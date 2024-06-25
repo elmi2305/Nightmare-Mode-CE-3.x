@@ -1,0 +1,158 @@
+import net.fabricmc.loom.api.processor.MinecraftJarProcessor
+import net.fabricmc.loom.api.processor.ProcessorContext
+import net.fabricmc.loom.api.processor.SpecContext
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption;
+plugins {
+	id 'maven-publish'
+	id 'fabric-loom' version "1.4-SNAPSHOT"
+}
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+	maven {
+		name = 'legacy-fabric'
+		url = 'https://maven.legacyfabric.net'
+	}
+	// Fixed LWJGL on Linux
+	maven {
+		name = 'Babric'
+		url = 'https://maven.glass-launcher.net/babric'
+	}
+	maven {
+		url file('mavenRepo')
+	}
+	mavenCentral() //For fastutil
+}
+
+loom {
+	setIntermediaryUrl('https://maven.legacyfabric.net/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
+	//accessWidenerPath = file('src/main/resources/<NAME>.accesswidener')
+	addMinecraftJarProcessor(
+			BTWJarReplacer, projectDir.toString()
+	)
+}
+
+def lwjglVersion = System.getProperty("os.name").toLowerCase().contains("mac") ? "2.9.1" : "2.9.0"
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "btw.community:mappings:1.0.3"
+
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	implementation 'net.fabricmc:fabric-loom:1.4-SNAPSHOT'
+
+	implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
+	implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
+
+	implementation "org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}"
+	implementation "org.lwjgl.lwjgl:lwjgl:${lwjglVersion}"
+	implementation "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
+
+	implementation fileTree(dir: "libs", include: "**.zip")
+
+	implementation 'com.google.guava:guava:14.0.1'
+
+	// This is what MC 1.6 uses
+	implementation 'com.google.code.gson:gson:2.2.2'
+
+	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.12'
+}
+
+configurations.all {
+	resolutionStrategy {
+		dependencySubstitution {
+			substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20130708-debug3') with {
+				module("org.lwjgl.lwjgl:lwjgl_util:${lwjglVersion}")
+			}
+			substitute module('org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20130708-debug3') with {
+				module("org.lwjgl.lwjgl:lwjgl:${lwjglVersion}")
+			}
+		}
+		force "org.lwjgl.lwjgl:lwjgl-platform:${lwjglVersion}"
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	withSourcesJar()
+}
+
+jar {
+	from sourceSets.main.output.resourcesDir
+	from sourceSets.main.output.classesDirs
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
+}
+
+loom {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+runClient {
+	dependsOn(jar)
+}
+
+runServer {
+	dependsOn(jar)
+}
+
+class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
+	String path;
+
+	@javax.inject.Inject
+	BTWJarReplacer(String path) {
+		super()
+		this.path = path
+	}
+
+	@Override
+	Spec buildSpec(SpecContext context) {
+		return new Spec() {
+			@Override
+			int hashCode() {
+				return super.hashCode()
+			}
+		}
+	}
+
+	@Override
+	void processJar(java.nio.file.Path jar, Spec spec, ProcessorContext context) throws IOException {
+		// Replace the Minecraft jar with the custom one from BTW_dev.
+		// This is just a straight up file replacement, no remapping or anything.
+		if (!Files.exists(Paths.get(path, "build/BTW_dev/BTW_dev.zip"))) {
+			// Print a warning if the BTW_dev zip doesn't exist.
+			System.err.println("BTW_dev zip not found, skipping BTWJarReplacer")
+		} else {
+			Files.copy(Paths.get(path, "build/BTW_dev/BTW_dev.zip"), jar, StandardCopyOption.REPLACE_EXISTING)
+			// Add Javadocs
+			Files.copy(Paths.get(path, "build/BTW_dev/BTW_dev-javadoc.jar"), jar.resolveSibling(jar.getFileName().toString().replace(".jar", "-javadoc.jar")), StandardCopyOption.REPLACE_EXISTING)
+		}
+	}
+
+	@Override
+	String getName() {
+		return "BTWJarReplacer";
+	}
+
+	interface Spec extends MinecraftJarProcessor.Spec {
+	}
+}

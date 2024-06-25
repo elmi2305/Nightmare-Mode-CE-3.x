@@ -1,0 +1,23 @@
+pluginManagement {
+	repositories {
+		maven {
+			url 'https://BTW-Community.github.io/BTW-gradle'
+		}
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			name = 'Jitpack'
+			url = 'https://jitpack.io'
+		}
+		gradlePluginPortal()
+	}
+}
+rootProject.name = name
+
+gradle.rootProject {
+	group = group
+	version = version
+	description = description
+}

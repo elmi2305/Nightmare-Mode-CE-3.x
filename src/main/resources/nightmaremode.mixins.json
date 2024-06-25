@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.itlesports.nightmaremode.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BiomeEndDecoratorMixin",
+    "BTWModMixin",
+    "CobblestoneBlockMixin",
+    "EntityDragonMixin",
+    "EntityEnderCrystalMixin",
+    "EntityPlayerMixin",
+    "EntityPlayerMPMixin",
+    "EntityPlayerSPMixin",
+    "HardcoreSpawnUtilsMixin",
+    "WorldInfoMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
