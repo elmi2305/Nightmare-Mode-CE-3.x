@@ -32,9 +32,9 @@ repositories {
 
 loom {
 	setIntermediaryUrl('https://maven.legacyfabric.net/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
-	//accessWidenerPath = file('src/main/resources/<NAME>.accesswidener')
+	accessWidenerPath = file("src/main/resources/NightmareMode.accessWidener")
 	addMinecraftJarProcessor(
-			BTWJarReplacer, projectDir.toString()
+			BTWJarReplacer, "BTWJarReplacer", projectDir.toString()
 	)
 }
 
@@ -116,22 +116,18 @@ runServer {
 }
 
 class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
-	String path;
+	String path
+	String name
 
 	@javax.inject.Inject
-	BTWJarReplacer(String path) {
-		super()
+	BTWJarReplacer(String name, String path) {
 		this.path = path
+		this.name = name
 	}
 
 	@Override
 	Spec buildSpec(SpecContext context) {
-		return new Spec() {
-			@Override
-			int hashCode() {
-				return super.hashCode()
-			}
-		}
+		return new Spec(path)
 	}
 
 	@Override
@@ -150,9 +146,19 @@ class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
 
 	@Override
 	String getName() {
-		return "BTWJarReplacer";
+		return name
 	}
 
-	interface Spec extends MinecraftJarProcessor.Spec {
+	class Spec implements MinecraftJarProcessor.Spec {
+		String path
+
+		Spec(String path) {
+			this.path = path
+		}
+
+		@Override
+		int hashCode() {
+			return path.hashCode()
+		}
 	}
 }

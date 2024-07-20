@@ -8,13 +8,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.EntityPlayer;
 
-/* MODIFY updateGloomState() in EntityPlayerSP
-* THIS CODE IS ONLY RELEVANT FOR CAVE SOUNDS WHILE IN GLOOM. This code is made to mimic the code in EntityPlayerMP and
-* EntityPlayerMPMixin. This can be taken away at any time to effectively achieve the same effect with less clock cycles
-*/
+
 @Mixin(EntityPlayerSP.class)
 
 public abstract class EntityPlayerSPMixin extends EntityPlayer{
+    /* MODIFY updateGloomState() in EntityPlayerSP
+     * THIS CODE IS ONLY RELEVANT FOR CAVE SOUNDS WHILE IN GLOOM. This code is made to mimic the code in EntityPlayerMP and
+     * EntityPlayerMPMixin. This can be taken away at any time to effectively achieve the same effect
+     */
+
     public EntityPlayerSPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
     }
@@ -24,9 +26,5 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer{
             this.inGloomCounter+=5;
         }
     }
-//    @Inject(method = "updateGloomState", at = @At(value = "FIELD", ordinal = 2))
-//    protected void incrementInGloomCounter(CallbackInfo ci) {
-//        inGloomCounter+=6;
-//    }
 }
 

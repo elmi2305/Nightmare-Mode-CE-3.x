@@ -1,0 +1,67 @@
+package com.itlesports.nightmaremode.mixin;
+
+import btw.block.BTWBlocks;
+import btw.entity.LightningBoltEntity;
+import btw.item.BTWItems;
+import net.minecraft.src.*;
+import net.minecraft.server.MinecraftServer;
+import btw.world.util.WorldUtils;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Mixin(EntityLivingBase.class)
+public abstract class EntityLivingBaseMixin extends Entity {
+    @Shadow public abstract boolean isEntityAlive();
+
+    public EntityLivingBaseMixin(World par1World) {
+        super(par1World);
+    }
+
+    @Inject(method = "jump", at = @At("TAIL"))
+    private void breakLeafBlockBelowEntity(CallbackInfo ci){
+        MinecraftServer server = MinecraftServer.getServer();
+        for(double i = -0.3d; i <= 0.3d; i += 0.3d){
+            for(double j = -0.3d;j <= 0.3d;j += 0.3d) {
+                if (this.worldObj.getBlockId((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 2.5), (int) Math.floor(this.posZ + j)) == Block.leaves.blockID) {
+                    server.getEntityWorld().destroyBlock((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 2.5), (int) Math.floor(this.posZ + j), false);
+                }
+            }
+        }
+        if (this.worldObj.getBlockId((int) Math.floor(this.posX), (int) Math.floor(this.posY - 3), (int) Math.floor(this.posZ)) == Block.leaves.blockID) {
+            server.getEntityWorld().destroyBlock((int) Math.floor(this.posX), (int) Math.floor(this.posY - 3), (int) Math.floor(this.posZ), false);
+        }
+    }
+
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void checkIfShouldBreakLeaves(CallbackInfo ci){
+        if(this.isEntityAlive()){
+            if(this.worldObj.getBlockId((int) Math.floor(this.posX), (int) Math.ceil(this.posY - 1), (int) Math.floor(this.posZ)) == Block.leaves.blockID){
+
+                int sprintModifier = 0;
+                if(this.isSprinting()){sprintModifier = 14;}
+
+                if (rand.nextInt((15-sprintModifier))==0) {
+                    MinecraftServer server = MinecraftServer.getServer();
+                    for(double i = -0.3d; i <= 0.3d; i += 0.3d){
+                        for(double j = -0.3d;j <= 0.3d;j += 0.3d) {
+                            if (this.worldObj.getBlockId((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 1), (int) Math.floor(this.posZ + j)) == Block.leaves.blockID) {
+                                server.getEntityWorld().destroyBlock((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 1), (int) Math.floor(this.posZ + j), false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

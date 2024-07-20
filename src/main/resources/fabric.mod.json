@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "modid/icon.png",
+  "icon": "assets/nightmare_mode/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -29,6 +29,7 @@
     "nightmaremode.mixins.json"
   ],
 
+  "accessWidener" : "NightmareMode.accessWidener",
   "depends": {
     "fabricloader": ">=0.14.9",
     "minecraft": "1.6.4"
