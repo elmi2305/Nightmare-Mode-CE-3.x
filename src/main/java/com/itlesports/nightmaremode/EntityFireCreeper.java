@@ -43,8 +43,8 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(25.0);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(15.0);
     }
 
     protected void entityInit() {
@@ -169,12 +169,18 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
-        if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
-            this.determinedToExplode = true;
-            return true;
-        } else {
-            return super.interact(player);
+        if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) {
+            if (!this.worldObj.isRemote) {
+                boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                if (this.getPowered()) {
+                    this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
+                } else {
+                    this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
+                }
+                this.setDead();
+            }
         }
+        return false;
     }
 
     public void playLivingSound() {

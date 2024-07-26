@@ -1,10 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.BTWSquidEntity;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityEnderCrystal;
-import net.minecraft.src.EntityMagmaCube;
-import net.minecraft.src.EntityZombie;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,4 +23,12 @@ public class EntityMixin {
             return thisObject.height-2;
         } else {return (double)thisObject.height * 0.75;}
     }
+    @Redirect(method = "onStruckByLightning(Lbtw/entity/LightningBoltEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;dealFireDamage(I)V"))
+    private void endermenImmune(Entity instance, int par1){
+        Entity thisObj = (Entity)(Object)this;
+        if (!thisObj.isImmuneToFire() && !(thisObj instanceof EntityEnderman)) {
+            thisObj.attackEntityFrom(DamageSource.inFire, par1);
+        }
+    }
+
 }

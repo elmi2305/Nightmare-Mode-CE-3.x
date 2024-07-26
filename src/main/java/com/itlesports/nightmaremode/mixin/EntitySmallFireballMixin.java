@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import net.minecraft.src.EntityMagmaCube;
-import net.minecraft.src.EntitySmallFireball;
-import net.minecraft.src.MovingObjectPosition;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,5 +19,13 @@ public class EntitySmallFireballMixin {
     private void ignoreMagmaCubeCollision(EntitySmallFireball instance){
         EntitySmallFireball thisObj = (EntitySmallFireball)(Object)this;
         if(!hitMagmaCube){thisObj.setDead();}
+    }
+
+    @Inject(method = "onImpact", at = @At("HEAD"))
+    private void dangerousBlazeFireballs(MovingObjectPosition par1, CallbackInfo ci){
+        EntitySmallFireball thisObj = (EntitySmallFireball)(Object)this;
+        if(thisObj.dimension == -1 && thisObj.shootingEntity instanceof EntityBlaze blaze){
+            thisObj.worldObj.newExplosion(blaze,par1.blockX, par1.blockY, par1.blockZ,1,true,true);
+        }
     }
 }

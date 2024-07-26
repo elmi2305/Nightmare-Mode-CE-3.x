@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import java.util.Random;
 public abstract class BlockPortalMixin{
     @Unique boolean runOnce = true;
     @Unique boolean runAgain = true;
+    @Unique boolean runEffects = false;
     @Unique long testTime = 2147483647;
 
 
@@ -32,9 +34,16 @@ public abstract class BlockPortalMixin{
                 Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text1);
                 testTime = Minecraft.getMinecraft().theWorld.getWorldTime() + 72000;
                 runAgain = false;
-                Minecraft.getMinecraft().thePlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));
-                Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death",2.0F, 0.905F);;
+                runEffects = true;
             }
+        }
+    }
+    @Inject(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"),remap = false)
+    private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
+        if (runEffects) {
+            world.getClosestPlayer(x,y,z,-1).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
+            Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death",2.0F, 0.905F);
+            runEffects = false;
         }
     }
 

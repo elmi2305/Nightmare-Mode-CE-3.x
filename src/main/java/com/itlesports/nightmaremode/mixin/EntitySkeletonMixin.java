@@ -1,9 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
-import btw.entity.InfiniteArrowEntity;
-import btw.entity.RottenArrowEntity;
-import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -13,22 +9,25 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Objects;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob {
     @Shadow public abstract void setSkeletonType(int par1);
-
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
-
     @Shadow public abstract int getSkeletonType();
+
+    @Unique private int progress = NightmareUtils.getGameProgressMobsLevel(this.worldObj);
 
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
 
+    @ModifyConstant(method = "setSkeletonType", constant = @Constant(floatValue = 2.34f))
+    private float shortWitherSkeletons(float constant){
+        return 2f;
+    }
+
+    
     @Inject(method = "<init>",
             at = @At(value = "TAIL"))
     private void removeHideFromSun(CallbackInfo ci) {
@@ -38,14 +37,14 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
-        return constant+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
+        return constant+progress*0.015;
         // 0.25 -> 0.265 -> 0.28 -> 0.295
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*6);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + progress*6);
         // 16.0 -> 22.0 -> 28.0 -> 34.0
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1));
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1));
         // not really important this is just melee damage
     }
 
@@ -54,8 +53,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
-        this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
-        int progress = NightmareUtils.getGameProgressMobsLevel(this.worldObj);
+        this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
         if (progress >= 2 && rand.nextFloat() < 0.13 + ((progress-2)*0.07)){
             // 13% -> 20%
             this.setSkeletonType(4); // ender skeleton
@@ -84,22 +82,6 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             this.setSkeletonType(2); // ice skeleton
             ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
             this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
-//            if (rand.nextFloat()<0.5f) {
-//                this.setSkeletonType(2); // ice skeleton
-//                ItemStack var1 = new ItemStack(BTWItems.woolHelmet,1);
-//                this.setCurrentItemOrArmor(4,setItemColor(var1, 13260));
-//            } else{
-//                this.setSkeletonType(5); // pumpkin head skeleton
-//
-//                this.setCurrentItemOrArmor(0, null);
-//                this.setCurrentItemOrArmor(1, null);
-//                this.setCurrentItemOrArmor(2, null);
-//                this.setCurrentItemOrArmor(3, null);
-//                this.setCurrentItemOrArmor(4, new ItemStack(Block.pumpkin));
-//                this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 10000000, 0));
-//                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.1);
-//                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.1);
-//            }
         }
         // overall chances to be a variant: 6% -> 17% -> 34% -> 45%
     }
@@ -113,8 +95,8 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     }
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
-        return 6.0f - NightmareUtils.getGameProgressMobsLevel(this.worldObj)*2;
-        // 6.0 -> 4.0 -> 2.0 -> 0.0
+        return 8.0f - progress*2;
+        // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
 
@@ -125,7 +107,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                     target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow){
         if(this.getSkeletonType()==3){
-            for(int i = -1; i<=1; i++) {
+            for(int i = -2; i<=2; i+=2) {
                 double var3 = target.posX - this.posX + i;
                 double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
                 double var7 = target.posZ - this.posZ + i;
@@ -144,25 +126,14 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
-        if(rand.nextInt(15) < ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1)*3 ) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
-            // n<3 -> n<6 -> n<9 -> n<12
+        if(rand.nextInt(60) < 3+(progress*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
             arrow.setFire(400);
-            arrow.setDamage(MathHelper.floor_double(4.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 3)));
-            // 4 -> 7 -> 10 -> 13
             arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
+        } else{
+            arrow.setDamage(MathHelper.floor_double(4.0 + (progress * 2)));
+            // 4 -> 6 -> 8 -> 10
         }
     }
-
-
-    // doesn't work
-//    @Inject(method = "setCombatTask", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void setRangedAttackIfEnderSkeleton(CallbackInfo ci){
-//        if(Objects.equals(this.getHeldItem(), new ItemStack(Item.enderPearl, 1))){ // if holding a pearl
-//            this.tasks.addTask(4, this.aiRangedAttack);
-//            this.tasks.removeTask(this.aiMeleeAttack);
-//        }
-//    }
-    // doesn't work
 
 
     @Unique
@@ -180,5 +151,20 @@ public abstract class EntitySkeletonMixin extends EntityMob {
         var4.setInteger("color", color);
         item.setTagCompound(var3);
         return item;
+    }
+    @ModifyConstant(method = "<init>", constant = @Constant(intValue = 60))
+    private int modifyAttackInterval(int constant){
+        return switch (progress) {
+            case 0 -> 60;
+            case 1 -> 50 + rand.nextInt(5);
+            case 2 -> 45 + rand.nextInt(10);
+            case 3 -> 40 + rand.nextInt(15);
+            default -> throw new IllegalStateException("Unexpected value: " + progress);
+        };
+    }
+    @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
+    private float modifyAttackRange(float constant){
+        return 18.0f + progress*3;
+        // 18 -> 21 -> 24 -> 27
     }
 }

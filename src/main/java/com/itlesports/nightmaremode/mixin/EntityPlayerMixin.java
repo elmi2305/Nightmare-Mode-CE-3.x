@@ -1,11 +1,13 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.blocks.BedBlockBase;
+import btw.block.blocks.BedrollBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -34,8 +36,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-//    @Inject(method = "onUpdate", at = @At("TAIL"))
-//    private void displayHeldItem(CallbackInfo ci){
-//        System.out.println(this.getHeldItem());
-//    }
+    // removes the check for daytime and kicking the player out of the bed if it turns day. this enables infinite sleeping
+    @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
+    private boolean doNotCareIfDay(World instance){
+        if (!(Block.blocksList[this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))] instanceof BedrollBlock)) {
+            return false;
+        } else {
+            return this.worldObj.skylightSubtracted < 4;
+        }
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
+    private boolean doNotCareIfDay1(World instance) {
+        if (!(Block.blocksList[this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))] instanceof BedrollBlock)) {
+            return false;
+        } else {
+            return this.worldObj.skylightSubtracted < 4;
+        }
+    }
 }

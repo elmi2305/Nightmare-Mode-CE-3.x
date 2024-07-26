@@ -50,5 +50,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 //        Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
 //        getEntityWorld().addWeatherEffect(lightningbolt);
 //    }
+
+
 }
 

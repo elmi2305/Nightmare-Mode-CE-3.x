@@ -10,7 +10,7 @@ public class RenderFireCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("assets/nightmare_mode/textures/entity/firecreeper.png");
+    public static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("textures/entity/firecreeper.png");
 
     public RenderFireCreeper() {
         super();

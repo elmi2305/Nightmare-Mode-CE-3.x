@@ -1,12 +1,14 @@
 package com.itlesports.nightmaremode.mixin;
 
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.EntityPlayer;
+
+import java.util.List;
 
 
 @Mixin(EntityPlayerSP.class)
