@@ -65,37 +65,39 @@ public class EntitySpiderMixin {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
-        int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
-        if(progress==0) {
-            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0);
-            thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
-        } else {
-            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(13.0 + progress*7);
-            // 16 -> 20 -> 27 -> 34
-            thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress*2);
-            // 4 -> 6 -> 8 -> 10
-            thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.85f); // slightly increases move speed
-        }
-        if(thisObj.rand.nextFloat()<0.05 && !(thisObj instanceof JungleSpiderEntity)){
-            thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
-        }
-        thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0);
-
-        if(thisObj instanceof JungleSpiderEntity){
-            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(12.0 + progress*6);
-            // 12 -> 18 -> 24 -> 30
-        }
-        if(thisObj.rand.nextFloat()<0.0125 && !(thisObj instanceof JungleSpiderEntity) && thisObj.riddenByEntity == null){
-            if(thisObj.rand.nextFloat()<0.3){
-                EntityCreeper rider = new EntityCreeper(thisObj.worldObj);
-                rider.copyLocationAndAnglesFrom(thisObj);
-                thisObj.worldObj.spawnEntityInWorld(rider);
-                rider.mountEntity(thisObj);
+        if (thisObj.worldObj != null) {
+            int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+            if(progress==0) {
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0);
+                thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
             } else {
-                EntityZombie rider = new EntityZombie(thisObj.worldObj);
-                rider.copyLocationAndAnglesFrom(thisObj);
-                thisObj.worldObj.spawnEntityInWorld(rider);
-                rider.mountEntity(thisObj);
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(13.0 + progress*7);
+                // 16 -> 20 -> 27 -> 34
+                thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress*2);
+                // 4 -> 6 -> 8 -> 10
+                thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.85f); // slightly increases move speed
+            }
+            if(thisObj.rand.nextFloat()<0.05 && !(thisObj instanceof JungleSpiderEntity)){
+                thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
+            }
+            thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0);
+
+            if(thisObj instanceof JungleSpiderEntity){
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(12.0 + progress*6);
+                // 12 -> 18 -> 24 -> 30
+            }
+            if(thisObj.rand.nextFloat()<0.0125 && !(thisObj instanceof JungleSpiderEntity) && thisObj.riddenByEntity == null){
+                if(thisObj.rand.nextFloat()<0.3){
+                    EntityCreeper rider = new EntityCreeper(thisObj.worldObj);
+                    rider.copyLocationAndAnglesFrom(thisObj);
+                    thisObj.worldObj.spawnEntityInWorld(rider);
+                    rider.mountEntity(thisObj);
+                } else {
+                    EntityZombie rider = new EntityZombie(thisObj.worldObj);
+                    rider.copyLocationAndAnglesFrom(thisObj);
+                    thisObj.worldObj.spawnEntityInWorld(rider);
+                    rider.mountEntity(thisObj);
+                }
             }
         }
     }

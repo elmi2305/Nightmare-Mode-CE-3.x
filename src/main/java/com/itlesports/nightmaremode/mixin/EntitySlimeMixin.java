@@ -12,9 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(EntitySlime.class)
 public abstract class EntitySlimeMixin {
     @Shadow protected abstract void setSlimeSize(int iSize);
-
-    @Shadow public abstract int getSlimeSize();
-
     @Unique private int timeSpentTargeting = 60;
     @Unique private float streakModifier = 1;
 

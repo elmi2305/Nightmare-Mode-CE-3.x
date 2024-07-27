@@ -17,6 +17,7 @@ public abstract class WorldInfoMixin {
     @Shadow
     private long worldTime;
 
+    @Unique
     private long totalTime;
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
     private void nightSetter(CallbackInfoReturnable<Long> cir) {

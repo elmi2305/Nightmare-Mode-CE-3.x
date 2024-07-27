@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob{
@@ -72,38 +71,40 @@ public abstract class EntityZombieMixin extends EntityMob{
                     target = "Lnet/minecraft/src/EntityZombie;entityLivingAddRandomArmor()V",
                     shift = At.Shift.AFTER))
     private void chanceToSpawnWithWeapon(CallbackInfo ci) {
-        if (rand.nextInt(50) == 0) {
-            ItemStack var1 = new ItemStack(BTWItems.boneClub);
-            this.setCurrentItemOrArmor(0, var1);
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(5.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj))*1.75));
-            // 5.0 -> 6.0 -> 8.0 -> 10.0
-            doNotDropItems = true;
-        } else if (rand.nextInt(18) == 0) {
-            ItemStack var1 = new ItemStack(Item.swordWood);
-            this.setCurrentItemOrArmor(0, var1);
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
-            // 4.0 -> 5.0 -> 6.0 -> 7.0
-            doNotDropItems = true;
-        }
-
-        if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) == 1) {
-            if (rand.nextInt(18) == 0) {
-                ItemStack var1 = new ItemStack(Item.axeGold);
-                ItemStack var2 = new ItemStack(Item.helmetGold);
+        if (this.worldObj != null) {
+            if (rand.nextInt(50) == 0) {
+                ItemStack var1 = new ItemStack(BTWItems.boneClub);
                 this.setCurrentItemOrArmor(0, var1);
-                this.setCurrentItemOrArmor(4, var2);
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(9.0);
-                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
-                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(10.0);
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(5.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj))*1.75));
+                // 5.0 -> 6.0 -> 8.0 -> 10.0
+                doNotDropItems = true;
+            } else if (rand.nextInt(18) == 0) {
+                ItemStack var1 = new ItemStack(Item.swordWood);
+                this.setCurrentItemOrArmor(0, var1);
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
+                // 4.0 -> 5.0 -> 6.0 -> 7.0
                 doNotDropItems = true;
             }
-        } else if (rand.nextInt(22) == 0 && NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 1) {
-            ItemStack var1 = new ItemStack(Item.swordDiamond);
-            doNotDropItems = true;
-            this.setCurrentItemOrArmor(0, var1);
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(16.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*3));
-            // 16.0 -> 19.0
+
+            if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) == 1) {
+                if (rand.nextInt(18) == 0) {
+                    ItemStack var1 = new ItemStack(Item.axeGold);
+                    ItemStack var2 = new ItemStack(Item.helmetGold);
+                    this.setCurrentItemOrArmor(0, var1);
+                    this.setCurrentItemOrArmor(4, var2);
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(9.0);
+                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(10.0);
+                    doNotDropItems = true;
+                }
+            } else if (rand.nextInt(22) == 0 && NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 1) {
+                ItemStack var1 = new ItemStack(Item.swordDiamond);
+                doNotDropItems = true;
+                this.setCurrentItemOrArmor(0, var1);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(16.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*3));
+                // 16.0 -> 19.0
+            }
         }
     }
 
@@ -130,15 +131,6 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
         // 0.05f -> 0.08f -> 0.11f -> 0.30f
     }
-
-//    @Inject(method = "addRandomArmor", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void changeArmorDropRates(CallbackInfo ci, int iHeldType) {
-//        if (doNotDropItems || isCrystalHead(this)) {
-//            for(int i = 0; i < 4; i++) {
-//                equipmentDropChances[1] = 0;
-//            }
-//        }
-//    }
 
     @ModifyConstant(method = "addRandomArmor", constant = @Constant(floatValue = 0.99F))
     private float makeSpecialZombiesNotDropHeldItem(float constant){
@@ -187,14 +179,14 @@ public abstract class EntityZombieMixin extends EntityMob{
 
         ItemStack var1 = new ItemStack(Item.skull,1,1);
         crystalhead.setCurrentItemOrArmor(4, var1);
-        crystalhead.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
-        crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
-        crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
+        crystalhead.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots))); // black
+        crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings))); // black
+        crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest))); // black
         this.setDead();
     }
 
     @Unique
-    private ItemStack setItemColor(ItemStack item, int color){
+    private ItemStack setItemColor(ItemStack item){
         NBTTagCompound var3 = item.getTagCompound();
         if (var3 == null) {
             var3 = new NBTTagCompound();
@@ -205,7 +197,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             var3.setCompoundTag("display", var4);
         }
 
-        var4.setInteger("color", color);
+        var4.setInteger("color", 1052688);
         item.setTagCompound(var3);
         return item;
     }

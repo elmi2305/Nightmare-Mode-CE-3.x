@@ -18,7 +18,6 @@ public abstract class EntityLivingBaseMixin extends Entity {
     private float modifyWitherSkeletonSight(float constant){
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
         if(thisObj instanceof EntitySkeleton skeleton && skeleton.getSkeletonType()==1){
-            System.out.println("Set");
             return 0.6f;
         } else{return 0.85f;}
     }

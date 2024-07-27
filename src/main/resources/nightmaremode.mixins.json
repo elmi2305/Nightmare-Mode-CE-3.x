@@ -26,6 +26,7 @@
     "EntityEndermanMixin",
     "EntityEnderPearlMixin",
     "EntityFireballMixin",
+    "EntityGhastMixin",
     "EntityLivingBaseMixin",
     "EntityLivingMixin",
     "EntityMagmaCubeMixin",

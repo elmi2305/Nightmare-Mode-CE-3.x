@@ -24,7 +24,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @ModifyConstant(method = "setSkeletonType", constant = @Constant(floatValue = 2.34f))
     private float shortWitherSkeletons(float constant){
-        return 2f;
+        return 1.8f;
     }
 
     
@@ -53,39 +53,40 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
-        this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
-        if (progress >= 2 && rand.nextFloat() < 0.13 + ((progress-2)*0.07)){
-            // 13% -> 20%
-            this.setSkeletonType(4); // ender skeleton
-            this.clearActivePotions();
+        if (this.worldObj != null) {
+            this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
+            if (progress >= 2 && rand.nextFloat() < 0.13 + ((progress-2)*0.07)){
+                // 13% -> 20%
+                this.setSkeletonType(4); // ender skeleton
+                this.clearActivePotions();
 
-            ItemStack var1 = new ItemStack(Item.skull,1,1);
-            ItemStack var2 = new ItemStack(Item.bow,1);
-            this.setCurrentItemOrArmor(4, var1);
-            this.setCurrentItemOrArmor(0, var2);
-            this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
-            this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
-            this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
+                ItemStack var1 = new ItemStack(Item.skull,1,1);
+                ItemStack var2 = new ItemStack(Item.bow,1);
+                this.setCurrentItemOrArmor(4, var1);
+                this.setCurrentItemOrArmor(0, var2);
+                this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
+                this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
+                this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
 
-        } else if (progress >= 1 && rand.nextFloat()<0.09 + ((progress-1)*0.02)) {
-            // 9% -> 11% -> 13%
-            this.setSkeletonType(3); // fire skeleton
+            } else if (progress >= 1 && rand.nextFloat()<0.09 + ((progress-1)*0.02) && this.dimension != -1) {
+                // 9% -> 11% -> 13%
+                this.setSkeletonType(3); // fire skeleton
 
-            Entity magmaCube = new EntityMagmaCube(this.worldObj);
-            magmaCube.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            this.worldObj.spawnEntityInWorld(magmaCube);
-            magmaCube.mountEntity(this);
-            this.setFire(1000000);
+                Entity magmaCube = new EntityMagmaCube(this.worldObj);
+                magmaCube.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+                this.worldObj.spawnEntityInWorld(magmaCube);
+                magmaCube.mountEntity(this);
+                this.setFire(1000000);
 
-        } else if(progress <= 3 && rand.nextFloat() < 0.06 + (progress*0.02)) {
-            // 6% -> 8% -> 10% -> 12%
-            this.setSkeletonType(2); // ice skeleton
-            ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
-            this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
+            } else if(progress <= 3 && rand.nextFloat() < 0.06 + (progress*0.02)) {
+                // 6% -> 8% -> 10% -> 12%
+                this.setSkeletonType(2); // ice skeleton
+                ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
+                this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
+            }
         }
         // overall chances to be a variant: 6% -> 17% -> 34% -> 45%
     }
-    
 
     @Inject(method = "attackEntityWithRangedAttack",
             at = @At(value = "INVOKE",

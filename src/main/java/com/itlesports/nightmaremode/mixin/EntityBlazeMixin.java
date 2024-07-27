@@ -22,12 +22,14 @@ public class EntityBlazeMixin extends EntityMob{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
-        int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
-        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10+progress*10);
-        // 10 -> 20 -> 30 -> 40, yes the scaling is that strict. it's meant to encourage early fortress exploration
-        if(thisObj.rand.nextFloat()<0.5 && progress > 0){
-            thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id,1000000,0));
-            invisible = true;
+        if(thisObj.worldObj != null) {
+            int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10 + progress * 10);
+            // 10 -> 20 -> 30 -> 40, yes the scaling is that strict. it's meant to encourage early fortress exploration
+            if (thisObj.rand.nextFloat() < 0.5 && progress > 0) {
+                thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
+                invisible = true;
+            }
         }
     }
 

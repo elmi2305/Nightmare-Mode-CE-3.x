@@ -43,14 +43,5 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),300,0,true));
         this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800,1,true));
     }
-
-        // strikes you with lightning every time you pick up an item. for testing
-//    @Inject(method = "onItemPickup", at = @At("TAIL"))
-//    private void summonLightning(Entity par1Entity, int par2, CallbackInfo ci){
-//        Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
-//        getEntityWorld().addWeatherEffect(lightningbolt);
-//    }
-
-
 }
 

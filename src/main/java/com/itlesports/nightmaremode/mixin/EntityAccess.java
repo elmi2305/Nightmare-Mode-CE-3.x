@@ -8,7 +8,4 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface EntityAccess {
     @Accessor("isInWeb")
     boolean getIsInWeb();
-
-    @Accessor("invulnerable")
-    void setInvulnerable(boolean invulnerable);
 }
