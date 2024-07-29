@@ -53,8 +53,8 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
                     ordinal = 3, shift = At.Shift.AFTER))
     private void giveExtraPotionEffects(ItemStack par3, World world, EntityPlayer entityPlayer, CallbackInfo ci){
         entityPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id, 600, 4));
-        entityPlayer.addPotionEffect(new PotionEffect(Potion.resistance.id, 6000, 0));
-        entityPlayer.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 6000, 0));
+        entityPlayer.addPotionEffect(new PotionEffect(Potion.resistance.id, 800, 0));
+        entityPlayer.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 600, 0));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 2400, 0));
         if(!entityPlayer.isPotionActive(Potion.damageBoost)) {
             entityPlayer.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 400, 1));

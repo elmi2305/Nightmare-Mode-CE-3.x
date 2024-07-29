@@ -1,10 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.blocks.BedBlockBase;
 import btw.block.blocks.BedrollBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -18,6 +18,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     public EntityPlayerMixin(World par1World) {
         super(par1World);
     }
+
                     // can't jump if you have slowness
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
@@ -54,4 +55,5 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return this.worldObj.skylightSubtracted < 4;
         }
     }
+
 }

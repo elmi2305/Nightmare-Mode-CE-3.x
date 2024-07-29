@@ -28,5 +28,32 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer{
             this.inGloomCounter+=5;
         }
     }
+
+//    @Unique long timeToEndGracePeriod;
+//    @Unique boolean playerHasJustDied;
+//    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+//    private void setGracePeriod(CallbackInfo ci){
+//        if(this.isDead){
+//            playerHasJustDied = true;
+//        }
+//    }
+//
+//    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+//    private void manageGracePeriod(CallbackInfo ci){
+//        if(playerHasJustDied && this.isEntityAlive()){
+//            timeToEndGracePeriod = 500;
+//            playerHasJustDied = false;
+//            System.out.println(timeToEndGracePeriod);
+//            this.worldObj.getGameRules().addGameRule("doMobSpawning", "false");
+//
+//        }
+//        if (!this.worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")) {
+//            --timeToEndGracePeriod;
+//            if(timeToEndGracePeriod == 0){
+//                this.worldObj.getGameRules().addGameRule("doMobSpawning", "true");
+//                System.out.println("Set to true");
+//            }
+//        }
+//    }
 }
 

@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,19 +15,21 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class EntitySkeletonMixin extends EntityMob {
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
-    @Shadow public abstract int getSkeletonType();
-
-    @Unique private int progress = NightmareUtils.getGameProgressMobsLevel(this.worldObj);
-
-    public EntitySkeletonMixin(World par1World) {
+    @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
+
 
     @ModifyConstant(method = "setSkeletonType", constant = @Constant(floatValue = 2.34f))
     private float shortWitherSkeletons(float constant){
         return 1.8f;
     }
-
+    // redirecting hostile call in constructor
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue(Difficulty instance){return true;}
+    @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue1(Difficulty instance){return true;}
+    // done redirecting
     
     @Inject(method = "<init>",
             at = @At(value = "TAIL"))
@@ -37,15 +40,19 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
-        return constant+progress*0.015;
+        if (this.worldObj != null) {
+            return constant+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
+        } else return 0.25;
         // 0.25 -> 0.265 -> 0.28 -> 0.295
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + progress*6);
-        // 16.0 -> 22.0 -> 28.0 -> 34.0
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1));
-        // not really important this is just melee damage
+        if (this.worldObj != null) {
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*6);
+            // 16.0 -> 22.0 -> 28.0 -> 34.0
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1));
+            // not really important this is just melee damage
+        }
     }
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
@@ -55,7 +62,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
-            if (progress >= 2 && rand.nextFloat() < 0.13 + ((progress-2)*0.07)){
+            if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2 && rand.nextFloat() < 0.13 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*0.07)){
                 // 13% -> 20%
                 this.setSkeletonType(4); // ender skeleton
                 this.clearActivePotions();
@@ -68,7 +75,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                 this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
                 this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
 
-            } else if (progress >= 1 && rand.nextFloat()<0.09 + ((progress-1)*0.02) && this.dimension != -1) {
+            } else if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && rand.nextFloat()<0.09 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*0.02) && this.dimension != -1) {
                 // 9% -> 11% -> 13%
                 this.setSkeletonType(3); // fire skeleton
 
@@ -78,7 +85,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                 magmaCube.mountEntity(this);
                 this.setFire(1000000);
 
-            } else if(progress <= 3 && rand.nextFloat() < 0.06 + (progress*0.02)) {
+            } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.06 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02)) {
                 // 6% -> 8% -> 10% -> 12%
                 this.setSkeletonType(2); // ice skeleton
                 ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
@@ -92,11 +99,15 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void deleteArrowEntity(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
-        if(this.getSkeletonType()==3){arrow.setDead();}
+        if (this.worldObj != null) {
+            if(this.getSkeletonType()==3){arrow.setDead();}
+        }
     }
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
-        return 8.0f - progress*2;
+        if (this.worldObj != null) {
+            return 8.0f - NightmareUtils.getGameProgressMobsLevel(this.worldObj)*2;
+        } else return 12.0f;
         // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
@@ -107,16 +118,18 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow){
-        if(this.getSkeletonType()==3){
-            for(int i = -2; i<=2; i+=2) {
-                double var3 = target.posX - this.posX + i;
-                double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
-                double var7 = target.posZ - this.posZ + i;
+        if (this.worldObj != null) {
+            if(this.getSkeletonType()==3){
+                for(int i = -2; i<=2; i+=2) {
+                    double var3 = target.posX - this.posX + i;
+                    double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
+                    double var7 = target.posZ - this.posZ + i;
 
-                EntitySmallFireball var11 = new EntitySmallFireball(this.worldObj, this, var3, var5, var7);
-                this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-                var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
-                this.worldObj.spawnEntityInWorld(var11);
+                    EntitySmallFireball var11 = new EntitySmallFireball(this.worldObj, this, var3, var5, var7);
+                    this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                    var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+                    this.worldObj.spawnEntityInWorld(var11);
+                }
             }
         }
     }
@@ -127,12 +140,14 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
-        if(rand.nextInt(60) < 3+(progress*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
-            arrow.setFire(400);
-            arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
-        } else{
-            arrow.setDamage(MathHelper.floor_double(4.0 + (progress * 2)));
-            // 4 -> 6 -> 8 -> 10
+        if (this.worldObj != null) {
+            if(rand.nextInt(60) < 3+(NightmareUtils.getGameProgressMobsLevel(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
+                arrow.setFire(400);
+                arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
+            } else{
+                arrow.setDamage(MathHelper.floor_double(4.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
+                // 4 -> 6 -> 8 -> 10
+            }
         }
     }
 
@@ -155,17 +170,21 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     }
     @ModifyConstant(method = "<init>", constant = @Constant(intValue = 60))
     private int modifyAttackInterval(int constant){
-        return switch (progress) {
-            case 0 -> 60;
-            case 1 -> 50 + rand.nextInt(5);
-            case 2 -> 45 + rand.nextInt(10);
-            case 3 -> 40 + rand.nextInt(15);
-            default -> throw new IllegalStateException("Unexpected value: " + progress);
-        };
+        if (this.worldObj != null) {
+            return switch (NightmareUtils.getGameProgressMobsLevel(this.worldObj)) {
+                case 0 -> 60;
+                case 1 -> 50 + rand.nextInt(5);
+                case 2 -> 45 + rand.nextInt(10);
+                case 3 -> 40 + rand.nextInt(15);
+                default -> throw new IllegalStateException("Unexpected value: " + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
+            };
+        } else return 60;
     }
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
-        return 18.0f + progress*3;
+        if (this.worldObj != null) {
+            return 18.0f + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*3;
+        } else return 15.0f;
         // 18 -> 21 -> 24 -> 27
     }
 }

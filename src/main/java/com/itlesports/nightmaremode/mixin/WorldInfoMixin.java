@@ -17,12 +17,15 @@ public abstract class WorldInfoMixin {
     @Shadow
     private long worldTime;
 
-    @Unique
+    @Shadow private GameRules theGameRules;
     private long totalTime;
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
     private void nightSetter(CallbackInfoReturnable<Long> cir) {
         if (this.totalTime == 0L) {
             worldTime = 18000L;
+            theGameRules.addGameRule("doMobSpawning", "false");
+        } else if(worldTime == 18600){
+            theGameRules.addGameRule("doMobSpawning", "true");
         }
     }
 }

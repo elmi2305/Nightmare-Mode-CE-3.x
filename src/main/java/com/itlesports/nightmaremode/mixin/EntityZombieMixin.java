@@ -71,11 +71,12 @@ public abstract class EntityZombieMixin extends EntityMob{
                     target = "Lnet/minecraft/src/EntityZombie;entityLivingAddRandomArmor()V",
                     shift = At.Shift.AFTER))
     private void chanceToSpawnWithWeapon(CallbackInfo ci) {
-        if (this.worldObj != null) {
+        EntityZombie thisObj = (EntityZombie)(Object)this;
+        if (thisObj.worldObj != null) {
             if (rand.nextInt(50) == 0) {
                 ItemStack var1 = new ItemStack(BTWItems.boneClub);
-                this.setCurrentItemOrArmor(0, var1);
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(5.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj))*1.75));
+                thisObj.setCurrentItemOrArmor(0, var1);
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(5.0 + (NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj))*1.75));
                 // 5.0 -> 6.0 -> 8.0 -> 10.0
                 doNotDropItems = true;
             } else if (rand.nextInt(18) == 0) {
@@ -113,22 +114,29 @@ public abstract class EntityZombieMixin extends EntityMob{
                     target = "Lnet/minecraft/src/EntityZombie;setCurrentItemOrArmor(ILnet/minecraft/src/ItemStack;)V",
                     ordinal = 0))
     private void setDamageIfIronSword(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(6.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*1.75));
+        if (this.worldObj!= null) {
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(6.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*1.75));
+        }
         // 6.0 -> 7.0 -> 9.0 -> 11.0
     }
     @Inject(method = "addRandomArmor", // summons crystalhead zombie on a 1% chance
             at = @At("TAIL"))
     private void chanceToSpawnCrystalHead(CallbackInfo ci){
-        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<=0.01f){
-            summonCrystalHeadAtPos();
+        if (this.worldObj != null) {
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<=0.01f){
+                summonCrystalHeadAtPos();
+            }
         }
     }
     @ModifyConstant(method = "addRandomArmor",constant = @Constant(floatValue = 0.05F))
     private float modifyChanceToHaveIronTool(float constant){
-        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)==3){return 0.3f;}
-        else {
-            return (float)(0.05F + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.03));
+        if (this.worldObj != null) {
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)==3){return 0.3f;}
+            else {
+                return (float)(0.05F + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.03));
+            }
         }
+        return 0.05f;
         // 0.05f -> 0.08f -> 0.11f -> 0.30f
     }
 
@@ -146,8 +154,10 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
     private void deleteEndCrystalIfZombieDied(CallbackInfo ci){
-        if(isCrystalHead(this) && this.getHealth() < 1.0f){
-            this.riddenByEntity.setDead();
+        if (this.worldObj != null) {
+            if(isCrystalHead(this) && this.getHealth() < 1.0f){
+                this.riddenByEntity.setDead();
+            }
         }
     }
 

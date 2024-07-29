@@ -66,14 +66,22 @@ public class EntityCreeperMixin {
     private float creeperImmunityToExplosionDamage(float constant){
         return 5.0f; // explosions deal 1/5 damage to creepers
     }
+    // redirecting all hostile calls
     @Redirect(method = "attackEntityFrom", at  = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
     private boolean returnTrue(Difficulty instance){return true;}
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue1(Difficulty instance){return true;}
+    @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue2(Difficulty instance){return true;}
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue3(Difficulty instance){return true;}
+    // done redirecting
 
     @ModifyConstant(method = "entityInit", constant = @Constant(intValue = 0,ordinal = 0))
     private int chanceToSpawnCharged(int constant){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
-        if((progress>0 || (thisObj.dimension==-1 && progress > 0)) && thisObj.rand.nextFloat() < 0.05 + (progress)*0.02){
+        if((progress>0 || (thisObj.dimension==-1 && progress > 0)) && thisObj.rand.nextFloat() < 0.1 + (progress)*0.02){
             return 1;       // set to charged if conditions met
         } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && progress > 0){
             return 1;

@@ -25,10 +25,11 @@ public abstract class EntityLivingBaseMixin extends Entity {
     @Inject(method = "jump", at = @At("TAIL"))
     private void breakLeafBlockBelowEntity(CallbackInfo ci){
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
-        if (!(thisObj instanceof EntityMob)) {
+        if (!(thisObj instanceof EntityMob && this.worldObj != null)) {
             MinecraftServer server = MinecraftServer.getServer();
             for(double i = -0.3d; i <= 0.3d; i += 0.3d){
                 for(double j = -0.3d;j <= 0.3d;j += 0.3d) {
+                    assert this.worldObj != null;
                     if (this.worldObj.getBlockId((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 2.5), (int) Math.floor(this.posZ + j)) == Block.leaves.blockID) {
                         server.getEntityWorld().destroyBlock((int) Math.floor(this.posX + i), (int) Math.floor(this.posY - 2.5), (int) Math.floor(this.posZ + j), false);
                     }

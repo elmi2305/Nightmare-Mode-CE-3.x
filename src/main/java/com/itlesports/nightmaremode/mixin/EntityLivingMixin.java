@@ -34,15 +34,17 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 
     @Inject(method = "entityLivingAddRandomArmor", at = @At("TAIL"))
     private void chanceToSpawnWithLeatherArmor(CallbackInfo ci) {
-        float streakModifier = 0.0f;
-        for (int i = 1; i <= 4; i++) {
-            if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                Random rand = new Random();
-                if(rand.nextFloat() < (0.04f + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02) + streakModifier){
-                    // 0.04f -> 0.06f -> 0.08f -> 0.10f
-                    streakModifier += 0.05f;
-                    List<ItemStack> leatherArmorList = getItemStacks();
-                    this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
+        if (this.worldObj != null) {
+            float streakModifier = 0.0f;
+            for (int i = 1; i <= 4; i++) {
+                if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
+                    Random rand = new Random();
+                    if(rand.nextFloat() < (0.04f + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02) + streakModifier){
+                        // 0.04f -> 0.06f -> 0.08f -> 0.10f
+                        streakModifier += 0.05f;
+                        List<ItemStack> leatherArmorList = getItemStacks();
+                        this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
+                    }
                 }
             }
         }
@@ -111,7 +113,8 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 //        return illegalItemList;
 //    }
 
-    @Unique public boolean checkNullAndCompareID(ItemStack par1ItemStack, ItemStack par2ItemStack){
+    @Unique
+    public boolean checkNullAndCompareID(ItemStack par1ItemStack, ItemStack par2ItemStack){
         if(par1ItemStack != null && par2ItemStack != null){
             return par1ItemStack.itemID == par2ItemStack.itemID;
         } else {return false;}
