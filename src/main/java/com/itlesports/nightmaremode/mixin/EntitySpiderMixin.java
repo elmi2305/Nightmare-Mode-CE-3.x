@@ -20,15 +20,20 @@ public class EntitySpiderMixin {
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         EntitySpider thisObj = (EntitySpider)(Object)this;
-        return 16000 - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3000;
+        if (thisObj.worldObj != null) {
+            return 16000 - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3000;
+        } else return 24000;
     }
     @ModifyConstant(method = "spitWeb", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown1(int constant){
         EntitySpider thisObj = (EntitySpider)(Object)this;
-        if(new Random().nextFloat() < 0.1){
-            return 10;
+        if (thisObj.worldObj != null) {
+            if(new Random().nextFloat() < 0.1){
+                return 10;
+            }
+            return 16000 - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3000;
         }
-        return 16000 - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3000;
+        return constant;
     }
     @Inject(method = "attackEntity", at  = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
@@ -105,11 +110,13 @@ public class EntitySpiderMixin {
 
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
-        List list = spider.worldObj.getEntitiesWithinAABBExcludingEntity(spider, spider.boundingBox.expand(32.0, 32.0, 32.0));
-        for (Object tempEntity : list) {
-            if (!(tempEntity instanceof EntitySpider tempSpider)) continue;
-            if (tempSpider.entityToAttack != null) continue;
-            tempSpider.entityToAttack = targetPlayer;
+        if (spider.worldObj != null) {
+            List list = spider.worldObj.getEntitiesWithinAABBExcludingEntity(spider, spider.boundingBox.expand(32.0, 32.0, 32.0));
+            for (Object tempEntity : list) {
+                if (!(tempEntity instanceof EntitySpider tempSpider)) continue;
+                if (tempSpider.entityToAttack != null) continue;
+                tempSpider.entityToAttack = targetPlayer;
+            }
         }
     }
 }

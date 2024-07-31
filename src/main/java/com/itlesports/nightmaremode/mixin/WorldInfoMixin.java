@@ -24,8 +24,8 @@ public abstract class WorldInfoMixin {
         if (this.totalTime == 0L) {
             worldTime = 18000L;
             theGameRules.addGameRule("doMobSpawning", "false");
-        } else if(worldTime == 18600){
+        } else if(worldTime == 20400){
             theGameRules.addGameRule("doMobSpawning", "true");
-        }
+        } // 2 minutes of grace
     }
 }

@@ -5,9 +5,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -25,6 +23,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if(this.isPotionActive(Potion.moveSlowdown)){
             cir.setReturnValue(false);
         }
+    }
+    @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
+    private float reduceExhaustion(float constant){
+        return 0.175f;
+    }
+    @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
+    private float reduceExhaustion1(float constant){
+        return 0.75f;
+    }
+    @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
+    private float reduceExhaustion2(float constant){
+        return 0.25f;
     }
 
 

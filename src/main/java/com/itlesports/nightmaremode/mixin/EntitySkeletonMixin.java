@@ -85,14 +85,14 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                 magmaCube.mountEntity(this);
                 this.setFire(1000000);
 
-            } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.06 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02)) {
+            } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.02 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02)) {
                 // 6% -> 8% -> 10% -> 12%
                 this.setSkeletonType(2); // ice skeleton
                 ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
                 this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
             }
         }
-        // overall chances to be a variant: 6% -> 17% -> 34% -> 45%
+        // overall chances to be a variant: 2% -> 13% -> 30% -> 41%
     }
 
     @Inject(method = "attackEntityWithRangedAttack",

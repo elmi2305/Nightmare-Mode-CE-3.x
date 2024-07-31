@@ -2,11 +2,13 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
@@ -63,4 +65,3 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800 - steelModifier * 79,1,true));
     }
 }
-
