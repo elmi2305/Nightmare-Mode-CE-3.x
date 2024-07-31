@@ -27,7 +27,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     // redirecting hostile call in constructor
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
     private boolean returnTrue(Difficulty instance){return true;}
-    @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue1(Difficulty instance){return true;}
     // done redirecting
     

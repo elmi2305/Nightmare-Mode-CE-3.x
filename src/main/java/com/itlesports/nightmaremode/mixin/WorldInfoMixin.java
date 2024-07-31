@@ -18,7 +18,7 @@ public abstract class WorldInfoMixin {
     private long worldTime;
 
     @Shadow private GameRules theGameRules;
-    private long totalTime;
+    @Shadow private long totalTime;
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
     private void nightSetter(CallbackInfoReturnable<Long> cir) {
         if (this.totalTime == 0L) {

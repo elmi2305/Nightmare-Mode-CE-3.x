@@ -1,4 +1,4 @@
-# Fabric Example Mod
+# Nightmare Mode Addon
 
 - [Quick start guide](#quick-start-guide)
   - [Introduction to the folder structure](#introduction-to-the-folder-structure)

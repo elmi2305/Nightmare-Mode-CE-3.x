@@ -20,9 +20,9 @@ public abstract class EntityZombieMixin extends EntityMob{
     // redirect all hostile calls
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
     private boolean returnTrue(Difficulty instance){return true;}
-    @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue1(Difficulty instance){return true;}
-    @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue2(Difficulty instance){return true;}
 
     @Shadow public abstract boolean isVillager();

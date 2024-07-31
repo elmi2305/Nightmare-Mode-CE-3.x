@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 @Mixin(BlockPortal.class)
-public abstract class BlockPortalMixin{
+public class BlockPortalMixin{
     @Unique boolean runOnce = true;
     @Unique boolean runAgain = true;
     @Unique boolean runEffects = false;
     @Unique long testTime = 2147483647;
 
 
-    @Redirect(method = "updateTick", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V "),remap = false)
+    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
     private void doNothing(){}
 
-    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"),remap = false)
+    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
     private void runHardmodeInitialisation() {
         if(runAgain) {
             if(!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
@@ -38,7 +38,7 @@ public abstract class BlockPortalMixin{
             }
         }
     }
-    @Inject(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"),remap = false)
+    @Inject(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
     private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
         if (runEffects) {
             world.getClosestPlayer(x,y,z,-1).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
@@ -47,7 +47,7 @@ public abstract class BlockPortalMixin{
         }
     }
 
-    @Inject(method = "randomDisplayTick", at = @At("TAIL"), remap = false)
+    @Inject(method = "randomDisplayTick", at = @At("TAIL"))
     private void displayHardmodeStuffInChat(World par1World, int par2, int par3, int par4, Random par5Random, CallbackInfo ci){
         if (runOnce) {
             if(Minecraft.getMinecraft().theWorld.getWorldTime() > testTime){
