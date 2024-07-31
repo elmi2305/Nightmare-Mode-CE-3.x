@@ -1,16 +1,24 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.mob.DireWolfEntity;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityDragon.class)
 public abstract class EntityDragonMixin extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob {
     @Shadow
     private void createEnderPortal(int par1, int par2) {
     }
+
+    @Shadow private Entity target;
+
+    @Unique long attackTimer;
 
     public EntityDragonMixin(World par1World) {
         super(par1World);
@@ -22,6 +30,52 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
         } else {
             BlockEndPortal.bossDefeated = true;
+        }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    private void attackPlayer(CallbackInfo ci){
+        attackTimer++;
+        if(this.target instanceof EntityPlayer && attackTimer > 15 + rand.nextInt(10)){
+            double var3 = target.posX - this.posX;
+            double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
+            double var7 = target.posZ - this.posZ;
+
+            EntityLargeFireball var11 = new EntityLargeFireball(this.worldObj, this, var3, var5, var7);
+            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+
+            float i = rand.nextFloat();
+            if(i<0.2) {
+                EntitySkeleton minion = new EntitySkeleton(this.worldObj);
+                minion.setSkeletonType(1);
+                minion.entityToAttack = target;
+                minion.mountEntity(var11);
+                this.worldObj.spawnEntityInWorld(minion);
+            } else if (i<0.25){
+                EntityCreeper minion = new EntityCreeper(this.worldObj);
+                minion.addPotionEffect(new PotionEffect(Potion.invisibility.id, 100000,0));
+                minion.entityToAttack = target;
+                minion.mountEntity(var11);
+                this.worldObj.spawnEntityInWorld(minion);
+            } else if (i < 0.35){
+                DireWolfEntity minion = new DireWolfEntity(this.worldObj);
+                minion.entityToAttack = target;
+                minion.mountEntity(var11);
+                this.worldObj.spawnEntityInWorld(minion);
+            } else if (i < 0.5){
+                EntityTNTPrimed minion = new EntityTNTPrimed(this.worldObj);
+                minion.fuse = 60;
+                minion.mountEntity(var11);
+                this.worldObj.spawnEntityInWorld(minion);
+            } else if (i < 0.515){
+                EntityWitch minion = new EntityWitch(this.worldObj);
+                minion.entityToAttack = target;
+                minion.mountEntity(var11);
+                this.worldObj.spawnEntityInWorld(minion);
+            }
+            this.worldObj.spawnEntityInWorld(var11);
+            attackTimer = 0;
         }
     }
 }

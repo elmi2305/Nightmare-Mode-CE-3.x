@@ -85,12 +85,12 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
 
     @Unique private void summonMinion(EntityWitch witch){
         for(int i = 0; i<3; i++){
-            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <1) {
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) < 1 || NightmareUtils.getGameProgressMobsLevel(this.worldObj) == 3) {
                 EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
                 this.worldObj.spawnEntityInWorld(tempMinion);
-            } else {
-                EntityCaveSpider tempMinion = new EntityCaveSpider(this.worldObj);
+            } else if(this.dimension != 1){
+                EntitySpider tempMinion = new EntitySpider(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
                 this.worldObj.spawnEntityInWorld(tempMinion);
             }

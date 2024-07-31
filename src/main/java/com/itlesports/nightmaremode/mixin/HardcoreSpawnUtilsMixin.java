@@ -23,7 +23,7 @@ public abstract class HardcoreSpawnUtilsMixin{
         if (BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) {
             overworldTime += 18000L;
             if(overworldTime % 192000 == 114000){
-                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch);
+                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,2);
                 player.inventory.addItemStackToInventory(var1);
             }
             for(int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i) {

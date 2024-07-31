@@ -97,10 +97,10 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
             effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 20,0));
             effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 20,0));
             effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 20,0));
-        }
-        if (target != null) {
-            this.angerNearbyEndermen(target);
-            cir.setReturnValue(target);
+            if (target != null) {
+                this.angerNearbyEndermen(target);
+                cir.setReturnValue(target);
+            }
         }
     }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))

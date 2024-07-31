@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +17,13 @@ public abstract class EntityZombieMixin extends EntityMob{
     public EntityZombieMixin(World par1World) {
         super(par1World);
     }
+    // redirect all hostile calls
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue(Difficulty instance){return true;}
+    @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue1(Difficulty instance){return true;}
+    @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
+    private boolean returnTrue2(Difficulty instance){return true;}
 
     @Shadow public abstract boolean isVillager();
     @Unique public void onKilledBySun() {
