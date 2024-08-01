@@ -1,9 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.JungleSpiderEntity;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -16,7 +18,8 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(EntitySpider.class)
-public class EntitySpiderMixin {
+public abstract class EntitySpiderMixin {
+
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         EntitySpider thisObj = (EntitySpider)(Object)this;
@@ -34,6 +37,14 @@ public class EntitySpiderMixin {
             return 16000 - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3000;
         }
         return constant;
+    }
+
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void dropVenomSacks(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        EntitySpider thisObj = (EntitySpider)(Object)this;
+        if(thisObj.hasWeb() || thisObj.rand.nextInt(10)<= NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) * 2){
+            thisObj.dropItem(Item.fermentedSpiderEye.itemID,1);
+        }
     }
     @Inject(method = "attackEntity", at  = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){

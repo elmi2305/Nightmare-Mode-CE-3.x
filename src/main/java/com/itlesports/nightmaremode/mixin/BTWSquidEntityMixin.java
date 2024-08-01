@@ -43,8 +43,9 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         tempEntity.setPositionAndUpdate(this.posX,this.posY-1,this.posZ);
         this.playSound("mob.endermen.portal",20.0F,1.0F);
     }
-
-
+    @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
+    private int increaseMysteriousGlandDropRate(int constant){return 5;}
+    // makes the random function roll a number between 0 and 5 instead of 0 and 8
 
 
     @Redirect(method = "updateTentacleAttack",

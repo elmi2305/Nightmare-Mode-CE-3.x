@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -25,6 +26,15 @@ public class EntityCreeperMixin {
         thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20+NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*6);
         // 20 -> 26 -> 32 -> 38
     }
+
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        if(thisObj.getDataWatcher().getWatchableObjectByte(17) == 1) {
+            thisObj.dropItem(Item.ghastTear.itemID, 1);
+        }
+    }
+
     @Inject(method = "interact",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/InventoryPlayer;getCurrentItem()Lnet/minecraft/src/ItemStack;",
