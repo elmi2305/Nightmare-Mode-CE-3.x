@@ -62,6 +62,7 @@
     "MillstoneBlockMixin",
     "OvenTileEntityMixin",
     "SpiderWebEntityMixin",
+    "TradeListMixin",
     "UrnEntityMixin",
     "WolfHowlBehaviorMixin",
     "WorldInfoMixin"

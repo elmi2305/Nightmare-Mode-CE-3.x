@@ -18,10 +18,10 @@ public abstract class EntityRendererMixin implements EntityAccess{
     @Shadow
     private Minecraft mc;
 
-    @ModifyArgs(
-            method = "updateCameraAndRender(F)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;setAngles(FF)V", ordinal = 0)
-    )
+    @ModifyArgs(method = "updateCameraAndRender(F)V",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/src/EntityClientPlayerMP;setAngles(FF)V",
+                    ordinal = 0))
     private void slowSmoothCameraInWeb(Args args) {
         if (((EntityAccess)this.mc.thePlayer).getIsInWeb()) {
             args.set(0, (float) args.get(0) * 0.25F);

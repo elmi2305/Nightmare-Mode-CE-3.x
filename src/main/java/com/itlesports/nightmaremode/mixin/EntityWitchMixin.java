@@ -46,17 +46,20 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 0.75f))
     private float modifyPotionVelocity(float constant){
         EntityWitch thisObj = (EntityWitch)(Object)this;
-        double dist = thisObj.getDistanceSqToEntity(this.getAttackTarget());
-        float velocityTuning = 0;
-        if(Math.sqrt(dist)>15){
-            velocityTuning = (float)Math.sqrt(dist)/27;
-            return 0.6f+velocityTuning;
+        if (this.getAttackTarget() != null) {
+            double dist = thisObj.getDistanceSqToEntity(this.getAttackTarget());
+            float velocityTuning = 0;
+            if(Math.sqrt(dist)>15){
+                velocityTuning = (float)Math.sqrt(dist)/27;
+                return 0.6f+velocityTuning;
+            }
+            if (Math.sqrt(dist)>8) {
+                velocityTuning = (float)Math.sqrt(dist)/30;
+                return 0.6f+velocityTuning;
+            }
+            return 0.75f +velocityTuning;
         }
-        if (Math.sqrt(dist)>8) {
-            velocityTuning = (float)Math.sqrt(dist)/30;
-            return 0.6f+velocityTuning;
-        }
-        return 0.75f +velocityTuning;
+        return constant;
     }
 
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
