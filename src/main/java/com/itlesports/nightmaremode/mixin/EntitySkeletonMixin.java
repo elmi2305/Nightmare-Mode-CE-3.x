@@ -145,7 +145,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double(4.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
+                arrow.setDamage(MathHelper.floor_double(2.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
                 // 4 -> 6 -> 8 -> 10
             }
         }

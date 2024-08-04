@@ -2,3 +2,4 @@ accessWidener v1 named
 accessible method btw/entity/mob/BTWSquidEntity launchTentacleAttackInDirection (DDD)V
 accessible field net/minecraft/src/EntityLiving tasks Lnet/minecraft/src/EntityAITasks;
 accessible field net/minecraft/src/BiomeGenBase spawnableMonsterList Ljava/util/List;
+accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPosition (Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V

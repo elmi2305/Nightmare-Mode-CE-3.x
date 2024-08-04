@@ -16,6 +16,8 @@
     "BTWSquidEntityMixin",
     "CampfireTileEntityMixin",
     "CobblestoneBlockMixin",
+    "ComponentScatteredFeatureDesertPyramidMixin",
+    "CraftingRecipeListMixin",
     "DiamondOreBlockMixin",
     "EntityAccess",
     "EntityAnimalInvoker",
@@ -59,7 +61,9 @@
     "HardcoreSpawnUtilsMixin",
     "ItemAppleGoldMixin",
     "JungleSpiderEntityMixin",
+    "KilnBlockMixin",
     "MillstoneBlockMixin",
+    "MillstoneTileEntityMixin",
     "OvenTileEntityMixin",
     "SpiderWebEntityMixin",
     "TradeListMixin",
@@ -68,7 +72,8 @@
     "WorldInfoMixin"
   ],
   "client": [
-    "BTWRenderMapperMixin"
+    "BTWRenderMapperMixin",
+    "GuiIngameMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1

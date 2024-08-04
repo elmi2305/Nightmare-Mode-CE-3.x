@@ -26,15 +26,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
-        return 0.175f;
+        return 0.165f; // jump
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
-        return 0.75f;
+        return 0.75f; // sprint jump
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
-        return 0.25f;
+        return 0.2f; // punch
     }
 
 

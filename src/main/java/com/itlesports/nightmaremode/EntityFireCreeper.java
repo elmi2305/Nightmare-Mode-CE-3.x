@@ -164,7 +164,9 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iFortuneModifier) > 0)) {
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
-
+        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2){
+            this.dropItem(BTWItems.steelNugget.itemID, this.rand.nextInt(6)+1);
+        }
     }
 
     public boolean interact(EntityPlayer player) {
