@@ -22,10 +22,8 @@ import java.util.List;
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     @Shadow(remap = false) private int headCrabDamageCounter;
-
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
-    @Unique
-    int squidOnHeadTimer = 0;
+    @Unique int squidOnHeadTimer = 0;
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -47,6 +45,10 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private int increaseMysteriousGlandDropRate(int constant){return 3;}
     // makes the random function roll a number between 0 and 3 instead of 0 and 8
 
+
+    @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 1))
+    private int increaseInkSacDrops(int constant){return 3;}
+    // adds a flat +2 increase to ink sac drops
 
     @Redirect(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",

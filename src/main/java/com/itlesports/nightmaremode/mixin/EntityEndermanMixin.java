@@ -93,10 +93,10 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
         EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 4);
         EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 8);
         if(effectTarget != null && this.dimension != 1){
-            effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 20,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 20,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 20,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 100,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 100,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 100,0));
             if (target != null) {
                 this.angerNearbyEndermen(target);
                 cir.setReturnValue(target);

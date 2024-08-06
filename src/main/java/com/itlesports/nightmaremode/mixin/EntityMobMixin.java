@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EntityMobMixin{
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
-    private void witchImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+    private void mobMagicImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         EntityMob thisObj = (EntityMob)(Object)this;
-        if((par1DamageSource == DamageSource.magic || par1DamageSource == DamageSource.wither || par1DamageSource == DamageSource.fallingBlock) && thisObj instanceof EntityWitch){
+        if((par1DamageSource == DamageSource.magic || par1DamageSource == DamageSource.wither || par1DamageSource == DamageSource.fallingBlock) && (thisObj instanceof EntityWitch || thisObj instanceof EntitySpider || thisObj instanceof EntitySilverfish || thisObj instanceof EntityCreeper)){
             cir.setReturnValue(false);
         }
     }

@@ -24,8 +24,10 @@ public class EntityBlazeMixin extends EntityMob{
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
         if(thisObj.worldObj != null) {
             int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
-            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10 + progress * 10);
-            // 10 -> 20 -> 30 -> 40, yes the scaling is that strict. it's meant to encourage early fortress exploration
+            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * 8);
+            // 16 -> 24 -> 32 -> 40
+            thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
+
             if (thisObj.rand.nextFloat() < 0.5 && progress > 0) {
                 thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 invisible = true;

@@ -27,4 +27,9 @@ public class EntitySilverfishMixin {
             }
         }
     }
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void dropClay(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        EntitySilverfish thisObj = (EntitySilverfish)(Object)this;
+        thisObj.dropItem(Item.clay.itemID, thisObj.rand.nextInt(3)+1); // drops clay regardless of dimension, dropping more in the end
+    }
 }

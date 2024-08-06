@@ -58,16 +58,7 @@ public class EntityCreeperMixin {
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
-
-        if(par1DamageSource == DamageSource.lava){
-            boolean var2 = thisObj.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-            if (thisObj.getPowered()) {
-                thisObj.worldObj.createExplosion(thisObj, thisObj.posX, thisObj.posY + (double)thisObj.getEyeHeight(), thisObj.posZ, 6, var2);
-            } else {
-                thisObj.worldObj.createExplosion(thisObj, thisObj.posX, thisObj.posY + (double)thisObj.getEyeHeight(), thisObj.posZ, 3, var2);
-            }
-            thisObj.setDead();
-        } else if (par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire){
+        if (par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava){
             thisObj.onKickedByAnimal(null); // primes the creeper instantly
         }
     }
@@ -126,7 +117,7 @@ public class EntityCreeperMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
-    private float injected(float par8) {
+    private float modifyExplosionSize(float par8) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         if(NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>=2){
             return 4;

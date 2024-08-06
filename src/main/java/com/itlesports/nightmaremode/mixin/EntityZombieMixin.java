@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
+import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -18,19 +20,23 @@ public abstract class EntityZombieMixin extends EntityMob{
         super(par1World);
     }
     // redirect all hostile calls
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue(Difficulty instance){return true;}
     @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue1(Difficulty instance){return true;}
     @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue2(Difficulty instance){return true;}
+    // done redirecting
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void addBlockBreakingAITask(World par1World, CallbackInfo ci){
+        this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
+        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
+    }
     @Shadow public abstract boolean isVillager();
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
             EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
             skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            skeleton.setHealth(skeleton.getMaxHealth());
+            skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(4));
             for (int i = 0; i < 5; i++) {
                 skeleton.setCurrentItemOrArmor(0, this.getCurrentItemOrArmor(0));
             }
@@ -44,6 +50,9 @@ public abstract class EntityZombieMixin extends EntityMob{
                     ItemStack var2 = new ItemStack(Item.skull,1,2);
                     skeleton.setCurrentItemOrArmor(4,var2);
                 }
+            }
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && this.rand.nextFloat()<=0.2941){
+                skeleton.setSkeletonType(1);
             }
             this.worldObj.spawnEntityInWorld(skeleton);
             this.setDead();
@@ -131,7 +140,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             at = @At("TAIL"))
     private void chanceToSpawnCrystalHead(CallbackInfo ci){
         if (this.worldObj != null) {
-            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<=0.01f){
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<=0.025f){
                 summonCrystalHeadAtPos();
             }
         }

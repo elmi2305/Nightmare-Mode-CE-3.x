@@ -77,8 +77,8 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
         EntityWitch thisObj = (EntityWitch)(Object)this;
         minionCountdown += thisObj.rand.nextInt(3+progress);
         if(minionCountdown > 600){
-            if(thisObj.getAttackTarget() instanceof EntityPlayer){
-                this.summonMinion(thisObj);
+            if(thisObj.getAttackTarget() instanceof EntityPlayer player){
+                this.summonMinion(thisObj, player);
                 minionCountdown = this.rand.nextInt(15)*10;
                 // this formula produces 3 silverfish around every 300 ticks spent targeting the player
             }
@@ -86,15 +86,17 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     }
 
 
-    @Unique private void summonMinion(EntityWitch witch){
+    @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i<3; i++){
             if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) < 1 || NightmareUtils.getGameProgressMobsLevel(this.worldObj) == 3) {
                 EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
+                tempMinion.setAttackTarget(player);
                 this.worldObj.spawnEntityInWorld(tempMinion);
             } else if(this.dimension != 1){
                 EntitySpider tempMinion = new EntitySpider(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
+                tempMinion.setAttackTarget(player);
                 this.worldObj.spawnEntityInWorld(tempMinion);
             }
         }

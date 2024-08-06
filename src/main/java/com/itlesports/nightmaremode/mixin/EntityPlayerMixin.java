@@ -9,6 +9,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccess{
     @Shadow public abstract ItemStack getHeldItem();
@@ -35,6 +37,28 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
         return 0.2f; // punch
+    }
+
+    @Inject(method = "onItemUseFinish", at = @At("HEAD"))
+    private void manageWaterDrinking(CallbackInfo ci){
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+        if(thisObj.getItemInUse().itemID == Item.potion.itemID && thisObj.getItemInUse().getItemDamage() == 0){
+            if (this.getFire()>=1) {
+                this.invokeSetFire(0);
+            }
+            if(this.isPotionActive(Potion.confusion.id)){
+                this.removePotionEffect(Potion.confusion.id);
+            }
+            if(this.isPotionActive(Potion.blindness.id)){
+                this.removePotionEffect(Potion.blindness.id);
+            }
+            if(this.isPotionActive(Potion.weakness.id)){
+                this.removePotionEffect(Potion.weakness.id);
+            }
+            if(this.isPotionActive(Potion.moveSlowdown.id)){
+                this.removePotionEffect(Potion.moveSlowdown.id);
+            }
+        }
     }
 
 

@@ -57,7 +57,7 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         entityPlayer.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 600, 0));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 2400, 0));
         if(!entityPlayer.isPotionActive(Potion.damageBoost)) {
-            entityPlayer.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 400, 1));
+            entityPlayer.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 600, 1));
         }
         entityPlayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 600, 1));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 600, 1));

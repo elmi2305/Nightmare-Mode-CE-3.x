@@ -21,8 +21,8 @@ public abstract class EntityAnimalMixin extends EntityAgeable implements EntityA
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityAnimal thisObj = (EntityAnimal)(Object)this;
-        EntityPlayer player = (EntityPlayer) this.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, this.boundingBox.expand(4.0, 3.0, 4.0), this);
-        if((player != null && (!player.isSneaking() || checkNullAndCompareID(player.getHeldItem()))) && !(thisObj instanceof EntityWolf)){
+        EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(thisObj,4);
+        if((player != null && (!player.isSneaking() || checkNullAndCompareID(player.getHeldItem()))) && !(thisObj instanceof EntityWolf) && !thisObj.getLeashed()){
             this.invokeOnNearbyPlayerStartles(player);
         }
     }
@@ -31,7 +31,7 @@ public abstract class EntityAnimalMixin extends EntityAgeable implements EntityA
     public boolean checkNullAndCompareID(ItemStack par2ItemStack){
         if(par2ItemStack != null){
             switch(par2ItemStack.itemID){
-                case 2,11,19,20,23,27,30,22324:
+                case 2,11,19,20,23,27,30,22580:
                     return true;
             }
         }

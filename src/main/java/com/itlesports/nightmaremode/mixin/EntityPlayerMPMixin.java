@@ -53,13 +53,13 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         if(Objects.equals(this.getCurrentItemOrArmor(3), new ItemStack(BTWItems.plateBreastplate))) {
             steelModifier += 5;
         }
-        if(Objects.equals(this.getCurrentItemOrArmor(4), new ItemStack(BTWItems.plateHelmet))) {
+        if(Objects.equals(this.getCurrentItemOrArmor(4), new ItemStack(BTWItems.plateHelmet)) || Objects.equals(this.getCurrentItemOrArmor(4), new ItemStack(BTWItems.enderSpectacles))) {
             steelModifier += 1;
         }
 
 
         this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),120 - steelModifier * 11,10 - steelModifier,true));
-        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - steelModifier * 50,3,true));
+        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - steelModifier * 79,3,true));
         this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),300 - steelModifier * 29,0,true));
         this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),300 - steelModifier * 29,0,true));
         this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800 - steelModifier * 79,1,true));

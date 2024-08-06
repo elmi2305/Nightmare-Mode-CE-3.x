@@ -14,7 +14,7 @@ public class MillstoneTileEntityMixin {
             ,at = @At(value = "INVOKE",
             target = "Lbtw/block/tileentity/MillstoneTileEntity;checkForNauseateNearbyPlayers(Lbtw/block/blocks/MillstoneBlock;)V"),remap = false)
     private void doNothing(MillstoneTileEntity instance, MillstoneBlock block){}
-    @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 200),remap = false)
+    @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 200))
     private int fasterMillstones(int constant){
         return 100;
     }

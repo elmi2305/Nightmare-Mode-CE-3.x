@@ -17,8 +17,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 0),remap = false)
     private static void lowerTrades0(Args args) {
-        args.set(0, 20);
-        args.set(1, 40); // dirt 48 - 64
+        args.set(0, 16);
+        args.set(1, 32); // dirt 48 - 64
     }
     // wood start
     @ModifyArgs(method = "addFarmerTrades",
@@ -27,7 +27,7 @@ public class TradeListMixin {
                     ordinal = 1),remap = false)
     private static void lowerTrades1(Args args) {
         args.set(0, 12);
-        args.set(1, 30);
+        args.set(1, 24);
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -35,7 +35,7 @@ public class TradeListMixin {
                     ordinal = 2),remap = false)
     private static void lowerTrades2(Args args) {
         args.set(0, 12);
-        args.set(1, 30);
+        args.set(1, 24);
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -43,7 +43,7 @@ public class TradeListMixin {
                     ordinal = 3),remap = false)
     private static void lowerTrades3(Args args) {
         args.set(0, 12);
-        args.set(1, 30);
+        args.set(1, 24);
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -51,7 +51,7 @@ public class TradeListMixin {
                     ordinal = 4),remap = false)
     private static void lowerTrades4(Args args) {
         args.set(0, 12);
-        args.set(1, 30);
+        args.set(1, 24);
     }
     // wood end
     @ModifyArgs(method = "addFarmerTrades",
@@ -59,7 +59,7 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 5),remap = false)
     private static void lowerTrades5(Args args) {
-        args.set(0, 9);
+        args.set(0, 6);
         args.set(1, 12); // wool 16 - 24
     }
     @ModifyArgs(method = "addFarmerTrades",
@@ -67,16 +67,16 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 6),remap = false)
     private static void lowerTrades6(Args args) {
-        args.set(0, 24);
-        args.set(1, 32); // bone meal 32-48
+        args.set(0, 12);
+        args.set(1, 20); // bone meal 32-48
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 7),remap = false)
     private static void lowerTrades7(Args args) {
-        args.set(0, 12);
-        args.set(1, 24); // flour 24 - 32
+        args.set(0, 6);
+        args.set(1, 12); // flour 24 - 32
     }
     // 8 skipped, sugar 10-20
     @ModifyArgs(method = "addFarmerTrades",
@@ -100,8 +100,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 11),remap = false)
     private static void lowerTrades11(Args args) {
-        args.set(0, 6);
-        args.set(1, 12); // hemp seed 24 - 32
+        args.set(0, 4);
+        args.set(1, 8); // hemp seed 24 - 32
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -117,8 +117,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 14),remap = false)
     private static void lowerTrades14(Args args) {
-        args.set(0, 6);
-        args.set(1, 12); // wheat 8-16
+        args.set(0, 2);
+        args.set(1, 8); // wheat 8-16
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -166,7 +166,7 @@ public class TradeListMixin {
                     ordinal = 20),remap = false)
     private static void lowerTrades20(Args args) {
         args.set(0, 1);
-        args.set(1, 3); // scrambled egg 4-5
+        args.set(1, 2); // scrambled egg 4-5
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -174,7 +174,7 @@ public class TradeListMixin {
                     ordinal = 21),remap = false)
     private static void lowerTrades21(Args args) {
         args.set(0, 1);
-        args.set(1, 3); // light block 2-4
+        args.set(1, 2); // light block 2-4
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -189,8 +189,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 23),remap = false)
     private static void lowerTrades23(Args args) {
-        args.set(0, 4);
-        args.set(1, 8); // cookie 8-10
+        args.set(0, 3);
+        args.set(1, 6); // cookie 8-10
     }
     @ModifyArgs(method = "addFarmerTrades",
             at = @At(value = "INVOKE",
@@ -235,7 +235,7 @@ public class TradeListMixin {
                     ordinal = 2),remap = false)
     private static void lowerLibrarianTrades2(Args args) {
         args.set(0, 6);
-        args.set(1, 12); // feather 16-24
+        args.set(1, 9); // feather 16-24
     }
     // 4 skipped - redstone 32-48
     @ModifyArgs(method = "addLibrarianTrades",
@@ -244,7 +244,7 @@ public class TradeListMixin {
                     ordinal = 4),remap = false)
     private static void lowerLibrarianTrades4(Args args) {
         args.set(0, 1);
-        args.set(1, 3); // latch 4-6
+        args.set(1, 2); // latch 4-6
     }
     @ModifyArgs(method = "addLibrarianTrades",
             at = @At(value = "INVOKE",
@@ -289,7 +289,7 @@ public class TradeListMixin {
                     ordinal = 14),remap = false)
     private static void lowerLibrarianTrades14(Args args) {
         args.set(0, 2);
-        args.set(1, 6); // magma cream 8-12
+        args.set(1, 3); // magma cream 8-12
     }
     // skipped 15 blaze powder 8-12
     @ModifyArgs(method = "addLibrarianTrades",
@@ -308,8 +308,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 0),remap = false)
     private static void priest0LowerTrades(Args args) {
-        args.set(0, 6);
-        args.set(1, 12); // hemp 16-24
+        args.set(0, 5);
+        args.set(1, 10); // hemp 16-24
     }
     @ModifyArgs(method = "addPriestTrades",
             at = @At(value = "INVOKE",
@@ -324,8 +324,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 2),remap = false)
     private static void priest2LowerTrades(Args args) {
-        args.set(0, 12);
-        args.set(1, 28); // cactus 32-48
+        args.set(0, 10);
+        args.set(1, 22); // cactus 32-48
     }
 
     @ModifyArg(method = "addPriestTrades", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellItemStep;item(I)Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;",ordinal = 6),remap = false)
@@ -434,15 +434,15 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 15),remap = false)
     private static void Butcher15LowerTrades(Args args) {
-        args.set(0, 5);
-        args.set(1, 10); // carrot 10-16
+        args.set(0, 2);
+        args.set(1, 4); // carrot 10-16
     }
     @ModifyArgs(method = "addButcherTrades",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 16),remap = false)
     private static void Butcher16LowerTrades(Args args) {
-        args.set(0, 5);
-        args.set(1, 10); // potato 10-16
+        args.set(0, 2);
+        args.set(1, 4); // potato 10-16
     }
 }

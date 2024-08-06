@@ -30,5 +30,4 @@ public class EntityMixin {
             thisObj.attackEntityFrom(DamageSource.inFire, par1);
         }
     }
-
 }

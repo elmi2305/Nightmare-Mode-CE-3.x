@@ -8,4 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface EntityAccess {
     @Accessor("isInWeb")
     boolean getIsInWeb();
+    @Accessor("fire")
+    int getFire();
+    @Accessor("fire")
+    void invokeSetFire(int tick);
 }

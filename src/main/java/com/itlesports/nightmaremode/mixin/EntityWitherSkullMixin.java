@@ -14,7 +14,7 @@ public class EntityWitherSkullMixin {
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
         EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
-        if(thisObj.rand.nextFloat()<0.25){
+        if(thisObj.rand.nextFloat()<0.85){
             return 1;
         }
         return 2;

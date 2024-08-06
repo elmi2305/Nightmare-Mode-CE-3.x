@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
@@ -30,6 +31,11 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue1(Difficulty instance){return true;}
     // done redirecting
+
+    @ModifyArg(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int modifyChanceToSpawnWitherSkelly(int bound){
+        return 4; // from 1/8 to 1/4 chance
+    }
     
     @Inject(method = "<init>",
             at = @At(value = "TAIL"))
@@ -40,6 +46,9 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
+        if (this.getSkeletonType() == 1){
+            return 0.3;
+        }
         if (this.worldObj != null) {
             return constant+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
         } else return 0.25;
@@ -48,8 +57,14 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*6);
-            // 16.0 -> 22.0 -> 28.0 -> 34.0
+            if (this.getSkeletonType()!=1) {
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 6);
+                // 16.0 -> 22.0 -> 28.0 -> 34.0
+            } else {
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24 + NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 4);
+                // 24.0 -> 28.0 -> 32.0 -> 36.0
+            }
+
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1));
             // not really important this is just melee damage
         }
@@ -111,7 +126,12 @@ public abstract class EntitySkeletonMixin extends EntityMob {
         // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
-
+    @Inject(method = "attackEntityFrom", at = @At(value = "RETURN"), cancellable = true)
+    private void manageFallDamageImmunity(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir){
+        if (this.getSkeletonType() == 1 && this.dimension == 1 && damageSource == DamageSource.fall){
+            cir.setReturnValue(false);
+        }
+    }
 
 
     @Inject(method = "attackEntityWithRangedAttack",

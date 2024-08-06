@@ -3,11 +3,11 @@ package com.itlesports.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
+import btw.world.util.WorldUtils;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.src.BiomeGenBase;
-import net.minecraft.src.EnumCreatureType;
-import net.minecraft.src.Packet24MobSpawn;
-import net.minecraft.src.SpawnListEntry;
+import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.List;
 public class NightmareMode extends BTWAddon implements ModInitializer {
     private static NightmareMode instance;
 
-//    private NightmareMode() {
-//    }
+    public NightmareMode() {
+        super();
+    }
 
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
-//        AddBiomeSpawn();
     }
 
     public static NightmareMode getInstance() {
@@ -63,15 +63,4 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
             return entityToSpawn;
         });
     }
-//
-//    private void AddBiomeSpawn() {
-//        BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.extremeHillsEdge.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//        BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 15, 2, 2));
-//        BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 10, 2, 2));
-//    }
 }

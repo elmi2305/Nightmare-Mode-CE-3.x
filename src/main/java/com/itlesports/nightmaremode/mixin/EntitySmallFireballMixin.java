@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntitySmallFireball.class)
 public class EntitySmallFireballMixin {
-    @Unique boolean hitMagmaCube;
+    @Unique boolean illegalHit;
     @Inject(method = "onImpact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySmallFireball;setDead()V", shift = At.Shift.BEFORE))
     private void helpWithIgnoringMagmaCubes(MovingObjectPosition par1, CallbackInfo ci){
-        hitMagmaCube = par1.entityHit instanceof EntityMagmaCube;
+        illegalHit = par1.entityHit instanceof EntityMagmaCube || par1.entityHit instanceof EntitySpider;
     }
     @Redirect(method = "onImpact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySmallFireball;setDead()V"))
     private void ignoreMagmaCubeCollision(EntitySmallFireball instance){
         EntitySmallFireball thisObj = (EntitySmallFireball)(Object)this;
-        if(!hitMagmaCube){thisObj.setDead();}
+        if(!illegalHit){thisObj.setDead();}
     }
 
     @Inject(method = "onImpact", at = @At("HEAD"))

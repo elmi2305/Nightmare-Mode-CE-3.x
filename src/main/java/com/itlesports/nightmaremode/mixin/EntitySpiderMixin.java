@@ -118,7 +118,7 @@ public abstract class EntitySpiderMixin {
         }
     }
 
-
+    // causes a crash. will fix someday
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
         if (spider.worldObj != null) {

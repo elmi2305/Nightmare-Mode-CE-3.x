@@ -22,6 +22,11 @@ public abstract class EntityWitherMixin extends EntityMob {
         super(par1World);
     }
 
+    @ModifyConstant(method = "isArmored", constant = @Constant(floatValue = 2.0f))
+    private float witherMeleeSooner(float constant){
+        return 1.66f; // starts melee at 60% health instead of 50%. this means 180hp instead of 150hp
+    }
+
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void attackTimer(CallbackInfo ci){
         if (witherAttackTimer<2000) {
@@ -43,11 +48,19 @@ public abstract class EntityWitherMixin extends EntityMob {
         }
     }
 
-//    @ModifyConstant(method = "attackEntityFrom", constant = @Constant(intValue = 20))
-//    private int lowerCooldownUntilBlockBreak(int constant){
-//        return 1;
-//    }
-    // doesn't actually do what it's supposed to
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
+    private void manageWitherImmunities(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        if (par1DamageSource.isExplosion() || par1DamageSource.isFireDamage() || par1DamageSource.isMagicDamage()){
+            cir.setReturnValue(false);
+        }
+    }
+
+    @ModifyArg(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
+    private float witherDamageCap(float par2) {
+        if(par2 > 200){return 400;} // if you want to instakill it with creative
+        if(par2 > 20){return 20;}
+        return par2;
+    }
 
     @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){

@@ -19,7 +19,7 @@ public class FireStarterItemMixin extends Item {
     @Inject(method = "<init>", at = @At("TAIL"),remap = false)
     private void modifyFirePLoughDurability(int iItemID, int iMaxUses, float fExhaustionPerUse, CallbackInfo ci){
         if(fExhaustionPerUse==0.05F){
-            this.setMaxDamage(190);
+            this.setMaxDamage(200);
         }
     }
 }
