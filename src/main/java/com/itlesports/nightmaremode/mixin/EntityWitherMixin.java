@@ -62,9 +62,9 @@ public abstract class EntityWitherMixin extends EntityMob {
         return par2;
     }
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
+    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",shift = At.Shift.AFTER))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getHealth()<30 && !hasRevived){
+        if(this.getHealth()<21 && !hasRevived){
             this.setHealth(300);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("A God does not fear death.");

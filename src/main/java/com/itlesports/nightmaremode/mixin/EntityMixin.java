@@ -20,7 +20,7 @@ public class EntityMixin {
         if(thisObject.riddenByEntity instanceof EntityEnderCrystal){
             return -0.5125; // so the ender crystal base is barely underground
         } else if (thisObject.riddenByEntity instanceof BTWSquidEntity){
-            return thisObject.height-2;
+            return thisObject.getEyeHeight();
         } else {return (double)thisObject.height * 0.75;}
     }
     @Redirect(method = "onStruckByLightning(Lbtw/entity/LightningBoltEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;dealFireDamage(I)V"))

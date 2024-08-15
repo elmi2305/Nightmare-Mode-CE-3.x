@@ -21,7 +21,7 @@ public abstract class EntityAnimalMixin extends EntityAgeable implements EntityA
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityAnimal thisObj = (EntityAnimal)(Object)this;
-        EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(thisObj,4);
+        EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(thisObj,5);
         if((player != null && (!player.isSneaking() || checkNullAndCompareID(player.getHeldItem()))) && !(thisObj instanceof EntityWolf) && !thisObj.getLeashed()){
             this.invokeOnNearbyPlayerStartles(player);
         }

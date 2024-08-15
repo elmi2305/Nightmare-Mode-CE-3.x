@@ -42,14 +42,14 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         this.playSound("mob.endermen.portal",20.0F,1.0F);
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
-    private int increaseMysteriousGlandDropRate(int constant){return 3;}
-    // makes the random function roll a number between 0 and 3 instead of 0 and 8
+    private int increaseMysteriousGlandDropRate(int constant){return 2;}
+    // makes the random function roll a number between 0 and 2 instead of 0 and 8
 
-
-    @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 1))
-    private int increaseInkSacDrops(int constant){return 3;}
     // adds a flat +2 increase to ink sac drops
-
+    @Inject(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;",ordinal = 0))
+    private void dropMoreSacs(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        this.entityDropItem(new ItemStack(Item.dyePowder, 2, 0), 0.0f);
+    }
     @Redirect(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
@@ -72,7 +72,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private void doScaryThingsOnHead(CallbackInfo ci) {
         squidOnHeadTimer++;
         if (rand.nextInt(25)==0) {
-            this.playSound("mob.ghast.scream",2.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if(this.ridingEntity instanceof EntityPlayer headcrabbedPlayer) {

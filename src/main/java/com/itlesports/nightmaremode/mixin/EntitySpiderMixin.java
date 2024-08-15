@@ -7,11 +7,9 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
@@ -19,6 +17,14 @@ import java.util.Random;
 
 @Mixin(EntitySpider.class)
 public abstract class EntitySpiderMixin {
+
+    @Inject(method = "shouldContinueAttacking", at = @At("RETURN"), cancellable = true)
+    private void doNotAttackWitches(float fDistanceToTarget, CallbackInfoReturnable<Boolean> cir){
+        EntitySpider thisObj = (EntitySpider)(Object)this;
+        if(thisObj.entityToAttack instanceof EntityWitch){
+            cir.setReturnValue(false);
+        }
+    }
 
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
@@ -45,6 +51,10 @@ public abstract class EntitySpiderMixin {
         if(thisObj.hasWeb() || thisObj.rand.nextInt(10)<= NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) * 2){
             thisObj.dropItem(Item.fermentedSpiderEye.itemID,1);
         }
+    }
+    @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int increaseSpiderEyeRates(int bound){
+        return 4;
     }
     @Inject(method = "attackEntity", at  = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){

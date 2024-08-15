@@ -3,3 +3,6 @@ accessible method btw/entity/mob/BTWSquidEntity launchTentacleAttackInDirection 
 accessible field net/minecraft/src/EntityLiving tasks Lnet/minecraft/src/EntityAITasks;
 accessible field net/minecraft/src/BiomeGenBase spawnableMonsterList Ljava/util/List;
 accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPosition (Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V
+accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/EntityAITasks;
+accessible class net/minecraft/src/CallableLevelSeed
+accessible class net/minecraft/src/CallableLevelSpawnLocation

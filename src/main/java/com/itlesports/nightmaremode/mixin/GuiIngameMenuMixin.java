@@ -14,4 +14,8 @@ public class GuiIngameMenuMixin {
     private void crashGame(Minecraft instance, GuiScreen var3) throws Exception {
         throw new Exception("Player is trying to cheat.");
     }
+    @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 4))
+    private String displayCheatText(String string){
+        return "Turn Cheats On";
+    }
 }

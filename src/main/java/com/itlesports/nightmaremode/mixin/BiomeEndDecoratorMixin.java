@@ -6,10 +6,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import paulscode.sound.SoundSystem;
 
 @Mixin(BiomeEndDecorator.class)
 
-public class BiomeEndDecoratorMixin extends BiomeDecorator{
+public abstract class BiomeEndDecoratorMixin extends BiomeDecorator implements SoundManagerAccessor{
     public BiomeEndDecoratorMixin(BiomeGenBase par1BiomeGenBase) {
         super(par1BiomeGenBase);
     }
@@ -21,5 +22,11 @@ public class BiomeEndDecoratorMixin extends BiomeDecorator{
         EntityDragon var4 = new EntityDragon(this.currentWorld);
         var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
         this.currentWorld.spawnEntityInWorld(var4);
+//        this.currentWorld.playAuxSFXAtEntity(); will play theme song soon
+//        this.getSoundSystem().backgroundMusic("nmBossTheme","nmBoss.ogg",true);
+//        this.getSoundSystem().setVolume("nmBossTheme", 0.5f);
+//        this.getSoundSystem().play("nmBossTheme");
+//        Minecraft.getMinecraft().sndManager.addMusic("nmBoss");
+//        Minecraft.getMinecraft().sndManager.playSound("nmBoss",1f,1f,1f,2f,0.5f);
     }
 }

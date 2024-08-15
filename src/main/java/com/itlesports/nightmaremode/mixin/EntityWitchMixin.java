@@ -65,10 +65,15 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void chanceToTeleport(EntityLivingBase par1EntityLivingBase, float par2, CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
-        if(thisObj.getAttackTarget() instanceof EntityPlayer targetPlayer && getDistanceSqToEntity(targetPlayer)>256 && this.rand.nextFloat()<0.95){
-            thisObj.getLookHelper().setLookPosition(targetPlayer.posX,targetPlayer.posY+1,targetPlayer.posZ,30,20f);
-            System.out.println(thisObj.rotationYaw);
-            thisObj.worldObj.spawnEntityInWorld(new EntityEnderPearl(thisObj.worldObj, thisObj));
+        if(thisObj.getAttackTarget() instanceof EntityPlayer targetPlayer && getDistanceSqToEntity(targetPlayer)>256){
+            EntityEnderPearl pearl = new EntityEnderPearl(thisObj.worldObj, thisObj);
+            thisObj.worldObj.spawnEntityInWorld(pearl);
+            double var1 = targetPlayer.posX - thisObj.posX;
+            double var2 = targetPlayer.posZ - thisObj.posZ;
+            Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
+            vector.normalize();
+            pearl.motionX = vector.xCoord * 0.1;
+            pearl.motionZ = vector.zCoord * 0.1;
         }
     }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))

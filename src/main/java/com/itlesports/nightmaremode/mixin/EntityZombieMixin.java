@@ -24,12 +24,13 @@ public abstract class EntityZombieMixin extends EntityMob{
     private boolean returnTrue1(Difficulty instance){return true;}
     @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean returnTrue2(Difficulty instance){return true;}
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
+    private boolean returnTrue0(Difficulty instance){return true;}
     // done redirecting
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addBlockBreakingAITask(World par1World, CallbackInfo ci){
-        this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
-        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
+        this.getNavigator().setBreakDoors(true);
     }
     @Shadow public abstract boolean isVillager();
     @Unique public void onKilledBySun() {
@@ -165,8 +166,9 @@ public abstract class EntityZombieMixin extends EntityMob{
                     || this.getHeldItem().equals(new ItemStack(Item.axeGold))
                     || this.getHeldItem().equals(new ItemStack(BTWItems.boneClub))) {
                 return 0;
-            } else {return 0.99f;}
-        } else {return 0.99f;}
+            }
+        }
+        return 0.99f;
     }
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))

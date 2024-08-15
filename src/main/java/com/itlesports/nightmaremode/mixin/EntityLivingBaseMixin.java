@@ -6,9 +6,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin extends Entity {
+public abstract class EntityLivingBaseMixin extends Entity implements EntityLivingBaseInvoker,EntityAccess{
     @Shadow public abstract boolean isEntityAlive();
 
     public EntityLivingBaseMixin(World par1World) {
@@ -25,7 +26,7 @@ public abstract class EntityLivingBaseMixin extends Entity {
     @Inject(method = "jump", at = @At("TAIL"))
     private void breakLeafBlockBelowEntity(CallbackInfo ci){
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
-        if (!(thisObj instanceof EntityMob && this.worldObj != null)) {
+        if (!(thisObj instanceof EntityMob && this.worldObj != null) && !(thisObj instanceof EntityOcelot || thisObj instanceof EntityChicken)) {
             MinecraftServer server = MinecraftServer.getServer();
             for(double i = -0.3d; i <= 0.3d; i += 0.3d){
                 for(double j = -0.3d;j <= 0.3d;j += 0.3d) {

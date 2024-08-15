@@ -47,16 +47,22 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
         if (this.getSkeletonType() == 1){
-            return 0.3;
+            return 0.35;
         }
         if (this.worldObj != null) {
-            return constant+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
-        } else return 0.25;
-        // 0.25 -> 0.265 -> 0.28 -> 0.295
+            return 0.3+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
+        } else return 0.3;
+        // 0.3 -> 0.315 -> 0.33 -> 0.345
+    }
+
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityAIWatchClosest;<init>(Lnet/minecraft/src/EntityLiving;Ljava/lang/Class;F)V"),index = 2)
+    private float modifyDetectionRadius(float f){
+        return 24f;
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0);
             if (this.getSkeletonType()!=1) {
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 6);
                 // 16.0 -> 22.0 -> 28.0 -> 34.0
@@ -165,8 +171,8 @@ public abstract class EntitySkeletonMixin extends EntityMob {
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double(2.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
-                // 4 -> 6 -> 8 -> 10
+                arrow.setDamage(MathHelper.floor_double(3.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
+                // 5 -> 7 -> 9 -> 11
             }
         }
     }

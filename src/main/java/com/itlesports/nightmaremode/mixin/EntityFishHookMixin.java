@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class EntityFishHookMixin {
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 8))
     private int increaseBiteOdds(int constant){
-        return 15;
+        return 10;
     }
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "nightmaremode",
+  "id": "nightmare_mode",
   "version": "${version}",
 
   "name": "Nightmare Mode",
@@ -21,9 +21,15 @@
     "main": [
       "com.itlesports.nightmaremode.NightmareMode"
     ],
+    "btw:addon": [
+      "btw.community.nightmaremode.NightmareMode"
+    ]
+  },
     "preLaunch": [
 
-    ]
+    ],
+  "custom": {
+    "btw:addon_prefix": "NM"
   },
   "mixins": [
     "nightmaremode.mixins.json"
