@@ -16,18 +16,19 @@ public class BlockMixin {
     private void additionalDropsForToolHarvested(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6, CallbackInfo ci){
         Block thisObj = (Block)(Object)this;
         if (par2EntityPlayer.getHeldItem() != null) {
-            if(par2EntityPlayer.getHeldItem().itemID == Item.pickaxeIron.itemID){
+            if(par2EntityPlayer.getHeldItem().itemID == Item.pickaxeIron.itemID && par1World.rand.nextInt(3) <= 1){
                 if (thisObj.blockID == Block.oreIron.blockID) {
+                    // 2/3 chance
                     par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.ironOreChunk)));
                 } else if(thisObj.blockID == Block.oreGold.blockID){
                     par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.goldOreChunk)));
                 }
-            } else if(par2EntityPlayer.getHeldItem().itemID == Item.pickaxeDiamond.itemID){
-                int bonus = par1World.rand.nextInt(4)==0 ? 2 : 3;
+            } else if((par2EntityPlayer.getHeldItem().itemID == Item.pickaxeDiamond.itemID || par2EntityPlayer.getHeldItem().itemID == BTWItems.steelPickaxe.itemID) && par1World.rand.nextInt(4) <= 2){
+                // 3/4 chance
                 if (thisObj.blockID == Block.oreIron.blockID) {
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.ironOreChunk, bonus)));
+                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.ironOreChunk)));
                 } else if(thisObj.blockID == Block.oreGold.blockID){
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.goldOreChunk, bonus)));
+                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.goldOreChunk)));
                 }
             }
         }

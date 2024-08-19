@@ -6,3 +6,4 @@ accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPositi
 accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/EntityAITasks;
 accessible class net/minecraft/src/CallableLevelSeed
 accessible class net/minecraft/src/CallableLevelSpawnLocation
+accessible field net/minecraft/src/EntityArrow inGround Z

@@ -19,6 +19,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
+    @Unique int jumpCooldown = 0;
 
 
     @ModifyConstant(method = "setSkeletonType", constant = @Constant(floatValue = 2.34f))
@@ -78,6 +79,30 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNothing(EntitySkeleton instance){}
+
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    private void manageJumpShot(CallbackInfo ci){
+        if (this.worldObj != null && this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID) {
+            EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
+            jumpCooldown ++;
+            if(jumpCooldown>70){
+                this.motionX = 0;
+                this.motionZ = 0;
+            }
+            if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && jumpCooldown >= 60){
+                this.motionY = 0.45;
+                jumpCooldown = 0;
+            }
+        }
+    }
+
+
+    @Unique private boolean canSeeIfJumped(EntityLiving skelly, Entity targetPlayer){
+        return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double)skelly.getEyeHeight()+1, skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double)targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) == null;
+    }
+    @Unique private boolean cannotSeeNormally(EntityLiving skelly, Entity targetPlayer){
+        return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
+    }
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){

@@ -43,7 +43,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onItemUseFinish", at = @At("HEAD"))
     private void manageWaterDrinking(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        if(thisObj.getItemInUse().itemID == Item.potion.itemID && thisObj.getItemInUse().getItemDamage() == 0){
+        if(thisObj.getItemInUse() != null && (thisObj.getItemInUse().itemID == Item.potion.itemID && thisObj.getItemInUse().getItemDamage() == 0)){
             if (this.getFire()>=1) {
                 this.invokeSetFire(0);
             }

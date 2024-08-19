@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import net.minecraft.src.BiomeDecorator;
+import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.WorldGenMinable;
 import net.minecraft.src.WorldGenerator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,8 @@ public class BiomeDecoratorMixin {
     protected WorldGenerator silverfishGenSecondStrata;
     @Unique
     protected WorldGenerator silverfishGenThirdStrata;
+    @Unique
+    protected WorldGenerator lavaPillowGenThirdStrata;
 
     @Inject(
             method = "<init>",
@@ -28,5 +31,10 @@ public class BiomeDecoratorMixin {
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 4);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void generateLavaPillows(CallbackInfo ci){
+        this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 32);
     }
 }
