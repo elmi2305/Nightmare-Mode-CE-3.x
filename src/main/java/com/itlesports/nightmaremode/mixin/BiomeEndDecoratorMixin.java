@@ -22,7 +22,7 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator implements S
         EntityDragon var4 = new EntityDragon(this.currentWorld);
         var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
         this.currentWorld.spawnEntityInWorld(var4);
-        System.out.println(this.getSoundSystem());
+//        System.out.println(this.getSoundSystem()); crashes
 //        this.getSoundSystem().backgroundMusic("nmBossTheme","nmBoss",true);
 //        this.getSoundSystem().setVolume("nmBossTheme", 0.5f);
 //        this.getSoundSystem().play("nmBossTheme");

@@ -142,8 +142,8 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     @Inject(method = "launchTentacleAttackInDirection",
             at = @At(value = "FIELD",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackTargetZ:D",
-                    shift = At.Shift.AFTER),
-            locals = LocalCapture.CAPTURE_FAILHARD)
+                    shift = At.Shift.AFTER)
+    )
     private void editTentacleVectors(double dUnitVectorToTargetX, double dUnitVectorToTargetY, double dUnitVectorToTargetZ, CallbackInfo ci){
         this.tentacleAttackTargetX = this.posX + dUnitVectorToTargetX * 8.0;
         this.tentacleAttackTargetY = this.posY + (double)(this.height / 2.0F) + dUnitVectorToTargetY * 8.0;
@@ -162,7 +162,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         double dDeltaY = thisObject.entityToAttack.posY + (double) (thisObject.entityToAttack.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
         double dDeltaZ = thisObject.entityToAttack.posZ - this.posZ;
         double dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
-        if (dDistSqToTarget < 80.0) {
+        if (dDistSqToTarget < 81.0) {
             dDeltaY = thisObject.entityToAttack.posY + (double) thisObject.entityToAttack.getEyeHeight() - (this.posY + (double) (this.height / 2.0F));
             dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
 

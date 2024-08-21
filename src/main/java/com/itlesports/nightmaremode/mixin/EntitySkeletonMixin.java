@@ -26,12 +26,6 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     private float shortWitherSkeletons(float constant){
         return 1.8f;
     }
-    // redirecting hostile call in constructor
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue(Difficulty instance){return true;}
-    @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
-    private boolean returnTrue1(Difficulty instance){return true;}
-    // done redirecting
 
     @ModifyArg(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int modifyChanceToSpawnWitherSkelly(int bound){
@@ -74,6 +68,7 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1));
             // not really important this is just melee damage
+            // 3 4 5 6
         }
     }
 
@@ -167,8 +162,8 @@ public abstract class EntitySkeletonMixin extends EntityMob {
 
     @Inject(method = "attackEntityWithRangedAttack",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow){
+                    target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"))
+    private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if (this.worldObj != null) {
             if(this.getSkeletonType()==3){
                 for(int i = -2; i<=2; i+=2) {

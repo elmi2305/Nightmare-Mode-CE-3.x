@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 
 @Mixin(EntityArrow.class)
-public class EntityArrowMixin {
+public abstract class EntityArrowMixin implements EntityArrowAccessor{
     @Shadow public Entity shootingEntity;
 
     @Inject(method = "onUpdate",

@@ -54,10 +54,6 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
             }
         }
     }
-    // redirect hostile call
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnIsHostile(Difficulty instance){return true;}
-    // done redirecting
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 256))
     private double endermanRangeToTeleport(double constant){

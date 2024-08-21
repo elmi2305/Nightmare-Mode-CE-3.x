@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.Item;
@@ -18,5 +19,11 @@ public class WorldMixin {
         if(entity instanceof EntityItem item && ((Objects.equals(item.getEntityName(), "item.item.magmaCream")) || Objects.equals(item.getEntityName(), "item.item.blazeRod"))){
             cir.setReturnValue(false);
         }
+    }
+
+    @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("RETURN"),remap = false, cancellable = true)
+    private void manageGloomPostWither(CallbackInfoReturnable<Float> cir){
+        World thisObj = (World)(Object)this;
+        if(NightmareUtils.getGameProgressMobsLevel(thisObj) == 2 && !thisObj.isDaytime()){cir.setReturnValue(0f);}
     }
 }

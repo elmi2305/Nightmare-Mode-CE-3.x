@@ -78,40 +78,6 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             }
         }
     }
-//
-//    @Unique private static @NotNull List<ItemStack> getIllegalItems() {
-//        ItemStack boots = new ItemStack(Item.bootsLeather);
-//        ItemStack pants = new ItemStack(Item.legsLeather);
-//        ItemStack chest = new ItemStack(Item.plateLeather);
-//        ItemStack helmet = new ItemStack(Item.helmetLeather);
-//        ItemStack socks = new ItemStack(BTWItems.woolBoots);
-//        ItemStack woolPants = new ItemStack(BTWItems.woolLeggings);
-//        ItemStack woolShirt = new ItemStack(BTWItems.woolChest);
-//        ItemStack woolHat = new ItemStack(BTWItems.woolHelmet);
-//        ItemStack diamondSword = new ItemStack(Item.swordDiamond);
-//        ItemStack goldenAxe = new ItemStack(Item.axeGold);
-//        ItemStack woodSword = new ItemStack(Item.swordWood);
-//        ItemStack boneClub = new ItemStack(BTWItems.boneClub);
-//        ItemStack infusedSkull = new ItemStack(Item.skull,1,5);
-//        ItemStack runedSkull = new ItemStack(Item.skull,1,1);
-//
-//        List<ItemStack> illegalItemList = new ArrayList<>(4);
-//        illegalItemList.add(new ItemStack(Item.bootsLeather));
-//        illegalItemList.add(new ItemStack(Item.legsLeather));
-//        illegalItemList.add(new ItemStack(Item.plateLeather));
-//        illegalItemList.add(new ItemStack(Item.helmetLeather));
-//        illegalItemList.add(new ItemStack(BTWItems.woolBoots));
-//        illegalItemList.add(new ItemStack(BTWItems.woolLeggings));
-//        illegalItemList.add(new ItemStack(BTWItems.woolChest));
-//        illegalItemList.add(new ItemStack(BTWItems.woolHelmet));
-//        illegalItemList.add(new ItemStack(Item.swordDiamond));
-//        illegalItemList.add(new ItemStack(Item.axeGold));
-//        illegalItemList.add(new ItemStack(Item.swordWood));
-//        illegalItemList.add(new ItemStack(BTWItems.boneClub));
-//        illegalItemList.add(new ItemStack(Item.skull,1,5));
-//        illegalItemList.add(new ItemStack(Item.skull,1,1));
-//        return illegalItemList;
-//    }
 
     @Unique
     public boolean checkNullAndCompareID(ItemStack par1ItemStack, ItemStack par2ItemStack){

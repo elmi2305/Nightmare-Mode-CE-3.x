@@ -82,15 +82,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-//    @Inject(method = "sleepInBedAt", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EnumStatus;NOT_POSSIBLE_HERE:Lnet/minecraft/src/EnumStatus;"), cancellable = true)
-//    private void displayTextWhenSleepingInDimension(int par1, int par2, int par3, CallbackInfoReturnable<EnumStatus> cir){
-//        ChatMessageComponent text2 = new ChatMessageComponent();
-//        text2.addText("Despite being in hell, you find it a good time to sleep.");
-//        text2.setColor(EnumChatFormatting.WHITE);
-//        Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
-//        cir.setReturnValue(EnumStatus.OK);
-//    } code literally doesn't apply for some reason. will figure out what to do with this later
-
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean doNotCareIfDay1(World instance) {
         if (!(Block.blocksList[this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))] instanceof BedrollBlock)) {
@@ -99,6 +90,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return this.worldObj.skylightSubtracted < 4;
         }
     }
+
+    @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
+    private boolean canSleepInNether(WorldProvider instance){
+        return true;
+    }
+
     @ModifyConstant(method = "movementModifierWhenRidingBoat", constant = @Constant(doubleValue = 0.35))
     private double windmillSpeedBoat(double constant){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
@@ -115,5 +112,4 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         return false;
     }
-
 }

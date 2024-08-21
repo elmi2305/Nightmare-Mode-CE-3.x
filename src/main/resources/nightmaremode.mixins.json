@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArmorItemSpecialMixin",
+    "BedBlockBaseMixin",
+    "BiomeDecoratorAccessor",
     "BiomeDecoratorMixin",
     "BiomeEndDecoratorMixin",
     "BiomeGenBaseMixin",
@@ -35,6 +37,7 @@
     "EntityAICreeperSwellMixin",
     "EntityAnimalInvoker",
     "EntityAnimalMixin",
+    "EntityArrowAccessor",
     "EntityArrowMixin",
     "EntityBatMixin",
     "EntityBlazeMixin",

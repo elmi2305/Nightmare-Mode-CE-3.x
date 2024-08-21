@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Objects;
 import java.util.Random;
 
 @Mixin(EntityCreeper.class)
@@ -38,7 +39,7 @@ public class EntityCreeperMixin {
     @Inject(method = "interact",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/InventoryPlayer;getCurrentItem()Lnet/minecraft/src/ItemStack;",
-                    shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
+                    shift = At.Shift.AFTER))
     private void explodeIfShorn(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
@@ -67,23 +68,16 @@ public class EntityCreeperMixin {
     private float creeperImmunityToExplosionDamage(float constant){
         return 5.0f; // explosions deal 1/5 damage to creepers
     }
-    // redirecting all hostile calls
-    @Redirect(method = "attackEntityFrom", at  = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue(Difficulty instance){return true;}
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue1(Difficulty instance){return true;}
-    @Redirect(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue2(Difficulty instance){return true;}
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"),remap = false)
-    private boolean returnTrue3(Difficulty instance){return true;}
-    // done redirecting
 
     @ModifyConstant(method = "entityInit", constant = @Constant(intValue = 0,ordinal = 0))
     private int chanceToSpawnCharged(int constant){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
         if((progress>0 || (thisObj.dimension==-1 && progress > 0)) && thisObj.rand.nextFloat() < 0.1 + (progress)*0.02){
-            return 1;       // set to charged if conditions met
+            if(Objects.equals(Minecraft.getMinecraft().thePlayer.getEntityName(), "TdLmcc") && thisObj.rand.nextInt(10)==0){
+                thisObj.setCustomNameTag("Terrence");
+            }
+            return 1;   // set to charged if conditions met
         } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && progress > 0){
             return 1;
         } else if(thisObj.dimension == 1){

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EntityAIAttackOnCollide.class)
-public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCollideAccessor{
+public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCollideAccessor, EntityArrowAccessor{
     @Shadow public EntityCreature attacker;
     @Unique int arrowCooldown = 10;
 
@@ -46,6 +46,7 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
                             break;
                         }
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
+                        if (((EntityArrowAccessor)(EntityArrow)(Object)this).getInGround()){System.out.println("IT WORKED");}
                         if (!arrow.inGround && thisObj.attacker.rand.nextFloat()<0.5f) {
                             EntityArrow newArrow = new EntityArrow(thisObj.attacker.worldObj,thisObj.attacker,thisObj.attacker.getAttackTarget(),1f,6);
                             newArrow.motionX = (arrow.motionX * -1)/1.5;
@@ -79,6 +80,8 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
                 && zombie.getAttackTarget() instanceof EntityPlayer target
                 && zombie.getDistanceSqToEntity(zombie.getAttackTarget()) < 30
                 && zombie.onGround
+                && zombie.canEntityBeSeen(target)
+//                && zombie.getEntitySenses().canSee(target)
         ) {
             double var1 = target.posX - zombie.posX;
             double var2 = target.posZ - zombie.posZ;
