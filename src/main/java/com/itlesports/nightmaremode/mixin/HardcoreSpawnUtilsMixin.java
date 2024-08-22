@@ -2,8 +2,10 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
 import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,6 +32,15 @@ public abstract class HardcoreSpawnUtilsMixin{
                 WorldServer tempServer = MinecraftServer.getServer().worldServers[i];
                 tempServer.setWorldTime(overworldTime);
             }
+            if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 2) {
+                ItemStack var2 = new ItemStack(BTWItems.corpseEye,1);
+                player.inventory.addItemStackToInventory(var2);
+            }
+            if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 1){
+                ItemStack var3 = new ItemStack(Item.compass,1);
+                player.inventory.addItemStackToInventory(var3);
+            }
+            // gives a few bonus items after you die
         }
     }
 }

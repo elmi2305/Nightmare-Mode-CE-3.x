@@ -12,8 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 // sets portal light value to 15 blocks
 @Mixin(BTWMod.class)
 public abstract class BTWModMixin {
-        @Inject(method = "initializeHostileModeServer", at = @At("TAIL"), remap = false)
-        private void changePortalLightLevel(boolean isHostile, CallbackInfo ci){
-        Block.portal.setLightValue(1.0F);
+    @Inject(method = "initializeHostileModeServer", at = @At("TAIL"), remap = false)
+    private void changePortalLightLevel(boolean isHostile, CallbackInfo ci) {
+        System.out.println("Portal");
+        Block.portal.setLightValue(0.25F);
     }
 }

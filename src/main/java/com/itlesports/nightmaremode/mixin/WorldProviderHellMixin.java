@@ -12,6 +12,6 @@ public class WorldProviderHellMixin {
     @Redirect(method = "generateLightBrightnessTable", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
     private boolean onlyGloomInNetherIfHardmode(Difficulty instance){
         WorldProviderHell thisObj = (WorldProviderHell)(Object)this;
-        return NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) == 1;
+        return NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) >= 1;
     }
 }

@@ -18,10 +18,10 @@ public class EntityFireballMixin {
     }
 
     // it's vague what this method does. it's used to implement ghast rage mode. without it the fireballs would collide with one another
-    // potentially hitting the ghast, or making most of the fireballs miss. it changes the method to check if airtime < -1 because that's always false
+    // potentially hitting the ghast, or making most of the fireballs miss.
     @ModifyConstant(method = "onUpdate", constant = @Constant(intValue = 25))
     private int largeFireballIgnoresItself(int constant){
         EntityFireball thisObj = (EntityFireball)(Object)this;
-        return thisObj instanceof EntityLargeFireball ? -1 : 25;
+        return thisObj instanceof EntityLargeFireball ? 300 : 25;
     }
 }

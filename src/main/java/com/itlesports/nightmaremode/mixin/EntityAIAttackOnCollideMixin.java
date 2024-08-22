@@ -33,8 +33,9 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
-        if(thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer){
+        if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer){
             if(isPlayerHoldingBow(targetPlayer) && isHoldingIllegalItem(thisObj.attacker)){
+                System.out.println("EntityAIAttackOnCollide about to make a list");
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.0, 2.4, 2.0));
                 arrowCooldown -= 1;
                 if (arrowCooldown <= 0) {
@@ -46,7 +47,6 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
                             break;
                         }
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
-                        if (((EntityArrowAccessor)(EntityArrow)(Object)this).getInGround()){System.out.println("IT WORKED");}
                         if (!arrow.inGround && thisObj.attacker.rand.nextFloat()<0.5f) {
                             EntityArrow newArrow = new EntityArrow(thisObj.attacker.worldObj,thisObj.attacker,thisObj.attacker.getAttackTarget(),1f,6);
                             newArrow.motionX = (arrow.motionX * -1)/1.5;

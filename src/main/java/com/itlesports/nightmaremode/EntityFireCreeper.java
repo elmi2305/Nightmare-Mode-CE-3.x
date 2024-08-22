@@ -13,18 +13,9 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
     private boolean determinedToExplode = false;
     private int lastActiveTime;
     private int timeSinceIgnited;
-    private int fuseTime = 30;
-    private int explosionRadius = 3;
+    private int fuseTime = 25;
+    private final int explosionRadius = 3;
     private byte patienceCounter = 60;
-    private void changeStatsDependingOnProgress(){
-        int progress = NightmareUtils.getGameProgressMobsLevel(this.worldObj);
-        if(progress == 1){
-            fuseTime = 20;
-        } else{
-            explosionRadius = 4;
-            fuseTime = 15;
-        }
-    }
 
 
     public EntityFireCreeper(World par1World) {
@@ -49,7 +40,6 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     protected void entityInit() {
         super.entityInit();
-        changeStatsDependingOnProgress();
     }
 
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
@@ -105,7 +95,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                 this.timeSinceIgnited = this.fuseTime;
                 if (!this.worldObj.isRemote) {
                     boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-                    if (this.getPowered()) {
+                    if (this.getPowered() || this.isBurning()) {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
                     } else {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
@@ -165,7 +155,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
         if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2){
-            this.dropItem(BTWItems.steelNugget.itemID, this.rand.nextInt(6)+1);
+            this.dropItem(BTWItems.steelNugget.itemID, this.rand.nextInt(4)+1);
         }
     }
 
@@ -174,7 +164,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) {
             if (!this.worldObj.isRemote) {
                 boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-                if (this.getPowered()) {
+                if (this.getPowered() || this.isBurning()) {
                     this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
                 } else {
                     this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);

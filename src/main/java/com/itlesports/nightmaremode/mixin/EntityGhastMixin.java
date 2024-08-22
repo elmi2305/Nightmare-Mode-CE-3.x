@@ -56,4 +56,49 @@ public class EntityGhastMixin {
             rageTimer = 0;
         }
     }
+//    @Inject(method = "onUpdate", at = @At("HEAD"))
+//    private void manageOverworldBehavior(CallbackInfo ci){
+//        EntityGhast thisObj = (EntityGhast)(Object)this;
+//        EntityPlayer player = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,100);
+//        if(player == null){thisObj.setInvisible(true);}
+//        else if(thisObj.dimension == 0 && thisObj.getEntitySenses().canSee(player)){
+//            thisObj.setInvisible(false);
+//            thisObj.getLookHelper().setLookPositionWithEntity(player,0,0);
+//            thisObj.motionX = 0;
+//            thisObj.motionY = 0;
+//            thisObj.motionZ = 0;
+//        }
+//    }
+
+    @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 10,ordinal = 0))
+    private int lowerSoundThreshold(int constant){
+        EntityGhast thisObj = (EntityGhast)(Object)this;
+        if(thisObj.dimension == 0){
+            return constant*2;
+        }
+        if(thisObj.worldObj != null && NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>0){
+            return constant - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*2 -1;
+            // 9 -> 7 -> 4 -> 2
+        }
+        return constant;
+    }
+    @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 20,ordinal = 1))
+    private int lowerAttackThreshold(int constant){
+        EntityGhast thisObj = (EntityGhast)(Object)this;
+        if(thisObj.dimension == 0){
+            return constant*2;
+        }
+        if(thisObj.worldObj != null && NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>0){
+            return constant - NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*3 - 5;
+            // 15 -> 12 -> 9 -> 6
+        }
+        return constant;
+    }
+
+    @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
+    private int lowerAttackCooldownOnFire(int constant){
+        EntityGhast thisObj = (EntityGhast)(Object)this;
+        return -10 - thisObj.rand.nextInt(21);
+        // from -10 to -30
+    }
 }

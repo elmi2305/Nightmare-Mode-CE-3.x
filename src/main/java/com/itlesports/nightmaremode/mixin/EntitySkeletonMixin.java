@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob {
+public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccess{
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
@@ -102,11 +102,13 @@ public abstract class EntitySkeletonMixin extends EntityMob {
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-            this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
+//            this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
+//            this.isImmuneToFire = true;
+            this.setIsImmuneToFire(true);
             if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2 && rand.nextFloat() < 0.13 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*0.07)){
                 // 13% -> 20%
                 this.setSkeletonType(4); // ender skeleton
-                this.clearActivePotions();
+                this.setIsImmuneToFire(true);
 
                 ItemStack var1 = new ItemStack(Item.skull,1,1);
                 ItemStack var2 = new ItemStack(Item.bow,1);
@@ -119,6 +121,8 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             } else if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && rand.nextFloat()<0.09 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*0.02) && this.dimension != -1) {
                 // 9% -> 11% -> 13%
                 this.setSkeletonType(3); // fire skeleton
+                this.setIsImmuneToFire(true);
+
 
                 Entity magmaCube = new EntityMagmaCube(this.worldObj);
                 magmaCube.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
@@ -129,6 +133,8 @@ public abstract class EntitySkeletonMixin extends EntityMob {
             } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.02 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.02)) {
                 // 6% -> 8% -> 10% -> 12%
                 this.setSkeletonType(2); // ice skeleton
+                this.setIsImmuneToFire(false);
+
                 ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
                 this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
             }

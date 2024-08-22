@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,14 +17,17 @@ import java.util.Random;
 
 @Mixin(EntityCreeper.class)
 public class EntityCreeperMixin {
+    @Shadow private int fuseTime;
+
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
-        if (new Random().nextFloat() < 0.05 + (NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*0.02)) {
+        if (new Random().nextFloat() < 0.08 + (NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*0.02)) {
             thisObj.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }
         thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20+NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*6);
+        thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28);
         // 20 -> 26 -> 32 -> 38
     }
 
@@ -60,7 +64,11 @@ public class EntityCreeperMixin {
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         if (par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava){
+            if (thisObj instanceof EntityFireCreeper){
+                thisObj.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 160,1));
+            }
             thisObj.onKickedByAnimal(null); // primes the creeper instantly
+
         }
     }
 
@@ -74,7 +82,7 @@ public class EntityCreeperMixin {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
         if((progress>0 || (thisObj.dimension==-1 && progress > 0)) && thisObj.rand.nextFloat() < 0.1 + (progress)*0.02){
-            if(Objects.equals(Minecraft.getMinecraft().thePlayer.getEntityName(), "TdLmcc") && thisObj.rand.nextInt(10)==0){
+            if(thisObj.rand.nextInt(10)==0) {
                 thisObj.setCustomNameTag("Terrence");
             }
             return 1;   // set to charged if conditions met
@@ -93,7 +101,7 @@ public class EntityCreeperMixin {
         if (thisObj.getCreeperState()==1) {
             creeperTimeSinceIgnited++;
         } else {creeperTimeSinceIgnited = 0;}
-        if (creeperTimeSinceIgnited == 24 && thisObj.getCreeperState()==1) {
+        if (creeperTimeSinceIgnited == this.fuseTime - 8 && thisObj.getCreeperState()==1) {
             thisObj.motionY = 0.38F;
             EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
             if(target != null) {
@@ -114,7 +122,7 @@ public class EntityCreeperMixin {
     private float modifyExplosionSize(float par8) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         if(NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>=2){
-            return 4;
+            return 4.2f;
         } else if(NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)==1){
             return 3.5f;
         }

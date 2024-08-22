@@ -7,6 +7,4 @@ accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/E
 accessible class net/minecraft/src/CallableLevelSeed
 accessible class net/minecraft/src/CallableLevelSpawnLocation
 accessible field net/minecraft/src/EntityArrow inGround Z
-accessible field net/minecraft/src/BiomeDecorator currentWorld Lnet/minecraft/src/World;
-accessible field net/minecraft/src/BiomeDecorator chunk_X I
-accessible field net/minecraft/src/BiomeDecorator chunk_Z I
+accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecraft/src/WorldGenerator;II)V
