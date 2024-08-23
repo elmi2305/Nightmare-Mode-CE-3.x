@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BTWModMixin {
     @Inject(method = "initializeHostileModeServer", at = @At("TAIL"), remap = false)
     private void changePortalLightLevel(boolean isHostile, CallbackInfo ci) {
-        System.out.println("Portal");
         Block.portal.setLightValue(0.25F);
     }
 }
