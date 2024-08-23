@@ -24,7 +24,10 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void increaseRangeOnToolHeld(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
-        if(thisObj.attacker.getAttackTarget() != null && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem()) && isHoldingIllegalItem(thisObj.attacker) && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
+        if(thisObj.attacker.getAttackTarget() != null
+                && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem())
+                && isHoldingIllegalItem(thisObj.attacker)
+                && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
             thisObj.attacker.swingItem();
             thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
         }
@@ -35,7 +38,6 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer){
             if(isPlayerHoldingBow(targetPlayer) && isHoldingIllegalItem(thisObj.attacker)){
-                System.out.println("EntityAIAttackOnCollide about to make a list");
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.0, 2.4, 2.0));
                 arrowCooldown -= 1;
                 if (arrowCooldown <= 0) {

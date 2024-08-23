@@ -127,6 +127,7 @@ public abstract class EntitySpiderMixin {
             }
         }
     }
+    // spider doesn't crash
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
         if (spider.worldObj != null) {

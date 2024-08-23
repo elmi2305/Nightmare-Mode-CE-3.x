@@ -82,6 +82,7 @@
     "ItemAppleGoldMixin",
     "JungleSpiderEntityMixin",
     "KilnBlockMixin",
+    "LavaPillowBlockMixin",
     "MillstoneBlockMixin",
     "MillstoneRecipeListMixin",
     "MillstoneTileEntityMixin",
