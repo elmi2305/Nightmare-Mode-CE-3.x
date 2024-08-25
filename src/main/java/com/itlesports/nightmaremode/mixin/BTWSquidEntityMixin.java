@@ -45,8 +45,8 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private int increaseMysteriousGlandDropRate(int constant){return 2;}
     // makes the random function roll a number between 0 and 2 instead of 0 and 8
 
-    // adds a flat +2 increase to ink sac drops
-    @Inject(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;",ordinal = 0))
+    // adds a flat +2 to inc sac drops
+    @Inject(method = "dropFewItems", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;rand:Ljava/util/Random;",ordinal = 0))
     private void dropMoreSacs(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         this.entityDropItem(new ItemStack(Item.dyePowder, 2, 0), 0.0f);
     }
