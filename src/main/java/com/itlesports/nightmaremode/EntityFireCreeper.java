@@ -4,6 +4,7 @@ import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;

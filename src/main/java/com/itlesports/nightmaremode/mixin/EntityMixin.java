@@ -19,7 +19,7 @@ public class EntityMixin {
             thisObject.setFire(1000);}
         if(thisObject.riddenByEntity instanceof EntityEnderCrystal){
             return -0.5125; // so the ender crystal base is barely underground
-        } else if (thisObject.riddenByEntity instanceof BTWSquidEntity){
+        } else if (thisObject.riddenByEntity instanceof BTWSquidEntity) {
             return thisObject.getEyeHeight();
         } else {return (double)thisObject.height * 0.75;}
     }

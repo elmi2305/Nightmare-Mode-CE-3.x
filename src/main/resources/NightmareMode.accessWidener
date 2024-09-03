@@ -8,3 +8,4 @@ accessible class net/minecraft/src/CallableLevelSeed
 accessible class net/minecraft/src/CallableLevelSpawnLocation
 accessible field net/minecraft/src/EntityArrow inGround Z
 accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecraft/src/WorldGenerator;II)V
+accessible method net/minecraft/src/EntityTNTPrimed explode ()V

@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.DireWolfEntity;
+import com.itlesports.nightmaremode.EntityFireCreeper;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +41,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                 int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
                 player.setPositionAndUpdate(xValue,yValue,zValue);
                 this.entityToAttack = player; // reassures the wither aggro in case it is lost
-                player.playSound("mob.endermen.portal",20.0F,1.0F);
+                player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
             }
             if (witherAttackTimer%400 == 20){
                 player.setFire(80);
@@ -116,7 +117,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                         int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
 
-                        EntityCreeper tempMinion = new EntityCreeper(this.worldObj);
+                        EntityFireCreeper tempMinion = new EntityFireCreeper(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
                         tempMinion.entityToAttack = this.getAttackTarget();
                         this.worldObj.spawnEntityInWorld(tempMinion);

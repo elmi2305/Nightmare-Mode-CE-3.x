@@ -21,9 +21,9 @@ public class EntityWitherSkullMixin {
     }
     @Inject(method = "onImpact",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD)
-    private void applyAdditionalEffectsOnImpact(MovingObjectPosition pos, CallbackInfo ci, int iDamage){
+                    target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V")
+    )
+    private void applyAdditionalEffectsOnImpact(MovingObjectPosition pos, CallbackInfo ci){
         if (pos.entityHit.rand.nextFloat()<0.02) {
             ((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
         }

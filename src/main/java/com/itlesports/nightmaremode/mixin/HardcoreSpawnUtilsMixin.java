@@ -11,6 +11,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // MODIFY TIME TO n * 24000 + 18000 UPON DEATH where n is current day
@@ -24,9 +25,12 @@ public abstract class HardcoreSpawnUtilsMixin{
         long overworldTime = WorldUtils.getOverworldTimeServerOnly();
         if (BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) {
             overworldTime += 18000L;
+
             if(overworldTime % 192000 == 114000){
-                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,2);
+                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
+                ItemStack var2 = new ItemStack(ItemPotion.potion,1,16422);
                 player.inventory.addItemStackToInventory(var1);
+                player.inventory.addItemStackToInventory(var2);
             }
             for(int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i) {
                 WorldServer tempServer = MinecraftServer.getServer().worldServers[i];
@@ -43,4 +47,8 @@ public abstract class HardcoreSpawnUtilsMixin{
             // gives a few bonus items after you die
         }
     }
+
+
+    @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;sendChatToPlayer(Lnet/minecraft/src/ChatMessageComponent;)V",ordinal = 0))
+    private static void doNothing(EntityPlayerMP instance, ChatMessageComponent par1ChatMessageComponent){}
 }

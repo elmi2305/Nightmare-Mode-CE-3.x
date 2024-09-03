@@ -15,6 +15,7 @@ import java.util.Random;
 
 @Mixin(BlockPortal.class)
 public class BlockPortalMixin{
+    // this code is awful
     @Unique boolean runOnce = true;
     @Unique boolean runAgain = true;
     @Unique boolean runEffects = false;
@@ -38,7 +39,7 @@ public class BlockPortalMixin{
             }
         }
     }
-    @Inject(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
+    @Inject(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V",shift = At.Shift.AFTER))
     private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
         if (runEffects) {
             world.getClosestPlayer(x,y,z,-1).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));

@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,59 +24,42 @@ public class EntityMobMixin{
         if((par1DamageSource == DamageSource.magic || par1DamageSource == DamageSource.wither || par1DamageSource == DamageSource.fallingBlock) && (thisObj instanceof EntityWitch || thisObj instanceof EntitySpider || thisObj instanceof EntitySilverfish || thisObj instanceof EntityCreeper)){
             cir.setReturnValue(false);
         }
+        if (par1DamageSource == DamageSource.fall && (thisObj instanceof EntityCreeper || thisObj instanceof EntitySkeleton) && thisObj.dimension == 1){
+            cir.setReturnValue(false);
+        }
     }
-//
-//    @ModifyConstant(method = "entityMobAttackEntity", constant = @Constant(floatValue = 2.0f))
-//    private float increaseTooledEntityRange(float constant){
-//        return 5f;
-//    }
 
-//    @Inject(method = "entityMobAttackEntity", at = @At("HEAD"))
-//    private void manageIncreasedRange(Entity par1Entity, float par2, CallbackInfo ci){
-//        EntityMob thisObj = (EntityMob)(Object)this;
-//        if(thisObj instanceof EntityZombie || thisObj instanceof EntitySkeleton){
-//            ItemStack heldItem = thisObj.getHeldItem();
-//            if(heldItem != null && getIllegalItems().contains(heldItem.itemID)){
-//                if (thisObj.attackTime <= 0 && par2 < 5.0f) {
-//                    thisObj.attackTime = 20;
-//                    thisObj.attackEntityAsMob(par1Entity);
-//                }
-//            }
-//        }
-//    }
-//    @Redirect(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))
-//    private void manageIncreasedRange(EntityMob instance, Entity par1Entity, float par2){
-//        if(instance instanceof EntityZombie || instance instanceof EntitySkeleton){
-//            ItemStack heldItem = instance.getHeldItem();
-//            if(heldItem != null && getIllegalItems().contains(heldItem.itemID)){
-//                if (instance.attackTime <= 0 && par2 < 5.0f) {
-//                    instance.attackTime = 20;
-//                    instance.attackEntityAsMob(par1Entity);
-//                }
-//            }
-//        }
-//        if (instance.attackTime <= 0 && par2 < 2.0f && par1Entity.boundingBox.maxY > instance.boundingBox.minY && par1Entity.boundingBox.minY < instance.boundingBox.maxY) {
-//            instance.attackTime = 20;
-//            instance.attackEntityAsMob(par1Entity);
-//        }
-//    }
+    @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
+    private void manageBlightPowerUp(CallbackInfo ci){
+        EntityMob thisObj = (EntityMob)(Object)this;
+        if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
+            if(thisObj.worldObj.getBlockId(MathHelper.floor_double(thisObj.posX),MathHelper.floor_double(thisObj.posY-1),MathHelper.floor_double(thisObj.posZ)) == BTWBlocks.aestheticEarth.blockID){
+                int i = MathHelper.floor_double(thisObj.posX);
+                int j = MathHelper.floor_double(thisObj.posY-1);
+                int k = MathHelper.floor_double(thisObj.posZ);
 
-    @Unique private static @NotNull List<Integer> getIllegalItems() {
-        List<Integer> illegalItemList = new ArrayList<>(14);
-        illegalItemList.add(BTWItems.boneClub.itemID);
-        illegalItemList.add(Item.swordWood.itemID);
-        illegalItemList.add(Item.swordStone.itemID);
-        illegalItemList.add(Item.swordIron.itemID);
-        illegalItemList.add(Item.swordGold.itemID);
-        illegalItemList.add(Item.swordDiamond.itemID);
-        illegalItemList.add(Item.axeGold.itemID);
-        illegalItemList.add(Item.axeStone.itemID);
-        illegalItemList.add(Item.axeDiamond.itemID);
-        illegalItemList.add(Item.axeIron.itemID);
-        illegalItemList.add(Item.shovelIron.itemID);
-        illegalItemList.add(Item.shovelStone.itemID);
-        illegalItemList.add(Item.shovelGold.itemID);
-        illegalItemList.add(Item.shovelDiamond.itemID);
-        return illegalItemList;
+                if(thisObj.worldObj.getBlockMetadata(i,j,k) == 0){
+                    this.addMobPotionEffect(thisObj,Potion.regeneration.id);
+                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 1){
+                    this.addMobPotionEffect(thisObj,Potion.regeneration.id);
+                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
+                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 2){
+                    this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
+                    this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
+                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
+                } else{
+                    this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
+                    this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
+                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
+                    this.addMobPotionEffect(thisObj,Potion.invisibility.id);
+                }
+            }
+        }
+    }
+
+    @Unique private void addMobPotionEffect(EntityMob mob, int potionID){
+        if(!mob.isPotionActive(potionID)){
+            mob.addPotionEffect(new PotionEffect(potionID,100,0));
+        }
     }
 }

@@ -1,8 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.crafting.recipe.MillstoneRecipeList;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
+import btw.util.color.Color;
+import com.itlesports.nightmaremode.item.NMItems;
+import net.minecraft.src.Block;
 import net.minecraft.src.BlockVine;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -22,5 +26,6 @@ public class MillstoneRecipeListMixin {
         RecipeManager.addMillStoneRecipe(new ItemStack(Item.potato), new ItemStack(BTWItems.straw));
         RecipeManager.addMillStoneRecipe(new ItemStack(Item.melonSeeds), new ItemStack(Item.pumpkinSeeds));
         RecipeManager.addMillStoneRecipe(new ItemStack(Item.pumpkinSeeds), new ItemStack(Item.melonSeeds));
+        RecipeManager.addMillStoneRecipe(new ItemStack[]{new ItemStack(NMItems.rifle), new ItemStack(NMItems.rpg)}, new ItemStack[]{new ItemStack(Block.dragonEgg)});
     }
 }

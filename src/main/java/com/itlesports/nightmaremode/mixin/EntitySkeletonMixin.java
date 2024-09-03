@@ -45,9 +45,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             return 0.35;
         }
         if (this.worldObj != null) {
-            return 0.3+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
+            return 0.29+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
         } else return 0.3;
-        // 0.3 -> 0.315 -> 0.33 -> 0.345
+        // 0.29 -> 0.305 -> 0.320 -> 0.335
     }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityAIWatchClosest;<init>(Lnet/minecraft/src/EntityLiving;Ljava/lang/Class;F)V"),index = 2)
@@ -197,8 +197,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double(3.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
-                // 5 -> 7 -> 9 -> 11
+                arrow.setDamage(MathHelper.floor_double(2.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 2)));
+                // 4 -> 6 -> 8 -> 10
             }
         }
     }

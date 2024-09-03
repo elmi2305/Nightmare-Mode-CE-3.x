@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.item.BTWItems;
 import net.minecraft.src.*;
@@ -15,6 +16,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract ItemStack getHeldItem();
 
     @Shadow protected abstract boolean isPlayer();
+
+    @Shadow public PlayerCapabilities capabilities;
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -59,6 +62,37 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             if(this.isPotionActive(Potion.moveSlowdown.id)){
                 this.removePotionEffect(Potion.moveSlowdown.id);
             }
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageBlightMovement(CallbackInfo ci){
+        if (this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID && !this.capabilities.isCreativeMode){
+            EntityPlayer thisObj = (EntityPlayer)(Object)this;
+
+            int i = MathHelper.floor_double(this.posX);
+            int j = MathHelper.floor_double(this.posY-1);
+            int k = MathHelper.floor_double(this.posZ);
+
+            if(this.worldObj.getBlockMetadata(i,j,k) == 0){
+                this.addPlayerPotionEffect(thisObj,Potion.weakness.id);
+            } else if (this.worldObj.getBlockMetadata(i,j,k) == 1){
+                this.addPlayerPotionEffect(thisObj,Potion.poison.id);
+            } else if (this.worldObj.getBlockMetadata(i,j,k) == 2){
+                this.addPlayerPotionEffect(thisObj,Potion.wither.id);
+                this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
+            } else{
+                this.addPlayerPotionEffect(thisObj,Potion.wither.id);
+                this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
+                this.addPlayerPotionEffect(thisObj,Potion.blindness.id);
+                this.addPlayerPotionEffect(thisObj,Potion.weakness.id);
+            }
+        }
+    }
+
+    @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
+        if(!player.isPotionActive(potionID)){
+            player.addPotionEffect(new PotionEffect(potionID,100,0));
         }
     }
 

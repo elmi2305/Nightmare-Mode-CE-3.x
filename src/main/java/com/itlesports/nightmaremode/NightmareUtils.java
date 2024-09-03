@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.mixin.WorldInfoMixin;
 import net.minecraft.src.World;
 
 public class NightmareUtils {
+
     public static int getGameProgressMobsLevel(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;

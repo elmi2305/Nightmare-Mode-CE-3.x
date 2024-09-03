@@ -96,8 +96,8 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
     }
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){
         if (heldItem != null && getIllegalItems().contains(heldItem.itemID)) {
-            if((heldItem.itemID == Item.swordWood.itemID || heldItem.itemID == BTWItems.boneClub.itemID)){
-                return 4;
+            if((heldItem.itemID == Item.swordWood.itemID || heldItem.itemID == BTWItems.boneClub.itemID || heldItem.itemID == Item.swordDiamond.itemID || heldItem.itemID == Item.axeGold.itemID)){
+                return 5;
             } else{return 8;}
         } return 2;
     }

@@ -25,7 +25,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         if (!this.worldObj.isRemote) {
             EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
             skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(6));
+            skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(7) - 2);
             for (int i = 0; i < 5; i++) {
                 skeleton.setCurrentItemOrArmor(0, this.getCurrentItemOrArmor(0));
             }
@@ -76,7 +76,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     shift = At.Shift.AFTER))
     private void chanceToSpawnWithWeapon(CallbackInfo ci) {
         EntityZombie thisObj = (EntityZombie)(Object)this;
-        if (thisObj.worldObj != null) {
+        if (thisObj.worldObj != null && !this.isVillager()) {
             if (rand.nextInt(50) == 0) {
                 ItemStack var1 = new ItemStack(BTWItems.boneClub);
                 thisObj.setCurrentItemOrArmor(0, var1);
@@ -165,21 +165,6 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-    // REMEMBER TO COPY MEA CODE once it updates to 3.0 making tooled entities have extra range
-
-
-
-
 
 
     @Unique

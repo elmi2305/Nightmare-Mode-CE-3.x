@@ -4,6 +4,7 @@
   "package": "com.itlesports.nightmaremode.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AestheticOpaqueEarthBlockMixin",
     "ArmorItemSpecialMixin",
     "BedBlockBaseMixin",
     "BiomeDecoratorAccessor",
@@ -14,6 +15,7 @@
     "BlockClayMixin",
     "BlockMixin",
     "BlockPortalMixin",
+    "BonusBasketGeneratorMixin",
     "BTWEntityMapperMixin",
     "BTWItemsMixin",
     "BTWModMixin",
@@ -26,6 +28,7 @@
     "CauldronRecipeListMixin",
     "CobblestoneBlockMixin",
     "ComponentScatteredFeatureDesertPyramidMixin",
+    "ComponentVillageChurchMixin",
     "CraftingRecipeListMixin",
     "DiamondOreBlockMixin",
     "DifficultyMixin",
