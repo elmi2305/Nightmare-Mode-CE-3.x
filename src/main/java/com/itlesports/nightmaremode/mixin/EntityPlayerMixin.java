@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

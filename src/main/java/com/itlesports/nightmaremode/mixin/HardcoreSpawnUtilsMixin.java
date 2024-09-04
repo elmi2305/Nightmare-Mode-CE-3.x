@@ -5,6 +5,7 @@ import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.world.util.WorldUtils;
+import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -47,7 +48,6 @@ public abstract class HardcoreSpawnUtilsMixin{
             // gives a few bonus items after you die
         }
     }
-
 
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;sendChatToPlayer(Lnet/minecraft/src/ChatMessageComponent;)V",ordinal = 0))
     private static void doNothing(EntityPlayerMP instance, ChatMessageComponent par1ChatMessageComponent){}

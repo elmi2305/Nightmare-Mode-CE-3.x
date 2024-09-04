@@ -22,7 +22,6 @@ import java.util.List;
 public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Shadow public MinecraftServer mcServer;
-    @Shadow public boolean playerConqueredTheEnd;
     @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
