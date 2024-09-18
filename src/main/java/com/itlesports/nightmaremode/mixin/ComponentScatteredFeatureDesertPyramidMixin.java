@@ -20,7 +20,7 @@ public class ComponentScatteredFeatureDesertPyramidMixin {
     private void spawnAdditionalPressurePlates(World world, Random generatorRand, StructureBoundingBox boundingBox, CallbackInfoReturnable<Boolean> cir){
         ComponentScatteredFeatureDesertPyramid thisObj = (ComponentScatteredFeatureDesertPyramid)(Object)this;
         // par4 default is 10. increasing par4 moves forward in +z
-        // par 6 default is 10. increasing par6 moves forward in +x
+        // par6 default is 10. increasing par6 moves forward in +x
         // thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 10, boundingBox);
 
         thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 10, boundingBox);

@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(EntityHorse.class)
 public class EntityHorseMixin {
-    @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 10.0f))
+    @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 20.0f))
     private double increaseHP(double constant){
-        return 20.0;
+        return 24.0;
     }
 }

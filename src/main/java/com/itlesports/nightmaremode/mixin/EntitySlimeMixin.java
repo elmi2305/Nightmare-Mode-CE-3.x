@@ -76,7 +76,7 @@ public abstract class EntitySlimeMixin {
     private void summonFire(CallbackInfo ci){
         EntitySlime thisObj = (EntitySlime)(Object)this;
         if(thisObj instanceof EntityMagmaCube && thisObj.getSlimeSize()>=2){
-            if(thisObj.worldObj.getBlockId(MathHelper.floor_double(thisObj.posX),MathHelper.floor_double(thisObj.posY-1),MathHelper.floor_double(thisObj.posZ))!=0) {
+            if(thisObj.worldObj.getBlockId(MathHelper.floor_double(thisObj.posX),MathHelper.floor_double(thisObj.posY-1),MathHelper.floor_double(thisObj.posZ)) != 0 && thisObj.worldObj.getBlockId(MathHelper.floor_double(thisObj.posX),MathHelper.floor_double(thisObj.posY),MathHelper.floor_double(thisObj.posZ)) == 0) {
                 thisObj.worldObj.setBlockWithNotify(MathHelper.floor_double(thisObj.posX), MathHelper.floor_double(thisObj.posY), MathHelper.floor_double(thisObj.posZ), Block.fire.blockID);
             }
         }

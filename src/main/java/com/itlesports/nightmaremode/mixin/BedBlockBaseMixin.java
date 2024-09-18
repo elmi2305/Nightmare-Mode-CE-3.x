@@ -13,9 +13,11 @@ public class BedBlockBaseMixin {
     @Redirect(method = "onBlockActivated", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBiomeGenForCoords(II)Lnet/minecraft/src/BiomeGenBase;"))
     private BiomeGenBase allowSleepingInNether(World instance, int i, int par1){
         return BiomeGenBase.plains;
+        // roundabout way to allow sleeping in the nether. the game checks which biome we are in
     }
     @Redirect(method = "onBlockActivated", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;canRespawnHere()Z"))
     private boolean allowSleepingInNether1(WorldProvider instance){
         return true;
+        // game checks if player canRespawnHere(). this is only true for the overworld. I make it true regardless of dimension
     }
 }

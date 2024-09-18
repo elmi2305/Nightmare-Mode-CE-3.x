@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccess{
     @Shadow public abstract ItemStack getHeldItem();
@@ -97,6 +99,19 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    private void manageRunningFromPlayer(CallbackInfo ci){
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+        List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
+        for (Object tempEntity : list) {
+            if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
+            if (tempAnimal instanceof EntityWolf) continue;
+            if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
+            ((EntityAnimalInvoker) ((EntityAnimal)(Object)tempAnimal)).invokeOnNearbyPlayerStartles(thisObj);
+            break;
+        }
+    }
+
 
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
@@ -144,6 +159,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         ItemStack currentItemStack = player.inventory.mainInventory[player.inventory.currentItem];
         if (currentItemStack != null) {
             return currentItemStack.itemID == BTWItems.windMill.itemID;
+        }
+        return false;
+    }
+
+    @Unique
+    public boolean checkNullAndCompareID(ItemStack par2ItemStack){
+        if(par2ItemStack != null){
+            switch(par2ItemStack.itemID){
+                case 2,11,19,20,23,27,30,267,276,22580:
+                    return true;
+            }
         }
         return false;
     }

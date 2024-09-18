@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EntityAIAttackOnCollide.class)
-public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCollideAccessor, EntityArrowAccessor{
-    @Shadow public EntityCreature attacker;
+public abstract class EntityAIAttackOnCollideMixin {
     @Unique int arrowCooldown = 10;
 
 
@@ -46,6 +45,7 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
                         if (tempEntity instanceof RottenArrowEntity rottenArrow){
                             thisObj.attacker.worldObj.playSoundAtEntity(rottenArrow,"random.break",1.0f,5f);
                             rottenArrow.setDead();
+                            thisObj.attacker.swingItem();
                             break;
                         }
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
@@ -82,8 +82,8 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
                 && zombie.getAttackTarget() instanceof EntityPlayer target
                 && zombie.getDistanceSqToEntity(zombie.getAttackTarget()) < 30
                 && zombie.onGround
-                && zombie.canEntityBeSeen(target)
-//                && zombie.getEntitySenses().canSee(target)
+//                && zombie.canEntityBeSeen(target)
+                && zombie.getEntitySenses().canSee(target)
         ) {
             double var1 = target.posX - zombie.posX;
             double var2 = target.posZ - zombie.posZ;
@@ -98,7 +98,7 @@ public abstract class EntityAIAttackOnCollideMixin implements EntityAIAttackOnCo
         if (heldItem != null && getIllegalItems().contains(heldItem.itemID)) {
             if((heldItem.itemID == Item.swordWood.itemID || heldItem.itemID == BTWItems.boneClub.itemID || heldItem.itemID == Item.swordDiamond.itemID || heldItem.itemID == Item.axeGold.itemID)){
                 return 5;
-            } else{return 8;}
+            } else{return 9;}
         } return 2;
     }
 

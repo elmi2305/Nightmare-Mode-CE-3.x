@@ -10,7 +10,7 @@ import paulscode.sound.SoundSystem;
 
 @Mixin(BiomeEndDecorator.class)
 
-public abstract class BiomeEndDecoratorMixin extends BiomeDecorator implements SoundManagerAccessor{
+public abstract class BiomeEndDecoratorMixin extends BiomeDecorator{
     public BiomeEndDecoratorMixin(BiomeGenBase par1BiomeGenBase) {
         super(par1BiomeGenBase);
     }
@@ -23,8 +23,6 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator implements S
         var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
         this.currentWorld.spawnEntityInWorld(var4);
 //        System.out.println(this.getSoundSystem()); crashes
-//        this.getSoundSystem().backgroundMusic("nmBossTheme","nmBoss",true);
-//        this.getSoundSystem().setVolume("nmBossTheme", 0.5f);
-//        this.getSoundSystem().play("nmBossTheme");
+//        getting the soundsystem using the accessor causes a crash. will postpone custom soundtrack until later release
     }
 }

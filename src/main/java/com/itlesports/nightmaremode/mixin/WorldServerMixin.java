@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(WorldServer.class)
 public class WorldServerMixin {
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
-    private boolean canBeInCreative(Difficulty instance){
-        return false;
-    }
+//    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
+//    private boolean canBeInCreative(Difficulty instance){
+//        return false;
+//    }
 }

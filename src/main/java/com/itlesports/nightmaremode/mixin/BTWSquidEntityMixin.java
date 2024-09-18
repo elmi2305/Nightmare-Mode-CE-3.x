@@ -29,8 +29,6 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         super(par1World);
     }
 
-
-
     @Inject(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V",
@@ -54,8 +52,6 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
     private void doNothing(BTWSquidEntity instance, Entity iFXJ, boolean iFXK){}
-
-
 
     @Inject(method = "updateHeadCrab",
             at = @At(value = "FIELD",
@@ -83,13 +79,19 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
                 case 0:
                     break;
                 case 1:
-                    headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.poison.id,120,0));
+                    if (!headcrabbedPlayer.isPotionActive(Potion.poison)) {
+                        headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.poison.id,120,0));
+                    }
                     break;
                 case 2:
-                    headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 200,0));
+                    if (!headcrabbedPlayer.isPotionActive(Potion.wither)) {
+                        headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 200,0));
+                    }
                     break;
                 case 3:
-                    headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 300,0));
+                    if (!headcrabbedPlayer.isPotionActive(Potion.wither)) {
+                        headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 300,0));
+                    }
                     headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.hunger.id, 160,0));
                     break;
             }
@@ -103,15 +105,11 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         this.headCrabDamageCounter = 15;
     }
 
-
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
         return NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0 ? 12*(NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1) : 18;
         // pre nether 20, hardmode 24, post wither 36, post dragon 48
     }
-
-
-
     // TENTACLES
     @Inject(method = "updateEntityActionState", at = @At("HEAD"))
     private void lowerTentacleCooldown(CallbackInfo ci){
@@ -121,21 +119,17 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         }
     }
 
-
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
         return 100-(NightmareUtils.getGameProgressMobsLevel(this.worldObj)*30);
+        // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.
+        // this purely insures the cooldown condition is true whenever it is checked
     }
 
-
-
-
-
-    // ATTEMPT TO DOUBLE THE SQUID RANGE
+    // increasing the squid range
     @Shadow(remap = false) private double tentacleAttackTargetX;
     @Shadow(remap = false) private double tentacleAttackTargetY;
     @Shadow(remap = false) private double tentacleAttackTargetZ;
-
     @Shadow(remap = false)
     public abstract void launchTentacleAttackInDirection(double dUnitVectorToTargetX, double dUnitVectorToTargetY, double dUnitVectorToTargetZ);
 
@@ -150,20 +144,18 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         this.tentacleAttackTargetZ = this.posZ + dUnitVectorToTargetZ * 8.0;
     }
 
-
     @Redirect(method = "updateHeadCrabActionState",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;attemptTentacleAttackOnTarget()V"))
     // redirecting attemptTentacleAttackOnTarget to execute basically a better version of itself. doubled the range in the
     // if statement, and I made there not be any LOS (line of sight) checks when launching the tentacle.
     private void attemptTentacleAttackOnTarget1(BTWSquidEntity instance) {
-        BTWSquidEntity thisObject = (BTWSquidEntity) (Object) this;
-        double dDeltaX = thisObject.entityToAttack.posX - this.posX;
-        double dDeltaY = thisObject.entityToAttack.posY + (double) (thisObject.entityToAttack.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
-        double dDeltaZ = thisObject.entityToAttack.posZ - this.posZ;
+        double dDeltaX = instance.entityToAttack.posX - this.posX;
+        double dDeltaY = instance.entityToAttack.posY + (double) (instance.entityToAttack.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
+        double dDeltaZ = instance.entityToAttack.posZ - this.posZ;
         double dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
         if (dDistSqToTarget < 81.0) {
-            dDeltaY = thisObject.entityToAttack.posY + (double) thisObject.entityToAttack.getEyeHeight() - (this.posY + (double) (this.height / 2.0F));
+            dDeltaY = instance.entityToAttack.posY + (double) instance.entityToAttack.getEyeHeight() - (this.posY + (double) (this.height / 2.0F));
             dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
 
             double dDistToTarget = MathHelper.sqrt_double(dDistSqToTarget);
@@ -184,16 +176,15 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private boolean squidAlwaysNightPostNether(World instance){
         if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>0){
             return false;
-        } else return this.worldObj.getWorldTime() % 24000 < 12000; // the % 24000 might not be needed, but I'm not sure
+        } else return this.worldObj.isDaytime();
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
-    private boolean canAlwaysSeePlayer(BTWSquidEntity instance, Entity entity){
+    private boolean canSeeThroughObstacles(BTWSquidEntity instance, Entity entity){
         return true;
     }
 
-    // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is
-    // not in water potentially
+    // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is not in water
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z",ordinal = 0))
     private boolean tentacleEvenIfBeached(BTWSquidEntity instance){
         return true;

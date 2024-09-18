@@ -98,10 +98,12 @@ public class EntityCreeperMixin {
     @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
     private void jumpBeforeExploding(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
+
         if (thisObj.getCreeperState()==1) {
             creeperTimeSinceIgnited++;
         } else {creeperTimeSinceIgnited = 0;}
-        if (creeperTimeSinceIgnited == this.fuseTime - 8 && thisObj.getCreeperState()==1) {
+        // 8 ticks before it explodes
+        if (creeperTimeSinceIgnited == (this.fuseTime - 8) && thisObj.getCreeperState()==1) {
             thisObj.motionY = 0.38F;
             EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
             if(target != null) {

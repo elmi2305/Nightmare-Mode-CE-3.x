@@ -143,7 +143,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
     }
 
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if (this.worldObj.getDifficulty().isHostile() && par1DamageSource.isExplosion()) {
+        if (par1DamageSource.isExplosion()) {
             par2 /= 2.0F;
         }
 

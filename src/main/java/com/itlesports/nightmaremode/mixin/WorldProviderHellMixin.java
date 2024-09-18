@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(WorldProviderHell.class)
 public class WorldProviderHellMixin {
-    @Redirect(method = "generateLightBrightnessTable", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;isHostile()Z"))
+    @Redirect(method = "generateLightBrightnessTable", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;doesNetherHaveGloom()Z"))
     private boolean onlyGloomInNetherIfHardmode(Difficulty instance){
         WorldProviderHell thisObj = (WorldProviderHell)(Object)this;
         return NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) >= 1;

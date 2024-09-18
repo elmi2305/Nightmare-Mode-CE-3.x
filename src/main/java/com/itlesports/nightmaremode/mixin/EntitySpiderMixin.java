@@ -56,7 +56,7 @@ public abstract class EntitySpiderMixin {
     private int increaseSpiderEyeRates(int bound){
         return 4;
     }
-    @Inject(method = "attackEntity", at  = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat()<0.4+ NightmareUtils.getGameProgressMobsLevel(target.worldObj)*0.2){
             if (NightmareUtils.getGameProgressMobsLevel(target.worldObj)<=1) {

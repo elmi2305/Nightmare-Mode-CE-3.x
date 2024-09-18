@@ -80,10 +80,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         if (this.worldObj != null && this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID) {
             EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
             jumpCooldown ++;
-            if(jumpCooldown>70){
-                this.motionX = 0;
-                this.motionZ = 0;
-            }
             if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && jumpCooldown >= 60){
                 this.motionY = 0.45;
                 jumpCooldown = 0;
@@ -102,8 +98,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-//            this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000000,0));
-//            this.isImmuneToFire = true;
             this.setIsImmuneToFire(true);
             if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2 && rand.nextFloat() < 0.13 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*0.07)){
                 // 13% -> 20%

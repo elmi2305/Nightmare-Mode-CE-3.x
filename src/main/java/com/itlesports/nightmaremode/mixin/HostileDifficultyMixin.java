@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HostileDifficulty.class)
 public class HostileDifficultyMixin {
-    @Inject(method = "getAbandonmentRangeMultiplier", at = @At("RETURN"),cancellable = true,remap = false)
+    @Inject(method = "getAbandonmentRangeMultiplier", at = @At("RETURN"),remap = false, cancellable = true)
     private void noAbandonment(CallbackInfoReturnable<Float> cir){
         cir.setReturnValue(0f);
     }
-    @Inject(method = "hasAbandonedStructures", at = @At("RETURN"),cancellable = true,remap = false)
-    private void noAbandonment1(CallbackInfoReturnable<Boolean> cir){
+    @Inject(method = "hasAbandonedStructures", at = @At("RETURN"),remap = false, cancellable = true)
+    private void noAbandonmentStructures(CallbackInfoReturnable<Boolean> cir){
         cir.setReturnValue(false);
     }
 }

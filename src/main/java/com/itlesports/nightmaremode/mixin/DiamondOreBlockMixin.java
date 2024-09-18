@@ -13,19 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 @Mixin(DiamondOreBlock.class)
-public class DiamondOreBlockMixin extends OreBlockStaged {
-    public DiamondOreBlockMixin(int iBlockID) {
-        super(iBlockID);
-    }
+public class DiamondOreBlockMixin  {
     @Inject(method = "idDropped", at = @At("RETURN"), cancellable = true)
     private void dropSoulforgedSteelAfterWither(int iMetadata, Random rand, int iFortuneModifier, CallbackInfoReturnable<Integer> cir){
         if(WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
             cir.setReturnValue(BTWItems.soulFlux.itemID);
         }
-    }
-
-    @Override
-    public int idDroppedOnConversion(int var1) {
-        return Item.diamond.itemID;
     }
 }

@@ -27,7 +27,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
             skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(7) - 2);
             for (int i = 0; i < 5; i++) {
-                skeleton.setCurrentItemOrArmor(0, this.getCurrentItemOrArmor(0));
+                skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
             }
             if (skeleton.getCurrentItemOrArmor(0) == null) {
                 if (rand.nextInt(25) == 0) {
