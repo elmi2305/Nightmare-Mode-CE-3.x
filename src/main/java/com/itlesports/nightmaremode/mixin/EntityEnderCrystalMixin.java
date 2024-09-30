@@ -50,4 +50,8 @@ public abstract class EntityEnderCrystalMixin extends Entity{
     private void updateEndCrystalSize(World par1World, CallbackInfo ci){
         this.setSize(1.8f,3.2f);
     }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDespawnIfDeloaded(CallbackInfo ci){
+        if(this.dimension != 1 && this.ridingEntity == null && this.ticksExisted >= 24000){this.setDead();}
+    }
 }

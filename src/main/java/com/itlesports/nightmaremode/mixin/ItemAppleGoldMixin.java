@@ -30,6 +30,10 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         }
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void decreaseStacksize(int j, int f, float bl, boolean par4, CallbackInfo ci){
+        this.maxStackSize = 2;
+    }
 
 //        List<Integer> potionIDList= new ArrayList<>();
 //        for(int i = 1; i <= 22; i++){
@@ -44,7 +48,6 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
 //
 //            entityPlayer.addPotionEffect(new PotionEffect(id,300,amplifier));
 //        }
-
 
     // ENCHANTED GOLDEN APPLE
     @Inject(method = "onFoodEaten",

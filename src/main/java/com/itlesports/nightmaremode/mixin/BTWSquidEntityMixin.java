@@ -1,21 +1,15 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.BTWSquidEntity;
-import btw.world.util.WorldUtils;
-import com.itlesports.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -170,13 +164,24 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {
-        return NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0;
+        if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0) {
+            return true;
+        }
+        return bIsInDarkness;
     }
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean squidAlwaysNightPostNether(World instance){
         if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>0){
             return false;
         } else return this.worldObj.isDaytime();
+    }
+
+    @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
+    private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
+        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>0){
+            return 0.01f;
+        }
+        return instance.getBrightness(1.0f);
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))

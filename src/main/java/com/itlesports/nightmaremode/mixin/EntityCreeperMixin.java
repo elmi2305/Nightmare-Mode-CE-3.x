@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -10,9 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Objects;
 import java.util.Random;
 
 @Mixin(EntityCreeper.class)
@@ -31,6 +28,21 @@ public class EntityCreeperMixin {
         // 20 -> 26 -> 32 -> 38
     }
 
+    @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
+    private double increaseCreeperBreachRange(double constant){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        if (thisObj.worldObj != null) {
+            int i = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+            return switch (i) {
+                case 0 -> 36; // 6b
+                case 1 -> 64; // 8b
+                case 2 -> 100; // 10b
+                case 3 -> 196; // 14b
+                default -> constant;
+            };
+        }
+        return constant;
+    }
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){

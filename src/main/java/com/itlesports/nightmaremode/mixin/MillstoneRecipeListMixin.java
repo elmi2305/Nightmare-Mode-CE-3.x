@@ -21,11 +21,8 @@ import java.util.Random;
 public class MillstoneRecipeListMixin {
     @Inject(method = "addRecipes", at = @At("TAIL"),remap = false)
     private static void addAdditionalRecipes(CallbackInfo ci){
-        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds,2), new ItemStack(BTWItems.hempSeeds));
+        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
-        RecipeManager.addMillStoneRecipe(new ItemStack(Item.potato), new ItemStack(BTWItems.straw));
-        RecipeManager.addMillStoneRecipe(new ItemStack(Item.melonSeeds), new ItemStack(Item.pumpkinSeeds));
-        RecipeManager.addMillStoneRecipe(new ItemStack(Item.pumpkinSeeds), new ItemStack(Item.melonSeeds));
         RecipeManager.addMillStoneRecipe(new ItemStack[]{new ItemStack(NMItems.rifle), new ItemStack(NMItems.rpg)}, new ItemStack[]{new ItemStack(Block.dragonEgg)});
     }
 }

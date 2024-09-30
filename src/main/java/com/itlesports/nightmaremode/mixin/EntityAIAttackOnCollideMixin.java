@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.RottenArrowEntity;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +20,11 @@ import java.util.List;
 public abstract class EntityAIAttackOnCollideMixin {
     @Unique int arrowCooldown = 10;
 
-
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void increaseRangeOnToolHeld(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.getAttackTarget() != null
-                && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem())
+                && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem()) // refactor the compute range method to take entity param instead of item stack
                 && isHoldingIllegalItem(thisObj.attacker)
                 && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
             thisObj.attacker.swingItem();
@@ -70,30 +70,6 @@ public abstract class EntityAIAttackOnCollideMixin {
         }
     }
 
-
-    @Inject(method = "updateTask", at = @At("TAIL"))
-    private void manageJumpAttack(CallbackInfo ci){
-        EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
-        if(thisObj.attacker instanceof EntityZombie zombie
-                && zombie.getHeldItem() == null
-                && zombie.ticksExisted % 50 ==  49
-                && thisObj.attackTick <= 0
-                && zombie.rand.nextInt(2)==0
-                && zombie.getAttackTarget() instanceof EntityPlayer target
-                && zombie.getDistanceSqToEntity(zombie.getAttackTarget()) < 30
-                && zombie.onGround
-//                && zombie.canEntityBeSeen(target)
-                && zombie.getEntitySenses().canSee(target)
-        ) {
-            double var1 = target.posX - zombie.posX;
-            double var2 = target.posZ - zombie.posZ;
-            Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
-            vector.normalize();
-            zombie.motionX = vector.xCoord * 0.2;
-            zombie.motionY = 0.34;
-            zombie.motionZ = vector.zCoord * 0.2;
-        }
-    }
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){
         if (heldItem != null && getIllegalItems().contains(heldItem.itemID)) {
             if((heldItem.itemID == Item.swordWood.itemID || heldItem.itemID == BTWItems.boneClub.itemID || heldItem.itemID == Item.swordDiamond.itemID || heldItem.itemID == Item.axeGold.itemID)){

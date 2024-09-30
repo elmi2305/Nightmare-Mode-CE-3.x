@@ -4,6 +4,8 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulty;
+import com.itlesports.nightmaremode.EntityAILunge;
+import com.itlesports.nightmaremode.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,9 +49,6 @@ public abstract class EntityZombieMixin extends EntityMob{
             this.setDead();
         }
     }
-
-
-
     @Unique private boolean canEntitySeeSun(){
         if(this.worldObj.isDaytime() && !this.worldObj.isRainingAtPos((int)this.posX, (int)this.posY, (int)this.posZ) && !this.isChild() && !this.inWater){
             return this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY + (double) this.getEyeHeight()), MathHelper.floor_double(this.posZ));
@@ -61,7 +60,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void transformIntoSkeletonOnFireDeath(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (!this.isEntityInvulnerable() && canEntitySeeSun()) {
-            if ((!this.isVillager() && this.getHealth() <= par2) && !isCrystalHead(this)) {this.onKilledBySun();}
+            if ((!this.isVillager() && this.getHealth() <= par2) && !isCrystalHead(this) && !this.isImmuneToFire) {this.onKilledBySun();}
         }
     }
     @Inject(method = "checkForLooseFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playAuxSFX(IIIII)V"))
@@ -132,9 +131,24 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
+
+    @Inject(method = "addRandomArmor", // summons crystalhead zombie on a 1% chance
+            at = @At("TAIL"))
+    private void chanceToSpawnShadowZombie(CallbackInfo ci){
+        if (this.worldObj != null) {
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=1 && rand.nextFloat()<0.25f){
+                summonShadowZombieAtPos();
+            }
+        }
+    }
+
+
     @ModifyConstant(method = "addRandomArmor",constant = @Constant(floatValue = 0.05F))
     private float modifyChanceToHaveIronTool(float constant){
         if (this.worldObj != null) {
+            if((EntityZombie)(Object)this instanceof EntityShadowZombie){
+                return 0;
+            }
             if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)==3){return 0.3f;}
             else {
                 return (float)(0.05F + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.03));
@@ -142,6 +156,11 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
         return 0.05f;
         // 0.05f -> 0.08f -> 0.11f -> 0.30f
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void addLungeAI(World par1World, CallbackInfo ci){
+        this.targetTasks.addTask(2, new EntityAILunge(this, true));
     }
 
     @ModifyConstant(method = "addRandomArmor", constant = @Constant(floatValue = 0.99F))
@@ -166,7 +185,6 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
     }
 
-
     @Unique
     private void summonCrystalHeadAtPos(){
         Entity crystalhead = new EntityZombie(this.worldObj);
@@ -182,6 +200,21 @@ public abstract class EntityZombieMixin extends EntityMob{
         crystalhead.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots))); // black
         crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings))); // black
         crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest))); // black
+        this.setDead();
+    }
+
+    @Unique
+    private void summonShadowZombieAtPos(){
+        Entity shadowZombie = new EntityShadowZombie(this.worldObj);
+        shadowZombie.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+
+        shadowZombie.setCurrentItemOrArmor(1, null);
+        shadowZombie.setCurrentItemOrArmor(2, null);
+        shadowZombie.setCurrentItemOrArmor(3, null);
+        shadowZombie.setCurrentItemOrArmor(4, null);
+
+        this.worldObj.spawnEntityInWorld(shadowZombie);
+
         this.setDead();
     }
 

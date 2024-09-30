@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.client.render.BTWRenderMapper;
-import com.itlesports.nightmaremode.EntityFireCreeper;
-import com.itlesports.nightmaremode.RenderFireCreeper;
-import net.minecraft.src.RenderCreeper;
+import com.itlesports.nightmaremode.*;
 import net.minecraft.src.RenderManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,5 +13,7 @@ public class BTWRenderMapperMixin {
     @Inject(method = "initEntityRenderers", at = @At("TAIL"),remap = false)
     private static void doNightmareEntityRenderMapping(CallbackInfo ci){
         RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderFireCreeper());
+        RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderShadowZombie());
+//        RenderManager.addEntityRenderer(SocksMobsEntityGoatPossessed.class, new SocksMobsRenderGoatPossessed(new SocksMobsModelGoatPossessed(),1));
     }
 }

@@ -6,6 +6,7 @@ import btw.block.BTWBlocks;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.EntityFireCreeper;
+import com.itlesports.nightmaremode.EntityShadowZombie;
 import net.minecraft.src.*;
 
 import java.util.Random;
@@ -22,7 +23,7 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
-        addMobBiomeSpawn();
+//        addMobBiomeSpawn();
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);
@@ -58,39 +59,54 @@ public class NightmareMode extends BTWAddon {
 
     private void addMobBiomeSpawn() {
         // adds fire creepers
-        BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 6, 1, 2));
-        BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 6, 1, 2));
-        BiomeGenBase.extremeHillsEdge.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 40, 1, 1));
-        BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.jungle.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.swampland.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.beach.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
-        BiomeGenBase.icePlains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 1, 1, 2));
-        BiomeGenBase.taiga.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 2, 1, 2));
-        BiomeGenBase.taigaHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 2, 1, 2));
+//        BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 6, 1, 2));
+//        BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 6, 1, 2));
+//        BiomeGenBase.extremeHillsEdge.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.hell.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 40, 1, 1));
+//        BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.jungle.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.swampland.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.beach.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+//        BiomeGenBase.icePlains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 1, 1, 2));
+//        BiomeGenBase.taiga.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 2, 1, 2));
+//        BiomeGenBase.taigaHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityFireCreeper.class, 2, 1, 2));
 
         // adds creepers to the end and nether
-        BiomeGenEnd.sky.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityCreeper.class,1,1,1));
-        BiomeGenHell.hell.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityCreeper.class,20,1,2));
+//        BiomeGenEnd.sky.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityCreeper.class,1,1,1));
+//        BiomeGenHell.hell.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityCreeper.class,20,1,2));
 
-        if(WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
-            // adds witches post hardmode
-            BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.icePlains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.iceMountains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.jungle.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.beach.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.taiga.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-            BiomeGenBase.taigaHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
-        }
+//        if(WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
+//            // adds witches post hardmode
+//            BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.icePlains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.iceMountains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.jungle.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.beach.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.taiga.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//            BiomeGenBase.taigaHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityWitch.class, 1, 1, 1));
+//
+//            // adds shadow zombies post nether
+//            BiomeGenBase.plains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.jungleHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.forest.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.forestHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.extremeHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.desert.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.desertHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.icePlains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.iceMountains.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.jungle.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.beach.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.taiga.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//            BiomeGenBase.taigaHills.getSpawnableList(EnumCreatureType.monster).add(new SpawnListEntry(EntityShadowZombie.class, 5, 1, 2));
+//        }
     }
 }

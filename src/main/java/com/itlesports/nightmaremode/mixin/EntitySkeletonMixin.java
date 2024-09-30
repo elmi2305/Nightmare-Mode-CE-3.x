@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulty;
+import btw.world.util.data.DataEntry;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,11 +38,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         this.tasks.removeAllTasksOfClass(EntityAIFleeSun.class);
         this.tasks.removeAllTasksOfClass(EntityAIRestrictSun.class);
     }
-
+    
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
         if (this.getSkeletonType() == 1){
-            return 0.35;
+            return 0.3;
         }
         if (this.worldObj != null) {
             return 0.29+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;

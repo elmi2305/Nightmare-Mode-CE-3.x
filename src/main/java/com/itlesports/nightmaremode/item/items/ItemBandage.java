@@ -49,7 +49,7 @@ public class ItemBandage extends ItemFood {
                 int iDamage = stack.getItemDamage();
                 --iDamage;
 //                if (iDamage % 4 == 0) {
-//                    this.playCraftingFX(stack, world, player);
+//                    world.playSoundAtEntity(player, "step.cloth", 1.0f, world.rand.nextFloat() * 0.1f + 0.9f);
 //                }
 
                 if (iDamage > 0) {

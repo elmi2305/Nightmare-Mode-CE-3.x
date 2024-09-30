@@ -22,8 +22,8 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;isBurning()Z", ordinal = 1))
     private void checkIfItemShouldBurn(CallbackInfo ci){
         if (this.furnaceItemStacks[2] != null) {
-            if(this.furnaceItemStacks[2].toString().contains("Cooked") || this.furnaceItemStacks[2].toString().contains("Baked") || this.furnaceItemStacks[2].toString().contains("Fried")){
-                this.burnCounter++;                     // because of how this is implemented, cake and pumpkin pie don't burn.
+            if((this.furnaceItemStacks[2].toString().contains("Cooked") || this.furnaceItemStacks[2].toString().contains("Fried")) && !this.furnaceItemStacks[2].toString().contains("Carrot")){
+                this.burnCounter++;
                 if(this.burnCounter >= 1600) {
                     burnCounter = 0;
                     ItemStack var2 = new ItemStack(BTWItems.burnedMeat);
