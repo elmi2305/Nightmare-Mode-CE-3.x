@@ -11,4 +11,6 @@ public interface GuiCreateWorldAccessor {
     int getDifficultyID();
     @Accessor("difficultyID")
     void setDifficultyID(int par1);
+    @Accessor("lockDifficulty")
+    void setLockDifficulty(boolean par2);
 }

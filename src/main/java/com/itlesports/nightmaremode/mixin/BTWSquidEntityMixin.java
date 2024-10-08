@@ -37,10 +37,10 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private int increaseMysteriousGlandDropRate(int constant){return 2;}
     // makes the random function roll a number between 0 and 2 instead of 0 and 8
 
-    // adds a flat +2 to inc sac drops
+    // adds a flat +1 to inc sac drops
     @Inject(method = "dropFewItems", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;rand:Ljava/util/Random;",ordinal = 0))
     private void dropMoreSacs(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        this.entityDropItem(new ItemStack(Item.dyePowder, 2, 0), 0.0f);
+        this.entityDropItem(new ItemStack(Item.dyePowder, 1, 0), 0.0f);
     }
     @Redirect(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
@@ -53,7 +53,9 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
                     ordinal = 3,
                     shift = At.Shift.AFTER))
     private void resetHeadCrabCounter(CallbackInfo ci){
-        this.headCrabDamageCounter = 11;
+        if (this.worldObj.getDifficulty().ID != 0) {
+            this.headCrabDamageCounter = 11;
+        }
     }
 
 

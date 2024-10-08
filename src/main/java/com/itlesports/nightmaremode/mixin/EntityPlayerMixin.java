@@ -4,6 +4,7 @@ import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulty;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +34,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             cir.setReturnValue(false);
         }
     }
+
+
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
         return 0.17f; // jump

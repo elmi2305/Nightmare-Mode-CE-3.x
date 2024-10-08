@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.DireWolfEntity;
+import com.itlesports.nightmaremode.EntityShadowZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -9,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(EntityDragon.class)
 public abstract class EntityDragonMixin extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob {
@@ -23,6 +26,18 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     public EntityDragonMixin(World par1World) {
         super(par1World);
     }
+
+//    @Inject(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;setDead()V"))
+//    private void convertAllNearbyEndermenToShadowZombies(CallbackInfo ci){
+//        List list = this.worldObj.getEntitiesWithinAABB(EntityEnderman.class, this.boundingBox.expand(200.0, 150.0, 200.0));
+//        for(Object tempEntity: list){
+//            EntityShadowZombie zombie = new EntityShadowZombie(((EntityEnderman)tempEntity).worldObj);
+//            zombie.copyLocationAndAnglesFrom((EntityEnderman)tempEntity);
+//            ((EntityEnderman)tempEntity).worldObj.spawnEntityInWorld(zombie);
+//            ((EntityEnderman)tempEntity).setDead();
+//        }
+//    }
+    // converts all endermen to shadow zombies
 
     @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;createEnderPortal(II)V"))
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {

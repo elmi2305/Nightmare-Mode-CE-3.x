@@ -42,7 +42,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     skeleton.setCurrentItemOrArmor(4,var2);
                 }
             }
-            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && this.rand.nextFloat()<=0.2941){
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && this.rand.nextFloat()<=0.3){
                 skeleton.setSkeletonType(1);
             }
             this.worldObj.spawnEntityInWorld(skeleton);

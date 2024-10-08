@@ -32,7 +32,7 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void decreaseStacksize(int j, int f, float bl, boolean par4, CallbackInfo ci){
-        this.maxStackSize = 2;
+        this.maxStackSize = 1;
     }
 
 //        List<Integer> potionIDList= new ArrayList<>();
