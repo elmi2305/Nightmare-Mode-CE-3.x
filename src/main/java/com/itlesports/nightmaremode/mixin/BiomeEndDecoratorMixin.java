@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 import net.minecraft.src.BiomeEndDecorator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,10 +20,12 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator{
             target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z",
             shift = At.Shift.AFTER))
     private void spawnDragon(CallbackInfo ci){
-        EntityDragon var4 = new EntityDragon(this.currentWorld);
-        var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
-        this.currentWorld.spawnEntityInWorld(var4);
-//        System.out.println(this.getSoundSystem()); crashes
-//        getting the soundsystem using the accessor causes a crash. will postpone custom soundtrack until later release
+        if (this.currentWorld.getDifficulty() == Difficulties.HOSTILE) {
+            EntityDragon var4 = new EntityDragon(this.currentWorld);
+            var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
+            this.currentWorld.spawnEntityInWorld(var4);
+        }
+        //getting the soundsystem using the accessor causes a crash. will postpone custom soundtrack until later release
+        // oct 2024 update: there's no API for custom sounds. will not write my own hooks
     }
 }

@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.DireWolfEntity;
+import btw.world.util.WorldUtils;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +32,14 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void attackTimer(CallbackInfo ci){
-        if (witherAttackTimer<2000) {
+        if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 100 == 0){
+            EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
+            if (tempTarget != null) {
+                this.setAttackTarget(tempTarget);
+            }
+        }
+
+        if (witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2000 : 4000)) {
             witherAttackTimer+= this.rand.nextInt(5)+1;
             if(hasRevived){witherAttackTimer += 3;}
         }
@@ -59,13 +68,13 @@ public abstract class EntityWitherMixin extends EntityMob {
     @ModifyArg(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float witherDamageCap(float par2) {
         if(par2 > 200){return 400;} // if you want to instakill it with creative
-        if(par2 > 20){return 20;}
+        if(par2 > 20 && (!WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly() && this.getHealth() < 40)){return 20;}
         return par2;
     }
 
     @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",shift = At.Shift.AFTER))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getHealth()<21 && !hasRevived){
+        if(this.getHealth()<21 && !hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             this.setHealth(300);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("A God does not fear death.");
@@ -87,15 +96,16 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "updateAITasks", at = @At("HEAD"))
     private void manageMinionSpawning(CallbackInfo ci){
-        if (witherAttackTimer >= 2000){
+        if (witherAttackTimer >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2000 : 4000)){
             if (witherSummonTimer == 0){
                 this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY),MathHelper.floor_double(this.posZ), 0);
+                this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
             }
             witherSummonTimer++;
-            if (witherSummonTimer > 0 && witherSummonTimer < 140){
+            if (witherSummonTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 100) && witherSummonTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 140)){
                 this.motionX = this.motionZ = 0;
             }
-            if(witherSummonTimer == 40){
+            if(witherSummonTimer == (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 100)){
                 if (!hasRevived) {
                     for(int i = 0; i<3; i++) {
                         int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
@@ -122,7 +132,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                         tempMinion.entityToAttack = this.getAttackTarget();
                         this.worldObj.spawnEntityInWorld(tempMinion);
                     }
-                } else if(this.getHealth()<75 && this.rand.nextFloat()<0.5f){
+                } else if(this.getHealth()<100 && this.rand.nextFloat()<0.5f){
 
                     for(int i = 0; i<3; i++) {
                         int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);

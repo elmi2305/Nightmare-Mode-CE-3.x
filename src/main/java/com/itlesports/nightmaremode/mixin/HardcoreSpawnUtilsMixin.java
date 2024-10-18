@@ -5,6 +5,7 @@ import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.world.util.WorldUtils;
+import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +25,7 @@ public abstract class HardcoreSpawnUtilsMixin{
     @Inject(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;setTimeOfLastSpawnAssignment(J)V"))
     private static void nightSetterUponDeath(World world, MinecraftServer server, EntityPlayerMP player, CallbackInfoReturnable<Boolean> cir) {
         long overworldTime = WorldUtils.getOverworldTimeServerOnly();
-        if (BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) {
+        if ((BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) && world.getDifficulty() == Difficulties.HOSTILE) {
             overworldTime += 18000L;
 
             if(overworldTime % 192000 == 114000){

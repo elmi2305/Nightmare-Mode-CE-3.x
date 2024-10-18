@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -30,7 +31,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                     // can't jump if you have slowness
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
-        if(this.isPotionActive(Potion.moveSlowdown)){
+        if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             cir.setReturnValue(false);
         }
     }
@@ -105,14 +106,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
-        for (Object tempEntity : list) {
-            if(tempEntity instanceof EntityEnderCrystal && this.dimension != 1 && ((EntityEnderCrystal) tempEntity).ridingEntity == null){((EntityEnderCrystal) tempEntity).setDead();}
-            if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
-            if (tempAnimal instanceof EntityWolf) continue;
-            if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
-            ((EntityAnimalInvoker) ((EntityAnimal)(Object)tempAnimal)).invokeOnNearbyPlayerStartles(thisObj);
-            break;
+        if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
+            for (Object tempEntity : list) {
+                if(tempEntity instanceof EntityEnderCrystal && this.dimension != 1 && ((EntityEnderCrystal) tempEntity).ridingEntity == null){((EntityEnderCrystal) tempEntity).setDead();}
+                if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
+                if (tempAnimal instanceof EntityWolf) continue;
+                if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
+                ((EntityAnimalInvoker) ((EntityAnimal)(Object)tempAnimal)).invokeOnNearbyPlayerStartles(thisObj);
+                break;
+            }
         }
     }
 

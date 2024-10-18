@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -38,7 +39,7 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
     private void hostileInEnd(CallbackInfoReturnable<Entity> cir, EntityPlayer target){
         if (target != null){
             ItemStack var2 = target.inventory.armorInventory[3];
-            if (target.dimension==1) {
+            if (target.dimension==1 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 if (var2 == null) {
                     this.angerNearbyEndermen(target);
                     cir.setReturnValue(target);
@@ -67,8 +68,6 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
         }
     }
 
-
-
     @Inject(method = "onLivingUpdate",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntityEnderman;entityMobOnLivingUpdate()V"))
@@ -86,7 +85,10 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
 
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"), cancellable = true)
     private void attackClosePlayers(CallbackInfoReturnable<Entity> cir){
-        EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 4);
+        EntityPlayer target = null;
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 4);
+        }
         EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 8);
         if(effectTarget != null && this.dimension != 1){
             effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));

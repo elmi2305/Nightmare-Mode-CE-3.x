@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -29,21 +30,23 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Inject(method="updateGloomState", at = @At("HEAD"))
     public void incrementInGloomCounter(CallbackInfo info) {
         if (this.getGloomLevel() > 0) {
-            this.inGloomCounter+=5; // gloom goes up 6x faster
+            this.inGloomCounter += 5; // gloom goes up 6x faster
         }
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
-        Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
-        getEntityWorld().addWeatherEffect(lightningbolt);
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
+            getEntityWorld().addWeatherEffect(lightningbolt);
 
-        // SUMMONS EXPLOSION. explosion does tile and entity damage. effectively kills all dropped items.
-        double par2 = this.posX;
-        double par4 = this.posY;
-        double par6 = this.posZ;
-        float par8 = 3.0f;
-        this.worldObj.createExplosion(null, par2, par4, par6, par8, true);
+            // SUMMONS EXPLOSION. explosion does tile and entity damage. effectively kills all dropped items.
+            double par2 = this.posX;
+            double par4 = this.posY;
+            double par6 = this.posZ;
+            float par8 = 3.0f;
+            this.worldObj.createExplosion(null, par2, par4, par6, par8, true);
+        }
     }
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))

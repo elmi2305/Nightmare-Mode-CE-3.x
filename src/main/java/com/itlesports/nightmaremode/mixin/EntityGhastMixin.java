@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,10 +30,10 @@ public class EntityGhastMixin {
     @Inject(method = "updateEntityActionState", at =@At("HEAD"))
     private void manageRageState(CallbackInfo ci){
         EntityGhast thisObj = (EntityGhast)(Object)this;
-        if(rageTimer>0){
+        if(rageTimer > 0){
             rageTimer++;
             EntityPlayer entityTargeted = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj, 100.0);
-            if (entityTargeted != null && rageTimer % 4 == 0) {
+            if (entityTargeted != null && rageTimer % (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 4 : 8) == 0) {
                 Vec3 ghastLookVec = thisObj.getLook(1.0f);
                 double dFireballX = thisObj.posX + ghastLookVec.xCoord;
                 double dFireballY = thisObj.posY + (double)(thisObj.height / 2.0f);

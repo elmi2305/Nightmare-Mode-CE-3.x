@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.EntityPigZombie;
 import net.minecraft.src.EntityPlayer;
@@ -18,7 +19,8 @@ public class EntityPigZombieMixin {
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
         EntityPigZombie thisObj = (EntityPigZombie)(Object)this;
-        List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(3.0, 3.0, 3.0));
+        double range = thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0;
+        List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(range, range, range));
         for (Object tempEntity : list) {
             if (!(tempEntity instanceof EntityPlayer player)) continue;
             if (this.isPlayerWearingGoldArmor(player)) continue;

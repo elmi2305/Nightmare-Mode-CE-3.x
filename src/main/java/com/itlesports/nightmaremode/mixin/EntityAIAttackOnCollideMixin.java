@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.RottenArrowEntity;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -26,7 +27,8 @@ public abstract class EntityAIAttackOnCollideMixin {
         if(thisObj.attacker.getAttackTarget() != null
                 && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem()) // refactor the compute range method to take entity param instead of item stack
                 && isHoldingIllegalItem(thisObj.attacker)
-                && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
+                && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
+                && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())) {
             thisObj.attacker.swingItem();
             thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
         }
@@ -35,7 +37,7 @@ public abstract class EntityAIAttackOnCollideMixin {
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
-        if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer){
+        if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE){
             if(isPlayerHoldingBow(targetPlayer) && isHoldingIllegalItem(thisObj.attacker)){
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.0, 2.4, 2.0));
                 arrowCooldown -= 1;

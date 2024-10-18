@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode;
 
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.mixin.EntityAccess;
 import net.minecraft.src.*;
 
@@ -44,10 +45,12 @@ public class EntityShadowZombie extends EntityZombie {
         double followDistance = 16.0;
         if (this.worldObj != null) {
             followDistance *= (double)this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)*4));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * (4 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2))));
             // 24 -> 28 -> 32 -> 36
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj)*2);
+            // relaxed: 24 + 26
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj) * (2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)));
             // 4 -> 6 -> 8 -> 10
+            // relaxed: 4 -> 5 -> 6 -> 7
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);

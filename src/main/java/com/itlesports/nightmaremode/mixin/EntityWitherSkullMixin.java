@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,10 +15,10 @@ public class EntityWitherSkullMixin {
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
         EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
-        if(thisObj.rand.nextFloat()<0.85){
-            return 1;
+        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            return 2;
         }
-        return 2;
+        return 1;
     }
     @Inject(method = "onImpact",
             at = @At(value = "INVOKE",

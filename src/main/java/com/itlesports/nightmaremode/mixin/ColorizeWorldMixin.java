@@ -17,7 +17,6 @@ public class ColorizeWorldMixin {
     private static float changeFog1(float constant){
         return 0f;
     }
-
     @ModifyArg(method = "reloadFogColors", at = @At(value = "INVOKE", target = "Lcom/prupe/mcpatcher/cc/Colorizer;loadIntColor(Ljava/lang/String;I)I"),index = 1,remap = false)
     private static int changeEndSkyColor(int color){
         return 0x000000;

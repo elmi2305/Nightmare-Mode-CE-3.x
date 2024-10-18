@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode;
 
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 
 public class EntityAILunge extends EntityAITarget {
@@ -19,7 +20,9 @@ public class EntityAILunge extends EntityAITarget {
             return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= 30  // 5.4 blocks
                     && !this.taskOwner.getNavigator().noPath()
                     && this.taskOwner.onGround
-                    && this.taskOwner.getHeldItem() == null;
+                    && this.taskOwner.getHeldItem() == null
+                    && this.taskOwner.worldObj != null // paranoid so I'm checking if it's null. a spawner should never execute this code
+                    && this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE;
         }
         return false;
     }

@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public class EntityMixin {
 
+    // TODO: make this code actually good
+
     @Redirect(method = "updateRiderPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;getMountedYOffset()D"))
     private double getEndCrystalOffset(Entity instance){
         Entity thisObject = (Entity)(Object)this;

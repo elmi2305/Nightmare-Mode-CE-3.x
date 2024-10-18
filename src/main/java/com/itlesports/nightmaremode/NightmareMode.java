@@ -24,26 +24,6 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
     }
 
-//    @Override
-//    public void decorateWorld(BiomeDecoratorBase decorator, World world, Random rand, int x, int y, BiomeGenBase biome) {
-//        this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
-//        for(int var5 = 0; var5 < 30; ++var5) {
-//            int var6 = x + rand.nextInt(16) + 8;
-//            int var7 = rand.nextInt(20)+4;
-//            int var8 = y + rand.nextInt(16) + 8; // this is supposed to be called z
-//            lavaPillowGenThirdStrata.generate(world, rand, var6, var7, var8);
-//        }
-//    }
-
-//    private void genLavaPillow(int par1, WorldGenerator par2WorldGenerator, int par3, int par4) {
-//        for (int var5 = 0; var5 < par1; ++var5) {
-//            int var6 = this.chunk_X + this.getRandomGenerator().nextInt(16) + 8;
-//            int var7 = this.getRandomGenerator().nextInt(par4 - par3) + par3;
-//            int var8 = this.getChunkZ() + this.getRandomGenerator().nextInt(16) + 8;
-//            par2WorldGenerator.generate(this.getCurrentWorld(), this.getRandomGenerator(), var6, var7, var8);
-//        }
-//    }
-
     public static NightmareMode getInstance() {
         if (instance == null)
             instance = new NightmareMode();

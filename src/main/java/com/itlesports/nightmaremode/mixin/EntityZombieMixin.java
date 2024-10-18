@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
-import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulty;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityAILunge;
 import com.itlesports.nightmaremode.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -25,33 +23,40 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Shadow public abstract boolean isVillager();
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
-            EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
-            skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-            skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(7) - 2);
-            for (int i = 0; i < 5; i++) {
-                skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
-            }
-            if (skeleton.getCurrentItemOrArmor(0) == null) {
-                if (rand.nextInt(25) == 0) {
-                    skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
+
+            float witherSkeletonChanceModifier = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0f : 0.2f;
+
+            if (this.rand.nextInt((this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 6)) < 2) {
+                // 100% on hostile, 33% on relaxed
+                EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
+                skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+                skeleton.setHealth(skeleton.getMaxHealth() - this.rand.nextInt(7) - 2);
+                for (int i = 0; i < 5; i++) {
+                    skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
                 }
-            }
-            if (skeleton.getCurrentItemOrArmor(4) == null){
-                if (rand.nextInt(10)==0) {
-                    ItemStack var2 = new ItemStack(Item.skull,1,2);
-                    skeleton.setCurrentItemOrArmor(4,var2);
+                if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+                    if (rand.nextInt(25) == 0) {
+                        skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
+                    }
                 }
+                if (skeleton.getCurrentItemOrArmor(4) == null){
+                    if (rand.nextInt(10)==0) {
+                        ItemStack var2 = new ItemStack(Item.skull,1,2);
+                        skeleton.setCurrentItemOrArmor(4,var2);
+                    }
+                }
+                if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && this.rand.nextFloat() <= (0.3 - witherSkeletonChanceModifier)){
+                    skeleton.setSkeletonType(1);
+                }
+                this.worldObj.spawnEntityInWorld(skeleton);
+                this.setDead();
             }
-            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && this.rand.nextFloat()<=0.3){
-                skeleton.setSkeletonType(1);
-            }
-            this.worldObj.spawnEntityInWorld(skeleton);
-            this.setDead();
         }
     }
     @Unique private boolean canEntitySeeSun(){
         if(this.worldObj.isDaytime() && !this.worldObj.isRainingAtPos((int)this.posX, (int)this.posY, (int)this.posZ) && !this.isChild() && !this.inWater){
-            return this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY + (double) this.getEyeHeight()), MathHelper.floor_double(this.posZ));
+            boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY + (double) this.getEyeHeight()), MathHelper.floor_double(this.posZ));
+            return this.worldObj.getDifficulty() == Difficulties.HOSTILE ? canSeeSky : canSeeSky && this.rand.nextInt(2)==0;
         } else {return false;}
     }
 
@@ -76,37 +81,35 @@ public abstract class EntityZombieMixin extends EntityMob{
     private void chanceToSpawnWithWeapon(CallbackInfo ci) {
         EntityZombie thisObj = (EntityZombie)(Object)this;
         if (thisObj.worldObj != null && !this.isVillager()) {
-            if (rand.nextInt(50) == 0) {
-                ItemStack var1 = new ItemStack(BTWItems.boneClub);
-                thisObj.setCurrentItemOrArmor(0, var1);
+
+            if (rand.nextInt(50 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 50)) == 0) {
+                thisObj.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + (NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj))*1.5));
                 // 3.0 -> 4.0 -> 6.0 -> 7.0
                 doNotDropItems = true;
-            } else if (rand.nextInt(18) == 0) {
-                ItemStack var1 = new ItemStack(Item.swordWood);
-                this.setCurrentItemOrArmor(0, var1);
+            } else if (rand.nextInt(18 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 10)) == 0) {
+                this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
                 // 2.0 -> 3.0 -> 4.0 -> 5.0
                 doNotDropItems = true;
             }
 
             if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) == 1) {
-                if (rand.nextInt(18) == 0) {
+                if (rand.nextInt(18 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 50)) == 0) {
                     ItemStack var1 = new ItemStack(Item.axeGold);
                     ItemStack var2 = new ItemStack(Item.helmetGold);
                     this.setCurrentItemOrArmor(0, var1);
                     this.setCurrentItemOrArmor(4, var2);
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
-                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
+                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 0.05));
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(16.0);
                     doNotDropItems = true;
                 }
-            } else if (rand.nextInt(22) == 0 && NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 1) {
-                ItemStack var1 = new ItemStack(Item.swordDiamond);
-                doNotDropItems = true;
-                this.setCurrentItemOrArmor(0, var1);
+            } else if (rand.nextInt(22 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 50)) == 0 && NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 1) {
+                this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*3));
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2)*3) - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 4));
+                doNotDropItems = true;
                 // 12.0 -> 15.0
             }
         }
@@ -126,7 +129,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             at = @At("TAIL"))
     private void chanceToSpawnCrystalHead(CallbackInfo ci){
         if (this.worldObj != null) {
-            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<=0.025f){
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>=2 && rand.nextFloat()<= (0.025f - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 0.007))){
                 summonCrystalHeadAtPos();
             }
         }

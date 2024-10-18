@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.BTWSquidEntity;
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,7 +54,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
                     ordinal = 3,
                     shift = At.Shift.AFTER))
     private void resetHeadCrabCounter(CallbackInfo ci){
-        if (this.worldObj.getDifficulty().ID != 0) {
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             this.headCrabDamageCounter = 11;
         }
     }
@@ -67,7 +68,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
             this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
-        if(this.ridingEntity instanceof EntityPlayer headcrabbedPlayer) {
+        if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer headcrabbedPlayer) {
             if (squidOnHeadTimer > 100) {
                 headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
@@ -103,21 +104,29 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
 
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
-        return NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0 ? 12*(NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1) : 18;
-        // pre nether 20, hardmode 24, post wither 36, post dragon 48
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            return NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0 ? 12*(NightmareUtils.getGameProgressMobsLevel(this.worldObj)+1) : 18;
+            // pre nether 18, hardmode 24, post wither 36, post dragon 48
+        }
+        return d;
     }
     // TENTACLES
     @Inject(method = "updateEntityActionState", at = @At("HEAD"))
     private void lowerTentacleCooldown(CallbackInfo ci){
-        --this.tentacleAttackCooldownTimer;
-        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>1){
-            this.tentacleAttackCooldownTimer-=2;
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            --this.tentacleAttackCooldownTimer;
+            if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>1){
+                this.tentacleAttackCooldownTimer-=2;
+            }
         }
     }
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
-        return 100-(NightmareUtils.getGameProgressMobsLevel(this.worldObj)*30);
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            return 100-(NightmareUtils.getGameProgressMobsLevel(this.worldObj)*30);
+        }
+        return constant;
         // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.
         // this purely insures the cooldown condition is true whenever it is checked
     }
@@ -135,9 +144,11 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
                     shift = At.Shift.AFTER)
     )
     private void editTentacleVectors(double dUnitVectorToTargetX, double dUnitVectorToTargetY, double dUnitVectorToTargetZ, CallbackInfo ci){
-        this.tentacleAttackTargetX = this.posX + dUnitVectorToTargetX * 8.0;
-        this.tentacleAttackTargetY = this.posY + (double)(this.height / 2.0F) + dUnitVectorToTargetY * 8.0;
-        this.tentacleAttackTargetZ = this.posZ + dUnitVectorToTargetZ * 8.0;
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            this.tentacleAttackTargetX = this.posX + dUnitVectorToTargetX * 8.0;
+            this.tentacleAttackTargetY = this.posY + (double)(this.height / 2.0F) + dUnitVectorToTargetY * 8.0;
+            this.tentacleAttackTargetZ = this.posZ + dUnitVectorToTargetZ * 8.0;
+        }
     }
 
     @Redirect(method = "updateHeadCrabActionState",
@@ -146,11 +157,12 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     // redirecting attemptTentacleAttackOnTarget to execute basically a better version of itself. doubled the range in the
     // if statement, and I made there not be any LOS (line of sight) checks when launching the tentacle.
     private void attemptTentacleAttackOnTarget1(BTWSquidEntity instance) {
+        double range = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 81.0 : 36.0;
         double dDeltaX = instance.entityToAttack.posX - this.posX;
         double dDeltaY = instance.entityToAttack.posY + (double) (instance.entityToAttack.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
         double dDeltaZ = instance.entityToAttack.posZ - this.posZ;
         double dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
-        if (dDistSqToTarget < 81.0) {
+        if (dDistSqToTarget < range) {
             dDeltaY = instance.entityToAttack.posY + (double) instance.entityToAttack.getEyeHeight() - (this.posY + (double) (this.height / 2.0F));
             dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
 
@@ -166,7 +178,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {
-        if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0) {
+        if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) > 0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             return true;
         }
         return bIsInDarkness;
@@ -180,7 +192,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
     private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
-        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>0){
+        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj)>0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             return 0.01f;
         }
         return instance.getBrightness(1.0f);
@@ -199,12 +211,14 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
 
     @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;attemptTentacleAttackOnTarget()V"))
     private void attemptTentacleAttackOnTargetBetter2(BTWSquidEntity instance){
+        double range = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 81.0 : 36.0;
+
         BTWSquidEntity thisObject = (BTWSquidEntity) (Object) this;
         double dDeltaX = thisObject.entityToAttack.posX - this.posX;
         double dDeltaY = thisObject.entityToAttack.posY + (double) (thisObject.entityToAttack.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
         double dDeltaZ = thisObject.entityToAttack.posZ - this.posZ;
         double dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
-        if (dDistSqToTarget < 80.0) {
+        if (dDistSqToTarget < range) {
             dDeltaY = thisObject.entityToAttack.posY + (double) thisObject.entityToAttack.getEyeHeight() - (this.posY + (double) (this.height / 2.0F));
             dDistSqToTarget = dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ;
 

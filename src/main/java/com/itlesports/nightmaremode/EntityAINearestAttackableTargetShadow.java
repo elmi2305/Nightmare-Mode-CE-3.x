@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode;
 
 
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 
 import java.util.Collections;
@@ -31,8 +32,9 @@ public class EntityAINearestAttackableTargetShadow extends EntityAINearestAttack
         if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
             return false;
         } else {
+            double verticalRange = this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 10.0 : 6;
             double var1 = this.getTargetDistance();
-            List var3 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand(var1, 10.0, var1), this.targetEntitySelector);
+            List var3 = this.taskOwner.worldObj.selectEntitiesWithinAABB(this.targetClass, this.taskOwner.boundingBox.expand(var1, verticalRange, var1), this.targetEntitySelector);
             Collections.sort(var3, this.theNearestAttackableTargetSorter);
             if (var3.isEmpty()) {
                 return false;

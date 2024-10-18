@@ -21,7 +21,7 @@ public class EntityMagmaCubeMixin {
                 baby.getDataWatcher().updateObject(16, (byte)(size/2));
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
-                streakModifier += 2+(float) thisObj.getSlimeSize();
+                streakModifier += 2 + (float) thisObj.getSlimeSize();
             }
         }
     }

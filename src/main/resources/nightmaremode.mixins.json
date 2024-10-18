@@ -57,6 +57,7 @@
     "EntityRendererMixin",
     "EntitySilverfishMixin",
     "EntitySkeletonMixin",
+    "EntitySlimeInvoker",
     "EntitySlimeMixin",
     "EntitySmallFireballMixin",
     "EntitySnowballMixin",
@@ -75,6 +76,7 @@
     "ItemFoodMixin",
     "JungleSpiderEntityMixin",
     "KilnBlockMixin",
+    "LoadingScreenRendererMixin",
     "MillstoneBlockMixin",
     "MillstoneRecipeListMixin",
     "MillstoneTileEntityMixin",
@@ -86,15 +88,16 @@
     "WolfHowlBehaviorMixin",
     "WorldInfoMixin",
     "WorldMixin",
-    "WorldProviderHellMixin",
-    "WorldServerMixin"
+    "WorldProviderHellMixin"
   ],
   "client": [
     "BTWRenderMapperMixin",
     "ColorizeWorldMixin",
     "GuiCreateWorldAccessor",
     "GuiCreateWorldMixin",
-    "GuiIngameMenuMixin"
+    "GuiIngameMenuMixin",
+    "GuiScreenMixin",
+    "GuiSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1

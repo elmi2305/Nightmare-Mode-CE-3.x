@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode;
 
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 
 import java.util.Collections;
@@ -18,7 +19,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
     public boolean shouldExecute() {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= 256;
+            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= (this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 256 : 100);
         }
         return false;
     }
@@ -26,7 +27,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
     @Override
     public boolean continueExecuting() {
         int targetX;
-        if (this.taskOwner.rand.nextInt(2)==0) {
+        if (this.taskOwner.rand.nextInt(2) == 0) {
             targetX = MathHelper.floor_double(this.targetEntity.posX + this.taskOwner.rand.nextInt(3)+1);
         } else{
             targetX = MathHelper.floor_double(this.targetEntity.posX - this.taskOwner.rand.nextInt(3)+1);

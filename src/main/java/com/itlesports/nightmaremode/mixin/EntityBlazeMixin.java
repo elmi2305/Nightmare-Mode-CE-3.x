@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,11 +25,11 @@ public class EntityBlazeMixin extends EntityMob{
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
         if(thisObj.worldObj != null) {
             int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
-            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * 8);
+            thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 8 : 4));
             // 16 -> 24 -> 32 -> 40
             thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
-            if (thisObj.rand.nextFloat() < 0.5 && progress > 0) {
+            if (thisObj.rand.nextFloat() < 0.5 && progress > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)) {
                 thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 invisible = true;
             }

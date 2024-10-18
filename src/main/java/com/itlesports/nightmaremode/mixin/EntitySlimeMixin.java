@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.SpiderWebEntity;
+import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,18 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySlime.class)
 public abstract class EntitySlimeMixin {
-    @Shadow protected abstract void setSlimeSize(int iSize);
     @Unique private int timeSpentTargeting = 60;
     @Unique private float streakModifier = 1;
-
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void changeSize(World par1World, CallbackInfo ci){
-        EntitySlime thisObj = (EntitySlime)(Object)this;
-        if(thisObj instanceof EntityMagmaCube magmaCube && thisObj.dimension==0) {
-            this.setSlimeSize(2);
-            magmaCube.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
-        }
-    }
 
 
     @Inject(method = "updateEntityActionState",
@@ -33,7 +24,7 @@ public abstract class EntitySlimeMixin {
         timeSpentTargeting++;
         EntitySlime thisObj = (EntitySlime)(Object)this;
         if (thisObj.ridingEntity == null) {
-            if(timeSpentTargeting%110==109){
+            if(timeSpentTargeting >= 110){
                 if (!thisObj.worldObj.isRemote && thisObj.getSlimeSize()>=2) {
                     if(thisObj instanceof EntityMagmaCube && thisObj.dimension!=0){
                         EntityLivingBase target = thisObj.getAITarget();
@@ -51,7 +42,7 @@ public abstract class EntitySlimeMixin {
                     } else {
                         thisObj.worldObj.spawnEntityInWorld(new SpiderWebEntity(thisObj.worldObj, thisObj, targetPlayer));
                     }
-                    timeSpentTargeting = thisObj.rand.nextInt(80);
+                    timeSpentTargeting = thisObj.rand.nextInt(40);
                 }
             }
         }
@@ -59,15 +50,15 @@ public abstract class EntitySlimeMixin {
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
+        System.out.println("Streak modifier:" + streakModifier);
         EntitySlime thisObj = (EntitySlime)(Object)this;
         if (thisObj.getSlimeSize() >= 2){
-            if(thisObj.rand.nextFloat()<0.5 / streakModifier){
+            if(thisObj.rand.nextFloat() < 0.5 / streakModifier){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
-                int size = thisObj.getSlimeSize();
-                baby.getDataWatcher().updateObject(16, (byte)(size/2));
+                baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2));
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
-                streakModifier += 1+(float) thisObj.getSlimeSize();
+                streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
             }
         }
     }

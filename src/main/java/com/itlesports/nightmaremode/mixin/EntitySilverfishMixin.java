@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,11 +16,12 @@ public class EntitySilverfishMixin {
         if(par1Entity instanceof EntityPlayer target && thisObj.worldObj != null){
             if (thisObj.rand.nextFloat()<0.05 && NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>1) {
                 thisObj.setDead();
-                target.addPotionEffect(new PotionEffect(Potion.wither.id,1000000,0));
-                ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("You are infected. Find milk or you will die.");
-                text2.setColor(EnumChatFormatting.DARK_GRAY);
-                Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
+                target.addPotionEffect(new PotionEffect(Potion.wither.id,300,0));
+//                target.addPotionEffect(new PotionEffect(Potion.wither.id,1000000,0));
+//                ChatMessageComponent text2 = new ChatMessageComponent();
+//                text2.addText("You are infected. Find milk or you will die.");
+//                text2.setColor(EnumChatFormatting.DARK_GRAY);
+//                Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
             } else {
                 if (thisObj.rand.nextInt(2) == 0) {
                     target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
