@@ -24,6 +24,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public PlayerCapabilities capabilities;
 
+    @Shadow protected abstract boolean isInBed();
+
     public EntityPlayerMixin(World par1World) {
         super(par1World);
     }
@@ -151,6 +153,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
     private boolean canSleepInNether(WorldProvider instance){
         return true;
+    }
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;setTimerSpeedModifier(F)V"))
+    private void manageInvisibilityWhileSleeping(CallbackInfo ci){
+        if (this.isInBed()) {
+            this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 10,0));
+        }
     }
 
     @ModifyConstant(method = "movementModifierWhenRidingBoat", constant = @Constant(doubleValue = 0.35))

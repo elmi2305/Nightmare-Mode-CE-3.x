@@ -96,6 +96,7 @@
     "GuiCreateWorldAccessor",
     "GuiCreateWorldMixin",
     "GuiIngameMenuMixin",
+    "GuiMainMenuMixin",
     "GuiScreenMixin",
     "GuiSlotMixin"
   ],

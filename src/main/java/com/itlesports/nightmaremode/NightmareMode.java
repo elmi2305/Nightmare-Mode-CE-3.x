@@ -2,15 +2,12 @@ package com.itlesports.nightmaremode;
 
 import btw.AddonHandler;
 import btw.BTWAddon;
-import btw.block.BTWBlocks;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
-import btw.world.biome.BiomeDecoratorBase;
+import btw.entity.SpiderWebEntity;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
-import java.util.Random;
 
 public class NightmareMode extends BTWAddon implements ModInitializer {
     private static NightmareMode instance;
@@ -32,10 +29,10 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        addFireCreeperToSpawnEntities();
+        addPacketManagementForCustomEntities();
     }
 
-    private static void addFireCreeperToSpawnEntities() {
+    private static void addPacketManagementForCustomEntities() {
         CustomEntityPacketHandler.entryMap.put(13, (world, dataStream, packet) -> {
             EntityFireCreeper entityToSpawn = new EntityFireCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
@@ -62,5 +59,23 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
+//
+//
+//        CustomEntityPacketHandler.entryMap.put(14, (world, dataStream, packet) -> {
+//            double x = (double)dataStream.readInt() / 32.0;
+//            double y = (double)dataStream.readInt() / 32.0;
+//            double z = (double)dataStream.readInt() / 32.0;
+//            double motionX = (double)dataStream.readByte() * 128.0;
+//            double motionY = (double)dataStream.readByte() * 128.0;
+//            double motionZ = (double)dataStream.readByte() * 128.0;
+//            NightmareFlameEntity entityToSpawn = new NightmareFlameEntity(world, x, y, z);
+//            entityToSpawn.motionX = motionX;
+//            entityToSpawn.motionY = motionY;
+//            entityToSpawn.motionZ = motionZ;
+//            entityToSpawn.serverPosX = (int)(x * 32.0);
+//            entityToSpawn.serverPosY = (int)(y * 32.0);
+//            entityToSpawn.serverPosZ = (int)(z * 32.0);
+//            return entityToSpawn;
+//        });
     }
 }

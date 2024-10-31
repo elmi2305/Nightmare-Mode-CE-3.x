@@ -101,17 +101,13 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         List<String> messageList = new ArrayList<>();
         messageList.add("<???> Pathetic.");
         messageList.add("<???> Really?");
-        messageList.add("<???> Too easy.");
         messageList.add("<???> Have you tried not dying?");
         messageList.add("<???> Skill issue.");
         messageList.add("<???> Dead again?");
         messageList.add("<???> Nice one.");
         messageList.add("<???> Easy.");
         messageList.add("<???> Not even close.");
-        messageList.add("<???> Is someone having a hard time?");
         messageList.add("<???> Don't bother trying.");
-        messageList.add("<???> Perfect.");
-        messageList.add("<???> :)");
         return messageList;
     }
 

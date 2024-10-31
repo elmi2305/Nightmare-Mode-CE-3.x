@@ -25,6 +25,11 @@ public abstract class EntityWitherMixin extends EntityMob {
         super(par1World);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void increaseXPYield(World par1World, CallbackInfo ci){
+        this.experienceValue = 150;
+    }
+
     @ModifyConstant(method = "isArmored", constant = @Constant(floatValue = 2.0f))
     private float witherMeleeSooner(float constant){
         return 1.66f; // starts melee at 60% health instead of 50%. this means 180hp instead of 150hp

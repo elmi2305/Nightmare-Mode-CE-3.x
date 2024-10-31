@@ -21,19 +21,22 @@ public class EntityCreeperMixin {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         EntityCreeper thisObj = ((EntityCreeper)(Object)this);
+        int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
 
-        if (thisObj.rand.nextFloat() < 0.08 + (NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*0.02) && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (thisObj.rand.nextFloat() < 0.08 + (progress * 0.02) && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             thisObj.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }
-        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20+NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)*6);
-        thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28);
+        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + progress*6);
         // 20 -> 26 -> 32 -> 38
+        thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28);
     }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
-        if (((EntityCreeper)(Object)this).worldObj != null && ((EntityCreeper)(Object)this).worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            int i = NightmareUtils.getGameProgressMobsLevel(((EntityCreeper)(Object)this).worldObj);
+        EntityCreeper thisObj = ((EntityCreeper)(Object)this);
+
+        if (thisObj.worldObj != null && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            int i = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
             return switch (i) {
                 case 0 -> 36; // 6b
                 case 1 -> 64; // 8b
@@ -47,8 +50,10 @@ public class EntityCreeperMixin {
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){
-        if(((EntityCreeper)(Object)this).getDataWatcher().getWatchableObjectByte(17) == 1) {
-            ((EntityCreeper)(Object)this).dropItem(Item.ghastTear.itemID, 1);
+        EntityCreeper thisObj = ((EntityCreeper)(Object)this);
+
+        if(thisObj.getDataWatcher().getWatchableObjectByte(17) == 1) {
+            thisObj.dropItem(Item.ghastTear.itemID, 1);
         }
     }
 
@@ -77,7 +82,7 @@ public class EntityCreeperMixin {
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
-        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && thisObj.dimension != -1){
+        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && thisObj.dimension != -1 && !thisObj.isPotionActive(Potion.fireResistance.id)){
             thisObj.onKickedByAnimal(null); // primes the creeper instantly
         }
     }

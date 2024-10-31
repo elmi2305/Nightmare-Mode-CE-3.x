@@ -1,13 +1,13 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.InfiniteArrowEntity;
 import btw.entity.mob.BTWSquidEntity;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin {
@@ -32,4 +32,11 @@ public class EntityMixin {
             thisObj.attackEntityFrom(DamageSource.inFire, par1);
         }
     }
+
+//    @Inject(method = "attackEntityFrom", at = @At("RETURN"),cancellable = true)
+//    private void arrowsIgnoreInvincibility(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+//        if(par1DamageSource.getEntity() instanceof InfiniteArrowEntity){
+//            cir.setReturnValue(true);
+//        }
+//    }
 }

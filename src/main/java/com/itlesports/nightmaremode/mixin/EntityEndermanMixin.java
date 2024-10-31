@@ -33,6 +33,7 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
         thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(7.0 + progress*2);
         // 7 -> 9 -> 11 -> 13
         thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress*20);
+        // 40 -> 60 -> 80 -> 100
     }
 
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
+import com.itlesports.nightmaremode.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +18,28 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     }
 
     @Unique private int minionCountdown = 0;
+    @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
+        for(int i = 0; i<3; i++){
+            if(!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || this.dimension == 1) {
+                EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
+                tempMinion.copyLocationAndAnglesFrom(witch);
+                tempMinion.setAttackTarget(player);
+                this.worldObj.spawnEntityInWorld(tempMinion);
+                // silverfish pre nether and in the end
+            } else {
+                EntitySpider tempMinion = new EntitySpider(this.worldObj);
+                tempMinion.copyLocationAndAnglesFrom(witch);
+                tempMinion.setAttackTarget(player);
+                this.worldObj.spawnEntityInWorld(tempMinion);
+                break;
+            }
+        }
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void addWitchSpecificAITasks(World par1World, CallbackInfo ci){
+        this.targetTasks.addTask(1, new EntityAIWitchLightningStrike(this));
+    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -33,6 +56,13 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     private void healFast(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             this.setWitchAttackTimer(10);
+        }
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void chanceToDropSpecialItems(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        if(this.rand.nextInt(50)==0){
+            this.dropItem(Item.expBottle.itemID, 1);
         }
     }
 
@@ -83,33 +113,16 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
             pearl.motionZ = vector.zCoord * 0.1;
         }
     }
+
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageSilverfish(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
         minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
         if(minionCountdown > (600 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1000))){
-            if(thisObj.getAttackTarget() instanceof EntityPlayer player){
+            if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);
                 minionCountdown = this.rand.nextInt(15) * (10 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 10));
                 // this formula produces 3 silverfish around every 300 ticks spent targeting the player
-            }
-        }
-    }
-
-
-    @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
-        for(int i = 0; i<3; i++){
-            if(!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || this.dimension == 1) {
-                EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
-                tempMinion.copyLocationAndAnglesFrom(witch);
-                tempMinion.setAttackTarget(player);
-                this.worldObj.spawnEntityInWorld(tempMinion);
-                // silverfish pre nether and in the end
-            } else {
-                EntitySpider tempMinion = new EntitySpider(this.worldObj);
-                tempMinion.copyLocationAndAnglesFrom(witch);
-                tempMinion.setAttackTarget(player);
-                this.worldObj.spawnEntityInWorld(tempMinion);
             }
         }
     }

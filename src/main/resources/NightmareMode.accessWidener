@@ -6,4 +6,5 @@ accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPositi
 accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/EntityAITasks;
 accessible class net/minecraft/src/GuiWorldSlot
 accessible field net/minecraft/src/EntityArrow inGround Z
+accessible field net/minecraft/src/EntityThrowable ticksInGround I
 accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecraft/src/WorldGenerator;II)V

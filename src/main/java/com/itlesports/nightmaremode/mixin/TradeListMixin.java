@@ -2,12 +2,11 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.entity.mob.villager.trade.TradeList;
+import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(TradeList.class)
@@ -235,7 +234,7 @@ public class TradeListMixin {
                     ordinal = 2),remap = false)
     private static void lowerLibrarianTrades2(Args args) {
         args.set(0, 6);
-        args.set(1, 9); // feather 16-24
+        args.set(1, 20); // feather 16-24
     }
     // 4 skipped - redstone 32-48
     @ModifyArgs(method = "addLibrarianTrades",
@@ -269,7 +268,7 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 9),remap = false)
     private static void lowerLibrarianTrades9(Args args) {
-        args.set(0, 1);
+        args.set(0, 2);
         args.set(1, 4); // spider eye 4-8
     }
     // skipped 10 witch wart 4-6
@@ -301,6 +300,58 @@ public class TradeListMixin {
         args.set(1, 24); // brimstone 24-32
     }
 
+//    // detector block
+//    @ModifyArgs(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeItem;fromID(II)Lbtw/entity/mob/villager/trade/TradeItem;",
+//                    ordinal = 0),
+//            remap = false)
+//    private static void changeVariantTrades0(Args args){
+//        args.set(0, BTWBlocks.detectorBlock.blockID);
+//        args.set(1, 1);
+//    }
+//    @Redirect(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeProvider$ConvertSecondInputStep;conversionCost(II)Lbtw/entity/mob/villager/trade/TradeProvider$ConvertOutputStep;",
+//                    ordinal = 0),
+//            remap = false)
+//    private static TradeProvider.ConvertOutputStep doNothing(TradeProvider.ConvertSecondInputStep instance, int i, int j){
+//        return (TradeProvider.ConvertOutputStep) instance;
+//    }
+//    @ModifyArgs(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeItem;fromID(I)Lbtw/entity/mob/villager/trade/TradeItem;",
+//            ordinal = 0),
+//            remap = false)
+//    private static void changeVariantTrades1(Args args){
+//        args.set(0, Item.emerald.itemID);
+//    }
+//    // buddy block
+//    @ModifyArgs(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeItem;fromID(II)Lbtw/entity/mob/villager/trade/TradeItem;",
+//                    ordinal = 1),
+//            remap = false)
+//    private static void changeVariantTrades2(Args args){
+//        args.set(0, BTWBlocks.buddyBlock.blockID);
+//        args.set(1, 1);
+//    }
+//    @Redirect(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeProvider$ConvertSecondInputStep;conversionCost(II)Lbtw/entity/mob/villager/trade/TradeProvider$ConvertOutputStep;",ordinal = 1),
+//            remap = false)
+//    private static TradeProvider.ConvertOutputStep doNothing1(TradeProvider.ConvertSecondInputStep instance, int i, int j){
+//        return (TradeProvider.ConvertOutputStep) instance;
+//    }
+//
+//    @ModifyArgs(method = "addLibrarianTrades",
+//            at = @At(value = "INVOKE",
+//                    target = "Lbtw/entity/mob/villager/trade/TradeItem;fromID(I)Lbtw/entity/mob/villager/trade/TradeItem;",
+//                    ordinal = 1),
+//            remap = false)
+//    private static void changeVariantTrades3(Args args){
+//        args.set(0, Item.emerald.itemID);
+//    }
 
     // PRIEST
     @ModifyArgs(method = "addPriestTrades",

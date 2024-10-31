@@ -19,7 +19,7 @@ public class ItemAR extends Item {
 
         if (!world.isRemote) {
             InfiniteArrowEntity missile = new InfiniteArrowEntity(world,player,3f);
-            missile.setDamage(20D);
+            missile.setDamage(10);
             world.spawnEntityInWorld(missile);
         }
         return stack;

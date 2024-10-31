@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
+import btw.entity.InfiniteArrowEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import net.minecraft.src.*;
@@ -26,6 +27,14 @@ public class EntityMobMixin{
         }
         if (par1DamageSource == DamageSource.fall && (thisObj instanceof EntityCreeper || thisObj instanceof EntitySkeleton) && thisObj.dimension == 1){
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void avoidAttackingWitches(CallbackInfo ci){
+        EntityMob thisObj = (EntityMob)(Object)this;
+        if(thisObj.getAttackTarget() instanceof EntityWitch){
+            thisObj.setAttackTarget(null);
         }
     }
 
@@ -62,4 +71,11 @@ public class EntityMobMixin{
             mob.addPotionEffect(new PotionEffect(potionID,100,0));
         }
     }
+//
+//    @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
+//    private void arrowsIgnoreInvincibility(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+//        if(par1DamageSource.getEntity() instanceof InfiniteArrowEntity){
+//            cir.setReturnValue(true);
+//        }
+//    }
 }

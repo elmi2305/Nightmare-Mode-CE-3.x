@@ -12,8 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySlime.class)
 public abstract class EntitySlimeMixin {
+    @Shadow public abstract int getSlimeSize();
+
     @Unique private int timeSpentTargeting = 60;
     @Unique private float streakModifier = 1;
+    @Unique private float splitCounter = 0;
 
 
     @Inject(method = "updateEntityActionState",
@@ -50,15 +53,16 @@ public abstract class EntitySlimeMixin {
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
-        System.out.println("Streak modifier:" + streakModifier);
         EntitySlime thisObj = (EntitySlime)(Object)this;
-        if (thisObj.getSlimeSize() >= 2){
-            if(thisObj.rand.nextFloat() < 0.5 / streakModifier){
+
+        if (thisObj.getSlimeSize() >= 2 && this.splitCounter < 3){
+            if(thisObj.rand.nextFloat() < 0.5 / this.streakModifier){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
-                baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2));
+                baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2)); // makes the newly spawned slime half the size of the current one
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
-                streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
+                this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
+                this.splitCounter += 1;
             }
         }
     }
