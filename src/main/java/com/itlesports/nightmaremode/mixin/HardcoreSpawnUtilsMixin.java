@@ -28,7 +28,7 @@ public abstract class HardcoreSpawnUtilsMixin{
         if ((BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) && world.getDifficulty() == Difficulties.HOSTILE) {
             overworldTime += 18000L;
 
-            if(overworldTime % 192000 == 114000){
+            if(world.getMoonPhase() == 4){
                 ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
                 ItemStack var2 = new ItemStack(ItemPotion.potion,1,16422);
                 player.inventory.addItemStackToInventory(var1);

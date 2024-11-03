@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.mixin.EntityAccess;
 import net.minecraft.src.*;
 
 public class EntityShadowZombie extends EntityZombie {

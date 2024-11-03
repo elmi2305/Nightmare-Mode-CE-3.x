@@ -2,17 +2,20 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityWitch.class)
-public abstract class EntityWitchMixin extends EntityMob implements EntityWitchAccess{
+public abstract class EntityWitchMixin extends EntityMob {
+
+    @Shadow private int witchAttackTimer;
+
     public EntityWitchMixin(World par1World) {
         super(par1World);
     }
@@ -55,7 +58,7 @@ public abstract class EntityWitchMixin extends EntityMob implements EntityWitchA
     @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWitch;setAggressive(Z)V",ordinal = 1,shift = At.Shift.AFTER))
     private void healFast(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            this.setWitchAttackTimer(10);
+            this.witchAttackTimer = 10;
         }
     }
 

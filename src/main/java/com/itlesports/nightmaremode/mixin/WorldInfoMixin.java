@@ -27,7 +27,7 @@ public abstract class WorldInfoMixin {
             if (this.totalTime == 0L) {
                 worldTime = 18000L;
                 theGameRules.addGameRule("doMobSpawning", "false");
-            } else if(worldTime >= 19200 && !theGameRules.getGameRuleBooleanValue("doMobSpawning")){
+            } else if(worldTime >= 19200 && !theGameRules.getGameRuleBooleanValue("doMobSpawning") && !Minecraft.getMinecraft().theWorld.worldInfo.areCommandsAllowed()){
                 theGameRules.addGameRule("doMobSpawning", "true");
                 botherChecking = false;
             } // 1 minute of grace

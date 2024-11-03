@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntityEnderman.class)
-public abstract class EntityEndermanMixin extends EntityMob implements EntityEndermanAccess {
+public abstract class EntityEndermanMixin extends EntityMob {
 
     public EntityEndermanMixin(World par1World) {
         super(par1World);
@@ -23,6 +22,8 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
     @Shadow protected abstract void angerNearbyEndermen(EntityPlayer targetPlayer);
 
     @Shadow private int teleportDelay;
+
+    @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -65,7 +66,7 @@ public abstract class EntityEndermanMixin extends EntityMob implements EntityEnd
     @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;setAIMoveSpeed(F)V"))
     private void teleportToNearestPlayerOnAggro(CallbackInfo ci){
         if(this.entityToAttack instanceof EntityPlayer){
-            this.invokeTeleportToEntity(this.entityToAttack);
+            this.teleportToEntity(this.entityToAttack);
         }
     }
 

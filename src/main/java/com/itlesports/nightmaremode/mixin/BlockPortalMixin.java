@@ -19,7 +19,7 @@ public class BlockPortalMixin{
     // this code is slightly less awful than before, but still pretty bad
     @Unique boolean runOnce = true;
     @Unique boolean runAgain = true;
-    @Unique long testTime = 2147483647;
+    @Unique long targetTime = 2147483647;
 
 
     @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
@@ -37,7 +37,7 @@ public class BlockPortalMixin{
             Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text1);
             world.getClosestPlayer(x,y,z,-1).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
             Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death",2.0F, 0.905F);
-            testTime = Minecraft.getMinecraft().theWorld.getWorldTime() + 72000;
+            targetTime = Minecraft.getMinecraft().theWorld.getWorldTime() + 72000;
 
 
             if (MinecraftServer.getServer() != null) {
@@ -50,7 +50,7 @@ public class BlockPortalMixin{
     @Inject(method = "randomDisplayTick", at = @At("TAIL"))
     private void displayHardmodeStuffInChat(World par1World, int par2, int par3, int par4, Random par5Random, CallbackInfo ci){
         if (runOnce) {
-            if(Minecraft.getMinecraft().theWorld.getWorldTime() > testTime){
+            if(Minecraft.getMinecraft().theWorld.getWorldTime() > targetTime){
                 ChatMessageComponent text2 = new ChatMessageComponent();
                 text2.addText("Hardmode has begun.");
                 text2.setColor(EnumChatFormatting.DARK_RED);

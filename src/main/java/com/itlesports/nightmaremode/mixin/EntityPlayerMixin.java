@@ -4,8 +4,6 @@ import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
-import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccess{
+public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
     @Shadow public abstract ItemStack getHeldItem();
 
     @Shadow protected abstract boolean isPlayer();
@@ -38,7 +36,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
         return 0.17f; // jump
@@ -56,8 +53,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void manageWaterDrinking(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
         if(thisObj.getItemInUse() != null && (thisObj.getItemInUse().itemID == Item.potion.itemID && thisObj.getItemInUse().getItemDamage() == 0)){
-            if (this.getFire()>=1) {
-                this.invokeSetFire(0);
+            if (this.isBurning()) {
+                this.extinguish();
             }
             if(this.isPotionActive(Potion.confusion.id)){
                 this.removePotionEffect(Potion.confusion.id);

@@ -2,15 +2,12 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
-import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin extends Entity implements EntityAccess{
+public abstract class EntityLivingBaseMixin extends Entity implements EntityAccessor {
     @Shadow public abstract boolean isEntityAlive();
 
     public EntityLivingBaseMixin(World par1World) {

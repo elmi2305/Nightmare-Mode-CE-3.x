@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
-import btw.world.util.data.DataEntry;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccess, EntitySlimeInvoker{
+public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor, EntitySlimeInvoker{
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
@@ -113,11 +112,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-            this.setIsImmuneToFire(true);
+            this.isImmuneToFire = true;
             if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2 && rand.nextFloat() < 0.13 + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-2) * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0.07 : 0.03))){
                 // 13% -> 20%
                 this.setSkeletonType(4); // ender skeleton
-                this.setIsImmuneToFire(true);
+                this.isImmuneToFire = true;
 
                 ItemStack var1 = new ItemStack(Item.skull,1,1);
                 ItemStack var2 = new ItemStack(Item.bow,1);
@@ -130,7 +129,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             } else if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && rand.nextFloat() < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0.09 : 0.03) + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*0.02) && this.dimension != -1) {
                 // 9% -> 11% -> 13%
                 this.setSkeletonType(3); // fire skeleton
-                this.setIsImmuneToFire(true);
+                this.isImmuneToFire = true;
 
 
                 EntityMagmaCube magmaCube = new EntityMagmaCube(this.worldObj);
@@ -143,8 +142,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.02 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 0.02)) {
                 // 2% -> 4% -> 6% -> 8%
                 this.setSkeletonType(2); // ice skeleton
-                this.setIsImmuneToFire(false);
-
+                this.isImmuneToFire = true;
                 ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
                 this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
             }
@@ -170,6 +168,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
     @Inject(method = "attackEntityFrom", at = @At(value = "RETURN"), cancellable = true)
     private void manageFallDamageImmunity(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir){
+        if(!this.isImmuneToFire()){
+            this.isImmuneToFire = true;
+        }
         if (this.getSkeletonType() == 1 && this.dimension == 1 && damageSource == DamageSource.fall){
             cir.setReturnValue(false);
         }
