@@ -19,8 +19,8 @@ public class BlockLeavesBaseMixin extends Block {
 
     @Inject(method = "addCollisionBoxesToList", at = @At("HEAD"))
     private void creeperCollideWithLeaves(World world, int x, int y, int z, AxisAlignedBB aabb, List bbList, Entity entity, CallbackInfo ci){
-        if (entity instanceof EntityCreeper) {
-            super.addCollisionBoxesToList(world, x, y, z, aabb, bbList, entity);
-        }
+//        if (entity instanceof EntityCreeper creeper && creeper.getCreeperState() == 1) {
+//            super.addCollisionBoxesToList(world, x, y, z, aabb, bbList, entity);
+//        }
     }
 }

@@ -29,11 +29,13 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
                     && !this.furnaceItemStacks[2].toString().contains("Carrot")){
                 this.burnCounter++;
                 if(this.burnCounter >= 1600) {
-                    burnCounter = 0;
+                    this.burnCounter = 0;
                     ItemStack var2 = new ItemStack(BTWItems.burnedMeat);
                     this.furnaceItemStacks[2] = var2.copy();
                 }
             }
+        } else{
+            this.burnCounter = 0;
         }
     }
 }

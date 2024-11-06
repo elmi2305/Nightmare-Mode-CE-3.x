@@ -40,6 +40,9 @@ public class GuiMainMenuMixin {
         quotesList.add("Orange-flavored creepers?!");
         quotesList.add("Better Than MEA?");
         quotesList.add("It's just a bad dream!");
+        quotesList.add("Not the water creatures!");
+        quotesList.add("MEN! WITH ME!");
+        quotesList.add("Try the Bonus Chest!");
         return quotesList;
     }
 }

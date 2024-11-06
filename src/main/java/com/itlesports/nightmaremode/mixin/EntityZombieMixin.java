@@ -65,7 +65,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void transformIntoSkeletonOnFireDeath(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (!this.isEntityInvulnerable() && canEntitySeeSun()) {
-            if ((!this.isVillager() && this.getHealth() <= par2) && !isCrystalHead(this) && !this.isImmuneToFire) {this.onKilledBySun();}
+            if ((!this.isVillager() && this.getHealth() <= par2) && !isCrystalHead(this) && !this.isImmuneToFire && this.getCurrentItemOrArmor(4) == null && !this.isInWater()) {this.onKilledBySun();}
         }
     }
     @Inject(method = "checkForLooseFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playAuxSFX(IIIII)V"))

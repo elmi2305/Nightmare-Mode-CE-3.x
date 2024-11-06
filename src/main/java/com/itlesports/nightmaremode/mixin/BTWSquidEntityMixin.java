@@ -32,7 +32,11 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
 
     private void teleportPlayer(CallbackInfo ci, Vec3 tentacleTip, AxisAlignedBB tipBox, List potentialCollisionList, Iterator collisionIterator, EntityLivingBase tempEntity){
         tempEntity.setPositionAndUpdate(this.posX,this.posY-1,this.posZ);
-        this.playSound("mob.endermen.portal",20.0F,1.0F);
+        if (tempEntity instanceof EntityPlayer) {
+            this.playSound("mob.endermen.portal",2.0F,1.0F);
+        } else{
+            this.worldObj.playSoundAtEntity(this,"mob.endermen.portal",1.0F,this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+        }
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
     private int increaseMysteriousGlandDropRate(int constant){return 2;}
@@ -65,7 +69,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     private void doScaryThingsOnHead(CallbackInfo ci) {
         squidOnHeadTimer++;
         if (rand.nextInt(25)==0) {
-            this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            this.playSound("mob.ghast.scream",0.4F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer headcrabbedPlayer) {
