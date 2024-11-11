@@ -23,7 +23,6 @@ public class GuiMainMenuMixin {
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void manageSplashText(CallbackInfo ci){
-//        this.splashText = "Nightmare Mode!";
         this.splashText = getQuotes().get(rand.nextInt(getQuotes().size()));
     }
 

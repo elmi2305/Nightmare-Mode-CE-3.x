@@ -75,7 +75,6 @@
     "JungleSpiderEntityMixin",
     "KilnBlockMixin",
     "LoadingScreenRendererMixin",
-    "MillstoneBlockMixin",
     "MillstoneRecipeListMixin",
     "MillstoneTileEntityMixin",
     "OvenTileEntityMixin",
@@ -91,8 +90,10 @@
   "client": [
     "BTWRenderMapperMixin",
     "ColorizeWorldMixin",
+    "MillstoneBlockMixin",
     "GuiCreateWorldMixin",
     "GuiIngameMenuMixin",
+    "GuiIngameMixin",
     "GuiMainMenuMixin",
     "GuiScreenMixin",
     "GuiSlotMixin"

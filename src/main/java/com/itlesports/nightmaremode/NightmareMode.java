@@ -3,9 +3,11 @@ package com.itlesports.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
-import btw.entity.SpiderWebEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.src.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.Packet24MobSpawn;
 
 import java.util.List;
 
@@ -19,6 +21,9 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
+        if (!MinecraftServer.getIsServer()) {
+            postInitClient();
+        }
     }
 
     public static NightmareMode getInstance() {
@@ -29,9 +34,17 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        if(!MinecraftServer.getIsServer()){
+            addPacketManagementForCustomEntities();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void postInitClient() {
         addPacketManagementForCustomEntities();
     }
 
+    @Environment (EnvType.CLIENT)
     private static void addPacketManagementForCustomEntities() {
         CustomEntityPacketHandler.entryMap.put(13, (world, dataStream, packet) -> {
             EntityFireCreeper entityToSpawn = new EntityFireCreeper(world);

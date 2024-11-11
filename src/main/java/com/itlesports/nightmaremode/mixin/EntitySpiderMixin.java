@@ -119,24 +119,24 @@ public abstract class EntitySpiderMixin extends EntityMob{
         }
     }
 
-    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
-    private void manageRider(EntityLivingData par1EntityLivingData, CallbackInfoReturnable<EntityLivingData> cir) {
-        EntitySpider thisObj = (EntitySpider)(Object)this;
-
-        if(thisObj.rand.nextFloat()<0.0125 && !(thisObj instanceof JungleSpiderEntity) && thisObj.riddenByEntity == null){
-            if(thisObj.rand.nextFloat()<0.3){
-                EntityCreeper rider = new EntityCreeper(thisObj.worldObj);
-                rider.copyLocationAndAnglesFrom(thisObj);
-                thisObj.worldObj.spawnEntityInWorld(rider);
-                rider.mountEntity(thisObj);
-            } else {
-                EntityZombie rider = new EntityZombie(thisObj.worldObj);
-                rider.copyLocationAndAnglesFrom(thisObj);
-                thisObj.worldObj.spawnEntityInWorld(rider);
-                rider.mountEntity(thisObj);
-            }
-        }
-    }
+//    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
+//    private void manageRider(EntityLivingData par1EntityLivingData, CallbackInfoReturnable<EntityLivingData> cir) {
+//        EntitySpider thisObj = (EntitySpider)(Object)this;
+//
+//        if(thisObj.rand.nextFloat()<0.0125 && !(thisObj instanceof JungleSpiderEntity) && thisObj.riddenByEntity == null){
+//            if(thisObj.rand.nextFloat()<0.3){
+//                EntityCreeper rider = new EntityCreeper(thisObj.worldObj);
+//                rider.copyLocationAndAnglesFrom(thisObj);
+//                thisObj.worldObj.spawnEntityInWorld(rider);
+//                rider.mountEntity(thisObj);
+//            } else {
+//                EntityZombie rider = new EntityZombie(thisObj.worldObj);
+//                rider.copyLocationAndAnglesFrom(thisObj);
+//                thisObj.worldObj.spawnEntityInWorld(rider);
+//                rider.mountEntity(thisObj);
+//            }
+//        }
+//    }
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
         if (spider.worldObj != null) {
