@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -86,6 +87,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         }
     }
 
+    @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
+    private boolean alwaysWitherSkelliesUnderground(Boolean instance){
+        return true;
+    }
+    @ModifyArg(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int chanceToSpawnAsWitherSkelly(int bound){
+        if(this.worldObj != null){
+            return 16 - (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 4);
+        }
+        return bound;
+    }
+
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNotCatchFireInSun(EntitySkeleton instance){}
 
@@ -102,12 +115,24 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
 
 
+
+
     @Unique private boolean canSeeIfJumped(EntityLiving skelly, Entity targetPlayer){
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double)skelly.getEyeHeight()+1, skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double)targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) == null;
     }
     @Unique private boolean cannotSeeNormally(EntityLiving skelly, Entity targetPlayer){
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
+
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        if(this.getSkeletonType() == 4) { // ender skeleton
+            if(this.rand.nextInt(4) == 0){
+                this.dropItem(BTWItems.soulFlux.itemID,1);
+            }
+        }
+    }
+
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){

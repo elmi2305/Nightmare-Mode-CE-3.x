@@ -22,10 +22,10 @@
     "CampfireTileEntityMixin",
     "CauldronRecipeListMixin",
     "CobblestoneBlockMixin",
+    "ComponentMineshaftCorridorMixin",
     "ComponentScatteredFeatureDesertPyramidMixin",
     "ComponentVillageChurchMixin",
     "CraftingRecipeListMixin",
-    "DiamondOreBlockMixin",
     "EnchantmentHelperMixin",
     "EntityAccessor",
     "EntityAIAttackOnCollideMixin",
@@ -66,7 +66,6 @@
     "EntityWitherMixin",
     "EntityWitherSkullMixin",
     "EntityZombieMixin",
-    "FireStarterItemMixin",
     "HardcoreSpawnUtilsMixin",
     "HostileDifficultyMixin",
     "ItemAppleGoldMixin",
@@ -81,22 +80,25 @@
     "SoulforgeRecipeListMixin",
     "SpiderWebEntityMixin",
     "TradeListMixin",
+    "UnfiredBrickTileEntityMixin",
     "UrnEntityMixin",
     "WolfHowlBehaviorMixin",
     "WorldInfoMixin",
     "WorldMixin",
-    "WorldProviderHellMixin"
+    "WorldProviderHellMixin",
+    "ZombieBreakBarricadeBehaviorHostileMixin"
   ],
   "client": [
     "BTWRenderMapperMixin",
     "ColorizeWorldMixin",
-    "MillstoneBlockMixin",
     "GuiCreateWorldMixin",
     "GuiIngameMenuMixin",
     "GuiIngameMixin",
     "GuiMainMenuMixin",
     "GuiScreenMixin",
-    "GuiSlotMixin"
+    "GuiSlotMixin",
+    "MillstoneBlockMixin",
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,10 +2,14 @@ package com.itlesports.nightmaremode.mixin;
 
 import net.minecraft.src.EntityRenderer;
 import net.minecraft.src.Minecraft;
+import net.minecraft.src.WorldClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(EntityRenderer.class)
@@ -13,6 +17,8 @@ public abstract class EntityRendererMixin implements EntityAccessor {
                             // MEA CODE. credit to Pot_tx
     @Shadow
     private Minecraft mc;
+
+    @Shadow protected abstract void updateLightmap(float par1);
 
     @ModifyArgs(method = "updateCameraAndRender(F)V",
             at = @At(value = "INVOKE",
@@ -36,4 +42,17 @@ public abstract class EntityRendererMixin implements EntityAccessor {
 
         }
     }
+
+//    @Inject(method = "modUpdateLightmap",
+//            at = @At(value = "INVOKE",
+//                    target = "Lnet/minecraft/src/EntityRenderer;modUpdateLightmapOverworld(Lnet/minecraft/src/WorldClient;F)V",
+//                    ordinal = 1,
+//                    shift = At.Shift.AFTER),
+//            locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void manageEndGloom(float fPartialTicks, CallbackInfo ci, WorldClient world){
+//        if(world.provider.dimensionId == 1){
+//            this.updateLightmap(fPartialTicks);
+//        }
+//    }
+//    REMOVES END GLOOM
 }

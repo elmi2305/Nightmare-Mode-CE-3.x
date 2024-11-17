@@ -63,13 +63,18 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
         }
     }
 
+    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int reduceScrollDropChance(int bound){
+        return 100;
+    }
+
 
     @Inject(method = "updateHeadCrab",
             at = @At("HEAD"),remap = false)
     private void doScaryThingsOnHead(CallbackInfo ci) {
         squidOnHeadTimer++;
-        if (rand.nextInt(25)==0) {
-            this.playSound("mob.ghast.scream",0.4F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+        if (rand.nextInt(30)==0) {
+            this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer headcrabbedPlayer) {
@@ -86,7 +91,7 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
                     break;
                 case 2:
                     if (!headcrabbedPlayer.isPotionActive(Potion.wither)) {
-                        headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 200,0));
+                        headcrabbedPlayer.addPotionEffect(new PotionEffect(Potion.wither.id, 120,0));
                     }
                     break;
                 case 3:
@@ -141,6 +146,8 @@ public abstract class BTWSquidEntityMixin extends EntityLivingBase{
     @Shadow(remap = false) private double tentacleAttackTargetZ;
     @Shadow(remap = false)
     public abstract void launchTentacleAttackInDirection(double dUnitVectorToTargetX, double dUnitVectorToTargetY, double dUnitVectorToTargetZ);
+
+    @Shadow private Entity entityToNotReCrab;
 
     @Inject(method = "launchTentacleAttackInDirection",
             at = @At(value = "FIELD",

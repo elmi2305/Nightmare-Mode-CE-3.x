@@ -27,7 +27,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void increaseXPYield(World par1World, CallbackInfo ci){
-        this.experienceValue = 150;
+        this.experienceValue = 250;
     }
 
     @ModifyConstant(method = "isArmored", constant = @Constant(floatValue = 2.0f))
@@ -46,7 +46,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
         if (witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2000 : 4000)) {
             witherAttackTimer+= this.rand.nextInt(5)+1;
-            if(hasRevived){witherAttackTimer += 3;}
+            if(this.hasRevived){witherAttackTimer += 3;}
         }
         if(this.entityToAttack instanceof EntityPlayer player && hasRevived){
             if(witherAttackTimer%400 == 10){
@@ -84,16 +84,13 @@ public abstract class EntityWitherMixin extends EntityMob {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("A God does not fear death.");
             text2.setColor(EnumChatFormatting.BLACK);
-            Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
-            if(this.getAttackTarget() instanceof EntityPlayer player){
-                player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
-            }
-            hasRevived = true;
+            this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
+            this.hasRevived = true;
         }
     }
     @ModifyArg(method = "func_82216_a",at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWither;func_82209_a(IDDDZ)V"), index = 4)
     private boolean modifyChanceForBlueSkulls(boolean par8){
-        if(hasRevived){
+        if(this.hasRevived){
             return this.rand.nextFloat()<0.03;
         }
         return this.rand.nextFloat()<0.01;
@@ -111,7 +108,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                 this.motionX = this.motionZ = 0;
             }
             if(witherSummonTimer == (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 100)){
-                if (!hasRevived) {
+                if (!this.hasRevived) {
                     for(int i = 0; i<3; i++) {
                         int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);

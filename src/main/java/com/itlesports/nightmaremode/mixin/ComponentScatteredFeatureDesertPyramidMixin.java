@@ -1,13 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
-import net.minecraft.src.Block;
-import net.minecraft.src.ComponentScatteredFeatureDesertPyramid;
-import net.minecraft.src.StructureBoundingBox;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
@@ -35,5 +33,13 @@ public class ComponentScatteredFeatureDesertPyramidMixin {
             thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 10, boundingBox);
             thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 11, boundingBox);
         }
+    }
+
+
+    @Redirect(method = "addComponentParts",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/src/ItemEnchantedBook;func_92114_b(Ljava/util/Random;)Lnet/minecraft/src/WeightedRandomChestContent;"))
+    private WeightedRandomChestContent increaseManuscriptChance(ItemEnchantedBook instance, Random par1Random){
+        return instance.func_92112_a(par1Random,1,1,8);
     }
 }

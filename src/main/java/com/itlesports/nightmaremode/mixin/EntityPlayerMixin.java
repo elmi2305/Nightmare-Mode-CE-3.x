@@ -109,7 +109,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
             for (Object tempEntity : list) {
-                if(tempEntity instanceof EntityEnderCrystal && this.dimension != 1 && ((EntityEnderCrystal) tempEntity).ridingEntity == null){((EntityEnderCrystal) tempEntity).setDead();}
+                if(tempEntity instanceof EntityEnderCrystal && !this.capabilities.isCreativeMode && this.dimension != 1 && ((EntityEnderCrystal) tempEntity).ridingEntity == null){((EntityEnderCrystal) tempEntity).setDead();}
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if (tempAnimal instanceof EntityWolf) continue;
                 if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;

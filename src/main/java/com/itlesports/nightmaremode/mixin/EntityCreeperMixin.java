@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -17,6 +18,11 @@ import java.util.Random;
 @Mixin(EntityCreeper.class)
 public class EntityCreeperMixin {
     @Shadow private int fuseTime;
+
+    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int reduceScrollDrops(int bound){
+        return 250;
+    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
@@ -54,6 +60,7 @@ public class EntityCreeperMixin {
 
         if(thisObj.getDataWatcher().getWatchableObjectByte(17) == 1) {
             thisObj.dropItem(Item.ghastTear.itemID, 1);
+            thisObj.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
     }
 

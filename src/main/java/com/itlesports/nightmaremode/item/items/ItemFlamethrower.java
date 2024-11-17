@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import btw.entity.SpiderWebEntity;
 import com.itlesports.nightmaremode.NightmareFlameEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,23 +23,25 @@ public class ItemFlamethrower extends Item {
 
         for (int i = -10; i < 10; i += 2) {
             for (int j = -10; j < 10; j += 2) {
-                NightmareFlameEntity var11 = new NightmareFlameEntity(world);
-                var11.setLocationAndAngles(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ, (player.rotationYaw + i), (player.rotationPitch + j));
-                var11.posX -= (double)(MathHelper.cos((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * 0.16f);
-                var11.posY -= (double)0.1f;
-                var11.posZ -= (double)(MathHelper.sin((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * 0.16f);
-                var11.setPosition(var11.posX, var11.posY, var11.posZ);
-                var11.yOffset = 0.0f;
-                float var3 = 0.4f;
-                var11.motionX = -MathHelper.sin((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * MathHelper.cos((var11.rotationPitch + j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
-                var11.motionZ = MathHelper.cos((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * MathHelper.cos((var11.rotationPitch + j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
-                var11.motionY = -MathHelper.sin((var11.rotationPitch+j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
+//                NightmareFlameEntity var11 = new NightmareFlameEntity(world);
+//                var11.setLocationAndAngles(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ, (player.rotationYaw + i), (player.rotationPitch + j));
+//                var11.posX -= (double)(MathHelper.cos((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * 0.16f);
+//                var11.posY -= (double)0.1f;
+//                var11.posZ -= (double)(MathHelper.sin((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * 0.16f);
+//                var11.setPosition(var11.posX, var11.posY, var11.posZ);
+//                var11.yOffset = 0.0f;
+//                float var3 = 0.4f;
+//                var11.motionX = -MathHelper.sin((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * MathHelper.cos((var11.rotationPitch + j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
+//                var11.motionZ = MathHelper.cos((var11.rotationYaw + i + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * MathHelper.cos((var11.rotationPitch + j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
+//                var11.motionY = -MathHelper.sin((var11.rotationPitch+j + (float)player.rand.nextGaussian()) / 180.0f * (float)Math.PI) * var3;
+//
+//                this.setThrowableHeading(var11.motionX, var11.motionY, var11.motionZ, 1.5f, 1.0f,var11.rand,var11);
+//
+//                if (world.isRemote) {
+//                    world.spawnEntityInWorld(var11);
+//                }
+//                world.spawnEntityInWorld(new SpiderWebEntity(world, (EntityLiving)player));
 
-                this.setThrowableHeading(var11.motionX, var11.motionY, var11.motionZ, 1.5f, 1.0f,var11.rand,var11);
-
-                if (world.isRemote) {
-                    world.spawnEntityInWorld(var11);
-                }
             }
         }
         return stack;

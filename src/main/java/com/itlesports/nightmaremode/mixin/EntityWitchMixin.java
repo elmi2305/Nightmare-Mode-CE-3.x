@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityAIWitchLightningStrike;
@@ -67,6 +68,9 @@ public abstract class EntityWitchMixin extends EntityMob {
         if(this.rand.nextInt(50)==0){
             this.dropItem(Item.expBottle.itemID, 1);
         }
+        if(this.rand.nextInt(6)==0){
+            this.dropItem(BTWItems.witchWart.itemID, this.rand.nextInt(2));
+        }
     }
 
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 8.0f))
@@ -84,19 +88,22 @@ public abstract class EntityWitchMixin extends EntityMob {
 
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 0.75f))
     private float modifyPotionVelocity(float constant){
-        if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
             return constant;
         }
         if (this.getAttackTarget() != null) {
             double dist = this.getDistanceSqToEntity(this.getAttackTarget());
             float velocityTuning = 0;
-            if(Math.sqrt(dist)>15){
+            if(Math.sqrt(dist) > 15){
                 velocityTuning = (float)Math.sqrt(dist)/27;
                 return 0.6f+velocityTuning;
             }
-            if (Math.sqrt(dist)>8) {
+            if (Math.sqrt(dist) > 8) {
                 velocityTuning = (float)Math.sqrt(dist)/30;
                 return 0.6f+velocityTuning;
+            }
+            if (Math.sqrt(dist) < 5){
+                return 0.6f;
             }
             return 0.75f +velocityTuning;
         }
@@ -121,7 +128,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void manageSilverfish(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
         minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
-        if(minionCountdown > (600 + (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1000))){
+        if(minionCountdown >  (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);
                 minionCountdown = this.rand.nextInt(15) * (10 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 10));

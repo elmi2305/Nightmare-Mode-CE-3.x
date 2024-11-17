@@ -28,7 +28,7 @@ public abstract class HardcoreSpawnUtilsMixin{
         if ((BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) && world.getDifficulty() == Difficulties.HOSTILE) {
             overworldTime += 18000L;
 
-            if(world.getMoonPhase() == 4){
+            if(world.getMoonPhase() == 4 && (!WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly())){
                 ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
                 ItemStack var2 = new ItemStack(ItemPotion.potion,1,16422);
                 player.inventory.addItemStackToInventory(var1);
@@ -39,11 +39,15 @@ public abstract class HardcoreSpawnUtilsMixin{
                 tempServer.setWorldTime(overworldTime);
             }
             if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 2) {
-                ItemStack var2 = new ItemStack(BTWItems.corpseEye,1);
-                player.inventory.addItemStackToInventory(var2);
+                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
+                ItemStack var3 = new ItemStack(ItemPotion.potion,1,16422);
+                player.inventory.addItemStackToInventory(var1);
+                player.inventory.addItemStackToInventory(var3);
             }
             if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 1){
                 ItemStack var3 = new ItemStack(Item.compass,1);
+                ItemStack var2 = new ItemStack(BTWItems.corpseEye,1);
+                player.inventory.addItemStackToInventory(var2);
                 player.inventory.addItemStackToInventory(var3);
             }
             // gives a few bonus items after you die

@@ -17,7 +17,10 @@ public abstract class EntitySlimeMixin {
     @Unique private float streakModifier = 1;
     @Unique private float splitCounter = 0;
 
-
+    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int increaseScrollRates(int bound){
+        return 150;
+    }
     @Inject(method = "updateEntityActionState",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntitySlime;faceEntity(Lnet/minecraft/src/Entity;FF)V",
@@ -58,6 +61,7 @@ public abstract class EntitySlimeMixin {
             if(thisObj.rand.nextFloat() < 0.5 / this.streakModifier){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
                 baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2)); // makes the newly spawned slime half the size of the current one
+                baby.setHealth(thisObj.getMaxHealth()/2);
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);

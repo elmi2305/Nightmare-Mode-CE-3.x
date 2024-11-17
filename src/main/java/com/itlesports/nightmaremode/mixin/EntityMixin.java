@@ -1,29 +1,24 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.InfiniteArrowEntity;
-import btw.entity.mob.BTWSquidEntity;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
 public class EntityMixin {
 
-    // TODO: make this code actually good
-
-    @Redirect(method = "updateRiderPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;getMountedYOffset()D"))
-    private double getEndCrystalOffset(Entity instance){
-        Entity thisObject = (Entity)(Object)this;
-        if(thisObject.riddenByEntity instanceof EntityMagmaCube && !thisObject.isInWater()){
-            thisObject.setFire(1000);}
-        if(thisObject.riddenByEntity instanceof EntityEnderCrystal){
-            return -0.5125; // so the ender crystal base is barely underground
-        } else if (thisObject.riddenByEntity instanceof BTWSquidEntity) {
-            return thisObject.getEyeHeight();
-        } else {return (double)thisObject.height * 0.75;}
+    @Inject(method = "updateRiderPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;setPosition(DDD)V",shift = At.Shift.AFTER))
+    private void riderHeightOffset(CallbackInfo ci){
+        Entity thisObj = (Entity)(Object)this;
+        if(thisObj.riddenByEntity instanceof EntityMagmaCube && !thisObj.isInWater()){
+            thisObj.setFire(1000);
+        }
+        if(thisObj.riddenByEntity instanceof EntityEnderCrystal) {
+            thisObj.riddenByEntity.setPosition(thisObj.posX, thisObj.posY - 0.5125D + thisObj.riddenByEntity.getYOffset(), thisObj.posZ);
+        }
     }
     @Redirect(method = "onStruckByLightning(Lbtw/entity/LightningBoltEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;dealFireDamage(I)V"))
     private void endermenImmune(Entity instance, int par1){

@@ -9,14 +9,14 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class MillstoneBlockMixin {
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 1.0f))
     private float lowerVolume(float constant){
-        return 0.1f;
+        return 0.09f;
     }
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 1.5f))
     private float lowerVolume1(float constant){
-        return 0.1f;
+        return 0.09f;
     }
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 0.75f,ordinal = 1))
     private float lowerVolume2(float constant){
-        return 0.075f;
+        return 0.065f;
     }
 }

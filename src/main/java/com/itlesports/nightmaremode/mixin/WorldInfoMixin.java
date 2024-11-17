@@ -27,10 +27,10 @@ public abstract class WorldInfoMixin {
             if (this.totalTime == 0L) {
                 worldTime = 18000L;
                 theGameRules.addGameRule("doMobSpawning", "false");
-            } else if(worldTime >= 19500 && !theGameRules.getGameRuleBooleanValue("doMobSpawning") && !Minecraft.getMinecraft().theWorld.worldInfo.areCommandsAllowed()){
+            } else if(worldTime >= 19800 && !theGameRules.getGameRuleBooleanValue("doMobSpawning") && !Minecraft.getMinecraft().theWorld.worldInfo.areCommandsAllowed()){
                 theGameRules.addGameRule("doMobSpawning", "true");
                 botherChecking = false;
-            } // 1:15 grace period
+            } // 1:30 grace period
         }
     }
 }

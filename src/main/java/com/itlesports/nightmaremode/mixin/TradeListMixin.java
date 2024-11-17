@@ -287,8 +287,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 10),remap = false)
     private static void lowerLibrarianTrades10(Args args) {
-        args.set(0, 2);
-        args.set(1, 4); // witch wart 4-6
+        args.set(0, 3);
+        args.set(1, 5); // witch wart 4-6
     }
     @ModifyArgs(method = "addLibrarianTrades",
             at = @At(value = "INVOKE",

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntitySnowball.class)
 public class EntitySnowballMixin {
-    @Inject(method = "onImpact", at = @At("TAIL"))
+    @Inject(method = "onImpact", at = @At("HEAD"))
     private void hookEntity(MovingObjectPosition par1, CallbackInfo ci) {
         EntitySnowball thisObj = (EntitySnowball) (Object) this;
         if (par1.entityHit instanceof EntityLivingBase target) {

@@ -15,5 +15,6 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderFireCreeper());
         RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderShadowZombie());
 //        RenderManager.addEntityRenderer(SocksMobsEntityGoatPossessed.class, new SocksMobsRenderGoatPossessed(new SocksMobsModelGoatPossessed(),1));
+//        RenderManager.addEntityRenderer(NightmareEntity.class, new RenderShadowZombie());
     }
 }

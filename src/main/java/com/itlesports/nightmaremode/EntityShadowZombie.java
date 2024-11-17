@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode;
 
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 
@@ -31,6 +32,13 @@ public class EntityShadowZombie extends EntityZombie {
             return false;
         }
         return super.attackEntityFrom(par1DamageSource, par2);
+    }
+
+    @Override
+    protected void dropFewItems(boolean par1, int par2) {
+        if(this.rand.nextInt(16) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
+            this.dropItem(Item.enderPearl.itemID,1);
+        }
     }
 
     public void onLivingUpdate() {

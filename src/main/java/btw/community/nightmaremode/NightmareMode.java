@@ -3,30 +3,38 @@ package btw.community.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
-import btw.client.network.packet.handler.CustomEntityPacketHandler;
 import btw.world.biome.BiomeDecoratorBase;
-import com.itlesports.nightmaremode.EntityFireCreeper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
+import org.lwjgl.input.Keyboard;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
 public class NightmareMode extends BTWAddon {
+    private static NightmareMode instance;
+
     public WorldGenerator lavaPillowGenThirdStrata;
     public WorldGenerator silverfishGenFirstStrata;
     public WorldGenerator silverfishGenSecondStrata;
     public WorldGenerator silverfishGenThirdStrata;
 
+
+    public static KeyBinding nightmareZoom;
+
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
-    public static long hellTime;
 
     public NightmareMode(){
         super();
     }
+
+    public static NightmareMode getInstance() {
+        if (instance == null)
+            instance = new NightmareMode();
+        return instance;
+    }
+
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
@@ -42,15 +50,24 @@ public class NightmareMode extends BTWAddon {
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
-//        this.registerProperty("NmHellTimer", "-1", "Time");
     }
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
-//        hellTime = Long.parseLong(propertyValues.get("NmHellTimer"));
     }
+
+    public void initKeybind(){
+        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.KEY_C );
+
+        GameSettings settings = Minecraft.getMinecraft().gameSettings;
+        KeyBinding[] keyBindings = settings.keyBindings;
+        keyBindings = Arrays.copyOf(keyBindings, keyBindings.length + 1);
+        keyBindings[keyBindings.length - 1] = nightmareZoom;
+        settings.keyBindings = keyBindings;
+    }
+
 
 
     @Override

@@ -25,9 +25,11 @@ public abstract class EntityAIAttackOnCollideMixin {
                 && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem()) // TODO: refactor the compute range method to take entity param instead of item stack
                 && isHoldingIllegalItem(thisObj.attacker)
                 && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
+                && thisObj.attackTick <= 1
                 && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())) {
             thisObj.attacker.swingItem();
             thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
+            thisObj.attackTick = 15;
         }
     }
 

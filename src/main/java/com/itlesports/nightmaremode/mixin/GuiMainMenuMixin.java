@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.item.BTWItems;
 import net.minecraft.src.GuiMainMenu;
-import net.minecraft.src.Item;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,7 +39,8 @@ public class GuiMainMenuMixin {
         quotesList.add("It's just a bad dream!");
         quotesList.add("Not the water creatures!");
         quotesList.add("MEN! WITH ME!");
-        quotesList.add("Try the Bonus Chest!");
+        quotesList.add("Wake up!");
+        quotesList.add("Type 1 if you agree!");
         return quotesList;
     }
 }

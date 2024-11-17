@@ -52,11 +52,12 @@ public class BlockPortalMixin{
                 text1.setColor(EnumChatFormatting.DARK_RED);
                 nearestPlayer.sendChatToPlayer(text1);
                 nearestPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
-                Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death", 2.0F, 0.905F);
+//                Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death", 2.0F, 0.905F);
 
                 targetTime = world.getWorldTime() + 72000;
                 runAgain = false;
             }
+            world.playSoundEffect(x,y,z,"mob.wither.death",2.0F,0.905F);
         }
     }
     @Inject(method = "randomDisplayTick", at = @At("TAIL"))

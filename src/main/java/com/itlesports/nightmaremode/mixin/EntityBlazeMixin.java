@@ -29,7 +29,7 @@ public class EntityBlazeMixin extends EntityMob{
             // 16 -> 24 -> 32 -> 40
             thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
-            if (thisObj.rand.nextFloat() < 0.5 && progress > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)) {
+            if (thisObj.rand.nextFloat() < 0.5 && progress >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)) {
                 thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 invisible = true;
             }

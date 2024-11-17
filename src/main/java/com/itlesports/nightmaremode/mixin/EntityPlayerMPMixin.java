@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,16 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
     }
 
+    @Inject(method = "isInGloom", at = @At("HEAD"),cancellable = true)
+    private void noGloomIfWearingEnderSpectacles(CallbackInfoReturnable<Boolean> cir){
+        if(this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == BTWItems.enderSpectacles.itemID){
+            cir.setReturnValue(false);
+        }
+    }
+
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && !MinecraftServer.getIsServer()) {
             Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
             getEntityWorld().addWeatherEffect(lightningbolt);
 

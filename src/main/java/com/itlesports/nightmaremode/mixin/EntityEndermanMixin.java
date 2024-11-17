@@ -18,12 +18,11 @@ public abstract class EntityEndermanMixin extends EntityMob {
     public EntityEndermanMixin(World par1World) {
         super(par1World);
     }
-
     @Shadow protected abstract void angerNearbyEndermen(EntityPlayer targetPlayer);
-
     @Shadow private int teleportDelay;
-
     @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
+
+    @Unique int patience = 30;
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -89,17 +88,23 @@ public abstract class EntityEndermanMixin extends EntityMob {
     private void attackClosePlayers(CallbackInfoReturnable<Entity> cir){
         EntityPlayer target = null;
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 4);
+            target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 3.5);
         }
-        EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 8);
+        EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 7);
         if(effectTarget != null && this.dimension != 1){
-            effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 100,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 100,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 100,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 60,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60,0));
+            effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 60,0));
             if (target != null) {
-                this.angerNearbyEndermen(target);
-                cir.setReturnValue(target);
+                this.patience--;
+                if(this.patience <= 0) {
+                    this.patience = 0;
+                    this.angerNearbyEndermen(target);
+                    cir.setReturnValue(target);
+                }
+            } else{
+                this.patience = Math.min(++this.patience,30);
             }
         }
     }
