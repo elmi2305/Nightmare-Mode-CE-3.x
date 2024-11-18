@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import net.minecraft.src.EntityMagmaCube;
-import net.minecraft.src.EntitySlime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +19,7 @@ public class EntityMagmaCubeMixin {
                 EntityMagmaCube baby = new EntityMagmaCube(thisObj.worldObj);
                 int size = thisObj.getSlimeSize();
                 baby.getDataWatcher().updateObject(16, (byte)(size/2));
+                baby.setHealth(thisObj.getMaxHealth()/2);
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 2 + (float) thisObj.getSlimeSize();

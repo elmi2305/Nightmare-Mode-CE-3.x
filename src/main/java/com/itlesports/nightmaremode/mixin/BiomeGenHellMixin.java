@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.EntityFireCreeper;
-import net.minecraft.src.BiomeGenEnd;
 import net.minecraft.src.BiomeGenHell;
 import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.SpawnListEntry;

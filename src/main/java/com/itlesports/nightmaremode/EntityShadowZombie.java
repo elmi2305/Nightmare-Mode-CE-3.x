@@ -36,7 +36,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     @Override
     protected void dropFewItems(boolean par1, int par2) {
-        if(this.rand.nextInt(16) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
+        if(this.rand.nextInt(32) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
             this.dropItem(Item.enderPearl.itemID,1);
         }
     }

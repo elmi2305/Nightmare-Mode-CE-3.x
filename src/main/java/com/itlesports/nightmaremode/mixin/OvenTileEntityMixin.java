@@ -4,7 +4,6 @@ import btw.block.tileentity.OvenTileEntity;
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntityFurnace;
 import org.spongepowered.asm.mixin.Mixin;

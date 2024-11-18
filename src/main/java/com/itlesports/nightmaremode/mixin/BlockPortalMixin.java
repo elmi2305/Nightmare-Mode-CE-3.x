@@ -2,8 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.WorldUtils;
 import btw.world.util.data.BTWWorldData;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -12,8 +11,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 
 @Mixin(EntityCreeper.class)
 public class EntityCreeperMixin {
@@ -85,6 +82,13 @@ public class EntityCreeperMixin {
                 }
             }
         }
+    }
+    @Redirect(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
+    private boolean doNotDropCreeperOystersIfShorn(World world){
+        if(world.getDifficulty() != Difficulties.HOSTILE){
+            return world.isRemote;
+        }
+        return true;
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){

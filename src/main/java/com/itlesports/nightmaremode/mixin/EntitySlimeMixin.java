@@ -4,7 +4,6 @@ import btw.entity.SpiderWebEntity;
 import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,7 +30,7 @@ public abstract class EntitySlimeMixin {
         if (thisObj.ridingEntity == null) {
             if(timeSpentTargeting >= 110){
                 if (!thisObj.worldObj.isRemote && thisObj.getSlimeSize()>=2) {
-                    if(thisObj instanceof EntityMagmaCube && thisObj.dimension!=0){
+                    if(thisObj instanceof EntityMagmaCube && thisObj.dimension != 0){
                         EntityLivingBase target = thisObj.getAITarget();
                         if (target != null) {
                             double var3 = target.posX - thisObj.posX;

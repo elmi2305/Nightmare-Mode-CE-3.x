@@ -1,20 +1,13 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
-import btw.entity.InfiniteArrowEntity;
-import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import net.minecraft.src.*;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(EntityMob.class)
 public class EntityMobMixin{

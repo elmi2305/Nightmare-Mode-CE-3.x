@@ -1,10 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
 import btw.crafting.recipe.CauldronRecipeList;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

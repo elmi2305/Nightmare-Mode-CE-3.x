@@ -7,7 +7,6 @@ import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.Item;
-import net.minecraft.src.ItemPotion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

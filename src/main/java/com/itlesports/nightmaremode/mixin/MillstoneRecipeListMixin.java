@@ -1,21 +1,15 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
 import btw.crafting.recipe.MillstoneRecipeList;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import btw.util.color.Color;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.Block;
-import net.minecraft.src.BlockVine;
-import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Random;
 
 @Mixin(MillstoneRecipeList.class)
 public class MillstoneRecipeListMixin {

@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     }
 
     public void initKeybind(){
-        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.KEY_C );
+        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.KEY_C);
 
         GameSettings settings = Minecraft.getMinecraft().gameSettings;
         KeyBinding[] keyBindings = settings.keyBindings;

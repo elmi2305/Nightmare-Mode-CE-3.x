@@ -1,17 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
-import btw.item.BTWItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @Mixin(ItemAppleGold.class)
 public abstract class ItemAppleGoldMixin extends ItemFood{

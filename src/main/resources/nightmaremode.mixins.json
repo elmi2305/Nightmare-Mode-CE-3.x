@@ -86,7 +86,8 @@
     "WorldInfoMixin",
     "WorldMixin",
     "WorldProviderHellMixin",
-    "ZombieBreakBarricadeBehaviorHostileMixin"
+    "ZombieBreakBarricadeBehaviorHostileMixin",
+    "ZombieBreakBarricadeBehaviorMixin"
   ],
   "client": [
     "BTWRenderMapperMixin",
@@ -98,7 +99,8 @@
     "GuiScreenMixin",
     "GuiSlotMixin",
     "MillstoneBlockMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "RenderSkeletonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

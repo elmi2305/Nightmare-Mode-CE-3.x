@@ -108,6 +108,8 @@ public abstract class EntityAIAttackOnCollideMixin {
         illegalItemList.add(Item.swordWood.itemID);
         illegalItemList.add(Item.swordDiamond.itemID);
         illegalItemList.add(Item.axeGold.itemID);
+        illegalItemList.add(Item.pickaxeStone.itemID);
+
         return illegalItemList;
     }
     @Unique
@@ -117,6 +119,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         lesserRangeItemList.add(Item.swordWood.itemID);
         lesserRangeItemList.add(Item.swordDiamond.itemID);
         lesserRangeItemList.add(Item.axeGold.itemID);
+        lesserRangeItemList.add(Item.pickaxeStone.itemID);
         return lesserRangeItemList;
     }
 }

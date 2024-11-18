@@ -1,9 +1,5 @@
 package com.itlesports.nightmaremode.item.items;
 
-import btw.entity.SpiderWebEntity;
-import com.itlesports.nightmaremode.NightmareFlameEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -55,9 +51,9 @@ public class ItemFlamethrower extends Item {
         float directionMagnitude = MathHelper.sqrt_double(xDirection * xDirection + yDirection * yDirection + zDirection * zDirection);
 
         // Normalize direction
-        xDirection /= (double) directionMagnitude;
-        yDirection /= (double) directionMagnitude;
-        zDirection /= (double) directionMagnitude;
+        xDirection /= directionMagnitude;
+        yDirection /= directionMagnitude;
+        zDirection /= directionMagnitude;
 
         // Apply random inaccuracy based on accuracy parameter
         xDirection += rand.nextGaussian() * (double) (rand.nextBoolean() ? -1 : 1) * 0.0075 * accuracy;
@@ -65,9 +61,9 @@ public class ItemFlamethrower extends Item {
         zDirection += rand.nextGaussian() * (double) (rand.nextBoolean() ? -1 : 1) * 0.0075 * accuracy;
 
         // Apply velocity to direction components and set entity motion
-        entity.motionX = xDirection *= (double) velocity;
-        entity.motionY = yDirection *= (double) velocity;
-        entity.motionZ = zDirection *= (double) velocity;
+        entity.motionX = xDirection *= velocity;
+        entity.motionY = yDirection *= velocity;
+        entity.motionZ = zDirection *= velocity;
 
         // Calculate rotation for the entity based on its direction
         float horizontalMagnitude = MathHelper.sqrt_double(xDirection * xDirection + zDirection * zDirection);

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.attribute.BTWAttributes;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -51,9 +51,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     return 0.3;
                 }
                 if (this.worldObj != null) {
-                    return 0.29+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.015;
+                    return 0.29+NightmareUtils.getGameProgressMobsLevel(this.worldObj)*0.005;
                 } else return 0.3;
-                // 0.29 -> 0.305 -> 0.320 -> 0.335
+                // 0.29 -> 0.295 -> 0.30 -> 0.305
             }
         }
         return 0.26;
@@ -143,26 +143,15 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 this.setSkeletonType(4); // ender skeleton
                 this.isImmuneToFire = true;
 
-                ItemStack var1 = new ItemStack(Item.skull,1,1);
-                ItemStack var2 = new ItemStack(Item.bow,1);
-                this.setCurrentItemOrArmor(4, var1);
-                this.setCurrentItemOrArmor(0, var2);
                 this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
                 this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
                 this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
+                this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
 
             } else if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 1 && rand.nextFloat() < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0.09 : 0.03) + ((NightmareUtils.getGameProgressMobsLevel(this.worldObj)-1)*0.02) && this.dimension != -1) {
                 // 9% -> 11% -> 13%
                 this.setSkeletonType(3); // fire skeleton
                 this.isImmuneToFire = true;
-
-
-                EntityMagmaCube magmaCube = new EntityMagmaCube(this.worldObj);
-                magmaCube.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                magmaCube.mountEntity(this);
-                ((EntitySlimeInvoker)magmaCube).invokeSetSlimeSize(2);
-                this.worldObj.spawnEntityInWorld(magmaCube);
-                this.setFire(1000000);
 
             } else if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) <= 3 && rand.nextFloat() < 0.02 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * 0.02)) {
                 // 2% -> 4% -> 6% -> 8%
@@ -173,6 +162,15 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
         }
         // overall chances to be a variant: 2% -> 13% -> 30% -> 41%
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    private void manageVariantEffects(CallbackInfo ci){
+        if(this.getSkeletonType() == 3){ // fireskeleton
+            if (!this.isInWater()) {
+                this.setFire(20);
+            }
+        }
     }
 
     @Inject(method = "attackEntityWithRangedAttack",

@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.WorldUtils;
 import net.minecraft.src.EnchantmentHelper;
-import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Random;
 
