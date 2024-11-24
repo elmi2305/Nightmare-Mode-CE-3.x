@@ -1,12 +1,11 @@
 package com.itlesports.nightmaremode;
 
 import btw.world.util.WorldUtils;
-import com.itlesports.nightmaremode.mixin.WorldInfoMixin;
 import net.minecraft.src.World;
 
 public class NightmareUtils {
 
-    public static int getGameProgressMobsLevel(World world) {
+    public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;
         }
@@ -20,5 +19,9 @@ public class NightmareUtils {
             return 1;
         }
         return 0;
+    }
+    public static boolean getIsBloodMoon(World world){
+        if(world == null){return false;}
+        return world.getMoonPhase() == 0 && world.getWorldTime() % 72000 > 60540 && world.getWorldTime() % 72000 < 71459;
     }
 }

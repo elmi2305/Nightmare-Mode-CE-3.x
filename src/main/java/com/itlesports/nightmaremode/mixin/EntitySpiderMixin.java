@@ -29,7 +29,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         if (this.worldObj != null) {
-            return 16000 - NightmareUtils.getGameProgressMobsLevel(this.worldObj)*3000;
+            return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
         } else return 24000;
     }
     @ModifyConstant(method = "spitWeb", constant = @Constant(intValue = 24000))
@@ -38,7 +38,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             if(this.rand.nextFloat() < 0.1){
                 return 10;
             }
-            return 16000 - NightmareUtils.getGameProgressMobsLevel(this.worldObj)*3000;
+            return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
         }
         return constant;
     }
@@ -47,7 +47,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private void dropVenomSacks(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
-        if(thisObj.hasWeb() || thisObj.rand.nextInt(10)<= NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj) * 2){
+        if(thisObj.hasWeb() || thisObj.rand.nextInt(10) <= NightmareUtils.getWorldProgress(thisObj.worldObj) * 2){
             thisObj.dropItem(Item.fermentedSpiderEye.itemID,1);
         }
     }
@@ -55,10 +55,11 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private int increaseSpiderEyeRates(int bound){
         return 4;
     }
+
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
-        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getGameProgressMobsLevel(target.worldObj)*0.2){
-            if (NightmareUtils.getGameProgressMobsLevel(target.worldObj)<=1) {
+        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getWorldProgress(target.worldObj)*0.2){
+            if (NightmareUtils.getWorldProgress(target.worldObj)<=1) {
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, 40,0));
             } else if (target.worldObj.getDifficulty() == Difficulties.HOSTILE){
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, 40,1));
@@ -73,7 +74,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void chanceToShootFireball(Entity targetEntity, CallbackInfo ci){
-        if(targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE && targetEntity.rand.nextFloat()<0.005 && NightmareUtils.getGameProgressMobsLevel(targetEntity.worldObj) <= 1){
+        if(targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE && targetEntity.rand.nextFloat()<0.005 && NightmareUtils.getWorldProgress(targetEntity.worldObj) <= 1){
             double var3 = targetEntity.posX - this.posX;
             double var5 = targetEntity.boundingBox.minY + (double) (targetEntity.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
             double var7 = targetEntity.posZ - this.posZ;
@@ -90,26 +91,30 @@ public abstract class EntitySpiderMixin extends EntityMob{
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
         if (thisObj.worldObj != null) {
-            int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+            int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(thisObj.worldObj) ? 1.5 : 1;
+            boolean isHostile = thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isBloodMoon = bloodMoonModifier > 1;
+
             if(progress==0) {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0);
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 * bloodMoonModifier);
                 thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
             } else {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(13.0 + progress * (7 - (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2)));
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier);
                 // 13 -> 20 -> 27 -> 34
-                thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress*2);
+                thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)));
                 // 4 -> 6 -> 8 -> 10
                 thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.85f); // slightly increases move speed
             }
-            if(thisObj.rand.nextFloat()<0.05 && !(thisObj instanceof JungleSpiderEntity)){
+            if(thisObj.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
                 thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
             }
-            if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0);
+            if (isHostile) {
+                thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0 * bloodMoonModifier);
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(12.0 + progress*6);
+                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1));
                 // 12 -> 18 -> 24 -> 30
             }
         }

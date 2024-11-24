@@ -31,8 +31,8 @@ public class EntityPigZombieMixin {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         EntityPigZombie thisObj = (EntityPigZombie)(Object)this;
-        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + 4 * NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj));
-        thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3 + 2 * NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj));
+        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + 4 * NightmareUtils.getWorldProgress(thisObj.worldObj));
+        thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3 + 2 * NightmareUtils.getWorldProgress(thisObj.worldObj));
     }
 
     @Unique boolean isPlayerWearingGoldArmor(EntityPlayer player){

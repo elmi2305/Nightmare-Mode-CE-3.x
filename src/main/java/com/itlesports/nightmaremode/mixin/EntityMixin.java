@@ -28,6 +28,7 @@ public class EntityMixin {
         }
     }
 
+
 //    @Inject(method = "attackEntityFrom", at = @At("RETURN"),cancellable = true)
 //    private void arrowsIgnoreInvincibility(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
 //        if(par1DamageSource.getEntity() instanceof InfiniteArrowEntity){

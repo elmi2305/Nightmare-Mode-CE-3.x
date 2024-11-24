@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BiomeGenHellMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addCreepersToNetherSpawn(int par1, CallbackInfo ci){
-        ((BiomeGenHell)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 20,1,1));
+        ((BiomeGenHell)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 15,1,1));
         ((BiomeGenHell)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityFireCreeper.class, 40,1,1));
     }
 }

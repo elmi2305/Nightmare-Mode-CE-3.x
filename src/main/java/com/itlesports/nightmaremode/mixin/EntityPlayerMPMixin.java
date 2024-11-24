@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
@@ -23,7 +24,13 @@ import java.util.List;
 
 public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
+    @Unique boolean runAgain = true;
+    @Unique long targetTime = 2147483647;
+
     @Shadow public MinecraftServer mcServer;
+
+    @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
+
     @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
@@ -35,10 +42,39 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
     }
 
+    @Redirect(method = "isInGloom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
+    private boolean manageGloomDuringBloodMoon(EntityPlayerMP player, Potion potion){
+        if(NightmareUtils.getIsBloodMoon(player.worldObj)){
+            return false;
+        }
+        return player.isPotionActive(potion);
+    }
+
+
     @Inject(method = "isInGloom", at = @At("HEAD"),cancellable = true)
     private void noGloomIfWearingEnderSpectacles(CallbackInfoReturnable<Boolean> cir){
         if(this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == BTWItems.enderSpectacles.itemID){
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 2))
+    private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
+        if (this.runAgain) {
+            this.targetTime = this.worldObj.getWorldTime() + 72000;
+            this.runAgain = false;
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageNetherThreeDayPeriod(CallbackInfo ci){
+        if(this.worldObj.getWorldTime() > this.targetTime && !this.runAgain && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
+            ChatMessageComponent text2 = new ChatMessageComponent();
+            text2.addText("Hardmode has begun.");
+            text2.setColor(EnumChatFormatting.DARK_RED);
+            this.sendChatToPlayer(text2);
+            this.playSound("mob.wither.death",1.0f,0.905f);
+            WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
         }
     }
 
@@ -96,7 +132,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ServerConfigurationManager;sendChatMsg(Lnet/minecraft/src/ChatMessageComponent;)V",shift = At.Shift.AFTER))
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
-        if (NightmareUtils.getGameProgressMobsLevel(this.worldObj) != 3) {
+        if (NightmareUtils.getWorldProgress(this.worldObj) != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
             text2.setColor(getDeathColors().get(this.rand.nextInt(getDeathColors().size())));
@@ -116,6 +152,10 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         messageList.add("<???> Easy.");
         messageList.add("<???> Not even close.");
         messageList.add("<???> Don't bother trying.");
+        messageList.add("<???> You weren't built to last.");
+        messageList.add("<???> Did you think you were special? You're not even memorable.");
+        messageList.add("<???> Such potential... wasted on someone so utterly incompetent.");
+        messageList.add("<???> Your light fades, but I remain eternal.");
         return messageList;
     }
 

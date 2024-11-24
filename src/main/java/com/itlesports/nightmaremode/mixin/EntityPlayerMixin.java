@@ -36,6 +36,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+//    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
+//    private void tellMobHealth(Entity par1Entity, CallbackInfo ci){
+//        if(par1Entity instanceof EntityLiving){
+//            System.out.println("health: " + ((EntityLiving) par1Entity).getHealth());
+//        }
+//    }
+
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
         return 0.17f; // jump
@@ -87,7 +94,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             } else if (this.worldObj.getBlockMetadata(i,j,k) == 2){
                 this.addPlayerPotionEffect(thisObj,Potion.wither.id);
                 this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
-            } else{
+            } else if (this.worldObj.getBlockMetadata(i,j,k) == 4){
                 this.addPlayerPotionEffect(thisObj,Potion.wither.id);
                 this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
                 this.addPlayerPotionEffect(thisObj,Potion.blindness.id);
@@ -97,8 +104,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
-        if(!player.isPotionActive(potionID)){
-            player.addPotionEffect(new PotionEffect(potionID,100,0));
+        if(!player.isPotionActive(potionID) || potionID == Potion.blindness.id){
+            player.addPotionEffect(new PotionEffect(potionID,81,0));
         }
     }
 

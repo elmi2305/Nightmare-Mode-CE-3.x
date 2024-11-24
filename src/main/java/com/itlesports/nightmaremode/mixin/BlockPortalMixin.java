@@ -30,7 +30,7 @@ public class BlockPortalMixin{
 
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"), cancellable = true)
     private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
-        if (runAgain && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
+        if (this.runAgain && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             if (MinecraftServer.getServer() != null) {
                 MinecraftServer.getServer().worldServers[0].setData(BTWWorldData.NETHER_ACCESSED, false);
             }
@@ -39,7 +39,7 @@ public class BlockPortalMixin{
                 text2.addText("Hardmode has begun.");
                 text2.setColor(EnumChatFormatting.DARK_RED);
                 world.getClosestPlayer(x,y,z,-1).sendChatToPlayer(text2);
-                runOnce = false;
+                this.runOnce = false;
                 WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
                 cir.setReturnValue(null);
             } else {
@@ -50,23 +50,24 @@ public class BlockPortalMixin{
                 text1.setColor(EnumChatFormatting.DARK_RED);
                 nearestPlayer.sendChatToPlayer(text1);
                 nearestPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
-//                Minecraft.getMinecraft().thePlayer.playSound("mob.wither.death", 2.0F, 0.905F);
 
-                targetTime = world.getWorldTime() + 72000;
-                runAgain = false;
+                this.targetTime = world.getWorldTime() + 72000;
+                this.runAgain = false;
             }
             world.playSoundEffect(x,y,z,"mob.wither.death",2.0F,0.905F);
         }
     }
     @Inject(method = "randomDisplayTick", at = @At("TAIL"))
     private void displayHardmodeStuffInChat(World world, int x, int y, int z, Random par5Random, CallbackInfo ci){
-        if (runOnce) {
-            if(world.getWorldTime() > targetTime){
+        if (this.runOnce) {
+            if(world.getWorldTime() > this.targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
+                EntityPlayer nearestPlayer = world.getClosestPlayer(x, y, z, -1);
                 ChatMessageComponent text2 = new ChatMessageComponent();
                 text2.addText("Hardmode has begun.");
                 text2.setColor(EnumChatFormatting.DARK_RED);
-                world.getClosestPlayer(x,y,z,-1).sendChatToPlayer(text2);
-                runOnce = false;
+                nearestPlayer.sendChatToPlayer(text2);
+                this.runOnce = false;
+                world.playSoundEffect(x,y,z,"mob.wither.death",2.0F,0.905F);
                 WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
             }
         }

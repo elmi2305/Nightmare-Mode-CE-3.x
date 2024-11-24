@@ -4,6 +4,9 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.AITasks.EntityAILunge;
+import com.itlesports.nightmaremode.AITasks.EntityAINearestAttackableTargetShadow;
+import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
 import net.minecraft.src.*;
 
 public class EntityShadowZombie extends EntityZombie {
@@ -47,17 +50,29 @@ public class EntityShadowZombie extends EntityZombie {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26d);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0);
         double followDistance = 16.0;
         if (this.worldObj != null) {
-            followDistance *= (double)this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24.0 + (NightmareUtils.getGameProgressMobsLevel(this.worldObj) * (4 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2))));
-            // 24 -> 28 -> 32 -> 36
-            // relaxed: 24 + 26
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + NightmareUtils.getGameProgressMobsLevel(this.worldObj) * (2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)));
-            // 4 -> 6 -> 8 -> 10
-            // relaxed: 4 -> 5 -> 6 -> 7
+            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+                followDistance *= 4;
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((24.0 + progress * 6));
+                // 30 -> 36 -> 42 -> 48
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * 2);
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29d);
+
+            } else {
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24.0 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 4 : 2));
+                // 24 -> 28 -> 32 -> 36
+                // relaxed: 24 + 26
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 1));
+                // 4 -> 6 -> 8 -> 10
+                // relaxed: 4 -> 5 -> 6 -> 7
+                followDistance *= (double) this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
+
+            }
+            followDistance *= (double) this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
@@ -70,26 +85,16 @@ public class EntityShadowZombie extends EntityZombie {
     protected void addRandomArmor() {}
 
     private void teleportToTarget(EntityPlayer targetPlayer){
-        int targetX;
-        if (this.rand.nextInt(2)==0) {
-            targetX = MathHelper.floor_double(targetPlayer.posX + this.rand.nextInt(3)+1);
-        } else{
-            targetX = MathHelper.floor_double(targetPlayer.posX - this.rand.nextInt(3)+1);
-        }
-        int targetY = MathHelper.floor_double(targetPlayer.posY);
-        int targetZ;
-        if (this.rand.nextInt(2)==0) {
-            targetZ = MathHelper.floor_double(targetPlayer.posZ + this.rand.nextInt(3)+1);
-        } else{
-            targetZ = MathHelper.floor_double(targetPlayer.posZ - this.rand.nextInt(3)+1);
-        }
+        int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);
+        int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);
 
-        for(int i = -1; i < 2; i++) {
-            if(this.worldObj.getBlockId(targetX, targetY + i, targetZ) == 0 && this.worldObj.getBlockId(targetX, targetY + i -1, targetZ) != 0){
-                this.setPositionAndUpdate(targetX,targetY + i, targetZ);
-                this.playSound("mob.endermen.portal",2.0F,1.0F);
-                break;
-            }
+        int targetX = MathHelper.floor_double(targetPlayer.posX + xOffset);
+        int targetY = MathHelper.floor_double(targetPlayer.posY);
+        int targetZ = MathHelper.floor_double(targetPlayer.posZ + zOffset);
+
+        if(this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 && this.worldObj.getBlockId(targetX, targetY-1, targetZ) != 0 && this.worldObj.getBlockId(targetX, targetY+1, targetZ) == 0){
+            this.setPositionAndUpdate(targetX,targetY, targetZ);
+            this.playSound("mob.endermen.portal",2.0F,1.0F);
         }
     }
 }

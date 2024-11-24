@@ -8,3 +8,5 @@ accessible class net/minecraft/src/GuiWorldSlot
 accessible field net/minecraft/src/EntityArrow inGround Z
 accessible field net/minecraft/src/EntityThrowable ticksInGround I
 accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecraft/src/WorldGenerator;II)V
+accessible field net/minecraft/src/EntityRenderer lightmapColors [I
+accessible method net/minecraft/src/EntityRenderer getNightVisionBrightness (Lnet/minecraft/src/EntityPlayer;F)F

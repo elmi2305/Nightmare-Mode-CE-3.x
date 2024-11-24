@@ -29,7 +29,7 @@ public class SpiderWebEntityMixin {
     private void applySlownessOnHit(MovingObjectPosition impactPos, CallbackInfo ci, Entity entityHit){
         if(entityHit instanceof EntityPlayer player){
             if(slimeShooter){amplifier=1;}
-            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,(amplifier+1)*(20 + NightmareUtils.getGameProgressMobsLevel(player.worldObj)*20),amplifier));
+            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,(amplifier+1)*(20 + NightmareUtils.getWorldProgress(player.worldObj)*20),amplifier));
         }
     }
 

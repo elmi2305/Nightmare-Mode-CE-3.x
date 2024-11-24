@@ -13,7 +13,7 @@ public class EntitySilverfishMixin {
     private void infectPlayer(Entity par1Entity, float par2, CallbackInfo ci){
         EntitySilverfish thisObj = (EntitySilverfish)(Object)this;
         if(par1Entity instanceof EntityPlayer target && thisObj.worldObj != null){
-            if (thisObj.rand.nextFloat()<0.05 && NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj)>1) {
+            if (thisObj.rand.nextFloat()<0.05 && NightmareUtils.getWorldProgress(thisObj.worldObj)>1) {
                 thisObj.setDead();
                 target.addPotionEffect(new PotionEffect(Potion.wither.id,300,0));
 //                target.addPotionEffect(new PotionEffect(Potion.wither.id,1000000,0));

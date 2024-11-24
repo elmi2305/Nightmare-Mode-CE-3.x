@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.SpiderWebEntity;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -50,6 +51,14 @@ public abstract class EntitySlimeMixin {
                 }
             }
         }
+    }
+
+    @Redirect(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getCurrentMoonPhaseFactor()F"))
+    private float slimeBloodMoon(World world){
+        if(NightmareUtils.getIsBloodMoon(world)){
+            return 0;
+        }
+        return world.getCurrentMoonPhaseFactor();
     }
 
     @Inject(method = "jump", at = @At("TAIL"))

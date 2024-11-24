@@ -24,6 +24,7 @@ public class NightmareMode extends BTWAddon {
 
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
+    public static String nightmareZoomKey;
 
     public NightmareMode(){
         super();
@@ -50,16 +51,18 @@ public class NightmareMode extends BTWAddon {
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
+        this.registerProperty("NmZoomKey", "C", "The zoom keybind");
     }
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
+        nightmareZoomKey = propertyValues.get("NmZoomKey");
     }
 
     public void initKeybind(){
-        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.KEY_C);
+        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.getKeyIndex(nightmareZoomKey));
 
         GameSettings settings = Minecraft.getMinecraft().gameSettings;
         KeyBinding[] keyBindings = settings.keyBindings;
@@ -97,4 +100,7 @@ public class NightmareMode extends BTWAddon {
             this.silverfishGenThirdStrata.generate(world, rand, var6, var7, var8);
         }
     }
+//    private int keyboardThing(String par1){
+//        return Keyboard.keyMap
+//    }
 }

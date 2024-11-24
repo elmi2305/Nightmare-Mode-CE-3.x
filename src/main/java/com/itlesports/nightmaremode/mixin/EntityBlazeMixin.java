@@ -24,7 +24,7 @@ public class EntityBlazeMixin extends EntityMob{
     private void applyAdditionalAttributes(CallbackInfo ci){
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
         if(thisObj.worldObj != null) {
-            int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+            int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
             thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 8 : 4));
             // 16 -> 24 -> 32 -> 40
             thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);

@@ -92,10 +92,11 @@ public abstract class EntityAIAttackOnCollideMixin {
 
     @Unique
     private static @NotNull List<Integer> getIllegalItems() {
-        List<Integer> illegalItemList = new ArrayList<>(14);
+        List<Integer> illegalItemList = new ArrayList<>(16);
         illegalItemList.add(Item.swordStone.itemID);
         illegalItemList.add(Item.swordIron.itemID);
         illegalItemList.add(Item.swordGold.itemID);
+        illegalItemList.add(BTWItems.steelSword.itemID);
         illegalItemList.add(Item.axeStone.itemID);
         illegalItemList.add(Item.axeDiamond.itemID);
         illegalItemList.add(Item.axeIron.itemID);

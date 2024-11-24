@@ -3,13 +3,16 @@ package com.itlesports.nightmaremode.mixin;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.EntityAIWitchLightningStrike;
+import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityWitch.class)
@@ -24,6 +27,15 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Unique private int minionCountdown = 0;
     @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i<3; i++){
+
+            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+                EntityCreeper tempMinion = new EntityCreeper(this.worldObj);
+                tempMinion.copyLocationAndAnglesFrom(witch);
+                tempMinion.setAttackTarget(player);
+                this.worldObj.spawnEntityInWorld(tempMinion);
+                break;
+            }
+
             if(!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || this.dimension == 1) {
                 EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
@@ -48,8 +60,10 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            int progress = NightmareUtils.getGameProgressMobsLevel(this.worldObj);
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0 + progress*4);
+            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.5 : 1;
+
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20.0 + progress*4) * bloodMoonModifier);
             // 20 -> 24 -> 28 -> 32
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
             this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4);
@@ -127,7 +141,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageSilverfish(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
-        minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getGameProgressMobsLevel(this.worldObj));
+        minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress(this.worldObj));
         if(minionCountdown >  (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);

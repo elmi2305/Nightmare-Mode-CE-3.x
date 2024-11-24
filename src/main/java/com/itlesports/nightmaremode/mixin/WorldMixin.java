@@ -30,7 +30,7 @@ public abstract class WorldMixin {
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("RETURN"),remap = false, cancellable = true)
     private void manageGloomPostWither(CallbackInfoReturnable<Float> cir){
         World thisObj = (World)(Object)this;
-        if(NightmareUtils.getGameProgressMobsLevel(thisObj) == 2 && !thisObj.isDaytime()){cir.setReturnValue(0f);}
+        if(NightmareUtils.getWorldProgress(thisObj) == 2 && !thisObj.isDaytime()){cir.setReturnValue(0f);}
     }
     @Inject(method = "updateWeather", at = @At("TAIL"))
     private void manageRain(CallbackInfo ci){

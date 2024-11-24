@@ -28,6 +28,9 @@ public class EntitySnowballMixin {
                     if (target.motionY <= -0.07 && target.motionY >= -0.08) {
                         target.motionY = yMotion;
                     }
+                    if(target instanceof EntityAnimal){
+                        target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40,0));
+                    }
                 }
             }
         }

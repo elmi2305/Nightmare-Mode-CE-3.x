@@ -12,5 +12,6 @@ public class BiomeGenBaseMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addMobBiomeSpawn(int par1, CallbackInfo ci) {
         ((BiomeGenBase)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityFireCreeper.class, 4, 1, 2));
+        ((BiomeGenBase)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityGhast.class, 1, 1, 1));
     }
 }

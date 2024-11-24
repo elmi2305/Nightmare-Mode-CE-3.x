@@ -4,9 +4,8 @@ import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
-import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
@@ -16,6 +15,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
     private boolean determinedToExplode = false;
     private int lastActiveTime;
     private int timeSinceIgnited;
+    private int rangedAttackCooldown;
     private int fuseTime = 25;
     private final int explosionRadius = 3;
     private byte patienceCounter = 60;
@@ -38,7 +38,10 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(15.0);
+        if (this.worldObj != null) {
+            int postNetherBoost = WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() ? 12 : 0;
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(20.0 + postNetherBoost);
+        }
     }
 
     protected void entityInit() {
@@ -82,8 +85,24 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                 if (this.worldObj.rand.nextInt(20) == 0) {
                     this.patienceCounter = (byte)Math.min(this.patienceCounter + 1, 100);
                 }
-            } else if (this.getDistanceSqToEntity(this.getAttackTarget()) < 36.0 && !this.canEntityBeSeen(this.getAttackTarget()) && this.getNavigator().noPath()) {
-                this.patienceCounter = (byte)Math.max(this.patienceCounter - 1, 0);
+            } else {
+                if (this.getDistanceSqToEntity(this.getAttackTarget()) < 36.0 && !this.canEntityBeSeen(this.getAttackTarget()) && this.getNavigator().noPath()) {
+                    this.patienceCounter = (byte)Math.max(this.patienceCounter - 1, 0);
+                } else if(this.getDistanceSqToEntity(this.getAttackTarget()) > 64.0 && this.canEntityBeSeen(this.getAttackTarget()) && this.rangedAttackCooldown == 0 && NightmareUtils.getIsBloodMoon(this.worldObj)){
+                    EntityLivingBase target = this.getAttackTarget();
+                    double var3 = target.posX - this.posX;
+                    double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
+                    double var7 = target.posZ - this.posZ;
+
+                    EntitySmallFireball var11 = new EntitySmallFireball(this.worldObj, this, var3, var5, var7);
+                    this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                    var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+
+                    this.worldObj.spawnEntityInWorld(var11);
+                    this.rangedAttackCooldown = 30 + rand.nextInt(30);
+                }
+                this.rangedAttackCooldown = Math.max(--this.rangedAttackCooldown,0);
+
             }
             if (this.patienceCounter == 0) {
                 this.determinedToExplode = true;
@@ -98,8 +117,12 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                 this.timeSinceIgnited = this.fuseTime;
                 if (!this.worldObj.isRemote) {
                     boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-                    if (this.getPowered() || (this.isBurning() && this.worldObj.getDifficulty() == Difficulties.HOSTILE)) {
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
+                    if(this.getPowered()){
+                        if(this.isBurning() && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+                            this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2.5),true, var2);
+                        } else {
+                            this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
+                        }
                     } else {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
                     }
@@ -117,8 +140,6 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         DataOutputStream dataStream = new DataOutputStream(byteStream);
         try {
             EntityFireCreeper par1EntityLivingBase = this;
-
-
             dataStream.writeInt(13);
 
             dataStream.writeInt(this.entityId);
@@ -157,7 +178,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iFortuneModifier) > 0)) {
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
-        if(NightmareUtils.getGameProgressMobsLevel(this.worldObj) >= 2){
+        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
             this.dropItem(BTWItems.steelNugget.itemID, this.rand.nextInt(4)+1);
         }
     }

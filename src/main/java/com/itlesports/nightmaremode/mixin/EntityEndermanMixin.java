@@ -27,7 +27,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         EntityEnderman thisObj = (EntityEnderman)(Object)this;
-        int progress = NightmareUtils.getGameProgressMobsLevel(thisObj.worldObj);
+        int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
 
         thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.35f);
         thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(7.0 + progress*2);
@@ -36,11 +36,20 @@ public abstract class EntityEndermanMixin extends EntityMob {
         // 40 -> 60 -> 80 -> 100
     }
 
+
+    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
+    private int increaseAttemptsToTeleportPlayer(int constant){
+        if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            return 6;
+        }
+        return constant;
+    }
+
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void hostileInEnd(CallbackInfoReturnable<Entity> cir, EntityPlayer target){
         if (target != null){
             ItemStack var2 = target.inventory.armorInventory[3];
-            if (target.dimension==1 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            if (target.dimension == 1 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 if (var2 == null) {
                     this.angerNearbyEndermen(target);
                     cir.setReturnValue(target);

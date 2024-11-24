@@ -37,13 +37,13 @@ public abstract class HardcoreSpawnUtilsMixin{
                 WorldServer tempServer = MinecraftServer.getServer().worldServers[i];
                 tempServer.setWorldTime(overworldTime);
             }
-            if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 2) {
+            if (NightmareUtils.getWorldProgress(player.worldObj) >= 2) {
                 ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
                 ItemStack var3 = new ItemStack(ItemPotion.potion,1,16422);
                 player.inventory.addItemStackToInventory(var1);
                 player.inventory.addItemStackToInventory(var3);
             }
-            if (NightmareUtils.getGameProgressMobsLevel(player.worldObj) >= 1){
+            if (NightmareUtils.getWorldProgress(player.worldObj) >= 1){
                 ItemStack var3 = new ItemStack(Item.compass,1);
                 ItemStack var2 = new ItemStack(BTWItems.corpseEye,1);
                 player.inventory.addItemStackToInventory(var2);

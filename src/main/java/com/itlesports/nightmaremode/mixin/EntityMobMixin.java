@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +31,15 @@ public class EntityMobMixin{
             thisObj.setAttackTarget(null);
         }
     }
+    @Inject(method = "isValidLightLevel", at = @At("HEAD"), cancellable = true)
+    private void allowBloodMoonSpawnsInLight(CallbackInfoReturnable<Boolean> cir){
+        EntityMob thisObj = (EntityMob)(Object)this;
+        if (thisObj.worldObj != null) {
+            if(NightmareUtils.getIsBloodMoon(thisObj.worldObj)){
+                cir.setReturnValue(true);
+            }
+        }
+    }
 
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
@@ -49,7 +59,7 @@ public class EntityMobMixin{
                     this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
                     this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
                     this.addMobPotionEffect(thisObj,Potion.resistance.id);
-                } else{
+                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 3){
                     this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
                     this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
                     this.addMobPotionEffect(thisObj,Potion.resistance.id);

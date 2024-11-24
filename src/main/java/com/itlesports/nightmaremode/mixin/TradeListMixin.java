@@ -322,7 +322,7 @@ public class TradeListMixin {
     @Inject(method = "addFarmerTrades", at = @At("TAIL"),remap = false)
     private static void customFarmerTrades(CallbackInfo ci){
         TradeProvider.getBuilder().profession(0).level(1).buy().item(Block.grass.blockID).itemCount(4,10).addToTradeList();
-        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromID(Block.tallGrass.blockID,10,20)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,10,20)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
