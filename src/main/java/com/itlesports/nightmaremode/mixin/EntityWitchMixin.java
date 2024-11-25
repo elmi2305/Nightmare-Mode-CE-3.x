@@ -28,7 +28,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i<3; i++){
 
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if(NightmareUtils.getIsBloodMoon()){
                 EntityCreeper tempMinion = new EntityCreeper(this.worldObj);
                 tempMinion.copyLocationAndAnglesFrom(witch);
                 tempMinion.setAttackTarget(player);
@@ -61,7 +61,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.5 : 1;
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
 
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20.0 + progress*4) * bloodMoonModifier);
             // 20 -> 24 -> 28 -> 32

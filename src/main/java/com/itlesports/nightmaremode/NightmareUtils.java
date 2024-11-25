@@ -4,7 +4,6 @@ import btw.world.util.WorldUtils;
 import net.minecraft.src.World;
 
 public class NightmareUtils {
-
     public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;
@@ -20,8 +19,18 @@ public class NightmareUtils {
         }
         return 0;
     }
-    public static boolean getIsBloodMoon(World world){
-        if(world == null){return false;}
-        return world.getMoonPhase() == 0 && world.getWorldTime() % 72000 > 60540 && world.getWorldTime() % 72000 < 71459;
+    public static boolean getIsBloodMoon(){
+//        return false;
+
+        if(btw.community.nightmaremode.NightmareMode.getInstance().isBloodMoon != null) {
+            return btw.community.nightmaremode.NightmareMode.getInstance().isBloodMoon || btw.community.nightmaremode.NightmareMode.bloodNightmare;
+        }
+        return false;
+
+//        if(world == null){return false;}
+//        if(NightmareMode.bloodNightmare){
+//            return !world.isDaytime();
+//        }
+//        return world.getMoonPhase() == 0 && world.getWorldTime() % 72000 > 60540 && world.getWorldTime() % 72000 < 71459;
     }
 }

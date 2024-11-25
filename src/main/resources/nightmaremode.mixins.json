@@ -54,6 +54,7 @@
     "EntityPlayerMixin",
     "EntityPlayerMPMixin",
     "EntityPlayerSPMixin",
+    "EntityRendererAccessor",
     "EntityRendererMixin",
     "EntitySilverfishMixin",
     "EntitySkeletonMixin",

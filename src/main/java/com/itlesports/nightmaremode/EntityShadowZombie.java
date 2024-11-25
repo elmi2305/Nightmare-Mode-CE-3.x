@@ -55,7 +55,7 @@ public class EntityShadowZombie extends EntityZombie {
         double followDistance = 16.0;
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if(NightmareUtils.getIsBloodMoon()){
                 followDistance *= 4;
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((24.0 + progress * 6));
                 // 30 -> 36 -> 42 -> 48

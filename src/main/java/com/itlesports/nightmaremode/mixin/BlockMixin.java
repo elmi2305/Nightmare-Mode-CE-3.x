@@ -35,7 +35,7 @@ public class BlockMixin {
     }
     @Inject(method = "canMobsSpawnOn", at = @At("HEAD"),cancellable = true)
     private void mobSpawnOnWood(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon(world)){
+        if(NightmareUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
     }

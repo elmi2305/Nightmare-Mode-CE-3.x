@@ -26,13 +26,14 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        EntityEnderman thisObj = (EntityEnderman)(Object)this;
-        int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
+        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
+        boolean isBloodMoon = bloodMoonModifier > 1;
 
-        thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.35f);
-        thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(7.0 + progress*2);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0));
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0 + progress * 2 + bloodMoonModifier);
         // 7 -> 9 -> 11 -> 13
-        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress*20);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress*20);
         // 40 -> 60 -> 80 -> 100
     }
 
@@ -40,6 +41,9 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
     private int increaseAttemptsToTeleportPlayer(int constant){
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            if (NightmareUtils.getIsBloodMoon()) {
+                return 9;
+            }
             return 6;
         }
         return constant;

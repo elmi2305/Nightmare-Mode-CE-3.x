@@ -24,6 +24,8 @@ public class NightmareMode extends BTWAddon {
 
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
+    public static Boolean bloodNightmare;
+    public Boolean isBloodMoon;
     public static String nightmareZoomKey;
 
     public NightmareMode(){
@@ -46,18 +48,26 @@ public class NightmareMode extends BTWAddon {
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
     }
 
+    public static void setBloodMoonFalse(){
+        instance.isBloodMoon = false;
+    }
+    public static void setBloodMoonTrue(){
+        instance.isBloodMoon = true;
+    }
 
     @Override
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
+        this.registerProperty("BloodNightmare", "True", "...");
     }
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
+        bloodNightmare = Boolean.parseBoolean(propertyValues.get("BloodNightmare"));
         nightmareZoomKey = propertyValues.get("NmZoomKey");
     }
 

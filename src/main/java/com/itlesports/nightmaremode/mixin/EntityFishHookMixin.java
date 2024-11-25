@@ -16,7 +16,7 @@ public abstract class EntityFishHookMixin extends Entity {
 
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 8))
     private int increaseBiteOdds(int constant){
-        if (NightmareUtils.getIsBloodMoon(this.worldObj)) {
+        if (NightmareUtils.getIsBloodMoon()) {
             return 16;
         }
         return 10;

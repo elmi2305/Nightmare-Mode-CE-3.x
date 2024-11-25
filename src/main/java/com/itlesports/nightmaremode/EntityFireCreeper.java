@@ -88,7 +88,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             } else {
                 if (this.getDistanceSqToEntity(this.getAttackTarget()) < 36.0 && !this.canEntityBeSeen(this.getAttackTarget()) && this.getNavigator().noPath()) {
                     this.patienceCounter = (byte)Math.max(this.patienceCounter - 1, 0);
-                } else if(this.getDistanceSqToEntity(this.getAttackTarget()) > 64.0 && this.canEntityBeSeen(this.getAttackTarget()) && this.rangedAttackCooldown == 0 && NightmareUtils.getIsBloodMoon(this.worldObj)){
+                } else if(this.getDistanceSqToEntity(this.getAttackTarget()) > 64.0 && this.canEntityBeSeen(this.getAttackTarget()) && this.rangedAttackCooldown == 0 && NightmareUtils.getIsBloodMoon()){
                     EntityLivingBase target = this.getAttackTarget();
                     double var3 = target.posX - this.posX;
                     double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;

@@ -64,15 +64,6 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        if(this.worldObj != null){
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
-                return true;
-            }
-        }
-        return super.getCanSpawnHere();
-    }
 
     @Unique private boolean canEntitySeeSun(){
         if(this.worldObj.isDaytime() && !this.worldObj.isRainingAtPos((int)this.posX, (int)this.posY, (int)this.posZ) && !this.isChild() && !this.inWater){
@@ -107,7 +98,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     private void manageZombieVariants(CallbackInfo ci) {
         if (this.worldObj != null && !this.isVillager()) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 0.5 : 1;
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 0.5 : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (rand.nextInt(MathHelper.floor_double((isHostile ? 50 : 100) * bloodMoonModifier)) == 0) {
@@ -148,7 +139,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 // 12.0 -> 15.0
             }
 
-            if(isHostile && NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if(isHostile && NightmareUtils.getIsBloodMoon()){
                 if(rand.nextInt(10) == 0){
                     this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
@@ -177,7 +168,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 progress = NightmareUtils.getWorldProgress(this.worldObj);
             } catch (RuntimeException ignored) {}
 
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if(NightmareUtils.getIsBloodMoon()){
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27d);
                 this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(64.0d);
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((int)(3.0d + (progress > 0 ? 1 : 0)) * 1.25);
@@ -201,7 +192,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     ordinal = 0))
     private void setDamageIfIronSword(CallbackInfo ci){
         if (this.worldObj!= null) {
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if(NightmareUtils.getIsBloodMoon()){
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(4.0 + (NightmareUtils.getWorldProgress(this.worldObj)) * 2.5));
                 // 4.0 -> 6.0 -> 9.0 -> 11.0
             } else {
@@ -218,7 +209,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
                 chance = 32;
             }
-            if(NightmareUtils.getIsBloodMoon(this.worldObj)){chance /= 2;}
+            if(NightmareUtils.getIsBloodMoon()){chance /= 2;}
 
             if(NightmareUtils.getWorldProgress(this.worldObj) >= 2 && rand.nextInt(chance) == 0){
                 summonCrystalHeadAtPos();
@@ -245,7 +236,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
             if(NightmareUtils.getWorldProgress(this.worldObj)==3){return 0.3f;}
             else {
-                int bloodMoonToolBonus = NightmareUtils.getIsBloodMoon(this.worldObj) ? 5 : 1;
+                int bloodMoonToolBonus = NightmareUtils.getIsBloodMoon() ? 5 : 1;
                 return (float)(0.05F + (NightmareUtils.getWorldProgress(this.worldObj)* (0.03 * bloodMoonToolBonus)));
             }
         }

@@ -66,9 +66,13 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
-        if(this.dimension == 0 && NightmareUtils.getIsBloodMoon(this.worldObj)) {
-            if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63) {
-                cir.setReturnValue(true);
+        if(this.dimension == 0){
+            if (NightmareUtils.getIsBloodMoon()) {
+                if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63) {
+                    cir.setReturnValue(true);
+                }
+            } else{
+                cir.setReturnValue(false);
             }
         }
     }

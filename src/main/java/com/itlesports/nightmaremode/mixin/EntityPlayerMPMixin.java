@@ -44,7 +44,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "isInGloom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
     private boolean manageGloomDuringBloodMoon(EntityPlayerMP player, Potion potion){
-        if(NightmareUtils.getIsBloodMoon(player.worldObj)){
+        if(NightmareUtils.getIsBloodMoon()){
             return false;
         }
         return player.isPotionActive(potion);

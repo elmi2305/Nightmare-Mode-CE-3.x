@@ -33,7 +33,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     private void playerNightVisionBypassDuringBloodMoon(Potion par1Potion, CallbackInfoReturnable<Boolean> cir){
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
 
-        if(thisObj instanceof EntityPlayer player && par1Potion.id == Potion.nightVision.id && NightmareUtils.getIsBloodMoon(player.worldObj)){
+        if(thisObj instanceof EntityPlayer player && par1Potion.id == Potion.nightVision.id && NightmareUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
     }

@@ -7,7 +7,9 @@ import net.minecraft.src.GuiScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiCreateWorld.class)
@@ -15,6 +17,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Shadow private boolean lockDifficulty;
     @Shadow private int difficultyID;
     @Unique boolean onlyOnce = true;
+
     @Inject(method = "updateButtonText", at = @At("HEAD"))
     private void manageDifficulty(CallbackInfo ci){
         if(this.difficultyID == 0 && onlyOnce){

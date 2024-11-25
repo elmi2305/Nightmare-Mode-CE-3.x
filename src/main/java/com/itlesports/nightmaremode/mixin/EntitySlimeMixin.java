@@ -55,7 +55,7 @@ public abstract class EntitySlimeMixin {
 
     @Redirect(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getCurrentMoonPhaseFactor()F"))
     private float slimeBloodMoon(World world){
-        if(NightmareUtils.getIsBloodMoon(world)){
+        if(NightmareUtils.getIsBloodMoon()){
             return 0;
         }
         return world.getCurrentMoonPhaseFactor();

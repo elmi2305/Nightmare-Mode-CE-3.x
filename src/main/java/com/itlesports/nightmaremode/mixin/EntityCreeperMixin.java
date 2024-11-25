@@ -29,7 +29,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
-        double bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.35 : 1;
+        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.35 : 1;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
         if (this.rand.nextInt(8 - progress * 2) == 0 && isHostile) {
@@ -45,7 +45,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-        int bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 3 : 1;
+        int bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 3 : 1;
         if (isHostile) {
             int i = NightmareUtils.getWorldProgress(this.worldObj);
             return switch (i) {
@@ -58,9 +58,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         return constant;
     }
-    @Inject(method = "onUpdate", at = @At(value = "TAIL"))
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"))
     private void manageBloodMoonFuse(CallbackInfo ci){
-        if(this.getFuseTime() == 30 && this.getCreeperState() == -1 && NightmareUtils.getIsBloodMoon(this.worldObj)){
+        if(this.getFuseTime() == 30 && NightmareUtils.getIsBloodMoon()){
             this.setFuseTime(20);
         }
     }
@@ -80,7 +80,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void explodeIfShorn(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-        float bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.25f : 1;
+        float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25f : 1;
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && thisObj.getNeuteredState() == 0) {
@@ -117,7 +117,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
     private void immuneToDrowningDuringBloodMoon(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon(this.worldObj) && par1DamageSource == DamageSource.drown){
+        if(NightmareUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown){
             cir.setReturnValue(false);
         }
     }
@@ -126,7 +126,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private int chanceToSpawnCharged(int constant){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
-        boolean isBloodMoon = NightmareUtils.getIsBloodMoon(thisObj.worldObj);
+        boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
 
         if(progress>0 && thisObj.rand.nextFloat() < 0.15 + (progress - 1)*0.03){
             if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
@@ -175,7 +175,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Override
     public boolean isSecondaryTargetForSquid() {
-        return NightmareUtils.getIsBloodMoon(this.worldObj) && this.getDataWatcher().getWatchableObjectByte(17) == 0;
+        return NightmareUtils.getIsBloodMoon() && this.getDataWatcher().getWatchableObjectByte(17) == 0;
     }
 
     @Override
@@ -188,7 +188,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
-        float bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.25f : 1;
+        float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25f : 1;
 
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
             return 3f;

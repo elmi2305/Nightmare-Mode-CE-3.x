@@ -92,7 +92,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
         if (thisObj.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(thisObj.worldObj) ? 1.5 : 1;
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
             boolean isHostile = thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE;
             boolean isBloodMoon = bloodMoonModifier > 1;
 

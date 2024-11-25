@@ -70,7 +70,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            float bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.5f : 1;
+            float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5f : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
@@ -97,7 +97,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "preInitCreature", at = @At("TAIL"))
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
-            if(NightmareUtils.getIsBloodMoon(this.worldObj) && this.rand.nextInt(8) == 0 && this.getSkeletonType() == 0){
+            if(NightmareUtils.getIsBloodMoon() && this.rand.nextInt(8) == 0 && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -133,7 +133,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if(this.worldObj != null){
-            if (NightmareUtils.getIsBloodMoon(this.worldObj)){
+            if (NightmareUtils.getIsBloodMoon()){
                 this.shootArrowAtEntity(target);
                 this.shootArrowAtEntity(target);
             }
@@ -165,7 +165,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             this.isImmuneToFire = true;
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon(this.worldObj) ? 1.5 : 1;
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
 
             if (progress >= 2 && rand.nextFloat() < (0.13 + ((progress-2) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier){
                 // 13% -> 20%

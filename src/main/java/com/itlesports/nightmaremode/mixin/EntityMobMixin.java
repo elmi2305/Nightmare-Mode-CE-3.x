@@ -11,7 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityMob.class)
-public class EntityMobMixin{
+public class EntityMobMixin extends EntityCreature{
+
+    public EntityMobMixin(World par1World) {
+        super(par1World);
+    }
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
     private void mobMagicImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
@@ -35,9 +39,18 @@ public class EntityMobMixin{
     private void allowBloodMoonSpawnsInLight(CallbackInfoReturnable<Boolean> cir){
         EntityMob thisObj = (EntityMob)(Object)this;
         if (thisObj.worldObj != null) {
-            if(NightmareUtils.getIsBloodMoon(thisObj.worldObj)){
+            if(NightmareUtils.getIsBloodMoon()){
                 cir.setReturnValue(true);
             }
+        }
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("TAIL"))
+    private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsBloodMoon()){
+            this.experienceValue = 20;
+        } else{
+            this.experienceValue = 5;
         }
     }
 

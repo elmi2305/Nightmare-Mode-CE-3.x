@@ -71,7 +71,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseSquidRangeDuringBloodMoon(CallbackInfo ci){
-        if(NightmareUtils.getIsBloodMoon(this.worldObj)){
+        if(NightmareUtils.getIsBloodMoon()){
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(22.0d);
         }
     }
