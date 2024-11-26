@@ -28,6 +28,10 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 
     @Shadow public abstract ItemStack getHeldItem();
 
+    @Shadow protected abstract boolean canDespawn();
+
+    @Shadow private boolean persistenceRequired;
+
     @Redirect(method = "entityLivingAddRandomArmor", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F", ordinal = 0))
     private float returnRandomFloatButLower(Random rand){
         return (rand.nextFloat()-0.008F);
@@ -47,6 +51,22 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
                         this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(method = "despawnEntity", at = @At(value = "TAIL"))
+    private void manageDespawnDuringBloodMoon(CallbackInfo ci){
+        if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 200 == 199 && NightmareUtils.getIsBloodMoon()) {
+            EntityPlayer testPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,128);
+            if(testPlayer != null){
+                if((testPlayer.posY - this.posY > 20) || (this.posY - testPlayer.posY > 20)){
+                    if(rand.nextInt(3)==0 && this.worldObj.getBlockMaterial((int) this.posX, (int) (this.posY-1), (int) this.posZ) != Material.wood){
+                        this.setDead();
+                    }
+                }
+            } else{
+                this.setDead();
             }
         }
     }

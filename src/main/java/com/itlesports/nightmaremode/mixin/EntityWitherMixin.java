@@ -36,6 +36,27 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void destroyBlocksAbove(CallbackInfo ci){
+        EntityLivingBase target = this.getAttackTarget();
+        if(target != null && this.posY - target.posY < 4){
+            for(int i = -1; i < 1; i++){
+                for(int j = -1; j < 1; j++){
+                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+1,(int)this.posZ + j);
+                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+2,(int)this.posZ + j);
+                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+3,(int)this.posZ + j);
+                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+4,(int)this.posZ + j);
+                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+5,(int)this.posZ + j);
+                }
+            }
+        }
+    }
+    @Unique private void destroyBlock(World world,int x, int y, int z){
+        if(world.getBlockId(x,y,z) != 0 && world.getBlockId(x,y,z) != Block.bedrock.blockID){
+            world.destroyBlock(x,y,z,true);
+        }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void attackTimer(CallbackInfo ci){
         if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 100 == 0){
             EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);

@@ -25,6 +25,7 @@ public class GuiMainMenuMixin {
     }
 
 
+
     @Unique
     private static @NotNull List<String> getQuotes() {
         List<String> quotesList = new ArrayList<>();
@@ -41,6 +42,10 @@ public class GuiMainMenuMixin {
         quotesList.add("MEN! WITH ME!");
         quotesList.add("Wake up!");
         quotesList.add("Type 1 if you agree!");
+        quotesList.add("Now with Blood Moons!");
+        quotesList.add("It's easy if you're good!");
+        quotesList.add("Hug the saw!");
+        quotesList.add("Oops! All Bloodmoons!");
         return quotesList;
     }
 }

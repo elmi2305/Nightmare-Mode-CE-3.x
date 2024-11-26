@@ -54,6 +54,19 @@ public class EntityMobMixin extends EntityCreature{
         }
     }
 
+//    @Inject(method = "entityMobOnLivingUpdate", at = @At("HEAD"))
+//    private void playerRadar(CallbackInfo ci){
+//        if(!this.hasAttackTarget() && this.ticksExisted % 200 == 0){
+////        if(NightmareUtils.getIsBloodMoon() && !this.hasAttackTarget() && this.ticksExisted % 200 == 0){
+//            EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,128);
+//            if(tempTarget != null){
+//                System.out.println("check!");
+//                this.getNavigator().tryMoveToEntity(tempTarget,this.getAIMoveSpeed());
+//                this.setAttackTarget(tempTarget);
+//            }
+//        }
+//    }
+
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
         EntityMob thisObj = (EntityMob)(Object)this;

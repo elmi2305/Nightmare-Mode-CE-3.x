@@ -71,12 +71,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5f : 1;
+            boolean isBloodMoon = bloodMoonModifier > 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
-                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2) * bloodMoonModifier);
+                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2) * (isBloodMoon ? 1.25 : 1));
                 // 20 -> 22 -> 24 -> 26
-                // 30 -> 33 -> 36 -> 39
+                // 25 -> 27.5 -> 30 -> 32.5
             }
 
             if(this.getSkeletonType() == 1){

@@ -10,10 +10,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import java.util.Arrays;
-
 @Mixin(EntityRenderer.class)
-public abstract class EntityRendererMixin implements EntityAccessor, EntityRendererAccessor {
+public abstract class EntityRendererMixin implements EntityAccessor {
     @Shadow private Minecraft mc;
     @Mutable
     @Shadow @Final public int[] lightmapColors;
@@ -85,50 +83,29 @@ public abstract class EntityRendererMixin implements EntityAccessor, EntityRende
     }
 
 
-//    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V"))
-//    private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
-//        if (this.mc.thePlayer.dimension == 1) {
-//            this.fogColorRed = 0;
-//            this.fogColorBlue = 0;
-//            this.fogColorGreen= 0;
-//        }
-//        if(NightmareUtils.getIsBloodMoon(this.mc.theWorld)){
-//            this.fogColorRed = 0.50196075f;
-//            this.fogColorBlue = 0.06359476f;
-//            this.fogColorGreen= 0.03591233f;
-//        }
-//        // if anaglyph:
-//        // red = 0.1787719233f
-//        // grn = 0.1787719233f
-//        // blu = 0.195104557f
-//    }
-
-    @Unique private int[] fillLightMapWithDesiredLight(int desiredLight){
-        return null;
+    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V"))
+    private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
+        if (this.mc.thePlayer.dimension == 1) {
+            this.fogColorRed = 0;
+            this.fogColorBlue = 0;
+            this.fogColorGreen= 0;
+        }
+        if(NightmareUtils.getIsBloodMoon()){
+            this.fogColorRed = 0.50196075f;
+            this.fogColorBlue = 0.06359476f;
+            this.fogColorGreen= 0.03591233f;
+        }
+        // if anaglyph:
+        // red = 0.1787719233f
+        // grn = 0.1787719233f
+        // blu = 0.195104557f
     }
+
 
 
     @Unique private int computeBrightnessForTransitionTime(long time){
         return (int) -(time % 235 + 255);
     }
-
-    @Unique private int[] getLightMapListLow(){
-        int[] array = new int[256];
-        Arrays.fill(array, 40);
-        return array;
-    }
-
-    @Unique private int[] getLightMapListHigh(){
-        int[] array = new int[256];
-        Arrays.fill(array, 255);
-        return array;
-    }
-    @Unique private int[] getLightMapListMid(){
-        int[] array = new int[256];
-        Arrays.fill(array, 100);
-        return array;
-    }
-
 
     @Unique private int[] arrayHigh = {
             256,256,256,256,256,256,256,256,

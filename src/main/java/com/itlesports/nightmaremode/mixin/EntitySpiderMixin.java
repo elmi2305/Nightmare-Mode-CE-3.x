@@ -109,9 +109,6 @@ public abstract class EntitySpiderMixin extends EntityMob{
             if(thisObj.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
                 thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
             }
-            if (isHostile) {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0 * bloodMoonModifier);
-            }
 
             if(thisObj instanceof JungleSpiderEntity){
                 thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1));

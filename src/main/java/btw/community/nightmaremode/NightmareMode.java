@@ -49,10 +49,14 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static void setBloodMoonFalse(){
-        instance.isBloodMoon = false;
+        if (instance != null) {
+            instance.isBloodMoon = false;
+        }
     }
     public static void setBloodMoonTrue(){
-        instance.isBloodMoon = true;
+        if (instance != null) {
+            instance.isBloodMoon = true;
+        }
     }
 
     @Override
@@ -60,7 +64,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("BloodNightmare", "True", "...");
+        this.registerProperty("BloodNightmare", "False", "...");
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.UrnEntity;
 import net.minecraft.src.ChatMessageComponent;
 import net.minecraft.src.EnumChatFormatting;
-import net.minecraft.src.Minecraft;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,13 +17,13 @@ public class UrnEntityMixin {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("The Wither must be summoned above sea level.");
             text2.setColor(EnumChatFormatting.BLACK);
-            Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
+            world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
             cir.setReturnValue(false);
         } else if(j > 200){
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("The Wither cannot be summoned this high.");
             text2.setColor(EnumChatFormatting.BLACK);
-            Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
+            world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
             cir.setReturnValue(false);
         }
         // this prints a chat message for every single wither-creating block in the soul urns range. but it works so I'm not complaining

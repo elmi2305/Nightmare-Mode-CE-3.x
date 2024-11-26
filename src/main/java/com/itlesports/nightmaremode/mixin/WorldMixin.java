@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NightmareUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,12 +44,14 @@ public abstract class WorldMixin {
         if(this.getTotalWorldTime() < 120000){
             this.worldInfo.setRaining(false);
         }
-        World thisObj = (World)(Object)this;
+        if (!MinecraftServer.getIsServer()) {
+            World thisObj = (World)(Object)this;
+            if(thisObj.getWorldTime() != thisObj.getTotalWorldTime() && !thisObj.worldInfo.areCommandsAllowed()){
+                thisObj.setWorldTime(thisObj.getTotalWorldTime());
+            }
+            int dawnOffset = this.isDawnOrDusk(thisObj.getWorldTime());
 
-        if(NightmareMode.getInstance().isBloodMoon != null && NightmareMode.getInstance().isBloodMoon){
-            NightmareMode.setBloodMoonTrue();
-        } else {
-            if (this.getIsBloodMoon(thisObj) && !this.test && !thisObj.isDaytime()) {
+            if (this.getIsBloodMoon(thisObj,((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset) && !this.test && !thisObj.isDaytime()) {
                 NightmareMode.setBloodMoonTrue();
                 this.test = true;
             }
@@ -56,12 +59,26 @@ public abstract class WorldMixin {
                 NightmareMode.setBloodMoonFalse();
                 this.test = false;
             }
+            if(!NightmareMode.bloodNightmare){
+                int dayCount = ((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset;
+
+                if(!this.getIsBloodMoon(thisObj,dayCount)){
+                    NightmareMode.setBloodMoonFalse();
+                }
+            }
         }
     }
 
-    @Unique private boolean getIsBloodMoon(World world){
-        long time = world.getWorldTime() % 72000;
-//        return (time % 384000) >= 204000 && (time % 384000) < 248000;
-        return world.getMoonPhase() == 0 && time > 60540 && time < 71459;
+    @Unique
+    private int isDawnOrDusk(long time){
+        if(time % 24000 >= 23459) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Unique private boolean getIsBloodMoon(World world, int dayCount){
+        if(NightmareUtils.getWorldProgress(world) == 0){return NightmareMode.bloodNightmare;}
+        return world.getMoonPhase() == 0 && (dayCount % 16 == 9) || NightmareMode.bloodNightmare;
     }
 }
