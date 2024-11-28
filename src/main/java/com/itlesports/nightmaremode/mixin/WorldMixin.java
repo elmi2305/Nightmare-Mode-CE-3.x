@@ -55,9 +55,8 @@ public abstract class WorldMixin {
                 NightmareMode.setBloodMoonTrue();
                 this.test = true;
             }
-            if (thisObj.isDaytime() && this.test) {
+            if (thisObj.isDaytime()) {
                 NightmareMode.setBloodMoonFalse();
-                this.test = false;
             }
             if(!NightmareMode.bloodNightmare){
                 int dayCount = ((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset;
