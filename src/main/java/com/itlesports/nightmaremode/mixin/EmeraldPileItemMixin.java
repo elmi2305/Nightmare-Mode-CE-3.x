@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(btw.item.items.EmeraldPileItem.class)
-public class EmeraldPileItem {
+public class EmeraldPileItemMixin {
     @Inject(method = "onItemRightClick", at = @At(value = "FIELD", target = "Lnet/minecraft/src/PlayerCapabilities;isCreativeMode:Z"))
     private void decreaseStackSizeOnUse(ItemStack stack, World world, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir){
         if(!player.capabilities.isCreativeMode){

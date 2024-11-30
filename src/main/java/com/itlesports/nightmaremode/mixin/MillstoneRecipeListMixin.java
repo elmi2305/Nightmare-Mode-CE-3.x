@@ -17,6 +17,7 @@ public class MillstoneRecipeListMixin {
     private static void addAdditionalRecipes(CallbackInfo ci){
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.witchLocator,4), new ItemStack(BTWItems.witchWart));
         RecipeManager.addMillStoneRecipe(new ItemStack[]{new ItemStack(NMItems.rifle), new ItemStack(NMItems.rpg)}, new ItemStack[]{new ItemStack(Block.dragonEgg)});
     }
 }

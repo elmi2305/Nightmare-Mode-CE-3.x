@@ -99,7 +99,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                     var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
 
                     this.worldObj.spawnEntityInWorld(var11);
-                    this.rangedAttackCooldown = 30 + rand.nextInt(30);
+                    this.rangedAttackCooldown = 50 + rand.nextInt(30);
                 }
                 this.rangedAttackCooldown = Math.max(--this.rangedAttackCooldown,0);
 
@@ -179,7 +179,14 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
         if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-            this.dropItem(BTWItems.steelNugget.itemID, this.rand.nextInt(4)+1);
+            int itemCount = this.rand.nextInt(5)+2;
+            if(NightmareUtils.getIsBloodMoon()){
+                itemCount += 1;
+                itemCount *= 2;
+            }
+            this.dropItem(BTWItems.steelNugget.itemID, itemCount);
+            // 2 - 6
+            // 6 - 14 on bloodmoons
         }
     }
 

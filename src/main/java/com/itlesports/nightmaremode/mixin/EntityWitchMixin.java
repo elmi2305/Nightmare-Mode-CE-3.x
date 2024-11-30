@@ -82,7 +82,7 @@ public abstract class EntityWitchMixin extends EntityMob {
         if(this.rand.nextInt(50)==0){
             this.dropItem(Item.expBottle.itemID, 1);
         }
-        if(this.rand.nextInt(6)==0){
+        if(this.rand.nextInt(NightmareUtils.getIsBloodMoon() ? 2 : 6) == 0){
             this.dropItem(BTWItems.witchWart.itemID, this.rand.nextInt(2));
         }
     }

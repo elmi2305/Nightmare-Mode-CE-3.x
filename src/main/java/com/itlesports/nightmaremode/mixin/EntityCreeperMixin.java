@@ -61,7 +61,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"))
     private void manageBloodMoonFuse(CallbackInfo ci){
         if(this.getFuseTime() == 30 && NightmareUtils.getIsBloodMoon()){
-            this.setFuseTime(20);
+            this.setFuseTime(22);
         }
     }
 
@@ -139,7 +139,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             return 1;
         }
         if(isBloodMoon){
-            return rand.nextInt(4) == 0 ? 1 : 0;
+            return rand.nextInt(6) == 0 ? 1 : 0;
         }
         return 0;
     }
@@ -196,7 +196,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         if(NightmareUtils.getWorldProgress(this.worldObj)>=2){
             return 4.2f * bloodMoonModifier;
         } else if(NightmareUtils.getWorldProgress(this.worldObj)==1){
-            return 3.5f * bloodMoonModifier;
+            return 3.7f * bloodMoonModifier;
         }
         return 3.375f * bloodMoonModifier;
     }

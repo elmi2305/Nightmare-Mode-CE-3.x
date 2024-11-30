@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.world.util.WorldUtils;
@@ -15,7 +16,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// MODIFY TIME TO n * 24000 + 18000 UPON DEATH where n is current day
+import java.util.ArrayList;
+
 // code is sloppy, there's probably a better way to do this.
 
 @Mixin(HardcoreSpawnUtils.class)
@@ -28,10 +30,11 @@ public abstract class HardcoreSpawnUtilsMixin{
             overworldTime += 18000L;
 
             if(world.getMoonPhase() == 4 && (!WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly())){
-                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
-                ItemStack var2 = new ItemStack(ItemPotion.potion,1,16422);
-                player.inventory.addItemStackToInventory(var1);
-                player.inventory.addItemStackToInventory(var2);
+//                ItemStack var1 = new ItemStack(BTWBlocks.finiteBurningTorch,3);
+//                ItemStack var2 = new ItemStack(ItemPotion.potion,1,16422);
+//                player.inventory.addItemStackToInventory(var1);
+//                player.inventory.addItemStackToInventory(var2);
+                overworldTime += 24000L;
             }
             for(int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i) {
                 WorldServer tempServer = MinecraftServer.getServer().worldServers[i];
@@ -51,6 +54,14 @@ public abstract class HardcoreSpawnUtilsMixin{
             }
             // gives a few bonus items after you die
         }
+    }
+
+    @Redirect(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;contains(Ljava/lang/Object;)Z"))
+    private static boolean excludeJungle(ArrayList list, Object o){
+        if((o.equals(BiomeGenBase.jungle) || o.equals(BiomeGenBase.jungleHills)) && NightmareMode.bloodNightmare){
+            return true;
+        }
+        return list.contains(o);
     }
 
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;sendChatToPlayer(Lnet/minecraft/src/ChatMessageComponent;)V",ordinal = 0))

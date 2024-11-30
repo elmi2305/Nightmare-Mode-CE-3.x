@@ -23,10 +23,6 @@ public abstract class WorldMixin {
 
     @Shadow public WorldInfo worldInfo;
 
-    @Shadow public abstract long getWorldTime();
-
-    @Unique private boolean test = false;
-
     @Inject(method = "isBoundingBoxBurning", at = @At("RETURN"),cancellable = true)
     private void manageBurningItemImmunity(Entity entity, CallbackInfoReturnable<Boolean> cir){
         if(entity instanceof EntityItem item && ((Objects.equals(item.getEntityName(), "item.item.magmaCream")) || Objects.equals(item.getEntityName(), "item.item.blazeRod"))){
@@ -46,23 +42,18 @@ public abstract class WorldMixin {
         }
         if (!MinecraftServer.getIsServer()) {
             World thisObj = (World)(Object)this;
-            if(thisObj.getWorldTime() != thisObj.getTotalWorldTime() && !thisObj.worldInfo.areCommandsAllowed()){
-                thisObj.setWorldTime(thisObj.getTotalWorldTime());
-            }
             int dawnOffset = this.isDawnOrDusk(thisObj.getWorldTime());
 
-            if (this.getIsBloodMoon(thisObj,((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset) && !this.test && !thisObj.isDaytime()) {
-                NightmareMode.setBloodMoonTrue();
-                this.test = true;
-            }
-            if (thisObj.isDaytime() && this.test) {
-                NightmareMode.setBloodMoonFalse();
-                this.test = false;
-            }
             if(!NightmareMode.bloodNightmare){
-                int dayCount = ((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset;
-
-                if(!this.getIsBloodMoon(thisObj,dayCount)){
+                if (this.getIsBloodMoon(thisObj,((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset)) {
+                    NightmareMode.setBloodMoonTrue();
+                } else {
+                    NightmareMode.setBloodMoonFalse();
+                }
+            } else{
+                if(this.getIsNight(thisObj)){
+                    NightmareMode.setBloodMoonTrue();
+                } else{
                     NightmareMode.setBloodMoonFalse();
                 }
             }
@@ -78,7 +69,11 @@ public abstract class WorldMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress(world) == 0){return NightmareMode.bloodNightmare;}
-        return world.getMoonPhase() == 0 && (dayCount % 16 == 9) || NightmareMode.bloodNightmare;
+        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
+        return this.getIsNight(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodNightmare;
+    }
+
+    @Unique private boolean getIsNight(World world){
+        return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
     }
 }

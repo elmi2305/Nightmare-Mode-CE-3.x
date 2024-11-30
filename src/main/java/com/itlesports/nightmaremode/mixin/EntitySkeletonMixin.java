@@ -4,6 +4,7 @@ import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
 import btw.item.BTWItems;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -75,9 +76,12 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
-                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2) * (isBloodMoon ? 1.25 : 1));
-                // 20 -> 22 -> 24 -> 26
-                // 25 -> 27.5 -> 30 -> 32.5
+                if(isBloodMoon){
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(26d);
+                } else {
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2) * (isBloodMoon ? 1.25 : 1));
+                    // 20 -> 22 -> 24 -> 26
+                }
             }
 
             if(this.getSkeletonType() == 1){
@@ -89,7 +93,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 // 24.0 -> 34.0 -> 45.0 -> 55.0
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1) + bloodMoonModifier);
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1));
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -99,6 +103,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
             if(NightmareUtils.getIsBloodMoon() && this.rand.nextInt(8) == 0 && this.getSkeletonType() == 0){
+                this.setSkeletonType(1);
+            } else if (this.rand.nextInt(10) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -153,8 +159,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if(this.getSkeletonType() == 4) { // ender skeleton
-            if(this.rand.nextInt(4) == 0){
-                this.dropItem(BTWItems.soulFlux.itemID,1);
+            if(this.rand.nextInt(3) == 0){
+                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 4 : 2))+1;
+                this.dropItem(BTWItems.soulFlux.itemID, drops);
+                // 1 - 2
+                // 1 - 4 bloodmoon
             }
         }
     }

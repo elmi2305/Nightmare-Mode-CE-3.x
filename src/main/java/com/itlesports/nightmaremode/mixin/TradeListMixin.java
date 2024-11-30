@@ -355,7 +355,7 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(16,32).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,2,6)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(BTWItems.soulFlux.itemID,4,8)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(4).buy().item(BTWItems.soulFlux.itemID).itemCount(8,12).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(4).buy().item(BTWItems.soulFlux.itemID).itemCount(3,6).weight(0.5f).addToTradeList();
     }
 
 

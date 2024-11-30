@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import net.minecraft.src.*;
@@ -45,14 +46,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
+        if(NightmareMode.bloodNightmare){
+            return 0.15f;
+        }
         return 0.17f; // jump
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
+        if(NightmareMode.bloodNightmare){
+            return 0.5f;
+        }
         return 0.75f; // sprint jump
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
+        if(NightmareMode.bloodNightmare){
+            return 0.15f;
+        }
         return 0.2f; // punch
     }
 
