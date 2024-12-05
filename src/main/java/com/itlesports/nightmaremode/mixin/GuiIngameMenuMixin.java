@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import net.minecraft.src.GuiIngameMenu;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.I18n;
 import net.minecraft.src.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ public class GuiIngameMenuMixin {
 
     @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 4))
     private String displayCheatText(String string){
-        return "Turn Cheats On";
+        return I18n.getString("gui.pauseMenu.turnCheatsOn");
     }
     
 //        @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;displayGuiScreen(Lnet/minecraft/src/GuiScreen;)V",ordinal = 5))

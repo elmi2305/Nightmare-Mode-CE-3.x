@@ -17,3 +17,19 @@ item.nmBloodChestplate.name=Blood Chestplate
 item.nmBloodLeggings.name=Blood Leggings
 item.nmBloodBoots.name=Blood Boots
 key.nightmaremode.zoom=Zoom
+
+gui.pauseMenu.turnCheatsOn=Turn Cheats On
+
+difficulty.nightmare.name=Nightmare
+difficulty.nightmare.description1=The ultimate challenge.
+# Intentionally empty.
+difficulty.nightmare.description2=
+difficulty.nightmare.description3=
+#
+
+difficulty.bloodmare.name=Bloodmare
+
+difficulty.baddream.name=Bad Dream
+difficulty.baddream.description1=A more relaxed experience. Makes
+difficulty.baddream.description2=many aspects of Nightmare Mode
+difficulty.baddream.description3=easier and more forgiving.
