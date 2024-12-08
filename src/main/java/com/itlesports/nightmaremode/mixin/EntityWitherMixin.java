@@ -41,8 +41,6 @@ public abstract class EntityWitherMixin extends EntityMob {
         if(target != null && this.posY - target.posY < 4){
             for(int i = -1; i < 1; i++){
                 for(int j = -1; j < 1; j++){
-                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+1,(int)this.posZ + j);
-                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+2,(int)this.posZ + j);
                     this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+3,(int)this.posZ + j);
                     this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+4,(int)this.posZ + j);
                     this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+5,(int)this.posZ + j);
@@ -69,7 +67,7 @@ public abstract class EntityWitherMixin extends EntityMob {
             witherAttackTimer+= this.rand.nextInt(5)+1;
             if(this.hasRevived){witherAttackTimer += 3;}
         }
-        if(this.entityToAttack instanceof EntityPlayer player && hasRevived){
+        if(this.entityToAttack instanceof EntityPlayer player && this.hasRevived){
             if(witherAttackTimer%400 == 10){
                 int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
                 int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
@@ -100,10 +98,24 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",shift = At.Shift.AFTER))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getHealth()<21 && !hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(this.getHealth()<21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             this.setHealth(300);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("A God does not fear death.");
+            for(int i = 0; i<3; i++) {
+                int yValue = (int) (this.posY + 2);
+                int xValue = (int) this.posX;
+                int zValue = (int) this.posZ;
+
+                EntitySkeleton tempMinion = new EntitySkeleton(this.worldObj);
+                tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
+                tempMinion.setSkeletonType(1);
+                if (this.rand.nextFloat() < 0.3) {
+                    tempMinion.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
+                }
+                tempMinion.entityToAttack = this.getAttackTarget();
+                this.worldObj.spawnEntityInWorld(tempMinion);
+            }
             text2.setColor(EnumChatFormatting.BLACK);
             this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
             this.hasRevived = true;
@@ -135,6 +147,12 @@ public abstract class EntityWitherMixin extends EntityMob {
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                         int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
 
+                        if(this.posY + 5 < yValue){
+                            yValue = (int) (this.posY + 2);
+                            xValue = (int) this.posX;
+                            zValue = (int) this.posZ;
+                        }
+
                         EntitySkeleton tempMinion = new EntitySkeleton(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
                         tempMinion.setSkeletonType(1);
@@ -150,6 +168,12 @@ public abstract class EntityWitherMixin extends EntityMob {
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                         int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
 
+                        if(this.posY + 5 < yValue){
+                            yValue = (int) (this.posY + 2);
+                            xValue = (int) this.posX;
+                            zValue = (int) this.posZ;
+                        }
+
                         EntityFireCreeper tempMinion = new EntityFireCreeper(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
                         tempMinion.entityToAttack = this.getAttackTarget();
@@ -162,6 +186,12 @@ public abstract class EntityWitherMixin extends EntityMob {
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                         int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
 
+                        if(this.posY + 5 < yValue){
+                            yValue = (int) (this.posY + 2);
+                            xValue = (int) this.posX;
+                            zValue = (int) this.posZ;
+                        }
+
                         EntityBlaze tempMinion = new EntityBlaze(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue + this.rand.nextInt(5), zValue, 50, 50);
                         tempMinion.entityToAttack = this.getAttackTarget();
@@ -173,6 +203,12 @@ public abstract class EntityWitherMixin extends EntityMob {
                         int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
                         int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                         int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
+
+                        if(this.posY + 5 < yValue){
+                            yValue = (int) (this.posY + 2);
+                            xValue = (int) this.posX;
+                            zValue = (int) this.posZ;
+                        }
 
                         DireWolfEntity tempMinion = new DireWolfEntity(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);

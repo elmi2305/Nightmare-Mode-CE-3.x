@@ -4,9 +4,9 @@ import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
-
-    @Shadow public abstract int getCreeperState();
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
@@ -29,7 +27,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
-        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.35 : 1;
+        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25 : 1;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
         if (this.rand.nextInt(8 - progress * 2) == 0 && isHostile) {
@@ -37,9 +35,22 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + progress * 6) * bloodMoonModifier);
         // 20 -> 26 -> 32 -> 38
-        // 27 -> 35 -> 43 -> 51
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28 + ((bloodMoonModifier-1) * 0.08));
-        // 0.28 or 0.308
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28);
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(3);
+            // 0 - 2
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
     }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
@@ -57,12 +68,6 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             };
         }
         return constant;
-    }
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"))
-    private void manageBloodMoonFuse(CallbackInfo ci){
-        if(this.getFuseTime() == 30 && NightmareUtils.getIsBloodMoon()){
-            this.setFuseTime(22);
-        }
     }
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
@@ -106,7 +111,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !this.isPotionActive(Potion.fireResistance.id)){
+        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NightmareUtils.getIsBloodMoon() && !this.isPotionActive(Potion.fireResistance.id)){
             this.onKickedByAnimal(null); // primes the creeper instantly
         }
     }
@@ -188,16 +193,14 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
-        float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25f : 1;
-
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
             return 3f;
         }
         if(NightmareUtils.getWorldProgress(this.worldObj)>=2){
-            return 4.2f * bloodMoonModifier;
+            return 4.2f ;
         } else if(NightmareUtils.getWorldProgress(this.worldObj)==1){
-            return 3.7f * bloodMoonModifier;
+            return 3.6f ;
         }
-        return 3.375f * bloodMoonModifier;
+        return 3.375f;
     }
 }

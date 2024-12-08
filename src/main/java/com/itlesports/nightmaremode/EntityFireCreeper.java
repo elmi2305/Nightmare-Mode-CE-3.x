@@ -6,6 +6,7 @@ import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
@@ -173,9 +174,9 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         return super.attackEntityFrom(par1DamageSource, par2);
     }
 
-    protected void dropFewItems(boolean bKilledByPlayer, int iFortuneModifier) {
-        super.dropFewItems(bKilledByPlayer, iFortuneModifier);
-        if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iFortuneModifier) > 0)) {
+    protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
+        super.dropFewItems(bKilledByPlayer, iLootingModifier);
+        if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iLootingModifier) > 0)) {
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
         if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
@@ -187,6 +188,18 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             this.dropItem(BTWItems.steelNugget.itemID, itemCount);
             // 2 - 6
             // 6 - 14 on bloodmoons
+        }
+
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(3);
+            // 0 - 2
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
         }
     }
 

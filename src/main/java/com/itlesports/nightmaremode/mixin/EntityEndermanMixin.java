@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +38,20 @@ public abstract class EntityEndermanMixin extends EntityMob {
         // 40 -> 60 -> 80 -> 100
     }
 
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(4)+1;
+            // 1 - 4
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
+    }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
     private int increaseAttemptsToTeleportPlayer(int constant){

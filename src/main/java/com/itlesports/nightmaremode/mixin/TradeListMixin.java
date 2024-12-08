@@ -321,8 +321,11 @@ public class TradeListMixin {
 
     @Inject(method = "addFarmerTrades", at = @At("TAIL"),remap = false)
     private static void customFarmerTrades(CallbackInfo ci){
+        EntityVillager.removeLevelUpTrade(0,2);
+
         TradeProvider.getBuilder().profession(0).level(1).buy().item(Block.grass.blockID).itemCount(4,10).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,10,20)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
         TradeProvider.getBuilder().profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
@@ -353,6 +356,7 @@ public class TradeListMixin {
     private static void customPriestTrades(CallbackInfo ci){
         TradeProvider.getBuilder().profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(12,16).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(16,32).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,12).weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,2,6)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(BTWItems.soulFlux.itemID,4,8)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
         TradeProvider.getBuilder().profession(2).level(4).buy().item(BTWItems.soulFlux.itemID).itemCount(3,6).weight(0.5f).addToTradeList();

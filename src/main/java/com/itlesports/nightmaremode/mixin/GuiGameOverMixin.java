@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.world.util.difficulty.Difficulties;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -22,7 +20,9 @@ public class GuiGameOverMixin extends GuiScreen {
 
     @Inject(method = "initGui", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GuiGameOver;buttonList:Ljava/util/List;",ordinal = 4,shift = At.Shift.AFTER))
     private void addNewButton(CallbackInfo ci){
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, "Next Attempt"));
+        if (!MinecraftServer.getIsServer()) {
+            this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, "Next Attempt"));
+        }
     }
 
 
@@ -37,14 +37,42 @@ public class GuiGameOverMixin extends GuiScreen {
 
             this.createClicked = true;
             long seed = new Random().nextLong();
-            EnumGameType gameType = EnumGameType.SURVIVAL;
-            WorldSettings settings = new WorldSettings(seed, gameType, true, false, WorldType.DEFAULT, Difficulties.HOSTILE,true);
+            WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), this.mc.theWorld.getWorldInfo().isMapFeaturesEnabled(), false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
             ISaveFormat var1 = this.mc.getSaveLoader();
 
+            if(this.mc.theWorld.getWorldInfo().areCommandsAllowed()){
+                settings.enableCommands();
+            }
+            //            if(this.mc.theWorld.getWorldInfo().getGeneratorOptions())
+            // TODO: no way to detect whether bonus chest was enabled. bonus chest defaults to off
+
+//            try {
+//                List saveList = var1.getSaveList();
+//                Collections.sort(saveList);
+//                String mostRecentWorld = updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
+//                if (MinecraftServer.getServer() != null) {
+//                    MinecraftServer.getServer().stopServer();
+//                    this.mc.loadWorld(null);
+//                }
+//
+//                this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
+//                this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
+//            } catch (Exception e) {
+//                System.out.println("it broke");
+//                ci.cancel();
+//            }
+
+            List saveList = null;
             try {
-                List saveList = var1.getSaveList();
-                Collections.sort(saveList);
-                String mostRecentWorld = updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
+                saveList = var1.getSaveList();
+            } catch (Exception e) {
+                ci.cancel();
+            }
+
+            saveList.sort(null);
+            String mostRecentWorld = updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
+
+            try {
                 if (MinecraftServer.getServer() != null) {
                     MinecraftServer.getServer().stopServer();
                     this.mc.loadWorld(null);
@@ -52,8 +80,7 @@ public class GuiGameOverMixin extends GuiScreen {
 
                 this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
                 this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
-            } catch (Exception e) {
-                System.out.println("it broke");
+            } catch (Exception ignored) {
                 ci.cancel();
             }
         }
@@ -78,12 +105,12 @@ public class GuiGameOverMixin extends GuiScreen {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(input);
 
-        int largest = Integer.MIN_VALUE;
+        long largest = Long.MIN_VALUE;
         int start = -1, end = -1;
 
         // Find the largest number and its position in the string
         while (matcher.find()) {
-            int num = Integer.parseInt(matcher.group());
+            long num = Long.parseLong(matcher.group());
             if (num > largest) {
                 largest = num;
                 start = matcher.start();
@@ -92,12 +119,12 @@ public class GuiGameOverMixin extends GuiScreen {
         }
 
         // If no number is found, return the original string
-        if (largest == Integer.MIN_VALUE) {
+        if (largest == Long.MIN_VALUE) {
             return input;
         }
 
         // Increment the largest number
-        int incrementedValue = largest + 1;
+        long incrementedValue = largest + (Long.signum(largest));
 
         // Replace the largest number with the incremented value
         StringBuilder updatedString = new StringBuilder(input);

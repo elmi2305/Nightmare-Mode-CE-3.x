@@ -5,6 +5,7 @@ import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,6 +49,22 @@ public abstract class EntityWitchMixin extends EntityMob {
                 tempMinion.setAttackTarget(player);
                 this.worldObj.spawnEntityInWorld(tempMinion);
                 break;
+            }
+        }
+    }
+
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(9)+4;
+            // 4 - 12
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
             }
         }
     }

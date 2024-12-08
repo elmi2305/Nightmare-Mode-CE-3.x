@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,6 +29,21 @@ public abstract class EntityGhastMixin extends EntityFlying{
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + 6 * progress);
         // 20 -> 26 -> 32 -> 38
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(3)+1;
+            // 1 - 3
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
     }
 
     @ModifyConstant(method = "attackEntityFrom", constant = @Constant(floatValue = 1000.0f))

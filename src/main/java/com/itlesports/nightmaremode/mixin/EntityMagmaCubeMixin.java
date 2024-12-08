@@ -19,7 +19,7 @@ public class EntityMagmaCubeMixin {
                 EntityMagmaCube baby = new EntityMagmaCube(thisObj.worldObj);
                 int size = thisObj.getSlimeSize();
                 baby.getDataWatcher().updateObject(16, (byte)(size/2));
-                baby.setHealth(thisObj.getMaxHealth()/2);
+                baby.setHealth(baby.getSlimeSize());
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 2 + (float) thisObj.getSlimeSize();

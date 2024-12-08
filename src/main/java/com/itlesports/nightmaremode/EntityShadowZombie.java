@@ -7,6 +7,7 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAINearestAttackableTargetShadow;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 public class EntityShadowZombie extends EntityZombie {
@@ -15,7 +16,7 @@ public class EntityShadowZombie extends EntityZombie {
         this.isImmuneToFire = true;
         this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
         this.tasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetShadow(this, EntityPlayer.class, 0, true, false, (IEntitySelector)null));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetShadow(this, EntityPlayer.class, 0, true, false, null));
         this.targetTasks.removeAllTasksOfClass(EntityAILunge.class);
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
     }
@@ -29,7 +30,7 @@ public class EntityShadowZombie extends EntityZombie {
         else if (par1DamageSource == DamageSource.onFire){return false;}
         else if (par1DamageSource == DamageSource.inFire){return false;}
         else if (par1DamageSource == DamageSource.lava){return false;}
-        else if (par1DamageSource instanceof EntityDamageSourceIndirect && ((EntityDamageSourceIndirect)par1DamageSource).getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target){
+        else if (par1DamageSource instanceof EntityDamageSourceIndirect && par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target){
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
@@ -41,6 +42,14 @@ public class EntityShadowZombie extends EntityZombie {
     protected void dropFewItems(boolean par1, int par2) {
         if(this.rand.nextInt(32) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
             this.dropItem(Item.enderPearl.itemID,1);
+        }
+
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int dropCount = this.rand.nextInt(3); // 0 - 2
+            for (int i = 0; i < dropCount; ++i) {
+                this.dropItem(bloodOrbID, 1);
+            }
         }
     }
 
@@ -69,13 +78,13 @@ public class EntityShadowZombie extends EntityZombie {
                 // 4 -> 6 -> 8 -> 10
                 // relaxed: 4 -> 5 -> 6 -> 7
             }
-            followDistance *= (double) this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
+            followDistance *= this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
         this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10);
     }
-
+    @Override
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
 
     @Override

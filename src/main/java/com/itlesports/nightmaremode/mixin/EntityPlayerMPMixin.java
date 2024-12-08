@@ -26,6 +26,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Unique boolean runAgain = true;
     @Unique long targetTime = 2147483647;
+    @Unique boolean isTryingToEscapeBloodMoon = true;
 
     @Shadow public MinecraftServer mcServer;
 
@@ -58,11 +59,28 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
     }
 
-    @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 2))
+
+    @Inject(method = "travelToDimension",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
+                    ordinal = 2),cancellable = true)
     private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
         if (this.runAgain) {
             this.targetTime = this.worldObj.getWorldTime() + 72000;
             this.runAgain = false;
+        }
+        if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && this.dimension == 0) {
+            int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
+            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
+                if(this.isTryingToEscapeBloodMoon){
+                    ChatMessageComponent text1 = new ChatMessageComponent();
+                    text1.addText("<???> Running to another realm? Pathetic. This is where your nightmare stays.");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    this.sendChatToPlayer(text1);
+                    this.isTryingToEscapeBloodMoon = false;
+                }
+                ci.cancel();
+            }
         }
     }
 
@@ -70,11 +88,14 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageNetherThreeDayPeriod(CallbackInfo ci){
         if(this.worldObj.getWorldTime() > this.targetTime && !this.runAgain && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("Hardmode has begun.");
+            text2.addText("<???> Hardmode has begun.");
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death",1.0f,0.905f);
             WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
+        }
+        if(this.worldObj.getWorldTime() % 24000 == 0){
+            this.isTryingToEscapeBloodMoon = true;
         }
     }
 

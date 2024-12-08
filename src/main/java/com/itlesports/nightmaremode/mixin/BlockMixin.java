@@ -5,6 +5,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,22 +14,34 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Block.class)
 public class BlockMixin {
     @Inject(method = "harvestBlock", at = @At("HEAD"))
-    private void additionalDropsForToolHarvested(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6, CallbackInfo ci){
+    private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
         Block thisObj = (Block)(Object)this;
-        if (par2EntityPlayer.getHeldItem() != null) {
-            if(par2EntityPlayer.getHeldItem().itemID == Item.pickaxeIron.itemID && par1World.rand.nextInt(7) <= 3){
+        ItemStack item = player.getHeldItem();
+        if (item != null) {
+//            if(item.itemID == Item.shovelStone.itemID){
+//                if(thisObj.blockID == Block.blockClay.blockID && world.rand.nextInt(10)==0){
+//                    summonEntity(world,x,y,z,Item.clay);
+//                }
+//            } else if(item.itemID == Item.shovelIron.itemID){
+//                if(thisObj.blockID == Block.blockClay.blockID && world.rand.nextInt(6)==0){
+//                    summonEntity(world,x,y,z,Item.clay);
+//                }
+//            }
+// TODO: decide if shovels should give double clay lol
+
+            if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) <= 3){
                 if (thisObj.blockID == Block.oreIron.blockID) {
                     // 4/7 chance (57%)
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.ironOreChunk)));
+                    summonEntity(world,x,y,z,BTWItems.ironOreChunk);
                 } else if(thisObj.blockID == Block.oreGold.blockID){
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.goldOreChunk)));
+                    summonEntity(world,x,y,z,BTWItems.goldOreChunk);
                 }
-            } else if((par2EntityPlayer.getHeldItem().itemID == Item.pickaxeDiamond.itemID || par2EntityPlayer.getHeldItem().itemID == BTWItems.steelPickaxe.itemID) && par1World.rand.nextInt(4) <= 2){
+            } else if((item.itemID == Item.pickaxeDiamond.itemID || item.itemID == BTWItems.steelPickaxe.itemID) && world.rand.nextInt(4) <= 2){
                 // 3/4 chance (75%)
                 if (thisObj.blockID == Block.oreIron.blockID) {
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.ironOreChunk)));
+                    summonEntity(world,x,y,z,BTWItems.ironOreChunk);
                 } else if(thisObj.blockID == Block.oreGold.blockID){
-                    par1World.spawnEntityInWorld(new FloatingItemEntity(par1World, par3, par4, par5, new ItemStack(BTWItems.goldOreChunk)));
+                    summonEntity(world,x,y,z,BTWItems.goldOreChunk);
                 }
             }
         }
@@ -38,5 +51,9 @@ public class BlockMixin {
         if(NightmareUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
+    }
+
+    @Unique private static void summonEntity(World world, int x, int y, int z, Item item){
+        world.spawnEntityInWorld(new FloatingItemEntity(world, x, y, z, new ItemStack(item)));
     }
 }

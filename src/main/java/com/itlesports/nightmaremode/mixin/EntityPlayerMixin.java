@@ -5,6 +5,7 @@ import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +26,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow protected abstract boolean isInBed();
 
+    @Shadow public FoodStats foodStats;
+
     public EntityPlayerMixin(World par1World) {
         super(par1World);
     }
@@ -37,12 +40,39 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-//    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
-//    private void tellMobHealth(Entity par1Entity, CallbackInfo ci){
-//        if(par1Entity instanceof EntityLiving){
-//            System.out.println("health: " + ((EntityLiving) par1Entity).getHealth());
-//        }
-//    }
+    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
+    private void manageLifeSteal(Entity entity, CallbackInfo ci){
+        if(entity instanceof EntityLiving && NightmareUtils.isHoldingBloodSword(this) && entity.hurtResistantTime == 0 && !this.isPotionActive(Potion.weakness) && !(entity instanceof EntityWither)){
+            int chance = 15 - NightmareUtils.getBloodArmorWornCount(this) * 3;
+            // 15, 12, 9, 6, 3
+            if(NightmareUtils.getIsBloodMoon()){
+                chance -= 1;
+            }
+
+            if(rand.nextInt(chance) == 0){
+                this.heal(rand.nextInt(chance) == 0 ? 2 : 1);
+            }
+
+            if(rand.nextInt((int) (chance / 1.5)) == 0 && this.foodStats.getFoodLevel() < 60){
+                this.foodStats.setFoodLevel(this.foodStats.getFoodLevel() + 1);
+            }
+
+            if(NightmareUtils.isWearingFullBloodArmor(this)){
+                this.increaseArmorDurabilityRandomly(this);
+                if((this.rand.nextInt(3) == 0 || NightmareUtils.getIsBloodMoon()) && this.fallDistance > 0.0F){
+                    this.heal(1f);
+                }
+            }
+        }
+    }
+
+    @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
+        int j = rand.nextInt(3);
+        for (int a = 0; a < 2; a++) {
+            int i = rand.nextInt(5);
+            player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
+        }
+    }
 
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant){
@@ -129,7 +159,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if (tempAnimal instanceof EntityWolf) continue;
                 if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
-                ((EntityAnimalInvoker) ((EntityAnimal)(Object)tempAnimal)).invokeOnNearbyPlayerStartles(thisObj);
+                ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles(thisObj);
                 break;
             }
         }

@@ -2,12 +2,16 @@ package com.itlesports.nightmaremode.mixin;
 
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemAppleGold.class)
 public abstract class ItemAppleGoldMixin extends ItemFood{
+    @Unique
+    private long timeUntilUsage;
+
     public ItemAppleGoldMixin(int par1, int par2, float par3, boolean par4) {
         super(par1, par2, par3, par4);
     }
@@ -28,27 +32,13 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         this.maxStackSize = 1;
     }
 
-//        List<Integer> potionIDList= new ArrayList<>();
-//        for(int i = 1; i <= 22; i++){
-//            potionIDList.add(i);
-//        }
-//        potionIDList.remove(5);
-//        potionIDList.remove(5);
-//        Random rand = new Random();
-//        for(int i = 0; i < 3; i++) {
-//            int id = potionIDList.get(rand.nextInt(potionIDList.size()));
-//            int amplifier = rand.nextInt(2);
-//
-//            entityPlayer.addPotionEffect(new PotionEffect(id,300,amplifier));
-//        }
-
     // ENCHANTED GOLDEN APPLE
     @Inject(method = "onFoodEaten",
             at = @At(value="INVOKE",
                     target = "Lnet/minecraft/src/EntityPlayer;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",
                     ordinal = 3, shift = At.Shift.AFTER))
     private void giveExtraPotionEffects(ItemStack par3, World world, EntityPlayer entityPlayer, CallbackInfo ci){
-        entityPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id, 600, 4));
+        entityPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id, 600, 3));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.resistance.id, 800, 0));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 600, 0));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 2400, 0));
@@ -58,5 +48,22 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         entityPlayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 600, 1));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 600, 1));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 2400, 1)); // absorption
+
+        this.timeUntilUsage = world.getTotalWorldTime() + 1800; // enchanted gapple cooldown, 90s
+    }
+
+    @Inject(method = "onFoodEaten",at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",ordinal = 0,shift = At.Shift.AFTER))
+    private void addCooldownForRegularGaps(ItemStack stack, World world, EntityPlayer player, CallbackInfo ci){
+        this.timeUntilUsage = world.getTotalWorldTime() + 600; // regular gap cooldown, 30s
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (!player.isPotionActive(Potion.hunger) && world.getTotalWorldTime() >= this.timeUntilUsage) {
+            player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+        } else {
+            player.onCantConsume();
+        }
+        return stack;
     }
 }

@@ -2,21 +2,17 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.blocks.MillstoneBlock;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(MillstoneBlock.class)
 public class MillstoneBlockMixin {
-    @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 1.0f))
-    private float lowerVolume(float constant){
-        return 0.09f;
+    @ModifyArg(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSound(DDDLjava/lang/String;FF)V"),index = 4)
+    private float lowerMillstoneVolume(float par8){
+        return 0.07f;
     }
-    @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 1.5f))
-    private float lowerVolume1(float constant){
-        return 0.09f;
-    }
-    @ModifyConstant(method = "randomDisplayTick", constant = @Constant(floatValue = 0.75f,ordinal = 1))
-    private float lowerVolume2(float constant){
-        return 0.065f;
+    @ModifyArg(method = "clientNotificationOfMetadataChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSound(DDDLjava/lang/String;FF)V"),index = 4)
+    private float lowerMillstoneVolume1(float par8){
+        return 0.07f;
     }
 }

@@ -2,10 +2,8 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
-import net.minecraft.src.EntityPigZombie;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Item;
-import net.minecraft.src.SharedMonsterAttributes;
+import com.itlesports.nightmaremode.item.NMItems;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,24 +13,41 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(EntityPigZombie.class)
-public class EntityPigZombieMixin {
+public class EntityPigZombieMixin extends EntityZombie {
+    public EntityPigZombieMixin(World par1World) {
+        super(par1World);
+    }
+
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
-        EntityPigZombie thisObj = (EntityPigZombie)(Object)this;
-        double range = thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0;
-        List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(range, range, range));
+        double range = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0;
+        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
         for (Object tempEntity : list) {
             if (!(tempEntity instanceof EntityPlayer player)) continue;
             if (this.isPlayerWearingGoldArmor(player)) continue;
-            thisObj.entityToAttack = player;
+            this.entityToAttack = player;
             break;
         }
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        EntityPigZombie thisObj = (EntityPigZombie)(Object)this;
-        thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + 4 * NightmareUtils.getWorldProgress(thisObj.worldObj));
-        thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3 + 2 * NightmareUtils.getWorldProgress(thisObj.worldObj));
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + 4 * NightmareUtils.getWorldProgress(this.worldObj));
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3 + 2 * NightmareUtils.getWorldProgress(this.worldObj));
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(2);
+            // 0 - 1
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
     }
 
     @Unique boolean isPlayerWearingGoldArmor(EntityPlayer player){

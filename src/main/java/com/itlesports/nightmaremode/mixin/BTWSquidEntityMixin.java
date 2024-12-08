@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +20,6 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int headCrabDamageCounter;
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
     @Unique int squidOnHeadTimer = 0;
-    @Unique int jumpCooldown;
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -42,6 +42,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
     private int increaseMysteriousGlandDropRate(int constant){return 2;}
     // makes the random function roll a number between 0 and 2 instead of 0 and 8
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0) {
+            int var4 = this.rand.nextInt(4)+2;
+            // 2 - 5
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
+    }
 
     // adds a flat +1 to inc sac drops
     @Inject(method = "dropFewItems", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;rand:Ljava/util/Random;",ordinal = 0))

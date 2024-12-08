@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +31,8 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 
     @Shadow private boolean persistenceRequired;
 
+    @Shadow protected float[] equipmentDropChances;
+
     @Redirect(method = "entityLivingAddRandomArmor", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F", ordinal = 0))
     private float returnRandomFloatButLower(Random rand){
         return (rand.nextFloat()-0.008F);
@@ -49,6 +50,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
                         streakModifier += 0.05f;
                         List<ItemStack> leatherArmorList = getItemStacks();
                         this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
+                        this.equipmentDropChances[i] = 0f;
                     }
                 }
             }
@@ -57,70 +59,27 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 
     @Inject(method = "despawnEntity", at = @At(value = "TAIL"))
     private void manageDespawnDuringBloodMoon(CallbackInfo ci){
-        if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 200 == 199 && NightmareUtils.getIsBloodMoon()) {
-            EntityPlayer testPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,128);
-            if(testPlayer != null){
-                if((testPlayer.posY - this.posY > 20) || (this.posY - testPlayer.posY > 20)){
-                    if(rand.nextInt(3)==0 && this.worldObj.getBlockMaterial((int) this.posX, (int) (this.posY-1), (int) this.posZ) != Material.wood){
+        if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 300 == 299 && NightmareUtils.getIsBloodMoon()) {
+            EntityPlayer nearestPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX, this.posY, this.posZ, 128);
+
+            if (nearestPlayer != null) {
+                double verticalDistance = Math.abs(nearestPlayer.posY - this.posY);
+
+                if (verticalDistance > 20) {
+                    boolean isOnNonWoodMaterial = this.worldObj.getBlockMaterial(
+                            (int) this.posX,
+                            (int) (this.posY - 1),
+                            (int) this.posZ
+                    ) != Material.wood;
+
+                    if (rand.nextInt(3) == 0 && isOnNonWoodMaterial) {
                         this.setDead();
                     }
                 }
-            } else{
+            } else {
                 this.setDead();
             }
         }
-    }
-
-//    @Redirect(method = "isInsideSpawnAreaAroundChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getMobSpawnRangeInChunks()I"))
-//    private int manageBloodMoonSpawningNearPlayer(World world){
-//        if(NightmareUtils.getIsBloodMoon(world)){
-//            return 0;
-//        }
-//        return world.getClampedViewDistanceInChunks() - 2;
-//    }
-//
-//    @Inject(method = "isInsideSpawnAreaAroundOriginalSpawn", at = @At("HEAD"), cancellable = true)
-//    private void manageBloodMoonSpawningNearPlayer(CallbackInfoReturnable<Boolean> cir){
-//        if(NightmareUtils.getIsBloodMoon(this.worldObj)){
-//            cir.setReturnValue(false);
-//        }
-//    }
-
-
-        @Redirect(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"))
-    private EntityItem doNotDropItemsIfVariant(EntityLiving instance, ItemStack itemStack, float v){
-        if (itemStack.stackSize == 0) {
-            return null;
-        } else {
-            if (checkNullAndCompareID(new ItemStack(Item.swordDiamond), instance.getHeldItem())
-            || checkNullAndCompareID(new ItemStack(Item.swordWood), instance.getHeldItem())
-            || checkNullAndCompareID(new ItemStack(Item.axeGold), instance.getHeldItem())
-
-            || checkNullAndCompareID(new ItemStack(Item.helmetLeather), instance.getCurrentItemOrArmor(4))
-            || checkNullAndCompareID(new ItemStack(Item.plateLeather), instance.getCurrentItemOrArmor(3))
-            || checkNullAndCompareID(new ItemStack(Item.legsLeather), instance.getCurrentItemOrArmor(2))
-            || checkNullAndCompareID(new ItemStack(Item.bootsLeather), instance.getCurrentItemOrArmor(1))
-
-            || checkNullAndCompareID(new ItemStack(BTWItems.woolBoots), instance.getCurrentItemOrArmor(1))
-            || checkNullAndCompareID(new ItemStack(BTWItems.woolLeggings), instance.getCurrentItemOrArmor(2))
-            || checkNullAndCompareID(new ItemStack(BTWItems.woolChest), instance.getCurrentItemOrArmor(3))
-            || checkNullAndCompareID(new ItemStack(BTWItems.woolHelmet), instance.getCurrentItemOrArmor(4))
-            ) {
-                return null; // yes it's all hardcoded, might make it not sometime down the road
-            } else {
-                EntityItem var3 = new EntityItem(this.worldObj, this.posX, this.posY + (double) v, this.posZ, itemStack);
-                var3.delayBeforeCanPickup = 10;
-                this.worldObj.spawnEntityInWorld(var3);
-                return var3;
-            }
-        }
-    }
-
-    @Unique
-    public boolean checkNullAndCompareID(ItemStack par1ItemStack, ItemStack par2ItemStack){
-        if(par1ItemStack != null && par2ItemStack != null){
-            return par1ItemStack.itemID == par2ItemStack.itemID;
-        } else {return false;}
     }
 
     @Unique

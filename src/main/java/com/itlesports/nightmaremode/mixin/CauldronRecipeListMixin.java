@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin;
 import btw.crafting.recipe.CauldronRecipeList;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
-import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +16,6 @@ public class CauldronRecipeListMixin {
     private static void addMoreRecipes(CallbackInfo ci){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
         RecipeManager.addCauldronRecipe(new ItemStack(Item.clay, 8), new ItemStack[]{new ItemStack(BTWItems.netherSludge, 8)});
-        RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(Block.netherBrick, 1)});
+        RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
     }
 }

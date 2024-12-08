@@ -36,7 +36,7 @@ public class BlockPortalMixin{
             }
             if (MinecraftServer.getIsServer()){
                 ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("Hardmode has begun.");
+                text2.addText("<???> Hardmode has begun.");
                 text2.setColor(EnumChatFormatting.DARK_RED);
                 world.getClosestPlayer(x,y,z,-1).sendChatToPlayer(text2);
                 this.runOnce = false;
@@ -46,7 +46,7 @@ public class BlockPortalMixin{
                 EntityPlayer nearestPlayer = world.getClosestPlayer(x, y, z, -1);
 
                 ChatMessageComponent text1 = new ChatMessageComponent();
-                text1.addText("3 days remain.");
+                text1.addText("<???> 3 days remain.");
                 text1.setColor(EnumChatFormatting.DARK_RED);
                 nearestPlayer.sendChatToPlayer(text1);
                 nearestPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
@@ -63,7 +63,7 @@ public class BlockPortalMixin{
             if(world.getWorldTime() > this.targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
                 EntityPlayer nearestPlayer = world.getClosestPlayer(x, y, z, -1);
                 ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("Hardmode has begun.");
+                text2.addText("<???> Hardmode has begun.");
                 text2.setColor(EnumChatFormatting.DARK_RED);
                 nearestPlayer.sendChatToPlayer(text2);
                 this.runOnce = false;

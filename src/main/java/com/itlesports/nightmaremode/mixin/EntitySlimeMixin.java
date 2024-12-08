@@ -69,7 +69,7 @@ public abstract class EntitySlimeMixin {
             if(thisObj.rand.nextFloat() < 0.5 / this.streakModifier){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
                 baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2)); // makes the newly spawned slime half the size of the current one
-                baby.setHealth(thisObj.getMaxHealth()/2);
+                baby.setHealth(baby.getSlimeSize());
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
