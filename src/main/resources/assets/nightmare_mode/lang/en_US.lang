@@ -19,6 +19,9 @@ item.nmBloodBoots.name=Blood Boots
 key.nightmaremode.zoom=Zoom
 
 gui.pauseMenu.turnCheatsOn=Turn Cheats On
+gui.nmTimer.day=Day %d
+gui.nmTimer.night=Night %d
+deathScreen.nextAttempt=Next Attempt
 
 difficulty.nightmare.name=Nightmare
 difficulty.nightmare.description1=The ultimate challenge.
