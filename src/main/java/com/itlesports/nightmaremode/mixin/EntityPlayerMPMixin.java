@@ -155,7 +155,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
         if (NightmareUtils.getWorldProgress(this.worldObj) != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
+            text2.addKey(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
             text2.setColor(getDeathColors().get(this.rand.nextInt(getDeathColors().size())));
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
@@ -164,19 +164,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Unique
     private static @NotNull List<String> getDeathMessages() {
         List<String> messageList = new ArrayList<>();
-        messageList.add("<???> Pathetic.");
-        messageList.add("<???> Really?");
-        messageList.add("<???> Have you tried not dying?");
-        messageList.add("<???> Skill issue.");
-        messageList.add("<???> Dead again?");
-        messageList.add("<???> Nice one.");
-        messageList.add("<???> Easy.");
-        messageList.add("<???> Not even close.");
-        messageList.add("<???> Don't bother trying.");
-        messageList.add("<???> You weren't built to last.");
-        messageList.add("<???> Did you think you were special? You're not even memorable.");
-        messageList.add("<???> Such potential... wasted on someone so utterly incompetent.");
-        messageList.add("<???> Your light fades, but I remain eternal.");
+        for (int i = 1; i <= 13; i++){
+            messageList.add("deathScreen.deathTauntMessage"+i);
+        }
         return messageList;
     }
 
@@ -191,7 +181,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<The Twins> Your journey ends here.");
+        text2.addKey("bosses.dragons.journeyEnd");
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
         // need to figure out how to make this not happen every time the player goes to the end
