@@ -19,6 +19,7 @@ public class NMItems {
     public static ItemBloodShovel bloodShovel;
     public static ItemBloodHoe bloodHoe;
     public static ItemBloodSword bloodSword;
+
     public static ItemBloodArmor bloodHelmet;
     public static ItemBloodArmor bloodChestplate;
     public static ItemBloodArmor bloodLeggings;
