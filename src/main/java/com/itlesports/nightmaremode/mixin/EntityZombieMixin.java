@@ -42,6 +42,8 @@ public abstract class EntityZombieMixin extends EntityMob{
                 skeleton.setHealth(Math.min(skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2, skeleton.getMaxHealth()));
                 for (int i = 0; i < 5; i++) {
                     skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
+                    skeleton.setEquipmentDropChance(i,0f);
+
                 }
                 if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                     if (rand.nextInt(25) == 0) {
@@ -97,6 +99,9 @@ public abstract class EntityZombieMixin extends EntityMob{
 
         if (bloodOrbID > 0) {
             int dropCount = this.rand.nextInt(2); // 0 - 1
+            if(((EntityZombie)(Object)this) instanceof EntityPigZombie){
+                dropCount = this.rand.nextInt(6) == 0 ? 1 : 0;
+            }
 
             if (this.isCrystalHead(this)) {
                 dropCount += 3;

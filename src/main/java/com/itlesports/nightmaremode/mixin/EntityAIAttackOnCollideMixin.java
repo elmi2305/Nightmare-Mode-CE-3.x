@@ -29,7 +29,7 @@ public abstract class EntityAIAttackOnCollideMixin {
                 && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())) {
             thisObj.attacker.swingItem();
             thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
-            thisObj.attackTick = 15;
+            thisObj.attackTick = 13;
         }
     }
 

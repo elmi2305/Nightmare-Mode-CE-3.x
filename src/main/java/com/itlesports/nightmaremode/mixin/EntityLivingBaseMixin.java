@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,28 +44,52 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     }
 
     @Inject(method = "onDeath", at = @At("HEAD"))
-    private void manageBloodMoonDeaths(DamageSource source, CallbackInfo ci){
+    private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
         if(source.getEntity() instanceof EntityPlayer player){
-            boolean bIsBloodMoon = NightmareUtils.getIsBloodMoon();
-
             if(NightmareUtils.isWearingFullBloodArmor(player)){
-                if(this.rand.nextInt(3) == 0 || bIsBloodMoon){
-                    if(player.isPotionActive(Potion.damageBoost) && (player.getActivePotionEffect(Potion.damageBoost)).getAmplifier() == 0){
+                int chance = NightmareUtils.getIsBloodMoon() ? 2 : 3;
+                if(this.rand.nextInt(chance) == 0){
+                    PotionEffect activeStrengthPotion = player.getActivePotionEffect(Potion.damageBoost);
+                    if(activeStrengthPotion != null && activeStrengthPotion.getAmplifier() == 0){
 
-                        if(rand.nextInt(5) == 0){this.addPotion(player,Potion.damageBoost.id, 1);}
+                        if(rand.nextInt(5) == 0 && activeStrengthPotion.getDuration() <= 100){
+                            this.addPotion(player,Potion.damageBoost.id, 1);
+                        }
 
                         this.addPotion(player,Potion.regeneration.id, 0);
                     } else {
                         this.addPotion(player, Potion.damageBoost.id, 0);
                     }
                 }
-                player.heal(2f);
+                player.heal(rand.nextInt(2)+1);
+                this.mendTools(player);
+            }
+            if(NightmareUtils.isHoldingBloodSword(player)){
+                player.getHeldItem().setItemDamage(Math.max(player.getHeldItem().getItemDamage() - this.rand.nextInt(4) - 2, 0));
+                if (this.rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.bloodOrb.itemID,1);
+                }
             }
         }
     }
 
 
     @Unique private void addPotion(EntityLivingBase entity, int potionID, int amp){
-        entity.addPotionEffect(new PotionEffect(potionID, 60, amp));
+        entity.addPotionEffect(new PotionEffect(potionID, 100, amp));
+    }
+    @Unique private void mendTools(EntityPlayer player){
+        for(ItemStack stack : player.inventory.mainInventory){
+            if (stack == null) continue;
+            if (stack.getMaxStackSize() != 1) continue;
+            if(NightmareUtils.bloodTools.contains(stack.itemID)){
+                if(rand.nextInt(4) == 0) continue;
+                this.increaseDurabilityIfPossible(stack);
+            }
+        }
+    }
+
+    @Unique private void increaseDurabilityIfPossible(ItemStack stack){
+        int i = rand.nextInt(7) + 1;
+        stack.setItemDamage(Math.max(stack.getItemDamage() - i,0));
     }
 }

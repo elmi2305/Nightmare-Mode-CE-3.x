@@ -5,9 +5,10 @@ import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EnumToolMaterial;
 
 public class ItemBloodPickaxe extends PickaxeItem {
-    public ItemBloodPickaxe(int i, EnumToolMaterial enumToolMaterial) {
+    public ItemBloodPickaxe(int i, EnumToolMaterial enumToolMaterial, int iMaxUses) {
         super(i, enumToolMaterial);
         this.maxStackSize = 1;
+        this.setMaxDamage(iMaxUses);
         this.setDamageVsEntity(3);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setBuoyant();

@@ -1,17 +1,40 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Mixin(EntityMob.class)
 public class EntityMobMixin extends EntityCreature{
+    @Unique
+    private static final List<Integer> itemsToAvoidDropping = new ArrayList<Integer>(Arrays.asList(
+            Item.swordWood.itemID,
+            Item.helmetLeather.itemID,
+            Item.plateLeather.itemID,
+            Item.legsLeather.itemID,
+            Item.bootsLeather.itemID,
+            BTWItems.boneClub.itemID,
+            BTWItems.steelSword.itemID,
+            Item.axeGold.itemID,
+            BTWItems.woolBoots.itemID,
+            BTWItems.woolChest.itemID,
+            BTWItems.woolHelmet.itemID,
+            BTWItems.woolLeggings.itemID,
+            Item.swordDiamond.itemID
+    ));
+
 
     public EntityMobMixin(World par1World) {
         super(par1World);
@@ -28,10 +51,37 @@ public class EntityMobMixin extends EntityCreature{
         }
     }
 
+    @Override
+    protected void dropEquipment(boolean par1, int par2) {
+        for(int var3 = 0; var3 < this.getLastActiveItems().length; ++var3) {
+            ItemStack var4 = this.getCurrentItemOrArmor(var3);
+            if(var4 != null && itemsToAvoidDropping.contains(var4.itemID)) continue;
+
+            boolean var5 = this.equipmentDropChances[var3] > 1.0F;
+            if (var4 != null && (par1 || var5) && this.rand.nextFloat() - (float)par2 * 0.01F < this.equipmentDropChances[var3]) {
+                if (!var5 && var4.isItemStackDamageable()) {
+                    int var6 = Math.max((int)((float)var4.getMaxDamage() * 0.95F), 1);
+                    int var7 = var4.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(var6) + 1);
+                    if (var7 > var6) {
+                        var7 = var6;
+                    }
+
+                    if (var7 < 1) {
+                        var7 = 1;
+                    }
+
+                    var4.setItemDamage(var7);
+                }
+
+                this.entityDropItem(var4, 0.0F);
+            }
+        }
+    }
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void avoidAttackingWitches(CallbackInfo ci){
         EntityMob thisObj = (EntityMob)(Object)this;
-        if(thisObj.getAttackTarget() instanceof EntityWitch){
+        if(thisObj.getAttackTarget() instanceof EntityWitch || thisObj.getAttackTarget() instanceof EntityWither){
             thisObj.setAttackTarget(null);
         }
     }
@@ -48,7 +98,9 @@ public class EntityMobMixin extends EntityCreature{
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if(NightmareUtils.getIsBloodMoon()){
-            this.experienceValue = 20;
+            boolean bIsPostWither = WorldUtils.gameProgressHasWitherBeenSummonedServerOnly();
+
+            this.experienceValue = bIsPostWither ? 40 : 20;
         } else{
             this.experienceValue = 5;
         }

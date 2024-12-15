@@ -40,33 +40,16 @@ public class GuiGameOverMixin extends GuiScreen {
             WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), this.mc.theWorld.getWorldInfo().isMapFeaturesEnabled(), false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
             ISaveFormat var1 = this.mc.getSaveLoader();
 
-            if(this.mc.theWorld.getWorldInfo().areCommandsAllowed()){
+            if(this.mc.theWorld.worldInfo.areCommandsAllowed() || this.mc.theWorld.getWorldInfo().getGameType() == EnumGameType.CREATIVE){
                 settings.enableCommands();
             }
-            //            if(this.mc.theWorld.getWorldInfo().getGeneratorOptions())
             // TODO: no way to detect whether bonus chest was enabled. bonus chest defaults to off
 
-//            try {
-//                List saveList = var1.getSaveList();
-//                Collections.sort(saveList);
-//                String mostRecentWorld = updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
-//                if (MinecraftServer.getServer() != null) {
-//                    MinecraftServer.getServer().stopServer();
-//                    this.mc.loadWorld(null);
-//                }
-//
-//                this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
-//                this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
-//            } catch (Exception e) {
-//                System.out.println("it broke");
-//                ci.cancel();
-//            }
 
             List saveList = null;
             try {
                 saveList = var1.getSaveList();
-            } catch (Exception e) {
-                ci.cancel();
+            } catch (AnvilConverterException ignored) {
             }
 
             saveList.sort(null);
@@ -80,8 +63,8 @@ public class GuiGameOverMixin extends GuiScreen {
 
                 this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
                 this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
-            } catch (Exception ignored) {
-                ci.cancel();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }

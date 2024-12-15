@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mixin(EntityPlayer.class)
@@ -43,33 +44,34 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void manageLifeSteal(Entity entity, CallbackInfo ci){
         if(entity instanceof EntityLiving && NightmareUtils.isHoldingBloodSword(this) && entity.hurtResistantTime == 0 && !this.isPotionActive(Potion.weakness) && !(entity instanceof EntityWither)){
-            int chance = 15 - NightmareUtils.getBloodArmorWornCount(this) * 3;
-            // 15, 12, 9, 6, 3
-            if(NightmareUtils.getIsBloodMoon()){
-                chance -= 1;
-            }
+            int chance = 20 - NightmareUtils.getBloodArmorWornCount(this) * 3;
+            // 20, 16, 12, 8, 4
 
             if(rand.nextInt(chance) == 0){
                 this.heal(rand.nextInt(chance) == 0 ? 2 : 1);
             }
 
-            if(rand.nextInt((int) (chance / 1.5)) == 0 && this.foodStats.getFoodLevel() < 60){
-                this.foodStats.setFoodLevel(this.foodStats.getFoodLevel() + 1);
+            if(rand.nextInt((int) (chance / 1.5)) == 0 && this.foodStats.getFoodLevel() < 57){
+                this.foodStats.setFoodLevel(this.foodStats.getFoodLevel() + 3);
             }
 
+            this.increaseArmorDurabilityRandomly(this);
+
             if(NightmareUtils.isWearingFullBloodArmor(this)){
-                this.increaseArmorDurabilityRandomly(this);
-                if((this.rand.nextInt(3) == 0 || NightmareUtils.getIsBloodMoon()) && this.fallDistance > 0.0F){
+                if((this.rand.nextInt(3) == 0) && this.fallDistance > 0.0F){
                     this.heal(1f);
                 }
             }
         }
     }
 
+
+
     @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
-        int j = rand.nextInt(3);
-        for (int a = 0; a < 2; a++) {
+        int j = rand.nextInt(4);
+        for (int a = 0; a < 3; a++) {
             int i = rand.nextInt(5);
+            if(player.getCurrentItemOrArmor(i) == null) continue;
             player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
         }
     }
@@ -142,6 +144,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void managePotionsDuringBloodArmor(CallbackInfo ci){
+        Collection activePotions = this.getActivePotionEffects();
+        if (NightmareUtils.isWearingFullBloodArmorWithoutSword(this)) {
+            for(Object activePotion : activePotions){
+                if(activePotion == null) continue;
+                PotionEffect tempPotion = (PotionEffect) activePotion;
+                tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
+            }
+        }
+    }
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
         if(!player.isPotionActive(potionID) || potionID == Potion.blindness.id){
@@ -155,7 +168,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
             for (Object tempEntity : list) {
-                if(tempEntity instanceof EntityEnderCrystal && !this.capabilities.isCreativeMode && this.dimension != 1 && ((EntityEnderCrystal) tempEntity).ridingEntity == null){((EntityEnderCrystal) tempEntity).setDead();}
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if (tempAnimal instanceof EntityWolf) continue;
                 if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;

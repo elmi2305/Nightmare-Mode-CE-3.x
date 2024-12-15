@@ -2,10 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.status.StatusEffect;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiIngame;
-import net.minecraft.src.Material;
-import net.minecraft.src.Minecraft;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +31,9 @@ public class GuiIngameMixin {
                 amountRendered++;
             }
             String period = this.mc.theWorld.isDaytime() ? "Day " : "Night ";
+            if(this.mc.thePlayer.dimension == -1){
+                period = this.getIsActuallyDaytime(this.mc.theWorld) ? "Day " : "Night ";
+            }
             int dawnOffset = this.isDawnOrDusk(this.mc.theWorld.getWorldTime());
             FontRenderer fontRenderer = this.mc.fontRenderer;
             String textToShow = secToTime((int)(Minecraft.getMinecraft().theWorld.getTotalWorldTime() / 20));
@@ -83,5 +83,11 @@ public class GuiIngameMixin {
             return String.format("%02d:%02d", minutes, seconds);
         }
         return String.format("0:%02d", seconds);
+    }
+
+    @Unique
+    boolean getIsActuallyDaytime(World world){
+        long time = world.getWorldTime() % 24000;
+        return time <= 12541 || time >= 23459;
     }
 }

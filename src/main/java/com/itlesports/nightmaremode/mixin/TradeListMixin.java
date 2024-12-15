@@ -207,8 +207,8 @@ public class TradeListMixin {
                     target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
                     ordinal = 25),remap = false)
     private static void lowerTrades25(Args args) {
-        args.set(0, 2);
-        args.set(1, 6); // planter with soil 8-8
+        args.set(0, 8);
+        args.set(1, 12); // planter with soil 8-8
     }
 
 
@@ -323,8 +323,8 @@ public class TradeListMixin {
     private static void customFarmerTrades(CallbackInfo ci){
         EntityVillager.removeLevelUpTrade(0,2);
 
-        TradeProvider.getBuilder().profession(0).level(1).buy().item(Block.grass.blockID).itemCount(4,10).addToTradeList();
-        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,10,20)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(1).buy().item(Block.grass.blockID).itemCount(2,6).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
         TradeProvider.getBuilder().profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).addToTradeList();
@@ -336,6 +336,8 @@ public class TradeListMixin {
     private static void customLibrarianTrades(CallbackInfo ci){
         EntityVillager.removeCustomTrade(1,TradeProvider.getBuilder().profession(1).level(1).buy().item(Item.paper.itemID).itemCount(24, 32).build());
         EntityVillager.removeCustomTrade(1,TradeProvider.getBuilder().profession(1).level(2).variants().addTradeVariant(TradeProvider.getBuilder().profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 2)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.detectorBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 4)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.buddyBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().profession(1).level(2).convert().input(TradeItem.fromID(Block.cobblestoneMossy.blockID, 6)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.blockDispenser.blockID)).build()).finishVariants().mandatory().build());
+        EntityVillager.removeCustomTrade(1,TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(Item.enderPearl.itemID)).conversionCost(6, 8).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().build());
+
 
 
         TradeProvider.getBuilder().profession(1).level(1).buy().item(NMItems.ironKnittingNeedles.itemID).emeraldCost(2,3).addToTradeList();
@@ -344,10 +346,11 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(1).level(2).buy().item(Item.redstoneRepeater.itemID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(3).buy().item(BTWItems.hellfireDust.itemID).itemCount(16,24).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(3).buy().item(Item.glassBottle.itemID).itemCount(16,24).addToTradeList();
-        TradeProvider.getBuilder().profession(1).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWItems.wool.itemID,15,4,8)).conversionCost(1, 2).output(TradeItem.fromID(NMItems.bandage.itemID,1,2)).addToTradeList();
+        TradeProvider.getBuilder().profession(1).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWItems.wool.itemID,15,4,6)).conversionCost(1, 2).output(TradeItem.fromID(NMItems.bandage.itemID,1,2)).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.blockDispenser.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.buddyBlock.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.detectorBlock.blockID).itemCount(1,3).addToTradeList();
+        TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(BTWItems.corpseEye.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,10)).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().addToTradeList();
     }
 
 

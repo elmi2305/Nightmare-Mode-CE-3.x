@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.item;
 
-import btw.item.items.ArmorItemGold;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.CreativeTabs;
@@ -23,10 +22,10 @@ public class NMItems {
     public static ItemBloodArmor bloodHelmet;
     public static ItemBloodArmor bloodChestplate;
     public static ItemBloodArmor bloodLeggings;
-    public static ArmorItemGold bloodBoots;
+    public static ItemBloodArmor bloodBoots;
     public static Item bloodIngot;
 
-    public static final int BLOOD_MOON_DURABILITY = 1600;
+    public static final int BLOOD_MOON_DURABILITY = 1200;
 
     static {
         rpg =(ItemRPG)(new ItemRPG(2309)).setTextureName("nmRPG");
@@ -37,15 +36,15 @@ public class NMItems {
 
         bloodOrb = (ItemBloodOrb)(new ItemBloodOrb(2315)).setTextureName("nmBloodOrb");
         bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");
-        bloodPickaxe = (ItemBloodPickaxe)(new ItemBloodPickaxe(2316, EnumToolMaterial.EMERALD)).setTextureName("nmBloodPickaxe");
+        bloodPickaxe = (ItemBloodPickaxe)(new ItemBloodPickaxe(2316, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodPickaxe");
         bloodAxe = (ItemBloodAxe)(new ItemBloodAxe(2317, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodAxe");
         bloodShovel = (ItemBloodShovel)(new ItemBloodShovel(2318, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodShovel");
         bloodHoe = (ItemBloodHoe)(new ItemBloodHoe(2319, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodHoe");
         bloodSword = (ItemBloodSword)(new ItemBloodSword(2320, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodSword");
 
-        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,2, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
+        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
         bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,1,6, BLOOD_MOON_DURABILITY, 0.1d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate");
         bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,5, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
-        bloodBoots = (ArmorItemGold) new ArmorItemGold(2324,3,3).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots").setMaxDamage(BLOOD_MOON_DURABILITY);
+        bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,2, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
     }
 }

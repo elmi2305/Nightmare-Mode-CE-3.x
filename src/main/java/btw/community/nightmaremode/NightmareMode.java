@@ -3,7 +3,10 @@ package btw.community.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
+import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 
@@ -38,9 +41,23 @@ public class NightmareMode extends BTWAddon {
         return instance;
     }
 
+
+
+    @Override
+    public void postSetup() {
+        float multiplier = 2f;
+        ((ToolItem)NMItems.bloodPickaxe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodAxe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodHoe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodShovel).addCustomEfficiencyMultiplier(multiplier);
+        super.postInitialize();
+    }
+
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
+
+        NMBlocks.initNightmareBlocks();
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);

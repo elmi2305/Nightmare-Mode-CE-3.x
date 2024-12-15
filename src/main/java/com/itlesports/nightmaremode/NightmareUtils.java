@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class NightmareUtils {
-    private static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
+    public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
+    public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodPickaxe.itemID,NMItems.bloodAxe.itemID,NMItems.bloodShovel.itemID,NMItems.bloodHoe.itemID));
 
     public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
@@ -35,6 +36,14 @@ public class NightmareUtils {
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){
         for(int i = 0; i < 5; i++){
+            if(entity.getCurrentItemOrArmor(i) == null){return false;}
+            if(entity.getCurrentItemOrArmor(i).itemID == bloodArmor.get(i)) continue;
+            return false;
+        }
+        return true;
+    }
+    public static boolean isWearingFullBloodArmorWithoutSword(EntityLivingBase entity){
+        for(int i = 1; i < 5; i++){
             if(entity.getCurrentItemOrArmor(i) == null){return false;}
             if(entity.getCurrentItemOrArmor(i).itemID == bloodArmor.get(i)) continue;
             return false;

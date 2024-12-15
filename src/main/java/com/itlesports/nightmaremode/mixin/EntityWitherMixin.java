@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
 import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,6 +19,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Shadow public abstract void addPotionEffect(PotionEffect par1PotionEffect);
 
+    @Shadow @Final private static IEntitySelector attackEntitySelector;
     @Unique int witherAttackTimer = 0;
     @Unique int witherSummonTimer = 0;
     @Unique boolean hasRevived = false;
@@ -28,15 +31,19 @@ public abstract class EntityWitherMixin extends EntityMob {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void increaseXPYield(World par1World, CallbackInfo ci){
         this.experienceValue = 250;
+        this.hasRevived = false;
+        this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
+        this.witherAttackTimer = 500;
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, false, attackEntitySelector));
     }
-
-    @ModifyConstant(method = "isArmored", constant = @Constant(floatValue = 2.0f))
-    private float witherMeleeSooner(float constant){
-        return 1.66f; // starts melee at 60% health instead of 50%. this means 180hp instead of 150hp
+    @Inject(method = "applyEntityAttributes", at = @At(value = "TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0F);
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void destroyBlocksAbove(CallbackInfo ci){
+        System.out.println(this.witherAttackTimer);
         EntityLivingBase target = this.getAttackTarget();
         if(target != null && this.posY - target.posY < 4){
             for(int i = -1; i < 1; i++){
@@ -54,21 +61,45 @@ public abstract class EntityWitherMixin extends EntityMob {
         }
     }
 
+    @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
+    private void manageRandomTeleport(EntityLivingBase attackTarget, float par2, CallbackInfo ci){
+        if (this.rand.nextInt(6) == 0) {
+            int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(5)+3);
+            int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(5)+3);
+
+            int xValue = MathHelper.floor_double(this.posX) + xOffset;
+            int zValue = MathHelper.floor_double(this.posZ) + zOffset;
+            int yValue = MathHelper.floor_double(this.posY) + this.rand.nextInt(-2,2);
+            this.setPositionAndUpdate(xValue,yValue,zValue);
+            if (this.hasRevived) {
+                boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 5f + this.rand.nextFloat()*2,true, mobGriefing);
+                System.out.println("Exploded");
+            }
+            this.worldObj.playSoundAtEntity(this,"mob.endermen.portal",2.0F,1.0F);
+        }
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void manageAnger(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.witherAttackTimer = (int) Math.min(this.witherAttackTimer + par2 * 2, this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000);
+    }
+
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void attackTimer(CallbackInfo ci){
-        if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 100 == 0){
+        if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 50 == 0){
             EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
             if (tempTarget != null) {
-                this.setAttackTarget(tempTarget);
+                this.entityToAttack = tempTarget;
             }
         }
 
-        if (witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2000 : 4000)) {
-            witherAttackTimer+= this.rand.nextInt(5)+1;
-            if(this.hasRevived){witherAttackTimer += 3;}
+        if (this.witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000)) {
+            this.witherAttackTimer += this.rand.nextInt(5)+1;
+            if(this.hasRevived){this.witherAttackTimer += 3;}
         }
         if(this.entityToAttack instanceof EntityPlayer player && this.hasRevived){
-            if(witherAttackTimer%400 == 10){
+            if(this.witherAttackTimer % 120 == 10){
                 int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
                 int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
                 int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
@@ -76,7 +107,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                 this.entityToAttack = player; // reassures the wither aggro in case it is lost
                 player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
             }
-            if (witherAttackTimer%400 == 20){
+            if (this.witherAttackTimer % 250 == 20){
                 player.setFire(80);
             }
         }
@@ -96,31 +127,19 @@ public abstract class EntityWitherMixin extends EntityMob {
         return par2;
     }
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",shift = At.Shift.AFTER))
+    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"), cancellable = true)
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getHealth()<21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             this.setHealth(300);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("A God does not fear death.");
-            for(int i = 0; i<3; i++) {
-                int yValue = (int) (this.posY + 2);
-                int xValue = (int) this.posX;
-                int zValue = (int) this.posZ;
-
-                EntitySkeleton tempMinion = new EntitySkeleton(this.worldObj);
-                tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
-                tempMinion.setSkeletonType(1);
-                if (this.rand.nextFloat() < 0.3) {
-                    tempMinion.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
-                }
-                tempMinion.entityToAttack = this.getAttackTarget();
-                this.worldObj.spawnEntityInWorld(tempMinion);
-            }
             text2.setColor(EnumChatFormatting.BLACK);
             this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
             this.hasRevived = true;
         }
     }
+
+
     @ModifyArg(method = "func_82216_a",at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWither;func_82209_a(IDDDZ)V"), index = 4)
     private boolean modifyChanceForBlueSkulls(boolean par8){
         if(this.hasRevived){
@@ -131,16 +150,16 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "updateAITasks", at = @At("HEAD"))
     private void manageMinionSpawning(CallbackInfo ci){
-        if (witherAttackTimer >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2000 : 4000)){
-            if (witherSummonTimer == 0){
+        if (this.witherAttackTimer >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000)){
+            if (this.witherSummonTimer == 0){
                 this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY),MathHelper.floor_double(this.posZ), 0);
                 this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
             }
-            witherSummonTimer++;
-            if (witherSummonTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 100) && witherSummonTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 140)){
+            this.witherSummonTimer++;
+            if (this.witherSummonTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 100) && witherSummonTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 140)){
                 this.motionX = this.motionZ = 0;
             }
-            if(witherSummonTimer == (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 100)){
+            if(this.witherSummonTimer == (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 100)){
                 if (!this.hasRevived) {
                     for(int i = 0; i<3; i++) {
                         int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
@@ -154,12 +173,14 @@ public abstract class EntityWitherMixin extends EntityMob {
                         }
 
                         EntitySkeleton tempMinion = new EntitySkeleton(this.worldObj);
-                        tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
+                        tempMinion.setLocationAndAngles(xValue, yValue, zValue, 90, 90);
                         tempMinion.setSkeletonType(1);
                         if (this.rand.nextFloat() < 0.3) {
                             tempMinion.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
                         }
-                        tempMinion.entityToAttack = this.getAttackTarget();
+                        if (this.getAttackTarget() != null) {
+                            tempMinion.entityToAttack = this.getAttackTarget();
+                        }
                         this.worldObj.spawnEntityInWorld(tempMinion);
                     }
                 } else if(this.rand.nextFloat()<0.7f){
@@ -176,7 +197,9 @@ public abstract class EntityWitherMixin extends EntityMob {
 
                         EntityFireCreeper tempMinion = new EntityFireCreeper(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
-                        tempMinion.entityToAttack = this.getAttackTarget();
+                        if (this.getAttackTarget() != null) {
+                            tempMinion.entityToAttack = this.getAttackTarget();
+                        }
                         this.worldObj.spawnEntityInWorld(tempMinion);
                     }
                 } else if(this.getHealth()<100 && this.rand.nextFloat()<0.5f){
@@ -194,7 +217,9 @@ public abstract class EntityWitherMixin extends EntityMob {
 
                         EntityBlaze tempMinion = new EntityBlaze(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue + this.rand.nextInt(5), zValue, 50, 50);
-                        tempMinion.entityToAttack = this.getAttackTarget();
+                        if (this.getAttackTarget() != null) {
+                            tempMinion.entityToAttack = this.getAttackTarget();
+                        }
                         this.worldObj.spawnEntityInWorld(tempMinion);
                     }
                 }
@@ -212,12 +237,14 @@ public abstract class EntityWitherMixin extends EntityMob {
 
                         DireWolfEntity tempMinion = new DireWolfEntity(this.worldObj);
                         tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
-                        tempMinion.entityToAttack = this.getAttackTarget();
+                        if (this.getAttackTarget() != null) {
+                            tempMinion.entityToAttack = this.getAttackTarget();
+                        }
                         this.worldObj.spawnEntityInWorld(tempMinion);
                     }
                 }
-                witherSummonTimer = 0;
-                witherAttackTimer = 0;
+                this.witherSummonTimer = 0;
+                this.witherAttackTimer = 0;
             }
         }
     }
