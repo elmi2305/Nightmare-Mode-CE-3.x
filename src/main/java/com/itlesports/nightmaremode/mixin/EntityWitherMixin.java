@@ -43,7 +43,6 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void destroyBlocksAbove(CallbackInfo ci){
-        System.out.println(this.witherAttackTimer);
         EntityLivingBase target = this.getAttackTarget();
         if(target != null && this.posY - target.posY < 4){
             for(int i = -1; i < 1; i++){

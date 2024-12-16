@@ -1,5 +1,4 @@
 accessWidener v1 named
-accessible method btw/entity/mob/BTWSquidEntity launchTentacleAttackInDirection (DDD)V
 accessible field net/minecraft/src/EntityLiving tasks Lnet/minecraft/src/EntityAITasks;
 accessible field net/minecraft/src/BiomeGenBase spawnableMonsterList Ljava/util/List;
 accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPosition (Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V
@@ -9,7 +8,6 @@ accessible field net/minecraft/src/EntityArrow inGround Z
 accessible field net/minecraft/src/EntityThrowable ticksInGround I
 accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecraft/src/WorldGenerator;II)V
 accessible method net/minecraft/src/EntityRenderer getNightVisionBrightness (Lnet/minecraft/src/EntityPlayer;F)F
-accessible field net/minecraft/src/EntityRenderer lightmapColors [I
 accessible method net/minecraft/src/Item setMaxDamage (I)Lnet/minecraft/src/Item;
 accessible field net/minecraft/src/PotionEffect duration I
 accessible class net/minecraft/src/StructureStrongholdStones

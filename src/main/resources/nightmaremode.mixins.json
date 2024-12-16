@@ -87,6 +87,8 @@
     "LoadingScreenRendererMixin",
     "MillstoneRecipeListMixin",
     "MillstoneTileEntityMixin",
+    "OreBlockAccessor",
+    "OreBlockMixin",
     "OvenTileEntityMixin",
     "RenderPlayerMixin",
     "SawBlockMixin",

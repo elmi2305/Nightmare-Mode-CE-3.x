@@ -34,4 +34,17 @@ public class ItemBloodPickaxe extends PickaxeItem {
         }
         return block.blockMaterial == Material.rock || block.blockMaterial == Material.iron || block.blockMaterial == Material.anvil || block.blockMaterial == BTWBlocks.netherRockMaterial;
     }
+
+    public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
+        int iToolLevel = 3;
+        int iBlockToolLevel = block.getEfficientToolLevel(world, i, j, k);
+        if (iBlockToolLevel > iToolLevel) {
+            return 1f;
+        }
+        Material material = block.blockMaterial;
+        if (material == Material.iron || material == Material.rock || block.blockMaterial == Material.anvil || material == BTWBlocks.netherRockMaterial) {
+            return this.efficiencyOnProperMaterial * 2;
+        }
+        return super.getStrVsBlock(stack, world, block, i, j, k);
+    }
 }

@@ -10,7 +10,7 @@ public class NMBlocks {
     public static Block steelOre;
 
     public static void initNightmareBlocks(){
-        steelOre = (new SteelOre(2305)).setHardness(3.0F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("steel_ore");
+        steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("steel_ore");
         Item.itemsList[steelOre.blockID] = new ItemBlock(NMBlocks.steelOre.blockID - 256);
     }
 }
