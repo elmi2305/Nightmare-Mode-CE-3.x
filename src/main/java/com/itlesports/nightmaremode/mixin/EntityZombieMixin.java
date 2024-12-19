@@ -65,6 +65,11 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
     }
 
+    @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
+    private void doNotDropScrolls(CallbackInfo ci){
+        ci.cancel();
+    }
+
 
     @Unique private boolean canEntitySeeSun(){
         if(this.worldObj.isDaytime() && !this.worldObj.isRainingAtPos((int)this.posX, (int)this.posY, (int)this.posZ) && !this.isChild() && !this.inWater){

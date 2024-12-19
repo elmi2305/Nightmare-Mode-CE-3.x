@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityLivingBase;
@@ -30,8 +31,8 @@ public class NightmareUtils {
         return 0;
     }
     public static boolean getIsBloodMoon(){
-        if(NightmareMode.getInstance() == null){return false;}
-        return Objects.requireNonNullElse(btw.community.nightmaremode.NightmareMode.getInstance().isBloodMoon, false);
+        if(NightmareModeAddon.getInstance() == null){return false;}
+        return Objects.requireNonNullElse(NightmareMode.getInstance().isBloodMoon, false);
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){

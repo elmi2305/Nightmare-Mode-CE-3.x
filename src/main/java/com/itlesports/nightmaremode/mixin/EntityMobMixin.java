@@ -19,7 +19,7 @@ import java.util.List;
 @Mixin(EntityMob.class)
 public class EntityMobMixin extends EntityCreature{
     @Unique
-    private static final List<Integer> itemsToAvoidDropping = new ArrayList<Integer>(Arrays.asList(
+    private static final List<Integer> itemsToAvoidDropping = new ArrayList<>(Arrays.asList(
             Item.swordWood.itemID,
             Item.helmetLeather.itemID,
             Item.plateLeather.itemID,
@@ -94,12 +94,22 @@ public class EntityMobMixin extends EntityCreature{
             }
         }
     }
+    @Inject(method = "canSpawnOnBlockBelow", at = @At("HEAD"),cancellable = true)
+    private void manageBloodmareSpawning(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsBloodMoon()){
+            int i = MathHelper.floor_double(this.posX);
+            int j = (int)this.boundingBox.minY - 1;
+            int k = MathHelper.floor_double(this.posZ);
+            if(this.worldObj != null && this.worldObj.getBlockId(i,j,k) != 0 && this.worldObj.getBlockMaterial(i,j,k) != Material.water){
+                cir.setReturnValue(true);
+            }
+        }
+    }
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if(NightmareUtils.getIsBloodMoon()){
             boolean bIsPostWither = WorldUtils.gameProgressHasWitherBeenSummonedServerOnly();
-
             this.experienceValue = bIsPostWither ? 40 : 20;
         } else{
             this.experienceValue = 5;

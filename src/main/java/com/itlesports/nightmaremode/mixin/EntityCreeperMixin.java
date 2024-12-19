@@ -19,9 +19,13 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         super(par1World);
     }
 
-    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
-    private int reduceScrollDrops(int bound){
-        return 250;
+//    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+//    private int reduceScrollDrops(int bound){
+//        return 250;
+//    }
+    @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
+    private void noScrollDrops(CallbackInfo ci){
+        ci.cancel();
     }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))

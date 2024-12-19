@@ -17,9 +17,13 @@ public abstract class EntitySlimeMixin {
     @Unique private float streakModifier = 1;
     @Unique private float splitCounter = 0;
 
-    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
-    private int increaseScrollRates(int bound){
-        return 150;
+//    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+//    private int increaseScrollRates(int bound){
+//        return 150;
+//    }
+    @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
+    private void noScrollDrops(CallbackInfo ci){
+        ci.cancel();
     }
     @Inject(method = "updateEntityActionState",
             at = @At(value = "INVOKE",

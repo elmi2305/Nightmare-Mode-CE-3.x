@@ -41,6 +41,12 @@ public abstract class EntityWitherMixin extends EntityMob {
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0F);
     }
 
+    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;II)V"),index = 2)
+    private int makeWitherDropSmiteScroll(int par2){
+        return Enchantment.smite.effectId;
+    }
+
+
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void destroyBlocksAbove(CallbackInfo ci){
         EntityLivingBase target = this.getAttackTarget();
@@ -126,7 +132,7 @@ public abstract class EntityWitherMixin extends EntityMob {
         return par2;
     }
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if(this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             this.setHealth(300);

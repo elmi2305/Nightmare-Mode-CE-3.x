@@ -186,17 +186,17 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
 
-    @Inject(method = "dropFewItems", at = @At("HEAD"))
-    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if(this.getSkeletonType() == 4) { // ender skeleton
-            if(this.rand.nextBoolean()){
-                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 6 : 3))+1;
-                this.dropItem(BTWItems.soulFlux.itemID, drops);
-                // 1 - 3
-                // 1 - 6 bloodmoon
-            }
-        }
-    }
+//    @Inject(method = "dropFewItems", at = @At("HEAD"))
+//    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+//        if(this.getSkeletonType() == 4) { // ender skeleton
+//            if(this.rand.nextBoolean()){
+//                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 6 : 3))+1;
+//                this.dropItem(BTWItems.soulFlux.itemID, drops);
+//                // 1 - 3
+//                // 1 - 6 bloodmoon
+//            }
+//        }
+//    }
 
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))

@@ -1,11 +1,14 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.AddonHandler;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,6 +31,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow protected abstract boolean isInBed();
 
     @Shadow public FoodStats foodStats;
+
+
+    @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
+
+    @Shadow public abstract void playSound(String par1Str, float par2, float par3);
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -61,6 +69,29 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if((this.rand.nextInt(3) == 0) && this.fallDistance > 0.0F){
                     this.heal(1f);
                 }
+            }
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void freelook(CallbackInfo ci) {
+        if(AddonHandler.modList.keySet().toString().contains("FreeLook")){
+            if(!this.isPotionActive(Potion.blindness)){
+                ChatMessageComponent text2 = new ChatMessageComponent();
+                text2.addText("<???> Using FreeLook? Pathetic. Seeing clearer won’t save you. You can’t cheat your way out of the darkness.");
+                text2.setColor(EnumChatFormatting.RED);
+                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text2);
+            }
+            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 100));
+            if(this.rand.nextInt(40) == 0){
+                this.worldObj.playSoundEffect(this.posX,this.posY,this.posZ,"mob.wither.death",2.0F,0.905F);
+            }
+            if(this.worldObj.getWorldTime() % 100 == 99){
+                Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
+                this.worldObj.addWeatherEffect(lightningbolt);
+            }
+            if(this.worldObj.getWorldTime() % 400 == 399){
+                this.attackEntityFrom(DamageSource.outOfWorld, 200f);
             }
         }
     }

@@ -47,23 +47,20 @@ public class SteelOre extends OreBlockStaged {
 
 
     // this is hardcoded to drop strata 3 stone
-    @Override
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
-        if (!world.isRemote) {
-            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(4)+3, 0, 1.0F);
-            this.dropItemsIndividually(world, i, j, k, BTWItems.stone.itemID, 6, 2, 1.0F);
-        }
-    }
-
-
-    // this is SUPPOSED to make the block drop the right stone depending on its strata (imetadata) but because all the
-    // blocks are bugged, it's always 1st strata
-
 //    @Override
 //    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
-//        super.dropBlockAsItemWithChance(world, i, j, k, iMetadata, fChance, iFortuneModifier);
 //        if (!world.isRemote) {
-//            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(4) + 2, 0, 1.0F);
+//            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(4)+3, 0, 1.0F);
+//            this.dropItemsIndividually(world, i, j, k, BTWItems.stone.itemID, 6, 2, 1.0F);
 //        }
 //    }
+
+
+    @Override
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
+        super.dropBlockAsItemWithChance(world, i, j, k, iMetadata, fChance, iFortuneModifier);
+        if (!world.isRemote) {
+            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(4) + 2, 0, 1.0F);
+        }
+    }
 }
