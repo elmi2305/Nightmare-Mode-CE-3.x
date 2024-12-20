@@ -32,7 +32,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public FoodStats foodStats;
 
-
     @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
 
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);

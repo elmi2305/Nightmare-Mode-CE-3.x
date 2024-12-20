@@ -17,10 +17,15 @@ public class AnvilBlockMixin extends Block {
     @Inject(method = "onBlockActivated", at = @At("HEAD"), cancellable = true)
     private void vanillaAnvilFunctionality(World world, int i, int j, int k, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick, CallbackInfoReturnable<Boolean> cir){
         if (!world.isRemote && !WorldUtils.doesBlockHaveLargeCenterHardpointToFacing(world, i, j + 1, k, 0) && player instanceof EntityPlayerMP) {
-//            ContainerRepair container = new ContainerRepair(player.inventory, world, i, j, k, player);
             player.displayGUIAnvil(i,j,k);
-//            BTWMod.serverOpenCustomInterface((EntityPlayerMP)player, container, BTWContainers.container);
+//            ContainerRepair container = new ContainerRepair(player.inventory, world, i, j, k, player);
+//            BTWMod.serverOpenCustomInterface((EntityPlayerMP)player, container, BTWContainers.anvilContainerID);
         }
         cir.setReturnValue(true);
     }
+//    @Override
+//    @Environment(value= EnvType.CLIENT)
+//    public void registerIcons(IconRegister register) {
+//        this.blockIcon = register.registerIcon("nmAnvil");
+//    }
 }

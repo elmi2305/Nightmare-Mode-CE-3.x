@@ -24,6 +24,9 @@ public class CraftingRecipeListMixin {
     private static void addNightmareItemRecipes(CallbackInfo ci){
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.appleGold, 1, 0), new Object[]{"###", "#X#", "###", '#', Item.ingotGold, 'X', Item.appleRed});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.appleGold, 1, 1), new Object[]{"###", "#X#", "###", '#', Block.blockGold, 'X', Item.appleRed});
+//        RecipeManager.removeVanillaRecipe(new ItemStack(Block.anvil, 1), new Object[]{"iii", " i ", "iii", Character.valueOf('i'), Item.ingotIron});
+//
+//        RecipeManager.addRecipe(new ItemStack(Block.anvil), new Object[]{"#X#", " # ", "###", Character.valueOf('#'), new ItemStack(BTWItems.soulforgedSteelIngot), Character.valueOf('X'), new ItemStack(BTWBlocks.soulforgedSteelBlock)});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 8), new Object[]{new ItemStack(BTWBlocks.hamper)});
 
         // add blood recipes

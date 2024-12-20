@@ -20,7 +20,9 @@ public class CrucibleRecipeListMixin {
     private static void addBloodCrucibleRecipes(CallbackInfo ci){
         // remove vanilla helmet recipe because it returns 6 ingots instead of 5
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
+//        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 6), new ItemStack[]{new ItemStack(BTWItems.metalFragment)});
+//
+//        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.steelNugget, 6), new ItemStack[]{new ItemStack(BTWItems.metalFragment)});
 
         // remove all gold recipes from crucible
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.ingotGold, 2), new ItemStack[]{new ItemStack(Item.pickaxeGold, 1, Short.MAX_VALUE)});
