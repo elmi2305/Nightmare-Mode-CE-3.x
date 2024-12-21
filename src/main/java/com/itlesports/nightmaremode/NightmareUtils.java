@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityLivingBase;
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class NightmareUtils {
-    private static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
+    public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
+    public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodPickaxe.itemID,NMItems.bloodAxe.itemID,NMItems.bloodShovel.itemID,NMItems.bloodHoe.itemID));
 
     public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
@@ -29,12 +31,20 @@ public class NightmareUtils {
         return 0;
     }
     public static boolean getIsBloodMoon(){
-        if(NightmareMode.getInstance() == null){return false;}
-        return Objects.requireNonNullElse(btw.community.nightmaremode.NightmareMode.getInstance().isBloodMoon, false);
+        if(NightmareModeAddon.getInstance() == null){return false;}
+        return Objects.requireNonNullElse(NightmareMode.getInstance().isBloodMoon, false);
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){
         for(int i = 0; i < 5; i++){
+            if(entity.getCurrentItemOrArmor(i) == null){return false;}
+            if(entity.getCurrentItemOrArmor(i).itemID == bloodArmor.get(i)) continue;
+            return false;
+        }
+        return true;
+    }
+    public static boolean isWearingFullBloodArmorWithoutSword(EntityLivingBase entity){
+        for(int i = 1; i < 5; i++){
             if(entity.getCurrentItemOrArmor(i) == null){return false;}
             if(entity.getCurrentItemOrArmor(i).itemID == bloodArmor.get(i)) continue;
             return false;

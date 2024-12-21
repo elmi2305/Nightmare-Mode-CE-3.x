@@ -25,7 +25,7 @@ public class ItemWitchLocator
             boolean bHasTarget = false;
             double dTargetXPos = player.posX;
             double dTargetZPos = player.posZ;
-            if (world.provider.dimensionId == 0 && (positions = world.findClosestStructureAll("Temple", (int)player.posX, (int)player.posY, (int)player.posZ, 128, 0)) != null && !positions.isEmpty()) {
+            if (world.provider.dimensionId == 0 && (positions = world.findClosestStructureAll("Temple", (int)player.posX, (int)player.posY, (int)player.posZ, 196, 0)) != null && !positions.isEmpty()) {
                 bHasTarget = true;
                 for (ChunkPosition pos : positions) {
                     dTargetXPos = pos.x * 16;

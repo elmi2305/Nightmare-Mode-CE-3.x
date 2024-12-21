@@ -11,10 +11,10 @@ import net.minecraft.src.Packet24MobSpawn;
 
 import java.util.List;
 
-public class NightmareMode extends BTWAddon implements ModInitializer {
-    private static NightmareMode instance;
+public class NightmareModeAddon extends BTWAddon implements ModInitializer {
+    private static NightmareModeAddon instance;
 
-    public NightmareMode() {
+    public NightmareModeAddon() {
         super();
     }
 
@@ -26,9 +26,9 @@ public class NightmareMode extends BTWAddon implements ModInitializer {
         }
     }
 
-    public static NightmareMode getInstance() {
+    public static NightmareModeAddon getInstance() {
         if (instance == null)
-            instance = new NightmareMode();
+            instance = new NightmareModeAddon();
         return instance;
     }
 

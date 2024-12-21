@@ -3,7 +3,10 @@ package btw.community.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
+import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 
@@ -18,6 +21,9 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator silverfishGenFirstStrata;
     public WorldGenerator silverfishGenSecondStrata;
     public WorldGenerator silverfishGenThirdStrata;
+
+    public WorldGenerator steelOreGenExposedToAir;
+    public WorldGenerator steelOreGen;
 
 
     public static KeyBinding nightmareZoom;
@@ -38,14 +44,30 @@ public class NightmareMode extends BTWAddon {
         return instance;
     }
 
+
+
+    @Override
+    public void postSetup() {
+        float multiplier = 2f;
+        ((ToolItem)NMItems.bloodPickaxe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodAxe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodHoe).addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem)NMItems.bloodShovel).addCustomEfficiencyMultiplier(multiplier);
+        super.postInitialize();
+    }
+
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
+
+        NMBlocks.initNightmareBlocks();
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
+        this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,4).setNeedsAirExposure();
+        this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
 
     public static void setBloodMoonFalse(){
@@ -113,8 +135,17 @@ public class NightmareMode extends BTWAddon {
             int var8 = z + rand.nextInt(16);
             this.silverfishGenThirdStrata.generate(world, rand, var6, var7, var8);
         }
+        for(int var5 = 0; var5 < 8; ++var5) {
+            int var6 = x + rand.nextInt(16);
+            int var7 = rand.nextInt(20)+16;
+            int var8 = z + rand.nextInt(16);
+            this.steelOreGenExposedToAir.generate(world, rand, var6, var7, var8);
+        }
+        for(int var5 = 0; var5 < 2; ++var5) {
+            int var6 = x + rand.nextInt(16);
+            int var7 = rand.nextInt(20)+16;
+            int var8 = z + rand.nextInt(16);
+            this.steelOreGen.generate(world, rand, var6, var7, var8);
+        }
     }
-//    private int keyboardThing(String par1){
-//        return Keyboard.keyMap
-//    }
 }

@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BiomeGenEndMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addCreepersToEndSpawnTable(int par1, CallbackInfo ci){
-        ((BiomeGenEnd)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 1, 1, 1));
+        ((BiomeGenEnd)(Object)this).spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 1, 1, 3));
     }
 }

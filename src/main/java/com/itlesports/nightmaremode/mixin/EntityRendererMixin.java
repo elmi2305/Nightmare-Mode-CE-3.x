@@ -3,18 +3,16 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
+import java.util.Arrays;
 
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin implements EntityAccessor {
     @Shadow private Minecraft mc;
     @Mutable
-    @Shadow @Final public int[] lightmapColors;
     @Shadow float fogColorRed;
     @Shadow float fogColorBlue;
     @Shadow float fogColorGreen;
@@ -35,22 +33,37 @@ public abstract class EntityRendererMixin implements EntityAccessor {
             args.set(1, (float) args.get(1) * 0.25F);
         }
     }
-
-    @Inject(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"))
-    private void removeNightVisionRed(WorldClient world, float fPartialTicks, CallbackInfo ci){
-        for (int iTempMapIndex = 0; iTempMapIndex < 256; ++iTempMapIndex) {
-            if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
-                if(this.mc.thePlayer.dimension == 1){
-                    this.lightmapColors[iTempMapIndex] = -10197916;
-                } else {
-                    this.lightmapColors[iTempMapIndex] = -1;
+    @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
+    private int[] manageNightvisionColor(int[] par1ArrayOfInteger){
+        if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
+            if(this.mc.thePlayer.dimension == 1){
+                return getArray();
+            } else {
+                if(NightmareUtils.getIsBloodMoon()) {
+                    return getArrayBloodMoon();
                 }
-            }
-            if(NightmareUtils.getIsBloodMoon()) {
-                this.lightmapColors[iTempMapIndex] = -14145496;
+                return getArray1();
             }
         }
+
+        return par1ArrayOfInteger;
     }
+
+//    @Inject(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"))
+//    private void removeNightVisionRed(WorldClient world, float fPartialTicks, CallbackInfo ci){
+//        for (int iTempMapIndex = 0; iTempMapIndex < 256; ++iTempMapIndex) {
+//            if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
+//                if(this.mc.thePlayer.dimension == 1){
+//                    this.lightmapColors[iTempMapIndex] = -10197916;
+//                } else {
+//                    this.lightmapColors[iTempMapIndex] = -1;
+//                }
+//            }
+//            if(NightmareUtils.getIsBloodMoon()) {
+//                this.lightmapColors[iTempMapIndex] = -14145496;
+//            }
+//        }
+//    }
 
     @Redirect(method = "getNightVisionBrightness", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/PotionEffect;getDuration()I"))
     private int noCrashGetDuration(PotionEffect potion){
@@ -98,4 +111,24 @@ public abstract class EntityRendererMixin implements EntityAccessor {
 //        }
 //    }
 //    REMOVES END GLOOM
+
+    @Unique
+    private static int[] getArray(){
+        int[] numbers = new int[256];
+        Arrays.fill(numbers,-10197916);
+        return numbers;
+    }
+
+    @Unique
+    private static int[] getArray1(){
+        int[] numbers = new int[256];
+        Arrays.fill(numbers,-1);
+        return numbers;
+    }
+    @Unique
+    private static int[] getArrayBloodMoon(){
+        int[] numbers = new int[256];
+        Arrays.fill(numbers,-14145496);
+        return numbers;
+    }
 }

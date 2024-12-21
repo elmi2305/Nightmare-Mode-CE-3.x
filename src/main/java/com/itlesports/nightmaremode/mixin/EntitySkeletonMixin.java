@@ -114,6 +114,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
+            if(this.getSkeletonType() == 4){
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? 6 : 2));
+                // 24.0 -> 30.0 -> 36.0 -> 40.0
+            }
 
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1));
             // 3.0 -> 4.0 -> 5.0 -> 6.0
@@ -182,17 +186,17 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
 
-    @Inject(method = "dropFewItems", at = @At("HEAD"))
-    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if(this.getSkeletonType() == 4) { // ender skeleton
-            if(this.rand.nextInt(3) == 0){
-                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 6 : 4))+1;
-                this.dropItem(BTWItems.soulFlux.itemID, drops);
-                // 1 - 4
-                // 1 - 6 bloodmoon
-            }
-        }
-    }
+//    @Inject(method = "dropFewItems", at = @At("HEAD"))
+//    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+//        if(this.getSkeletonType() == 4) { // ender skeleton
+//            if(this.rand.nextBoolean()){
+//                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 6 : 3))+1;
+//                this.dropItem(BTWItems.soulFlux.itemID, drops);
+//                // 1 - 3
+//                // 1 - 6 bloodmoon
+//            }
+//        }
+//    }
 
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
@@ -215,7 +219,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 this.equipmentDropChances[2] = 0f;
                 this.equipmentDropChances[3] = 0f;
 
-                this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
+                this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
 
             } else if (progress >= 1 && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + ((progress-1)*0.02)) * bloodMoonModifier && this.dimension != -1) {
                 // 9% -> 11% -> 13%
@@ -225,6 +229,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 this.setCurrentItemOrArmor(2, null);
                 this.setCurrentItemOrArmor(3, null);
                 this.setCurrentItemOrArmor(4, null);
+                this.setFire(10000);
                 this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
 
             } else if(progress <= 3 && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
@@ -244,7 +249,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void manageVariantEffects(CallbackInfo ci){
         if(this.getSkeletonType() == 3){ // fireskeleton
             if (!this.isInWater()) {
-                this.setFire(20);
+                this.setFire(2000);
             }
         }
     }

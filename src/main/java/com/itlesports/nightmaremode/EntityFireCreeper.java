@@ -179,16 +179,16 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iLootingModifier) > 0)) {
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
-        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-            int itemCount = this.rand.nextInt(5)+2;
-            if(NightmareUtils.getIsBloodMoon()){
-                itemCount += 1;
-                itemCount *= 2;
-            }
-            this.dropItem(BTWItems.steelNugget.itemID, itemCount);
-            // 2 - 6
-            // 6 - 14 on bloodmoons
-        }
+//        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
+//            int itemCount = this.rand.nextInt(5)+2;
+//            if(NightmareUtils.getIsBloodMoon()){
+//                itemCount += 1;
+//                itemCount *= 2;
+//            }
+//            this.dropItem(BTWItems.steelNugget.itemID, itemCount);
+//            // 2 - 6
+//            // 6 - 14 on bloodmoons
+//        }
 
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
@@ -240,10 +240,10 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
     }
 
     public void checkForScrollDrop() {
-        if (this.rand.nextInt(200) == 0) {
-            ItemStack itemstack = new ItemStack(BTWItems.arcaneScroll, 1, Enchantment.blastProtection.effectId);
-            this.entityDropItem(itemstack, 0.0F);
-        }
+//        if (this.rand.nextInt(200) == 0) {
+//            ItemStack itemstack = new ItemStack(BTWItems.arcaneScroll, 1, Enchantment.blastProtection.effectId);
+//            this.entityDropItem(itemstack, 0.0F);
+//        }
     }
 
     public boolean getIsDeterminedToExplode() {

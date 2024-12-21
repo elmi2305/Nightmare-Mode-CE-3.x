@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.itlesports.nightmaremode.NightmareMode"
+      "com.itlesports.nightmaremode.NightmareModeAddon"
     ],
     "btw:addon": [
       "btw.community.nightmaremode.NightmareMode"

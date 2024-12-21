@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,19 +30,21 @@ public class BlockMixin {
 //            }
 // TODO: decide if shovels should give double clay lol
 
-            if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) <= 3){
-                if (thisObj.blockID == Block.oreIron.blockID) {
+            int blockID = thisObj.blockID;
+
+            if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) < 4){
+                if (blockID == Block.oreIron.blockID) {
                     // 4/7 chance (57%)
                     summonEntity(world,x,y,z,BTWItems.ironOreChunk);
-                } else if(thisObj.blockID == Block.oreGold.blockID){
+                } else if(blockID == Block.oreGold.blockID){
                     summonEntity(world,x,y,z,BTWItems.goldOreChunk);
                 }
-            } else if((item.itemID == Item.pickaxeDiamond.itemID || item.itemID == BTWItems.steelPickaxe.itemID) && world.rand.nextInt(4) <= 2){
+            } else if((item.itemID == Item.pickaxeDiamond.itemID || item.itemID == BTWItems.steelPickaxe.itemID || item.itemID == NMItems.bloodPickaxe.itemID) && world.rand.nextInt(4) < 3) {
                 // 3/4 chance (75%)
-                if (thisObj.blockID == Block.oreIron.blockID) {
-                    summonEntity(world,x,y,z,BTWItems.ironOreChunk);
-                } else if(thisObj.blockID == Block.oreGold.blockID){
-                    summonEntity(world,x,y,z,BTWItems.goldOreChunk);
+                if (blockID == Block.oreIron.blockID) {
+                    summonEntity(world, x, y, z, BTWItems.ironOreChunk);
+                } else if (blockID == Block.oreGold.blockID) {
+                    summonEntity(world, x, y, z, BTWItems.goldOreChunk);
                 }
             }
         }
