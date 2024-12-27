@@ -42,6 +42,15 @@ public abstract class EntitySpiderMixin extends EntityMob{
         }
     }
 
+    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
+    private void manageHardmodeSpiderSpawns(EntityLivingData entityData, CallbackInfoReturnable<EntityLivingData> cir){
+        if(NightmareUtils.getWorldProgress(this.worldObj) >= 1 && this.rand.nextInt(6) == 0){
+            JungleSpiderEntity caveSpider = new JungleSpiderEntity(this.worldObj);
+            caveSpider.copyLocationAndAnglesFrom(this);
+            this.setDead();
+            this.worldObj.spawnEntityInWorld(caveSpider);
+        }
+    }
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         if (this.worldObj != null) {

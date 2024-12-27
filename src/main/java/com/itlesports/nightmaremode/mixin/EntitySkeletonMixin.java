@@ -94,7 +94,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.3f : 1;
+            float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.4f : 1;
             boolean isBloodMoon = bloodMoonModifier > 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 

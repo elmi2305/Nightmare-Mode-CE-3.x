@@ -17,12 +17,8 @@ import java.util.List;
 
 @Mixin(EntityDragon.class)
 public abstract class EntityDragonMixin extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob {
-    @Shadow
-    private void createEnderPortal(int par1, int par2) {
-    }
-
+    @Shadow private void createEnderPortal(int par1, int par2) {}
     @Shadow private Entity target;
-
     @Unique long attackTimer;
 
     public EntityDragonMixin(World par1World) {
@@ -87,7 +83,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
 
             float i = rand.nextFloat();
-            if(i<0.2) {
+            if(i<0.3) {
                 EntitySkeleton minion = new EntitySkeleton(this.worldObj);
                 minion.setSkeletonType(1);
                 minion.entityToAttack = this.target;
@@ -96,23 +92,23 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 }
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i<0.3){
+            } else if (i<0.45){
                 EntityCreeper minion = new EntityCreeper(this.worldObj);
                 minion.addPotionEffect(new PotionEffect(Potion.invisibility.id, 100000,0));
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.5){
+            } else if (i < 0.55){
                 DireWolfEntity minion = new DireWolfEntity(this.worldObj);
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.6){
+            } else if (i < 0.65){
                 EntityTNTPrimed minion = new EntityTNTPrimed(this.worldObj);
                 minion.fuse = 60;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.63){
+            } else if (i < 0.68){
                 EntityWitch minion = new EntityWitch(this.worldObj);
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);

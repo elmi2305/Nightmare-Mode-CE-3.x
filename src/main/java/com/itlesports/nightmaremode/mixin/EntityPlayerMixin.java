@@ -1,14 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.AddonHandler;
+import btw.BTWMod;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,20 +18,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collection;
 import java.util.List;
 
+import static com.itlesports.nightmaremode.NightmareUtils.chainArmor;
+
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
     @Shadow public abstract ItemStack getHeldItem();
-
     @Shadow protected abstract boolean isPlayer();
-
     @Shadow public PlayerCapabilities capabilities;
-
     @Shadow protected abstract boolean isInBed();
-
     @Shadow public FoodStats foodStats;
-
     @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
-
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
 
     public EntityPlayerMixin(World par1World) {
@@ -72,30 +66,28 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-    @Inject(method = "onUpdate", at = @At("HEAD"))
-    private void freelook(CallbackInfo ci) {
-        if(AddonHandler.modList.keySet().toString().contains("FreeLook")){
-            if(!this.isPotionActive(Potion.blindness)){
-                ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("<???> Using FreeLook? Pathetic. Seeing clearer won’t save you. You can’t cheat your way out of the darkness.");
-                text2.setColor(EnumChatFormatting.RED);
-                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text2);
-            }
-            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 100));
-            if(this.rand.nextInt(40) == 0){
-                this.worldObj.playSoundEffect(this.posX,this.posY,this.posZ,"mob.wither.death",2.0F,0.905F);
-            }
-            if(this.worldObj.getWorldTime() % 100 == 99){
-                Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
-                this.worldObj.addWeatherEffect(lightningbolt);
-            }
-            if(this.worldObj.getWorldTime() % 400 == 399){
-                this.attackEntityFrom(DamageSource.outOfWorld, 200f);
-            }
-        }
-    }
-
-
+//    @Inject(method = "onUpdate", at = @At("HEAD"))
+//    private void freelook(CallbackInfo ci) {
+//        if(AddonHandler.modList.keySet().toString().contains("FreeLook")){
+//            if(!this.isPotionActive(Potion.blindness)){
+//                ChatMessageComponent text2 = new ChatMessageComponent();
+//                text2.addText("<???> Using FreeLook? Pathetic. Seeing clearer won’t save you. You can’t cheat your way out of the darkness.");
+//                text2.setColor(EnumChatFormatting.RED);
+//                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text2);
+//            }
+//            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 100));
+//            if(this.rand.nextInt(40) == 0){
+//                this.worldObj.playSoundEffect(this.posX,this.posY,this.posZ,"mob.wither.death",2.0F,0.905F);
+//            }
+//            if(this.worldObj.getWorldTime() % 100 == 99){
+//                Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
+//                this.worldObj.addWeatherEffect(lightningbolt);
+//            }
+//            if(this.worldObj.getWorldTime() % 400 == 399){
+//                this.attackEntityFrom(DamageSource.outOfWorld, 200f);
+//            }
+//        }
+//    }
 
     @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
         int j = rand.nextInt(4);
@@ -184,6 +176,35 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
+    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageChainArmor(CallbackInfo ci){
+        if(isWearingFullChainArmor(this) && !areChainPotionsActive(this)){
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 110,0));
+            if(this.rand.nextInt(16) == 0){
+                this.addPotionEffect(new PotionEffect(BTWMod.potionFortune.id, 600, 0));
+            }
+            if(this.rand.nextInt(16) == 0){
+                this.addPotionEffect(new PotionEffect(BTWMod.potionLooting.id, 600, 0));
+            }
+            if(this.rand.nextInt(16) == 0){
+                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,1));
+            } else{
+                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,0));
+            }
+        }
+    }
+
+    @Unique private static boolean areChainPotionsActive(EntityLivingBase player){
+        return player.isPotionActive(Potion.digSpeed) || player.isPotionActive(Potion.moveSpeed);
+    }
+    @Unique private static boolean isWearingFullChainArmor(EntityLivingBase entity){
+        for(int i = 1; i < 5; i++){
+            if(entity.getCurrentItemOrArmor(i) == null){return false;}
+            if(entity.getCurrentItemOrArmor(i).itemID == chainArmor.get(i - 1)) continue;
+            return false;
+        }
+        return true;
     }
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){

@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(EntityWither.class)
 public abstract class EntityWitherMixin extends EntityMob {
 
@@ -32,6 +34,8 @@ public abstract class EntityWitherMixin extends EntityMob {
     private void increaseXPYield(World par1World, CallbackInfo ci){
         this.experienceValue = 250;
         this.hasRevived = false;
+        this.noClip = true;
+        this.isImmuneToFire = true;
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
         this.witherAttackTimer = 500;
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, false, attackEntitySelector));
@@ -46,6 +50,10 @@ public abstract class EntityWitherMixin extends EntityMob {
         return Enchantment.smite.effectId;
     }
 
+    @ModifyConstant(method = "attackEntityFrom", constant = @Constant(intValue = 20))
+    private int reduceWitherBreakBlockInterval(int constant){
+        return 1;
+    }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void destroyBlocksAbove(CallbackInfo ci){
@@ -59,7 +67,85 @@ public abstract class EntityWitherMixin extends EntityMob {
                 }
             }
         }
+
+        if(this.witherAttackTimer % 40 == 0){
+            onGolemNearby(this);
+        }
+//        else if(this.witherAttackTimer % 100 == 0){
+//            onNoSkyLight(this);
+//        }
+//        else if(this.witherAttackTimer % 60 == 0){
+//            onCantSeePlayer(this);
+//        }
+
     }
+
+    @Inject(method = "updateAITasks", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityWither;field_82222_j:I",ordinal = 0))
+    private void manageWitherBlockBreaking(CallbackInfo ci){
+        this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0.5d,0.5d));
+    }
+
+    @Unique
+    private void destroyBlocksInAABB(AxisAlignedBB par1AxisAlignedBB) {
+        int var2 = MathHelper.floor_double(par1AxisAlignedBB.minX);
+        int var3 = MathHelper.floor_double(par1AxisAlignedBB.minY);
+        int var4 = MathHelper.floor_double(par1AxisAlignedBB.minZ);
+        int var5 = MathHelper.floor_double(par1AxisAlignedBB.maxX);
+        int var6 = MathHelper.floor_double(par1AxisAlignedBB.maxY);
+        int var7 = MathHelper.floor_double(par1AxisAlignedBB.maxZ);
+        boolean var9 = false;
+        for (int var10 = var2; var10 <= var5; ++var10) {
+            for (int var11 = var3; var11 <= var6; ++var11) {
+                for (int var12 = var4; var12 <= var7; ++var12) {
+                    int var13 = this.worldObj.getBlockId(var10, var11, var12);
+                    if (var13 == 0) continue;
+                    if (var13 != Block.obsidian.blockID && var13 != Block.whiteStone.blockID && var13 != Block.bedrock.blockID && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
+                        var9 = this.worldObj.setBlockToAir(var10, var11, var12) || var9;
+                    }
+                }
+            }
+        }
+        if (var9) {
+            double var16 = par1AxisAlignedBB.minX + (par1AxisAlignedBB.maxX - par1AxisAlignedBB.minX) * (double)this.rand.nextFloat();
+            double var17 = par1AxisAlignedBB.minY + (par1AxisAlignedBB.maxY - par1AxisAlignedBB.minY) * (double)this.rand.nextFloat();
+            double var14 = par1AxisAlignedBB.minZ + (par1AxisAlignedBB.maxZ - par1AxisAlignedBB.minZ) * (double)this.rand.nextFloat();
+            this.worldObj.spawnParticle("largeexplode", var16, var17, var14, 0.0, 0.0, 0.0);
+        }
+    }
+
+
+    @Unique private static void onGolemNearby(EntityMob wither){
+        List list = wither.worldObj.getEntitiesWithinAABBExcludingEntity(wither, wither.boundingBox.expand(6, 6, 6));
+        for (Object tempEntity : list) {
+            if (!(tempEntity instanceof EntityIronGolem golem)) continue;
+            golem.attackEntityFrom(DamageSource.magic,100f);
+            wither.worldObj.newExplosion(wither,golem.posX,golem.posY,golem.posZ,2f,false,false);
+            wither.heal(1f);
+        }
+    }
+    @Unique private static void onNoSkyLight(EntityMob wither){
+        if(!wither.worldObj.canBlockSeeTheSky((int) wither.posX, (int) wither.posY + 1, (int) wither.posZ)){
+            for(int posY = (int)wither.posY + 5; posY < 200; posY += 3){
+                if (wither.worldObj.getBlockId((int) wither.posX,posY, (int) wither.posZ) != 0) {
+                    if(wither.worldObj.canBlockSeeTheSky((int) wither.posX, posY, (int) wither.posZ)){
+                        break;
+                    }
+                    wither.worldObj.newExplosion(wither,wither.posX,posY,wither.posZ,4f,false,true);
+                }
+            }
+        }
+    }
+
+//    @Unique private static void onCantSeePlayer(EntityMob wither){
+//        EntityLivingBase target = wither.getAttackTarget();
+//        if(target == null){
+//            target = wither.worldObj.getClosestVulnerablePlayer(wither.posX,wither.posY,wither.posZ,10);
+//        }
+//        if(target != null && !wither.getEntitySenses().canSee(target)){
+//            wither.worldObj.newExplosion(wither,wither.posX,wither.posY,wither.posZ,4f,false,true);
+//        }
+//    }
+
     @Unique private void destroyBlock(World world,int x, int y, int z){
         if(world.getBlockId(x,y,z) != 0 && world.getBlockId(x,y,z) != Block.bedrock.blockID){
             world.destroyBlock(x,y,z,true);
@@ -78,11 +164,15 @@ public abstract class EntityWitherMixin extends EntityMob {
             this.setPositionAndUpdate(xValue,yValue,zValue);
             if (this.hasRevived) {
                 boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                this.getEntityAttribute(BTWAttributes.armor).setAttribute(10.0F);
                 this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 5f + this.rand.nextFloat()*2,true, mobGriefing);
-                System.out.println("Exploded");
             }
             this.worldObj.playSoundAtEntity(this,"mob.endermen.portal",2.0F,1.0F);
         }
+    }
+    @ModifyConstant(method = "updateAITasks", constant = @Constant(intValue = 20,ordinal = 1))
+    private int increaseHealingRate2ndPhase(int constant){
+        return this.hasRevived ? 12 : constant;
     }
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))

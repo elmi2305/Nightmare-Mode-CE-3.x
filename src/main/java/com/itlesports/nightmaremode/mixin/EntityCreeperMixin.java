@@ -197,14 +197,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
+        float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
-            return 3f;
+            return 3f + bloodmoonModifier;
         }
         if(NightmareUtils.getWorldProgress(this.worldObj)>=2){
-            return 4.2f ;
+            return 4.2f + bloodmoonModifier;
         } else if(NightmareUtils.getWorldProgress(this.worldObj)==1){
-            return 3.6f ;
+            return 3.6f + bloodmoonModifier;
         }
-        return 3.375f;
+        return 3.375f + bloodmoonModifier;
     }
 }

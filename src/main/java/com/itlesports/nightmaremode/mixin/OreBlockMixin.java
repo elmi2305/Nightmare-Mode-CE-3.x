@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.blocks.OreBlock;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.BlockOre;
 import net.minecraft.src.Icon;
 import net.minecraft.src.IconRegister;
@@ -18,6 +20,7 @@ public abstract class OreBlockMixin extends BlockOre implements OreBlockAccessor
     }
 
     // this gets the proper icons
+    @Environment(EnvType.CLIENT)
     @Inject(method = "registerIcons", at = @At("TAIL"))
     private void registerSteelIcons(IconRegister register, CallbackInfo ci){
         if (this.blockID == NMBlocks.steelOre.blockID) {

@@ -16,16 +16,10 @@ public class EntitySilverfishMixin {
             if (thisObj.rand.nextFloat()<0.05 && NightmareUtils.getWorldProgress(thisObj.worldObj)>1) {
                 thisObj.setDead();
                 target.addPotionEffect(new PotionEffect(Potion.wither.id,300,0));
-//                target.addPotionEffect(new PotionEffect(Potion.wither.id,1000000,0));
-//                ChatMessageComponent text2 = new ChatMessageComponent();
-//                text2.addText("You are infected. Find milk or you will die.");
-//                text2.setColor(EnumChatFormatting.DARK_GRAY);
-//                Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
-            } else {
-                if (thisObj.rand.nextInt(2) == 0) {
-                    target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
-                } else target.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60, 0));
             }
+            if (thisObj.rand.nextInt(2) == 0) {
+                target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
+            } else target.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60, 0));
         }
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))

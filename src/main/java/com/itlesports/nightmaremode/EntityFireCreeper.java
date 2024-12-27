@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -176,8 +175,8 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
-        if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iLootingModifier) > 0)) {
-            this.dropItem(BTWItems.creeperOysters.itemID, 1);
+        if (this.getNeuteredState() == 0 && this.rand.nextInt(8) == 0) {
+            this.dropItem(Item.fireballCharge.itemID, 1);
         }
 //        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
 //            int itemCount = this.rand.nextInt(5)+2;

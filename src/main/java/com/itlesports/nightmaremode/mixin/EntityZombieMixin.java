@@ -208,8 +208,8 @@ public abstract class EntityZombieMixin extends EntityMob{
 
             if(NightmareUtils.getIsBloodMoon()){
                 this.getEntityAttribute(BTWAttributes.armor).setAttribute(2.0d + progress * 1.5);
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + progress * 6) * 1.25 - 2);
-                // 23 -> 30.5 -> 38 -> 45.5
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24 + progress * 8);
+                // 24 -> 32 -> 40 -> 48
                 this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute((double) progress / 5);
             } else {
                 this.getEntityAttribute(BTWAttributes.armor).setAttribute(2.0d + progress);

@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.Item;
 import net.minecraft.src.World;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Objects;
 public class NightmareUtils {
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
     public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodPickaxe.itemID,NMItems.bloodAxe.itemID,NMItems.bloodShovel.itemID,NMItems.bloodHoe.itemID));
+    public static final List<Integer> chainArmor = new ArrayList<>(Arrays.asList(Item.bootsChain.itemID,Item.legsChain.itemID,Item.plateChain.itemID,Item.helmetChain.itemID));
 
     public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
@@ -59,7 +61,14 @@ public class NightmareUtils {
         }
         return false;
     }
-
+//    public static boolean isWearingFullChainArmor(EntityLivingBase entity){
+//        for(int i = 1; i < 5; i++){
+//            if(entity.getCurrentItemOrArmor(i) == null){return false;}
+//            if(entity.getCurrentItemOrArmor(i).itemID == chainArmor.get(i)) continue;
+//            return false;
+//        }
+//        return true;
+//    }
     public static int getBloodArmorWornCount(EntityLivingBase entity){
         int value = 0;
         for(int i = 1; i < 5; i++){

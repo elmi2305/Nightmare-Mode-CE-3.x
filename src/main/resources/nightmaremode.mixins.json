@@ -37,6 +37,7 @@
     "ContainerRepairMixin",
     "CraftingRecipeListMixin",
     "CrucibleRecipeListMixin",
+    "DireWolfEntityMixin",
     "EmeraldPileItemMixin",
     "EnchantmentDurabilityMixin",
     "EnchantmentHelperMixin",
