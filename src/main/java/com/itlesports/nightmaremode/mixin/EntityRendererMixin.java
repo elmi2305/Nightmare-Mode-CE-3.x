@@ -128,7 +128,11 @@ public abstract class EntityRendererMixin implements EntityAccessor {
     @Unique
     private static int[] getArrayBloodMoon(){
         int[] numbers = new int[256];
-        Arrays.fill(numbers,-14145496);
+        Arrays.fill(numbers,-12829636); // slightly brighter bloodmoon
+        // 255 << 24 | 60 << 16 | 60 << 8 | 60
+
+//        Arrays.fill(numbers,-14145496);
+        // 255 << 24 | 40 << 16 | 40 << 8 | 40
         return numbers;
     }
 }

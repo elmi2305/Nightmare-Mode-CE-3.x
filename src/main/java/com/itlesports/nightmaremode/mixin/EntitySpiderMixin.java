@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,6 +17,8 @@ import java.util.List;
 @Mixin(EntitySpider.class)
 public abstract class EntitySpiderMixin extends EntityMob{
 
+    @Shadow protected abstract void entityInit();
+
     public EntitySpiderMixin(World par1World) {
         super(par1World);
     }
@@ -25,6 +28,14 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if(this.entityToAttack instanceof EntityWitch){
             cir.setReturnValue(false);
         }
+    }
+
+    @Redirect(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;getBrightness(F)F"))
+    private float alwaysAggressiveOnEclipse(EntitySpider instance, float v){
+        if(NightmareUtils.getIsEclipse()){
+            return 0f;
+        }
+        return instance.getBrightness(v);
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
@@ -57,11 +68,14 @@ public abstract class EntitySpiderMixin extends EntityMob{
             return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
         } else return 24000;
     }
+
     @ModifyConstant(method = "spitWeb", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown1(int constant){
         if (this.worldObj != null) {
             if(this.rand.nextFloat() < 0.1){
                 return 10;
+            } else if(NightmareUtils.getIsEclipse()){
+                return 200;
             }
             return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
         }
@@ -99,54 +113,105 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void chanceToShootFireball(Entity targetEntity, CallbackInfo ci){
-        if(targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE && targetEntity.rand.nextFloat()<0.005 && NightmareUtils.getWorldProgress(targetEntity.worldObj) <= 1){
-            double var3 = targetEntity.posX - this.posX;
-            double var5 = targetEntity.boundingBox.minY + (double) (targetEntity.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
-            double var7 = targetEntity.posZ - this.posZ;
+        boolean isHostile = targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isEclipse = NightmareUtils.getIsEclipse();
 
-            EntityLargeFireball var11 = new EntityLargeFireball(this.worldObj, this, var3, var5, var7);
-            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
-            this.worldObj.spawnEntityInWorld(var11);
+        if (isHostile) {
+            double deltaX = targetEntity.posX - this.posX;
+            double deltaY = targetEntity.boundingBox.minY + (double) (targetEntity.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
+            double deltaZ = targetEntity.posZ - this.posZ;
+
+            Entity var11 = null;
+
+            if(targetEntity.rand.nextInt(isEclipse ? 4 : 200) == 0){
+                var11 = new EntityLargeFireball(this.worldObj, this, deltaX, deltaY, deltaZ);
+                this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+            } else{
+                if(isEclipse){
+
+                    int i = rand.nextInt(3);
+                    switch(i){
+                        case 0:
+                            var11 = new EntitySmallFireball(this.worldObj, this, deltaX, deltaY, deltaZ);
+                            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+                            break;
+                        case 1:
+                            var11 = new EntityLargeFireball(this.worldObj, this, deltaX, deltaY - 0.5, deltaZ);
+                            JungleSpiderEntity spider = new JungleSpiderEntity(this.worldObj);
+                            spider.copyLocationAndAnglesFrom(this);
+                            this.worldObj.spawnEntityInWorld(spider);
+                            spider.mountEntity(var11);
+
+                            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+                            break;
+                        case 2:
+                            var11 = new EntityLargeFireball(this.worldObj, this, deltaX, deltaY - 0.5, deltaZ);
+                            EntityCreeper creeper = new EntityCreeper(this.worldObj);
+                            creeper.copyLocationAndAnglesFrom(this);
+                            this.worldObj.spawnEntityInWorld(creeper);
+                            creeper.mountEntity(var11);
+
+                            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+                            break;
+                    }
+                }
+            }
+            if (var11 != null) {
+                this.worldObj.spawnEntityInWorld(var11);
+            }
+        }
+    }
+
+    @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"),cancellable = true)
+    private void doNotShootWebInEclipse(Entity targetEntity, CallbackInfo ci){
+        if (NightmareUtils.getIsEclipse()) {
+            ci.cancel();
         }
     }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        EntitySpider thisObj = (EntitySpider)(Object)this;
+        if (this.worldObj != null) {
+            EntitySpider thisObj = (EntitySpider)(Object)this;
 
-        if (thisObj.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
+            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int eclipseModifier = NightmareUtils.getIsEclipse() ? 20 : 0;
+            boolean isEclipse = eclipseModifier > 1;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
-            boolean isHostile = thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
             boolean isBloodMoon = bloodMoonModifier > 1;
 
             if(progress==0) {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 * bloodMoonModifier);
-                thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 * bloodMoonModifier + eclipseModifier);
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
             } else {
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier);
                 // 13 -> 20 -> 27 -> 34
-                thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)));
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0));
                 // 4 -> 6 -> 8 -> 10
-                thisObj.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.85f); // slightly increases move speed
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(isEclipse ? 0.9f : 0.85f); // slightly increases move speed
             }
-            if(thisObj.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
-                thisObj.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
+            if(this.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
+                this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                thisObj.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1));
                 // 12 -> 18 -> 24 -> 30
             }
         }
     }
 
 
+
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
         if (spider.worldObj != null) {
-            List list = spider.worldObj.getEntitiesWithinAABBExcludingEntity(spider, spider.boundingBox.expand(32.0, 32.0, 32.0));
+            List list = spider.worldObj.getEntitiesWithinAABBExcludingEntity(spider, spider.boundingBox.expand(32.0, 16.0, 32.0));
             for (Object tempEntity : list) {
                 if (!(tempEntity instanceof EntitySpider tempSpider)) continue;
                 if (tempSpider.entityToAttack != null) continue;

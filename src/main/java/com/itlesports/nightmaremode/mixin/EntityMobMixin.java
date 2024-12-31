@@ -81,7 +81,7 @@ public class EntityMobMixin extends EntityCreature{
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void avoidAttackingWitches(CallbackInfo ci){
         EntityMob thisObj = (EntityMob)(Object)this;
-        if(thisObj.getAttackTarget() instanceof EntityWitch || thisObj.getAttackTarget() instanceof EntityWither){
+        if(thisObj.getAttackTarget() instanceof EntityWitch || thisObj.getAttackTarget() instanceof EntityWither || (thisObj.getAttackTarget() instanceof EntitySpider && thisObj instanceof EntitySkeleton)){
             thisObj.setAttackTarget(null);
         }
     }
@@ -96,7 +96,7 @@ public class EntityMobMixin extends EntityCreature{
     }
     @Inject(method = "canSpawnOnBlockBelow", at = @At("HEAD"),cancellable = true)
     private void manageBloodmareSpawning(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon()){
+        if(NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsEclipse()){
             int i = MathHelper.floor_double(this.posX);
             int j = (int)this.boundingBox.minY - 1;
             int k = MathHelper.floor_double(this.posZ);

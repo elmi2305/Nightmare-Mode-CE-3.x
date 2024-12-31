@@ -34,7 +34,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
         } else if (this.difficultyID == 1){ // if it's standard
             this.difficultyID = 2; // sets it to hostile
         }
-        if(NightmareMode.bloodNightmare){this.difficultyID = 2;}
+        if(NightmareMode.bloodmare){this.difficultyID = 2;}
     }
     @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiCreateWorld;updateButtonText()V", ordinal = 9))
     private void alwaysLockedDifficulty(CallbackInfo ci){
@@ -44,7 +44,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;"))
     private String customDifficultyName(Difficulty difficulty){
         if(difficulty.ID == 2){
-            if(NightmareMode.bloodNightmare){
+            if(NightmareMode.bloodmare){
                 return "Bloodmare";
             }
             return "Nightmare";
@@ -57,7 +57,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 10))
     private String customText(String string){
         if (this.difficultyID == 2) {
-            if(NightmareMode.bloodNightmare){
+            if(NightmareMode.bloodmare){
                 return "";
             }
             return "The ultimate challenge.";

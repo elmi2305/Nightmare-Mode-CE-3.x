@@ -1,8 +1,5 @@
 package com.itlesports.nightmaremode;
 
-import btw.entity.mob.JungleSpiderEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
@@ -11,6 +8,7 @@ public class RenderFireCreeper extends RenderCreeper {
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     public static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("textures/entity/firecreeper.png");
+    public static final ResourceLocation FIRE_CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/firecreeperEclipseHigh.png");
 
     public RenderFireCreeper() {
         super();
@@ -18,13 +16,13 @@ public class RenderFireCreeper extends RenderCreeper {
     @Override
     protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper) {
         if (par1EntityCreeper instanceof EntityFireCreeper) {
-            return FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsEclipse() ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
         } else {return super.getEntityTexture(par1EntityCreeper);}
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         if(par1Entity instanceof EntityFireCreeper) {
-            return FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsEclipse() ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
         } else {
             return super.getEntityTexture(par1Entity);
         }

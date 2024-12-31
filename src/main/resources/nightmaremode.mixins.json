@@ -71,7 +71,6 @@
     "EntityPlayerSPMixin",
     "EntitySilverfishMixin",
     "EntitySkeletonMixin",
-    "EntitySlimeInvoker",
     "EntitySlimeMixin",
     "EntitySmallFireballMixin",
     "EntitySnowballMixin",
@@ -97,8 +96,12 @@
     "OreBlockAccessor",
     "OreBlockMixin",
     "OvenTileEntityMixin",
+    "RenderCreeperMixin",
     "RenderPlayerMixin",
+    "RenderSpiderMixin",
+    "RenderWitchMixin",
     "SawBlockMixin",
+    "SkeletonArrowAttackBehaviorMixin",
     "SoulforgeRecipeListMixin",
     "SpawnerAnimalsMixin",
     "SpiderWebEntityMixin",
@@ -131,7 +134,8 @@
     "MillstoneBlockMixin",
     "MinecraftMixin",
     "RenderGlobalMixin",
-    "RenderSkeletonMixin"
+    "RenderSkeletonMixin",
+    "RenderZombieMixin"
   ],
   "injectors": {
     "defaultRequire": 1

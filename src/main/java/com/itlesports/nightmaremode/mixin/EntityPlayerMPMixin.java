@@ -71,7 +71,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
         if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && this.dimension == 0) {
             int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
-            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
+            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9) || NightmareUtils.getIsEclipse() || (dayCount % 12 >= 7 && dayCount % 12 <= 8)){
                 if(this.isTryingToEscapeBloodMoon){
                     ChatMessageComponent text1 = new ChatMessageComponent();
                     text1.addText("<???> Running to another realm? Pathetic. This is where your nightmare stays.");

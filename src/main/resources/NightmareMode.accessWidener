@@ -10,5 +10,6 @@ accessible method net/minecraft/src/BiomeDecorator genStandardOre1 (ILnet/minecr
 accessible method net/minecraft/src/EntityRenderer getNightVisionBrightness (Lnet/minecraft/src/EntityPlayer;F)F
 accessible method net/minecraft/src/Item setMaxDamage (I)Lnet/minecraft/src/Item;
 accessible field net/minecraft/src/PotionEffect duration I
+accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

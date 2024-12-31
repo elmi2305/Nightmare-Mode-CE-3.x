@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class GuiScreenMixin {
     @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private ResourceLocation changeBackground(ResourceLocation par1ResourceLocation){
-        if(NightmareMode.bloodNightmare){
+        if(NightmareMode.bloodmare){
             return new ResourceLocation("textures/gui/bloodNightmare.png");
         }
         return new ResourceLocation("textures/gui/dirtBackground.png");

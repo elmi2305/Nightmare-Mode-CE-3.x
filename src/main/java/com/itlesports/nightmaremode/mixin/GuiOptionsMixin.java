@@ -23,7 +23,7 @@ public class GuiOptionsMixin {
         } else if(difficulty == Difficulties.STANDARD){
             var6.displayString = "Difficulty: Bad Dream";
         }
-        if(NightmareMode.bloodNightmare){
+        if(NightmareMode.bloodmare){
             var6.displayString = "Difficulty: Bloodmare";
         }
     }

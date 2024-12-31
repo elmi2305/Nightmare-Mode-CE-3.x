@@ -25,13 +25,16 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator steelOreGenExposedToAir;
     public WorldGenerator steelOreGen;
 
-
     public static KeyBinding nightmareZoom;
 
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
-    public static Boolean bloodNightmare;
+    public static Boolean bloodmare;
+    public static Boolean eclipsed;
+
     public Boolean isBloodMoon;
+    public Boolean isEclipse;
+
     public static String nightmareZoomKey;
 
     public NightmareMode(){
@@ -70,14 +73,24 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
 
-    public static void setBloodMoonFalse(){
+//    public static void setBloodMoonFalse(){
+//        if (instance != null) {
+//            instance.isBloodMoon = false;
+//        }
+//    }
+//    public static void setBloodMoonTrue(){
+//        if (instance != null) {
+//            instance.isBloodMoon = true;
+//        }
+//    }
+    public static void setEclipse(boolean par1){
         if (instance != null) {
-            instance.isBloodMoon = false;
+            instance.isEclipse = par1;
         }
     }
-    public static void setBloodMoonTrue(){
+    public static void setBloodmoon(boolean par1){
         if (instance != null) {
-            instance.isBloodMoon = true;
+            instance.isBloodMoon = par1;
         }
     }
 
@@ -86,14 +99,16 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("BloodNightmare", "False", "...");
+        this.registerProperty("Bloodmare", "False");
+        this.registerProperty("Eclipsed", "False");
     }
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
-        bloodNightmare = Boolean.parseBoolean(propertyValues.get("BloodNightmare"));
+        bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
+        eclipsed = Boolean.parseBoolean(propertyValues.get("Eclipsed"));
         nightmareZoomKey = propertyValues.get("NmZoomKey");
     }
 

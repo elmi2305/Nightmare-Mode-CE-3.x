@@ -126,7 +126,24 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                     } else {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
                     }
-
+                    if(NightmareUtils.getIsEclipse()){
+                        EntityLivingBase target = this.getAttackTarget();
+                        if (target instanceof EntityPlayer) {
+                            for (int i = -1; i < 2 ; i++) {
+                                for (int j = -1; j < 2 ; j++) {
+                                    for (int k = 0; k < 2; k++) {
+                                        if(rand.nextInt(4) == 0){
+                                            continue;
+                                        }
+                                        EntityMagmaCube cube = new EntityMagmaCube(this.worldObj);
+                                        cube.setLocationAndAngles(this.posX + (i * 0.2), this.posY + (k * 0.5), this.posZ + (j * 0.2),this.rotationYaw,this.rotationPitch);
+                                        ((EntitySlime)cube).setSlimeSize(1);
+                                        this.worldObj.spawnEntityInWorld(cube);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     this.setDead();
                 }
             }
@@ -178,16 +195,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         if (this.getNeuteredState() == 0 && this.rand.nextInt(8) == 0) {
             this.dropItem(Item.fireballCharge.itemID, 1);
         }
-//        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-//            int itemCount = this.rand.nextInt(5)+2;
-//            if(NightmareUtils.getIsBloodMoon()){
-//                itemCount += 1;
-//                itemCount *= 2;
-//            }
-//            this.dropItem(BTWItems.steelNugget.itemID, itemCount);
-//            // 2 - 6
-//            // 6 - 14 on bloodmoons
-//        }
+
 
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
@@ -238,12 +246,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         this.determinedToExplode = true;
     }
 
-    public void checkForScrollDrop() {
-//        if (this.rand.nextInt(200) == 0) {
-//            ItemStack itemstack = new ItemStack(BTWItems.arcaneScroll, 1, Enchantment.blastProtection.effectId);
-//            this.entityDropItem(itemstack, 0.0F);
-//        }
-    }
+    public void checkForScrollDrop() {}
 
     public boolean getIsDeterminedToExplode() {
         return this.determinedToExplode;

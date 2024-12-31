@@ -58,7 +58,7 @@ public abstract class HardcoreSpawnUtilsMixin{
 
     @Redirect(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;contains(Ljava/lang/Object;)Z"))
     private static boolean excludeJungle(ArrayList list, Object o){
-        if((o.equals(BiomeGenBase.jungle) || o.equals(BiomeGenBase.jungleHills)) && NightmareMode.bloodNightmare){
+        if((o.equals(BiomeGenBase.jungle) || o.equals(BiomeGenBase.jungleHills)) && NightmareMode.bloodmare){
             return true;
         }
         return list.contains(o);

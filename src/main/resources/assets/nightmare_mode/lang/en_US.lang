@@ -16,5 +16,5 @@ item.nmBloodHelmet.name=Blood Helmet
 item.nmBloodChestplate.name=Blood Chestplate
 item.nmBloodLeggings.name=Blood Leggings
 item.nmBloodBoots.name=Blood Boots
-tile.nmSteelOre.name="Steel Ore"
+tile.nmSteelOre.name=Steel Ore
 key.nightmaremode.zoom=Zoom

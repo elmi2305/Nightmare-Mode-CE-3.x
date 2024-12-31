@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor, EntitySlimeInvoker{
+public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
@@ -33,6 +33,20 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             return this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1.8f : constant;
         }
         return constant;
+    }
+    @Override
+    public boolean isImmuneToHeadCrabDamage() {
+        return true;
+    }
+
+    @Override
+    public boolean isSecondaryTargetForSquid() {
+        return false;
+    }
+
+    @Override
+    public Entity getHeadCrabSharedAttackTarget() {
+        return this.getAttackTarget();
     }
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
@@ -96,10 +110,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.4f : 1;
             boolean isBloodMoon = bloodMoonModifier > 1;
+            boolean isEclipse = NightmareUtils.getIsEclipse();
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
-                if(isBloodMoon){
+                if(isBloodMoon || isEclipse){
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(26d);
                 } else {
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2));
@@ -108,18 +123,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
 
             if(this.getSkeletonType() == 1){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 ));
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0)));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
             if(this.getSkeletonType() == 4){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? 6 : 2));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2));
                 // 24.0 -> 30.0 -> 36.0 -> 40.0
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress+1));
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress + 1) + (isEclipse ? 1 : 0));
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -177,27 +192,12 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         }
     }
 
-
-
     @Unique private boolean canSeeIfJumped(EntityLiving skelly, Entity targetPlayer){
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double)skelly.getEyeHeight()+1, skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double)targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) == null;
     }
     @Unique private boolean cannotSeeNormally(EntityLiving skelly, Entity targetPlayer){
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
-
-//    @Inject(method = "dropFewItems", at = @At("HEAD"))
-//    private void manageVariantDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-//        if(this.getSkeletonType() == 4) { // ender skeleton
-//            if(this.rand.nextBoolean()){
-//                int drops = this.rand.nextInt((NightmareUtils.getIsBloodMoon() ? 6 : 3))+1;
-//                this.dropItem(BTWItems.soulFlux.itemID, drops);
-//                // 1 - 3
-//                // 1 - 6 bloodmoon
-//            }
-//        }
-//    }
-
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
@@ -206,43 +206,85 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
+            boolean isEclipse = NightmareUtils.getIsEclipse();
 
-            if (progress >= 2 && rand.nextFloat() < (0.13 + ((progress-2) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier){
-                // 13% -> 20%
-                // 19.5% -> 30%
-                this.setSkeletonType(4); // ender skeleton
 
-                this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
-                this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
-                this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
-                this.equipmentDropChances[1] = 0f;
-                this.equipmentDropChances[2] = 0f;
-                this.equipmentDropChances[3] = 0f;
+            if (!isEclipse) {
+                // for non solar eclipse. randomly picks which variant to spawn. chances are different from each
+                if (progress >= 2 && rand.nextFloat() < (0.13 + ((progress - 2) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier) {
+                    // 13% -> 20%
+                    // 19.5% -> 30%
+                    this.setSkeletonType(4); // ender skeleton
 
-                this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
+                    this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
+                    this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
+                    this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
+                    this.equipmentDropChances[1] = 0f;
+                    this.equipmentDropChances[2] = 0f;
+                    this.equipmentDropChances[3] = 0f;
 
-            } else if (progress >= 1 && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + ((progress-1)*0.02)) * bloodMoonModifier && this.dimension != -1) {
-                // 9% -> 11% -> 13%
-                // 13.5% -> 16.5% -> 19.5%
-                this.setSkeletonType(3); // fire skeleton
-                this.setCurrentItemOrArmor(1, null);
-                this.setCurrentItemOrArmor(2, null);
-                this.setCurrentItemOrArmor(3, null);
-                this.setCurrentItemOrArmor(4, null);
-                this.setFire(10000);
-                this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
+                    this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
 
-            } else if(progress <= 3 && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
-                // 2% -> 4% -> 6% -> 8%
-                // 3% -> 6% -> 9% -> 12%
-                this.setSkeletonType(2); // ice skeleton
-                this.isImmuneToFire = false;
-                ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
-                this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
-                this.equipmentDropChances[4] = 0f;
+                } else if (progress >= 1 && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + ((progress - 1) * 0.02)) * bloodMoonModifier && this.dimension != -1) {
+                    // 9% -> 11% -> 13%
+                    // 13.5% -> 16.5% -> 19.5%
+                    this.setSkeletonType(3); // fire skeleton
+                    this.setCurrentItemOrArmor(1, null);
+                    this.setCurrentItemOrArmor(2, null);
+                    this.setCurrentItemOrArmor(3, null);
+                    this.setCurrentItemOrArmor(4, null);
+                    this.setFire(10000);
+                    this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
+
+                } else if (progress <= 3 && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
+                    // 2% -> 4% -> 6% -> 8%
+                    // 3% -> 6% -> 9% -> 12%
+                    this.setSkeletonType(2); // ice skeleton
+                    ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
+                    this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
+                    this.equipmentDropChances[4] = 0f;
+                }
+            }
+            else{
+                // picks a random variant including default & wither. each variant now has an equal 20% chance of spawning
+                switch (rand.nextInt(5)){
+                    case 0:
+                        this.setSkeletonType(4); // ender skeleton
+
+                        this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
+                        this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
+                        this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
+                        this.equipmentDropChances[1] = 0f;
+                        this.equipmentDropChances[2] = 0f;
+                        this.equipmentDropChances[3] = 0f;
+
+                        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
+                        break;
+                    case 1:
+                        this.setSkeletonType(3); // fire skeleton
+                        this.setCurrentItemOrArmor(1, null);
+                        this.setCurrentItemOrArmor(2, null);
+                        this.setCurrentItemOrArmor(3, null);
+                        this.setCurrentItemOrArmor(4, null);
+                        this.setFire(10000);
+                        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
+                        break;
+                    case 2:
+                        this.setSkeletonType(2); // ice skeleton
+                        ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
+                        this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
+                        this.equipmentDropChances[4] = 0f;
+                        break;
+                    case 3:
+                        this.setSkeletonType(1);
+                        break;
+                    case 4:
+                        this.setSkeletonType(0);
+                        break;
+                }
             }
         }
-        // overall chances to be a variant: 2% -> 13% -> 30% -> 41%
+        // overall chances to be a variant (non eclipse): 2% -> 13% -> 30% -> 41%
     }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))

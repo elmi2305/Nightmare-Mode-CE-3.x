@@ -42,8 +42,7 @@ public class SteelOre extends OreBlockStaged {
     @Override
     @Environment(EnvType.CLIENT)
     public void getSubBlocks(int blockID, CreativeTabs creativeTabs, List list) {
-        list.add(new ItemStack(blockID, 1, 1));
-        list.add(new ItemStack(blockID, 1, 2));
+        list.add(new ItemStack(blockID, 1, 0));
     }
 
 

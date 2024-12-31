@@ -36,6 +36,10 @@ public class NightmareUtils {
         if(NightmareModeAddon.getInstance() == null){return false;}
         return Objects.requireNonNullElse(NightmareMode.getInstance().isBloodMoon, false);
     }
+    public static boolean getIsEclipse(){
+        if(NightmareModeAddon.getInstance() == null){return false;}
+        return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
+    }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){
         for(int i = 0; i < 5; i++){

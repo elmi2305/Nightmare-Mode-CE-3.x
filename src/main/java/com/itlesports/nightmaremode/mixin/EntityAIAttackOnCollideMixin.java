@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.RottenArrowEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,15 +22,23 @@ public abstract class EntityAIAttackOnCollideMixin {
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void increaseRangeOnToolHeld(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
-        if(thisObj.attacker.getAttackTarget() != null
-                && thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem()) // TODO: refactor the compute range method to take entity param instead of item stack
-                && isHoldingIllegalItem(thisObj.attacker)
-                && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
-                && thisObj.attackTick <= 1
-                && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())) {
-            thisObj.attacker.swingItem();
-            thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
-            thisObj.attackTick = 13;
+        if(thisObj.attacker.getAttackTarget() != null){
+            if(thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem())
+                    && isHoldingIllegalItem(thisObj.attacker)
+                    && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
+                    && thisObj.attackTick <= 1
+                    && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
+                thisObj.attacker.swingItem();
+                thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
+                thisObj.attackTick = 13;
+            }
+            if(NightmareUtils.getIsEclipse()){
+                if(thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < 3){
+                    thisObj.attacker.swingItem();
+                    thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
+                    thisObj.attackTick = 20;
+                }
+            }
         }
     }
 
@@ -37,20 +46,20 @@ public abstract class EntityAIAttackOnCollideMixin {
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE){
-            if(isPlayerHoldingBow(targetPlayer) && isHoldingIllegalItem(thisObj.attacker)){
-                List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.0, 2.4, 2.0));
+            if(isPlayerHoldingBow(targetPlayer) && (isHoldingIllegalItem(thisObj.attacker)) || NightmareUtils.getIsEclipse()){
+                List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.5, 2.4, 2.5));
                 arrowCooldown -= 1;
                 if (arrowCooldown <= 0) {
                     arrowCooldown = 0;
                     for (Object tempEntity : list) {
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
 
-                        if (!arrow.inGround && thisObj.attacker.rand.nextInt(2) == 0) {
+                        if (!arrow.inGround && thisObj.attacker.rand.nextBoolean()) {
                             EntityArrow newArrow = new EntityArrow(thisObj.attacker.worldObj,thisObj.attacker,targetPlayer,1f,6);
                             newArrow.copyLocationAndAnglesFrom(arrow);
-                            newArrow.motionX = (arrow.motionX * -1)/1.5;
-                            newArrow.motionY = arrow.motionY * -1;
-                            newArrow.motionZ = (arrow.motionZ * -1) / 1.5;
+                            newArrow.motionX = -arrow.motionX / 1.5;
+                            newArrow.motionY = -arrow.motionY;
+                            newArrow.motionZ = -arrow.motionZ / 1.5;
                             thisObj.attacker.worldObj.playSoundAtEntity(arrow,"random.break",1.0f,5f);
                             arrow.setDead();
                             thisObj.worldObj.spawnEntityInWorld(newArrow);
@@ -65,7 +74,6 @@ public abstract class EntityAIAttackOnCollideMixin {
                             thisObj.attacker.swingItem();
                             break;
                         }
-
                     }
                 }
             }

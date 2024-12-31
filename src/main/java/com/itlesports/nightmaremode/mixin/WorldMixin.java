@@ -51,18 +51,16 @@ public abstract class WorldMixin {
             World thisObj = (World)(Object)this;
             int dawnOffset = this.isDawnOrDusk(thisObj.getWorldTime());
 
-            if(!NightmareMode.bloodNightmare){
-                if (this.getIsBloodMoon(thisObj,((int)Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset)) {
-                    NightmareMode.setBloodMoonTrue();
-                } else {
-                    NightmareMode.setBloodMoonFalse();
-                }
+            if(!NightmareMode.bloodmare){
+                NightmareMode.setBloodmoon(this.getIsBloodMoon(thisObj, ((int) Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset));
             } else{
-                if(this.getIsNight(thisObj)){
-                    NightmareMode.setBloodMoonTrue();
-                } else{
-                    NightmareMode.setBloodMoonFalse();
-                }
+                NightmareMode.setBloodmoon(this.getIsNight(thisObj));
+            }
+
+            if(!NightmareMode.eclipsed){
+                NightmareMode.setEclipse(this.getIsEclipse(thisObj, ((int) Math.ceil((double) thisObj.getWorldTime() / 24000)) + dawnOffset));
+            } else{
+                NightmareMode.setEclipse(!this.getIsNight(thisObj));
             }
         }
     }
@@ -76,11 +74,41 @@ public abstract class WorldMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
-        return this.getIsNight(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodNightmare;
+//        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
+        // TODO don't forget to remove this debug after testing
+        return this.getIsNight(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
+    }
+
+    @Unique private boolean getIsEclipse(World world, int dayCount){
+//        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
+        return !this.getIsNight(world);
+//        return !this.getIsNight(world) && (dayCount % 12 == 8) || NightmareMode.eclipsed;
     }
 
     @Unique private boolean getIsNight(World world){
         return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
+    }
+    @Inject(method = "isDaytime", at = @At("HEAD"),cancellable = true)
+    private void eclipseNightTime(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsEclipse()){
+            cir.setReturnValue(false);
+        }
+    }
+
+//    @ModifyArgs(method = "getSkyColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Vec3Pool;getVecFromPool(DDD)Lnet/minecraft/src/Vec3;"))
+//    private void manageBackgroundColorInEclipse(Args args){
+//        if (NightmareUtils.getIsEclipse()) {
+//            args.set(0,0.0f);
+//            args.set(1,0.0f);
+//            args.set(2,0.0f);
+//        System.out.println(args.get(0) + ", " + args.get(1) + ", " + args.get(2));
+//        }
+//    }
+    @Inject(method = "getSkyColor", at = @At("HEAD"),cancellable = true)
+    private void manageEclipseSkyColor(Entity par1Entity, float par2, CallbackInfoReturnable<Vec3> cir){
+        World thisObj = (World)(Object)this;
+        if (NightmareUtils.getIsEclipse()) {
+            cir.setReturnValue(thisObj.getWorldVec3Pool().getVecFromPool(0.0, 0.0, 0.0));
+        }
     }
 }

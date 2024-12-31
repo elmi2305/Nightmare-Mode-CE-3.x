@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.attribute.BTWAttributes;
+import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
@@ -34,6 +35,8 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
             float witherSkeletonChanceModifier = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0f : 0.2f;
+            boolean isEclipse = NightmareUtils.getIsEclipse();
+
             if (this.rand.nextInt((this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 6)) < 2) {
                 // 100% on hostile, 33% on relaxed
                 int progress = NightmareUtils.getWorldProgress(this.worldObj);
@@ -59,6 +62,10 @@ public abstract class EntityZombieMixin extends EntityMob{
                 if(progress >= 1 && this.rand.nextFloat() <= (0.3 - witherSkeletonChanceModifier)){
                     skeleton.setSkeletonType(1);
                 }
+
+                if(isEclipse){
+                    skeleton.setSkeletonType(this.rand.nextInt(5));
+                }
                 this.worldObj.spawnEntityInWorld(skeleton);
                 this.setDead();
             }
@@ -81,11 +88,9 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void transformIntoSkeletonOnFireDeath(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if (!this.isEntityInvulnerable()) {
+        if (!this.isEntityInvulnerable() && !this.isVillager() && this.getHealth() <= par2) {
             if (canEntitySeeSun()) {
                 boolean shouldBurn =
-                        !this.isVillager() &&
-                                this.getHealth() <= par2 &&
                                 !isCrystalHead(this) &&
                                 !this.isImmuneToFire &&
                                 this.getCurrentItemOrArmor(4) == null &&
@@ -94,6 +99,35 @@ public abstract class EntityZombieMixin extends EntityMob{
                 if (shouldBurn) {
                     this.onKilledBySun();
                 }
+            } else if(NightmareUtils.getIsEclipse()){
+                summonSilverfish(this);
+            }
+        }
+    }
+
+    @Unique private static void summonSilverfish(EntityMob zombie){
+        int i = zombie.rand.nextInt(5)+1;
+        while(i > 0){
+            if(i >= 2 && zombie.rand.nextBoolean()){
+                JungleSpiderEntity spider = new JungleSpiderEntity(zombie.worldObj);
+                spider.copyLocationAndAnglesFrom(zombie);
+                zombie.worldObj.spawnEntityInWorld(spider);
+                i -= 2;
+            } else{
+                EntitySilverfish fish = new EntitySilverfish(zombie.worldObj);
+                fish.setLocationAndAngles(zombie.posX,zombie.posY,zombie.posZ, zombie.rand.nextFloat()*90, zombie.rotationPitch);
+                fish.copyLocationAndAnglesFrom(zombie);
+                zombie.worldObj.spawnEntityInWorld(fish);
+                i--;
+            }
+        }
+    }
+
+    @Inject(method = "attackEntityAsMob", at = @At("HEAD"))
+    private void manageEclipseAttack(Entity attackedEntity, CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsEclipse()){
+            if(rand.nextInt(3) == 0 && attackedEntity instanceof EntityLivingBase){
+                ((EntityLivingBase) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 40,0));
             }
         }
     }
@@ -138,62 +172,102 @@ public abstract class EntityZombieMixin extends EntityMob{
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 0.5 : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isEclipse = NightmareUtils.getIsEclipse();
 
-            if (rand.nextInt(MathHelper.floor_double((isHostile ? 50 : 100) * bloodMoonModifier)) == 0) {
-                this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
-                this.equipmentDropChances[0] = 0f;
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
-                // 3.0 -> 4.0 -> 6.0 -> 7.0
-            } else if (rand.nextInt(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier)) == 0) {
-                this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
-                this.equipmentDropChances[0] = 0f;
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
-                // 2.0 -> 3.0 -> 4.0 -> 5.0
+            if (!isEclipse) {
+                // NON ECLIPSE
+                if (rand.nextInt(MathHelper.floor_double((isHostile ? 50 : 100) * bloodMoonModifier)) == 0) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
+                    this.equipmentDropChances[0] = 0f;
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
+                    // 3.0 -> 4.0 -> 6.0 -> 7.0
+                } else if (rand.nextInt(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier)) == 0) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
+                    this.equipmentDropChances[0] = 0f;
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
+                    // 2.0 -> 3.0 -> 4.0 -> 5.0
+                }
+
+                if(rand.nextInt(MathHelper.floor_double(48 * bloodMoonModifier)) == 0 && isHostile && this.posY <= 45){
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
+                    this.equipmentDropChances[0] = 0f;
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0d);
+                }
+
+
+                if (progress == 1) {
+                    if (rand.nextInt(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier)) == 0) {
+                        ItemStack var1 = new ItemStack(Item.axeGold);
+                        ItemStack var2 = new ItemStack(Item.helmetGold);
+                        this.setCurrentItemOrArmor(0, var1);
+                        this.setCurrentItemOrArmor(4, var2);
+                        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
+                        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(isHostile ? 0.34f : 0.29f);
+                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
+                        this.equipmentDropChances[0] = 0f;
+                        this.equipmentDropChances[4] = 0f;
+                    }
+                } else if (rand.nextInt(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier)) == 0 && progress > 1) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
+                    this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
+                    this.equipmentDropChances[0] = 0f;
+                    // 12.0 -> 15.0
+                }
+
+                if(isHostile && NightmareUtils.getIsBloodMoon()){
+                    if(rand.nextInt(50) == 0){
+                        this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
+                        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3));
+                        this.equipmentDropChances[0] = 0;
+                    }
+                    float streakModifier = 0.0f;
+                    for (int i = 1; i <= 4; i++) {
+                        if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
+                            if(rand.nextFloat() < 0.07f + streakModifier){
+                                streakModifier += 0.01f;
+                                List<ItemStack> advancedArmorList = getAdvancedArmor();
+                                this.setCurrentItemOrArmor(i, advancedArmorList.get(i - 1));
+                                this.equipmentDropChances[i] = 0;
+                            }
+                        }
+                    }
+                }
             }
+            else{
+                // ECLIPSE
+                if (rand.nextInt(8) == 0) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
+                    this.equipmentDropChances[0] = 0f;
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
+                    // 3.0 -> 4.0 -> 6.0 -> 7.0
+                } else if (rand.nextInt(8) == 0) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
+                    this.equipmentDropChances[0] = 0f;
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
+                    // 2.0 -> 3.0 -> 4.0 -> 5.0
+                }
 
-            if(rand.nextInt(MathHelper.floor_double(48 * bloodMoonModifier)) == 0 && isHostile && this.posY <= 45){
-                this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
-                this.equipmentDropChances[0] = 0f;
-                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0d);
-            }
+                if(rand.nextInt(8) == 0 && isHostile){
+                    if (this.posY <= 45) {
+                        this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
+                        this.equipmentDropChances[0] = 0f;
+                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0d);
+                    } else{
+                        this.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
+                        this.equipmentDropChances[0] = 0f;
+                    }
+                }
 
-
-            if (progress == 1) {
-                if (rand.nextInt(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier)) == 0) {
+                if (rand.nextInt(10) == 0) {
                     ItemStack var1 = new ItemStack(Item.axeGold);
                     ItemStack var2 = new ItemStack(Item.helmetGold);
                     this.setCurrentItemOrArmor(0, var1);
                     this.setCurrentItemOrArmor(4, var2);
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
-                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(isHostile ? 0.34f : 0.29f);
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
+                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
                     this.equipmentDropChances[0] = 0f;
                     this.equipmentDropChances[4] = 0f;
-                }
-            } else if (rand.nextInt(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier)) == 0 && progress > 1) {
-                this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
-                this.equipmentDropChances[0] = 0f;
-                // 12.0 -> 15.0
-            }
-
-            if(isHostile && NightmareUtils.getIsBloodMoon()){
-                if(rand.nextInt(50) == 0){
-                    this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
-                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3));
-                    this.equipmentDropChances[0] = 0;
-                }
-                float streakModifier = 0.0f;
-                for (int i = 1; i <= 4; i++) {
-                    if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                        if(rand.nextFloat() < 0.07f + streakModifier){
-                            streakModifier += 0.01f;
-                            List<ItemStack> advancedArmorList = getAdvancedArmor();
-                            this.setCurrentItemOrArmor(i, advancedArmorList.get(i - 1));
-                            this.equipmentDropChances[i] = 0;
-                        }
-                    }
                 }
             }
         }
@@ -202,21 +276,21 @@ public abstract class EntityZombieMixin extends EntityMob{
     private void addAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = 0;
+            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
+
             try {
                 progress = NightmareUtils.getWorldProgress(this.worldObj);
             } catch (RuntimeException ignored) {}
 
-            if(NightmareUtils.getIsBloodMoon()){
-                this.getEntityAttribute(BTWAttributes.armor).setAttribute(2.0d + progress * 1.5);
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24 + progress * 8);
-                // 24 -> 32 -> 40 -> 48
-                this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute((double) progress / 5);
-            } else {
-                this.getEntityAttribute(BTWAttributes.armor).setAttribute(2.0d + progress);
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + progress * 6);
-                // 20 -> 26 -> 32 -> 38
-                this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute((double) progress / 10);
-            }
+
+            this.getEntityAttribute(BTWAttributes.armor).setAttribute(2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isBloodMoon ? 24 : 20) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0));
+            // 40 -> 46 -> 52 -> 58 eclipse
+            // 24 -> 32 -> 40 -> 48 bm
+            // 20 -> 26 -> 32 -> 38 normal
+            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute((double) progress / (isBloodMoon ? 5 : 10));
+
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0d + (progress > 0 ? 1 : 0));
         }
     }
@@ -245,6 +319,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 chance = 32;
             }
             if(NightmareUtils.getIsBloodMoon()){chance /= 2;}
+            if(NightmareUtils.getIsEclipse()){chance /= 4;}
 
             if(NightmareUtils.getWorldProgress(this.worldObj) >= 2 && rand.nextInt(chance) == 0){
                 summonCrystalHeadAtPos();

@@ -123,28 +123,7 @@ public abstract class EntityWitherMixin extends EntityMob {
             wither.heal(1f);
         }
     }
-    @Unique private static void onNoSkyLight(EntityMob wither){
-        if(!wither.worldObj.canBlockSeeTheSky((int) wither.posX, (int) wither.posY + 1, (int) wither.posZ)){
-            for(int posY = (int)wither.posY + 5; posY < 200; posY += 3){
-                if (wither.worldObj.getBlockId((int) wither.posX,posY, (int) wither.posZ) != 0) {
-                    if(wither.worldObj.canBlockSeeTheSky((int) wither.posX, posY, (int) wither.posZ)){
-                        break;
-                    }
-                    wither.worldObj.newExplosion(wither,wither.posX,posY,wither.posZ,4f,false,true);
-                }
-            }
-        }
-    }
 
-//    @Unique private static void onCantSeePlayer(EntityMob wither){
-//        EntityLivingBase target = wither.getAttackTarget();
-//        if(target == null){
-//            target = wither.worldObj.getClosestVulnerablePlayer(wither.posX,wither.posY,wither.posZ,10);
-//        }
-//        if(target != null && !wither.getEntitySenses().canSee(target)){
-//            wither.worldObj.newExplosion(wither,wither.posX,wither.posY,wither.posZ,4f,false,true);
-//        }
-//    }
 
     @Unique private void destroyBlock(World world,int x, int y, int z){
         if(world.getBlockId(x,y,z) != 0 && world.getBlockId(x,y,z) != Block.bedrock.blockID){
