@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityShadowZombie;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -87,9 +88,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 EntitySkeleton minion = new EntitySkeleton(this.worldObj);
                 minion.setSkeletonType(1);
                 minion.entityToAttack = this.target;
-                if(this.rand.nextInt(3) == 0){
-                    minion.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
-                }
+                minion.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
             } else if (i<0.45){
@@ -118,5 +117,13 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
             this.attackTimer = 0;
         }
+    }
+
+    @Redirect(method = "destroyBlocksInAABB", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlockToAir(III)Z"))
+    private boolean avoidDestroyingArenaBlocks(World world, int par1, int par2, int par3){
+        if(world.getBlockId(par1,par2,par3) == NMBlocks.specialObsidian.blockID || world.getBlockId(par1,par2,par3) == NMBlocks.cryingObsidian.blockID){
+            return false;
+        }
+        return world.setBlockToAir(par1,par2,par3);
     }
 }

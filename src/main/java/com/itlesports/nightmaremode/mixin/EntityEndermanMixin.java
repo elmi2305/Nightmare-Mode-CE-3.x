@@ -23,7 +23,14 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Shadow private int teleportDelay;
     @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
 
+    @Shadow protected abstract boolean teleportRandomly();
+
+    @Shadow public abstract int getCarried();
+
+    @Shadow public abstract void setCarried(int par1);
+
     @Unique int patience = 30;
+    @Unique int inventorySwitchCooldown = 80;
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -31,17 +38,17 @@ public abstract class EntityEndermanMixin extends EntityMob {
         double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
         boolean isBloodMoon = bloodMoonModifier > 1;
 
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0));
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NightmareUtils.getIsEclipse() ? 0.07 : 0));
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0 + progress * 2 + bloodMoonModifier);
         // 7 -> 9 -> 11 -> 13
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress*20);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress * 20);
         // 40 -> 60 -> 80 -> 100
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(4)+1;
             // 1 - 4
             if (iLootingModifier > 0) {
@@ -52,17 +59,159 @@ public abstract class EntityEndermanMixin extends EntityMob {
             }
         }
     }
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void manageEclipseShardDrops(boolean par1, int par2, CallbackInfo ci){
+        if (par1 && NightmareUtils.getIsEclipse()) {
+            for(int i = 0; i < (par2 * 2) + 1; i++){
+                if(this.rand.nextInt(6) == 0){
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
     private int increaseAttemptsToTeleportPlayer(int constant){
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             if (NightmareUtils.getIsBloodMoon()) {
                 return 9;
+            } else if(NightmareUtils.getIsEclipse()){
+                return 18;
             }
             return 6;
         }
         return constant;
     }
+
+    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;teleportRandomly()Z",ordinal = 0))
+    private boolean helpEndermanTeleportPlayerMoreOften(EntityEnderman instance){
+        if(NightmareUtils.getIsEclipse() && this.rand.nextBoolean()){
+            return true;
+        }
+        return this.teleportRandomly();
+    }
+
+    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 16.0))
+    private double canTeleportPlayerFromFurtherAway(double constant){
+        return 64;
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At(value = "HEAD"))
+    private void incrementAbilityTimer(CallbackInfo ci){
+        if (this.entityToAttack != null) {
+            this.inventorySwitchCooldown = Math.max(this.inventorySwitchCooldown - 1 , 0);
+        }
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        if(NightmareUtils.getIsEclipse() && entity instanceof EntityPlayer){
+            int heldItemID = this.getCarried();
+
+            if (this.inventorySwitchCooldown == 0) {
+                ItemStack[] hotbar = new ItemStack[9];
+                System.arraycopy(((EntityPlayer) entity).inventory.mainInventory, 0, hotbar, 0, 9);
+                for(int i = 0; i < 9; i++){
+                    int j = this.rand.nextInt(i + 1);
+                    ItemStack temp = hotbar[i];
+                    hotbar[i] = hotbar[j];
+                    hotbar[j] = temp;
+                }
+                System.arraycopy(hotbar, 0, ((EntityPlayer) entity).inventory.mainInventory, 0, 9);
+
+                entity.worldObj.playSoundEffect(entity.posX, entity.posY, entity.posZ, "mob.endermen.portal", 1.0f, 1.0f);
+                this.inventorySwitchCooldown = 80 + this.rand.nextInt(40);
+            }
+
+            if(heldItemID == Block.tnt.blockID){
+                this.worldObj.newExplosion(this, entity.posX, entity.posY, entity.posZ, 2, false, false);
+
+                this.setCarried(0);
+
+                double deltaX = entity.posX - this.posX;
+                double deltaZ = entity.posZ - this.posZ;
+                double distance = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
+
+                // Normalize the direction vector
+                deltaX /= distance;
+                deltaZ /= distance;
+
+                entity.motionX += deltaX * 4;
+                entity.motionZ += deltaZ * 4;
+                entity.motionY += 0.4; // Adjust the vertical component as needed
+
+                // Clamp the vertical motion to prevent excessive knockback
+                if (entity.motionY > 0.4) {
+                    entity.motionY = 0.4;
+                }
+                entity.isAirBorne = true;
+            }
+        }
+        return super.attackEntityAsMob(entity);
+    }
+
+    @Inject(method = "teleportTo(DDD)Z", at = @At(value = "RETURN",ordinal = 1))
+    private void chanceToHaveItem(double par1, double par3, double par5, CallbackInfoReturnable<Boolean> cir){
+        if (NightmareUtils.getIsEclipse()) {
+            int i = this.rand.nextInt(8);
+            if(i == 0){
+                this.setCarried(Block.tnt.blockID);
+            }
+        }
+    }
+
+    //    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityEnderman;moveStrafing:F"))
+//    private void teleportNearbyMobsToAssist(CallbackInfo ci){
+//        if(this.ticksExisted % 400 == 399){
+//            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(32.0, 32.0, 32.0));
+//            for (Object tempEntity : list) {
+//                if (!(tempEntity instanceof EntityMob tempMob)) continue;
+//                if(this.rand.nextInt(4) == 0){
+//                    double mobX = tempMob.posX;
+//                    double mobY = tempMob.posY;
+//                    double mobZ = tempMob.posZ;
+//
+//                    double targetX = this.entityToAttack.posX + getRandomOffsetFromPosition(this);
+//                    double targetY;
+//                    double targetZ = this.entityToAttack.posZ + getRandomOffsetFromPosition(this);
+//                    int var18;
+//                    boolean var13 = false;
+//
+//                    if (this.worldObj.blockExists((int) targetX, (int) (targetY = MathHelper.floor_double(this.posY)), (int) targetZ)) {
+//                        boolean var17 = false;
+//                        while (!var17 && targetY > 0) {
+//                            var18 = this.worldObj.getBlockId((int) targetX, (int) (targetY - 1), (int) targetZ);
+//                            if (var18 != 0 && Block.blocksList[var18].blockMaterial.blocksMovement()) {
+//                                var17 = true;
+//                                continue;
+//                            }
+//                            tempMob.posY -= 1.0;
+//                            --targetY;
+//                        }
+//                        if (var17) {
+//                            Block blockBelow;
+//                            tempMob.setPosition(tempMob.posX, tempMob.posY, tempMob.posZ);
+//                            if (this.worldObj.getCollidingBoundingBoxes(tempMob, tempMob.boundingBox).isEmpty() && !tempMob.worldObj.isAnyLiquid(tempMob.boundingBox) && (blockBelow = Block.blocksList[tempMob.worldObj.getBlockId((int) targetX, (int) (targetY - 1), (int) targetZ)]) != null && blockBelow.canMobsSpawnOn(tempMob.worldObj, (int) targetX, (int) (targetY - 1), (int) targetZ)) {
+//                                var13 = true;
+//                            }
+//                        }
+//                    }
+//                    if (!var13) {
+//                        tempMob.setPosition(mobX, mobY, mobZ);
+//                    } else {
+//                        tempMob.setPositionAndUpdate(targetX, targetY, targetZ);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    @Unique private static double getRandomOffsetFromPosition(EntityLivingBase entity){
+//        return ((entity.rand.nextBoolean() ? -1 : 1) * entity.rand.nextInt(6)+4);
+//    }
 
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void hostileInEnd(CallbackInfoReturnable<Entity> cir, EntityPlayer target){
@@ -137,7 +286,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
         }
     }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
-    private boolean returnFalse(World instance){
+    private boolean doNotLoseAggroDuringTheDay(World instance){
         return false; // this just makes endermen not lose aggro in the day.
     }
 

@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.EntityFireCreeper;
-import net.minecraft.src.*;
+import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.EntityGhast;
+import net.minecraft.src.SpawnListEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -18,6 +18,9 @@ public class NightmareUtils {
     public static final List<Integer> chainArmor = new ArrayList<>(Arrays.asList(Item.bootsChain.itemID,Item.legsChain.itemID,Item.plateChain.itemID,Item.helmetChain.itemID));
 
     public static int getWorldProgress(World world) {
+        if(NightmareUtils.getIsEclipse()){
+            return 3;
+        }
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;
         }

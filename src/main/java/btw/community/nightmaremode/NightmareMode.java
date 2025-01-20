@@ -27,10 +27,6 @@ public class NightmareMode extends BTWAddon {
 
     public static KeyBinding nightmareZoom;
 
-    public static Boolean shouldShowDateTimer;
-    public static Boolean shouldShowRealTimer;
-    public static Boolean bloodmare;
-    public static Boolean eclipsed;
 
     public Boolean isBloodMoon;
     public Boolean isEclipse;
@@ -93,23 +89,40 @@ public class NightmareMode extends BTWAddon {
             instance.isBloodMoon = par1;
         }
     }
+    public static Boolean shouldShowDateTimer;
+    public static Boolean shouldShowRealTimer;
+    public static Boolean bloodmoonColors;
+    public static Boolean bloodmare;
+    public static Boolean configOnHud;
+    public static Boolean totalEclipse;
+    public static Boolean buffedSquids;
+    public static Boolean evolvedMobs;
 
     @Override
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("Bloodmare", "False");
-        this.registerProperty("Eclipsed", "False");
+        this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
+        this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
+        this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
+        this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
+        this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
+        this.registerProperty("TotalEclipse", "False", "Every day is a solar eclipse");
     }
+    // evolvedMobs is currently only used in a few mob classes. it doesn't account for mob variants only present during eclipses
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
-        bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
-        eclipsed = Boolean.parseBoolean(propertyValues.get("Eclipsed"));
         nightmareZoomKey = propertyValues.get("NmZoomKey");
+        bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
+        configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
+        bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
+        buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));
+        evolvedMobs = Boolean.parseBoolean(propertyValues.get("EvolvedMobs"));
+        totalEclipse = Boolean.parseBoolean(propertyValues.get("TotalEclipse"));
     }
 
     public void initKeybind(){
@@ -150,13 +163,13 @@ public class NightmareMode extends BTWAddon {
             int var8 = z + rand.nextInt(16);
             this.silverfishGenThirdStrata.generate(world, rand, var6, var7, var8);
         }
-        for(int var5 = 0; var5 < 8; ++var5) {
+        for(int var5 = 0; var5 < 9; ++var5) {
             int var6 = x + rand.nextInt(16);
             int var7 = rand.nextInt(20)+16;
             int var8 = z + rand.nextInt(16);
             this.steelOreGenExposedToAir.generate(world, rand, var6, var7, var8);
         }
-        for(int var5 = 0; var5 < 2; ++var5) {
+        for(int var5 = 0; var5 < 3; ++var5) {
             int var6 = x + rand.nextInt(16);
             int var7 = rand.nextInt(20)+16;
             int var8 = z + rand.nextInt(16);

@@ -11,5 +11,6 @@ accessible method net/minecraft/src/EntityRenderer getNightVisionBrightness (Lne
 accessible method net/minecraft/src/Item setMaxDamage (I)Lnet/minecraft/src/Item;
 accessible field net/minecraft/src/PotionEffect duration I
 accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
+accessible method net/minecraft/src/EntityWitherAttackFilter <init> ()V
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

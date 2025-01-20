@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityFireCreeper;
@@ -15,19 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
+    @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
     @Shadow private int timeSinceIgnited;
-
     @Shadow private int fuseTime;
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
     }
 
-//    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
-//    private int reduceScrollDrops(int bound){
-//        return 250;
-//    }
     @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
     private void noScrollDrops(CallbackInfo ci){
         ci.cancel();
@@ -54,7 +51,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
             if (iLootingModifier > 0) {
@@ -167,12 +164,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
         boolean isEclipse = NightmareUtils.getIsEclipse();
 
-        if(progress>0 && thisObj.rand.nextFloat() < 0.15 + (progress - 1)*0.03){
+        if((progress > 0 || areMobsEvolved) && thisObj.rand.nextFloat() < 0.15 + (progress - 1)*0.03){
             if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
                 thisObj.setCustomNameTag("Terrence");
             }
             return 1;   // set to charged if conditions met
-        } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && progress > 0){
+        } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && (progress > 0 || areMobsEvolved)){
             return 1;
         } else if(thisObj.dimension == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE){
             return 1;
@@ -232,9 +229,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
             return 3f + bloodmoonModifier;
         }
-        if(NightmareUtils.getWorldProgress(this.worldObj)>=2){
+        if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
             return 4.2f + bloodmoonModifier + eclipseModifier;
-        } else if(NightmareUtils.getWorldProgress(this.worldObj)==1){
+        } else if(NightmareUtils.getWorldProgress(this.worldObj) == 1){
             return 3.6f + bloodmoonModifier + eclipseModifier;
         }
         return 3.375f + bloodmoonModifier + eclipseModifier;

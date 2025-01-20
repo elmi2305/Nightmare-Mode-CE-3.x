@@ -1,39 +1,81 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.SpiderWebEntity;
+import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(EntitySlime.class)
-public abstract class EntitySlimeMixin {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+@Mixin(EntitySlime.class)
+public abstract class EntitySlimeMixin extends EntityLiving{
+    @Unique private static final List<Integer> foodItems = new ArrayList<>(Arrays.asList(
+            Item.cake.itemID,
+            Item.pumpkinPie.itemID,
+            Item.cookie.itemID,
+            Item.porkCooked.itemID,
+            Item.beefCooked.itemID,
+            Item.chickenCooked.itemID,
+            Item.fishCooked.itemID,
+            BTWItems.cookedCheval.itemID,
+            BTWItems.cookedKebab.itemID,
+            BTWItems.cookedMutton.itemID,
+            BTWItems.cookedMysteryMeat.itemID,
+            BTWItems.cookedScrambledEggs.itemID,
+            BTWItems.cookedWolfChop.itemID,
+            BTWItems.donut.itemID,
+            BTWItems.cookedCarrot.itemID,
+            BTWItems.chocolate.itemID,
+            Item.bakedPotato.itemID,
+            BTWItems.porkDinner.itemID,
+            BTWItems.steakDinner.itemID,
+            BTWItems.wolfDinner.itemID,
+            BTWItems.hamAndEggs.itemID,
+            BTWItems.chowder.itemID,
+            BTWItems.heartyStew.itemID,
+            BTWItems.chickenSoup.itemID,
+            Item.goldenCarrot.itemID,
+            Item.bread.itemID,
+            BTWItems.tastySandwich.itemID,
+            BTWItems.steakAndPotatoes.itemID
+    ));
+
+
+    public EntitySlimeMixin(World par1World) {
+        super(par1World);
+    }
+
+    @Shadow public abstract void setSlimeSize(int iSize);
+    @Shadow public abstract int getSlimeSize();
     @Unique private int timeSpentTargeting = 60;
     @Unique private float streakModifier = 1;
     @Unique private float splitCounter = 0;
 
-//    @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
-//    private int increaseScrollRates(int bound){
-//        return 150;
-//    }
     @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
     private void noScrollDrops(CallbackInfo ci){
         ci.cancel();
     }
+
     @Inject(method = "updateEntityActionState",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntitySlime;faceEntity(Lnet/minecraft/src/Entity;FF)V",
                     shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void checkIfShouldShootPlayer(CallbackInfo ci, EntityPlayer targetPlayer){
-        timeSpentTargeting++;
+        this.timeSpentTargeting++;
         EntitySlime thisObj = (EntitySlime)(Object)this;
         if (thisObj.ridingEntity == null) {
-            if(timeSpentTargeting >= 110){
+            if(this.timeSpentTargeting >= 110){
                 if (!thisObj.worldObj.isRemote && thisObj.getSlimeSize()>=2) {
                     if(thisObj instanceof EntityMagmaCube && thisObj.dimension != 0){
                         EntityLivingBase target = thisObj.getAITarget();
@@ -51,7 +93,7 @@ public abstract class EntitySlimeMixin {
                     } else {
                         thisObj.worldObj.spawnEntityInWorld(new SpiderWebEntity(thisObj.worldObj, thisObj, targetPlayer));
                     }
-                    timeSpentTargeting = thisObj.rand.nextInt(40);
+                    this.timeSpentTargeting = thisObj.rand.nextInt(40);
                 }
             }
         }
@@ -68,11 +110,17 @@ public abstract class EntitySlimeMixin {
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
         EntitySlime thisObj = (EntitySlime)(Object)this;
+        int maxSplits = NightmareUtils.getIsEclipse() ? 1 : 3;
+        int baseChance = NightmareUtils.getIsEclipse() ? 4 : 2;
 
-        if (thisObj.getSlimeSize() >= 2 && this.splitCounter < 3){
-            if(thisObj.rand.nextFloat() < 0.5 / this.streakModifier){
+        if (thisObj.getSlimeSize() >= 2 && this.splitCounter < maxSplits){
+            if(thisObj.rand.nextInt((int) (baseChance * this.streakModifier)) == 0){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
-                baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize()/2)); // makes the newly spawned slime half the size of the current one
+                if (NightmareUtils.getIsEclipse()) {
+                    baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize() - 1)); // makes the newly spawned slime half the size of the current one
+                } else{
+                    baby.getDataWatcher().updateObject(16, (byte)(Math.floor((double) thisObj.getSlimeSize() / 2))); // makes the newly spawned slime half the size of the current one
+                }
                 baby.setHealth(baby.getSlimeSize());
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
@@ -81,4 +129,24 @@ public abstract class EntitySlimeMixin {
             }
         }
     }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
+        if(NightmareUtils.getIsEclipse()){
+            this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
+        }
+    }
+
+    @Override
+    protected void dropFewItems(boolean par1, int par2) {
+        if(NightmareUtils.getIsEclipse() && par1){
+            for(int i = 0; i < this.getSlimeSize() * 2; i++){
+                if(this.rand.nextInt(12) == 0){
+                    this.dropItem(foodItems.get(this.rand.nextInt(foodItems.size())), 1);
+                }
+            }
+        }
+        super.dropFewItems(par1, par2);
+    }
+
 }

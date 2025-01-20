@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,6 +41,36 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     public void incrementInGloomCounter(CallbackInfo info) {
         if (this.getGloomLevel() > 0) {
             this.inGloomCounter += 5; // gloom goes up 6x faster
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void manageChickenRider(CallbackInfo ci){
+        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsEclipse()){
+            if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+                this.ridingEntity.motionY = 0.12;
+            }
+            float strafe = 0.0f;
+            float forward = 0.0f;
+            float speed = 0.018f;
+            this.ridingEntity.rotationYaw = this.rotationYaw;
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+                strafe -= 1.0f;
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+                strafe += 1.0f;
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+                forward += 1.0f;
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+                forward -= 1.0f;
+            }
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+                speed = 0.023f;
+            }
+            this.ridingEntity.moveFlying(strafe, forward, speed);
         }
     }
 
@@ -156,7 +187,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         if (NightmareUtils.getWorldProgress(this.worldObj) != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
-            text2.setColor(getDeathColors().get(this.rand.nextInt(getDeathColors().size())));
+            text2.setColor(EnumChatFormatting.RED);
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
     }
@@ -177,15 +208,13 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         messageList.add("<???> Did you think you were special? You're not even memorable.");
         messageList.add("<???> Such potential... wasted on someone so utterly incompetent.");
         messageList.add("<???> Your light fades, but I remain eternal.");
+        messageList.add("<???> Pathetic attempt. Try again.");
+        messageList.add("<???> Is that the best you can do?");
+        messageList.add("<???> Not even a worthy sacrifice.");
+        messageList.add("<???> Try an easier difficulty?");
+        messageList.add("<???> Another failure. How delightful to watch.");
+        messageList.add("<???> Was that supposed to impress me?");
         return messageList;
-    }
-
-    @Unique
-    private static @NotNull List<EnumChatFormatting> getDeathColors() {
-        List<EnumChatFormatting> colorList = new ArrayList<>();
-        colorList.add(EnumChatFormatting.RED);
-        colorList.add(EnumChatFormatting.BLUE);
-        return colorList;
     }
 
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))

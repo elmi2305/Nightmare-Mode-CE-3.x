@@ -88,20 +88,20 @@ public abstract class EntityWitchMixin extends EntityMob {
                 if (NightmareUtils.getIsBloodMoon()) {
                     EntityCreeper tempMinion = new EntityCreeper(this.worldObj);
                     tempMinion.copyLocationAndAnglesFrom(witch);
-                    tempMinion.setAttackTarget(player);
+                    tempMinion.entityToAttack = player;
                     this.worldObj.spawnEntityInWorld(tempMinion);
                     break;
                 }
                 if (!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || this.dimension == 1) {
                     EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
                     tempMinion.copyLocationAndAnglesFrom(witch);
-                    tempMinion.setAttackTarget(player);
+                    tempMinion.entityToAttack = player;
                     this.worldObj.spawnEntityInWorld(tempMinion);
                     // silverfish pre nether and in the end
                 } else {
                     EntitySpider tempMinion = new EntitySpider(this.worldObj);
+                    tempMinion.entityToAttack = player;
                     tempMinion.copyLocationAndAnglesFrom(witch);
-                    tempMinion.setAttackTarget(player);
                     this.worldObj.spawnEntityInWorld(tempMinion);
                     break;
                 }
@@ -113,7 +113,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(9)+4;
             // 4 - 12
             if (iLootingModifier > 0) {

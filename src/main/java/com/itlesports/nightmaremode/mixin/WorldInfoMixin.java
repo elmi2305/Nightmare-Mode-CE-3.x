@@ -8,16 +8,19 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // SETS THE TIME TO NIGHT UPON WORLD CREATION
 
 @Mixin(WorldInfo.class)
-public abstract class WorldInfoMixin {
+public abstract class WorldInfoMixin implements WorldInfoAccessor{
     @Shadow private long worldTime;
     @Shadow private GameRules theGameRules;
     @Shadow private long totalTime;
     @Shadow public abstract Difficulty getDifficulty();
+    @Shadow public boolean allowCommands;
 
     @Unique private boolean botherChecking = true;
 
@@ -32,5 +35,25 @@ public abstract class WorldInfoMixin {
                 botherChecking = false;
             } // 1:30 grace period
         }
+    }
+
+    @ModifyArg(method = "updateTagCompound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NBTTagCompound;setBoolean(Ljava/lang/String;Z)V",ordinal = 4),index = 0)
+    private String javaCompatibility(String string){
+        return "jvmArgsOverride";
+    }
+    @Inject(method = "<init>(Lnet/minecraft/src/NBTTagCompound;)V", at = @At("TAIL"))
+    private void addCompatibility(NBTTagCompound par1NBTTagCompound, CallbackInfo ci){
+        if (par1NBTTagCompound.hasKey("jvmArgsOverride")) {
+            this.setJavaCompatibilityLevel(par1NBTTagCompound.getBoolean("jvmArgsOverride"));
+        }
+    }
+    
+    @ModifyArg(method = "updateTagCompound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NBTTagCompound;setInteger(Ljava/lang/String;I)V",ordinal = 1),index = 0)
+    private String implementDeathCounter(String string){
+        return "DeathCount";
+    }
+    @Inject(method = "<init>(Lnet/minecraft/src/NBTTagCompound;)V", at = @At("TAIL"))
+    private void countDeaths(NBTTagCompound par1NBTTagCompound, CallbackInfo ci){
+        this.setDeathCounter(EnumGameType.getByID(par1NBTTagCompound.getInteger("DeathCount")));
     }
 }

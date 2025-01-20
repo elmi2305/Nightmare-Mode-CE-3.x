@@ -19,6 +19,8 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Shadow protected abstract void entityInit();
 
+    @Shadow protected int timeToNextWeb;
+
     public EntitySpiderMixin(World par1World) {
         super(par1World);
     }
@@ -41,7 +43,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
             if (iLootingModifier > 0) {
@@ -162,6 +164,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
             if (var11 != null) {
                 this.worldObj.spawnEntityInWorld(var11);
+                this.timeToNextWeb = (this.rand.nextInt(3) + 1)* 100;
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
@@ -19,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
+    @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
+
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
@@ -52,7 +55,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
             switch(this.getSkeletonType()){
@@ -143,9 +146,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "preInitCreature", at = @At("TAIL"))
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
-            if(NightmareUtils.getIsBloodMoon() && this.rand.nextInt(16) == 0 && this.getSkeletonType() == 0){
+            if((NightmareUtils.getIsBloodMoon() || areMobsEvolved) && this.rand.nextInt(16) == 0 && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
-            } else if (this.rand.nextInt(10) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() && this.getSkeletonType() == 0){
+            } else if (this.rand.nextInt(10) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -170,10 +173,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void manageJumpShot(CallbackInfo ci){
         if (this.worldObj != null && this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
-            jumpCooldown ++;
-            if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && jumpCooldown >= 60){
+            this.jumpCooldown ++;
+            if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && this.jumpCooldown >= 60){
                 this.motionY = 0.45;
-                jumpCooldown = 0;
+                this.jumpCooldown = 0;
             }
         }
     }
@@ -210,8 +213,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
 
             if (!isEclipse) {
-                // for non solar eclipse. randomly picks which variant to spawn. chances are different from each
-                if (progress >= 2 && rand.nextFloat() < (0.13 + ((progress - 2) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier) {
+                // for non-solar eclipse. randomly picks which variant to spawn. chances are different from each
+                if ((progress >= 2 || areMobsEvolved) && rand.nextFloat() < (0.13 + (Math.abs((progress - 2)) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier) {
                     // 13% -> 20%
                     // 19.5% -> 30%
                     this.setSkeletonType(4); // ender skeleton
@@ -225,7 +228,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
                     this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
 
-                } else if (progress >= 1 && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + ((progress - 1) * 0.02)) * bloodMoonModifier && this.dimension != -1) {
+                } else if ((progress >= 1 || areMobsEvolved) && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + (Math.abs((progress - 1)) * 0.02)) * bloodMoonModifier && this.dimension != -1) {
                     // 9% -> 11% -> 13%
                     // 13.5% -> 16.5% -> 19.5%
                     this.setSkeletonType(3); // fire skeleton
@@ -236,7 +239,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     this.setFire(10000);
                     this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
 
-                } else if (progress <= 3 && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
+                } else if ((progress <= 3 || areMobsEvolved) && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
                     // 2% -> 4% -> 6% -> 8%
                     // 3% -> 6% -> 9% -> 12%
                     this.setSkeletonType(2); // ice skeleton
@@ -285,6 +288,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
         }
         // overall chances to be a variant (non eclipse): 2% -> 13% -> 30% -> 41%
+
+        // skeleton types:
+        // 0: regular
+        // 1: wither skelly
+        // 2: ice skelly
+        // 3: fire
+        // 4: ender
     }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
@@ -299,7 +309,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "attackEntityWithRangedAttack",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void deleteArrowEntity(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
+    private void killArrowEntityForEnderSkeleton(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
             if(this.getSkeletonType()==3){arrow.setDead();}
         }
@@ -308,7 +318,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private float reduceArrowSpread(float constant){
         if (this.worldObj != null) {
             return 8.0f - NightmareUtils.getWorldProgress(this.worldObj)*2;
-        } else return 12.0f;
+        }
+        return 12.0f;
         // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
@@ -318,7 +329,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             this.isImmuneToFire = true;
         }
         if (this.getSkeletonType() == 1 && this.dimension == 1 && damageSource == DamageSource.fall){
-            cir.setReturnValue(false);
+            cir.setReturnValue(false); // refers to wither skeletons spawned by the ender dragon
         }
     }
 
@@ -396,17 +407,17 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 case 1 -> 50 + rand.nextInt(5);
                 case 2 -> 45 + rand.nextInt(10);
                 case 3 -> 40 + rand.nextInt(15);
-                default -> throw new IllegalStateException("Unexpected value: " + NightmareUtils.getWorldProgress(this.worldObj));
+                default -> constant;
             };
         }
-        return 60;
+        return constant;
     }
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             return 18.0f + NightmareUtils.getWorldProgress(this.worldObj)*3;
         }
-        return 15.0f;
+        return constant;
         // 18 -> 21 -> 24 -> 27
     }
 

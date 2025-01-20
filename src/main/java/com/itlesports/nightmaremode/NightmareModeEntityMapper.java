@@ -8,8 +8,7 @@ public class NightmareModeEntityMapper {
     public static void createModEntityMappings() {
         EntityList.addMapping(EntityFireCreeper.class, "NightmareFireCreeper", 2301, 15770182, 16643820);
         EntityList.addMapping(EntityShadowZombie.class, "NightmareShadowZombie", 2302, 0, 0);
-//        EntityList.addMapping(NightmareFlameEntity.class, "NightmareFlame", 2303, 100000, 100000);
-//        EntityList.addMapping(SocksMobsEntityGoatPossessed.class, "NightmareHellGoat", 2302, 0, 7208964);
-//        EntityList.addMapping(NightmareEntity.class,"NightmareEntity",2304,0,0);
+        EntityList.addMapping(NightmareVillager.class, "NightmareVillager", 2303, 0, 16711680);
+        EntityList.addMapping(EntityBloodWither.class, "NightmareBloodWither", 2304, 16711680, 11011333);
     }
 }

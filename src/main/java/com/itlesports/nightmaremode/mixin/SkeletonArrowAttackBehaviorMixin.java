@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +29,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "continueExecuting", at = @At("HEAD"))
     private void manageRunningAway(CallbackInfoReturnable<Boolean> cir){
-        if(this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType())){
+        if(NightmareUtils.getIsEclipse() &&this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType())){
             double distToPlayer = this.entityOwner.getDistanceSqToEntity(player);
             int range = this.isExecuting ? 144 : 36;
 

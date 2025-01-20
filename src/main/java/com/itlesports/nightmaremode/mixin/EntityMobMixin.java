@@ -34,6 +34,31 @@ public class EntityMobMixin extends EntityCreature{
             BTWItems.woolLeggings.itemID,
             Item.swordDiamond.itemID
     ));
+//
+//    @Unique
+//    private static final List<Integer> pigmanItemsToAvoidDropping = new ArrayList<>(Arrays.asList(
+//            Item.swordWood.itemID,
+//            Item.helmetLeather.itemID,
+//            Item.plateLeather.itemID,
+//            Item.legsLeather.itemID,
+//            Item.bootsLeather.itemID,
+//            BTWItems.boneClub.itemID,
+//            Item.axeGold.itemID,
+//            BTWItems.woolBoots.itemID,
+//            BTWItems.woolChest.itemID,
+//            BTWItems.woolHelmet.itemID,
+//            BTWItems.woolLeggings.itemID
+//    ));
+
+    @Unique private static boolean shouldDropItems(EntityCreature mob, ItemStack stack){
+        if(stack == null){
+            return false;
+        }
+        if(mob instanceof EntityPigZombie){
+            return itemsToAvoidDropping.contains(stack.itemID) || stack.itemID == Item.swordDiamond.itemID || stack.itemID == BTWItems.steelSword.itemID;
+        }
+        return itemsToAvoidDropping.contains(stack.itemID);
+    }
 
 
     public EntityMobMixin(World par1World) {
@@ -55,7 +80,7 @@ public class EntityMobMixin extends EntityCreature{
     protected void dropEquipment(boolean par1, int par2) {
         for(int var3 = 0; var3 < this.getLastActiveItems().length; ++var3) {
             ItemStack var4 = this.getCurrentItemOrArmor(var3);
-            if(var4 != null && itemsToAvoidDropping.contains(var4.itemID)) continue;
+            if(var4 != null && !shouldDropItems(this,var4)) continue;
 
             boolean var5 = this.equipmentDropChances[var3] > 1.0F;
             if (var4 != null && (par1 || var5) && this.rand.nextFloat() - (float)par2 * 0.01F < this.equipmentDropChances[var3]) {

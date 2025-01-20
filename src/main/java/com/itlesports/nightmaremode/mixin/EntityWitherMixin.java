@@ -4,7 +4,9 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.EntityFireCreeper;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,11 +36,10 @@ public abstract class EntityWitherMixin extends EntityMob {
     private void increaseXPYield(World par1World, CallbackInfo ci){
         this.experienceValue = 250;
         this.hasRevived = false;
-        this.noClip = true;
         this.isImmuneToFire = true;
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
-        this.witherAttackTimer = 500;
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, false, attackEntitySelector));
+        this.witherAttackTimer = 200;
+        this.targetTasks.addTask(6, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, false, attackEntitySelector));
     }
     @Inject(method = "applyEntityAttributes", at = @At(value = "TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -58,31 +59,34 @@ public abstract class EntityWitherMixin extends EntityMob {
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void destroyBlocksAbove(CallbackInfo ci){
         EntityLivingBase target = this.getAttackTarget();
-        if(target != null && this.posY - target.posY < 4){
-            for(int i = -1; i < 1; i++){
-                for(int j = -1; j < 1; j++){
-                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+3,(int)this.posZ + j);
-                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+4,(int)this.posZ + j);
-                    this.destroyBlock(this.worldObj,(int)this.posX + i,(int)this.posY+5,(int)this.posZ + j);
+        if(target != null && this.posY - target.posY < 4) {
+            for (int i = -1; i < 1; i++) {
+                for (int j = -1; j < 1; j++) {
+                    this.destroyBlock(this.worldObj, (int) this.posX + i, (int) this.posY + 3, (int) this.posZ + j);
+                    this.destroyBlock(this.worldObj, (int) this.posX + i, (int) this.posY + 4, (int) this.posZ + j);
+                    this.destroyBlock(this.worldObj, (int) this.posX + i, (int) this.posY + 5, (int) this.posZ + j);
                 }
             }
         }
 
-        if(this.witherAttackTimer % 40 == 0){
+        if(this.ticksExisted % 40 == 0){
             onGolemNearby(this);
+            ensureTargettingOnPlayer();
         }
-//        else if(this.witherAttackTimer % 100 == 0){
-//            onNoSkyLight(this);
-//        }
-//        else if(this.witherAttackTimer % 60 == 0){
-//            onCantSeePlayer(this);
-//        }
+    }
 
+
+    @Unique private void ensureTargettingOnPlayer(){
+        EntityPlayer player = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,20);
+        if(player != null){
+            this.entityLivingToAttack = player;
+            this.setAttackTarget(player);
+        }
     }
 
     @Inject(method = "updateAITasks", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityWither;field_82222_j:I",ordinal = 0))
     private void manageWitherBlockBreaking(CallbackInfo ci){
-        this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0.5d,0.5d));
+        this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0,0.5d));
     }
 
     @Unique
@@ -99,7 +103,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                 for (int var12 = var4; var12 <= var7; ++var12) {
                     int var13 = this.worldObj.getBlockId(var10, var11, var12);
                     if (var13 == 0) continue;
-                    if (var13 != Block.obsidian.blockID && var13 != Block.whiteStone.blockID && var13 != Block.bedrock.blockID && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
+                    if (var13 != Block.obsidian.blockID && var13 != Block.whiteStone.blockID && var13 != Block.bedrock.blockID  && var13 != NMBlocks.cryingObsidian.blockID  && var13 != NMBlocks.specialObsidian.blockID && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
                         var9 = this.worldObj.setBlockToAir(var10, var11, var12) || var9;
                     }
                 }
@@ -113,17 +117,25 @@ public abstract class EntityWitherMixin extends EntityMob {
         }
     }
 
+    @Redirect(method = "updateAITasks", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;destroyBlock(IIIZ)Z"))
+    private boolean avoidDestroyingSpecialNightmareBlocks(World world, int x, int y, int z, boolean par3){
+        if(world.getBlockId(x,y,z) == NMBlocks.specialObsidian.blockID || world.getBlockId(x,y,z) == NMBlocks.cryingObsidian.blockID){
+            return false;
+        }
+        return world.destroyBlock(x,y,z,par3);
+    }
+
 
     @Unique private static void onGolemNearby(EntityMob wither){
         List list = wither.worldObj.getEntitiesWithinAABBExcludingEntity(wither, wither.boundingBox.expand(6, 6, 6));
         for (Object tempEntity : list) {
             if (!(tempEntity instanceof EntityIronGolem golem)) continue;
+            if (!(golem.getAttackTarget() instanceof EntityPlayer)) continue;
             golem.attackEntityFrom(DamageSource.magic,100f);
             wither.worldObj.newExplosion(wither,golem.posX,golem.posY,golem.posZ,2f,false,false);
             wither.heal(1f);
         }
     }
-
 
     @Unique private void destroyBlock(World world,int x, int y, int z){
         if(world.getBlockId(x,y,z) != 0 && world.getBlockId(x,y,z) != Block.bedrock.blockID){
@@ -156,33 +168,37 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void manageAnger(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        this.witherAttackTimer = (int) Math.min(this.witherAttackTimer + par2 * 2, this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000);
+        if (!(((EntityWither)(Object)this) instanceof EntityBloodWither)) {
+            this.witherAttackTimer = (int) Math.min(this.witherAttackTimer + par2 * 2, this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000);
+        }
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void attackTimer(CallbackInfo ci){
-        if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 50 == 0){
-            EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
-            if (tempTarget != null) {
-                this.entityToAttack = tempTarget;
+        if (!(((EntityWither)(Object)this) instanceof EntityBloodWither)) {
+            if(!(this.getAttackTarget() instanceof EntityPlayer) && this.worldObj.getWorldTime() % 50 == 0){
+                EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
+                if (tempTarget != null) {
+                    this.entityToAttack = tempTarget;
+                }
             }
-        }
 
-        if (this.witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000)) {
-            this.witherAttackTimer += this.rand.nextInt(5)+1;
-            if(this.hasRevived){this.witherAttackTimer += 3;}
-        }
-        if(this.entityToAttack instanceof EntityPlayer player && this.hasRevived){
-            if(this.witherAttackTimer % 120 == 10){
-                int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
-                int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
-                int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
-                player.setPositionAndUpdate(xValue,yValue,zValue);
-                this.entityToAttack = player; // reassures the wither aggro in case it is lost
-                player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
+            if (this.witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000)) {
+                this.witherAttackTimer += this.rand.nextInt(5)+1;
+                if(this.hasRevived){this.witherAttackTimer += 3;}
             }
-            if (this.witherAttackTimer % 250 == 20){
-                player.setFire(80);
+            if(this.entityToAttack instanceof EntityPlayer player && this.hasRevived){
+                if(this.witherAttackTimer % 120 == 10){
+                    int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
+                    int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
+                    int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
+                    player.setPositionAndUpdate(xValue,yValue,zValue);
+                    this.entityToAttack = player; // reassures the wither aggro in case it is lost
+                    player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
+                }
+                if (this.witherAttackTimer % 250 == 20){
+                    player.setFire(80);
+                }
             }
         }
     }
@@ -203,12 +219,14 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             this.setHealth(300);
-            ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("A God does not fear death.");
-            text2.setColor(EnumChatFormatting.BLACK);
-            this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
+            if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null) {
+                ChatMessageComponent text2 = new ChatMessageComponent();
+                text2.addText("A God does not fear death.");
+                text2.setColor(EnumChatFormatting.BLACK);
+                this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
+            }
             this.hasRevived = true;
         }
     }
@@ -223,103 +241,101 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
 
     @Inject(method = "updateAITasks", at = @At("HEAD"))
-    private void manageMinionSpawning(CallbackInfo ci){
-        if (this.witherAttackTimer >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 1500 : 4000)){
-            if (this.witherSummonTimer == 0){
-                this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY),MathHelper.floor_double(this.posZ), 0);
-                this.playSound("mob.ghast.scream",0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
-            }
-            this.witherSummonTimer++;
-            if (this.witherSummonTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 100) && witherSummonTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 140)){
-                this.motionX = this.motionZ = 0;
-            }
-            if(this.witherSummonTimer == (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 40 : 100)){
-                if (!this.hasRevived) {
-                    for(int i = 0; i<3; i++) {
-                        int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
-                        int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
-                        int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
+    private void manageMinionSpawning(CallbackInfo ci) {
+        if (!(((EntityWither)(Object)this) instanceof EntityBloodWither)) {
+            boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            int spawnDelay = isHostile ? 1500 : 4000;
+            int summonStart = isHostile ? 0 : 100;
+            int summonEnd = isHostile ? 40 : 140;
+            int summonComplete = isHostile ? 40 : 100;
 
-                        if(this.posY + 5 < yValue){
-                            yValue = (int) (this.posY + 2);
-                            xValue = (int) this.posX;
-                            zValue = (int) this.posZ;
-                        }
-
-                        EntitySkeleton tempMinion = new EntitySkeleton(this.worldObj);
-                        tempMinion.setLocationAndAngles(xValue, yValue, zValue, 90, 90);
-                        tempMinion.setSkeletonType(1);
-                        if (this.rand.nextFloat() < 0.3) {
-                            tempMinion.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
-                        }
-                        if (this.getAttackTarget() != null) {
-                            tempMinion.entityToAttack = this.getAttackTarget();
-                        }
-                        this.worldObj.spawnEntityInWorld(tempMinion);
-                    }
-                } else if(this.rand.nextFloat()<0.7f){
-                    for(int i = 0; i<3; i++) {
-                        int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
-                        int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
-                        int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
-
-                        if(this.posY + 5 < yValue){
-                            yValue = (int) (this.posY + 2);
-                            xValue = (int) this.posX;
-                            zValue = (int) this.posZ;
-                        }
-
-                        EntityFireCreeper tempMinion = new EntityFireCreeper(this.worldObj);
-                        tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
-                        if (this.getAttackTarget() != null) {
-                            tempMinion.entityToAttack = this.getAttackTarget();
-                        }
-                        this.worldObj.spawnEntityInWorld(tempMinion);
-                    }
-                } else if(this.getHealth()<100 && this.rand.nextFloat()<0.5f){
-
-                    for(int i = 0; i<3; i++) {
-                        int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
-                        int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
-                        int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
-
-                        if(this.posY + 5 < yValue){
-                            yValue = (int) (this.posY + 2);
-                            xValue = (int) this.posX;
-                            zValue = (int) this.posZ;
-                        }
-
-                        EntityBlaze tempMinion = new EntityBlaze(this.worldObj);
-                        tempMinion.setLocationAndAngles(xValue, yValue + this.rand.nextInt(5), zValue, 50, 50);
-                        if (this.getAttackTarget() != null) {
-                            tempMinion.entityToAttack = this.getAttackTarget();
-                        }
-                        this.worldObj.spawnEntityInWorld(tempMinion);
-                    }
+            if (this.witherAttackTimer >= spawnDelay) {
+                if (this.witherSummonTimer == 0) {
+                    this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
+                    this.playSound("mob.ghast.scream", 0.6F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
                 }
-                else{
-                    for(int i = 0; i<3; i++) {
-                        int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
-                        int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
-                        int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
 
-                        if(this.posY + 5 < yValue){
-                            yValue = (int) (this.posY + 2);
-                            xValue = (int) this.posX;
-                            zValue = (int) this.posZ;
-                        }
+                this.witherSummonTimer++;
 
-                        DireWolfEntity tempMinion = new DireWolfEntity(this.worldObj);
-                        tempMinion.setLocationAndAngles(xValue, yValue, zValue, 50, 50);
-                        if (this.getAttackTarget() != null) {
-                            tempMinion.entityToAttack = this.getAttackTarget();
-                        }
-                        this.worldObj.spawnEntityInWorld(tempMinion);
-                    }
+                if (this.witherSummonTimer > summonStart && this.witherSummonTimer < summonEnd) {
+                    this.motionX = this.motionZ = 0;
                 }
-                this.witherSummonTimer = 0;
-                this.witherAttackTimer = 0;
+
+                if (this.witherSummonTimer == summonComplete) {
+                    spawnMinions();
+                    this.witherSummonTimer = 0;
+                    this.witherAttackTimer = 0;
+                }
             }
+        }
+    }
+
+
+    @Unique
+    private void spawnMinions() {
+        for (int i = 0; i < 3; i++) {
+            int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
+            int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
+            int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
+
+            if (this.posY + 5 < yValue) {
+                yValue = (int) (this.posY + 2);
+                xValue = (int) this.posX;
+                zValue = (int) this.posZ;
+            }
+
+            if (!this.hasRevived) {
+                spawnSkeleton(xValue, yValue, zValue);
+            } else if (this.rand.nextFloat() < 0.7f) {
+                spawnFireCreeper(xValue, yValue, zValue);
+            } else if (this.getHealth() < 100 && this.rand.nextBoolean()) {
+                spawnBlaze(xValue, yValue, zValue);
+            } else {
+                spawnDireWolf(xValue, yValue, zValue);
+            }
+        }
+    }
+
+    @Unique
+    private void spawnSkeleton(int x, int y, int z) {
+        EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
+        skeleton.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
+        skeleton.setSkeletonType(1);
+        if (this.rand.nextFloat() < 0.3) {
+            skeleton.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
+        }
+        setMinionTarget(skeleton);
+        this.worldObj.spawnEntityInWorld(skeleton);
+    }
+
+    @Unique
+    private void spawnFireCreeper(int x, int y, int z) {
+        EntityFireCreeper fireCreeper = new EntityFireCreeper(this.worldObj);
+        fireCreeper.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
+        setMinionTarget(fireCreeper);
+        this.worldObj.spawnEntityInWorld(fireCreeper);
+    }
+
+    @Unique
+    private void spawnBlaze(int x, int y, int z) {
+        EntityBlaze blaze = new EntityBlaze(this.worldObj);
+        blaze.setLocationAndAngles(x, y + this.rand.nextInt(5), z, this.rotationYaw, this.rotationPitch);
+        setMinionTarget(blaze);
+        this.worldObj.spawnEntityInWorld(blaze);
+    }
+
+    @Unique
+    private void spawnDireWolf(int x, int y, int z) {
+        DireWolfEntity direWolf = new DireWolfEntity(this.worldObj);
+        direWolf.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
+        setMinionTarget(direWolf);
+        this.worldObj.spawnEntityInWorld(direWolf);
+    }
+
+    @Unique
+    private void setMinionTarget(EntityCreature minion) {
+        if (this.getAttackTarget() != null) {
+            minion.entityToAttack = this.getAttackTarget();
         }
     }
 }

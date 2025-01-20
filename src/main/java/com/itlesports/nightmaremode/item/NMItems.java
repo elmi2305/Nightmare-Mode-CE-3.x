@@ -1,10 +1,11 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.item.items.FoodItem;
+import btw.item.items.NetherStarItem;
+import btw.item.items.RottenFleshItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EnumToolMaterial;
-import net.minecraft.src.Item;
+import net.minecraft.src.*;
 
 public class NMItems {
     public static ItemRPG rpg;
@@ -26,6 +27,29 @@ public class NMItems {
     public static ItemBloodArmor bloodBoots;
     public static Item bloodIngot;
 
+    public static Item darksunFragment;
+    public static Item magicFeather;
+    public static ItemBucketMilk bloodMilk;
+    public static Item creeperChop;
+    public static Item voidSack;
+    public static RottenFleshItem charredFlesh;
+    public static Item spiderFangs;
+    public static Item fireRod;
+    public static Item waterRod;
+    public static Item sulfur;
+    public static Item creeperTear;
+    public static Item silverLump;
+    public static Item witheredBone;
+    public static Item voidMembrane;
+    public static RottenFleshItem decayedFlesh;
+    public static Item ghastTentacle;
+    public static Item elementalRod;
+    public static Item greg;
+    public static NetherStarItem starOfTheBloodGod;
+    public static FoodItem calamari;
+    public static FoodItem calamariRoast;
+    public static FoodItem friedCalamari;
+
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
     static {
@@ -36,7 +60,6 @@ public class NMItems {
         witchLocator = (ItemWitchLocator)(new ItemWitchLocator(2314)).setTextureName("nmWitchDust");
 
         bloodOrb = (ItemBloodOrb)(new ItemBloodOrb(2315)).setTextureName("nmBloodOrb");
-        bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");
         bloodPickaxe = (ItemBloodPickaxe)(new ItemBloodPickaxe(2316, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodPickaxe");
         bloodAxe = (ItemBloodAxe)(new ItemBloodAxe(2317, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodAxe");
         bloodShovel = (ItemBloodShovel)(new ItemBloodShovel(2318, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodShovel");
@@ -47,5 +70,31 @@ public class NMItems {
         bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,1,6, BLOOD_MOON_DURABILITY, 0.1d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate");
         bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,5, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
         bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,2, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
+        bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");
+
+        darksunFragment = (new Item(2326)).setTextureName("nmDarksunFragment").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDarksunFragment");
+
+        magicFeather = (new Item(2327)).setTextureName("nmMagicFeather").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmMagicFeather");
+        bloodMilk = (ItemBucketMilk) (new ItemBucketMilk(2328)).setTextureName("nmBloodMilk").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodMilk");
+        creeperChop = (new Item(2329)).setTextureName("nmCreeperChop").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmCreeperChop");
+        voidSack = (new Item(2330)).setTextureName("nmVoidSack").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmVoidSack");
+        voidMembrane = (new Item(2331)).setTextureName("nmVoidMembrane").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmVoidMembrane");
+        charredFlesh = (RottenFleshItem) (new RottenFleshItem(2332)).setMaxStackSize(64).setTextureName("nmCharredFlesh").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmCharredFlesh");
+        spiderFangs = (new Item(2333)).setTextureName("nmSpiderFangs").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmSpiderFangs");
+        fireRod = (new Item(2334)).setTextureName("nmHellFireRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmHellFireRod");
+        waterRod = (new Item(2335)).setTextureName("nmWaterRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmWaterRod");
+        sulfur = (new Item(2336)).setTextureName("nmSulfur").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmSulfur");
+        creeperTear = (new Item(2337)).setTextureName("nmCreeperTear").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmCreeperTear");
+        silverLump = (new Item(2338)).setTextureName("nmSilverLump").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmSilverLump");
+        witheredBone = (new Item(2339)).setTextureName("nmWitheredBone").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmWitheredBone");
+        decayedFlesh = (RottenFleshItem) (new RottenFleshItem(2340)).setMaxStackSize(64).setTextureName("nmDecayedFlesh").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDecayedFlesh");
+        ghastTentacle = (new Item(2341)).setTextureName("nmGhastTentacle").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGhastTentacle");
+        elementalRod = (new Item(2342)).setTextureName("nmElementalRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmElementalRod");
+        greg = (new Item(2343)).setTextureName("nmGreg").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGreg");
+        starOfTheBloodGod = (NetherStarItem) new NetherStarItem(2344).setMaxStackSize(1).setTextureName("nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
+
+        calamari = (FoodItem) new FoodItem(2345, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nmCalamari").setCreativeTab(CreativeTabs.tabFood);
+        calamariRoast = (FoodItem) new FoodItem(2346, 8, 0.25f, true, "nmCalamariRoast",true).setTextureName("nmCalamariRoast").setCreativeTab(CreativeTabs.tabFood);
+        friedCalamari = (FoodItem) new FoodItem(2347, 12, 0.5f, true,"nmFriedCalamari").setTextureName("nmFriedCalamari").setCreativeTab(CreativeTabs.tabFood);
     }
 }

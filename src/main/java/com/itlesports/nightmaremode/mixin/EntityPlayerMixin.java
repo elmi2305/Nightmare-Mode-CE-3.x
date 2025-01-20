@@ -4,6 +4,7 @@ import btw.BTWMod;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -38,6 +39,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
         if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "isImmuneToHeadCrabDamage", at = @At("HEAD"),cancellable = true)
+    private void notImmuneToSquidsEclipse(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsEclipse()){
             cir.setReturnValue(false);
         }
     }
@@ -89,6 +97,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 //        }
 //    }
 
+    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
+    private void punishPlayerForHittingChicken(Entity par1Entity, CallbackInfo ci){
+        if(NightmareUtils.getIsEclipse() && par1Entity instanceof EntityChicken){
+            Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
+            this.worldObj.addWeatherEffect(lightningbolt);
+        }
+    }
     @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
         int j = rand.nextInt(4);
         for (int a = 0; a < 3; a++) {
@@ -217,12 +232,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
         if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(5.0, 5.0, 5.0));
+            double range = NightmareUtils.getIsEclipse() ? 3 : 5;
+
+            List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(range, range, range));
             for (Object tempEntity : list) {
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if (tempAnimal instanceof EntityWolf) continue;
+                if (NightmareUtils.getIsEclipse()) {
+                    if(tempAnimal instanceof EntityChicken) continue;
+                    if(tempAnimal instanceof EntityPig){
+                        tempAnimal.setDead();
+                        this.worldObj.newExplosion(tempAnimal,tempAnimal.posX,tempAnimal.posY,tempAnimal.posZ,5f,false,false);
+                        break;
+                    }
+                }
                 if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
                 ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles(thisObj);
+
                 break;
             }
         }

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
@@ -19,6 +21,7 @@ import java.util.List;
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
     @Unique int squidOnHeadTimer = 0;
+    @Unique private static final int buffedSquidBonus = NightmareMode.buffedSquids ? 2 : 1;
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -39,13 +42,26 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
-    private int increaseMysteriousGlandDropRate(int constant){return 2;}
+    private int increaseMysteriousGlandDropRate(int constant){
+        if(NightmareUtils.getIsEclipse()){
+            return 4;
+        }
+        return 2;
+    }
     // makes the random function roll a number between 0 and 2 instead of 0 and 8
+
+    @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;dropItem(II)Lnet/minecraft/src/EntityItem;"),index = 0)
+    private int eclipseDropVoidSacks(int par1){
+        if(NightmareUtils.getIsEclipse()){
+            return NMItems.voidSack.itemID;
+        }
+        return par1;
+    }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(4)+2;
             // 2 - 5
             if (iLootingModifier > 0) {
@@ -53,6 +69,18 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             }
             for (int var5 = 0; var5 < var4; ++var5) {
                 this.dropItem(bloodOrbID, 1);
+            }
+        }
+
+
+        if (bKilledByPlayer && NightmareUtils.getIsEclipse()) {
+            for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
+                if(this.rand.nextInt(12) == 0){
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -67,19 +95,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
     private void doNothing(BTWSquidEntity instance, Entity iFXJ, boolean iFXK){}
 
-//    @Inject(method = "updateHeadCrab",
-//            at = @At(value = "FIELD",
-//                    target = "Lbtw/entity/mob/BTWSquidEntity;headCrabDamageCounter:I",
-//                    ordinal = 3,
-//                    shift = At.Shift.AFTER))
-//    private void resetHeadCrabCounter(CallbackInfo ci){
-//        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-//            this.headCrabDamageCounter = 11;
-//        }
-//    }
     @ModifyConstant(method = "updateHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceSquidDamageInterval(int constant){
-        return 11;
+        return 11 / buffedSquidBonus;
     }
 
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
@@ -87,65 +105,56 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return 100;
     }
 
-    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
-    private void increaseSquidRangeDuringBloodMoon(CallbackInfo ci){
-        if(NightmareUtils.getIsBloodMoon()){
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(20d);
+    @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
+    private double increaseSquidRange(double dRange){
+        if(NightmareUtils.getIsEclipse()){
+            return 32;
         }
+        return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * buffedSquidBonus;
     }
 
 
     @Inject(method = "updateHeadCrab",
             at = @At("HEAD"),remap = false)
     private void doScaryThingsOnHead(CallbackInfo ci) {
-        squidOnHeadTimer++;
+        this.squidOnHeadTimer++;
         if (rand.nextInt(60)==0) {
             this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer player) {
-            if (squidOnHeadTimer > 100) {
+            if (this.squidOnHeadTimer > 100) {
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
             switch (NightmareUtils.getWorldProgress(this.worldObj)) {
-                case 0:
-                    break;
                 case 1:
                     if (!player.isPotionActive(Potion.poison)) {
-                        player.addPotionEffect(new PotionEffect(Potion.poison.id,120,0));
+                        player.addPotionEffect(new PotionEffect(Potion.poison.id,120 * buffedSquidBonus,0));
                     }
                     break;
-                case 2:
+                case 2,3:
                     if (!player.isPotionActive(Potion.wither)) {
-                        player.addPotionEffect(new PotionEffect(Potion.wither.id, 120,0));
+                        player.addPotionEffect(new PotionEffect(Potion.wither.id, 120 * buffedSquidBonus,0));
                     }
                     break;
-                case 3:
-                    if (!player.isPotionActive(Potion.wither)) {
-                        player.addPotionEffect(new PotionEffect(Potion.wither.id, 300,0));
-                    }
-                    player.addPotionEffect(new PotionEffect(Potion.hunger.id, 160,0));
+                default:
                     break;
             }
         }
     }
 
 
-// sets the time until the squid starts dealing damage to n ticks
-//    @Inject(method = "checkForHeadCrab", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;headCrabDamageCounter:I", shift = At.Shift.AFTER))
-//    private void firstHeadCrabInterval(CallbackInfo ci){
-//        this.headCrabDamageCounter = 15;
-//    }
     @ModifyConstant(method = "checkForHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceDamageInterval(int constant){
-        return 15;
+        return 15 / buffedSquidBonus;
     }
 
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 12*(NightmareUtils.getWorldProgress(this.worldObj)+1) : 18;
+            return (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 12 * (NightmareUtils.getWorldProgress(this.worldObj)+1) : 18) * buffedSquidBonus;
             // pre nether 18, hardmode 24, post wither 36, post dragon 48
+            // if BS is on, 36 -> 48 -> 72 -> 96
         }
         return d;
     }
@@ -155,7 +164,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             --this.tentacleAttackCooldownTimer;
             if (NightmareUtils.getWorldProgress(this.worldObj) > 1) {
-                this.tentacleAttackCooldownTimer -= 2;
+                this.tentacleAttackCooldownTimer -= 2 * buffedSquidBonus;
             }
         }
     }
@@ -169,16 +178,33 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         // this purely insures the cooldown condition is true whenever it is checked
     }
 
+    @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
+    private void manageJumpOnEclipse(CallbackInfo ci){
+        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsEclipse() || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid()){
+            this.motionY = 0.2f;
+        }
+    }
+
+    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.02,ordinal = 0))
+    private double noGravityOnEclipse(double constant){
+        return NightmareUtils.getIsEclipse() || buffedSquidBonus == 2 ? 0d : constant;
+    }
+
+    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.8d))
+    private double noGravityOnEclipse1(double constant){
+        return NightmareUtils.getIsEclipse() || buffedSquidBonus == 2 ? 1d : constant;
+    }
+
     // increasing the squid range
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
     private double increaseCalculatedTentacleRange(double constant){
-        return 8.0d;
+        return (NightmareUtils.getIsEclipse() ? 12.0d : 8.0d) * buffedSquidBonus;
     }
 
     @ModifyConstant(method = "attemptTentacleAttackOnTarget", constant = @Constant(doubleValue = 36.0),remap = false)
     private double manageRange(double constant){
-        return this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 81.0 : 36.0;
+        return (NightmareUtils.getIsEclipse() ? 144.0 : 81.0) * (buffedSquidBonus * buffedSquidBonus);
     }
     // let squid see through walls
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
@@ -190,6 +216,37 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return true;
     }
 
+//    @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
+//    private void manageEclipseRage(CallbackInfo ci){
+//        if(NightmareUtils.getIsEclipse() && this.eclipseRageCooldown <= 40){
+//            double deltaX = getRandomOffsetFromPosition(this,this.posX);
+//            double deltaY = getRandomOffsetFromPosition(this,this.posY);
+//            double deltaZ = getRandomOffsetFromPosition(this,this.posZ);
+//
+//            double distSqToTarget = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+//            if(distSqToTarget <= 200){
+//
+//                double dDistToTarget = MathHelper.sqrt_double(distSqToTarget);
+//                double dUnitVectorToTargetX = deltaX / dDistToTarget;
+//                double dUnitVectorToTargetY = deltaY / dDistToTarget;
+//                double dUnitVectorToTargetZ = deltaZ / dDistToTarget;
+//
+//                this.invokeLaunchTentacle(dUnitVectorToTargetX, dUnitVectorToTargetY, dUnitVectorToTargetZ);
+//                this.tentacleAttackCooldownTimer = 1;
+//                this.tentacleAttackInProgressCounter = -1;
+//            }
+//
+//            this.eclipseRageCooldown = (this.rand.nextInt(3) + 2) * 50;
+//        }
+//
+//        this.eclipseRageCooldown = Math.max(this.eclipseRageCooldown - 2, 0);
+//    }
+//
+//
+//    @Unique private static double getRandomOffsetFromPosition(EntityLivingBase entity, double pos){
+//        return (entity.rand.nextBoolean() ? -1 : 1) * entity.rand.nextInt(4)+6;
+//    }
+    
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {
@@ -210,7 +267,18 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if(NightmareUtils.getWorldProgress(this.worldObj)>0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             return 0f;
         }
-        return instance.getBrightness(1.0f);
+        return instance.getBrightness(v);
+    }
+
+    @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
+    private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 96) != null && this.posY >= 63){
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique private boolean getCanSpawnHereNoPlayerDistanceRestrictions() {
+        return this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty();
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
@@ -222,5 +290,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z",ordinal = 0))
     private boolean tentacleEvenIfBeached(BTWSquidEntity instance){
         return true;
+    }
+
+    @Override
+    public boolean isInWater() {
+        if(NightmareUtils.getIsEclipse() || buffedSquidBonus == 2){
+            return true;
+        }
+        return super.isInWater();
+    }
+
+    @Override
+    public boolean isInsideOfMaterial(Material par1Material) {
+        if((NightmareUtils.getIsEclipse() || buffedSquidBonus == 2) && par1Material == Material.water){
+            return true;
+        }
+        return super.isInsideOfMaterial(par1Material);
     }
 }
