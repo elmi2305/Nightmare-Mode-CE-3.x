@@ -16,13 +16,13 @@ public class RenderFireCreeper extends RenderCreeper {
     @Override
     protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper) {
         if (par1EntityCreeper instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsEclipse() ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
         } else {return super.getEntityTexture(par1EntityCreeper);}
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         if(par1Entity instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsEclipse() ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
         } else {
             return super.getEntityTexture(par1Entity);
         }

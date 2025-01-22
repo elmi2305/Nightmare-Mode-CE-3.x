@@ -10,5 +10,6 @@ public class NightmareModeEntityMapper {
         EntityList.addMapping(EntityShadowZombie.class, "NightmareShadowZombie", 2302, 0, 0);
         EntityList.addMapping(NightmareVillager.class, "NightmareVillager", 2303, 0, 16711680);
         EntityList.addMapping(EntityBloodWither.class, "NightmareBloodWither", 2304, 16711680, 11011333);
+        EntityList.addMapping(EntityFallingChicken.class, "NightmareFallingChicken", 2305, 13882323 , 14277081);
     }
 }

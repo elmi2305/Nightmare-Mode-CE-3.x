@@ -34,7 +34,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
         double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25 : 1;
-        int eclipseModifier = NightmareUtils.getIsEclipse() ? 20 : 0;
+        int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
         if (this.rand.nextInt(8 - progress * 2) == 0 && isHostile) {
@@ -67,7 +67,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private double increaseCreeperBreachRange(double constant){
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
         if(!isHostile){return constant;}
-        int bloodMoonModifier = NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsEclipse() ? 3 : 1;
+        int bloodMoonModifier = NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NightmareUtils.getWorldProgress(this.worldObj);
 
         return switch (i) {
@@ -122,14 +122,14 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NightmareUtils.getIsBloodMoon() && !NightmareUtils.getIsEclipse() && !this.isPotionActive(Potion.fireResistance.id)){
+        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NightmareUtils.getIsBloodMoon() && !NightmareUtils.getIsMobEclipsed(this) && !this.isPotionActive(Potion.fireResistance.id)){
             this.onKickedByAnimal(null); // primes the creeper instantly
         }
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
     private void manageNotKillingSelf(EntityCreeper creeper){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             if(creeper.getAttackTarget() instanceof EntityPlayer target){
                 double var1 = this.posX - target.posX;
                 double var2 = this.posZ - target.posZ;
@@ -162,7 +162,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         int progress = NightmareUtils.getWorldProgress(thisObj.worldObj);
         boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
-        boolean isEclipse = NightmareUtils.getIsEclipse();
+        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
         if((progress > 0 || areMobsEvolved) && thisObj.rand.nextFloat() < 0.15 + (progress - 1)*0.03){
             if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
@@ -218,6 +218,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     public Entity getHeadCrabSharedAttackTarget() {
         return this.getAttackTarget();
     }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,12);
+    }
 
     @ModifyArg(method = "onUpdate",
             at = @At(value = "INVOKE",
@@ -225,7 +229,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
         float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
-        float eclipseModifier = NightmareUtils.getIsEclipse() ? 0.15f : 0;
+        float eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
             return 3f + bloodmoonModifier;
         }

@@ -34,10 +34,14 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Redirect(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;getBrightness(F)F"))
     private float alwaysAggressiveOnEclipse(EntitySpider instance, float v){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             return 0f;
         }
         return instance.getBrightness(v);
+    }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,6);
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
@@ -76,7 +80,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if (this.worldObj != null) {
             if(this.rand.nextFloat() < 0.1){
                 return 10;
-            } else if(NightmareUtils.getIsEclipse()){
+            } else if(NightmareUtils.getIsMobEclipsed(this)){
                 return 200;
             }
             return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
@@ -116,7 +120,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void chanceToShootFireball(Entity targetEntity, CallbackInfo ci){
         boolean isHostile = targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE;
-        boolean isEclipse = NightmareUtils.getIsEclipse();
+        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
         if (isHostile) {
             double deltaX = targetEntity.posX - this.posX;
@@ -171,7 +175,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"),cancellable = true)
     private void doNotShootWebInEclipse(Entity targetEntity, CallbackInfo ci){
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(this)) {
             ci.cancel();
         }
     }
@@ -182,7 +186,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             EntitySpider thisObj = (EntitySpider)(Object)this;
 
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            int eclipseModifier = NightmareUtils.getIsEclipse() ? 20 : 0;
+            int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
             boolean isEclipse = eclipseModifier > 1;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;

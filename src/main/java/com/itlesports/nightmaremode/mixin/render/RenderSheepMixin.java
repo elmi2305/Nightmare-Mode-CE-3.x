@@ -16,7 +16,7 @@ public class RenderSheepMixin {
 
     @Inject(method = "func_110883_a", at = @At("HEAD"),cancellable = true)
     private void sheepEclipseTextures(EntitySheep par1EntitySheep, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1EntitySheep)) {
             cir.setReturnValue(SHEEP_ECLIPSE);
         }
     }

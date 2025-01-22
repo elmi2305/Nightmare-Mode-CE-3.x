@@ -19,6 +19,8 @@ public class EntityShadowZombie extends EntityZombie {
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetShadow(this, EntityPlayer.class, 0, true, false, null));
         this.targetTasks.removeAllTasksOfClass(EntityAILunge.class);
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
+        NightmareUtils.manageEclipseChance(this,2);
+
     }
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {

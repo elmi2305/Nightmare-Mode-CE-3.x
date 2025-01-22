@@ -34,10 +34,14 @@ public class EntityMagmaCubeMixin extends EntitySlime {
             }
         }
     }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,4);
+    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
     }

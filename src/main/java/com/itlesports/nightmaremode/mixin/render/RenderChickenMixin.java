@@ -65,7 +65,7 @@ public class RenderChickenMixin {
 
     @Inject(method = "getChickenTextures", at = @At("HEAD"),cancellable = true)
     private void chickenTextures(EntityChicken par1EntityChicken, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1EntityChicken)){
             cir.setReturnValue(this.getResourceLocation(par1EntityChicken.ticksExisted % 90));
         }
     }

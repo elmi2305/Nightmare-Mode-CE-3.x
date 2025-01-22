@@ -13,17 +13,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderEnderman.class)
 public class RenderEndermanMixin {
+    @Unique private boolean eclipseEyes;
     @Unique private static final ResourceLocation ENDERMAN_ECLIPSE = new ResourceLocation("textures/entity/endermanEclipseTux.png");
     @Unique private static final ResourceLocation ENDERMAN_ECLIPSE_EYES = new ResourceLocation("textures/entity/endermanEclipseEyes.png");
 
     @Inject(method = "getEndermanTextures", at = @At("HEAD"), cancellable = true)
     private void endermanEclipseTextures(EntityEnderman par1EntityEnderman, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1EntityEnderman)) {
+            this.eclipseEyes = true;
             cir.setReturnValue(ENDERMAN_ECLIPSE);
         }
     }
     @ModifyArg(method = "renderEyes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderEnderman;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private ResourceLocation addEyeTexturesOnEclipse(ResourceLocation par1){
-        return NightmareUtils.getIsEclipse() ? ENDERMAN_ECLIPSE_EYES : par1;
+        return this.eclipseEyes ? ENDERMAN_ECLIPSE_EYES : par1;
     }
 }

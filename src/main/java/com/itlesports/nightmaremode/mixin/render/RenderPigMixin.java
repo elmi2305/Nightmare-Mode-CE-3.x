@@ -16,7 +16,7 @@ public class RenderPigMixin {
 
     @Inject(method = "getPigTextures", at = @At("HEAD"),cancellable = true)
     private void pigEclipseTextures(EntityPig par1EntityPig, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1EntityPig)) {
             cir.setReturnValue(PIG_ECLIPSE);
         }
     }

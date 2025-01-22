@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
@@ -110,18 +111,22 @@ public abstract class EntitySlimeMixin extends EntityLiving{
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
         EntitySlime thisObj = (EntitySlime)(Object)this;
-        int maxSplits = NightmareUtils.getIsEclipse() ? 1 : 3;
-        int baseChance = NightmareUtils.getIsEclipse() ? 4 : 2;
+        boolean isEclipsed = NightmareUtils.getIsMobEclipsed(this);
+        int maxSplits = isEclipsed ? 1 : 3;
+        int baseChance = isEclipsed ? 4 : 2;
 
         if (thisObj.getSlimeSize() >= 2 && this.splitCounter < maxSplits){
             if(thisObj.rand.nextInt((int) (baseChance * this.streakModifier)) == 0){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
-                if (NightmareUtils.getIsEclipse()) {
+                if (isEclipsed) {
                     baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize() - 1)); // makes the newly spawned slime half the size of the current one
                 } else{
                     baby.getDataWatcher().updateObject(16, (byte)(Math.floor((double) thisObj.getSlimeSize() / 2))); // makes the newly spawned slime half the size of the current one
                 }
                 baby.setHealth(baby.getSlimeSize());
+                if(this.isPotionActive(Potion.field_76443_y)){
+                    baby.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
+                }
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
@@ -132,14 +137,15 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsEclipse() || (NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0)){
+            this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
     }
 
     @Override
     protected void dropFewItems(boolean par1, int par2) {
-        if(NightmareUtils.getIsEclipse() && par1){
+        if(NightmareUtils.getIsMobEclipsed(this) && par1){
             for(int i = 0; i < this.getSlimeSize() * 2; i++){
                 if(this.rand.nextInt(12) == 0){
                     this.dropItem(foodItems.get(this.rand.nextInt(foodItems.size())), 1);

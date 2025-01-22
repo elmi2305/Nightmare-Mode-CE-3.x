@@ -16,7 +16,7 @@ public class RenderCreeperMixin {
 
     @Inject(method = "getCreeperTextures", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1EntityCreeper)){
             cir.setReturnValue(CREEPER_TEXTURE_ECLIPSE);
         }
     }

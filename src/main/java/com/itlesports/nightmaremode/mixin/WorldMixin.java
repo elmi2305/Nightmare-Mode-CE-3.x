@@ -27,6 +27,8 @@ public abstract class WorldMixin {
 
     @Shadow public int skylightSubtracted;
 
+    @Shadow public abstract long getWorldTime();
+
     @Inject(method = "isBoundingBoxBurning", at = @At("RETURN"),cancellable = true)
     private void manageBurningItemImmunity(Entity entity, CallbackInfoReturnable<Boolean> cir){
         if(entity instanceof EntityItem item
@@ -43,7 +45,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "handleMaterialAcceleration", at = @At("HEAD"),cancellable = true)
     private void manageSquidNoGravityWater(AxisAlignedBB par1AxisAlignedBB, Material par2Material, Entity par3Entity, CallbackInfoReturnable<Boolean> cir){
-        if((NightmareUtils.getIsEclipse() || NightmareMode.buffedSquids) && par3Entity instanceof BTWSquidEntity && par2Material == Material.water){
+        if(par3Entity instanceof BTWSquidEntity && (NightmareUtils.getIsMobEclipsed((BTWSquidEntity) par3Entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
             par3Entity.inWater = true;
             cir.setReturnValue(true);
         }
@@ -76,7 +78,6 @@ public abstract class WorldMixin {
             }
         }
     }
-
     @ModifyConstant(method = "updateWeather", constant = @Constant(intValue = 12000))
     private int increaseDurationBetweenRain(int constant){
         return 24000;
@@ -95,15 +96,16 @@ public abstract class WorldMixin {
         // TODO don't forget to remove this debug after testing
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
+    @Unique private boolean getIsNightFromWorldTime(World world){
+        return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
+    }
 
     @Unique private boolean getIsEclipse(World world, int dayCount){
 //        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
         return !this.getIsNightFromWorldTime(world);
     }
 
-    @Unique private boolean getIsNightFromWorldTime(World world){
-        return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
-    }
+
 
     @Unique private boolean getIsNightFromSkyLight(World world){
         return this.skylightSubtracted < 4;

@@ -25,10 +25,15 @@ public abstract class EntityWitchMixin extends EntityMob {
         super(par1World);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,10);
+    }
+
     @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i<3; i++){
 
-            if(NightmareUtils.getIsEclipse()){
+            if(NightmareUtils.getIsMobEclipsed(this)){
                 int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
                 int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                 int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
@@ -135,7 +140,7 @@ public abstract class EntityWitchMixin extends EntityMob {
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
-            int eclipseModifier = NightmareUtils.getIsEclipse() ? 30 : 0;
+            int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 30 : 0;
 
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier);
             // 20 -> 24 -> 28 -> 32
@@ -147,7 +152,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWitch;setAggressive(Z)V",ordinal = 1,shift = At.Shift.AFTER))
     private void healFast(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            this.witchAttackTimer = NightmareUtils.getIsEclipse() ? 5 : 10;
+            this.witchAttackTimer = NightmareUtils.getIsMobEclipsed(this) ? 5 : 10;
         }
     }
 
@@ -218,7 +223,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void manageMinionSummons(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
         this.minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress(this.worldObj));
-        if(this.minionCountdown >  (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NightmareUtils.getIsEclipse() ? 300 : 0)){
+        if(this.minionCountdown >  (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NightmareUtils.getIsMobEclipsed(this) ? 300 : 0)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);
                 this.minionCountdown = this.rand.nextInt(15) * (10 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 10));
@@ -229,7 +234,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if(this.rand.nextInt(4) == 0 && NightmareUtils.getIsEclipse()){
+        if(this.rand.nextInt(4) == 0 && NightmareUtils.getIsMobEclipsed(this)){
             int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+3);
             int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+3);
 

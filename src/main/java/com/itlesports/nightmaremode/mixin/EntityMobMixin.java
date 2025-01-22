@@ -121,7 +121,7 @@ public class EntityMobMixin extends EntityCreature{
     }
     @Inject(method = "canSpawnOnBlockBelow", at = @At("HEAD"),cancellable = true)
     private void manageBloodmareSpawning(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this)){
             int i = MathHelper.floor_double(this.posX);
             int j = (int)this.boundingBox.minY - 1;
             int k = MathHelper.floor_double(this.posZ);
@@ -164,31 +164,41 @@ public class EntityMobMixin extends EntityCreature{
                 int k = MathHelper.floor_double(thisObj.posZ);
 
                 if(thisObj.worldObj.getBlockMetadata(i,j,k) == 0){
-                    this.addMobPotionEffect(thisObj,Potion.regeneration.id);
+                    this.addBlightPotionEffect(thisObj,Potion.regeneration.id);
                 } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 1){
-                    this.addMobPotionEffect(thisObj,Potion.regeneration.id);
-                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
+                    this.addBlightPotionEffect(thisObj,Potion.regeneration.id);
+                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
                 } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 2){
-                    this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
-                    this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
-                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
+                    this.addBlightPotionEffect(thisObj,Potion.moveSpeed.id);
+                    this.addBlightPotionEffect(thisObj,Potion.damageBoost.id);
+                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
                 } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 3){
-                    this.addMobPotionEffect(thisObj,Potion.moveSpeed.id);
-                    this.addMobPotionEffect(thisObj,Potion.damageBoost.id);
-                    this.addMobPotionEffect(thisObj,Potion.resistance.id);
-                    this.addMobPotionEffect(thisObj,Potion.invisibility.id);
+                    this.addBlightPotionEffect(thisObj,Potion.moveSpeed.id);
+                    this.addBlightPotionEffect(thisObj,Potion.damageBoost.id);
+                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
+                    this.addBlightPotionEffect(thisObj,Potion.invisibility.id);
                 }
             }
         }
     }
 
-    @Unique private void addMobPotionEffect(EntityMob mob, int potionID){
+    @Unique private void addBlightPotionEffect(EntityMob mob, int potionID){
         if(!mob.isPotionActive(potionID)){
             mob.addPotionEffect(new PotionEffect(potionID,100,0));
         }
     }
-//
-//    @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
+
+//    @Override
+//    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
+//        if(NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0){
+//            System.out.println("mob is eclipsed");
+//            this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
+//        }
+//        return super.onSpawnWithEgg(par1EntityLivingData);
+//    }
+
+
+    //    @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
 //    private void arrowsIgnoreInvincibility(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
 //        if(par1DamageSource.getEntity() instanceof InfiniteArrowEntity){
 //            cir.setReturnValue(true);

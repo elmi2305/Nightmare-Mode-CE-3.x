@@ -99,7 +99,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void punishPlayerForHittingChicken(Entity par1Entity, CallbackInfo ci){
-        if(NightmareUtils.getIsEclipse() && par1Entity instanceof EntityChicken){
+        if(par1Entity instanceof EntityChicken chicken && NightmareUtils.getIsMobEclipsed(chicken)){
             Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
             this.worldObj.addWeatherEffect(lightningbolt);
         }
@@ -238,7 +238,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             for (Object tempEntity : list) {
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if (tempAnimal instanceof EntityWolf) continue;
-                if (NightmareUtils.getIsEclipse()) {
+                if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
                     if(tempAnimal instanceof EntityPig){
                         tempAnimal.setDead();

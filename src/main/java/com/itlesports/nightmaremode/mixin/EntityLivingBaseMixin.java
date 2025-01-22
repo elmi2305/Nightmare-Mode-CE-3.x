@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements EntityAccessor {
     @Shadow public abstract boolean isEntityAlive();
@@ -45,7 +47,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
-        if(source.getEntity() instanceof EntityPlayer player){
+        if(source.getEntity() instanceof EntityPlayer player && Objects.equals(source.damageType, "player")){
             if(NightmareUtils.isWearingFullBloodArmor(player)){
                 int chance = NightmareUtils.getIsBloodMoon() ? 2 : 3;
                 if(this.rand.nextInt(chance) == 0){

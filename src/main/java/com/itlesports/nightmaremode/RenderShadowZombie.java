@@ -9,6 +9,6 @@ public class RenderShadowZombie extends RenderZombie {
     private static final ResourceLocation shadowZombieTexturesEclipse = new ResourceLocation("textures/entity/shadowzombieEclipse.png");
 
     @Override protected ResourceLocation func_110863_a(EntityZombie par1EntityZombie) {
-        return NightmareUtils.getIsEclipse() ? shadowZombieTexturesEclipse : shadowZombieTextures;
+        return NightmareUtils.getIsMobEclipsed(par1EntityZombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
     }
 }

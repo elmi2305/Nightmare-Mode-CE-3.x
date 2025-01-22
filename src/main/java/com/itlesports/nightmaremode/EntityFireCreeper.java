@@ -33,6 +33,9 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+
+        NightmareUtils.manageEclipseChance(this,10);
+
     }
 
     protected void applyEntityAttributes() {
@@ -126,7 +129,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                     } else {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
                     }
-                    if(NightmareUtils.getIsEclipse()){
+                    if(NightmareUtils.getIsMobEclipsed(this)){
                         EntityLivingBase target = this.getAttackTarget();
                         if (target instanceof EntityPlayer) {
                             for (int i = -1; i < 2 ; i++) {

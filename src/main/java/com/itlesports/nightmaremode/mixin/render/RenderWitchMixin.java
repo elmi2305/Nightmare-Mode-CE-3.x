@@ -16,7 +16,7 @@ public class RenderWitchMixin {
 
     @Inject(method = "getWitchTextures", at = @At("HEAD"),cancellable = true)
     private void eclipseWitchTextures(EntityWitch par1EntityWitch, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1EntityWitch)){
             cir.setReturnValue(WITCH_ECLIPSE);
         }
     }

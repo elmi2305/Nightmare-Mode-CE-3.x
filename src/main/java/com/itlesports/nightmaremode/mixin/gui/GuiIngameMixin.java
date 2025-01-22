@@ -54,10 +54,6 @@ public class GuiIngameMixin {
             if(NightmareMode.configOnHud){
                 textToShow = this.getTextForActiveConfig();
                 renderText(textToShow, stringWidth, iScreenX + this.configDisplayOffset, iScreenY, fontRenderer, activeStatuses);
-//                renderText(textToShow, stringWidth, iScreenX - 15, iScreenY, fontRenderer, activeStatuses);
-                // 3
-//                renderText(textToShow, stringWidth, iScreenX + 5, iScreenY, fontRenderer, activeStatuses);
-                // 2
             }
         }
     }
@@ -97,12 +93,12 @@ public class GuiIngameMixin {
             string += "BS";
             count++;
         }
-        if(this.mc.theWorld.worldInfo.areCommandsAllowed()){
-            if(count > 0){
-                string += "+";
-            }
-            string += "Cheats";
-        }
+//        if(this.mc.theWorld.worldInfo.areCommandsAllowed()){
+//            if(count > 0){
+//                string += "+";
+//            }
+//            string += "Cheats";
+//        }
 
         if(count == 4){
             this.configDisplayOffset = -32;

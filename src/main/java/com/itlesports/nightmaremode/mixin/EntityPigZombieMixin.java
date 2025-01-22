@@ -20,8 +20,7 @@ public class EntityPigZombieMixin extends EntityZombie {
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
     }
-    @Unique private boolean isCharging;
-    @Unique private double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NightmareUtils.getIsEclipse() ? 3 : 0);
+    @Unique private double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NightmareUtils.getIsMobEclipsed(this) ? 3 : 0);
 
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
@@ -38,7 +37,7 @@ public class EntityPigZombieMixin extends EntityZombie {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        boolean isEclipse = NightmareUtils.getIsEclipse();
+        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + 4 * NightmareUtils.getWorldProgress(this.worldObj) + (isEclipse ? 10 : 0));
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3 + 2 * NightmareUtils.getWorldProgress(this.worldObj));
@@ -60,9 +59,14 @@ public class EntityPigZombieMixin extends EntityZombie {
         }
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,6);
+    }
+
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
-        if(NightmareUtils.getIsEclipse() && attackedEntity instanceof EntityPlayer){
+        if(NightmareUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
 
             if(this.rand.nextInt(12) == 0){
                 ((EntityPlayer) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 60,0));

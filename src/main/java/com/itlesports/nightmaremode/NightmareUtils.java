@@ -3,9 +3,7 @@ package com.itlesports.nightmaremode;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
-import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.Item;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,9 +11,29 @@ import java.util.List;
 import java.util.Objects;
 
 public class NightmareUtils {
-    public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodBoots.itemID,NMItems.bloodLeggings.itemID,NMItems.bloodChestplate.itemID,NMItems.bloodHelmet.itemID));
-    public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(NMItems.bloodSword.itemID,NMItems.bloodPickaxe.itemID,NMItems.bloodAxe.itemID,NMItems.bloodShovel.itemID,NMItems.bloodHoe.itemID));
-    public static final List<Integer> chainArmor = new ArrayList<>(Arrays.asList(Item.bootsChain.itemID,Item.legsChain.itemID,Item.plateChain.itemID,Item.helmetChain.itemID));
+    public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
+            NMItems.bloodSword.itemID,
+            NMItems.bloodBoots.itemID,
+            NMItems.bloodLeggings.itemID,
+            NMItems.bloodChestplate.itemID,
+            NMItems.bloodHelmet.itemID
+    ));
+
+    public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(
+            NMItems.bloodSword.itemID,
+            NMItems.bloodPickaxe.itemID,
+            NMItems.bloodAxe.itemID,
+            NMItems.bloodShovel.itemID,
+            NMItems.bloodHoe.itemID
+    ));
+
+    public static final List<Integer> chainArmor = new ArrayList<>(Arrays.asList(
+            Item.bootsChain.itemID,
+            Item.legsChain.itemID,
+            Item.plateChain.itemID,
+            Item.helmetChain.itemID
+    ));
+
 
     public static int getWorldProgress(World world) {
         if(NightmareUtils.getIsEclipse()){
@@ -36,12 +54,28 @@ public class NightmareUtils {
         return 0;
     }
     public static boolean getIsBloodMoon(){
-        if(NightmareModeAddon.getInstance() == null){return false;}
+        if(NightmareMode.getInstance() == null){return false;}
         return Objects.requireNonNullElse(NightmareMode.getInstance().isBloodMoon, false);
     }
     public static boolean getIsEclipse(){
-        if(NightmareModeAddon.getInstance() == null){return false;}
+        if(NightmareMode.getInstance() == null){return false;}
         return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
+    }
+    public static boolean getIsMobEclipsed(EntityLivingBase mob){
+        if(mob.activePotionsMap != null){
+            if (mob.isPotionActive(Potion.field_76443_y)) {
+                return true;
+            }
+        }
+        if(NightmareMode.getInstance() == null){return false;}
+        return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
+    }
+    public static void manageEclipseChance(EntityLivingBase mob, int chance){
+        if(NightmareMode.evolvedMobs){
+            if(mob.rand.nextInt(chance) == 0){
+                mob.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
+            }
+        }
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){
@@ -61,21 +95,6 @@ public class NightmareUtils {
         return true;
     }
 
-    public static boolean isWearingAnyBloodArmor(EntityLivingBase entity){
-        for(int i = 1; i < 5; i++){
-            if(entity.getCurrentItemOrArmor(i) == null) continue;
-            if(entity.getCurrentItemOrArmor(i).itemID == bloodArmor.get(i)){return true;}
-        }
-        return false;
-    }
-//    public static boolean isWearingFullChainArmor(EntityLivingBase entity){
-//        for(int i = 1; i < 5; i++){
-//            if(entity.getCurrentItemOrArmor(i) == null){return false;}
-//            if(entity.getCurrentItemOrArmor(i).itemID == chainArmor.get(i)) continue;
-//            return false;
-//        }
-//        return true;
-//    }
     public static int getBloodArmorWornCount(EntityLivingBase entity){
         int value = 0;
         for(int i = 1; i < 5; i++){

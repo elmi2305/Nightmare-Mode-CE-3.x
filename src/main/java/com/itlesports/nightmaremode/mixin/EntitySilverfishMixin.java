@@ -28,7 +28,7 @@ public class EntitySilverfishMixin extends EntityMob{
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropClay(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (!NightmareUtils.getIsEclipse()) {
+        if (!NightmareUtils.getIsMobEclipsed(this)) {
             this.dropItem(Item.clay.itemID, this.rand.nextInt(3)+1); // drops clay regardless of dimension, dropping more in the end
         } else if(bKilledByPlayer){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){

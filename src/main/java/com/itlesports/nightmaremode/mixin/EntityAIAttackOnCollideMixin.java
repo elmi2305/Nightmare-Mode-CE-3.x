@@ -32,7 +32,7 @@ public abstract class EntityAIAttackOnCollideMixin {
                 thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
                 thisObj.attackTick = 13;
             }
-            if(NightmareUtils.getIsEclipse()){
+            if(NightmareUtils.getIsMobEclipsed(thisObj.attacker)){
                 if(thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < 3){
                     thisObj.attacker.swingItem();
                     thisObj.attacker.attackEntityAsMob(thisObj.attacker.getAttackTarget());
@@ -46,7 +46,7 @@ public abstract class EntityAIAttackOnCollideMixin {
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE){
-            if(isPlayerHoldingBow(targetPlayer) && (isHoldingIllegalItem(thisObj.attacker)) || NightmareUtils.getIsEclipse()){
+            if(isPlayerHoldingBow(targetPlayer) && (isHoldingIllegalItem(thisObj.attacker)) || NightmareUtils.getIsMobEclipsed(thisObj.attacker)){
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.5, 2.4, 2.5));
                 arrowCooldown -= 1;
                 if (arrowCooldown <= 0) {

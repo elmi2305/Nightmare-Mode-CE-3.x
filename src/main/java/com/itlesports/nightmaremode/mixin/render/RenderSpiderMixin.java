@@ -13,18 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderSpider.class)
 public class RenderSpiderMixin {
+    @Unique private boolean eclipseEyes;
     @Unique private static final ResourceLocation SPIDER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/spiderEclipseHigh.png");
     @Unique private static final ResourceLocation NOTHING = new ResourceLocation("textures/entity/nothing.png");
 
     @Inject(method = "getSpiderTextures", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntitySpider par1EntitySpider, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1EntitySpider)){
+            this.eclipseEyes = true;
             cir.setReturnValue(SPIDER_TEXTURE_ECLIPSE);
         }
     }
     @ModifyArg(method = "setSpiderEyeBrightness", at = @At(value = "INVOKE", target = "Lcom/prupe/mcpatcher/mob/MobRandomizer;randomTexture(Lnet/minecraft/src/Entity;Lnet/minecraft/src/ResourceLocation;)Lnet/minecraft/src/ResourceLocation;"),index = 1)
     private ResourceLocation noEyesDuringEclipse(ResourceLocation texture){
-        if(NightmareUtils.getIsEclipse()){
+        if(this.eclipseEyes){
             return NOTHING;
         }
         return texture;

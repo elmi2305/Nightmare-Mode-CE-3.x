@@ -46,7 +46,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
-        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsEclipse()){
+        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsMobEclipsed((EntityChicken)this.ridingEntity)){
             if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
                 this.ridingEntity.motionY = 0.12;
             }

@@ -26,7 +26,7 @@ public class RenderSkeletonMixin {
 
     @Inject(method = "func_110860_a", at = @At("HEAD"), cancellable = true)
     private void manageVariantTextures(EntitySkeleton skeleton, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (!NightmareUtils.getIsEclipse()) {
+        if (!NightmareUtils.getIsMobEclipsed(skeleton)) {
             if(skeleton.getSkeletonType() == 4){
                 cir.setReturnValue(ENDER_SKELETON_TEXTURE);
             }else if(skeleton.getSkeletonType() == 3){

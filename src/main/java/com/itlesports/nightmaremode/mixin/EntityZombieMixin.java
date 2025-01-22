@@ -37,7 +37,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
             float witherSkeletonChanceModifier = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0f : 0.2f;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
             if (this.rand.nextInt((this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 6)) < 2) {
                 // 100% on hostile, 33% on relaxed
@@ -100,7 +100,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 if (shouldBurn) {
                     this.onKilledBySun();
                 }
-            } else if(NightmareUtils.getIsEclipse()){
+            } else if(NightmareUtils.getIsMobEclipsed(this)){
                 summonSilverfish(this);
             }
         }
@@ -129,7 +129,7 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Inject(method = "attackEntityAsMob", at = @At("HEAD"))
     private void manageEclipseAttack(Entity attackedEntity, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             if(rand.nextInt(3) == 0 && attackedEntity instanceof EntityLivingBase){
                 ((EntityLivingBase) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 40,0));
             }
@@ -175,7 +175,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 0.5 : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
             if (!isEclipse) {
                 // NON ECLIPSE
@@ -279,7 +279,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     private void addAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = 0;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
             boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
 
             try {
@@ -322,7 +322,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 chance = 32;
             }
             if(NightmareUtils.getIsBloodMoon()){chance /= 2;}
-            if(NightmareUtils.getIsEclipse()){chance /= 4;}
+            if(NightmareUtils.getIsMobEclipsed(this)){chance /= 4;}
 
             if((NightmareUtils.getWorldProgress(this.worldObj) >= 2 || areMobsEvolved) && rand.nextInt(chance) == 0){
                 summonCrystalHeadAtPos();
@@ -330,6 +330,10 @@ public abstract class EntityZombieMixin extends EntityMob{
                 summonShadowZombieAtPos((EntityZombie)(Object)this);
             }
         }
+    }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,12);
     }
 
 

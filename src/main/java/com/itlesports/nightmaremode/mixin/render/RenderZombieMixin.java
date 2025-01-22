@@ -18,7 +18,7 @@ public class RenderZombieMixin {
 
     @Inject(method = "func_110863_a", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1EntityZombie)){
             if (par1EntityZombie instanceof EntityPigZombie) {
                 cir.setReturnValue(PIGMAN_TEXTURE_ECLIPSE);
             } else{

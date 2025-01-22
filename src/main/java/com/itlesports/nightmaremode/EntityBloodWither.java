@@ -6,6 +6,9 @@ import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class EntityBloodWither extends EntityWither {
@@ -25,17 +28,60 @@ public class EntityBloodWither extends EntityWither {
     private int passivityDuration = -1; // decides how long the wither should stay passive
     private double verticalOffset = 5.0; // the height difference between the player and the wither
     private boolean activity = false; // whether the wither should go to the sky and be passive or not
-    private EntityLiving trackedEntity; // the entity we are tracking. usually a mob summoned by the wither
+    private final List<Entity> trackedEntities = new ArrayList<>(5); // the entity we are tracking. usually a mob summoned by the wither
     private EntityPlayer playerTarget; // the player we are targetting
-    private double targetX; // target's X position
-    private double targetZ; // target's Z position
+    private double targetX; // target's X position. used to calculate delta movement
+    private double targetZ; // target's Z position. used to calculate delta movement
     private double deltaX; // target's deltaX movement
     private double deltaZ; // target's deltaZ movement
-    private double[] lightningX = {0,0,0,0,0,0,0,0,0,0}; // lightning X target
-    private double[] lightningZ = {0,0,0,0,0,0,0,0,0,0}; // lightning Z target
+    private final double[] lightningX = {0,0,0,0,0,0,0,0,0,0}; // lightning X targets
+    private final double[] lightningZ = {0,0,0,0,0,0,0,0,0,0}; // lightning Z targets
     private int[] origin; // coordinates of the origin, the center of the platform, where the wither spawned
-    private boolean shouldFollowPlayer; // determines if a wither attack requires it to follow the player, to ensure aggro at all times
+    private long previousWorldTime; // stores the value of the world time before it was altered.
+    private boolean isDoingCrystalStorm; // true if there's an ongoing crystal storm
+    private ItemStack[] playerHotbar; // the player's hotbar. used for one attack
+    private int currentAttackIndex; // the current attack the wither is set to do
+    private int currentDurationBetweenAttacks; // the duration of the attack the wither will do
+    private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
+    private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
     private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
+    private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
+            Block.stone.blockID,
+            Block.grass.blockID,
+            Block.dirt.blockID,
+            Block.cobblestone.blockID,
+            Block.planks.blockID,
+            Block.bedrock.blockID,
+            Block.sand.blockID,
+            Block.gravel.blockID,
+            Block.blockGold.blockID,
+            Block.blockIron.blockID,
+            Block.brick.blockID,
+            Block.bookShelf.blockID,
+            Block.cobblestoneMossy.blockID,
+            Block.obsidian.blockID,
+            Block.ice.blockID,
+            Block.snow.blockID,
+            BTWBlocks.gearBox.blockID,
+            BTWBlocks.planter.blockID,
+            Block.netherrack.blockID,
+            Block.slowSand.blockID,
+            Block.glowStone.blockID,
+            Block.sponge.blockID,
+            Block.blockLapis.blockID,
+            Block.sandStone.blockID,
+            BTWBlocks.charcoalBlock.blockID,
+            Block.wood.blockID,
+            BTWBlocks.hamper.blockID,
+            Block.blockSnow.blockID,
+            BTWBlocks.bloodWoodLog.blockID,
+            Block.netherBrick.blockID,
+            BTWBlocks.companionCube.blockID,
+            BTWBlocks.hibachi.blockID,
+            BTWBlocks.hopper.blockID,
+            BTWBlocks.deepStrataStoneBrickStairs.blockID,
+            BTWBlocks.workStump.blockID
+    ));
 
     public boolean getActivity(){return this.activity;}
 
@@ -44,20 +90,68 @@ public class EntityBloodWither extends EntityWither {
     }
 
     private void manageWitherPassivity(boolean isTrackingEntity){
-
         if (isTrackingEntity) {
-            this.activity = false;
-            this.setTargetY(10d);
-            if(this.trackedEntity.isDead){
+            this.disengageWither();
+            for(int i = 0; i < this.trackedEntities.size(); i++){
+                if(this.trackedEntities.get(i).isDead){
+                    this.trackedEntities.remove(i);
+                    break;
+                }
+            }
+            if(this.isDoingCrystalStorm) {
+                if(this.trackedEntities.size() < 30 && this.passivityDuration > 50){
+                    EntityFallingChicken chicken = new EntityFallingChicken(this.worldObj);
+                    chicken.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28) + 2), 210 + (this.rand.nextInt(30) * 1.66), this.origin[2] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28)) + 2);
+                    EntityEnderCrystal crystal = new EntityEnderCrystal(this.worldObj);
+                    crystal.copyLocationAndAnglesFrom(chicken);
+                    chicken.clearActivePotions();
+                    chicken.addPotionEffect(new PotionEffect(Potion.invisibility.id, Integer.MAX_VALUE,0));
+                    chicken.noClip = true;
+                    this.worldObj.spawnEntityInWorld(crystal);
+                    this.trackedEntities.add(chicken);
+                    this.worldObj.spawnEntityInWorld(chicken);
+                    crystal.mountEntity(chicken);
+                }
+                boolean shouldClear = this.passivityDuration <= 50;
+
+                Iterator<Entity> iterator = this.trackedEntities.iterator();
+                while (iterator.hasNext()) {
+                    Entity trackedEntity = iterator.next();
+
+                    if (shouldClear) {
+                        if (trackedEntity.riddenByEntity != null) {
+                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
+                        }
+                        trackedEntity.setDead();
+                        continue; // Skip further processing if clearing is needed
+                    }
+                    if (trackedEntity.posY <= 200 || trackedEntity.isDead) {
+                        if (trackedEntity.riddenByEntity == null) {
+                            trackedEntity.setDead();
+                        } else {
+                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
+                        }
+                        iterator.remove(); // Remove entity safely
+                    }
+                }
+
+                if (shouldClear) {
+                    this.trackedEntities.clear();
+                }
+                if (this.passivityDuration > 0) {
+                    this.setWitherPassiveFor(this.passivityDuration - 1);
+                    this.disengageWither();
+                } else {
+                    this.engageWither();
+                }
+            }
+            if(this.trackedEntities.isEmpty()){
                 this.engageWither();
             }
-            this.setInvisible(true);
         } else {
             if (this.passivityDuration > 0) {
                 this.setWitherPassiveFor(this.passivityDuration - 1);
-                this.activity = false;
-                this.setInvisible(true);
-                this.setTargetY(10d);
+                this.disengageWither();
             } else {
                 this.engageWither();
             }
@@ -70,6 +164,15 @@ public class EntityBloodWither extends EntityWither {
         this.activity = true;
         this.setInvisible(false);
         this.setTargetY(5d);
+        if(this.previousWorldTime != 0){
+            this.worldObj.setWorldTime(this.previousWorldTime);
+            this.previousWorldTime = 0;
+        }
+    }
+    private void disengageWither(){
+        this.activity = false;
+        this.setInvisible(true);
+        this.setTargetY(10d);
     }
     private void setWitherPassiveFor(int par1){
         this.passivityDuration = par1;
@@ -166,14 +269,109 @@ public class EntityBloodWither extends EntityWither {
                             }
                         }
                         break;
-                    case 8:
-                        if (this.trackedEntity == null) {
+                    case 3:
+                        // standard horde
+                        for(int i = 0; i < 12; i ++){
+                            EntityLiving mobToSpawn;
+                            int j = this.rand.nextInt(64);
+
+                            mobToSpawn = switch (j) {
+                                case  0,  1,  2,  3,  4,  5,  6,  7,  8,  9 -> new EntityZombie(this.worldObj);        // 10 occurrences
+                                case 10, 11, 12, 13, 14, 15, 16, 17 -> new EntitySkeleton(this.worldObj);              // 8  occurrences
+                                case 18, 19, 20, 21, 22, 23, 24 -> new EntityCreeper(this.worldObj);                   // 7  occurrences
+                                case 25, 26, 27, 28, 29, 30 -> new EntitySpider(this.worldObj);                        // 6  occurrences
+                                case 31, 32 -> new EntityEnderman(this.worldObj);                                      // 2  occurrences
+                                case 33 -> new EntityWitch(this.worldObj);                                             // 1  occurrence
+                                case 34, 35 -> new EntityBlaze(this.worldObj);                                         // 2  occurrences
+                                case 36, 37, 38, 39 -> new EntitySlime(this.worldObj);                                 // 4  occurrences
+                                case 40, 41, 42, 43 -> new EntityMagmaCube(this.worldObj);                             // 4  occurrences
+                                case 44, 45, 46, 47, 48, 49 -> new EntityShadowZombie(this.worldObj);                  // 6  occurrences
+                                case 50, 51, 52, 53, 54, 55, 56 -> new EntityFireCreeper(this.worldObj);               // 7  occurrences
+                                case 57, 58, 59, 60, 61 -> new EntitySilverfish(this.worldObj);                        // 5  occurrences
+                                case 62, 63 -> new EntityPigZombie(this.worldObj);                                     // 2  occurrences
+                                default -> new EntityZombie(this.worldObj); // Fallback in case of unexpected input
+                            };
+                            mobToSpawn.setPositionAndUpdate(this.origin[0] + this.rand.nextInt(20), 200, this.origin[2] + this.rand.nextInt(20));
+                            mobToSpawn.setAttackTarget(player);
+                            this.worldObj.spawnEntityInWorld(mobToSpawn);
+                        }
+
+                        break;
+                    case 4:
+                        // falling crystals
+                        this.isDoingCrystalStorm = this.passivityDuration > 0;
+                        break;
+//                    case 5:
+//                        // launch player into the air and scramble their inventory
+//                        this.attackCycle += 1;
+//                        if(this.passivityDuration > 40) {
+//                            if (player.onGround && this.attackCycle % 4 == 1) {
+//                                this.worldObj.playSoundEffect(player.posX + (double) 0.5F, player.posY + (double) 0.5F, player.posZ + (double) 0.5F, "note.harp", 3.0F, 1);
+//                            }
+//                            if (player.onGround && this.attackCycle % 4 == 2) {
+//                                player.setPositionAndUpdate(player.posX, player.posY + 30, player.posZ);
+//                                player.motionY = 1;
+//                                if (this.playerHotbar == null) {
+//                                    this.playerHotbar = new ItemStack[9];
+//                                    System.arraycopy(player.inventory.mainInventory, 0, this.playerHotbar, 0, 9);
+//                                    System.arraycopy(this.getRandomItem(), 0, player.inventory.mainInventory, 0, 9);
+//                                    player.inventory.mainInventory[this.rand.nextInt(9)] = new ItemStack(Item.bucketWater);
+//                                }
+//                                player.worldObj.playSoundEffect(player.posX, player.posY + 2, player.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+//                                this.playerHotbar = null;
+//                            }
+//                        }
+//                        else if (this.attackCycle % 4 == 0){
+//                            System.arraycopy(this.playerHotbar, 0, player.inventory.mainInventory, 0, 9);
+//                            this.playerHotbar = null;
+//                        }
+//                        break;
+                    case 5:
+                        if(this.trackedEntities.isEmpty()){
                             EntityDragon dragon = new EntityDragon(this.worldObj);
                             dragon.setPositionAndUpdate(this.origin[0],this.origin[1] + 30, this.origin[2]);
-                            this.trackedEntity = dragon;
+                            this.trackedEntities.add(dragon);
                             this.worldObj.spawnEntityInWorld(dragon);
                         }
                         break;
+                    case 6:
+                        if(this.trackedEntities.isEmpty()){
+                            EntityBlaze blaze0 = new EntityBlaze(this.worldObj);
+                            blaze0.clearActivePotions();
+                            blaze0.addPotionEffect(new PotionEffect(Potion.field_76443_y.id,1000000,0));
+                            blaze0.setPositionAndUpdate(this.origin[0] + 5, 205, this.origin[2]);
+
+                            EntityBlaze blaze1 = new EntityBlaze(this.worldObj);
+                            blaze1.clearActivePotions();
+                            blaze1.addPotionEffect(new PotionEffect(Potion.field_76443_y.id,1000000,0));
+                            blaze1.addPotionEffect(new PotionEffect(Potion.waterBreathing.id,1000000,0));
+                            blaze1.setPositionAndUpdate(this.origin[0], 205, this.origin[2] + 5);
+
+                            EntityBlaze blaze2 = new EntityBlaze(this.worldObj);
+                            blaze2.clearActivePotions();
+                            blaze2.addPotionEffect(new PotionEffect(Potion.invisibility.id,1000000,0));
+                            blaze2.setPositionAndUpdate(this.origin[0], 205, this.origin[2]);
+
+                            EntityBlaze blaze3 = new EntityBlaze(this.worldObj);
+                            blaze3.clearActivePotions();
+                            blaze3.setPositionAndUpdate(this.origin[0] - 5, 210, this.origin[2]);
+
+                            EntityBlaze blaze4 = new EntityBlaze(this.worldObj);
+                            blaze4.clearActivePotions();
+                            blaze4.addPotionEffect(new PotionEffect(Potion.field_76443_y.id,1000000,0));
+                            blaze4.setPositionAndUpdate(this.origin[0], 205, this.origin[2] - 5);
+
+                            this.trackedEntities.add(blaze0);
+                            this.trackedEntities.add(blaze1);
+                            this.trackedEntities.add(blaze2);
+                            this.trackedEntities.add(blaze3);
+                            this.trackedEntities.add(blaze4);
+                            this.worldObj.spawnEntityInWorld(blaze0);
+                            this.worldObj.spawnEntityInWorld(blaze1);
+                            this.worldObj.spawnEntityInWorld(blaze2);
+                            this.worldObj.spawnEntityInWorld(blaze3);
+                            this.worldObj.spawnEntityInWorld(blaze4);
+                        }
                 }
             }
         }
@@ -195,22 +393,27 @@ public class EntityBloodWither extends EntityWither {
         if(this.playerTarget == null){
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
+
+        // tudou
+        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1){
+            this.currentAttackIndex = this.rand.nextInt(7);
+            this.setAttackDetails(this.currentAttackIndex);
+        }
+
+        // all the attacks
+        // summon attacks: executeAttack -> manageWitherPassivity
+        // regular attacks: manageWitherPassivity -> executeAttack
         if (!this.worldObj.isRemote && this.playerTarget != null) {
             primaryTarget = this.playerTarget;
             if(this.witherAttack == 600) {
-
-                this.executeAttack(8,-1);
-//                if (this.trackedEntity == null) {
-//                    EntityDragon dragon = new EntityDragon(this.worldObj);
-//                    dragon.setPositionAndUpdate(this.origin[0],this.origin[1] + 30, this.origin[2]);
-//                    this.trackedEntity = dragon;
-//                    this.worldObj.spawnEntityInWorld(dragon);
-//                }
-                this.manageWitherPassivity(true);
-
                 // suffocation attack
-//                primaryTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200,0));
-//                this.executeAttack(0, 8, false);
+
+                primaryTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 300,0));
+                if (this.passivityDuration == -1) {
+                    this.setWitherPassiveFor(300);
+                }
+                this.manageWitherPassivity(false);
+                this.executeAttack(0, 8);
             }
             else if(this.witherAttack == 900){
                 // tnt rain
@@ -222,6 +425,7 @@ public class EntityBloodWither extends EntityWither {
                 this.executeAttack(1, 12);
             }
             else if(this.witherAttack == 1400){
+                // lightning strikes
                 if (this.passivityDuration == -1) {
                     this.setWitherPassiveFor(600);
                 }
@@ -230,20 +434,46 @@ public class EntityBloodWither extends EntityWither {
             }
             else if(this.witherAttack == 2300){
                 // dragon summon
-                this.executeAttack(8,60);
-//                if (this.trackedEntity == null) {
-//                    EntityDragon dragon = new EntityDragon(this.worldObj);
-//                    dragon.setPositionAndUpdate(this.origin[0],this.origin[1] + 30, this.origin[2]);
-//                    this.trackedEntity = dragon;
-//                    this.worldObj.spawnEntityInWorld(dragon);
-//                }
+                this.executeAttack(5,-1);
                 this.manageWitherPassivity(true);
             }
             else if(this.witherAttack == 2500){
-
+                // blaze summon
+                this.executeAttack(6,-1);
+                this.manageWitherPassivity(true);
+            }
+            else if (this.witherAttack == 2700){
+                // set blood moon and summon mobs
+                if (this.passivityDuration == -1) {
+                    this.setWitherPassiveFor(600);
+                }
+                this.manageWitherPassivity(false);
+                this.executeAttack(3, 300);
+                if(!NightmareUtils.getIsBloodMoon()){
+                    this.previousWorldTime = this.worldObj.getWorldTime();
+                    this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
+                }
+            }
+            else if (this.witherAttack == 3000){
+                if (this.passivityDuration == -1) {
+                    this.setWitherPassiveFor(600);
+                }
+                this.manageWitherPassivity(false);
+                this.executeAttack(3, 400);
+                if(!NightmareUtils.getIsEclipse()){
+                    this.previousWorldTime = this.worldObj.getWorldTime();
+                    this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
+                }
+            }
+            else if (this.witherAttack == 3200){
+                if (this.passivityDuration == -1) {
+                    this.setWitherPassiveFor(1000);
+                }
+                this.executeAttack(4, -1);
+                this.manageWitherPassivity(true);
             }
             else{
-                this.witherAttack = Math.min(this.witherAttack + 1, 2000); // counter goes up from 0 to 2000
+                this.witherAttack = Math.min(this.witherAttack + 1, 4000);
                 this.activity = true;
                 this.attackCycle = 0;
             }
@@ -264,10 +494,10 @@ public class EntityBloodWither extends EntityWither {
                     this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.6f;
                     this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.6f;
                 }
-                if(targetDistanceSquared > 1000 && !this.activity && this.trackedEntity == null){
+                if(targetDistanceSquared > 1000 && !this.activity && this.trackedEntities.isEmpty()){
                     this.setPositionAndUpdate(primaryTarget.posX,210, primaryTarget.posZ);
                 }
-                if(this.trackedEntity != null){
+                if(!this.trackedEntities.isEmpty()){
                     deltaX = this.origin[0] - this.posX;
                     deltaZ = this.origin[2] - this.posZ;
                     targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
@@ -291,7 +521,6 @@ public class EntityBloodWither extends EntityWither {
         for (headIndex = 0; headIndex < 2; ++headIndex) {
             this.previousHeadYaw[headIndex] = this.headYaw[headIndex];
             this.previousHeadPitch[headIndex] = this.headPitch[headIndex];
-            // cato
         }
 
         for (headIndex = 0; headIndex < 2; ++headIndex) {
@@ -427,14 +656,6 @@ public class EntityBloodWither extends EntityWither {
 
     public void setTargetId(int par1, int par2) {
         this.dataWatcher.updateObject(17 + par1, par2);
-    }
-
-    private static void placeBlocksAtLine(World world, int x, int y, int z, int line){
-        int bonus = (line % 5) * 12;
-        for(int i = bonus; i < 12 + bonus; i++){
-            int blockID = world.rand.nextBoolean() ? NMBlocks.specialObsidian.blockID : NMBlocks.cryingObsidian.blockID;
-            world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 5),blockID);
-        }
     }
 
     private static void placeBlocksAtLinePartial(World world, int x, int y, int z, int line){
@@ -576,8 +797,9 @@ public class EntityBloodWither extends EntityWither {
         EntityBloodWither wither = new EntityBloodWither(world);
         wither.func_82206_m();
         world.playAuxSFX(2279, x, 200, z, 0);
-        WorldUtils.gameProgressSetWitherHasBeenSummonedServerOnly();
+        WorldUtils.gameProgressSetEndDimensionHasBeenAccessedServerOnly();
         wither.setLocationAndAngles(x + 0.25, 200, (double)z + 0.5, 0.0f, 0.0f);
+
         wither.origin = new int[]{x, 200, z};
         world.spawnEntityInWorld(wither);
     }
@@ -591,5 +813,96 @@ public class EntityBloodWither extends EntityWither {
     public void func_82206_m() {
         this.setHealthTimer(400);
         this.setHealth(this.getMaxHealth() / 16.0F);
+    }
+
+    private static long getNextBloodMoonTime(long currentTime) {
+        int currentDay = (int) Math.ceil((double) currentTime / 24000);
+
+        // Find the next day that satisfies the blood moon cycle (day % 16 == 9)
+        int nextBloodMoonDay = currentDay + (15 - (currentDay % 16) + 9) % 16;
+
+        // Convert back to ticks and set the time to 18000 (nighttime)
+        return (nextBloodMoonDay * 24000L) + 18000;
+    }
+    private static long getNextEclipse(long currentTime) {
+        return ((currentTime / 24000) + 1) * 24000 + 5000;
+    }
+    private ItemStack[] getRandomItem(){
+        return new ItemStack[]{
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
+                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0)
+        };
+    }
+    private static boolean areItemStackArraysEqual(ItemStack[] array1, ItemStack[] array2) {
+        // Check if both arrays are null or have the same reference
+        if (array1 == array2) {
+            return true;
+        }
+
+        // Check if either array is null or lengths are different
+        if (array1 == null || array2 == null || array1.length != array2.length) {
+            return false;
+        }
+
+        // Compare each item stack in both arrays
+        for (int i = 0; i < array1.length; i++) {
+            if (!ItemStack.areItemStacksEqual(array1[i], array2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void setAttackDetails(int index) {
+        switch (index) {
+            case 0: // Suffocation attack
+                this.currentDurationBetweenAttacks = 8;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 300;
+                break;
+            case 1: // TNT rain
+                this.currentDurationBetweenAttacks = 12;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 300;
+                break;
+            case 2: // Lightning strikes
+                this.currentDurationBetweenAttacks = 21;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 600;
+                break;
+            case 3: // Blood moon and mob summon
+                this.currentDurationBetweenAttacks = 300;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 600;
+                break;
+            case 4: // Eclipse event
+                this.currentDurationBetweenAttacks = 400;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 600;
+                break;
+            case 5: // Dragon summon
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = 0; // No passivity duration set
+                break;
+            case 6: // Blaze summon
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = 0; // No passivity duration set
+                break;
+            case 7: // Special case, passive for longer
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = 1000;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid attack index: " + index);
+        }
     }
 }

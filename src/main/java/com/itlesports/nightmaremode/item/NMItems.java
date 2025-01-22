@@ -30,7 +30,7 @@ public class NMItems {
     public static Item darksunFragment;
     public static Item magicFeather;
     public static ItemBucketMilk bloodMilk;
-    public static Item creeperChop;
+    public static FoodItem creeperChop;
     public static Item voidSack;
     public static RottenFleshItem charredFlesh;
     public static Item spiderFangs;
@@ -49,6 +49,7 @@ public class NMItems {
     public static FoodItem calamari;
     public static FoodItem calamariRoast;
     public static FoodItem friedCalamari;
+    public static Item steelBunch;
 
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
@@ -76,7 +77,7 @@ public class NMItems {
 
         magicFeather = (new Item(2327)).setTextureName("nmMagicFeather").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmMagicFeather");
         bloodMilk = (ItemBucketMilk) (new ItemBucketMilk(2328)).setTextureName("nmBloodMilk").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodMilk");
-        creeperChop = (new Item(2329)).setTextureName("nmCreeperChop").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmCreeperChop");
+        creeperChop = (FoodItem) (new FoodItem(2329,6,0.25f,false,"nmCreeperChop",false)).setTextureName("nmCreeperChop").setCreativeTab(CreativeTabs.tabFood);
         voidSack = (new Item(2330)).setTextureName("nmVoidSack").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmVoidSack");
         voidMembrane = (new Item(2331)).setTextureName("nmVoidMembrane").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmVoidMembrane");
         charredFlesh = (RottenFleshItem) (new RottenFleshItem(2332)).setMaxStackSize(64).setTextureName("nmCharredFlesh").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmCharredFlesh");
@@ -96,5 +97,7 @@ public class NMItems {
         calamari = (FoodItem) new FoodItem(2345, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nmCalamari").setCreativeTab(CreativeTabs.tabFood);
         calamariRoast = (FoodItem) new FoodItem(2346, 8, 0.25f, true, "nmCalamariRoast",true).setTextureName("nmCalamariRoast").setCreativeTab(CreativeTabs.tabFood);
         friedCalamari = (FoodItem) new FoodItem(2347, 12, 0.5f, true,"nmFriedCalamari").setTextureName("nmFriedCalamari").setCreativeTab(CreativeTabs.tabFood);
+
+        steelBunch = new Item(2348).setTextureName("nmSteelBunch").setUnlocalizedName("nmSteelBunch").setCreativeTab(CreativeTabs.tabMaterials);
     }
 }

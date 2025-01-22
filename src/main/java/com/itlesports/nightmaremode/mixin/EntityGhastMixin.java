@@ -35,7 +35,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Override
     public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-        if(NightmareUtils.getIsEclipse() && this.rand.nextInt(4) == 0){
+        if(NightmareUtils.getIsMobEclipsed(this) && this.rand.nextInt(4) == 0){
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 0));
         }
         return super.onSpawnWithEgg(par1EntityLivingData);
@@ -92,7 +92,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I",ordinal = 2),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
-        if(NightmareUtils.getIsEclipse() && isCreeperVariant(this)){
+        if(NightmareUtils.getIsMobEclipsed(this) && isCreeperVariant(this)){
             if(this.firstAttack){
                 this.worldObj.playSoundEffect(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ, "mob.ghast.scream",1f,0.8f);
                 this.firstAttack = false;
@@ -129,7 +129,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
         if(this.dimension == 0){
-            if (NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsEclipse()) {
+            if (NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this)) {
                 if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63) {
                     cir.setReturnValue(true);
                 }
@@ -163,7 +163,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 10,ordinal = 0))
     private int lowerSoundThreshold(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;
-        if(thisObj.dimension == 0 && !NightmareUtils.getIsEclipse()){
+        if(thisObj.dimension == 0 && !NightmareUtils.getIsMobEclipsed(this)){
             return constant * 2;
         }
         if(thisObj.worldObj != null && NightmareUtils.getWorldProgress(thisObj.worldObj)>0){
@@ -175,7 +175,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 20,ordinal = 1))
     private int lowerAttackThreshold(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;
-        if(thisObj.dimension == 0 && !NightmareUtils.getIsEclipse()){
+        if(thisObj.dimension == 0 && !NightmareUtils.getIsMobEclipsed(this)){
             return constant * 2;
         }
         if(thisObj.worldObj != null && NightmareUtils.getWorldProgress(thisObj.worldObj)>0){
@@ -184,9 +184,15 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
         return constant;
     }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,12);
+    }
+
     @Inject(method = "fireAtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void boostGhastForwardOnEclipse(CallbackInfo ci){
-        if (NightmareUtils.getIsEclipse() && this.rand.nextInt(3) == 0) {
+        if (NightmareUtils.getIsMobEclipsed(this) && this.rand.nextInt(3) == 0) {
             Vec3 playerPos = Vec3.createVectorHelper(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ);
             Vec3 entityPos = Vec3.createVectorHelper(this.posX,this.posY,this.posZ);
             // Calculate the direction vector

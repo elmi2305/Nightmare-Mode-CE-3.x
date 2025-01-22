@@ -65,7 +65,7 @@ public class NightmareMode extends BTWAddon {
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
-        this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,4).setNeedsAirExposure();
+        this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
 
@@ -163,7 +163,7 @@ public class NightmareMode extends BTWAddon {
             int var8 = z + rand.nextInt(16);
             this.silverfishGenThirdStrata.generate(world, rand, var6, var7, var8);
         }
-        for(int var5 = 0; var5 < 9; ++var5) {
+        for(int var5 = 0; var5 < 10; ++var5) {
             int var6 = x + rand.nextInt(16);
             int var7 = rand.nextInt(20)+16;
             int var8 = z + rand.nextInt(16);

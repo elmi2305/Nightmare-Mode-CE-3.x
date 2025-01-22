@@ -97,6 +97,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         }
         return 0.26;
     }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,8);
+    }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityAIWatchClosest;<init>(Lnet/minecraft/src/EntityLiving;Ljava/lang/Class;F)V"),index = 2)
     private float modifyDetectionRadius(float f){
@@ -113,15 +117,15 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.4f : 1;
             boolean isBloodMoon = bloodMoonModifier > 1;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
                 if(isBloodMoon || isEclipse){
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(26d);
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24d);
                 } else {
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 2));
-                    // 20 -> 22 -> 24 -> 26
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress));
+                    // 20 -> 21 -> 22 -> 23
                 }
             }
 

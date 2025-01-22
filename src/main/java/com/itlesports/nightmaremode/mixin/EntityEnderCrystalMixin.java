@@ -53,4 +53,10 @@ public abstract class EntityEnderCrystalMixin extends Entity{
     private void manageDespawnIfDeloaded(CallbackInfo ci){
         if(this.dimension != 1 && this.ridingEntity == null && this.ticksExisted >= 3000){this.setDead();}
     }
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
+    private void removeChainExplosions(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        if(par1DamageSource.isExplosion()){
+            cir.setReturnValue(false);
+        }
+    }
 }

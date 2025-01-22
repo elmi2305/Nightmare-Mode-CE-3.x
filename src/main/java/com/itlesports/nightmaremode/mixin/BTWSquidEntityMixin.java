@@ -26,6 +26,10 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
     }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,24);
+    }
 
     @Inject(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
@@ -43,7 +47,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
     private int increaseMysteriousGlandDropRate(int constant){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             return 4;
         }
         return 2;
@@ -52,7 +56,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;dropItem(II)Lnet/minecraft/src/EntityItem;"),index = 0)
     private int eclipseDropVoidSacks(int par1){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             return NMItems.voidSack.itemID;
         }
         return par1;
@@ -73,7 +77,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
 
 
-        if (bKilledByPlayer && NightmareUtils.getIsEclipse()) {
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
                 if(this.rand.nextInt(12) == 0){
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -107,7 +111,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
     private double increaseSquidRange(double dRange){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(this)){
             return 32;
         }
         return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * buffedSquidBonus;
@@ -180,31 +184,31 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
     private void manageJumpOnEclipse(CallbackInfo ci){
-        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsEclipse() || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid()){
+        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid()){
             this.motionY = 0.2f;
         }
     }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.02,ordinal = 0))
     private double noGravityOnEclipse(double constant){
-        return NightmareUtils.getIsEclipse() || buffedSquidBonus == 2 ? 0d : constant;
+        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2 ? 0d : constant;
     }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.8d))
     private double noGravityOnEclipse1(double constant){
-        return NightmareUtils.getIsEclipse() || buffedSquidBonus == 2 ? 1d : constant;
+        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2 ? 1d : constant;
     }
 
     // increasing the squid range
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
     private double increaseCalculatedTentacleRange(double constant){
-        return (NightmareUtils.getIsEclipse() ? 12.0d : 8.0d) * buffedSquidBonus;
+        return (NightmareUtils.getIsMobEclipsed(this) ? 12.0d : 8.0d) * buffedSquidBonus;
     }
 
     @ModifyConstant(method = "attemptTentacleAttackOnTarget", constant = @Constant(doubleValue = 36.0),remap = false)
     private double manageRange(double constant){
-        return (NightmareUtils.getIsEclipse() ? 144.0 : 81.0) * (buffedSquidBonus * buffedSquidBonus);
+        return (NightmareUtils.getIsMobEclipsed(this) ? 144.0 : 81.0) * (buffedSquidBonus * buffedSquidBonus);
     }
     // let squid see through walls
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
@@ -272,7 +276,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 96) != null && this.posY >= 63){
+        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.posY >= 63){
             cir.setReturnValue(true);
         }
     }
@@ -294,7 +298,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Override
     public boolean isInWater() {
-        if(NightmareUtils.getIsEclipse() || buffedSquidBonus == 2){
+        if(NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2){
             return true;
         }
         return super.isInWater();
@@ -302,7 +306,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Override
     public boolean isInsideOfMaterial(Material par1Material) {
-        if((NightmareUtils.getIsEclipse() || buffedSquidBonus == 2) && par1Material == Material.water){
+        if((NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && par1Material == Material.water){
             return true;
         }
         return super.isInsideOfMaterial(par1Material);

@@ -25,13 +25,13 @@ public class EntityBlazeMixin extends EntityMob{
         if(this.worldObj != null) {
             boolean isVariant = false;
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
-            int eclipseBonus = NightmareUtils.getIsEclipse() ? (isAquatic(this) ? 20 : 10) : 0;
+            int eclipseBonus = NightmareUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
 
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 8 : 4) + eclipseBonus);
             // 16 -> 24 -> 32 -> 40
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
-            if(NightmareUtils.getIsEclipse()){
+            if(NightmareUtils.getIsMobEclipsed(this)){
                 if(rand.nextBoolean()){
                     this.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 1000000, 0));
                 }
@@ -63,7 +63,7 @@ public class EntityBlazeMixin extends EntityMob{
     }
     @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 100))
     private int lowerBlazeAttackCooldown(int constant) {
-        if (NightmareUtils.getIsEclipse() && this.getActivePotionEffects().isEmpty()){
+        if (NightmareUtils.getIsMobEclipsed(this) && this.getActivePotionEffects().isEmpty()){
             return 50;
         }
         return constant;
@@ -73,7 +73,7 @@ public class EntityBlazeMixin extends EntityMob{
     private void manageBlazeDash(CallbackInfo ci){
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
         if(thisObj.entityToAttack instanceof EntityPlayer target){
-            int threshold = NightmareUtils.getIsEclipse() ? 80 : 200;
+            int threshold = NightmareUtils.getIsMobEclipsed(this) ? 80 : 200;
             double distToPlayer = this.getDistanceSqToEntity(target);
             boolean isEclipse = threshold == 80;
 
@@ -107,16 +107,23 @@ public class EntityBlazeMixin extends EntityMob{
         }
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void manageEclipseChance(World world, CallbackInfo ci){
+        NightmareUtils.manageEclipseChance(this,8);
+    }
+
 
     @ModifyArg(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private Entity manageWaterBlazeAttack(Entity projectile){
-        if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NightmareUtils.getIsEclipse()) {
+        if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NightmareUtils.getIsMobEclipsed(this)) {
             if(isAquatic(this)){
                 BTWSquidEntity squid = new BTWSquidEntity(this.worldObj);
 
                 double posX = this.posX + getRandomOffsetFromPosition(this);
                 double posY = this.posY + this.getEyeHeight() + (getRandomOffsetFromPosition(this) / 4);
                 double posZ = this.posZ + getRandomOffsetFromPosition(this);
+
+                squid.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
 
                 squid.setPositionAndUpdate(posX,posY,posZ);
 

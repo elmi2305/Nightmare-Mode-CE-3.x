@@ -16,7 +16,7 @@ public class RenderHorseMixin {
 
     @Inject(method = "func_110849_a", at = @At("HEAD"),cancellable = true)
     private void horseEclipseTextures(EntityHorse par1, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1)) {
             cir.setReturnValue(HORSE_ECLIPSE);
         }
     }

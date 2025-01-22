@@ -15,7 +15,7 @@ public class RenderBlazeMixin {
 
     @Inject(method = "getBlazeTextures", at = @At("HEAD"),cancellable = true)
     private void blazeEclipseTextures(EntityBlaze par1, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NightmareUtils.getIsMobEclipsed(par1)){
             if(par1.isPotionActive(Potion.waterBreathing)){
                 cir.setReturnValue(BLAZE_WATER);
             } else {

@@ -18,13 +18,12 @@ public class EntityAILunge extends EntityAITarget {
     public boolean shouldExecute() {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
+            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this.taskOwner);
             int range = isEclipse ? 50 : 30;
 
             return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= range  // 5.4 blocks
                     && !this.taskOwner.getNavigator().noPath()
                     && this.taskOwner.onGround
-//                    && (this.taskOwner.getHeldItem() == null || isEclipse)
                     && this.taskOwner.worldObj != null // paranoid so I'm checking if it's null. a spawner should never execute this code
                     && this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE;
         }
@@ -34,7 +33,7 @@ public class EntityAILunge extends EntityAITarget {
     @Override
     public boolean continueExecuting(){
         boolean isHoldingItem = this.taskOwner.getHeldItem() != null;
-        boolean isEclipse = NightmareUtils.getIsEclipse();
+        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this.taskOwner);
 
         if(isHoldingItem && !isEclipse){return false;}
         // ensures normal behavior on non-eclipse

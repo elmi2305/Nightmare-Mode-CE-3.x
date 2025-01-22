@@ -108,7 +108,7 @@ public class UrnEntityMixin {
             }
         }
 
-        for(int i = x - 1; i < x + 2; i++){
+        for(int i = x - 2; i < x + 3; i++){
             for(int j = z - 1; j < z + 2; j++){
                 int blockID = world.rand.nextBoolean() ? NMBlocks.specialObsidian.blockID : NMBlocks.cryingObsidian.blockID;
                 world.setBlock(i,199,j,blockID);

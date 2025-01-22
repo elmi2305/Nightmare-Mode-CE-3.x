@@ -16,7 +16,7 @@ public class RenderCowMixin {
 
     @Inject(method = "getCowTextures", at = @At("HEAD"),cancellable = true)
     private void cowEclipseTextures(EntityCow par1EntityCow, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1EntityCow)) {
             cir.setReturnValue(COW_ECLIPSE);
         }
     }

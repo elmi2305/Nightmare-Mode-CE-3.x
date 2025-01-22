@@ -15,7 +15,7 @@ public class RenderGhastMixin {
 
     @Inject(method = "func_110867_a", at = @At("HEAD"),cancellable = true)
     private void eclipseTextures(EntityGhast par1, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsMobEclipsed(par1)) {
             if (par1.isPotionActive(Potion.moveSpeed)) {
                 cir.setReturnValue(GHAST_CREEPER);
             } else {
