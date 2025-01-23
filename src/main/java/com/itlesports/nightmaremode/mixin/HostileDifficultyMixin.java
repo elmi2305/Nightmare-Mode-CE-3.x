@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulty;
 import btw.world.util.difficulty.HostileDifficulty;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,10 +20,5 @@ public class HostileDifficultyMixin extends Difficulty {
     @Inject(method = "hasAbandonedStructures", at = @At("RETURN"),remap = false, cancellable = true)
     private void noAbandonmentStructures(CallbackInfoReturnable<Boolean> cir){
         cir.setReturnValue(false);
-    }
-
-    @Override
-    public boolean allowsPlacingBlocksInAir() {
-        return WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly();
     }
 }

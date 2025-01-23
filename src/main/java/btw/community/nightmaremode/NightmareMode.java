@@ -68,17 +68,6 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
-
-//    public static void setBloodMoonFalse(){
-//        if (instance != null) {
-//            instance.isBloodMoon = false;
-//        }
-//    }
-//    public static void setBloodMoonTrue(){
-//        if (instance != null) {
-//            instance.isBloodMoon = true;
-//        }
-//    }
     public static void setEclipse(boolean par1){
         if (instance != null) {
             instance.isEclipse = par1;
@@ -97,12 +86,14 @@ public class NightmareMode extends BTWAddon {
     public static Boolean totalEclipse;
     public static Boolean buffedSquids;
     public static Boolean evolvedMobs;
+    public static Boolean perfectStart;
 
     @Override
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
+        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven, an axe and 3/4 food");
         this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
         this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
@@ -117,6 +108,7 @@ public class NightmareMode extends BTWAddon {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
         nightmareZoomKey = propertyValues.get("NmZoomKey");
+        perfectStart = Boolean.parseBoolean(propertyValues.get("PerfectStart"));
         bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
         configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
         bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));

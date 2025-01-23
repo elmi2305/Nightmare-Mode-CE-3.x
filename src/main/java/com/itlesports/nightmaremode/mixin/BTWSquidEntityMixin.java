@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -38,7 +39,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             locals = LocalCapture.CAPTURE_FAILHARD)
 
     private void teleportPlayer(CallbackInfo ci, Vec3 tentacleTip, AxisAlignedBB tipBox, List potentialCollisionList, Iterator collisionIterator, EntityLivingBase tempEntity){
-        tempEntity.setPositionAndUpdate(this.posX,this.posY-1,this.posZ);
+        tempEntity.setPositionAndUpdate(this.posX,this.posY,this.posZ);
         if (tempEntity instanceof EntityPlayer) {
             this.playSound("mob.endermen.portal",2.0F,1.0F);
         } else{
@@ -188,6 +189,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             this.motionY = 0.2f;
         }
     }
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void manageSquidsOnBossFight(CallbackInfo ci){
+        if(this.posY <= 200 && EntityBloodWither.isBossActive()){
+            this.setDead();
+        }
+    }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.02,ordinal = 0))
     private double noGravityOnEclipse(double constant){
@@ -276,7 +283,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.posY >= 63){
+        int targetY = EntityBloodWither.isBossActive() ? 205 : 63;
+        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.posY >= targetY){
             cir.setReturnValue(true);
         }
     }

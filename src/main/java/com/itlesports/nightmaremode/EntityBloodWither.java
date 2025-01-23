@@ -44,6 +44,8 @@ public class EntityBloodWither extends EntityWither {
     private int currentDurationBetweenAttacks; // the duration of the attack the wither will do
     private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
     private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
+    private static short[] blockChanges = new short[16]; // used to send render packets for creating the arena
+    private static boolean isBossActive = false;
     private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
     private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
             Block.stone.blockID,
@@ -93,6 +95,9 @@ public class EntityBloodWither extends EntityWither {
         if (isTrackingEntity) {
             this.disengageWither();
             for(int i = 0; i < this.trackedEntities.size(); i++){
+                if(this.trackedEntities.get(i).posY < 199 && !trackedEntities.get(i).noClip){
+                    this.trackedEntities.get(i).setLocationAndAngles(this.origin[0], 200, this.origin[2], this.trackedEntities.get(i).rotationYaw , this.trackedEntities.get(i).rotationPitch);
+                }
                 if(this.trackedEntities.get(i).isDead){
                     this.trackedEntities.remove(i);
                     break;
@@ -137,6 +142,7 @@ public class EntityBloodWither extends EntityWither {
 
                 if (shouldClear) {
                     this.trackedEntities.clear();
+                    this.isDoingCrystalStorm = false;
                 }
                 if (this.passivityDuration > 0) {
                     this.setWitherPassiveFor(this.passivityDuration - 1);
@@ -216,6 +222,9 @@ public class EntityBloodWither extends EntityWither {
 
                 switch (index){
                     case 0: // suffocation attack
+                        if(player.isPotionActive(Potion.moveSlowdown) && player.getActivePotionEffect(Potion.moveSlowdown).duration < 10){
+                            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 30,0));
+                        }
                         for (int i = -1; i < 2; i++) {
                             for (int j = -1; j < 2; j++) {
                                 x = player.posX + i + this.rand.nextInt(4);
@@ -235,7 +244,7 @@ public class EntityBloodWither extends EntityWither {
                         int fuse = (int) Math.sqrt(800 * y / 16);
 
                         EntityTNTPrimed missile = new EntityTNTPrimed(this.worldObj,x + deltaMovement.xCoord * fuse,player.posY + y, z + deltaMovement.zCoord * fuse);
-                        missile.fuse = fuse;
+                        missile.fuse = (int) (fuse * 1.5);
                         this.worldObj.spawnEntityInWorld(missile);
                         break;
                     case 2:
@@ -299,7 +308,7 @@ public class EntityBloodWither extends EntityWither {
                         break;
                     case 4:
                         // falling crystals
-                        this.isDoingCrystalStorm = this.passivityDuration > 0;
+                        this.isDoingCrystalStorm = this.passivityDuration > 10;
                         break;
 //                    case 5:
 //                        // launch player into the air and scramble their inventory
@@ -386,6 +395,7 @@ public class EntityBloodWither extends EntityWither {
         double deltaX;
         double deltaZ;
         EntityPlayer primaryTarget;
+        isBossActive = true;
 
         this.motionY *= 0.6f;
 
@@ -395,9 +405,27 @@ public class EntityBloodWither extends EntityWither {
         }
 
         // tudou
-        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1){
-            this.currentAttackIndex = this.rand.nextInt(7);
+        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
+            int i;
+            do {
+                i = this.rand.nextInt(7);
+            } while (i == this.currentAttackIndex);
+
+            this.currentAttackIndex = i;
+            System.out.println(this.currentAttackIndex);
             this.setAttackDetails(this.currentAttackIndex);
+
+            if (this.rand.nextInt(8) == 0) {
+                if(!NightmareUtils.getIsBloodMoon()){
+                    this.previousWorldTime = this.worldObj.getWorldTime();
+                    this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
+                }
+            } else if (this.rand.nextInt(8) == 0) {
+                if(!NightmareUtils.getIsEclipse()){
+                    this.previousWorldTime = this.worldObj.getWorldTime();
+                    this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
+                }
+            }
         }
 
         // all the attacks
@@ -405,75 +433,21 @@ public class EntityBloodWither extends EntityWither {
         // regular attacks: manageWitherPassivity -> executeAttack
         if (!this.worldObj.isRemote && this.playerTarget != null) {
             primaryTarget = this.playerTarget;
-            if(this.witherAttack == 600) {
-                // suffocation attack
-
-                primaryTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 300,0));
+            if(this.witherAttack % 600 == 599) {
+                // every attack
                 if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(300);
+                    this.setWitherPassiveFor(this.currentAttackPassivityLength);
                 }
-                this.manageWitherPassivity(false);
-                this.executeAttack(0, 8);
-            }
-            else if(this.witherAttack == 900){
-                // tnt rain
-
-                if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(300);
+                if(this.isCurrentAttackSummoning) {
+                    this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
+                    this.manageWitherPassivity(true);
+                } else{
+                    this.manageWitherPassivity(false);
+                    this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
                 }
-                this.manageWitherPassivity(false);
-                this.executeAttack(1, 12);
-            }
-            else if(this.witherAttack == 1400){
-                // lightning strikes
-                if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(600);
-                }
-                this.manageWitherPassivity(false);
-                this.executeAttack(2, 20 + 1);
-            }
-            else if(this.witherAttack == 2300){
-                // dragon summon
-                this.executeAttack(5,-1);
-                this.manageWitherPassivity(true);
-            }
-            else if(this.witherAttack == 2500){
-                // blaze summon
-                this.executeAttack(6,-1);
-                this.manageWitherPassivity(true);
-            }
-            else if (this.witherAttack == 2700){
-                // set blood moon and summon mobs
-                if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(600);
-                }
-                this.manageWitherPassivity(false);
-                this.executeAttack(3, 300);
-                if(!NightmareUtils.getIsBloodMoon()){
-                    this.previousWorldTime = this.worldObj.getWorldTime();
-                    this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
-                }
-            }
-            else if (this.witherAttack == 3000){
-                if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(600);
-                }
-                this.manageWitherPassivity(false);
-                this.executeAttack(3, 400);
-                if(!NightmareUtils.getIsEclipse()){
-                    this.previousWorldTime = this.worldObj.getWorldTime();
-                    this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
-                }
-            }
-            else if (this.witherAttack == 3200){
-                if (this.passivityDuration == -1) {
-                    this.setWitherPassiveFor(1000);
-                }
-                this.executeAttack(4, -1);
-                this.manageWitherPassivity(true);
             }
             else{
-                this.witherAttack = Math.min(this.witherAttack + 1, 4000);
+                this.witherAttack = (this.witherAttack + 1) % 3000;
                 this.activity = true;
                 this.attackCycle = 0;
             }
@@ -658,12 +632,47 @@ public class EntityBloodWither extends EntityWither {
         this.dataWatcher.updateObject(17 + par1, par2);
     }
 
-    private static void placeBlocksAtLinePartial(World world, int x, int y, int z, int line){
+    private void placeBlocksAtLinePartial(World world, int x, int y, int z, int line){
         int bonus = (line % 3) * 20;
         for(int i = bonus; i < 20 + bonus; i++) {
             int blockID = world.rand.nextBoolean() ? NMBlocks.specialObsidian.blockID : NMBlocks.cryingObsidian.blockID;
-            world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 3), blockID);
+            world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 3), blockID, 0, 2);
+//            world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 3), blockID, 0, 0);
         }
+//        if (line % 8 == 2){
+//            blockChanges[0] = (short) ((x << 12) | (z << 8) | y);
+//            blockChanges[1] = (short) ((x << 12) | (z << 8) | y);
+//            blockChanges[2] = (short) ((x << 12) | (z << 8) | y);
+//            Packet52MultiBlockChange packet = new Packet52MultiBlockChange((int)x >> 4, (int) z >> 4, );
+//            Minecraft.getMinecraft().getNetHandler().handleMultiBlockChange(packet);
+//        }
+//        if(line == 0){
+//            world.markBlockRangeForRenderUpdate(x - 30, 199, z - 30,x + 30, 199, z + 30);
+//        }
+    }
+
+    public void sendMultiBlockChangePacket(World world, int chunkX, int chunkZ, short[] blockData, int size) {
+        // Create the Packet52MultiBlockChange packet for the given chunk
+        Packet52MultiBlockChange packet = new Packet52MultiBlockChange(chunkX, chunkZ, blockData, size, world);
+
+        // Now send the packet to all players in the world (or specific players)
+        for (Object obj : world.playerEntities) {
+            if (obj instanceof EntityPlayerMP) {
+                EntityPlayerMP player = (EntityPlayerMP) obj;
+                sendPacketToPlayer(player, packet);
+            }
+        }
+    }
+
+    public void sendPacketToPlayer(EntityPlayerMP player, Packet52MultiBlockChange packet) {
+        // Convert Packet52MultiBlockChange to Packet250CustomPayload
+        Packet250CustomPayload customPayload = new Packet250CustomPayload();
+        customPayload.channel = "yourmod:multi_block_change"; // Custom channel
+        customPayload.data = packet.metadataArray; // Assuming getData() returns byte[] for packet data
+        customPayload.length = customPayload.data.length;
+
+        // Send the packet to the client
+        player.playerNetServerHandler.sendPacket(customPayload);
     }
 
     @Override
@@ -867,7 +876,7 @@ public class EntityBloodWither extends EntityWither {
                 this.currentAttackPassivityLength = 300;
                 break;
             case 1: // TNT rain
-                this.currentDurationBetweenAttacks = 12;
+                this.currentDurationBetweenAttacks = 20;
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 300;
                 break;
@@ -881,28 +890,26 @@ public class EntityBloodWither extends EntityWither {
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 600;
                 break;
-            case 4: // Eclipse event
-                this.currentDurationBetweenAttacks = 400;
-                this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 600;
-                break;
-            case 5: // Dragon summon
-                this.currentDurationBetweenAttacks = -1;
-                this.isCurrentAttackSummoning = true;
-                this.currentAttackPassivityLength = 0; // No passivity duration set
-                break;
-            case 6: // Blaze summon
-                this.currentDurationBetweenAttacks = -1;
-                this.isCurrentAttackSummoning = true;
-                this.currentAttackPassivityLength = 0; // No passivity duration set
-                break;
-            case 7: // Special case, passive for longer
+            case 4: // crystal storm
                 this.currentDurationBetweenAttacks = -1;
                 this.isCurrentAttackSummoning = true;
                 this.currentAttackPassivityLength = 1000;
                 break;
+            case 5: // Dragon summon
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = -1; // No passivity duration set
+                break;
+            case 6: // Blaze summon
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = -1; // No passivity duration set
+                break;
             default:
                 throw new IllegalArgumentException("Invalid attack index: " + index);
         }
+    }
+    public static boolean isBossActive(){
+        return isBossActive;
     }
 }

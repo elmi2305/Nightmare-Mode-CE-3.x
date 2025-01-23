@@ -26,6 +26,7 @@ public abstract class HardcoreSpawnUtilsMixin{
         if ((BTWMod.isSinglePlayerNonLan() || MinecraftServer.getServer().getCurrentPlayerCount() == 0) && world.getDifficulty() == Difficulties.HOSTILE) {
             overworldTime += 18000L;
 
+
             if(world.getMoonPhase() == 4 && (!WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly())){
                 overworldTime += 24000L;
             }
