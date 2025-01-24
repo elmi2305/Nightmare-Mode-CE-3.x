@@ -5,7 +5,10 @@ import btw.item.items.NetherStarItem;
 import btw.item.items.RottenFleshItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
-import net.minecraft.src.*;
+import net.minecraft.src.CreativeTabs;
+import net.minecraft.src.EnumToolMaterial;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemBucketMilk;
 
 public class NMItems {
     public static ItemRPG rpg;
@@ -44,12 +47,17 @@ public class NMItems {
     public static RottenFleshItem decayedFlesh;
     public static Item ghastTentacle;
     public static Item elementalRod;
+    public static Item shadowRod;
     public static Item greg;
     public static NetherStarItem starOfTheBloodGod;
     public static FoodItem calamari;
     public static FoodItem calamariRoast;
     public static FoodItem friedCalamari;
     public static Item steelBunch;
+
+    public static ItemEclipseBow eclipseBow;
+    public static ItemMagicArrow magicArrow;
+    public static ItemIronFishingPole ironFishingPole;
 
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
@@ -91,13 +99,17 @@ public class NMItems {
         decayedFlesh = (RottenFleshItem) (new RottenFleshItem(2340)).setMaxStackSize(64).setTextureName("nmDecayedFlesh").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDecayedFlesh");
         ghastTentacle = (new Item(2341)).setTextureName("nmGhastTentacle").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGhastTentacle");
         elementalRod = (new Item(2342)).setTextureName("nmElementalRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmElementalRod");
-        greg = (new Item(2343)).setTextureName("nmGreg").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGreg");
-        starOfTheBloodGod = (NetherStarItem) new NetherStarItem(2344).setMaxStackSize(1).setTextureName("nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
+        shadowRod = (new Item(2342)).setTextureName("nmShadowRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmShadowRod");
+        greg = (new Item(2344)).setTextureName("nmGreg").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGreg");
+        starOfTheBloodGod = (NetherStarItem) new NetherStarItem(2345).setMaxStackSize(1).setTextureName("nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
 
-        calamari = (FoodItem) new FoodItem(2345, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nmCalamari").setCreativeTab(CreativeTabs.tabFood);
-        calamariRoast = (FoodItem) new FoodItem(2346, 8, 0.25f, true, "nmCalamariRoast",true).setTextureName("nmCalamariRoast").setCreativeTab(CreativeTabs.tabFood);
-        friedCalamari = (FoodItem) new FoodItem(2347, 12, 0.5f, true,"nmFriedCalamari").setTextureName("nmFriedCalamari").setCreativeTab(CreativeTabs.tabFood);
+        calamari = (FoodItem) new FoodItem(2346, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nmCalamari").setCreativeTab(CreativeTabs.tabFood);
+        calamariRoast = (FoodItem) new FoodItem(2347, 8, 0.25f, true, "nmCalamariRoast",true).setTextureName("nmCalamariRoast").setCreativeTab(CreativeTabs.tabFood);
+        friedCalamari = (FoodItem) new FoodItem(2348, 12, 0.5f, true,"nmFriedCalamari").setTextureName("nmFriedCalamari").setCreativeTab(CreativeTabs.tabFood);
 
-        steelBunch = new Item(2348).setTextureName("nmSteelBunch").setUnlocalizedName("nmSteelBunch").setCreativeTab(CreativeTabs.tabMaterials);
+        steelBunch = new Item(2349).setTextureName("nmSteelBunch").setUnlocalizedName("nmSteelBunch").setCreativeTab(CreativeTabs.tabMaterials);
+        eclipseBow = (ItemEclipseBow) new ItemEclipseBow(2350).setCreativeTab(CreativeTabs.tabCombat);
+        magicArrow = (ItemMagicArrow) new ItemMagicArrow(2351).setTextureName("nmMagicArrow").setUnlocalizedName("nmMagicArrow").setCreativeTab(CreativeTabs.tabCombat);
+//        ironFishingPole = (ItemIronFishingPole) new ItemIronFishingPole(2352).setCreativeTab(CreativeTabs.tabTools);
     }
 }

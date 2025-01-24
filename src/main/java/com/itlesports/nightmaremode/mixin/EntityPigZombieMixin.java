@@ -46,18 +46,42 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
-            int var4 = this.rand.nextInt(2);
-            // 0 - 1
-            if (iLootingModifier > 0) {
-                var4 += this.rand.nextInt(iLootingModifier + 1);
+        if (bKilledByPlayer) {
+            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            if (bloodOrbID > 0) {
+                int var4 = this.rand.nextInt(2);
+                // 0 - 1
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    this.dropItem(bloodOrbID, 1);
+                }
             }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                this.dropItem(bloodOrbID, 1);
+            if (NightmareUtils.getIsMobEclipsed(this)) {
+                for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
+                    if (this.rand.nextInt(8) == 0) {
+                        this.dropItem(NMItems.darksunFragment.itemID, 1);
+                        if (this.rand.nextBoolean()) {
+                            break;
+                        }
+                    }
+                }
+
+                int itemID = NMItems.decayedFlesh.itemID;
+
+                int var4 = this.rand.nextInt(3);
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    if(this.rand.nextInt(3) == 0) continue;
+                    this.dropItem(itemID, 1);
+                }
             }
         }
     }
+
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){

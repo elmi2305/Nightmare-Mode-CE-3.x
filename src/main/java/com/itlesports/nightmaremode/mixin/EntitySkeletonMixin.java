@@ -54,25 +54,52 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
-            int var4 = this.rand.nextInt(3);
-            // 0 - 2
-            switch(this.getSkeletonType()){
-                case 1, 4:
-                    var4 += 2;
-                    break;
-                case 2, 3:
-                    var4 += 1;
-                    break;
+        if (bKilledByPlayer) {
+            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            if (bloodOrbID > 0) {
+                int var4 = this.rand.nextInt(3);
+                // 0 - 2
+                switch(this.getSkeletonType()){
+                    case 1, 4:
+                        var4 += 2;
+                        break;
+                    case 2, 3:
+                        var4 += 1;
+                        break;
+                }
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    this.dropItem(bloodOrbID, 1);
+                }
             }
-            if (iLootingModifier > 0) {
-                var4 += this.rand.nextInt(iLootingModifier + 1);
-            }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                this.dropItem(bloodOrbID, 1);
+            if (NightmareUtils.getIsMobEclipsed(this)) {
+                for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
+                    if (this.rand.nextInt(8) == 0) {
+                        this.dropItem(NMItems.darksunFragment.itemID, 1);
+                        if (this.rand.nextBoolean()) {
+                            break;
+                        }
+                    }
+                }
+
+                int itemID = NMItems.witheredBone.itemID;
+
+                int var4 = this.rand.nextInt(3);
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    if(this.rand.nextInt(3) == 0) continue;
+                    this.dropItem(itemID, 1);
+                }
             }
         }
+    }
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+
     }
 
     @Inject(method = "<init>",

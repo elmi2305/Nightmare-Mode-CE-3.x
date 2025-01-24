@@ -5,10 +5,7 @@ import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class NightmareUtils {
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(

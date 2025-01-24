@@ -41,16 +41,37 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     @Override
-    protected void dropFewItems(boolean par1, int par2) {
+    protected void dropFewItems(boolean bKilledByPlayer, int lootingLevel) {
         if(this.rand.nextInt(12) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
             this.dropItem(Item.enderPearl.itemID,1);
         }
 
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0) {
+        if (bloodOrbID > 0 && bKilledByPlayer) {
             int dropCount = this.rand.nextInt(3); // 0 - 2
             for (int i = 0; i < dropCount; ++i) {
                 this.dropItem(bloodOrbID, 1);
+            }
+        }
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+            for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
+                if (this.rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+
+            int itemID = NMItems.charredFlesh.itemID;
+
+            int var4 = this.rand.nextInt(3);
+            if (lootingLevel > 0) {
+                var4 += this.rand.nextInt(lootingLevel + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                if(this.rand.nextInt(3) == 0) continue;
+                this.dropItem(itemID, 1);
             }
         }
     }
@@ -90,7 +111,19 @@ public class EntityShadowZombie extends EntityZombie {
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
 
     @Override
-    protected void addRandomArmor() {}
+    protected void addRandomArmor() {
+        if(NightmareUtils.getIsMobEclipsed(this)){
+            if (this.rand.nextFloat() < 0.05f) {
+                int iHeldType = this.rand.nextInt(3);
+                if (iHeldType == 0) {
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
+                } else {
+                    this.setCurrentItemOrArmor(0, new ItemStack(Item.shovelIron));
+                }
+                this.equipmentDropChances[0] = 1f;
+            }
+        }
+    }
 
     private void teleportToTarget(EntityPlayer targetPlayer){
         int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);

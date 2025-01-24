@@ -1,10 +1,8 @@
 package com.itlesports.nightmaremode;
 
 import btw.entity.mob.villager.trade.VillagerTrade;
-import net.minecraft.src.EntityVillager;
-import net.minecraft.src.MerchantRecipe;
-import net.minecraft.src.MerchantRecipeList;
-import net.minecraft.src.World;
+import btw.util.sounds.BTWSoundManager;
+import net.minecraft.src.*;
 
 import java.util.HashSet;
 
@@ -32,5 +30,36 @@ public class NightmareVillager extends EntityVillager {
             recipeList.add(recipe);
             --availableTrades;
         }
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27d);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(800.0);
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        if(par1DamageSource.getSourceOfDamage() instanceof EntityLivingBase attacker){
+            attacker.attackEntityFrom(DamageSource.generic, 6f);
+            if(attacker instanceof EntityLiving){
+                ((EntityLiving) attacker).setAttackTarget(null);
+                this.setLastAttacker(attacker);
+            }
+        }
+        this.heal(par2 * 3);
+        this.playSound(BTWSoundManager.WITCH_IDLE.sound(),2f,0.1f);
+        return super.attackEntityFrom(par1DamageSource, par2);
+    }
+
+    @Override
+    protected String getHurtSound() {
+        return null;
+    }
+
+    @Override
+    public boolean getCanBeHeadCrabbed(boolean bSquidInWater) {
+        return false;
     }
 }

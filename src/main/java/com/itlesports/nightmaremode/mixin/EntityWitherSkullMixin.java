@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityWitherSkull.class)
 public class EntityWitherSkullMixin {
@@ -33,4 +35,10 @@ public class EntityWitherSkullMixin {
         return 12.0f;
     }
 
+    @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"),cancellable = true)
+    private void manageBloodWitherNotDestroyingArena(Explosion explosion, World par2World, int par3, int par4, int par5, Block par6Block, CallbackInfoReturnable<Float> cir){
+        if(par6Block.blockID == NMBlocks.specialObsidian.blockID || par6Block.blockID == NMBlocks.cryingObsidian.blockID){
+            cir.setReturnValue(par6Block.blockResistance);
+        }
+    }
 }

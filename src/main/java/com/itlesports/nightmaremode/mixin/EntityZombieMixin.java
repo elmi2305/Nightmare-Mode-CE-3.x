@@ -100,7 +100,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 if (shouldBurn) {
                     this.onKilledBySun();
                 }
-            } else if(NightmareUtils.getIsMobEclipsed(this)){
+            } else if(NightmareUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote){
                 summonSilverfish(this);
             }
         }
@@ -123,6 +123,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     i--;
                 }
             }
+            zombie.onDeath(DamageSource.generic);
             zombie.setDead();
         }
     }
@@ -138,6 +139,27 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Override
     protected void entityLivingDropFewItems(boolean par1, int par2) {
+        if (par1 && NightmareUtils.getIsMobEclipsed(this)) {
+            for(int i = 0; i < (par2 * 2) + 1; i++) {
+                if (this.rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+
+            int itemID = NMItems.decayedFlesh.itemID;
+            int var4 = this.rand.nextInt(3);
+            if (par2 > 0) {
+                var4 += this.rand.nextInt(par2 + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                if(this.rand.nextInt(3) == 0) continue;
+                this.dropItem(itemID, 1);
+            }
+
+        }
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
 
         if (bloodOrbID > 0 && par1) {

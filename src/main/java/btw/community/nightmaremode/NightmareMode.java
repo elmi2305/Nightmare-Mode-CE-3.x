@@ -3,6 +3,7 @@ package btw.community.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
+import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -60,7 +61,11 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
 
         NMBlocks.initNightmareBlocks();
-
+        // because apparently adding this trade crashes if I do it in the trade list mixin ???
+        for(int i = 1; i <= 4; i++){
+            TradeProvider.getBuilder().profession(5).level(i).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.613f * (float)Math.log(i) + 0.05f).addToTradeList();
+        }
+        // this is stupid ^
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);

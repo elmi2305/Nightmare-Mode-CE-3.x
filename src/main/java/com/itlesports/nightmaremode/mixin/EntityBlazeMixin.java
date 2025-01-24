@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -123,7 +124,7 @@ public class EntityBlazeMixin extends EntityMob{
                 double posY = this.posY + this.getEyeHeight() + (getRandomOffsetFromPosition(this) / 4);
                 double posZ = this.posZ + getRandomOffsetFromPosition(this);
 
-                squid.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
+                squid.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE));
 
                 squid.setPositionAndUpdate(posX,posY,posZ);
 
@@ -155,5 +156,33 @@ public class EntityBlazeMixin extends EntityMob{
     }
     @Unique private static boolean isAquatic(EntityMob blaze){
         return blaze != null && blaze.isPotionActive(Potion.waterBreathing);
+    }
+
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+            for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
+                if (this.rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+
+            int itemID = isAquatic(this) ? NMItems.waterRod.itemID : isInvisible(this) ? NMItems.shadowRod.itemID : NMItems.fireRod.itemID;
+
+            int var4 = this.rand.nextInt(3);
+            if(this.dimension == -1){
+                var4 += 4;
+            }
+            if (lootingLevel > 0) {
+                var4 += this.rand.nextInt(lootingLevel + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                if(this.rand.nextInt(3) == 0) continue;
+                this.dropItem(itemID, 1);
+            }
+        }
     }
 }

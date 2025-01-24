@@ -49,6 +49,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             cir.setReturnValue(false);
         }
     }
+//    @Inject(method = "preparePlayerToSpawn", at = @At("TAIL"))
+//    private void managePerfectStartSpawn(CallbackInfo ci){
+//        if (NightmareMode.perfectStart) {
+//            EntityPlayer thisObj = (EntityPlayer)(Object)this;
+//
+//            thisObj.foodStats.setFoodLevel(45);
+//            thisObj.setHealth(16);
+//            thisObj.inventory.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
+//            thisObj.inventory.addItemStackToInventory(new ItemStack(Item.axeStone));
+//            thisObj.inventory.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
+//        }
+//    }
 
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void manageLifeSteal(Entity entity, CallbackInfo ci){
@@ -240,7 +252,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
-                    if(tempAnimal instanceof EntityPig){
+                    if(tempAnimal instanceof EntityPig && !tempAnimal.worldObj.isRemote){
                         tempAnimal.setDead();
                         this.worldObj.newExplosion(tempAnimal,tempAnimal.posX,tempAnimal.posY,tempAnimal.posZ,5f,false,false);
                         break;

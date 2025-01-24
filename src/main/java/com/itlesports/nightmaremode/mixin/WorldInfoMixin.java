@@ -1,12 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
+import net.minecraft.src.EnumGameType;
+import net.minecraft.src.GameRules;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.WorldInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,23 +41,6 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
             }
         } else{
             worldTime = 24000L;
-            if(!MinecraftServer.getIsServer()){
-                Minecraft.getMinecraft().thePlayer.foodStats.setFoodLevel(45);
-                Minecraft.getMinecraft().thePlayer.setHealth(16);
-                Minecraft.getMinecraft().thePlayer.inventory.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
-                Minecraft.getMinecraft().thePlayer.inventory.addItemStackToInventory(new ItemStack(Item.axeStone));
-                Minecraft.getMinecraft().thePlayer.inventory.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
-            } else{
-                for (Object playerEntity : MinecraftServer.getServer().worldServers[0].playerEntities) {
-                    ((EntityPlayer)playerEntity).inventory.addItemStackToInventory(new ItemStack(Item.axeStone));
-                    if(((EntityPlayer)playerEntity).rand.nextInt(3) == 0) continue;
-                    ((EntityPlayer)playerEntity).inventory.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
-                    if(((EntityPlayer)playerEntity).rand.nextInt(3) == 0) continue;
-                    ((EntityPlayer)playerEntity).inventory.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
-
-                }
-
-            }
         }
     }
 

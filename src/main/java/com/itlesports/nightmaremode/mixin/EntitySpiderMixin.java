@@ -58,6 +58,30 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
         }
     }
+    @Inject(method = "dropFewItems", at = @At("HEAD"))
+    private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+            for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
+                if (this.rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+
+            int itemID = NMItems.spiderFangs.itemID;
+
+            int var4 = this.rand.nextInt(3);
+            if (lootingLevel > 0) {
+                var4 += this.rand.nextInt(lootingLevel + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                if(this.rand.nextInt(3) == 0) continue;
+                this.dropItem(itemID, 1);
+            }
+        }
+    }
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void manageHardmodeSpiderSpawns(EntityLivingData entityData, CallbackInfoReturnable<EntityLivingData> cir){

@@ -7,7 +7,10 @@ import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
 import btw.util.color.Color;
 import com.itlesports.nightmaremode.item.NMItems;
-import net.minecraft.src.*;
+import net.minecraft.src.Block;
+import net.minecraft.src.Enchantment;
+import net.minecraft.src.EntityVillager;
+import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -510,7 +513,7 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.buddyBlock.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.detectorBlock.blockID).itemCount(1,3).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("blast"))).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(1).level(4).sell().item(BTWItems.soulFlux.itemID).itemCount(1,3).addToTradeList();
+        TradeProvider.getBuilder().profession(1).level(4).sell().item(BTWItems.soulFlux.itemID).itemCount(2,4).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(BTWItems.corpseEye.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,10)).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().addToTradeList();
         TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
@@ -594,16 +597,18 @@ public class TradeListMixin {
         // Level 1 Trades
         TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.rottenFlesh.itemID).itemCount(8, 16).defaultTrade().weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.dyePowder.itemID, Color.BLACK.colorID).itemCount(12, 18).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.bloodMilk.itemID).buySellSingle().weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.bloodMilk.itemID).buySellSingle().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.enderPearl.itemID).buySellSingle().addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.fireRod.itemID).itemCount(1, 1).addToTradeList();
 
         // Level 2 Trades
         TradeProvider.getBuilder().profession(5).level(2).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.decayedFlesh.itemID).itemCount(4, 6).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.silverLump.itemID).itemCount(2, 3).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.waterRod.itemID).itemCount(1, 1).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.shadowRod.itemID).itemCount(1, 2).addToTradeList();
+
 
         // Level 3 Trades
         TradeProvider.getBuilder().profession(5).level(3).sell().item(Item.blazeRod.itemID).emeraldCost(2, 4).addToTradeList();
@@ -611,15 +616,15 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.spiderFangs.itemID).itemCount(2, 4).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.sulfur.itemID).itemCount(3, 6).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.charredFlesh.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.fireRod.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).sell().item(Item.magmaCream.itemID).itemCount(6, 8).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.greg.itemID).itemCount(1, 1).weight(0.5f).addToTradeList();
 
         // Level 4 Trades
         TradeProvider.getBuilder().profession(5).level(4).sell().item(Item.ghastTear.itemID).itemCount(4, 6).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.waterRod.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.voidSack.itemID).itemCount(1,3).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.creeperChop.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.waterRod.itemID).itemCount(1, 3).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.elementalRod.itemID).itemCount(1, 1).weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.voidMembrane.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.darksunFragment.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(Item.eyeOfEnder.itemID).buySellSingle().addToTradeList();
@@ -691,6 +696,7 @@ public class TradeListMixin {
                 .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2302, 3, 6)).build())
                 .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2303, 3, 6)).build())
                 .finishVariants().mandatory().addToTradeList();
+
 
 
         // Level up Trades

@@ -59,6 +59,9 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Shadow public abstract void setSlimeSize(int iSize);
     @Shadow public abstract int getSlimeSize();
+
+    @Shadow public abstract void setDead();
+
     @Unique private int timeSpentTargeting = 60;
     @Unique private float streakModifier = 1;
     @Unique private float splitCounter = 0;
@@ -99,6 +102,13 @@ public abstract class EntitySlimeMixin extends EntityLiving{
             }
         }
     }
+    // unused despawn timer
+//    @Inject(method = "updateEntityActionState", at = @At("HEAD"))
+//    private void manageDespawningOnEclipse(CallbackInfo ci){
+//        if(this.ticksExisted % 2000 == 1999 && this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,40) == null){
+//            this.setDead();
+//        }
+//    }
 
     @Redirect(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getCurrentMoonPhaseFactor()F"))
     private float slimeBloodMoon(World world){

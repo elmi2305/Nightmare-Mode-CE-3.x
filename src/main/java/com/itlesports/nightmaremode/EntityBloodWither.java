@@ -45,7 +45,7 @@ public class EntityBloodWither extends EntityWither {
     private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
     private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
     private static short[] blockChanges = new short[16]; // used to send render packets for creating the arena
-    private static boolean isBossActive = false;
+    private static boolean bossActive = false; // flag used in other areas to ensure specific behavior during the boss fight
     private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
     private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
             Block.stone.blockID,
@@ -395,15 +395,13 @@ public class EntityBloodWither extends EntityWither {
         double deltaX;
         double deltaZ;
         EntityPlayer primaryTarget;
-        isBossActive = true;
-
         this.motionY *= 0.6f;
 
         // Adjust motion towards the primary target
         if(this.playerTarget == null){
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
-
+        bossActive = this.playerTarget != null;
         // tudou
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
             int i;
@@ -910,6 +908,6 @@ public class EntityBloodWither extends EntityWither {
         }
     }
     public static boolean isBossActive(){
-        return isBossActive;
+        return bossActive;
     }
 }

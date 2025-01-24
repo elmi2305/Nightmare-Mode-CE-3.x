@@ -21,6 +21,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow private Entity entityTargeted;
     @Unique int rageTimer = 0;
     @Unique boolean firstAttack = true;
+    @Unique boolean isCreeperVariant = false;
 
     public EntityGhastMixin(World world) {
         super(world);
@@ -37,21 +38,48 @@ public abstract class EntityGhastMixin extends EntityFlying{
     public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
         if(NightmareUtils.getIsMobEclipsed(this) && this.rand.nextInt(4) == 0){
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 0));
+            this.isCreeperVariant = true;
         }
         return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
-            int var4 = this.rand.nextInt(3)+1;
-            // 1 - 3
-            if (iLootingModifier > 0) {
-                var4 += this.rand.nextInt(iLootingModifier + 1);
+        if (bKilledByPlayer) {
+            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            if (bloodOrbID > 0) {
+                int var4 = this.rand.nextInt(3)+1;
+                // 1 - 3
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    this.dropItem(bloodOrbID, 1);
+                }
             }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                this.dropItem(bloodOrbID, 1);
+            if (NightmareUtils.getIsMobEclipsed(this)) {
+                for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
+                    if (this.rand.nextInt(8) == 0) {
+                        this.dropItem(NMItems.darksunFragment.itemID, 1);
+                        if (this.rand.nextBoolean()) {
+                            break;
+                        }
+                    }
+                }
+
+                int itemID = this.isCreeperVariant() ? NMItems.creeperTear.itemID : NMItems.ghastTentacle.itemID;
+
+                int var4 = this.rand.nextInt(3);
+                if(this.dimension == -1){
+                    var4 += 4;
+                }
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    if(this.rand.nextInt(3) == 0) continue;
+                    this.dropItem(itemID, 1);
+                }
             }
         }
     }
@@ -92,7 +120,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I",ordinal = 2),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
-        if(NightmareUtils.getIsMobEclipsed(this) && isCreeperVariant(this)){
+        if(NightmareUtils.getIsMobEclipsed(this) && this.isCreeperVariant()){
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 40,0));
             if(this.firstAttack){
                 this.worldObj.playSoundEffect(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ, "mob.ghast.scream",1f,0.8f);
                 this.firstAttack = false;
@@ -121,8 +150,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
     }
 
-    @Unique private static boolean isCreeperVariant(EntityFlying entity){
-        return entity != null && entity.isPotionActive(Potion.moveSpeed);
+    @Unique private boolean isCreeperVariant(){
+        return this.isPotionActive(Potion.moveSpeed) || this.isCreeperVariant;
     }
 
 
@@ -200,7 +229,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
             velocity.normalize();
 
             // Calculate the velocity vector
-            velocity.scale(0.1d);
+            velocity.scale(0.02d);
             if (this.getDistanceSqToEntity(this.entityTargeted) > 256) {
                 this.motionX = velocity.xCoord;
                 this.motionY = velocity.yCoord;

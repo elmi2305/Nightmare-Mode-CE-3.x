@@ -112,10 +112,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
     private double increaseSquidRange(double dRange){
-        if(NightmareUtils.getIsMobEclipsed(this)){
-            return 32;
+        if(NightmareUtils.getIsEclipse()){
+            return 24 * buffedSquidBonus;
         }
         return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * buffedSquidBonus;
+        // 20 max
     }
 
 
@@ -185,7 +186,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
     private void manageJumpOnEclipse(CallbackInfo ci){
-        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid()){
+        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid() && !this.entityToAttack.isInWater()){
             this.motionY = 0.2f;
         }
     }
@@ -211,6 +212,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
     private double increaseCalculatedTentacleRange(double constant){
         return (NightmareUtils.getIsMobEclipsed(this) ? 12.0d : 8.0d) * buffedSquidBonus;
+    }
+    @Inject(method = "attemptTentacleAttackOnTarget", at = @At("HEAD"),cancellable = true,remap = false)
+    private void squidAvoidAttackingHeadcrabbedPlayer(CallbackInfo ci){
+        if(this.entityToAttack.hasHeadCrabbedSquid()){
+            ci.cancel();
+        }
     }
 
     @ModifyConstant(method = "attemptTentacleAttackOnTarget", constant = @Constant(doubleValue = 36.0),remap = false)
