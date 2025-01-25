@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityShadowZombie;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,6 +36,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             this.worldObj.spawnEntityInWorld(zombie);
             ((EntityEnderman)tempEntity).setDead();
         }
+
     }
     // converts all endermen to shadow zombies
 
@@ -42,17 +44,8 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {
         if (BlockEndPortal.bossDefeated || this.worldObj.getDifficulty() != Difficulties.HOSTILE) {
             createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
+            NightmareUtils.updateItemStackSizes();
         } else {
-//            ChatMessageComponent text2 = new ChatMessageComponent();
-//            text2.addText("<Twin " + (rand.nextInt(2)+1) + "> Ugh... You monster...");
-//            if (rand.nextInt(2)==0) {
-//                text2.setColor(EnumChatFormatting.RED);
-//            } else {
-//                text2.setColor(EnumChatFormatting.BLUE);
-//            }
-//            if (this.worldObj.getClosestVulnerablePlayerToEntity(this, -1) != null) {
-//                this.worldObj.getClosestVulnerablePlayerToEntity(this, -1).sendChatToPlayer(text2);
-//            }
             BlockEndPortal.bossDefeated = true;
         }
     }

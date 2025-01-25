@@ -1,11 +1,15 @@
 package com.itlesports.nightmaremode;
 
 import btw.community.nightmaremode.NightmareMode;
+import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class NightmareUtils {
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
@@ -15,6 +19,51 @@ public class NightmareUtils {
             NMItems.bloodChestplate.itemID,
             NMItems.bloodHelmet.itemID
     ));
+    public static final List<Item> foodList = new ArrayList<>(Arrays.asList(
+            NMItems.calamariRoast,
+            NMItems.friedCalamari,
+            Item.appleRed,
+            Item.pumpkinPie,
+            Item.cookie,
+            Item.porkCooked,
+            Item.beefCooked,
+            Item.chickenCooked,
+            Item.fishCooked,
+            BTWItems.cookedCheval,
+            BTWItems.cookedLiver,
+            BTWItems.mashedMelon,
+            Item.melon,
+            BTWItems.cookedKebab,
+            BTWItems.cookedMutton,
+            BTWItems.cookedMysteryMeat,
+            BTWItems.cookedScrambledEggs,
+            BTWItems.cookedWolfChop,
+            BTWItems.donut,
+            BTWItems.cookedCarrot,
+            BTWItems.chocolate,
+            Item.bakedPotato,
+            Item.potato,
+            BTWItems.porkDinner,
+            BTWItems.hardBoiledEgg,
+            BTWItems.steakDinner,
+            BTWItems.wolfDinner,
+            BTWItems.hamAndEggs,
+            BTWItems.chowder,
+            BTWItems.heartyStew,
+            BTWItems.chickenSoup,
+            Item.goldenCarrot,
+            Item.bread,
+            BTWItems.tastySandwich,
+            BTWItems.steakAndPotatoes
+    ));
+    public static void updateItemStackSizes(){
+        Item.potion.setMaxStackSize(16);
+        for(Item item : foodList){
+            if(item.getItemStackLimit() == 16){
+                item.setMaxStackSize(32);
+            }
+        }
+    }
 
     public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(
             NMItems.bloodSword.itemID,
@@ -33,9 +82,6 @@ public class NightmareUtils {
 
 
     public static int getWorldProgress(World world) {
-        if(NightmareUtils.getIsEclipse()){
-            return 3;
-        }
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;
         }

@@ -98,7 +98,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven, an axe and 3/4 food");
+        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
         this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
         this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");

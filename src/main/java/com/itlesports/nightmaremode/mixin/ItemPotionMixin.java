@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemPotion;
 import net.minecraft.src.ItemStack;
@@ -23,7 +24,7 @@ public class ItemPotionMixin extends Item {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setStackSize(int par1, CallbackInfo ci){
         if(WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()){
-            this.setMaxStackSize(16);
+            NightmareUtils.updateItemStackSizes();
         }
     }
 }

@@ -6,6 +6,7 @@ import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.EntityFireCreeper;
+import com.itlesports.nightmaremode.EntityNightmareGolem;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
@@ -130,6 +131,7 @@ public abstract class EntityWitherMixin extends EntityMob {
         List list = wither.worldObj.getEntitiesWithinAABBExcludingEntity(wither, wither.boundingBox.expand(6, 6, 6));
         for (Object tempEntity : list) {
             if (!(tempEntity instanceof EntityIronGolem golem)) continue;
+            if (golem instanceof EntityNightmareGolem) continue;
             if (!(golem.getAttackTarget() instanceof EntityPlayer)) continue;
             golem.attackEntityFrom(DamageSource.magic,100f);
             wither.worldObj.newExplosion(wither,golem.posX,golem.posY,golem.posZ,2f,false,false);

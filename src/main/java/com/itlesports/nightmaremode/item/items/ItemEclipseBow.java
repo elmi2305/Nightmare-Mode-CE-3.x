@@ -41,13 +41,13 @@ public class ItemEclipseBow extends CompositeBowItem {
                 return;
             }
 
-            float velocityMultiplier = this.getPullStrengthToArrowVelocityMultiplier();
-            float arrowVelocity = fPullStrength * velocityMultiplier;
-            float spreadAngle = 6F; // Angle for left and right arrows
+            float arrowVelocity = fPullStrength * 4;
+            float spreadAngle = world.rand.nextFloat() * 3 + 3; // Angle for left and right arrows
+            float spreadAngleVertical = world.rand.nextFloat() * 3 + 1;
 
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0);
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle);
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle);
+            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0, fPullStrength, 0);
+            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical) ;
+            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical);
             if (!infiniteArrows) {
                 player.inventory.consumeInventoryItem(arrowStack.itemID);
             }
@@ -66,21 +66,22 @@ public class ItemEclipseBow extends CompositeBowItem {
     /**
      * Spawns an arrow with a given yaw offset to create spread effect.
      */
-    private void spawnArrowWithSpread(World world, EntityPlayer player, int arrowItemID, float velocity, float yawOffset) {
+    private void spawnArrowWithSpread(World world, EntityPlayer player, int arrowItemID, float velocity, float yawOffset, float fPullStrength, float pitchOffset) {
         EntityArrow arrow = this.createArrowEntityForItem(world, player, arrowItemID, velocity / this.getPullStrengthToArrowVelocityMultiplier());
 
         // Calculate the directional vectors with adjusted yaw
         float yaw = player.rotationYaw + yawOffset;
-        float pitch = player.rotationPitch;
+        float pitch = player.rotationPitch + pitchOffset;
         float motionX = -MathHelper.sin(yaw * (float)Math.PI / 180.0F) * MathHelper.cos(pitch * (float)Math.PI / 180.0F);
         float motionY = -MathHelper.sin(pitch * (float)Math.PI / 180.0F);
         float motionZ = MathHelper.cos(yaw * (float)Math.PI / 180.0F) * MathHelper.cos(pitch * (float)Math.PI / 180.0F);
 
         arrow.setThrowableHeading(motionX, motionY, motionZ, velocity, 1.0F);
-
-        if (velocity == 1.0f) {
+        arrow.setSize(0.7f, 0.7f);
+        if (fPullStrength == 1.0) {
             arrow.setIsCritical(true);
         }
+
 
         if (!world.isRemote) {
             world.spawnEntityInWorld(arrow);

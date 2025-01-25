@@ -24,25 +24,24 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
     @Shadow private GameRules theGameRules;
     @Shadow private long totalTime;
     @Shadow public abstract Difficulty getDifficulty();
-
-    @Unique private boolean botherChecking = true;
+    @Unique private boolean shouldCheck = true;
 
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
-    private void nightSetter(CallbackInfoReturnable<Long> cir) {
-        if (!NightmareMode.perfectStart) {
-            if (botherChecking && this.getDifficulty() == Difficulties.HOSTILE) {
-                if (this.totalTime == 0L) {
-                    worldTime = 18000L;
-                    theGameRules.addGameRule("doMobSpawning", "false");
-                } else if(worldTime >= 20000 && !theGameRules.getGameRuleBooleanValue("doMobSpawning")){
-                    theGameRules.addGameRule("doMobSpawning", "true");
-                    botherChecking = false;
-                } // 1:40 grace period
+    private void setTimeToNightAndManageGracePeriod(CallbackInfoReturnable<Long> cir) {
+        if (this.shouldCheck && this.getDifficulty() == Difficulties.HOSTILE) {
+            long initialTime = NightmareMode.perfectStart ? 24000L : 18500L;
+            long gracePeriodEnd = initialTime + (NightmareMode.perfectStart ? 6000 : 2100); // 1:45 grace period
+
+            if (this.totalTime == 0L) {
+                this.worldTime = initialTime;
+                this.theGameRules.addGameRule("doMobSpawning", "false");
+            } else if (this.worldTime >= gracePeriodEnd && !this.theGameRules.getGameRuleBooleanValue("doMobSpawning")) {
+                this.theGameRules.addGameRule("doMobSpawning", "true");
+                this.shouldCheck = false;
             }
-        } else{
-            worldTime = 24000L;
         }
     }
+
 
     @ModifyArg(method = "updateTagCompound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NBTTagCompound;setBoolean(Ljava/lang/String;Z)V",ordinal = 4),index = 0)
     private String javaCompatibility(String string){

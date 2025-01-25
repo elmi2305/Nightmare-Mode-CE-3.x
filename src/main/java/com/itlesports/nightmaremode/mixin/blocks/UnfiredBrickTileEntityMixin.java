@@ -13,7 +13,7 @@ public class UnfiredBrickTileEntityMixin {
         return 11400;
     }
 
-    @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"),remap = false)
+    @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"))
     private int enableCookingOnEclipse(World instance, int i, int j, int k){
         if(NightmareUtils.getIsEclipse()){
             return 31;

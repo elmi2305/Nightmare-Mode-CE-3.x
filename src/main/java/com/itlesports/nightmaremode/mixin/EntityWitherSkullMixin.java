@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ public class EntityWitherSkullMixin {
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
         EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
-        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE && !(thisObj.shootingEntity instanceof EntityBloodWither)){
             return 2;
         }
         return 1;

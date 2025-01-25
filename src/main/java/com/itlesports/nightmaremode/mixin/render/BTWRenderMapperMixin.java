@@ -14,7 +14,6 @@ public class BTWRenderMapperMixin {
     private static void doNightmareEntityRenderMapping(CallbackInfo ci){
         RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderFireCreeper());
         RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderShadowZombie());
-//        RenderManager.addEntityRenderer(SocksMobsEntityGoatPossessed.class, new SocksMobsRenderGoatPossessed(new SocksMobsModelGoatPossessed(),1));
-//        RenderManager.addEntityRenderer(NightmareEntity.class, new RenderShadowZombie());
+        RenderManager.addEntityRenderer(EntityNightmareGolem.class, new RenderNightmareGolem());
     }
 }

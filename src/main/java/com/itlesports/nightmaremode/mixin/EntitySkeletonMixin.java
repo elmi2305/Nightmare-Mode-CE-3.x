@@ -29,7 +29,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
     @Unique int jumpCooldown = 0;
 
-
+    @Override
+    public float knockbackMagnitude() {
+        return this.isWeighted() ? 0.2f : super.knockbackMagnitude();
+    }
     @ModifyConstant(method = "setSkeletonType", constant = @Constant(floatValue = 2.34f))
     private float shortWitherSkeletons(float constant){
         if (this.worldObj != null) {

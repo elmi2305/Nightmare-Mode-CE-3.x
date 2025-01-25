@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class OvenTileEntityMixin extends TileEntityFurnace implements TileEntityDataPacketHandler {
 
     @Shadow public abstract int getItemBurnTime(ItemStack stack);
-
     @Unique private int burnCounter;
 
     @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;isBurning()Z", ordinal = 1))

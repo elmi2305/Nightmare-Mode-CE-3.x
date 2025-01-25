@@ -12,10 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class EntityBloodWither extends EntityWither {
-    public EntityBloodWither(World world) {
-        super(world);
-        this.experienceValue = 4954;
-    }
     private final float[] headPitch = new float[2]; // Represents the pitch (up/down angle) of the heads.
     private final float[] headYaw = new float[2]; // Represents the yaw (left/right angle) of the heads
     private final float[] previousHeadPitch = new float[2]; // Previous tick's pitch values for the heads
@@ -42,9 +38,11 @@ public class EntityBloodWither extends EntityWither {
     private ItemStack[] playerHotbar; // the player's hotbar. used for one attack
     private int currentAttackIndex; // the current attack the wither is set to do
     private int currentDurationBetweenAttacks; // the duration of the attack the wither will do
+    private boolean shouldExecuteSecondaryAttack; // true if the 2nd phase secondary attack should execute
+    private int secondaryAttackIndex; // the secondary attack the wither is set to do
     private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
     private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
-    private static short[] blockChanges = new short[16]; // used to send render packets for creating the arena
+    public int witherPhase; // the phase the wither is in
     private static boolean bossActive = false; // flag used in other areas to ensure specific behavior during the boss fight
     private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
     private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
@@ -84,6 +82,12 @@ public class EntityBloodWither extends EntityWither {
             BTWBlocks.deepStrataStoneBrickStairs.blockID,
             BTWBlocks.workStump.blockID
     ));
+
+    public EntityBloodWither(World world) {
+        super(world);
+        this.experienceValue = 4954;
+        this.witherPhase = 0;
+    }
 
     public boolean getActivity(){return this.activity;}
 
@@ -163,6 +167,21 @@ public class EntityBloodWither extends EntityWither {
             }
         }
     }
+    @Override
+    public boolean canBeCollidedWith() {
+        return this.activity && this.getHealthTimer() <= 0;
+    }
+
+    @Override
+    public boolean canBePushed() {
+        return this.activity && this.getHealthTimer() <= 0;
+    }
+
+    @Override
+    public boolean isArmored() {
+        return false;
+    }
+
 
     private void engageWither(){
         this.witherAttack += 1;
@@ -310,31 +329,6 @@ public class EntityBloodWither extends EntityWither {
                         // falling crystals
                         this.isDoingCrystalStorm = this.passivityDuration > 10;
                         break;
-//                    case 5:
-//                        // launch player into the air and scramble their inventory
-//                        this.attackCycle += 1;
-//                        if(this.passivityDuration > 40) {
-//                            if (player.onGround && this.attackCycle % 4 == 1) {
-//                                this.worldObj.playSoundEffect(player.posX + (double) 0.5F, player.posY + (double) 0.5F, player.posZ + (double) 0.5F, "note.harp", 3.0F, 1);
-//                            }
-//                            if (player.onGround && this.attackCycle % 4 == 2) {
-//                                player.setPositionAndUpdate(player.posX, player.posY + 30, player.posZ);
-//                                player.motionY = 1;
-//                                if (this.playerHotbar == null) {
-//                                    this.playerHotbar = new ItemStack[9];
-//                                    System.arraycopy(player.inventory.mainInventory, 0, this.playerHotbar, 0, 9);
-//                                    System.arraycopy(this.getRandomItem(), 0, player.inventory.mainInventory, 0, 9);
-//                                    player.inventory.mainInventory[this.rand.nextInt(9)] = new ItemStack(Item.bucketWater);
-//                                }
-//                                player.worldObj.playSoundEffect(player.posX, player.posY + 2, player.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-//                                this.playerHotbar = null;
-//                            }
-//                        }
-//                        else if (this.attackCycle % 4 == 0){
-//                            System.arraycopy(this.playerHotbar, 0, player.inventory.mainInventory, 0, 9);
-//                            this.playerHotbar = null;
-//                        }
-//                        break;
                     case 5:
                         if(this.trackedEntities.isEmpty()){
                             EntityDragon dragon = new EntityDragon(this.worldObj);
@@ -381,6 +375,18 @@ public class EntityBloodWither extends EntityWither {
                             this.worldObj.spawnEntityInWorld(blaze3);
                             this.worldObj.spawnEntityInWorld(blaze4);
                         }
+                    case 7:
+                        if(this.trackedEntities.isEmpty()) {
+                            for(int i = 0; i < 4; i++){
+                                EntityNightmareGolem tempGolem = new EntityNightmareGolem(this.worldObj);
+                                tempGolem.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(15), 200, this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(15));
+                                this.trackedEntities.add(tempGolem);
+                                this.worldObj.spawnEntityInWorld(tempGolem);
+                                tempGolem.setAttackTarget(player);
+                            }
+                        }
+                        break;
+
                 }
             }
         }
@@ -424,6 +430,10 @@ public class EntityBloodWither extends EntityWither {
                     this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
                 }
             }
+            if(this.rand.nextInt(3) == 0 && this.currentAttackIndex != 2 && this.currentAttackIndex != 4 && this.witherPhase >= 1){
+                this.shouldExecuteSecondaryAttack = true;
+                this.secondaryAttackIndex = this.rand.nextBoolean() || this.isCurrentAttackSummoning ? 2 : 4;
+            }
         }
 
         // all the attacks
@@ -442,6 +452,11 @@ public class EntityBloodWither extends EntityWither {
                 } else{
                     this.manageWitherPassivity(false);
                     this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
+                }
+                // tud
+                if(this.shouldExecuteSecondaryAttack && this.secondaryAttackIndex != 0){
+                    int delay = this.secondaryAttackIndex == 2 ? 21 : -1;
+                    this.executeAttack(this.secondaryAttackIndex, delay);
                 }
             }
             else{
@@ -691,7 +706,7 @@ public class EntityBloodWither extends EntityWither {
                 int line = healthTimer - 40;
                 // healthTimer holds a value between 0 and 360
                 if (line % 2 == 0) {
-                    placeBlocksAtLinePartial(this.worldObj, (int) this.posX - 30, (int) this.posY - 1, (int) this.posZ + 30, MathHelper.floor_double((double) line / 2));
+                    placeBlocksAtLinePartial(this.worldObj, (int) this.origin[0] - 30, (int) 199, (int) this.origin[2] + 30, MathHelper.floor_double((double) line / 2));
                 }
             }
 
@@ -813,7 +828,16 @@ public class EntityBloodWither extends EntityWither {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        return this.activity && super.attackEntityFrom(par1DamageSource, par2);
+        if(par2 > 20){
+            par2 = 20;
+        }
+        if (this.witherPhase < 2 && this.getHealth() < par2) {
+            this.witherPhase += 1;
+            this.heal(300f);
+            return false;
+        } else{
+            return this.activity && super.entityMobAttackEntityFrom(par1DamageSource, par2);
+        }
     }
 
     @Override
@@ -871,22 +895,22 @@ public class EntityBloodWither extends EntityWither {
             case 0: // Suffocation attack
                 this.currentDurationBetweenAttacks = 8;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 300;
+                this.currentAttackPassivityLength = 400;
                 break;
             case 1: // TNT rain
                 this.currentDurationBetweenAttacks = 20;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 300;
+                this.currentAttackPassivityLength = 300 + this.witherPhase * 40;
                 break;
             case 2: // Lightning strikes
                 this.currentDurationBetweenAttacks = 21;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 600;
+                this.currentAttackPassivityLength = 600 + this.witherPhase * 40;
                 break;
             case 3: // Blood moon and mob summon
                 this.currentDurationBetweenAttacks = 300;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 600;
+                this.currentAttackPassivityLength = 750 + this.witherPhase * 50;
                 break;
             case 4: // crystal storm
                 this.currentDurationBetweenAttacks = -1;
@@ -899,6 +923,11 @@ public class EntityBloodWither extends EntityWither {
                 this.currentAttackPassivityLength = -1; // No passivity duration set
                 break;
             case 6: // Blaze summon
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = true;
+                this.currentAttackPassivityLength = -1; // No passivity duration set
+                break;
+            case 7: // Golem summon
                 this.currentDurationBetweenAttacks = -1;
                 this.isCurrentAttackSummoning = true;
                 this.currentAttackPassivityLength = -1; // No passivity duration set

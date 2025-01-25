@@ -24,10 +24,7 @@ public abstract class WorldMixin {
     @Shadow public abstract long getTotalWorldTime();
     @Shadow public Random rand;
     @Shadow public WorldInfo worldInfo;
-
     @Shadow public int skylightSubtracted;
-
-    @Shadow public abstract long getWorldTime();
 
     @Inject(method = "isBoundingBoxBurning", at = @At("RETURN"),cancellable = true)
     private void manageBurningItemImmunity(Entity entity, CallbackInfoReturnable<Boolean> cir){
@@ -92,8 +89,7 @@ public abstract class WorldMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-//        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
-        // TODO don't forget to remove this debug after testing
+        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
     @Unique private boolean getIsNightFromWorldTime(World world){
@@ -101,8 +97,8 @@ public abstract class WorldMixin {
     }
 
     @Unique private boolean getIsEclipse(World world, int dayCount){
-//        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
-        return !this.getIsNightFromWorldTime(world);
+        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
+        return !this.getIsNightFromWorldTime(world) && dayCount % 2 == 0;
     }
 
 

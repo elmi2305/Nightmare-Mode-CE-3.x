@@ -23,6 +23,7 @@ import static com.itlesports.nightmaremode.NightmareUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
+    @Unique private boolean hasUpdated = false;
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
@@ -49,18 +50,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             cir.setReturnValue(false);
         }
     }
-//    @Inject(method = "preparePlayerToSpawn", at = @At("TAIL"))
-//    private void managePerfectStartSpawn(CallbackInfo ci){
-//        if (NightmareMode.perfectStart) {
-//            EntityPlayer thisObj = (EntityPlayer)(Object)this;
-//
-//            thisObj.foodStats.setFoodLevel(45);
-//            thisObj.setHealth(16);
-//            thisObj.inventory.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
-//            thisObj.inventory.addItemStackToInventory(new ItemStack(Item.axeStone));
-//            thisObj.inventory.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
-//        }
-//    }
 
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void manageLifeSteal(Entity entity, CallbackInfo ci){
@@ -131,6 +120,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return 0.15f;
         }
         return 0.17f; // jump
+    }
+    @Inject(method = "jump", at = @At("HEAD"))
+    private void a(CallbackInfo ci){
+        NightmareUtils.updateItemStackSizes();
+        if (!this.hasUpdated) {
+            ChatMessageComponent text2 = new ChatMessageComponent();
+            text2.addText("Potions and food now have double stack size!");
+            ((EntityPlayer)(Object)this).sendChatToPlayer(text2);
+        }
+        this.hasUpdated = true;
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
@@ -252,7 +251,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
-                    if(tempAnimal instanceof EntityPig && !tempAnimal.worldObj.isRemote){
+                    if(tempAnimal instanceof EntityPig && tempAnimal.worldObj.isRemote){
                         tempAnimal.setDead();
                         this.worldObj.newExplosion(tempAnimal,tempAnimal.posX,tempAnimal.posY,tempAnimal.posZ,5f,false,false);
                         break;

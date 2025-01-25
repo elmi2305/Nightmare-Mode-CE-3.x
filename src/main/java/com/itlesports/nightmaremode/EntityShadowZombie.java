@@ -111,6 +111,11 @@ public class EntityShadowZombie extends EntityZombie {
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
 
     @Override
+    public float knockbackMagnitude() {
+        return 0;
+    }
+
+    @Override
     protected void addRandomArmor() {
         if(NightmareUtils.getIsMobEclipsed(this)){
             if (this.rand.nextFloat() < 0.05f) {

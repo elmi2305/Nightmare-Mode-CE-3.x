@@ -297,6 +297,12 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
+
+    @Override
+    public float knockbackMagnitude() {
+        return this.isWeighted() ? 0.2f : super.knockbackMagnitude();
+    }
+
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void addAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj != null) {
