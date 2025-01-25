@@ -65,6 +65,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(4)+2;
@@ -82,6 +83,16 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
                 if(this.rand.nextInt(12) == 0){
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (this.rand.nextBoolean()) {
+                        break;
+                    }
+                }
+            }
+        }
+        if(bKilledByPlayer){
+            for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
+                if(this.rand.nextInt(8 - worldProgress * 2) == 0){
+                    this.dropItem(NMItems.calamari.itemID, 1);
                     if (this.rand.nextBoolean()) {
                         break;
                     }
@@ -112,6 +123,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
     private double increaseSquidRange(double dRange){
+        if(EntityBloodWither.isBossActive()){
+            return 6;
+        }
         if(NightmareUtils.getIsEclipse()){
             return 24 * buffedSquidBonus;
         }

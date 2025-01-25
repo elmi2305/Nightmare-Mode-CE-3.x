@@ -4,6 +4,7 @@ import btw.entity.mob.KickingAnimal;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityHorse;
+import net.minecraft.src.SharedMonsterAttributes;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
@@ -19,10 +20,6 @@ public abstract class EntityHorseMixin extends KickingAnimal {
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 20.0d))
     private double increaseHP(double constant){
         return 24.0;
-    }
-    @ModifyArg(method = "applyEntityAttributes",at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V",ordinal = 1))
-    private double increaseSpeed(double var1){
-        return NightmareUtils.getIsMobEclipsed(this) ? 0.4d : var1;
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
@@ -58,5 +55,10 @@ public abstract class EntityHorseMixin extends KickingAnimal {
             }
 
         }
+    }
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void horseSpeed(CallbackInfo ci){
+        float speed = NightmareUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f;
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speed);
     }
 }

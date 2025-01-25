@@ -29,10 +29,12 @@ public class CraftingRecipeListMixin {
         RecipeManager.addRecipe(new ItemStack(Item.appleGold), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(Item.goldNugget, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.appleRed,1,Short.MAX_VALUE)});
         // done with gapples
 
-        // add anvil recipes
-//        RecipeManager.removeVanillaRecipe(new ItemStack(Block.anvil, 1), new Object[]{"iii", " i ", "iii", Character.valueOf('i'), Item.ingotIron});
-//        RecipeManager.addRecipe(new ItemStack(Block.anvil), new Object[]{"#X#", " # ", "###", Character.valueOf('#'), new ItemStack(BTWItems.soulforgedSteelIngot), Character.valueOf('X'), new ItemStack(BTWBlocks.soulforgedSteelBlock)});
-        // done adding anvil recipes
+        // fishing recipes
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.fishingRod), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.silk), new ItemStack(Item.silk), new ItemStack(BTWItems.ironNugget)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.fishingRod), new Object[]{new ItemStack(Item.stick), new ItemStack(BTWItems.sinew), new ItemStack(BTWItems.sinew), new ItemStack(BTWItems.ironNugget)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.fishingRod), new Object[]{new ItemStack(Item.stick), new ItemStack(BTWItems.sinew), new ItemStack(BTWItems.sinew), new ItemStack(BTWItems.boneFishHook)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.ironFishingPole,1), new Object[]{"  #", " #X", "Y #", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('X'), BTWItems.rope, Character.valueOf('Y'), Item.ingotIron});
+        // fishing recipes added
 
         // add misc recipes
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 8), new Object[]{new ItemStack(BTWBlocks.hamper)});

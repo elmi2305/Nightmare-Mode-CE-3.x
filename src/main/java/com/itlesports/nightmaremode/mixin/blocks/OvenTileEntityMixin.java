@@ -22,8 +22,10 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;isBurning()Z", ordinal = 1))
     private void checkIfItemShouldBurn(CallbackInfo ci){
         if (this.furnaceItemStacks[2] != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            if((this.furnaceItemStacks[2].toString().contains("Cooked")
-                    || this.furnaceItemStacks[2].toString().contains("Fried"))
+            if((
+                    this.furnaceItemStacks[2].toString().contains("Cooked")
+                    || this.furnaceItemStacks[2].toString().contains("Fried")
+                    || this.furnaceItemStacks[2].toString().contains("Roast"))
                     && !this.furnaceItemStacks[2].toString().contains("Carrot")){
                 this.burnCounter++;
                 if(this.burnCounter >= 1600) {

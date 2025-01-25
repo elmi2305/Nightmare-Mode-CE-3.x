@@ -115,21 +115,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
-    private float reduceExhaustion(float constant){
-        if(NightmareMode.bloodmare){
+    private float reduceExhaustion(float constant) {
+        if (NightmareMode.bloodmare) {
             return 0.15f;
         }
         return 0.17f; // jump
-    }
-    @Inject(method = "jump", at = @At("HEAD"))
-    private void a(CallbackInfo ci){
-        NightmareUtils.updateItemStackSizes();
-        if (!this.hasUpdated) {
-            ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("Potions and food now have double stack size!");
-            ((EntityPlayer)(Object)this).sendChatToPlayer(text2);
-        }
-        this.hasUpdated = true;
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
@@ -251,7 +241,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
-                    if(tempAnimal instanceof EntityPig && tempAnimal.worldObj.isRemote){
+                    if(tempAnimal instanceof EntityPig){
                         tempAnimal.setDead();
                         this.worldObj.newExplosion(tempAnimal,tempAnimal.posX,tempAnimal.posY,tempAnimal.posZ,5f,false,false);
                         break;

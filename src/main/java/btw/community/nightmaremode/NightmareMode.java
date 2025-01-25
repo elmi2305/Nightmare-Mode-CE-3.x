@@ -91,6 +91,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean totalEclipse;
     public static Boolean buffedSquids;
     public static Boolean evolvedMobs;
+    public static Boolean magicMonsters;
     public static Boolean perfectStart;
 
     @Override
@@ -104,6 +105,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
         this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
         this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
+        this.registerProperty("MagicMonsters", "False", "All mobs are witches");
         this.registerProperty("TotalEclipse", "False", "Every day is a solar eclipse");
     }
     // evolvedMobs is currently only used in a few mob classes. it doesn't account for mob variants only present during eclipses
@@ -119,6 +121,7 @@ public class NightmareMode extends BTWAddon {
         bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
         buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));
         evolvedMobs = Boolean.parseBoolean(propertyValues.get("EvolvedMobs"));
+        magicMonsters = Boolean.parseBoolean(propertyValues.get("MagicMonsters"));
         totalEclipse = Boolean.parseBoolean(propertyValues.get("TotalEclipse"));
     }
 

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
@@ -25,6 +26,15 @@ public abstract class EntityWitchMixin extends EntityMob {
         super(par1World);
     }
 
+    @Override
+    public boolean getCanSpawnHere() {
+        if (NightmareMode.magicMonsters) {
+            return super.getCanSpawnHere();
+        } else{
+            return (int) this.posY >= this.worldObj.provider.getAverageGroundLevel() - 5 && super.getCanSpawnHere();
+        }
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NightmareUtils.manageEclipseChance(this,10);
@@ -32,7 +42,6 @@ public abstract class EntityWitchMixin extends EntityMob {
 
     @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i<3; i++){
-
             if(NightmareUtils.getIsMobEclipsed(this)){
                 int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
                 int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
@@ -119,6 +128,83 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if (bKilledByPlayer) {
+            if (NightmareMode.magicMonsters) {
+                Item itemToDrop = null;
+                for (int i = 0; i < 4; i++) {
+                    int j = this.rand.nextInt(162);
+                    if (this.dimension == 0) {
+                        itemToDrop = switch (j) {
+
+                            case  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12                    -> BTWItems.nitre;           // 18
+                            case 13, 14, 15, 16, 17, 18, 19, 20, 21, 22                                 -> Item.rottenFlesh;         // 20
+                            case 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34                         -> Item.spiderEye;           // 12
+                            case 35, 36, 37, 38                                                        -> Item.fireballCharge;      // 4
+                            case 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51                     -> Item.clay;                // 13
+                            case 52, 53, 54, 55                                                        -> Item.enderPearl;          // 4
+                            case 56, 57, 58, 59, 60, 61, 62, 63                                        -> BTWItems.witchWart;       // 8
+                            case 64, 65, 66, 67, 68, 69, 70                                            -> BTWItems.mysteriousGland; // 7
+                            case 71, 72, 73, 74, 75, 76, 77, 78, 79                                    -> NMItems.calamari;         // 9
+                            case 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94             -> Item.bone;                // 15
+                            case 95, 96, 97, 98, 99, 100, 101                                          -> Item.slimeBall;           // 7
+                            case 102, 103, 104, 105, 106, 107, 108, 109, 110                           -> Item.potion;              // 9
+                            case 111, 112, 113, 114, 115, 116                                          -> Item.fermentedSpiderEye;  // 6
+                            case 117, 118, 119, 120, 121, 122, 123, 124, 125                           -> Item.dyePowder;           // 9
+                            case 126, 127, 128                                                        -> Item.skull;               // 3
+                            case 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140             -> Item.arrow;               // 12
+                            case 141, 142, 143, 144                                                   -> Item.bow;                 // 4
+                            case 145                                                                 -> Item.plateIron;           // 2
+                            case 146                                                               -> Item.bootsIron;           // 3
+                            case 147                                                                -> Item.legsIron;            // 2
+                            case 148                                                                -> Item.helmetIron;          // 4
+                            case 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161  -> BTWItems.creeperOysters;  // 14
+                            default -> BTWItems.creeperOysters;
+                        };
+                    } else if(this.dimension == -1){
+                        j = this.rand.nextInt(40);
+                        itemToDrop = switch (j) {
+                            case 0, 1, 2, 3, 4, 5, 6, 29, 30, 31, 32, 33 -> Item.blazeRod;
+                            case 7, 8, 9, 10, 11, 12, 13, 24, 25, 26, 27, 28 -> Item.magmaCream;
+                            case 14, 15, 16, 17, 18                      -> Item.ghastTear;
+                            case 19, 20, 21, 22, 23                      -> Item.goldNugget;
+                            case 34, 35                                  -> Item.swordGold;
+                            case 36, 37                                  -> Item.plateGold;
+                            case 38, 39                                  -> Item.legsGold;
+                            default -> BTWItems.witchWart;
+                        };
+                    }
+                    if(NightmareUtils.getIsMobEclipsed(this)){
+                        j = this.rand.nextInt(80);
+                        itemToDrop = switch (j) {
+                            case  0,  1,  2,  3,  4  -> NMItems.magicFeather;
+                            case  5,  6,  7,  8,  9  -> NMItems.creeperChop;
+                            case 10, 11, 12, 13, 14  -> NMItems.magicArrow;
+                            case 15, 16               -> NMItems.bloodMilk;
+                            case 17, 18, 19, 20, 21, 22 -> NMItems.calamari;
+                            case 23, 24, 25, 26, 27, 28, 29 -> NMItems.silverLump;
+                            case 30, 31, 32, 33, 34, 35, 36, 37, 38 -> BTWItems.soulFlux;
+                            case 39, 40, 41, 42      -> NMItems.voidMembrane;
+                            case 43, 44, 45, 46, 47  -> NMItems.voidSack;
+                            case 48, 49, 50          -> NMItems.charredFlesh;
+                            case 51, 52, 53, 54      -> NMItems.ghastTentacle;
+                            case 55, 56, 57          -> NMItems.creeperTear;
+                            case 58, 59, 60, 61      -> NMItems.spiderFangs;
+                            case 62, 63, 64          -> NMItems.greg;
+                            case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;
+                            case 74, 75              -> NMItems.elementalRod;
+                            case 76, 77, 78, 79      -> NMItems.decayedFlesh;
+                            default -> Item.fishRaw;  // Fallback in case of unexpected input
+                        };
+                    }
+
+
+                    if (itemToDrop != null) {
+                        this.dropItem(itemToDrop.itemID, 1);
+                    }
+                }
+            }
+
+
+
             int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(9)+4;

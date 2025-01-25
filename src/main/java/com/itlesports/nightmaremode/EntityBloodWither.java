@@ -4,6 +4,7 @@ import btw.block.BTWBlocks;
 import btw.entity.LightningBoltEntity;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ public class EntityBloodWither extends EntityWither {
     private final float[] previousHeadPitch = new float[2]; // Previous tick's pitch values for the heads
     private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads
     private final int[] headAttackCounts = new int[2]; // Counters for the number of attacks by the heads
+    private boolean isPhase0;
+    private boolean isPhase1;
+    private boolean isPhase2;
 
     private int attackCycle; // used to be headAttackCooldowns. repurposed to track the cycle an attack is in. eg. the lightning attack has 3 cycles, prep, telegraph and fire
     private int shieldRegenCooldown; // Cooldown timer for regenerating the shield
@@ -24,7 +28,7 @@ public class EntityBloodWither extends EntityWither {
     private int passivityDuration = -1; // decides how long the wither should stay passive
     private double verticalOffset = 5.0; // the height difference between the player and the wither
     private boolean activity = false; // whether the wither should go to the sky and be passive or not
-    private final List<Entity> trackedEntities = new ArrayList<>(5); // the entity we are tracking. usually a mob summoned by the wither
+    private final List<Entity> trackedEntities = new ArrayList<>(25); // the entities we are tracking. usually a mob summoned by the wither
     private EntityPlayer playerTarget; // the player we are targetting
     private double targetX; // target's X position. used to calculate delta movement
     private double targetZ; // target's Z position. used to calculate delta movement
@@ -35,6 +39,7 @@ public class EntityBloodWither extends EntityWither {
     private int[] origin; // coordinates of the origin, the center of the platform, where the wither spawned
     private long previousWorldTime; // stores the value of the world time before it was altered.
     private boolean isDoingCrystalStorm; // true if there's an ongoing crystal storm
+    private int reviveTimer; // timer used so the wither revives over time, instead of healing instantly
     private ItemStack[] playerHotbar; // the player's hotbar. used for one attack
     private int currentAttackIndex; // the current attack the wither is set to do
     private int currentDurationBetweenAttacks; // the duration of the attack the wither will do
@@ -89,13 +94,26 @@ public class EntityBloodWither extends EntityWither {
         this.witherPhase = 0;
     }
 
-    public boolean getActivity(){return this.activity;}
+    public int getWitherPhase(){return this.witherPhase;}
 
     private void setTargetY(double par1){
         this.verticalOffset = par1;
     }
 
+    @Override
+    protected void dropFewItems(boolean par1, int par2) {
+        this.dropItem(NMItems.starOfTheBloodGod.itemID, 1);
+    }
+
+    @Override
+    public void checkForScrollDrop() {}
+
     private void manageWitherPassivity(boolean isTrackingEntity){
+        if(this.reviveTimer > 0){
+            this.reviveTimer--;
+            this.heal(1.5f);
+        }
+
         if (isTrackingEntity) {
             this.disengageWither();
             for(int i = 0; i < this.trackedEntities.size(); i++){
@@ -106,9 +124,12 @@ public class EntityBloodWither extends EntityWither {
                     this.trackedEntities.remove(i);
                     break;
                 }
+                if(this.trackedEntities.get(i) instanceof EntityDragon && this.witherPhase > 0 && this.rand.nextInt(6) == 0){
+                    ((EntityDragon) this.trackedEntities.get(i)).heal(1);
+                }
             }
             if(this.isDoingCrystalStorm) {
-                if(this.trackedEntities.size() < 30 && this.passivityDuration > 50){
+                if(this.trackedEntities.size() < 30 + this.witherPhase * 8 && this.passivityDuration > 50){
                     EntityFallingChicken chicken = new EntityFallingChicken(this.worldObj);
                     chicken.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28) + 2), 210 + (this.rand.nextInt(30) * 1.66), this.origin[2] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28)) + 2);
                     EntityEnderCrystal crystal = new EntityEnderCrystal(this.worldObj);
@@ -179,7 +200,7 @@ public class EntityBloodWither extends EntityWither {
 
     @Override
     public boolean isArmored() {
-        return false;
+        return this.witherPhase == 2;
     }
 
 
@@ -244,12 +265,12 @@ public class EntityBloodWither extends EntityWither {
                         if(player.isPotionActive(Potion.moveSlowdown) && player.getActivePotionEffect(Potion.moveSlowdown).duration < 10){
                             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 30,0));
                         }
-                        for (int i = -1; i < 2; i++) {
+                        for (int i = -1 - this.witherPhase; i < 2 + this.witherPhase; i++) {
                             for (int j = -1; j < 2; j++) {
                                 x = player.posX + i + this.rand.nextInt(4);
                                 y = player.posY + 20;
                                 z = player.posZ + j + this.rand.nextInt(4);
-                                // time to fall (in ticks) is sqrt(2 * 400 * y / 16), which is approximately 5.31.62277660168379 in this case
+                                // time to fall (in ticks) is sqrt(2 * 400 * y / 16), which is approximately 31.62277660168379 in this case
 
                                 this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y, (int)(z + deltaMovement.zCoord * 31.62277660168379), this.rand.nextBoolean() ? Block.sand.blockID : Block.gravel.blockID);
                                 this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y + 1, (int)(z + deltaMovement.zCoord * 31.62277660168379), this.rand.nextBoolean() ? Block.sand.blockID : Block.gravel.blockID);
@@ -299,7 +320,7 @@ public class EntityBloodWither extends EntityWither {
                         break;
                     case 3:
                         // standard horde
-                        for(int i = 0; i < 12; i ++){
+                        for(int i = 0; i < 8 + this.witherPhase * 3; i ++){
                             EntityLiving mobToSpawn;
                             int j = this.rand.nextInt(64);
 
@@ -412,7 +433,8 @@ public class EntityBloodWither extends EntityWither {
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
             int i;
             do {
-                i = this.rand.nextInt(7);
+                i = this.rand.nextInt(8);
+                i = 7;
             } while (i == this.currentAttackIndex);
 
             this.currentAttackIndex = i;
@@ -440,6 +462,7 @@ public class EntityBloodWither extends EntityWither {
         // summon attacks: executeAttack -> manageWitherPassivity
         // regular attacks: manageWitherPassivity -> executeAttack
         if (!this.worldObj.isRemote && this.playerTarget != null) {
+            boolean bIsArmored = this.isArmored();
             primaryTarget = this.playerTarget;
             if(this.witherAttack % 600 == 599) {
                 // every attack
@@ -467,7 +490,7 @@ public class EntityBloodWither extends EntityWither {
 
 
             if (this.getHealthTimer() <= 0) {
-                if (this.posY < primaryTarget.posY || (!this.isArmored() && this.posY < primaryTarget.posY + this.verticalOffset)) {
+                if (this.posY < primaryTarget.posY || ((!this.activity || !bIsArmored) && this.posY < primaryTarget.posY + this.verticalOffset)) {
                     if (this.motionY < 0.0) {
                         this.motionY = 0.0;
                     }
@@ -488,11 +511,14 @@ public class EntityBloodWither extends EntityWither {
                     deltaX = this.origin[0] - this.posX;
                     deltaZ = this.origin[2] - this.posZ;
                     targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
-                    if (targetDistanceSquared > 4.0) {
+                    if (targetDistanceSquared > (bIsArmored ? 1 : 4)) {
                         double distance = MathHelper.sqrt_double(targetDistanceSquared);
                         this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.2f;
                         this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.2f;
                     }
+                }
+                if(bIsArmored && targetDistanceSquared < 3){
+                    this.attackEntity(primaryTarget, 4f);
                 }
             }
         }
@@ -650,42 +676,7 @@ public class EntityBloodWither extends EntityWither {
         for(int i = bonus; i < 20 + bonus; i++) {
             int blockID = world.rand.nextBoolean() ? NMBlocks.specialObsidian.blockID : NMBlocks.cryingObsidian.blockID;
             world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 3), blockID, 0, 2);
-//            world.setBlock(x + i, y, z - MathHelper.floor_double((double) line / 3), blockID, 0, 0);
         }
-//        if (line % 8 == 2){
-//            blockChanges[0] = (short) ((x << 12) | (z << 8) | y);
-//            blockChanges[1] = (short) ((x << 12) | (z << 8) | y);
-//            blockChanges[2] = (short) ((x << 12) | (z << 8) | y);
-//            Packet52MultiBlockChange packet = new Packet52MultiBlockChange((int)x >> 4, (int) z >> 4, );
-//            Minecraft.getMinecraft().getNetHandler().handleMultiBlockChange(packet);
-//        }
-//        if(line == 0){
-//            world.markBlockRangeForRenderUpdate(x - 30, 199, z - 30,x + 30, 199, z + 30);
-//        }
-    }
-
-    public void sendMultiBlockChangePacket(World world, int chunkX, int chunkZ, short[] blockData, int size) {
-        // Create the Packet52MultiBlockChange packet for the given chunk
-        Packet52MultiBlockChange packet = new Packet52MultiBlockChange(chunkX, chunkZ, blockData, size, world);
-
-        // Now send the packet to all players in the world (or specific players)
-        for (Object obj : world.playerEntities) {
-            if (obj instanceof EntityPlayerMP) {
-                EntityPlayerMP player = (EntityPlayerMP) obj;
-                sendPacketToPlayer(player, packet);
-            }
-        }
-    }
-
-    public void sendPacketToPlayer(EntityPlayerMP player, Packet52MultiBlockChange packet) {
-        // Convert Packet52MultiBlockChange to Packet250CustomPayload
-        Packet250CustomPayload customPayload = new Packet250CustomPayload();
-        customPayload.channel = "yourmod:multi_block_change"; // Custom channel
-        customPayload.data = packet.metadataArray; // Assuming getData() returns byte[] for packet data
-        customPayload.length = customPayload.data.length;
-
-        // Send the packet to the client
-        player.playerNetServerHandler.sendPacket(customPayload);
     }
 
     @Override
@@ -693,13 +684,6 @@ public class EntityBloodWither extends EntityWither {
         if (this.getHealthTimer() > 0) {
             int healthTimer = this.getHealthTimer() - 1;
             // builds the platform of the wither arena, in a lag efficient way
-
-            // places 1 line every tick
-//            if(isBetween(healthTimer,80,400)){
-//                int line = healthTimer - 80;
-//                // healthTimer holds a value between 0 and 300
-//                placeBlocksAtLine(this.worldObj, (int) this.posX - 30, (int) this.posY - 1, (int) this.posZ + 30, line);
-//            }
 
             // places one line every 2 ticks
             if(isBetween(healthTimer,40,400)){
@@ -828,12 +812,15 @@ public class EntityBloodWither extends EntityWither {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if(par2 > 20){
-            par2 = 20;
+        boolean bIsArmored = this.isArmored();
+        if(par2 > (bIsArmored ? 12 : 20)){
+            par2 = bIsArmored ? 12 : 20;
         }
         if (this.witherPhase < 2 && this.getHealth() < par2) {
             this.witherPhase += 1;
-            this.heal(300f);
+            this.setAttackDetails(this.currentAttackIndex);
+            this.witherAttack = 599;
+            this.reviveTimer = 200;
             return false;
         } else{
             return this.activity && super.entityMobAttackEntityFrom(par1DamageSource, par2);

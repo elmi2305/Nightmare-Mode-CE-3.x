@@ -58,7 +58,6 @@ public class NMItems {
     public static ItemEclipseBow eclipseBow;
     public static ItemMagicArrow magicArrow;
     public static ItemIronFishingPole ironFishingPole;
-
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
     static {
@@ -99,7 +98,7 @@ public class NMItems {
         decayedFlesh = (RottenFleshItem) (new RottenFleshItem(2340)).setMaxStackSize(64).setTextureName("nmDecayedFlesh").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDecayedFlesh");
         ghastTentacle = (new Item(2341)).setTextureName("nmGhastTentacle").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGhastTentacle");
         elementalRod = (new Item(2342)).setTextureName("nmElementalRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmElementalRod");
-        shadowRod = (new Item(2342)).setTextureName("nmShadowRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmShadowRod");
+        shadowRod = (new Item(2343)).setTextureName("nmShadowRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmShadowRod");
         greg = (new Item(2344)).setTextureName("nmGreg").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGreg");
         starOfTheBloodGod = (NetherStarItem) new NetherStarItem(2345).setMaxStackSize(1).setTextureName("nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
 
