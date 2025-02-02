@@ -95,7 +95,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         if (this.worldObj != null) {
-            return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
+            return 16000 - NightmareUtils.getWorldProgress(this.worldObj) * 3000;
         } else return 24000;
     }
 
@@ -129,10 +129,10 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getWorldProgress(target.worldObj)*0.2){
             if (NightmareUtils.getWorldProgress(target.worldObj)<=1) {
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, 40,0));
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NightmareUtils.getNiteMultiplier()),0));
             } else if (target.worldObj.getDifficulty() == Difficulties.HOSTILE){
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, 40,1));
-                target.addPotionEffect(new PotionEffect(Potion.hunger.id, 80,0));
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NightmareUtils.getNiteMultiplier()),1));
+                target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * NightmareUtils.getNiteMultiplier()),0));
             }
 
             if (target.worldObj.getDifficulty() == Difficulties.HOSTILE && target instanceof EntityPlayer player) {
@@ -217,21 +217,21 @@ public abstract class EntitySpiderMixin extends EntityMob{
             boolean isBloodMoon = bloodMoonModifier > 1;
 
             if(progress==0) {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16.0 * bloodMoonModifier + eclipseModifier);
-                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier)* NightmareUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier) * NightmareUtils.getNiteMultiplier());
                 // 13 -> 20 -> 27 -> 34
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0));
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double(((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0)) * NightmareUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
-                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(isEclipse ? 0.9f : 0.85f); // slightly increases move speed
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isEclipse ? 0.9f : 0.85f) * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20)); // slightly increases move speed
             }
             if(this.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
                 this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1)) * NightmareUtils.getNiteMultiplier());
                 // 12 -> 18 -> 24 -> 30
             }
         }

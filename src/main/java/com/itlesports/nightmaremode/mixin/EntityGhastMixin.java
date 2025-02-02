@@ -30,7 +30,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + 6 * progress);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 6 * progress) * NightmareUtils.getNiteMultiplier());
         // 20 -> 26 -> 32 -> 38
     }
 
@@ -205,11 +205,11 @@ public abstract class EntityGhastMixin extends EntityFlying{
     private int lowerAttackThreshold(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;
         if(thisObj.dimension == 0 && !NightmareUtils.getIsMobEclipsed(this)){
-            return constant * 2;
+            return NightmareUtils.divByNiteMultiplier(constant * 2, 10);
         }
         if(thisObj.worldObj != null && NightmareUtils.getWorldProgress(thisObj.worldObj)>0){
-            return constant - NightmareUtils.getWorldProgress(thisObj.worldObj)*3 - 5;
-            // 15 -> 12 -> 9 -> 6
+            return NightmareUtils.divByNiteMultiplier((int) (constant - NightmareUtils.getWorldProgress(thisObj.worldObj) * 1.5 - 5), 8);
+            // 15 -> 13 -> 12 -> 10
         }
         return constant;
     }
@@ -241,7 +241,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
     private int lowerAttackCooldownOnFire(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;
-        return - 10 - thisObj.rand.nextInt(21);
+        return (int) ((- 10 - thisObj.rand.nextInt(21)) * NightmareUtils.getNiteMultiplier());
         // from -10 to -30
     }
 }

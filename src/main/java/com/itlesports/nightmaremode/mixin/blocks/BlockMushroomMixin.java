@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.*;
 public class BlockMushroomMixin {
     @ModifyArg(method = "updateTick", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 1))
     private int increaseChanceToSpread(int bound){
-        return 6;
+        return 7;
     }
     @ModifyConstant(method = "updateTick", constant = @Constant(intValue = 4,ordinal = 0))
     private int decreaseMushroomDetectionRange(int constant){
@@ -16,6 +16,6 @@ public class BlockMushroomMixin {
     }
     @ModifyConstant(method = "updateTick", constant = @Constant(intValue = 4,ordinal = 1))
     private int increaseAttemptsToSpread(int constant){
-        return 7;
+        return 6;
     }
 }

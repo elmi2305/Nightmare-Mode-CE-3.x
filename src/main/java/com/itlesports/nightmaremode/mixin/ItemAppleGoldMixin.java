@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemAppleGold.class)
@@ -22,8 +24,18 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
                     target = "Lnet/minecraft/src/EntityPlayer;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",
                     ordinal = 0, shift = At.Shift.AFTER))
     private void goldenAppleRandomEffects(ItemStack par3, World world, EntityPlayer entityPlayer, CallbackInfo ci){
-        if (par3.getItemDamage()==0) {
+        if (par3.getItemDamage() == 0 && !NightmareMode.noHit) {
             entityPlayer.addPotionEffect(new PotionEffect(Potion.field_76444_x.id,14400,4)); // absorption
+        }
+    }
+
+    @Redirect(method = "onFoodEaten",
+            at = @At(value="INVOKE",
+                    target = "Lnet/minecraft/src/EntityPlayer;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",
+                    ordinal = 0))
+    private void noHitNoAbsorption(EntityPlayer instance, PotionEffect potionEffect){
+        if(!NightmareMode.noHit){
+            instance.addPotionEffect(potionEffect);
         }
     }
 
@@ -47,7 +59,9 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         }
         entityPlayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 600, 1));
         entityPlayer.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 600, 1));
-        entityPlayer.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 2400, 1)); // absorption
+        if (!NightmareMode.noHit) {
+            entityPlayer.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 2400, 1)); // absorption
+        }
 
         this.timeUntilUsage = world.getTotalWorldTime() + 1800; // enchanted gapple cooldown, 90s
     }

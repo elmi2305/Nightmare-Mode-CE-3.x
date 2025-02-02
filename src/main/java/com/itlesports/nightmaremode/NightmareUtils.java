@@ -56,6 +56,12 @@ public class NightmareUtils {
             BTWItems.tastySandwich,
             BTWItems.steakAndPotatoes
     ));
+
+
+    public static int getFoodShanksFromLevel(EntityPlayer player){
+        return (int) Math.min(Math.floor((double) player.experienceLevel / 3) * 6 + 18, 60);
+    }
+
     public static void updateItemStackSizes(){
         Item.potion.setMaxStackSize(16);
         for(Item item : foodList){
@@ -80,6 +86,10 @@ public class NightmareUtils {
             Item.helmetChain.itemID
     ));
 
+    public static double getNiteMultiplier(){
+        if(NightmareMode.getInstance() == null){return 1;}
+        return NightmareMode.getInstance().NITE_MULTIPLIER;
+    }
 
     public static int getWorldProgress(World world) {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
@@ -114,11 +124,15 @@ public class NightmareUtils {
         return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
     }
     public static void manageEclipseChance(EntityLivingBase mob, int chance){
-        if(NightmareMode.evolvedMobs){
+        if(NightmareMode.evolvedMobs && mob.worldObj != null){
             if(mob.rand.nextInt(chance) == 0){
                 mob.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
             }
         }
+    }
+
+    public static int divByNiteMultiplier(int par1, int par2){
+        return (int) Math.max(par1 / NightmareUtils.getNiteMultiplier(), par2);
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){

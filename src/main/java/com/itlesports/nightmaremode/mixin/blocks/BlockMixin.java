@@ -19,17 +19,6 @@ public class BlockMixin {
         Block thisObj = (Block)(Object)this;
         ItemStack item = player.getHeldItem();
         if (item != null) {
-//            if(item.itemID == Item.shovelStone.itemID){
-//                if(thisObj.blockID == Block.blockClay.blockID && world.rand.nextInt(10)==0){
-//                    summonEntity(world,x,y,z,Item.clay);
-//                }
-//            } else if(item.itemID == Item.shovelIron.itemID){
-//                if(thisObj.blockID == Block.blockClay.blockID && world.rand.nextInt(6)==0){
-//                    summonEntity(world,x,y,z,Item.clay);
-//                }
-//            }
-// TODO: decide if shovels should give double clay lol
-
             int blockID = thisObj.blockID;
 
             if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) < 4){

@@ -1,6 +1,5 @@
 accessWidener v1 named
 accessible field net/minecraft/src/EntityLiving tasks Lnet/minecraft/src/EntityAITasks;
-accessible field net/minecraft/src/BiomeGenBase spawnableMonsterList Ljava/util/List;
 accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPosition (Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V
 accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/EntityAITasks;
 accessible class net/minecraft/src/GuiWorldSlot
@@ -14,5 +13,7 @@ accessible field net/minecraft/src/EntityLivingBase activePotionsMap Ljava/util/
 accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
 accessible method net/minecraft/src/EntityWitherAttackFilter <init> ()V
 accessible method net/minecraft/src/Entity setSize (FF)V
+accessible method btw/util/status/PlayerStatusEffects createHealthEffect (IFLjava/lang/String;)Lbtw/util/status/StatusEffectBuilder;
+accessible method btw/util/status/PlayerStatusEffects createHungerEffect (IFLjava/lang/String;)Lbtw/util/status/StatusEffectBuilder;
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

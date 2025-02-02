@@ -12,15 +12,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BiomeGenHell.class)
-public class BiomeGenHellMixin {
+public abstract class BiomeGenHellMixin implements BiomeGenBaseAccessor{
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addCreepersToNetherSpawn(int par1, CallbackInfo ci){
-        BiomeGenHell thisObj =((BiomeGenHell)(Object)this);
-        thisObj.spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 15,1,1));
-        thisObj.spawnableMonsterList.add(new SpawnListEntry(EntityFireCreeper.class, 40,1,1));
+        this.getSpawnableMonsterList().add(new SpawnListEntry(EntityCreeper.class, 15,1,1));
+        this.getSpawnableMonsterList().add(new SpawnListEntry(EntityFireCreeper.class, 40,1,1));
         if(NightmareMode.magicMonsters){
-            thisObj.spawnableMonsterList.clear();
-            thisObj.spawnableMonsterList.add(new SpawnListEntry(EntityWitch.class, 40, 1, 2));
+            this.getSpawnableMonsterList().clear();
+            this.getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 40, 1, 2));
         }
     }
 }

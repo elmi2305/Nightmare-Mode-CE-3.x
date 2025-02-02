@@ -2,24 +2,24 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.status.StatusEffect;
+import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin {
-    @Unique private int configDisplayOffset = 0;
 
-    @Final
-    @Shadow
-    private Minecraft mc;
+    @Final @Shadow private Minecraft mc;
 
     @Unique
     private int amountRendered = 0;
@@ -51,9 +51,11 @@ public class GuiIngameMixin {
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
 
+            textToShow = this.getTextForActiveConfig();
+            stringWidth = fontRenderer.getStringWidth(textToShow);
+
             if(NightmareMode.configOnHud){
-                textToShow = this.getTextForActiveConfig();
-                renderText(textToShow, stringWidth, iScreenX + this.configDisplayOffset, iScreenY, fontRenderer, activeStatuses);
+                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
         }
     }
@@ -93,23 +95,19 @@ public class GuiIngameMixin {
             string += "BS";
             count++;
         }
-//        if(this.mc.theWorld.worldInfo.areCommandsAllowed()){
-//            if(count > 0){
-//                string += "+";
-//            }
-//            string += "Cheats";
-//        }
-
-        if(count == 4){
-            this.configDisplayOffset = -32;
-        } else if(count == 3){
-            this.configDisplayOffset = -15;
-        } else if(count == 2){
-            this.configDisplayOffset = 5;
-        } else if(count == 1){
-            this.configDisplayOffset = 22;
+        if(NightmareMode.magicMonsters){
+            if(count > 0){
+                string += "+";
+            }
+            string += "MM";
         }
         return string;
+    }
+
+    @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
+    private int modifyFoodOverlay(int original) {
+        if(!NightmareMode.nite || mc.thePlayer == null){return original;}
+        return (int) (NightmareUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
     }
 
     @Unique

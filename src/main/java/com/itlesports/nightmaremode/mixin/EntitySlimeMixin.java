@@ -164,5 +164,4 @@ public abstract class EntitySlimeMixin extends EntityLiving{
         }
         super.dropFewItems(par1, par2);
     }
-
 }

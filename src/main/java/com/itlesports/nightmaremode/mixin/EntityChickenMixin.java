@@ -2,10 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
-import net.minecraft.src.EntityAnimal;
-import net.minecraft.src.EntityChicken;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -55,5 +52,9 @@ public abstract class EntityChickenMixin extends EntityAnimal {
                 this.dropItem(itemID, 1);
             }
         }
+    }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0d * NightmareUtils.getNiteMultiplier());
     }
 }

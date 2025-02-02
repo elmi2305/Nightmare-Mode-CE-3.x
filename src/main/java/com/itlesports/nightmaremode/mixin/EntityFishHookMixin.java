@@ -18,8 +18,7 @@ import java.util.Map;
 
 @Mixin(EntityFishHook.class)
 public abstract class EntityFishHookMixin extends Entity implements EntityFishHookAccessor{
-    @Unique
-    private static final Map<Item, Integer> itemOccurrences0 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> itemOccurrences0 = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(Item.reed, 3),
             new AbstractMap.SimpleEntry<>(BTWItems.tangledWeb, 9),
             new AbstractMap.SimpleEntry<>(BTWItems.ironOreChunk, 3),
@@ -33,8 +32,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.goldenCarrot, 1),
             new AbstractMap.SimpleEntry<>(BTWItems.mysteriousGland, 7)
     );
-    @Unique
-    private static final Map<Item, Integer> itemOccurrences1 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> itemOccurrences1 = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(BTWItems.ironNugget, 7),
             new AbstractMap.SimpleEntry<>(BTWItems.goldOreChunk, 4),
             new AbstractMap.SimpleEntry<>(Item.goldNugget, 2),
@@ -53,8 +51,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.diamond, 1),
             new AbstractMap.SimpleEntry<>(NMItems.bloodOrb, 2)
     );
-    @Unique
-    private static final Map<Item, Integer> itemOccurrences2 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> itemOccurrences2 = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(Item.goldNugget, 6),
             new AbstractMap.SimpleEntry<>(BTWItems.steelNugget, 4),
             new AbstractMap.SimpleEntry<>(BTWItems.broadheadArrowHead, 2),
@@ -66,8 +63,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.book, 8),
             new AbstractMap.SimpleEntry<>(Item.emerald, 9)
     );
-    @Unique
-    private static final Map<Item, Integer> itemOccurrences3 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> itemOccurrences3 = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(NMItems.magicFeather, 4),
             new AbstractMap.SimpleEntry<>(NMItems.creeperChop, 3),
             new AbstractMap.SimpleEntry<>(NMItems.magicArrow, 5),
@@ -85,8 +81,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(NMItems.waterRod, 9),
             new AbstractMap.SimpleEntry<>(NMItems.elementalRod, 1)
     );
-    @Unique
-    private static final Map<Integer, Map<Item, Integer>> mapOfMaps = Map.ofEntries(
+    @Unique private static final Map<Integer, Map<Item, Integer>> mapOfMaps = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(0, itemOccurrences0),
             new AbstractMap.SimpleEntry<>(1, itemOccurrences1),
             new AbstractMap.SimpleEntry<>(2, itemOccurrences2),
@@ -97,12 +92,11 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private static int getItemOccurrences(Item item, int index) {
         return mapOfMaps.get(index).getOrDefault(item,0);
     }
-
-
-
     @Shadow private boolean isBaited;
     @Shadow public EntityPlayer angler;
     @Unique private boolean isIron;
+    @Unique private Item fishItem = Item.fishRaw;
+    @Unique private int cap = 1;
 
     public EntityFishHookMixin(World par1World) {
         super(par1World);
@@ -162,11 +156,24 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
-        return this.getRandomItemForRod();
+        if(this.fishItem != Item.fishRaw){
+            int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress(this.angler.worldObj) : 0;
+            double rarity = getRarity(this.fishItem, this.cap, worldProgress);
+            String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
+            ChatMessageComponent text2 = new ChatMessageComponent();
+            text2.addText(textToDisplay);
+            text2.setColor(getRarityColor(rarity));
+            this.angler.sendChatToPlayer(text2);
+        }
+        return this.fishItem;
     }
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFishHook;playSound(Ljava/lang/String;FF)V"))
     private void playCatchSoundAtPlayer(EntityFishHook instance, String s, float v, float p){
-        instance.worldObj.playSoundAtEntity(instance.angler,BTWSoundManager.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
+        if ((this.fishItem = this.getRandomItemForRod()) != Item.fishRaw) {
+            instance.worldObj.playSoundAtEntity(instance.angler,BTWSoundManager.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
+        } else {
+            instance.playSound(s, v, p);
+        }
     }
     @Unique
     private int getWorldProgressBonus(){
@@ -179,14 +186,14 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private Item getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
-        int cap = 800;
+        this.cap = 800;
         double capModifier = 0.8;
-        int j = this.rand.nextInt((int) (cap * capModifier));
+        int j = this.rand.nextInt((int) (this.cap * capModifier));
         Item itemToDrop;
         if (worldProgress == 0) {
             itemToDrop = switch (j) {
-                case  0,  1,  2                              -> Item.reed;               // 3 occurrences (paper)
-                case  3,  4,  5,  6,  7,  8,  9, 10, 11      -> BTWItems.tangledWeb;                // 9 occurrences (silk)
+                case  0,  1,  2                              -> Item.reed;                // 3 occurrences (paper)
+                case  3,  4,  5,  6,  7,  8,  9, 10, 11      -> BTWItems.tangledWeb;      // 9 occurrences (silk)
                 case 12, 13, 14                              -> BTWItems.ironOreChunk;    // 3 occurrences (iron ore chunk)
                 case 15                                      -> Item.melonSeeds;          // 1 occurrence (melon seeds)
                 case 16, 17, 18, 19, 20, 21, 22, 23, 24, 25  -> Item.bone;                // 10 occurrences (bone)
@@ -201,15 +208,15 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         } else if(worldProgress == 1){
-            cap = 905;
-            j = this.rand.nextInt((int) (cap * capModifier));
+            this.cap = 905;
+            j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
                 case  0,  1,  2,  3,  4,  5,  6                     -> BTWItems.ironNugget;       // 7 occurrences (iron nugget)
                 case  7,  8,  9, 10                                 -> BTWItems.goldOreChunk;     // 4 occurrences (gold chunk)
                 case 11, 12                                         -> Item.goldNugget;           // 2 occurrences (gold nugget)
                 case 13, 14, 15, 16, 17                             -> Item.melonSeeds;           // 5 occurrences (melon seeds)
                 case 18, 19, 20, 21, 22, 23, 24, 25, 26, 27         -> Item.arrow;                // 10 occurrences (arrow)
-                case 28, 29, 30, 31, 32, 33, 34, 35                 -> BTWItems.tannedLeather;             // 8 occurrences (glue)
+                case 28, 29, 30, 31, 32, 33, 34, 35                 -> BTWItems.tannedLeather;    // 8 occurrences (glue)
                 case 36, 37                                         -> Item.enchantedBook;        // 2 occurrences (enchanted book)
                 case 38, 39                                         -> BTWItems.witchWart;        // 2 occurrences (witch wart)
                 case 40, 41, 42, 43, 44, 45                         -> BTWItems.emeraldPile;      // 6 occurrences (emerald pile)
@@ -224,51 +231,43 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         } else if(worldProgress == 2){
-            cap = 540;
-            j = this.rand.nextInt((int) (cap * capModifier));
+            this.cap = 540;
+            j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
-                case  0,  1,  2,  3,  4,  5             -> Item.goldNugget;            // 6 occurrences (gold nugget)
-                case  6,  7,  8,  9                     -> BTWItems.steelNugget;       // 4 occurrences (steel nugget)
-                case 10, 11                             -> BTWItems.broadheadArrowHead;// 2 occurrences (broad-head arrowhead)
-                case 12, 13, 14, 15, 16, 17             -> BTWItems.rope;              // 6 occurrences (rope)
-                case 18, 19, 20, 21, 22, 23, 24, 25     -> NMItems.calamari;           // 8 occurrences (calamari)
-                case 26                                 -> Item.diamond;               // 1 occurrence (diamond)
-                case 27, 28, 29, 30                     -> BTWItems.soulFlux;          // 4 occurrences (soul flux)
-                case 31, 32, 33, 34, 35, 36, 37         -> Item.expBottle;             // 7 occurrences (exp bottle)
-                case 38, 39, 40, 41, 42, 43, 44, 45     -> Item.book;                  // 8 occurrences (book)
-                case 46, 47, 48, 49, 50, 51, 52, 53, 54 -> Item.emerald;               // 9 occurrences (emerald)
+                case  0,  1,  2,  3,  4,  5             -> Item.goldNugget;             // 6 occurrences (gold nugget)
+                case  6,  7,  8,  9                     -> BTWItems.steelNugget;        // 4 occurrences (steel nugget)
+                case 10, 11                             -> BTWItems.broadheadArrowHead; // 2 occurrences (broad-head arrowhead)
+                case 12, 13, 14, 15, 16, 17             -> BTWItems.rope;               // 6 occurrences (rope)
+                case 18, 19, 20, 21, 22, 23, 24, 25     -> NMItems.calamari;            // 8 occurrences (calamari)
+                case 26                                 -> Item.diamond;                // 1 occurrence (diamond)
+                case 27, 28, 29, 30                     -> BTWItems.soulFlux;           // 4 occurrences (soul flux)
+                case 31, 32, 33, 34, 35, 36, 37         -> Item.expBottle;              // 7 occurrences (exp bottle)
+                case 38, 39, 40, 41, 42, 43, 44, 45     -> Item.book;                   // 8 occurrences (book)
+                case 46, 47, 48, 49, 50, 51, 52, 53, 54 -> Item.emerald;                // 9 occurrences (emerald)
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         } else{
-            cap = 365;
-            j = this.rand.nextInt((int) (cap * capModifier));
+            this.cap = 365;
+            j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
-                case  0,  1,  2,  3                     -> NMItems.magicFeather;       // 4 / 365 = 0.01095890,  occurrences (magic feather)
-                case  4,  5,  6                         -> NMItems.creeperChop;        // 3 / 365 = 0.00821918, occurrences (creeper chop)
-                case  7,  8,  9, 10, 11                 -> NMItems.magicArrow;         // 5 / 365 = 0.01369863, occurrences (magic arrow)
-                case 12, 13                             -> NMItems.bloodMilk;          // 2 / 365 = 0.00547945, occurrences (blood-milk)
-                case 14, 15, 16, 17, 18, 19, 20, 21, 22 -> NMItems.calamari;           // 9 / 365 = 0.02465753, occurrences (calamari)
-                case 23, 24, 25, 26, 27, 28, 29         -> NMItems.silverLump;         // 7 / 365 = 0.01917808, occurrences (silver lump)
-                case 30, 31, 32, 33, 34, 35, 36, 37, 38 -> BTWItems.soulFlux;          // 9 / 365 = 0.02465753, occurrences (soul flux)
-                case 39                                 -> NMItems.voidMembrane;       // 1 / 365 = 0.00273973, occurrence (void membrane)
-                case 40, 41, 42, 43, 44, 45, 46, 47     -> NMItems.voidSack;           // 8 / 365 = 0.02191781, occurrences (void sack)
-                case 48, 49, 50                         -> NMItems.charredFlesh;       // 3 / 365 = 0.00821918, occurrences (charred flesh)
-                case 51, 52, 53, 54                     -> NMItems.ghastTentacle;      // 4 / 365 = 0.01095890, occurrences (ghast tentacle)
-                case 55                                 -> NMItems.creeperTear;        // 1 / 365 = 0.00273973, occurrence (creeper tear)
-                case 56, 57, 58, 59, 60, 61             -> NMItems.spiderFangs;        // 6 / 365 = 0.01643836, occurrences (spider fangs)
-                case 62, 63, 64                         -> NMItems.greg;               // 3 / 365 = 0.00821918, occurrences (greg)
-                case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;           // 9 / 365 = 0.02465753, occurrences (water rod)
-                case 74                                 -> NMItems.elementalRod;       // 1 / 365 = 0.00273973  occurrence (elemental rod)
+                case  0,  1,  2,  3                     -> NMItems.magicFeather;       // 4 occurrences (magic feather)
+                case  4,  5,  6                         -> NMItems.creeperChop;        // 3 occurrences (creeper chop)
+                case  7,  8,  9, 10, 11                 -> NMItems.magicArrow;         // 5 occurrences (magic arrow)
+                case 12, 13                             -> NMItems.bloodMilk;          // 2 occurrences (blood-milk)
+                case 14, 15, 16, 17, 18, 19, 20, 21, 22 -> NMItems.calamari;           // 9 occurrences (calamari)
+                case 23, 24, 25, 26, 27, 28, 29         -> NMItems.silverLump;         // 7 occurrences (silver lump)
+                case 30, 31, 32, 33, 34, 35, 36, 37, 38 -> BTWItems.soulFlux;          // 9 occurrences (soul flux)
+                case 39                                 -> NMItems.voidMembrane;       // 1 occurrence (void membrane)
+                case 40, 41, 42, 43, 44, 45, 46, 47     -> NMItems.voidSack;           // 8 occurrences (void sack)
+                case 48, 49, 50                         -> NMItems.charredFlesh;       // 3 occurrences (charred flesh)
+                case 51, 52, 53, 54                     -> NMItems.ghastTentacle;      // 4 occurrences (ghast tentacle)
+                case 55                                 -> NMItems.creeperTear;        // 1 occurrence (creeper tear)
+                case 56, 57, 58, 59, 60, 61             -> NMItems.spiderFangs;        // 6 occurrences (spider fangs)
+                case 62, 63, 64                         -> NMItems.greg;               // 3 occurrences (greg)
+                case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;           // 9 occurrences (water rod)
+                case 74                                 -> NMItems.elementalRod;       // 1 occurrence (elemental rod)
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
-        }
-        if(itemToDrop != Item.fishRaw){
-            double rarity = getRarity(itemToDrop, cap, worldProgress);
-            String textToDisplay = "You caught: " + itemToDrop.getItemDisplayName(new ItemStack(itemToDrop)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
-            ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText(textToDisplay);
-            text2.setColor(getRarityColor(rarity));
-            this.angler.sendChatToPlayer(text2);
         }
         return itemToDrop;
     }
@@ -344,16 +343,16 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private static EnumChatFormatting getRarityColor(double rarityPercent){
         double rarity = rarityPercent / 100;
-        if (rarity > 0.014) {
+        if (rarity >= 0.011) {
             return EnumChatFormatting.WHITE;
         }
-        else if (rarity > 0.01) {
+        else if (rarity > 0.0073) {
             return EnumChatFormatting.YELLOW;
         }
-        else if (rarity > 0.007) {
+        else if (rarity > 0.0035) {
             return EnumChatFormatting.BLUE;
         }
-        else if (rarity > 0.004) {
+        else if (rarity > 0.0025) {
             return EnumChatFormatting.RED;
         }
         else if (rarity > 0.002) {
@@ -366,16 +365,16 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private static String getRarityName(double rarityPercent){
         double rarity = rarityPercent / 100;
-        if (rarity > 0.014) {
+        if (rarity >= 0.011) {
             return "(Common)";
         }
-        else if (rarity > 0.01) {
+        else if (rarity > 0.0073) {
             return "(Uncommon)";
         }
-        else if (rarity > 0.007) {
+        else if (rarity > 0.0035) {
             return "(Rare)";
         }
-        else if (rarity > 0.004) {
+        else if (rarity > 0.0025) {
             return "(Epic)";
         }
         else if (rarity > 0.002) {

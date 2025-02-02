@@ -38,8 +38,8 @@ public abstract class EntityEndermanMixin extends EntityMob {
         double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
         boolean isBloodMoon = bloodMoonModifier > 1;
 
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NightmareUtils.getIsMobEclipsed(this) ? 0.07 : 0));
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0 + progress * 2 + bloodMoonModifier);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NightmareUtils.getIsMobEclipsed(this) ? 0.07 : 0)) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((6.0 + progress * 2 + bloodMoonModifier) * NightmareUtils.getNiteMultiplier());
         // 7 -> 9 -> 11 -> 13
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress * 20);
         // 40 -> 60 -> 80 -> 100
@@ -157,9 +157,8 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
                 entity.motionX += deltaX * 4;
                 entity.motionZ += deltaZ * 4;
-                entity.motionY += 0.4; // Adjust the vertical component as needed
+                entity.motionY += 0.4;
 
-                // Clamp the vertical motion to prevent excessive knockback
                 if (entity.motionY > 0.4) {
                     entity.motionY = 0.4;
                 }
@@ -267,7 +266,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
                     target = "Lnet/minecraft/src/EntityEnderman;entityMobOnLivingUpdate()V"))
     private void updateEnemyTeleport(CallbackInfo ci) {
         if (!this.worldObj.isRemote && this.isEntityAlive() && this.entityToAttack != null) {
-            if (entityToAttack.getDistanceSqToEntity(this) > 6.0D && entityToAttack.getDistanceSqToEntity(this) < 64D) {
+            if (entityToAttack.getDistanceSqToEntity(this) > 6.0D && entityToAttack.getDistanceSqToEntity(this) < 900) {
                 if (this.teleportDelay++ >= 120 && this.teleportEnemy()) {
                     this.teleportDelay = 0;
                 }
@@ -281,7 +280,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     private void attackClosePlayers(CallbackInfoReturnable<Entity> cir){
         EntityPlayer target = null;
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 3.5);
+            target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 3.25);
         }
         EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 7);
         if(effectTarget != null && this.dimension != 1){
@@ -297,13 +296,13 @@ public abstract class EntityEndermanMixin extends EntityMob {
                     cir.setReturnValue(target);
                 }
             } else{
-                this.patience = Math.min(++this.patience,30);
+                this.patience = Math.min(++this.patience,40);
             }
         }
     }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean doNotLoseAggroDuringTheDay(World instance){
-        return false; // this just makes endermen not lose aggro in the day.
+        return false;
     }
 
 

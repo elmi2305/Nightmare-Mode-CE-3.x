@@ -28,7 +28,7 @@ public class EntityBlazeMixin extends EntityMob{
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             int eclipseBonus = NightmareUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 8 : 4) + eclipseBonus);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 8 : 4) + eclipseBonus) * NightmareUtils.getNiteMultiplier());
             // 16 -> 24 -> 32 -> 40
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 

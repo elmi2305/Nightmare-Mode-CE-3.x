@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -34,22 +35,7 @@ public class EntityMobMixin extends EntityCreature{
             BTWItems.woolLeggings.itemID,
             Item.swordDiamond.itemID
     ));
-//
-//    @Unique
-//    private static final List<Integer> pigmanItemsToAvoidDropping = new ArrayList<>(Arrays.asList(
-//            Item.swordWood.itemID,
-//            Item.helmetLeather.itemID,
-//            Item.plateLeather.itemID,
-//            Item.legsLeather.itemID,
-//            Item.bootsLeather.itemID,
-//            BTWItems.boneClub.itemID,
-//            Item.axeGold.itemID,
-//            BTWItems.woolBoots.itemID,
-//            BTWItems.woolChest.itemID,
-//            BTWItems.woolHelmet.itemID,
-//            BTWItems.woolLeggings.itemID
-//    ));
-
+    
     @Unique private static boolean shouldDropItems(EntityCreature mob, ItemStack stack){
         if(stack == null){
             return false;
@@ -137,22 +123,9 @@ public class EntityMobMixin extends EntityCreature{
             boolean bIsPostWither = WorldUtils.gameProgressHasWitherBeenSummonedServerOnly();
             this.experienceValue = bIsPostWither ? 40 : 20;
         } else{
-            this.experienceValue = 5;
+            this.experienceValue = NightmareMode.nite ? 10 : 5;
         }
     }
-
-//    @Inject(method = "entityMobOnLivingUpdate", at = @At("HEAD"))
-//    private void playerRadar(CallbackInfo ci){
-//        if(!this.hasAttackTarget() && this.ticksExisted % 200 == 0){
-////        if(NightmareUtils.getIsBloodMoon() && !this.hasAttackTarget() && this.ticksExisted % 200 == 0){
-//            EntityPlayer tempTarget = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,128);
-//            if(tempTarget != null){
-//                System.out.println("check!");
-//                this.getNavigator().tryMoveToEntity(tempTarget,this.getAIMoveSpeed());
-//                this.setAttackTarget(tempTarget);
-//            }
-//        }
-//    }
 
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
@@ -187,21 +160,4 @@ public class EntityMobMixin extends EntityCreature{
             mob.addPotionEffect(new PotionEffect(potionID,100,0));
         }
     }
-
-//    @Override
-//    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-//        if(NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0){
-//            System.out.println("mob is eclipsed");
-//            this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
-//        }
-//        return super.onSpawnWithEgg(par1EntityLivingData);
-//    }
-
-
-    //    @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
-//    private void arrowsIgnoreInvincibility(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-//        if(par1DamageSource.getEntity() instanceof InfiniteArrowEntity){
-//            cir.setReturnValue(true);
-//        }
-//    }
 }

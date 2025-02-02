@@ -1,16 +1,22 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.EntityMagicArrow;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntityArrow.class)
-public abstract class EntityArrowMixin {
+public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
     @Shadow public Entity shootingEntity;
+
+    public EntityArrowMixin(World par1World) {
+        super(par1World);
+    }
 
     @Inject(method = "onUpdate",
             at = @At(value = "FIELD",
@@ -26,6 +32,24 @@ public abstract class EntityArrowMixin {
                 mySkeleton.playSound("mob.endermen.portal",20.0F,1.0F);
                 mySkeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordIron));
             }
+        }
+    }
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityArrow;setDead()V",ordinal = 1))
+    private void magicArrowPierce(EntityArrow instance){
+        if (!(instance instanceof EntityMagicArrow)) {
+            instance.setDead();
+        }
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
+    private boolean magicArrowDamageDuringPierce(Entity instance, DamageSource par1DamageSource, float par2){
+        EntityArrow thisObj = ((EntityArrow)(Object)this);
+        if (thisObj instanceof EntityMagicArrow) {
+            ((EntityAccessor)instance).setInvulnerable(false);
+            instance.attackEntityFrom(par1DamageSource,par2);
+            return true;
+        } else {
+            return instance.attackEntityFrom(par1DamageSource, par2);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -40,9 +39,9 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
         if (this.worldObj != null) {
-            int postNetherBoost = WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() ? 12 : 0;
+            int postNetherBoost = NightmareUtils.getWorldProgress(this.worldObj) >= 1 ? 12 : 0;
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(20.0 + postNetherBoost);
         }
     }

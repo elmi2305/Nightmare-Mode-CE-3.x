@@ -68,7 +68,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
-            int var4 = this.rand.nextInt(4)+2;
+            int var4 = this.rand.nextInt(4) + 2;
             // 2 - 5
             if (iLootingModifier > 0) {
                 var4 += this.rand.nextInt(iLootingModifier + 1);
@@ -127,9 +127,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             return 6;
         }
         if(NightmareUtils.getIsEclipse()){
-            return 24 * buffedSquidBonus;
+            return 24;
         }
-        return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * buffedSquidBonus;
+        return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
         // 20 max
     }
 
@@ -138,7 +138,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             at = @At("HEAD"),remap = false)
     private void doScaryThingsOnHead(CallbackInfo ci) {
         this.squidOnHeadTimer++;
-        if (rand.nextInt(60)==0) {
+        if (rand.nextInt(60) == 0) {
             this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
@@ -172,7 +172,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 12 * (NightmareUtils.getWorldProgress(this.worldObj)+1) : 18) * buffedSquidBonus;
+            return (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 12 * (NightmareUtils.getWorldProgress(this.worldObj)+1) : 18) * buffedSquidBonus * NightmareUtils.getNiteMultiplier();
             // pre nether 18, hardmode 24, post wither 36, post dragon 48
             // if BS is on, 36 -> 48 -> 72 -> 96
         }
@@ -191,7 +191,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return 100-(NightmareUtils.getWorldProgress(this.worldObj)*30);
+            return 100 - (NightmareUtils.getWorldProgress(this.worldObj) * 30);
         }
         return constant;
         // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.

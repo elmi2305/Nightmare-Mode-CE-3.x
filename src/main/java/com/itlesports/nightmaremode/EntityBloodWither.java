@@ -7,10 +7,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class EntityBloodWither extends EntityWither {
     private final float[] headPitch = new float[2]; // Represents the pitch (up/down angle) of the heads.
@@ -18,10 +15,8 @@ public class EntityBloodWither extends EntityWither {
     private final float[] previousHeadPitch = new float[2]; // Previous tick's pitch values for the heads
     private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads
     private final int[] headAttackCounts = new int[2]; // Counters for the number of attacks by the heads
-    private boolean isPhase0;
-    private boolean isPhase1;
-    private boolean isPhase2;
 
+    private int baseAttackInterval = 800;
     private int attackCycle; // used to be headAttackCooldowns. repurposed to track the cycle an attack is in. eg. the lightning attack has 3 cycles, prep, telegraph and fire
     private int shieldRegenCooldown; // Cooldown timer for regenerating the shield
     private int witherAttack; // controls which AI attack the wither should currently use
@@ -46,8 +41,11 @@ public class EntityBloodWither extends EntityWither {
     private boolean shouldExecuteSecondaryAttack; // true if the 2nd phase secondary attack should execute
     private int secondaryAttackIndex; // the secondary attack the wither is set to do
     private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
+    public boolean isDoingLaserAttack; // manages the laser attack
     private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
     public int witherPhase; // the phase the wither is in
+    private int laserIndex; // used to calculate the angle of the laser attack
+    private int laserDirection = 1; // 1 or -1. used to switch the laser attack's motion from clockwise to counterclockwise
     private static boolean bossActive = false; // flag used in other areas to ensure specific behavior during the boss fight
     private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
     private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
@@ -87,14 +85,24 @@ public class EntityBloodWither extends EntityWither {
             BTWBlocks.deepStrataStoneBrickStairs.blockID,
             BTWBlocks.workStump.blockID
     ));
+    private static final List<Integer> GOOD_EFFECTS = new ArrayList<>(Arrays.asList(
+            Potion.regeneration.id,
+            Potion.fireResistance.id,
+            Potion.digSpeed.id,
+            Potion.resistance.id,
+            Potion.damageBoost.id,
+            Potion.moveSpeed.id,
+            Potion.field_76434_w.id,
+            Potion.field_76444_x.id,
+            Potion.field_76443_y.id
+    ));
+
 
     public EntityBloodWither(World world) {
         super(world);
         this.experienceValue = 4954;
         this.witherPhase = 0;
     }
-
-    public int getWitherPhase(){return this.witherPhase;}
 
     private void setTargetY(double par1){
         this.verticalOffset = par1;
@@ -108,12 +116,92 @@ public class EntityBloodWither extends EntityWither {
     @Override
     public void checkForScrollDrop() {}
 
+    private void sendChat(String string){
+        ChatMessageComponent text2 = new ChatMessageComponent();
+        text2.addText("<???> " + string);
+        text2.setColor(EnumChatFormatting.RED);
+        this.playerTarget.sendChatToPlayer(text2);
+    }
+
+    private boolean hasItemInInventory(EntityPlayer player, Item item) {
+        List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
+        for (ItemStack stack : inventory) {
+            if (stack != null && stack.getItem() == item) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private void ejectSpecifiedItems(EntityPlayer player, Item item) {
+        // Get the player's inventory
+        List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
+
+        // Loop through each slot
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stack = inventory.get(i);
+            if(stack == null) continue;
+
+            if (stack.getItem() == item) {
+                player.dropPlayerItemWithRandomChoice(stack, false);
+                player.inventory.mainInventory[i] = null;
+            }
+        }
+    }
+    private static boolean isUsingPotions(EntityPlayer player){
+        if (player.getActivePotionEffects().isEmpty()){
+            return false;
+        }
+        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+        for(PotionEffect potionEffect : potionEffects){
+            if(GOOD_EFFECTS.contains(potionEffect.getPotionID())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void destroyActivePotions(EntityPlayer player){
+        if (player.getActivePotionEffects().isEmpty()){
+            return;
+        }
+        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+        for(PotionEffect potionEffect : potionEffects){
+            if(GOOD_EFFECTS.contains(potionEffect.getPotionID())){
+                player.removePotionEffect(potionEffect.getPotionID());
+            }
+        }
+    }
+
+
+
     private void manageWitherPassivity(boolean isTrackingEntity){
         if(this.reviveTimer > 0){
             this.reviveTimer--;
-            this.heal(1.5f);
+            this.heal(2f);
+            if (this.playerTarget != null) {
+                if (this.witherPhase == 1) {
+                    if(isUsingPotions(this.playerTarget)){
+                        if(this.reviveTimer == 500){
+                            this.sendChat("Had to use potions just to beat me? Pathetic.");
+                        } else if(this.reviveTimer == 420){
+                            this.sendChat("Can't you learn to fight properly?");
+                        } else if(this.reviveTimer == 400){
+                            this.destroyActivePotions(this.playerTarget);
+                        }
+                    }
+                } else if(this.witherPhase == 2){
+                    if (this.hasItemInInventory(this.playerTarget,Item.appleGold)) {
+                        if(this.reviveTimer == 500){
+                            this.sendChat("I see you've brought some golden apples...");
+                        } else if(this.reviveTimer == 420){
+                            this.sendChat("You weren't planning on using them, right?");
+                        } else if(this.reviveTimer == 400){
+                            this.ejectSpecifiedItems(this.playerTarget,Item.appleGold);
+                        }
+                    }
+                }
+            }
         }
-
         if (isTrackingEntity) {
             this.disengageWither();
             for(int i = 0; i < this.trackedEntities.size(); i++){
@@ -209,6 +297,7 @@ public class EntityBloodWither extends EntityWither {
         this.passivityDuration = -1;
         this.activity = true;
         this.setInvisible(false);
+        this.isDoingLaserAttack = false;
         this.setTargetY(5d);
         if(this.previousWorldTime != 0){
             this.worldObj.setWorldTime(this.previousWorldTime);
@@ -218,7 +307,7 @@ public class EntityBloodWither extends EntityWither {
     private void disengageWither(){
         this.activity = false;
         this.setInvisible(true);
-        this.setTargetY(10d);
+        this.setTargetY(this.isDoingLaserAttack ? - 4: 10d);
     }
     private void setWitherPassiveFor(int par1){
         this.passivityDuration = par1;
@@ -255,7 +344,7 @@ public class EntityBloodWither extends EntityWither {
         if (player != null) {
             this.updatePlayerMovementDeltas(player);
             double x,y,z;
-            boolean shouldCheck = this.ticksExisted % delayBetweenAttacks == 0 || delayBetweenAttacks == -1;
+            boolean shouldCheck = delayBetweenAttacks == -1 || this.ticksExisted % delayBetweenAttacks == 0;
             if (shouldCheck) {
                 Vec3 deltaMovement = Vec3.createVectorHelper(this.deltaX, 0, this.deltaZ);
                 deltaMovement.normalize();
@@ -398,16 +487,46 @@ public class EntityBloodWither extends EntityWither {
                         }
                     case 7:
                         if(this.trackedEntities.isEmpty()) {
-                            for(int i = 0; i < 4; i++){
+                            for(int i = 0; i < 6 + this.witherPhase * 2; i++){
                                 EntityNightmareGolem tempGolem = new EntityNightmareGolem(this.worldObj);
-                                tempGolem.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(15), 200, this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(15));
+                                tempGolem.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(20), 200, this.origin[2] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(20));
                                 this.trackedEntities.add(tempGolem);
                                 this.worldObj.spawnEntityInWorld(tempGolem);
                                 tempGolem.setAttackTarget(player);
                             }
                         }
                         break;
-
+                    case 8:
+                        // tudou
+                        this.laserIndex += (2 + (this.witherPhase * 2)) * this.laserDirection;
+                        if(this.rand.nextInt(150 - this.witherPhase * 50) == 0){
+                            this.laserDirection *= -1;
+                        }
+                        this.isDoingLaserAttack = true;
+                        if(this.getDistance(this.origin[0], this.origin[1] + 1, this.origin[2]) <= 2){
+                            this.spawnWitherSkullWithYaw(this.laserIndex % 360, 1, false);
+                            this.spawnWitherSkullWithYaw((this.laserIndex + 90) % 360, 1, false);
+                            this.spawnWitherSkullWithYaw((this.laserIndex + 180) % 360, 1, false);
+                            this.spawnWitherSkullWithYaw((this.laserIndex + 270) % 360, 1, false);
+                        } else{
+                            double deltaY;
+                            double targetDistanceSquared;
+                            double deltaX = this.origin[0] - this.posX;
+                            double deltaZ = this.origin[2] - this.posZ;
+                            deltaY = (this.origin[1] - 4) - this.posY;
+                            targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
+                            if (targetDistanceSquared > 2) {
+                                double distance = MathHelper.sqrt_double(targetDistanceSquared);
+                                this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.2f;
+                                this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.2f;
+                                if(this.isDoingLaserAttack){
+                                    this.motionY += (deltaY / distance * 0.5 - this.motionY) * 0.2f;
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -429,16 +548,18 @@ public class EntityBloodWither extends EntityWither {
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
         bossActive = this.playerTarget != null;
-        // tudou
-        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % 400 == 399 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
+        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
             int i;
             do {
-                i = this.rand.nextInt(8);
-                i = 7;
+                i = this.rand.nextInt(9);
             } while (i == this.currentAttackIndex);
 
             this.currentAttackIndex = i;
             System.out.println(this.currentAttackIndex);
+            ChatMessageComponent text2 = new ChatMessageComponent();
+            text2.addText("[DEBUG]  Currently doing attack: " + this.currentAttackIndex + ", current phase: " + this.witherPhase);
+            text2.setColor(EnumChatFormatting.WHITE);
+            playerTarget.sendChatToPlayer(text2);
             this.setAttackDetails(this.currentAttackIndex);
 
             if (this.rand.nextInt(8) == 0) {
@@ -462,21 +583,26 @@ public class EntityBloodWither extends EntityWither {
         // summon attacks: executeAttack -> manageWitherPassivity
         // regular attacks: manageWitherPassivity -> executeAttack
         if (!this.worldObj.isRemote && this.playerTarget != null) {
+            this.playerTarget.capabilities.allowEdit = this.activity || this.isDead;
             boolean bIsArmored = this.isArmored();
             primaryTarget = this.playerTarget;
-            if(this.witherAttack % 600 == 599) {
+            if(this.witherAttack % (this.baseAttackInterval + 200) == (this.baseAttackInterval + 199)) {
                 // every attack
                 if (this.passivityDuration == -1) {
                     this.setWitherPassiveFor(this.currentAttackPassivityLength);
                 }
-                if(this.isCurrentAttackSummoning) {
+                if(this.currentAttackIndex == 8){
                     this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
-                    this.manageWitherPassivity(true);
-                } else{
                     this.manageWitherPassivity(false);
-                    this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
+                } else {
+                    if (this.isCurrentAttackSummoning) {
+                        this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
+                        this.manageWitherPassivity(true);
+                    } else {
+                        this.manageWitherPassivity(false);
+                        this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
+                    }
                 }
-                // tud
                 if(this.shouldExecuteSecondaryAttack && this.secondaryAttackIndex != 0){
                     int delay = this.secondaryAttackIndex == 2 ? 21 : -1;
                     this.executeAttack(this.secondaryAttackIndex, delay);
@@ -490,7 +616,7 @@ public class EntityBloodWither extends EntityWither {
 
 
             if (this.getHealthTimer() <= 0) {
-                if (this.posY < primaryTarget.posY || ((!this.activity || !bIsArmored) && this.posY < primaryTarget.posY + this.verticalOffset)) {
+                if ((this.posY < primaryTarget.posY || ((!this.activity || !bIsArmored) && this.posY < primaryTarget.posY + this.verticalOffset)) && !this.isDoingLaserAttack) {
                     if (this.motionY < 0.0) {
                         this.motionY = 0.0;
                     }
@@ -498,23 +624,28 @@ public class EntityBloodWither extends EntityWither {
                 }
                 deltaX = primaryTarget.posX - this.posX;
                 deltaZ = primaryTarget.posZ - this.posZ;
+                double deltaY;
                 targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
-                if (targetDistanceSquared > 9.0 && this.activity) {
+                if (targetDistanceSquared > 9.0 && this.activity && !this.isDoingLaserAttack) {
                     double distance = MathHelper.sqrt_double(targetDistanceSquared);
                     this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.6f;
                     this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.6f;
                 }
-                if(targetDistanceSquared > 1000 && !this.activity && this.trackedEntities.isEmpty()){
+                if(targetDistanceSquared > 1000 && !this.activity && this.trackedEntities.isEmpty() && !this.isDoingLaserAttack){
                     this.setPositionAndUpdate(primaryTarget.posX,210, primaryTarget.posZ);
                 }
-                if(!this.trackedEntities.isEmpty()){
+                if(!this.trackedEntities.isEmpty() || this.isDoingLaserAttack){
                     deltaX = this.origin[0] - this.posX;
                     deltaZ = this.origin[2] - this.posZ;
+                    deltaY = (this.origin[1] - 4) - this.posY;
                     targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
-                    if (targetDistanceSquared > (bIsArmored ? 1 : 4)) {
+                    if (targetDistanceSquared > 2) {
                         double distance = MathHelper.sqrt_double(targetDistanceSquared);
                         this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.2f;
                         this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.2f;
+                        if(this.isDoingLaserAttack){
+                            this.motionY += (deltaY / distance * 0.5 - this.motionY) * 0.2f;
+                        }
                     }
                 }
                 if(bIsArmored && targetDistanceSquared < 3){
@@ -528,7 +659,7 @@ public class EntityBloodWither extends EntityWither {
             this.rotationYaw = (float) Math.atan2(this.motionZ, this.motionX) * 57.295776f - 90.0f;
         }
 
-        super.onLivingUpdate();
+        super.entityMobOnLivingUpdate();
 
         // Update head tracking for each head
         for (headIndex = 0; headIndex < 2; ++headIndex) {
@@ -662,6 +793,78 @@ public class EntityBloodWither extends EntityWither {
         witherSkull.posZ = offsetZ;
         this.worldObj.spawnEntityInWorld(witherSkull);
     }
+    private void shootArrowWithYaw(float yaw, float speed) {
+        // Convert yaw to radians
+        double radians = Math.toRadians(yaw);
+
+        // Calculate velocity components based on yaw
+        double velocityX = -Math.sin(radians) * speed;
+        double velocityZ = Math.cos(radians) * speed;
+        double velocityY = 0.1;  // Slight upward velocity to counteract gravity
+
+        // Create the arrow entity
+        EntityArrow arrow = new EntityArrow(this.worldObj, this.posX, this.posY + 1.5, this.posZ);
+
+        // Set arrow velocity
+        arrow.setThrowableHeading(velocityX, velocityY, velocityZ, speed, 0);
+
+        // Spawn the arrow in the world
+        this.worldObj.spawnEntityInWorld(arrow);
+    }
+    public void setSkullHeading(double x, double y, double z, float velocity, float inaccuracy, EntityWitherSkull skull) {
+        // Normalize the direction vector
+        float magnitude = MathHelper.sqrt_double(x * x + y * y + z * z);
+        x /= magnitude;
+        y /= magnitude;
+        z /= magnitude;
+
+        // Add inaccuracy (random spread)
+        x += this.rand.nextGaussian() * 0.0075F * inaccuracy;
+        y += this.rand.nextGaussian() * 0.0075F * inaccuracy;
+        z += this.rand.nextGaussian() * 0.0075F * inaccuracy;
+
+        // Apply velocity multiplier
+        skull.accelerationX = x * velocity * 0.1;
+        skull.accelerationY = y * velocity * 0.1;
+        skull.accelerationZ = z * velocity * 0.1;
+
+        // Set the skull's rotation to match its movement direction
+        float flatDistance = MathHelper.sqrt_double(x * x + z * z);
+        skull.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(x, z) * (180.0F / Math.PI));
+        skull.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(y, flatDistance) * (180.0F / Math.PI));
+    }
+
+    private void spawnWitherSkullWithYaw(float yaw, float speed, boolean isInvulnerable) {
+        this.worldObj.playAuxSFXAtEntity(null, 1014, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+
+        double offsetX = this.getHeadXPositionOffset(0);
+        double offsetY = this.getHeadYPositionOffset(0) - 1;
+        double offsetZ = this.getHeadZPositionOffset(0);
+
+        // Convert yaw to radians for calculations
+        double radians = Math.toRadians(yaw);
+
+        // Calculate directional velocity
+        double deltaX = -Math.sin(radians);
+        double deltaZ = Math.cos(radians);
+        double deltaY = 0.0; // Keep Y level unless needed
+
+        EntityWitherSkull witherSkull = new EntityWitherSkull(this.worldObj, this, deltaX, deltaY, deltaZ);
+
+        if (isInvulnerable) {
+            witherSkull.setInvulnerable(true);
+        }
+        // Apply movement using the new method
+        this.setSkullHeading(deltaX, deltaY, deltaZ, speed, 0,witherSkull);
+
+        witherSkull.posY = offsetY;
+        witherSkull.posX = offsetX;
+        witherSkull.posZ = offsetZ;
+
+        this.worldObj.spawnEntityInWorld(witherSkull);
+    }
+
+
 
     private void setTargetButInsteadItJustShoots(int par1, EntityLivingBase par2EntityLivingBase) {
         this.spawnEntity(par1, par2EntityLivingBase.posX, par2EntityLivingBase.posY + (double)par2EntityLivingBase.getEyeHeight() * 0.5, par2EntityLivingBase.posZ, par1 == 0 && this.rand.nextFloat() < 0.001f);
@@ -682,6 +885,14 @@ public class EntityBloodWither extends EntityWither {
     @Override
     protected void updateAITasks() {
         if (this.getHealthTimer() > 0) {
+//            EntityPlayer target;
+//            if((target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ, 20)) != null){
+//                if(target.worldObj.worldInfo.getGameType() != EnumGameType.ADVENTURE){
+//                    target.setGameType(EnumGameType.ADVENTURE);
+//                    System.out.println("Hi");
+//                }
+//            }
+
             int healthTimer = this.getHealthTimer() - 1;
             // builds the platform of the wither arena, in a lag efficient way
 
@@ -690,7 +901,7 @@ public class EntityBloodWither extends EntityWither {
                 int line = healthTimer - 40;
                 // healthTimer holds a value between 0 and 360
                 if (line % 2 == 0) {
-                    placeBlocksAtLinePartial(this.worldObj, (int) this.origin[0] - 30, (int) 199, (int) this.origin[2] + 30, MathHelper.floor_double((double) line / 2));
+                    placeBlocksAtLinePartial(this.worldObj, this.origin[0] - 30, 199, this.origin[2] + 30, MathHelper.floor_double((double) line / 2));
                 }
             }
 
@@ -813,14 +1024,21 @@ public class EntityBloodWither extends EntityWither {
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         boolean bIsArmored = this.isArmored();
-        if(par2 > (bIsArmored ? 12 : 20)){
-            par2 = bIsArmored ? 12 : 20;
+        int damageCap = bIsArmored ? 10 : 15;
+        if(par2 > damageCap){
+            par2 = damageCap;
         }
-        if (this.witherPhase < 2 && this.getHealth() < par2) {
+        if (this.witherPhase < 2 && this.getHealth() <= (par2 + 1)) {
             this.witherPhase += 1;
-            this.setAttackDetails(this.currentAttackIndex);
-            this.witherAttack = 599;
-            this.reviveTimer = 200;
+            this.reviveTimer = 600;
+            this.heal(21f);
+
+
+
+            this.setAttackDetails(9);
+            this.baseAttackInterval -= this.witherPhase * 50;
+            this.witherAttack = this.baseAttackInterval + 199;
+            this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
             return false;
         } else{
             return this.activity && super.entityMobAttackEntityFrom(par1DamageSource, par2);
@@ -890,9 +1108,10 @@ public class EntityBloodWither extends EntityWither {
                 this.currentAttackPassivityLength = 300 + this.witherPhase * 40;
                 break;
             case 2: // Lightning strikes
-                this.currentDurationBetweenAttacks = 21;
+                this.attackCycle = 0;
+                this.currentDurationBetweenAttacks = 21 - this.witherPhase * 2;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 600 + this.witherPhase * 40;
+                this.currentAttackPassivityLength = 600;
                 break;
             case 3: // Blood moon and mob summon
                 this.currentDurationBetweenAttacks = 300;
@@ -919,8 +1138,18 @@ public class EntityBloodWither extends EntityWither {
                 this.isCurrentAttackSummoning = true;
                 this.currentAttackPassivityLength = -1; // No passivity duration set
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid attack index: " + index);
+            case 8: // Laser attack
+                this.isDoingLaserAttack = false;
+                this.laserIndex = 0;
+                this.currentDurationBetweenAttacks = 2;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = 1000;
+                break;
+            default: // placeholder attack that does nothing. used for reviving
+                this.currentDurationBetweenAttacks = -1;
+                this.isCurrentAttackSummoning = false;
+                this.currentAttackPassivityLength = this.reviveTimer;
+                break;
         }
     }
     public static boolean isBossActive(){

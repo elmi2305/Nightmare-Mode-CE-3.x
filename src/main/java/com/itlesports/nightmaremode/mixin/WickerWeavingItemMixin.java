@@ -14,9 +14,8 @@ public class WickerWeavingItemMixin {
     @Mutable
     @Shadow @Final public static int WICKER_WEAVING_MAX_DAMAGE;
 
-    @Inject(method = "getProgressiveCraftingMaxDamage", at = @At("HEAD"),cancellable = true,remap = false)
+    @Inject(method = "getProgressiveCraftingMaxDamage", at = @At("HEAD"), remap = false)
     private void makeWickerWeaveFaster(CallbackInfoReturnable<Integer> cir){
         WICKER_WEAVING_MAX_DAMAGE = 150;
-        cir.setReturnValue(150);
     }
 }

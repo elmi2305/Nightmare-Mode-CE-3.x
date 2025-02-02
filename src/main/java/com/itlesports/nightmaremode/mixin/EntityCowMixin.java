@@ -17,6 +17,10 @@ public abstract class EntityCowMixin extends KickingAnimal {
     public EntityCowMixin(World par1World) {
         super(par1World);
     }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15d * NightmareUtils.getNiteMultiplier());
+    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){

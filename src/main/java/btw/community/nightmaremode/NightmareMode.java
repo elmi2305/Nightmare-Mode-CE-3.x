@@ -28,9 +28,9 @@ public class NightmareMode extends BTWAddon {
 
     public static KeyBinding nightmareZoom;
 
-
     public Boolean isBloodMoon;
     public Boolean isEclipse;
+    public double NITE_MULTIPLIER = 1;
 
     public static String nightmareZoomKey;
 
@@ -83,6 +83,12 @@ public class NightmareMode extends BTWAddon {
             instance.isBloodMoon = par1;
         }
     }
+
+    public static void setNiteMultiplier(double par1){
+        if (instance != null) {
+            instance.NITE_MULTIPLIER = par1;
+        }
+    }
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
     public static Boolean bloodmoonColors;
@@ -92,7 +98,9 @@ public class NightmareMode extends BTWAddon {
     public static Boolean buffedSquids;
     public static Boolean evolvedMobs;
     public static Boolean magicMonsters;
+    public static Boolean noHit;
     public static Boolean perfectStart;
+    public static Boolean nite;
 
     @Override
     public void preInitialize() {
@@ -106,9 +114,10 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
         this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
         this.registerProperty("MagicMonsters", "False", "All mobs are witches");
+        this.registerProperty("NoHit", "False", "One hit, and you're out");
         this.registerProperty("TotalEclipse", "False", "Every day is a solar eclipse");
+        this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties.");
     }
-    // evolvedMobs is currently only used in a few mob classes. it doesn't account for mob variants only present during eclipses
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
@@ -122,7 +131,9 @@ public class NightmareMode extends BTWAddon {
         buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));
         evolvedMobs = Boolean.parseBoolean(propertyValues.get("EvolvedMobs"));
         magicMonsters = Boolean.parseBoolean(propertyValues.get("MagicMonsters"));
+        noHit = Boolean.parseBoolean(propertyValues.get("NoHit"));
         totalEclipse = Boolean.parseBoolean(propertyValues.get("TotalEclipse"));
+        nite = Boolean.parseBoolean(propertyValues.get("NITE"));
     }
 
     public void initKeybind(){

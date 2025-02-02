@@ -13,7 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityWitherSkull.class)
-public class EntityWitherSkullMixin {
+public abstract class EntityWitherSkullMixin extends EntityFireball{
+    public EntityWitherSkullMixin(World par1World) {
+        super(par1World);
+    }
+
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
         EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
@@ -33,7 +37,7 @@ public class EntityWitherSkullMixin {
     }
     @ModifyConstant(method = "onImpact", constant = @Constant(floatValue = 8.0f))
     private float increaseDamage(float constant){
-        return 12.0f;
+        return this.shootingEntity instanceof EntityBloodWither bloodWither? (bloodWither.isDoingLaserAttack ? 50f : 15f) : 12f;
     }
 
     @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"),cancellable = true)

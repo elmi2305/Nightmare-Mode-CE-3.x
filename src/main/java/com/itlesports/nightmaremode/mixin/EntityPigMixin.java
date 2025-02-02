@@ -4,6 +4,7 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityAnimal;
 import net.minecraft.src.EntityPig;
+import net.minecraft.src.SharedMonsterAttributes;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -50,5 +51,10 @@ public abstract class EntityPigMixin extends EntityAnimal {
                 this.dropItem(itemID, 1);
             }
         }
+    }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10d * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.25F * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
     }
 }

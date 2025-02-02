@@ -16,7 +16,7 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
     @ModifyArg(method = "shouldExecute", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AxisAlignedBB;expand(DDD)Lnet/minecraft/src/AxisAlignedBB;"),index = 1)
     private double increaseVerticalDetectionRange(double par1){
         if(this.taskOwner instanceof EntitySkeleton){
-            return 10.0;
+            return 12.0;
         }
         return 6.0;
     }

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.EntityMagmaCube;
 import net.minecraft.src.EntitySlime;
+import net.minecraft.src.SharedMonsterAttributes;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,11 +23,11 @@ public class EntityMagmaCubeMixin extends EntitySlime {
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
         if (this.getSlimeSize() >= 2 && this.splitCounter < 5){
-            if(this.rand.nextFloat()<0.3 / this.streakModifier){
+            if(this.rand.nextFloat() < 0.3 / this.streakModifier){
                 EntityMagmaCube baby = new EntityMagmaCube(this.worldObj);
                 int size = this.getSlimeSize();
                 baby.getDataWatcher().updateObject(16, (byte)(size/2));
-                baby.setHealth(baby.getSlimeSize());
+                baby.setHealth((int) (baby.getSlimeSize() * NightmareUtils.getNiteMultiplier()));
                 baby.setPositionAndUpdate(this.posX,this.posY,this.posZ);
                 this.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 2 + (float) this.getSlimeSize();
@@ -44,5 +45,9 @@ public class EntityMagmaCubeMixin extends EntitySlime {
         if(NightmareUtils.getIsMobEclipsed(this)){
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
+    }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.5F + (NightmareUtils.getNiteMultiplier() - 1) * 0.01);
     }
 }

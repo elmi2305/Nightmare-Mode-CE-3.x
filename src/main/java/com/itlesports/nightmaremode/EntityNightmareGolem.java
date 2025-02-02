@@ -20,6 +20,13 @@ public class EntityNightmareGolem extends EntityIronGolem {
     protected void dropFewItems(boolean par1, int par2) {}
 
     @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27);
+    }
+
+    @Override
     public void onLivingUpdate() {
         if (!(this.getAttackTarget() instanceof EntityPlayer)) {
             EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ, 30);

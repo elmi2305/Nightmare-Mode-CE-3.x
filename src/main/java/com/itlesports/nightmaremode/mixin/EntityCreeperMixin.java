@@ -61,15 +61,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
-        if (this.rand.nextInt(8 - progress * 2) == 0 && isHostile) {
+        if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }
-        if (this.rand.nextInt(3) == 0 && eclipseModifier > 1) {
+        if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + progress * 6) * bloodMoonModifier + eclipseModifier);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NightmareUtils.getNiteMultiplier());
         // 20 -> 26 -> 32 -> 38
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28 + eclipseModifier * 0.005);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NightmareUtils.getNiteMultiplier() - 1) / 20)) + 1));
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
@@ -95,10 +95,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int i = NightmareUtils.getWorldProgress(this.worldObj);
 
         return switch (i) {
-            case 0 -> 36 * bloodMoonModifier;  // 6b   10.4b
-            case 1 -> 81 * bloodMoonModifier;  // 9b   15.57b
-            case 2 -> 121 * bloodMoonModifier; // 11b  19.03b
-            case 3 -> 196 * bloodMoonModifier; // 14b  24.2b
+            case 0 ->  36 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 6b   10.4b
+            case 1 ->  81 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 9b   15.57b
+            case 2 -> 121 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 11b  19.03b
+            case 3 -> 196 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 14b  24.2b
             default -> constant;
         };
     }
@@ -132,7 +132,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     } else {
                         thisObj.worldObj.createExplosion(thisObj, thisObj.posX, thisObj.posY + (double)thisObj.getEyeHeight(), thisObj.posZ, 3 * bloodMoonModifier, var2);
                     }
-                    thisObj.setDead();
+                    if (!NightmareUtils.getIsMobEclipsed(this)) {
+                        thisObj.setDead();
+                    }
                 }
             }
         }
@@ -188,7 +190,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
-        if((progress > 0 || areMobsEvolved) && thisObj.rand.nextFloat() < 0.15 + (progress - 1)*0.03){
+        if((progress > 0 || areMobsEvolved) && (thisObj.rand.nextFloat() * NightmareUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
             if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
                 thisObj.setCustomNameTag("Terrence");
             }
@@ -210,11 +212,11 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
 
         if (thisObj.getCreeperState() == 1) {
-            creeperTimeSinceIgnited++;
-        } else {creeperTimeSinceIgnited = 0;}
+            this.creeperTimeSinceIgnited++;
+        } else {this.creeperTimeSinceIgnited = 0;}
 
         // 8 ticks before it explodes
-        if (creeperTimeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.creeperTimeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
             thisObj.motionY = 0.38F;
             if(target != null) {
@@ -254,14 +256,16 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private float modifyExplosionSize(float par8) {
         float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 0.15f : 0;
+        float niteModifier = (float) NightmareUtils.getNiteMultiplier();
+
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
-            return 3f + bloodmoonModifier;
+            return 3f + bloodmoonModifier * niteModifier;
         }
         if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-            return 4.2f + bloodmoonModifier + eclipseModifier;
+            return 4.2f + bloodmoonModifier + eclipseModifier * niteModifier;
         } else if(NightmareUtils.getWorldProgress(this.worldObj) == 1){
-            return 3.6f + bloodmoonModifier + eclipseModifier;
+            return 3.6f + bloodmoonModifier + eclipseModifier * niteModifier;
         }
-        return 3.375f + bloodmoonModifier + eclipseModifier;
+        return 3.375f + bloodmoonModifier + eclipseModifier * niteModifier;
     }
 }

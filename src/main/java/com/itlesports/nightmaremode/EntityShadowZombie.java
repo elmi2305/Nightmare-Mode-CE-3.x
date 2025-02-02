@@ -83,7 +83,7 @@ public class EntityShadowZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26d);
-        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NightmareUtils.getNiteMultiplier());
         double followDistance = 16.0;
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
@@ -105,7 +105,7 @@ public class EntityShadowZombie extends EntityZombie {
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
-        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10);
+        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10 * NightmareUtils.getNiteMultiplier());
     }
     @Override
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}

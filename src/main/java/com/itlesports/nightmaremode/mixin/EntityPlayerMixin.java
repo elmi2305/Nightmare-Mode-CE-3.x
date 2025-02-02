@@ -7,6 +7,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +25,6 @@ import static com.itlesports.nightmaremode.NightmareUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
-    @Unique private boolean hasUpdated = false;
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
@@ -31,6 +32,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public FoodStats foodStats;
     @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
+
+    @Shadow public int experienceLevel;
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -40,6 +43,25 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
         if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            cir.setReturnValue(false);
+        }
+    }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void noHitAttributes(CallbackInfo ci){
+        if (NightmareMode.noHit) {
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1f);
+            this.getDataWatcher().updateObject(6, 1f);
+        } else if(NightmareMode.nite){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
+            this.getDataWatcher().updateObject(6, this.getHealthForExperience());
+        }
+    }
+    @Unique private float getHealthForExperience(){
+        return Math.min(MathHelper.floor_double((double) this.experienceLevel / 3) * 2 + 6, 20);
+    }
+    @Inject(method = "doesStatusPreventSprinting", at = @At("HEAD"),cancellable = true)
+    private void allowSprintingOnLowHealth(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareMode.noHit || NightmareMode.nite){
             cir.setReturnValue(false);
         }
     }
@@ -74,30 +96,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
-
-//    @Inject(method = "onUpdate", at = @At("HEAD"))
-//    private void freelook(CallbackInfo ci) {
-//        if(AddonHandler.modList.keySet().toString().contains("FreeLook")){
-//            if(!this.isPotionActive(Potion.blindness)){
-//                ChatMessageComponent text2 = new ChatMessageComponent();
-//                text2.addText("<???> Using FreeLook? Pathetic. Seeing clearer won’t save you. You can’t cheat your way out of the darkness.");
-//                text2.setColor(EnumChatFormatting.RED);
-//                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text2);
-//            }
-//            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 100));
-//            if(this.rand.nextInt(40) == 0){
-//                this.worldObj.playSoundEffect(this.posX,this.posY,this.posZ,"mob.wither.death",2.0F,0.905F);
-//            }
-//            if(this.worldObj.getWorldTime() % 100 == 99){
-//                Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
-//                this.worldObj.addWeatherEffect(lightningbolt);
-//            }
-//            if(this.worldObj.getWorldTime() % 400 == 399){
-//                this.attackEntityFrom(DamageSource.outOfWorld, 200f);
-//            }
-//        }
-//    }
-
+    
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void punishPlayerForHittingChicken(Entity par1Entity, CallbackInfo ci){
         if(par1Entity instanceof EntityChicken chicken && NightmareUtils.getIsMobEclipsed(chicken)){
@@ -113,9 +112,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
         }
     }
-
+    @Inject(method = "dropPlayerItemWithRandomChoice", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD)
+    private void manageDroppingItemsDuringBloodWither(ItemStack par1ItemStack, boolean par2, CallbackInfoReturnable<EntityItem> cir, EntityItem var3, float var4, float var5){
+        if(EntityBloodWither.isBossActive()){
+            var3.setFire(100);
+            var3.dealFireDamage(3);
+        }
+    }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
+        if(NightmareMode.noHit){
+            return 0.09f;
+        }
+        if (NightmareMode.nite){
+            return 0.1f;
+        }
         if (NightmareMode.bloodmare) {
             return 0.15f;
         }
@@ -123,6 +134,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
+        if(NightmareMode.noHit || NightmareMode.nite){
+            return 0.2f;
+        }
         if(NightmareMode.bloodmare){
             return 0.5f;
         }
@@ -130,6 +144,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
+        if(NightmareMode.noHit || NightmareMode.nite){
+            return 0.1f;
+        }
         if(NightmareMode.bloodmare){
             return 0.15f;
         }
@@ -190,6 +207,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if(activePotion == null) continue;
                 PotionEffect tempPotion = (PotionEffect) activePotion;
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
+            }
+        }
+    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageHealthOnNoHitAndNite(CallbackInfo ci){
+        if(NightmareMode.noHit){
+            if(this.getDataWatcher().getWatchableObjectByte(6) > 1){
+                this.getDataWatcher().updateObject(6, 1);
+            }
+        } else if(NightmareMode.nite){
+            if(this.getMaxHealth() != this.getHealthForExperience()){
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
             }
         }
     }

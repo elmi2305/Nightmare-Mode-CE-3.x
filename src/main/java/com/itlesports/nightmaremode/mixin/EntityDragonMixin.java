@@ -36,9 +36,12 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             this.worldObj.spawnEntityInWorld(zombie);
             ((EntityEnderman)tempEntity).setDead();
         }
-
     }
-    // converts all endermen to shadow zombies
+
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void applyAdditionalAttributes(CallbackInfo ci){
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200d * NightmareUtils.getNiteMultiplier());
+    }
 
     @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;createEnderPortal(II)V"))
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {

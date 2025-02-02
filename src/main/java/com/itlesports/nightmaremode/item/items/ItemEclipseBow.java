@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.item.items;
 import btw.entity.BroadheadArrowEntity;
 import btw.item.BTWItems;
 import btw.item.items.CompositeBowItem;
+import com.itlesports.nightmaremode.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -15,10 +16,10 @@ public class ItemEclipseBow extends CompositeBowItem {
     }
     @Override
     public Icon getDrawIcon(int itemInUseDuration) {
-        if (itemInUseDuration >= 12) {
+        if (itemInUseDuration >= 10) {
             return this.getItemIconForUseDuration(2);
         }
-        if (itemInUseDuration > 8) {
+        if (itemInUseDuration > 6) {
             return this.getItemIconForUseDuration(1);
         }
         if (itemInUseDuration > 0) {
@@ -41,15 +42,25 @@ public class ItemEclipseBow extends CompositeBowItem {
                 return;
             }
 
-            float arrowVelocity = fPullStrength * 4;
-            float spreadAngle = world.rand.nextFloat() * 3 + 3; // Angle for left and right arrows
+            float arrowVelocity = fPullStrength * 4f;
+            float spreadAngle = world.rand.nextFloat() * 3 + 2; // Angle for left and right arrows
             float spreadAngleVertical = world.rand.nextFloat() * 3 + 1;
 
             spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0, fPullStrength, 0);
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical) ;
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical);
+            if (arrowStack.stackSize > 1) {
+                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical) ;
+            }
+            if (arrowStack.stackSize > 2) {
+                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical);
+            }
             if (!infiniteArrows) {
                 player.inventory.consumeInventoryItem(arrowStack.itemID);
+                if (arrowStack.stackSize > 0) {
+                    player.inventory.consumeInventoryItem(arrowStack.itemID);
+                }
+                if (arrowStack.stackSize > 0) {
+                    player.inventory.consumeInventoryItem(arrowStack.itemID);
+                }
             }
 
             itemStack.damageItem(1, player);
@@ -77,12 +88,10 @@ public class ItemEclipseBow extends CompositeBowItem {
         float motionZ = MathHelper.cos(yaw * (float)Math.PI / 180.0F) * MathHelper.cos(pitch * (float)Math.PI / 180.0F);
 
         arrow.setThrowableHeading(motionX, motionY, motionZ, velocity, 1.0F);
-        arrow.setSize(0.7f, 0.7f);
+        arrow.setSize(1f, 1f);
         if (fPullStrength == 1.0) {
             arrow.setIsCritical(true);
         }
-
-
         if (!world.isRemote) {
             world.spawnEntityInWorld(arrow);
         }
@@ -90,8 +99,10 @@ public class ItemEclipseBow extends CompositeBowItem {
 
     @Override
     protected EntityArrow createArrowEntityForItem(World world, EntityPlayer player, int iItemID, float fPullStrength) {
-        if (iItemID == BTWItems.broadheadArrow.itemID || iItemID == NMItems.magicArrow.itemID) {
-            return new BroadheadArrowEntity(world, player, fPullStrength * this.getPullStrengthToArrowVelocityMultiplier());
+        if (iItemID == BTWItems.broadheadArrow.itemID) {
+            return new BroadheadArrowEntity(world, player, fPullStrength * 3);
+        } else if(iItemID == NMItems.magicArrow.itemID){
+            return new EntityMagicArrow(world, player, fPullStrength * 3);
         }
         if (iItemID == BTWItems.rottenArrow.itemID) {
             world.playSoundAtEntity(player, "random.break", 0.8f, 0.8f + world.rand.nextFloat() * 0.4f);
@@ -113,10 +124,10 @@ public class ItemEclipseBow extends CompositeBowItem {
     @Override
     protected float getCurrentPullStrength(EntityPlayer player, ItemStack itemStack, int iTicksInUseRemaining) {
         int iTicksInUse = this.getMaxItemUseDuration(itemStack) - iTicksInUseRemaining;
-        float fPullStrength = (float)iTicksInUse / 12.0f;
+        float fPullStrength = (float)iTicksInUse / 10.0f;
         if ((fPullStrength = (fPullStrength * fPullStrength + fPullStrength * 2.0f) / 3.0f) > 1.0f) {
             fPullStrength = 1.0f;
         }
-        return fPullStrength *= player.getBowPullStrengthModifier();
+        return fPullStrength * player.getBowPullStrengthModifier();
     }
 }

@@ -19,7 +19,7 @@ public abstract class EntityHorseMixin extends KickingAnimal {
 
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 20.0d))
     private double increaseHP(double constant){
-        return 24.0;
+        return 24.0 * NightmareUtils.getNiteMultiplier();
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
@@ -58,7 +58,7 @@ public abstract class EntityHorseMixin extends KickingAnimal {
     }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void horseSpeed(CallbackInfo ci){
-        float speed = NightmareUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f;
+        float speed = (float) ((NightmareUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f) * NightmareUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speed);
     }
 }

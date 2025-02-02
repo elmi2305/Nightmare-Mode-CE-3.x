@@ -17,7 +17,7 @@ public class EntitySilverfishMixin extends EntityMob{
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySilverfish;attackEntityAsMob(Lnet/minecraft/src/Entity;)Z"))
     private void infectPlayer(Entity par1Entity, float par2, CallbackInfo ci){
         if(par1Entity instanceof EntityPlayer target && this.worldObj != null){
-            if (this.rand.nextFloat()<0.05 && NightmareUtils.getWorldProgress(this.worldObj)>1) {
+            if (this.rand.nextFloat() < 0.05 * NightmareUtils.getNiteMultiplier() && NightmareUtils.getWorldProgress(this.worldObj)>1) {
                 this.setDead();
                 target.addPotionEffect(new PotionEffect(Potion.wither.id,300,0));
             }

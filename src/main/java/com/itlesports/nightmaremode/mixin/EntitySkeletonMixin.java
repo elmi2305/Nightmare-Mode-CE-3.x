@@ -100,10 +100,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
         }
     }
-    @Inject(method = "dropFewItems", at = @At("HEAD"))
-    private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-
-    }
 
     @Inject(method = "<init>",
             at = @At(value = "TAIL"))
@@ -117,11 +113,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         if (this.worldObj != null) {
             if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 if (this.getSkeletonType() == 1){
-                    return 0.3;
+                    return 0.3  * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
                 }
                 if (this.worldObj != null) {
-                    return 0.29+NightmareUtils.getWorldProgress(this.worldObj)*0.005;
-                } else return 0.3;
+                    return (0.29 + NightmareUtils.getWorldProgress(this.worldObj) * 0.005) * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
+                }
                 // 0.29 -> 0.295 -> 0.30 -> 0.305
             }
         }
@@ -136,7 +132,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private float modifyDetectionRadius(float f){
         if (this.worldObj != null) {
             if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-                return 24f;
+                return (float) (24f * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10));
             }
         }
         return f;
@@ -160,18 +156,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
 
             if(this.getSkeletonType() == 1){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 ));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * NightmareUtils.getNiteMultiplier());
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0)));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * NightmareUtils.getNiteMultiplier())));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
             if(this.getSkeletonType() == 4){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * NightmareUtils.getNiteMultiplier());
                 // 24.0 -> 30.0 -> 36.0 -> 40.0
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 * (progress + 1) + (isEclipse ? 1 : 0));
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 * (progress + 1) + (isEclipse ? 1 : 0)) * NightmareUtils.getNiteMultiplier());
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -182,7 +178,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         if(this.worldObj != null){
             if((NightmareUtils.getIsBloodMoon() || areMobsEvolved) && this.rand.nextInt(16) == 0 && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
-            } else if (this.rand.nextInt(10) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType() == 0){
+            } else if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -248,7 +244,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
             if (!isEclipse) {
                 // for non-solar eclipse. randomly picks which variant to spawn. chances are different from each
-                if ((progress >= 2 || areMobsEvolved) && rand.nextFloat() < (0.13 + (Math.abs((progress - 2)) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier) {
+                if ((progress >= 2 || areMobsEvolved) && rand.nextFloat() < (0.13 + (Math.abs((progress - 2)) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier * NightmareUtils.getNiteMultiplier()) {
                     // 13% -> 20%
                     // 19.5% -> 30%
                     this.setSkeletonType(4); // ender skeleton
@@ -262,7 +258,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
                     this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
 
-                } else if ((progress >= 1 || areMobsEvolved) && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + (Math.abs((progress - 1)) * 0.02)) * bloodMoonModifier && this.dimension != -1) {
+                } else if ((progress >= 1 || areMobsEvolved) && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + (Math.abs((progress - 1)) * 0.02)) * bloodMoonModifier * NightmareUtils.getNiteMultiplier() && this.dimension != -1) {
                     // 9% -> 11% -> 13%
                     // 13.5% -> 16.5% -> 19.5%
                     this.setSkeletonType(3); // fire skeleton
@@ -273,7 +269,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     this.setFire(10000);
                     this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
 
-                } else if ((progress <= 3 || areMobsEvolved) && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier) {
+                } else if ((progress <= 3 || areMobsEvolved) && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier * NightmareUtils.getNiteMultiplier()) {
                     // 2% -> 4% -> 6% -> 8%
                     // 3% -> 6% -> 9% -> 12%
                     this.setSkeletonType(2); // ice skeleton
@@ -325,8 +321,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
         // skeleton types:
         // 0: regular
-        // 1: wither skelly
-        // 2: ice skelly
+        // 1: wither
+        // 2: ice
         // 3: fire
         // 4: ender
     }
@@ -351,9 +347,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
         if (this.worldObj != null) {
-            return 8.0f - NightmareUtils.getWorldProgress(this.worldObj)*2;
+            return NightmareUtils.divByNiteMultiplier((int) (8.0f - NightmareUtils.getWorldProgress(this.worldObj)*2), 2);
         }
-        return 12.0f;
+        return constant;
         // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
@@ -406,11 +402,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && rand.nextInt(60) < 3+(NightmareUtils.getWorldProgress(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
+            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3+(NightmareUtils.getWorldProgress(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double(2.0 + (NightmareUtils.getWorldProgress(this.worldObj) * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1))));
+                arrow.setDamage(MathHelper.floor_double((2.0 + (NightmareUtils.getWorldProgress(this.worldObj) * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NightmareUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
             }
         }
@@ -436,11 +432,12 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "<init>", constant = @Constant(intValue = 60))
     private int modifyAttackInterval(int constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+
             return switch (NightmareUtils.getWorldProgress(this.worldObj)) {
-                case 0 -> 60;
-                case 1 -> 50 + rand.nextInt(5);
-                case 2 -> 45 + rand.nextInt(10);
-                case 3 -> 40 + rand.nextInt(15);
+                case 0 -> NightmareUtils.divByNiteMultiplier(60, 20);
+                case 1 -> NightmareUtils.divByNiteMultiplier(50, 20);
+                case 2 -> NightmareUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
+                case 3 -> NightmareUtils.divByNiteMultiplier(40 + rand.nextInt(5), 20);
                 default -> constant;
             };
         }
@@ -449,7 +446,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return 18.0f + NightmareUtils.getWorldProgress(this.worldObj)*3;
+            return (float) ((18.0f + NightmareUtils.getWorldProgress(this.worldObj) * 3) * Math.min(NightmareUtils.getNiteMultiplier(), 1.3f));
         }
         return constant;
         // 18 -> 21 -> 24 -> 27
