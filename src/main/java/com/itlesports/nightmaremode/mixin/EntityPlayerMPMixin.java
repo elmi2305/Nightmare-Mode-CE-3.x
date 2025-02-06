@@ -46,31 +46,42 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
-        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsMobEclipsed((EntityChicken)this.ridingEntity)){
-            if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-                this.ridingEntity.motionY = 0.12;
-            }
-            float strafe = 0.0f;
-            float forward = 0.0f;
-            float speed = 0.018f;
+        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsMobEclipsed((EntityChicken)this.ridingEntity)) {
             this.ridingEntity.rotationYaw = this.rotationYaw;
+            this.ridingEntity.rotationPitch = this.rotationPitch * 0.5F;
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-                strafe -= 1.0f;
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-                strafe += 1.0f;
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-                forward += 1.0f;
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-                forward -= 1.0f;
-            }
-            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+            float strafe = this.moveStrafing;
+            float forward = this.moveForward;
+            float speed = 0.018f;
+
+            // Increase speed when sprinting
+            if (this.isSprinting()) {
                 speed = 0.023f;
             }
+
+            // Allow horse to fly up if the player is holding jump
+            if (this.isJumping) {
+                this.ridingEntity.motionY = 0.12;
+            }
+
+            // Move the horse
             this.ridingEntity.moveFlying(strafe, forward, speed);
+
+            if (!this.worldObj.isRemote) {
+                super.moveEntityWithHeading(strafe, forward);
+            }
+
+            this.prevLimbSwingAmount = this.limbSwingAmount;
+            double var8 = this.posX - this.prevPosX;
+            double var5 = this.posZ - this.prevPosZ;
+            float var7 = MathHelper.sqrt_double(var8 * var8 + var5 * var5) * 4.0F;
+
+            if (var7 > 1.0F) {
+                var7 = 1.0F;
+            }
+
+            this.limbSwingAmount += (var7 - this.limbSwingAmount) * 0.4F;
+            this.limbSwing += this.limbSwingAmount;
         }
     }
 

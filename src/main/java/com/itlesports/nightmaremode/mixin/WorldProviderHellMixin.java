@@ -13,5 +13,6 @@ public class WorldProviderHellMixin {
     private boolean onlyGloomInNetherIfHardmode(Difficulty instance){
         WorldProviderHell thisObj = (WorldProviderHell)(Object)this;
         return NightmareUtils.getWorldProgress(thisObj.worldObj) >= 1;
+        // todo fix this shit
     }
 }

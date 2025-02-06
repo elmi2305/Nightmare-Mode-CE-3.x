@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.EntityMagicArrow;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,6 +32,12 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                 mySkeleton.setPositionAndUpdate(var4.entityHit.posX,var4.entityHit.posY,var4.entityHit.posZ);
                 mySkeleton.playSound("mob.endermen.portal",20.0F,1.0F);
                 mySkeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordIron));
+            }
+        }
+        EntityArrow thisObj = ((EntityArrow)(Object)this);
+        if(thisObj instanceof EntityMagicArrow){
+            if(this.shootingEntity instanceof EntityPlayer player && var4.entityHit != null && this.rand.nextInt(3) == 0){
+                player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
             }
         }
     }

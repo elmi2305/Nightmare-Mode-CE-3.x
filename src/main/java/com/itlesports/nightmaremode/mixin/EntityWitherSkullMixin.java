@@ -1,14 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -45,5 +43,15 @@ public abstract class EntityWitherSkullMixin extends EntityFireball{
         if(par6Block.blockID == NMBlocks.specialObsidian.blockID || par6Block.blockID == NMBlocks.cryingObsidian.blockID){
             cir.setReturnValue(par6Block.blockResistance);
         }
+        if(par6Block.blockID == BTWBlocks.soulforgedSteelBlock.blockID){
+            cir.setReturnValue(0.8f);
+        }
+    }
+    @Redirect(method = "getBlockExplosionResistance", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWitherSkull;isHighExplosive()Z"))
+    private boolean normalSkullsExplodeOnBloodWither(EntityWitherSkull skull){
+        if(skull.shootingEntity instanceof EntityBloodWither){
+            return true;
+        }
+        return skull.isInvulnerable();
     }
 }

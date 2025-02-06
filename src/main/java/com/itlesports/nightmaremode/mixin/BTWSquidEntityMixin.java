@@ -32,6 +32,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         NightmareUtils.manageEclipseChance(this,24);
     }
 
+    @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Entity;inWater:Z"))
+    private boolean attackUnderwaterPlayers(Entity instance){
+        return false;
+    }
+
     @Inject(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V",
@@ -225,7 +230,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
     private double increaseCalculatedTentacleRange(double constant){
-        return (NightmareUtils.getIsMobEclipsed(this) ? 12.0d : 8.0d) * buffedSquidBonus;
+        return (NightmareUtils.getIsMobEclipsed(this) ? 12.0d : 7.0d) * buffedSquidBonus;
     }
     @Inject(method = "attemptTentacleAttackOnTarget", at = @At("HEAD"),cancellable = true,remap = false)
     private void squidAvoidAttackingHeadcrabbedPlayer(CallbackInfo ci){
@@ -236,7 +241,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "attemptTentacleAttackOnTarget", constant = @Constant(doubleValue = 36.0),remap = false)
     private double manageRange(double constant){
-        return (NightmareUtils.getIsMobEclipsed(this) ? 144.0 : 81.0) * (buffedSquidBonus * buffedSquidBonus);
+        return (NightmareUtils.getIsMobEclipsed(this) ? 144.0 : 64) * (buffedSquidBonus * buffedSquidBonus);
     }
     // let squid see through walls
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))

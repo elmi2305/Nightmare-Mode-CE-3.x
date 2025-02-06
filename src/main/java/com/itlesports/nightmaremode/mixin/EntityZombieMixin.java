@@ -92,7 +92,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         if (!this.isEntityInvulnerable() && !this.isVillager() && this.getHealth() <= par2) {
             if (canEntitySeeSun()) {
                 boolean shouldBurn =
-                                !isCrystalHead(this) &&
+                        !isCrystalHead(this) &&
                                 !this.isImmuneToFire &&
                                 this.getCurrentItemOrArmor(4) == null &&
                                 !this.isInWater();
@@ -297,8 +297,8 @@ public abstract class EntityZombieMixin extends EntityMob{
                 }
             }
 
-            // iron tool zombies have a 25% chance to spawn with a leather helmet
-            if(this.getHeldItem() != null && (this.getHeldItem().itemID == Item.swordIron.itemID || this.getHeldItem().itemID == Item.shovelIron.itemID) && this.rand.nextInt(4) == 0 && this.getCurrentItemOrArmor(4) == null){
+            // iron tool zombies have a 33% chance to spawn with a leather helmet
+            if(this.getHeldItem() != null && (this.getHeldItem().itemID == Item.swordIron.itemID || this.getHeldItem().itemID == Item.shovelIron.itemID) && this.rand.nextInt(100) != 0 && this.getCurrentItemOrArmor(4) == null){
                 this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetLeather));
             }
         }

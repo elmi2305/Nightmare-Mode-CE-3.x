@@ -8,15 +8,26 @@ import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
 public class NightmareMode extends BTWAddon {
+    public static int postWitherSunTicks = 0;
+    public static int postNetherMoonTicks = 0;
+
+    public final static int sunTransitionTime = 360;
+    public final static int moonTransitionTime = 240;
+
     private static NightmareMode instance;
+    public static int worldState;
 
     public WorldGenerator lavaPillowGenThirdStrata;
     public WorldGenerator silverfishGenFirstStrata;
@@ -27,12 +38,11 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator steelOreGen;
 
     public static KeyBinding nightmareZoom;
-
-    public Boolean isBloodMoon;
-    public Boolean isEclipse;
-    public double NITE_MULTIPLIER = 1;
-
     public static String nightmareZoomKey;
+
+    public boolean isBloodMoon;
+    public boolean isEclipse;
+    public double NITE_MULTIPLIER = 1;
 
     public NightmareMode(){
         super();
@@ -45,7 +55,13 @@ public class NightmareMode extends BTWAddon {
     }
 
 
+    public boolean getIsBloodmoon(){
+        return this.isBloodMoon;
+    }
 
+    public boolean getIsEclipse(){
+        return this.isEclipse;
+    }
     @Override
     public void postSetup() {
         float multiplier = 2f;
@@ -59,6 +75,9 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
+        if (!MinecraftServer.getIsServer()) {
+            initClientPacketInfo();
+        }
 
         NMBlocks.initNightmareBlocks();
         // because apparently adding this trade crashes if I do it in the trade list mixin ???
@@ -73,15 +92,122 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
-    public static void setEclipse(boolean par1){
-        if (instance != null) {
-            instance.isEclipse = par1;
+
+    @Environment(EnvType.CLIENT)
+    private void initClientPacketInfo() {
+        //world state packet handler
+        AddonHandler.registerPacketHandler("nightmaremode|state", (packet, player) -> {
+            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+            int worldState = -1;
+            try {
+                worldState = dataStream.readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (worldState != -1) {
+                NightmareMode.worldState = worldState;
+            }
+        });
+
+
+        AddonHandler.registerPacketHandler("nightmaremode|bloodmoonEclipse", (packet, player) -> {
+            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+            try {
+                this.isBloodMoon = dataStream.readBoolean();
+                this.isEclipse = dataStream.readBoolean();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        //this is to stop unintended transitions
+        AddonHandler.registerPacketHandler("nightmaremode|onJoin", (packet, player) -> {
+            postWitherSunTicks = 999;
+            postNetherMoonTicks = 999;
+        });
+    }
+    private static Packet250CustomPayload createWorldStatePacket() {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeInt(NightmareMode.worldState);
+        } catch (Exception var4) {
+            var4.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload("nightmaremode|state", byteStream.toByteArray());
+        return packet;
+    }
+
+
+    private Packet250CustomPayload createBloodMoonAndEclipsePacket(){
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeBoolean(this.isBloodMoon);
+            dataStream.writeBoolean(this.isEclipse);
+        } catch (Exception var4) {
+            var4.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload("nightmaremode|BMEC", byteStream.toByteArray());
+        return packet;
+    }
+
+
+//    public static void setEclipse(boolean par1){
+//        if (instance != null) {
+//            instance.isEclipse = par1;
+//        }
+//    }
+//    public static void setBloodmoon(boolean par1){
+//        if (instance != null) {
+//            instance.isBloodMoon = par1;
+//        }
+//    }
+
+    public static void sendWorldStateToAllPlayers() {
+        Packet250CustomPayload packet = createWorldStatePacket();
+        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
+            }
         }
     }
-    public static void setBloodmoon(boolean par1){
-        if (instance != null) {
-            instance.isBloodMoon = par1;
+    public void sendBloodmoonEclipseToAllPlayers(){
+        Packet250CustomPayload packet = this.createBloodMoonAndEclipsePacket();
+        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
+            }
         }
+    }
+
+    @Override
+    public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
+        sendWorldStateToClient(serverHandler);
+        Packet250CustomPayload onJoinPacket = new Packet250CustomPayload("nightmaremode|onJoin", new byte[0]);
+        serverHandler.sendPacketToPlayer(onJoinPacket);
+    }
+
+    private static void sendWorldStateToClient(NetServerHandler serverHandler) {
+        Packet250CustomPayload packet = createWorldStatePacket();
+        serverHandler.sendPacketToPlayer(packet);
+    }
+    public void sendBloodMoonAndEclipseToClient(NetServerHandler serverHandler) {
+        Packet250CustomPayload packet = this.createBloodMoonAndEclipsePacket();
+        serverHandler.sendPacketToPlayer(packet);
+    }
+
+
+
+    public void setEclipse(boolean par1){
+        this.isEclipse = par1;
+    }
+    public void setBloodmoon(boolean par1){
+        this.isBloodMoon = par1;
     }
 
     public static void setNiteMultiplier(double par1){
@@ -101,22 +227,26 @@ public class NightmareMode extends BTWAddon {
     public static Boolean noHit;
     public static Boolean perfectStart;
     public static Boolean nite;
+    public static Boolean noSkybases;
+    public static Boolean unkillableMobs;
 
     @Override
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
         this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
         this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
+        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
         this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
         this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
         this.registerProperty("MagicMonsters", "False", "All mobs are witches");
         this.registerProperty("NoHit", "False", "One hit, and you're out");
         this.registerProperty("TotalEclipse", "False", "Every day is a solar eclipse");
-        this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties.");
+        this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties. Inspired by MITE");
+        this.registerProperty("NoSkybases", "False", "Logs have gravity");
+        this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
     }
 
     @Override
@@ -134,6 +264,8 @@ public class NightmareMode extends BTWAddon {
         noHit = Boolean.parseBoolean(propertyValues.get("NoHit"));
         totalEclipse = Boolean.parseBoolean(propertyValues.get("TotalEclipse"));
         nite = Boolean.parseBoolean(propertyValues.get("NITE"));
+        noSkybases = Boolean.parseBoolean(propertyValues.get("NoSkybases"));
+        unkillableMobs = Boolean.parseBoolean(propertyValues.get("UnkillableMobs"));
     }
 
     public void initKeybind(){

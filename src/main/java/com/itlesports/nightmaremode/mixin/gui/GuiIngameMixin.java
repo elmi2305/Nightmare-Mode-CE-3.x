@@ -101,6 +101,31 @@ public class GuiIngameMixin {
             }
             string += "MM";
         }
+        if(NightmareMode.nite){
+            if(count > 0){
+                string += "+";
+            }
+            string += "NITE";
+        }
+        if(NightmareMode.noSkybases){
+            if(count > 0){
+                string += "+";
+            }
+            string += "NS";
+        }
+        if(NightmareMode.unkillableMobs){
+            if(count > 0){
+                string += "+";
+            }
+            string += "UM";
+        }
+        if(NightmareMode.noHit){
+            if (count > 0) {
+                string = "NoHit " + string;
+            } else{
+                string += "NoHit";
+            }
+        }
         return string;
     }
 

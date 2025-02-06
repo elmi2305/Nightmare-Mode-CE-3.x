@@ -10,8 +10,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +37,7 @@ public class EntityMobMixin extends EntityCreature{
             BTWItems.woolLeggings.itemID,
             Item.swordDiamond.itemID
     ));
-    
+
     @Unique private static boolean shouldDropItems(EntityCreature mob, ItemStack stack){
         if(stack == null){
             return false;
@@ -45,6 +47,22 @@ public class EntityMobMixin extends EntityCreature{
         }
         return itemsToAvoidDropping.contains(stack.itemID);
     }
+
+    @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+    private void ensureSpawnsOnEclipse(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
+        if(NightmareUtils.getIsEclipse()){
+            cir.setReturnValue(naturalLightValue <= this.rand.nextInt(8) + 8);
+        }
+    }
+
+    @ModifyArg(method = "isValidLightLevel", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I"), index = 1)
+    private int increaseMobSpawningOnStormChance(int a){
+        return 4;
+    }
+//    @ModifyArg(method = "isValidLightLevel", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 1))
+//    private int eclipseSpawnOnSurface(int a){
+//        return 4;
+//    }
 
 
     public EntityMobMixin(World par1World) {
@@ -62,32 +80,32 @@ public class EntityMobMixin extends EntityCreature{
         }
     }
 
-    @Override
-    protected void dropEquipment(boolean par1, int par2) {
-        for(int var3 = 0; var3 < this.getLastActiveItems().length; ++var3) {
-            ItemStack var4 = this.getCurrentItemOrArmor(var3);
-            if(var4 != null && !shouldDropItems(this,var4)) continue;
-
-            boolean var5 = this.equipmentDropChances[var3] > 1.0F;
-            if (var4 != null && (par1 || var5) && this.rand.nextFloat() - (float)par2 * 0.01F < this.equipmentDropChances[var3]) {
-                if (!var5 && var4.isItemStackDamageable()) {
-                    int var6 = Math.max((int)((float)var4.getMaxDamage() * 0.95F), 1);
-                    int var7 = var4.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(var6) + 1);
-                    if (var7 > var6) {
-                        var7 = var6;
-                    }
-
-                    if (var7 < 1) {
-                        var7 = 1;
-                    }
-
-                    var4.setItemDamage(var7);
-                }
-
-                this.entityDropItem(var4, 0.0F);
-            }
-        }
-    }
+//    @Override
+//    protected void dropEquipment(boolean par1, int par2) {
+//        for(int var3 = 0; var3 < this.getLastActiveItems().length; ++var3) {
+//            ItemStack var4 = this.getCurrentItemOrArmor(var3);
+//            if(var4 != null && !shouldDropItems(this,var4)) continue;
+//
+//            boolean var5 = this.equipmentDropChances[var3] > 1.0F;
+//            if (var4 != null && (par1 || var5) && this.rand.nextFloat() - (float)par2 * 0.01F < this.equipmentDropChances[var3]) {
+//                if (!var5 && var4.isItemStackDamageable()) {
+//                    int var6 = Math.max((int)((float)var4.getMaxDamage() * 0.95F), 1);
+//                    int var7 = var4.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(var6) + 1);
+//                    if (var7 > var6) {
+//                        var7 = var6;
+//                    }
+//
+//                    if (var7 < 1) {
+//                        var7 = 1;
+//                    }
+//
+//                    var4.setItemDamage(var7);
+//                }
+//
+//                this.entityDropItem(var4, 0.0F);
+//            }
+//        }
+//    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void avoidAttackingWitches(CallbackInfo ci){

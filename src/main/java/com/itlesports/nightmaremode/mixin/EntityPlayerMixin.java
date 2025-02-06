@@ -4,8 +4,9 @@ import btw.BTWMod;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
+import btw.util.status.PlayerStatusEffects;
+import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.EntityBloodWither;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -18,8 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static com.itlesports.nightmaremode.NightmareUtils.chainArmor;
 
@@ -49,15 +49,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void noHitAttributes(CallbackInfo ci){
         if (NightmareMode.noHit) {
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1f);
-            this.getDataWatcher().updateObject(6, 1f);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
+            this.getDataWatcher().updateObject(6, (byte)1);
         } else if(NightmareMode.nite){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
             this.getDataWatcher().updateObject(6, this.getHealthForExperience());
         }
     }
-    @Unique private float getHealthForExperience(){
-        return Math.min(MathHelper.floor_double((double) this.experienceLevel / 3) * 2 + 6, 20);
+    @Unique private byte getHealthForExperience(){
+        return (byte) Math.min(MathHelper.floor_double((double) this.experienceLevel / 3) * 2 + 6, 20);
     }
     @Inject(method = "doesStatusPreventSprinting", at = @At("HEAD"),cancellable = true)
     private void allowSprintingOnLowHealth(CallbackInfoReturnable<Boolean> cir){
@@ -96,14 +96,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
-    
-    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
-    private void punishPlayerForHittingChicken(Entity par1Entity, CallbackInfo ci){
-        if(par1Entity instanceof EntityChicken chicken && NightmareUtils.getIsMobEclipsed(chicken)){
-            Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY, this.posZ);
-            this.worldObj.addWeatherEffect(lightningbolt);
+    @ModifyArg(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
+    private float unkillableMobs(float par2){
+        if(NightmareMode.unkillableMobs){
+            return 0f;
         }
+        return par2;
     }
+
     @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
         int j = rand.nextInt(4);
         for (int a = 0; a < 3; a++) {
@@ -213,8 +213,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHealthOnNoHitAndNite(CallbackInfo ci){
         if(NightmareMode.noHit){
-            if(this.getDataWatcher().getWatchableObjectByte(6) > 1){
-                this.getDataWatcher().updateObject(6, 1);
+            if(this.getMaxHealth() > 1){
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
+                this.getDataWatcher().updateObject(6, (byte)1);
             }
         } else if(NightmareMode.nite){
             if(this.getMaxHealth() != this.getHealthForExperience()){
@@ -258,6 +259,27 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Unique private static final Collection<StatusEffect> collection = List.of(
+            PlayerStatusEffects.PECKISH,
+            PlayerStatusEffects.STARVING,
+            PlayerStatusEffects.EMACIATED,
+            PlayerStatusEffects.HUNGRY,
+            PlayerStatusEffects.HURT,
+            PlayerStatusEffects.INJURED,
+            PlayerStatusEffects.STARVING,
+            PlayerStatusEffects.WOUNDED,
+            PlayerStatusEffects.DYING,
+            PlayerStatusEffects.CRIPPLED,
+            PlayerStatusEffects.FAMISHED
+    );
+
+    @Inject(method = "getAllActiveStatusEffects", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void niteAndNoHitEffectManager(CallbackInfoReturnable<ArrayList<StatusEffect>> cir, ArrayList activeEffects){
+        if (NightmareMode.nite || NightmareMode.noHit) {
+            activeEffects.removeAll(collection);
+        }
+    }
+
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
@@ -270,11 +292,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
-                    if(tempAnimal instanceof EntityPig){
-                        tempAnimal.setDead();
-                        this.worldObj.newExplosion(tempAnimal,tempAnimal.posX,tempAnimal.posY,tempAnimal.posZ,5f,false,false);
-                        break;
-                    }
+                    if(tempAnimal instanceof EntityPig) continue;
                 }
                 if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
                 ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles(thisObj);

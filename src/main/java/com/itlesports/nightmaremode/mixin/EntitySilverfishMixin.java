@@ -24,6 +24,10 @@ public class EntitySilverfishMixin extends EntityMob{
             if (this.rand.nextInt(2) == 0) {
                 target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
             } else target.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60, 0));
+            if(NightmareUtils.getIsMobEclipsed(this)){
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, 260, 0));
+                this.setDead();
+            }
         }
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))

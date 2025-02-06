@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.RenderGlobal;
 import net.minecraft.src.ResourceLocation;

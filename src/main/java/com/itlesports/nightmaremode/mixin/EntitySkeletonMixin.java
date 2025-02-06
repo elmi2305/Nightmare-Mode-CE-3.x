@@ -18,8 +18,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
+    @Unique
+    private static final List<Integer> droppableArmor = new ArrayList<>(Arrays.asList(
+            Item.swordIron.itemID,
+            Item.shovelIron.itemID,
+            Item.plateIron.itemID,
+            Item.bootsIron.itemID,
+            Item.legsIron.itemID,
+            Item.helmetIron.itemID
+    ));
+
     @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
     @Shadow public abstract void setSkeletonType(int par1);
@@ -28,6 +42,36 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         super(par1World);
     }
     @Unique int jumpCooldown = 0;
+
+    @Unique
+    private void dropSkeletonEquipment() {
+        for (int slotIndex = 0; slotIndex < this.getLastActiveItems().length; ++slotIndex) {
+            ItemStack equipmentItem = this.getCurrentItemOrArmor(slotIndex);
+            boolean guaranteedDrop = this.equipmentDropChances[slotIndex] > 1.0F;
+
+            if (equipmentItem != null && (this.rand.nextFloat() < 0.75F || slotIndex == 0) && droppableArmor.contains(equipmentItem.itemID)) {
+
+                if (!guaranteedDrop && equipmentItem.isItemStackDamageable()) {
+                    int minDurability = Math.max((int) (equipmentItem.getMaxDamage() * 0.95F), 1);
+                    int finalDurability = equipmentItem.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(minDurability) + 1);
+
+                    if (finalDurability > minDurability) {
+                        finalDurability = minDurability;
+                    }
+                    if (finalDurability < 1) {
+                        finalDurability = 1;
+                    }
+
+                    equipmentItem.setItemDamage(finalDurability);
+                }
+
+                if (!this.worldObj.isRemote && this.isEntityAlive()) {
+                    this.entityDropItem(equipmentItem, 0.0F);
+                }
+            }
+        }
+    }
+
 
     @Override
     public float knockbackMagnitude() {

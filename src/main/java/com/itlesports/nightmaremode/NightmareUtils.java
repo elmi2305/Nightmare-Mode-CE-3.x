@@ -95,24 +95,25 @@ public class NightmareUtils {
         if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
             return 0;
         }
-        else if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
-            return 3;
-        }
-        else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
-            return 2;
-        }
-        else if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
-            return 1;
-        }
-        return 0;
+        return NightmareMode.worldState;
+//        else if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
+//            return 3;
+//        }
+//        else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
+//            return 2;
+//        }
+//        else if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
+//            return 1;
+//        }
+//        return 0;
     }
     public static boolean getIsBloodMoon(){
         if(NightmareMode.getInstance() == null){return false;}
-        return Objects.requireNonNullElse(NightmareMode.getInstance().isBloodMoon, false);
+        return NightmareMode.getInstance().isBloodMoon;
     }
     public static boolean getIsEclipse(){
         if(NightmareMode.getInstance() == null){return false;}
-        return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
+        return NightmareMode.getInstance().isEclipse;
     }
     public static boolean getIsMobEclipsed(EntityLivingBase mob){
         if(mob.activePotionsMap != null){

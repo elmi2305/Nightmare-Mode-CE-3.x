@@ -18,7 +18,7 @@ public class ItemBloodPickaxe extends PickaxeItem {
 
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        int iToolLevel = 4;
+        int iToolLevel = 3;
         int iBlockToolLevel = block.getHarvestToolLevel(world, i, j, k);
         if (iBlockToolLevel > iToolLevel) {
             return false;

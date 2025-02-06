@@ -82,7 +82,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         this.mc.getTextureManager().bindTexture(MENU);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int customTextureY = var7 + 45; // Slightly below the logo
+        int customTextureY = var7 + 46; // Slightly below the logo
 
         // Define size (Adjust to your texture dimensions)
         int customWidth = 256;  // Replace with actual width
