@@ -4,7 +4,6 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -66,33 +65,6 @@ public abstract class WorldMixin {
         if(this.getTotalWorldTime() < 140000){
             this.worldInfo.setRaining(false);
         }
-        World thisObj = (World)(Object)this;
-        int dawnOffset = this.isDawnOrDusk(thisObj.getWorldTime());
-
-        if (!thisObj.isRemote) {
-            int dayCount = (int) Math.ceil((double) thisObj.getWorldTime() / 24000) + dawnOffset;
-            NightmareMode instance = NightmareMode.getInstance();
-
-            if (!NightmareMode.bloodmare) {
-                NightmareMode.getInstance().setBloodmoon(this.getIsBloodMoon(thisObj, dayCount));
-            } else {
-                NightmareMode.getInstance().setBloodmoon(this.getIsNightFromWorldTime(thisObj));
-            }
-
-            if (!NightmareMode.totalEclipse) {
-                NightmareMode.getInstance().setEclipse(this.getIsEclipse(thisObj, dayCount));
-            } else {
-                NightmareMode.getInstance().setEclipse(!this.getIsNightFromWorldTime(thisObj));
-            }
-
-
-//            if(thisObj.getWorldTime() % 60 == 0){
-//                System.out.println("packet sent");
-//                instance.sendBloodmoonEclipseToAllPlayers();
-//            }
-        }
-
-
         if(this.getWorldTime() % 200 == 0 && NightmareMode.nite){
             NightmareMode.setNiteMultiplier(this.calculateNiteMultiplier());
             if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().thePlayer.isSneaking()) {
@@ -109,30 +81,9 @@ public abstract class WorldMixin {
     }
 
     @Unique
-    private int isDawnOrDusk(long time){
-        if(time % 24000 >= 23459) {
-            return 1;
-        }
-        return 0;
-    }
-    @Unique
     private double calculateNiteMultiplier(){
         return 1 + ((double) this.getWorldTime() / 20000) * 0.01;
     }
-
-    @Unique private boolean getIsBloodMoon(World world, int dayCount){
-//        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
-        return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
-    }
-    @Unique private boolean getIsNightFromWorldTime(World world){
-        return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
-    }
-
-    @Unique private boolean getIsEclipse(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
-        return !this.getIsNightFromWorldTime(world) && dayCount % 2 == 0;
-    }
-
 
     @Inject(method = "isDaytime", at = @At("HEAD"),cancellable = true)
     private void eclipseNightTime(CallbackInfoReturnable<Boolean> cir){

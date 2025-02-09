@@ -2,14 +2,11 @@ package com.itlesports.nightmaremode;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class NightmareUtils {
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
@@ -96,24 +93,12 @@ public class NightmareUtils {
             return 0;
         }
         return NightmareMode.worldState;
-//        else if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
-//            return 3;
-//        }
-//        else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
-//            return 2;
-//        }
-//        else if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
-//            return 1;
-//        }
-//        return 0;
     }
     public static boolean getIsBloodMoon(){
-        if(NightmareMode.getInstance() == null){return false;}
-        return NightmareMode.getInstance().isBloodMoon;
+        return NightmareMode.isBloodMoon;
     }
     public static boolean getIsEclipse(){
-        if(NightmareMode.getInstance() == null){return false;}
-        return NightmareMode.getInstance().isEclipse;
+        return NightmareMode.isEclipse;
     }
     public static boolean getIsMobEclipsed(EntityLivingBase mob){
         if(mob.activePotionsMap != null){
@@ -121,8 +106,7 @@ public class NightmareUtils {
                 return true;
             }
         }
-        if(NightmareMode.getInstance() == null){return false;}
-        return Objects.requireNonNullElse(NightmareMode.getInstance().isEclipse, false);
+        return NightmareMode.isEclipse;
     }
     public static void manageEclipseChance(EntityLivingBase mob, int chance){
         if(NightmareMode.evolvedMobs && mob.worldObj != null){

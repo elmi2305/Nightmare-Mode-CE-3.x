@@ -54,7 +54,7 @@ public abstract class EntityAIAttackOnCollideMixin {
                     for (Object tempEntity : list) {
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
 
-                        if (!arrow.inGround && thisObj.attacker.rand.nextBoolean()) {
+                        if (!arrow.inGround) {
                             EntityArrow newArrow = new EntityArrow(thisObj.attacker.worldObj,thisObj.attacker,targetPlayer,1f,6);
                             newArrow.copyLocationAndAnglesFrom(arrow);
                             newArrow.motionX = -arrow.motionX / 1.5;

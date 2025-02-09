@@ -21,6 +21,9 @@ import java.util.List;
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
+
+    @Shadow protected abstract void retractTentacleAttackOnCollision();
+
     @Unique int squidOnHeadTimer = 0;
     @Unique private static final int buffedSquidBonus = NightmareMode.buffedSquids ? 2 : 1;
 
@@ -44,6 +47,23 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             locals = LocalCapture.CAPTURE_FAILHARD)
 
     private void teleportPlayer(CallbackInfo ci, Vec3 tentacleTip, AxisAlignedBB tipBox, List potentialCollisionList, Iterator collisionIterator, EntityLivingBase tempEntity){
+        if (tempEntity instanceof EntityPlayer && ((EntityPlayer) tempEntity).isBlocking()) {
+            Vec3 lookVec = tempEntity.getLookVec(); // Player's look direction
+            Vec3 directionToSquid = Vec3.createVectorHelper(
+                    this.posX - tempEntity.posX,
+                    this.posY - (tempEntity.posY + tempEntity.getEyeHeight()), // From eye level
+                    this.posZ - tempEntity.posZ
+            ).normalize(); // Normalize to get direction
+
+            double dotProduct = lookVec.dotProduct(directionToSquid); // How aligned the vectors are
+
+            if (dotProduct > 0.7) { // Threshold: 1 = perfect alignment, 0 = perpendicular, -1 = opposite
+                ((EntityPlayer) tempEntity).setItemInUse(null, 0);
+                tempEntity.getHeldItem().attemptDamageItem(this.rand.nextInt(4) + 4, this.rand);
+                this.retractTentacleAttackOnCollision();
+                return;
+            }
+        }
         tempEntity.setPositionAndUpdate(this.posX,this.posY,this.posZ);
         if (tempEntity instanceof EntityPlayer) {
             this.playSound("mob.endermen.portal",2.0F,1.0F);
@@ -128,11 +148,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
     private double increaseSquidRange(double dRange){
-        if(EntityBloodWither.isBossActive()){
-            return 6;
-        }
         if(NightmareUtils.getIsEclipse()){
-            return 24;
+            return 16;
         }
         return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
         // 20 max
@@ -196,11 +213,16 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return 100 - (NightmareUtils.getWorldProgress(this.worldObj) * 30);
+            return 100 - (NightmareUtils.getWorldProgress(this.worldObj) * 10);
         }
         return constant;
         // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.
         // this purely insures the cooldown condition is true whenever it is checked
+    }
+
+    @ModifyArg(method = "getValidHeadCrabTargetInRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getEntitiesWithinAABB(Ljava/lang/Class;Lnet/minecraft/src/AxisAlignedBB;)Ljava/util/List;"),index = 0)
+    private Class avoidAttackingAnimalsIfEclipsed(Class par1Class){
+        return NightmareUtils.getIsMobEclipsed(this) ? EntityPlayer.class : par1Class;
     }
 
     @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)

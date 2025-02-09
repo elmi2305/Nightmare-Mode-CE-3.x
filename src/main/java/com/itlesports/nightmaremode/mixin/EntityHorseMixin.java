@@ -58,6 +58,13 @@ public abstract class EntityHorseMixin extends KickingAnimal {
     }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void horseSpeed(CallbackInfo ci){
+        if(this.ticksExisted % 120 != 0) return;
+        int originalHealth = 24;
+        double eclipseModifier = NightmareUtils.getIsEclipse() ? 1.5 : 1;
+        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
+        }
+
         float speed = (float) ((NightmareUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f) * NightmareUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speed);
     }

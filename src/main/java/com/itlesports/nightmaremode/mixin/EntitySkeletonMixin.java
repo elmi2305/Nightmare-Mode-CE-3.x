@@ -43,35 +43,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
     @Unique int jumpCooldown = 0;
 
-    @Unique
-    private void dropSkeletonEquipment() {
-        for (int slotIndex = 0; slotIndex < this.getLastActiveItems().length; ++slotIndex) {
-            ItemStack equipmentItem = this.getCurrentItemOrArmor(slotIndex);
-            boolean guaranteedDrop = this.equipmentDropChances[slotIndex] > 1.0F;
-
-            if (equipmentItem != null && (this.rand.nextFloat() < 0.75F || slotIndex == 0) && droppableArmor.contains(equipmentItem.itemID)) {
-
-                if (!guaranteedDrop && equipmentItem.isItemStackDamageable()) {
-                    int minDurability = Math.max((int) (equipmentItem.getMaxDamage() * 0.95F), 1);
-                    int finalDurability = equipmentItem.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(minDurability) + 1);
-
-                    if (finalDurability > minDurability) {
-                        finalDurability = minDurability;
-                    }
-                    if (finalDurability < 1) {
-                        finalDurability = 1;
-                    }
-
-                    equipmentItem.setItemDamage(finalDurability);
-                }
-
-                if (!this.worldObj.isRemote && this.isEntityAlive()) {
-                    this.entityDropItem(equipmentItem, 0.0F);
-                }
-            }
-        }
-    }
-
 
     @Override
     public float knockbackMagnitude() {
@@ -87,11 +58,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Override
     public boolean isImmuneToHeadCrabDamage() {
         return true;
-    }
-
-    @Override
-    public boolean isSecondaryTargetForSquid() {
-        return false;
     }
 
     @Override
@@ -244,13 +210,20 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void doNotCatchFireInSun(EntitySkeleton instance){}
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
-    private void manageJumpShot(CallbackInfo ci){
-        if (this.worldObj != null && this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
-            this.jumpCooldown ++;
-            if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && this.jumpCooldown >= 60){
-                this.motionY = 0.45;
-                this.jumpCooldown = 0;
+    private void manageJumpShotAndSpiderDismount(CallbackInfo ci){
+        if (this.worldObj != null ) {
+            if (this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+                EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
+                this.jumpCooldown ++;
+                if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && this.jumpCooldown >= 60){
+                    this.motionY = 0.45;
+                    this.jumpCooldown = 0;
+                }
+            }
+            if(this.ridingEntity instanceof EntitySpider && this.worldObj.isDaytime() && this.ticksExisted % 20 == 0 && !this.worldObj.isRemote){
+                if(this.hasAttackTarget()){
+                    ((EntitySpider) this.ridingEntity).entityToAttack = this.getAttackTarget();
+                }
             }
         }
     }

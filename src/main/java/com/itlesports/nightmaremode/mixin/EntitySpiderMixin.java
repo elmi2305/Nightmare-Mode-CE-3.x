@@ -37,8 +37,15 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if(NightmareUtils.getIsMobEclipsed(this)){
             return 0f;
         }
+        if(this.ticksExisted % 20 == 0){
+            EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this,4);
+            if (target != null){
+                return 0f;
+            }
+        }
         return instance.getBrightness(v);
     }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NightmareUtils.manageEclipseChance(this,6);

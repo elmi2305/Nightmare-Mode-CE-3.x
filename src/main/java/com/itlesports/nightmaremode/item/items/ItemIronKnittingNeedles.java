@@ -3,12 +3,10 @@ package com.itlesports.nightmaremode.item.items;
 import btw.item.items.ToolItem;
 import net.minecraft.src.*;
 
-import java.util.Random;
-
 public class ItemIronKnittingNeedles extends ToolItem {
 
     public ItemIronKnittingNeedles(int iItemID) {
-        super(iItemID, 0, EnumToolMaterial.WOOD);
+        super(iItemID, 0, EnumToolMaterial.IRON);
         this.maxStackSize = 1;
         this.setMaxDamage(64);
         this.setBuoyant();

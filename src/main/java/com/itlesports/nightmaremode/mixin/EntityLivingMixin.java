@@ -20,7 +20,6 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
     public EntityLivingMixin(World par1World) {
         super(par1World);
     }
-
     @Shadow public abstract ItemStack getCurrentItemOrArmor(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract ItemStack getHeldItem();

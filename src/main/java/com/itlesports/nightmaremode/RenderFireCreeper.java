@@ -9,6 +9,7 @@ public class RenderFireCreeper extends RenderCreeper {
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     public static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("textures/entity/firecreeper.png");
     public static final ResourceLocation FIRE_CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/firecreeperEclipseHigh.png");
+    public static final ResourceLocation FIRE_CREEPER_TEXTURE_CHARGED = new ResourceLocation("textures/entity/firecreeperCharged.png");
 
     public RenderFireCreeper() {
         super();
@@ -16,13 +17,13 @@ public class RenderFireCreeper extends RenderCreeper {
     @Override
     protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper) {
         if (par1EntityCreeper instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (par1EntityCreeper.getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
         } else {return super.getEntityTexture(par1EntityCreeper);}
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         if(par1Entity instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : FIRE_CREEPER_TEXTURE;
+            return NightmareUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (((EntityFireCreeper) par1Entity).getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
         } else {
             return super.getEntityTexture(par1Entity);
         }
@@ -31,11 +32,7 @@ public class RenderFireCreeper extends RenderCreeper {
 
     protected int renderCreeperPassModel(EntityFireCreeper par1EntityCreeper, int par2, float par3) {
         if (par1EntityCreeper.getPowered()) {
-            if (par1EntityCreeper.isInvisible()) {
-                GL11.glDepthMask(false);
-            } else {
-                GL11.glDepthMask(true);
-            }
+            GL11.glDepthMask(!par1EntityCreeper.isInvisible());
             if (par2 == 1) {
                 float var4 = (float)par1EntityCreeper.ticksExisted + par3;
                 this.bindTexture(armoredCreeperTextures);

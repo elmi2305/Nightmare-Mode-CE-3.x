@@ -3,10 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Material;
+import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,8 +40,16 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
     @Inject(method = "continueExecuting", at = @At("HEAD"),cancellable = true)
     private void manageWhenToStop(CallbackInfoReturnable<Boolean> cir){
+        Entity target = this.associatedEntity.getAttackTarget();
         if(this.associatedEntity.isAirBorne){
             cir.setReturnValue(false);
+        }
+        if (target == null) return;
+        double dDistSqToDoor = Math.min(Math.min(this.associatedEntity.getDistanceSq(this.doorPosX, this.doorPosY, this.doorPosZ), this.associatedEntity.getDistanceSq(this.doorPosX, (double)this.doorPosY - (double)1.0F, this.doorPosZ)), this.associatedEntity.getDistanceSq(this.doorPosX, (double)this.doorPosY - (double)2.0F, this.doorPosZ));
+        if(this.associatedEntity.getDistanceSqToEntity(target) < dDistSqToDoor){
+            if((this.associatedEntity.getEntitySenses().canSee(target) || this.associatedEntity.canEntityBeSeen(target)) && this.associatedEntity.getNavigator().getPathToXYZ(target.posX,target.posY,target.posZ) != null){
+                cir.setReturnValue(true);
+            }
         }
     }
 

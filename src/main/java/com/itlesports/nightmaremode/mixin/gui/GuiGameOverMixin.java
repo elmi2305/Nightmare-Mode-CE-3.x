@@ -29,7 +29,6 @@ public class GuiGameOverMixin extends GuiScreen {
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
     private void manageExtraButton(GuiButton par1GuiButton, CallbackInfo ci){
         if(par1GuiButton.id == 4){
-
             this.mc.displayGuiScreen(null);
             if (this.createClicked) {
                 return;
@@ -64,7 +63,7 @@ public class GuiGameOverMixin extends GuiScreen {
                 this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
                 this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                ci.cancel();
             }
         }
     }

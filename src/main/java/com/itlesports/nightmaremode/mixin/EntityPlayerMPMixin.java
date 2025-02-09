@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
@@ -8,7 +9,6 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Unique boolean runAgain = true;
-    @Unique long targetTime = 2147483647;
+    @Unique long targetTime = Long.MAX_VALUE;
     @Unique boolean isTryingToEscapeBloodMoon = true;
 
     @Shadow public MinecraftServer mcServer;
@@ -128,6 +128,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageNetherThreeDayPeriod(CallbackInfo ci){
+        NightmareMode.getInstance().setCanLeaveGame(((this.worldObj.getWorldTime() <= this.targetTime - 72000) && this.dimension != -1) || NightmareUtils.getWorldProgress(this.worldObj) != 0);
         if(this.worldObj.getWorldTime() > this.targetTime && !this.runAgain && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("<???> Hardmode has begun.");
@@ -135,6 +136,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death",1.0f,0.905f);
             WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
+            this.targetTime = Long.MAX_VALUE;
         }
         if(this.worldObj.getWorldTime() % 24000 == 0){
             this.isTryingToEscapeBloodMoon = true;

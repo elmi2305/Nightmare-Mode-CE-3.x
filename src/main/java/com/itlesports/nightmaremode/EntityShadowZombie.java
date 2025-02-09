@@ -36,6 +36,8 @@ public class EntityShadowZombie extends EntityZombie {
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
+        } else if(par1DamageSource == DamageSource.generic && NightmareUtils.getIsMobEclipsed(this) && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer target){
+            this.teleportBehindTarget(target);
         }
         return super.attackEntityFrom(par1DamageSource, par2);
     }
@@ -129,6 +131,30 @@ public class EntityShadowZombie extends EntityZombie {
             }
         }
     }
+    private void teleportBehindTarget(EntityPlayer targetPlayer) {
+        // Get player's facing direction (yaw) and calculate the opposite direction
+        float yaw = targetPlayer.rotationYaw + 180; // 180° to teleport behind
+        double radians = Math.toRadians(yaw);
+
+        // Random distance between 5 and 10 blocks
+        double distance = 5 + this.rand.nextInt(6);
+
+        // Calculate the position behind the player
+        int xOffset = (int) (-Math.sin(radians) * distance);
+        int zOffset = (int) (Math.cos(radians) * distance);
+
+        int targetX = MathHelper.floor_double(targetPlayer.posX + xOffset);
+        int targetY = MathHelper.floor_double(targetPlayer.posY);
+        int targetZ = MathHelper.floor_double(targetPlayer.posZ + zOffset);
+
+        // Ensure the teleport location is valid
+        if (this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 &&
+                this.worldObj.getBlockId(targetX, targetY - 1, targetZ) != 0 &&
+                this.worldObj.getBlockId(targetX, targetY + 1, targetZ) == 0) {
+            this.setPositionAndUpdate(targetX, targetY, targetZ);
+            this.playSound("mob.endermen.portal", 2.0F, 1.0F);
+        }
+    }
 
     private void teleportToTarget(EntityPlayer targetPlayer){
         int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);
@@ -142,5 +168,15 @@ public class EntityShadowZombie extends EntityZombie {
             this.setPositionAndUpdate(targetX,targetY, targetZ);
             this.playSound("mob.endermen.portal",2.0F,1.0F);
         }
+    }
+
+    @Override
+    protected void attackEntity(Entity attackedEntity, float fDistanceToTarget) {
+        if(NightmareUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
+            ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
+            ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.weakness.id, 60, 0));
+            ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));
+        }
+        super.attackEntity(attackedEntity, fDistanceToTarget);
     }
 }

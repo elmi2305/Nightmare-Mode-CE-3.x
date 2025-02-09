@@ -94,6 +94,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     }
     @Shadow private boolean isBaited;
     @Shadow public EntityPlayer angler;
+    @Shadow public Entity bobber;
     @Unique private boolean isIron;
     @Unique private Item fishItem = Item.fishRaw;
     @Unique private int cap = 1;
@@ -122,6 +123,19 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             return BTWItems.baitedFishingRod;
         }
         return instance.getItem();
+    }
+    @Redirect(method = "catchFish", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityFishHook;bobber:Lnet/minecraft/src/Entity;", ordinal = 0))
+    private Entity cannotHookEnemies(EntityFishHook instance){
+        return null;
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageFishingEnemies(CallbackInfo ci){
+        if(this.bobber instanceof EntityMob && this.angler != null){
+            this.angler.getHeldItem().attemptDamageItem(4, this.rand);
+            this.angler.playSound("random.splash", 0.5f, 2.0f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4f);
+            this.angler.dropOneItem(false);
+        }
     }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
     private int ironFishingRod2(int constant){

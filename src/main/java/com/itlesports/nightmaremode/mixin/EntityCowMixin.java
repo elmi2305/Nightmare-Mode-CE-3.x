@@ -52,6 +52,16 @@ public abstract class EntityCowMixin extends KickingAnimal {
         }
     }
 
+    @Inject(method = "updateHungerState", at = @At("HEAD"))
+    private void updateHealthState(CallbackInfo ci){
+        if(this.ticksExisted % 120 != 0) return;
+        int originalHealth = 15;
+        double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 2.5 : 1;
+        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
+        }
+    }
+
     @Inject(method = "isSubjectToHunger", at = @At("HEAD"),cancellable = true)
     private void manageEclipseHunger(CallbackInfoReturnable<Boolean> cir){
         if(NightmareUtils.getIsMobEclipsed(this)){

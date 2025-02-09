@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,6 +41,18 @@ public abstract class EntityChickenMixin extends EntityAnimal {
         }
         return super.interact(player);
     }
+
+    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    private void manageJumpAttackAtPlayer(CallbackInfo ci){
+        if(this.ticksExisted % 120 != 0) return;
+        int originalHealth = 4;
+        double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 4 : 1;
+        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
+        }
+    }
+
+
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {

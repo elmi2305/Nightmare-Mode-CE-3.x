@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.AITasks.EntityAIChasePlayer;
-import com.itlesports.nightmaremode.AITasks.EntityAIPursuePlayer;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -32,6 +31,7 @@ public abstract class EntityPigMixin extends EntityAnimal {
         }
     }
 
+
     @Inject(method = "updateAITasks", at = @At("TAIL"))
     private void manageJumpAttackAtPlayer(CallbackInfo ci){
         if(this.getAttackTarget() instanceof EntityPlayer player && NightmareUtils.getIsMobEclipsed(this)){
@@ -58,6 +58,12 @@ public abstract class EntityPigMixin extends EntityAnimal {
                 this.worldObj.newExplosion(this,this.posX,this.posY,this.posZ,5f,false,true);
                 this.setDead();
             }
+        }
+        if(this.ticksExisted % 120 != 0) return;
+        int originalHealth = 10;
+        double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 2.4 : 1;
+        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
         }
     }
 

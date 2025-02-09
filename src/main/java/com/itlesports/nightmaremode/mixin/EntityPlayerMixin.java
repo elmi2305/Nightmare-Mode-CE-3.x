@@ -32,8 +32,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public FoodStats foodStats;
     @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
-
     @Shadow public int experienceLevel;
+    @Shadow protected abstract int decreaseAirSupply(int iAirSupply);
+
+
+    @Unique private int ticksInWater;
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -309,6 +312,33 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if(this.isInWeb) {
             this.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 10, 3));
             this.addPotionEffect(new PotionEffect(Potion.weakness.id, 10, 1));
+        }
+    }
+//    @Inject(method = "onUpdate", at = @At("TAIL"))
+//    private void oxygenLossOnTooHigh(CallbackInfo ci){
+//        if(this.posY > 120) {
+//            this.setAir(Math.max(this.getAir() - 1, 0));
+//        }
+//    }
+//
+//    @Inject(method = "recoverAirSupply", at = @At(value = "HEAD"),cancellable = true)
+//    private void oxygenLossOnTooHigh0(CallbackInfo ci){
+//        if (this.posY > 120) {
+//            ci.cancel();
+//        }
+//    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageSeaOfDeath(CallbackInfo ci){
+        if(NightmareMode.bloodmare){
+            if (this.isInWater()) {
+                this.ticksInWater = Math.min(this.ticksInWater + 1, 30);
+                if(this.ticksInWater == 30){
+                    this.attackEntityFrom(DamageSource.drown, 1f);
+                    this.ticksInWater = 0;
+                }
+            } else{
+                this.ticksInWater = Math.max(this.ticksInWater - 1, 0);
+            }
         }
     }
 

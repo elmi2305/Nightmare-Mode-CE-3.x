@@ -57,7 +57,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         args.set(3, yOffset - 3);
     }
     @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"))
-    private void modifyColorsOnBloodmare(Args args){
+    private void colorOfBetterThanWolvesSign(Args args){
         if (NightmareMode.bloodmare) {
             args.set(1, 0.15f);
             args.set(2, 0.15f);

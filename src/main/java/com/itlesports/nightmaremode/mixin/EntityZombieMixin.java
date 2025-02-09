@@ -49,6 +49,11 @@ public abstract class EntityZombieMixin extends EntityMob{
                     skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
                     skeleton.setEquipmentDropChance(i,0f);
                 }
+                skeleton.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30d);
+
+                if (this.getAttackTarget() != null) {
+                    skeleton.setAttackTarget(this.getAttackTarget());
+                }
                 if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                     if (rand.nextInt(Math.max((int) (25 / NightmareUtils.getNiteMultiplier()), 1)) == 0) {
                         skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));

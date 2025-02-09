@@ -23,9 +23,6 @@ public class NightmareMode extends BTWAddon {
     public static int postWitherSunTicks = 0;
     public static int postNetherMoonTicks = 0;
 
-    public final static int sunTransitionTime = 360;
-    public final static int moonTransitionTime = 240;
-
     private static NightmareMode instance;
     public static int worldState;
 
@@ -40,8 +37,8 @@ public class NightmareMode extends BTWAddon {
     public static KeyBinding nightmareZoom;
     public static String nightmareZoomKey;
 
-    public boolean isBloodMoon;
-    public boolean isEclipse;
+    public static boolean isBloodMoon;
+    public static boolean isEclipse;
     public double NITE_MULTIPLIER = 1;
 
     public NightmareMode(){
@@ -55,20 +52,19 @@ public class NightmareMode extends BTWAddon {
     }
 
 
-    public boolean getIsBloodmoon(){
-        return this.isBloodMoon;
-    }
-
-    public boolean getIsEclipse(){
-        return this.isEclipse;
-    }
+//    public static boolean getIsBloodmoon(){
+//        return isBloodMoon;
+//    }
+//    public static boolean getIsEclipse(){
+//        return isEclipse;
+//    }
     @Override
     public void postSetup() {
         float multiplier = 2f;
-        ((ToolItem)NMItems.bloodPickaxe).addCustomEfficiencyMultiplier(multiplier);
-        ((ToolItem)NMItems.bloodAxe).addCustomEfficiencyMultiplier(multiplier);
-        ((ToolItem)NMItems.bloodHoe).addCustomEfficiencyMultiplier(multiplier);
-        ((ToolItem)NMItems.bloodShovel).addCustomEfficiencyMultiplier(multiplier);
+        NMItems.bloodPickaxe.addCustomEfficiencyMultiplier(multiplier);
+        NMItems.bloodAxe.addCustomEfficiencyMultiplier(multiplier);
+        NMItems.bloodHoe.addCustomEfficiencyMultiplier(multiplier);
+        NMItems.bloodShovel.addCustomEfficiencyMultiplier(multiplier);
         super.postInitialize();
     }
 
@@ -110,11 +106,11 @@ public class NightmareMode extends BTWAddon {
         });
 
 
-        AddonHandler.registerPacketHandler("nightmaremode|bloodmoonEclipse", (packet, player) -> {
+        AddonHandler.registerPacketHandler("nightmaremode|BMEC", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
-                this.isBloodMoon = dataStream.readBoolean();
-                this.isEclipse = dataStream.readBoolean();
+                isBloodMoon = dataStream.readBoolean();
+                isEclipse = dataStream.readBoolean();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,37 +132,35 @@ public class NightmareMode extends BTWAddon {
             var4.printStackTrace();
         }
 
-        Packet250CustomPayload packet = new Packet250CustomPayload("nightmaremode|state", byteStream.toByteArray());
-        return packet;
+        return new Packet250CustomPayload("nightmaremode|state", byteStream.toByteArray());
     }
 
 
-    private Packet250CustomPayload createBloodMoonAndEclipsePacket(){
+    private static Packet250CustomPayload createBloodMoonAndEclipsePacket(){
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
-            dataStream.writeBoolean(this.isBloodMoon);
-            dataStream.writeBoolean(this.isEclipse);
+            dataStream.writeBoolean(isBloodMoon);
+            dataStream.writeBoolean(isEclipse);
         } catch (Exception var4) {
             var4.printStackTrace();
         }
 
-        Packet250CustomPayload packet = new Packet250CustomPayload("nightmaremode|BMEC", byteStream.toByteArray());
-        return packet;
+        return new Packet250CustomPayload("nightmaremode|BMEC", byteStream.toByteArray());
     }
 
 
-//    public static void setEclipse(boolean par1){
+    public static void setEclipse(boolean par1){
 //        if (instance != null) {
-//            instance.isEclipse = par1;
+            isEclipse = par1;
 //        }
-//    }
-//    public static void setBloodmoon(boolean par1){
+    }
+    public static void setBloodmoon(boolean par1){
 //        if (instance != null) {
-//            instance.isBloodMoon = par1;
+            isBloodMoon = par1;
 //        }
-//    }
+    }
 
     public static void sendWorldStateToAllPlayers() {
         Packet250CustomPayload packet = createWorldStatePacket();
@@ -176,8 +170,8 @@ public class NightmareMode extends BTWAddon {
             }
         }
     }
-    public void sendBloodmoonEclipseToAllPlayers(){
-        Packet250CustomPayload packet = this.createBloodMoonAndEclipsePacket();
+    public static void sendBloodmoonEclipseToAllPlayers(){
+        Packet250CustomPayload packet = createBloodMoonAndEclipsePacket();
         for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
@@ -196,19 +190,14 @@ public class NightmareMode extends BTWAddon {
         Packet250CustomPayload packet = createWorldStatePacket();
         serverHandler.sendPacketToPlayer(packet);
     }
-    public void sendBloodMoonAndEclipseToClient(NetServerHandler serverHandler) {
-        Packet250CustomPayload packet = this.createBloodMoonAndEclipsePacket();
-        serverHandler.sendPacketToPlayer(packet);
-    }
 
 
-
-    public void setEclipse(boolean par1){
-        this.isEclipse = par1;
-    }
-    public void setBloodmoon(boolean par1){
-        this.isBloodMoon = par1;
-    }
+//    public void setEclipse(boolean par1){
+//        this.isEclipse = par1;
+//    }
+//    public void setBloodmoon(boolean par1){
+//        this.isBloodMoon = par1;
+//    }
 
     public static void setNiteMultiplier(double par1){
         if (instance != null) {
@@ -218,6 +207,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
     public static Boolean bloodmoonColors;
+    public static Boolean crimson;
     public static Boolean bloodmare;
     public static Boolean configOnHud;
     public static Boolean totalEclipse;
@@ -229,6 +219,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean nite;
     public static Boolean noSkybases;
     public static Boolean unkillableMobs;
+    public boolean canAccessMenu = true;
 
     @Override
     public void preInitialize() {
@@ -236,6 +227,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
         this.registerProperty("NmZoomKey", "C", "The zoom keybind");
         this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
+        this.registerProperty("Crimson", "False", "Everything is blood red! Purely visual");
         this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
         this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
@@ -248,6 +240,12 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NoSkybases", "False", "Logs have gravity");
         this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
     }
+    public void setCanLeaveGame(boolean par1){
+        this.canAccessMenu = par1;
+    }
+    public boolean getCanLeaveGame(){
+        return this.canAccessMenu;
+    }
 
     @Override
     public void handleConfigProperties(Map<String, String> propertyValues) {
@@ -256,6 +254,7 @@ public class NightmareMode extends BTWAddon {
         nightmareZoomKey = propertyValues.get("NmZoomKey");
         perfectStart = Boolean.parseBoolean(propertyValues.get("PerfectStart"));
         bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
+        crimson = Boolean.parseBoolean(propertyValues.get("RedSeaOfDeath"));
         configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
         bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
         buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));
