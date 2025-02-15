@@ -1,18 +1,20 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityAICreeperSwell;
-import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.EntitySenses;
+import com.itlesports.nightmaremode.NightmareUtils;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(EntityAICreeperSwell.class)
-public class EntityAICreeperSwellMixin {
+public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
     @Shadow public EntityLivingBase creeperAttackTarget;
+
+    @Shadow public EntityCreeper swellingCreeper;
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughWalls(EntitySenses senses, Entity entity){
@@ -20,5 +22,9 @@ public class EntityAICreeperSwellMixin {
             return true;
         }
         return senses.canSee(this.creeperAttackTarget);
+    }
+    @ModifyConstant(method = "updateTask", constant = @Constant(doubleValue = 36.0))
+    private double increaseCreeperExplosionRadiusSlightly(double constant){
+        return constant + NightmareUtils.getWorldProgress(this.swellingCreeper.worldObj) * 3;
     }
 }

@@ -36,7 +36,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Override
     public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-        if(NightmareUtils.getIsMobEclipsed(this) && this.rand.nextInt(4) == 0){
+        if(NightmareUtils.getIsMobEclipsed(this) && this.rand.nextInt(6) == 0){
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 0));
             this.isCreeperVariant = true;
         }

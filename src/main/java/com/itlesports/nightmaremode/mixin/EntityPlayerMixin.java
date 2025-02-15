@@ -212,6 +212,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
+
+        if(Item.potion.getItemStackLimit() < 32 && NightmareUtils.getWorldProgress(this.worldObj) > 2){
+            NightmareUtils.updateItemStackSizes();
+        }
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHealthOnNoHitAndNite(CallbackInfo ci){

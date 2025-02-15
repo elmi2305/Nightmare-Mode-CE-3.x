@@ -112,7 +112,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     }
 
     @Unique private static void summonSilverfish(EntityMob zombie){
-        if (!(zombie instanceof EntityPigZombie)) {
+        if (!(zombie instanceof EntityPigZombie) && !(zombie instanceof EntityShadowZombie)) {
             int i = zombie.rand.nextInt(5)+1;
             while(i > 0){
                 if(i >= 2 && zombie.rand.nextBoolean()){

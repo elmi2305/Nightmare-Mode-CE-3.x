@@ -47,10 +47,10 @@ public class ItemEclipseBow extends CompositeBowItem {
             float spreadAngleVertical = world.rand.nextFloat() * 3 + 1;
 
             spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0, fPullStrength, 0);
-            if (arrowStack.stackSize > 1) {
+            if (arrowStack.stackSize > 1 || infiniteArrows) {
                 spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical) ;
             }
-            if (arrowStack.stackSize > 2) {
+            if (arrowStack.stackSize > 2 || infiniteArrows) {
                 spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical);
             }
             if (!infiniteArrows) {

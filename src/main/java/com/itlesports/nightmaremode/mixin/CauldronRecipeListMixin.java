@@ -17,7 +17,7 @@ public class CauldronRecipeListMixin {
     private static void addMoreRecipes(CallbackInfo ci){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
         RecipeManager.addCauldronRecipe(new ItemStack(Item.clay, 8), new ItemStack[]{new ItemStack(BTWItems.netherSludge, 8)});
-        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.friedCalamari, 5), new ItemStack[]{new ItemStack(NMItems.calamari), new ItemStack(Item.bowlEmpty, 5)});
+        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.friedCalamari), new ItemStack[]{new ItemStack(NMItems.calamariRoast), new ItemStack(Item.bowlEmpty)});
         RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
     }
 }

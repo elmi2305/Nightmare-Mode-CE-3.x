@@ -21,10 +21,10 @@ import java.util.List;
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
-
     @Shadow protected abstract void retractTentacleAttackOnCollision();
 
-    @Unique int squidOnHeadTimer = 0;
+    @Unique private int squidOnHeadTimer = 0;
+    @Unique private int recentParryCount = 0;
     @Unique private static final int buffedSquidBonus = NightmareMode.buffedSquids ? 2 : 1;
 
     public BTWSquidEntityMixin(World par1World) {
@@ -59,8 +59,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
             if (dotProduct > 0.7) { // Threshold: 1 = perfect alignment, 0 = perpendicular, -1 = opposite
                 ((EntityPlayer) tempEntity).setItemInUse(null, 0);
-                tempEntity.getHeldItem().attemptDamageItem(this.rand.nextInt(4) + 4, this.rand);
+                tempEntity.getHeldItem().attemptDamageItem(this.rand.nextInt(6) + 2 + 2 * this.recentParryCount, this.rand);
                 this.retractTentacleAttackOnCollision();
+                this.recentParryCount += 1;
                 return;
             }
         }
@@ -69,6 +70,13 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             this.playSound("mob.endermen.portal",2.0F,1.0F);
         } else{
             this.worldObj.playSoundAtEntity(this,"mob.endermen.portal",1.0F,this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+        }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void manageRecentParries(CallbackInfo ci){
+        if (this.ticksExisted % 160 == 0) {
+            this.recentParryCount = Math.max(recentParryCount - 1, 0);
         }
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
@@ -116,9 +124,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
         if(bKilledByPlayer){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
-                if(this.rand.nextInt(8 - worldProgress * 2) == 0){
+                if(this.rand.nextInt(12 - worldProgress * 2) == 0){
                     this.dropItem(NMItems.calamari.itemID, 1);
-                    if (this.rand.nextBoolean()) {
+                    if (this.rand.nextInt(3) == 0) {
                         break;
                     }
                 }

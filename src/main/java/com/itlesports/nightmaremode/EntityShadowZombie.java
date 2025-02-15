@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode;
 
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
+import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
@@ -18,6 +19,7 @@ public class EntityShadowZombie extends EntityZombie {
         this.tasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
         this.targetTasks.addTask(2, new EntityAINearestAttackableTargetShadow(this, EntityPlayer.class, 0, true, false, null));
         this.targetTasks.removeAllTasksOfClass(EntityAILunge.class);
+        this.targetTasks.removeAllTasksOfClass(ZombieSecondaryAttackBehavior.class);
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
         NightmareUtils.manageEclipseChance(this,2);
 
@@ -36,7 +38,7 @@ public class EntityShadowZombie extends EntityZombie {
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
-        } else if(par1DamageSource == DamageSource.generic && NightmareUtils.getIsMobEclipsed(this) && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer target){
+        } else if(NightmareUtils.getIsMobEclipsed(this) && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer target){
             this.teleportBehindTarget(target);
         }
         return super.attackEntityFrom(par1DamageSource, par2);
@@ -78,7 +80,78 @@ public class EntityShadowZombie extends EntityZombie {
         }
     }
 
+    private void explore() {
+        for (int i = 0; i < 8; i++) {
+            double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
+
+            int chance = 30;
+            int verticalRange = 12;
+            chance -= (int) Math.min(Math.max(targetY - this.posY, 0) * 2, 24);
+
+            if (this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood) {
+                chance = Math.max(chance - 16, 2);
+                verticalRange = 20;
+            }
+
+            if (Math.abs(targetY - this.posY) < verticalRange && this.rand.nextInt(chance) == 0) {
+                this.setPositionAndUpdate(targetX, targetY, targetZ);
+                this.getNavigator().clearPathEntity();
+                break;
+            }
+        }
+    }
+    private void seekSkybases() {
+        double targetX;
+        double targetZ;
+        double targetY;
+        double foundPosX = this.posX;
+        double foundPosY = this.posY;
+        double foundPosZ = this.posZ;
+        boolean isWood = false;
+        for (int i = 0; i < 24; i++) {
+            int verticalRange = 16;
+            targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
+            if(this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood){
+                verticalRange = 24;
+                isWood = true;
+            }
+
+            if(Math.abs(targetY - this.posY) < verticalRange && (isWood ? targetY + 3 : targetY) > foundPosY){
+                foundPosX = targetX;
+                foundPosY = targetY;
+                foundPosZ = targetZ;
+            }
+        }
+        if(foundPosX != this.posX && foundPosY >= this.posY && foundPosZ != this.posZ){
+            this.setPositionAndUpdate(foundPosX,foundPosY,foundPosZ);
+            this.getNavigator().clearPathEntity();
+        }
+    }
+
+    private static int getChanceOfTeleporting(int input) {
+        return switch (input) {
+            case 0 -> 24;
+            case 1 -> 10;
+            case 2 -> 8;
+            case 3 -> 6;
+            default -> 4;
+        };
+    }
+
     public void onLivingUpdate() {
+        if(this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
+            int chance = getChanceOfTeleporting(NightmareUtils.getWorldProgress(this.worldObj));
+
+            if (this.rand.nextInt(chance) == 0) {
+                this.seekSkybases();
+            } else{
+                this.explore();
+            }
+        }
         super.onLivingUpdate();
     }
 
@@ -90,14 +163,14 @@ public class EntityShadowZombie extends EntityZombie {
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             if(NightmareUtils.getIsBloodMoon()){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((24.0 + progress * 6));
-                // 30 -> 36 -> 42 -> 48
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((24.0 + progress * 8));
+                // 32 -> 40 -> 48 -> 56
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * 2);
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29d);
 
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24.0 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 4 : 2));
-                // 24 -> 28 -> 32 -> 36
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(26 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 5 : 2));
+                // 26 -> 31 -> 36 -> 41
                 // relaxed: 24 + 26
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 1));
                 // 4 -> 6 -> 8 -> 10
@@ -171,12 +244,12 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     @Override
-    protected void attackEntity(Entity attackedEntity, float fDistanceToTarget) {
+    public boolean attackEntityAsMob(Entity attackedEntity) {
         if(NightmareUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.weakness.id, 60, 0));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));
         }
-        super.attackEntity(attackedEntity, fDistanceToTarget);
+        return super.attackEntityAsMob(attackedEntity);
     }
 }

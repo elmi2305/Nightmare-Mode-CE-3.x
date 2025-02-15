@@ -68,7 +68,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
             }
             if(NightmareUtils.isHoldingBloodSword(player)){
                 player.getHeldItem().setItemDamage(Math.max(player.getHeldItem().getItemDamage() - this.rand.nextInt(4) - 2, 0));
-                if (this.rand.nextInt(8) == 0) {
+                if (this.rand.nextInt(24) == 0) {
                     this.dropItem(NMItems.bloodOrb.itemID,1);
                 }
             }

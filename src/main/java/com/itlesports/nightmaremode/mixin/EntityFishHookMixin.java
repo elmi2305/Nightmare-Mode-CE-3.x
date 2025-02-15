@@ -138,11 +138,11 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         }
     }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
-    private int ironFishingRod2(int constant){
-        return this.isIron ? 400 : constant;
+    private int startingBiteOdds(int constant){
+        return this.isIron ? 500 : constant;
     }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
-    private int ironFishingRod3(int constant){
+    private int biteChanceMultiplierDay(int constant){
         return this.isIron ? 1 : constant;
     }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 2))
@@ -150,22 +150,22 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         return this.isIron ? 4 : constant;
     }
     @ModifyConstant(method = "isBodyOfWaterLargeEnoughForFishing", constant = @Constant(intValue = 2))
-    private int ironFishingRod5(int constant){
+    private int decreaseWaterDepthRequirement(int constant){
         return this.isIron ? 1 : constant;
     }
     @Inject(method = "loseBait", at = @At("HEAD"),cancellable = true)
-    private void ironFishingRod6(CallbackInfo ci){
+    private void cannotLoseBait(CallbackInfo ci){
         if(this.isIron){
             ci.cancel();
         }
     }
     @ModifyConstant(method = "onUpdate", constant = @Constant(intValue = 10,ordinal = 1))
-    private int ironFishingRod6(int constant){
+    private int increaseCatchableTime(int constant){
         return this.isIron ? 40 : constant;
     }
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0))
     private int increaseChanceToCatchSpecialItem(int bound){
-        return this.isIron ? 1 : 6 - (4 - this.getWorldProgressBonus());
+        return this.isIron ? 1 : 2 + this.getWorldProgressBonus();
     }
 
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
@@ -173,7 +173,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         if(this.fishItem != Item.fishRaw){
             int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress(this.angler.worldObj) : 0;
             double rarity = getRarity(this.fishItem, this.cap, worldProgress);
-            String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
+            String textToDisplay = "You caught: " + this.fishItem.getItemStackDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(textToDisplay);
             text2.setColor(getRarityColor(rarity));
@@ -201,7 +201,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private Item getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
         this.cap = 800;
-        double capModifier = 0.8;
+        double capModifier = 1;
         int j = this.rand.nextInt((int) (this.cap * capModifier));
         Item itemToDrop;
         if (worldProgress == 0) {

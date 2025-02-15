@@ -14,7 +14,10 @@ public class NightmareVillager extends EntityVillager {
     public int getProfessionFromClass() {
         return 5;
     }
-
+    @Override
+    public boolean getCanCreatureTypeBePossessed() {
+        return false;
+    }
     @Override
     protected void checkForProfessionTrades(MerchantRecipeList recipeList, int availableTrades) {
         HashSet<VillagerTrade> tradeList = new HashSet<VillagerTrade>();

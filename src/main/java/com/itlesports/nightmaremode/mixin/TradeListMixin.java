@@ -698,6 +698,7 @@ public class TradeListMixin {
                 .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2301, 3, 6)).build())
                 .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2302, 3, 6)).build())
                 .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2303, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2306, 3, 6)).build())
                 .finishVariants().mandatory().addToTradeList();
 
 

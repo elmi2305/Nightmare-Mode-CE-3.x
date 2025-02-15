@@ -12,8 +12,8 @@ import java.util.*;
 public class EntityBloodWither extends EntityWither {
     private final float[] headPitch = new float[2]; // Represents the pitch (up/down angle) of the heads.
     private final float[] headYaw = new float[2]; // Represents the yaw (left/right angle) of the heads
-    private final float[] previousHeadPitch = new float[2]; // Previous tick's pitch values for the heads
-    private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads
+    private final float[] previousHeadPitch = new float[2]; // Previous tick's pitch values for the heads. unused
+    private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads. unused
     private final int[] headAttackCounts = new int[2]; // Counters for the number of attacks by the heads
 
     private int baseAttackInterval = 800;
@@ -84,7 +84,7 @@ public class EntityBloodWither extends EntityWither {
             BTWBlocks.hopper.blockID,
             BTWBlocks.deepStrataStoneBrickStairs.blockID,
             BTWBlocks.workStump.blockID
-    ));
+    )); // unused
     private static final List<Integer> GOOD_EFFECTS = new ArrayList<>(Arrays.asList(
             Potion.regeneration.id,
             Potion.fireResistance.id,
@@ -111,6 +111,7 @@ public class EntityBloodWither extends EntityWither {
     @Override
     protected void dropFewItems(boolean par1, int par2) {
         this.dropItem(NMItems.starOfTheBloodGod.itemID, 1);
+        this.dropItem(Item.bucketWater.itemID, 1);
     }
 
     @Override
@@ -189,7 +190,8 @@ public class EntityBloodWither extends EntityWither {
                             this.destroyActivePotions(this.playerTarget);
                         }
                     }
-                } else if(this.witherPhase == 2){
+                } else
+                    if(this.witherPhase == 2){
                     if (this.hasItemInInventory(this.playerTarget,Item.appleGold)) {
                         if(this.reviveTimer == 500){
                             this.sendChat("I see you've brought some golden apples...");
@@ -205,6 +207,7 @@ public class EntityBloodWither extends EntityWither {
         if (isTrackingEntity) {
             this.disengageWither();
             for(int i = 0; i < this.trackedEntities.size(); i++){
+                // main way tracked entities are managed
                 if(this.trackedEntities.get(i).posY < 199 && !trackedEntities.get(i).noClip){
                     this.trackedEntities.get(i).setLocationAndAngles(this.origin[0], 200, this.origin[2], this.trackedEntities.get(i).rotationYaw , this.trackedEntities.get(i).rotationPitch);
                 }
@@ -217,6 +220,7 @@ public class EntityBloodWither extends EntityWither {
                 }
             }
             if(this.isDoingCrystalStorm) {
+                // crystal storm attack
                 if(this.trackedEntities.size() < 30 + this.witherPhase * 8 && this.passivityDuration > 50){
                     EntityFallingChicken chicken = new EntityFallingChicken(this.worldObj);
                     chicken.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28) + 2), 210 + (this.rand.nextInt(30) * 1.66), this.origin[2] + (this.rand.nextBoolean() ? -1 : 1 ) * (this.rand.nextInt(28)) + 2);
@@ -278,12 +282,12 @@ public class EntityBloodWither extends EntityWither {
     }
     @Override
     public boolean canBeCollidedWith() {
-        return this.activity && this.getHealthTimer() <= 0;
+        return this.activity && (this.getHealthTimer() <= 0 || this.isArmored());
     }
 
     @Override
     public boolean canBePushed() {
-        return this.activity && this.getHealthTimer() <= 0;
+        return this.activity && (this.getHealthTimer() <= 0 && this.isArmored());
     }
 
     @Override
@@ -299,7 +303,7 @@ public class EntityBloodWither extends EntityWither {
         this.setInvisible(false);
         this.isDoingLaserAttack = false;
         this.setTargetY(5d);
-        if(this.previousWorldTime != 0){
+        if(this.previousWorldTime != 0 && this.rand.nextBoolean()){
             this.worldObj.setWorldTime(this.previousWorldTime);
             this.previousWorldTime = 0;
         }
@@ -341,6 +345,7 @@ public class EntityBloodWither extends EntityWither {
 
     private void executeAttack(int index, int delayBetweenAttacks){
         EntityPlayer player = this.playerTarget;
+        this.setAttackDetails(index, false); // simply ensures the attack details don't get changed mid-attack
         if (player != null) {
             this.updatePlayerMovementDeltas(player);
             double x,y,z;
@@ -498,7 +503,7 @@ public class EntityBloodWither extends EntityWither {
                         break;
                     case 8:
                         // tudou
-                        this.laserIndex += (2 + (this.witherPhase * 2)) * this.laserDirection;
+                        this.laserIndex += (2 + this.witherPhase) * this.laserDirection;
                         if(this.rand.nextInt(150 - this.witherPhase * 50) == 0){
                             this.laserDirection *= -1;
                         }
@@ -548,19 +553,14 @@ public class EntityBloodWither extends EntityWither {
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
         bossActive = this.playerTarget != null;
-        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty()){
+        if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
             int i;
             do {
                 i = this.rand.nextInt(9);
             } while (i == this.currentAttackIndex);
 
             this.currentAttackIndex = i;
-            System.out.println(this.currentAttackIndex);
-            ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("[DEBUG]  Currently doing attack: " + this.currentAttackIndex + ", current phase: " + this.witherPhase);
-            text2.setColor(EnumChatFormatting.WHITE);
-            playerTarget.sendChatToPlayer(text2);
-            this.setAttackDetails(this.currentAttackIndex);
+            this.setAttackDetails(this.currentAttackIndex, true);
 
             if (this.rand.nextInt(8) == 0) {
                 if(!NightmareUtils.getIsBloodMoon()){
@@ -586,7 +586,7 @@ public class EntityBloodWither extends EntityWither {
             this.playerTarget.capabilities.allowEdit = this.activity || this.isDead;
             boolean bIsArmored = this.isArmored();
             primaryTarget = this.playerTarget;
-            if(this.witherAttack % (this.baseAttackInterval + 200) == (this.baseAttackInterval + 199)) {
+            if((this.witherAttack % (this.baseAttackInterval + 200)) == (this.baseAttackInterval + 199)) {
                 // every attack
                 if (this.passivityDuration == -1) {
                     this.setWitherPassiveFor(this.currentAttackPassivityLength);
@@ -847,14 +847,14 @@ public class EntityBloodWither extends EntityWither {
         // Calculate directional velocity
         double deltaX = -Math.sin(radians);
         double deltaZ = Math.cos(radians);
-        double deltaY = 0.0; // Keep Y level unless needed
+        double deltaY = 0.0;
 
         EntityWitherSkull witherSkull = new EntityWitherSkull(this.worldObj, this, deltaX, deltaY, deltaZ);
 
         if (isInvulnerable) {
             witherSkull.setInvulnerable(true);
         }
-        // Apply movement using the new method
+        // Apply movement
         this.setSkullHeading(deltaX, deltaY, deltaZ, speed, 0,witherSkull);
 
         witherSkull.posY = offsetY;
@@ -885,13 +885,6 @@ public class EntityBloodWither extends EntityWither {
     @Override
     protected void updateAITasks() {
         if (this.getHealthTimer() > 0) {
-//            EntityPlayer target;
-//            if((target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ, 20)) != null){
-//                if(target.worldObj.worldInfo.getGameType() != EnumGameType.ADVENTURE){
-//                    target.setGameType(EnumGameType.ADVENTURE);
-//                    System.out.println("Hi");
-//                }
-//            }
 
             int healthTimer = this.getHealthTimer() - 1;
             // builds the platform of the wither arena, in a lag efficient way
@@ -899,7 +892,7 @@ public class EntityBloodWither extends EntityWither {
             // places one line every 2 ticks
             if(isBetween(healthTimer,40,400)){
                 int line = healthTimer - 40;
-                // healthTimer holds a value between 0 and 360
+                // line holds a value between 0 and 360
                 if (line % 2 == 0) {
                     placeBlocksAtLinePartial(this.worldObj, this.origin[0] - 30, 199, this.origin[2] + 30, MathHelper.floor_double((double) line / 2));
                 }
@@ -1024,9 +1017,11 @@ public class EntityBloodWither extends EntityWither {
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         boolean bIsArmored = this.isArmored();
-        int damageCap = bIsArmored ? 10 : 15;
+        int damageCap = bIsArmored ? 30 : 15;
         if(par2 > damageCap){
             par2 = damageCap;
+        } else{
+            par2 = Math.min(par2 * 1.5f, 30);
         }
         if (this.witherPhase < 2 && this.getHealth() <= (par2 + 1)) {
             this.witherPhase += 1;
@@ -1035,7 +1030,7 @@ public class EntityBloodWither extends EntityWither {
 
 
 
-            this.setAttackDetails(9);
+            this.setAttackDetails(9, true);
             this.baseAttackInterval -= this.witherPhase * 50;
             this.witherAttack = this.baseAttackInterval + 199;
             this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
@@ -1095,7 +1090,7 @@ public class EntityBloodWither extends EntityWither {
         }
         return true;
     }
-    private void setAttackDetails(int index) {
+    private void setAttackDetails(int index, boolean isNotSafetyCheck) {
         switch (index) {
             case 0: // Suffocation attack
                 this.currentDurationBetweenAttacks = 8;
@@ -1108,7 +1103,9 @@ public class EntityBloodWither extends EntityWither {
                 this.currentAttackPassivityLength = 300 + this.witherPhase * 40;
                 break;
             case 2: // Lightning strikes
-                this.attackCycle = 0;
+                if (isNotSafetyCheck) {
+                    this.attackCycle = 0;
+                }
                 this.currentDurationBetweenAttacks = 21 - this.witherPhase * 2;
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 600;
@@ -1139,16 +1136,20 @@ public class EntityBloodWither extends EntityWither {
                 this.currentAttackPassivityLength = -1; // No passivity duration set
                 break;
             case 8: // Laser attack
-                this.isDoingLaserAttack = false;
-                this.laserIndex = 0;
+                if (isNotSafetyCheck) {
+                    this.isDoingLaserAttack = false;
+                    this.laserIndex = 0;
+                }
                 this.currentDurationBetweenAttacks = 2;
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 1000;
                 break;
             default: // placeholder attack that does nothing. used for reviving
-                this.currentDurationBetweenAttacks = -1;
-                this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = this.reviveTimer;
+                if (isNotSafetyCheck) {
+                    this.currentDurationBetweenAttacks = 80;
+                    this.isCurrentAttackSummoning = false;
+                    this.currentAttackPassivityLength = this.reviveTimer;
+                }
                 break;
         }
     }

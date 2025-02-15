@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.NightmareVillager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +25,10 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     private void resetVillagerTrades(CallbackInfo ci){
         if (this.worldObj.getTotalWorldTime() % 48000==0) {
             this.buyingList = null;
+        }
+        if(this.ticksExisted % 20 != 0) return;
+        if(NightmareUtils.getIsBloodMoon()){
+            this.heal(20f);
         }
     }
 

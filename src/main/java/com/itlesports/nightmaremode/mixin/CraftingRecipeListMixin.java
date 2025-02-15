@@ -55,6 +55,10 @@ public class CraftingRecipeListMixin {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.magicArrow, 4), new Object[]{new ItemStack(NMItems.magicFeather), new ItemStack(Item.stick), new ItemStack(BTWItems.soulFlux), new ItemStack(BTWItems.broadheadArrowHead)});
         // done adding misc recipes
 
+        // fish sandwich
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked, 2)});
+        // fish sandwich end
 
         // remove sinew recipes, add custom ones
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.sinewExtractingBeef, 1, 400), new Object[]{new ItemStack(Item.beefCooked), new ItemStack(BTWItems.sharpStone)});

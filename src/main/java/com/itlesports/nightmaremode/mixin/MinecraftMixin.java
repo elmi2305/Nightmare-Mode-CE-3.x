@@ -26,6 +26,18 @@ public class MinecraftMixin {
         NightmareMode.getInstance().initKeybind();
     }
 
+//
+//    @Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;shutdown()V"))
+//    private void manageHardmodeTransition(CallbackInfo ci){
+//        if (NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
+//            if(NightmareMode.worldState == 0){
+//                NightmareMode.worldState = 1;
+//                this.thePlayer.playSound("mob.wither.death",1.0f,0.905f);
+//                WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
+//            }
+//        }
+//    }
+
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_F4) && NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {

@@ -6,6 +6,8 @@ import btw.block.BTWBlocks;
 import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
+import btw.world.util.data.DataEntry;
+import btw.world.util.data.DataProvider;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
@@ -77,9 +79,9 @@ public class NightmareMode extends BTWAddon {
 
         NMBlocks.initNightmareBlocks();
         // because apparently adding this trade crashes if I do it in the trade list mixin ???
-        for(int i = 1; i <= 4; i++){
-            TradeProvider.getBuilder().profession(5).level(i).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.613f * (float)Math.log(i) + 0.05f).addToTradeList();
-        }
+        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.05f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().addToTradeList();
         // this is stupid ^
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
@@ -191,19 +193,12 @@ public class NightmareMode extends BTWAddon {
         serverHandler.sendPacketToPlayer(packet);
     }
 
-
-//    public void setEclipse(boolean par1){
-//        this.isEclipse = par1;
-//    }
-//    public void setBloodmoon(boolean par1){
-//        this.isBloodMoon = par1;
-//    }
-
     public static void setNiteMultiplier(double par1){
         if (instance != null) {
             instance.NITE_MULTIPLIER = par1;
         }
     }
+
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
     public static Boolean bloodmoonColors;
@@ -220,6 +215,15 @@ public class NightmareMode extends BTWAddon {
     public static Boolean noSkybases;
     public static Boolean unkillableMobs;
     public boolean canAccessMenu = true;
+    public static long portalTime = Long.MAX_VALUE;
+    public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
+            .global()
+            .name("PortalTime")
+            .defaultSupplier(() -> Long.MAX_VALUE)
+            .readNBT(NBTTagCompound::getLong)
+            .writeNBT(NBTTagCompound::setLong)
+            .build();
+
 
     @Override
     public void preInitialize() {
@@ -239,6 +243,8 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties. Inspired by MITE");
         this.registerProperty("NoSkybases", "False", "Logs have gravity");
         this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
+
+        PORTAL_TIME.register();
     }
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;

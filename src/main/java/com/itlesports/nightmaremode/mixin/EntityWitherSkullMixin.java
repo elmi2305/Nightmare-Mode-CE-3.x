@@ -29,7 +29,7 @@ public abstract class EntityWitherSkullMixin extends EntityFireball{
                     target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V")
     )
     private void applyAdditionalEffectsOnImpact(MovingObjectPosition pos, CallbackInfo ci){
-        if (pos.entityHit.rand.nextFloat()<0.06) {
+        if (pos.entityHit.rand.nextFloat()<0.06 && !(this.shootingEntity instanceof EntityBloodWither)) {
             ((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
         }
     }

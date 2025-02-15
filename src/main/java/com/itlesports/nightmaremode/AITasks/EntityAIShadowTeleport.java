@@ -18,7 +18,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 256 : 100) * bloodMoonModifier);
+            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 400 : 100) * bloodMoonModifier);
         }
         return false;
     }

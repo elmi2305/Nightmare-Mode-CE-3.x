@@ -27,6 +27,8 @@ public class MinecraftServerMixin {
 
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
+        NightmareMode.portalTime = this.worldServers[0].getData(NightmareMode.PORTAL_TIME);
+
         if (this.worldServers[0].worldInfo.getDifficulty() == Difficulties.HOSTILE){
             if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
                 NightmareMode.worldState = 3;
