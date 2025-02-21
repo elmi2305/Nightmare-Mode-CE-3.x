@@ -120,7 +120,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 //            if(NMUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
 //                if(this.isTryingToEscapeBloodMoon){
 //                    ChatMessageComponent text1 = new ChatMessageComponent();
-//                    text1.addText("<???> Running from the Bloodmoon? Pathetic.");
+//                    text1.addKey("player.attemptEscapeBloodmoon");
 //                    text1.setColor(EnumChatFormatting.DARK_RED);
 //                    this.sendChatToPlayer(text1);
 //                    this.isTryingToEscapeBloodMoon = false;
@@ -137,7 +137,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
         if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("<???> " + ("nightmare.hardmode_begun"));
+            text2.addKey("world.hardmodeBegin");
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death", 0.9f, 0.905f);
@@ -201,8 +201,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
         if (NMUtils.getWorldProgress() != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            String tauntKey = "nightmare.taunt_" + this.rand.nextInt(getDeathMessages().size());
-            text2.addText("<???> " + tauntKey);
+            text2.addKey(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
             text2.setColor(EnumChatFormatting.RED);
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
@@ -211,32 +210,16 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Unique
     private static @NotNull List<String> getDeathMessages() {
         List<String> messageList = new ArrayList<>();
-        messageList.add("taunt_0");
-        messageList.add("taunt_1");
-        messageList.add("taunt_2");
-        messageList.add("taunt_3");
-        messageList.add("taunt_4");
-        messageList.add("taunt_5");
-        messageList.add("taunt_6");
-        messageList.add("taunt_7");
-        messageList.add("taunt_8");
-        messageList.add("taunt_9");
-        messageList.add("taunt_10");
-        messageList.add("taunt_11");
-        messageList.add("taunt_12");
-        messageList.add("taunt_13");
-        messageList.add("taunt_14");
-        messageList.add("taunt_15");
-        messageList.add("taunt_16");
-        messageList.add("taunt_17");
-        messageList.add("taunt_18");
+        for (int i = 1; i <= 19; i++){
+            messageList.add("deathScreen.deathTauntMessage"+i);
+        }
         return messageList;
     }
 
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<The Twins> " + ("nightmare.twins_end"));
+        text2.addKey("bosses.dragons.journeyEnd");
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
     }
