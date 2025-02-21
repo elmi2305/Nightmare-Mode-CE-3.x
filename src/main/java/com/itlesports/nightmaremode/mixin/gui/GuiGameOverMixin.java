@@ -21,7 +21,7 @@ public class GuiGameOverMixin extends GuiScreen {
     @Inject(method = "initGui", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GuiGameOver;buttonList:Ljava/util/List;",ordinal = 4,shift = At.Shift.AFTER))
     private void addNewButton(CallbackInfo ci){
         if (!MinecraftServer.getIsServer()) {
-            this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, "Next Attempt"));
+            this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, I18n.getString("deathScreen.nextAttempt")));
         }
     }
 

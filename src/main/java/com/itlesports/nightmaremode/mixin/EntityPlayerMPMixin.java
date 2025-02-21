@@ -107,7 +107,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9) || NightmareUtils.getIsEclipse() || (dayCount % 12 >= 7 && dayCount % 12 <= 8)){
                 if(this.isTryingToEscapeBloodMoon){
                     ChatMessageComponent text1 = new ChatMessageComponent();
-                    text1.addText("<???> Running from the Bloodmoon? Pathetic.");
+                    text1.addKey("player.attemptEscapeBloodmoon");
                     text1.setColor(EnumChatFormatting.DARK_RED);
                     this.sendChatToPlayer(text1);
                     this.isTryingToEscapeBloodMoon = false;
@@ -125,7 +125,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
         if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("<???> Hardmode has begun.");
+            text2.addKey("world.hardmodeBegin");
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death",0.9f,0.905f);
@@ -192,7 +192,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
         if (NightmareUtils.getWorldProgress(this.worldObj) != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
+            text2.addKey(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
             text2.setColor(EnumChatFormatting.RED);
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
@@ -201,32 +201,16 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Unique
     private static @NotNull List<String> getDeathMessages() {
         List<String> messageList = new ArrayList<>();
-        messageList.add("<???> Pathetic.");
-        messageList.add("<???> Really?");
-        messageList.add("<???> Have you tried not dying?");
-        messageList.add("<???> Skill issue.");
-        messageList.add("<???> Dead again?");
-        messageList.add("<???> Nice one.");
-        messageList.add("<???> Easy.");
-        messageList.add("<???> Not even close.");
-        messageList.add("<???> Don't bother trying.");
-        messageList.add("<???> You weren't built to last.");
-        messageList.add("<???> Did you think you were special? You're not even memorable.");
-        messageList.add("<???> Such potential... wasted on someone so utterly incompetent.");
-        messageList.add("<???> Your light fades, but I remain eternal.");
-        messageList.add("<???> Pathetic attempt. Try again.");
-        messageList.add("<???> Is that the best you can do?");
-        messageList.add("<???> Not even a worthy sacrifice.");
-        messageList.add("<???> Try an easier difficulty?");
-        messageList.add("<???> Another failure. How delightful to watch.");
-        messageList.add("<???> Was that supposed to impress me?");
+        for (int i = 1; i <= 19; i++){
+            messageList.add("deathScreen.deathTauntMessage"+i);
+        }
         return messageList;
     }
 
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<The Twins> Your journey ends here.");
+        text2.addKey("bosses.dragons.journeyEnd");
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
         // need to figure out how to make this not happen every time the player goes to the end

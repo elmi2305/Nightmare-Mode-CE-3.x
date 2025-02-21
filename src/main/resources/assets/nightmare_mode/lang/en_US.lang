@@ -53,3 +53,45 @@ tile.nmBloodBone.name=Blood Bone Block
 key.nightmaremode.zoom=Zoom
 emi.trade.NightmareVillager=Nightmare Merchant
 status.health.NoHit=No Hit
+
+gui.nmTimer.day=Day %d
+gui.nmTimer.night=Night %d
+deathScreen.nextAttempt=Next Attempt
+deathScreen.deathTauntMessage1=<???> Pathetic.
+deathScreen.deathTauntMessage2=<???> Really?
+deathScreen.deathTauntMessage3=<???> Have you tried not dying?
+deathScreen.deathTauntMessage4=<???> Skill issue.
+deathScreen.deathTauntMessage5=<???> Dead again?
+deathScreen.deathTauntMessage6=<???> Nice one.
+deathScreen.deathTauntMessage7=<???> Easy.
+deathScreen.deathTauntMessage8=<???> Not even close.
+deathScreen.deathTauntMessage9=<???> Don't bother trying.
+deathScreen.deathTauntMessage10=<???> You weren't built to last.
+deathScreen.deathTauntMessage11=<???> Did you think you were special? You're not even memorable.
+deathScreen.deathTauntMessage12=<???> Such potential... wasted on someone so utterly incompetent.
+deathScreen.deathTauntMessage13=<???> Your light fades, but I remain eternal.
+deathScreen.deathTauntMessage14=<???> Pathetic attempt. Try again.
+deathScreen.deathTauntMessage15=<???> Is that the best you can do?
+deathScreen.deathTauntMessage16=<???> Not even a worthy sacrifice.
+deathScreen.deathTauntMessage17=<???> Try an easier difficulty?
+deathScreen.deathTauntMessage18=<???> Another failure. How delightful to watch.
+deathScreen.deathTauntMessage19=<???> Was that supposed to impress me?
+bosses.dragons.journeyEnd=<The Twins> Your journey ends here.
+
+difficulty.nightmare.name=Nightmare
+difficulty.nightmare.description1=The ultimate challenge.
+# Intentionally empty.
+difficulty.nightmare.description2=
+difficulty.nightmare.description3=
+#
+
+difficulty.bloodmare.name=Bloodmare
+
+difficulty.baddream.name=Bad Dream
+difficulty.baddream.description1=A more relaxed experience. Makes
+difficulty.baddream.description2=many aspects of Nightmare Mode
+difficulty.baddream.description3=easier and more forgiving.
+
+menu.noEscape=No Escape
+player.attemptEscapeBloodmoon=<???> Running from the Bloodmoon? Pathetic.
+world.hardmodeBegin=<???> Hardmode has begun.
