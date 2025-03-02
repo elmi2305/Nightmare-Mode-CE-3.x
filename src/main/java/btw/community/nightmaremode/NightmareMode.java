@@ -4,7 +4,6 @@ import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
 import btw.entity.mob.villager.trade.TradeProvider;
-import btw.item.items.ToolItem;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
@@ -24,6 +23,11 @@ import java.util.Random;
 public class NightmareMode extends BTWAddon {
     public static int postWitherSunTicks = 0;
     public static int postNetherMoonTicks = 0;
+    public static int SKELETON_ICE = 2;
+    public static int SKELETON_FIRE = 3;
+    public static int SKELETON_ENDER = 4;
+    public static int SKELETON_JUNGLE = 5;
+    public static int SKELETON_SUPERCRITICAL = 6;
 
     private static NightmareMode instance;
     public static int worldState;
@@ -53,13 +57,6 @@ public class NightmareMode extends BTWAddon {
         return instance;
     }
 
-
-//    public static boolean getIsBloodmoon(){
-//        return isBloodMoon;
-//    }
-//    public static boolean getIsEclipse(){
-//        return isEclipse;
-//    }
     @Override
     public void postSetup() {
         float multiplier = 2f;
@@ -154,14 +151,10 @@ public class NightmareMode extends BTWAddon {
 
 
     public static void setEclipse(boolean par1){
-//        if (instance != null) {
-            isEclipse = par1;
-//        }
+        isEclipse = par1;
     }
     public static void setBloodmoon(boolean par1){
-//        if (instance != null) {
-            isBloodMoon = par1;
-//        }
+        isBloodMoon = par1;
     }
 
     public static void sendWorldStateToAllPlayers() {
@@ -214,6 +207,9 @@ public class NightmareMode extends BTWAddon {
     public static Boolean nite;
     public static Boolean noSkybases;
     public static Boolean unkillableMobs;
+    public static Boolean potionParticles;
+    public static Boolean moreVariants;
+    public static Boolean shouldDisplayFishingAnnouncements;
     public boolean canAccessMenu = true;
     public static long portalTime = Long.MAX_VALUE;
     public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
@@ -233,6 +229,8 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
         this.registerProperty("Crimson", "False", "Everything is blood red! Purely visual");
         this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
+        this.registerProperty("PotionParticles", "True", "Whether particles from potions should appear or not");
+        this.registerProperty("FishingAnnouncements", "True", "Whether rare drops obtained by fishing should display in chat");
         this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
         this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
         this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
@@ -243,6 +241,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties. Inspired by MITE");
         this.registerProperty("NoSkybases", "False", "Logs have gravity");
         this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
+        this.registerProperty("MoreVariants", "False", "Adds lots of new mob variants to Nightmare Mode");
 
         PORTAL_TIME.register();
     }
@@ -259,7 +258,9 @@ public class NightmareMode extends BTWAddon {
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
         nightmareZoomKey = propertyValues.get("NmZoomKey");
         perfectStart = Boolean.parseBoolean(propertyValues.get("PerfectStart"));
+        shouldDisplayFishingAnnouncements = Boolean.parseBoolean(propertyValues.get("FishingAnnouncements"));
         bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
+        potionParticles = Boolean.parseBoolean(propertyValues.get("PotionParticles"));
         crimson = Boolean.parseBoolean(propertyValues.get("RedSeaOfDeath"));
         configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
         bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
@@ -271,6 +272,7 @@ public class NightmareMode extends BTWAddon {
         nite = Boolean.parseBoolean(propertyValues.get("NITE"));
         noSkybases = Boolean.parseBoolean(propertyValues.get("NoSkybases"));
         unkillableMobs = Boolean.parseBoolean(propertyValues.get("UnkillableMobs"));
+        moreVariants = Boolean.parseBoolean(propertyValues.get("MoreVariants"));
     }
 
     public void initKeybind(){

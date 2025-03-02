@@ -21,6 +21,13 @@ import java.util.List;
 
 @Mixin(EntityMob.class)
 public class EntityMobMixin extends EntityCreature{
+
+    public EntityMobMixin(World par1World) {
+        super(par1World);
+    }
+
+    @Unique private int timeOfLastAttack;
+
     @Unique
     private static final List<Integer> itemsToAvoidDropping = new ArrayList<>(Arrays.asList(
             Item.swordWood.itemID,
@@ -38,15 +45,6 @@ public class EntityMobMixin extends EntityCreature{
             Item.swordDiamond.itemID
     ));
 
-    @Unique private static boolean shouldDropItems(EntityCreature mob, ItemStack stack){
-        if(stack == null){
-            return false;
-        }
-        if(mob instanceof EntityPigZombie){
-            return itemsToAvoidDropping.contains(stack.itemID) || stack.itemID == Item.swordDiamond.itemID || stack.itemID == BTWItems.steelSword.itemID;
-        }
-        return itemsToAvoidDropping.contains(stack.itemID);
-    }
 
     @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void ensureSpawnsOnEclipse(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
@@ -59,14 +57,17 @@ public class EntityMobMixin extends EntityCreature{
     private int increaseMobSpawningOnStormChance(int a){
         return 4;
     }
-//    @ModifyArg(method = "isValidLightLevel", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 1))
-//    private int eclipseSpawnOnSurface(int a){
-//        return 4;
-//    }
 
+    @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
+    private void manageHealingOverTime(CallbackInfo ci){
+        if(this.worldObj != null && this.ticksExisted % (120 - NightmareUtils.getWorldProgress(this.worldObj) * 10) == 0 && (this.timeOfLastAttack + 100) < this.ticksExisted){
+            this.heal(1f);
+        }
+    }
 
-    public EntityMobMixin(World par1World) {
-        super(par1World);
+    @Inject(method = "entityMobAttackEntityFrom", at = @At("TAIL"))
+    private void timeEntityWasRecentlyHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.timeOfLastAttack = this.ticksExisted;
     }
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)
@@ -79,33 +80,6 @@ public class EntityMobMixin extends EntityCreature{
             cir.setReturnValue(false);
         }
     }
-
-//    @Override
-//    protected void dropEquipment(boolean par1, int par2) {
-//        for(int var3 = 0; var3 < this.getLastActiveItems().length; ++var3) {
-//            ItemStack var4 = this.getCurrentItemOrArmor(var3);
-//            if(var4 != null && !shouldDropItems(this,var4)) continue;
-//
-//            boolean var5 = this.equipmentDropChances[var3] > 1.0F;
-//            if (var4 != null && (par1 || var5) && this.rand.nextFloat() - (float)par2 * 0.01F < this.equipmentDropChances[var3]) {
-//                if (!var5 && var4.isItemStackDamageable()) {
-//                    int var6 = Math.max((int)((float)var4.getMaxDamage() * 0.95F), 1);
-//                    int var7 = var4.getMaxDamage() - this.rand.nextInt(this.rand.nextInt(var6) + 1);
-//                    if (var7 > var6) {
-//                        var7 = var6;
-//                    }
-//
-//                    if (var7 < 1) {
-//                        var7 = 1;
-//                    }
-//
-//                    var4.setItemDamage(var7);
-//                }
-//
-//                this.entityDropItem(var4, 0.0F);
-//            }
-//        }
-//    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void avoidAttackingWitches(CallbackInfo ci){

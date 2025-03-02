@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.NightmareUtils;
-import com.itlesports.nightmaremode.NightmareVillager;
+import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

@@ -24,7 +24,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.getAttackTarget() != null){
             if(thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem())
-                    && isHoldingIllegalItem(thisObj.attacker)
+                    && isHoldingLongRangeItem(thisObj.attacker)
                     && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
                     && thisObj.attackTick <= 1
                     && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
@@ -46,7 +46,7 @@ public abstract class EntityAIAttackOnCollideMixin {
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE){
-            if(isPlayerHoldingBow(targetPlayer) && (isHoldingIllegalItem(thisObj.attacker)) || NightmareUtils.getIsMobEclipsed(thisObj.attacker)){
+            if(isPlayerHoldingBow(targetPlayer) && (isHoldingLongRangeItem(thisObj.attacker)) || NightmareUtils.getIsMobEclipsed(thisObj.attacker)){
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.5, 2.4, 2.5));
                 arrowCooldown -= 1;
                 if (arrowCooldown <= 0) {
@@ -81,7 +81,7 @@ public abstract class EntityAIAttackOnCollideMixin {
     }
 
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){
-        if (heldItem != null && getIllegalItems().contains(heldItem.itemID)) {
+        if (heldItem != null && getLongRangeItems().contains(heldItem.itemID)) {
             if(getLesserRangeItems().contains(heldItem.itemID)){
                 return 5;
             }
@@ -94,32 +94,32 @@ public abstract class EntityAIAttackOnCollideMixin {
         return player.getHeldItem() != null && (player.getHeldItem().itemID == Item.bow.itemID || player.getHeldItem().itemID == BTWItems.compositeBow.itemID);
     }
 
-    @Unique private boolean isHoldingIllegalItem(EntityLiving entity){
-        return entity.getHeldItem() != null && getIllegalItems().contains(entity.getHeldItem().itemID);
+    @Unique private boolean isHoldingLongRangeItem(EntityLiving entity){
+        return entity.getHeldItem() != null && getLongRangeItems().contains(entity.getHeldItem().itemID);
     }
 
     @Unique
-    private static @NotNull List<Integer> getIllegalItems() {
-        List<Integer> illegalItemList = new ArrayList<>(16);
-        illegalItemList.add(Item.swordStone.itemID);
-        illegalItemList.add(Item.swordIron.itemID);
-        illegalItemList.add(Item.swordGold.itemID);
-        illegalItemList.add(BTWItems.steelSword.itemID);
-        illegalItemList.add(Item.axeStone.itemID);
-        illegalItemList.add(Item.axeDiamond.itemID);
-        illegalItemList.add(Item.axeIron.itemID);
-        illegalItemList.add(Item.shovelIron.itemID);
-        illegalItemList.add(Item.shovelStone.itemID);
-        illegalItemList.add(Item.shovelGold.itemID);
-        illegalItemList.add(Item.shovelDiamond.itemID);
+    private static @NotNull List<Integer> getLongRangeItems() {
+        List<Integer> longRangeItemList = new ArrayList<>(16);
+        longRangeItemList.add(Item.swordStone.itemID);
+        longRangeItemList.add(Item.swordIron.itemID);
+        longRangeItemList.add(Item.swordGold.itemID);
+        longRangeItemList.add(BTWItems.steelSword.itemID);
+        longRangeItemList.add(Item.axeStone.itemID);
+        longRangeItemList.add(Item.axeDiamond.itemID);
+        longRangeItemList.add(Item.axeIron.itemID);
+        longRangeItemList.add(Item.shovelIron.itemID);
+        longRangeItemList.add(Item.shovelStone.itemID);
+        longRangeItemList.add(Item.shovelGold.itemID);
+        longRangeItemList.add(Item.shovelDiamond.itemID);
 
-        illegalItemList.add(BTWItems.boneClub.itemID);
-        illegalItemList.add(Item.swordWood.itemID);
-        illegalItemList.add(Item.swordDiamond.itemID);
-        illegalItemList.add(Item.axeGold.itemID);
-        illegalItemList.add(Item.pickaxeStone.itemID);
+        longRangeItemList.add(BTWItems.boneClub.itemID);
+        longRangeItemList.add(Item.swordWood.itemID);
+        longRangeItemList.add(Item.swordDiamond.itemID);
+        longRangeItemList.add(Item.axeGold.itemID);
+        longRangeItemList.add(Item.pickaxeStone.itemID);
 
-        return illegalItemList;
+        return longRangeItemList;
     }
     @Unique
     private static @NotNull List<Integer> getLesserRangeItems() {
@@ -128,7 +128,6 @@ public abstract class EntityAIAttackOnCollideMixin {
         lesserRangeItemList.add(Item.swordWood.itemID);
         lesserRangeItemList.add(Item.swordDiamond.itemID);
         lesserRangeItemList.add(Item.axeGold.itemID);
-        lesserRangeItemList.add(Item.pickaxeStone.itemID);
         return lesserRangeItemList;
     }
 }

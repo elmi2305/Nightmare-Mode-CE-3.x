@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.EntityFireCreeper;
+import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import net.minecraft.src.BiomeGenHell;
 import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.EntityWitch;

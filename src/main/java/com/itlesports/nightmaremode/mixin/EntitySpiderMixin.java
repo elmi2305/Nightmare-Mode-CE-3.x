@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
+import com.itlesports.nightmaremode.entity.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -102,6 +104,11 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){
         if (this.worldObj != null) {
+            EntitySpider thisObj = (EntitySpider)(Object)this;
+
+            if(thisObj instanceof EntityBlackWidowSpider){
+                return 1000 + this.rand.nextInt(2000);
+            }
             return 16000 - NightmareUtils.getWorldProgress(this.worldObj) * 3000;
         } else return 24000;
     }
@@ -134,16 +141,18 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
+        EntitySpider thisObj = (EntitySpider)(Object)this;
+
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getWorldProgress(target.worldObj)*0.2){
-            if (NightmareUtils.getWorldProgress(target.worldObj)<=1) {
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NightmareUtils.getNiteMultiplier()),0));
+            if (NightmareUtils.getWorldProgress(target.worldObj) <= 1 && !(thisObj instanceof EntityFireSpider)) {
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * NightmareUtils.getNiteMultiplier()),0));
             } else if (target.worldObj.getDifficulty() == Difficulties.HOSTILE){
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NightmareUtils.getNiteMultiplier()),1));
                 target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * NightmareUtils.getNiteMultiplier()),0));
             }
 
             if (target.worldObj.getDifficulty() == Difficulties.HOSTILE && target instanceof EntityPlayer player) {
-                this.alertNearbySpiders((EntitySpider)(Object)this,player);
+                this.alertNearbySpiders(thisObj,player);
             }
         }
     }
@@ -152,13 +161,21 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private void chanceToShootFireball(Entity targetEntity, CallbackInfo ci){
         boolean isHostile = targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE;
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
+        EntitySpider thisObj = (EntitySpider)(Object)this;
+        Entity var11 = null;
+        double deltaX = targetEntity.posX - this.posX;
+        double deltaY = targetEntity.boundingBox.minY + (double) (targetEntity.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
+        double deltaZ = targetEntity.posZ - this.posZ;
 
+        if(thisObj instanceof EntityFireSpider){
+            var11 = new EntitySmallFireball(this.worldObj, this, deltaX, deltaY, deltaZ);
+            this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+            var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
+            this.timeToNextWeb = this.isBurning() ? 100 : 600;
+            this.worldObj.spawnEntityInWorld(var11);
+            return;
+        }
         if (isHostile) {
-            double deltaX = targetEntity.posX - this.posX;
-            double deltaY = targetEntity.boundingBox.minY + (double) (targetEntity.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
-            double deltaZ = targetEntity.posZ - this.posZ;
-
-            Entity var11 = null;
 
             if(targetEntity.rand.nextInt(isEclipse ? 4 : 200) == 0){
                 var11 = new EntityLargeFireball(this.worldObj, this, deltaX, deltaY, deltaZ);
@@ -166,7 +183,6 @@ public abstract class EntitySpiderMixin extends EntityMob{
                 var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
             } else{
                 if(isEclipse){
-
                     int i = rand.nextInt(3);
                     switch(i){
                         case 0:
@@ -206,7 +222,8 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"),cancellable = true)
     private void doNotShootWebInEclipse(Entity targetEntity, CallbackInfo ci){
-        if (NightmareUtils.getIsMobEclipsed(this)) {
+        EntitySpider thisObj = (EntitySpider)(Object)this;
+        if (NightmareUtils.getIsMobEclipsed(this) || thisObj instanceof EntityFireSpider) {
             ci.cancel();
         }
     }

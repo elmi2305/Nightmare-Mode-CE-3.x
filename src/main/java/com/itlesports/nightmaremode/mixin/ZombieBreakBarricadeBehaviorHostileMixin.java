@@ -66,6 +66,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         fastItemList.add(Item.shovelStone.itemID);
         fastItemList.add(Item.shovelGold.itemID);
         fastItemList.add(Item.shovelDiamond.itemID);
+        fastItemList.add(Item.pickaxeStone.itemID);
 
         fastItemList.add(BTWItems.boneClub.itemID);
         fastItemList.add(Item.swordWood.itemID);

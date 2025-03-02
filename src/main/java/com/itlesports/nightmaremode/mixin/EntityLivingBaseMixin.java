@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -7,10 +8,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -36,12 +34,11 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
             return 0.6f;
         } else{return 0.85f;}
     }
-    @Inject(method = "isPotionActive(Lnet/minecraft/src/Potion;)Z", at = @At("HEAD"), cancellable = true)
-    private void playerNightVisionBypassDuringBloodMoon(Potion par1Potion, CallbackInfoReturnable<Boolean> cir){
-        EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
 
-        if(thisObj instanceof EntityPlayer && par1Potion.id == Potion.nightVision.id && NightmareUtils.getIsBloodMoon()){
-            cir.setReturnValue(true);
+    @Redirect(method = "updatePotionEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnParticle(Ljava/lang/String;DDDDDD)V"))
+    private void removePotionParticlesConfig(World world, String s, double d, double par2, double par4, double par6, double par8, double par10){
+        if(NightmareMode.potionParticles){
+            world.spawnParticle(s,d,par2,par4,par6,par8,par10);
         }
     }
 
@@ -64,10 +61,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
                     }
                 }
                 player.heal(rand.nextInt(2)+1);
-                this.mendTools(player);
             }
             if(NightmareUtils.isHoldingBloodSword(player)){
-                player.getHeldItem().setItemDamage(Math.max(player.getHeldItem().getItemDamage() - this.rand.nextInt(4) - 2, 0));
+                player.getHeldItem().setItemDamage(Math.max(player.getHeldItem().getItemDamage() - this.rand.nextInt(4) - 1, 0));
+                this.mendTools(player);
                 if (this.rand.nextInt(24) == 0) {
                     this.dropItem(NMItems.bloodOrb.itemID,1);
                 }
@@ -91,7 +88,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     }
 
     @Unique private void increaseDurabilityIfPossible(ItemStack stack){
-        int i = rand.nextInt(7) + 1;
+        int i = rand.nextInt(4) + 1;
         stack.setItemDamage(Math.max(stack.getItemDamage() - i,0));
     }
 }

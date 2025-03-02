@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
+import com.itlesports.nightmaremode.entity.EntityFireSpider;
 import net.minecraft.src.EntitySpider;
 import net.minecraft.src.RenderSpider;
 import net.minecraft.src.ResourceLocation;
@@ -15,11 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class RenderSpiderMixin {
     @Unique private boolean eclipseEyes;
     @Unique private static final ResourceLocation SPIDER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/spiderEclipseHigh.png");
+    @Unique private static final ResourceLocation SPIDER_TEXTURE_FIRE = new ResourceLocation("textures/entity/spiderFire.png");
+    @Unique private static final ResourceLocation SPIDER_TEXTURE_BLACK = new ResourceLocation("textures/entity/spiderBlackWidow.png");
     @Unique private static final ResourceLocation NOTHING = new ResourceLocation("textures/entity/nothing.png");
 
     @Inject(method = "getSpiderTextures", at = @At("HEAD"),cancellable = true)
-    private void manageEclipsedTextures(EntitySpider par1EntitySpider, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsMobEclipsed(par1EntitySpider)){
+    private void manageEclipsedTextures(EntitySpider par1EntitySpider, CallbackInfoReturnable<ResourceLocation> cir) {
+        if(par1EntitySpider instanceof EntityBlackWidowSpider){
+            cir.setReturnValue(SPIDER_TEXTURE_BLACK);
+        }else if(par1EntitySpider instanceof EntityFireSpider){
+            cir.setReturnValue(SPIDER_TEXTURE_FIRE);
+        } else if(NightmareUtils.getIsMobEclipsed(par1EntitySpider)){
             this.eclipseEyes = true;
             cir.setReturnValue(SPIDER_TEXTURE_ECLIPSE);
         }

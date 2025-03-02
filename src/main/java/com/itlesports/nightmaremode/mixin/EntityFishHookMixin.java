@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.util.sounds.BTWSoundManager;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @Mixin(EntityFishHook.class)
 public abstract class EntityFishHookMixin extends Entity implements EntityFishHookAccessor{
-    @Unique private static final Map<Item, Integer> itemOccurrences0 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> preHardmode = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(Item.reed, 3),
             new AbstractMap.SimpleEntry<>(BTWItems.tangledWeb, 9),
             new AbstractMap.SimpleEntry<>(BTWItems.ironOreChunk, 3),
@@ -32,7 +33,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.goldenCarrot, 1),
             new AbstractMap.SimpleEntry<>(BTWItems.mysteriousGland, 7)
     );
-    @Unique private static final Map<Item, Integer> itemOccurrences1 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> hardmode = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(BTWItems.ironNugget, 7),
             new AbstractMap.SimpleEntry<>(BTWItems.goldOreChunk, 4),
             new AbstractMap.SimpleEntry<>(Item.goldNugget, 2),
@@ -51,7 +52,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.diamond, 1),
             new AbstractMap.SimpleEntry<>(NMItems.bloodOrb, 2)
     );
-    @Unique private static final Map<Item, Integer> itemOccurrences2 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> endgame = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(Item.goldNugget, 6),
             new AbstractMap.SimpleEntry<>(BTWItems.steelNugget, 4),
             new AbstractMap.SimpleEntry<>(BTWItems.broadheadArrowHead, 2),
@@ -63,7 +64,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(Item.book, 8),
             new AbstractMap.SimpleEntry<>(Item.emerald, 9)
     );
-    @Unique private static final Map<Item, Integer> itemOccurrences3 = Map.ofEntries(
+    @Unique private static final Map<Item, Integer> eclipse = Map.ofEntries(
             new AbstractMap.SimpleEntry<>(NMItems.magicFeather, 4),
             new AbstractMap.SimpleEntry<>(NMItems.creeperChop, 3),
             new AbstractMap.SimpleEntry<>(NMItems.magicArrow, 5),
@@ -81,20 +82,21 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(NMItems.waterRod, 9),
             new AbstractMap.SimpleEntry<>(NMItems.elementalRod, 1)
     );
-    @Unique private static final Map<Integer, Map<Item, Integer>> mapOfMaps = Map.ofEntries(
-            new AbstractMap.SimpleEntry<>(0, itemOccurrences0),
-            new AbstractMap.SimpleEntry<>(1, itemOccurrences1),
-            new AbstractMap.SimpleEntry<>(2, itemOccurrences2),
-            new AbstractMap.SimpleEntry<>(3, itemOccurrences3)
+    @Unique private static final Map<Integer, Map<Item, Integer>> mapOfLootPools = Map.ofEntries(
+            new AbstractMap.SimpleEntry<>(0, preHardmode),
+            new AbstractMap.SimpleEntry<>(1, hardmode),
+            new AbstractMap.SimpleEntry<>(2, endgame),
+            new AbstractMap.SimpleEntry<>(3, eclipse)
     );
 
     @Unique
     private static int getItemOccurrences(Item item, int index) {
-        return mapOfMaps.get(index).getOrDefault(item,0);
+        return mapOfLootPools.get(index).getOrDefault(item,0);
     }
     @Shadow private boolean isBaited;
     @Shadow public EntityPlayer angler;
     @Shadow public Entity bobber;
+
     @Unique private boolean isIron;
     @Unique private Item fishItem = Item.fishRaw;
     @Unique private int cap = 1;
@@ -108,7 +110,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         if (NightmareUtils.getIsBloodMoon()) {
             return 16;
         }
-        return this.isIron ? 6 : 10;
+        return this.isIron ? 8 : 10;
     }
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void ensureBaitingTrue(CallbackInfo ci){
@@ -137,18 +139,18 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.angler.dropOneItem(false);
         }
     }
-    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
-    private int startingBiteOdds(int constant){
-        return this.isIron ? 500 : constant;
-    }
+//    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
+//    private int startingBiteOdds(int constant){
+//        return this.isIron ? 6 : constant;
+//    }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
     private int biteChanceMultiplierDay(int constant){
-        return this.isIron ? 1 : constant;
+        return this.isIron ? 2 : constant;
     }
-    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 2))
-    private int ironFishingRod4(int constant){
-        return this.isIron ? 4 : constant;
-    }
+//    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 2))
+//    private int dawnDuskRain(int constant){
+//        return this.isIron ? 2 : constant;
+//    }
     @ModifyConstant(method = "isBodyOfWaterLargeEnoughForFishing", constant = @Constant(intValue = 2))
     private int decreaseWaterDepthRequirement(int constant){
         return this.isIron ? 1 : constant;
@@ -165,15 +167,15 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     }
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0))
     private int increaseChanceToCatchSpecialItem(int bound){
-        return this.isIron ? 1 : 2 + this.getWorldProgressBonus();
+        return 1;
     }
 
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
-        if(this.fishItem != Item.fishRaw){
+        if(this.fishItem != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
             int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress(this.angler.worldObj) : 0;
             double rarity = getRarity(this.fishItem, this.cap, worldProgress);
-            String textToDisplay = "You caught: " + this.fishItem.getItemStackDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
+            String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(textToDisplay);
             text2.setColor(getRarityColor(rarity));
@@ -186,7 +188,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         if ((this.fishItem = this.getRandomItemForRod()) != Item.fishRaw) {
             instance.worldObj.playSoundAtEntity(instance.angler,BTWSoundManager.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
         } else {
-            instance.playSound(s, v, p);
+            instance.worldObj.playSoundAtEntity(instance.angler, s, v, p);
         }
     }
     @Unique
@@ -201,7 +203,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private Item getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
         this.cap = 800;
-        double capModifier = 1;
+        double capModifier = this.isIron ? 1 : (5 - this.getWorldProgressBonus());
         int j = this.rand.nextInt((int) (this.cap * capModifier));
         Item itemToDrop;
         if (worldProgress == 0) {
@@ -245,7 +247,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         } else if(worldProgress == 2){
-            this.cap = 540;
+            this.cap = 600;
             j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
                 case  0,  1,  2,  3,  4,  5             -> Item.goldNugget;             // 6 occurrences (gold nugget)
@@ -261,7 +263,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         } else{
-            this.cap = 365;
+            this.cap = 740;
             j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
                 case  0,  1,  2,  3                     -> NMItems.magicFeather;       // 4 occurrences (magic feather)
@@ -341,9 +343,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         // Count decimal places
         int scale = Math.max(0, bd.scale());
 
-        // If more than 4 decimal places, round to 4
-        if (scale > 4) {
-            bd = bd.setScale(4, RoundingMode.HALF_UP);
+        // If more than 3 decimal places, round to 3
+        if (scale > 3) {
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
         }
 
         return bd.doubleValue();

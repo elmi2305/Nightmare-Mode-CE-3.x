@@ -1,9 +1,10 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -34,7 +35,6 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
         NightmareUtils.manageEclipseChance(this,10);
-
     }
 
     protected void applyEntityAttributes() {
@@ -42,7 +42,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
         if (this.worldObj != null) {
             int postNetherBoost = NightmareUtils.getWorldProgress(this.worldObj) >= 1 ? 12 : 0;
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(20.0 + postNetherBoost);
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0 + postNetherBoost);
         }
     }
 
@@ -159,7 +159,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         DataOutputStream dataStream = new DataOutputStream(byteStream);
         try {
             EntityFireCreeper par1EntityLivingBase = this;
-            dataStream.writeInt(13);
+            dataStream.writeInt(18);
 
             dataStream.writeInt(this.entityId);
             new Packet24MobSpawn(par1EntityLivingBase).writePacketData(dataStream);

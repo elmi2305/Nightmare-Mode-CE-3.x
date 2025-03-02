@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.EntityBloodWither;
+import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import net.minecraft.src.EntityWither;
 import net.minecraft.src.RenderWither;
 import net.minecraft.src.ResourceLocation;

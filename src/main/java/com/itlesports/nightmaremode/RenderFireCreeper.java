@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode;
 
+import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 

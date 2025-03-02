@@ -2,12 +2,11 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.villager.LibrarianVillagerEntity;
 import com.itlesports.nightmaremode.NightmareUtils;
-import com.itlesports.nightmaremode.NightmareVillager;
+import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(LibrarianVillagerEntity.class)
 public class LibrarianVillagerEntityMixin extends EntityVillager {

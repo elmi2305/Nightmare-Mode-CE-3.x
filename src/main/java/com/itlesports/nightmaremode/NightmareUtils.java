@@ -101,6 +101,9 @@ public class NightmareUtils {
         return NightmareMode.isEclipse;
     }
     public static boolean getIsMobEclipsed(EntityLivingBase mob){
+        if(mob.dimension == 1){
+            return false;
+        }
         if(mob.activePotionsMap != null){
             if (mob.isPotionActive(Potion.field_76443_y)) {
                 return true;
@@ -116,8 +119,10 @@ public class NightmareUtils {
         }
     }
 
-    public static int divByNiteMultiplier(int par1, int par2){
-        return (int) Math.max(par1 / NightmareUtils.getNiteMultiplier(), par2);
+    public static int divByNiteMultiplier(int numerator, int minValue){
+        // divides the numerator by the NITE multiplier, rounds down to an integer
+        // to prevent it from returning 0, a minimum value is given
+        return (int) Math.max(numerator / NightmareUtils.getNiteMultiplier(), minValue);
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){

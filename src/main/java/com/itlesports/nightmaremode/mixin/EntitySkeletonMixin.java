@@ -24,15 +24,6 @@ import java.util.List;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
-    @Unique
-    private static final List<Integer> droppableArmor = new ArrayList<>(Arrays.asList(
-            Item.swordIron.itemID,
-            Item.shovelIron.itemID,
-            Item.plateIron.itemID,
-            Item.bootsIron.itemID,
-            Item.legsIron.itemID,
-            Item.helmetIron.itemID
-    ));
 
     @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
@@ -209,24 +200,41 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNotCatchFireInSun(EntitySkeleton instance){}
 
+    @Unique private int visibilityCheckCooldown = 0;
+    @Unique private boolean canSeeIfJumpedCached = false;
+    @Unique private boolean cannotSeeNormallyCached = false;
+    @Unique private EntityPlayer lastTarget = null;
+
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
-    private void manageJumpShotAndSpiderDismount(CallbackInfo ci){
-        if (this.worldObj != null ) {
-            if (this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-                EntityPlayer targetPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,12);
-                this.jumpCooldown ++;
-                if(targetPlayer != null && (canSeeIfJumped(this,targetPlayer) && cannotSeeNormally(this, targetPlayer)) && !this.isAirBorne && this.jumpCooldown >= 60){
+    private void manageJumpShotAndSpiderDismount(CallbackInfo ci) {
+        if (this.worldObj != null) {
+            if (this.getHeldItem() != null && this.getHeldItem().itemID == Item.bow.itemID && this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.getAttackTarget() instanceof EntityPlayer targetPlayer) {
+                this.jumpCooldown++;
+
+                // Recalculate visibility every 4 ticks or if target changes
+                if (this.visibilityCheckCooldown <= 0 || targetPlayer != this.lastTarget) {
+                    this.canSeeIfJumpedCached = canSeeIfJumped(this, targetPlayer);
+                    this.cannotSeeNormallyCached = cannotSeeNormally(this, targetPlayer);
+                    this.visibilityCheckCooldown = 4; // Only check every 4 ticks
+                    this.lastTarget = targetPlayer;
+                }
+
+                if (this.canSeeIfJumpedCached && this.cannotSeeNormallyCached && !this.isAirBorne && this.jumpCooldown >= 60) {
                     this.motionY = 0.45;
                     this.jumpCooldown = 0;
                 }
+
+                this.visibilityCheckCooldown--;
             }
-            if(this.ridingEntity instanceof EntitySpider && this.worldObj.isDaytime() && this.ticksExisted % 20 == 0 && !this.worldObj.isRemote){
-                if(this.hasAttackTarget()){
+
+            if (this.ridingEntity instanceof EntitySpider && this.worldObj.isDaytime() && this.ticksExisted % 20 == 0 && !this.worldObj.isRemote) {
+                if (this.hasAttackTarget()) {
                     ((EntitySpider) this.ridingEntity).entityToAttack = this.getAttackTarget();
                 }
             }
         }
     }
+
 
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
@@ -252,85 +260,28 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-            this.isImmuneToFire = true;
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
             boolean isEclipse = NightmareUtils.getIsEclipse();
+            double niteMultiplier = NightmareUtils.getNiteMultiplier();
 
-
-            if (!isEclipse) {
-                // for non-solar eclipse. randomly picks which variant to spawn. chances are different from each
-                if ((progress >= 2 || areMobsEvolved) && rand.nextFloat() < (0.13 + (Math.abs((progress - 2)) * (isHostile ? 0.07 : 0.03))) * bloodMoonModifier * NightmareUtils.getNiteMultiplier()) {
-                    // 13% -> 20%
-                    // 19.5% -> 30%
-                    this.setSkeletonType(4); // ender skeleton
-
-                    this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
-                    this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
-                    this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
-                    this.equipmentDropChances[1] = 0f;
-                    this.equipmentDropChances[2] = 0f;
-                    this.equipmentDropChances[3] = 0f;
-
-                    this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
-
-                } else if ((progress >= 1 || areMobsEvolved) && rand.nextFloat() < ((isHostile ? 0.09 : 0.03) + (Math.abs((progress - 1)) * 0.02)) * bloodMoonModifier * NightmareUtils.getNiteMultiplier() && this.dimension != -1) {
-                    // 9% -> 11% -> 13%
-                    // 13.5% -> 16.5% -> 19.5%
-                    this.setSkeletonType(3); // fire skeleton
-                    this.setCurrentItemOrArmor(1, null);
-                    this.setCurrentItemOrArmor(2, null);
-                    this.setCurrentItemOrArmor(3, null);
-                    this.setCurrentItemOrArmor(4, null);
-                    this.setFire(10000);
-                    this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
-
-                } else if ((progress <= 3 || areMobsEvolved) && rand.nextFloat() < (0.02 + (progress * 0.02)) * bloodMoonModifier * NightmareUtils.getNiteMultiplier()) {
-                    // 2% -> 4% -> 6% -> 8%
-                    // 3% -> 6% -> 9% -> 12%
-                    this.setSkeletonType(2); // ice skeleton
-                    ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
-                    this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
-                    this.equipmentDropChances[4] = 0f;
-                }
+            if (isEclipse) {
+                assignEclipseSkeletonVariant();
+                return;
             }
-            else{
-                // picks a random variant including default & wither. each variant now has an equal 20% chance of spawning
-                switch (rand.nextInt(5)){
-                    case 0:
-                        this.setSkeletonType(4); // ender skeleton
 
-                        this.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots), 1052688)); // black
-                        this.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings), 1052688)); // black
-                        this.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest), 1052688)); // black
-                        this.equipmentDropChances[1] = 0f;
-                        this.equipmentDropChances[2] = 0f;
-                        this.equipmentDropChances[3] = 0f;
-
-                        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
-                        break;
-                    case 1:
-                        this.setSkeletonType(3); // fire skeleton
-                        this.setCurrentItemOrArmor(1, null);
-                        this.setCurrentItemOrArmor(2, null);
-                        this.setCurrentItemOrArmor(3, null);
-                        this.setCurrentItemOrArmor(4, null);
-                        this.setFire(10000);
-                        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
-                        break;
-                    case 2:
-                        this.setSkeletonType(2); // ice skeleton
-                        ItemStack var1 = new ItemStack(BTWItems.woolHelmet, 1);
-                        this.setCurrentItemOrArmor(4, setItemColor(var1, 13260));
-                        this.equipmentDropChances[4] = 0f;
-                        break;
-                    case 3:
-                        this.setSkeletonType(1);
-                        break;
-                    case 4:
-                        this.setSkeletonType(0);
-                        break;
+            if (shouldSpawnEnderSkeleton(progress, isHostile, bloodMoonModifier, niteMultiplier)) {
+                setEnderSkeleton();
+            } else if (shouldSpawnFireSkeleton(progress, isHostile, bloodMoonModifier, niteMultiplier)) {
+                setFireSkeleton();
+            } else {
+                if (shouldSpawnIceSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
+                    setIceSkeleton();
+                } else if (shouldSpawnJungleSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
+                    setJungleSkeleton();
+                } else if (shouldSpawnSuperCriticalSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
+                    setSuperCriticalSkeleton();
                 }
             }
         }
@@ -342,6 +293,32 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         // 2: ice
         // 3: fire
         // 4: ender
+        // 5: jungle
+        // 6: supercritical
+    }
+    @Unique
+    private void assignEclipseSkeletonVariant() {
+        // picks a random variant including default & wither. each variant now has an equal 1/6 chance of spawning
+        switch (rand.nextInt(6)) {
+            case 5:
+                setJungleSkeleton();
+                break;
+            case 4:
+                setEnderSkeleton();
+                break;
+            case 3:
+                setFireSkeleton();
+                break;
+            case 2:
+                setIceSkeleton();
+                break;
+            case 1:
+                this.setSkeletonType(1);
+                break;
+            case 0:
+                this.setSkeletonType(0);
+                break;
+        }
     }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
@@ -496,4 +473,99 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.worldObj.spawnEntityInWorld(arrow);
     }
+
+    @Unique
+    private boolean shouldSpawnEnderSkeleton(int progress, boolean isHostile, double bloodMoonModifier, double niteMultiplier) {
+        double chance = (0.13 + Math.abs(progress - 2) * (isHostile ? 0.07 : 0.03)) * bloodMoonModifier * niteMultiplier;
+        return (progress >= 2 || areMobsEvolved) && rand.nextFloat() < chance;
+    }
+
+    @Unique
+    private boolean shouldSpawnFireSkeleton(int progress, boolean isHostile, double bloodMoonModifier, double niteMultiplier) {
+        double chance = ((isHostile ? 0.09 : 0.03) + Math.abs(progress - 1) * 0.02) * bloodMoonModifier * niteMultiplier;
+        return (progress >= 1 || areMobsEvolved) && rand.nextFloat() < chance && this.dimension != -1;
+    }
+
+    @Unique
+    private boolean shouldSpawnIceSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
+        double chance = (0.02 + progress * 0.02) * bloodMoonModifier * niteMultiplier;
+        return rand.nextFloat() < chance;
+    }
+
+    @Unique
+    private boolean shouldSpawnJungleSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
+        if(!NightmareMode.moreVariants){
+            return false;
+        }
+        BiomeGenBase spawnBiome = this.worldObj.getBiomeGenForCoords((int) this.posX, (int) this.posZ);
+        double jungleBonus = spawnBiome == BiomeGenBase.jungle || spawnBiome == BiomeGenBase.jungleHills ? 0.3 : 0;
+        double chance = (0.04 + progress * 0.06 + jungleBonus) * bloodMoonModifier * niteMultiplier;
+        return rand.nextFloat() < chance;
+    }
+
+    @Unique
+    private boolean shouldSpawnSuperCriticalSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
+        if(!NightmareMode.moreVariants){
+            return false;
+        }
+        BiomeGenBase spawnBiome = this.worldObj.getBiomeGenForCoords((int) this.posX, (int) this.posZ);
+        double desertBonus = spawnBiome == BiomeGenBase.desert || spawnBiome == BiomeGenBase.desertHills ? 0.3 : 0;
+        double chance = (0.04 + progress * 0.06 + desertBonus) * bloodMoonModifier * niteMultiplier;
+        return rand.nextFloat() < chance;
+    }
+
+    @Unique
+    private void setEnderSkeleton() {
+        this.setSkeletonType(NightmareMode.SKELETON_ENDER);
+        this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
+    }
+
+    @Unique
+    private void setFireSkeleton() {
+        this.setSkeletonType(NightmareMode.SKELETON_FIRE);
+        this.clearArmor();
+        this.setFire(10000);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
+    }
+
+    @Unique
+    private void setIceSkeleton() {
+        this.setSkeletonType(NightmareMode.SKELETON_ICE);
+        this.setHelmet(13260, BTWItems.woolHelmet);
+    }
+
+    @Unique
+    private void setJungleSkeleton() {
+        this.setSkeletonType(NightmareMode.SKELETON_JUNGLE);
+    }
+    @Unique
+    private void setSuperCriticalSkeleton() {
+        this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+
+        this.setSkeletonType(NightmareMode.SKELETON_SUPERCRITICAL);
+    }
+
+    @Unique
+    private void setArmor(int color, Item... items) {
+        for (int i = 0; i < items.length; i++) {
+            this.setCurrentItemOrArmor(i + 1, setItemColor(new ItemStack(items[i]), color));
+            this.equipmentDropChances[i + 1] = 0f;
+        }
+    }
+
+    @Unique
+    private void setHelmet(int color, Item item) {
+        this.setCurrentItemOrArmor(4, setItemColor(new ItemStack(item), color));
+        this.equipmentDropChances[4] = 0f;
+    }
+
+    @Unique
+    private void clearArmor() {
+        for (int i = 1; i <= 4; i++) {
+            this.setCurrentItemOrArmor(i, null);
+        }
+    }
+
 }

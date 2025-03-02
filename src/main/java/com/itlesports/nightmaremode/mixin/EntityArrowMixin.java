@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.EntityMagicArrow;
+import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,15 +24,32 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
             at = @At(value = "FIELD",
                     target = "Lnet/minecraft/src/EntityArrow;shootingEntity:Lnet/minecraft/src/Entity;",
                     ordinal = 5), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void applySlownessIfIceSkeleton(CallbackInfo ci, int var16, Vec3 var17, Vec3 var3, MovingObjectPosition var4){
-        if (this.shootingEntity instanceof EntitySkeleton mySkeleton) {
-            if(var4.entityHit instanceof EntityPlayer && mySkeleton.getSkeletonType()==2){
-                ((EntityPlayer) var4.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
-                ((EntityPlayer) var4.entityHit).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140,0));
-            } else if(var4.entityHit instanceof EntityPlayer && mySkeleton.getSkeletonType()==4){
-                mySkeleton.setPositionAndUpdate(var4.entityHit.posX,var4.entityHit.posY,var4.entityHit.posZ);
-                mySkeleton.playSound("mob.endermen.portal",20.0F,1.0F);
-                mySkeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordIron));
+    private void skeletonArrowImpactEffects(CallbackInfo ci, int var16, Vec3 var17, Vec3 var3, MovingObjectPosition var4){
+        if (this.shootingEntity instanceof EntitySkeleton skeleton && var4.entityHit instanceof EntityLivingBase hitEntity) {
+            if(skeleton.getSkeletonType() == NightmareMode.SKELETON_ICE){
+                hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
+                hitEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140,0));
+            } else if(skeleton.getSkeletonType() == NightmareMode.SKELETON_ENDER){
+                skeleton.setPositionAndUpdate(hitEntity.posX,hitEntity.posY,hitEntity.posZ);
+                skeleton.playSound("mob.endermen.portal",1.0F,1.0F);
+                skeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordIron));
+            } else if(skeleton.getSkeletonType() == NightmareMode.SKELETON_JUNGLE){
+                if (!hitEntity.isPotionActive(Potion.moveSlowdown)) {
+                    // 75% chance to apply Slowness if the target doesn't already have it
+                    if (this.rand.nextFloat() < 0.75f) {
+                        hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 3));
+                    }
+                } else {
+                    // If the target already has Slowness, roll for Poison or Blindness
+                    int i = this.rand.nextInt(4);
+                    if (i == 0) {
+                        hitEntity.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 0));
+                    } else if (i == 1) {
+                        hitEntity.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
+                    }
+                }
+            } else if(skeleton.getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL){
+                this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,this.isBurning() && !this.isBeingRainedOn(),true);
             }
         }
         EntityArrow thisObj = ((EntityArrow)(Object)this);
@@ -41,6 +59,13 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                     player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
                 }
             }
+        }
+    }
+
+    @Inject(method = "notifyCollidingBlockOfImpact", at = @At("HEAD"))
+    private void supercriticalSkeletonArrowExplosion(CallbackInfo ci){
+        if(this.shootingEntity instanceof EntitySkeleton skeleton && skeleton.getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL){
+            this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,false,true);
         }
     }
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityArrow;setDead()V",ordinal = 1))

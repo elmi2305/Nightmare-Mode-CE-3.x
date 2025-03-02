@@ -26,6 +26,41 @@ public abstract class WorldMixin {
 
     @Shadow public abstract long getWorldTime();
 
+    @Inject(method = "getFogColor", at = @At("RETURN"), cancellable = true)
+    private void darkenFog(CallbackInfoReturnable<Vec3> cir){
+        Vec3 color = cir.getReturnValue();
+        if (NightmareUtils.getIsEclipse()) {
+            color.scale(0);
+            cir.setReturnValue(color);
+        }
+        if (NightmareUtils.getIsBloodMoon()){
+            double x = color.xCoord;
+            double y = color.yCoord;
+            double z = color.zCoord;
+
+            // Target ratio
+            double rx = 0.50196;
+            double ry = 0.06359;
+            double rz = 0.03591;
+
+            // Normalize the ratio
+            double ratioMagnitude = Math.sqrt(rx * rx + ry * ry + rz * rz);
+            double normX = rx / ratioMagnitude;
+            double normY = ry / ratioMagnitude;
+            double normZ = rz / ratioMagnitude;
+
+            // Compute the magnitude of the original vector
+            double vMagnitude = Math.sqrt(x * x + y * y + z * z);
+
+            // Scale the normalized ratio to match the original vector's magnitude
+            double newX = normX * vMagnitude;
+            double newY = normY * vMagnitude;
+            double newZ = normZ * vMagnitude;
+
+            color.setComponents(newX,newY,newZ);
+        }
+    }
+
     @Inject(method = "isBoundingBoxBurning", at = @At("RETURN"),cancellable = true)
     private void manageBurningItemImmunity(Entity entity, CallbackInfoReturnable<Boolean> cir){
         if(entity instanceof EntityItem item
@@ -67,12 +102,6 @@ public abstract class WorldMixin {
         }
         if(this.getWorldTime() % 200 == 0 && NightmareMode.nite){
             NightmareMode.setNiteMultiplier(this.calculateNiteMultiplier());
-            if (Minecraft.getMinecraft().thePlayer != null && Minecraft.getMinecraft().thePlayer.isSneaking()) {
-                ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("[debug] current nite multiplier: " + NightmareUtils.getNiteMultiplier());
-                text2.setColor(EnumChatFormatting.WHITE);
-                Minecraft.getMinecraft().thePlayer.sendChatToPlayer(text2);
-            }
         }
     }
     @ModifyConstant(method = "updateWeather", constant = @Constant(intValue = 12000))

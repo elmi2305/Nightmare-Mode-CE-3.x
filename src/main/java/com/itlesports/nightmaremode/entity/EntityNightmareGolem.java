@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import net.minecraft.src.*;
 
@@ -23,6 +23,7 @@ public class EntityNightmareGolem extends EntityIronGolem {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27);
     }
 

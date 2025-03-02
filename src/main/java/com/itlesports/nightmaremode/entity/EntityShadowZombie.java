@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
@@ -8,6 +8,7 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAINearestAttackableTargetShadow;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -81,7 +82,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void explore() {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
             double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
             double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
@@ -110,8 +111,8 @@ public class EntityShadowZombie extends EntityZombie {
         double foundPosY = this.posY;
         double foundPosZ = this.posZ;
         boolean isWood = false;
-        for (int i = 0; i < 24; i++) {
-            int verticalRange = 16;
+        for (int i = 0; i < 12; i++) {
+            int verticalRange = 20;
             targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
             targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
             targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
@@ -120,7 +121,7 @@ public class EntityShadowZombie extends EntityZombie {
                 isWood = true;
             }
 
-            if(Math.abs(targetY - this.posY) < verticalRange && (isWood ? targetY + 3 : targetY) > foundPosY){
+            if(Math.abs(targetY - this.posY) < verticalRange && (isWood ? targetY + 4 : targetY) > foundPosY){
                 foundPosX = targetX;
                 foundPosY = targetY;
                 foundPosZ = targetZ;
@@ -134,16 +135,16 @@ public class EntityShadowZombie extends EntityZombie {
 
     private static int getChanceOfTeleporting(int input) {
         return switch (input) {
-            case 0 -> 24;
-            case 1 -> 10;
-            case 2 -> 8;
-            case 3 -> 6;
-            default -> 4;
+            case 0 -> 12;
+            case 1 -> 6;
+            case 2 -> 4;
+            case 3 -> 3;
+            default -> 2;
         };
     }
 
     public void onLivingUpdate() {
-        if(this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
+        if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
             int chance = getChanceOfTeleporting(NightmareUtils.getWorldProgress(this.worldObj));
 
             if (this.rand.nextInt(chance) == 0) {

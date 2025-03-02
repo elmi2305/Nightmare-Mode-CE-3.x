@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.item.items;
 import btw.entity.BroadheadArrowEntity;
 import btw.item.BTWItems;
 import btw.item.items.CompositeBowItem;
-import com.itlesports.nightmaremode.EntityMagicArrow;
+import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 

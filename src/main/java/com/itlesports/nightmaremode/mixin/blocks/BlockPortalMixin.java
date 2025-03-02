@@ -3,15 +3,12 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import btw.world.util.data.BTWWorldData;
-import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import btw.entity.BroadheadArrowEntity;
 import com.itlesports.nightmaremode.item.NMItems;

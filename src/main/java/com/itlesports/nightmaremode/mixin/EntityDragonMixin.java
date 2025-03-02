@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.EntityShadowZombie;
+import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;

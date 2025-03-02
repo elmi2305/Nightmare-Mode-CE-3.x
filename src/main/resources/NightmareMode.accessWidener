@@ -13,5 +13,6 @@ accessible field net/minecraft/src/EntityLivingBase activePotionsMap Ljava/util/
 accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
 accessible method net/minecraft/src/EntityWitherAttackFilter <init> ()V
 accessible method net/minecraft/src/Entity setSize (FF)V
+accessible field net/minecraft/src/EntityCreeper fuseTime I
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
@@ -26,6 +28,14 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Unique boolean isExecuting;
     @Unique int ticksOnGround;
+
+    @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
+    private boolean superCriticalSkeletonEnhancedSight(EntitySenses instance, Entity entity){
+        if(((EntitySkeleton)this.entityOwner).getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL){
+            return true;
+        }
+        return instance.canSee(entity);
+    }
 
     @Inject(method = "continueExecuting", at = @At("HEAD"))
     private void manageRunningAway(CallbackInfoReturnable<Boolean> cir){

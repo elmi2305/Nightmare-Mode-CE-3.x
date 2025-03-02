@@ -1,8 +1,10 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import btw.block.BTWBlocks;
 import btw.entity.LightningBoltEntity;
+import btw.entity.attribute.BTWAttributes;
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -16,7 +18,7 @@ public class EntityBloodWither extends EntityWither {
     private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads. unused
     private final int[] headAttackCounts = new int[2]; // Counters for the number of attacks by the heads
 
-    private int baseAttackInterval = 800;
+    private int baseAttackInterval = 600;
     private int attackCycle; // used to be headAttackCooldowns. repurposed to track the cycle an attack is in. eg. the lightning attack has 3 cycles, prep, telegraph and fire
     private int shieldRegenCooldown; // Cooldown timer for regenerating the shield
     private int witherAttack; // controls which AI attack the wither should currently use
@@ -38,8 +40,6 @@ public class EntityBloodWither extends EntityWither {
     private ItemStack[] playerHotbar; // the player's hotbar. used for one attack
     private int currentAttackIndex; // the current attack the wither is set to do
     private int currentDurationBetweenAttacks; // the duration of the attack the wither will do
-    private boolean shouldExecuteSecondaryAttack; // true if the 2nd phase secondary attack should execute
-    private int secondaryAttackIndex; // the secondary attack the wither is set to do
     private boolean isCurrentAttackSummoning; // true if the current attack is supposed to track entities
     public boolean isDoingLaserAttack; // manages the laser attack
     private int currentAttackPassivityLength; // time that the current attack needs to spend being passive
@@ -124,6 +124,14 @@ public class EntityBloodWither extends EntityWither {
         this.playerTarget.sendChatToPlayer(text2);
     }
 
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0);
+    }
+
+
     private boolean hasItemInInventory(EntityPlayer player, Item item) {
         List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
         for (ItemStack stack : inventory) {
@@ -165,12 +173,14 @@ public class EntityBloodWither extends EntityWither {
         if (player.getActivePotionEffects().isEmpty()){
             return;
         }
-        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
-        for(PotionEffect potionEffect : potionEffects){
-            if(GOOD_EFFECTS.contains(potionEffect.getPotionID())){
-                player.removePotionEffect(potionEffect.getPotionID());
-            }
-        }
+
+        List<Integer> effectsToRemove = player.getActivePotionEffects().stream()
+                .map(effect -> ((PotionEffect) effect).getPotionID()) // Explicit cast to PotionEffect
+                .filter(GOOD_EFFECTS::contains)
+                .toList();
+
+        // Remove each effect
+        effectsToRemove.forEach(player::removePotionEffect);
     }
 
 
@@ -489,6 +499,11 @@ public class EntityBloodWither extends EntityWither {
                             this.worldObj.spawnEntityInWorld(blaze2);
                             this.worldObj.spawnEntityInWorld(blaze3);
                             this.worldObj.spawnEntityInWorld(blaze4);
+                            blaze0.entityToAttack = this.playerTarget;
+                            blaze1.entityToAttack = this.playerTarget;
+                            blaze2.entityToAttack = this.playerTarget;
+                            blaze3.entityToAttack = this.playerTarget;
+                            blaze4.entityToAttack = this.playerTarget;
                         }
                     case 7:
                         if(this.trackedEntities.isEmpty()) {
@@ -573,10 +588,6 @@ public class EntityBloodWither extends EntityWither {
                     this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
                 }
             }
-            if(this.rand.nextInt(3) == 0 && this.currentAttackIndex != 2 && this.currentAttackIndex != 4 && this.witherPhase >= 1){
-                this.shouldExecuteSecondaryAttack = true;
-                this.secondaryAttackIndex = this.rand.nextBoolean() || this.isCurrentAttackSummoning ? 2 : 4;
-            }
         }
 
         // all the attacks
@@ -602,10 +613,6 @@ public class EntityBloodWither extends EntityWither {
                         this.manageWitherPassivity(false);
                         this.executeAttack(this.currentAttackIndex, this.currentDurationBetweenAttacks);
                     }
-                }
-                if(this.shouldExecuteSecondaryAttack && this.secondaryAttackIndex != 0){
-                    int delay = this.secondaryAttackIndex == 2 ? 21 : -1;
-                    this.executeAttack(this.secondaryAttackIndex, delay);
                 }
             }
             else{
@@ -919,7 +926,7 @@ public class EntityBloodWither extends EntityWither {
             }
             this.setHealthTimer(healthTimer);
             if (this.ticksExisted % 10 == 0) {
-                this.heal(10.0f);
+                this.heal(15f);
             }
         } else {
             int targetId;
@@ -1017,6 +1024,7 @@ public class EntityBloodWither extends EntityWither {
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         boolean bIsArmored = this.isArmored();
+        par2 /= 1.5f;
         int damageCap = bIsArmored ? 30 : 15;
         if(par2 > damageCap){
             par2 = damageCap;
@@ -1031,7 +1039,7 @@ public class EntityBloodWither extends EntityWither {
 
 
             this.setAttackDetails(9, true);
-            this.baseAttackInterval -= this.witherPhase * 50;
+            this.baseAttackInterval -= (this.witherPhase * 50 + 50);
             this.witherAttack = this.baseAttackInterval + 199;
             this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
             return false;

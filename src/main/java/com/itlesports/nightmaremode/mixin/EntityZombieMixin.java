@@ -6,7 +6,7 @@ import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
-import com.itlesports.nightmaremode.EntityShadowZombie;
+import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -53,6 +53,7 @@ public abstract class EntityZombieMixin extends EntityMob{
 
                 if (this.getAttackTarget() != null) {
                     skeleton.setAttackTarget(this.getAttackTarget());
+                    skeleton.entityToAttack = this.getEntityToAttack();
                 }
                 if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                     if (rand.nextInt(Math.max((int) (25 / NightmareUtils.getNiteMultiplier()), 1)) == 0) {
@@ -183,11 +184,13 @@ public abstract class EntityZombieMixin extends EntityMob{
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if(this.isWearingAnyDiamondArmor(this) && this.rand.nextBoolean()){
+        if(this.isWearingAnyDiamondArmor(this)){
             this.dropItem(Item.diamond.itemID, 1);
         }
         super.entityLivingDropFewItems(par1, par2);
     }
+
+
 
     @Inject(method = "checkForLooseFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playAuxSFX(IIIII)V"))
     private void healZombie(CallbackInfo ci){
@@ -218,19 +221,25 @@ public abstract class EntityZombieMixin extends EntityMob{
                     // 2.0 -> 3.0 -> 4.0 -> 5.0
                 }
 
-                if(rand.nextInt(Math.max(MathHelper.floor_double(48 * bloodMoonModifier * (1 / NightmareUtils.getNiteMultiplier())), 2)) == 0 && isHostile && this.posY <= 45){
+                if(rand.nextInt(Math.max(MathHelper.floor_double(16 * bloodMoonModifier * (1 / NightmareUtils.getNiteMultiplier())), 2)) == 0 && isHostile && this.posY <= 50){
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
                     this.equipmentDropChances[0] = 0f;
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0d);
+                    List<ItemStack> leatherArmor = getLeatherArmor();
+                    for (int i = 1; i <= 4; i++) {
+                        if(this.getCurrentItemOrArmor(i) == null){
+                            this.setCurrentItemOrArmor(i, leatherArmor.get(i - 1));
+                            this.equipmentDropChances[i] = 0;
+                        }
+                    }
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
                 }
+
 
 
                 if (progress == 1 || areMobsEvolved) {
                     if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier * (1 / NightmareUtils.getNiteMultiplier())), 2)) == 0) {
-                        ItemStack var1 = new ItemStack(Item.axeGold);
-                        ItemStack var2 = new ItemStack(Item.helmetGold);
-                        this.setCurrentItemOrArmor(0, var1);
-                        this.setCurrentItemOrArmor(4, var2);
+                        this.setCurrentItemOrArmor(0, new ItemStack(Item.axeGold));
+                        this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetGold));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
                         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isHostile ? 0.34f : 0.29f) * ((NightmareUtils.getNiteMultiplier() - 1) / 20 + 1));
                         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
@@ -257,8 +266,8 @@ public abstract class EntityZombieMixin extends EntityMob{
                             if(rand.nextFloat() < 0.07f + streakModifier){
                                 streakModifier += 0.01f;
                                 streakModifier += (float) (NightmareUtils.getNiteMultiplier() - 1);
-                                List<ItemStack> advancedArmorList = getAdvancedArmor();
-                                this.setCurrentItemOrArmor(i, advancedArmorList.get(i - 1));
+                                List<ItemStack> diamondArmor = getDiamondArmor();
+                                this.setCurrentItemOrArmor(i, diamondArmor.get(i - 1));
                                 this.equipmentDropChances[i] = 0;
                             }
                         }
@@ -305,8 +314,23 @@ public abstract class EntityZombieMixin extends EntityMob{
             // iron tool zombies have a 33% chance to spawn with a leather helmet
             if(this.getHeldItem() != null && (this.getHeldItem().itemID == Item.swordIron.itemID || this.getHeldItem().itemID == Item.shovelIron.itemID) && this.rand.nextInt(100) != 0 && this.getCurrentItemOrArmor(4) == null){
                 this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetLeather));
+                this.equipmentDropChances[4] = 0f;
             }
         }
+    }
+    @Unique
+    private static @NotNull List<ItemStack> getLeatherArmor() {
+        ItemStack boots = new ItemStack(Item.bootsLeather);
+        ItemStack pants = new ItemStack(Item.legsLeather);
+        ItemStack chest = new ItemStack(Item.plateLeather);
+        ItemStack helmet = new ItemStack(Item.helmetLeather);
+
+        List<ItemStack> leatherArmorList = new ArrayList<>(4);
+        leatherArmorList.add(boots);
+        leatherArmorList.add(pants);
+        leatherArmorList.add(chest);
+        leatherArmorList.add(helmet);
+        return leatherArmorList;
     }
 
     @Override
@@ -474,7 +498,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     }
 
     @Unique
-    private static @NotNull List<ItemStack> getAdvancedArmor() {
+    private static @NotNull List<ItemStack> getDiamondArmor() {
         ItemStack boots = new ItemStack(Item.bootsDiamond);
         ItemStack pants = new ItemStack(Item.legsDiamond);
         ItemStack chest = new ItemStack(Item.plateDiamond);

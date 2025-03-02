@@ -8,4 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface EntityCreeperAccessor {
     @Accessor("fuseTime")
     int getFuseTime();
+    @Accessor("fuseTime")
+    void setFuseTime(int par1);
 }

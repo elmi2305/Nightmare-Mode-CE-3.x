@@ -5,10 +5,7 @@ import btw.item.items.NetherStarItem;
 import btw.item.items.RottenFleshItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EnumToolMaterial;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemBucketMilk;
+import net.minecraft.src.*;
 
 public class NMItems {
     public static ItemRPG rpg;
@@ -58,6 +55,9 @@ public class NMItems {
     public static ItemEclipseBow eclipseBow;
     public static ItemMagicArrow magicArrow;
     public static ItemIronFishingPole ironFishingPole;
+
+    public static FoodItem dungApple;
+
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
     static {
@@ -110,5 +110,8 @@ public class NMItems {
         eclipseBow = (ItemEclipseBow) new ItemEclipseBow(2350).setCreativeTab(CreativeTabs.tabCombat);
         magicArrow = (ItemMagicArrow) new ItemMagicArrow(2351).setTextureName("nmMagicArrow").setUnlocalizedName("nmMagicArrow").setCreativeTab(CreativeTabs.tabCombat);
         ironFishingPole = (ItemIronFishingPole) new ItemIronFishingPole(2352).setCreativeTab(CreativeTabs.tabTools);
+
+        dungApple = (FoodItem) new FoodItem(2353, 2, 0.25f, false, "nmDungApple",false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nmDungApple").setCreativeTab(CreativeTabs.tabFood);
+
     }
 }

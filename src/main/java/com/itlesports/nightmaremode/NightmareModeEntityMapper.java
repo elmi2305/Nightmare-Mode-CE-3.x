@@ -1,4 +1,5 @@
 package com.itlesports.nightmaremode;
+import com.itlesports.nightmaremode.entity.*;
 import net.minecraft.src.EntityList;
 
 public class NightmareModeEntityMapper {
@@ -12,5 +13,11 @@ public class NightmareModeEntityMapper {
         EntityList.addMapping(EntityBloodWither.class, "NightmareBloodWither", 2304);
         EntityList.addMapping(EntityFallingChicken.class, "NightmareFallingChicken", 2305);
         EntityList.addMapping(EntityNightmareGolem.class, "NightmareGolem", 2306, 16711680, 0);
+        EntityList.addMapping(EntityFireSpider.class, "NightmareFireSpider", 2307, 12874496, 10232320);
+        EntityList.addMapping(EntityStoneZombie.class, "NightmareStoneZombie", 2308, 11119017, 0);
+        EntityList.addMapping(EntityMetalCreeper.class, "NightmareMetalCreeper", 2309, 11119017, 9013641);
+        EntityList.addMapping(EntitySuperchargedCreeper.class, "NightmareSupercriticalCreeper", 2310, 16721408, 3148800);
+        EntityList.addMapping(EntityBlackWidowSpider.class, "NightmareBlackWidowSpider", 2311, 0, 12189696);
+        EntityList.addMapping(EntityRadioactiveEnderman.class, "NightmareRadioactiveEnderman", 2312, 0, 47625);
     }
 }

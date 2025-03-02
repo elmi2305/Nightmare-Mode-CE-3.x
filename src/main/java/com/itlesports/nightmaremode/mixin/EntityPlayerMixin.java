@@ -4,12 +4,14 @@ import btw.BTWMod;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.EntityBloodWither;
+import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,6 +37,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public int experienceLevel;
     @Shadow protected abstract int decreaseAirSupply(int iAirSupply);
 
+
+    @Shadow public abstract boolean isPlayerSleeping();
 
     @Unique private int ticksInWater;
 
@@ -71,7 +75,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "isImmuneToHeadCrabDamage", at = @At("HEAD"),cancellable = true)
     private void notImmuneToSquidsEclipse(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(this.riddenByEntity instanceof BTWSquidEntity && NightmareUtils.getIsMobEclipsed((BTWSquidEntity) this.riddenByEntity)){
             cir.setReturnValue(false);
         }
     }
@@ -124,11 +128,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+
         if(NightmareMode.noHit){
             return 0.09f;
         }
-        if (NightmareMode.nite){
-            return 0.1f;
+        if(NightmareMode.nite){
+            return 0.2f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if (NightmareMode.bloodmare) {
             return 0.15f;
@@ -137,8 +143,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
-        if(NightmareMode.noHit || NightmareMode.nite){
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+
+        if(NightmareMode.noHit){
             return 0.2f;
+        }
+        if(NightmareMode.nite){
+            return 0.75f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if(NightmareMode.bloodmare){
             return 0.5f;
@@ -147,8 +158,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
-        if(NightmareMode.noHit || NightmareMode.nite){
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+
+        if(NightmareMode.noHit){
             return 0.1f;
+        }
+        if(NightmareMode.nite){
+            return 0.2f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if(NightmareMode.bloodmare){
             return 0.15f;
@@ -177,6 +193,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+
+    @Inject(method = "sleepInBedAt", at = @At("TAIL"))
+    private void setPlayerHeadAngleQol(int par1, int par2, int par3, CallbackInfoReturnable<EnumStatus> cir){
+        this.rotationYawHead = 0f;
+        this.rotationPitch = 0f;
+    }
+    @Inject(method = "sleepInBedAt", at = @At("HEAD"),cancellable = true)
+    private void preventPlayerFromSleepingIfBlocked(int par1, int par2, int par3, CallbackInfoReturnable<EnumStatus> cir){
+        if(this.worldObj.getBlockId(par1, par2 + 1, par3) != 0){
+            cir.cancel();
+        }
+    }
+//    @ModifyConstant(method = "sleepInBedAt", constant = @Constant(floatValue = 0.9375f))
+//    private float setPlayerHeadAngleQol(float constant){
+//        return 0.7f;
+//    }
+
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageBlightMovement(CallbackInfo ci){
@@ -247,6 +280,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageHighPoisonInvincibilityFrames(CallbackInfo ci){
+        if(this.isPotionActive(Potion.poison) && this.getActivePotionEffect(Potion.poison).getAmplifier() >= 128){
+            this.hurtResistantTime = 0;
+        }
+    }
 
     @Unique private static boolean areChainPotionsActive(EntityLivingBase player){
         return player.isPotionActive(Potion.digSpeed) || player.isPotionActive(Potion.moveSpeed);
@@ -290,18 +329,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ticksExisted % 4 == 3) {
             double range = NightmareUtils.getIsEclipse() ? 3 : 5;
 
             List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(range, range, range));
             for (Object tempEntity : list) {
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
-                if (tempAnimal instanceof EntityWolf) continue;
+                if (tempAnimal.isSprinting() ||tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
                     if(tempAnimal instanceof EntityPig) continue;
                 }
-                if(!((!thisObj.isSneaking() || checkNullAndCompareID(thisObj.getHeldItem())) && !tempAnimal.getLeashed())) continue;
+                boolean isNotSneaking = !thisObj.isSneaking();
+                boolean isHoldingItemToRunFrom = thisObj.getHeldItem() != null && itemsToRunFrom.contains(thisObj.getHeldItem().itemID);
+                boolean shouldRun = (isNotSneaking || isHoldingItemToRunFrom) && !tempAnimal.getLeashed();
+
+                if (!shouldRun) continue;
                 ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles(thisObj);
 
                 break;
@@ -369,12 +412,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private boolean canSleepInNether(WorldProvider instance){
         return true;
     }
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;setTimerSpeedModifier(F)V"))
-    private void manageInvisibilityWhileSleeping(CallbackInfo ci){
-        if (this.isInBed()) {
-            this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 10,0));
-        }
-    }
 
     @ModifyConstant(method = "movementModifierWhenRidingBoat", constant = @Constant(doubleValue = 0.35))
     private double windmillSpeedBoat(double constant){
@@ -394,13 +431,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique
-    public boolean checkNullAndCompareID(ItemStack par2ItemStack){
-        if(par2ItemStack != null){
-            switch(par2ItemStack.itemID){
-                case 2,11,19,20,23,27,30,267,276,22580:
-                    return true;
-            }
-        }
-        return false;
-    }
+    private static final List<Integer> itemsToRunFrom = new ArrayList<>(Arrays.asList(
+            Item.axeStone.itemID,
+            Item.swordIron.itemID,
+            Item.axeIron.itemID,
+            Item.swordDiamond.itemID,
+            Item.axeDiamond.itemID,
+            22580, // bone club
+            22568, // wood club
+            541, // steel axe
+            511, // steel sword
+            510, // battleaxe
+            NMItems.bloodSword.itemID,
+            NMItems.bloodAxe.itemID
+    ));
 }

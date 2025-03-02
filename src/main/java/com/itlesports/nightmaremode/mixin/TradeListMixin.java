@@ -607,6 +607,7 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.decayedFlesh.itemID).itemCount(4, 6).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.silverLump.itemID).itemCount(2, 3).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMItems.dungApple.itemID).buySellSingle().weight(0.5f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.shadowRod.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).sell().item(BTWItems.soulFlux.itemID).itemCount(4, 8).addToTradeList();

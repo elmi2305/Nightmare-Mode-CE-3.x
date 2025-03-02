@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -284,10 +285,17 @@ public abstract class EntityEndermanMixin extends EntityMob {
         }
         EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 7);
         if(effectTarget != null && this.dimension != 1){
-            effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 60,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60,0));
-            effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 60,0));
+            EntityEnderman thisObj = (EntityEnderman)(Object)this;
+            if(thisObj instanceof EntityRadioactiveEnderman){
+                if (!effectTarget.isPotionActive(Potion.poison)) {
+                    effectTarget.addPotionEffect(new PotionEffect(Potion.poison.id, 80, 0));
+                }
+            } else {
+                effectTarget.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
+                effectTarget.addPotionEffect(new PotionEffect(Potion.weakness.id, 60, 0));
+                effectTarget.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 60, 0));
+                effectTarget.addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));
+            }
             if (target != null) {
                 this.patience--;
                 if(this.patience <= 0) {
@@ -300,6 +308,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
             }
         }
     }
+
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean doNotLoseAggroDuringTheDay(World instance){
         return false;

@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
@@ -12,9 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -102,9 +99,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
                     target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
                     ordinal = 2),cancellable = true)
     private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
-        if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && this.dimension == 0) {
+        if (NightmareUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
             int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
-            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9) || NightmareUtils.getIsEclipse() || (dayCount % 12 >= 7 && dayCount % 12 <= 8)){
+            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
                 if(this.isTryingToEscapeBloodMoon){
                     ChatMessageComponent text1 = new ChatMessageComponent();
                     text1.addText("<???> Running from the Bloodmoon? Pathetic.");
@@ -114,6 +111,12 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
                 }
                 ci.cancel();
             }
+        }
+    }
+    @Inject(method = "getEyeHeight", at = @At(value = "HEAD"),cancellable = true)
+    private void increaseEyeHeightWhileSleeping(CallbackInfoReturnable<Float> cir){
+        if(this.sleeping){
+            cir.setReturnValue(0.8f);
         }
     }
 

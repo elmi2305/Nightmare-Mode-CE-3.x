@@ -42,24 +42,6 @@ public class SpiderWebEntityMixin {
         }
         return false;
     }
-//    @Inject(method = "onImpact", at = @At(value = "TAIL"),locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void doBadThingsIfEclipse(MovingObjectPosition impactPos, CallbackInfo ci, Entity entityHit, BlockPos targetPos, int var4, int var5){
-//        if(NightmareUtils.getIsEclipse() && entityHit != null){
-//            entityHit.worldObj.setBlockMetadataWithNotify((int) entityHit.posX, (int) entityHit.posY, (int) entityHit.posZ, Block.lavaMoving.blockID,2);
-//        }
-//    }
-//    @Redirect(method = "attemptToPlaceWebInBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlockWithNotify(IIII)Z"))
-//    private boolean placeLavaOnEclipse(World world, int x, int y, int z, int iBlockID){
-//        System.out.println(x);
-//        System.out.println(y);
-//        System.out.println(z);
-//        if(NightmareUtils.getIsEclipse()){
-//            System.out.println("hi");
-//            return world.setBlockAndMetadataWithNotify(x,y,z, Block.lavaMoving.blockID,2);
-//        } else{
-//            return world.setBlock(x, y, z, iBlockID, 0, 3);
-//        }
-//    }
 
     @Unique
     private boolean canWebReplaceBlock(int i, int j, int k) {

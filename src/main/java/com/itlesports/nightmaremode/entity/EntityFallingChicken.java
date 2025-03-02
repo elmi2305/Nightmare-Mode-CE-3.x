@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.entity;
 
 import btw.block.blocks.BlockDispenserBlock;
 import btw.block.blocks.GroundCoverBlock;

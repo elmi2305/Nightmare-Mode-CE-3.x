@@ -126,6 +126,7 @@
     "blocks.OreBlockAccessor",
     "blocks.OreBlockMixin",
     "blocks.OvenTileEntityMixin",
+    "blocks.PotatoBlockMixin",
     "blocks.SawBlockMixin",
     "blocks.UnfiredBrickTileEntityMixin",
     "component.ComponentMineshaftCorridorMixin",

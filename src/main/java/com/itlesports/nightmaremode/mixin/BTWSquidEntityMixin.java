@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.EntityBloodWither;
+import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -125,10 +125,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if(bKilledByPlayer){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
                 if(this.rand.nextInt(12 - worldProgress * 2) == 0){
+                    // 1/12 -> 1/10 -> 1/8 -> 1/6
                     this.dropItem(NMItems.calamari.itemID, 1);
-                    if (this.rand.nextInt(3) == 0) {
-                        break;
-                    }
                 }
             }
         }
@@ -173,7 +171,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
 
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer player) {
-            if (this.squidOnHeadTimer > 100) {
+            if (this.squidOnHeadTimer > 100 && !EntityBloodWither.isBossActive()) {
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
             switch (NightmareUtils.getWorldProgress(this.worldObj)) {
@@ -340,7 +338,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
         int targetY = EntityBloodWither.isBossActive() ? 205 : 63;
-        if(NightmareUtils.getIsEclipse() && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 8) == null && this.posY >= targetY){
+        if(NightmareUtils.getIsEclipse() && this.rand.nextInt(4) == 0 && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 10) == null && this.posY >= targetY){
             cir.setReturnValue(true);
         }
     }

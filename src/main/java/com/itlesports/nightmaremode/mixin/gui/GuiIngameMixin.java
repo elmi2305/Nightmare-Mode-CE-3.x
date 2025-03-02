@@ -119,6 +119,12 @@ public class GuiIngameMixin {
             }
             string += "UM";
         }
+        if(NightmareMode.moreVariants){
+            if(count > 0){
+                string += "+";
+            }
+            string += "MV";
+        }
         if(NightmareMode.noHit){
             if (count > 0) {
                 string = "NoHit " + string;

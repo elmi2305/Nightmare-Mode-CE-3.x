@@ -3,8 +3,10 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.EntityFireCreeper;
+import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
+import com.itlesports.nightmaremode.entity.EntitySuperchargedCreeper;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +21,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
     @Shadow private int timeSinceIgnited;
-    @Shadow private int fuseTime;
+    @Shadow public int fuseTime;
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
@@ -165,7 +167,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.motionY = 0.5f;
                 this.motionZ = vector.zCoord * 0.2;
                 this.timeSinceIgnited = 0;
-                this.fuseTime =  20;
+                this.fuseTime = 20;
             }
         } else{
             this.setDead();
@@ -211,21 +213,24 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void jumpBeforeExploding(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
 
-        if (thisObj.getCreeperState() == 1) {
-            this.creeperTimeSinceIgnited++;
-        } else {this.creeperTimeSinceIgnited = 0;}
+        if (!(thisObj instanceof EntityMetalCreeper) && !(thisObj instanceof EntitySuperchargedCreeper)) {
+            if (thisObj.getCreeperState() == 1) {
+                this.creeperTimeSinceIgnited++;
+            } else {this.creeperTimeSinceIgnited = 0;}
 
-        // 8 ticks before it explodes
-        if (this.creeperTimeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
-            thisObj.motionY = 0.38F;
-            if(target != null) {
-                double var1 = target.posX - thisObj.posX;
-                double var2 = target.posZ - thisObj.posZ;
-                Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
-                vector.normalize();
-                thisObj.motionX = vector.xCoord * 0.18;
-                thisObj.motionZ = vector.zCoord * 0.18;
+            // 8 ticks before it explodes
+            if (this.creeperTimeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+                EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
+                thisObj.motionY = 0.38F;
+                if(target != null) {
+                    double var1 = target.posX - thisObj.posX;
+                    double var2 = target.posZ - thisObj.posZ;
+                    Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
+                    vector.normalize();
+                    thisObj.motionX = vector.xCoord * 0.18;
+                    thisObj.motionZ = vector.zCoord * 0.18;
+                    this.faceEntity(target,100f,100f);
+                }
             }
         }
     }
@@ -248,24 +253,36 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void manageEclipseChance(World world, CallbackInfo ci){
         NightmareUtils.manageEclipseChance(this,12);
     }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void setFuseTimeDependingOnVariant(World world, CallbackInfo ci){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+
+        if (thisObj instanceof EntityMetalCreeper) {
+            this.setFuseTime(60);
+        } else if (thisObj instanceof EntitySuperchargedCreeper) {
+            this.setFuseTime(15);
+        }
+    }
 
     @ModifyArg(method = "onUpdate",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        float variantExplosionModifier = thisObj instanceof EntityMetalCreeper ? 1.25f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
         float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NightmareUtils.getNiteMultiplier();
 
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
-            return 3f + bloodmoonModifier * niteModifier;
+            return (3f + bloodmoonModifier) * niteModifier * variantExplosionModifier;
         }
         if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-            return 4.2f + bloodmoonModifier + eclipseModifier * niteModifier;
+            return (4.2f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
         } else if(NightmareUtils.getWorldProgress(this.worldObj) == 1){
-            return 3.6f + bloodmoonModifier + eclipseModifier * niteModifier;
+            return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
         }
-        return 3.375f + bloodmoonModifier + eclipseModifier * niteModifier;
+        return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
     }
 }

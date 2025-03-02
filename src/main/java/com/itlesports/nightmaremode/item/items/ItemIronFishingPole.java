@@ -7,7 +7,7 @@ public class ItemIronFishingPole extends ItemFishingRod {
         super(par1);
         this.setTextureName("nmIronFishingPole");
         this.setUnlocalizedName("nmIronFishingPole");
-        this.setMaxDamage(220);
+        this.setMaxDamage(250);
     }
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {

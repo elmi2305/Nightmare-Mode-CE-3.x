@@ -37,12 +37,12 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
     private void chanceToSpawnWithLeatherArmor(CallbackInfo ci) {
         if (this.worldObj != null) {
             float streakModifier = 0.0f;
+            List<ItemStack> leatherArmorList = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
                     if(rand.nextFloat() < (0.04f + NightmareUtils.getWorldProgress(this.worldObj)*0.02) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
-                        List<ItemStack> leatherArmorList = getItemStacks();
                         this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
                         this.equipmentDropChances[i] = 0f;
                     }
@@ -77,7 +77,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
     }
 
     @Unique
-    private static @NotNull List<ItemStack> getItemStacks() {
+    private static @NotNull List<ItemStack> getLeatherArmor() {
         ItemStack boots = new ItemStack(Item.bootsLeather);
         ItemStack pants = new ItemStack(Item.legsLeather);
         ItemStack chest = new ItemStack(Item.plateLeather);

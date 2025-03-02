@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.RenderCreeper;
 import net.minecraft.src.ResourceLocation;
