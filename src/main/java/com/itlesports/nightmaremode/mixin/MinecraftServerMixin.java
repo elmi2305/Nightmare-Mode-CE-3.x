@@ -27,7 +27,10 @@ public class MinecraftServerMixin {
 
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
-        NightmareMode.portalTime = this.worldServers[0].getData(NightmareMode.PORTAL_TIME);
+        NightmareMode.getInstance().portalTime = this.worldServers[0].worldInfo.getData(NightmareMode.PORTAL_TIME);
+        if(this.worldServers[0].getWorldTime() + 72000 < NightmareMode.getInstance().portalTime){
+            NightmareMode.getInstance().portalTime = 0;
+        }
 
         if (this.worldServers[0].worldInfo.getDifficulty() == Difficulties.HOSTILE){
             if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
@@ -42,10 +45,6 @@ public class MinecraftServerMixin {
         } else {
             NightmareMode.worldState = 0;
         }
-        if (NightmareMode.worldState == 1 || NightmareMode.worldState == 2) {
-            NightmareMode.postWitherSunTicks = 999;
-            NightmareMode.postNetherMoonTicks = 999;
-        }
         oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
@@ -53,16 +52,6 @@ public class MinecraftServerMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void tick(CallbackInfo ci) {
-        if (MinecraftServer.getIsServer()) {
-            if (NightmareMode.worldState == 2) {
-                NightmareMode.postWitherSunTicks++;
-            }
-            else NightmareMode.postWitherSunTicks = 0;
-            if (NightmareMode.worldState == 1 || NightmareMode.worldState == 2) {
-                NightmareMode.postNetherMoonTicks++;
-            }
-            else NightmareMode.postNetherMoonTicks = 0;
-        }
         if (this.worldServers[0].getTotalWorldTime() % 30 != 0) return;
         
         int dayCount = (int) Math.ceil((double) this.worldServers[0].getWorldTime() / 24000) + this.isDawnOrDusk(this.worldServers[0].getWorldTime());

@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -30,7 +29,7 @@ public class EntitySuperchargedCreeper extends EntityCreeper implements EntityWi
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {

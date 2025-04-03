@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.entity.EntityDungCreeper;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Random;
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
@@ -89,6 +92,67 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
+    private void manageDungCreeper(CallbackInfo ci){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+
+        if(thisObj instanceof EntityDungCreeper){
+            for(int i = 0; i < 24; i++){
+                spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung),3,this.rand);
+            }
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void creeperTeleport(CallbackInfo ci){
+        if (NightmareMode.isAprilFools && this.getAttackTarget() instanceof EntityPlayer player && this.getDistanceSqToEntity(player) < 81) {
+            Vec3 lookVec = player.getLookVec(); // Player's look direction
+
+            Vec3 directionToSquid = Vec3.createVectorHelper(
+                    this.posX - player.posX,
+                    this.posY - (player.posY + player.getEyeHeight()), // From eye level
+                    this.posZ - player.posZ
+            ).normalize(); // Normalize to get direction
+
+            double dotProduct = lookVec.dotProduct(directionToSquid); // How aligned the vectors are
+
+            if (dotProduct < -0.2) {
+                this.copyLocationAndAnglesFrom(player);
+            }
+        }
+
+    }
+    @Unique
+    private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
+        for (int i = 0; i < amount; i++) {
+            // Random spherical coordinates
+            double theta = random.nextDouble() * 2 * Math.PI; // Horizontal angle
+            double phi = random.nextDouble() * Math.PI;       // Vertical angle
+            double radius = 0.5 + random.nextDouble() * 0.5; // Sphere size (0.5 - 1 block radius)
+
+            // Convert spherical coordinates to Cartesian
+            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * Math.cos(phi);
+            double zOffset = radius * Math.sin(phi) * Math.sin(theta);
+
+            // Spawn position relative to the entity
+            double spawnX = entity.posX + xOffset;
+            double spawnY = entity.posY + yOffset;
+            double spawnZ = entity.posZ + zOffset;
+
+            // Create item entity
+            EntityItem itemEntity = new EntityItem(world, spawnX, spawnY, spawnZ, itemStack.copy());
+
+            // Outward momentum (normalized direction vector)
+            itemEntity.motionX = xOffset * 0.5;
+            itemEntity.motionY = yOffset * 0.5;
+            itemEntity.motionZ = zOffset * 0.5;
+
+            // Spawn the item entity
+            world.spawnEntityInWorld(itemEntity);
+        }
+    }
+
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
@@ -112,6 +176,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             if (rand.nextInt(3) == 0) {
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
             }
+        }
+    }
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;"))
+    private void aprilFoolsFunnyTntBomb(CallbackInfo ci){
+        if(NightmareMode.isAprilFools){
+            this.worldObj.spawnEntityInWorld(new EntityTNTPrimed(this.worldObj,this.posX,this.posY,this.posZ,this));
         }
     }
 
@@ -242,7 +312,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Override
     public boolean isSecondaryTargetForSquid() {
-        return NightmareUtils.getIsBloodMoon() && this.getDataWatcher().getWatchableObjectByte(17) == 0;
+        return NightmareUtils.getIsBloodMoon() && this.getDataWatcher().getWatchableObjectByte(17) == 0 && !this.inWater;
     }
 
     @Override
@@ -270,19 +340,20 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
         float variantExplosionModifier = thisObj instanceof EntityMetalCreeper ? 1.25f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
         float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NightmareUtils.getNiteMultiplier();
 
         if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
-            return (3f + bloodmoonModifier) * niteModifier * variantExplosionModifier;
+            return (3f + bloodmoonModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
         }
         if(NightmareUtils.getWorldProgress(this.worldObj) >= 2){
-            return (4.2f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
+            return (4.2f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
         } else if(NightmareUtils.getWorldProgress(this.worldObj) == 1){
-            return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
+            return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
         }
-        return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier;
+        return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
     }
 }

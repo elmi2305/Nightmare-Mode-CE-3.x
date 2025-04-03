@@ -10,9 +10,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -27,6 +25,8 @@ public class GuiMainMenuMixin extends GuiScreen {
     @Unique private final ResourceLocation BLOODMARE_CLEAN = new ResourceLocation("textures/NightmareModeBloodmareClean.png");
     @Unique private final ResourceLocation BLOODMARE = new ResourceLocation("textures/NightmareModeBloodmare.png");
     @Unique private final ResourceLocation NIGHTMARE_MODE = new ResourceLocation("textures/NightmareMode.png");
+    @Unique private final ResourceLocation CANCER_MODE = new ResourceLocation("textures/CancerMode.png");
+    @Unique private final ResourceLocation BTW_CANCER = new ResourceLocation("textures/BTWCancer.png");
     @Unique private final ResourceLocation NIGHTMARE_MODE_RED = new ResourceLocation("textures/NightmareModeRed.png");
     @Unique private final ResourceLocation NIGHTMARE_MODE_DARK = new ResourceLocation("textures/NightmareModeDark.png");
     @Unique private final ResourceLocation NIGHTMARE_MODE_GREEN = new ResourceLocation("textures/NightmareModeGreen.png");
@@ -46,9 +46,32 @@ public class GuiMainMenuMixin extends GuiScreen {
     private void manageSplashText(CallbackInfo ci){
         this.splashText = getQuotes().get(rand.nextInt(getQuotes().size()));
         if (MENU == null) {
-            MENU = NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN) : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE);
+            MENU = NightmareMode.isAprilFools ? CANCER_MODE : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN) : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
         }
     }
+
+    @ModifyArg(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
+    private ResourceLocation cancerBTWLogo(ResourceLocation par1ResourceLocation){
+        if(NightmareMode.isAprilFools){
+            return BTW_CANCER;
+        }
+        return par1ResourceLocation;
+    }
+    @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 0),index = 3)
+    private String replaceSinglePlayerText(String par4Str){
+        if(NightmareMode.isAprilFools){
+            return "Skibidiplayer";
+        }
+        return par4Str;
+    }
+    @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 1),index = 3)
+    private String replaceMultiPlayerText(String par4Str){
+        if(NightmareMode.isAprilFools){
+            return "Rizz your friends";
+        }
+        return par4Str;
+    }
+
     @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiMainMenu;drawCenteredString(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V"))
     private void changeSplashScreenHeight(Args args) {
         int xOffset = args.get(2);

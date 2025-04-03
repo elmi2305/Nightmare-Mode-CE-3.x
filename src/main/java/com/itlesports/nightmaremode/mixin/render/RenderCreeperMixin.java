@@ -15,10 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RenderCreeper.class)
 public class RenderCreeperMixin {
     @Unique private static final ResourceLocation CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/creeperEclipseHigh.png");
+    @Unique private static final ResourceLocation CREEPER_TEXTURE_NETHER = new ResourceLocation("textures/entity/creeperNether0.png");
 
     @Inject(method = "getCreeperTextures", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsMobEclipsed(par1EntityCreeper)){
+        if(par1EntityCreeper.dimension == -1){
+            cir.setReturnValue(CREEPER_TEXTURE_NETHER);
+        } else if(NightmareUtils.getIsMobEclipsed(par1EntityCreeper)){
             cir.setReturnValue(CREEPER_TEXTURE_ECLIPSE);
         }
     }

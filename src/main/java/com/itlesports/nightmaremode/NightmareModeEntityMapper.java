@@ -19,5 +19,6 @@ public class NightmareModeEntityMapper {
         EntityList.addMapping(EntitySuperchargedCreeper.class, "NightmareSupercriticalCreeper", 2310, 16721408, 3148800);
         EntityList.addMapping(EntityBlackWidowSpider.class, "NightmareBlackWidowSpider", 2311, 0, 12189696);
         EntityList.addMapping(EntityRadioactiveEnderman.class, "NightmareRadioactiveEnderman", 2312, 0, 47625);
+        EntityList.addMapping(EntityDungCreeper.class, "NightmareDungCreeper", 2313, 12889732 , 0);
     }
 }

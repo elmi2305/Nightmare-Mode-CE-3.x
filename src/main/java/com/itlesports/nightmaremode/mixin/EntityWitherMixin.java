@@ -1,9 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.EntityNightmareGolem;
@@ -88,6 +90,25 @@ public abstract class EntityWitherMixin extends EntityMob {
     @Inject(method = "updateAITasks", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityWither;field_82222_j:I",ordinal = 0))
     private void manageWitherBlockBreaking(CallbackInfo ci){
         this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0,0.5d));
+    }
+    @Inject(method = "isAIEnabled", at = @At("HEAD"),cancellable = true)
+    private void aprilFoolsAiStuff(CallbackInfoReturnable<Boolean> cir){
+        if(NightmareMode.isAprilFools){
+            cir.setReturnValue(this.worldObj.getClosestVulnerablePlayerToEntity(this,6f) != null);
+        }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void manageDespawnOnAprilFools(CallbackInfo ci){
+        if(NightmareMode.isAprilFools && !this.hasAttackTarget() && (this.posY <= 63 || this.ticksExisted >= 5000)){
+            this.setDead();
+        }
+    }
+    @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true)
+    private void manageAprilFoolsWitherSetter(CallbackInfo ci){
+        if(NightmareUtils.getWorldProgress(this.worldObj) == 0 && NightmareMode.isAprilFools){
+            ci.cancel();
+        }
     }
 
     @Unique

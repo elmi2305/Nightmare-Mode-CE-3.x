@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.client.render.BTWRenderMapper;
-import com.itlesports.nightmaremode.*;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.rendering.*;
 import net.minecraft.src.RenderManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,5 +18,6 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityNightmareGolem.class, new RenderNightmareGolem());
         RenderManager.addEntityRenderer(EntityMetalCreeper.class, new RenderMetalCreeper());
         RenderManager.addEntityRenderer(EntitySuperchargedCreeper.class, new RenderSupercriticalCreeper());
+        RenderManager.addEntityRenderer(EntityDungCreeper.class, new RenderDungCreeper());
     }
 }

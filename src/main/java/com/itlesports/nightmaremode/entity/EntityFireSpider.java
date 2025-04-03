@@ -38,6 +38,6 @@ public class EntityFireSpider extends EntitySpider {
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 }

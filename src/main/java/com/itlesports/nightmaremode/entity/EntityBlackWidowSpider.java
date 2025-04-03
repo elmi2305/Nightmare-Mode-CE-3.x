@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -57,6 +56,6 @@ public class EntityBlackWidowSpider extends EntitySpider {
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 }

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.KickingAnimal;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.DamageSource;
@@ -29,6 +30,14 @@ public abstract class EntityMixin {
         if (!thisObj.isImmuneToFire() && !(thisObj instanceof EntityEnderman)) {
             thisObj.attackEntityFrom(DamageSource.inFire, par1);
         }
+    }
+
+    @Redirect(method = "moveEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;isSneaking()Z"))
+    private boolean manageAprilFoolsSneaking(Entity instance){
+        if(NightmareMode.isAprilFools){
+            return false;
+        }
+        return instance.isSneaking();
     }
 
     @Inject(method = "onKickedByAnimal", at = @At("HEAD"),cancellable = true)

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import btw.client.gui.LockButton;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.GuiButton;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Shadow private boolean lockDifficulty;
     @Shadow private int difficultyID;
+    @Shadow private LockButton buttonLockDifficulty;
     @Unique boolean onlyOnce = true;
 
     @Inject(method = "updateButtonText", at = @At("HEAD"))
@@ -52,6 +54,11 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             return "Bad Dream";
         }
         return difficulty.NAME;
+    }
+    @Inject(method = "updateButtonText", at = @At("TAIL"))
+    private void lockButtonCannotBeClicked(CallbackInfo ci){
+        // this fixes the issue TdL had right at the start, where he clicked the lock button thinking it'd make any difference
+        this.buttonLockDifficulty.enabled = false;
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 10))

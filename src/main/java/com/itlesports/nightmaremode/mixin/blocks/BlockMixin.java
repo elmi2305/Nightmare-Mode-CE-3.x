@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -14,6 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public class BlockMixin {
+    @Inject(method = "harvestBlock", at = @At("HEAD"))
+    private void explodeRandomlyOnBlockBreak(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
+        if(NightmareMode.isAprilFools){
+            if(world.rand.nextInt(8) == 0){
+                world.newExplosion(null,x, y, z, world.rand.nextFloat() + 1.5f, false, true);
+            }
+        }
+    }
+
     @Inject(method = "harvestBlock", at = @At("HEAD"))
     private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
         Block thisObj = (Block)(Object)this;

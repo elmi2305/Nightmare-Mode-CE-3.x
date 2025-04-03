@@ -25,7 +25,7 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
         return senses.canSee(this.creeperAttackTarget);
     }
     @ModifyConstant(method = "updateTask", constant = @Constant(doubleValue = 36.0))
-    private double increaseCreeperExplosionRadiusSlightly(double constant){
+    private double increaseRadiusOfCreeperContinueSwelling(double constant){
         if(this.swellingCreeper instanceof EntityMetalCreeper){
             return 81;
         }

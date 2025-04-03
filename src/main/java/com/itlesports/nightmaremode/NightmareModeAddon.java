@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
+import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityDungCreeper;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
 import com.itlesports.nightmaremode.entity.EntitySuperchargedCreeper;
@@ -103,6 +105,32 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
         });
         CustomEntityPacketHandler.entryMap.put(20, (world, dataStream, packet) -> {
             EntitySuperchargedCreeper entityToSpawn = new EntitySuperchargedCreeper(world);
+            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
+            par1Packet24MobSpawn.readPacketData(dataStream);
+            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
+            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
+            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
+            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
+            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
+            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
+            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
+            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
+            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
+            List var14 = par1Packet24MobSpawn.getMetadata();
+            if (var14 != null) {
+                entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
+            }
+            int timeSinceIgnited = dataStream.readInt();
+            entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
+            return entityToSpawn;
+        });
+        CustomEntityPacketHandler.entryMap.put(21, (world, dataStream, packet) -> {
+            EntityDungCreeper entityToSpawn = new EntityDungCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
             double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;

@@ -45,6 +45,13 @@ public class EntityMobMixin extends EntityCreature{
             Item.swordDiamond.itemID
     ));
 
+//    @Inject(method = "isValidLightLevel", at = @At("TAIL"),cancellable = true,locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void manageAprilFoolsSpawning(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
+//        if(NightmareMode.isAprilFools && y > 63){
+//            cir.setReturnValue(naturalLightValue >= (15 - this.rand.nextInt(8)));
+//        }
+//    }
+
 
     @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void ensureSpawnsOnEclipse(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
@@ -60,14 +67,22 @@ public class EntityMobMixin extends EntityCreature{
 
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){
-        if(this.worldObj != null && this.ticksExisted % (120 - NightmareUtils.getWorldProgress(this.worldObj) * 10) == 0 && (this.timeOfLastAttack + 100) < this.ticksExisted){
+        boolean shouldIncreaseHealth = false;
+        if (this.worldObj != null && this.worldObj.isRemote) {
+            if(this.ticksExisted % (120 - NightmareUtils.getWorldProgress(this.worldObj) * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
+                shouldIncreaseHealth = true;
+            }
+        }
+        if(shouldIncreaseHealth){
             this.heal(1f);
         }
     }
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("TAIL"))
     private void timeEntityWasRecentlyHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        this.timeOfLastAttack = this.ticksExisted;
+        if (this.worldObj.isRemote) {
+            this.timeOfLastAttack = this.ticksExisted;
+        }
     }
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("HEAD"),cancellable = true)

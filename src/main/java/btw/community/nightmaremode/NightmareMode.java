@@ -21,13 +21,14 @@ import java.util.Map;
 import java.util.Random;
 
 public class NightmareMode extends BTWAddon {
-    public static int postWitherSunTicks = 0;
-    public static int postNetherMoonTicks = 0;
     public static int SKELETON_ICE = 2;
     public static int SKELETON_FIRE = 3;
     public static int SKELETON_ENDER = 4;
     public static int SKELETON_JUNGLE = 5;
     public static int SKELETON_SUPERCRITICAL = 6;
+
+    private static boolean needUpdateConfig;
+
 
     private static NightmareMode instance;
     public static int worldState;
@@ -51,9 +52,20 @@ public class NightmareMode extends BTWAddon {
         super();
     }
 
+    public static void setNeedUpdateConfig(boolean needUpdateConfig) {
+        NightmareMode.needUpdateConfig = needUpdateConfig;
+    }
+
+    @Override
+    public String getModID() {
+        return "nightmare_mode";
+    }
+
     public static NightmareMode getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new NightmareMode();
+        }
+        instance.modID = "nightmare_mode";
         return instance;
     }
 
@@ -115,11 +127,6 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
-        //this is to stop unintended transitions
-        AddonHandler.registerPacketHandler("nightmaremode|onJoin", (packet, player) -> {
-            postWitherSunTicks = 999;
-            postNetherMoonTicks = 999;
-        });
     }
     private static Packet250CustomPayload createWorldStatePacket() {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -210,12 +217,14 @@ public class NightmareMode extends BTWAddon {
     public static Boolean potionParticles;
     public static Boolean moreVariants;
     public static Boolean shouldDisplayFishingAnnouncements;
+    public static Boolean isAprilFools;
+    public static Boolean aprilFoolsRendering;
     public boolean canAccessMenu = true;
-    public static long portalTime = Long.MAX_VALUE;
+    public long portalTime = 0;
     public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
             .global()
             .name("PortalTime")
-            .defaultSupplier(() -> Long.MAX_VALUE)
+            .defaultSupplier(() -> 0L)
             .readNBT(NBTTagCompound::getLong)
             .writeNBT(NBTTagCompound::setLong)
             .build();
@@ -232,7 +241,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("PotionParticles", "True", "Whether particles from potions should appear or not");
         this.registerProperty("FishingAnnouncements", "True", "Whether rare drops obtained by fishing should display in chat");
         this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
-        this.registerProperty("Bloodmare", "False", "Every night is a Blood Moon");
+        this.registerProperty("Bloodmare", "False");
         this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
         this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
         this.registerProperty("MagicMonsters", "False", "All mobs are witches");
@@ -242,6 +251,8 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("NoSkybases", "False", "Logs have gravity");
         this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
         this.registerProperty("MoreVariants", "False", "Adds lots of new mob variants to Nightmare Mode");
+        this.registerProperty("AprilFoolsPatch", "False", "Does a lot of stupid things. May crash.");
+        this.registerProperty("AprilFoolsWarpedRendering", "True", "Enables / disables the warped rendering effects of the april fools patch. Recommended for streamers or people with sensitive eyes.");
 
         PORTAL_TIME.register();
     }
@@ -273,6 +284,8 @@ public class NightmareMode extends BTWAddon {
         noSkybases = Boolean.parseBoolean(propertyValues.get("NoSkybases"));
         unkillableMobs = Boolean.parseBoolean(propertyValues.get("UnkillableMobs"));
         moreVariants = Boolean.parseBoolean(propertyValues.get("MoreVariants"));
+        isAprilFools = Boolean.parseBoolean(propertyValues.get("AprilFoolsPatch"));
+        aprilFoolsRendering = Boolean.parseBoolean(propertyValues.get("AprilFoolsWarpedRendering"));
     }
 
     public void initKeybind(){

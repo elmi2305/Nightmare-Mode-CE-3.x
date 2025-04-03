@@ -113,12 +113,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             }
         }
     }
-    @Inject(method = "getEyeHeight", at = @At(value = "HEAD"),cancellable = true)
-    private void increaseEyeHeightWhileSleeping(CallbackInfoReturnable<Float> cir){
-        if(this.sleeping){
-            cir.setReturnValue(0.8f);
-        }
-    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageNetherThreeDayPeriod(CallbackInfo ci){

@@ -83,7 +83,7 @@ public class EntityStoneZombie extends EntityZombie {
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere() && this.posY < 63;
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere() && this.posY < 63;
     }
 
     @Override

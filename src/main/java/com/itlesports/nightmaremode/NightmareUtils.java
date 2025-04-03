@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NightmareUtils {
+    private static double buffedSquidBonus = 1;
+    private static boolean intenseCorruption = false;
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
             NMItems.bloodSword.itemID,
             NMItems.bloodBoots.itemID,
@@ -53,6 +55,22 @@ public class NightmareUtils {
             BTWItems.tastySandwich,
             BTWItems.steakAndPotatoes
     ));
+
+
+    public static boolean isIntenseCorruption() {
+        return intenseCorruption;
+    }
+
+    public static void setIntenseCorruption(boolean intenseCorruption) {
+        NightmareUtils.intenseCorruption = intenseCorruption;
+    }
+
+    public static double getBuffedSquidBonus(){
+        return buffedSquidBonus * (NightmareMode.buffedSquids ? 2 : 1);
+    }
+    public static void setBuffedSquidBonus(double par1){
+        buffedSquidBonus = par1;
+    }
 
 
     public static int getFoodShanksFromLevel(EntityPlayer player){

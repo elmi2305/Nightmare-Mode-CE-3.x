@@ -11,7 +11,7 @@ public class EntityRadioactiveEnderman extends EntityEnderman {
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 
     @Override

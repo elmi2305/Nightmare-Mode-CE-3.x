@@ -23,7 +23,7 @@ public class BlockPortalMixin{
 
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"))
     private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
-        long targetTime = Math.max(world.worldInfo.getNBTTagCompound().getLong("PortalTime"), NightmareMode.portalTime);
+        long targetTime = Math.max(world.worldInfo.getNBTTagCompound().getLong("PortalTime"), NightmareMode.getInstance().portalTime);
         if (!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && (targetTime == 0 || targetTime == Long.MAX_VALUE)) {
             if (MinecraftServer.getServer() != null) {
                 MinecraftServer.getServer().worldServers[0].setData(BTWWorldData.NETHER_ACCESSED, false);
@@ -36,8 +36,8 @@ public class BlockPortalMixin{
             nearestPlayer.sendChatToPlayer(text1);
             nearestPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
 
-            NightmareMode.portalTime = world.getWorldTime() + 72000;
-            world.worldInfo.getNBTTagCompound().setLong("PortalTime", NightmareMode.portalTime);
+            NightmareMode.getInstance().portalTime = world.getWorldTime() + 72000;
+            world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + 72000);
             world.playSoundEffect(x,y,z,"mob.wither.death",1f,0.905F);
             // the rest is handled in EntityPlayerMPMixin
         }

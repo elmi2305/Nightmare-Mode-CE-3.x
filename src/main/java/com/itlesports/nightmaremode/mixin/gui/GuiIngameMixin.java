@@ -135,6 +135,11 @@ public class GuiIngameMixin {
         return string;
     }
 
+    @ModifyConstant(method = "renderGameOverlay", constant = @Constant(floatValue = 220.0f))
+    private float makeScreenFadeToBlackWhileSleeping(float constant){
+        return 255.0f;
+    }
+
     @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
     private int modifyFoodOverlay(int original) {
         if(!NightmareMode.nite || mc.thePlayer == null){return original;}

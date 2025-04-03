@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
@@ -25,18 +26,6 @@ public class MinecraftMixin {
     private void addNightmareSpecificKeybinds(CallbackInfo ci){
         NightmareMode.getInstance().initKeybind();
     }
-
-//
-//    @Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;shutdown()V"))
-//    private void manageHardmodeTransition(CallbackInfo ci){
-//        if (NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
-//            if(NightmareMode.worldState == 0){
-//                NightmareMode.worldState = 1;
-//                this.thePlayer.playSound("mob.wither.death",1.0f,0.905f);
-//                WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
-//            }
-//        }
-//    }
 
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.RottenArrowEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
@@ -17,14 +18,13 @@ import java.util.List;
 
 @Mixin(EntityAIAttackOnCollide.class)
 public abstract class EntityAIAttackOnCollideMixin {
-    @Unique int arrowCooldown = 10;
+    @Unique private int arrowCooldown = 10;
 
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void increaseRangeOnToolHeld(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
         if(thisObj.attacker.getAttackTarget() != null){
             if(thisObj.attacker.getDistanceSqToEntity(thisObj.attacker.getAttackTarget()) < computeRangeForHeldItem(thisObj.attacker.getHeldItem())
-                    && isHoldingLongRangeItem(thisObj.attacker)
                     && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE
                     && thisObj.attackTick <= 1
                     && thisObj.attacker.canEntityBeSeen(thisObj.attacker.getAttackTarget())){
@@ -45,12 +45,13 @@ public abstract class EntityAIAttackOnCollideMixin {
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void manageArrowDeflection(CallbackInfo ci){
         EntityAIAttackOnCollide thisObj = (EntityAIAttackOnCollide)(Object)this;
+
         if(thisObj.attacker.worldObj != null && thisObj.attacker.getAttackTarget() instanceof EntityPlayer targetPlayer && thisObj.attacker.worldObj.getDifficulty() == Difficulties.HOSTILE){
             if(isPlayerHoldingBow(targetPlayer) && (isHoldingLongRangeItem(thisObj.attacker)) || NightmareUtils.getIsMobEclipsed(thisObj.attacker)){
                 List list = thisObj.attacker.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj.attacker, thisObj.attacker.boundingBox.expand(2.5, 2.4, 2.5));
-                arrowCooldown -= 1;
-                if (arrowCooldown <= 0) {
-                    arrowCooldown = 0;
+                this.arrowCooldown -= 1;
+                if (this.arrowCooldown <= 0) {
+                    this.arrowCooldown = 0;
                     for (Object tempEntity : list) {
                         if (!(tempEntity instanceof EntityArrow arrow)) continue;
 
@@ -63,7 +64,7 @@ public abstract class EntityAIAttackOnCollideMixin {
                             thisObj.attacker.worldObj.playSoundAtEntity(arrow,"random.break",1.0f,5f);
                             arrow.setDead();
                             thisObj.worldObj.spawnEntityInWorld(newArrow);
-                            arrowCooldown = 40;
+                            this.arrowCooldown = 40;
                             thisObj.attacker.swingItem();
                             break;
                         }
@@ -85,9 +86,10 @@ public abstract class EntityAIAttackOnCollideMixin {
             if(getLesserRangeItems().contains(heldItem.itemID)){
                 return 5;
             }
-            return 9;
+            return 10;
         }
-        return 2;
+        return NightmareMode.isAprilFools ? 7 : 2;
+        // this method is mirrored in ZombieBreakBarricadeBehaviorHostileMixin. So are all the lists used in this method. Updating one means you need to update the other too
     }
 
     @Unique private boolean isPlayerHoldingBow(EntityPlayer player){

@@ -32,7 +32,7 @@ public class EntityMetalCreeper extends EntityCreeper implements EntityWithCusto
 
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && this.posY < 63 && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {

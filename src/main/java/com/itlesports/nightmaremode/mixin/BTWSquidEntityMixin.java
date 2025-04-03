@@ -25,7 +25,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Unique private int squidOnHeadTimer = 0;
     @Unique private int recentParryCount = 0;
-    @Unique private static final int buffedSquidBonus = NightmareMode.buffedSquids ? 2 : 1;
+    @Unique private static double buffedSquidBonus = NightmareUtils.getBuffedSquidBonus();
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -144,7 +144,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "updateHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceSquidDamageInterval(int constant){
-        return 11 / buffedSquidBonus;
+        return (int) (11 / buffedSquidBonus);
     }
 
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
@@ -177,12 +177,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             switch (NightmareUtils.getWorldProgress(this.worldObj)) {
                 case 1:
                     if (!player.isPotionActive(Potion.poison)) {
-                        player.addPotionEffect(new PotionEffect(Potion.poison.id,120 * buffedSquidBonus,0));
+                        player.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (120 * buffedSquidBonus),0));
                     }
                     break;
                 case 2,3:
                     if (!player.isPotionActive(Potion.wither)) {
-                        player.addPotionEffect(new PotionEffect(Potion.wither.id, 120 * buffedSquidBonus,0));
+                        player.addPotionEffect(new PotionEffect(Potion.wither.id, (int) (120 * buffedSquidBonus),0));
                     }
                     break;
                 default:
@@ -194,7 +194,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "checkForHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceDamageInterval(int constant){
-        return 15 / buffedSquidBonus;
+        return (int) (15 / buffedSquidBonus);
     }
 
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
@@ -212,7 +212,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             --this.tentacleAttackCooldownTimer;
             if (NightmareUtils.getWorldProgress(this.worldObj) > 1) {
-                this.tentacleAttackCooldownTimer -= 2 * buffedSquidBonus;
+                this.tentacleAttackCooldownTimer -= (int) (2 * buffedSquidBonus);
             }
         }
     }
@@ -233,7 +233,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
     private void manageJumpOnEclipse(CallbackInfo ci){
-        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && !this.entityToAttack.hasHeadCrabbedSquid() && !this.entityToAttack.isInWater()){
+        if(this.entityToAttack != null && this.posY < this.entityToAttack.posY + this.entityToAttack.getEyeHeight() + 1 && (NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus >= 2) && !this.entityToAttack.hasHeadCrabbedSquid() && !this.entityToAttack.isInWater()){
             this.motionY = 0.2f;
         }
     }
@@ -246,12 +246,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.02,ordinal = 0))
     private double noGravityOnEclipse(double constant){
-        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2 ? 0d : constant;
+        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus >= 2 ? 0d : constant;
     }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.8d))
     private double noGravityOnEclipse1(double constant){
-        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2 ? 1d : constant;
+        return NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus >= 2 ? 1d : constant;
     }
 
     // increasing the squid range
@@ -280,37 +280,6 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private boolean canSeeThroughWalls2(BTWSquidEntity instance, Entity entity){
         return true;
     }
-
-//    @Inject(method = "checkForHeadCrab", at = @At("HEAD"),remap = false)
-//    private void manageEclipseRage(CallbackInfo ci){
-//        if(NightmareUtils.getIsEclipse() && this.eclipseRageCooldown <= 40){
-//            double deltaX = getRandomOffsetFromPosition(this,this.posX);
-//            double deltaY = getRandomOffsetFromPosition(this,this.posY);
-//            double deltaZ = getRandomOffsetFromPosition(this,this.posZ);
-//
-//            double distSqToTarget = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-//            if(distSqToTarget <= 200){
-//
-//                double dDistToTarget = MathHelper.sqrt_double(distSqToTarget);
-//                double dUnitVectorToTargetX = deltaX / dDistToTarget;
-//                double dUnitVectorToTargetY = deltaY / dDistToTarget;
-//                double dUnitVectorToTargetZ = deltaZ / dDistToTarget;
-//
-//                this.invokeLaunchTentacle(dUnitVectorToTargetX, dUnitVectorToTargetY, dUnitVectorToTargetZ);
-//                this.tentacleAttackCooldownTimer = 1;
-//                this.tentacleAttackInProgressCounter = -1;
-//            }
-//
-//            this.eclipseRageCooldown = (this.rand.nextInt(3) + 2) * 50;
-//        }
-//
-//        this.eclipseRageCooldown = Math.max(this.eclipseRageCooldown - 2, 0);
-//    }
-//
-//
-//    @Unique private static double getRandomOffsetFromPosition(EntityLivingBase entity, double pos){
-//        return (entity.rand.nextBoolean() ? -1 : 1) * entity.rand.nextInt(4)+6;
-//    }
     
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
@@ -360,7 +329,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Override
     public boolean isInWater() {
-        if(NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2){
+        if(NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus >= 2){
             return true;
         }
         return super.isInWater();
@@ -368,7 +337,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Override
     public boolean isInsideOfMaterial(Material par1Material) {
-        if((NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus == 2) && par1Material == Material.water){
+        if((NightmareUtils.getIsMobEclipsed(this) || buffedSquidBonus >= 2) && par1Material == Material.water){
             return true;
         }
         return super.isInsideOfMaterial(par1Material);

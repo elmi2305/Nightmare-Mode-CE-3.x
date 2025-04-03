@@ -20,6 +20,7 @@ public abstract class BiomeGenBaseMixin implements BiomeGenBaseAccessor {
         this.getSpawnableMonsterList().add(new SpawnListEntry(EntitySuperchargedCreeper.class, 2, 1, 2));
         this.getSpawnableMonsterList().add(new SpawnListEntry(EntityBlackWidowSpider.class, 2, 1, 2));
         this.getSpawnableMonsterList().add(new SpawnListEntry(EntityRadioactiveEnderman.class, 1, 1, 1));
+        this.getSpawnableMonsterList().add(new SpawnListEntry(EntityDungCreeper.class, 10, 1, 1));
         if (NightmareMode.magicMonsters) {
             this.getSpawnableMonsterList().clear();
             this.getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 10, 1, 2));

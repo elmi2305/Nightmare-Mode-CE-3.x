@@ -57,6 +57,7 @@ public class NMItems {
     public static ItemIronFishingPole ironFishingPole;
 
     public static FoodItem dungApple;
+    public static FoodItem creeperBallSoup;
 
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
@@ -112,6 +113,6 @@ public class NMItems {
         ironFishingPole = (ItemIronFishingPole) new ItemIronFishingPole(2352).setCreativeTab(CreativeTabs.tabTools);
 
         dungApple = (FoodItem) new FoodItem(2353, 2, 0.25f, false, "nmDungApple",false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nmDungApple").setCreativeTab(CreativeTabs.tabFood);
-
+        creeperBallSoup = (FoodItem) new FoodItem(2354, 6, 1f, false, "nmOysterSoup",false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nmOysterSoup").hideFromEMI();
     }
 }

@@ -15,7 +15,11 @@ public class ItemBandage extends ItemFood {
 
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-        if (par2World.getTotalWorldTime() >= timeUntilUsage) {
+        // safety check in case timeUntilUsage is kept from previous world
+        if(this.timeUntilUsage - par2World.getTotalWorldTime() > 200){
+            this.timeUntilUsage = 0;
+        }
+        if (par2World.getTotalWorldTime() >= this.timeUntilUsage) {
             par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
         } else {
             par3EntityPlayer.onCantConsume();
@@ -48,10 +52,6 @@ public class ItemBandage extends ItemFood {
             if (!world.isRemote && iUseCount % 4 == 0) {
                 int iDamage = stack.getItemDamage();
                 --iDamage;
-//                if (iDamage % 4 == 0) {
-//                    world.playSoundAtEntity(player, "step.cloth", 1.0f, world.rand.nextFloat() * 0.1f + 0.9f);
-//                }
-
                 if (iDamage > 0) {
                     stack.setItemDamage(iDamage);
                 } else {

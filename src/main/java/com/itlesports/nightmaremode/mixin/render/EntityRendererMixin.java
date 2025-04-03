@@ -27,10 +27,6 @@ public abstract class EntityRendererMixin implements EntityAccessor {
             args.set(1, (float) args.get(1) * 0.25F);
         }
     }
-    @ModifyArg(method = "orientCamera", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V",ordinal = 0),index = 1)
-    private float increaseCameraHeightWhileSleeping(float x){
-        return 0.15f;
-    }
 
     @ModifyArgs(method = "updateCameraAndRender(F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;setAngles(FF)V", ordinal = 1))
     private void slowCameraInWeb(Args args) {
