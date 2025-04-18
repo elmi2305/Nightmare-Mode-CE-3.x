@@ -485,11 +485,11 @@ public class TradeListMixin {
         EntityVillager.removeLevelUpTrade(0,2);
         EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
 
-        TradeProvider.getBuilder().profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
-        TradeProvider.getBuilder().profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.4f).addToTradeList();
+        TradeProvider.getBuilder().profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).weight(1.2f).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().profession(0).level(4).buy().item(BTWItems.chowder.itemID).itemCount(2, 4).addToTradeList();
         TradeProvider.getBuilder().profession(0).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("efficiency"))).mandatory().addToTradeList();
@@ -512,11 +512,10 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.blockDispenser.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.buddyBlock.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).buy().item(BTWBlocks.detectorBlock.blockID).itemCount(1,3).addToTradeList();
-        TradeProvider.getBuilder().profession(1).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("blast"))).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(1).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("blast"))).weight(0.1f).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(4).sell().item(BTWItems.soulFlux.itemID).itemCount(2,4).addToTradeList();
-        TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
+        TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
         TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(BTWItems.corpseEye.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,10)).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().addToTradeList();
-        TradeProvider.getBuilder().profession(1).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
     }
 
 
@@ -527,11 +526,14 @@ public class TradeListMixin {
 
         TradeProvider.getBuilder().profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(12,16).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(16,32).addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,12).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,12)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("fortune"))).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,2,6)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,8)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,18,26)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).mandatory().addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,10).weight(0.2f).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,32,64)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("fortune"))).weight(0.1f).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
+//        TradeProvider.getBuilder().profession(2).level(3).sell().item(Item.slimeBall.itemID).itemCount(2,4).weight(1.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,26)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
+
     }
 
 
@@ -541,15 +543,15 @@ public class TradeListMixin {
 
         TradeProvider.getBuilder().profession(3).level(1).buy().item(Item.pickaxeStone.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().profession(3).level(2).sell().item(NMItems.bandage.itemID).itemCount(2,2).addToTradeList();
-        TradeProvider.getBuilder().profession(3).level(2).buy().item(Item.redstone.itemID).itemCount(32,64).addToTradeList();
+        TradeProvider.getBuilder().profession(3).level(2).buy().item(Item.redstone.itemID).itemCount(32,64).weight(0.8f).addToTradeList();
         TradeProvider.getBuilder().profession(3).level(2).buy().item(Item.flintAndSteel.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().profession(3).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticOpaque.blockID, 7,4,8)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID,1)).addToTradeList();
         TradeProvider.getBuilder().profession(3).level(3).buy().item(BTWItems.diamondArmorPlate.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().profession(3).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("looting"))).addToTradeList();
+        TradeProvider.getBuilder().profession(3).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("looting"))).weight(0.1f).addToTradeList();
         TradeProvider.getBuilder().profession(3).level(3).buy().item(BTWItems.padding.itemID).itemCount(6,10).addToTradeList();
         TradeProvider.getBuilder().profession(3).level(3).sell().item(Item.appleGold.itemID).emeraldCost(8,16).addToTradeList();
         TradeProvider.getBuilder().profession(3).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,8201)).addToTradeList();
-        TradeProvider.getBuilder().profession(3).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("unbreaking"))).addToTradeList();
+        TradeProvider.getBuilder().profession(3).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,18)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("unbreaking"))).weight(0.6f).addToTradeList();
     }
 
 
@@ -558,9 +560,9 @@ public class TradeListMixin {
         EntityVillager.removeCustomTrade(4, TradeProvider.getBuilder().profession(4).level(5).arcaneScroll().scrollEnchant(Enchantment.sharpness).secondaryEmeraldCost(16, 24).mandatory().build());
 
         TradeProvider.getBuilder().profession(4).level(1).buy().item(Item.leash.itemID).itemCount(6,10).addToTradeList();
-        TradeProvider.getBuilder().profession(4).level(2).buy().item(Item.swordIron.itemID).buySellSingle().weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(4).level(2).buy().item(Item.swordIron.itemID).buySellSingle().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().profession(4).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,6,12)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("thorns"))).addToTradeList();
-        TradeProvider.getBuilder().profession(4).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("feather"))).addToTradeList();
+        TradeProvider.getBuilder().profession(4).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("feather"))).weight(0.1f).addToTradeList();
     }
 
 
@@ -595,19 +597,19 @@ public class TradeListMixin {
     @Inject(method = "addVillagerTrades", at = @At("TAIL"),remap = false)
     private static void addNightmareVillagerTrades(CallbackInfo ci){
         // Level 1 Trades
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.rottenFlesh.itemID).itemCount(8, 16).defaultTrade().weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.dyePowder.itemID, Color.BLACK.colorID).itemCount(12, 18).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.bloodMilk.itemID).buySellSingle().weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.rottenFlesh.itemID).itemCount(8, 16).defaultTrade().weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.dyePowder.itemID, Color.BLACK.colorID).itemCount(12, 18).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.bloodMilk.itemID).buySellSingle().weight(0.2f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(1).buy().item(Item.enderPearl.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.fireRod.itemID).itemCount(1, 1).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(1).buy().item(NMItems.fireRod.itemID).itemCount(1, 3).weight(0.5f).addToTradeList();
 
         // Level 2 Trades
-        TradeProvider.getBuilder().profession(5).level(2).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).convert().input(TradeItem.fromIDAndMetadata(Item.potion.itemID, 8229, 1,2)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID)).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.1f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.decayedFlesh.itemID).itemCount(4, 6).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.silverLump.itemID).itemCount(2, 3).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMItems.dungApple.itemID).buySellSingle().weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMItems.dungApple.itemID).buySellSingle().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).buy().item(NMItems.shadowRod.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(2).sell().item(BTWItems.soulFlux.itemID).itemCount(4, 8).addToTradeList();
@@ -621,18 +623,18 @@ public class TradeListMixin {
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.charredFlesh.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).sell().item(Item.magmaCream.itemID).itemCount(6, 8).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).buy().item(NMItems.greg.itemID).itemCount(1, 1).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("sharp"))).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("sharp"))).weight(0.15f).addToTradeList();
 
         // Level 4 Trades
         TradeProvider.getBuilder().profession(5).level(4).sell().item(Item.ghastTear.itemID).itemCount(4, 6).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.waterRod.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.voidSack.itemID).itemCount(1,3).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.creeperChop.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.elementalRod.itemID).itemCount(1, 1).weight(0.5f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.elementalRod.itemID).itemCount(1, 1).weight(0.6f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.voidMembrane.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.darksunFragment.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).buy().item(Item.eyeOfEnder.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(4).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).weight(0.2f).addToTradeList();
 
         // Level 5 Trades
         TradeProvider.getBuilder().profession(5).level(5).sell().item(Item.enderPearl.itemID).itemCount(32, 64).mandatory().addToTradeList();

@@ -141,7 +141,12 @@ public class GuiIngameMixin {
     }
 
     @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
-    private int modifyFoodOverlay(int original) {
+    private int modifyNiteFoodOverlay(int original) {
+//        if(AddonHandler.modList.keySet().toString().contains("rpg")) {
+//            NightmareMode.nite = false;
+//            NightmareMode.FORCE_NITE_OFF = true;
+//            return original;
+//        }
         if(!NightmareMode.nite || mc.thePlayer == null){return original;}
         return (int) (NightmareUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
     }

@@ -53,10 +53,12 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
     @Inject(method = "<init>(Lnet/minecraft/src/NBTTagCompound;)V", at = @At(value = "TAIL"))
     private void addCustomNBT(NBTTagCompound par1NBTTagCompound, CallbackInfo ci){
         NightmareMode.getInstance().portalTime = par1NBTTagCompound.getLong("PortalTime");
+        NightmareMode.getInstance().shouldStackSizesIncrease = par1NBTTagCompound.getBoolean("HasDragonBeenDefeated");
     }
     @Inject(method = "updateTagCompound", at = @At("TAIL"))
     private void manageCustomNBT(NBTTagCompound par1NBTTagCompound, NBTTagCompound par2NBTTagCompound, CallbackInfo ci){
         par1NBTTagCompound.setLong("PortalTime", NightmareMode.getInstance().portalTime);
+        par1NBTTagCompound.setBoolean("HasDragonBeenDefeated", NightmareMode.getInstance().shouldStackSizesIncrease);
     }
     
     @ModifyArg(method = "updateTagCompound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NBTTagCompound;setInteger(Ljava/lang/String;I)V",ordinal = 1),index = 0)

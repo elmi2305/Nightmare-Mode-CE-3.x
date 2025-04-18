@@ -153,7 +153,7 @@ public abstract class WorldMixin {
         if(this.getTotalWorldTime() < 140000){
             this.worldInfo.setRaining(false);
         }
-        if(this.getWorldTime() % 200 == 0 && NightmareMode.nite){
+        if(this.getWorldTime() % 300 == 0 && NightmareMode.nite){
             NightmareMode.setNiteMultiplier(this.calculateNiteMultiplier());
         }
     }
@@ -164,7 +164,11 @@ public abstract class WorldMixin {
 
     @Unique
     private double calculateNiteMultiplier(){
-        return 1 + ((double) this.getWorldTime() / 20000) * 0.01;
+        int progress = NightmareUtils.getWorldProgress((World)(Object)this);
+//        double baseInterval = 6000 * Math.log((4 - progress) * 10); // 22133 -> 20407 -> 17974
+        double baseInterval = 14000 + 6000 * Math.log(Math.max(4 - progress, 1)) / Math.log(4); // from 20000 to 14000
+
+        return 1 + ((double) this.getWorldTime() / baseInterval) * 0.01;
     }
 
     @Inject(method = "isDaytime", at = @At("HEAD"),cancellable = true)

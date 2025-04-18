@@ -312,6 +312,32 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
     }
 
+    @Redirect(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;isSurroundedByWater(III)Z"))
+    private boolean allowSquidSpawningInOneBlockGaps(BTWSquidEntity instance, int x, int y, int z){
+        int blockID = instance.worldObj.getBlockId(x, y, z);
+        if (!(blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)) {
+            return false;
+        }
+        // if it detects water, checks neighbor blocks
+
+        // Check only horizontal sides: north (2), south (3), west (4), east (5)
+        for (int side = 2; side <= 5; ++side) {
+            int neighborX = x + Facing.offsetsXForSide[side];
+            // y remains the same for horizontal
+            int neighborZ = z + Facing.offsetsZForSide[side];
+
+            int neighborBlockID = instance.worldObj.getBlockId(neighborX, y, neighborZ);
+            if (!(neighborBlockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    @ModifyConstant(method = "getCanSpawnHere", constant = @Constant(intValue = 1))
+    private int increaseSquidLightThreshold(int constant){
+        return 2;
+    }
+
     @Unique private boolean getCanSpawnHereNoPlayerDistanceRestrictions() {
         return this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty();
     }

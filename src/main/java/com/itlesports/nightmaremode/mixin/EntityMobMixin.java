@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -15,9 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Mixin(EntityMob.class)
 public class EntityMobMixin extends EntityCreature{
@@ -25,32 +21,6 @@ public class EntityMobMixin extends EntityCreature{
     public EntityMobMixin(World par1World) {
         super(par1World);
     }
-
-    @Unique private int timeOfLastAttack;
-
-    @Unique
-    private static final List<Integer> itemsToAvoidDropping = new ArrayList<>(Arrays.asList(
-            Item.swordWood.itemID,
-            Item.helmetLeather.itemID,
-            Item.plateLeather.itemID,
-            Item.legsLeather.itemID,
-            Item.bootsLeather.itemID,
-            BTWItems.boneClub.itemID,
-            BTWItems.steelSword.itemID,
-            Item.axeGold.itemID,
-            BTWItems.woolBoots.itemID,
-            BTWItems.woolChest.itemID,
-            BTWItems.woolHelmet.itemID,
-            BTWItems.woolLeggings.itemID,
-            Item.swordDiamond.itemID
-    ));
-
-//    @Inject(method = "isValidLightLevel", at = @At("TAIL"),cancellable = true,locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void manageAprilFoolsSpawning(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
-//        if(NightmareMode.isAprilFools && y > 63){
-//            cir.setReturnValue(naturalLightValue >= (15 - this.rand.nextInt(8)));
-//        }
-//    }
 
 
     @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
@@ -64,6 +34,8 @@ public class EntityMobMixin extends EntityCreature{
     private int increaseMobSpawningOnStormChance(int a){
         return 4;
     }
+
+    @Unique private int timeOfLastAttack;
 
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){

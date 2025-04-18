@@ -1,15 +1,22 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Random;
+
 @Mixin(SpawnerAnimals.class)
 public class SpawnerAnimalsMixin {
+    @Unique
+    private static Random rand = new Random();
+
     @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"))
     private EntityPlayer allowSpawningCloseToPlayerInBloodMoon(WorldServer worldServer, double spawnPosX, double spawnPosY, double spawnPosZ, double exclusionRadius){
         if(NightmareUtils.getIsBloodMoon()){
@@ -43,5 +50,13 @@ public class SpawnerAnimalsMixin {
             return 8;
         }
         return instance.getMaxNumberOfCreature();
+    }
+
+    @Redirect(method = "canCreatureTypeSpawnAtLocation", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Material;isLiquid()Z",ordinal = 1))
+    private static boolean allowSquidsToSpawnIn1BlockHoles(Material instance){
+        if(rand.nextInt(16) == 0 && NightmareMode.worldState > 0) {
+            return true;
+        }
+        return instance.isLiquid();
     }
 }

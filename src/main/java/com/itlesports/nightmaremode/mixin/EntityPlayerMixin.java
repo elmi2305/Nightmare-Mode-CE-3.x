@@ -30,7 +30,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
-    @Shadow protected abstract boolean isInBed();
     @Shadow public FoodStats foodStats;
     @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
@@ -44,8 +43,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public abstract boolean isPlayerFullyAsleep();
 
-    @Shadow private int sleepTimer;
-    @Shadow protected boolean sleeping;
     @Unique private int ticksInWater;
 
     public EntityPlayerMixin(World par1World) {
@@ -249,9 +246,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
+        if(this.ticksExisted % 30 != 0) return;
 
-        if(Item.potion.getItemStackLimit() < 32 && NightmareUtils.getWorldProgress(this.worldObj) > 2){
-            NightmareUtils.updateItemStackSizes();
+        if(Item.potion.getItemStackLimit() < 32){
+            if (NightmareMode.getInstance().shouldStackSizesIncrease || (this.dimension == 0 && NightmareUtils.getWorldProgress(this.worldObj) >= 2)) {
+                // this second check simply makes post drag worlds in regular gameplay still have increased stack sizes
+                NightmareUtils.setItemStackSizes(32);
+                NightmareMode.getInstance().shouldStackSizesIncrease = true;
+            }
         }
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))

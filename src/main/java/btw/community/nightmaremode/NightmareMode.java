@@ -16,9 +16,7 @@ import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class NightmareMode extends BTWAddon {
     public static int SKELETON_ICE = 2;
@@ -26,9 +24,6 @@ public class NightmareMode extends BTWAddon {
     public static int SKELETON_ENDER = 4;
     public static int SKELETON_JUNGLE = 5;
     public static int SKELETON_SUPERCRITICAL = 6;
-
-    private static boolean needUpdateConfig;
-
 
     private static NightmareMode instance;
     public static int worldState;
@@ -47,13 +42,64 @@ public class NightmareMode extends BTWAddon {
     public static boolean isBloodMoon;
     public static boolean isEclipse;
     public double NITE_MULTIPLIER = 1;
+    public static boolean FORCE_NITE_OFF;
 
     public NightmareMode(){
         super();
     }
 
-    public static void setNeedUpdateConfig(boolean needUpdateConfig) {
-        NightmareMode.needUpdateConfig = needUpdateConfig;
+
+    public boolean wasConfigModified;
+    public void modifyConfigProperty(String propertyName, String newValue) {
+        String filename = "config/" + this.modID + ".properties"; // Adjust path if needed
+        File config = new File(filename);
+
+        // Ensure the file exists before modifying
+        if (!config.exists()) {
+            System.out.println("Config file does not exist. Creating a new one.");
+            try {
+                config.getParentFile().mkdirs(); // Ensure config directory exists
+                config.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        List<String> lines = new ArrayList<>();
+        boolean propertyFound = false;
+
+        // Read the config file and modify the specified property
+        try (BufferedReader reader = new BufferedReader(new FileReader(config))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(propertyName + "=")) {
+                    lines.add(propertyName + "=" + newValue); // Modify specified property
+                    propertyFound = true;
+                } else {
+                    lines.add(line); // Keep other settings unchanged
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // If the property wasn't found, add it at the end
+        if (!propertyFound) {
+            lines.add(propertyName + "=" + newValue);
+        }
+
+        // Write back the modified config file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(config, false))) {
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        wasConfigModified = true;
     }
 
     @Override
@@ -88,7 +134,7 @@ public class NightmareMode extends BTWAddon {
 
         NMBlocks.initNightmareBlocks();
         // because apparently adding this trade crashes if I do it in the trade list mixin ???
-        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.05f).addToTradeList();
+        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight( 0.05f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().addToTradeList();
         // this is stupid ^
@@ -221,6 +267,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean aprilFoolsRendering;
     public boolean canAccessMenu = true;
     public long portalTime = 0;
+    public boolean shouldStackSizesIncrease;
     public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
             .global()
             .name("PortalTime")
@@ -228,31 +275,37 @@ public class NightmareMode extends BTWAddon {
             .readNBT(NBTTagCompound::getLong)
             .writeNBT(NBTTagCompound::setLong)
             .build();
-
+    public static final DataEntry<Boolean> STACK_SIZE_INCREASE = DataProvider.getBuilder(boolean.class)
+            .global()
+            .name("HasDragonBeenDefeated")
+            .defaultSupplier(() -> false)
+            .readNBT(NBTTagCompound::getBoolean)
+            .writeNBT(NBTTagCompound::setBoolean)
+            .build();
 
     @Override
     public void preInitialize() {
-        this.registerProperty("NmMinecraftDayTimer", "True", "Set if the minecraft date should show up or not");
-        this.registerProperty("NmTimer", "True", "Set if the real time timer should show up or not");
-        this.registerProperty("NmZoomKey", "C", "The zoom keybind");
-        this.registerProperty("BloodmoonColors", "True", "Determines whether the screen should be tinted red during a blood moon");
-        this.registerProperty("Crimson", "False", "Everything is blood red! Purely visual");
-        this.registerProperty("ConfigOnHUD", "True", "Displays the active config modes on the HUD");
-        this.registerProperty("PotionParticles", "True", "Whether particles from potions should appear or not");
-        this.registerProperty("FishingAnnouncements", "True", "Whether rare drops obtained by fishing should display in chat");
-        this.registerProperty("PerfectStart", "False", "Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks.");
+        this.registerProperty("NmMinecraftDayTimer", "True");
+        this.registerProperty("NmTimer", "True");
+        this.registerProperty("NmZoomKey", "C");
+        this.registerProperty("BloodmoonColors", "True");
+        this.registerProperty("Crimson", "False");
+        this.registerProperty("ConfigOnHUD", "True");
+        this.registerProperty("PotionParticles", "True");
+        this.registerProperty("FishingAnnouncements", "True");
+        this.registerProperty("PerfectStart", "False");
         this.registerProperty("Bloodmare", "False");
-        this.registerProperty("BuffedSquids", "False", "Squids have doubled stats and can chase the player on land");
-        this.registerProperty("EvolvedMobs", "False", "All mob variants can spawn, regardless of world progress");
-        this.registerProperty("MagicMonsters", "False", "All mobs are witches");
-        this.registerProperty("NoHit", "False", "One hit, and you're out");
-        this.registerProperty("TotalEclipse", "False", "Every day is a solar eclipse");
-        this.registerProperty("NITE", "False", "Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties. Inspired by MITE");
-        this.registerProperty("NoSkybases", "False", "Logs have gravity");
-        this.registerProperty("UnkillableMobs", "False", "Mobs cannot take direct damage");
-        this.registerProperty("MoreVariants", "False", "Adds lots of new mob variants to Nightmare Mode");
-        this.registerProperty("AprilFoolsPatch", "False", "Does a lot of stupid things. May crash.");
-        this.registerProperty("AprilFoolsWarpedRendering", "True", "Enables / disables the warped rendering effects of the april fools patch. Recommended for streamers or people with sensitive eyes.");
+        this.registerProperty("BuffedSquids", "False");
+        this.registerProperty("EvolvedMobs", "False");
+        this.registerProperty("MagicMonsters", "False");
+        this.registerProperty("NoHit", "False");
+        this.registerProperty("TotalEclipse", "False");
+        this.registerProperty("NITE", "False");
+        this.registerProperty("NoSkybases", "False");
+        this.registerProperty("UnkillableMobs", "False");
+        this.registerProperty("MoreVariants", "False");
+        this.registerProperty("AprilFoolsPatch", "False");
+        this.registerProperty("AprilFoolsWarpedRendering", "True");
 
         PORTAL_TIME.register();
     }

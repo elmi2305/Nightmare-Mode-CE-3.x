@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import net.minecraft.src.*;
 
@@ -15,12 +16,14 @@ public class ItemAR extends Item {
     }
 
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        if (!NightmareMode.noHit) {
+            world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-        if (!world.isRemote) {
-            InfiniteArrowEntity missile = new InfiniteArrowEntity(world,player,3f);
-            missile.setDamage(10);
-            world.spawnEntityInWorld(missile);
+            if (!world.isRemote) {
+                InfiniteArrowEntity missile = new InfiniteArrowEntity(world,player,3f);
+                missile.setDamage(10);
+                world.spawnEntityInWorld(missile);
+            }
         }
         return stack;
     }

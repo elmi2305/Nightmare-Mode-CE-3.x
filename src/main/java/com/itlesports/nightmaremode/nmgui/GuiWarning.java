@@ -1,21 +1,23 @@
-package com.itlesports.nightmaremode.guiscreens;
+package com.itlesports.nightmaremode.nmgui;
 
-import btw.BTWAddon;
-import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class GuiConfig extends GuiScreen {
-    private static Map<String, String> tempMap = new HashMap<>();
-
-
+public class GuiWarning extends GuiScreen {
+    private static boolean playerHasAgreed = false;
     private final GuiScreen parentGuiScreen;
 
-    public GuiConfig(GuiScreen par1GuiScreen) {
+    public GuiWarning(GuiScreen par1GuiScreen) {
         this.parentGuiScreen = par1GuiScreen;
+    }
+
+    public static boolean hasPlayerAgreed() {
+        return playerHasAgreed;
+    }
+
+    public static void setPlayerHasAgreed(boolean playerHasAgreed) {
+        GuiWarning.playerHasAgreed = playerHasAgreed;
     }
 
     @Override
@@ -38,29 +40,18 @@ public class GuiConfig extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton par1GuiButton) {
-        NightmareMode instance = NightmareMode.getInstance();
-        tempMap = instance.configPropertyDefaults;
-//        System.out.println(tempMap.keySet());
-
         if(par1GuiButton.id == 0){
+            setPlayerHasAgreed(true);
             this.mc.displayGuiScreen(this.parentGuiScreen);
         } else if(par1GuiButton.id == 1){
-            NightmareMode.bloodmare = !NightmareMode.bloodmare;
-//            NightmareMode.setNeedUpdateConfig(true);
-//            instance.updateConfigs("Bloodmare", Boolean.toString(NightmareMode.bloodmare));
-//            NightmareMode.getInstance().registerProperty("Bloodmare", Boolean.toString(NightmareMode.bloodmare));
-//            tempMap.put("Bloodmare", Boolean.toString(NightmareMode.bloodmare));
-//            NightmareMode.getInstance().repopulateConfigFile(this.conf); // overwrites the config file to the default
-//            instance.configProperties.remove("Bloodmare");
-//            instance.configProperties.add("Bloodmare");
-//            instance.configPropertyDefaults.put("Bloodmare", Boolean.toString(NightmareMode.bloodmare));
+            this.mc.displayGuiScreen(this.parentGuiScreen);
         }
     }
 
     @Override
     public void initGui() {
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height / 2 + 60, 150, 20, "Go back"));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 155, 20, 150, 20, "Bloodmare"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height / 2 + 60, 150, 20, "yes I know what I'm doing"));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 60, 150, 20, "go back"));
     }
 }

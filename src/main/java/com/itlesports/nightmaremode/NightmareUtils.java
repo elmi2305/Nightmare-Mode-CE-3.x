@@ -77,11 +77,11 @@ public class NightmareUtils {
         return (int) Math.min(Math.floor((double) player.experienceLevel / 3) * 6 + 18, 60);
     }
 
-    public static void updateItemStackSizes(){
-        Item.potion.setMaxStackSize(16);
+    public static void setItemStackSizes(int par1){
+        Item.potion.setMaxStackSize((int)(par1 / 2));
         for(Item item : foodList){
-            if(item.getItemStackLimit() == 16){
-                item.setMaxStackSize(32);
+            if(item.getItemStackLimit() != par1){
+                item.setMaxStackSize(par1);
             }
         }
     }
@@ -107,10 +107,11 @@ public class NightmareUtils {
     }
 
     public static int getWorldProgress(World world) {
-        if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
-            return 0;
-        }
         return NightmareMode.worldState;
+//        if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
+//            return 0;
+//        }
+//        return NightmareMode.worldState;
     }
     public static boolean getIsBloodMoon(){
         return NightmareMode.isBloodMoon;
@@ -130,7 +131,7 @@ public class NightmareUtils {
         return NightmareMode.isEclipse;
     }
     public static void manageEclipseChance(EntityLivingBase mob, int chance){
-        if(NightmareMode.evolvedMobs && mob.worldObj != null){
+        if(NightmareMode.evolvedMobs && mob.worldObj != null && !mob.worldObj.isRemote){
             if(mob.rand.nextInt(chance) == 0){
                 mob.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
             }

@@ -1,8 +1,9 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.guiscreens.GuiConfig;
-import com.itlesports.nightmaremode.guiscreens.GuiWarning;
+import com.itlesports.nightmaremode.nmgui.GuiColoredButton;
+import com.itlesports.nightmaremode.nmgui.GuiConfig;
+import com.itlesports.nightmaremode.nmgui.GuiWarning;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +27,7 @@ public class GuiSelectWorldMixin extends GuiScreen {
             GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, "Toggle Cancer Worldgen");
             this.buttonList.add(chaosButton);
         }
-        this.buttonList.add(new GuiButton(2305, 5, this.height / 2, 80, 20, "NM Config"));
+        this.buttonList.add(new GuiColoredButton(2305, 5, this.height / 2, 80, 20, "NM Config", 0xFFFFFF, 0xd4d4d4, 0xFF0000));
     }
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawSquidText(int par1, int par2, float par3, CallbackInfo ci){

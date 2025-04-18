@@ -28,6 +28,10 @@ public class MinecraftServerMixin {
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
         NightmareMode.getInstance().portalTime = this.worldServers[0].worldInfo.getData(NightmareMode.PORTAL_TIME);
+        NightmareMode.getInstance().shouldStackSizesIncrease = this.worldServers[0].worldInfo.getData(NightmareMode.STACK_SIZE_INCREASE);
+        if (!NightmareMode.getInstance().shouldStackSizesIncrease) {
+            NightmareUtils.setItemStackSizes(16);
+        }
         if(this.worldServers[0].getWorldTime() + 72000 < NightmareMode.getInstance().portalTime){
             NightmareMode.getInstance().portalTime = 0;
         }

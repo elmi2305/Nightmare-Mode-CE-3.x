@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class ArmorItemSpecialMixin {
     @ModifyConstant(method = "<init>", constant = @Constant(intValue = 12),remap = false)
     private int extendDurabilityOfSpectacles(int constant){
-        return 200;
+        return 300;
     }
 }

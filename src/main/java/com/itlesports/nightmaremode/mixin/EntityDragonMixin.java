@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.DireWolfEntity;
+import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -34,6 +36,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             EntityShadowZombie zombie = new EntityShadowZombie(((EntityEnderman)tempEntity).worldObj);
             zombie.copyLocationAndAnglesFrom((EntityEnderman)tempEntity);
             this.worldObj.spawnEntityInWorld(zombie);
+            zombie.setHealth(20);
             ((EntityEnderman)tempEntity).setDead();
         }
     }
@@ -47,7 +50,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {
         if (BlockEndPortal.bossDefeated || this.worldObj.getDifficulty() != Difficulties.HOSTILE) {
             createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
-            NightmareUtils.updateItemStackSizes();
+            NightmareMode.getInstance().shouldStackSizesIncrease = true;
         } else {
             BlockEndPortal.bossDefeated = true;
         }
@@ -56,21 +59,25 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     @ModifyArg(method = "func_82195_e", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float manageDamageCap(float par2){
         if(par2 > 20){
-            return 20;
+            return 20 + (par2 - 20) / 6;
         }
         return par2;
     }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void attackPlayer(CallbackInfo ci){
+
         this.attackTimer++;
         if(this.attackTimer % 4 == 0){
             EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,50);
             if (target != null) {
                 this.setAttackTarget(target);
             }
+            if(this.dimension == 1 && !WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()){
+                WorldUtils.gameProgressSetEndDimensionHasBeenAccessedServerOnly();
+            }
         }
-        if(this.target instanceof EntityPlayer && this.attackTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 15 : 25)){
+        if(this.target instanceof EntityPlayer && this.attackTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 19 : 30)){
             double var3 = this.target.posX - this.posX;
             double var5 = this.target.boundingBox.minY + (double) (this.target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
             double var7 = this.target.posZ - this.posZ;
@@ -80,30 +87,33 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             var11.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
 
             float i = rand.nextFloat();
-            if(i<0.3) {
+            if(i<0.2) {
                 EntitySkeleton minion = new EntitySkeleton(this.worldObj);
                 minion.setSkeletonType(1);
                 minion.entityToAttack = this.target;
-                minion.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
+                if (this.rand.nextBoolean()) {
+                    minion.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
+                    // 25% chance to have a sword
+                }
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i<0.45){
+            } else if (i<0.4){
                 EntityCreeper minion = new EntityCreeper(this.worldObj);
                 minion.addPotionEffect(new PotionEffect(Potion.invisibility.id, 100000,0));
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.55){
+            } else if (i < 0.5){
                 DireWolfEntity minion = new DireWolfEntity(this.worldObj);
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.65){
+            } else if (i < 0.6){
                 EntityTNTPrimed minion = new EntityTNTPrimed(this.worldObj);
                 minion.fuse = 60;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.68){
+            } else if (i < 0.63){
                 EntityWitch minion = new EntityWitch(this.worldObj);
                 minion.entityToAttack = this.target;
                 minion.mountEntity(var11);
