@@ -122,13 +122,13 @@ public class NMUtils {
         }
     }
 
-    public static void forcePlayMusic(String soundID) {
+    public static void forcePlayMusic(String soundID, boolean toLoop) {
         SoundManager sndManager = Minecraft.getMinecraft().sndManager;
         shushMusic();
         if (Minecraft.getMinecraft().gameSettings.musicVolume != 0.0F) {
             SoundPoolEntry sound = sndManager.soundPoolSounds.getRandomSoundFromSoundPool(soundID);
             if (sound != null) {
-                sndManager.sndSystem.backgroundMusic("BgMusic", sound.getSoundUrl(), sound.getSoundName(), false);
+                sndManager.sndSystem.backgroundMusic("BgMusic", sound.getSoundUrl(), sound.getSoundName(), toLoop);
                 sndManager.sndSystem.setVolume("BgMusic", Minecraft.getMinecraft().gameSettings.musicVolume);
                 sndManager.sndSystem.play("BgMusic");
             }
