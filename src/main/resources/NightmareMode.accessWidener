@@ -19,3 +19,5 @@ accessible field btw/BTWAddon configProperties Ljava/util/ArrayList;
 accessible field btw/BTWAddon configPropertyDefaults Ljava/util/Map;
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold
+accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/SoundSystem;
+accessible field net/minecraft/src/SoundManager soundPoolSounds Lnet/minecraft/src/SoundPool;
