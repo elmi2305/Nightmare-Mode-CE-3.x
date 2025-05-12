@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
+import btw.util.sounds.AddonSoundRegistryEntry;
 import com.itlesports.nightmaremode.entity.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +15,9 @@ import java.util.List;
 
 public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
+
+    private final AddonSoundRegistryEntry nmBossMusic = new AddonSoundRegistryEntry("nightmare_mode:nmBoss");
+
     public NightmareModeAddon() {
         super();
     }
