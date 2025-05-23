@@ -32,16 +32,16 @@ public class EntityAIShadowTeleport extends EntityAITarget {
         int targetY = MathHelper.floor_double(this.targetEntity.posY);
         int targetZ = MathHelper.floor_double(this.targetEntity.posZ + zOffset);
 
-        if(this.canTeleportHere(this.taskOwner.worldObj, targetX,targetY,targetZ) && cooldown == 0){
+        if(this.canTeleportHere(this.taskOwner.worldObj, targetX,targetY,targetZ) && this.cooldown == 0){
 
             int shadowCooldown = NightmareUtils.getIsBloodMoon() ? 10 : 20;
             this.taskOwner.setPositionAndUpdate(targetX,targetY, targetZ);
             this.taskOwner.playSound("mob.endermen.portal",2.0F,1.0F);
-            cooldown = shadowCooldown + this.taskOwner.rand.nextInt(20)+1;
+            this.cooldown = shadowCooldown + this.taskOwner.rand.nextInt(20)+1;
         }
 
-        cooldown = Math.max(--cooldown, 0);
-        return cooldown == 0;
+        this.cooldown = Math.max(--this.cooldown, 0);
+        return this.cooldown == 0;
     }
 
 

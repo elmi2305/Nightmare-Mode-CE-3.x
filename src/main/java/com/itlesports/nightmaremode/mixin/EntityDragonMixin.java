@@ -36,7 +36,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             EntityShadowZombie zombie = new EntityShadowZombie(((EntityEnderman)tempEntity).worldObj);
             zombie.copyLocationAndAnglesFrom((EntityEnderman)tempEntity);
             this.worldObj.spawnEntityInWorld(zombie);
-            zombie.setHealth(20);
+            zombie.setHealth(20 + zombie.rand.nextInt(10) * 3);
             ((EntityEnderman)tempEntity).setDead();
         }
     }

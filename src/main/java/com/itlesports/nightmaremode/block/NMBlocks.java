@@ -23,5 +23,6 @@ public class NMBlocks {
         Item.itemsList[cryingObsidian.blockID] = new ItemBlock(NMBlocks.cryingObsidian.blockID - 256);
         specialObsidian = ((BedrockBlock) new BedrockBlock(2308).setTextureName("nmSpecialObsidian").setUnlocalizedName("nmSpecialObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock));
         Item.itemsList[specialObsidian.blockID] = new ItemBlock(NMBlocks.specialObsidian.blockID - 256);
+
     }
 }

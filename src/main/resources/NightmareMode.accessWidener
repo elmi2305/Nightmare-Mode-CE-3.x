@@ -17,5 +17,6 @@ accessible field net/minecraft/src/EntityCreeper fuseTime I
 accessible method btw/BTWAddon registerProperty (Ljava/lang/String;Ljava/lang/String;)V
 accessible field btw/BTWAddon configProperties Ljava/util/ArrayList;
 accessible field btw/BTWAddon configPropertyDefaults Ljava/util/Map;
+accessible field net/minecraft/src/WorldInfo dimension I
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

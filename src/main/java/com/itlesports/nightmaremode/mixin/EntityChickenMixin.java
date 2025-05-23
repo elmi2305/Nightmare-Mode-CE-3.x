@@ -5,15 +5,24 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityChicken.class)
 public abstract class EntityChickenMixin extends EntityAnimal {
+    @Shadow protected abstract String getLivingSound();
+
+    @Shadow protected abstract String getHurtSound();
+
     public EntityChickenMixin(World par1World) {
         super(par1World);
     }
+
+    @Unique
+    private int flightTimer;
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NightmareUtils.manageEclipseChance(this,32);
@@ -40,9 +49,26 @@ public abstract class EntityChickenMixin extends EntityAnimal {
         }
         return super.interact(player);
     }
+    @Unique public boolean isTired(){
+        return this.isPotionActive(Potion.damageBoost);
+        // mirror of isChickenTired in EntityPlayerMPMixin
+    }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
-    private void manageJumpAttackAtPlayer(CallbackInfo ci){
+    private void ensureMaxHealthAndManageFlightTimer(CallbackInfo ci){
+        if (this.riddenByEntity instanceof EntityPlayer) {
+            if (!this.isTired()) {
+                this.flightTimer += 2;
+            }
+
+            if(this.flightTimer > 1600){
+                this.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 1600, 0));
+                this.playSound(this.getHurtSound(), 1.0f, 0.5f);
+                this.flightTimer = 0;
+                // this is simply used to communicate with the player mixin that
+            }
+        }
+
         if(this.ticksExisted % 120 != 0) return;
         int originalHealth = 4;
         double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 4 : 1;

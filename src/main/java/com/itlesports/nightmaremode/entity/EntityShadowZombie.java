@@ -1,12 +1,13 @@
 package com.itlesports.nightmaremode.entity;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
-import com.itlesports.nightmaremode.AITasks.EntityAINearestAttackableTargetShadow;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -17,11 +18,16 @@ public class EntityShadowZombie extends EntityZombie {
         super(par1World);
         this.isImmuneToFire = true;
         this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
-        this.tasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTargetShadow(this, EntityPlayer.class, 0, true, false, null));
+        this.tasks.removeAllTasksOfClass(ZombieSecondaryAttackBehavior.class);
         this.targetTasks.removeAllTasksOfClass(EntityAILunge.class);
-        this.targetTasks.removeAllTasksOfClass(ZombieSecondaryAttackBehavior.class);
+
+        if (NightmareMode.hordeMode) {
+            this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+            this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 0.7d));
+        }
+
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
+
         NightmareUtils.manageEclipseChance(this,2);
 
     }

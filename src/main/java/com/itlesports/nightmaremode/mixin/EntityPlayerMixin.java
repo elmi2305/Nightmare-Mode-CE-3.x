@@ -43,6 +43,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public abstract boolean isPlayerFullyAsleep();
 
+    @Shadow public abstract void addExperience(int par1);
+
     @Unique private int ticksInWater;
 
     public EntityPlayerMixin(World par1World) {
@@ -246,14 +248,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
-        if(this.ticksExisted % 30 != 0) return;
+        if(this.ticksExisted % 80 != 0) return;
 
-        if(Item.potion.getItemStackLimit() < 32){
-            if (NightmareMode.getInstance().shouldStackSizesIncrease || (this.dimension == 0 && NightmareUtils.getWorldProgress(this.worldObj) >= 2)) {
-                // this second check simply makes post drag worlds in regular gameplay still have increased stack sizes
-                NightmareUtils.setItemStackSizes(32);
-                NightmareMode.getInstance().shouldStackSizesIncrease = true;
-            }
+        if(NightmareUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
+            NightmareUtils.setItemStackSizes(32);
         }
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
@@ -290,6 +288,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void manageHighPoisonInvincibilityFrames(CallbackInfo ci){
         if(this.isPotionActive(Potion.poison) && this.getActivePotionEffect(Potion.poison).getAmplifier() >= 128){
             this.hurtResistantTime = 0;
+        }
+    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDarkStormyNight(CallbackInfo ci){
+        if (NightmareMode.darkStormyNightmare) {
+            this.worldObj.worldInfo.setRaining(true);
+            this.worldObj.worldInfo.setThundering(true);
+            if (this.worldObj.worldInfo.getThunderTime() < 200) {
+                this.worldObj.worldInfo.setThunderTime(2000);
+                this.worldObj.worldInfo.setRainTime(2000);
+            }
         }
     }
 
@@ -441,25 +450,26 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        if (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ticksExisted % 4 == 3) {
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ticksExisted % 4 == 3) {
             double range = NightmareUtils.getIsEclipse() ? 3 : 5;
 
-            List list = thisObj.worldObj.getEntitiesWithinAABBExcludingEntity(thisObj, thisObj.boundingBox.expand(range, range, range));
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
+
             for (Object tempEntity : list) {
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
-                if (tempAnimal.isSprinting() ||tempAnimal instanceof EntityWolf) continue;
+                if(tempAnimal == this.ridingEntity) continue;
+                if (tempAnimal.isSprinting() || tempAnimal instanceof EntityWolf) continue;
                 if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
                     if(tempAnimal instanceof EntityPig) continue;
+                    if(tempAnimal instanceof EntitySheep) continue;
                 }
-                boolean isNotSneaking = !thisObj.isSneaking();
-                boolean isHoldingItemToRunFrom = thisObj.getHeldItem() != null && itemsToRunFrom.contains(thisObj.getHeldItem().itemID);
+                boolean isNotSneaking = !this.isSneaking();
+                boolean isHoldingItemToRunFrom = this.getHeldItem() != null && itemsToRunFrom.contains(this.getHeldItem().itemID);
                 boolean shouldRun = (isNotSneaking || isHoldingItemToRunFrom) && !tempAnimal.getLeashed();
 
                 if (!shouldRun) continue;
-                ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles(thisObj);
-
+                ((EntityAnimalInvoker) tempAnimal).invokeOnNearbyPlayerStartles((EntityPlayer)(Object)this);
                 break;
             }
         }

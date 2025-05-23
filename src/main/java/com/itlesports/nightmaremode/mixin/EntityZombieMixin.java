@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -202,6 +204,8 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageZombieVariants(CallbackInfo ci) {
         if (this.worldObj != null && !this.isVillager()) {
+            boolean wasVariantSelected = false;
+
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 0.5 : 1;
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
@@ -214,11 +218,13 @@ public abstract class EntityZombieMixin extends EntityMob{
                     this.equipmentDropChances[0] = 0f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
                     // 3.0 -> 4.0 -> 6.0 -> 7.0
+                    wasVariantSelected = true;
                 } else if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier * (1 / NightmareUtils.getNiteMultiplier())), 2)) == 0) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
                     this.equipmentDropChances[0] = 0f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
                     // 2.0 -> 3.0 -> 4.0 -> 5.0
+                    wasVariantSelected = true;
                 }
 
                 if(rand.nextInt(Math.max(MathHelper.floor_double(16 * bloodMoonModifier * (1 / NightmareUtils.getNiteMultiplier())), 2)) == 0 && isHostile && this.posY <= 50){
@@ -232,6 +238,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                         }
                     }
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
+                    wasVariantSelected = true;
                 }
 
 
@@ -245,6 +252,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
                         this.equipmentDropChances[0] = 0f;
                         this.equipmentDropChances[4] = 0f;
+                        wasVariantSelected = true;
                     }
                 } else if (rand.nextInt((int) Math.max(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier) * (1 / NightmareUtils.getNiteMultiplier()), 2)) == 0 && (progress > 1 || areMobsEvolved)) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
@@ -252,6 +260,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
                     this.equipmentDropChances[0] = 0f;
                     // 12.0 -> 15.0
+                    wasVariantSelected = true;
                 }
 
                 if(isHostile && (NightmareUtils.getIsBloodMoon() || areMobsEvolved)){
@@ -259,6 +268,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                         this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3));
                         this.equipmentDropChances[0] = 0;
+                        wasVariantSelected = true;
                     }
                     float streakModifier = 0.0f;
                     for (int i = 1; i <= 4; i++) {
@@ -272,6 +282,12 @@ public abstract class EntityZombieMixin extends EntityMob{
                             }
                         }
                     }
+                }
+                if(isHostile && !wasVariantSelected && this.getCurrentItemOrArmor(4) == null && this.rand.nextInt(24) == 0){
+                    this.setCurrentItemOrArmor(4, new ItemStack(Block.pumpkin));
+                    this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26f);
+                    this.getEntityAttribute(BTWAttributes.armor).setAttribute(2f);
+                    this.equipmentDropChances[4] = 0f;
                 }
             }
             else{
@@ -311,7 +327,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                 }
             }
 
-            // iron tool zombies have a 33% chance to spawn with a leather helmet
+            // iron tool zombies have a 99% chance to spawn with a leather helmet
             if(this.getHeldItem() != null && (this.getHeldItem().itemID == Item.swordIron.itemID || this.getHeldItem().itemID == Item.shovelIron.itemID) && this.rand.nextInt(100) != 0 && this.getCurrentItemOrArmor(4) == null){
                 this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetLeather));
                 this.equipmentDropChances[4] = 0f;
@@ -394,6 +410,7 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NightmareUtils.manageEclipseChance(this,12);
@@ -461,6 +478,15 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
         this.setDead();
     }
+
+
+@Inject(method = "<init>", at = @At("TAIL"))
+private void increasePriority(World par1World, CallbackInfo ci){
+    if (NightmareMode.hordeMode) {
+        this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+        this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));
+    }
+}
 
     @Unique
     private void summonShadowZombieAtPos(EntityZombie zombie){

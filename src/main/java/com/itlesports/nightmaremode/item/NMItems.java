@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
-import btw.item.items.FoodItem;
-import btw.item.items.NetherStarItem;
-import btw.item.items.RottenFleshItem;
+import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.*;
@@ -22,7 +20,7 @@ public class NMItems {
     public static ItemBloodSword bloodSword;
 
     public static ItemBloodArmor bloodHelmet;
-    public static ItemBloodArmor bloodChestplate;
+    public static ArmorItemDiamond bloodChestplate;
     public static ItemBloodArmor bloodLeggings;
     public static ItemBloodArmor bloodBoots;
     public static Item bloodIngot;
@@ -76,7 +74,7 @@ public class NMItems {
         bloodSword = (ItemBloodSword)(new ItemBloodSword(2320, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodSword");
 
         bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
-        bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,1,6, BLOOD_MOON_DURABILITY, 0.1d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate");
+        bloodChestplate = (ArmorItemDiamond)(new ArmorItemDiamond(2322,1,6)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
         bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,5, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
         bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,2, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
         bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");

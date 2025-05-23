@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -7,10 +8,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -30,8 +28,21 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         int progress = NightmareUtils.getWorldProgress(this.worldObj);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 6 * progress) * NightmareUtils.getNiteMultiplier());
-        // 20 -> 26 -> 32 -> 38
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 8 * progress) * NightmareUtils.getNiteMultiplier());
+        // 20 -> 28 -> 36 -> 44
+    }
+
+    @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
+    private double increaseHordeAttackRange(double par2){
+        return NightmareMode.hordeMode ? 140d : par2;
+    }
+    @ModifyConstant(method = "updateAttackStateClient", constant = @Constant(doubleValue = 4096.0F))
+    private double increaseDetectionRangeHorde(double constant){
+        return (float) (NightmareMode.hordeMode ? constant * 4d : constant);
+    }
+    @Redirect(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
+    private boolean seePlayerThroughWallsHorde(EntityGhast instance, Entity entity){
+        return NightmareMode.hordeMode || instance.canEntityBeSeen(entity);
     }
 
     @Override

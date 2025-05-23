@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.InfiniteArrowEntity;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -19,6 +20,13 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
     public EntityArrowMixin(World par1World) {
         super(par1World);
     }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityArrow;playSound(Ljava/lang/String;FF)V"))
+    private void onlyPlayBowHitIfNotInfiniteArrow(EntityArrow instance, String s, float v, float b){
+        if(instance instanceof InfiniteArrowEntity) return;
+        instance.playSound(s,v,b);
+    }
+
 
     @Inject(method = "onUpdate",
             at = @At(value = "FIELD",

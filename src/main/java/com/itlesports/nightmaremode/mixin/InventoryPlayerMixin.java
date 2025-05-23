@@ -28,5 +28,11 @@ public class InventoryPlayerMixin {
             thisObj.addItemStackToInventory(new ItemStack(NMItems.creeperBallSoup));
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.bedroll,64));
         }
+        if(NightmareMode.extraArmor){
+            thisObj.addItemStackToInventory(new ItemStack(Item.bootsLeather));
+            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolLeggings));
+            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolChest));
+            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolHelmet));
+        }
     }
 }

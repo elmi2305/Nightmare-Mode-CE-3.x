@@ -125,6 +125,18 @@ public class GuiIngameMixin {
             }
             string += "MV";
         }
+        if(NightmareMode.isAprilFools){
+            if(count > 0){
+                string += "+";
+            }
+            string += "CM";
+        }
+        if(NightmareMode.hordeMode){
+            if(count > 0){
+                string += "+";
+            }
+            string += "HM";
+        }
         if(NightmareMode.noHit){
             if (count > 0) {
                 string = "NoHit " + string;

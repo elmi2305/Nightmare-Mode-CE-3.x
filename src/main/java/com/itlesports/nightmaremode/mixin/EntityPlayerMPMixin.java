@@ -25,6 +25,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 
+    @Shadow private int lastExperience;
     @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
@@ -35,32 +36,50 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             this.inGloomCounter += 5; // gloom goes up 6x faster
         }
     }
+    @Unique public boolean isChickenTired(EntityChicken chicken){
+        return chicken.isPotionActive(Potion.damageBoost);
+        // mirror of isTired() in EntityChickenMixin
+    }
+    @Unique public boolean isChickenAirborne(EntityChicken chicken){
+        return chicken.motionY != 0;
+    }
+
+
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
-        if(this.ridingEntity instanceof EntityChicken && NightmareUtils.getIsMobEclipsed((EntityChicken)this.ridingEntity)) {
-            this.ridingEntity.rotationYaw = this.rotationYaw;
-            this.ridingEntity.rotationPitch = this.rotationPitch * 0.5F;
+        if(this.ridingEntity instanceof EntityChicken chicken && NightmareUtils.getIsMobEclipsed(chicken)) {
+            // Allow chicken to fly up if the player is holding jump
+
+            if(chicken.motionY < -0.1){
+                chicken.motionY = -0.1;
+            }
+
+            if(this.isChickenTired(chicken)) return;
+            if (this.isJumping) {
+                chicken.motionY = 0.12;
+            }
+
+            chicken.rotationYaw = this.rotationYaw;
+            chicken.rotationPitch = this.rotationPitch * 0.5F;
+
 
             float strafe = this.moveStrafing;
             float forward = this.moveForward;
-            float speed = 0.018f;
+            float speed = 0.024f;
 
             // Increase speed when sprinting
             if (this.isSprinting()) {
-                speed = 0.023f;
+                speed = 0.035f;
             }
 
-            // Allow horse to fly up if the player is holding jump
-            if (this.isJumping) {
-                this.ridingEntity.motionY = 0.12;
-            }
-
-            // Move the horse
-            this.ridingEntity.moveFlying(strafe, forward, speed);
-
-            if (!this.worldObj.isRemote) {
-                super.moveEntityWithHeading(strafe, forward);
+            // Move the chicken
+            if (this.isChickenAirborne(chicken)) {
+                chicken.moveFlying(strafe, forward, speed);
+            } else {
+                if (!this.worldObj.isRemote) {
+                    chicken.moveEntityWithHeading(strafe / 6, forward / 6);
+                }
             }
 
             this.prevLimbSwingAmount = this.limbSwingAmount;
@@ -116,9 +135,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageNetherThreeDayPeriod(CallbackInfo ci){
-//        NightmareMode.getInstance().setCanLeaveGame(((this.worldObj.getWorldTime() <= this.targetTime - 72000) && this.dimension != -1) || NightmareUtils.getWorldProgress(this.worldObj) != 0);
-
         if(this.ticksExisted % 20 != 0) return;
+
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
         if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
             ChatMessageComponent text2 = new ChatMessageComponent();
@@ -131,6 +149,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         if(this.worldObj.getWorldTime() % 24000 == 0){
             this.isTryingToEscapeBloodMoon = true;
         }
+
+
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))

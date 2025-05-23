@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.entity.EntityDungCreeper;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -56,6 +57,14 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 if(this.rand.nextInt(3) == 0) continue;
                 this.dropItem(itemID, 1);
             }
+        }
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void addHordeTasks(World par1World, CallbackInfo ci){
+        if (NightmareMode.hordeMode) {
+            this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+            this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));
         }
     }
 
@@ -255,6 +264,20 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
+//    @Inject(method = "<init>", at = @At("TAIL"))
+//    private void increasePriority(World par1World, CallbackInfo ci){
+//        this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+//        this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));
+//    }
+//
+//    @Inject(method = "onUpdate", at = @At("TAIL"))
+//    private void ensureTargetting(CallbackInfo ci){
+//        System.out.println(this.getAttackTarget());
+//        if(this.worldObj.playerEntities.isEmpty()) return;
+//        if(!this.hasAttackTarget() && this.ticksExisted % 80 == 0){
+//            this.setAttackTarget((EntityLivingBase) this.worldObj.playerEntities.get(0));
+//        }
+//    }
     @ModifyConstant(method = "entityInit", constant = @Constant(intValue = 0,ordinal = 0))
     private int chanceToSpawnCharged(int constant){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;

@@ -30,32 +30,11 @@ public abstract class WorldMixin {
 
     @Unique private static float fogHue = 0.0f; // Start hue at 0
 
-    @Unique private static Vec3 getRainbowFogColor() {
-        fogHue += 0.001f; // Adjust speed for smoother/faster transitions
-        if (fogHue > 1.0f) fogHue -= 1.0f; // Loop hue back to 0 when it exceeds 1
-
-        // Convert HSB to RGB
-        Color color = Color.getHSBColor(fogHue, 1.0f, 1.0f);
-
-        // Normalize RGB values (0-255) to Minecraft's 0-1 range
-        return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
-    }
     @Unique private static Vec3 getRainbowFogColorFromWorldTime(long worldTime) {
         float fogHue = (worldTime % 24000) / 24000.0f; // Normalize worldTime to range [0, 1] over a full Minecraft day
 
         // Convert HSB to RGB
         Color color = Color.getHSBColor(fogHue, 1.0f, 1.0f);
-
-        // Normalize RGB values (0-255) to Minecraft's 0-1 range
-        return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
-    }
-
-    @Unique private static Vec3 getRainbowSkyColor() {
-        fogHue += 0.0005f; // Adjust speed for smoother/faster transitions
-        if (fogHue > 1.0f) fogHue -= 1.0f; // Loop hue back to 0 when it exceeds 1
-
-        // Convert HSB to RGB
-        Color color = Color.getHSBColor(fogHue, 1.0f, 0.5f);
 
         // Normalize RGB values (0-255) to Minecraft's 0-1 range
         return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
@@ -150,13 +129,16 @@ public abstract class WorldMixin {
     }
     @Inject(method = "updateWeather", at = @At("TAIL"))
     private void manageRainAndBloodMoon(CallbackInfo ci){
-        if(this.getTotalWorldTime() < 140000){
-            this.worldInfo.setRaining(false);
+        if (!NightmareMode.darkStormyNightmare) {
+            if(this.getTotalWorldTime() < 140000){
+                this.worldInfo.setRaining(false);
+            }
         }
         if(this.getWorldTime() % 300 == 0 && NightmareMode.nite){
             NightmareMode.setNiteMultiplier(this.calculateNiteMultiplier());
         }
     }
+
     @ModifyConstant(method = "updateWeather", constant = @Constant(intValue = 12000))
     private int increaseDurationBetweenRain(int constant){
         return 24000;

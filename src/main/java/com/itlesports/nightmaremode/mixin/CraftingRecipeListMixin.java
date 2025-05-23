@@ -93,7 +93,6 @@ public class CraftingRecipeListMixin {
         // done adding blood recipes
 
         // add blaze rod recipes
-
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.elementalRod, 1), new Object[]{NMItems.shadowRod, Item.blazeRod, NMItems.fireRod, NMItems.waterRod});
         // done adding blaze rod recipes
 
@@ -101,6 +100,11 @@ public class CraftingRecipeListMixin {
         RecipeManager.addRecipe(new ItemStack(Item.book), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.cutTannedLeather, Character.valueOf('X'), new ItemStack(Item.paper, 1, Short.MAX_VALUE)});
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.gunpowder), new Object[]{new ItemStack(BTWItems.nitre), new ItemStack(BTWItems.brimstone), new ItemStack(BTWItems.coalDust)});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.woolHelmet), new Object[]{"##", Character.valueOf('#'), new ItemStack(BTWItems.woolKnit, 1, Short.MAX_VALUE)});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.woolChest), new Object[]{"##", "##", Character.valueOf('#'), new ItemStack(BTWItems.woolKnit, 1, Short.MAX_VALUE)});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.woolLeggings), new Object[]{"##", "# ", Character.valueOf('#'), new ItemStack(BTWItems.woolKnit, 1, Short.MAX_VALUE)});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.woolLeggings), new Object[]{"# ", "##", Character.valueOf('#'), new ItemStack(BTWItems.woolKnit, 1, Short.MAX_VALUE)});
     }
 
     @Inject(method = "addAlternateVanillaRecipes", at = @At("TAIL"),remap = false)

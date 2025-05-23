@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.TeleportScheduler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldServer;
@@ -28,7 +29,6 @@ public class MinecraftServerMixin {
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
         NightmareMode.getInstance().portalTime = this.worldServers[0].worldInfo.getData(NightmareMode.PORTAL_TIME);
-        NightmareMode.getInstance().shouldStackSizesIncrease = this.worldServers[0].worldInfo.getData(NightmareMode.STACK_SIZE_INCREASE);
         if (!NightmareMode.getInstance().shouldStackSizesIncrease) {
             NightmareUtils.setItemStackSizes(16);
         }
@@ -52,10 +52,15 @@ public class MinecraftServerMixin {
         oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
+
+        NightmareMode.isEclipse = false;
+        NightmareMode.isBloodMoon = false;
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void tick(CallbackInfo ci) {
+        TeleportScheduler.onServerTick();
+
         if (this.worldServers[0].getTotalWorldTime() % 30 != 0) return;
         
         int dayCount = (int) Math.ceil((double) this.worldServers[0].getWorldTime() / 24000) + this.isDawnOrDusk(this.worldServers[0].getWorldTime());
@@ -64,7 +69,6 @@ public class MinecraftServerMixin {
         } else {
             NightmareMode.setBloodmoon(this.getIsNightFromWorldTime(this.worldServers[0]));
         }
-
         if (!NightmareMode.totalEclipse) {
             NightmareMode.setEclipse(this.getIsEclipse(this.worldServers[0], dayCount));
         } else {

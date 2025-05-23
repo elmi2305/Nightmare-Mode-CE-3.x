@@ -4,9 +4,8 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
 
 public class NightmareUtils {
     private static double buffedSquidBonus = 1;
@@ -18,6 +17,32 @@ public class NightmareUtils {
             NMItems.bloodChestplate.itemID,
             NMItems.bloodHelmet.itemID
     ));
+    public static final Set<Integer> LONG_RANGE_ITEMS = new HashSet<>(Arrays.asList(
+            Item.swordStone.itemID,
+            Item.swordIron.itemID,
+            Item.swordGold.itemID,
+            BTWItems.steelSword.itemID,
+            Item.axeStone.itemID,
+            Item.axeDiamond.itemID,
+            Item.axeIron.itemID,
+            Item.shovelIron.itemID,
+            Item.shovelStone.itemID,
+            Item.shovelGold.itemID,
+            Item.shovelDiamond.itemID,
+            BTWItems.boneClub.itemID,
+            Item.swordWood.itemID,
+            Item.swordDiamond.itemID,
+            Item.axeGold.itemID,
+            Item.pickaxeStone.itemID
+    ));
+    public static final Set<Integer> LESSER_RANGE_ITEMS = new HashSet<>(Arrays.asList(
+            BTWItems.boneClub.itemID,
+            Item.swordWood.itemID,
+            Item.swordDiamond.itemID,
+            Item.axeGold.itemID
+    ));
+
+
     public static final List<Item> foodList = new ArrayList<>(Arrays.asList(
             NMItems.calamariRoast,
             NMItems.friedCalamari,

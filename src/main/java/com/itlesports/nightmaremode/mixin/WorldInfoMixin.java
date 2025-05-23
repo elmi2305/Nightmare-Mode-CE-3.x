@@ -26,7 +26,7 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
     private void setTimeToNightAndManageGracePeriod(CallbackInfoReturnable<Long> cir) {
         if (this.shouldCheck) {
-            long initialTime = NightmareMode.perfectStart ? 24000L : 18000L;
+            long initialTime = NightmareMode.perfectStart || NightmareMode.darkStormyNightmare ? 24000L : 18000L;
             long gracePeriodEnd = initialTime + (NightmareMode.bloodmare ? 2400: 2100) + (this.getDifficulty() != Difficulties.HOSTILE ? 2000 : 0); // 1:45 grace period, 3:25 on bad dream
             if (this.totalTime == 0L) {
                 this.worldTime = initialTime;

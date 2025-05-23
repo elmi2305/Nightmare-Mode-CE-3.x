@@ -18,7 +18,6 @@ import java.util.List;
 
 @Mixin(EntitySpider.class)
 public abstract class EntitySpiderMixin extends EntityMob{
-
     @Shadow protected abstract void entityInit();
 
     @Shadow protected int timeToNextWeb;
@@ -40,7 +39,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             return 0f;
         }
         if(this.ticksExisted % 20 == 0){
-            EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this,4);
+            EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this,3);
             if (target != null){
                 return 0f;
             }
@@ -48,10 +47,14 @@ public abstract class EntitySpiderMixin extends EntityMob{
         return instance.getBrightness(v);
     }
 
+
+
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,6);
+        NightmareUtils.manageEclipseChance(this,8);
     }
+
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){

@@ -23,13 +23,13 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
         cir.setReturnValue(!NightmareUtils.getIsMobEclipsed(this));
     }
     @Unique
-    private int timeOfLastAttack;
+    private int timeOfLastAttack = -400;
 
-    @Inject(method = "onLivingUpdate", at = @At("TAIL"))
+    @Inject(method = "updateHealing", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
-        if (this.worldObj != null && this.worldObj.isRemote && NightmareUtils.getIsEclipse()) {
-            if(this.ticksExisted % 30 == 0 && this.timeOfLastAttack + 800 < this.ticksExisted){
+        if (this.worldObj != null && NightmareUtils.getIsEclipse()) {
+            if(this.ticksExisted % 20 == 0 && this.timeOfLastAttack + 400 < this.ticksExisted){
                 shouldIncreaseHealth = true;
             }
         }
@@ -39,7 +39,7 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
     }
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void timeEntityWasRecentlyHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if (this.worldObj.isRemote && NightmareUtils.getIsEclipse()) {
+        if (NightmareUtils.getIsEclipse()) {
             this.timeOfLastAttack = this.ticksExisted;
         }
     }

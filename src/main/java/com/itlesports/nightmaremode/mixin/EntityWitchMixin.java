@@ -18,9 +18,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+
 @Mixin(EntityWitch.class)
 public abstract class EntityWitchMixin extends EntityMob {
     @Shadow private int witchAttackTimer;
+
     @Unique private int minionCountdown = 0;
     public EntityWitchMixin(World par1World) {
         super(par1World);
@@ -130,7 +132,7 @@ public abstract class EntityWitchMixin extends EntityMob {
         if (bKilledByPlayer) {
             if (NightmareMode.magicMonsters) {
                 Item itemToDrop = null;
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 3; i++) {
                     int j = this.rand.nextInt(163);
                     if (this.dimension == 0) {
                         itemToDrop = switch (j) {
@@ -265,12 +267,12 @@ public abstract class EntityWitchMixin extends EntityMob {
             this.witchAttackTimer = NightmareUtils.getIsMobEclipsed(this) ? 5 : 10;
         }
     }
-
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void chanceToDropSpecialItems(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if(this.rand.nextInt(Math.max(24 - iLootingModifier, 2)) == 0){
             this.dropItem(Item.expBottle.itemID, 1);
         }
+
         if(this.rand.nextInt(NightmareUtils.getIsBloodMoon() ? 2 : 6) == 0){
             this.dropItem(BTWItems.witchWart.itemID, this.rand.nextInt(2));
         }
@@ -332,6 +334,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageMinionSummons(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
+
         this.minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress(this.worldObj));
         if(this.minionCountdown > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NightmareUtils.getIsMobEclipsed(this) ? 300 : 0)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){

@@ -61,3 +61,4 @@ tile.nmCryingObsidian.name=Crying Arena Stone
 tile.nmBloodBone.name=Blood Bone Block
 key.nightmaremode.zoom=Zoom
 emi.trade.NightmareVillager=Nightmare Merchant
+commands.tpa.usage=/tpa <username>

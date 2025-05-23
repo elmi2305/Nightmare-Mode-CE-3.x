@@ -17,7 +17,7 @@ public class ItemAR extends Item {
 
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!NightmareMode.noHit) {
-            world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+            world.playSoundAtEntity(player, "random.bow", 0.5F, 2.1F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
             if (!world.isRemote) {
                 InfiniteArrowEntity missile = new InfiniteArrowEntity(world,player,3f);

@@ -27,7 +27,7 @@ public class GuiSelectWorldMixin extends GuiScreen {
             GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, "Toggle Cancer Worldgen");
             this.buttonList.add(chaosButton);
         }
-        this.buttonList.add(new GuiColoredButton(2305, 5, this.height / 2, 80, 20, "NM Config", 0xFFFFFF, 0xd4d4d4, 0xFF0000));
+        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 80, 20, "NM Config", 0xFFFFFF, 0xd4d4d4, 0xFF0000));
     }
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawSquidText(int par1, int par2, float par3, CallbackInfo ci){
@@ -38,7 +38,6 @@ public class GuiSelectWorldMixin extends GuiScreen {
             this.drawCenteredString(this.fontRenderer, textToDisplay, this.width / 16 + this.fontRenderer.getStringWidth(textToDisplay) / 2 - 20, this.height / 2 + 35, 0xFFFFFF);
             textToDisplay = Boolean.toString(chaos);
             this.drawCenteredString(this.fontRenderer, textToDisplay, this.width / 12 + this.fontRenderer.getStringWidth(textToDisplay) / 2 - 30, this.height / 2 - 25, 0xFFFFFF);
-
         }
     }
     @Unique
@@ -80,6 +79,17 @@ public class GuiSelectWorldMixin extends GuiScreen {
         if(NightmareMode.isAprilFools){
             if (!GuiWarning.hasPlayerAgreed()) {
                 GuiWarning screen = new GuiWarning(this);
+                this.mc.displayGuiScreen(screen);
+                ci.cancel();
+            }
+        }else if(NightmareMode.getInstance().wasConfigModified){
+            if (!GuiWarning.hasPlayerAgreed()) {
+                GuiWarning screen = new GuiWarning(this);
+                screen.setLine1("Warning:");
+                screen.setLine2("It is recommended that you restart your game");
+                screen.setLine3("New configs were loaded, which may crash your game or corrupt your world");
+                screen.setLine4("Are you absolutely sure you want to continue?");
+                screen.setLine5("This is your final warning");
                 this.mc.displayGuiScreen(screen);
                 ci.cancel();
             }

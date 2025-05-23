@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.RottenArrowEntity;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntityMob.class)
 public class EntityMobMixin extends EntityCreature{
+    @Unique private int arrowCooldown;
 
     public EntityMobMixin(World par1World) {
         super(par1World);
@@ -32,7 +34,45 @@ public class EntityMobMixin extends EntityCreature{
 
     @ModifyArg(method = "isValidLightLevel", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I"), index = 1)
     private int increaseMobSpawningOnStormChance(int a){
-        return 4;
+        return NightmareMode.darkStormyNightmare ? 3 : 4;
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
+    private void manageArrowDeflection(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        if (par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow) {
+            if (arrow instanceof RottenArrowEntity) {
+                arrow.setDead();
+                this.worldObj.playSoundAtEntity(this, "random.break", 1.0f, 1.0f);
+                cir.setReturnValue(false);
+                return;
+            }
+
+            if (this.canDeflectArrows() && this.rand.nextInt(8 - NightmareUtils.getWorldProgress(this.worldObj) * 2) == 0) {
+                this.arrowCooldown = 40;
+
+                EntityArrow reflectedArrow = new EntityArrow(this.worldObj);
+                reflectedArrow.copyLocationAndAnglesFrom(arrow);
+                reflectedArrow.motionX = -arrow.motionX / 1.5;
+                reflectedArrow.motionY = -arrow.motionY;
+                reflectedArrow.motionZ = -arrow.motionZ / 1.5;
+                arrow.setDead();
+
+                this.worldObj.spawnEntityInWorld(reflectedArrow);
+                this.worldObj.playSoundAtEntity(this, "random.break", 1.0f, 7.0f);
+                this.swingItem();
+                cir.setReturnValue(false);
+            }
+        }
+
+    }
+
+    @Unique private boolean canDeflectArrows(){
+        if (this.arrowCooldown > 0) return false;
+
+        ItemStack heldItem = this.getHeldItem();
+        if(heldItem == null) return false;
+
+        return NightmareUtils.LONG_RANGE_ITEMS.contains(heldItem.getItem().itemID);
     }
 
     @Unique private int timeOfLastAttack;
@@ -48,6 +88,7 @@ public class EntityMobMixin extends EntityCreature{
         if(shouldIncreaseHealth){
             this.heal(1f);
         }
+        this.arrowCooldown = Math.max(this.arrowCooldown - 1, 0);
     }
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("TAIL"))

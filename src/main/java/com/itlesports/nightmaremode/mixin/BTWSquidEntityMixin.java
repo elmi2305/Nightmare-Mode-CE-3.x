@@ -65,6 +65,10 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
                 return;
             }
         }
+        if(tempEntity.isRiding()){
+            tempEntity.dismountEntity(tempEntity.ridingEntity);
+            tempEntity.mountEntity(null);
+        }
         tempEntity.setPositionAndUpdate(this.posX,this.posY,this.posZ);
         if (tempEntity instanceof EntityPlayer) {
             this.playSound("mob.endermen.portal",2.0F,1.0F);
@@ -156,6 +160,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private double increaseSquidRange(double dRange){
         if(NightmareUtils.getIsEclipse()){
             return 16;
+        }
+        if(this.posY < 40){
+            return 5;
+        } else if(this.posY < 50){
+            return 10;
         }
         return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
         // 20 max

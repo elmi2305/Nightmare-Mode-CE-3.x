@@ -7,6 +7,7 @@ import btw.entity.mob.villager.trade.TradeProvider;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
+import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
@@ -130,6 +131,8 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
         if (!MinecraftServer.getIsServer()) {
             initClientPacketInfo();
+        } else{
+            AddonHandler.registerCommand(new TPACommand(), false);
         }
 
         NMBlocks.initNightmareBlocks();
@@ -265,6 +268,9 @@ public class NightmareMode extends BTWAddon {
     public static Boolean shouldDisplayFishingAnnouncements;
     public static Boolean isAprilFools;
     public static Boolean aprilFoolsRendering;
+    public static Boolean extraArmor;
+    public static Boolean darkStormyNightmare;
+    public static Boolean hordeMode;
     public boolean canAccessMenu = true;
     public long portalTime = 0;
     public boolean shouldStackSizesIncrease;
@@ -275,7 +281,7 @@ public class NightmareMode extends BTWAddon {
             .readNBT(NBTTagCompound::getLong)
             .writeNBT(NBTTagCompound::setLong)
             .build();
-    public static final DataEntry<Boolean> STACK_SIZE_INCREASE = DataProvider.getBuilder(boolean.class)
+    public static final DataEntry<Boolean> DRAGON_DEFEATED = DataProvider.getBuilder(boolean.class)
             .global()
             .name("HasDragonBeenDefeated")
             .defaultSupplier(() -> false)
@@ -306,8 +312,12 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("MoreVariants", "False");
         this.registerProperty("AprilFoolsPatch", "False");
         this.registerProperty("AprilFoolsWarpedRendering", "True");
+        this.registerProperty("ExtraArmor", "False");
+        this.registerProperty("DarkStormyNightmare", "False");
+        this.registerProperty("HordeMode", "False");
 
         PORTAL_TIME.register();
+        DRAGON_DEFEATED.register();
     }
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;
@@ -337,8 +347,11 @@ public class NightmareMode extends BTWAddon {
         noSkybases = Boolean.parseBoolean(propertyValues.get("NoSkybases"));
         unkillableMobs = Boolean.parseBoolean(propertyValues.get("UnkillableMobs"));
         moreVariants = Boolean.parseBoolean(propertyValues.get("MoreVariants"));
+        extraArmor = Boolean.parseBoolean(propertyValues.get("ExtraArmor"));
         isAprilFools = Boolean.parseBoolean(propertyValues.get("AprilFoolsPatch"));
         aprilFoolsRendering = Boolean.parseBoolean(propertyValues.get("AprilFoolsWarpedRendering"));
+        darkStormyNightmare = Boolean.parseBoolean(propertyValues.get("DarkStormyNightmare"));
+        hordeMode = Boolean.parseBoolean(propertyValues.get("HordeMode"));
     }
 
     public void initKeybind(){

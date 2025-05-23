@@ -4,8 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -23,6 +22,11 @@ public class GuiGameOverMixin extends GuiScreen {
         if (!MinecraftServer.getIsServer()) {
             this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, "Next Attempt"));
         }
+    }
+
+    @ModifyConstant(method = "initGui", constant = @Constant(longValue = 10800L))
+    private long reduceTimeBeforeRerollingSpawnPoint(long constant){
+        return 600L;
     }
 
 

@@ -4,9 +4,12 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
+import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
+import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -18,18 +21,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
 
-    @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
+    @Unique private boolean areMobsEvolved = NightmareMode.evolvedMobs;
+
+    @Unique private SkeletonChaseSmart aiRangedAttackHorde = new SkeletonChaseSmart((EntitySkeleton)(Object)this, 1.0f, 60, 24f);
+    @Unique private EntityAIChaseTargetSmart aiMeleeAttackHorde = new EntityAIChaseTargetSmart(this, 1.25f);
 
     @Shadow public abstract void setSkeletonType(int par1);
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
-    @Shadow public abstract int getSkeletonType();public EntitySkeletonMixin(World par1World) {
+    @Shadow public abstract int getSkeletonType();
+
+
+    @Shadow private EntityAIAttackOnCollide aiMeleeAttack;
+
+    @Shadow private SkeletonArrowAttackBehavior aiRangedAttack;
+
+    public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
     @Unique int jumpCooldown = 0;
@@ -108,7 +117,22 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         this.tasks.removeAllTasksOfClass(EntityAIFleeSun.class);
         this.tasks.removeAllTasksOfClass(EntityAIRestrictSun.class);
     }
-    
+
+    @Inject(method = "setCombatTask", at = @At("TAIL"))
+    private void hordeModeCombatTask(CallbackInfo ci){
+        if (NightmareMode.hordeMode) {
+            this.tasks.removeTask(this.aiMeleeAttack);
+            this.tasks.removeTask(this.aiRangedAttack);
+            this.tasks.removeTask(this.aiMeleeAttackHorde);
+            this.tasks.removeTask(this.aiRangedAttackHorde);
+            ItemStack heldStack = this.getHeldItem();
+            if (heldStack != null && heldStack.itemID == Item.bow.itemID) {
+                this.tasks.addTask(4, this.aiRangedAttackHorde);
+            } else {
+                this.tasks.addTask(4, this.aiMeleeAttackHorde);
+            }
+        }
+    }
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
         if (this.worldObj != null) {
