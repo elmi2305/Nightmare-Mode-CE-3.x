@@ -16,13 +16,25 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
 @Mixin(EntityDragon.class)
 public abstract class EntityDragonMixin extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob {
+    @Unique
+    private boolean isCharging;
+    private int boundingBoxIntersectionTicks;
+
     @Shadow private void createEnderPortal(int par1, int par2) {}
     @Shadow private Entity target;
+
+    @Shadow protected abstract boolean func_82195_e(DamageSource par1DamageSource, float par2);
+
+    @Shadow public EntityDragonPart dragonPartHead;
+    @Shadow public double targetX;
+    @Shadow public double targetY;
+    @Shadow public double targetZ;
     @Unique long attackTimer;
 
     public EntityDragonMixin(World par1World) {
@@ -63,13 +75,56 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         }
         return par2;
     }
+    @Inject(method = "attackEntityFromPart", at = @At("HEAD"),cancellable = true)
+    private void dragonDoesNotStopChargeWhenHit(EntityDragonPart par1EntityDragonPart, DamageSource par2DamageSource, float par3, CallbackInfoReturnable<Boolean> cir){
+        if (par1EntityDragonPart != this.dragonPartHead) {
+            par3 = par3 / 4.0F + 1.0F;
+        }
+        if (par2DamageSource.getEntity() instanceof EntityPlayer || par2DamageSource.isExplosion()) {
+            this.func_82195_e(par2DamageSource, par3);
+        }
+
+        cir.setReturnValue(true);
+    }
+    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;setNewTarget()V"))
+    private void upgradedSetNewTarget(EntityDragon instance){
+        instance.forceNewTarget = false;
+        boolean bTargetSelected = false;
+        if (this.rand.nextInt(2) == 0 && !this.worldObj.playerEntities.isEmpty()) {
+            this.target = (Entity)this.worldObj.playerEntities.get(this.rand.nextInt(this.worldObj.playerEntities.size()));
+            long lTargetChangedDimensionTime = ((EntityPlayer)this.target).timeOfLastDimensionSwitch;
+            long lWorldTime = this.worldObj.getWorldTime();
+            if (lWorldTime < lTargetChangedDimensionTime || lWorldTime - lTargetChangedDimensionTime > 600L) {
+                bTargetSelected = true;
+            }
+        }
+
+        if (!this.isCharging) {
+            if (!bTargetSelected) {
+                boolean var1 = false;
+
+                do {
+                    this.targetX = (double)0.0F;
+                    this.targetY = (double)(70.0F + this.rand.nextFloat() * 50.0F);
+                    this.targetZ = (double)0.0F;
+                    this.targetX += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
+                    this.targetZ += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
+                    double var2 = this.posX - this.targetX;
+                    double var4 = this.posY - this.targetY;
+                    double var6 = this.posZ - this.targetZ;
+                    var1 = var2 * var2 + var4 * var4 + var6 * var6 > (double)100.0F;
+                } while(!var1);
+
+                this.target = null;
+            }
+        }
+    }
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void attackPlayer(CallbackInfo ci){
-
         this.attackTimer++;
         if(this.attackTimer % 4 == 0){
-            EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,50);
+            EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,120);
             if (target != null) {
                 this.setAttackTarget(target);
             }
@@ -77,10 +132,32 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 WorldUtils.gameProgressSetEndDimensionHasBeenAccessedServerOnly();
             }
         }
-        if(this.target instanceof EntityPlayer && this.attackTimer > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 19 : 30)){
-            double var3 = this.target.posX - this.posX;
-            double var5 = this.target.boundingBox.minY + (double) (this.target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
-            double var7 = this.target.posZ - this.posZ;
+        if(!(this.target instanceof EntityPlayer player)) return;
+        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 22 : 35;
+
+
+
+        if(this.boundingBox.expand(1,1,1).intersectsWith(player.boundingBox)){
+            this.boundingBoxIntersectionTicks += 1;
+        } else{
+            this.boundingBoxIntersectionTicks = 0;
+        }
+        if(this.attackTimer == threshold && this.rand.nextInt(10) == 0 && !this.isCharging){
+            this.isCharging = true;
+        }
+
+        if((this.getDistanceSqToEntity(player) < 4 || this.boundingBoxIntersectionTicks > 15) && this.isCharging){
+            this.isCharging = false;
+        }
+
+//        this.isCharging = this.isCharging
+//                ? !(this.getDistanceSqToEntity(player) < 4 || this.boundingBoxIntersectionTicks > 10)
+//                : (this.attackTimer == threshold && this.rand.nextInt(2) == 0);
+
+        if(this.attackTimer > threshold){
+            double var3 = player.posX - this.posX;
+            double var5 = player.boundingBox.minY + (double) (player.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
+            double var7 = player.posZ - this.posZ;
 
             EntityLargeFireball var11 = new EntityLargeFireball(this.worldObj, this, var3, var5, var7);
             this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
@@ -90,7 +167,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             if(i<0.2) {
                 EntitySkeleton minion = new EntitySkeleton(this.worldObj);
                 minion.setSkeletonType(1);
-                minion.entityToAttack = this.target;
+                minion.entityToAttack = player;
                 if (this.rand.nextBoolean()) {
                     minion.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
                     // 25% chance to have a sword
@@ -100,12 +177,12 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             } else if (i<0.4){
                 EntityCreeper minion = new EntityCreeper(this.worldObj);
                 minion.addPotionEffect(new PotionEffect(Potion.invisibility.id, 100000,0));
-                minion.entityToAttack = this.target;
+                minion.entityToAttack = player;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
             } else if (i < 0.5){
                 DireWolfEntity minion = new DireWolfEntity(this.worldObj);
-                minion.entityToAttack = this.target;
+                minion.entityToAttack = player;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
             } else if (i < 0.6){
@@ -115,7 +192,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 this.worldObj.spawnEntityInWorld(minion);
             } else if (i < 0.63){
                 EntityWitch minion = new EntityWitch(this.worldObj);
-                minion.entityToAttack = this.target;
+                minion.entityToAttack = player;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
             }
@@ -125,11 +202,25 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         }
     }
 
+    @Override
+    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
+
+
+    @Override
+    public float knockbackMagnitude() {
+        return 0f;
+    }
+
     @Redirect(method = "destroyBlocksInAABB", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlockToAir(III)Z"))
     private boolean avoidDestroyingArenaBlocks(World world, int par1, int par2, int par3){
         if(world.getBlockId(par1,par2,par3) == NMBlocks.specialObsidian.blockID || world.getBlockId(par1,par2,par3) == NMBlocks.cryingObsidian.blockID){
             return false;
         }
         return world.setBlockToAir(par1,par2,par3);
+    }
+    @Redirect(method = "destroyBlocksInAABB", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;obsidian:Lnet/minecraft/src/Block;"))
+    private Block allowBreakingObsidianWhileCharging(){
+        if(this.isCharging) return Block.glass;
+        return Block.obsidian;
     }
 }

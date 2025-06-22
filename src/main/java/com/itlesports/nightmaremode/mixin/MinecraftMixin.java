@@ -18,9 +18,8 @@ public class MinecraftMixin {
     @Shadow public GuiScreen currentScreen;
 
     @Shadow public EntityClientPlayerMP thePlayer;
-    @Unique boolean testBoolean = true;
-    @Unique boolean testBoolean1 = false;
-    @Unique float fov = -1;
+    private boolean wasZooming = false;
+    private float originalFov = 0.0f;
 
     @Inject(method = "startGame", at = @At("TAIL"))
     private void addNightmareSpecificKeybinds(CallbackInfo ci){
@@ -29,6 +28,18 @@ public class MinecraftMixin {
 
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
+        if (Keyboard.isKeyDown(NightmareMode.nightmareZoom.keyCode) && this.currentScreen == null) {
+            if (!this.wasZooming) {
+                this.originalFov = this.gameSettings.fovSetting;
+                this.wasZooming = true;
+            }
+            this.gameSettings.fovSetting = -1.2f;
+        } else if (this.wasZooming) {
+            this.gameSettings.fovSetting = originalFov;
+            this.wasZooming = false;
+        }
+
+
         if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_F4) && NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
             if (NightmareMode.worldState == 0) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
@@ -39,19 +50,6 @@ public class MinecraftMixin {
                 WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
                 NightmareMode.worldState = 1;
             }
-        }
-
-
-        if (Keyboard.isKeyDown(NightmareMode.nightmareZoom.keyCode) && this.currentScreen == null) {
-            if (testBoolean) {
-                this.fov = gameSettings.fovSetting;
-                testBoolean = false;
-            }
-            testBoolean1 = true;
-            gameSettings.fovSetting = -1.2f;
-        } else if (testBoolean1 && gameSettings.fovSetting == -1.2f) {
-            gameSettings.fovSetting = this.fov;
-            testBoolean1 = false;
         }
     }
 }

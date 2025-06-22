@@ -4,6 +4,8 @@ import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 
+import java.awt.*;
+
 public class GuiConfig extends GuiScreen {
 
     private boolean isOnSecondPage = false;
@@ -19,7 +21,6 @@ public class GuiConfig extends GuiScreen {
     private GuiColoredButton magicMonstersButton;       // 10
     private GuiColoredButton unkillableMobsButton;      // 11
     private GuiColoredButton noHitButton;               // 12
-    private GuiColoredButton hordeModeButton;           // 24
 
     private GuiColoredButton shouldShowDateTimerButton; // 14
     private GuiColoredButton shouldShowRealTimerButton; // 15
@@ -31,6 +32,11 @@ public class GuiConfig extends GuiScreen {
     private GuiColoredButton aprilFoolsRenderingButton; // 21
     private GuiColoredButton perfectStartButton; // 22
     private GuiColoredButton extraArmorButton; // 23
+    private GuiColoredButton hordeModeButton;           // 24
+    private GuiColoredButton fullBrightButton;           // 25
+
+
+    private GuiColoredButton birthdayBashButton; // 25
 
 
 
@@ -49,6 +55,12 @@ public class GuiConfig extends GuiScreen {
             this.drawSecondPageText();
         } else{
             this.drawFirstPageText();
+//            this.birthdayBashButton.changeColors(
+//                    getRainbowColor(7.5f, 0.0f, 1.0f, 1.0f),
+//                    getRainbowColor(7.5f, 0.25f, 1.0f, 1.0f),
+//                    getRainbowColor(7.5f, 0.5f, 1.0f, 1.0f),
+//                    getRainbowColor(7.5f, 0.75f, 1.0f, 1.0f)
+//            );
         }
     }
 
@@ -111,6 +123,12 @@ public class GuiConfig extends GuiScreen {
 
         textToDisplay = cap(Boolean.toString(NightmareMode.noHit));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex + 7, (NightmareMode.noHit ? 0xAAAAAA : 0x484848));
+        textIndex ++;
+
+//        textToDisplay = cap(Boolean.toString(NightmareMode.birthdayBash));
+//        float birthdayBashBrightness = NightmareMode.birthdayBash ? 1f : 0.5f;
+//        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex + 7, getRainbowColor(7.5f, 0.0f, 1.0f, birthdayBashBrightness));
+
 
         for(Object coloredButton: this.buttonList){
             if(coloredButton instanceof GuiColoredButton tempButton){
@@ -120,6 +138,12 @@ public class GuiConfig extends GuiScreen {
             }
         }
     }
+    public static int getRainbowColor(float speed, float offset, float saturation, float brightness) {
+        float time = (System.currentTimeMillis() % (long)(360 * speed)) / (speed * 360f);
+        float hue = (time + offset) % 1.0f;
+        return Color.HSBtoRGB(hue, saturation, brightness);
+    }
+
 
     private void drawSecondPageText(){
         int width = this.width / 8;
@@ -168,6 +192,10 @@ public class GuiConfig extends GuiScreen {
         textToDisplay = cap(Boolean.toString(NightmareMode.extraArmor));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.extraArmor ? 0x5fe647 : 0x429c32));
 
+        textIndex ++;
+        textToDisplay = cap(Boolean.toString(NightmareMode.fullBright));
+        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.fullBright ? 0x5fe647 : 0x429c32));
+
         for(Object coloredButton: this.buttonList){
             if(coloredButton instanceof GuiColoredButton tempButton){
                 if(tempButton.shouldDrawToolTip){
@@ -190,6 +218,7 @@ public class GuiConfig extends GuiScreen {
         this.unkillableMobsButton.drawButton = par1;
         this.noHitButton.drawButton = par1;
         this.darkStormyNightmareButton.drawButton = par1;
+//        this.birthdayBashButton.drawButton = par1;
         this.isOnSecondPage = !par1;
 
         this.shouldShowDateTimerButton.drawButton = !par1;
@@ -202,6 +231,7 @@ public class GuiConfig extends GuiScreen {
         this.aprilFoolsRenderingButton.drawButton = !par1;
         this.perfectStartButton.drawButton = !par1;
         this.extraArmorButton.drawButton = !par1;
+        this.fullBrightButton.drawButton = !par1;
     }
 
     @Override
@@ -243,6 +273,7 @@ public class GuiConfig extends GuiScreen {
         addMagicMonstersButton(rightColumnX, heightMultiplier, hardBase, hardActive);
         addUnkillableMobsButton(rightColumnX, heightMultiplier, impossibleBase, impossibleActive);
         addNoHitButton(rightColumnX, heightMultiplier, impossibleBase, impossibleActive);
+//        addBirthdayBashButton(rightColumnX, heightMultiplier, impossibleBase, impossibleActive);
 
 
         // second page
@@ -269,6 +300,8 @@ public class GuiConfig extends GuiScreen {
 // beneficial configs
         addPerfectStartButton(rightColumnX, heightMultiplier, goodBase, goodActive);
         addExtraArmorButton(rightColumnX, heightMultiplier, goodBase, goodActive);
+        addFullbrightButton(rightColumnX, heightMultiplier, goodBase, goodActive);
+
 
 
         this.initializeButtonStates();
@@ -286,6 +319,7 @@ public class GuiConfig extends GuiScreen {
         this.aprilFoolsRenderingButton.drawButton = this.isOnSecondPage;
         this.perfectStartButton.drawButton = this.isOnSecondPage;
         this.extraArmorButton.drawButton = this.isOnSecondPage;
+        this.fullBrightButton.drawButton = this.isOnSecondPage;
 
         // Buttons visible only on first page
         this.moreVariantsButton.drawButton = !this.isOnSecondPage;
@@ -325,6 +359,7 @@ public class GuiConfig extends GuiScreen {
         this.aprilFoolsRenderingButton.updateState(NightmareMode.aprilFoolsRendering);
         this.perfectStartButton.updateState(NightmareMode.perfectStart);
         this.extraArmorButton.updateState(NightmareMode.extraArmor);
+        this.fullBrightButton.updateState(NightmareMode.fullBright);
         this.darkStormyNightmareButton.updateState(NightmareMode.darkStormyNightmare);
     }
 
@@ -353,7 +388,7 @@ public class GuiConfig extends GuiScreen {
 
     private void addDarkStormyNightmareButton(int x, int heightMultiplier, int baseColor, int activeColor) {
         this.darkStormyNightmareButton = new GuiColoredButton(5, x, 5 * heightMultiplier, 100, 20, "Dark Stormy Night", baseColor, activeColor);
-        this.darkStormyNightmareButton.setTooltipText("The world is under a constant thunderstorm, lowering light and increasing enemy spawn rate. Thunder is quieter.");
+        this.darkStormyNightmareButton.setTooltipText("The world is under a constant thunderstorm, lowering light and increasing enemy spawn rate. Thunder is quieter");
         this.buttonList.add(this.darkStormyNightmareButton);
     }
 
@@ -365,13 +400,13 @@ public class GuiConfig extends GuiScreen {
 
     private void addCancerModeButton(int x, int heightMultiplier, int baseColor, int activeColor) {
         this.cancerModeButton = new GuiColoredButton(7, x, 7 * heightMultiplier, 100, 20, "Cancer Mode", baseColor, activeColor);
-        this.cancerModeButton.setTooltipText("Destroys the world generation algorithm, destroys the renderer, adds stupid features and flashing lights. The True April Fools experience");
+        this.cancerModeButton.setTooltipText("Destroys the world generation algorithm, destroys the renderer, adds stupid features and flashing lights. The true April Fools experience");
         this.buttonList.add(this.cancerModeButton);
     }
 
     private void addHordeModeButton(int x, int heightMultiplier, int baseColor, int activeColor) {
         this.hordeModeButton = new GuiColoredButton(24, x,  1 * heightMultiplier, 100, 20, "Horde Mode", baseColor, activeColor);
-        this.hordeModeButton.setTooltipText("All mobs have perfect awareness of your position. They will track and chase you from anywhere. They were just going easy on you before.");
+        this.hordeModeButton.setTooltipText("All mobs have perfect awareness of your position. They will track and chase you from anywhere. They were just going easy on you before");
         this.buttonList.add(this.hordeModeButton);
     }
 
@@ -403,6 +438,13 @@ public class GuiConfig extends GuiScreen {
         this.noHitButton = new GuiColoredButton(12, x, 6 * heightMultiplier, 100, 20, "NoHit", baseColor, activeColor);
         this.noHitButton.setTooltipText("One hit, and you're out");
         this.buttonList.add(this.noHitButton);
+    }
+
+
+    private void addBirthdayBashButton(int x, int heightMultiplier, int baseColor, int activeColor) {
+        this.birthdayBashButton = new GuiColoredButton(25, x, heightMultiplier * 7, 100, 20, "Birthday Bash", baseColor, activeColor);
+        this.birthdayBashButton.setTooltipText("Happy Birthday");
+        this.buttonList.add(this.birthdayBashButton);
     }
 
 
@@ -453,7 +495,7 @@ public class GuiConfig extends GuiScreen {
 
     private void addCMRenderingButton( int x, int heightMultiplier, int baseColor, int activeColor) {
         this.aprilFoolsRenderingButton = new GuiColoredButton(21, x, heightMultiplier * 2, 100, 20, "CM Rendering", baseColor, activeColor);
-        this.aprilFoolsRenderingButton.setTooltipText("Enables / disables the warped rendering effects of the April Fools patch. Recommended for streamers or people with sensitive eyes.");
+        this.aprilFoolsRenderingButton.setTooltipText("Enables / disables the warped rendering effects of the April Fools patch. Recommended for streamers or people with sensitive eyes");
         this.buttonList.add(this.aprilFoolsRenderingButton);
     }
 
@@ -467,6 +509,12 @@ public class GuiConfig extends GuiScreen {
         this.extraArmorButton.setTooltipText("Starts you off with a cheap set of armor");
         this.buttonList.add(this.extraArmorButton);
     }
+    private void addFullbrightButton(int x, int heightMultiplier, int baseColor, int activeColor) {
+        this.fullBrightButton = new GuiColoredButton(25, x, heightMultiplier * 6, 100, 20, "Full Bright", baseColor, activeColor);
+        this.fullBrightButton.setTooltipText("Renders the world at maximum brightness. Does not bypass gloom");
+        this.buttonList.add(this.fullBrightButton);
+    }
+
 
 
     private static String cap(String str) {
@@ -577,6 +625,15 @@ public class GuiConfig extends GuiScreen {
             NightmareMode.hordeMode = !NightmareMode.hordeMode;
             instance.modifyConfigProperty("HordeMode", Boolean.toString(NightmareMode.hordeMode));
             this.hordeModeButton.updateState(NightmareMode.hordeMode);
+        }  else if (par1GuiButton.id == 25) {
+            NightmareMode.fullBright = !NightmareMode.fullBright;
+            instance.modifyConfigProperty("FullBright", Boolean.toString(NightmareMode.fullBright));
+            this.fullBrightButton.updateState(NightmareMode.fullBright);
         }
+//        else if (par1GuiButton.id == 25) {
+//            NightmareMode.birthdayBash = !NightmareMode.birthdayBash;
+//            instance.modifyConfigProperty("BirthdayBash", Boolean.toString(NightmareMode.birthdayBash));
+//            this.birthdayBashButton.updateState(NightmareMode.birthdayBash);
+//        }
     }
 }

@@ -63,7 +63,18 @@ public abstract class EntityRendererMixin implements EntityAccessor {
         // g = 0.178771923f
         // b = 0.195104557f
     }
-
+    @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
+    private boolean noNightvisionRedFog(EntityLivingBase instance, Potion par1Potion){
+        return false;
+    }
+    @Redirect(method = "updateLightmap", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F"))
+    private float activateFullbright(GameSettings instance){
+        return NightmareMode.fullBright ? 16f : instance.gammaSetting;
+    }
+    @Redirect(method = "modUpdateLightmapOverworld", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F"))
+    private float activateFullbright0(GameSettings instance){
+        return NightmareMode.fullBright ? 16f : instance.gammaSetting;
+    }
 
     @Unique
     private static int[] nightvisionEnd(){

@@ -21,11 +21,6 @@ public class EntityShadowZombie extends EntityZombie {
         this.tasks.removeAllTasksOfClass(ZombieSecondaryAttackBehavior.class);
         this.targetTasks.removeAllTasksOfClass(EntityAILunge.class);
 
-        if (NightmareMode.hordeMode) {
-            this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
-            this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 0.7d));
-        }
-
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
 
         NightmareUtils.manageEclipseChance(this,2);
@@ -137,6 +132,18 @@ public class EntityShadowZombie extends EntityZombie {
             this.setPositionAndUpdate(foundPosX,foundPosY,foundPosZ);
             this.getNavigator().clearPathEntity();
         }
+    }
+
+    @Override
+    public boolean getCanSpawnHere() {
+        if(this.dimension == -1){
+            if (!this.worldObj.isRemote) {
+                this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
+            }
+            return NightmareUtils.getIsBloodMoon() && super.getCanSpawnHere();
+        }
+
+        return super.getCanSpawnHere();
     }
 
     private static int getChanceOfTeleporting(int input) {

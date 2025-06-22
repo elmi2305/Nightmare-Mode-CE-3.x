@@ -1,14 +1,13 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.LightningBoltEntity;
+import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
-import com.itlesports.nightmaremode.entity.EntityDungCreeper;
-import com.itlesports.nightmaremode.entity.EntityFireCreeper;
+import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.NightmareUtils;
-import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
-import com.itlesports.nightmaremode.entity.EntitySuperchargedCreeper;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,10 +21,12 @@ import java.util.Random;
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
-    @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
+    @Unique private boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
     @Shadow private int timeSinceIgnited;
     @Shadow public int fuseTime;
+
+    @Shadow public abstract void onKickedByAnimal(KickingAnimal kickingAnimal);
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
@@ -35,6 +36,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void noScrollDrops(CallbackInfo ci){
         ci.cancel();
     }
+
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
@@ -101,6 +103,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
+
+    // dung creeper variant handled in EntityCreeperVariant.class
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
     private void manageDungCreeper(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
@@ -129,8 +133,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.copyLocationAndAnglesFrom(player);
             }
         }
-
     }
+
     @Unique
     private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
         for (int i = 0; i < amount; i++) {
@@ -243,11 +247,11 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
                 vector.normalize();
                 this.motionX = vector.xCoord * 0.2;
-                this.motionY = 0.5f;
                 this.motionZ = vector.zCoord * 0.2;
                 this.timeSinceIgnited = 0;
                 this.fuseTime = 20;
             }
+            this.motionY = 0.5f;
         } else{
             this.setDead();
         }
@@ -258,26 +262,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         return 5.0f; // explosions deal 1/5 damage to creepers
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
-    private void immuneToDrowningDuringBloodMoon(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown){
+    private void immuneToDrowningDuringBloodMoon(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir) {
+        if (NightmareUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown) {
             cir.setReturnValue(false);
         }
     }
 
-//    @Inject(method = "<init>", at = @At("TAIL"))
-//    private void increasePriority(World par1World, CallbackInfo ci){
-//        this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
-//        this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));
-//    }
-//
-//    @Inject(method = "onUpdate", at = @At("TAIL"))
-//    private void ensureTargetting(CallbackInfo ci){
-//        System.out.println(this.getAttackTarget());
-//        if(this.worldObj.playerEntities.isEmpty()) return;
-//        if(!this.hasAttackTarget() && this.ticksExisted % 80 == 0){
-//            this.setAttackTarget((EntityLivingBase) this.worldObj.playerEntities.get(0));
-//        }
-//    }
     @ModifyConstant(method = "entityInit", constant = @Constant(intValue = 0,ordinal = 0))
     private int chanceToSpawnCharged(int constant){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
@@ -285,6 +275,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
+        if(thisObj instanceof EntityLightningCreeper){
+            return 1;
+        }
         if((progress > 0 || areMobsEvolved) && (thisObj.rand.nextFloat() * NightmareUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
             if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
                 thisObj.setCustomNameTag("Terrence");
@@ -300,19 +293,13 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         return 0;
     }
-    @Unique private int creeperTimeSinceIgnited = 0;
 
     @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
     private void jumpBeforeExploding(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
-
-        if (!(thisObj instanceof EntityMetalCreeper) && !(thisObj instanceof EntitySuperchargedCreeper)) {
-            if (thisObj.getCreeperState() == 1) {
-                this.creeperTimeSinceIgnited++;
-            } else {this.creeperTimeSinceIgnited = 0;}
-
+        if (!(thisObj instanceof EntityMetalCreeper) && !(thisObj instanceof EntitySuperchargedCreeper) && !(thisObj instanceof EntityLightningCreeper)) {
             // 8 ticks before it explodes
-            if (this.creeperTimeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            if (this.timeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
                 thisObj.motionY = 0.38F;
                 if(target != null) {
@@ -326,6 +313,36 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 }
             }
         }
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
+    private boolean lightningCreeperAvoidsExploding(World instance){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+
+
+
+        if(!instance.isRemote && thisObj instanceof EntityLightningCreeper){
+            EntityPlayer player;
+            if(this.getAttackTarget() instanceof EntityPlayer targetPlayer){
+                player = targetPlayer;
+            } else {
+                player = this.worldObj.getClosestPlayerToEntity(this, 16);
+            }
+
+            if (player != null) {
+                int worldState = NightmareUtils.getWorldProgress(this.worldObj);
+                double xOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
+                double zOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
+                Entity lightningbolt = new LightningBoltEntity(this.worldObj, player.posX + xOffset, player.posY - 0.5, player.posZ + zOffset);
+                this.worldObj.addWeatherEffect(lightningbolt);
+            }
+            this.setDead();
+        }
+
+        if (thisObj instanceof EntityLightningCreeper) {
+            return true;
+        }
+        return instance.isRemote;
     }
 
     @Override
@@ -354,6 +371,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             this.setFuseTime(60);
         } else if (thisObj instanceof EntitySuperchargedCreeper) {
             this.setFuseTime(15);
+        } else if (thisObj instanceof EntityLightningCreeper) {
+            this.setFuseTime(90 - NightmareUtils.getWorldProgress(world) * 10);
         }
     }
 
@@ -364,7 +383,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private float modifyExplosionSize(float par8) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
-        float variantExplosionModifier = thisObj instanceof EntityMetalCreeper ? 1.25f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
+        float variantExplosionModifier = thisObj instanceof EntityMetalCreeper ? 1.5f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
         float bloodmoonModifier = NightmareUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NightmareUtils.getNiteMultiplier();

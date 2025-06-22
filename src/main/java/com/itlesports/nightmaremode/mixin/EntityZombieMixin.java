@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
@@ -8,8 +7,10 @@ import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
+import com.itlesports.nightmaremode.entity.EntitySkeletonDrowned;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -95,7 +96,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         return false;
     }
 
-    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
     private void transformIntoSkeletonOnFireDeath(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (!this.isEntityInvulnerable() && !this.isVillager() && this.getHealth() <= par2) {
             if (canEntitySeeSun()) {
@@ -110,8 +111,44 @@ public abstract class EntityZombieMixin extends EntityMob{
                 }
             } else if(NightmareUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote){
                 summonSilverfish(this);
+            } else if(par1DamageSource == DamageSource.drown || par1DamageSource == DamageSource.lava){
+                this.transformToVariant(par1DamageSource == DamageSource.lava);
+                cir.setReturnValue(true);
             }
         }
+    }
+    @Unique private void transformToVariant(boolean wasFireDamage){
+        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        EntitySkeleton skeleton;
+        if (wasFireDamage) {
+            skeleton = new EntitySkeletonMelted(this.worldObj);
+            for (int i = 0; i < 10; i++) {
+                double offsetX = (this.rand.nextDouble() - 0.5D) * 2.5D;
+                double offsetY = this.rand.nextDouble() * this.height * 1.5D;
+                double offsetZ = (this.rand.nextDouble() - 0.5D) * 2.5D;
+
+                this.worldObj.playAuxSFX(2278, (int) (this.posX + offsetX), (int) (this.posY + offsetY), (int) (this.posZ + offsetZ), 0);
+            }
+        } else{
+            skeleton = new EntitySkeletonDrowned(this.worldObj);
+        }
+
+        skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+        skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * NightmareUtils.getNiteMultiplier(), skeleton.getMaxHealth() * NightmareUtils.getNiteMultiplier()));
+        for (int i = 0; i < 5; i++) {
+            skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
+            skeleton.setEquipmentDropChance(i,this.equipmentDropChances[i]);
+        }
+        skeleton.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30d);
+
+        if (this.hasAttackTarget()) {
+            skeleton.setAttackTarget(this.getAttackTarget());
+            skeleton.entityToAttack = this.getEntityToAttack();
+        }
+        if (!this.worldObj.isRemote) {
+            this.worldObj.spawnEntityInWorld(skeleton);
+        }
+        this.setDead();
     }
 
     @Unique private static void summonSilverfish(EntityMob zombie){
@@ -476,12 +513,18 @@ public abstract class EntityZombieMixin extends EntityMob{
         for (int i = 0; i < 5; i++) {
             crystalhead.setEquipmentDropChance(i,0f);
         }
+        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28f);
+        EntityPlayer nearestPlayer = this.worldObj.getClosestPlayerToEntity(crystalhead, 100);
+        if (nearestPlayer != null) {
+            crystalhead.setAttackTarget(nearestPlayer);
+            crystalhead.getMoveHelper().setMoveTo(nearestPlayer.posX,nearestPlayer.posY,nearestPlayer.posZ, 1.2f);
+        }
         this.setDead();
     }
 
 
 @Inject(method = "<init>", at = @At("TAIL"))
-private void increasePriority(World par1World, CallbackInfo ci){
+private void addHordeTasks(World par1World, CallbackInfo ci){
     if (NightmareMode.hordeMode) {
         this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
         this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));

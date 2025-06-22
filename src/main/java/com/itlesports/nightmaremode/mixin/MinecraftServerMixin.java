@@ -6,19 +6,29 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.TeleportScheduler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldServer;
+import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MinecraftServer.class)
-public class MinecraftServerMixin {
+public abstract class MinecraftServerMixin {
     @Shadow public WorldServer[] worldServers;
 
+    @Shadow @Final public Profiler theProfiler;
+
+    @Shadow public abstract ILogAgent getLogAgent();
+
+    @Shadow public abstract boolean isSinglePlayer();
+
+    @Shadow public abstract EnumGameType getGameType();
+
+    @Shadow private ServerConfigurationManager serverConfigManager;
     @Unique
     private int oldWorldState;
     @Unique
@@ -49,6 +59,7 @@ public class MinecraftServerMixin {
         } else {
             NightmareMode.worldState = 0;
         }
+
         oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
@@ -87,13 +98,39 @@ public class MinecraftServerMixin {
         } else {
             NightmareMode.worldState = 0;
         }
-        if (NightmareMode.worldState != oldWorldState) {
+//        if (NightmareMode.worldState != oldWorldState) {
             NightmareMode.sendWorldStateToAllPlayers();
-        }
+//        }
         oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
     }
+//    @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
+//    private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){
+////        System.out.println(this.worldServers.length);
+//
+//        if(par1 == NightmareMode.UNDERWORLD_DIMENSION){
+//            cir.setReturnValue(this.worldServers[3]);
+//        }
+//    }
+
+// // TODO: DIMENSION STUFF
+//    @ModifyConstant(method = "loadAllWorlds", constant = @Constant(intValue = 3))
+//    private int attemptToIncreaseWorldServerSize(int constant){
+//        return 4;
+//    }
+//    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;difficultyLevel:Lbtw/world/util/difficulty/Difficulty;",ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void loadNightmareWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9){
+//        MinecraftServer server = (MinecraftServer) (Object)this;
+//        WorldSettings var8 = new WorldSettings(var9);
+//        this.worldServers[3] = new WorldServer(server, var7, par2Str, NightmareMode.UNDERWORLD_DIMENSION, var8, this.theProfiler, this.getLogAgent());
+//
+//        this.worldServers[3].addWorldAccess(new WorldManager(server, this.worldServers[3]));
+//        if (!this.isSinglePlayer()) {
+//            this.worldServers[3].getWorldInfo().setGameType(this.getGameType());
+//        }
+//    }
+
 
 
     @Unique

@@ -18,5 +18,9 @@ accessible method btw/BTWAddon registerProperty (Ljava/lang/String;Ljava/lang/St
 accessible field btw/BTWAddon configProperties Ljava/util/ArrayList;
 accessible field btw/BTWAddon configPropertyDefaults Ljava/util/Map;
 accessible field net/minecraft/src/WorldInfo dimension I
+accessible field net/minecraft/src/Teleporter worldServerInstance Lnet/minecraft/src/WorldServer;
+accessible field net/minecraft/src/Teleporter destinationCoordinateKeys Ljava/util/List;
+accessible field net/minecraft/src/Teleporter destinationCoordinateCache Lnet/minecraft/src/LongHashMap;
+accessible class net/minecraft/src/ComponentScatteredFeature
 accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold

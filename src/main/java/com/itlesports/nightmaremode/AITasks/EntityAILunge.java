@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.AITasks;
 
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 
 public class EntityAILunge extends EntityAITarget {
@@ -21,13 +22,18 @@ public class EntityAILunge extends EntityAITarget {
             boolean isEclipse = NightmareUtils.getIsMobEclipsed(this.taskOwner);
             int range = isEclipse ? 50 : 30;
 
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= range  // 5.4 blocks
+            return (this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= range || this.taskOwner instanceof EntityBloodZombie)  // 5.4 blocks
                     && !this.taskOwner.getNavigator().noPath()
                     && this.taskOwner.onGround
-                    && this.taskOwner.worldObj != null // paranoid so I'm checking if it's null. a spawner should never execute this code
                     && this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE;
         }
         return false;
+    }
+
+    private static double clamp(double input, double radius) {
+        if (input > radius) {
+            return radius;
+        } else return Math.max(input, -radius);
     }
 
     @Override
@@ -38,15 +44,14 @@ public class EntityAILunge extends EntityAITarget {
         if(isHoldingItem && !isEclipse){return false;}
         // ensures normal behavior on non-eclipse
 
-        if (cooldown <= 0) {
-
+        if (this.cooldown <= 0) {
             double var1 = this.targetEntity.posX - this.taskOwner.posX;
             double var2 = this.targetEntity.posZ - this.taskOwner.posZ;
             Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
             vector.normalize();
-            this.taskOwner.motionX = vector.xCoord * 0.2;
+            this.taskOwner.motionX = clamp(vector.xCoord * 0.2, 1.0);
             this.taskOwner.motionY = 0.34;
-            this.taskOwner.motionZ = vector.zCoord * 0.2;
+            this.taskOwner.motionZ = clamp(vector.zCoord * 0.2, 1.0);
 
             if(isEclipse){
                 this.cooldown = isHoldingItem ? 20 + this.taskOwner.rand.nextInt(20) : 0;

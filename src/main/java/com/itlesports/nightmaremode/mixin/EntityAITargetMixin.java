@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,20 +14,22 @@ public abstract class EntityAITargetMixin extends EntityAIBase {
     @Shadow protected boolean shouldCheckSight;
     @Shadow protected boolean ignoreTargetsOutsideHome;
 
+    @Shadow protected EntityCreature taskOwner;
+
     @Inject(method = "canEasilyReach", at = @At("HEAD"),cancellable = true)
     private void canAlwaysReach(EntityLivingBase par1EntityLivingBase, CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode) {
+        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
             cir.setReturnValue(true);
         }
     }
     @Redirect(method = "continueExecuting", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreature;getDistanceSqToEntity(Lnet/minecraft/src/Entity;)D"))
     private double bypassDistanceLimit(EntityCreature instance, Entity entity){
-        return NightmareMode.hordeMode ? 0d : instance.getDistanceSqToEntity(entity);
+        return (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) ? 0d : instance.getDistanceSqToEntity(entity);
     }
 
     @Inject(method = "isSuitableTarget", at = @At(value = "HEAD"), cancellable = true)
     private void ensurePlayerTargetting(EntityLivingBase par1EntityLivingBase, boolean par2, CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode) {
+        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
             if (par1EntityLivingBase instanceof EntityPlayer) {
                 this.targetSearchStatus = 1;
                 this.shouldCheckSight = false;

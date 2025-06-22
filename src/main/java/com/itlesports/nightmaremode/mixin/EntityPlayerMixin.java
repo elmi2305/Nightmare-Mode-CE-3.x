@@ -43,8 +43,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public abstract boolean isPlayerFullyAsleep();
 
-    @Shadow public abstract void addExperience(int par1);
-
     @Unique private int ticksInWater;
 
     public EntityPlayerMixin(World par1World) {
@@ -107,7 +105,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 this.foodStats.setFoodLevel(this.foodStats.getFoodLevel() + 3);
             }
 
-            this.increaseArmorDurabilityRandomly(this);
 
             if(NightmareUtils.isWearingFullBloodArmor(this)){
                 if((this.rand.nextInt(3) == 0) && this.fallDistance > 0.0F){
@@ -124,14 +121,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return par2;
     }
 
-    @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
-        int j = rand.nextInt(4);
-        for (int a = 0; a < 3; a++) {
-            int i = rand.nextInt(5);
-            if(player.getCurrentItemOrArmor(i) == null) continue;
-            player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
-        }
+    @Override
+    public int getMaxInPortalTime() {
+        if(NightmareUtils.getWorldProgress(this.worldObj) > 1) {return 30;}
+        return super.getMaxInPortalTime();
     }
+
     @Inject(method = "dropPlayerItemWithRandomChoice", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD)
     private void manageDroppingItemsDuringBloodWither(ItemStack par1ItemStack, boolean par2, CallbackInfoReturnable<EntityItem> cir, EntityItem var3, float var4, float var5){
         if(EntityBloodWither.isBossActive()){

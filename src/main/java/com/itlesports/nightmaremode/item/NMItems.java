@@ -73,10 +73,10 @@ public class NMItems {
         bloodHoe = (ItemBloodHoe)(new ItemBloodHoe(2319, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodHoe");
         bloodSword = (ItemBloodSword)(new ItemBloodSword(2320, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodSword");
 
-        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
-        bloodChestplate = (ArmorItemDiamond)(new ArmorItemDiamond(2322,1,6)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
-        bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,5, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
-        bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,2, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
+        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,2, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
+        bloodChestplate = (ArmorItemDiamond)(new ArmorItemDiamond(2322,1,4)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
+        bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
+        bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,1, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
         bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");
 
         darksunFragment = (new Item(2326)).setTextureName("nmDarksunFragment").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDarksunFragment");

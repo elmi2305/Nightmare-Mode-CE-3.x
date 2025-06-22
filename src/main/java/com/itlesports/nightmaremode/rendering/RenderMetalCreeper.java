@@ -8,7 +8,7 @@ public class RenderMetalCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public static final ResourceLocation METAL_CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeperMetal0.png");
+    private static final ResourceLocation METAL_CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeperMetal.png");
 
     public RenderMetalCreeper() {
         super();

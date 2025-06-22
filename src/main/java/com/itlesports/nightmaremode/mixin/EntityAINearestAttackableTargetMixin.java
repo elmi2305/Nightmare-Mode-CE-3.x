@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
@@ -34,11 +35,11 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
 
     @Inject(method = "shouldExecute", at = @At("HEAD"),cancellable = true)
     private void forceTargetPlayer(CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode) {
+        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
             if (this.targetEntity != null) return;
-            if (this.taskOwner.worldObj.playerEntities.isEmpty()) return;
-            if (this.taskOwner.worldObj.playerEntities.get(0) != null) {
-                this.targetEntity = (EntityLivingBase) this.taskOwner.worldObj.playerEntities.get(0);
+            EntityPlayer nearestPlayer = this.taskOwner.worldObj.getClosestPlayerToEntity(this.taskOwner, -1);
+            if(nearestPlayer != null){
+                this.targetEntity = nearestPlayer;
                 cir.setReturnValue(true);
             }
         }
@@ -47,7 +48,7 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
 
     @Inject(method = "getTargetDistance", at = @At("HEAD"),cancellable = true)
     private void bypassExpensiveAABB(CallbackInfoReturnable<Double> cir){
-        if (NightmareMode.hordeMode) {
+        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
             cir.setReturnValue(1d);
         }
     }

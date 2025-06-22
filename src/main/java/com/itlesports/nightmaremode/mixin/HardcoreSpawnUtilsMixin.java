@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 
-// code is sloppy, there's probably a better way to do this.
-
 @Mixin(HardcoreSpawnUtils.class)
 public abstract class HardcoreSpawnUtilsMixin{
     @Unique private static WorldServer worldServer;
@@ -26,10 +24,19 @@ public abstract class HardcoreSpawnUtilsMixin{
 
     @Inject(method = "handleHardcoreSpawn", at = @At("TAIL"))
     private static void handleExperienceLossOnDeath(MinecraftServer server, EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer, CallbackInfo ci){
-        newPlayer.addExperience((int) (Math.log10(oldPlayer.experienceTotal * 2) * 16));
+        newPlayer.addExperience(ensurePositive(Math.log10(oldPlayer.experienceTotal * 2) * 16));
         if(newPlayer.experienceLevel > 0){
             newPlayer.addExperienceLevel(-1);
         }
+        if(newPlayer.experienceTotal < 0){
+            newPlayer.experienceTotal = 0;
+        }
+    }
+    @Unique private static int ensurePositive(double input){
+        if(input >= 0){
+            return (int) input;
+        }
+        return 0;
     }
 
     @ModifyArg(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;setWorldTime(J)V"))

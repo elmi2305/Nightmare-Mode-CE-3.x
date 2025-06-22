@@ -7,6 +7,7 @@ import btw.entity.mob.villager.trade.TradeProvider;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
+import com.itlesports.nightmaremode.NMInitializer;
 import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -18,6 +19,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class NightmareMode extends BTWAddon {
     public static int SKELETON_ICE = 2;
@@ -43,7 +45,8 @@ public class NightmareMode extends BTWAddon {
     public static boolean isBloodMoon;
     public static boolean isEclipse;
     public double NITE_MULTIPLIER = 1;
-    public static boolean FORCE_NITE_OFF;
+
+    public static final int UNDERWORLD_DIMENSION = 2;
 
     public NightmareMode(){
         super();
@@ -136,11 +139,10 @@ public class NightmareMode extends BTWAddon {
         }
 
         NMBlocks.initNightmareBlocks();
-        // because apparently adding this trade crashes if I do it in the trade list mixin ???
-        TradeProvider.getBuilder().profession(5).level(2).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight( 0.05f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().addToTradeList();
-        // this is stupid ^
+        NMInitializer.initNightmareRecipes();
+        NMInitializer.initNightmareTrades();
+
+
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);
         this.silverfishGenFirstStrata = new WorldGenMinable(BTWBlocks.infestedStone.blockID, 8);
         this.silverfishGenSecondStrata = new WorldGenMinable(BTWBlocks.infestedMidStrataStone.blockID, 8);
@@ -149,10 +151,11 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
 
+
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
         //world state packet handler
-        AddonHandler.registerPacketHandler("nightmaremode|state", (packet, player) -> {
+        AddonHandler.registerPacketHandler("nightmaremode|stat", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             int worldState = -1;
             try {
@@ -187,7 +190,7 @@ public class NightmareMode extends BTWAddon {
             var4.printStackTrace();
         }
 
-        return new Packet250CustomPayload("nightmaremode|state", byteStream.toByteArray());
+        return new Packet250CustomPayload("nightmaremode|stat", byteStream.toByteArray());
     }
 
 
@@ -271,9 +274,14 @@ public class NightmareMode extends BTWAddon {
     public static Boolean extraArmor;
     public static Boolean darkStormyNightmare;
     public static Boolean hordeMode;
+    public static Boolean birthdayBash;
+    public static Boolean fullBright;
+
     public boolean canAccessMenu = true;
     public long portalTime = 0;
     public boolean shouldStackSizesIncrease;
+
+
     public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
             .global()
             .name("PortalTime")
@@ -315,6 +323,9 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("ExtraArmor", "False");
         this.registerProperty("DarkStormyNightmare", "False");
         this.registerProperty("HordeMode", "False");
+        this.registerProperty("BirthdayBash", "False");
+        this.registerProperty("FullBright", "False");
+
 
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
@@ -352,6 +363,8 @@ public class NightmareMode extends BTWAddon {
         aprilFoolsRendering = Boolean.parseBoolean(propertyValues.get("AprilFoolsWarpedRendering"));
         darkStormyNightmare = Boolean.parseBoolean(propertyValues.get("DarkStormyNightmare"));
         hordeMode = Boolean.parseBoolean(propertyValues.get("HordeMode"));
+        birthdayBash = Boolean.parseBoolean(propertyValues.get("BirthdayBash"));
+        fullBright = Boolean.parseBoolean(propertyValues.get("FullBright"));
     }
 
     public void initKeybind(){

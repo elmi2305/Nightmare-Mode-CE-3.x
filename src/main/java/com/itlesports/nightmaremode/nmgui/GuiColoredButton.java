@@ -18,43 +18,53 @@ public class GuiColoredButton extends GuiButton {
 
     private final int textColorDisabled;
     private final int textColorHover;
-    private final int textColorUnpressed;
-    private final int textColorActive;
-    private final int baseColor;
+    private int textColorUnpressed;
+    private int textColorActive;
+    private int baseColor;
     private int baseColorActive;
     private String tooltipText;
     private boolean state;
     public boolean shouldDrawToolTip;
 
-    public GuiColoredButton(int par1, int par2, int par3, int par4, int par5, String par6Str,
-                            int textColorHover, int textColorUnpressed, int baseColor) {
-        this(par1, par2, par3, par4, par5, par6Str, textColorHover, textColorUnpressed, 0, baseColor);
-        // only used in selectWorldMixin to render the NM Config button
+    public GuiColoredButton(int id, int x, int y, int width, int height, String label,
+                            int hoverTextColor, int unpressedTextColor, int baseColor) {
+        this(id, x, y, width, height, label, hoverTextColor, unpressedTextColor, 0, baseColor);
+        // Used in selectWorldMixin to render the NM Config button
     }
 
-    public GuiColoredButton(int par1, int par2, int par3, int par4, int par5, String par6Str,
-                            int textColorHover, int textColorUnpressed, int textColorActive, int baseColor) {
-        super(par1, par2, par3, par4, par5, par6Str);
-        this.textColorDisabled = -6250336;
-        this.textColorHover = textColorHover;
-        this.textColorUnpressed = textColorUnpressed;
-        this.textColorActive = textColorActive;
+    public GuiColoredButton(int id, int x, int y, int width, int height, String label,
+                            int hoverTextColor, int unpressedTextColor, int activeTextColor, int baseColor) {
+        super(id, x, y, width, height, label);
+        this.textColorDisabled = -6250336; // Default disabled text color
+        this.textColorHover = hoverTextColor;
+        this.textColorUnpressed = unpressedTextColor;
+        this.textColorActive = activeTextColor;
         this.baseColor = baseColor;
     }
 
-    public GuiColoredButton(int par1, int par2, int par3, int par4, int par5, String par6Str,
-                            int hover, int unpressed, int active, int baseColor, int baseColorActive) {
-        this(par1, par2, par3, par4, par5, par6Str, hover, unpressed, active, baseColor);
+    public GuiColoredButton(int id, int x, int y, int width, int height, String label,
+                            int hoverTextColor, int unpressedTextColor, int activeTextColor,
+                            int baseColorInactive, int baseColorActive) {
+        this(id, x, y, width, height, label, hoverTextColor, unpressedTextColor, activeTextColor, baseColorInactive);
         this.baseColorActive = baseColorActive;
-        // used for the configs
+        // Used for the configs
     }
-    // New constructor with forced text colors
-    public GuiColoredButton(int par1, int par2, int par3, int par4, int par5, String par6Str, int baseColor, int baseColorActive) {
-        this(par1, par2, par3, par4, par5, par6Str, 0xFFFFFF, 0xD4D4D4, 0xFFFFFF, baseColor, baseColorActive);
+
+    // New constructor with default white text colors
+    public GuiColoredButton(int id, int x, int y, int width, int height, String label,
+                            int baseColorInactive, int baseColorActive) {
+        this(id, x, y, width, height, label, 0xFFFFFF, 0xD4D4D4, 0xFFFFFF, baseColorInactive, baseColorActive);
     }
+
 
     public void updateState(boolean state){
         this.state = state;
+    }
+    public void changeColors(int baseColor, int baseColorActive, int textColorUnpressed, int textColorActive){
+        this.baseColor = baseColor;
+        this.baseColorActive = baseColorActive;
+        this.textColorUnpressed = textColorUnpressed;
+        this.textColorActive = textColorActive;
     }
 
     @Override

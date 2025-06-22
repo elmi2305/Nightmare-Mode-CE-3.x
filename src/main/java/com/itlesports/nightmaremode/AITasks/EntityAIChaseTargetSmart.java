@@ -1,30 +1,19 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.RottenArrowEntity;
-import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 
-import java.util.List;
 import java.util.Set;
 
 public class EntityAIChaseTargetSmart extends EntityAIBase {
     private final EntityCreature taskOwner;
     private final double moveSpeed;
     private EntityLivingBase targetEntity;
-    private int stuckCounter;
     private int repathDelay;
     private int attackTick;
-    private double lastPosX, lastPosZ;
-    private int stuckInPlaceTicks = 0;
-    private int stuckInPlaceInstances = 0;
-    private static final int STUCK_IN_PLACE_THRESHOLD = 10;
 
-
-    private static final int MAX_PATHFINDING_RANGE = 32;
-    private static final int STUCK_THRESHOLD = 60;
 
     public EntityAIChaseTargetSmart(EntityCreature creature, double speed) {
         this.taskOwner = creature;
@@ -34,18 +23,16 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        EntityLivingBase target = this.taskOwner.getAttackTarget();
-        if (target == null || !target.isEntityAlive()) return false;
+        EntityLivingBase foundTarget = this.taskOwner.getAttackTarget();
+        if (foundTarget != null && foundTarget.isEntityAlive()) {
+            if(foundTarget instanceof EntityPlayer && ((EntityPlayer) foundTarget).capabilities.isCreativeMode){
+                return false;
+            }
+            this.targetEntity = foundTarget;
 
-        double distanceSq = this.taskOwner.getDistanceSqToEntity(target);
-        if (distanceSq > MAX_PATHFINDING_RANGE * MAX_PATHFINDING_RANGE) {
-            this.targetEntity = target;
             return true;
         }
-
-        this.taskOwner.getNavigator().tryMoveToEntityLiving(target, this.moveSpeed);
-        this.targetEntity = target;
-        return true;
+        return false;
     }
 
     @Override
@@ -56,93 +43,130 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
     @Override
     public void resetTask() {
         this.targetEntity = null;
-        this.stuckCounter = 0;
         this.repathDelay = 0;
         this.attackTick = 0;
     }
 
+
+    // state:
+    private boolean lastNavSuccess    = true;  // assume “good” at start
+
+
+    // tuning constants
+    private static final double   MAX_RANGE_SQ              = 32.0D * 32.0D;
+    private static final double   VERTICAL_UNREACHABLE_Y    = 4.0D;           // any vertical gap > this is unreachable
+    private static final int      CLOSE_REPATH_INTERVAL     = 8;             // ticks between nav when healthy & close
+    private static final int      BROKEN_PROBE_BASE         = 30;             // min ticks before retrying nav/fallback
+    private static final int      BROKEN_PROBE_VARIANCE     = 20;             // + rand(0..39) to BROKEN_PROBE_BASE
+    private static final double   STALE_THRESHOLD_SQ        = 4.0D * 4.0D;  // 4-block threshold
+
+
+
     @Override
     public void updateTask() {
-        if (this.targetEntity == null) return;
+        // 1) Validate target
+        if (this.targetEntity == null || !this.targetEntity.isEntityAlive()) {
+            return;
+        }
 
-        this.taskOwner.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
 
-        double dx = this.targetEntity.posX - this.taskOwner.posX;
-        double dz = this.targetEntity.posZ - this.taskOwner.posZ;
-        double dy = this.targetEntity.posY - this.taskOwner.posY;
-        double distanceSq = dx * dx + dz * dz + dy * dy;
+        // 2) Compute vector to player
+        double dx    = this.targetEntity.posX - this.taskOwner.posX;
+        double dy    = this.targetEntity.posY - this.taskOwner.posY;
+        double dz    = this.targetEntity.posZ - this.taskOwner.posZ;
+        double horizSq = dx*dx + dz*dz;
+        double vert   = Math.abs(dy);
+        this.performExtendedMeleeAttack();
 
-        if (distanceSq > MAX_PATHFINDING_RANGE * MAX_PATHFINDING_RANGE * MAX_PATHFINDING_RANGE) {
-            this.taskOwner.getMoveHelper().setMoveTo(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ, this.moveSpeed);
-        } else {
-            if (--this.repathDelay <= 0) {
-                this.taskOwner.getNavigator().tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
-                this.repathDelay = 30 + this.taskOwner.getRNG().nextInt(15);
+        // 3) Detect stale navigator path
+        if (!this.taskOwner.getNavigator().noPath()) {
+            PathEntity path = this.taskOwner.getNavigator().getPath();
+            PathPoint end = path.getFinalPathPoint();
+
+            double ex = end.xCoord + 0.5 - this.targetEntity.posX; // X diff
+            double ey = end.yCoord      - this.targetEntity.posY; // Y diff (no center adjust for Y)
+            double ez = end.zCoord + 0.5 - this.targetEntity.posZ; // Z diff
+
+            double distSq = ex * ex + ey * ey + ez * ez;
+
+            if (distSq > STALE_THRESHOLD_SQ) {
+                // Path is too far off — cancel and fallback
+                this.taskOwner.getNavigator().clearPathEntity();
+                this.lastNavSuccess = false;
+                this.repathDelay = 0;
             }
         }
 
-// Handle stuck pathing
-        if (this.taskOwner.getNavigator().noPath()) {
-            if (++this.stuckCounter > STUCK_THRESHOLD) {
-                this.taskOwner.getMoveHelper().setMoveTo(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ, this.moveSpeed);
-                this.repathDelay = 40;
-            }
-        } else {
-            this.stuckCounter = 0;
+
+        // 4) Gate further logic behind repathDelay
+        if (--this.repathDelay > 0) {
+            return;
         }
 
-// Tick down cooldowns
-        this.attackTick = Math.max(this.attackTick - 1, 0);
-
-// Handle stuck-in-place detection
-        boolean barelyMoved = Math.abs(this.taskOwner.posX - this.lastPosX) < 0.01 && Math.abs(this.taskOwner.posZ - this.lastPosZ) < 0.01;
-        if (barelyMoved) {
-            this.stuckInPlaceTicks++;
-
-            if (this.stuckInPlaceTicks > STUCK_IN_PLACE_THRESHOLD && this.taskOwner.onGround) {
-                this.stuckInPlaceInstances++;
-
-                // Alternate between jumping and recalculating path
-                if ((this.stuckInPlaceInstances % 3) == 0) {
-                    // Every third time: try to recalculate the path
-                    this.taskOwner.getNavigator().tryMoveToEntityLiving(this.targetEntity, this.moveSpeed); // expensive pathing operation
-                    this.repathDelay = 40;
-                } else {
-                    // Otherwise: jump
-                    this.taskOwner.jump();
-                    this.taskOwner.isAirBorne = true;
-                }
-
-                // Reset tick counter so we don’t spam either action
-                this.stuckInPlaceTicks = 0;
-            }
-        } else {
-            this.stuckInPlaceTicks = 0;
-            this.lastPosX = this.taskOwner.posX;
-            this.lastPosZ = this.taskOwner.posZ;
+        // 5) Vertical unreachable?
+        if (vert > VERTICAL_UNREACHABLE_Y) {
+            applyFallbackMotion(dx, dz);
+            scheduleBrokenProbe();
+            return;
         }
 
-// Failsafe for stuck mobs
-        if (this.stuckInPlaceInstances > 6 && this.taskOwner instanceof EntityCreeper) {
-            this.taskOwner.onKickedByAnimal(null);
+        // 6) Horizontal far?
+        if (horizSq > MAX_RANGE_SQ) {
+            this.lastNavSuccess = false;
+            applyFallbackMotion(dx, dz);
+            scheduleBrokenProbe();
+            return;
         }
 
+        // 7) Navigator broken → fallback + probe
+        if (!this.lastNavSuccess) {
+            applyFallbackMotion(dx, dz);
+            boolean success = this.taskOwner.getNavigator()
+                    .tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
+            this.lastNavSuccess = success;
+            scheduleBrokenProbe();
+            return;
+        }
 
+        // 8) Navigator healthy & close enough → run A*
+        double horiz = Math.sqrt(horizSq);
+        int    interval = (horiz <= 8.0D)
+                ? 2 + this.taskOwner.getRNG().nextInt(3)
+                : CLOSE_REPATH_INTERVAL;
 
-        performExtendedMeleeAttack();
-        // === Custom Logic End ===
+        boolean success = this.taskOwner.getNavigator()
+                .tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
+        this.lastNavSuccess = success;
+        this.repathDelay    = success ? interval : (BROKEN_PROBE_BASE + this.taskOwner.getRNG().nextInt(BROKEN_PROBE_VARIANCE));
     }
+
+    /** Applies cheap motion without raycasts. */
+    private void applyFallbackMotion(double dx, double dz) {
+        Vec3 dir = Vec3.createVectorHelper(dx, 0.0, dz).normalize();
+        this.taskOwner.motionX += dir.xCoord * 0.1;
+        this.taskOwner.motionZ += dir.zCoord * 0.1;
+    }
+
+    /** Schedule next broken‐nav probe sooner. */
+    private void scheduleBrokenProbe() {
+        this.repathDelay = BROKEN_PROBE_BASE + this.taskOwner.getRNG().nextInt(BROKEN_PROBE_VARIANCE);
+    }
+
+
+
+
+
 
     private void performExtendedMeleeAttack() {
         if (this.targetEntity == null) return;
 
         if (this.taskOwner.worldObj.getDifficulty() != Difficulties.HOSTILE) return;
-        if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
 
         double distanceSq = this.taskOwner.getDistanceSqToEntity(this.targetEntity);
         int attackRange = computeRangeForHeldItem(this.taskOwner.getHeldItem());
 
         if (distanceSq < attackRange && this.attackTick <= 1) {
+            if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
             this.taskOwner.swingItem();
             this.taskOwner.attackEntityAsMob(this.targetEntity);
             this.attackTick = 13 - NightmareUtils.getWorldProgress(this.taskOwner.worldObj) * 2;
@@ -163,19 +187,6 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
             return getLesserRangeItems().contains(id) ? 5 : 10;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
-    }
-
-    private boolean isPlayerHoldingBow(EntityPlayer player) {
-        ItemStack held = player.getHeldItem();
-        if (held == null) return false;
-
-        int id = held.itemID;
-        return id == Item.bow.itemID || id == BTWItems.compositeBow.itemID;
-    }
-
-    private boolean isHoldingLongRangeItem(EntityLiving entity) {
-        ItemStack held = entity.getHeldItem();
-        return held != null && getLongRangeItems().contains(held.itemID);
     }
 
     // You should define or import these as needed

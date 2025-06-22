@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.RottenArrowEntity;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 
 @Mixin(EntityMob.class)
-public class EntityMobMixin extends EntityCreature{
+public abstract class EntityMobMixin extends EntityCreature implements EntityLivingAccessor{
     @Unique private int arrowCooldown;
 
     public EntityMobMixin(World par1World) {
@@ -131,11 +132,97 @@ public class EntityMobMixin extends EntityCreature{
             int i = MathHelper.floor_double(this.posX);
             int j = (int)this.boundingBox.minY - 1;
             int k = MathHelper.floor_double(this.posZ);
-            if(this.worldObj != null && this.worldObj.getBlockId(i,j,k) != 0 && this.worldObj.getBlockMaterial(i,j,k) != Material.water){
+            Material blockMaterial = this.worldObj.getBlockMaterial(i,j,k);
+            if(this.worldObj != null && this.worldObj.getBlockId(i,j,k) != 0 && blockMaterial != Material.water && blockMaterial != Material.lava){
                 cir.setReturnValue(true);
             }
         }
     }
+    @Inject(method = "getCanSpawnHere", at = @At("RETURN"), cancellable = true)
+    private void restrictSpawningFarFromPlayer(CallbackInfoReturnable<Boolean> cir) {
+        EntityMob mob = (EntityMob)(Object)this;
+
+        // Only apply when relevant
+        if (!NightmareMode.hordeMode && !(mob instanceof EntityBloodZombie)) return;
+
+        EntityPlayer player = worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, -1);
+        if (player == null) return;
+        if(player.capabilities.isCreativeMode) return;
+
+        double mobY = this.posY;
+        double playerY = player.posY;
+        double heightDifference = Math.abs(mobY - playerY);
+
+        boolean playerIsHigh = playerY > 70;
+        boolean mobIsHigh = mobY > 60;
+
+
+        if (heightDifference > 20) {
+            if(playerIsHigh && mobIsHigh){
+                return;
+            }
+
+            cir.setReturnValue(false);
+        }
+    }
+    @Inject(method = "isValidLightLevel", at = @At("HEAD"), cancellable = true)
+    private void ensureEndDimensionSpawns(CallbackInfoReturnable<Boolean> cir){
+        if(this.dimension == 1){
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Override
+    protected void despawnEntity() {
+        boolean isHorde = NightmareMode.hordeMode;
+        if (!this.getPersistence() && this.canDespawn()) {
+            int chunkX = MathHelper.floor_double(this.posX / 16.0);
+            int chunkZ = MathHelper.floor_double(this.posZ / 16.0);
+
+            if (!this.worldObj.isChunkActive(chunkX, chunkZ)) {
+                this.setDead();
+                return;
+            }
+
+            if (isHorde) {
+                // Horde mode: prioritize target-based despawning
+                EntityLivingBase target = this.getAttackTarget();
+
+                if (target != null && target.isEntityAlive()) {
+                    double distSq = this.getDistanceSqToEntity(target);
+
+                    if (distSq > 48.0 * 48.0) {
+                        this.setDead();
+                        return;
+                    }
+
+                    // Still chasing target → stay alive
+                    this.entityAge = 0;
+                } else {
+                    // No target: fall back to player proximity
+                    EntityPlayer closestPlayer = this.worldObj.getClosestPlayerToEntity(this, this.minDistFromPlayerForDespawn());
+                    if (closestPlayer != null) {
+                        this.entityAge = 0;
+                    } else if (this.entityAge > 600 && this.rand.nextInt(800) == 0) {
+                        this.setDead();
+                    }
+                }
+
+            } else {
+                // Vanilla behavior
+                EntityPlayer closestPlayer = this.worldObj.getClosestPlayerToEntity(this, this.minDistFromPlayerForDespawn());
+                if (closestPlayer != null) {
+                    this.entityAge = 0;
+                } else if (this.entityAge > 600 && this.rand.nextInt(800) == 0) {
+                    this.setDead();
+                }
+            }
+
+        } else {
+            this.entityAge = 0;
+        }
+    }
+
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){

@@ -86,6 +86,7 @@ public abstract class WorldMixin {
                 double newZ = normZ * vMagnitude;
 
                 color.setComponents(newX, newY, newZ);
+                cir.setReturnValue(color);
             }
         }
     }
@@ -127,10 +128,11 @@ public abstract class WorldMixin {
             cir.setReturnValue(cir.getReturnValueF() * 0.4f);
         }
     }
+
     @Inject(method = "updateWeather", at = @At("TAIL"))
     private void manageRainAndBloodMoon(CallbackInfo ci){
         if (!NightmareMode.darkStormyNightmare) {
-            if(this.getTotalWorldTime() < 140000){
+            if(this.getWorldTime() < 140000){
                 this.worldInfo.setRaining(false);
             }
         }

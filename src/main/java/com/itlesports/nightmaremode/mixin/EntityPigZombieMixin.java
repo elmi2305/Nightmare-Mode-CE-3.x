@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -20,21 +22,43 @@ public class EntityPigZombieMixin extends EntityZombie {
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
     }
-    @Unique private double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NightmareUtils.getIsMobEclipsed(this) ? 3 : 0);
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void addBlockBreakingTask(World par1World, CallbackInfo ci){
+        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
+    }
+
+    @Override
+    public void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        if (NightmareUtils.getIsBloodMoon()) {
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
+        }
+    }
+
+    @Override
+    public Entity findPlayerToAttack() {
+        return this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
+    }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
         if (this.entityToAttack == null) {
-            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
-            for (Object tempEntity : list) {
-                if (!(tempEntity instanceof EntityPlayer player)) continue;
-                if (this.isPlayerWearingGoldArmor(player)) continue;
-                this.entityToAttack = player;
-                break;
+            if(NightmareUtils.getIsBloodMoon()){
+                EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
+                if (player != null) {
+                    this.entityToAttack = player;
+                }
+            } else {
+                double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NightmareUtils.getIsMobEclipsed(this) ? 3 : 0);
+                EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
+                if(player != null && this.isPlayerWearingGoldArmor(player)){
+                    this.entityToAttack = player;
+                }
             }
         }
     }
+
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
@@ -80,6 +104,18 @@ public class EntityPigZombieMixin extends EntityZombie {
                 }
             }
         }
+    }
+
+    @Override
+    protected void dropEquipment(boolean par1, int par2) {
+        if(this.rand.nextInt(8) == 0) {
+            super.dropEquipment(par1, par2);
+        }
+    }
+
+    @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int reduceDropRatesFromPigMen(int bound){
+        return bound - 1;
     }
 
 

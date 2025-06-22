@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +24,11 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     }
 
     @Inject(method = "updateTask", at = @At("HEAD"))
-    private void tooLZombieBreaksFaster(CallbackInfo ci){
+    private void toolZombieBreaksFaster(CallbackInfo ci){
+        if(this.associatedEntity instanceof EntityBloodZombie || NightmareMode.hordeMode){
+            this.breakingTime += 12;
+        }
+
         if (this.associatedEntity.getHeldItem() != null) {
             ItemStack heldItem = this.associatedEntity.getHeldItem();
 
@@ -33,13 +38,14 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
                     this.breakingTime += 3;
                 }
             }
-            if(this.breakingTime > 240){
-                this.breakingTime = 240;
-            }
+        }
+        if(this.breakingTime > 240){
+            this.breakingTime = 240;
         }
     }
     @Unique private int targetCanBeMovedToCounter = 0;
     @Unique private int timesTriggered = 0;
+    
     @Inject(method = "continueExecuting", at = @At("HEAD"),cancellable = true)
     private void manageWhenToStop(CallbackInfoReturnable<Boolean> cir){
         Entity target = this.associatedEntity.getAttackTarget();
@@ -90,7 +96,6 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         if(this.targetCanBeMovedToCounter == 0 && this.breakingTime == 0 && this.timesTriggered > 0 && this.associatedEntity.ticksExisted % 30 == 0){
             --this.timesTriggered;
         }
-
     }
 
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){

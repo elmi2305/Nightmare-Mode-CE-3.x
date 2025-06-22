@@ -68,7 +68,18 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
                 if (this.rand.nextInt(24) == 0) {
                     this.dropItem(NMItems.bloodOrb.itemID,1);
                 }
+                this.increaseArmorDurabilityRandomly(player);
+
             }
+        }
+    }
+
+    @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
+        int j = rand.nextInt(8);
+        for (int a = 0; a < 3; a++) {
+            int i = rand.nextInt(4);
+            if(player.getCurrentItemOrArmor(i) == null) continue;
+            player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
         }
     }
 

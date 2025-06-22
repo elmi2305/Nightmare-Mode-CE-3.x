@@ -11,6 +11,7 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -175,7 +176,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 if(isBloodMoon || isEclipse){
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24d);
                 } else {
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress));
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 1.5));
                     // 20 -> 21 -> 22 -> 23
                 }
             }
@@ -251,9 +252,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 this.visibilityCheckCooldown--;
             }
 
-            if (this.ridingEntity instanceof EntitySpider && this.worldObj.isDaytime() && this.ticksExisted % 20 == 0 && !this.worldObj.isRemote) {
-                if (this.hasAttackTarget()) {
-                    ((EntitySpider) this.ridingEntity).entityToAttack = this.getAttackTarget();
+            if (this.ridingEntity instanceof EntitySpider spider) {
+                if(this.getAttackTarget() == spider){
+                    this.setAttackTarget(null);
+                }
+
+                if (this.worldObj.isDaytime() && this.ticksExisted % 20 == 0 && !this.worldObj.isRemote) {
+                    if (this.hasAttackTarget()) {
+                        spider.entityToAttack = this.getAttackTarget();
+                    } else if(spider.hasAttackTarget()){
+                        this.entityToAttack = spider.entityToAttack;
+                        this.setAttackTarget((EntityLivingBase) spider.entityToAttack);
+                    }
                 }
             }
         }
@@ -371,14 +381,28 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         // 8.0 -> 6.0 -> 4.0 -> 2.0
     }
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"), cancellable = true)
     private void manageFallDamageImmunity(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir){
         if(!this.isImmuneToFire()){
             this.isImmuneToFire = true;
         }
+        if(damageSource == DamageSource.inWall){
+            EntitySpider mountedSpider = this.getMountedSpider();
+
+            if(mountedSpider != null){
+                cir.setReturnValue(false);
+            }
+        }
         if (this.getSkeletonType() == 1 && this.dimension == 1 && damageSource == DamageSource.fall){
             cir.setReturnValue(false); // refers to wither skeletons spawned by the ender dragon
         }
+    }
+
+    @Unique private EntitySpider getMountedSpider(){
+        if(this.ridingEntity instanceof EntitySpider) {
+            return (EntitySpider) this.ridingEntity;
+        }
+        return null;
     }
 
 
@@ -420,7 +444,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3+(NightmareUtils.getWorldProgress(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2){
+            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3 + (NightmareUtils.getWorldProgress(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{

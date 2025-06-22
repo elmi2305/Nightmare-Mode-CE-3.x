@@ -21,11 +21,9 @@ import java.util.List;
 @Mixin(EntityPlayerMP.class)
 
 public abstract class EntityPlayerMPMixin extends EntityPlayer {
-    @Unique boolean isTryingToEscapeBloodMoon = true;
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 
-    @Shadow private int lastExperience;
     @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
@@ -36,6 +34,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             this.inGloomCounter += 5; // gloom goes up 6x faster
         }
     }
+
     @Unique public boolean isChickenTired(EntityChicken chicken){
         return chicken.isPotionActive(Potion.damageBoost);
         // mirror of isTired() in EntityChickenMixin
@@ -98,9 +97,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "isInGloom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
     private boolean manageGloomDuringBloodMoon(EntityPlayerMP player, Potion potion){
-        if(NightmareUtils.getIsBloodMoon()){
-            return false;
-        }
+//        if(NightmareUtils.getIsBloodMoon()){
+//            return false;
+//        }
         return player.isPotionActive(potion);
     }
 
@@ -112,45 +111,40 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
     }
 
-
-    @Inject(method = "travelToDimension",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
-                    ordinal = 2),cancellable = true)
-    private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
-        if (NightmareUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
-            int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
-            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
-                if(this.isTryingToEscapeBloodMoon){
-                    ChatMessageComponent text1 = new ChatMessageComponent();
-                    text1.addText("<???> Running from the Bloodmoon? Pathetic.");
-                    text1.setColor(EnumChatFormatting.DARK_RED);
-                    this.sendChatToPlayer(text1);
-                    this.isTryingToEscapeBloodMoon = false;
-                }
-                ci.cancel();
-            }
-        }
-    }
+//
+//    @Inject(method = "travelToDimension",
+//            at = @At(value = "INVOKE",
+//                    target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
+//                    ordinal = 2),cancellable = true)
+//    private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
+//        if (NightmareUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
+//            int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
+//            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
+//                if(this.isTryingToEscapeBloodMoon){
+//                    ChatMessageComponent text1 = new ChatMessageComponent();
+//                    text1.addText("<???> Running from the Bloodmoon? Pathetic.");
+//                    text1.setColor(EnumChatFormatting.DARK_RED);
+//                    this.sendChatToPlayer(text1);
+//                    this.isTryingToEscapeBloodMoon = false;
+//                }
+//                ci.cancel();
+//            }
+//        }
+//    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageNetherThreeDayPeriod(CallbackInfo ci){
         if(this.ticksExisted % 20 != 0) return;
 
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
-        if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()){
+        if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText("<???> Hardmode has begun.");
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
-            this.playSound("mob.wither.death",0.9f,0.905f);
+            this.playSound("mob.wither.death", 0.9f, 0.905f);
             WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
         }
-        if(this.worldObj.getWorldTime() % 24000 == 0){
-            this.isTryingToEscapeBloodMoon = true;
-        }
-
-
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
@@ -170,34 +164,34 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))
     private void dealMagicDamage(EntityPlayerMP instance, int i){
-        this.attackEntityFrom(DamageSource.magic, 5f+this.rand.nextInt(3));
+        this.attackEntityFrom(DamageSource.magic, NightmareUtils.getWorldProgress(this.worldObj) * 2 + this.rand.nextInt(2));
         // makes fire resistance not bypass the lightning damage
     }
 
-        // makes lightning give a few other effects with higher amplifier
     @Inject(method = "onStruckByLightning",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void givePlayerSlowness(LightningBoltEntity boltEntity, CallbackInfo ci){
+    private void addLightningEffects(LightningBoltEntity boltEntity, CallbackInfo ci){
         EntityPlayerMP thisObj = (EntityPlayerMP)(Object)this;
-        steelModifier = 0;
+        this.steelModifier = 0;
+
         if(isPlayerWearingItem(thisObj, BTWItems.plateBoots,1)){
-            steelModifier += 1;
+            this.steelModifier += 1;
         }
         if(isPlayerWearingItem(thisObj, BTWItems.plateLeggings,2)){
-            steelModifier += 3;
+            this.steelModifier += 3;
         }
         if(isPlayerWearingItem(thisObj, BTWItems.plateBreastplate,3)) {
-            steelModifier += 5;
+            this.steelModifier += 5;
         }
         if(isPlayerWearingItem(thisObj, BTWItems.plateHelmet,4) || isPlayerWearingItem(thisObj, BTWItems.enderSpectacles,4)) {
-            steelModifier += 1;
+            this.steelModifier += 1;
         }
 
-        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),120 - steelModifier * 10,10 - steelModifier,true));
-        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - steelModifier * 79,3,true));
-        this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),300 - steelModifier * 28,0,true));
-        this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),300 - steelModifier * 28,0,true));
-        this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800 - steelModifier * 75,1,true));
+        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NightmareUtils.getWorldProgress(this.worldObj), 0),true));
+        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - this.steelModifier * 79,3,true));
+        this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),260 - this.steelModifier * 25,0,true));
+        this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),260 - this.steelModifier * 25,0,true));
+        this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800 - this.steelModifier * 75,1,true));
     }
 
     @Unique private boolean isPlayerWearingItem(EntityPlayerMP player, Item itemToCheck, int armorIndex){

@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityMagmaCube.class)
@@ -49,5 +50,9 @@ public class EntityMagmaCubeMixin extends EntitySlime {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.5F + (NightmareUtils.getNiteMultiplier() - 1) * 0.01);
+    }
+    @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
+    private int increaseMagmaCreamRates(int bound){
+        return bound + 1;
     }
 }

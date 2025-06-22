@@ -34,15 +34,20 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
     private double increaseHordeAttackRange(double par2){
-        return NightmareMode.hordeMode ? 140d : par2;
+        return (NightmareMode.hordeMode || (NightmareUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
     }
     @ModifyConstant(method = "updateAttackStateClient", constant = @Constant(doubleValue = 4096.0F))
     private double increaseDetectionRangeHorde(double constant){
-        return (float) (NightmareMode.hordeMode ? constant * 4d : constant);
+        return (float) ((NightmareMode.hordeMode || (NightmareUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
+    }
+    @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
+    private boolean allowShootingThroughWallsBloodMoon(EntityGhast instance, Entity entity){
+        if(NightmareUtils.getIsBloodMoon() && instance.dimension == -1){return true;}
+        return instance.canEntityBeSeen(entity);
     }
     @Redirect(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean seePlayerThroughWallsHorde(EntityGhast instance, Entity entity){
-        return NightmareMode.hordeMode || instance.canEntityBeSeen(entity);
+        return NightmareMode.hordeMode || (NightmareUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
     }
 
     @Override
@@ -129,6 +134,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
             this.rageTimer = 0;
         }
     }
+
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I",ordinal = 2),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
         if(NightmareUtils.getIsMobEclipsed(this) && this.isCreeperVariant()){
@@ -178,6 +184,11 @@ public abstract class EntityGhastMixin extends EntityFlying{
             }
         }
     }
+    @ModifyArg(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"),index = 3)
+    private double increaseGhastSpawnrateOnBloodMoon(double par1){
+        if(NightmareUtils.getIsBloodMoon() && this.dimension == -1){return 16.0;}
+        return par1;
+    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void killIfTooHigh(CallbackInfo ci){
@@ -185,20 +196,6 @@ public abstract class EntityGhastMixin extends EntityFlying{
             this.setDead();
         }
     }
-
-//    @Inject(method = "onUpdate", at = @At("HEAD"))
-//    private void manageOverworldBehavior(CallbackInfo ci){
-//        EntityGhast thisObj = (EntityGhast)(Object)this;
-//        EntityPlayer player = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,100);
-//        if(player == null){thisObj.setInvisible(true);}
-//        else if(thisObj.dimension == 0 && thisObj.getEntitySenses().canSee(player)){
-//            thisObj.setInvisible(false);
-//            thisObj.getLookHelper().setLookPositionWithEntity(player,0,0);
-//            thisObj.motionX = 0;
-//            thisObj.motionY = 0;
-//            thisObj.motionZ = 0;
-//        }
-//    }
 
     @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 10,ordinal = 0))
     private int lowerSoundThreshold(int constant){

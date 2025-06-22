@@ -46,7 +46,7 @@ public class SteelOre extends OreBlockStaged {
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
         super.dropBlockAsItemWithChance(world, i, j, k, iMetadata, fChance, iFortuneModifier);
         if (!world.isRemote) {
-            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(5) + 4, 0, 1.0F);
+            this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(5) + 4 + iFortuneModifier, 0, 1.0F);
         }
     }
 }

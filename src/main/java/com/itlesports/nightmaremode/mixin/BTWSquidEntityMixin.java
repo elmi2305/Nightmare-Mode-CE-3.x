@@ -21,6 +21,9 @@ import java.util.List;
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
+    @Unique
+    private int canDropCalamari = 0;
+
     @Shadow protected abstract void retractTentacleAttackOnCollision();
 
     @Unique private int squidOnHeadTimer = 0;
@@ -79,6 +82,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageRecentParries(CallbackInfo ci){
+        this.canDropCalamari = Math.max(--this.canDropCalamari, 0);
+
         if (this.ticksExisted % 160 == 0) {
             this.recentParryCount = Math.max(recentParryCount - 1, 0);
         }
@@ -126,12 +131,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
                 }
             }
         }
-        if(bKilledByPlayer){
+        if(bKilledByPlayer && this.canDropCalamari > 0){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
                 if(this.rand.nextInt(12 - worldProgress * 2) == 0){
                     // 1/12 -> 1/10 -> 1/8 -> 1/6
                     this.dropItem(NMItems.calamari.itemID, 1);
                 }
+            }
+        }
+    }
+    
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void manageCalamariDrop(DamageSource damageSource, float iDamageAmount, CallbackInfoReturnable<Boolean> cir){
+        if (!this.worldObj.isRemote) {
+            if(damageSource.getSourceOfDamage() instanceof EntityPlayer){
+                this.canDropCalamari = 40;
             }
         }
     }
@@ -141,6 +155,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private void dropMoreSacs(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         this.entityDropItem(new ItemStack(Item.dyePowder, 1, 0), 0.0f);
     }
+
     @Redirect(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
