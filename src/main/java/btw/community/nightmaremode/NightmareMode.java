@@ -3,7 +3,6 @@ package btw.community.nightmaremode;
 import btw.AddonHandler;
 import btw.BTWAddon;
 import btw.block.BTWBlocks;
-import btw.entity.mob.villager.trade.TradeProvider;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
@@ -141,6 +140,7 @@ public class NightmareMode extends BTWAddon {
         NMBlocks.initNightmareBlocks();
         NMInitializer.initNightmareRecipes();
         NMInitializer.initNightmareTrades();
+        NMInitializer.miscInit();
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

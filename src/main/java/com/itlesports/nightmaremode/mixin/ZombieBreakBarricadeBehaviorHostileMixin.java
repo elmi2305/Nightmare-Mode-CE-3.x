@@ -26,7 +26,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     @Inject(method = "updateTask", at = @At("HEAD"))
     private void toolZombieBreaksFaster(CallbackInfo ci){
         if(this.associatedEntity instanceof EntityBloodZombie || NightmareMode.hordeMode){
-            this.breakingTime += 12;
+            this.breakingTime += 8;
         }
 
         if (this.associatedEntity.getHeldItem() != null) {
@@ -39,8 +39,14 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
                 }
             }
         }
-        if(this.breakingTime > 240){
-            this.breakingTime = 240;
+        if(this.breakingTime > 239){
+            this.breakingTime = 239;
+        }
+    }
+    @Inject(method = "shouldExecute", at = @At("RETURN"), cancellable = true)
+    private void manageBloodZombieBlockBreaking(CallbackInfoReturnable<Boolean> cir){
+        if(this.associatedEntity instanceof EntityBloodZombie){
+            cir.setReturnValue(cir.getReturnValue() && ((EntityBloodZombie) this.associatedEntity).canBreakBlocks());
         }
     }
     @Unique private int targetCanBeMovedToCounter = 0;

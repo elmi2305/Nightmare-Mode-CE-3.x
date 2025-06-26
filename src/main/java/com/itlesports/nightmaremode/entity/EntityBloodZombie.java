@@ -2,9 +2,8 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
-import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmartLite;
+import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -15,9 +14,9 @@ public class EntityBloodZombie extends EntityZombie {
         this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
         this.tasks.removeAllTasksOfClass(EntityAIChaseTargetSmart.class);
         if (NightmareMode.hordeMode) {
-            this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.4f));
+            this.tasks.addTask(6, new EntityAIChaseTargetSmart(this, 1.0f));
         } else{
-            this.tasks.addTask(4, new EntityAIChaseTargetSmartLite(this, 1.4f));
+            this.tasks.addTask(6, new EntityAILiteHorde(this, 1.0f));
         }
 
         this.tasks.removeAllTasksOfClass(SimpleWanderBehavior.class);
@@ -25,10 +24,8 @@ public class EntityBloodZombie extends EntityZombie {
         NightmareUtils.manageEclipseChance(this,8);
     }
 
-        private int failCountYBelow40 = 0;
-        private int failCountNoMoon = 0;
-        private int failCountLowYRange = 0;
-        private int failCountRandomFail = 0;
+
+    private boolean canBreakBlocks;
     @Override
     public boolean getCanSpawnHere() {
         int worldProgress = NightmareUtils.getWorldProgress(this.worldObj);
@@ -38,7 +35,6 @@ public class EntityBloodZombie extends EntityZombie {
 
 
         if (y < 40) {
-            failCountYBelow40++;
             return false;
         }
 
@@ -46,7 +42,7 @@ public class EntityBloodZombie extends EntityZombie {
             return false;
         }
         EntityPlayer nearbyPlayer = null;
-        double closestDistSq = 64 * 64;
+        double closestDistSq = 70 * 70;
 
         for (Object obj : this.worldObj.playerEntities) {
             if (!(obj instanceof EntityPlayer player)) continue;
@@ -68,46 +64,23 @@ public class EntityBloodZombie extends EntityZombie {
         double chance = 0;
         if (moonPhase == 4) {
             chance = 0.7 + worldProgress * 0.1;
-        } else {
-            failCountNoMoon++;
         }
-
         boolean lowYRange = y >= 40 && y <= 60;
         if (lowYRange) {
             chance *= 0.15; // 85% reduction
-            failCountLowYRange++;
         }
 
-        boolean randomChancePassed = this.rand.nextDouble() < chance;
-        boolean finalSpawn = randomChancePassed && super.getCanSpawnHere();
 
-        if (!randomChancePassed) {
-            failCountRandomFail++;
-        }
-
-//        if (finalSpawn) {
-//            ChatMessageComponent text = new ChatMessageComponent();
-//            text.addText("Blood Zombie spawned at x: " + Math.floor(this.posX) +
-//                    " y: " + Math.floor(this.posY) +
-//                    " z: " + Math.floor(this.posZ) + "\n");
-//            text.addText("Spawn condition fail counts:\n");
-//            text.addText("- Below Y=40: " + failCountYBelow40 + "\n");
-//            text.addText("- Moon not dark: " + failCountNoMoon + "\n");
-//            text.addText("- Random roll failed: " + failCountRandomFail);
-//            text.setColor(EnumChatFormatting.RED);
-//
-//            nearbyPlayer.sendChatToPlayer(text);
-//        }
-
-        return finalSpawn;
+        return this.rand.nextDouble() < chance && super.getCanSpawnHere();
     }
 
-
+    @Override
+    protected void checkForCatchFireInSun() {}
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int lootingLevel) {
-        if(this.rand.nextInt(12) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
-            this.dropItem(Item.enderPearl.itemID,1);
+        if(this.rand.nextInt(16) == 0 && bKilledByPlayer){
+            this.dropItem(Item.porkRaw.itemID,1);
         }
 
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
@@ -155,6 +128,8 @@ public class EntityBloodZombie extends EntityZombie {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NightmareUtils.getWorldProgress(this.worldObj) * 6) * NightmareUtils.getNiteMultiplier());
     }
 
     @Override
@@ -189,5 +164,13 @@ public class EntityBloodZombie extends EntityZombie {
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
         return super.attackEntityAsMob(attackedEntity);
+    }
+
+    public boolean canBreakBlocks() {
+        return canBreakBlocks;
+    }
+
+    public void setCanBreakBlocks(boolean canBreakBlocks) {
+        this.canBreakBlocks = canBreakBlocks;
     }
 }

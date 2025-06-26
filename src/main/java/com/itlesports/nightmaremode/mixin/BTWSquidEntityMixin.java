@@ -331,7 +331,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
         int targetY = EntityBloodWither.isBossActive() ? 205 : 63;
-        if(NightmareUtils.getIsEclipse() && this.rand.nextInt(4) == 0 && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 10) == null && this.posY >= targetY){
+        if(NightmareUtils.getIsEclipse() && this.rand.nextInt(12) == 0 && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 16) == null && this.posY >= targetY){
             cir.setReturnValue(true);
         }
     }

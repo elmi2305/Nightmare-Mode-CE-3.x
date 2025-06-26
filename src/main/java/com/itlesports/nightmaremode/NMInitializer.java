@@ -11,9 +11,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 
 import java.util.HashMap;
 
@@ -35,6 +33,13 @@ public class NMInitializer {
         addLibrarianTrades();
         addBlacksmithTrades();
         addNightmareVillagerTrades();
+    }
+
+    public static void miscInit(){
+        BTWItems.plateBoots.setMaxDamage(729);
+        BTWItems.plateLeggings.setMaxDamage(729);
+        BTWItems.plateBreastplate.setMaxDamage(729);
+        BTWItems.plateHelmet.setMaxDamage(729);
     }
 
 

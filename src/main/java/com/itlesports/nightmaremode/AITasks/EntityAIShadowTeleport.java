@@ -17,7 +17,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
     public boolean shouldExecute() {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
+            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 4 : 1;
             return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 400 : 100) * bloodMoonModifier);
         }
         return false;
@@ -25,8 +25,10 @@ public class EntityAIShadowTeleport extends EntityAITarget {
 
     @Override
     public boolean continueExecuting() {
-        int xOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3)+1);
-        int zOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3)+1);
+        boolean bIsBloodmoon = NightmareUtils.getIsBloodMoon();
+        int minimumOffset = bIsBloodmoon ? 0 : 1;
+        int xOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
+        int zOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
 
         int targetX = MathHelper.floor_double(this.targetEntity.posX + xOffset);
         int targetY = MathHelper.floor_double(this.targetEntity.posY);

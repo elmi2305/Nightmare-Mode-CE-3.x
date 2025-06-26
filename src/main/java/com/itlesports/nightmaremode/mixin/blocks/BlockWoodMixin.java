@@ -16,6 +16,11 @@ public class BlockWoodMixin extends Block {
         super(par1, par2Material);
     }
 
+    @Override
+    public boolean canEndermenPickUpBlock(World world, int x, int y, int z) {
+        return true;
+    }
+
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases;
     }

@@ -28,11 +28,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
     }
-    @Inject(method="updateGloomState", at = @At("HEAD"))
-    public void incrementInGloomCounter(CallbackInfo info) {
-        if (this.getGloomLevel() > 0) {
-            this.inGloomCounter += 5; // gloom goes up 6x faster
-        }
+
+
+    @Inject(method = "updateGloomState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayerMP;inGloomCounter:I",ordinal = 0))
+    private void increaseGloomRate(CallbackInfo ci){
+        this.inGloomCounter += 5; // gloom goes up 6x faster
     }
 
     @Unique public boolean isChickenTired(EntityChicken chicken){

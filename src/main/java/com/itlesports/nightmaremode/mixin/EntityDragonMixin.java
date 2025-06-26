@@ -22,9 +22,10 @@ import java.util.List;
 
 @Mixin(EntityDragon.class)
 public abstract class EntityDragonMixin extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob {
-    @Unique
-    private boolean isCharging;
-    private int boundingBoxIntersectionTicks;
+    @Unique private boolean isCharging;
+    @Unique private int boundingBoxIntersectionTicks;
+    @Unique private int chargeCooldown = 100 + this.rand.nextInt(400);
+    @Unique private int forceTargetCooldown = 50;
 
     @Shadow private void createEnderPortal(int par1, int par2) {}
     @Shadow private Entity target;
@@ -80,11 +81,16 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         if (par1EntityDragonPart != this.dragonPartHead) {
             par3 = par3 / 4.0F + 1.0F;
         }
-        if (par2DamageSource.getEntity() instanceof EntityPlayer || par2DamageSource.isExplosion()) {
-            this.func_82195_e(par2DamageSource, par3);
+        if(par2DamageSource.isExplosion()){
+            par3 /= 3;
         }
 
-        cir.setReturnValue(true);
+        if (this.isCharging) {
+            if (par2DamageSource.getEntity() instanceof EntityPlayer || par2DamageSource.isExplosion()) {
+                this.func_82195_e(par2DamageSource, par3);
+            }
+            cir.setReturnValue(true);
+        }
     }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;setNewTarget()V"))
     private void upgradedSetNewTarget(EntityDragon instance){
@@ -101,40 +107,54 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
         if (!this.isCharging) {
             if (!bTargetSelected) {
+                double var6;
+                double var4;
+                double var2;
                 boolean var1 = false;
-
                 do {
-                    this.targetX = (double)0.0F;
-                    this.targetY = (double)(70.0F + this.rand.nextFloat() * 50.0F);
-                    this.targetZ = (double)0.0F;
-                    this.targetX += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
-                    this.targetZ += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
-                    double var2 = this.posX - this.targetX;
-                    double var4 = this.posY - this.targetY;
-                    double var6 = this.posZ - this.targetZ;
-                    var1 = var2 * var2 + var4 * var4 + var6 * var6 > (double)100.0F;
-                } while(!var1);
-
+                    this.targetX = 0.0;
+                    this.targetY = 70.0f + this.rand.nextFloat() * 50.0f;
+                    this.targetZ = 0.0;
+                    this.targetX += (double)(this.rand.nextFloat() * 120.0f - 60.0f);
+                    this.targetZ += (double)(this.rand.nextFloat() * 120.0f - 60.0f);
+                } while (!(var1 = (var2 = this.posX - this.targetX) * var2 + (var4 = this.posY - this.targetY) * var4 + (var6 = this.posZ - this.targetZ) * var6 > 100.0));
                 this.target = null;
             }
         }
     }
+//    @Inject(method = "setNewTarget", at = @At(value = ""))
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void attackPlayer(CallbackInfo ci){
         this.attackTimer++;
+
         if(this.attackTimer % 4 == 0){
-            EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,120);
+            EntityPlayer target = this.worldObj.getClosestVulnerablePlayer(this.posX,this.posY,this.posZ,80);
+
             if (target != null) {
+                if(this.target != target){
+                    this.forceTargetCooldown--;
+                }
+                if(this.forceTargetCooldown <= 0) {
+                    this.target = target;
+                    this.forceTargetCooldown = 30 + (this.rand.nextInt(13) + 3) * 3;
+                    if(BlockEndPortal.bossDefeated){
+                        this.forceTargetCooldown -= 15;
+                    }
+                }
                 this.setAttackTarget(target);
             }
             if(this.dimension == 1 && !WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()){
                 WorldUtils.gameProgressSetEndDimensionHasBeenAccessedServerOnly();
             }
         }
-        if(!(this.target instanceof EntityPlayer player)) return;
-        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 22 : 35;
+        if (!this.isCharging) {
+            this.chargeCooldown--;
+        }
 
+
+        if(!(this.target instanceof EntityPlayer player)) return;
+        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 45 : 105;
 
 
         if(this.boundingBox.expand(1,1,1).intersectsWith(player.boundingBox)){
@@ -142,11 +162,12 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         } else{
             this.boundingBoxIntersectionTicks = 0;
         }
-        if(this.attackTimer == threshold && this.rand.nextInt(10) == 0 && !this.isCharging){
+        if(this.attackTimer == threshold && this.rand.nextInt(20) == 0 && !this.isCharging && this.chargeCooldown <= 0){
+            System.out.println("charging");
             this.isCharging = true;
+            this.chargeCooldown = 200 + this.rand.nextInt(200);
         }
-
-        if((this.getDistanceSqToEntity(player) < 4 || this.boundingBoxIntersectionTicks > 15) && this.isCharging){
+        if((this.getDistanceSqToEntity(player) < 5 || this.boundingBoxIntersectionTicks > 12) && this.isCharging){
             this.isCharging = false;
         }
 
@@ -154,7 +175,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 //                ? !(this.getDistanceSqToEntity(player) < 4 || this.boundingBoxIntersectionTicks > 10)
 //                : (this.attackTimer == threshold && this.rand.nextInt(2) == 0);
 
-        if(this.attackTimer > threshold){
+        if(this.attackTimer > threshold && !this.worldObj.isRemote){
             double var3 = player.posX - this.posX;
             double var5 = player.boundingBox.minY + (double) (player.height / 2.0F) - (this.posY + (double) (this.height / 2.0F));
             double var7 = player.posZ - this.posZ;

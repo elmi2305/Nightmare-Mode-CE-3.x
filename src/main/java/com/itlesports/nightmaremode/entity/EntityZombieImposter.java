@@ -1,13 +1,10 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
+import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityZombie;
-import net.minecraft.src.SharedMonsterAttributes;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 public class EntityZombieImposter extends EntityZombie {
     public EntityZombieImposter(World par1World) {
@@ -33,6 +30,19 @@ public class EntityZombieImposter extends EntityZombie {
     @Override
     public boolean isAffectedByMovementModifiers() {
         return false;
+    }
+
+    @Override
+    protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
+
+        if (bKilledByPlayer) {
+            if(this.rand.nextInt(Math.max(20 - iLootingModifier * 4, 1)) == 0){
+                this.dropItem(BTWItems.tannedLeather.itemID, 1);
+            } else if(this.rand.nextInt(Math.max(12 - iLootingModifier * 3, 1)) == 0){
+                this.dropItem(BTWItems.cutTannedLeather.itemID, 1);
+            }
+        }
+        super.dropFewItems(bKilledByPlayer, iLootingModifier);
     }
 
     @Override

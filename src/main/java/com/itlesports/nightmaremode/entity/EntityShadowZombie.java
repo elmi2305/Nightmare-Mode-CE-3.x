@@ -1,12 +1,10 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -177,8 +175,8 @@ public class EntityShadowZombie extends EntityZombie {
         if (this.worldObj != null) {
             int progress = NightmareUtils.getWorldProgress(this.worldObj);
             if(NightmareUtils.getIsBloodMoon()){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((24.0 + progress * 8));
-                // 32 -> 40 -> 48 -> 56
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((28.0 + progress * 8));
+                // 28 -> 36 -> 44 -> 52
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * 2);
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29d);
 

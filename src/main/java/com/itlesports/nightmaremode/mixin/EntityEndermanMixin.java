@@ -14,6 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Mixin(EntityEnderman.class)
 public abstract class EntityEndermanMixin extends EntityMob {
 
@@ -23,12 +27,60 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Shadow protected abstract void angerNearbyEndermen(EntityPlayer targetPlayer);
     @Shadow private int teleportDelay;
     @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
-
     @Shadow protected abstract boolean teleportRandomly();
-
     @Shadow public abstract int getCarried();
-
     @Shadow public abstract void setCarried(int par1);
+
+
+    @Shadow protected abstract boolean canPickUpBlock(int x, int y, int z);
+
+    @Shadow public abstract void setCarryingData(int par1);
+
+    @Unique
+    private static final Set<Integer> NATURAL_BLOCKS = new HashSet<>(Arrays.asList(
+            Block.grass.blockID,
+            Block.dirt.blockID,
+            Block.stone.blockID,
+            Block.sand.blockID,
+            Block.gravel.blockID,
+            Block.leaves.blockID
+    ));
+
+
+    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;updateWithoutCarriedBlock()Z"))
+    private boolean stealPlayerBlocks(EntityEnderman instance){
+        // Increase pickup frequency: 1 in 8 ticks (was 1 in 20)
+        if (this.rand.nextInt(8) == 0) {
+            int i = MathHelper.floor_double(this.posX - 3.0 + this.rand.nextDouble() * 6.0);
+            int j = MathHelper.floor_double(this.posY - 1.0 + this.rand.nextDouble() * 7.0);
+            int k = MathHelper.floor_double(this.posZ - 3.0 + this.rand.nextDouble() * 6.0);
+
+            int blockId = this.worldObj.getBlockId(i, j, k);
+
+            if (this.canPickUpBlock(i, j, k)) {
+                boolean isNaturalBlock = NATURAL_BLOCKS.contains(blockId);
+
+                // If it's a natural block, only pick it up with a low chance (e.g. 1 in 8)
+                if (isNaturalBlock && this.rand.nextInt(8) != 0) {
+                    return true; // Skip picking up this block most of the time
+                }
+
+                // Play pickup effect and pick up the block
+                this.worldObj.playAuxSFX(2244, i, j, k, blockId + (this.worldObj.getBlockMetadata(i, j, k) << 12));
+                this.setCarried(blockId);
+                this.setCarryingData(this.worldObj.getBlockMetadata(i, j, k));
+                this.worldObj.setBlockToAir(i, j, k);
+            }
+        } else if (this.worldObj.provider.dimensionId == 1 && this.rand.nextInt(9600) == 0) {
+            int i = MathHelper.floor_double(this.posX);
+            int j = MathHelper.floor_double(this.posY) + 1;
+            int k = MathHelper.floor_double(this.posZ);
+            this.worldObj.playAuxSFX(2247, i, j, k, 0);
+            this.setDead();
+            return false;
+        }
+        return true;
+    }
 
     @Unique int patience = 45;
     @Unique int inventorySwitchCooldown = 80;
