@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.rendering;
 
 import com.itlesports.nightmaremode.entity.EntityLightningCreeper;
-import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
@@ -9,7 +8,7 @@ public class RenderLightningCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("textures/entity/lightningCreeper0.png");
+    private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("textures/entity/lightningCreeper.png");
 
     public RenderLightningCreeper() {
         super();

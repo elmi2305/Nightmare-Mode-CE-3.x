@@ -14,6 +14,10 @@ public class NMBlocks {
     public static BedrockBlock specialObsidian;
     public static BlockUnderworldPortal underworldPortal;
     public static BlockBloodChest bloodChest;
+    public static BlockRoad blockRoad;
+    public static BlockRoad blockAsphalt;
+    public static BlockCustomLadder stoneLadder;
+    public static BlockCustomLadder ironLadder;
 
     public static void initNightmareBlocks(){
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("steel_ore");
@@ -28,10 +32,21 @@ public class NMBlocks {
         underworldPortal = new BlockUnderworldPortal(2309);
         Item.itemsList[underworldPortal.blockID] = new ItemBlock(NMBlocks.underworldPortal.blockID - 256);
 
+
         bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 1).setTextureName("chestBlood");
         Item.itemsList[bloodChest.blockID] = new ItemBlock(NMBlocks.bloodChest.blockID - 256);
-
         TileEntity.addMapping(TileEntityBloodChest.class, "BloodChest");
+
+        blockRoad = (BlockRoad) new BlockRoad(2311, 1.5f).setUnlocalizedName("nmRoad").setTextureName("nmRoad");
+        Item.itemsList[blockRoad.blockID] = new ItemBlock(NMBlocks.blockRoad.blockID - 256);
+        blockAsphalt =  (BlockRoad) new BlockRoad(2312, 1.85f).setUnlocalizedName("nmAsphalt").setTextureName("nmAsphalt");
+        Item.itemsList[blockAsphalt.blockID] = new ItemBlock(NMBlocks.blockAsphalt.blockID - 256);
+
+        stoneLadder = (BlockCustomLadder) new BlockCustomLadder(2313, 1.5f).setUnlocalizedName("nmStoneLadder").setTextureName("nmStoneLadder");
+        Item.itemsList[stoneLadder.blockID] = new ItemBlock(NMBlocks.stoneLadder.blockID - 256);
+
+        ironLadder = (BlockCustomLadder) new BlockCustomLadder(2314, 2.2f).setUnlocalizedName("nmIronLadder").setTextureName("nmIronLadder");
+        Item.itemsList[ironLadder.blockID] = new ItemBlock(NMBlocks.ironLadder.blockID - 256);
 
     }
 }

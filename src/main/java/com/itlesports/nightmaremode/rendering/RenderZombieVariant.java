@@ -16,7 +16,7 @@ public class RenderZombieVariant extends RenderZombie {
     private static final ResourceLocation bloodZombieTexture4 = new ResourceLocation("textures/entity/zombieFleshFrame44.png");
 
 
-    private static final ResourceLocation imposterZombieTexture = new ResourceLocation("textures/entity/zombieImposter3.png");
+    private static final ResourceLocation imposterZombieTexture = new ResourceLocation("textures/entity/zombieImposter.png");
 
 
 

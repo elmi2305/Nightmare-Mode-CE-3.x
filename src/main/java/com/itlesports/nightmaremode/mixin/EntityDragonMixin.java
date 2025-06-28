@@ -92,6 +92,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             cir.setReturnValue(true);
         }
     }
+
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;setNewTarget()V"))
     private void upgradedSetNewTarget(EntityDragon instance){
         instance.forceNewTarget = false;
@@ -104,8 +105,8 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 bTargetSelected = true;
             }
         }
-
-        if (!this.isCharging) {
+        boolean shouldRetarget = !this.isCharging || this.rand.nextInt(12) == 0;
+        if (shouldRetarget) {
             if (!bTargetSelected) {
                 double var6;
                 double var4;
@@ -137,7 +138,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
                 }
                 if(this.forceTargetCooldown <= 0) {
                     this.target = target;
-                    this.forceTargetCooldown = 30 + (this.rand.nextInt(13) + 3) * 3;
+                    this.forceTargetCooldown = 30 + (this.rand.nextInt(14) + 3) * 3;
                     if(BlockEndPortal.bossDefeated){
                         this.forceTargetCooldown -= 15;
                     }
@@ -154,7 +155,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
 
         if(!(this.target instanceof EntityPlayer player)) return;
-        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 45 : 105;
+        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 25 : 40;
 
 
         if(this.boundingBox.expand(1,1,1).intersectsWith(player.boundingBox)){
@@ -163,7 +164,6 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             this.boundingBoxIntersectionTicks = 0;
         }
         if(this.attackTimer == threshold && this.rand.nextInt(20) == 0 && !this.isCharging && this.chargeCooldown <= 0){
-            System.out.println("charging");
             this.isCharging = true;
             this.chargeCooldown = 200 + this.rand.nextInt(200);
         }
@@ -224,12 +224,8 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     }
 
     @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
-
-
-    @Override
     public float knockbackMagnitude() {
-        return 0f;
+        return this.isCharging ? 0.15f : 0f;
     }
 
     @Redirect(method = "destroyBlocksInAABB", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlockToAir(III)Z"))
@@ -239,6 +235,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         }
         return world.setBlockToAir(par1,par2,par3);
     }
+
     @Redirect(method = "destroyBlocksInAABB", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;obsidian:Lnet/minecraft/src/Block;"))
     private Block allowBreakingObsidianWhileCharging(){
         if(this.isCharging) return Block.glass;

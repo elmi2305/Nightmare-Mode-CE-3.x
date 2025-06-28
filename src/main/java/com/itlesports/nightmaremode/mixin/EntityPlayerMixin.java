@@ -49,7 +49,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         super(par1World);
     }
 
-                    // can't jump if you have slowness
+    // can't jump if you have slowness
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
         if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficulty() == Difficulties.HOSTILE){

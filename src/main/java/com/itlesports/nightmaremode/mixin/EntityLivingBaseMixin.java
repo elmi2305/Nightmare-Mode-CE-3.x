@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
@@ -33,6 +33,20 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
         if(thisObj instanceof EntitySkeleton skeleton && skeleton.getSkeletonType()==1){
             return 0.6f;
         } else{return 0.85f;}
+    }
+    @ModifyConstant(method = "moveEntityWithHeading", constant = @Constant(doubleValue = 0.2))
+    private double modifyLadderClimbRateBasedOnLadder(double constant){
+        int blockX = MathHelper.floor_double(this.posX);
+        int blockY = MathHelper.floor_double(this.boundingBox.minY);
+        int blockZ = MathHelper.floor_double(this.posZ);
+
+        int blockID = this.worldObj.getBlockId(blockX, blockY, blockZ);
+        if(blockID == NMBlocks.stoneLadder.blockID){
+            return NMBlocks.stoneLadder.getSpeedModifier();
+        } else if (blockID == NMBlocks.ironLadder.blockID){
+            return NMBlocks.ironLadder.getSpeedModifier();
+        }
+        return constant;
     }
 
     @Redirect(method = "updatePotionEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnParticle(Ljava/lang/String;DDDDDD)V"))

@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.block.blocks;
 
 
 import btw.block.BTWBlocks;
-import btw.crafting.util.FurnaceBurnTime;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
 import net.fabricmc.api.EnvType;
@@ -20,9 +19,9 @@ public class BlockBloodChest extends BlockContainer {
         this.chestType = par2;
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setBlockMaterial(BTWBlocks.plankMaterial);
-        this.setHardness(5.5F);
+        this.setHardness(10f);
+        this.setResistance(25f);
         this.setAxesEffectiveOn();
-        this.setPicksEffectiveOn();
         this.setBuoyant();
         this.initBlockBounds((double) 0.0625F, (double) 0.0F, (double) 0.0625F, (double) 0.9375F, (double) 0.875F, (double) 0.9375F);
         this.setStepSound(soundMetalFootstep);

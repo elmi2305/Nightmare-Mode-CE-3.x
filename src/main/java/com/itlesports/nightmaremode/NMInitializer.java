@@ -443,7 +443,7 @@ public class NMInitializer {
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodAxe), new Object[]{"#  ", "#X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodShovel), new Object[]{" # ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodHoe), new Object[]{"#X ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(Block.chest)});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(BTWBlocks.chest)});
 
         RecipeManager.addRecipe(new ItemStack(BTWItems.rawMysteryMeat), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(Item.beefRaw)});
         RecipeManager.addRecipe(new ItemStack(BTWItems.rawMysteryMeat), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(BTWItems.rawCheval)});
@@ -471,5 +471,14 @@ public class NMInitializer {
         RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"###", "# #", "   ", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
         RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
         RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{"###", "# #", "# #", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
+
+        // road
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockRoad), new Object[]{"XY", "YX", 'X', Block.gravel, 'Y', BTWBlocks.looseCobblestone});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockAsphalt, 8), new Object[]{"XXX", "XYX", "XXX", 'X', NMBlocks.blockRoad, 'Y', BTWItems.soulUrn});
+        // ladders
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), Item.silk});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), BTWItems.hempFibers});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), BTWItems.sinew});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.ironLadder, 4), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('S'), BTWItems.hempFibers});
     }
 }
