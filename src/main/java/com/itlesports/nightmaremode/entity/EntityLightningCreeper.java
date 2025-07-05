@@ -21,6 +21,7 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
     public EntityLightningCreeper(World par1World) {
         super(par1World);
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
+//        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
     }
 
     protected void entityInit() {

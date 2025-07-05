@@ -180,6 +180,7 @@ public class NightmareMode extends BTWAddon {
         });
 
     }
+
     private static Packet250CustomPayload createWorldStatePacket() {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);

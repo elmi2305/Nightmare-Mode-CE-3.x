@@ -25,6 +25,10 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         super(par1World);
     }
 
+    @Override
+    public boolean isPushedByWater() {
+        return !this.hasAttackTarget();
+    }
 
     @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void ensureSpawnsOnEclipse(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){

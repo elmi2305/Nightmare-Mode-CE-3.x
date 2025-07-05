@@ -19,16 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Shadow public WorldServer[] worldServers;
-
-    @Shadow @Final public Profiler theProfiler;
-
-    @Shadow public abstract ILogAgent getLogAgent();
-
-    @Shadow public abstract boolean isSinglePlayer();
-
-    @Shadow public abstract EnumGameType getGameType();
-
-    @Shadow private ServerConfigurationManager serverConfigManager;
     @Unique
     private int oldWorldState;
     @Unique
@@ -98,16 +88,13 @@ public abstract class MinecraftServerMixin {
         } else {
             NightmareMode.worldState = 0;
         }
-//        if (NightmareMode.worldState != oldWorldState) {
-            NightmareMode.sendWorldStateToAllPlayers();
-//        }
+        NightmareMode.sendWorldStateToAllPlayers();
         oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
     }
 //    @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
 //    private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){
-////        System.out.println(this.worldServers.length);
 //
 //        if(par1 == NightmareMode.UNDERWORLD_DIMENSION){
 //            cir.setReturnValue(this.worldServers[3]);

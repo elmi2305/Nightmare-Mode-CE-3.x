@@ -83,14 +83,17 @@ public class NMInitializer {
 
     private static void addPriestTrades(){
         EntityVillager.removeCustomTrade(2, TradeProvider.getBuilder().profession(2).level(5).arcaneScroll().scrollEnchant(Enchantment.fortune).secondaryEmeraldCost(24, 32).mandatory().build());
+        EntityVillager.removeLevelUpTrade(2,4);
 
-        TradeProvider.getBuilder().profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(12,16).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(6,12).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(16,32).addToTradeList();
-        TradeProvider.getBuilder().profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,10).weight(0.2f).addToTradeList();
+        TradeProvider.getBuilder().profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,10).weight(0.35f).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,32,64)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("fortune"))).weight(0.1f).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
-//        TradeProvider.getBuilder().profession(2).level(3).sell().item(Item.slimeBall.itemID).itemCount(2,4).weight(1.3f).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
+
+        TradeProvider.getBuilder().profession(2).level(4).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Block.enchantmentTable.blockID)).addAsLevelUpTrade();
+//        TradeProvider.getBuilder().profession(2).level(4).buy().item().emeraldCost(4, 4).addAsLevelUpTrade();
         TradeProvider.getBuilder().profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,26)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).addToTradeList();
         TradeProvider.getBuilder().profession(2).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
 

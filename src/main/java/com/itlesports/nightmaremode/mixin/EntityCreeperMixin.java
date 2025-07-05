@@ -5,6 +5,7 @@ import btw.entity.LightningBoltEntity;
 import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.NightmareUtils;
@@ -110,7 +111,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
         if(thisObj instanceof EntityDungCreeper){
-            for(int i = 0; i < 24; i++){
+            for(int i = 0; i < 12; i++){
                 spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung),3,this.rand);
             }
         }
@@ -313,6 +314,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 }
             }
         }
+    }
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;canCreepersBreachWalls()Z"))
+    private boolean avoidLightningCreeperExplodingThroughWalls(Difficulty instance){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        if(thisObj instanceof EntityLightningCreeper) return false;
+        return instance.canCreepersBreachWalls();
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))

@@ -57,7 +57,7 @@ public class EntityShadowZombie extends EntityZombie {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NightmareUtils.getWorldProgress(this.worldObj) <= 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
