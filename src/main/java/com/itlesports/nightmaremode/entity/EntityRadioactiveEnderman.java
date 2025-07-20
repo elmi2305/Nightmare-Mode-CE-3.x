@@ -24,7 +24,7 @@ public class EntityRadioactiveEnderman extends EntityEnderman {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
-        if (bKilledByPlayer && NightmareUtils.getWorldProgress(this.worldObj) > 0) {
+        if (bKilledByPlayer && NightmareUtils.getWorldProgress() > 0) {
             int dropCount = this.rand.nextInt(2 + iLootingModifier); // 0 - 1
 
             for (int i = 0; i < dropCount; ++i) {

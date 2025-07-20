@@ -27,7 +27,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        int progress = NightmareUtils.getWorldProgress();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 8 * progress) * NightmareUtils.getNiteMultiplier());
         // 20 -> 28 -> 36 -> 44
     }
@@ -203,8 +203,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(thisObj.dimension == 0 && !NightmareUtils.getIsMobEclipsed(this)){
             return constant * 2;
         }
-        if(thisObj.worldObj != null && NightmareUtils.getWorldProgress(thisObj.worldObj)>0){
-            return constant - NightmareUtils.getWorldProgress(thisObj.worldObj)*2 -1;
+        if(thisObj.worldObj != null && NightmareUtils.getWorldProgress()>0){
+            return constant - NightmareUtils.getWorldProgress()*2 -1;
             // 9 -> 7 -> 4 -> 2
         }
         return constant;
@@ -215,8 +215,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(thisObj.dimension == 0 && !NightmareUtils.getIsMobEclipsed(this)){
             return NightmareUtils.divByNiteMultiplier(constant * 2, 10);
         }
-        if(thisObj.worldObj != null && NightmareUtils.getWorldProgress(thisObj.worldObj)>0){
-            return NightmareUtils.divByNiteMultiplier((int) (constant - NightmareUtils.getWorldProgress(thisObj.worldObj) * 1.5 - 5), 8);
+        if(thisObj.worldObj != null && NightmareUtils.getWorldProgress()>0){
+            return NightmareUtils.divByNiteMultiplier((int) (constant - NightmareUtils.getWorldProgress() * 1.5 - 5), 8);
             // 15 -> 13 -> 12 -> 10
         }
         return constant;

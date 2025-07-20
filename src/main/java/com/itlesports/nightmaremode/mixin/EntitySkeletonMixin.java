@@ -11,7 +11,6 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NightmareUtils;
-import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -142,7 +141,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     return 0.3  * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
                 }
                 if (this.worldObj != null) {
-                    return (0.29 + NightmareUtils.getWorldProgress(this.worldObj) * 0.005) * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
+                    return (0.29 + NightmareUtils.getWorldProgress() * 0.005) * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
                 }
                 // 0.29 -> 0.295 -> 0.30 -> 0.305
             }
@@ -166,7 +165,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.4f : 1;
             boolean isBloodMoon = bloodMoonModifier > 1;
             boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
@@ -217,7 +216,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyArg(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int chanceToSpawnAsWitherSkelly(int bound){
         if(this.worldObj != null){
-            return 12 - (NightmareUtils.getWorldProgress(this.worldObj) * 3);
+            return 12 - (NightmareUtils.getWorldProgress() * 3);
         }
         return bound;
     }
@@ -294,7 +293,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
             boolean isEclipse = NightmareUtils.getIsEclipse();
@@ -375,7 +374,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
         if (this.worldObj != null) {
-            return NightmareUtils.divByNiteMultiplier((int) (8.0f - NightmareUtils.getWorldProgress(this.worldObj)*2), 2);
+            return NightmareUtils.divByNiteMultiplier((int) (8.0f - NightmareUtils.getWorldProgress()*2), 2);
         }
         return constant;
         // 8.0 -> 6.0 -> 4.0 -> 2.0
@@ -444,11 +443,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3 + (NightmareUtils.getWorldProgress(this.worldObj)*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
+            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3 + (NightmareUtils.getWorldProgress()*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double((2.0 + (NightmareUtils.getWorldProgress(this.worldObj) * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NightmareUtils.getNiteMultiplier());
+                arrow.setDamage(MathHelper.floor_double((2.0 + (NightmareUtils.getWorldProgress() * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NightmareUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
             }
         }
@@ -475,7 +474,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private int modifyAttackInterval(int constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
 
-            return switch (NightmareUtils.getWorldProgress(this.worldObj)) {
+            return switch (NightmareUtils.getWorldProgress()) {
                 case 0 -> NightmareUtils.divByNiteMultiplier(60, 20);
                 case 1 -> NightmareUtils.divByNiteMultiplier(50, 20);
                 case 2 -> NightmareUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
@@ -488,7 +487,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return (float) ((18.0f + NightmareUtils.getWorldProgress(this.worldObj) * 3) * Math.min(NightmareUtils.getNiteMultiplier(), 1.3f));
+            return (float) ((18.0f + NightmareUtils.getWorldProgress() * 3) * Math.min(NightmareUtils.getNiteMultiplier(), 1.3f));
         }
         return constant;
         // 18 -> 21 -> 24 -> 27

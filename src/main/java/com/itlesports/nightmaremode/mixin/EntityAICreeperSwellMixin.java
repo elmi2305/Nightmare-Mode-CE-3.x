@@ -33,7 +33,7 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
         if(this.swellingCreeper instanceof EntityLightningCreeper){
             return 4096;
         }
-        return constant + NightmareUtils.getWorldProgress(this.swellingCreeper.worldObj) * 3;
+        return constant + NightmareUtils.getWorldProgress() * 3;
     }
 
     @ModifyConstant(method = "shouldExecute", constant = @Constant(doubleValue = 9.0))

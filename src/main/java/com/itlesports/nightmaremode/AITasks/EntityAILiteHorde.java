@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
@@ -153,7 +152,7 @@ public class EntityAILiteHorde extends EntityAIBase {
         if (distanceSq < attackRange && this.attackTick <= 1) {
             this.taskOwner.swingItem();
             this.taskOwner.attackEntityAsMob(this.targetEntity);
-            this.attackTick = 13 - NightmareUtils.getWorldProgress(this.taskOwner.worldObj) * 2;
+            this.attackTick = 13 - NightmareUtils.getWorldProgress() * 2;
         }
 
         if (NightmareUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {

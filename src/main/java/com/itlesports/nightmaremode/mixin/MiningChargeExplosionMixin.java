@@ -16,7 +16,7 @@ public class MiningChargeExplosionMixin {
 
     @Inject(method = "destroyBlock", at = @At("HEAD"),cancellable = true,remap = false)
     private void steelCannotBeDestroyedByMiningCharges(int x, int y, int z, CallbackInfo ci){
-        if(this.worldObj.getBlockId(x,y,z) == NMBlocks.steelOre.blockID && NightmareUtils.getWorldProgress(this.worldObj) < 2){
+        if(this.worldObj.getBlockId(x,y,z) == NMBlocks.steelOre.blockID && NightmareUtils.getWorldProgress() < 2){
             ci.cancel();
         }
     }

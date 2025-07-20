@@ -57,7 +57,7 @@ public class EntityShadowZombie extends EntityZombie {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NightmareUtils.getWorldProgress(this.worldObj) <= 2)) {
+        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NightmareUtils.getWorldProgress() <= 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -156,7 +156,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     public void onLivingUpdate() {
         if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
-            int chance = getChanceOfTeleporting(NightmareUtils.getWorldProgress(this.worldObj));
+            int chance = getChanceOfTeleporting(NightmareUtils.getWorldProgress());
 
             if (this.rand.nextInt(chance) == 0) {
                 this.seekSkybases();
@@ -173,7 +173,7 @@ public class EntityShadowZombie extends EntityZombie {
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NightmareUtils.getNiteMultiplier());
         double followDistance = 16.0;
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             if(NightmareUtils.getIsBloodMoon()){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((28.0 + progress * 8));
                 // 28 -> 36 -> 44 -> 52

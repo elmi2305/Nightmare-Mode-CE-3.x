@@ -26,9 +26,11 @@ public class EntityBloodZombie extends EntityZombie {
 
 
     private boolean canBreakBlocks;
+
+
     @Override
     public boolean getCanSpawnHere() {
-        int worldProgress = NightmareUtils.getWorldProgress(this.worldObj);
+        int worldProgress = NightmareUtils.getWorldProgress();
         int moonPhase = this.worldObj.getMoonPhase();
         double y = this.posY;
 
@@ -129,12 +131,12 @@ public class EntityBloodZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NightmareUtils.getWorldProgress(this.worldObj) * 6) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NightmareUtils.getWorldProgress() * 6) * NightmareUtils.getNiteMultiplier());
     }
 
     @Override
     protected void addRandomArmor() {
-        if (this.rand.nextFloat() < 0.05f) {
+        if (this.rand.nextFloat() < 0.03f && this.worldObj.getWorldTime() > 120000) {
             int iHeldType = this.rand.nextInt(3);
             if (iHeldType == 0) {
                 this.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));

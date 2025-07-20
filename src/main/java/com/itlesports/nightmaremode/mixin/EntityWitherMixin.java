@@ -112,7 +112,7 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
     @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true)
     private void manageAprilFoolsWitherSetter(CallbackInfo ci){
-        if(NightmareUtils.getWorldProgress(this.worldObj) == 0 && NightmareMode.isAprilFools){
+        if(NightmareUtils.getWorldProgress() == 0 && NightmareMode.isAprilFools){
             ci.cancel();
         }
     }

@@ -52,7 +52,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
                 return;
             }
 
-            if (this.canDeflectArrows() && this.rand.nextInt(8 - NightmareUtils.getWorldProgress(this.worldObj) * 2) == 0) {
+            if (this.canDeflectArrows() && this.rand.nextInt(8 - NightmareUtils.getWorldProgress() * 2) == 0) {
                 this.arrowCooldown = 40;
 
                 EntityArrow reflectedArrow = new EntityArrow(this.worldObj);
@@ -86,7 +86,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
         if (this.worldObj != null && this.worldObj.isRemote) {
-            if(this.ticksExisted % (120 - NightmareUtils.getWorldProgress(this.worldObj) * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
+            if(this.ticksExisted % (120 - NightmareUtils.getWorldProgress() * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
                 shouldIncreaseHealth = true;
             }
         }

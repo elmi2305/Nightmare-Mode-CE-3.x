@@ -107,7 +107,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
+        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress() : 0;
         int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(4) + 2;
@@ -181,7 +181,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         } else if(this.posY < 50){
             return 10;
         }
-        return (dRange + (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
+        return (dRange + (NightmareUtils.getWorldProgress() > 0 ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
         // 20 max
     }
 
@@ -198,7 +198,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             if (this.squidOnHeadTimer > 100 && !EntityBloodWither.isBossActive()) {
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
-            switch (NightmareUtils.getWorldProgress(this.worldObj)) {
+            switch (NightmareUtils.getWorldProgress()) {
                 case 1:
                     if (!player.isPotionActive(Potion.poison)) {
                         player.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (120 * buffedSquidBonus),0));
@@ -224,7 +224,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return (NightmareUtils.getWorldProgress(this.worldObj) > 0 ? 12 * (NightmareUtils.getWorldProgress(this.worldObj)+1) : 18) * buffedSquidBonus * NightmareUtils.getNiteMultiplier();
+            return (NightmareUtils.getWorldProgress() > 0 ? 12 * (NightmareUtils.getWorldProgress()+1) : 18) * buffedSquidBonus * NightmareUtils.getNiteMultiplier();
             // pre nether 18, hardmode 24, post wither 36, post dragon 48
             // if BS is on, 36 -> 48 -> 72 -> 96
         }
@@ -235,7 +235,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private void lowerTentacleCooldown(CallbackInfo ci) {
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             --this.tentacleAttackCooldownTimer;
-            if (NightmareUtils.getWorldProgress(this.worldObj) > 1) {
+            if (NightmareUtils.getWorldProgress() > 1) {
                 this.tentacleAttackCooldownTimer -= (int) (2 * buffedSquidBonus);
             }
         }
@@ -243,7 +243,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return 100 - (NightmareUtils.getWorldProgress(this.worldObj) * 10);
+            return 100 - (NightmareUtils.getWorldProgress() * 10);
         }
         return constant;
         // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.
@@ -308,21 +308,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {
-        if (NightmareUtils.getWorldProgress(this.worldObj) > 0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (NightmareUtils.getWorldProgress() > 0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
             return true;
         }
         return bIsInDarkness;
     }
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean squidAlwaysNightPostNether(World instance){
-        if(NightmareUtils.getWorldProgress(this.worldObj) > 0){
+        if(NightmareUtils.getWorldProgress() > 0){
             return false;
         } else return this.worldObj.isDaytime();
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
     private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
-        if(NightmareUtils.getWorldProgress(this.worldObj)>0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(NightmareUtils.getWorldProgress()>0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
             return 0f;
         }
         return instance.getBrightness(v);

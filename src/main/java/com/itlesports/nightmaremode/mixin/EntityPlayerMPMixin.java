@@ -164,7 +164,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))
     private void dealMagicDamage(EntityPlayerMP instance, int i){
-        this.attackEntityFrom(DamageSource.magic, NightmareUtils.getWorldProgress(this.worldObj) * 2 + this.rand.nextInt(2));
+        this.attackEntityFrom(DamageSource.magic, NightmareUtils.getWorldProgress() * 2 + this.rand.nextInt(2));
         // makes fire resistance not bypass the lightning damage
     }
 
@@ -187,7 +187,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             this.steelModifier += 1;
         }
 
-        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NightmareUtils.getWorldProgress(this.worldObj), 0),true));
+        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NightmareUtils.getWorldProgress(), 0),true));
         this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - this.steelModifier * 79,3,true));
         this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),260 - this.steelModifier * 25,0,true));
         this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),260 - this.steelModifier * 25,0,true));
@@ -201,7 +201,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ServerConfigurationManager;sendChatMsg(Lnet/minecraft/src/ChatMessageComponent;)V",shift = At.Shift.AFTER))
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
-        if (NightmareUtils.getWorldProgress(this.worldObj) != 3) {
+        if (NightmareUtils.getWorldProgress() != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
             text2.setColor(EnumChatFormatting.RED);

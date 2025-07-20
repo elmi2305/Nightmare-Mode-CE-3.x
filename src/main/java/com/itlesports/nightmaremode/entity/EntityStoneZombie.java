@@ -25,7 +25,7 @@ public class EntityStoneZombie extends EntityZombie {
             boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
             boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
 
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 32 : 28) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NightmareUtils.getNiteMultiplier());
         }
     }
@@ -49,7 +49,7 @@ public class EntityStoneZombie extends EntityZombie {
                 heldItem = target.getHeldItem().getItem();
             }
 
-            int progress =  NightmareUtils.getWorldProgress(this.worldObj);
+            int progress =  NightmareUtils.getWorldProgress();
 
             if(heldItem != null){
                 if (itemsThatCanAttackTheZombie.contains(heldItem.itemID)) {

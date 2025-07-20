@@ -7,14 +7,11 @@ import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.TeleportScheduler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
@@ -129,7 +126,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress(world) == 0){return false;}
+        if(NightmareUtils.getWorldProgress() == 0){return false;}
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
     @Unique private boolean getIsNightFromWorldTime(World world){
@@ -137,7 +134,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsEclipse(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress(world) <= 2){return false;}
+        if(NightmareUtils.getWorldProgress() <= 2){return false;}
         return !this.getIsNightFromWorldTime(world) && dayCount % 2 == 0;
     }
 }

@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -34,7 +32,7 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
     @Override
     public boolean getCanSpawnHere() {
         if (this.worldObj == null) return false;
-        int worldProgress = NightmareUtils.getWorldProgress(this.worldObj);
+        int worldProgress = NightmareUtils.getWorldProgress();
         boolean bCanSpawn = false;
 
         if (this.worldObj.isThundering() || worldProgress > 0) {

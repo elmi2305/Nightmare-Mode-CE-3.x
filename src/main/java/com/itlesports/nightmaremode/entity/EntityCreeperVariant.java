@@ -66,7 +66,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
 
-        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        int progress = NightmareUtils.getWorldProgress();
         double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25 : 1;
         int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
@@ -102,7 +102,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
 
-        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        int progress = NightmareUtils.getWorldProgress();
         boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
         boolean result = false;
@@ -278,7 +278,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
         if(!isHostile){return 36;}
         int bloodMoonModifier = NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this) ? 3 : 1;
-        int i = NightmareUtils.getWorldProgress(this.worldObj);
+        int i = NightmareUtils.getWorldProgress();
 
         return switch (i) {
             case 0 ->  36 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 6b   10.4b

@@ -19,7 +19,7 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     @Inject(method = "attackEntityAsMob", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",ordinal = 0))
     private void addAdditionalEffects(Entity targetEntity, CallbackInfoReturnable<Boolean> cir){
         if(targetEntity instanceof EntityPlayer targetPlayer && targetPlayer.worldObj.getDifficulty() == Difficulties.HOSTILE){
-            if(NightmareUtils.getWorldProgress(targetPlayer.worldObj) >=1){
+            if(NightmareUtils.getWorldProgress() >=1){
                 targetPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100,1));
                 targetPlayer.addPotionEffect(new PotionEffect(Potion.poison.id,100,1));
             }
@@ -34,7 +34,7 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void scaleHealth(CallbackInfo ci){
         if (this.worldObj != null) {
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)11.0F + NightmareUtils.getWorldProgress(this.worldObj) * 4);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)11.0F + NightmareUtils.getWorldProgress() * 4);
         }
     }
 }

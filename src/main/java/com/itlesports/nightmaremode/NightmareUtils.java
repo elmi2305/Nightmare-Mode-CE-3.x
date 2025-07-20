@@ -131,12 +131,8 @@ public class NightmareUtils {
         return NightmareMode.getInstance().NITE_MULTIPLIER;
     }
 
-    public static int getWorldProgress(World world) {
+    public static int getWorldProgress() {
         return NightmareMode.worldState;
-//        if (!world.worldInfo.getDifficulty().shouldHCSRangeIncrease()) {
-//            return 0;
-//        }
-//        return NightmareMode.worldState;
     }
     public static boolean getIsBloodMoon(){
         return NightmareMode.isBloodMoon;

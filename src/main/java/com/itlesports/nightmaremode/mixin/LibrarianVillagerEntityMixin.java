@@ -18,7 +18,7 @@ public class LibrarianVillagerEntityMixin extends EntityVillager {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(this.worldObj != null && NightmareUtils.getWorldProgress(this.worldObj) == 3){
+        if(this.worldObj != null && NightmareUtils.getWorldProgress() == 3){
             if (this.conversionCountdown > 0) {
                 this.conversionCountdown -= 1;
             } else if (!this.worldObj.isRemote){

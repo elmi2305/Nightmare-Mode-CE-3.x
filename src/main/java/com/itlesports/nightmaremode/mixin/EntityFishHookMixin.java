@@ -173,7 +173,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
         if(this.fishItem != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
-            int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress(this.angler.worldObj) : 0;
+            int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress() : 0;
             double rarity = getRarity(this.fishItem, this.cap, worldProgress);
             String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
@@ -194,14 +194,14 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private int getWorldProgressBonus(){
         if(this.worldObj != null){
-            return NightmareUtils.getWorldProgress(this.worldObj);
+            return NightmareUtils.getWorldProgress();
         }
         return 0;
     }
 
     @Unique
     private Item getRandomItemForRod(){
-        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress(this.worldObj) : 0;
+        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress() : 0;
         this.cap = 800;
         double capModifier = this.isIron ? 1 : (5 - this.getWorldProgressBonus());
         int j = this.rand.nextInt((int) (this.cap * capModifier));

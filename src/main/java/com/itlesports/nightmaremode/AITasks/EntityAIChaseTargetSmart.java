@@ -169,7 +169,7 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
             if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
             this.taskOwner.swingItem();
             this.taskOwner.attackEntityAsMob(this.targetEntity);
-            this.attackTick = 13 - NightmareUtils.getWorldProgress(this.taskOwner.worldObj) * 2;
+            this.attackTick = 13 - NightmareUtils.getWorldProgress() * 2;
         }
 
         if (NightmareUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {

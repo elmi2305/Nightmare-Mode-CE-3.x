@@ -35,7 +35,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         if (distanceSq < computedRange && isHostile && ai.attackTick <= 1 && canSeeTarget) {
             attacker.swingItem();
             attacker.attackEntityAsMob(target);
-            ai.attackTick = 13 - NightmareUtils.getWorldProgress(attacker.worldObj) * 2;
+            ai.attackTick = 13 - NightmareUtils.getWorldProgress() * 2;
         }
 
         if (NightmareUtils.getIsMobEclipsed(attacker) && distanceSq < 3) {

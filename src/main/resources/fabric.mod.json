@@ -4,9 +4,9 @@
   "version": "${version}",
 
   "name": "Nightmare Mode",
-  "description": "A hardcore challenge addon for BTW 3.x. You will not survive.",
+  "description": "A hardcore challenge addon for BTW 3.0. You will not survive.",
   "authors": [
-    "Elmi, ITL Supress, BTF Dev Team"
+    "elmi2305"
   ],
   "contact": {
     "homepage": "https://itlesports.com/",

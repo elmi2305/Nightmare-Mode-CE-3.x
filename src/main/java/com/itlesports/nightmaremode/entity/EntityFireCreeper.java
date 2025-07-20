@@ -41,7 +41,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
         if (this.worldObj != null) {
-            int postNetherBoost = NightmareUtils.getWorldProgress(this.worldObj) >= 1 ? 12 : 0;
+            int postNetherBoost = NightmareUtils.getWorldProgress() >= 1 ? 12 : 0;
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0 + postNetherBoost);
         }
     }

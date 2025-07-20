@@ -230,7 +230,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
                 int itemID = NMItems.voidMembrane.itemID;
 
-                int var4 = this.rand.nextInt(3);
+                int var4 = this.rand.nextInt(5);
                 if (iLootingModifier > 0) {
                     var4 += this.rand.nextInt(iLootingModifier + 1);
                 }
@@ -250,7 +250,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
             int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 30 : 0;
 
@@ -335,7 +335,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void manageMinionSummons(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
 
-        this.minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress(this.worldObj));
+        this.minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress());
         if(this.minionCountdown > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NightmareUtils.getIsMobEclipsed(this) ? 300 : 0)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);

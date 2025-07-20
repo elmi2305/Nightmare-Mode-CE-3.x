@@ -63,8 +63,8 @@ public class EntityPigZombieMixin extends EntityZombie {
     private void applyAdditionalAttributes(CallbackInfo ci){
         boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NightmareUtils.getWorldProgress(this.worldObj) + (isEclipse ? 10 : 0)) * NightmareUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NightmareUtils.getWorldProgress(this.worldObj)) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NightmareUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NightmareUtils.getWorldProgress()) * NightmareUtils.getNiteMultiplier());
     }
 
 

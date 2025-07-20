@@ -123,7 +123,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public int getMaxInPortalTime() {
-        if(NightmareUtils.getWorldProgress(this.worldObj) > 1) {return 30;}
+        if(NightmareUtils.getWorldProgress() > 1) {return 30;}
         return super.getMaxInPortalTime();
     }
 

@@ -77,7 +77,7 @@ public class EntityMetalCreeper extends EntityCreeper implements EntityWithCusto
                 heldItem = target.getHeldItem().getItem();
             }
 
-            int progress =  NightmareUtils.getWorldProgress(this.worldObj);
+            int progress =  NightmareUtils.getWorldProgress();
 
             if(heldItem != null){
                 if (itemsThatCanAttackTheZombie.contains(heldItem.itemID)) {

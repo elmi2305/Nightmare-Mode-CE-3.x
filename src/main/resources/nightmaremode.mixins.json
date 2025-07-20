@@ -132,6 +132,7 @@
     "blocks.CobblestoneBlockMixin",
     "blocks.CobblestoneStairsBlockMixin",
     "blocks.DoorBlockMixin",
+    "blocks.HempCropBlockMixin",
     "blocks.HopperTileEntityMixin",
     "blocks.KilnBlockMixin",
     "blocks.MillstoneTileEntityMixin",

@@ -119,7 +119,7 @@ public abstract class WorldMixin {
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("RETURN"),remap = false, cancellable = true)
     private void manageGloomPostWither(CallbackInfoReturnable<Float> cir){
         World thisObj = (World)(Object)this;
-        if(NightmareUtils.getWorldProgress(thisObj) == 2 && !thisObj.isDaytime() && !NightmareUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
+        if(NightmareUtils.getWorldProgress() == 2 && !thisObj.isDaytime() && !NightmareUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
     }
 
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("TAIL"),cancellable = true)
@@ -148,7 +148,7 @@ public abstract class WorldMixin {
 
     @Unique
     private double calculateNiteMultiplier(){
-        int progress = NightmareUtils.getWorldProgress((World)(Object)this);
+        int progress = NightmareUtils.getWorldProgress();
 //        double baseInterval = 6000 * Math.log((4 - progress) * 10); // 22133 -> 20407 -> 17974
         double baseInterval = 14000 + 6000 * Math.log(Math.max(4 - progress, 1)) / Math.log(4); // from 20000 to 14000
 

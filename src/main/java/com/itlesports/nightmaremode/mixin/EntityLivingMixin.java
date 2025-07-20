@@ -40,7 +40,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             List<ItemStack> leatherArmorList = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                    if(rand.nextFloat() < (0.04f + NightmareUtils.getWorldProgress(this.worldObj)*0.02) + streakModifier){
+                    if(rand.nextFloat() < (0.04f + NightmareUtils.getWorldProgress()*0.02) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
                         this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));

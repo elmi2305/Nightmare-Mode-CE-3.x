@@ -87,7 +87,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        int progress = NightmareUtils.getWorldProgress(this.worldObj);
+        int progress = NightmareUtils.getWorldProgress();
         double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
         boolean isBloodMoon = bloodMoonModifier > 1;
 

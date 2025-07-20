@@ -16,7 +16,7 @@ public class EntityZombieImposter extends EntityZombie {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.40d);
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 5 : 2));
             // 20 -> 25 -> 30 -> 35
             // relaxed: 24 + 26

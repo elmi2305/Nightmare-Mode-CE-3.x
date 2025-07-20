@@ -97,7 +97,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void manageHardmodeSpiderSpawns(EntityLivingData entityData, CallbackInfoReturnable<EntityLivingData> cir){
-        if(NightmareUtils.getWorldProgress(this.worldObj) >= 1 && this.rand.nextInt(6) == 0){
+        if(NightmareUtils.getWorldProgress() >= 1 && this.rand.nextInt(6) == 0){
             JungleSpiderEntity caveSpider = new JungleSpiderEntity(this.worldObj);
             caveSpider.copyLocationAndAnglesFrom(this);
             this.setDead();
@@ -112,7 +112,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             if(thisObj instanceof EntityBlackWidowSpider){
                 return 1000 + this.rand.nextInt(2000);
             }
-            return 16000 - NightmareUtils.getWorldProgress(this.worldObj) * 3000;
+            return 16000 - NightmareUtils.getWorldProgress() * 3000;
         } else return 24000;
     }
 
@@ -124,7 +124,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             } else if(NightmareUtils.getIsMobEclipsed(this)){
                 return 200;
             }
-            return 16000 - NightmareUtils.getWorldProgress(this.worldObj)*3000;
+            return 16000 - NightmareUtils.getWorldProgress()*3000;
         }
         return constant;
     }
@@ -133,7 +133,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private void dropVenomSacks(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
-        if(thisObj.hasWeb() || thisObj.rand.nextInt(10) <= NightmareUtils.getWorldProgress(thisObj.worldObj) * 2){
+        if(thisObj.hasWeb() || thisObj.rand.nextInt(10) <= NightmareUtils.getWorldProgress() * 2){
             thisObj.dropItem(Item.fermentedSpiderEye.itemID,1);
         }
     }
@@ -146,8 +146,8 @@ public abstract class EntitySpiderMixin extends EntityMob{
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
-        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getWorldProgress(target.worldObj)*0.2){
-            if (NightmareUtils.getWorldProgress(target.worldObj) <= 1 && !(thisObj instanceof EntityFireSpider)) {
+        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NightmareUtils.getWorldProgress()*0.2){
+            if (NightmareUtils.getWorldProgress() <= 1 && !(thisObj instanceof EntityFireSpider)) {
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * NightmareUtils.getNiteMultiplier()),0));
             } else if (target.worldObj.getDifficulty() == Difficulties.HOSTILE){
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NightmareUtils.getNiteMultiplier()),1));
@@ -236,7 +236,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if (this.worldObj != null) {
             EntitySpider thisObj = (EntitySpider)(Object)this;
 
-            int progress = NightmareUtils.getWorldProgress(this.worldObj);
+            int progress = NightmareUtils.getWorldProgress();
             int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
             boolean isEclipse = eclipseModifier > 1;
             double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
