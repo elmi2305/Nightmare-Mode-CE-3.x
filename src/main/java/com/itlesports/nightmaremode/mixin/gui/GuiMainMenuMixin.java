@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiMainMenu;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.I18n;
 import net.minecraft.src.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
@@ -44,10 +45,19 @@ public class GuiMainMenuMixin extends GuiScreen {
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void manageSplashText(CallbackInfo ci){
-        this.splashText = getQuotes().get(rand.nextInt(getQuotes().size()));
+        this.splashText = getLocalizedSplash();
         if (MENU == null) {
             MENU = NightmareMode.isAprilFools ? CANCER_MODE : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN) : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
         }
+    }
+
+    @Unique
+    private static String getLocalizedSplash() {
+        List<String> splashList = new ArrayList<>();
+        for (int i = 1; i <= 24; ++i) {
+            splashList.add(I18n.getString("gui.mainmenu.splash" + i));
+        }
+        return splashList.get(rand.nextInt(splashList.size()));
     }
 
     @ModifyArg(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
@@ -57,17 +67,18 @@ public class GuiMainMenuMixin extends GuiScreen {
         }
         return par1ResourceLocation;
     }
+
     @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 0),index = 3)
     private String replaceSinglePlayerText(String par4Str){
         if(NightmareMode.isAprilFools){
-            return "Skibidiplayer";
+            return I18n.getString("gui.mainmenu.skibidiplayer");
         }
         return par4Str;
     }
     @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 1),index = 3)
     private String replaceMultiPlayerText(String par4Str){
         if(NightmareMode.isAprilFools){
-            return "Rizz your friends";
+            return I18n.getString("gui.mainmenu.rizzfriends");
         }
         return par4Str;
     }
@@ -91,8 +102,8 @@ public class GuiMainMenuMixin extends GuiScreen {
     @ModifyArgs(method = "drawPanorama", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorRGBA_I(II)V"))
     private void modifyColorsOnBloodmare0(Args args){
         if (NightmareMode.bloodmare) {
-        args.set(0, (255 << 16) | (40 << 8) | 40);
-        args.set(1, 40);
+            args.set(0, (255 << 16) | (40 << 8) | 40);
+            args.set(1, 40);
         }
     }
 
@@ -113,35 +124,5 @@ public class GuiMainMenuMixin extends GuiScreen {
 
         // Draw the texture
         this.drawTexturedModalRect(var6, customTextureY, 0, 0, customWidth, customHeight);
-    }
-
-    @Unique
-    private static @NotNull List<String> getQuotes() {
-        List<String> quotesList = new ArrayList<>();
-        quotesList.add("Nightmare Mode!");
-        quotesList.add("Also try MEA!");
-        quotesList.add("Also try Hostile!");
-        quotesList.add("Am I dreaming?");
-        quotesList.add("Wakey wakey!");
-        quotesList.add("Orange-flavored creepers?!");
-        quotesList.add("Better Than MEA?");
-        quotesList.add("It's just a bad dream!");
-        quotesList.add("Not the water creatures!");
-        quotesList.add("MEN! WITH ME!");
-        quotesList.add("Wake up!");
-        quotesList.add("Type 1 if you agree!");
-        quotesList.add("Now with Blood Moons!");
-        quotesList.add("It's easy if you're good!");
-        quotesList.add("Hug the saw!");
-        quotesList.add("Also try Bloodmare!");
-        quotesList.add("Axes aren't weapons!");
-        quotesList.add("Buff Squids!");
-        quotesList.add("Cookie Creepers!");
-        quotesList.add("MEA is harder!");
-        quotesList.add("A God does not fear death!");
-        quotesList.add("Greed!");
-        quotesList.add("Shattered Sun!");
-        quotesList.add("Now with Solar Eclipses!");
-        return quotesList;
     }
 }

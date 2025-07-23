@@ -5,6 +5,7 @@ import btw.world.util.WorldUtils;
 import btw.world.util.data.BTWWorldData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
+import net.minecraft.src.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,7 +43,7 @@ public class BlockPortalMixin{
 
                 if (distanceSq <= radius * radius) {
                     ChatMessageComponent text1 = new ChatMessageComponent();
-                    text1.addText("<???> 3 days remain.");
+                    text1.addText("<???> " + I18n.getString("nightmare.portal_warning"));
                     text1.setColor(EnumChatFormatting.DARK_RED);
                     player.sendChatToPlayer(text1);
 

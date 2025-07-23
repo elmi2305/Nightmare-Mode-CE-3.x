@@ -6,6 +6,7 @@ import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiCreateWorld;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,11 +48,11 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private String customDifficultyName(Difficulty difficulty){
         if(difficulty.ID == 2){
             if(NightmareMode.bloodmare){
-                return "Bloodmare";
+                return I18n.getString("difficulty.bloodmare");
             }
-            return "Nightmare";
+            return I18n.getString("difficulty.nightmare");
         } else if (difficulty.ID == 0){
-            return "Bad Dream";
+            return I18n.getString("difficulty.baddream");
         }
         return difficulty.NAME;
     }
@@ -67,22 +68,22 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             if(NightmareMode.bloodmare){
                 return "";
             }
-            return "The ultimate challenge.";
+            return I18n.getString("difficulty.nightmare.desc");
         }
-        return "A more relaxed experience. Makes";
+        return I18n.getString("difficulty.baddream.desc1");
     }
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 11))
     private String customText1(String string){
         if (this.difficultyID == 2) {
             return "";
         }
-        return "many aspects of Nightmare Mode";
+        return I18n.getString("difficulty.baddream.desc2");
     }
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 12))
     private String customText2(String string){
         if (this.difficultyID == 2) {
             return "";
         }
-        return "easier and more forgiving.";
+        return I18n.getString("difficulty.baddream.desc3");
     }
 }
