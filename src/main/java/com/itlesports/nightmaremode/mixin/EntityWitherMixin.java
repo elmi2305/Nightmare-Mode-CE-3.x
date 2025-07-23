@@ -251,7 +251,7 @@ public abstract class EntityWitherMixin extends EntityMob {
             this.setHealth(300);
             if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("A God does not fear death.");
+                text2.addText(I18n.getString("nightmare.wither_revive_message"));
                 text2.setColor(EnumChatFormatting.BLACK);
                 this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
             }

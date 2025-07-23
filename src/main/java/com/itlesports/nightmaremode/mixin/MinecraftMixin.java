@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import net.minecraft.src.*;
+import net.minecraft.src.I18n;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,7 +44,7 @@ public class MinecraftMixin {
         if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_F4) && NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
             if (NightmareMode.worldState == 0) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("<???> Hardmode has begun.");
+                text2.addText("<???> " + I18n.getString("nightmare.hardmode_begun"));
                 text2.setColor(EnumChatFormatting.DARK_RED);
                 this.thePlayer.sendChatToPlayer(text2);
                 this.thePlayer.playSound("mob.wither.death",1.0f,0.905f);

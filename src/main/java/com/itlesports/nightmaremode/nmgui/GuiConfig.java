@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.nmgui;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
+import net.minecraft.src.I18n;
 
 import java.awt.*;
 
@@ -238,8 +239,8 @@ public class GuiConfig extends GuiScreen {
     public void initGui() {
         this.buttonList.clear();
         int width = this.width / 8;
-        this.buttonList.add(new GuiButton(0, width, this.height - 30, 100, 20, "Go back"));
-        this.buttonList.add(new GuiButton(13, width + 200, this.height - 30, 100, 20, "Switch pages"));
+        this.buttonList.add(new GuiButton(0, width, this.height - 30, 100, 20, I18n.getString("gui.config.go_back")));
+        this.buttonList.add(new GuiButton(13, width + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 
         // add configs
         int easyBase = 0x8a8a00;
@@ -364,86 +365,75 @@ public class GuiConfig extends GuiScreen {
     }
 
     private void addMoreVariantsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.moreVariantsButton = new GuiColoredButton(1, x, 1 * heightMultiplier, 100, 20, "More Variants", baseColor,activeColor);
-        this.moreVariantsButton.setTooltipText("Adds various new variants to NM");
+        this.moreVariantsButton = new GuiColoredButton(1, x, 1 * heightMultiplier, 100, 20, I18n.getString("gui.config.more_variants"), baseColor,activeColor);
+        this.moreVariantsButton.setTooltipText(I18n.getString("gui.config.tooltip.more_variants"));
         this.buttonList.add(this.moreVariantsButton);
     }
     private void addEvolvedMobsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.evolvedMobsButton = new GuiColoredButton(2, x, 2 * heightMultiplier, 100, 20, "Evolved Mobs", baseColor,activeColor);
-        this.evolvedMobsButton.setTooltipText("All mob variants can spawn, regardless of world progress");
+        this.evolvedMobsButton = new GuiColoredButton(2, x, 2 * heightMultiplier, 100, 20, I18n.getString("gui.config.evolved_mobs"), baseColor,activeColor);
+        this.evolvedMobsButton.setTooltipText(I18n.getString("gui.config.tooltip.evolved_mobs"));
         this.buttonList.add(this.evolvedMobsButton);
     }
-
     private void addBuffedSquidsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.buffedSquidsButton = new GuiColoredButton(3, x, 3 * heightMultiplier, 100, 20, "Buffed Squids", baseColor,activeColor);
-        this.buffedSquidsButton.setTooltipText("Squids have doubled stats and can chase the player on land");
+        this.buffedSquidsButton = new GuiColoredButton(3, x, 3 * heightMultiplier, 100, 20, I18n.getString("gui.config.buffed_squids"), baseColor,activeColor);
+        this.buffedSquidsButton.setTooltipText(I18n.getString("gui.config.tooltip.buffed_squids"));
         this.buttonList.add(this.buffedSquidsButton);
-}
-
+    }
     private void addNITEButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.NITEButton = new GuiColoredButton(4, x, 4 * heightMultiplier, 100, 20, "NITE", baseColor, activeColor);
-        this.NITEButton.setTooltipText("Nightmare Is Too Easy. Start with 3 hearts and shanks. Gain them back by levelling up. Mobs get stronger the longer you play. Raw food is safe to eat. Reduced hunger cost & movement penalties. Inspired by MITE");
+        this.NITEButton = new GuiColoredButton(4, x, 4 * heightMultiplier, 100, 20, I18n.getString("gui.config.nite"), baseColor, activeColor);
+        this.NITEButton.setTooltipText(I18n.getString("gui.config.tooltip.nite"));
         this.buttonList.add(this.NITEButton);
     }
-
     private void addDarkStormyNightmareButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.darkStormyNightmareButton = new GuiColoredButton(5, x, 5 * heightMultiplier, 100, 20, "Dark Stormy Night", baseColor, activeColor);
-        this.darkStormyNightmareButton.setTooltipText("The world is under a constant thunderstorm, lowering light and increasing enemy spawn rate. Thunder is quieter");
+        this.darkStormyNightmareButton = new GuiColoredButton(5, x, 5 * heightMultiplier, 100, 20, I18n.getString("gui.config.dark_stormy_night"), baseColor, activeColor);
+        this.darkStormyNightmareButton.setTooltipText(I18n.getString("gui.config.tooltip.dark_stormy_night"));
         this.buttonList.add(this.darkStormyNightmareButton);
     }
-
     private void addNoSkybasesButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.noSkybasesButton = new GuiColoredButton(6, x, 6 * heightMultiplier, 100, 20, "No Skybases", baseColor, activeColor);
-        this.noSkybasesButton.setTooltipText("Logs and planks have gravity");
+        this.noSkybasesButton = new GuiColoredButton(6, x, 6 * heightMultiplier, 100, 20, I18n.getString("gui.config.no_skybases"), baseColor, activeColor);
+        this.noSkybasesButton.setTooltipText(I18n.getString("gui.config.tooltip.no_skybases"));
         this.buttonList.add(this.noSkybasesButton);
     }
-
     private void addCancerModeButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.cancerModeButton = new GuiColoredButton(7, x, 7 * heightMultiplier, 100, 20, "Cancer Mode", baseColor, activeColor);
-        this.cancerModeButton.setTooltipText("Destroys the world generation algorithm, destroys the renderer, adds stupid features and flashing lights. The true April Fools experience");
+        this.cancerModeButton = new GuiColoredButton(7, x, 7 * heightMultiplier, 100, 20, I18n.getString("gui.config.cancer_mode"), baseColor, activeColor);
+        this.cancerModeButton.setTooltipText(I18n.getString("gui.config.tooltip.cancer_mode"));
         this.buttonList.add(this.cancerModeButton);
     }
-
     private void addHordeModeButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.hordeModeButton = new GuiColoredButton(24, x,  1 * heightMultiplier, 100, 20, "Horde Mode", baseColor, activeColor);
-        this.hordeModeButton.setTooltipText("All mobs have perfect awareness of your position. They will track and chase you from anywhere. They were just going easy on you before");
+        this.hordeModeButton = new GuiColoredButton(24, x,  1 * heightMultiplier, 100, 20, I18n.getString("gui.config.horde_mode"), baseColor, activeColor);
+        this.hordeModeButton.setTooltipText(I18n.getString("gui.config.tooltip.horde_mode"));
         this.buttonList.add(this.hordeModeButton);
     }
-
     private void addTotalEclipseButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.totalEclipseButton = new GuiColoredButton(8, x, 2 * heightMultiplier, 100, 20, "Total Eclipse", baseColor, activeColor);
-        this.totalEclipseButton.setTooltipText("Every day is a Solar Eclipse");
+        this.totalEclipseButton = new GuiColoredButton(8, x, 2 * heightMultiplier, 100, 20, I18n.getString("gui.config.total_eclipse"), baseColor, activeColor);
+        this.totalEclipseButton.setTooltipText(I18n.getString("gui.config.tooltip.total_eclipse"));
         this.buttonList.add(this.totalEclipseButton);
     }
-
     private void addBloodmareButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.bloodmareButton = new GuiColoredButton(9, x, 3 * heightMultiplier, 100, 20, "Bloodmare", baseColor, activeColor);
-        this.bloodmareButton.setTooltipText("Every night is a Blood Moon");
+        this.bloodmareButton = new GuiColoredButton(9, x, 3 * heightMultiplier, 100, 20, I18n.getString("gui.config.bloodmare"), baseColor, activeColor);
+        this.bloodmareButton.setTooltipText(I18n.getString("gui.config.tooltip.bloodmare"));
         this.buttonList.add(this.bloodmareButton);
     }
-
     private void addMagicMonstersButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.magicMonstersButton = new GuiColoredButton(10, x, 4 * heightMultiplier, 100, 20, "Magic Monsters", baseColor, activeColor);
-        this.magicMonstersButton.setTooltipText("All mobs are replaced by witches");
+        this.magicMonstersButton = new GuiColoredButton(10, x, 4 * heightMultiplier, 100, 20, I18n.getString("gui.config.magic_monsters"), baseColor, activeColor);
+        this.magicMonstersButton.setTooltipText(I18n.getString("gui.config.tooltip.magic_monsters"));
         this.buttonList.add(this.magicMonstersButton);
     }
-
     private void addUnkillableMobsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.unkillableMobsButton = new GuiColoredButton(11, x, 5 * heightMultiplier, 100, 20, "Unkillable Mobs", baseColor, activeColor);
-        this.unkillableMobsButton.setTooltipText("Mobs cannot take melee damage");
+        this.unkillableMobsButton = new GuiColoredButton(11, x, 5 * heightMultiplier, 100, 20, I18n.getString("gui.config.unkillable_mobs"), baseColor, activeColor);
+        this.unkillableMobsButton.setTooltipText(I18n.getString("gui.config.tooltip.unkillable_mobs"));
         this.buttonList.add(this.unkillableMobsButton);
     }
-
     private void addNoHitButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.noHitButton = new GuiColoredButton(12, x, 6 * heightMultiplier, 100, 20, "NoHit", baseColor, activeColor);
-        this.noHitButton.setTooltipText("One hit, and you're out");
+        this.noHitButton = new GuiColoredButton(12, x, 6 * heightMultiplier, 100, 20, I18n.getString("gui.config.no_hit"), baseColor, activeColor);
+        this.noHitButton.setTooltipText(I18n.getString("gui.config.tooltip.no_hit"));
         this.buttonList.add(this.noHitButton);
     }
 
 
     private void addBirthdayBashButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.birthdayBashButton = new GuiColoredButton(25, x, heightMultiplier * 7, 100, 20, "Birthday Bash", baseColor, activeColor);
-        this.birthdayBashButton.setTooltipText("Happy Birthday");
+        this.birthdayBashButton = new GuiColoredButton(25, x, heightMultiplier * 7, 100, 20,I18n.getString ("Birthday Bash"), baseColor, activeColor);
+        this.birthdayBashButton.setTooltipText(I18n.getString("gui.config.birthday_bash"));
         this.buttonList.add(this.birthdayBashButton);
     }
 
@@ -452,70 +442,60 @@ public class GuiConfig extends GuiScreen {
 
 
     private void addDateTimerButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.shouldShowDateTimerButton = new GuiColoredButton(14, x, heightMultiplier * 1, 100, 20, "Date Timer", baseColor, activeColor);
-        this.shouldShowDateTimerButton.setTooltipText("Shows the Day/Night cycle and the number of days played on the HUD");
+        this.shouldShowDateTimerButton = new GuiColoredButton(14, x, heightMultiplier * 1, 100, 20, I18n.getString("gui.config.date_timer"), baseColor, activeColor);
+        this.shouldShowDateTimerButton.setTooltipText(I18n.getString("gui.config.tooltip.date_timer"));
         this.buttonList.add(this.shouldShowDateTimerButton);
     }
-
     private void addRealTimerButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.shouldShowRealTimerButton = new GuiColoredButton(15, x, heightMultiplier * 2, 100, 20, "Real Timer", baseColor, activeColor);
-        this.shouldShowRealTimerButton.setTooltipText("Shows the in-game time spent playing");
+        this.shouldShowRealTimerButton = new GuiColoredButton(15, x, heightMultiplier * 2, 100, 20, I18n.getString("gui.config.real_timer"), baseColor, activeColor);
+        this.shouldShowRealTimerButton.setTooltipText(I18n.getString("gui.config.tooltip.real_timer"));
         this.buttonList.add(this.shouldShowRealTimerButton);
     }
-
     private void addBloodmoonColorsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.bloodmoonColorsButton = new GuiColoredButton(16, x, heightMultiplier * 3, 100, 20, "Bloodmoon Colors", baseColor, activeColor);
-        this.bloodmoonColorsButton.setTooltipText("Determines whether the screen should be tinted red during a Blood Moon. Advised to turn this off if you are a content creator");
+        this.bloodmoonColorsButton = new GuiColoredButton(16, x, heightMultiplier * 3, 100, 20, I18n.getString("gui.config.bloodmoon_colors"), baseColor, activeColor);
+        this.bloodmoonColorsButton.setTooltipText(I18n.getString("gui.config.tooltip.bloodmoon_colors"));
         this.buttonList.add(this.bloodmoonColorsButton);
     }
-
     private void addCrimsonButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.crimsonButton = new GuiColoredButton(17, x, heightMultiplier * 4, 100, 20, "Crimson", baseColor, activeColor);
-        this.crimsonButton.setTooltipText("Everything is blood red! Purely visual");
+        this.crimsonButton = new GuiColoredButton(17, x, heightMultiplier * 4, 100, 20, I18n.getString("gui.config.crimson"), baseColor, activeColor);
+        this.crimsonButton.setTooltipText(I18n.getString("gui.config.tooltip.crimson"));
         this.buttonList.add(this.crimsonButton);
     }
-
     private void addConfigOnHudButton( int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.configOnHudButton = new GuiColoredButton(18, x, heightMultiplier * 5, 100, 20, "Config on HUD", baseColor, activeColor);
-        this.configOnHudButton.setTooltipText("Displays the active config modes on the HUD");
+        this.configOnHudButton = new GuiColoredButton(18, x, heightMultiplier * 5, 100, 20, I18n.getString("gui.config.config_on_hud"), baseColor, activeColor);
+        this.configOnHudButton.setTooltipText(I18n.getString("gui.config.tooltip.config_on_hud"));
         this.buttonList.add(this.configOnHudButton);
     }
-
     private void addPotionParticlesButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.potionParticlesButton = new GuiColoredButton(19, x, heightMultiplier * 6, 100, 20, "Potion Particles", baseColor, activeColor);
-        this.potionParticlesButton.setTooltipText("Whether particles from potions should appear or not");
+        this.potionParticlesButton = new GuiColoredButton(19, x, heightMultiplier * 6, 100, 20, I18n.getString("gui.config.potion_particles"), baseColor, activeColor);
+        this.potionParticlesButton.setTooltipText(I18n.getString("gui.config.tooltip.potion_particles"));
         this.buttonList.add(this.potionParticlesButton);
     }
-
     private void addFishingAlertsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.shouldDisplayFishingAnnouncementsButton = new GuiColoredButton(20, x, heightMultiplier * 1, 100, 20, "Fishing Alerts", baseColor, activeColor);
-        this.shouldDisplayFishingAnnouncementsButton.setTooltipText("Whether rare drops obtained by fishing should display in chat");
+        this.shouldDisplayFishingAnnouncementsButton = new GuiColoredButton(20, x, heightMultiplier * 1, 100, 20, I18n.getString("gui.config.fishing_alerts"), baseColor, activeColor);
+        this.shouldDisplayFishingAnnouncementsButton.setTooltipText(I18n.getString("gui.config.tooltip.fishing_alerts"));
         this.buttonList.add(this.shouldDisplayFishingAnnouncementsButton);
     }
-
     private void addCMRenderingButton( int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.aprilFoolsRenderingButton = new GuiColoredButton(21, x, heightMultiplier * 2, 100, 20, "CM Rendering", baseColor, activeColor);
-        this.aprilFoolsRenderingButton.setTooltipText("Enables / disables the warped rendering effects of the April Fools patch. Recommended for streamers or people with sensitive eyes");
+        this.aprilFoolsRenderingButton = new GuiColoredButton(21, x, heightMultiplier * 2, 100, 20, I18n.getString("gui.config.cm_rendering"), baseColor, activeColor);
+        this.aprilFoolsRenderingButton.setTooltipText(I18n.getString("gui.config.tooltip.cm_rendering"));
         this.buttonList.add(this.aprilFoolsRenderingButton);
     }
-
     private void addPerfectStartButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.perfectStartButton = new GuiColoredButton(22, x, heightMultiplier * 4, 100, 20, "Perfect Start", baseColor, activeColor);
-        this.perfectStartButton.setTooltipText("Tired of resetting over and over on the first night? This option starts you off on day 2 with a brick oven and an axe. However, you start with only 6 shanks");
+        this.perfectStartButton = new GuiColoredButton(22, x, heightMultiplier * 4, 100, 20, I18n.getString("gui.config.perfect_start"), baseColor, activeColor);
+        this.perfectStartButton.setTooltipText(I18n.getString("gui.config.tooltip.perfect_start"));
         this.buttonList.add(this.perfectStartButton);
     }
     private void addExtraArmorButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.extraArmorButton = new GuiColoredButton(23, x, heightMultiplier * 5, 100, 20, "Extra Armor", baseColor, activeColor);
-        this.extraArmorButton.setTooltipText("Starts you off with a cheap set of armor");
+        this.extraArmorButton = new GuiColoredButton(23, x, heightMultiplier * 5, 100, 20, I18n.getString("gui.config.extra_armor"), baseColor, activeColor);
+        this.extraArmorButton.setTooltipText(I18n.getString("gui.config.tooltip.extra_armor"));
         this.buttonList.add(this.extraArmorButton);
     }
     private void addFullbrightButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.fullBrightButton = new GuiColoredButton(25, x, heightMultiplier * 6, 100, 20, "Full Bright", baseColor, activeColor);
-        this.fullBrightButton.setTooltipText("Renders the world at maximum brightness. Does not bypass gloom");
+        this.fullBrightButton = new GuiColoredButton(25, x, heightMultiplier * 6, 100, 20, I18n.getString("gui.config.full_bright"), baseColor, activeColor);
+        this.fullBrightButton.setTooltipText(I18n.getString("gui.config.tooltip.full_bright"));
         this.buttonList.add(this.fullBrightButton);
     }
-
-
 
     private static String cap(String str) {
         if (str == null || str.isEmpty()) {

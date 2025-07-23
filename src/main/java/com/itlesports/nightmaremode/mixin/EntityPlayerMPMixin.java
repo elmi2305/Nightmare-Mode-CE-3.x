@@ -7,6 +7,7 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
+import net.minecraft.src.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EntityPlayerMP.class)
-
 public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
@@ -139,7 +139,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
         if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("<???> Hardmode has begun.");
+            text2.addText("<???> " + I18n.getString("nightmare.hardmode_begun"));
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death", 0.9f, 0.905f);
@@ -203,7 +203,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
         if (NightmareUtils.getWorldProgress() != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
+            text2.addText("<???> " + I18n.getString("nightmare.taunt_" + (this.rand.nextInt(getDeathMessages().size()))));
             text2.setColor(EnumChatFormatting.RED);
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
@@ -212,34 +212,33 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Unique
     private static @NotNull List<String> getDeathMessages() {
         List<String> messageList = new ArrayList<>();
-        messageList.add("<???> Pathetic.");
-        messageList.add("<???> Really?");
-        messageList.add("<???> Have you tried not dying?");
-        messageList.add("<???> Skill issue.");
-        messageList.add("<???> Dead again?");
-        messageList.add("<???> Nice one.");
-        messageList.add("<???> Easy.");
-        messageList.add("<???> Not even close.");
-        messageList.add("<???> Don't bother trying.");
-        messageList.add("<???> You weren't built to last.");
-        messageList.add("<???> Did you think you were special? You're not even memorable.");
-        messageList.add("<???> Such potential... wasted on someone so utterly incompetent.");
-        messageList.add("<???> Your light fades, but I remain eternal.");
-        messageList.add("<???> Pathetic attempt. Try again.");
-        messageList.add("<???> Is that the best you can do?");
-        messageList.add("<???> Not even a worthy sacrifice.");
-        messageList.add("<???> Try an easier difficulty?");
-        messageList.add("<???> Another failure. How delightful to watch.");
-        messageList.add("<???> Was that supposed to impress me?");
+        messageList.add("taunt_0");
+        messageList.add("taunt_1");
+        messageList.add("taunt_2");
+        messageList.add("taunt_3");
+        messageList.add("taunt_4");
+        messageList.add("taunt_5");
+        messageList.add("taunt_6");
+        messageList.add("taunt_7");
+        messageList.add("taunt_8");
+        messageList.add("taunt_9");
+        messageList.add("taunt_10");
+        messageList.add("taunt_11");
+        messageList.add("taunt_12");
+        messageList.add("taunt_13");
+        messageList.add("taunt_14");
+        messageList.add("taunt_15");
+        messageList.add("taunt_16");
+        messageList.add("taunt_17");
+        messageList.add("taunt_18");
         return messageList;
     }
 
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<The Twins> Your journey ends here.");
+        text2.addText("<The Twins> " + I18n.getString("nightmare.twins_end"));
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
-        // need to figure out how to make this not happen every time the player goes to the end
     }
 }

@@ -2,17 +2,16 @@ package com.itlesports.nightmaremode.nmgui;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
-
+import net.minecraft.src.I18n;
 
 public class GuiWarning extends GuiScreen {
     private static boolean playerHasAgreed = false;
     private final GuiScreen parentGuiScreen;
-    private String line1 = "bro";
-    private String line2 = "you are about to join a world with cancer mode enabled";
-    private String line3 = "if this isn’t a backup or a throwaway world, turn back now";
-    private String line4 = "cause it WILL probably get destroyed";
-    private String line5 = "are you absolutely certain you want to do this? this is your only warning";
-
+    private String line1 = I18n.getString("gui.warning.line1");
+    private String line2 = I18n.getString("gui.warning.line2");
+    private String line3 = I18n.getString("gui.warning.line3");
+    private String line4 = I18n.getString("gui.warning.line4");
+    private String line5 = I18n.getString("gui.warning.line5");
 
     public GuiWarning(GuiScreen par1GuiScreen) {
         this.parentGuiScreen = par1GuiScreen;
@@ -73,7 +72,7 @@ public class GuiWarning extends GuiScreen {
     @Override
     public void initGui() {
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height / 2 + 60, 150, 20, "I know what I'm doing"));
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 60, 150, 20, "Go back"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 155, this.height / 2 + 60, 150, 20, I18n.getString("gui.warning.iknow")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 60, 150, 20, I18n.getString("gui.warning.goback")));
     }
 }

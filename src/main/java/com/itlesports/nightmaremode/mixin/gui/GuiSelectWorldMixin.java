@@ -18,43 +18,37 @@ import java.math.RoundingMode;
 @Mixin(GuiSelectWorld.class)
 public class GuiSelectWorldMixin extends GuiScreen {
 
-    @Unique private static int num = 0;
+    @Unique
+    private static int num = 0;
     @Unique private static boolean chaos = false;
+
     @Inject(method = "initButtons", at = @At("TAIL"))
     private void addBuffSquidsButton(CallbackInfo ci){
         if (NightmareMode.isAprilFools) {
-            this.buttonList.add(new GuiButton(10, this.width / 12, this.height / 2 - 40, 98, 20, "Buff Squids"));
-            GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, "Toggle Cancer Worldgen");
+            this.buttonList.add(new GuiButton(10, this.width / 12, this.height / 2 - 40, 98, 20, I18n.getString("gui.selectworld.buff_squids")));
+            GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, I18n.getString("gui.selectworld.toggle_cancer_worldgen"));
             this.buttonList.add(chaosButton);
         }
-        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 80, 20, "NM Config", 0xFFFFFF, 0xd4d4d4, 0xFF0000));
+        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 80, 20, I18n.getString("gui.selectworld.nm_config"), 0xFFFFFF, 0xd4d4d4, 0xFF0000));
     }
+
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawSquidText(int par1, int par2, float par3, CallbackInfo ci){
         if (NightmareMode.isAprilFools) {
-            String textToDisplay = "You have buffed squids " + num + " time" + (num == 1 ? "." : "s.");
-            this.drawCenteredString(this.fontRenderer, textToDisplay, this.width / 16 + this.fontRenderer.getStringWidth(textToDisplay) / 2 - 20, this.height / 2 + 25, 0xFFFFFF);
-            textToDisplay = "Squid strength multiplier: " + roundIfNeeded(1 + num * 0.013) + "x";
-            this.drawCenteredString(this.fontRenderer, textToDisplay, this.width / 16 + this.fontRenderer.getStringWidth(textToDisplay) / 2 - 20, this.height / 2 + 35, 0xFFFFFF);
-            textToDisplay = Boolean.toString(chaos);
-            this.drawCenteredString(this.fontRenderer, textToDisplay, this.width / 12 + this.fontRenderer.getStringWidth(textToDisplay) / 2 - 30, this.height / 2 - 25, 0xFFFFFF);
+            String timesText = I18n.getString("gui.selectworld.squid_buffed_times")
+                    .replace("{0}", Integer.toString(num))
+                    .replace("{1}", num == 1 ? "" : "s");
+            this.drawCenteredString(this.fontRenderer, timesText, this.width / 16 + this.fontRenderer.getStringWidth(timesText) / 2 - 20, this.height / 2 + 25, 0xFFFFFF);
+
+            String strengthText = I18n.getString("gui.selectworld.squid_strength")
+                    .replace("{0}", Double.toString(roundIfNeeded(1 + num * 0.013)));
+            this.drawCenteredString(this.fontRenderer, strengthText, this.width / 16 + this.fontRenderer.getStringWidth(strengthText) / 2 - 20, this.height / 2 + 35, 0xFFFFFF);
+
+            String chaosText = Boolean.toString(chaos);
+            this.drawCenteredString(this.fontRenderer, chaosText, this.width / 12 + this.fontRenderer.getStringWidth(chaosText) / 2 - 30, this.height / 2 - 25, 0xFFFFFF);
         }
     }
-    @Unique
-    private static double roundIfNeeded(double value) {
-        BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.stripTrailingZeros(); // Remove trailing zeros
 
-        // Count decimal places
-        int scale = Math.max(0, bd.scale());
-
-        // If more than 3 decimal places, round to 3
-        if (scale > 3) {
-            bd = bd.setScale(3, RoundingMode.HALF_UP);
-        }
-
-        return bd.doubleValue();
-    }
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     private void squidButton(GuiButton par1GuiButton, CallbackInfo ci) {
         if (NightmareMode.isAprilFools) {
@@ -72,8 +66,6 @@ public class GuiSelectWorldMixin extends GuiScreen {
         }
     }
 
-
-
     @Inject(method = "selectWorld", at = @At("HEAD"),cancellable = true)
     private void manageWarning(int par1, CallbackInfo ci){
         if(NightmareMode.isAprilFools){
@@ -85,14 +77,25 @@ public class GuiSelectWorldMixin extends GuiScreen {
         }else if(NightmareMode.getInstance().wasConfigModified){
             if (!GuiWarning.hasPlayerAgreed()) {
                 GuiWarning screen = new GuiWarning(this);
-                screen.setLine1("Warning:");
-                screen.setLine2("It is recommended that you restart your game");
-                screen.setLine3("New configs were loaded, which may crash your game or corrupt your world");
-                screen.setLine4("Are you absolutely sure you want to continue?");
-                screen.setLine5("This is your final warning");
+                screen.setLine1(I18n.getString("gui.selectworld.warning_title"));
+                screen.setLine2(I18n.getString("gui.selectworld.warning_recommend_restart"));
+                screen.setLine3(I18n.getString("gui.selectworld.warning_config_crash"));
+                screen.setLine4(I18n.getString("gui.selectworld.warning_continue"));
+                screen.setLine5(I18n.getString("gui.selectworld.warning_final"));
                 this.mc.displayGuiScreen(screen);
                 ci.cancel();
             }
         }
+    }
+
+    @Unique
+    private static double roundIfNeeded(double value) {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.stripTrailingZeros();
+        int scale = Math.max(0, bd.scale());
+        if (scale > 3) {
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+        }
+        return bd.doubleValue();
     }
 }

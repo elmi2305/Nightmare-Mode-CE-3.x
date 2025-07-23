@@ -119,7 +119,7 @@ public class EntityBloodWither extends EntityWither {
 
     private void sendChat(String string){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<???> " + string);
+        text2.addText("<???> " + I18n.getString(string));
         text2.setColor(EnumChatFormatting.RED);
         this.playerTarget.sendChatToPlayer(text2);
     }
@@ -193,20 +193,20 @@ public class EntityBloodWither extends EntityWither {
                 if (this.witherPhase == 1) {
                     if(isUsingPotions(this.playerTarget)){
                         if(this.reviveTimer == 500){
-                            this.sendChat("Had to use potions just to beat me? Pathetic.");
+                            this.sendChat("bloodwither.potion_warning");
                         } else if(this.reviveTimer == 420){
-                            this.sendChat("Can't you learn to fight properly?");
+                            this.sendChat("bloodwither.learn_fight");
                         } else if(this.reviveTimer == 400){
                             this.destroyActivePotions(this.playerTarget);
                         }
                     }
                 } else
-                    if(this.witherPhase == 2){
+                if(this.witherPhase == 2){
                     if (this.hasItemInInventory(this.playerTarget,Item.appleGold)) {
                         if(this.reviveTimer == 500){
-                            this.sendChat("I see you've brought some golden apples...");
+                            this.sendChat("bloodwither.gapple_notice");
                         } else if(this.reviveTimer == 420){
-                            this.sendChat("You weren't planning on using them, right?");
+                            this.sendChat("bloodwither.gapple_plan");
                         } else if(this.reviveTimer == 400){
                             this.ejectSpecifiedItems(this.playerTarget,Item.appleGold);
                         }
