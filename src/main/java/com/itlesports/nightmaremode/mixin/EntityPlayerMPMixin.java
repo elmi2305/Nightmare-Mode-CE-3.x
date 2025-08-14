@@ -7,7 +7,6 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import net.minecraft.src.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -139,7 +138,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         long targetTime = this.worldObj.worldInfo.getNBTTagCompound().getLong("PortalTime");
         if(targetTime != 0 && this.worldObj.getWorldTime() > targetTime && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("<???> " + I18n.getString("nightmare.hardmode_begun"));
+            text2.addText("<???> " + ("nightmare.hardmode_begun"));
             text2.setColor(EnumChatFormatting.DARK_RED);
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death", 0.9f, 0.905f);
@@ -203,7 +202,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
         if (NightmareUtils.getWorldProgress() != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("<???> " + I18n.getString("nightmare.taunt_" + (this.rand.nextInt(getDeathMessages().size()))));
+            String tauntKey = "nightmare.taunt_" + this.rand.nextInt(getDeathMessages().size());
+            text2.addText("<???> " + tauntKey);
             text2.setColor(EnumChatFormatting.RED);
             this.mcServer.getConfigurationManager().sendChatMsg(text2);
         }
@@ -237,7 +237,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<The Twins> " + I18n.getString("nightmare.twins_end"));
+        text2.addText("<The Twins> " + ("nightmare.twins_end"));
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
     }

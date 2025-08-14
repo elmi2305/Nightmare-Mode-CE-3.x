@@ -44,7 +44,7 @@ public class MinecraftMixin {
         if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_F4) && NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
             if (NightmareMode.worldState == 0) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("<???> " + I18n.getString("nightmare.hardmode_begun"));
+                text2.addText("<???> " + ("nightmare.hardmode_begun"));
                 text2.setColor(EnumChatFormatting.DARK_RED);
                 this.thePlayer.sendChatToPlayer(text2);
                 this.thePlayer.playSound("mob.wither.death",1.0f,0.905f);

@@ -43,7 +43,7 @@ public class BlockPortalMixin{
 
                 if (distanceSq <= radius * radius) {
                     ChatMessageComponent text1 = new ChatMessageComponent();
-                    text1.addText("<???> " + I18n.getString("nightmare.portal_warning"));
+                    text1.addText("<???> " + ("nightmare.portal_warning"));
                     text1.setColor(EnumChatFormatting.DARK_RED);
                     player.sendChatToPlayer(text1);
 
