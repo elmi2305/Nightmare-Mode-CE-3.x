@@ -69,8 +69,6 @@ public abstract class MinecraftServerMixin {
         }
         if (!NightmareMode.totalEclipse) {
             NightmareMode.setEclipse(this.getIsEclipse(this.worldServers[0], dayCount));
-        } else {
-            NightmareMode.setEclipse(!this.getIsNightFromWorldTime(this.worldServers[0]));
         }
         if ((NightmareMode.isBloodMoon != oldBloodMoon) || (NightmareMode.isEclipse != oldEclipse)) {
             NightmareMode.sendBloodmoonEclipseToAllPlayers();
