@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(LibrarianVillagerEntity.class)
 public class LibrarianVillagerEntityMixin extends EntityVillager {
     @Unique private int conversionCountdown = 600;
+
     public LibrarianVillagerEntityMixin(World par1World) {
         super(par1World);
     }
@@ -18,7 +19,7 @@ public class LibrarianVillagerEntityMixin extends EntityVillager {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(this.worldObj != null && NightmareUtils.getWorldProgress() == 3){
+        if(this.worldObj != null && NightmareUtils.getIsEclipse()){
             if (this.conversionCountdown > 0) {
                 this.conversionCountdown -= 1;
             } else if (!this.worldObj.isRemote){
