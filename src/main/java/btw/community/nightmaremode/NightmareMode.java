@@ -7,9 +7,11 @@ import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
 import com.itlesports.nightmaremode.NMInitializer;
+import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -128,6 +130,20 @@ public class NightmareMode extends BTWAddon {
         super.postInitialize();
     }
 
+    public static int getCurrentStackSize(World world) {
+        return NightmareMode.getInstance().shouldStackSizesIncrease ? 32 : 16;
+    }
+    public static void syncItemStackSizesToProgress(World world) {
+        int size = getCurrentStackSize(world);
+        NightmareUtils.setItemStackSizes(size);
+
+        for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (obj instanceof EntityPlayerMP player) {
+                sendStackSizeSyncPacket(player, size);
+            }
+        }
+    }
+
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
@@ -155,7 +171,7 @@ public class NightmareMode extends BTWAddon {
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
         //world state packet handler
-        AddonHandler.registerPacketHandler("nightmaremode|stat", (packet, player) -> {
+        AddonHandler.registerPacketHandler("nm|stat", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             int worldState = -1;
             try {
@@ -169,11 +185,25 @@ public class NightmareMode extends BTWAddon {
         });
 
 
-        AddonHandler.registerPacketHandler("nightmaremode|BMEC", (packet, player) -> {
+        AddonHandler.registerPacketHandler("nm|BMEC", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
                 isBloodMoon = dataStream.readBoolean();
                 isEclipse = dataStream.readBoolean();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc != null && mc.entityRenderer != null) {
+                ((EntityRendererAccessor) mc.entityRenderer).nightmaremode$updateLightmap(1.0f);
+            }
+        });
+
+        AddonHandler.registerPacketHandler("nm|stacksize", (packet, player) -> {
+            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+            try {
+                int newSize = dataStream.readInt();
+                NightmareUtils.setItemStackSizes(newSize);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -191,7 +221,7 @@ public class NightmareMode extends BTWAddon {
             var4.printStackTrace();
         }
 
-        return new Packet250CustomPayload("nightmaremode|stat", byteStream.toByteArray());
+        return new Packet250CustomPayload("nm|stat", byteStream.toByteArray());
     }
 
 
@@ -206,7 +236,7 @@ public class NightmareMode extends BTWAddon {
             var4.printStackTrace();
         }
 
-        return new Packet250CustomPayload("nightmaremode|BMEC", byteStream.toByteArray());
+        return new Packet250CustomPayload("nm|BMEC", byteStream.toByteArray());
     }
 
 
@@ -237,8 +267,21 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
         sendWorldStateToClient(serverHandler);
-        Packet250CustomPayload onJoinPacket = new Packet250CustomPayload("nightmaremode|onJoin", new byte[0]);
+        Packet250CustomPayload onJoinPacket = new Packet250CustomPayload("nm|onJoin", new byte[0]);
         serverHandler.sendPacketToPlayer(onJoinPacket);
+        syncItemStackSizesToProgress(playerMP.worldObj);
+    }
+
+    public static void sendStackSizeSyncPacket(EntityPlayerMP player, int size) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        try {
+            dataStream.writeInt(size);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|stacksize", byteStream.toByteArray());
+        player.playerNetServerHandler.sendPacketToPlayer(packet);
     }
 
     private static void sendWorldStateToClient(NetServerHandler serverHandler) {

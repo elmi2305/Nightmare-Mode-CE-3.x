@@ -66,6 +66,7 @@ public class NightmareUtils {
             BTWItems.cookedCarrot,
             BTWItems.chocolate,
             Item.bakedPotato,
+            BTWItems.boiledPotato,
             Item.potato,
             BTWItems.porkDinner,
             BTWItems.hardBoiledEgg,
