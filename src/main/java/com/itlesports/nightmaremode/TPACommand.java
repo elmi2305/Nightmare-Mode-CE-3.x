@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import net.minecraft.src.I18n;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +40,7 @@ public class TPACommand extends CommandBase {
         String sub = args[0].toLowerCase();
 
         if(player.experienceLevel < 1){
-            sender.sendChatToPlayer(createMessage(I18n.getString("tpa.not_enough_xp"), EnumChatFormatting.RED, true, false));
+            sender.sendChatToPlayer(createMessage(("nightmare.tpa.not_enough_xp"), EnumChatFormatting.RED, true, false));
             return;
         }
 
@@ -71,37 +70,37 @@ public class TPACommand extends CommandBase {
             throw new PlayerNotFoundException();
         }
         if (sender == target) {
-            sender.sendChatToPlayer(createMessage(I18n.getString("tpa.cannot_self"), EnumChatFormatting.RED, false, false));
+            sender.sendChatToPlayer(createMessage(("nightmare.tpa.cannot_self"), EnumChatFormatting.RED, false, false));
             return;
         }
         if (sender.dimension != target.dimension) {
-            sender.sendChatToPlayer(createMessage(I18n.getString("tpa.different_dimension"), EnumChatFormatting.RED, false, false));
+            sender.sendChatToPlayer(createMessage(("nightmare.tpa.different_dimension"), EnumChatFormatting.RED, false, false));
             return;
         }
 
         TPAManager.sendRequest(sender, target);
-        sender.sendChatToPlayer(createMessage(I18n.getString("tpa.sent").replace("{target}", target.getCommandSenderName()), EnumChatFormatting.GREEN, false, false));
-        target.sendChatToPlayer(createMessage(I18n.getString("tpa.request_message").replace("{sender}", sender.getCommandSenderName()), EnumChatFormatting.GOLD, false, false));
+        sender.sendChatToPlayer(createMessage("nightmare.tpa.sent|target=" + target.getCommandSenderName(), EnumChatFormatting.GREEN, false, false));
+        target.sendChatToPlayer(createMessage("nightmare.tpa.request_message|sender=" + sender.getCommandSenderName(), EnumChatFormatting.GOLD, false, false));
     }
 
 
     private void handleAccept(EntityPlayerMP target) {
         UUID senderUUID = TPAManager.getRequestSender(target.getUniqueID());
         if (senderUUID == null) {
-            target.sendChatToPlayer(createMessage(I18n.getString("tpa.no_request_to_accept"), EnumChatFormatting.RED, false, false));
+            target.sendChatToPlayer(createMessage(("nightmare.tpa.no_request_to_accept"), EnumChatFormatting.RED, false, false));
             return;
         }
 
         EntityPlayerMP sender = getPlayerByUUID(senderUUID);
         if (sender == null) {
-            target.sendChatToPlayer(createMessage(I18n.getString("tpa.sender_offline"), EnumChatFormatting.RED, false, false));
+            target.sendChatToPlayer(createMessage(("nightmare.tpa.sender_offline"), EnumChatFormatting.RED, false, false));
             TPAManager.removeRequest(target.getUniqueID());
             return;
         }
 
         TPAManager.removeRequest(target.getUniqueID());
-        target.sendChatToPlayer(createMessage(I18n.getString("tpa.accepted").replace("{sender}", sender.getCommandSenderName()), EnumChatFormatting.GREEN, false, false));
-        sender.sendChatToPlayer(createMessage(I18n.getString("tpa.accepted_sender").replace("{target}", target.getCommandSenderName()), EnumChatFormatting.GREEN, false, false));
+        target.sendChatToPlayer(createMessage("nightmare.tpa.accepted|sender=" + sender.getCommandSenderName(), EnumChatFormatting.GREEN, false, false));
+        sender.sendChatToPlayer(createMessage("nightmare.tpa.accepted_sender|target=" + target.getCommandSenderName(), EnumChatFormatting.GREEN, false, false));
 
         scheduleTeleport(sender, target, 10);
     }
@@ -109,15 +108,15 @@ public class TPACommand extends CommandBase {
     private void handleDeny(EntityPlayerMP target) {
         UUID senderUUID = TPAManager.getRequestSender(target.getUniqueID());
         if (senderUUID == null) {
-            target.sendChatToPlayer(createMessage(I18n.getString("tpa.no_request_to_deny"), EnumChatFormatting.RED, false, false));
+            target.sendChatToPlayer(createMessage(("nightmare.tpa.no_request_to_deny"), EnumChatFormatting.RED, false, false));
             return;
         }
 
         EntityPlayerMP sender = getPlayerByUUID(senderUUID);
         if (sender != null) {
-            sender.sendChatToPlayer(createMessage(I18n.getString("tpa.denied_sender").replace("{target}", target.getCommandSenderName()), EnumChatFormatting.RED, false, false));
+            sender.sendChatToPlayer(createMessage("nightmare.tpa.denied_sender|target=" + target.getCommandSenderName(), EnumChatFormatting.RED, false, false));
         }
-        target.sendChatToPlayer(createMessage(I18n.getString("tpa.denied"), EnumChatFormatting.YELLOW, false, false));
+        target.sendChatToPlayer(createMessage(("nightmare.tpa.denied"), EnumChatFormatting.YELLOW, false, false));
         TPAManager.removeRequest(target.getUniqueID());
     }
 

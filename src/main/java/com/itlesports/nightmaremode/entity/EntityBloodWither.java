@@ -119,7 +119,7 @@ public class EntityBloodWither extends EntityWither {
 
     private void sendChat(String string){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<???> " + I18n.getString(string));
+        text2.addText("<???> " + string);
         text2.setColor(EnumChatFormatting.RED);
         this.playerTarget.sendChatToPlayer(text2);
     }
