@@ -83,7 +83,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
                     this.dropItem(NMItems.bloodOrb.itemID,1);
                 }
                 this.increaseArmorDurabilityRandomly(player);
-
             }
         }
     }

@@ -172,6 +172,7 @@
     "gui.GuiIngameMenuMixin",
     "gui.GuiIngameMixin",
     "gui.GuiMainMenuMixin",
+    "gui.GuiMixin",
     "gui.GuiOptionsMixin",
     "gui.GuiScreenMixin",
     "gui.GuiSelectWorldMixin",

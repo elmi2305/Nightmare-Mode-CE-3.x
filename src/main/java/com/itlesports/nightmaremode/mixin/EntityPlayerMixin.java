@@ -93,7 +93,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void manageLifeSteal(Entity entity, CallbackInfo ci){
-        if(entity instanceof EntityLiving && NightmareUtils.isHoldingBloodSword(this) && entity.hurtResistantTime == 0 && !this.isPotionActive(Potion.weakness) && !(entity instanceof EntityWither)){
+        if(entity instanceof EntityLiving &&
+                NightmareUtils.isHoldingBloodSword(this) &&
+                entity.hurtResistantTime == 0 &&
+                !this.isPotionActive(Potion.weakness) &&
+                !(entity instanceof EntityWither)){
             int chance = 20 - NightmareUtils.getBloodArmorWornCount(this) * 3;
             // 20, 16, 12, 8, 4
 

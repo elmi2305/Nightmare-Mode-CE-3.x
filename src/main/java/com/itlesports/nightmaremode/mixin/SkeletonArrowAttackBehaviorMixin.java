@@ -70,21 +70,21 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
             }
         }
     }
-    @Inject(method = "continueExecuting", at = @At("TAIL"))
-    private void addBowSlapBehavior(CallbackInfoReturnable<Boolean> cir){
-        EntityLivingBase target = this.entityAttackTarget;
-        if (target != null && this.entityOwner.ticksExisted % 20 == 0 && this.entityOwner.getDistanceSqToEntity(target) <= 1 && this.entityOwner.getHeldItem() != null && this.entityOwner.getHeldItem().getItem() == Item.bow){
-            if(this.entityOwner.canEntityBeSeen(target)){
-                this.entityOwner.attackEntityAsMob(target);
-                this.entityOwner.swingItem();
-
-                if (this.entityOwner.rand.nextInt(8) == 0) {
-                    this.entityOwner.playSound("random.break", 1f, 1f);
-                    this.entityOwner.setCurrentItemOrArmor(0, new ItemStack(Item.stick));
-                } else{
-                    this.attackCooldownCounter = 25;
-                }
-            }
-        }
-    }
+//    @Inject(method = "continueExecuting", at = @At("TAIL"))
+//    private void addBowSlapBehavior(CallbackInfoReturnable<Boolean> cir){
+//        EntityLivingBase target = this.entityAttackTarget;
+//        if (target != null && this.entityOwner.ticksExisted % 20 == 0 && this.entityOwner.getDistanceSqToEntity(target) <= 1 && this.entityOwner.getHeldItem() != null && this.entityOwner.getHeldItem().getItem() == Item.bow){
+//            if(this.entityOwner.canEntityBeSeen(target)){
+//                this.entityOwner.attackEntityAsMob(target);
+//                this.entityOwner.swingItem();
+//
+//                if (this.entityOwner.rand.nextInt(8) == 0) {
+//                    this.entityOwner.playSound("random.break", 1f, 1f);
+//                    this.entityOwner.setCurrentItemOrArmor(0, new ItemStack(Item.stick));
+//                } else{
+//                    this.attackCooldownCounter = 25;
+//                }
+//            }
+//        }
+//    }
 }

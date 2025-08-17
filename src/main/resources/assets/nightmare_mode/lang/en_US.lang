@@ -261,5 +261,5 @@ nightmare.taunt_16=Try an easier difficulty?
 nightmare.taunt_17=Another failure. How delightful to watch.
 nightmare.taunt_18=Was that supposed to impress me?
 nightmare.wither_summon_sealevel=The Wither must be summoned above sea level.
-nightmare.wither_summon_too_high=The Wither cannot be summoned this high.Y coordinate must be under 200.
+nightmare.wither_summon_too_high=The Wither cannot be summoned this high. Y coordinate must be under 200.
 nightmare.wither_revive_message=A God does not fear death.

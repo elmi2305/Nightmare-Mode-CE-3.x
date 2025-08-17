@@ -60,6 +60,8 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
         return finalSpawn;
     }
 
+
+
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -187,10 +189,8 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
     protected String getLivingSound() {
         return this.getNeuteredState() > 0 ? "mob.creeper.say" : super.getLivingSound();
     }
-
-    public void onKickedByAnimal(KickingAnimal kickingAnimal) {
-        this.determinedToExplode = true;
-    }
+    @Override
+    public void onKickedByAnimal(KickingAnimal kickingAnimal) {}
 
     public void checkForScrollDrop() {}
 

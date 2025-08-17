@@ -149,7 +149,6 @@ public abstract class WorldMixin {
     @Unique
     private double calculateNiteMultiplier(){
         int progress = NightmareUtils.getWorldProgress();
-//        double baseInterval = 6000 * Math.log((4 - progress) * 10); // 22133 -> 20407 -> 17974
         double baseInterval = 14000 + 6000 * Math.log(Math.max(4 - progress, 1)) / Math.log(4); // from 20000 to 14000
 
         return 1 + ((double) this.getWorldTime() / baseInterval) * 0.01;

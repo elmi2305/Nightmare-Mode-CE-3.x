@@ -136,36 +136,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
-    @Unique
-    private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
-        for (int i = 0; i < amount; i++) {
-            // Random spherical coordinates
-            double theta = random.nextDouble() * 2 * Math.PI; // Horizontal angle
-            double phi = random.nextDouble() * Math.PI;       // Vertical angle
-            double radius = 0.5 + random.nextDouble() * 0.5; // Sphere size (0.5 - 1 block radius)
 
-            // Convert spherical coordinates to Cartesian
-            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
-            double yOffset = radius * Math.cos(phi);
-            double zOffset = radius * Math.sin(phi) * Math.sin(theta);
-
-            // Spawn position relative to the entity
-            double spawnX = entity.posX + xOffset;
-            double spawnY = entity.posY + yOffset;
-            double spawnZ = entity.posZ + zOffset;
-
-            // Create item entity
-            EntityItem itemEntity = new EntityItem(world, spawnX, spawnY, spawnZ, itemStack.copy());
-
-            // Outward momentum (normalized direction vector)
-            itemEntity.motionX = xOffset * 0.5;
-            itemEntity.motionY = yOffset * 0.5;
-            itemEntity.motionZ = zOffset * 0.5;
-
-            // Spawn the item entity
-            world.spawnEntityInWorld(itemEntity);
-        }
-    }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
@@ -177,8 +148,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         return switch (i) {
             case 0 ->  36 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 6b   10.4b
             case 1 ->  81 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 9b   15.57b
-            case 2 -> 121 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 11b  19.03b
-            case 3 -> 196 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 14b  24.2b
+            case 2, 3 -> 121 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 11b  19.03b
             default -> constant;
         };
     }
@@ -233,11 +203,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         return true;
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
-    private void detonateIfFireDamage(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NightmareUtils.getIsBloodMoon() && !NightmareUtils.getIsMobEclipsed(this) && !this.isPotionActive(Potion.fireResistance.id)){
-            this.onKickedByAnimal(null); // primes the creeper instantly
+    private void detonateIfFireDamage(DamageSource source, float par2, CallbackInfoReturnable<Boolean> cir){
+        if (shouldDetonateOnFire(source)){
+            this.onKickedByAnimal(null); // primes the creeper instantly. lightning creeper overrides and skips this
         }
     }
+
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
     private void manageNotKillingSelf(EntityCreeper creeper){
@@ -404,5 +375,55 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
         }
         return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
+    }
+
+
+
+
+
+
+
+
+    // HELPER METHODS
+
+
+
+
+    @Unique
+    private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
+        for (int i = 0; i < amount; i++) {
+            double theta = random.nextDouble() * 2 * Math.PI; // Horizontal angle
+            double phi = random.nextDouble() * Math.PI;       // Vertical angle
+            double radius = 0.5 + random.nextDouble() * 0.5; // Sphere size (0.5 - 1 block radius)
+
+            double xOffset = radius * Math.sin(phi) * Math.cos(theta);
+            double yOffset = radius * Math.cos(phi);
+            double zOffset = radius * Math.sin(phi) * Math.sin(theta);
+
+            double spawnX = entity.posX + xOffset;
+            double spawnY = entity.posY + yOffset;
+            double spawnZ = entity.posZ + zOffset;
+
+            // Create item entity
+            EntityItem itemEntity = new EntityItem(world, spawnX, spawnY, spawnZ, itemStack.copy());
+
+            // Outward momentum (normalized direction vector)
+            itemEntity.motionX = xOffset * 0.5;
+            itemEntity.motionY = yOffset * 0.5;
+            itemEntity.motionZ = zOffset * 0.5;
+
+            // Spawn the item entity
+            world.spawnEntityInWorld(itemEntity);
+        }
+    }
+
+
+    @Unique private boolean shouldDetonateOnFire(DamageSource src){
+        return (src == DamageSource.inFire ||
+                src == DamageSource.onFire ||
+                src == DamageSource.lava) && this.dimension != -1 &&
+                !NightmareUtils.getIsBloodMoon() &&
+                !NightmareUtils.getIsMobEclipsed(this) &&
+                !this.isPotionActive(Potion.fireResistance.id);
     }
 }
