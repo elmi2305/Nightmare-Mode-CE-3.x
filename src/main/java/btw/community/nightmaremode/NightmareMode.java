@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
+import com.itlesports.nightmaremode.network.SteelLockerNet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -157,6 +158,7 @@ public class NightmareMode extends BTWAddon {
         NMInitializer.initNightmareRecipes();
         NMInitializer.initNightmareTrades();
         NMInitializer.miscInit();
+        SteelLockerNet.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

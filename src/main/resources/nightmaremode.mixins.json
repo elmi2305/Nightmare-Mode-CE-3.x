@@ -163,6 +163,7 @@
   ],
   "client": [
     "MinecraftMixin",
+    "MixinNetClientHandler",
     "WorldClientMixin",
     "blocks.MillstoneBlockMixin",
     "gui.GuiBrewingStandMixin",

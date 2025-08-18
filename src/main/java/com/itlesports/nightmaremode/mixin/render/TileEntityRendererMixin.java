@@ -1,8 +1,10 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.rendering.TileEntityBloodChestRenderer;
+import com.itlesports.nightmaremode.rendering.TileEntitySteelLockerRenderer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityRenderer;
 import net.minecraft.src.TileEntitySpecialRenderer;
@@ -26,12 +28,14 @@ public abstract class TileEntityRendererMixin {
     @Inject(method = "<init>",at = @At("TAIL"))
     private void addCustomNightmareRendering(CallbackInfo ci){
         this.specialRendererMap.put(TileEntityBloodChest.class, new TileEntityBloodChestRenderer());
-        TileEntityRenderer thisObj = (TileEntityRenderer)(Object)this;
+        this.specialRendererMap.put(TileEntitySteelLocker.class, new TileEntitySteelLockerRenderer());
 
-        for (Object var2 : this.specialRendererMap.values()) {
-            ((TileEntitySpecialRenderer)var2).setTileEntityRenderer(thisObj);
+        TileEntityRenderer thisObj = (TileEntityRenderer) (Object) this;
+        for (Object renderer : this.specialRendererMap.values()) {
+            ((TileEntitySpecialRenderer) renderer).setTileEntityRenderer(thisObj);
         }
-        ((TileEntitySpecialRenderer)this.specialRendererMap.get(TileEntityBloodChest.class)).setTileEntityRenderer(thisObj);
+        ((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntityBloodChest.class)).setTileEntityRenderer(thisObj);
+        ((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntitySteelLocker.class)).setTileEntityRenderer(thisObj);
     }
 
 //    @Inject(method = "getSpecialRendererForEntity", at = @At("HEAD"),cancellable = true)
