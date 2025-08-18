@@ -217,7 +217,7 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public boolean canProvidePower() {
-        return this.chestType == 1;
+        return this.chestType == 0;
     }
 
     public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
@@ -257,6 +257,6 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public void registerIcons(IconRegister par1IconRegister) {
-        this.blockIcon = par1IconRegister.registerIcon("planks_oak");
+        this.blockIcon = par1IconRegister.registerIcon("chestBlood_particle");
     }
 }
