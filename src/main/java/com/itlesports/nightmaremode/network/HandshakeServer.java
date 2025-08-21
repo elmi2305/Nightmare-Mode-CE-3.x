@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.network;
 
-import com.itlesports.nightmaremode.NightmareModeAddon;
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.IntegratedServer;
 import net.minecraft.src.NetServerHandler;
@@ -20,13 +20,13 @@ import java.util.Map;
 public class HandshakeServer {
     // Tracks server-side players awaiting version ACK
     private static final Map<NetServerHandler, Integer> awaitingAckTicks = new HashMap<>();
-    private static final int MAX_TICKS_FOR_ACK_WAIT = 10;
-    public static final String VERSION_CHECK_CHANNEL = "nm|VC";
-    public static final String VERSION_ACK_CHANNEL = "nm|VC_Ack";
+    private static final int MAX_TICKS_FOR_ACK_WAIT = 20;
+    public static final String VERSION_CHECK_CHANNEL = "nightmare_mode|VC";
+    public static final String VERSION_ACK_CHANNEL = "nightmare_mode|Ack";
 
     /** Returns current Nightmaremode mod version. */
     public static String getModVersion() {
-        return NightmareModeAddon.MOD_VERSION;
+        return NightmareMode.MOD_VERSION;
     }
 
     /** Called when player joins the server; initiates handshake. */

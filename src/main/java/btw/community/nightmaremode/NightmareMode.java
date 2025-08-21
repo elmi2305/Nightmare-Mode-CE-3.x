@@ -12,12 +12,13 @@ import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
+import com.itlesports.nightmaremode.network.HandshakeClient;
+import com.itlesports.nightmaremode.network.HandshakeServer;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import org.lwjgl.input.Keyboard;
 
 import java.io.*;
 import java.util.*;
@@ -31,6 +32,7 @@ public class NightmareMode extends BTWAddon {
     public static int SKELETON_SUPERCRITICAL = 6;
 
     private static NightmareMode instance;
+    public static String MOD_VERSION;
     public static int worldState;
 
     public WorldGenerator lavaPillowGenThirdStrata;
@@ -40,9 +42,6 @@ public class NightmareMode extends BTWAddon {
 
     public WorldGenerator steelOreGenExposedToAir;
     public WorldGenerator steelOreGen;
-
-    public static KeyBinding nightmareZoom;
-    public static String nightmareZoomKey;
 
     public static boolean isBloodMoon;
     public static boolean isEclipse;
@@ -148,6 +147,12 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
+        MOD_VERSION = this.getVersionString();
+        this.registerPacketHandler(HandshakeServer.VERSION_ACK_CHANNEL, (packet, player) -> {
+            if (!(player instanceof EntityPlayerMP mp)) return;
+            HandshakeServer.handleVersionAckPacket(mp.playerNetServerHandler, packet);
+        });
+        this.registerPacketHandler(HandshakeClient.VERSION_CHECK_CHANNEL, (packet, player) -> HandshakeClient.handleVersionCheckPacketClient(packet));
         if (!MinecraftServer.getIsServer()) {
             initClientPacketInfo();
         } else{
@@ -268,6 +273,7 @@ public class NightmareMode extends BTWAddon {
 
     @Override
     public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
+        HandshakeServer.onPlayerJoin(serverHandler, playerMP);
         sendWorldStateToClient(serverHandler);
         Packet250CustomPayload onJoinPacket = new Packet250CustomPayload("nm|onJoin", new byte[0]);
         serverHandler.sendPacketToPlayer(onJoinPacket);
@@ -347,7 +353,6 @@ public class NightmareMode extends BTWAddon {
     public void preInitialize() {
         this.registerProperty("NmMinecraftDayTimer", "True");
         this.registerProperty("NmTimer", "True");
-        this.registerProperty("NmZoomKey", "C");
         this.registerProperty("BloodmoonColors", "True");
         this.registerProperty("Crimson", "False");
         this.registerProperty("ConfigOnHUD", "True");
@@ -387,7 +392,6 @@ public class NightmareMode extends BTWAddon {
     public void handleConfigProperties(Map<String, String> propertyValues) {
         shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
         shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
-        nightmareZoomKey = propertyValues.get("NmZoomKey");
         perfectStart = Boolean.parseBoolean(propertyValues.get("PerfectStart"));
         shouldDisplayFishingAnnouncements = Boolean.parseBoolean(propertyValues.get("FishingAnnouncements"));
         bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
@@ -412,18 +416,6 @@ public class NightmareMode extends BTWAddon {
         birthdayBash = Boolean.parseBoolean(propertyValues.get("BirthdayBash"));
         fullBright = Boolean.parseBoolean(propertyValues.get("FullBright"));
     }
-
-    public void initKeybind(){
-        nightmareZoom = new KeyBinding(StatCollector.translateToLocal("key.nightmaremode.zoom"), Keyboard.getKeyIndex(nightmareZoomKey));
-
-        GameSettings settings = Minecraft.getMinecraft().gameSettings;
-        KeyBinding[] keyBindings = settings.keyBindings;
-        keyBindings = Arrays.copyOf(keyBindings, keyBindings.length + 1);
-        keyBindings[keyBindings.length - 1] = nightmareZoom;
-        settings.keyBindings = keyBindings;
-    }
-
-
 
     @Override
     public void decorateWorld(BiomeDecoratorBase decorator, World world, Random rand, int x, int z, BiomeGenBase biome) {

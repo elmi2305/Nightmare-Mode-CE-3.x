@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.network;
 
-import com.itlesports.nightmaremode.NightmareModeAddon;
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.GuiDisconnected;
@@ -18,12 +18,12 @@ public class HandshakeClient {
     // Client-side: handshake status
     private static int ticksSinceLogin = 0;
     private static boolean receivedVC = false;
-    public static final String VERSION_CHECK_CHANNEL = "nm|VC";
-    public static final String VERSION_ACK_CHANNEL = "nm|VC_Ack";
+    public static final String VERSION_CHECK_CHANNEL = "nightmare_mode|VC";
+    public static final String VERSION_ACK_CHANNEL = "nightmare_mode|Ack";
 
     /** Returns current Nightmaremode mod version. */
     public static String getModVersion() {
-        return NightmareModeAddon.MOD_VERSION;
+        return NightmareMode.MOD_VERSION;
     }
 
     /** Called every client tick; checks server handshake. */

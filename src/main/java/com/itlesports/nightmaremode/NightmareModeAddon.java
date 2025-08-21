@@ -19,7 +19,6 @@ import java.util.List;
 
 public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
-    public static String MOD_VERSION;
     public NightmareModeAddon() {
         super();
     }
@@ -30,16 +29,6 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
         if (!MinecraftServer.getIsServer()) {
             postInitClient();
         }
-        this.registerPacketHandler(HandshakeServer.VERSION_ACK_CHANNEL, (packet, player) -> {
-            if (!(player instanceof EntityPlayerMP mp)) return;
-            HandshakeServer.handleVersionAckPacket(mp.playerNetServerHandler, packet);
-        });
-        this.registerPacketHandler(HandshakeClient.VERSION_CHECK_CHANNEL, (packet, player) -> HandshakeClient.handleVersionCheckPacketClient(packet));
-    }
-
-    @Override
-    public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
-        HandshakeServer.onPlayerJoin(serverHandler, playerMP);
     }
 
     public static NightmareModeAddon getInstance() {
