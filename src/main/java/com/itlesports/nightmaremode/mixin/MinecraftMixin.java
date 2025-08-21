@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.network.HandshakeClient;
 import net.minecraft.src.*;
 import net.minecraft.src.I18n;
 import org.lwjgl.input.Keyboard;
@@ -25,6 +26,11 @@ public class MinecraftMixin {
     @Inject(method = "startGame", at = @At("TAIL"))
     private void addNightmareSpecificKeybinds(CallbackInfo ci){
         NightmareMode.getInstance().initKeybind();
+    }
+
+    @Inject(method = "runTick", at = @At("TAIL"))
+    private void nmOnClientTick(CallbackInfo ci) {
+        HandshakeClient.onClientTick();
     }
 
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))

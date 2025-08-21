@@ -162,7 +162,9 @@
     "render.TileEntityRendererMixin"
   ],
   "client": [
+    "GameSettingsMixin",
     "MinecraftMixin",
+    "MixinNetClientHandler",
     "WorldClientMixin",
     "blocks.MillstoneBlockMixin",
     "gui.GuiBrewingStandMixin",

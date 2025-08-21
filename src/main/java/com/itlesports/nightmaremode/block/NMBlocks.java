@@ -5,6 +5,7 @@ import btw.block.blocks.BedrockBlock;
 import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import net.minecraft.src.*;
 
 public class NMBlocks {
@@ -14,6 +15,7 @@ public class NMBlocks {
     public static BedrockBlock specialObsidian;
     public static BlockUnderworldPortal underworldPortal;
     public static BlockBloodChest bloodChest;
+    public static BlockSteelLocker steelLocker;
     public static BlockRoad blockRoad;
     public static BlockRoad blockAsphalt;
     public static BlockCustomLadder stoneLadder;
@@ -36,6 +38,10 @@ public class NMBlocks {
         bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 1).setTextureName("chestBlood");
         Item.itemsList[bloodChest.blockID] = new ItemBlock(NMBlocks.bloodChest.blockID - 256);
         TileEntity.addMapping(TileEntityBloodChest.class, "BloodChest");
+
+        steelLocker = (BlockSteelLocker) new BlockSteelLocker(2355, 1).setTextureName("lockerSteel");
+        Item.itemsList[steelLocker.blockID] = new ItemBlock(NMBlocks.steelLocker.blockID - 256);
+        TileEntity.addMapping(TileEntitySteelLocker.class, "SteelLocker");
 
         blockRoad = (BlockRoad) new BlockRoad(2311, 1.5f).setUnlocalizedName("nmRoad").setTextureName("nmRoad");
         Item.itemsList[blockRoad.blockID] = new ItemBlock(NMBlocks.blockRoad.blockID - 256);

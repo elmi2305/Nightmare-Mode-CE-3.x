@@ -5,17 +5,20 @@ import btw.BTWAddon;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.network.HandshakeClient;
+import com.itlesports.nightmaremode.network.HandshakeServer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.NetServerHandler;
 import net.minecraft.src.Packet24MobSpawn;
 
 import java.util.List;
 
 public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
-
     public NightmareModeAddon() {
         super();
     }
