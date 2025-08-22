@@ -29,7 +29,8 @@ public abstract class GameSettingsMixin {
     private void nightmaremode$injectCustomKeys(CallbackInfo ci) {
         if (!NightmareKeyBindings.markRegistered()) return;
 
-        NightmareKeyBindings.nightmareZoom = new KeyBinding("key.nightmaremode.zoom", Keyboard.KEY_C);
+        NightmareKeyBindings.nmZoomHold = new KeyBinding("key.nightmaremode.zoomhold", Keyboard.KEY_C);
+        NightmareKeyBindings.nmZoomToggle = new KeyBinding("key.nightmaremode.zoomtoggle", org.lwjgl.input.Keyboard.KEY_V);
 
         KeyBinding[] custom = NightmareKeyBindings.all();
         KeyBinding[] neu = Arrays.copyOf(keyBindings, keyBindings.length + custom.length);
