@@ -8,7 +8,8 @@ import net.minecraft.src.KeyBinding;
  */
 public final class NightmareKeyBindings {
 
-    public static KeyBinding nightmareZoom;
+    public static KeyBinding nmZoomHold;
+    public static KeyBinding nmZoomToggle;
 
     private static boolean registered;
 
@@ -29,6 +30,6 @@ public final class NightmareKeyBindings {
      * All custom bindings to append.
      */
     public static KeyBinding[] all() {
-        return new KeyBinding[]{ nightmareZoom };
+        return new KeyBinding[]{ nmZoomHold, nmZoomToggle };
     }
 }

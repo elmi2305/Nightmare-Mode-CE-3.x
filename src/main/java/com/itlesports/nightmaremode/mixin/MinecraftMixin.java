@@ -2,40 +2,48 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.client.NightmareKeyBindings;
+import com.itlesports.nightmaremode.client.ZoomStateAccessor;
 import com.itlesports.nightmaremode.network.HandshakeClient;
 import net.minecraft.src.*;
-import net.minecraft.src.I18n;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
     @Shadow public GameSettings gameSettings;
     @Shadow public GuiScreen currentScreen;
+    @Shadow public EntityRenderer entityRenderer;
 
     @Shadow public EntityClientPlayerMP thePlayer;
     private boolean wasZooming = false;
     private float originalFov = 0.0f;
-
-    @Inject(method = "startGame", at = @At("TAIL"))
-    private void addNightmareSpecificKeybinds(CallbackInfo ci){
-        NightmareMode.getInstance().initKeybind();
-    }
 
     @Inject(method = "runTick", at = @At("TAIL"))
     private void nmOnClientTick(CallbackInfo ci) {
         HandshakeClient.onClientTick();
     }
 
+    @Redirect(
+            method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I"))
+    private int nmBlockHotbarScrollWhenZoom() {
+        if (entityRenderer instanceof ZoomStateAccessor accessor) {
+            if (accessor.nightmareMode$isToggleZoomActive() && accessor.nightmareMode$isToggleZoomKeyHeld()) {
+                return 0;
+            }
+        }
+        return Mouse.getEventDWheel();
+    }
+
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
-        if (Keyboard.isKeyDown(NightmareMode.nightmareZoom.keyCode) && this.currentScreen == null) {
+        if (Keyboard.isKeyDown(NightmareKeyBindings.nmZoomHold.keyCode) && this.currentScreen == null) {
             if (!this.wasZooming) {
                 this.originalFov = this.gameSettings.fovSetting;
                 this.wasZooming = true;
