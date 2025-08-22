@@ -37,6 +37,7 @@ public class SteelOre extends OreBlockStaged {
     // remove this to enable all 3 steel ore blocks in the creative menu. this only registers the 1st strata block
     @Override
     @Environment(EnvType.CLIENT)
+    @SuppressWarnings("unchecked")
     public void getSubBlocks(int blockID, CreativeTabs creativeTabs, List list) {
         list.add(new ItemStack(blockID, 1, 2));
     }

@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -59,8 +59,8 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
         if(source.getEntity() instanceof EntityPlayer player && Objects.equals(source.damageType, "player")){
-            if(NightmareUtils.isWearingFullBloodArmor(player)){
-                int chance = NightmareUtils.getIsBloodMoon() ? 2 : 3;
+            if(NMUtils.isWearingFullBloodArmor(player)){
+                int chance = NMUtils.getIsBloodMoon() ? 2 : 3;
                 if(this.rand.nextInt(chance) == 0){
                     PotionEffect activeStrengthPotion = player.getActivePotionEffect(Potion.damageBoost);
                     if(activeStrengthPotion != null && activeStrengthPotion.getAmplifier() == 0){
@@ -76,7 +76,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
                 }
                 player.heal(rand.nextInt(2)+1);
             }
-            if(NightmareUtils.isHoldingBloodSword(player)){
+            if(NMUtils.isHoldingBloodSword(player)){
                 player.getHeldItem().setItemDamage(Math.max(player.getHeldItem().getItemDamage() - this.rand.nextInt(4) - 1, 0));
                 this.mendTools(player);
                 if (this.rand.nextInt(24) == 0) {
@@ -104,7 +104,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
         for(ItemStack stack : player.inventory.mainInventory){
             if (stack == null) continue;
             if (stack.getMaxStackSize() != 1) continue;
-            if(NightmareUtils.bloodTools.contains(stack.itemID)){
+            if(NMUtils.bloodTools.contains(stack.itemID)){
                 if(rand.nextInt(4) == 0) continue;
                 this.increaseDurabilityIfPossible(stack);
             }

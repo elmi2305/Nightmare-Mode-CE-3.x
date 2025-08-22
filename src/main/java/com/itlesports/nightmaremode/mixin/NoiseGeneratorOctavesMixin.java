@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.NoiseGenerator;
 import net.minecraft.src.NoiseGeneratorOctaves;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ public class NoiseGeneratorOctavesMixin extends NoiseGenerator {
         if (NightmareMode.isAprilFools) {
             double[] modifiedNoise = new double[noiseArray.length];
             int choice = 0;
-            boolean intenseCorruption = NightmareUtils.isIntenseCorruption();
+            boolean intenseCorruption = NMUtils.isIntenseCorruption();
             int chanceBase = intenseCorruption ? 79 : 90; // 90 by default, reduced to 79 during chaos mode
             int chanceIntensityMultiplier = intenseCorruption ? 3 : 1; // makes the individual choices more likely. also greatly amplifies the chaos
             if (!intenseCorruption) {

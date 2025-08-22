@@ -4,7 +4,7 @@ import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.RottenArrowEntity;
 import btw.world.util.WorldUtils;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +32,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "isValidLightLevel", at = @At(value = "RETURN", ordinal = 2),cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void ensureSpawnsOnEclipse(CallbackInfoReturnable<Boolean> cir, int x, int y, int z, int blockLightValue, int naturalLightValue){
-        if(NightmareUtils.getIsEclipse()){
+        if(NMUtils.getIsEclipse()){
             cir.setReturnValue(naturalLightValue <= this.rand.nextInt(8) + 8);
         }
     }
@@ -52,7 +52,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
                 return;
             }
 
-            if (this.canDeflectArrows() && this.rand.nextInt(8 - NightmareUtils.getWorldProgress() * 2) == 0) {
+            if (this.canDeflectArrows() && this.rand.nextInt(8 - NMUtils.getWorldProgress() * 2) == 0) {
                 this.arrowCooldown = 40;
 
                 EntityArrow reflectedArrow = new EntityArrow(this.worldObj);
@@ -77,7 +77,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         ItemStack heldItem = this.getHeldItem();
         if(heldItem == null) return false;
 
-        return NightmareUtils.LONG_RANGE_ITEMS.contains(heldItem.getItem().itemID);
+        return NMUtils.LONG_RANGE_ITEMS.contains(heldItem.getItem().itemID);
     }
 
     @Unique private int timeOfLastAttack;
@@ -86,7 +86,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
         if (this.worldObj != null && this.worldObj.isRemote) {
-            if(this.ticksExisted % (120 - NightmareUtils.getWorldProgress() * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
+            if(this.ticksExisted % (120 - NMUtils.getWorldProgress() * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
                 shouldIncreaseHealth = true;
             }
         }
@@ -125,14 +125,14 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     private void allowBloodMoonSpawnsInLight(CallbackInfoReturnable<Boolean> cir){
         EntityMob thisObj = (EntityMob)(Object)this;
         if (thisObj.worldObj != null) {
-            if(NightmareUtils.getIsBloodMoon()){
+            if(NMUtils.getIsBloodMoon()){
                 cir.setReturnValue(true);
             }
         }
     }
     @Inject(method = "canSpawnOnBlockBelow", at = @At("HEAD"),cancellable = true)
     private void manageBloodmareSpawning(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this)){
             int i = MathHelper.floor_double(this.posX);
             int j = (int)this.boundingBox.minY - 1;
             int k = MathHelper.floor_double(this.posZ);
@@ -230,7 +230,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon()){
+        if(NMUtils.getIsBloodMoon()){
             boolean bIsPostWither = WorldUtils.gameProgressHasWitherBeenSummonedServerOnly();
             this.experienceValue = bIsPostWither ? 40 : 20;
         } else{

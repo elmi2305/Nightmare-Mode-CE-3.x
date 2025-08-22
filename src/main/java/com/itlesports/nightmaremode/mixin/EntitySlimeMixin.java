@@ -4,7 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -112,7 +112,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Redirect(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getCurrentMoonPhaseFactor()F"))
     private float slimeBloodMoon(World world){
-        if(NightmareUtils.getIsBloodMoon()){
+        if(NMUtils.getIsBloodMoon()){
             return 0;
         }
         return world.getCurrentMoonPhaseFactor();
@@ -121,7 +121,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
         EntitySlime thisObj = (EntitySlime)(Object)this;
-        boolean isEclipsed = NightmareUtils.getIsMobEclipsed(this);
+        boolean isEclipsed = NMUtils.getIsMobEclipsed(this);
         int maxSplits = isEclipsed ? 1 : 3;
         int baseChance = isEclipsed ? 4 : 2;
 
@@ -147,7 +147,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
-        if(NightmareUtils.getIsEclipse() || (NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0)){
+        if(NMUtils.getIsEclipse() || (NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0)){
             this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
@@ -155,7 +155,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Override
     protected void dropFewItems(boolean par1, int par2) {
-        if(NightmareUtils.getIsMobEclipsed(this) && par1){
+        if(NMUtils.getIsMobEclipsed(this) && par1){
             for(int i = 0; i < this.getSlimeSize() * 2; i++){
                 if(this.rand.nextInt(12) == 0){
                     this.dropItem(foodItems.get(this.rand.nextInt(foodItems.size())), 1);

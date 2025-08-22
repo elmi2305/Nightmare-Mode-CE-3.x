@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,7 +29,7 @@ public class SpiderWebEntityMixin {
     private void applySlownessOnHit(MovingObjectPosition impactPos, CallbackInfo ci, Entity entityHit){
         if(entityHit instanceof EntityPlayer player){
             if(slimeShooter){amplifier=1;}
-            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,(amplifier+1)*(20 + NightmareUtils.getWorldProgress()*20),amplifier));
+            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,(amplifier+1)*(20 + NMUtils.getWorldProgress()*20),amplifier));
         }
     }
 

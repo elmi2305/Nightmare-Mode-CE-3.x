@@ -10,7 +10,7 @@ import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,7 +68,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if (bKilledByPlayer) {
-            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(3);
                 // 0 - 2
@@ -87,7 +87,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NightmareUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsMobEclipsed(this)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -138,10 +138,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         if (this.worldObj != null) {
             if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 if (this.getSkeletonType() == 1){
-                    return 0.3  * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
+                    return 0.3  * (1 + (NMUtils.getNiteMultiplier() - 1) / 10);
                 }
                 if (this.worldObj != null) {
-                    return (0.29 + NightmareUtils.getWorldProgress() * 0.005) * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10);
+                    return (0.29 + NMUtils.getWorldProgress() * 0.005) * (1 + (NMUtils.getNiteMultiplier() - 1) / 10);
                 }
                 // 0.29 -> 0.295 -> 0.30 -> 0.305
             }
@@ -150,14 +150,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,8);
+        NMUtils.manageEclipseChance(this,8);
     }
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityAIWatchClosest;<init>(Lnet/minecraft/src/EntityLiving;Ljava/lang/Class;F)V"),index = 2)
     private float modifyDetectionRadius(float f){
         if (this.worldObj != null) {
             if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-                return (float) (24f * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 10));
+                return (float) (24f * (1 + (NMUtils.getNiteMultiplier() - 1) / 10));
             }
         }
         return f;
@@ -165,10 +165,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress();
-            float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.4f : 1;
+            int progress = NMUtils.getWorldProgress();
+            float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.4f : 1;
             boolean isBloodMoon = bloodMoonModifier > 1;
-            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
             if (isHostile) {
@@ -181,18 +181,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
 
             if(this.getSkeletonType() == 1){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * NightmareUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * NMUtils.getNiteMultiplier());
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * NightmareUtils.getNiteMultiplier())));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * NMUtils.getNiteMultiplier())));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
             if(this.getSkeletonType() == 4){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * NightmareUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * NMUtils.getNiteMultiplier());
                 // 24.0 -> 30.0 -> 36.0 -> 40.0
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 * (progress + 1) + (isEclipse ? 1 : 0)) * NightmareUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 * (progress + 1) + (isEclipse ? 1 : 0)) * NMUtils.getNiteMultiplier());
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -201,9 +201,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "preInitCreature", at = @At("TAIL"))
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
-            if((NightmareUtils.getIsBloodMoon() || areMobsEvolved) && this.rand.nextInt(16) == 0 && this.getSkeletonType() == 0){
+            if((NMUtils.getIsBloodMoon() || areMobsEvolved) && this.rand.nextInt(16) == 0 && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
-            } else if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType() == 0){
+            } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -216,7 +216,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyArg(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int chanceToSpawnAsWitherSkelly(int bound){
         if(this.worldObj != null){
-            return 12 - (NightmareUtils.getWorldProgress() * 3);
+            return 12 - (NMUtils.getWorldProgress() * 3);
         }
         return bound;
     }
@@ -272,7 +272,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if(this.worldObj != null){
-            if (NightmareUtils.getIsBloodMoon()){
+            if (NMUtils.getIsBloodMoon()){
                 if (rand.nextBoolean()) {
                     this.shootArrowAtEntity(target);
                     if(rand.nextBoolean()){
@@ -293,11 +293,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress();
+            int progress = NMUtils.getWorldProgress();
             boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
-            boolean isEclipse = NightmareUtils.getIsEclipse();
-            double niteMultiplier = NightmareUtils.getNiteMultiplier();
+            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            boolean isEclipse = NMUtils.getIsEclipse();
+            double niteMultiplier = NMUtils.getNiteMultiplier();
 
             if (isEclipse) {
                 assignEclipseSkeletonVariant();
@@ -374,7 +374,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
         if (this.worldObj != null) {
-            return NightmareUtils.divByNiteMultiplier((int) (8.0f - NightmareUtils.getWorldProgress()*2), 2);
+            return NMUtils.divByNiteMultiplier((int) (8.0f - NMUtils.getWorldProgress()*2), 2);
         }
         return constant;
         // 8.0 -> 6.0 -> 4.0 -> 2.0
@@ -443,11 +443,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(60, 20)) < 3 + (NightmareUtils.getWorldProgress()*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
+            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NMUtils.divByNiteMultiplier(60, 20)) < 3 + (NMUtils.getWorldProgress()*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
                 arrow.setFire(400);
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double((2.0 + (NightmareUtils.getWorldProgress() * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NightmareUtils.getNiteMultiplier());
+                arrow.setDamage(MathHelper.floor_double((2.0 + (NMUtils.getWorldProgress() * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NMUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
             }
         }
@@ -474,11 +474,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private int modifyAttackInterval(int constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
 
-            return switch (NightmareUtils.getWorldProgress()) {
-                case 0 -> NightmareUtils.divByNiteMultiplier(60, 20);
-                case 1 -> NightmareUtils.divByNiteMultiplier(50, 20);
-                case 2 -> NightmareUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
-                case 3 -> NightmareUtils.divByNiteMultiplier(40 + rand.nextInt(5), 20);
+            return switch (NMUtils.getWorldProgress()) {
+                case 0 -> NMUtils.divByNiteMultiplier(60, 20);
+                case 1 -> NMUtils.divByNiteMultiplier(50, 20);
+                case 2 -> NMUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
+                case 3 -> NMUtils.divByNiteMultiplier(40 + rand.nextInt(5), 20);
                 default -> constant;
             };
         }
@@ -487,7 +487,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
         if (this.worldObj != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            return (float) ((18.0f + NightmareUtils.getWorldProgress() * 3) * Math.min(NightmareUtils.getNiteMultiplier(), 1.3f));
+            return (float) ((18.0f + NMUtils.getWorldProgress() * 3) * Math.min(NMUtils.getNiteMultiplier(), 1.3f));
         }
         return constant;
         // 18 -> 21 -> 24 -> 27

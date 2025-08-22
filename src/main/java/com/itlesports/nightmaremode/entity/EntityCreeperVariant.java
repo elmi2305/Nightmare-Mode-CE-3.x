@@ -9,7 +9,7 @@ import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAICreeperVariantSwell;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
@@ -66,20 +66,20 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
 
-        int progress = NightmareUtils.getWorldProgress();
-        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25 : 1;
-        int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 20 : 0;
+        int progress = NMUtils.getWorldProgress();
+        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
+        int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
 
-        if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
+        if (this.rand.nextInt(NMUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }
-        if (this.rand.nextInt(NightmareUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
+        if (this.rand.nextInt(NMUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
         // 20 -> 26 -> 32 -> 38
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NightmareUtils.getNiteMultiplier() - 1) / 20)) + 1));
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NMUtils.getNiteMultiplier() - 1) / 20)) + 1));
 
     }
 
@@ -102,9 +102,9 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
 
-        int progress = NightmareUtils.getWorldProgress();
-        boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
-        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
+        int progress = NMUtils.getWorldProgress();
+        boolean isBloodMoon = NMUtils.getIsBloodMoon();
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
         boolean result = false;
 
         boolean evolved = progress > 0 || areMobsEvolved;
@@ -114,7 +114,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             result = rand.nextInt(6) == 0;
         } else if (evolved) {
             if (dimension == 0) {
-                double chance = rand.nextDouble() * NightmareUtils.getNiteMultiplier();
+                double chance = rand.nextDouble() * NMUtils.getNiteMultiplier();
                 float threshold = 0.15f + (progress - 1) * 0.03f;
 
                 if (chance < threshold) {
@@ -277,14 +277,14 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     private double getCreeperBreachRange(){
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
         if(!isHostile){return 36;}
-        int bloodMoonModifier = NightmareUtils.getIsBloodMoon() || NightmareUtils.getIsMobEclipsed(this) ? 3 : 1;
-        int i = NightmareUtils.getWorldProgress();
+        int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
+        int i = NMUtils.getWorldProgress();
 
         return switch (i) {
-            case 0 ->  36 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 6b   10.4b
-            case 1 ->  81 * bloodMoonModifier * NightmareUtils.getNiteMultiplier();  // 9b   15.57b
-            case 2 -> 121 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 11b  19.03b
-            case 3 -> 196 * bloodMoonModifier * NightmareUtils.getNiteMultiplier(); // 14b  24.2b
+            case 0 ->  36 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 6b   10.4b
+            case 1 ->  81 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 9b   15.57b
+            case 2 -> 121 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 11b  19.03b
+            case 3 -> 196 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 14b  24.2b
             default -> 36;
         };
     }
@@ -336,13 +336,13 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NightmareUtils.getIsBloodMoon() && !NightmareUtils.getIsMobEclipsed(this) && !this.isPotionActive(Potion.fireResistance.id)){
+        if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NMUtils.getIsBloodMoon() && !NMUtils.getIsMobEclipsed(this) && !this.isPotionActive(Potion.fireResistance.id)){
             this.determinedToExplode = true;
         }
         if (this.worldObj.getDifficulty().canCreepersBreachWalls() && par1DamageSource.isExplosion()) {
             par2 /= 5.0f;
         }
-        if (NightmareUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown) {
+        if (NMUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown) {
             return false;
         }
         return super.attackEntityFrom(par1DamageSource, par2);
@@ -367,7 +367,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iFortuneModifier) > 0)) {
             this.dropItem(BTWItems.creeperOysters.itemID, 1);
         }
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (iFortuneModifier * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -389,7 +389,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             }
         }
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
@@ -406,7 +406,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
-        float bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.25f : 1;
+        float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25f : 1;
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
             if (!this.worldObj.isRemote) {
@@ -417,7 +417,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                     } else {
                         this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 3 * bloodMoonModifier, var2);
                     }
-                    if(NightmareUtils.getIsMobEclipsed(this)){
+                    if(NMUtils.getIsMobEclipsed(this)){
                         if(this.getAttackTarget() instanceof EntityPlayer target){
                             double var1 = this.posX - target.posX;
                             double var3 = this.posZ - target.posZ;

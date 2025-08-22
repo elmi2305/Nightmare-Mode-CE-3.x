@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.RenderSkeleton;
 import net.minecraft.src.ResourceLocation;
@@ -34,7 +34,7 @@ public class RenderSkeletonMixin {
         } else if(skeleton.getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL) {
             cir.setReturnValue(SUPERCRITICAL_SKELETON_TEXTURE);
         }
-        if (!NightmareUtils.getIsMobEclipsed(skeleton)) {
+        if (!NMUtils.getIsMobEclipsed(skeleton)) {
              if(skeleton.getSkeletonType() == 4){
                 cir.setReturnValue(ENDER_SKELETON_TEXTURE);
             }else if(skeleton.getSkeletonType() == 3){

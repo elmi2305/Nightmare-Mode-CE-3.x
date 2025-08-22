@@ -5,7 +5,7 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.EntityNightmareGolem;
@@ -110,9 +110,9 @@ public abstract class EntityWitherMixin extends EntityMob {
             this.setDead();
         }
     }
-    @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true)
+    @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true, remap = false)
     private void manageAprilFoolsWitherSetter(CallbackInfo ci){
-        if(NightmareUtils.getWorldProgress() == 0 && NightmareMode.isAprilFools){
+        if(NMUtils.getWorldProgress() == 0 && NightmareMode.isAprilFools){
             ci.cancel();
         }
     }

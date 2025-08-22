@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.villager.LibrarianVillagerEntity;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.World;
@@ -19,7 +19,7 @@ public class LibrarianVillagerEntityMixin extends EntityVillager {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(this.worldObj != null && NightmareUtils.getIsEclipse()){
+        if(this.worldObj != null && NMUtils.getIsEclipse()){
             if (this.conversionCountdown > 0) {
                 this.conversionCountdown -= 1;
             } else if (!this.worldObj.isRemote){

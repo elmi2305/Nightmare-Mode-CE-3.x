@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.rendering;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityZombieImposter;
 import net.minecraft.src.EntityZombie;
@@ -30,7 +30,7 @@ public class RenderZombieVariant extends RenderZombie {
         if(par1EntityZombie instanceof EntityZombieImposter){
             return imposterZombieTexture;
         }
-        return NightmareUtils.getIsMobEclipsed(par1EntityZombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
+        return NMUtils.getIsMobEclipsed(par1EntityZombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
     }
 
     @Unique

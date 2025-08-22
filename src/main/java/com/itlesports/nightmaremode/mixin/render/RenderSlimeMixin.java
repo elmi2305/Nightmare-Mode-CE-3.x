@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntitySlime;
 import net.minecraft.src.RenderSlime;
 import net.minecraft.src.ResourceLocation;
@@ -23,7 +23,7 @@ public class RenderSlimeMixin {
 
     @Inject(method = "getSlimeTextures", at = @At("HEAD"),cancellable = true)
     private void slimeEclipseTextures(EntitySlime par1, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsMobEclipsed(par1)){
+        if(NMUtils.getIsMobEclipsed(par1)){
             switch(par1.getSlimeSize() % 8 + 1){
                 case 1:
                     cir.setReturnValue(SLIME_1);

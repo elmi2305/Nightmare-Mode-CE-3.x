@@ -4,13 +4,14 @@ import btw.block.BTWBlocks;
 import btw.item.items.AxeItem;
 import net.minecraft.src.*;
 
-public class ItemBloodAxe extends AxeItem {
+public class ItemBloodAxe extends AxeItem implements IBloodTool{
 
     public ItemBloodAxe(int i, EnumToolMaterial enumToolMaterial, int iMaxUses) {
         super(i, enumToolMaterial);
         this.setMaxDamage(iMaxUses);
         this.setDamageVsEntity(4);
         this.maxStackSize = 1;
+        this.setInfernalMaxNumEnchants(4);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setBuoyant();
         this.setUnlocalizedName("nmBloodAxe");

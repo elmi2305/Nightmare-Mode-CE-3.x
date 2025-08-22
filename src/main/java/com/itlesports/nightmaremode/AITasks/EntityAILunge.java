@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 
@@ -19,7 +19,7 @@ public class EntityAILunge extends EntityAITarget {
     public boolean shouldExecute() {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
-            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this.taskOwner);
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this.taskOwner);
             int range = isEclipse ? 50 : 30;
 
             return (this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= range || this.taskOwner instanceof EntityBloodZombie)  // 5.4 blocks
@@ -39,7 +39,7 @@ public class EntityAILunge extends EntityAITarget {
     @Override
     public boolean continueExecuting(){
         boolean isHoldingItem = this.taskOwner.getHeldItem() != null;
-        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this.taskOwner);
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this.taskOwner);
 
         if(isHoldingItem && !isEclipse){return false;}
         // ensures normal behavior on non-eclipse

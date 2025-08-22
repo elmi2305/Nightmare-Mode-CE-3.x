@@ -7,7 +7,7 @@ import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
 import com.itlesports.nightmaremode.NMInitializer;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.TPACommand;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -135,7 +135,7 @@ public class NightmareMode extends BTWAddon {
     }
     public static void syncItemStackSizesToProgress(World world) {
         int size = getCurrentStackSize(world);
-        NightmareUtils.setItemStackSizes(size);
+        NMUtils.setItemStackSizes(size);
 
         for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             if (obj instanceof EntityPlayerMP player) {
@@ -210,7 +210,7 @@ public class NightmareMode extends BTWAddon {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
                 int newSize = dataStream.readInt();
-                NightmareUtils.setItemStackSizes(newSize);
+                NMUtils.setItemStackSizes(newSize);
             } catch (IOException e) {
                 e.printStackTrace();
             }

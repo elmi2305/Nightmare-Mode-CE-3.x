@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -32,7 +32,7 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
     @Override
     public boolean getCanSpawnHere() {
         if (this.worldObj == null) return false;
-        int worldProgress = NightmareUtils.getWorldProgress();
+        int worldProgress = NMUtils.getWorldProgress();
         boolean bCanSpawn = false;
 
         if (this.worldObj.isThundering() || worldProgress > 0) {
@@ -157,7 +157,7 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
         }
 
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2

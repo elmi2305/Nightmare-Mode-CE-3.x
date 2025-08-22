@@ -6,7 +6,7 @@ import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,12 +39,12 @@ public abstract class EntityWitchMixin extends EntityMob {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,10);
+        NMUtils.manageEclipseChance(this,10);
     }
 
     @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
         for(int i = 0; i < 3; i++){
-            if(NightmareUtils.getIsMobEclipsed(this)){
+            if(NMUtils.getIsMobEclipsed(this)){
                 int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
                 int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
                 int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
@@ -102,7 +102,7 @@ public abstract class EntityWitchMixin extends EntityMob {
                 }
                 minion.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE));
             } else {
-                if (NightmareUtils.getIsBloodMoon()) {
+                if (NMUtils.getIsBloodMoon()) {
                     EntityCreeper tempMinion = new EntityCreeper(this.worldObj);
                     tempMinion.copyLocationAndAnglesFrom(witch);
                     tempMinion.entityToAttack = player;
@@ -174,7 +174,7 @@ public abstract class EntityWitchMixin extends EntityMob {
                             default -> BTWItems.witchWart;
                         };
                     }
-                    if(NightmareUtils.getIsMobEclipsed(this)){
+                    if(NMUtils.getIsMobEclipsed(this)){
                         j = this.rand.nextInt(80);
                         itemToDrop = switch (j) {
                             case  0,  1,  2,  3,  4  -> NMItems.magicFeather;
@@ -207,7 +207,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
 
 
-            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(9)+4;
                 // 4 - 12
@@ -218,7 +218,7 @@ public abstract class EntityWitchMixin extends EntityMob {
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NightmareUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsMobEclipsed(this)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -250,21 +250,21 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            int progress = NightmareUtils.getWorldProgress();
-            double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
-            int eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 30 : 0;
+            int progress = NMUtils.getWorldProgress();
+            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 30 : 0;
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * NightmareUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
             // 20 -> 24 -> 28 -> 32
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4 * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4 * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
         }
     }
 
     @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWitch;setAggressive(Z)V",ordinal = 1,shift = At.Shift.AFTER))
     private void healFast(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
-            this.witchAttackTimer = NightmareUtils.getIsMobEclipsed(this) ? 5 : 10;
+            this.witchAttackTimer = NMUtils.getIsMobEclipsed(this) ? 5 : 10;
         }
     }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
@@ -273,7 +273,7 @@ public abstract class EntityWitchMixin extends EntityMob {
             this.dropItem(Item.expBottle.itemID, 1);
         }
 
-        if(this.rand.nextInt(NightmareUtils.getIsBloodMoon() ? 2 : 6) == 0){
+        if(this.rand.nextInt(NMUtils.getIsBloodMoon() ? 2 : 6) == 0){
             this.dropItem(BTWItems.witchWart.itemID, this.rand.nextInt(2));
         }
     }
@@ -335,8 +335,8 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void manageMinionSummons(CallbackInfo ci){
         EntityWitch thisObj = (EntityWitch)(Object)this;
 
-        this.minionCountdown += thisObj.rand.nextInt(3 + NightmareUtils.getWorldProgress());
-        if(this.minionCountdown > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NightmareUtils.getIsMobEclipsed(this) ? 300 : 0)){
+        this.minionCountdown += thisObj.rand.nextInt(3 + NMUtils.getWorldProgress());
+        if(this.minionCountdown > (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 600 : 1600) - (NMUtils.getIsMobEclipsed(this) ? 300 : 0)){
             if(thisObj.getAttackTarget() instanceof EntityPlayer player && !player.capabilities.isCreativeMode){
                 this.summonMinion(thisObj, player);
                 this.minionCountdown = this.rand.nextInt(15) * (10 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 10));
@@ -347,7 +347,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if(this.rand.nextInt(4) == 0 && NightmareUtils.getIsMobEclipsed(this)){
+        if(this.rand.nextInt(4) == 0 && NMUtils.getIsMobEclipsed(this)){
             int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+3);
             int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+3);
 

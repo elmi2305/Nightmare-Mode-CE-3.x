@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.FoodStats;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ public class FoodStatsMixin {
     @ModifyConstant(method = {"addStats(IF)V", "needFood"}, constant = @Constant(intValue = 60, ordinal = 0))
     private int modifyAddStatsMaxHunger(int original) {
         if (NightmareMode.nite) {
-            return player != null ? NightmareUtils.getFoodShanksFromLevel(player) : original;
+            return player != null ? NMUtils.getFoodShanksFromLevel(player) : original;
         }
         return original;
     }

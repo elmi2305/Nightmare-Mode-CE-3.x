@@ -1,10 +1,10 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.nmgui.GuiColoredButton;
 import com.itlesports.nightmaremode.nmgui.GuiConfig;
 import com.itlesports.nightmaremode.nmgui.GuiWarning;
-import com.itlesports.nightmaremode.NightmareUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -54,11 +54,11 @@ public class GuiSelectWorldMixin extends GuiScreen {
         if (NightmareMode.isAprilFools) {
             if (par1GuiButton.id == 10) {
                 num += 1;
-                NightmareUtils.setBuffedSquidBonus(roundIfNeeded(1 + num * 0.013));
+                NMUtils.setBuffedSquidBonus(roundIfNeeded(1 + num * 0.013));
             }
             if(par1GuiButton.id == 11){
                 chaos = !chaos;
-                NightmareUtils.setIntenseCorruption(chaos);
+                NMUtils.setIntenseCorruption(chaos);
             }
         }
         if(par1GuiButton.id == 2305){

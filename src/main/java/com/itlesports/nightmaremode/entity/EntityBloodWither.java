@@ -4,7 +4,7 @@ import btw.block.BTWBlocks;
 import btw.entity.LightningBoltEntity;
 import btw.entity.attribute.BTWAttributes;
 import btw.world.util.WorldUtils;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -578,12 +578,12 @@ public class EntityBloodWither extends EntityWither {
             this.setAttackDetails(this.currentAttackIndex, true);
 
             if (this.rand.nextInt(8) == 0) {
-                if(!NightmareUtils.getIsBloodMoon()){
+                if(!NMUtils.getIsBloodMoon()){
                     this.previousWorldTime = this.worldObj.getWorldTime();
                     this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
                 }
             } else if (this.rand.nextInt(8) == 0) {
-                if(!NightmareUtils.getIsEclipse()){
+                if(!NMUtils.getIsEclipse()){
                     this.previousWorldTime = this.worldObj.getWorldTime();
                     this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
                 }

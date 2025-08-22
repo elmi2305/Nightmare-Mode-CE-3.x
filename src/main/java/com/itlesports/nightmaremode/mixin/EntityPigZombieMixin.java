@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class EntityPigZombieMixin extends EntityZombie {
     @Override
     public void applyEntityAttributes() {
         super.applyEntityAttributes();
-        if (NightmareUtils.getIsBloodMoon()) {
+        if (NMUtils.getIsBloodMoon()) {
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
         }
     }
@@ -44,13 +44,13 @@ public class EntityPigZombieMixin extends EntityZombie {
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
         if (this.entityToAttack == null) {
-            if(NightmareUtils.getIsBloodMoon()){
+            if(NMUtils.getIsBloodMoon()){
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
                 if (player != null) {
                     this.entityToAttack = player;
                 }
             } else {
-                double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NightmareUtils.getIsMobEclipsed(this) ? 3 : 0);
+                double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
                 if(player != null && this.isPlayerWearingGoldArmor(player)){
                     this.entityToAttack = player;
@@ -61,17 +61,17 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NightmareUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NightmareUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NightmareUtils.getWorldProgress()) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NMUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
     }
 
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if (bKilledByPlayer) {
-            int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+            int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(2);
                 // 0 - 1
@@ -82,7 +82,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NightmareUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsMobEclipsed(this)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -121,12 +121,12 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,6);
+        NMUtils.manageEclipseChance(this,6);
     }
 
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
-        if(NightmareUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
+        if(NMUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
 
             if(this.rand.nextInt(12) == 0){
                 ((EntityPlayer) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 60,0));

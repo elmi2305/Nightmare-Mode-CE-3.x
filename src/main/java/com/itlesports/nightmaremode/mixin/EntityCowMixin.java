@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.KickingAnimal;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,17 +19,17 @@ public abstract class EntityCowMixin extends KickingAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15d * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15d * NMUtils.getNiteMultiplier());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,4);
+        NMUtils.manageEclipseChance(this,4);
     }
     @Inject(method = "interact", at = @At("HEAD"),cancellable = true)
     private void manageGatheringBloodMilk(EntityPlayer player, CallbackInfoReturnable<Boolean> cir){
         EntityCow thisObj = (EntityCow)(Object)this;
-        if(NightmareUtils.getIsMobEclipsed(thisObj)){
+        if(NMUtils.getIsMobEclipsed(thisObj)){
             ItemStack stack = player.inventory.getCurrentItem();
             if (stack != null && stack.itemID == Item.bucketEmpty.itemID) {
                 if (thisObj.gotMilk()) {
@@ -56,15 +56,15 @@ public abstract class EntityCowMixin extends KickingAnimal {
     private void updateHealthState(CallbackInfo ci){
         if(this.ticksExisted % 120 != 0) return;
         int originalHealth = 15;
-        double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 2.5 : 1;
-        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
+        double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 2.5 : 1;
+        if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
         }
     }
 
     @Inject(method = "isSubjectToHunger", at = @At("HEAD"),cancellable = true)
     private void manageEclipseHunger(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsMobEclipsed(this)){
             cir.setReturnValue(false);
         }
     }

@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.EntityFireSpider;
 import net.minecraft.src.EntitySpider;
@@ -27,7 +27,7 @@ public class RenderSpiderMixin {
             cir.setReturnValue(SPIDER_TEXTURE_BLACK);
         }else if(par1EntitySpider instanceof EntityFireSpider){
             cir.setReturnValue(SPIDER_TEXTURE_FIRE);
-        } else if(NightmareUtils.getIsMobEclipsed(par1EntitySpider)){
+        } else if(NMUtils.getIsMobEclipsed(par1EntitySpider)){
             this.eclipseEyes = true;
             cir.setReturnValue(SPIDER_TEXTURE_ECLIPSE);
         }

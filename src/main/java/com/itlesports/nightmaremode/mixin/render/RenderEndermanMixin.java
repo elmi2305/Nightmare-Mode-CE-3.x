@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
 import net.minecraft.src.EntityEnderman;
 import net.minecraft.src.RenderEnderman;
@@ -23,7 +23,7 @@ public class RenderEndermanMixin {
     private void endermanEclipseTextures(EntityEnderman par1EntityEnderman, CallbackInfoReturnable<ResourceLocation> cir) {
         if(par1EntityEnderman instanceof EntityRadioactiveEnderman){
             cir.setReturnValue(ENDERMAN_GREEN);
-        } else if (NightmareUtils.getIsMobEclipsed(par1EntityEnderman)) {
+        } else if (NMUtils.getIsMobEclipsed(par1EntityEnderman)) {
             this.eclipseEyes = true;
             cir.setReturnValue(ENDERMAN_ECLIPSE);
         }

@@ -90,7 +90,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         args.set(2, xOffset + 25);
         args.set(3, yOffset - 3);
     }
-    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"))
+    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"), remap = false)
     private void colorOfBetterThanWolvesSign(Args args){
         if (NightmareMode.bloodmare) {
             args.set(1, 0.15f);
@@ -107,7 +107,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         }
     }
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V"))
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V"), remap = false)
     private void customNightmareGui(int par1, int par2, float par3, CallbackInfo ci){
         short var5 = 256;
         int var6 = this.width / 2 - var5 / 2;
@@ -116,13 +116,11 @@ public class GuiMainMenuMixin extends GuiScreen {
         this.mc.getTextureManager().bindTexture(MENU);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int customTextureY = var7 + 46; // Slightly below the logo
+        int customTextureY = var7 + 46;
 
-        // Define size (Adjust to your texture dimensions)
-        int customWidth = 256;  // Replace with actual width
-        int customHeight = 51;  // Replace with actual height
+        int customWidth = 256;
+        int customHeight = 51;
 
-        // Draw the texture
         this.drawTexturedModalRect(var6, customTextureY, 0, 0, customWidth, customHeight);
     }
 }

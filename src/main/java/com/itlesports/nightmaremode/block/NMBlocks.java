@@ -35,7 +35,7 @@ public class NMBlocks {
         Item.itemsList[underworldPortal.blockID] = new ItemBlock(NMBlocks.underworldPortal.blockID - 256);
 
 
-        bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 1).setTextureName("chestBlood");
+        bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 0).setTextureName("chestBlood");
         Item.itemsList[bloodChest.blockID] = new ItemBlock(NMBlocks.bloodChest.blockID - 256);
         TileEntity.addMapping(TileEntityBloodChest.class, "BloodChest");
 

@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +40,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             List<ItemStack> leatherArmorList = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                    if(rand.nextFloat() < (0.04f + NightmareUtils.getWorldProgress()*0.02) + streakModifier){
+                    if(rand.nextFloat() < (0.04f + NMUtils.getWorldProgress()*0.02) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
                         this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
@@ -53,7 +53,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
 
     @Inject(method = "despawnEntity", at = @At(value = "TAIL"))
     private void manageDespawnDuringBloodMoon(CallbackInfo ci){
-        if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 300 == 299 && NightmareUtils.getIsBloodMoon()) {
+        if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 300 == 299 && NMUtils.getIsBloodMoon()) {
             EntityPlayer nearestPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX, this.posY, this.posZ, 128);
 
             if (nearestPlayer != null) {

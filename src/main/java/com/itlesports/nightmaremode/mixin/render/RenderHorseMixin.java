@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityHorse;
 import net.minecraft.src.RenderHorse;
 import net.minecraft.src.ResourceLocation;
@@ -16,7 +16,7 @@ public class RenderHorseMixin {
 
     @Inject(method = "func_110849_a", at = @At("HEAD"),cancellable = true)
     private void horseEclipseTextures(EntityHorse par1, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsMobEclipsed(par1)) {
+        if (NMUtils.getIsMobEclipsed(par1)) {
             cir.setReturnValue(HORSE_ECLIPSE);
         }
     }

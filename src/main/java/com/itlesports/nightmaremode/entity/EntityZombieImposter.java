@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.entity;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityZombieImposter extends EntityZombie {
@@ -16,7 +16,7 @@ public class EntityZombieImposter extends EntityZombie {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.40d);
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress();
+            int progress = NMUtils.getWorldProgress();
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 5 : 2));
             // 20 -> 25 -> 30 -> 35
             // relaxed: 24 + 26

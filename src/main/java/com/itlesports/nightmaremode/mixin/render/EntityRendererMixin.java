@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.client.NightmareKeyBindings;
 import com.itlesports.nightmaremode.client.ZoomStateAccessor;
 import com.itlesports.nightmaremode.mixin.EntityAccessor;
@@ -108,7 +108,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             value = "INVOKE",
             target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V",
             shift = At.Shift.AFTER
-    ))
+    ), remap = false)
     private void nightmaremode$scaleViewmodel(float partialTicks, int pass, CallbackInfo ci) {
         float zoom = (float) cameraZoom;
         if (zoom != 1.0F) {
@@ -128,7 +128,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     /**
      * Force render hand when zoomed by injecting after the zoom check
      */
-    @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClear(I)V", shift = At.Shift.AFTER))
+    @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClear(I)V", shift = At.Shift.AFTER), remap = false)
     private void nightmaremode$forceRenderHandWhenZoomed(float partialTicks, long timeSlice, CallbackInfo ci) {
         // Check if we're in a zoom state and the normal hand rendering was skipped
         if (this.cameraZoom != 1.0D) {
@@ -250,7 +250,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
 
     @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
     private int[] manageNightvisionColor(int[] par1ArrayOfInteger){
-        if(NightmareUtils.getIsBloodMoon() && NightmareMode.bloodmoonColors) {
+        if(NMUtils.getIsBloodMoon() && NightmareMode.bloodmoonColors) {
             return bloodmoonForcedBrightness();
         } else if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
             if(this.mc.thePlayer.dimension == 1){
@@ -262,7 +262,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         return par1ArrayOfInteger;
     }
 
-    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V"))
+    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V"), remap = false)
     private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
         if (this.mc.thePlayer.dimension == 1) {
             this.fogColorRed = 0;

@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityStoneZombie;
 import net.minecraft.src.EntityPigZombie;
 import net.minecraft.src.EntityZombie;
@@ -22,7 +22,7 @@ public class RenderZombieMixin {
     private void manageEclipsedTextures(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir){
         if(par1EntityZombie instanceof EntityStoneZombie){
             cir.setReturnValue(ZOMBIE_TEXTURE_STONE);
-        } else if(NightmareUtils.getIsMobEclipsed(par1EntityZombie)){
+        } else if(NMUtils.getIsMobEclipsed(par1EntityZombie)){
             if (par1EntityZombie instanceof EntityPigZombie) {
                 cir.setReturnValue(PIGMAN_TEXTURE_ECLIPSE);
             } else{

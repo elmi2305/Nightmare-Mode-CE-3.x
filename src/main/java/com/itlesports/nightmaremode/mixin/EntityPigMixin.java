@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.AITasks.EntityAIChasePlayer;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,12 +21,12 @@ public abstract class EntityPigMixin extends EntityAnimal {
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,8);
+        NMUtils.manageEclipseChance(this,8);
         this.targetTasks.addTask(12, new EntityAIChasePlayer(this, 1.25f));
     }
     @Inject(method = "isSubjectToHunger", at = @At("HEAD"),cancellable = true)
     private void manageEclipseHunger(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsMobEclipsed(this)){
             cir.setReturnValue(false);
         }
     }
@@ -34,7 +34,7 @@ public abstract class EntityPigMixin extends EntityAnimal {
 
     @Inject(method = "updateAITasks", at = @At("TAIL"))
     private void manageJumpAttackAtPlayer(CallbackInfo ci){
-        if(this.getAttackTarget() instanceof EntityPlayer player && NightmareUtils.getIsMobEclipsed(this)){
+        if(this.getAttackTarget() instanceof EntityPlayer player && NMUtils.getIsMobEclipsed(this)){
             double dist = Math.sqrt(this.getDistanceSqToEntity(player));
             if(dist > 1.5 && dist < 7){
                 if (!this.hasMadeSound) {
@@ -61,22 +61,22 @@ public abstract class EntityPigMixin extends EntityAnimal {
         }
         if(this.ticksExisted % 120 != 0) return;
         int originalHealth = 10;
-        double eclipseModifier = NightmareUtils.getIsMobEclipsed(this) ? 2.4 : 1;
-        if(this.getMaxHealth() != originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NightmareUtils.getNiteMultiplier() * eclipseModifier);
+        double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 2.4 : 1;
+        if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
         }
     }
 
     @Override
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {
-        if(!NightmareUtils.getIsMobEclipsed(this)) {
+        if(!NMUtils.getIsMobEclipsed(this)) {
             super.knockBack(par1Entity, par2, par3, par5);
         }
     }
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -100,7 +100,7 @@ public abstract class EntityPigMixin extends EntityAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10d * NightmareUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.25F * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10d * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.25F * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
     }
 }

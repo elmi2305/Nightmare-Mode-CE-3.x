@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.AITasks;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityAIChasePlayer extends EntityAIBase {
@@ -19,7 +19,7 @@ public class EntityAIChasePlayer extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if (NightmareUtils.getIsMobEclipsed(this.theAnimal)) {
+        if (NMUtils.getIsMobEclipsed(this.theAnimal)) {
             EntityPlayer possibleTarget = this.theAnimal.worldObj.getClosestVulnerablePlayerToEntity(this.theAnimal, 16);
             if (possibleTarget != null && possibleTarget.isEntityAlive() && this.theAnimal.getDistanceSqToEntity(possibleTarget) < CHASE_DISTANCE_SQ) {
                 this.targetEntity = possibleTarget;

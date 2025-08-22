@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 
 import java.util.Set;
@@ -169,10 +169,10 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
             if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
             this.taskOwner.swingItem();
             this.taskOwner.attackEntityAsMob(this.targetEntity);
-            this.attackTick = 13 - NightmareUtils.getWorldProgress() * 2;
+            this.attackTick = 13 - NMUtils.getWorldProgress() * 2;
         }
 
-        if (NightmareUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {
+        if (NMUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {
             this.taskOwner.swingItem();
             this.taskOwner.attackEntityAsMob(this.targetEntity);
             this.attackTick = 20;
@@ -191,11 +191,11 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
 
     // You should define or import these as needed
     private Set<Integer> getLongRangeItems() {
-        return NightmareUtils.LONG_RANGE_ITEMS;
+        return NMUtils.LONG_RANGE_ITEMS;
     }
 
     private Set<Integer> getLesserRangeItems() {
-        return NightmareUtils.LESSER_RANGE_ITEMS;
+        return NMUtils.LESSER_RANGE_ITEMS;
     }
 }
 

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityRadioactiveEnderman extends EntityEnderman {
@@ -24,7 +24,7 @@ public class EntityRadioactiveEnderman extends EntityEnderman {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
-        if (bKilledByPlayer && NightmareUtils.getWorldProgress() > 0) {
+        if (bKilledByPlayer && NMUtils.getWorldProgress() > 0) {
             int dropCount = this.rand.nextInt(2 + iLootingModifier); // 0 - 1
 
             for (int i = 0; i < dropCount; ++i) {

@@ -4,7 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -21,7 +21,7 @@ public class EntityBloodZombie extends EntityZombie {
 
         this.tasks.removeAllTasksOfClass(SimpleWanderBehavior.class);
 
-        NightmareUtils.manageEclipseChance(this,8);
+        NMUtils.manageEclipseChance(this,8);
     }
 
 
@@ -30,7 +30,7 @@ public class EntityBloodZombie extends EntityZombie {
 
     @Override
     public boolean getCanSpawnHere() {
-        int worldProgress = NightmareUtils.getWorldProgress();
+        int worldProgress = NMUtils.getWorldProgress();
         int moonPhase = this.worldObj.getMoonPhase();
         double y = this.posY;
 
@@ -85,14 +85,14 @@ public class EntityBloodZombie extends EntityZombie {
             this.dropItem(Item.porkRaw.itemID,1);
         }
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int dropCount = this.rand.nextInt(3); // 0 - 2
             for (int i = 0; i < dropCount; ++i) {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -131,7 +131,7 @@ public class EntityBloodZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NightmareUtils.getWorldProgress() * 6) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
     }
 
     @Override

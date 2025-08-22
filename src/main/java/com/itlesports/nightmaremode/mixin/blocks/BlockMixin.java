@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,7 +50,7 @@ public class BlockMixin {
     }
     @Inject(method = "canMobsSpawnOn", at = @At("HEAD"),cancellable = true)
     private void mobSpawnOnWood(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsBloodMoon()){
+        if(NMUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
     }

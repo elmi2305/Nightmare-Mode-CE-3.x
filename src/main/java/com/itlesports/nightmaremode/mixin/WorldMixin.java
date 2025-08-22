@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,11 +57,11 @@ public abstract class WorldMixin {
         if(NightmareMode.isAprilFools){
             cir.setReturnValue(getRainbowFogColorFromWorldTime(this.getWorldTime()));
         } else {
-            if (NightmareUtils.getIsEclipse()) {
+            if (NMUtils.getIsEclipse()) {
                 color.scale(0);
                 cir.setReturnValue(color);
             }
-            if (NightmareUtils.getIsBloodMoon()) {
+            if (NMUtils.getIsBloodMoon()) {
                 double x = color.xCoord;
                 double y = color.yCoord;
                 double z = color.zCoord;
@@ -110,7 +110,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "handleMaterialAcceleration", at = @At("HEAD"),cancellable = true)
     private void manageSquidNoGravityWater(AxisAlignedBB par1AxisAlignedBB, Material par2Material, Entity par3Entity, CallbackInfoReturnable<Boolean> cir){
-        if(par3Entity instanceof BTWSquidEntity && (NightmareUtils.getIsMobEclipsed((BTWSquidEntity) par3Entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
+        if(par3Entity instanceof BTWSquidEntity && (NMUtils.getIsMobEclipsed((BTWSquidEntity) par3Entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
             par3Entity.inWater = true;
             cir.setReturnValue(true);
         }
@@ -119,12 +119,12 @@ public abstract class WorldMixin {
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("RETURN"),remap = false, cancellable = true)
     private void manageGloomPostWither(CallbackInfoReturnable<Float> cir){
         World thisObj = (World)(Object)this;
-        if(NightmareUtils.getWorldProgress() == 2 && !thisObj.isDaytime() && !NightmareUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
+        if(NMUtils.getWorldProgress() == 2 && !thisObj.isDaytime() && !NMUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
     }
 
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("TAIL"),cancellable = true)
     private void setEclipseTargetLightLevel(CallbackInfoReturnable<Float> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NMUtils.getIsEclipse()){
             cir.setReturnValue(cir.getReturnValueF() * 0.4f);
         }
     }
@@ -148,7 +148,7 @@ public abstract class WorldMixin {
 
     @Unique
     private double calculateNiteMultiplier(){
-        int progress = NightmareUtils.getWorldProgress();
+        int progress = NMUtils.getWorldProgress();
         double baseInterval = 14000 + 6000 * Math.log(Math.max(4 - progress, 1)) / Math.log(4); // from 20000 to 14000
 
         return 1 + ((double) this.getWorldTime() / baseInterval) * 0.01;
@@ -156,7 +156,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "isDaytime", at = @At("HEAD"),cancellable = true)
     private void eclipseNightTime(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsEclipse()){
+        if(NMUtils.getIsEclipse()){
             cir.setReturnValue(false);
         }
     }
@@ -166,7 +166,7 @@ public abstract class WorldMixin {
         World thisObj = (World)(Object)this;
         if(NightmareMode.isAprilFools){
             cir.setReturnValue(getRainbowSkyColorFromWorldTime(this.getWorldTime()));
-        } else if (NightmareUtils.getIsEclipse()) {
+        } else if (NMUtils.getIsEclipse()) {
             cir.setReturnValue(thisObj.getWorldVec3Pool().getVecFromPool(0.0, 0.0, 0.0));
         }
     }

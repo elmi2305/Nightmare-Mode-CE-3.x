@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -22,11 +22,11 @@ public class EntityStoneZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         if (this.worldObj != null) {
-            boolean isEclipse = NightmareUtils.getIsMobEclipsed(this);
-            boolean isBloodMoon = NightmareUtils.getIsBloodMoon();
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            boolean isBloodMoon = NMUtils.getIsBloodMoon();
 
-            int progress = NightmareUtils.getWorldProgress();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 32 : 28) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NightmareUtils.getNiteMultiplier());
+            int progress = NMUtils.getWorldProgress();
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 32 : 28) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NMUtils.getNiteMultiplier());
         }
     }
 
@@ -49,7 +49,7 @@ public class EntityStoneZombie extends EntityZombie {
                 heldItem = target.getHeldItem().getItem();
             }
 
-            int progress =  NightmareUtils.getWorldProgress();
+            int progress =  NMUtils.getWorldProgress();
 
             if(heldItem != null){
                 if (itemsThatCanAttackTheZombie.contains(heldItem.itemID)) {

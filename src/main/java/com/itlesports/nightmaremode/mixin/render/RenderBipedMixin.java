@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderBiped.class)
 public abstract class RenderBipedMixin extends RenderLiving {
-    @Unique private ResourceLocation BLOOD_ARMOR_LAYER_1 = new ResourceLocation("textures/armor/bloodArmorLayer1.png");
-    @Unique private ResourceLocation BLOOD_ARMOR_LAYER_2 = new ResourceLocation("textures/armor/bloodArmorLayer2.png");
+    @Unique private ResourceLocation BLOOD_ARMOR_LAYER_1 = new ResourceLocation("textures/armor/bloodArmor_layer_1.png");
+    @Unique private ResourceLocation BLOOD_ARMOR_LAYER_2 = new ResourceLocation("textures/armor/bloodArmor_layer_2.png");
 
     public RenderBipedMixin(ModelBase par1ModelBase, float par2) {
         super(par1ModelBase, par2);

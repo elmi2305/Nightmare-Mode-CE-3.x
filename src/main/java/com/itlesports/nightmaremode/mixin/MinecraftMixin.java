@@ -31,7 +31,7 @@ public class MinecraftMixin {
     }
 
     @Redirect(
-            method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I"))
+            method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I"), remap = false)
     private int nmBlockHotbarScrollWhenZoom() {
         if (entityRenderer instanceof ZoomStateAccessor accessor) {
             if (accessor.nightmareMode$isToggleZoomActive() && accessor.nightmareMode$isToggleZoomKeyHeld()) {

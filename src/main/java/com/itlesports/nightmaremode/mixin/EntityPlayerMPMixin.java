@@ -4,7 +4,7 @@ import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
-        if(this.ridingEntity instanceof EntityChicken chicken && NightmareUtils.getIsMobEclipsed(chicken)) {
+        if(this.ridingEntity instanceof EntityChicken chicken && NMUtils.getIsMobEclipsed(chicken)) {
             // Allow chicken to fly up if the player is holding jump
 
             if(chicken.motionY < -0.1){
@@ -96,7 +96,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "isInGloom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
     private boolean manageGloomDuringBloodMoon(EntityPlayerMP player, Potion potion){
-//        if(NightmareUtils.getIsBloodMoon()){
+//        if(NMUtils.getIsBloodMoon()){
 //            return false;
 //        }
         return player.isPotionActive(potion);
@@ -116,9 +116,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 //                    target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
 //                    ordinal = 2),cancellable = true)
 //    private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
-//        if (NightmareUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
+//        if (NMUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
 //            int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
-//            if(NightmareUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
+//            if(NMUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
 //                if(this.isTryingToEscapeBloodMoon){
 //                    ChatMessageComponent text1 = new ChatMessageComponent();
 //                    text1.addText("<???> Running from the Bloodmoon? Pathetic.");
@@ -163,7 +163,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))
     private void dealMagicDamage(EntityPlayerMP instance, int i){
-        this.attackEntityFrom(DamageSource.magic, NightmareUtils.getWorldProgress() * 2 + this.rand.nextInt(2));
+        this.attackEntityFrom(DamageSource.magic, NMUtils.getWorldProgress() * 2 + this.rand.nextInt(2));
         // makes fire resistance not bypass the lightning damage
     }
 
@@ -186,7 +186,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             this.steelModifier += 1;
         }
 
-        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NightmareUtils.getWorldProgress(), 0),true));
+        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NMUtils.getWorldProgress(), 0),true));
         this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - this.steelModifier * 79,3,true));
         this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),260 - this.steelModifier * 25,0,true));
         this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),260 - this.steelModifier * 25,0,true));
@@ -200,7 +200,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ServerConfigurationManager;sendChatMsg(Lnet/minecraft/src/ChatMessageComponent;)V",shift = At.Shift.AFTER))
     private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
-        if (NightmareUtils.getWorldProgress() != 3) {
+        if (NMUtils.getWorldProgress() != 3) {
             ChatMessageComponent text2 = new ChatMessageComponent();
             String tauntKey = "nightmare.taunt_" + this.rand.nextInt(getDeathMessages().size());
             text2.addText("<???> " + tauntKey);

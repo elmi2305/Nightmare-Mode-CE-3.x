@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.util.sounds.BTWSoundManager;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -107,7 +107,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 8))
     private int increaseBiteOdds(int constant){
-        if (NightmareUtils.getIsBloodMoon()) {
+        if (NMUtils.getIsBloodMoon()) {
             return 16;
         }
         return this.isIron ? 8 : 10;
@@ -173,7 +173,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
         if(this.fishItem != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
-            int worldProgress = this.angler.worldObj != null ? NightmareUtils.getWorldProgress() : 0;
+            int worldProgress = this.angler.worldObj != null ? NMUtils.getWorldProgress() : 0;
             double rarity = getRarity(this.fishItem, this.cap, worldProgress);
             String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
@@ -194,14 +194,14 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private int getWorldProgressBonus(){
         if(this.worldObj != null){
-            return NightmareUtils.getWorldProgress();
+            return NMUtils.getWorldProgress();
         }
         return 0;
     }
 
     @Unique
     private Item getRandomItemForRod(){
-        int worldProgress = this.worldObj != null ? NightmareUtils.getWorldProgress() : 0;
+        int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
         this.cap = 800;
         double capModifier = this.isIron ? 1 : (5 - this.getWorldProgressBonus());
         int j = this.rand.nextInt((int) (this.cap * capModifier));

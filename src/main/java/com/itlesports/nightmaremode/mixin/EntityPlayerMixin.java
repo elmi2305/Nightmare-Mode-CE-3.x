@@ -9,8 +9,8 @@ import btw.item.BTWItems;
 import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
-import com.itlesports.nightmaremode.NightmareUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
-import static com.itlesports.nightmaremode.NightmareUtils.chainArmor;
+import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
@@ -78,7 +78,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "isImmuneToHeadCrabDamage", at = @At("HEAD"),cancellable = true)
     private void notImmuneToSquidsEclipse(CallbackInfoReturnable<Boolean> cir){
-        if(this.riddenByEntity instanceof BTWSquidEntity && NightmareUtils.getIsMobEclipsed((BTWSquidEntity) this.riddenByEntity)){
+        if(this.riddenByEntity instanceof BTWSquidEntity && NMUtils.getIsMobEclipsed((BTWSquidEntity) this.riddenByEntity)){
             cir.setReturnValue(false);
         }
     }
@@ -94,11 +94,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("HEAD"))
     private void manageLifeSteal(Entity entity, CallbackInfo ci){
         if(entity instanceof EntityLiving &&
-                NightmareUtils.isHoldingBloodSword(this) &&
+                NMUtils.isHoldingBloodSword(this) &&
                 entity.hurtResistantTime == 0 &&
                 !this.isPotionActive(Potion.weakness) &&
                 !(entity instanceof EntityWither)){
-            int chance = 20 - NightmareUtils.getBloodArmorWornCount(this) * 3;
+            int chance = 20 - NMUtils.getBloodArmorWornCount(this) * 3;
             // 20, 16, 12, 8, 4
 
             if(rand.nextInt(chance) == 0){
@@ -110,7 +110,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
 
 
-            if(NightmareUtils.isWearingFullBloodArmor(this)){
+            if(NMUtils.isWearingFullBloodArmor(this)){
                 if((this.rand.nextInt(3) == 0) && this.fallDistance > 0.0F){
                     this.heal(1f);
                 }
@@ -127,7 +127,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public int getMaxInPortalTime() {
-        if(NightmareUtils.getWorldProgress() > 1) {return 30;}
+        if(NMUtils.getWorldProgress() > 1) {return 30;}
         return super.getMaxInPortalTime();
     }
 
@@ -146,7 +146,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return 0.09f;
         }
         if(NightmareMode.nite){
-            return 0.2f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
+            return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if (NightmareMode.bloodmare) {
             return 0.15f;
@@ -161,7 +161,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return 0.2f;
         }
         if(NightmareMode.nite){
-            return 0.75f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
+            return 0.75f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if(NightmareMode.bloodmare){
             return 0.5f;
@@ -176,7 +176,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return 0.1f;
         }
         if(NightmareMode.nite){
-            return 0.2f * NightmareUtils.getFoodShanksFromLevel(thisObj) / 60f;
+            return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
         if(NightmareMode.bloodmare){
             return 0.15f;
@@ -240,7 +240,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void managePotionsDuringBloodArmor(CallbackInfo ci){
         Collection activePotions = this.getActivePotionEffects();
-        if (NightmareUtils.isWearingFullBloodArmorWithoutSword(this)) {
+        if (NMUtils.isWearingFullBloodArmorWithoutSword(this)) {
             for(Object activePotion : activePotions){
                 if(activePotion == null) continue;
                 PotionEffect tempPotion = (PotionEffect) activePotion;
@@ -249,8 +249,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         if(this.ticksExisted % 80 != 0) return;
 
-        if(NightmareUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
-            NightmareUtils.setItemStackSizes(32);
+        if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
+            NMUtils.setItemStackSizes(32);
         }
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
@@ -450,7 +450,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ticksExisted % 4 == 3) {
-            double range = NightmareUtils.getIsEclipse() ? 3 : 5;
+            double range = NMUtils.getIsEclipse() ? 3 : 5;
 
             List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
 
@@ -458,7 +458,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 if (!(tempEntity instanceof EntityAnimal tempAnimal)) continue;
                 if(tempAnimal == this.ridingEntity) continue;
                 if (tempAnimal.isSprinting() || tempAnimal instanceof EntityWolf) continue;
-                if (NightmareUtils.getIsMobEclipsed(tempAnimal)) {
+                if (NMUtils.getIsMobEclipsed(tempAnimal)) {
                     if(tempAnimal instanceof EntityChicken) continue;
                     if(tempAnimal instanceof EntityPig) continue;
                     if(tempAnimal instanceof EntitySheep) continue;

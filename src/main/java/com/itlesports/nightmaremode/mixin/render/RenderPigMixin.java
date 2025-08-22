@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityPig;
 import net.minecraft.src.RenderPig;
 import net.minecraft.src.ResourceLocation;
@@ -16,7 +16,7 @@ public class RenderPigMixin {
 
     @Inject(method = "getPigTextures", at = @At("HEAD"),cancellable = true)
     private void pigEclipseTextures(EntityPig par1EntityPig, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsMobEclipsed(par1EntityPig)) {
+        if (NMUtils.getIsMobEclipsed(par1EntityPig)) {
             cir.setReturnValue(PIG_ECLIPSE);
         }
     }

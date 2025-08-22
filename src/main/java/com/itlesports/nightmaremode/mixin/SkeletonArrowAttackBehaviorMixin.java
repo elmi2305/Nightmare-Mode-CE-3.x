@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,8 +23,8 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Shadow private EntityLivingBase entityAttackTarget;
     @Shadow @Final private EntityLiving entityOwner;
-    @Shadow private float entityMoveSpeed;
-    @Shadow private int attackCooldownCounter;
+    @Shadow(remap = false) private float entityMoveSpeed;
+    @Shadow(remap = false) private int attackCooldownCounter;
 
     @Unique boolean isExecuting;
     @Unique int ticksOnGround;
@@ -39,7 +39,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "continueExecuting", at = @At("HEAD"))
     private void manageRunningAway(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareUtils.getIsMobEclipsed(this.entityOwner) && this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType())){
+        if(NMUtils.getIsMobEclipsed(this.entityOwner) && this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType())){
             double distToPlayer = this.entityOwner.getDistanceSqToEntity(player);
             int range = this.isExecuting ? 144 : 36;
 

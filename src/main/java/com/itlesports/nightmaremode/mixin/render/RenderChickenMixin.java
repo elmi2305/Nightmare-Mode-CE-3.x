@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityChicken;
 import net.minecraft.src.RenderChicken;
 import net.minecraft.src.ResourceLocation;
@@ -65,7 +65,7 @@ public class RenderChickenMixin {
 
     @Inject(method = "getChickenTextures", at = @At("HEAD"),cancellable = true)
     private void chickenTextures(EntityChicken par1EntityChicken, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsMobEclipsed(par1EntityChicken)){
+        if(NMUtils.getIsMobEclipsed(par1EntityChicken)){
             cir.setReturnValue(this.getResourceLocation(par1EntityChicken.ticksExisted % 90));
         }
     }

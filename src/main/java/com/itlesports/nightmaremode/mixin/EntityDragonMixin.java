@@ -5,7 +5,7 @@ import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -56,7 +56,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200d * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200d * NMUtils.getNiteMultiplier());
     }
 
     @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;createEnderPortal(II)V"))

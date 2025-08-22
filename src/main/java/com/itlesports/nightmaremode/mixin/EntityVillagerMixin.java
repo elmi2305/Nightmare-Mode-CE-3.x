@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +27,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
             this.buyingList = null;
         }
         if(this.ticksExisted % 20 != 0) return;
-        if(NightmareUtils.getIsBloodMoon()){
+        if(NMUtils.getIsBloodMoon()){
             this.heal(20f);
         }
     }
@@ -35,5 +35,10 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Inject(method = "<clinit>", at = @At("TAIL"),remap = false)
     private static void addNightmareVillagerProfession(CallbackInfo ci){
         professionMap.put(5, NightmareVillager.class);
+    }
+
+    @Override
+    public boolean isSecondaryTargetForSquid() {
+        return false;
     }
 }

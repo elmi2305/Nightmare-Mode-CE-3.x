@@ -7,7 +7,7 @@ import net.minecraft.src.*;
 
 import java.util.*;
 
-public class NightmareUtils {
+public class NMUtils {
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
@@ -88,7 +88,7 @@ public class NightmareUtils {
     }
 
     public static void setIntenseCorruption(boolean intenseCorruption) {
-        NightmareUtils.intenseCorruption = intenseCorruption;
+        NMUtils.intenseCorruption = intenseCorruption;
     }
 
     public static double getBuffedSquidBonus(){
@@ -163,7 +163,7 @@ public class NightmareUtils {
     public static int divByNiteMultiplier(int numerator, int minValue){
         // divides the numerator by the NITE multiplier, rounds down to an integer
         // to prevent it from returning 0, a minimum value is given
-        return (int) Math.max(numerator / NightmareUtils.getNiteMultiplier(), minValue);
+        return (int) Math.max(numerator / NMUtils.getNiteMultiplier(), minValue);
     }
 
     public static boolean isWearingFullBloodArmor(EntityLivingBase entity){

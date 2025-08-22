@@ -7,7 +7,7 @@ import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -21,7 +21,7 @@ public class EntityShadowZombie extends EntityZombie {
 
         this.targetTasks.addTask(2, new EntityAIShadowTeleport(this, false, false));
 
-        NightmareUtils.manageEclipseChance(this,2);
+        NMUtils.manageEclipseChance(this,2);
 
     }
     @Override
@@ -38,7 +38,7 @@ public class EntityShadowZombie extends EntityZombie {
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
-        } else if(NightmareUtils.getIsMobEclipsed(this) && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer target){
+        } else if(NMUtils.getIsMobEclipsed(this) && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer target){
             this.teleportBehindTarget(target);
         }
         return super.attackEntityFrom(par1DamageSource, par2);
@@ -50,14 +50,14 @@ public class EntityShadowZombie extends EntityZombie {
             this.dropItem(Item.enderPearl.itemID,1);
         }
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int dropCount = this.rand.nextInt(3); // 0 - 2
             for (int i = 0; i < dropCount; ++i) {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NightmareUtils.getWorldProgress() <= 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -138,7 +138,7 @@ public class EntityShadowZombie extends EntityZombie {
             if (!this.worldObj.isRemote) {
                 this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
             }
-            return NightmareUtils.getIsBloodMoon() && super.getCanSpawnHere();
+            return NMUtils.getIsBloodMoon() && super.getCanSpawnHere();
         }
 
         return super.getCanSpawnHere();
@@ -156,7 +156,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     public void onLivingUpdate() {
         if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
-            int chance = getChanceOfTeleporting(NightmareUtils.getWorldProgress());
+            int chance = getChanceOfTeleporting(NMUtils.getWorldProgress());
 
             if (this.rand.nextInt(chance) == 0) {
                 this.seekSkybases();
@@ -170,11 +170,11 @@ public class EntityShadowZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26d);
-        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NMUtils.getNiteMultiplier());
         double followDistance = 16.0;
         if (this.worldObj != null) {
-            int progress = NightmareUtils.getWorldProgress();
-            if(NightmareUtils.getIsBloodMoon()){
+            int progress = NMUtils.getWorldProgress();
+            if(NMUtils.getIsBloodMoon()){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((28.0 + progress * 8));
                 // 28 -> 36 -> 44 -> 52
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * 2);
@@ -192,7 +192,7 @@ public class EntityShadowZombie extends EntityZombie {
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
-        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10 * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10 * NMUtils.getNiteMultiplier());
     }
     @Override
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
@@ -204,7 +204,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     @Override
     protected void addRandomArmor() {
-        if(NightmareUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsMobEclipsed(this)){
             if (this.rand.nextFloat() < 0.05f) {
                 int iHeldType = this.rand.nextInt(3);
                 if (iHeldType == 0) {
@@ -257,7 +257,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
-        if(NightmareUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
+        if(NMUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.weakness.id, 60, 0));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));

@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
-import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
-import net.minecraft.src.Entity;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.RenderCreeper;
 import net.minecraft.src.ResourceLocation;
@@ -21,7 +19,7 @@ public class RenderCreeperMixin {
     private void manageEclipsedTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir){
         if(par1EntityCreeper.dimension == -1){
             cir.setReturnValue(CREEPER_TEXTURE_NETHER);
-        } else if(NightmareUtils.getIsMobEclipsed(par1EntityCreeper)){
+        } else if(NMUtils.getIsMobEclipsed(par1EntityCreeper)){
             cir.setReturnValue(CREEPER_TEXTURE_ECLIPSE);
         }
     }

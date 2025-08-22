@@ -4,7 +4,7 @@ import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -34,14 +34,14 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
-        NightmareUtils.manageEclipseChance(this,10);
+        NMUtils.manageEclipseChance(this,10);
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NightmareUtils.getNiteMultiplier() - 1) / 20));
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
         if (this.worldObj != null) {
-            int postNetherBoost = NightmareUtils.getWorldProgress() >= 1 ? 12 : 0;
+            int postNetherBoost = NMUtils.getWorldProgress() >= 1 ? 12 : 0;
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0 + postNetherBoost);
         }
     }
@@ -90,7 +90,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             } else {
                 if (this.getDistanceSqToEntity(this.getAttackTarget()) < 36.0 && !this.canEntityBeSeen(this.getAttackTarget()) && this.getNavigator().noPath()) {
                     this.patienceCounter = (byte)Math.max(this.patienceCounter - 1, 0);
-                } else if(this.getDistanceSqToEntity(this.getAttackTarget()) > 64.0 && this.canEntityBeSeen(this.getAttackTarget()) && this.rangedAttackCooldown == 0 && NightmareUtils.getIsBloodMoon()){
+                } else if(this.getDistanceSqToEntity(this.getAttackTarget()) > 64.0 && this.canEntityBeSeen(this.getAttackTarget()) && this.rangedAttackCooldown == 0 && NMUtils.getIsBloodMoon()){
                     EntityLivingBase target = this.getAttackTarget();
                     double var3 = target.posX - this.posX;
                     double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
@@ -128,7 +128,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                     } else {
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
                     }
-                    if(NightmareUtils.getIsMobEclipsed(this)){
+                    if(NMUtils.getIsMobEclipsed(this)){
                         EntityLivingBase target = this.getAttackTarget();
                         if (target instanceof EntityPlayer) {
                             for (int i = -1; i < 2 ; i++) {
@@ -199,7 +199,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         }
 
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2

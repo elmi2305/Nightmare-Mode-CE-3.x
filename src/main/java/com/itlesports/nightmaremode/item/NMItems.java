@@ -20,7 +20,7 @@ public class NMItems {
     public static ItemBloodSword bloodSword;
 
     public static ItemBloodArmor bloodHelmet;
-    public static ArmorItemDiamond bloodChestplate;
+    public static ItemBloodArmor bloodChestplate;
     public static ItemBloodArmor bloodLeggings;
     public static ItemBloodArmor bloodBoots;
     public static Item bloodIngot;
@@ -73,10 +73,10 @@ public class NMItems {
         bloodHoe = (ItemBloodHoe)(new ItemBloodHoe(2319, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodHoe");
         bloodSword = (ItemBloodSword)(new ItemBloodSword(2320, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodSword");
 
-        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,0,2, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
-        bloodChestplate = (ArmorItemDiamond)(new ArmorItemDiamond(2322,1,4)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
-        bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,2,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
-        bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,3,1, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
+        bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,EnumArmorMaterial.IRON,0,2, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
+        bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,EnumArmorMaterial.DIAMOND,1,4, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
+        bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,EnumArmorMaterial.IRON,2,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
+        bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,EnumArmorMaterial.IRON, 3,1, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
         bloodIngot = (new Item(2325)).setTextureName("nmBloodIngot").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodIngot");
 
         darksunFragment = (new Item(2326)).setTextureName("nmDarksunFragment").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDarksunFragment");

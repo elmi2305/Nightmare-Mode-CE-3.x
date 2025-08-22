@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.TeleportScheduler;
 import com.itlesports.nightmaremode.network.HandshakeServer;
 import net.minecraft.server.MinecraftServer;
@@ -28,7 +28,7 @@ public abstract class MinecraftServerMixin {
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
         NightmareMode.getInstance().portalTime = this.worldServers[0].worldInfo.getData(NightmareMode.PORTAL_TIME);
         if (!NightmareMode.getInstance().shouldStackSizesIncrease) {
-            NightmareUtils.setItemStackSizes(16);
+            NMUtils.setItemStackSizes(16);
         }
         if(this.worldServers[0].getWorldTime() + 72000 < NightmareMode.getInstance().portalTime){
             NightmareMode.getInstance().portalTime = 0;
@@ -126,7 +126,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress() == 0){return false;}
+        if(NMUtils.getWorldProgress() == 0){return false;}
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
     @Unique private boolean getIsNightFromWorldTime(World world){
@@ -134,7 +134,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsEclipse(World world, int dayCount){
-        if(NightmareUtils.getWorldProgress() <= 2){return false;}
+        if(NMUtils.getWorldProgress() <= 2){return false;}
         return !this.getIsNightFromWorldTime(world) && dayCount % 2 == 0;
     }
 }

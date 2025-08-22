@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.rendering;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -19,13 +19,13 @@ public class RenderFireCreeper extends RenderCreeper {
     @Override
     protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper) {
         if (par1EntityCreeper instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (par1EntityCreeper.getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
+            return NMUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (par1EntityCreeper.getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
         } else {return super.getEntityTexture(par1EntityCreeper);}
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
         if(par1Entity instanceof EntityFireCreeper) {
-            return NightmareUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (((EntityFireCreeper) par1Entity).getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
+            return NMUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (((EntityFireCreeper) par1Entity).getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
         } else {
             return super.getEntityTexture(par1Entity);
         }

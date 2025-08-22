@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -99,7 +99,7 @@ public class EntitySuperchargedCreeper extends EntityCreeper implements EntityWi
         }
 
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2

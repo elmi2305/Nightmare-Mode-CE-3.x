@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntitySheep;
 import net.minecraft.src.RenderSheep;
 import net.minecraft.src.ResourceLocation;
@@ -16,7 +16,7 @@ public class RenderSheepMixin {
 
     @Inject(method = "func_110883_a", at = @At("HEAD"),cancellable = true)
     private void sheepEclipseTextures(EntitySheep par1EntitySheep, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsMobEclipsed(par1EntitySheep)) {
+        if (NMUtils.getIsMobEclipsed(par1EntitySheep)) {
             cir.setReturnValue(SHEEP_ECLIPSE);
         }
     }

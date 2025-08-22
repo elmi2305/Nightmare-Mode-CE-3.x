@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityCow;
 import net.minecraft.src.RenderCow;
 import net.minecraft.src.ResourceLocation;
@@ -16,7 +16,7 @@ public class RenderCowMixin {
 
     @Inject(method = "getCowTextures", at = @At("HEAD"),cancellable = true)
     private void cowEclipseTextures(EntityCow par1EntityCow, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsMobEclipsed(par1EntityCow)) {
+        if (NMUtils.getIsMobEclipsed(par1EntityCow)) {
             cir.setReturnValue(COW_ECLIPSE);
         }
     }

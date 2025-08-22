@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -87,12 +87,12 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        int progress = NightmareUtils.getWorldProgress();
-        double bloodMoonModifier = NightmareUtils.getIsBloodMoon() ? 1.5 : 1;
+        int progress = NMUtils.getWorldProgress();
+        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
         boolean isBloodMoon = bloodMoonModifier > 1;
 
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NightmareUtils.getIsMobEclipsed(this) ? 0.07 : 0)) * NightmareUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((6.0 + progress * 2 + bloodMoonModifier) * NightmareUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NMUtils.getIsMobEclipsed(this) ? 0.07 : 0)) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((6.0 + progress * 2 + bloodMoonModifier) * NMUtils.getNiteMultiplier());
         // 7 -> 9 -> 11 -> 13
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress * 20);
         // 40 -> 60 -> 80 -> 100
@@ -100,12 +100,12 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,10);
+        NMUtils.manageEclipseChance(this,10);
     }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {
             int var4 = this.rand.nextInt(4)+1;
             // 1 - 4
@@ -119,7 +119,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -145,9 +145,9 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
     private int increaseAttemptsToTeleportPlayer(int constant){
         if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
-            if (NightmareUtils.getIsBloodMoon()) {
+            if (NMUtils.getIsBloodMoon()) {
                 return 9;
-            } else if(NightmareUtils.getIsMobEclipsed(this)){
+            } else if(NMUtils.getIsMobEclipsed(this)){
                 return 18;
             }
             return 6;
@@ -157,7 +157,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;teleportRandomly()Z",ordinal = 0))
     private boolean helpEndermanTeleportPlayerMoreOften(EntityEnderman instance){
-        if(NightmareUtils.getIsMobEclipsed(this) && this.rand.nextBoolean()){
+        if(NMUtils.getIsMobEclipsed(this) && this.rand.nextBoolean()){
             return true;
         }
         return this.teleportRandomly();
@@ -177,7 +177,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if(NightmareUtils.getIsMobEclipsed(this) && entity instanceof EntityPlayer){
+        if(NMUtils.getIsMobEclipsed(this) && entity instanceof EntityPlayer){
             int heldItemID = this.getCarried();
 
             if (this.inventorySwitchCooldown == 0) {
@@ -223,7 +223,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @Inject(method = "teleportTo(DDD)Z", at = @At(value = "RETURN",ordinal = 1))
     private void chanceToHaveItem(double par1, double par3, double par5, CallbackInfoReturnable<Boolean> cir){
-        if (NightmareUtils.getIsMobEclipsed(this)) {
+        if (NMUtils.getIsMobEclipsed(this)) {
             int i = this.rand.nextInt(8);
             if(i == 0){
                 this.setCarried(Block.tnt.blockID);

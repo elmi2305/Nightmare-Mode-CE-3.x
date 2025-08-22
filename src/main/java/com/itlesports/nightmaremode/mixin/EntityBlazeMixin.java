@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,14 +25,14 @@ public class EntityBlazeMixin extends EntityMob{
     private void applyAdditionalAttributes(CallbackInfo ci){
         if(this.worldObj != null) {
             boolean isVariant = false;
-            int progress = NightmareUtils.getWorldProgress();
-            int eclipseBonus = NightmareUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
+            int progress = NMUtils.getWorldProgress();
+            int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 10 : 4) + eclipseBonus) * NightmareUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
-            if(NightmareUtils.getIsMobEclipsed(this)){
+            if(NMUtils.getIsMobEclipsed(this)){
                 if(rand.nextBoolean()){
                     this.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 1000000, 0));
                 }
@@ -64,7 +64,7 @@ public class EntityBlazeMixin extends EntityMob{
     }
     @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 100))
     private int lowerBlazeAttackCooldown(int constant) {
-        if (NightmareUtils.getIsMobEclipsed(this) && this.getActivePotionEffects().isEmpty()){
+        if (NMUtils.getIsMobEclipsed(this) && this.getActivePotionEffects().isEmpty()){
             return 50;
         }
         return constant;
@@ -74,7 +74,7 @@ public class EntityBlazeMixin extends EntityMob{
     private void manageBlazeDash(CallbackInfo ci){
         EntityBlaze thisObj = (EntityBlaze)(Object)this;
         if(thisObj.entityToAttack instanceof EntityPlayer target){
-            int threshold = NightmareUtils.getIsMobEclipsed(this) ? 80 : 200;
+            int threshold = NMUtils.getIsMobEclipsed(this) ? 80 : 200;
             double distToPlayer = this.getDistanceSqToEntity(target);
             boolean isEclipse = threshold == 80;
 
@@ -110,13 +110,13 @@ public class EntityBlazeMixin extends EntityMob{
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,8);
+        NMUtils.manageEclipseChance(this,8);
     }
 
 
     @ModifyArg(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private Entity manageWaterBlazeAttack(Entity projectile){
-        if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NightmareUtils.getIsMobEclipsed(this)) {
+        if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NMUtils.getIsMobEclipsed(this)) {
             if(isAquatic(this)){
                 BTWSquidEntity squid = new BTWSquidEntity(this.worldObj);
 
@@ -160,7 +160,7 @@ public class EntityBlazeMixin extends EntityMob{
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NightmareUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

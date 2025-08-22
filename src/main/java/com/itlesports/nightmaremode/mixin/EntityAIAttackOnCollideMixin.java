@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,10 +35,10 @@ public abstract class EntityAIAttackOnCollideMixin {
         if (distanceSq < computedRange && isHostile && ai.attackTick <= 1 && canSeeTarget) {
             attacker.swingItem();
             attacker.attackEntityAsMob(target);
-            ai.attackTick = 13 - NightmareUtils.getWorldProgress() * 2;
+            ai.attackTick = 13 - NMUtils.getWorldProgress() * 2;
         }
 
-        if (NightmareUtils.getIsMobEclipsed(attacker) && distanceSq < 3) {
+        if (NMUtils.getIsMobEclipsed(attacker) && distanceSq < 3) {
             attacker.swingItem();
             attacker.attackEntityAsMob(target);
             ai.attackTick = 20;
@@ -50,8 +50,8 @@ public abstract class EntityAIAttackOnCollideMixin {
         if (heldItem == null) return NightmareMode.isAprilFools ? 7 : 2;
 
         int itemId = heldItem.itemID;
-        if (NightmareUtils.LONG_RANGE_ITEMS.contains(itemId)) {
-            return NightmareUtils.LESSER_RANGE_ITEMS.contains(itemId) ? 5 : 10;
+        if (NMUtils.LONG_RANGE_ITEMS.contains(itemId)) {
+            return NMUtils.LESSER_RANGE_ITEMS.contains(itemId) ? 5 : 10;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
     }

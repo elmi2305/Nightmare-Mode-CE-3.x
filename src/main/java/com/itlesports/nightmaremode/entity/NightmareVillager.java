@@ -9,6 +9,7 @@ import java.util.HashSet;
 public class NightmareVillager extends EntityVillager {
     public NightmareVillager(World par1World) {
         super(par1World, 5);
+        this.setPersistent(true);
     }
     @Override
     public int getProfessionFromClass() {
@@ -34,6 +35,7 @@ public class NightmareVillager extends EntityVillager {
             --availableTrades;
         }
     }
+
 
     @Override
     protected void applyEntityAttributes() {

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.client.render.entity.SquidRenderer;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.ResourceLocation;
@@ -18,7 +18,7 @@ public class SquidRendererMixin {
 
     @Inject(method = "getEntityTexture", at = @At("HEAD"),cancellable = true)
     private void manageEclipseTexture(Entity var1, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NightmareUtils.getIsMobEclipsed((EntityLivingBase) var1)) {
+        if (NMUtils.getIsMobEclipsed((EntityLivingBase) var1)) {
             cir.setReturnValue(SQUID_ECLIPSE);
         }
     }

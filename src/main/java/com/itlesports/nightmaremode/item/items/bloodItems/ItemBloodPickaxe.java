@@ -4,7 +4,7 @@ import btw.block.BTWBlocks;
 import btw.item.items.PickaxeItem;
 import net.minecraft.src.*;
 
-public class ItemBloodPickaxe extends PickaxeItem {
+public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
     public ItemBloodPickaxe(int i, EnumToolMaterial enumToolMaterial, int iMaxUses) {
         super(i, enumToolMaterial);
         this.maxStackSize = 1;
@@ -12,6 +12,7 @@ public class ItemBloodPickaxe extends PickaxeItem {
         this.setDamageVsEntity(3);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setBuoyant();
+        this.setInfernalMaxNumEnchants(4);
         this.setUnlocalizedName("nmBloodPickaxe");
         this.efficiencyOnProperMaterial = 6.0f;
     }

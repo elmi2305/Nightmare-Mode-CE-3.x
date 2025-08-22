@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -23,7 +23,7 @@ public class EntityBlackWidowSpider extends EntitySpider {
             int dropCount = this.rand.nextInt(2 + iLootingModifier); // 0 - 1
 
             for (int i = 0; i < dropCount; ++i) {
-                if (this.rand.nextInt(16) == 0 && NightmareUtils.getWorldProgress() > 0) {
+                if (this.rand.nextInt(16) == 0 && NMUtils.getWorldProgress() > 0) {
                     this.dropItem(NMItems.spiderFangs.itemID, 1);
                 }
                 if(this.rand.nextInt(4) == 0){
@@ -41,7 +41,7 @@ public class EntityBlackWidowSpider extends EntitySpider {
     @Override
     public boolean attackEntityAsMob(Entity par1Entity) {
         if(par1Entity instanceof EntityLivingBase){
-            ((EntityLivingBase) par1Entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70 + NightmareUtils.getWorldProgress() * 30, 1));
+            ((EntityLivingBase) par1Entity).addPotionEffect(new PotionEffect(Potion.poison.id, 70 + NMUtils.getWorldProgress() * 30, 1));
         }
         return super.attackEntityAsMob(par1Entity);
     }

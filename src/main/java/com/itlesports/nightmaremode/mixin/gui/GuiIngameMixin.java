@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.status.StatusEffect;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -160,7 +160,7 @@ public class GuiIngameMixin {
 //            return original;
 //        }
         if(!NightmareMode.nite || mc.thePlayer == null){return original;}
-        return (int) (NightmareUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
+        return (int) (NMUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
     }
 
     @Unique

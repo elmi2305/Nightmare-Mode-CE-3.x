@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityLightningCreeper;
 import com.itlesports.nightmaremode.entity.EntityMetalCreeper;
 import net.minecraft.src.*;
@@ -33,7 +33,7 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
         if(this.swellingCreeper instanceof EntityLightningCreeper){
             return 4096;
         }
-        return constant + NightmareUtils.getWorldProgress() * 3;
+        return constant + NMUtils.getWorldProgress() * 3;
     }
 
     @ModifyConstant(method = "shouldExecute", constant = @Constant(doubleValue = 9.0))

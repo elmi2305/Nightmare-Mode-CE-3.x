@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -71,7 +70,7 @@ public class GuiGameOverMixin extends GuiScreen {
 
         String rawTip;
 
-        if (NightmareUtils.getWorldProgress() < 1) {
+        if (NMUtils.getWorldProgress() < 1) {
             rawTip = tips[random.nextInt(tips.length)];
         } else {
             rawTip = lategameTips[random.nextInt(lategameTips.length)];

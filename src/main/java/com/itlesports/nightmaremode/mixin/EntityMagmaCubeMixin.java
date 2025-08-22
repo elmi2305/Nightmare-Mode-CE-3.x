@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityMagmaCube;
 import net.minecraft.src.EntitySlime;
 import net.minecraft.src.SharedMonsterAttributes;
@@ -28,7 +28,7 @@ public class EntityMagmaCubeMixin extends EntitySlime {
                 EntityMagmaCube baby = new EntityMagmaCube(this.worldObj);
                 int size = this.getSlimeSize();
                 baby.getDataWatcher().updateObject(16, (byte)(size/2));
-                baby.setHealth((int) (baby.getSlimeSize() * NightmareUtils.getNiteMultiplier()));
+                baby.setHealth((int) (baby.getSlimeSize() * NMUtils.getNiteMultiplier()));
                 baby.setPositionAndUpdate(this.posX,this.posY,this.posZ);
                 this.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 2 + (float) this.getSlimeSize();
@@ -38,18 +38,18 @@ public class EntityMagmaCubeMixin extends EntitySlime {
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NightmareUtils.manageEclipseChance(this,4);
+        NMUtils.manageEclipseChance(this,4);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
-        if(NightmareUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsMobEclipsed(this)){
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.5F + (NightmareUtils.getNiteMultiplier() - 1) * 0.01);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.5F + (NMUtils.getNiteMultiplier() - 1) * 0.01);
     }
     @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int increaseMagmaCreamRates(int bound){

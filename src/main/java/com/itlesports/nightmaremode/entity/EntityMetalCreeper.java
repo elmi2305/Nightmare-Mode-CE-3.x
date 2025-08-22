@@ -4,7 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -77,7 +77,7 @@ public class EntityMetalCreeper extends EntityCreeper implements EntityWithCusto
                 heldItem = target.getHeldItem().getItem();
             }
 
-            int progress =  NightmareUtils.getWorldProgress();
+            int progress =  NMUtils.getWorldProgress();
 
             if(heldItem != null){
                 if (itemsThatCanAttackTheZombie.contains(heldItem.itemID)) {
@@ -137,7 +137,7 @@ public class EntityMetalCreeper extends EntityCreeper implements EntityWithCusto
         }
 
 
-        int bloodOrbID = NightmareUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2

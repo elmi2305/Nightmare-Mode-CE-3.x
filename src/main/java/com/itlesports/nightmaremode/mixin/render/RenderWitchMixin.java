@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.EntityWitch;
 import net.minecraft.src.RenderWitch;
 import net.minecraft.src.ResourceLocation;
@@ -16,7 +16,7 @@ public class RenderWitchMixin {
 
     @Inject(method = "getWitchTextures", at = @At("HEAD"),cancellable = true)
     private void eclipseWitchTextures(EntityWitch par1EntityWitch, CallbackInfoReturnable<ResourceLocation> cir){
-        if(NightmareUtils.getIsMobEclipsed(par1EntityWitch)){
+        if(NMUtils.getIsMobEclipsed(par1EntityWitch)){
             cir.setReturnValue(WITCH_ECLIPSE);
         }
     }

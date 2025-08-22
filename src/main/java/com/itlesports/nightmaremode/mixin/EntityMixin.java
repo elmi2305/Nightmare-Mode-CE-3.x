@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.KickingAnimal;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityEnderCrystal;
@@ -42,7 +42,7 @@ public abstract class EntityMixin {
 
     @Inject(method = "onKickedByAnimal", at = @At("HEAD"),cancellable = true)
     private void increaseKickKnockbackOnEclipse(KickingAnimal kickingAnimal, CallbackInfo ci){
-        if(NightmareUtils.getIsMobEclipsed(kickingAnimal)){
+        if(NMUtils.getIsMobEclipsed(kickingAnimal)){
             this.flingAwayFromEntity(kickingAnimal, 3);
             ci.cancel();
         }
