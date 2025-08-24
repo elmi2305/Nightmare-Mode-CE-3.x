@@ -12,9 +12,9 @@ import java.util.Random;
 
 @Mixin(CobblestoneStairsBlock.class)
 public class CobblestoneStairsBlockMixin {
-    @Shadow(remap = false) private int strata;
+    @Shadow private int strata;
 
-    @Inject(method = "idDropped", at = @At("TAIL"),cancellable = true, remap = false)
+    @Inject(method = "idDropped", at = @At("TAIL"),cancellable = true)
     private void dropOnlyOneRock(int iMetaData, Random rand, int iFortuneModifier, CallbackInfoReturnable<Integer> cir){
         if(this.strata == 0){
             cir.setReturnValue(BTWItems.stone.itemID);

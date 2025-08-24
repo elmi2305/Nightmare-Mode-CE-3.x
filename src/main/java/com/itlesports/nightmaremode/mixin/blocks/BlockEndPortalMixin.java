@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BlockEndPortal.class)
 public class BlockEndPortalMixin {
-    @Redirect(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetEndDimensionHasBeenAccessedServerOnly()V"), remap = false)
+    @Redirect(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetEndDimensionHasBeenAccessedServerOnly()V"))
     private void doNotActivatePostDragonOnPortalActivation(){}
-    @Redirect(method = "updateTick", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetEndDimensionHasBeenAccessedServerOnly()V"), remap = false)
+    @Redirect(method = "updateTick", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetEndDimensionHasBeenAccessedServerOnly()V"))
     private void doNotActivatePostDragonOnPortalActivationEveryTick(){}
 }

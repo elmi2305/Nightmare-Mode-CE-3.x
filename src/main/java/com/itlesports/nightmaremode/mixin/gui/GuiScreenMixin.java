@@ -35,13 +35,13 @@ public class GuiScreenMixin {
 
         EntityPlayer player = mc.thePlayer;
         int inGloomCounter = player.inGloomCounter;
-        int gloomLevel = player.getGloomLevel();
+        int gloomLevel = player.getGloomLevel() - 1;
 
-        int progress = inGloomCounter + (gloomLevel * 200);
-        int maxProgress = 400;
+        int progress = Math.max(inGloomCounter + (gloomLevel * 200), 0);
+        int maxProgress = 250;
 
         if (progress > 0) {
-            float darkness = progress / (float) maxProgress;
+            float darkness = Math.min(progress / (float) maxProgress, 1.0f) * 0.95f;
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

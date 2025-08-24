@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WickerWeavingItem.class)
 public class WickerWeavingItemMixin {
     @Mutable
-    @Shadow(remap = false) @Final public static int WICKER_WEAVING_MAX_DAMAGE;
+    @Shadow @Final public static int WICKER_WEAVING_MAX_DAMAGE;
 
     @Inject(method = "getProgressiveCraftingMaxDamage", at = @At("HEAD"), remap = false)
     private void makeWickerWeaveFaster(CallbackInfoReturnable<Integer> cir){

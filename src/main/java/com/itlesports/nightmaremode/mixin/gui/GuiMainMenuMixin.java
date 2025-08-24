@@ -90,7 +90,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         args.set(2, xOffset + 25);
         args.set(3, yOffset - 3);
     }
-    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"), remap = false)
+    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"))
     private void colorOfBetterThanWolvesSign(Args args){
         if (NightmareMode.bloodmare) {
             args.set(1, 0.15f);
@@ -107,7 +107,7 @@ public class GuiMainMenuMixin extends GuiScreen {
         }
     }
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V"), remap = false)
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V"))
     private void customNightmareGui(int par1, int par2, float par3, CallbackInfo ci){
         short var5 = 256;
         int var6 = this.width / 2 - var5 / 2;

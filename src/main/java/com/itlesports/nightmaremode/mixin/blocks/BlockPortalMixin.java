@@ -17,10 +17,10 @@ import java.util.Random;
 
 @Mixin(BlockPortal.class)
 public class BlockPortalMixin{
-    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"), remap = false)
+    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
     private void doNothing(){} // doesn't update the nether flag to be set every tick
 
-    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"), remap = false)
+    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
     private void doNothing1(){} // makes sure the nether flag isn't set as soon as the portal is created
 
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"))
