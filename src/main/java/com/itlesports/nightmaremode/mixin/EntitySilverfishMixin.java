@@ -30,17 +30,11 @@ public class EntitySilverfishMixin extends EntityMob{
             }
         }
     }
-    @Inject(method = "dropFewItems", at = @At("HEAD"))
-    private void dropClay(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (!NMUtils.getIsMobEclipsed(this)) {
-            this.dropItem(Item.clay.itemID, this.rand.nextInt(3)+1); // drops clay regardless of dimension, dropping more in the end
-        }
-    }
 
-    @Inject(method = "dropFewItems", at = @At("HEAD"))
-    private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+    @Override
+    protected void dropFewItems(boolean bKilledByPlayer, int looting) {
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
-            for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
+            for(int i = 0; i < (looting * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
                     if (this.rand.nextBoolean()) {
@@ -52,13 +46,17 @@ public class EntitySilverfishMixin extends EntityMob{
             int itemID = NMItems.silverLump.itemID;
 
             int var4 = this.rand.nextInt(3);
-            if (lootingLevel > 0) {
-                var4 += this.rand.nextInt(lootingLevel + 1);
+            if (looting > 0) {
+                var4 += this.rand.nextInt(looting + 1);
             }
             for (int var5 = 0; var5 < var4; ++var5) {
                 if(this.rand.nextInt(3) == 0) continue;
                 this.dropItem(itemID, 1);
             }
         }
+        if (!NMUtils.getIsMobEclipsed(this)) {
+            this.dropItem(Item.clay.itemID, this.rand.nextInt(3)+1); // drops clay regardless of dimension, dropping more in the end
+        }
+        super.dropFewItems(bKilledByPlayer, looting);
     }
 }

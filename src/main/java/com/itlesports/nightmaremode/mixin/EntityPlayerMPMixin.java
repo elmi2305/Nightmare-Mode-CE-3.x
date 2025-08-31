@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.LightningBoltEntity;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
@@ -149,7 +148,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
         if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && !MinecraftServer.getIsServer()) {
-            Entity lightningbolt = new LightningBoltEntity(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
+            Entity lightningbolt = new EntityLightningBolt(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
             getEntityWorld().addWeatherEffect(lightningbolt);
 
             // SUMMONS EXPLOSION. explosion does tile and entity damage. effectively kills all dropped items.
@@ -169,7 +168,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
 
     @Inject(method = "onStruckByLightning",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void addLightningEffects(LightningBoltEntity boltEntity, CallbackInfo ci){
+    private void addLightningEffects(EntityLightningBolt boltEntity, CallbackInfo ci){
         EntityPlayerMP thisObj = (EntityPlayerMP)(Object)this;
         this.steelModifier = 0;
 

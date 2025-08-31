@@ -1,8 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.achievement.event.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -11,11 +13,15 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements EntityAccessor {
+    @Unique private int lastTimeWasSnowballed;
+    @Unique private EntityPlayer lastSnowBaller;
+
     @Shadow public abstract boolean isEntityAlive();
 
     @Shadow public abstract void addPotionEffect(PotionEffect par1PotionEffect);
@@ -88,9 +94,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     }
 
     @Unique private void increaseArmorDurabilityRandomly(EntityLivingBase player){
-        int j = rand.nextInt(8);
-        for (int a = 0; a < 3; a++) {
-            int i = rand.nextInt(4);
+        int j = rand.nextInt(5);
+        for (int a = 0; a < 2; a++) {
+            int i = rand.nextInt(4) + 1;
             if(player.getCurrentItemOrArmor(i) == null) continue;
             player.getCurrentItemOrArmor(i).setItemDamage(Math.max(player.getCurrentItemOrArmor(i).getItemDamage() - j,0));
         }
@@ -114,5 +120,24 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
     @Unique private void increaseDurabilityIfPossible(ItemStack stack){
         int i = rand.nextInt(4) + 1;
         stack.setItemDamage(Math.max(stack.getItemDamage() - i,0));
+    }
+
+
+
+    @Inject(method = "attackEntityFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityLivingBase;limbSwingAmount:F"))
+    private void enemyHitByPlayerAchievements(DamageSource src, float damage, CallbackInfoReturnable<Boolean> cir){
+        if (src.getSourceOfDamage() instanceof EntitySnowball sb) {
+            EntityPlayer player = sb.getThrower() instanceof EntityPlayer ? (EntityPlayer) sb.getThrower() : null;
+            // manually triggered
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, player, false);
+            this.lastTimeWasSnowballed = this.ticksExisted;
+            this.lastSnowBaller = player;
+        }
+    }
+    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;onDeath(Lnet/minecraft/src/DamageSource;)V"))
+    private void manageSnowballFallDamageDeath(DamageSource src, float dmg, CallbackInfoReturnable<Boolean> cir){
+        if(src == DamageSource.fall && this.lastTimeWasSnowballed + 60 > this.ticksExisted && this.lastSnowBaller != null){
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, this.lastSnowBaller, true);
+        }
     }
 }

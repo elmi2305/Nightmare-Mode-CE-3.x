@@ -65,7 +65,6 @@ public abstract class EntityEndermanMixin extends EntityMob {
                     return true; // Skip picking up this block most of the time
                 }
 
-                // Play pickup effect and pick up the block
                 this.worldObj.playAuxSFX(2244, i, j, k, blockId + (this.worldObj.getBlockMetadata(i, j, k) << 12));
                 this.setCarried(blockId);
                 this.setCarryingData(this.worldObj.getBlockMetadata(i, j, k));
@@ -204,7 +203,6 @@ public abstract class EntityEndermanMixin extends EntityMob {
                 double deltaZ = entity.posZ - this.posZ;
                 double distance = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
 
-                // Normalize the direction vector
                 deltaX /= distance;
                 deltaZ /= distance;
 
@@ -316,17 +314,16 @@ public abstract class EntityEndermanMixin extends EntityMob {
     private boolean doNotLoseAggroDuringTheDay(World instance){
         return false;
     }
-    @Unique
-    protected boolean teleportEnemy() {
+
+
+    @Unique protected boolean teleportEnemy() {
         if (this.entityToAttack == null) return false;
         Entity target = this.entityToAttack;
 
-        // === tweakable constants ===
         double MAX_Y_DIFF    = 4.0D;  // allowed vertical shift when below 60
         final double MIN_DISTANCE  = 4.0D;  // minimum straight-line teleport
         final int    PARTICLE_COUNT = 128;
 
-        // 1) direction from target → enderman eye-level
         Vec3 dir = this.worldObj.getWorldVec3Pool()
                 .getVecFromPool(
                         this.posX - target.posX,
@@ -334,15 +331,12 @@ public abstract class EntityEndermanMixin extends EntityMob {
                         this.posZ - target.posZ
                 ).normalize();
 
-        // 2) stash old pos
         double oldX = target.posX, oldY = target.posY, oldZ = target.posZ;
 
-        // 3) compute candidate teleport
         target.posX = oldX + (this.rand.nextDouble() - 0.5D)*8.0D + dir.xCoord*0.8D;
         target.posY = oldY + (this.rand.nextInt(16) - 8)   + dir.yCoord*0.8D;
         target.posZ = oldZ + (this.rand.nextDouble() - 0.5D)*8.0D + dir.zCoord*0.8D;
 
-        // 4) enforce minimum distance
         double dx = target.posX - oldX;
         double dy = target.posY - oldY;
         double dz = target.posZ - oldZ;
@@ -353,26 +347,24 @@ public abstract class EntityEndermanMixin extends EntityMob {
             return false;
         }
 
-        // 5) conditional Y-clamp
-        //    only enforce if either old or new Y <= 60
-        if (oldY <= 60.0D || target.posY <= 60.0D){
+//        if (oldY >= 60.0D || target.posY >= 60.0D){
             if (Math.abs(target.posY - oldY) > MAX_Y_DIFF) {
                 target.setPosition(oldX, oldY, oldZ);
                 return false;
             }
-        }
+//        }
 
         int xb = MathHelper.floor_double(target.posX),
                 yb = MathHelper.floor_double(target.posY),
                 zb = MathHelper.floor_double(target.posZ);
 
-        // 6) must be in loaded chunk
+        // must be in loaded chunk
         if (!this.worldObj.blockExists(xb, yb, zb)) {
             target.setPosition(oldX, oldY, oldZ);
             return false;
         }
 
-        // 7) ground-finding & clearance (unchanged)
+        // ground-finding & clearance (unchanged)
         boolean canTeleport = false;
         while (!canTeleport && yb > 0) {
             int blockId = this.worldObj.getBlockId(xb, yb, zb);
@@ -403,21 +395,21 @@ public abstract class EntityEndermanMixin extends EntityMob {
             return false;
         }
 
-        // 8) suffocation check
+        // suffocation check
         target.setPosition(target.posX, target.posY, target.posZ);
         if (target.isEntityInsideOpaqueBlock()) {
             target.setPosition(oldX, oldY, oldZ);
             return false;
         }
 
-        // 9) commit teleport
+        // commit teleport
         if (target instanceof EntityPlayer) {
             ((EntityPlayer)target).setPositionAndUpdate(target.posX, target.posY, target.posZ);
         } else {
             target.setPosition(target.posX, target.posY, target.posZ);
         }
 
-        // 10) particles
+        //  particles
         for (int i = 0; i < PARTICLE_COUNT; i++) {
             double t  = (double)i/(PARTICLE_COUNT - 1);
             float  vx = (this.rand.nextFloat() - 0.5F)*0.2F;
@@ -429,7 +421,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
             this.worldObj.spawnParticle("portal", px, py, pz, vx, vy, vz);
         }
 
-        // 11) sounds
+        // sounds
         this.worldObj.playSoundEffect(oldX, oldY, oldZ, "mob.endermen.portal", 1.0F, 1.0F);
         target.playSound   ("mob.endermen.portal", 1.0F, 1.0F);
 

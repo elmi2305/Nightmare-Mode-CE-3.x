@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.LightningBoltEntity;
 import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
@@ -312,7 +311,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 int worldState = NMUtils.getWorldProgress();
                 double xOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
                 double zOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
-                Entity lightningbolt = new LightningBoltEntity(this.worldObj, player.posX + xOffset, player.posY - 0.5, player.posZ + zOffset);
+                Entity lightningbolt = new EntityLightningBolt(this.worldObj, player.posX + xOffset, player.posY - 0.5, player.posZ + zOffset);
                 this.worldObj.addWeatherEffect(lightningbolt);
             }
             this.setDead();

@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.achievement.event.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.TeleportScheduler;
+import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.network.HandshakeServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -61,7 +63,16 @@ public abstract class MinecraftServerMixin {
         TeleportScheduler.onServerTick();
         HandshakeServer.onServerTick();
 
+
         if (this.worldServers[0].getTotalWorldTime() % 30 != 0) return;
+        long worldTime = this.worldServers[0].getWorldTime();
+
+        for (Object o : this.worldServers[0].playerEntities) {
+            EntityPlayer player = (EntityPlayer)o;
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeEvent.class, player, this.worldServers[0].getWorldTime());
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeItemEvent.class, player, new NMAchievementEvents.TimeItemEvent.Context(player, worldTime));
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MiscPlayerEvent.class, player, player);
+        }
         
         int dayCount = (int) Math.ceil((double) this.worldServers[0].getWorldTime() / 24000) + this.isDawnOrDusk(this.worldServers[0].getWorldTime());
         if (!NightmareMode.bloodmare) {
@@ -72,7 +83,18 @@ public abstract class MinecraftServerMixin {
         if (!NightmareMode.totalEclipse) {
             NightmareMode.setEclipse(this.getIsEclipse(this.worldServers[0], dayCount));
         }
-        if ((NightmareMode.isBloodMoon != oldBloodMoon) || (NightmareMode.isEclipse != oldEclipse)) {
+        boolean shouldChangeBloodMoon = NightmareMode.isBloodMoon != oldBloodMoon;
+        boolean shouldChangeEclipse = NightmareMode.isEclipse != oldEclipse;
+        if (shouldChangeBloodMoon || shouldChangeEclipse) {
+            for (Object o : this.worldServers[0].playerEntities) {
+                EntityPlayer player = (EntityPlayer)o;
+                if (shouldChangeBloodMoon) {
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BloodMoonEvent.class, player, NightmareMode.isBloodMoon);
+                }
+                if (shouldChangeEclipse) {
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.EclipseEvent.class, player, NightmareMode.isEclipse);
+                }
+            }
             NightmareMode.sendBloodmoonEclipseToAllPlayers();
         }
 

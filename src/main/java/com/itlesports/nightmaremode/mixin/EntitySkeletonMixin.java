@@ -11,6 +11,7 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.entity.EntityBurningArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -444,7 +445,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
             if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && (this.rand.nextInt(NMUtils.divByNiteMultiplier(60, 20)) < 3 + (NMUtils.getWorldProgress()*2) && this.getSkeletonType()!=4 && this.getSkeletonType() != 2)){
-                arrow.setFire(400);
+                EntityBurningArrow newArrow = new EntityBurningArrow(this.worldObj, arrow);
+                this.worldObj.spawnEntityInWorld(newArrow);
+                arrow.setDead();
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
                 arrow.setDamage(MathHelper.floor_double((2.0 + (NMUtils.getWorldProgress() * 2 - (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1)))) * NMUtils.getNiteMultiplier());

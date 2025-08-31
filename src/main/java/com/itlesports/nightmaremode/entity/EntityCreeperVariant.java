@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.EntityWithCustomPacket;
-import btw.entity.LightningBoltEntity;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.item.BTWItems;
@@ -12,6 +11,7 @@ import com.itlesports.nightmaremode.AITasks.EntityAICreeperVariantSwell;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import net.minecraft.src.EntityLightningBolt;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,6 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     // note: I'm potentially gonna move all creeper variants to this class. one day. surely.
 
-    private static final int NEUTERED_STATE_DATA_WATCHER_ID = 25;
     private boolean determinedToExplode = false;
     private int lastActiveTime;
     private int timeSinceIgnited;
@@ -472,7 +471,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     public void checkForScrollDrop() {}
 
     @Override
-    public void onStruckByLightning(LightningBoltEntity entityBolt) {
+    public void onStruckByLightning(EntityLightningBolt entityBolt) {
         this.dataWatcher.updateObject(17, (byte)1);
     }
 

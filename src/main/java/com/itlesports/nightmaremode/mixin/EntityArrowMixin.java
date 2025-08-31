@@ -1,21 +1,30 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.achievement.event.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
+import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(EntityArrow.class)
 public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
     @Shadow public Entity shootingEntity;
+    @Unique private float damageDone = 0;
+    @Unique private final List<EntityLivingBase> entitiesHit = new ArrayList<>();
+
 
     public EntityArrowMixin(World par1World) {
         super(par1World);
@@ -62,9 +71,21 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
         }
         EntityArrow thisObj = ((EntityArrow)(Object)this);
         if(thisObj instanceof EntityMagicArrow){
-            if(this.shootingEntity instanceof EntityPlayer player && var4.entityHit != null && this.rand.nextBoolean()){
-                if (player.getHeldItem() != null && EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, player.getHeldItem()) != 0) {
-                    player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
+            if(this.shootingEntity instanceof EntityPlayer player && var4.entityHit != null){
+                if( var4.entityHit instanceof EntityLivingBase entityLivingBase){
+                    if (!this.entitiesHit.contains(var4.entityHit)) {
+                        this.entitiesHit.add(entityLivingBase);
+                        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArrowEnemyHitEvent.class, player, this.entitiesHit.size());
+                    }
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArrowDamageEvent.class, player, this.damageDone);
+                }
+
+
+
+                if (this.rand.nextBoolean()) {
+                    if (player.getHeldItem() != null && EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, player.getHeldItem()) != 0) {
+                        player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
+                    }
                 }
             }
         }
@@ -89,6 +110,8 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
         if (thisObj instanceof EntityMagicArrow) {
             ((EntityAccessor)instance).setInvulnerable(false);
             instance.attackEntityFrom(par1DamageSource,par2);
+            this.damageDone += par2;
+
             return true;
         } else {
             return instance.attackEntityFrom(par1DamageSource, par2);

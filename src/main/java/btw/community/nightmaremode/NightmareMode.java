@@ -9,6 +9,7 @@ import btw.world.util.data.DataProvider;
 import com.itlesports.nightmaremode.NMInitializer;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.TPACommand;
+import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
@@ -127,6 +128,12 @@ public class NightmareMode extends BTWAddon {
         NMItems.bloodAxe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodHoe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodShovel.addCustomEfficiencyMultiplier(multiplier);
+
+        super.postSetup();
+    }
+
+    @Override
+    public void postInitialize() {
         super.postInitialize();
     }
 
@@ -163,6 +170,7 @@ public class NightmareMode extends BTWAddon {
         NMInitializer.initNightmareRecipes();
         NMInitializer.initNightmareTrades();
         NMInitializer.miscInit();
+        NMAchievements.initialize();
         SteelLockerNet.register(this);
 
 
@@ -333,21 +341,26 @@ public class NightmareMode extends BTWAddon {
     public long portalTime = 0;
     public boolean shouldStackSizesIncrease;
 
+    public static final DataEntry.WorldDataEntry<Long> PORTAL_TIME =
+        DataProvider.getBuilder(Long.class)
+                .name("PortalTime")
+                .defaultSupplier(() -> 0L)
+                .readNBT(nbt -> nbt.getLong("PortalTime"))
+                .writeNBT((nbt, v) -> nbt.setLong("PortalTime", v))
+                .global()  // attaches GlobalDataComponent
+                .build();
 
-    public static final DataEntry<Long> PORTAL_TIME = DataProvider.getBuilder(long.class)
-            .global()
-            .name("PortalTime")
-            .defaultSupplier(() -> 0L)
-            .readNBT(NBTTagCompound::getLong)
-            .writeNBT(NBTTagCompound::setLong)
-            .build();
-    public static final DataEntry<Boolean> DRAGON_DEFEATED = DataProvider.getBuilder(boolean.class)
-            .global()
-            .name("HasDragonBeenDefeated")
-            .defaultSupplier(() -> false)
-            .readNBT(NBTTagCompound::getBoolean)
-            .writeNBT(NBTTagCompound::setBoolean)
-            .build();
+    public static final DataEntry.WorldDataEntry<Boolean> DRAGON_DEFEATED =
+            DataProvider.getBuilder(Boolean.class)
+                    .name("HasDragonBeenDefeated")
+                    .defaultSupplier(() -> false)
+                    .readNBT(nbt -> nbt.getBoolean("HasDragonBeenDefeated"))
+                    .writeNBT((nbt, v) -> nbt.setBoolean("HasDragonBeenDefeated", v))
+                    .global()
+                    .build();
+
+
+
 
     @Override
     public void preInitialize() {

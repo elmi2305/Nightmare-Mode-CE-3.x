@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.LightningBoltEntity;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -42,7 +41,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         Entity attacker = par1DamageSource.getSourceOfDamage();
         if (attacker != null && NMUtils.getIsMobEclipsed(this)) {
-            Entity lightningbolt = new LightningBoltEntity(this.worldObj, attacker.posX, attacker.posY, attacker.posZ);
+            Entity lightningbolt = new EntityLightningBolt(this.worldObj, attacker.posX, attacker.posY, attacker.posZ);
             this.worldObj.addWeatherEffect(lightningbolt);
         }
         return super.attackEntityFrom(par1DamageSource, par2);

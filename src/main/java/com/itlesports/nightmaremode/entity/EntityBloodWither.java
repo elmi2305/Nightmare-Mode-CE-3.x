@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.block.BTWBlocks;
-import btw.entity.LightningBoltEntity;
 import btw.entity.attribute.BTWAttributes;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NMUtils;
@@ -402,13 +401,13 @@ public class EntityBloodWither extends EntityWither {
                                 this.lightningZ[i] = this.origin[2] + (this.rand.nextBoolean() ? -1 : 1) * (3 + this.rand.nextInt(25));
                             } else {
                                 if (this.attackCycle % 4 == 3) {
-                                    Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.lightningX[i], 200, this.lightningZ[i]);
+                                    Entity lightningbolt = new EntityLightningBolt(this.worldObj, this.lightningX[i], 200, this.lightningZ[i]);
                                     this.worldObj.addWeatherEffect(lightningbolt);
                                 } else if(this.attackCycle % 4 == 0) {
-                                    Entity scatteredBolt0 = new LightningBoltEntity(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] + lightningSpread);
-                                    Entity scatteredBolt1 = new LightningBoltEntity(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] - lightningSpread);
-                                    Entity scatteredBolt2 = new LightningBoltEntity(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] + lightningSpread);
-                                    Entity scatteredBolt3 = new LightningBoltEntity(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] - lightningSpread);
+                                    Entity scatteredBolt0 = new EntityLightningBolt(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] + lightningSpread);
+                                    Entity scatteredBolt1 = new EntityLightningBolt(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] - lightningSpread);
+                                    Entity scatteredBolt2 = new EntityLightningBolt(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] + lightningSpread);
+                                    Entity scatteredBolt3 = new EntityLightningBolt(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] - lightningSpread);
                                     this.worldObj.addWeatherEffect(scatteredBolt0);
                                     this.worldObj.addWeatherEffect(scatteredBolt1);
                                     this.worldObj.addWeatherEffect(scatteredBolt2);
@@ -906,13 +905,13 @@ public class EntityBloodWither extends EntityWither {
             }
 
             if(healthTimer == 30){
-                Entity lightningbolt = new LightningBoltEntity(this.worldObj, this.posX, this.posY + 1, this.posZ);
+                Entity lightningbolt = new EntityLightningBolt(this.worldObj, this.posX, this.posY + 1, this.posZ);
                 this.worldObj.addWeatherEffect(lightningbolt);
             } else if(healthTimer == 15){
-                LightningBoltEntity lightningbolt1 = new LightningBoltEntity(this.worldObj, this.posX + 3, this.posY + 1, this.posZ);
-                LightningBoltEntity lightningbolt2 = new LightningBoltEntity(this.worldObj, this.posX - 3, this.posY + 1, this.posZ);
-                LightningBoltEntity lightningbolt3 = new LightningBoltEntity(this.worldObj, this.posX, this.posY + 1, this.posZ + 3);
-                LightningBoltEntity lightningbolt4 = new LightningBoltEntity(this.worldObj, this.posX, this.posY + 1, this.posZ - 3);
+                EntityLightningBolt lightningbolt1 = new EntityLightningBolt(this.worldObj, this.posX + 3, this.posY + 1, this.posZ);
+                EntityLightningBolt lightningbolt2 = new EntityLightningBolt(this.worldObj, this.posX - 3, this.posY + 1, this.posZ);
+                EntityLightningBolt lightningbolt3 = new EntityLightningBolt(this.worldObj, this.posX, this.posY + 1, this.posZ + 3);
+                EntityLightningBolt lightningbolt4 = new EntityLightningBolt(this.worldObj, this.posX, this.posY + 1, this.posZ - 3);
 
                 this.worldObj.addWeatherEffect(lightningbolt1);
                 this.worldObj.addWeatherEffect(lightningbolt2);

@@ -267,3 +267,299 @@ nightmare.taunt_18=Was that supposed to impress me?
 nightmare.wither_summon_sealevel=The Wither must be summoned above sea level.
 nightmare.wither_summon_too_high=The Wither cannot be summoned this high. Y coordinate must be under 200.
 nightmare.wither_revive_message=A God does not fear death.
+
+achievementtab.nightmaremode=Nightmare Mode
+
+achievement.nm.morningSecondDay=And So It Begins...
+achievement.nm.morningSecondDay.desc=Survive Your First Night
+
+achievement.nm.sludge=Sludge!
+achievement.nm.sludge.desc=Craft a Brick Oven on the first Day
+
+achievement.nm.hitBurningSkeleton=Now That's Just Unnecessary
+achievement.nm.hitBurningSkeleton.desc=Get hit by a Skeleton's flaming arrow
+
+achievement.nm.killRunningAnimal=Why Are You Running?
+achievement.nm.killRunningAnimal.desc=Kill a running Animal with your Club
+
+achievement.btw.craft_hamper=Hampter
+achievement.btw.craft_hamper.desc=Craft a Hamper
+
+achievement.nm.ironNeedles=Turbo Granny
+achievement.nm.ironNeedles.desc=Craft upgraded Knitting Needles!
+
+achievement.nm.bandage=I Need Healing
+achievement.nm.bandage.desc=Craft a Bandage
+
+achievement.nm.skyBase=Head In The Clouds
+achievement.nm.skyBase.desc=Make a Sky Base that is at least 8 Blocks off the ground
+
+achievement.nm.eatRawFood=Let's Go Gambling
+achievement.nm.eatRawFood.desc=Eat Raw Food without getting Food Poisoning
+
+achievement.nm.snowballMob=Chilly Reception
+achievement.nm.snowballMob.desc=Hit an Animal or Monster with a Snowball
+
+achievement.nm.snowballMobKill=The Bigger They Are...
+achievement.nm.snowballMobKill.desc=Kill an Animal or Monster with Fall Damage using a Snowball
+
+achievement.nm.calamariCook=Sweet Revenge
+achievement.nm.calamariCook.desc=Cook Calamari Roast on a Campfire or a Brick Oven
+
+achievement.nm.calamariGet=Blood In The Water
+achievement.nm.calamariGet.desc=Kill a Squid for Calamari
+
+achievement.nm.bloodZombieKill=What The Hell Was That?!
+achievement.nm.bloodZombieKill.desc=Kill a Blood Zombie
+
+achievement.nm.witherSkeletonKillOverworld=Smells Like Coal
+achievement.nm.witherSkeletonKillOverworld.desc=Kill a Wither Skeleton in the Depths of Strata 3
+
+achievement.nm.breakLavaPillow=Warm And Comfy
+achievement.nm.breakLavaPillow.desc=Mine a Lava Pillow in the Depths of Strata 3
+
+achievement.nm.craftPlanter=Enter Agriculture
+achievement.nm.craftPlanter.desc=Craft a Planter with 7 Bricks
+
+achievement.nm.calamariFried=Ocean's Delight
+achievement.nm.calamariFried.desc=Cook Fried Calamari - The Best Food Item
+
+achievement.nm.greed=Greed
+achievement.nm.greed.desc=Greed whispers from The Abyss, and you listened
+
+achievement.btw.find_creeper_oysters=Mods, Steal His Balls
+achievement.btw.find_creeper_oysters.desc=Kill a Creeper for Creeper Oysters
+
+achievement.nm.ironSword=Chrome Blade
+achievement.nm.ironSword.desc=Obtain an Iron Sword
+
+achievement.nm.ironZombie=Mr. Chrome
+achievement.nm.ironZombie.desc=Kill a Monster bearing Iron Gear
+
+achievement.nm.ladderWood=One Must Go Up
+achievement.nm.ladderWood.desc=Craft some Ladders
+
+achievement.nm.roadStandard=Rush Hour
+achievement.nm.roadStandard.desc=Craft Road with Cobblestone and Gravel
+
+achievement.nm.ladderStone=Climbing The Ranks
+achievement.nm.ladderStone.desc=Craft a Stone Ladder
+
+achievement.nm.ladderIron=Peak Performance
+achievement.nm.ladderIron.desc=Craft an Iron Ladder
+
+achievement.nm.hardmode=That Was The Easy Part?
+achievement.nm.hardmode.desc=Enter Hardmode
+
+achievement.nm.bloodOrb=Not For Emergency Transfusions!
+achievement.nm.bloodOrb.desc=Obtain a Blood Orb
+
+achievement.nm.bloodMoon=Bloodmoon Conqueror
+achievement.nm.bloodMoon.desc=Survive your first Blood Moon
+
+achievement.nm.bloodIngot=Forged in Blood
+achievement.nm.bloodIngot.desc=Craft a Blood Ingot
+
+achievement.nm.bloodSword=There Will Be Bloodshed!
+achievement.nm.bloodSword.desc=Craft a Blood Sword
+
+achievement.nm.bloodPickaxe=Vein Miner
+achievement.nm.bloodPickaxe.desc=Craft a Blood Pickaxe
+
+achievement.nm.bloodShovel=Grave Digger
+achievement.nm.bloodShovel.desc=Craft a Blood Shovel
+
+achievement.nm.bloodAxe=Butcher Vanity
+achievement.nm.bloodAxe.desc=Craft a Blood Axe
+
+achievement.nm.bloodHoe=Harbinger Of Hemp
+achievement.nm.bloodHoe.desc=Craft a Blood Hoe
+
+achievement.nm.shadowJumpScare=Boo!
+achievement.nm.shadowJumpScare.desc=Get Jump-scared by a Shadow Zombie
+
+achievement.nm.killTerrence=Ayo Terrence
+achievement.nm.killTerrence.desc=Find and Kill Terrence
+
+achievement.nm.netherSleep=Fever Dream
+achievement.nm.netherSleep.desc=Sleep in The Nether
+
+achievement.btw.redneck_fishing=Modern Solutions
+achievement.btw.redneck_fishing.desc=Throw Dynamite into a Lake to get Fish
+
+achievement.nm.equipBloodArmor=Cover Me In... Corpses?
+achievement.nm.equipBloodArmor.desc=Equip a full set of Blood Armor
+
+achievement.nm.bloodChest=Crimson Mimic
+achievement.nm.bloodChest.desc=Craft a Blood Chest
+
+achievement.nm.wanderingTraderKill=Trust Issues
+achievement.nm.wanderingTraderKill.desc=Kill a "Wandering Trader"
+
+achievement.nm.mineSteelOre=Better Than Diamonds
+achievement.nm.mineSteelOre.desc=Mine Steel Ore After Defeating The Wither
+
+achievement.nm.bloodMoonWither=A God Does Not Fear Death
+achievement.nm.bloodMoonWither.desc=Survive a Post-Wither Blood Moon
+
+achievement.nm.corpseEye=Eye Of Desolation
+achievement.nm.corpseEye.desc=Craft a Corpse Eye
+
+achievement.nm.roadAsphalt=Running In The 90s
+achievement.nm.roadAsphalt.desc=Craft Asphalt
+
+achievement.nm.steelLocker=Beyond Lock And Key
+achievement.nm.steelLocker.desc=Craft a Steel Locker, The Ultimate Storage Unit
+
+achievement.nm.wrath=Wrath
+achievement.nm.wrath.desc=The voices screamed for blood, and you obeyed
+
+achievement.nm.envy=Envy
+achievement.nm.envy.desc=You desired what was theirs, and you took it
+
+achievement.nm.sloth=Sloth
+achievement.nm.sloth.desc=The World moved on, and you did nothing
+
+achievement.nm.fabric=Better Than Forge
+achievement.nm.fabric.desc=Craft Fabric
+
+achievement.nm.bed=Nocturnal
+achievement.nm.bed.desc=Craft a Bed
+
+achievement.nm.gluttony=Gluttony
+achievement.nm.gluttony.desc=The Void cried for more, and you fed it
+
+achievement.nm.lust=Lust
+achievement.nm.lust.desc=The desire consumed you, and you embraced it
+
+achievement.nm.steelSword=Blade Of Eternity
+achievement.nm.steelSword.desc=Craft a Refined Sword
+
+achievement.nm.steelIngot=Better Than Diamonds
+achievement.nm.steelIngot.desc=Craft a Steel Ingot
+
+achievement.nm.steelPickaxe=Bedrock Breaker
+achievement.nm.steelPickaxe.desc=Craft a Refined Pickaxe
+
+achievement.nm.steelShovel=Ash and Dust
+achievement.nm.steelShovel.desc=Craft a Refined Shovel
+
+achievement.nm.steelAxe=Soulforged Slicer
+achievement.nm.steelAxe.desc=Craft a Refined Axe
+
+achievement.nm.steelHoe=Harvester of Souls
+achievement.nm.steelHoe.desc=Craft a Refined Hoe
+
+achievement.nm.steelMattock=Handheld Excavator
+achievement.nm.steelMattock.desc=Craft a Mattock
+
+achievement.nm.steelBattleAxe=MEN! WITH ME!
+achievement.nm.steelBattleAxe.desc=Craft a Battle Axe
+
+achievement.nm.equipSteelArmor=Untouchable
+achievement.nm.equipSteelArmor.desc=Equip a Full Set of Steel Armor
+
+achievement.nm.pride=Pride
+achievement.nm.pride.desc=The Depths threatened your end, and you dared them
+
+achievement.nm.eclipse=Eclipse Conqueror
+achievement.nm.eclipse.desc=Survive your first Solar Eclipse
+
+achievement.nm.eclipseShard=Dark Sun Fragment
+achievement.nm.eclipseShard.desc=Obtain an Eclipse Shard by killing a Monster during an Eclipse
+
+achievement.nm.beaconGold=Shining Glory
+achievement.nm.beaconGold.desc=Construct a tier 4 Gold Beacon
+
+achievement.nm.beaconHellfire=Hell’s Lantern
+achievement.nm.beaconHellfire.desc=Construct a tier 4 Hellfire Beacon
+
+achievement.nm.beaconDiamond=Crown Jewel
+achievement.nm.beaconDiamond.desc=Construct a tier 4 Diamond Beacon
+
+achievement.nm.beaconDung=The Great Mighty Poo
+achievement.nm.beaconDung.desc=Construct a tier 4 Dung Beacon
+
+achievement.nm.beaconEmerald=Treasure!
+achievement.nm.beaconEmerald.desc=Construct a tier 4 Emerald Beacon
+
+achievement.nm.beaconGlass=Last Prism
+achievement.nm.beaconGlass.desc=Construct a tier 4 Glass Beacon
+
+achievement.nm.beaconGlowstone=Gloom Eternal
+achievement.nm.beaconGlowstone.desc=Construct a tier 4 Glowstone Beacon
+
+achievement.nm.beaconLapis=The All-Seeing Eye
+achievement.nm.beaconLapis.desc=Construct a tier 4 Lapis Beacon
+
+achievement.nm.beaconIron=The North Star
+achievement.nm.beaconIron.desc=Construct a tier 4 Iron Beacon
+
+achievement.nm.beaconEnderBlock=Interdimensional Transportation
+achievement.nm.beaconEnderBlock.desc=Construct a tier 4 Ender Beacon
+
+achievement.nm.beaconAll=Full Spectrum
+achievement.nm.beaconAll.desc=Construct a tier 4 Beacon of every type
+
+achievement.nm.magicArrow=Enhanced Munitions
+achievement.nm.magicArrow.desc=Obtain a Magic Arrow
+
+achievement.nm.nightmareMerchant=Librarian Transformation
+achievement.nm.nightmareMerchant.desc=Have your Librarian Villager transform under the effects of the Eclipse
+
+achievement.nm.killEclipseAnimal=Slaughter Under the Black Sun
+achievement.nm.killEclipseAnimal.desc=Kill an Animal during an Eclipse
+
+achievement.nm.magicFeather=So... Fluffy...
+achievement.nm.magicFeather.desc=Obtain a Magic Arrow by killing a Chicken during an Eclipse
+
+achievement.nm.rideEclipseChicken=I Can Fly!
+achievement.nm.rideEclipseChicken.desc=Mount an Eclipse Chicken and take flight!
+
+achievement.nm.eclipseCowKick=Ouch, That Hurt
+achievement.nm.eclipseCowKick.desc=Get kicked by an Eclipse Cow
+
+achievement.nm.eclipseCowMilk=Blood Or Milk?
+achievement.nm.eclipseCowMilk.desc=Milk an Eclipse Cow for Blood Milk. How disgusting
+
+achievement.nm.nightmareMerchantLevel2=Black Market
+achievement.nm.nightmareMerchantLevel2.desc=Appease the Nightmare Merchant
+
+achievement.nm.nightmareMerchantLevel3=Dark Ritual
+achievement.nm.nightmareMerchantLevel3.desc=Appease the Nightmare Merchant
+
+achievement.nm.nightmareMerchantLevel4=A Worthy Sacrifice
+achievement.nm.nightmareMerchantLevel4.desc=Appease the Nightmare Merchant
+
+achievement.nm.nightmareMerchantLevel5=Blood God's Wrath
+achievement.nm.nightmareMerchantLevel5.desc=...
+
+achievement.nm.eclipseShadowZombie=You Look Familiar...
+achievement.nm.eclipseShadowZombie.desc=Defeat an Eclipse Shadow Zombie
+
+achievement.nm.eclipseSquid=Eldritch Horrors
+achievement.nm.eclipseSquid.desc=Defeat an Eclipse Squid
+
+achievement.nm.eclipseGhast=Angels In The Sky
+achievement.nm.eclipseGhast.desc=Defeat an Eclipse Ghast
+
+achievement.nm.eclipseEnderman=Dragon's Revenge
+achievement.nm.eclipseEnderman.desc=Defeat an Eclipse Enderman
+
+achievement.nm.eclipseWitch=Devil Incarnate
+achievement.nm.eclipseWitch.desc=Defeat an Eclipse Witch. Good luck!
+
+achievement.nm.killBloodWither=Skill Issued
+achievement.nm.killBloodWither.desc=Defeat ???
+
+achievement.nm.arrowDamage=Headshot!
+achievement.nm.arrowDamage.desc=Deal over 50 damage with a single Magic Arrow
+
+achievement.nm.arrowPierce=Arbalistic
+achievement.nm.arrowPierce.desc=Pierce 5 or more enemies with a single Magic Arrow
+
+achievement.nm.eclipseBow=Sun-forged!
+achievement.nm.eclipseBow.desc=Craft an Eclipse Bow
+
+achievement.nm.rifleRpg=Absolute Cinema
+achievement.nm.rifleRpg.desc=Solve your problems the right way

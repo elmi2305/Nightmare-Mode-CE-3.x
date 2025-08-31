@@ -58,11 +58,11 @@ public abstract class HardcoreSpawnUtilsMixin{
     private static long lowerCooldownForRandomSpawning(long constant){
         return 600L;
     }
-    @ModifyArg(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;setHealth(F)V"))
+    @ModifyArg(method = "onSoftRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;setHealth(F)V"))
     private static float doNotLowerHealth(float par1){
         return 20f;
     }
-    @ModifyArg(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FoodStats;setFoodLevel(I)V"))
+    @ModifyArg(method = "onSoftRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FoodStats;setFoodLevel(I)V"))
     private static int doNotLowerFood(int par1){
         return 60;
     }
@@ -81,32 +81,4 @@ public abstract class HardcoreSpawnUtilsMixin{
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;sendChatToPlayer(Lnet/minecraft/src/ChatMessageComponent;)V",ordinal = 0))
     private static void avoidSendingChatMessage(EntityPlayerMP instance, ChatMessageComponent par1ChatMessageComponent){}
 
-    @Unique
-    private static boolean hasDeepWaterNearby(double x, double z, World world) {
-        // Fixed water level
-        int y1 = 62; // surface
-        int y2 = 61; // one below surface
-
-        // Check in cardinal directions, exactly 10 blocks away
-        int[][] offsets = {
-                {15, 0},   // East
-                {-15, 0},  // West
-                {0, 15},   // South
-                {0, -15}   // North
-        };
-
-        for (int[] offset : offsets) {
-            int checkX = (int) Math.floor(x + offset[0]);
-            int checkZ = (int) Math.floor(z + offset[1]);
-
-            int block1 = world.getBlockId(checkX, y1, checkZ);
-            int block2 = world.getBlockId(checkX, y2, checkZ);
-            System.out.println(block1 + ", " + block2);
-
-            if (block1 == Block.waterStill.blockID && block2 == Block.waterStill.blockID) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

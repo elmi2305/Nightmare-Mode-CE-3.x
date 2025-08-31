@@ -57,7 +57,31 @@ public class NMItems {
     public static FoodItem dungApple;
     public static FoodItem creeperBallSoup;
 
+    public static Item ACHIEVEMENT_SPECIAL_SNOWBALL;
+    public static Item ACHIEVEMENT_SPECIAL_LADDER_STONE;
+    public static Item ACHIEVEMENT_SPECIAL_ROAD;
+    public static Item ACHIEVEMENT_SPECIAL_LADDER_IRON;
+    public static Item ACHIEVEMENT_SPECIAL_ASPHALT;
+    public static Item ACHIEVEMENT_SPECIAL_HARDMODE;
+    public static Item ACHIEVEMENT_SPECIAL_BLOODMOON;
+    public static Item ACHIEVEMENT_SPECIAL_BLOODCHEST;
+    public static Item ACHIEVEMENT_SPECIAL_LOCKER;
+    public static Item ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER;
+    public static Item ACHIEVEMENT_SPECIAL_ECLIPSE;
+    public static Item ACHIEVEMENT_SPECIAL_MERCHANT;
+    public static Item ACHIEVEMENT_SPECIAL_CHICKEN;
+    public static Item ACHIEVEMENT_SPECIAL_DIAMOND;
+    public static Item ACHIEVEMENT_SPECIAL_BLOOD_BONE;
+    public static Item ACHIEVEMENT_SPECIAL_SKULL;
+    public static Item ACHIEVEMENT_SPECIAL_ARROW_TRIPLE;
+    public static Item ACHIEVEMENT_SPECIAL_ARROW_RED;
+    public static Item ACHIEVEMENT_SPECIAL_TRIPLE_TEAR;
+    public static Item ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE;
+
+
+
     public static final int BLOOD_MOON_DURABILITY = 1200;
+
 
     static {
         rpg =(ItemRPG)(new ItemRPG(2309)).setTextureName("nmRPG");
@@ -112,5 +136,27 @@ public class NMItems {
 
         dungApple = (FoodItem) new FoodItem(2353, 2, 0.25f, false, "nmDungApple",false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nmDungApple").setCreativeTab(CreativeTabs.tabFood);
         creeperBallSoup = (FoodItem) new FoodItem(2354, 6, 1f, false, "nmOysterSoup",false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nmOysterSoup").hideFromEMI();
+
+        ACHIEVEMENT_SPECIAL_SNOWBALL = new Item(2400).setTextureName("nmAchievementSpecialSnowball");
+        ACHIEVEMENT_SPECIAL_LADDER_STONE = new Item(2401).setTextureName("nmAchievementStoneLadder");
+        ACHIEVEMENT_SPECIAL_LADDER_IRON = new Item(2402).setTextureName("nmAchievementIronLadder");
+        ACHIEVEMENT_SPECIAL_ROAD = new Item(2403).setTextureName("nmAchievementRoad");
+        ACHIEVEMENT_SPECIAL_ASPHALT = new Item(2404).setTextureName("nmAchievementAsphalt");
+        ACHIEVEMENT_SPECIAL_HARDMODE = new Item(2405).setTextureName("nmAchievementHardmode");
+        ACHIEVEMENT_SPECIAL_BLOODMOON = new Item(2406).setTextureName("nmAchievementBloodMoon");
+        ACHIEVEMENT_SPECIAL_BLOODCHEST = new Item(2407).setTextureName("nmAchievementBloodChest");
+        ACHIEVEMENT_SPECIAL_LOCKER = new Item(2408).setTextureName("nmAchievementSteelLocker");
+        ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER = new Item(2409).setTextureName("nmAchievementBloodMoonWither");
+        ACHIEVEMENT_SPECIAL_ECLIPSE = new Item(2410).setTextureName("nmAchievementEclipse");
+        ACHIEVEMENT_SPECIAL_MERCHANT = new Item(2411).setTextureName("nmAchievementMerchant");
+        ACHIEVEMENT_SPECIAL_CHICKEN = new Item(2412).setTextureName("nmAchievementChicken");
+        ACHIEVEMENT_SPECIAL_DIAMOND = new Item(2413).setTextureName("nmAchievementDiamond");
+        ACHIEVEMENT_SPECIAL_BLOOD_BONE = new Item(2414).setTextureName("nmAchievementBloodBone");
+        ACHIEVEMENT_SPECIAL_SKULL = new Item(2415).setTextureName("nmAchievementBloodSkull");
+        ACHIEVEMENT_SPECIAL_ARROW_TRIPLE = new Item(2416).setTextureName("nmAchievementTripleArrow");
+        ACHIEVEMENT_SPECIAL_ARROW_RED = new Item(2417).setTextureName("nmAchievementArrowRed");
+        ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new Item(2418).setTextureName("nmAchievementTripleTear");
+        ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new Item(2419).setTextureName("nmAchievementBloodZombie");
+
     }
 }

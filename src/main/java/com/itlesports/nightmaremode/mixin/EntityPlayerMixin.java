@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
+import btw.achievement.event.AchievementEventDispatcher;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
@@ -10,6 +11,7 @@ import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -27,6 +29,7 @@ import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
+
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
@@ -35,15 +38,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
     @Shadow public int experienceLevel;
     @Shadow protected abstract int decreaseAirSupply(int iAirSupply);
-
-
     @Shadow public abstract boolean isPlayerSleeping();
-
     @Shadow public abstract void wakeUpPlayer(boolean par1, boolean par2, boolean par3);
-
     @Shadow public abstract boolean isPlayerFullyAsleep();
 
+
+
     @Unique private int ticksInWater;
+    @Unique private int ticksSleeping;
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -124,6 +126,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         return par2;
     }
+    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;triggerAchievement(Lnet/minecraft/src/StatBase;)V"),locals = LocalCapture.CAPTURE_FAILHARD)
+    private void manageAchievementsOnPlayerHit(Entity entityHit, CallbackInfo ci, float dmg, int var3, float var4, float fModifier, boolean var5, boolean var6, int var7, boolean var8){
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.PlayerAttackEvent.class, player, new NMAchievementEvents.PlayerAttackEvent.PlayerAttackEventData(player, entityHit, dmg));
+    }
+
 
     @Override
     public int getMaxInPortalTime() {
@@ -247,7 +255,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
+        if(this.isPlayerFullyAsleep()){
+            this.ticksSleeping ++;
+        } else{
+            this.ticksSleeping = 0;
+        }
         if(this.ticksExisted % 80 != 0) return;
+        EntityPlayer thisObj = (EntityPlayer)(Object)this;
+
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.PlayerSleepEvent.class, thisObj, this.ticksSleeping);
 
         if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
             NMUtils.setItemStackSizes(32);
@@ -509,6 +525,19 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 this.ticksInWater = Math.max(this.ticksInWater - 1, 0);
             }
         }
+    }
+    @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
+    private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
+        EntityPlayer self = (EntityPlayer)(Object)this;
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void manageAchievementDamageSource(DamageSource source, float par2, CallbackInfoReturnable<Boolean> cir){
+        EntityPlayer self = (EntityPlayer)(Object)this;
+
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourceEvent.class, self, source);
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourcePlayerEvent.class, self, new NMAchievementEvents.DamageSourcePlayerEvent.DamageSourceData(self, source));
     }
 
     // removes the check for daytime and kicking the player out of the bed if it turns day. this enables infinite sleeping

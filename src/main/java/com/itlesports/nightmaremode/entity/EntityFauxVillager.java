@@ -1,9 +1,5 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.client.fx.BTWEffectManager;
-import btw.client.fx.EffectHandler;
-import btw.entity.mob.behavior.MultiTemptBehavior;
-import btw.entity.mob.behavior.VillagerBreedBehavior;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIFollowPlayerIfWatched;
 import net.minecraft.src.*;
@@ -43,7 +39,7 @@ public class EntityFauxVillager extends EntityMob {
         Vec3 vLook = player.getLook(1.0f).normalize();
         Vec3 vDelta = this.worldObj.getWorldVec3Pool().getVecFromPool(this.posX - player.posX, this.posY + (double)this.getEyeHeight() - (player.posY + (double)player.getEyeHeight()), this.posZ - player.posZ);
         double dDist = vDelta.lengthVector();
-        double dotDelta = vLook.dotProduct(vDelta = vDelta.normalize());
+        double dotDelta = vLook.dotProduct(vDelta.normalize());
         if (dotDelta > 1.0 - 0.1 / dDist) {
             return player.canEntityBeSeen(this);
         }
@@ -162,7 +158,11 @@ public class EntityFauxVillager extends EntityMob {
 
 
     @Override
-    protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {}
+    protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
+        if(bKilledByPlayer){
+            this.dropItem(BTWItems.tannedLeather.itemID, 1);
+        }
+    }
 
     @Override
     public void onDeath(DamageSource source) {
@@ -176,6 +176,7 @@ public class EntityFauxVillager extends EntityMob {
                 }
             }
         }
+
         super.onDeath(source);
     }
 
