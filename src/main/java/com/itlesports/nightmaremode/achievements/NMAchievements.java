@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.achievements;
 
 import btw.achievement.AchievementHandler;
 import btw.achievement.AchievementProvider;
-import btw.achievement.AchievementTab;
 import btw.achievement.event.BTWAchievementEvents;
 import btw.block.BTWBlocks;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
@@ -21,7 +20,7 @@ import java.util.function.Predicate;
 import static btw.achievement.BTWAchievements.*;
 
 public class NMAchievements {
-    private static final AchievementTab TAB_NM = new AchievementTab("nightmaremode").setIcon(NMItems.starOfTheBloodGod);
+//    private static final AchievementTab TAB_NM = new AchievementTab("nightmaremode").setIcon(NMItems.starOfTheBloodGod);
 
     public static final Achievement<Long> MORNING_SECOND_DAY =
             AchievementProvider.getBuilder(NMAchievementEvents.TimeEvent.class)
@@ -172,6 +171,7 @@ public class NMAchievements {
                     .triggerCondition(data -> data.killedEntity() instanceof EntitySkeleton skeleton
                             && skeleton.getSkeletonType() == 1
                             && skeleton.dimension == 0)
+                    .parents(CRAFT_STONE_PICKAXE)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
 
@@ -884,7 +884,7 @@ public class NMAchievements {
                     .icon(new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 3))
                     .displayLocation(9, 4)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.FIRE_RESIST_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
     public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_DIAMOND =
@@ -893,7 +893,7 @@ public class NMAchievements {
                     .icon(BTWBlocks.diamondIngot) // you can try guessing the right icon, but you don't have to
                     .displayLocation(10, 4)// keep the same
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.FORTUNE_EFFECT && data.level() == 4)// keep this constant
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
     public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_DUNG =
@@ -902,7 +902,7 @@ public class NMAchievements {
                     .icon(new ItemStack(BTWBlocks.aestheticEarth.blockID, 1, 7))
                     .displayLocation(11, 5)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.NAUSEA_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -912,7 +912,7 @@ public class NMAchievements {
                     .icon(Block.blockEmerald)
                     .displayLocation(12, 6)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.LOOTING_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -922,7 +922,7 @@ public class NMAchievements {
                     .icon(Block.glass)
                     .displayLocation(13, 5)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.DECORATIVE_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -932,7 +932,7 @@ public class NMAchievements {
                     .icon(Block.glowStone)
                     .displayLocation(14, 4)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.NIGHT_VISION_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -942,7 +942,7 @@ public class NMAchievements {
                     .icon(Block.blockGold)
                     .displayLocation(15, 4)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.HASTE_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -952,7 +952,7 @@ public class NMAchievements {
                     .icon(Block.blockIron)
                     .displayLocation(13, 3)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.MAGNETIC_POLE_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -963,7 +963,7 @@ public class NMAchievements {
                     .icon(Block.blockLapis)
                     .displayLocation(12, 2)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.TRUE_SIGHT_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -973,7 +973,7 @@ public class NMAchievements {
                     .icon(new ItemStack(BTWBlocks.aestheticOpaque, 1, 14)) // ender block
                     .displayLocation(11, 3)
                     .triggerCondition(data -> data.effect() == BTWBeaconEffects.ENDER_ANTENNA_EFFECT && data.level() == 4)
-                    .parents()
+                    .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
@@ -983,7 +983,8 @@ public class NMAchievements {
                     .icon(Block.beacon)
                     .displayLocation(12, 7)
                     .triggerCondition(NMAchievements::hasBeaconAchievements)
-                    .parents(BEACON_GOLD,
+                    .parents(CRAFTED_BEACON,
+                            BEACON_GOLD,
                             BEACON_HELLFIRE,
                             BEACON_DIAMOND,
                             BEACON_DUNG,

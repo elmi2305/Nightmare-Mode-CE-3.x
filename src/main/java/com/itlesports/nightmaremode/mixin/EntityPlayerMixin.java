@@ -126,13 +126,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         return par2;
     }
-
-    // Mixin locals required, ignore IDEA warning
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;triggerAchievement(Lnet/minecraft/src/StatBase;)V"),locals = LocalCapture.CAPTURE_FAILHARD)
-    private void manageAchievementsOnPlayerHit(Entity entityHit, CallbackInfo ci, float dmg, int var3, float var4, float fModifier, int var5, int var6, int var7, int var8){
+    private void manageAchievementsOnPlayerHit(Entity entityHit, CallbackInfo ci, float dmg){
         EntityPlayer player = (EntityPlayer)(Object)this;
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.PlayerAttackEvent.class, player, new NMAchievementEvents.PlayerAttackEvent.PlayerAttackEventData(player, entityHit, dmg));
     }
+
 
     @Override
     public int getMaxInPortalTime() {
