@@ -24,7 +24,7 @@ public abstract class EntityMixin {
             thisObj.riddenByEntity.setPosition(thisObj.posX, thisObj.posY - 0.5125D + thisObj.riddenByEntity.getYOffset(), thisObj.posZ);
         }
     }
-    @Redirect(method = "onStruckByLightning(Lbtw/entity/LightningBoltEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;dealFireDamage(I)V"))
+    @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;dealFireDamage(I)V"))
     private void endermenImmune(Entity instance, int par1) {
         Entity thisObj = (Entity) (Object) this;
         if (!thisObj.isImmuneToFire() && !(thisObj instanceof EntityEnderman)) {

@@ -148,6 +148,7 @@
     "blocks.OvenTileEntityMixin",
     "blocks.PotatoBlockMixin",
     "blocks.SawBlockMixin",
+    "blocks.TileEntityFurnaceMixin",
     "blocks.UnfiredBrickTileEntityMixin",
     "component.ComponentMineshaftCorridorMixin",
     "component.ComponentScatteredFeatureDesertPyramidMixin",

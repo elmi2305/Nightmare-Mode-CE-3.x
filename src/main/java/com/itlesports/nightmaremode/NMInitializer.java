@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode;
 
 import btw.block.BTWBlocks;
 import btw.crafting.manager.CrucibleStokedCraftingManager;
+import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
 import btw.entity.mob.villager.trade.TradeItem;
 import btw.entity.mob.villager.trade.TradeProvider;
@@ -26,6 +27,7 @@ public class NMInitializer {
         addMillstoneRecipes();
         addOvenRecipes();
         addSoulforgeRecipes();
+        addPistonPackingRecipes();
     }
     public static void initNightmareTrades(){
         addFarmerTrades();
@@ -374,6 +376,11 @@ public class NMInitializer {
     private static void addSoulforgeRecipes(){
         RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.canvas), new Object[]{"MMMM", "MFFM", "MFFM", "MMMM", Character.valueOf('F'), BTWItems.fabric, Character.valueOf('M'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE)});
         RecipeManager.addSoulforgeRecipe(new ItemStack(Block.cobblestoneMossy, 4),new Object[]{"####", "#XX#", "#XX#", "####", Character.valueOf('#'), Block.vine, Character.valueOf('X'), BTWBlocks.looseCobblestone});
+        // packed blocks
+        RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.aestheticEarth.blockID, 4, 6),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), BTWBlocks.looseDirt});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(Block.sandStone, 4),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), Block.sand});
+
+
     }
     private static void addCampfireRecipes(){
         RecipeManager.addCampfireRecipe(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast));
@@ -501,5 +508,32 @@ public class NMInitializer {
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"###", "#Y#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('Y'), Item.silk});
 
+        // add compressed block recipes
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.creeperOysterBlock, 1), new Object[]{new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters)});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.rottenFleshBlock, 1), new Object[]{new ItemStack(Item.rottenFlesh), new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),new ItemStack(Item.rottenFlesh),});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.spiderEyeBlock, 1), new Object[]{new ItemStack(Item.spiderEye), new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),new ItemStack(Item.spiderEye),});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.aestheticOpaque, 1, 15), new Object[]{new ItemStack(Item.bone), new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),new ItemStack(Item.bone),});
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.creeperOysters, 16), new Object[]{new ItemStack(BTWBlocks.creeperOysterBlock)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.creeperOysters, 8), new Object[]{new ItemStack(BTWBlocks.creeperOysterSlab)});
+
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.creeperOysters, 9), new Object[]{new ItemStack(BTWBlocks.creeperOysterBlock)});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.creeperOysters, 4), new Object[]{new ItemStack(BTWBlocks.creeperOysterSlab)});
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.spiderEye, 16), new Object[]{new ItemStack(BTWBlocks.spiderEyeBlock)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.spiderEye, 8), new Object[]{new ItemStack(BTWBlocks.spiderEyeSlab)});
+
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 9), new Object[]{new ItemStack(BTWBlocks.spiderEyeBlock)});
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 4), new Object[]{new ItemStack(BTWBlocks.spiderEyeSlab)});
+
+    }
+
+    private static void addPistonPackingRecipes() {
+        // oysters
+        PistonPackingCraftingManager.instance.removeRecipe((Block)BTWBlocks.creeperOysterBlock, 0 , (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
+        RecipeManager.addPistonPackingRecipe((Block)BTWBlocks.creeperOysterBlock, new ItemStack(BTWItems.creeperOysters, 9));
+        // spider eyes
+        PistonPackingCraftingManager.instance.removeRecipe((Block)BTWBlocks.spiderEyeBlock, 0 , (TagOrStack[])new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
+        RecipeManager.addPistonPackingRecipe((Block)BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
     }
 }
