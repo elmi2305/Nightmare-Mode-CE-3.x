@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WickerBasketTileEntity.class)
 public abstract class WickerBasketTileEntityMixin extends BasketTileEntity {
-    @Mutable @Shadow @Final public static int MAX_STORAGE_STACKS;
+    @Mutable @Shadow(remap = false) @Final public static int MAX_STORAGE_STACKS;
 
     @Unique
     private static int LIMIT = 2;
