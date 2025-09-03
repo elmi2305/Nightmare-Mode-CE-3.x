@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class WickerBasketTileEntityMixin extends BasketTileEntity
         implements TileEntityDataPacketHandler {
     @Mutable
-    @Shadow @Final public static int MAX_STORAGE_STACKS;
+    @Shadow(remap = false) @Final public static int MAX_STORAGE_STACKS;
 
     @Unique
     private static int LIMIT = 2;

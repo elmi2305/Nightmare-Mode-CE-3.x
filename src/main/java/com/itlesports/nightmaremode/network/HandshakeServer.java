@@ -20,7 +20,7 @@ import java.util.Map;
 public class HandshakeServer {
     // Tracks server-side players awaiting version ACK
     private static final Map<NetServerHandler, Integer> awaitingAckTicks = new HashMap<>();
-    private static final int MAX_TICKS_FOR_ACK_WAIT = 20;
+    private static final int MAX_TICKS_FOR_ACK_WAIT = 40;
     public static final String VERSION_CHECK_CHANNEL = "nightmare_mode|VC";
     public static final String VERSION_ACK_CHANNEL = "nightmare_mode|Ack";
 
@@ -49,8 +49,12 @@ public class HandshakeServer {
         awaitingAckTicks.entrySet().removeIf(entry -> {
             NetServerHandler handler = entry.getKey();
             int ticks = entry.getValue() + 1;
+            if (ticks == 5 || ticks == 10 || ticks == 15 || ticks == 20) {
+//            if (ticks >= 2 && ticks <= 11) {
+                sendVersionCheckPacket(handler);
+            }
             if (ticks > MAX_TICKS_FOR_ACK_WAIT) {
-                handler.kickPlayerFromServer("You need the Nightmaremode mod mod installed (version " + getModVersion() + ") to join this server.");
+                handler.kickPlayerFromServer("You need the Nightmaremode mod installed (version " + getModVersion() + ") to join this server.");
                 return true;
             }
             entry.setValue(ticks);
@@ -64,7 +68,7 @@ public class HandshakeServer {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             String clientVersion = dataStream.readUTF();
             if (!getModVersion().equals(clientVersion)) {
-                handler.kickPlayerFromServer("Nightmaremode mod mod version mismatch!\nServer: " + getModVersion() + "\nClient: " + clientVersion);
+                handler.kickPlayerFromServer("Nightmaremode mod version mismatch!\nServer: " + getModVersion() + "\nClient: " + clientVersion);
                 awaitingAckTicks.remove(handler);
                 return;
             }

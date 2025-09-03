@@ -26,6 +26,22 @@ public class HandshakeClient {
         return NightmareMode.MOD_VERSION;
     }
 
+    public static void sendAckPacket() {
+        Minecraft mc = Minecraft.getMinecraft();
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(out);
+            dos.writeUTF(getModVersion());
+            dos.close();
+            byte[] data = out.toByteArray();
+
+            Packet250CustomPayload ack = new Packet250CustomPayload(VERSION_ACK_CHANNEL, data);
+            mc.thePlayer.sendQueue.addToSendQueue(ack);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /** Called every client tick; checks server handshake. */
     public static void onClientTick() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -36,11 +52,16 @@ public class HandshakeClient {
             return;
         }
         ticksSinceLogin++;
+        if (receivedVC && (ticksSinceLogin == 5 || ticksSinceLogin == 10 || ticksSinceLogin == 15 || ticksSinceLogin == 20)) {
+//        if (receivedVC && ticksSinceLogin >= 2 && ticksSinceLogin <= 11) {
+            sendAckPacket();
+        }
         // Disconnect if handshake failed
         if (ticksSinceLogin > 1 && !receivedVC) {
             mc.thePlayer.sendQueue.getNetManager().closeConnections();
             mc.displayGuiScreen(new GuiDisconnected(null, "disconnect.genericReason", "Nightmaremode mod not installed on server!"));
             mc.theWorld = null;
+            mc.thePlayer = null;
         }
     }
 
@@ -59,6 +80,7 @@ public class HandshakeClient {
                         "Nightmaremode mod version mismatch!\nServer: " + serverVersion + "\nClient: " + getModVersion()
                 ));
                 mc.theWorld = null;
+                mc.thePlayer = null;
                 return;
             }
             // Send ACK packet

@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -22,7 +23,9 @@ public class MinecraftMixin {
     @Shadow public EntityRenderer entityRenderer;
 
     @Shadow public EntityClientPlayerMP thePlayer;
+    @Unique
     private boolean wasZooming = false;
+    @Unique
     private float originalFov = 0.0f;
 
     @Inject(method = "runTick", at = @At("TAIL"))
@@ -30,8 +33,7 @@ public class MinecraftMixin {
         HandshakeClient.onClientTick();
     }
 
-    @Redirect(
-            method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I"))
+    @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I", remap = false))
     private int nmBlockHotbarScrollWhenZoom() {
         if (entityRenderer instanceof ZoomStateAccessor accessor) {
             if (accessor.nightmareMode$isToggleZoomActive() && accessor.nightmareMode$isToggleZoomKeyHeld()) {
