@@ -16,7 +16,7 @@ import java.util.List;
 public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
 
-    private final AddonSoundRegistryEntry nmBossMusic = new AddonSoundRegistryEntry("nightmare_mode:nmBoss");
+    public static final AddonSoundRegistryEntry NM_BOSS_MUSIC = new AddonSoundRegistryEntry("nightmare_mode:nmBoss");
 
     public NightmareModeAddon() {
         super();

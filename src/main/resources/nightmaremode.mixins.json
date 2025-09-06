@@ -170,6 +170,7 @@
     "render.TileEntityRendererMixin"
   ],
   "client": [
+    "EntityPlayerSPMixin",
     "GameSettingsMixin",
     "MinecraftMixin",
     "MixinNetClientHandler",

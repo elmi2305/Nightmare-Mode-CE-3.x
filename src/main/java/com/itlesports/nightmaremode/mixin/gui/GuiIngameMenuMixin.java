@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NightmareUtils;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiIngameMenu;
 import net.minecraft.src.GuiScreen;
@@ -36,7 +36,7 @@ public class GuiIngameMenuMixin extends GuiScreen {
         NightmareMode.worldState = 0;
         NightmareMode.setBloodmoon(false);
         NightmareMode.setEclipse(false);
-        NightmareUtils.shushMusic();
+        NMUtils.shushMusic();
     }
 
 //    @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;", ordinal = 1))
