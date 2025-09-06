@@ -23,8 +23,8 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Shadow private EntityLivingBase entityAttackTarget;
     @Shadow @Final private EntityLiving entityOwner;
-    @Shadow private float entityMoveSpeed;
-    @Shadow private int attackCooldownCounter;
+    @Shadow(remap = false) private float entityMoveSpeed;
+    @Shadow(remap = false) private int attackCooldownCounter;
 
     @Unique boolean isExecuting;
     @Unique int ticksOnGround;

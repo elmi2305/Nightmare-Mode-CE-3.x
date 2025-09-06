@@ -5,22 +5,18 @@ import btw.world.util.WorldUtils;
 import btw.world.util.data.BTWWorldData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import net.minecraft.src.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-import java.util.Random;
-
 @Mixin(BlockPortal.class)
 public class BlockPortalMixin{
-    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
+    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
     private void doNothing(){} // doesn't update the nether flag to be set every tick
 
-    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V"))
+    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
     private void doNothing1(){} // makes sure the nether flag isn't set as soon as the portal is created
 
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"))
@@ -33,21 +29,21 @@ public class BlockPortalMixin{
             }
 
             double radius = 16.0;
-            List<EntityPlayer> players = world.playerEntities;
+            for (Object obj : world.playerEntities) {
+                if (obj instanceof EntityPlayer player) {
+                    double dx = player.posX - x;
+                    double dy = player.posY - y;
+                    double dz = player.posZ - z;
+                    double distanceSq = dx * dx + dy * dy + dz * dz;
 
-            for (EntityPlayer player : players) {
-                double dx = player.posX - x;
-                double dy = player.posY - y;
-                double dz = player.posZ - z;
-                double distanceSq = dx * dx + dy * dy + dz * dz;
+                    if (distanceSq <= radius * radius) {
+                        ChatMessageComponent text1 = new ChatMessageComponent();
+                        text1.addText("<???> " + ("nightmare.portal_warning"));
+                        text1.setColor(EnumChatFormatting.DARK_RED);
+                        player.sendChatToPlayer(text1);
 
-                if (distanceSq <= radius * radius) {
-                    ChatMessageComponent text1 = new ChatMessageComponent();
-                    text1.addText("<???> " + ("nightmare.portal_warning"));
-                    text1.setColor(EnumChatFormatting.DARK_RED);
-                    player.sendChatToPlayer(text1);
-
-                    player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
+                        player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
+                    }
                 }
             }
 

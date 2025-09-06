@@ -20,11 +20,11 @@ import java.util.List;
 
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
-    @Shadow private int tentacleAttackCooldownTimer;
+    @Shadow(remap = false) private int tentacleAttackCooldownTimer;
     @Unique
     private int canDropCalamari = 0;
 
-    @Shadow protected abstract void retractTentacleAttackOnCollision();
+    @Shadow(remap = false) protected abstract void retractTentacleAttackOnCollision();
 
     @Unique private int squidOnHeadTimer = 0;
     @Unique private int recentParryCount = 0;

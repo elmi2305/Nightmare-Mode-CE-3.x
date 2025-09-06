@@ -44,7 +44,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
         this.lockDifficulty = true;
     }
 
-    @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;"))
+    @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
     private String customDifficultyName(Difficulty difficulty){
         if(difficulty.ID == 2){
             if(NightmareMode.bloodmare){

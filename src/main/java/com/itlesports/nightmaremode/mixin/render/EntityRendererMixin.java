@@ -104,11 +104,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         }
     }
 
-    @Inject(method = "renderHand(FI)V", at = @At(
-            value = "INVOKE",
-            target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V",
-            shift = At.Shift.AFTER
-    ))
+    @Inject(method = "renderHand(FI)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V", shift = At.Shift.AFTER, remap = false))
     private void nightmaremode$scaleViewmodel(float partialTicks, int pass, CallbackInfo ci) {
         float zoom = (float) cameraZoom;
         if (zoom != 1.0F) {
@@ -128,7 +124,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     /**
      * Force render hand when zoomed by injecting after the zoom check
      */
-    @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClear(I)V", shift = At.Shift.AFTER))
+    @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClear(I)V", shift = At.Shift.AFTER, remap = false))
     private void nightmaremode$forceRenderHandWhenZoomed(float partialTicks, long timeSlice, CallbackInfo ci) {
         // Check if we're in a zoom state and the normal hand rendering was skipped
         if (this.cameraZoom != 1.0D) {
@@ -262,7 +258,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         return par1ArrayOfInteger;
     }
 
-    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V"))
+    @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V", remap = false))
     private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
         if (this.mc.thePlayer.dimension == 1) {
             this.fogColorRed = 0;

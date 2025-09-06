@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(RenderItem.class)
 public class RenderItemMixin {
-    @ModifyArgs(method = "renderItemIntoGUI", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V"))
+    @ModifyArgs(method = "renderItemIntoGUI", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false))
     private void changeBrightnessItem(Args args){
         float r = args.get(0);
         float g = args.get(1);

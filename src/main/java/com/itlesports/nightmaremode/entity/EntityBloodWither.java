@@ -192,9 +192,15 @@ public class EntityBloodWither extends EntityWither {
                 if (this.witherPhase == 1) {
                     if(isUsingPotions(this.playerTarget)){
                         if(this.reviveTimer == 500){
-                            this.sendChat("bloodwither.potion_warning");
+                            ChatMessageComponent msg = new ChatMessageComponent();
+                            msg.addText("nightmare.bloodwither.potion_warning");
+                            msg.setColor(EnumChatFormatting.RED);
+                            this.playerTarget.sendChatToPlayer(msg);
                         } else if(this.reviveTimer == 420){
-                            this.sendChat("bloodwither.learn_fight");
+                            ChatMessageComponent msg = new ChatMessageComponent();
+                            msg.addText("nightmare.bloodwither.learn_fight");
+                            msg.setColor(EnumChatFormatting.RED);
+                            this.playerTarget.sendChatToPlayer(msg);
                         } else if(this.reviveTimer == 400){
                             this.destroyActivePotions(this.playerTarget);
                         }
@@ -203,9 +209,15 @@ public class EntityBloodWither extends EntityWither {
                 if(this.witherPhase == 2){
                     if (this.hasItemInInventory(this.playerTarget,Item.appleGold)) {
                         if(this.reviveTimer == 500){
-                            this.sendChat("bloodwither.gapple_notice");
+                            ChatMessageComponent msg = new ChatMessageComponent();
+                            msg.addText("nightmare.bloodwither.gapple_notice");
+                            msg.setColor(EnumChatFormatting.RED);
+                            this.playerTarget.sendChatToPlayer(msg);
                         } else if(this.reviveTimer == 420){
-                            this.sendChat("bloodwither.gapple_plan");
+                            ChatMessageComponent msg = new ChatMessageComponent();
+                            msg.addText("nightmare.bloodwither.gapple_plan");
+                            msg.setColor(EnumChatFormatting.RED);
+                            this.playerTarget.sendChatToPlayer(msg);
                         } else if(this.reviveTimer == 400){
                             this.ejectSpecifiedItems(this.playerTarget,Item.appleGold);
                         }
