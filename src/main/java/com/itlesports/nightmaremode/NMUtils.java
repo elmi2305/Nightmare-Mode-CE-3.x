@@ -112,6 +112,29 @@ public class NMUtils {
         }
     }
 
+    public static void shushMusic() {
+        SoundManager sndManager = Minecraft.getMinecraft().sndManager;
+        if (sndManager.sndSystem.playing("BgMusic")) {
+            sndManager.sndSystem.stop("BgMusic");
+        }
+        if (sndManager.sndSystem.playing("streaming")) {
+            sndManager.sndSystem.stop("streaming");
+        }
+    }
+
+    public static void forcePlayMusic(String soundID, boolean toLoop) {
+        SoundManager sndManager = Minecraft.getMinecraft().sndManager;
+        shushMusic();
+        if (Minecraft.getMinecraft().gameSettings.musicVolume != 0.0F) {
+            SoundPoolEntry sound = sndManager.soundPoolSounds.getRandomSoundFromSoundPool(soundID);
+            if (sound != null) {
+                sndManager.sndSystem.backgroundMusic("BgMusic", sound.getSoundUrl(), sound.getSoundName(), toLoop);
+                sndManager.sndSystem.setVolume("BgMusic", Minecraft.getMinecraft().gameSettings.musicVolume);
+                sndManager.sndSystem.play("BgMusic");
+            }
+        }
+    }
+
     public static final List<Integer> bloodTools = new ArrayList<>(Arrays.asList(
             NMItems.bloodSword.itemID,
             NMItems.bloodPickaxe.itemID,

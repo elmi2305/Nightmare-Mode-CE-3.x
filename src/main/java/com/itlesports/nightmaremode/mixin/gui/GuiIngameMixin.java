@@ -31,9 +31,9 @@ public class GuiIngameMixin {
             if(this.mc.thePlayer.isInsideOfMaterial(Material.water) || mc.thePlayer.getAir() < 300 ){
                 amountRendered++;
             }
-            String period = this.mc.theWorld.isDaytime() ? "Day " : "Night ";
+            String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
             if(this.mc.thePlayer.dimension == -1){
-                period = this.getIsActuallyDaytime(this.mc.theWorld) ? "Day " : "Night ";
+                period = this.getIsActuallyDaytime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
             }
             int dawnOffset = this.isDawnOrDusk(this.mc.theWorld.getWorldTime());
             FontRenderer fontRenderer = this.mc.fontRenderer;
@@ -45,7 +45,7 @@ public class GuiIngameMixin {
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
 
-            textToShow = period + (((int)Math.ceil((double) Minecraft.getMinecraft().theWorld.getWorldTime() / 24000)) + dawnOffset);
+            textToShow = String.format(period, ((int)Math.ceil((double) Minecraft.getMinecraft().theWorld.getWorldTime() / 24000)) + dawnOffset);
             stringWidth = fontRenderer.getStringWidth(textToShow);
             if(NightmareMode.shouldShowDateTimer){
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);

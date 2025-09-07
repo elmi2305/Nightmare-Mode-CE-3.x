@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiIngameMenu;
 import net.minecraft.src.GuiScreen;
@@ -24,9 +25,18 @@ public class GuiIngameMenuMixin extends GuiScreen {
     @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;", ordinal = 0))
     private String manageTextOnCannotEscapeClient(String string){
         if(!NightmareMode.getInstance().getCanLeaveGame()){
-            return I18n.getString("gui.ingamemenu.noescape");
+            return I18n.getString("menu.noEscape");
         }
         return I18n.getString(string);
+    }
+
+    //inject copied from gloomy hostile, resets things to not infect rest
+    @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;loadWorld(Lnet/minecraft/src/WorldClient;)V", ordinal = 0))
+    public void onLeaveWorld(GuiButton par1GuiButton, CallbackInfo ci) {
+        NightmareMode.worldState = 0;
+        NightmareMode.setBloodmoon(false);
+        NightmareMode.setEclipse(false);
+        NMUtils.shushMusic();
     }
 
 //    @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;", ordinal = 1))

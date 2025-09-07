@@ -19,13 +19,14 @@ public class GuiOptionsMixin {
     @Inject(method = "initGui", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GuiSmallButton;displayString:Ljava/lang/String;",shift = At.Shift.AFTER),locals = LocalCapture.CAPTURE_FAILHARD)
     private void manageIngameDifficultyDisplay(CallbackInfo ci, int var1, EnumOptions[] var2, int var3, int var4, EnumOptions var5, GuiSmallButton var6){
         Difficulty difficulty = MinecraftServer.getServer().worldServers[0].worldInfo.getDifficulty();
-        if (difficulty == Difficulties.HOSTILE) {
-            var6.displayString = I18n.getString("gui.options.difficulty.nightmare");
-        } else if (difficulty == Difficulties.STANDARD) {
-            var6.displayString = I18n.getString("gui.options.difficulty.baddream");
+        String difficultyStringFormat = "%s: %s";
+        if(difficulty == Difficulties.HOSTILE){
+            var6.displayString = String.format(difficultyStringFormat, I18n.getString("selectWorld.difficulty"), I18n.getString("difficulty.nightmare.name"));
+        } else if(difficulty == Difficulties.STANDARD){
+            var6.displayString = String.format(difficultyStringFormat, I18n.getString("selectWorld.difficulty"), I18n.getString("difficulty.baddream.name"));
         }
-        if (NightmareMode.bloodmare) {
-            var6.displayString = I18n.getString("gui.options.difficulty.bloodmare");
+        if(NightmareMode.bloodmare){
+            var6.displayString = String.format(difficultyStringFormat, I18n.getString("selectWorld.difficulty"), I18n.getString("difficulty.bloodmare.name"));
         }
     }
 }

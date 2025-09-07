@@ -48,11 +48,11 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private String customDifficultyName(Difficulty difficulty){
         if(difficulty.ID == 2){
             if(NightmareMode.bloodmare){
-                return I18n.getString("difficulty.bloodmare");
+                return I18n.getString("difficulty.bloodmare.name");
             }
-            return I18n.getString("difficulty.nightmare");
+            return I18n.getString("difficulty.nightmare.name");
         } else if (difficulty.ID == 0){
-            return I18n.getString("difficulty.baddream");
+            return I18n.getString("difficulty.baddream.name");
         }
         return difficulty.NAME;
     }
@@ -68,22 +68,28 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             if(NightmareMode.bloodmare){
                 return "";
             }
-            return I18n.getString("difficulty.nightmare.desc");
+            return I18n.getString("difficulty.nightmare.description1");
         }
-        return I18n.getString("difficulty.baddream.desc1");
+        return I18n.getString("difficulty.baddream.description1");
     }
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 11))
     private String customText1(String string){
         if (this.difficultyID == 2) {
-            return "";
+            if(NightmareMode.bloodmare){
+                return "";
+            }
+            return I18n.getString("difficulty.nightmare.description2");
         }
-        return I18n.getString("difficulty.baddream.desc2");
+        return I18n.getString("difficulty.baddream.description2");
     }
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 12))
     private String customText2(String string){
         if (this.difficultyID == 2) {
-            return "";
+            if(NightmareMode.bloodmare){
+                return "";
+            }
+            return I18n.getString("difficulty.nightmare.description3");
         }
-        return I18n.getString("difficulty.baddream.desc3");
+        return I18n.getString("difficulty.baddream.description3");
     }
 }
