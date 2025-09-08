@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.itlesports.nightmaremode.TPACommand.createMessage;
+import static com.itlesports.nightmaremode.TPACommand.createFormattedMessage;
 
 public class TeleportScheduler {
     private static final List<PendingTeleport> pendingTeleports = new ArrayList<>();
@@ -27,11 +28,13 @@ public class TeleportScheduler {
                 if (pt.playerToTeleport.worldObj == pt.targetPlayer.worldObj) {
                     pt.playerToTeleport.setPositionAndUpdate(pt.targetPlayer.posX, pt.targetPlayer.posY, pt.targetPlayer.posZ);
 
-                    pt.playerToTeleport.sendChatToPlayer(createMessage(
-                            "Teleported to " + pt.targetPlayer.getCommandSenderName() + ".", EnumChatFormatting.GREEN, false, false));
+                    pt.playerToTeleport.sendChatToPlayer(
+                            createFormattedMessage("commands.tpa.teleport_success", EnumChatFormatting.GREEN, false, false, pt.targetPlayer.getCommandSenderName())
+                    );
                 } else {
-                    pt.playerToTeleport.sendChatToPlayer(createMessage(
-                            "Teleport cancelled: player changed dimension.", EnumChatFormatting.RED, false, false));
+                    pt.playerToTeleport.sendChatToPlayer(
+                            createMessage("commands.tpa.teleport_cancelled", EnumChatFormatting.RED, false, false)
+                    );
                 }
                 iterator.remove();
             }

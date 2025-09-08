@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class GuiSleepMPMixin extends GuiChat {
     @ModifyArg(method = "initGui", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private Object increaseHeightOfSleepButton(Object e){
-        return new GuiButton(1, this.width / 2 - 100, this.height - 90, I18n.getString("multiplayer.stopSleeping"));
+        return new GuiButton(1, this.width / 2 - 100, this.height - 90, I18n.getString("player.stopSleeping"));
     }
 }

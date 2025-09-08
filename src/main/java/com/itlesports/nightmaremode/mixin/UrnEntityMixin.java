@@ -16,14 +16,14 @@ public class UrnEntityMixin {
     private static void witherSummoningRestrictions(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
         if(j < 60){
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("nightmare.wither_summon_sealevel");
-            text2.setColor(EnumChatFormatting.BLACK);
+            text2.addKey("bosses.wither_summon_sealevel");
+            text2.setColor(EnumChatFormatting.YELLOW);
             world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
             cir.setReturnValue(false);
         } else if(j > 200){
             ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addText("nightmare.wither_summon_too_high");
-            text2.setColor(EnumChatFormatting.BLACK);
+            text2.addKey("bosses.wither_summon_too_high");
+            text2.setColor(EnumChatFormatting.YELLOW);
             world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
             cir.setReturnValue(false);
         }
