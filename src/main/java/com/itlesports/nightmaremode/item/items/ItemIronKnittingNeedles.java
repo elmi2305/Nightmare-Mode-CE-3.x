@@ -16,6 +16,10 @@ public class ItemIronKnittingNeedles extends ToolItem {
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public boolean isToolTypeEfficientVsBlockType(Block var1) {
         return false;

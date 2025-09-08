@@ -11,7 +11,6 @@ public class BlockUnderworldPortal extends BlockBreakable {
         setHardness(-1.0f);
         setLightValue(0.75f);
         setTickRandomly(true);
-        setUnlocalizedName("underworld_portal");
     }
 
     @Override public boolean isOpaqueCube() { return false; }

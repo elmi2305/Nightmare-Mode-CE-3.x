@@ -14,4 +14,9 @@ public class ItemBloodSword extends SwordItem implements IBloodTool{
         this.setBuoyant();
         this.setUnlocalizedName("nmBloodSword");
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
 }

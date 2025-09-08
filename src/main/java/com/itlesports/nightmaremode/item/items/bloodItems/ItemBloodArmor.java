@@ -13,6 +13,10 @@ public class ItemBloodArmor extends ArmorItemMod implements IBloodTool{
         this.setUnlocalizedName("nmBloodArmor");
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public String getWornTexturePrefix() {
         return "bloodArmor";

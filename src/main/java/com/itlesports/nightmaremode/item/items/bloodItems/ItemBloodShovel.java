@@ -13,4 +13,9 @@ public class ItemBloodShovel extends ShovelItem implements IBloodTool{
         this.setInfernalMaxNumEnchants(4);
         this.setUnlocalizedName("nmBloodShovel");
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
 }

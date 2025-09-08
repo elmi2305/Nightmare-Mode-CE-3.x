@@ -25,7 +25,6 @@ public class BlockBloodChest extends BlockContainer {
         this.setBuoyant();
         this.initBlockBounds((double) 0.0625F, (double) 0.0F, (double) 0.0625F, (double) 0.9375F, (double) 0.875F, (double) 0.9375F);
         this.setStepSound(soundMetalFootstep);
-        this.setUnlocalizedName("nmBloodChest");
     }
     @Override
     public boolean isOpaqueCube() {
@@ -257,6 +256,6 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public void registerIcons(IconRegister par1IconRegister) {
-        this.blockIcon = par1IconRegister.registerIcon("chestBlood_particle");
+        this.blockIcon = par1IconRegister.registerIcon("nightmare_mode:chestBlood_particle");
     }
 }

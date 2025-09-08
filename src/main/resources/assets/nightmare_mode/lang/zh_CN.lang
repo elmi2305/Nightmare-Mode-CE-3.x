@@ -47,7 +47,7 @@ item.nmOysterSoup.name=苦力怕牡蛎汤
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石
 tile.nmCryingObsidian.name=泣灵岩
-tile.nmBloodBone.name=血骨方块
+tile.nmBloodBone.name=血骨块
 tile.nmBloodChest.name=血之箱子
 tile.nmSteelLocker.name=钢储物柜
 tile.nmRoad.name=道路
@@ -55,7 +55,7 @@ tile.nmAsphalt.name=沥青
 tile.nmStoneLadder.name=石质梯子
 tile.nmIronLadder.name=铁质梯子
 
-container.steelLocker=锻钢箱子
+container.steelLocker=钢储物柜
 container.inventory=物品栏
 
 entity.NightmareFireCreeper.name=火焰苦力怕

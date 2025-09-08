@@ -14,6 +14,12 @@ public class ItemFlamethrower extends Item {
         this.setBuoyant();
         this.setUnlocalizedName("nmFlamethrower");
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
+
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         world.playSoundAtEntity(player, "fire.fire", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 

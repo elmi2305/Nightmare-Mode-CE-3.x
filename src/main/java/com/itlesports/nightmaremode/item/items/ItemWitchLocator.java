@@ -18,6 +18,10 @@ public class ItemWitchLocator
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote) {

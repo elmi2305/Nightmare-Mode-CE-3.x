@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL12;
 @Environment(value= EnvType.CLIENT)
 
 public class TileEntityBloodChestRenderer extends TileEntitySpecialRenderer {
-    private static final ResourceLocation RES_TRAPPED = new ResourceLocation("textures/blocks/chestBlood.png");
-    private static final ResourceLocation RES_NORMAL = new ResourceLocation("textures/blocks/chestBlood.png");
+    private static final ResourceLocation RES_TRAPPED = new ResourceLocation("nightmare_mode:textures/blocks/chestBlood.png");
+    private static final ResourceLocation RES_NORMAL = new ResourceLocation("nightmare_mode:textures/blocks/chestBlood.png");
 
     private final ModelChest chestModel = new ModelChest();
 
