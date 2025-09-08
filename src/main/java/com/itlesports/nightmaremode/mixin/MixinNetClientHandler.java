@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
-import com.itlesports.nightmaremode.rendering.GuiSteelLocker;
+import com.itlesports.nightmaremode.rendering.GuiLocker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,7 +33,7 @@ public abstract class MixinNetClientHandler {
             fake = new InventoryBasic("SteelLocker", false, 133);
         }
 
-        GuiSteelLocker gui = new GuiSteelLocker(player.inventory, fake);
+        GuiLocker gui = new GuiLocker(player.inventory, fake);
         mc.displayGuiScreen(gui);
 
         if (player.openContainer != null) {
