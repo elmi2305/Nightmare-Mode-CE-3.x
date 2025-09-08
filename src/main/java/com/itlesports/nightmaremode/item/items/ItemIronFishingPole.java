@@ -9,6 +9,12 @@ public class ItemIronFishingPole extends ItemFishingRod {
         this.setUnlocalizedName("nmIronFishingPole");
         this.setMaxDamage(250);
     }
+
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         player.swingItem();

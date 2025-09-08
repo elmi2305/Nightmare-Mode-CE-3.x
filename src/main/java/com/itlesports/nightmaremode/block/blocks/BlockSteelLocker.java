@@ -27,7 +27,6 @@ public class BlockSteelLocker extends BlockContainer {
         setBuoyant();
         initBlockBounds(0.0625F,0,0.0625F,0.9375F,0.875F,0.9375F);
         setStepSound(soundMetalFootstep);
-        setUnlocalizedName("nmSteelLocker");
     }
 
     @Override public boolean isOpaqueCube(){ return false; }
@@ -196,7 +195,7 @@ public class BlockSteelLocker extends BlockContainer {
 
     @Override
     public void registerIcons(IconRegister reg){
-        this.blockIcon = reg.registerIcon("lockerSteel_particle");
+        this.blockIcon = reg.registerIcon("nightmare_mode:lockerSteel_particle");
     }
 
 }

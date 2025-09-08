@@ -11,6 +11,11 @@ public class ItemBandage extends ItemFood {
         this.maxStackSize = 2;
         this.setCreativeTab(CreativeTabs.tabCombat);
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     private long timeUntilUsage;
 
     @Override

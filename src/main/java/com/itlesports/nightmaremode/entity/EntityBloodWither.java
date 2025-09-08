@@ -116,10 +116,10 @@ public class EntityBloodWither extends EntityWither {
     @Override
     public void checkForScrollDrop() {}
 
-    private void sendChat(String string){
+    private void sendChatKey(String key, EnumChatFormatting color){
         ChatMessageComponent text2 = new ChatMessageComponent();
-        text2.addText("<???> " + string);
-        text2.setColor(EnumChatFormatting.RED);
+        text2.addKey(key);
+        text2.setColor(color);
         this.playerTarget.sendChatToPlayer(text2);
     }
 
@@ -129,7 +129,6 @@ public class EntityBloodWither extends EntityWither {
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0);
     }
-
 
     private boolean hasItemInInventory(EntityPlayer player, Item item) {
         List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
@@ -182,8 +181,6 @@ public class EntityBloodWither extends EntityWither {
         effectsToRemove.forEach(player::removePotionEffect);
     }
 
-
-
     private void manageWitherPassivity(boolean isTrackingEntity){
         if(this.reviveTimer > 0){
             this.reviveTimer--;
@@ -192,15 +189,9 @@ public class EntityBloodWither extends EntityWither {
                 if (this.witherPhase == 1) {
                     if(isUsingPotions(this.playerTarget)){
                         if(this.reviveTimer == 500){
-                            ChatMessageComponent msg = new ChatMessageComponent();
-                            msg.addText("nightmare.bloodwither.potion_warning");
-                            msg.setColor(EnumChatFormatting.RED);
-                            this.playerTarget.sendChatToPlayer(msg);
+                            sendChatKey("bosses.bloodwither.potion_warning", EnumChatFormatting.RED);
                         } else if(this.reviveTimer == 420){
-                            ChatMessageComponent msg = new ChatMessageComponent();
-                            msg.addText("nightmare.bloodwither.learn_fight");
-                            msg.setColor(EnumChatFormatting.RED);
-                            this.playerTarget.sendChatToPlayer(msg);
+                            sendChatKey("bosses.bloodwither.learn_fight", EnumChatFormatting.RED);
                         } else if(this.reviveTimer == 400){
                             this.destroyActivePotions(this.playerTarget);
                         }
@@ -209,15 +200,9 @@ public class EntityBloodWither extends EntityWither {
                 if(this.witherPhase == 2){
                     if (this.hasItemInInventory(this.playerTarget,Item.appleGold)) {
                         if(this.reviveTimer == 500){
-                            ChatMessageComponent msg = new ChatMessageComponent();
-                            msg.addText("nightmare.bloodwither.gapple_notice");
-                            msg.setColor(EnumChatFormatting.RED);
-                            this.playerTarget.sendChatToPlayer(msg);
+                            sendChatKey("bosses.bloodwither.gapple_notice", EnumChatFormatting.RED);
                         } else if(this.reviveTimer == 420){
-                            ChatMessageComponent msg = new ChatMessageComponent();
-                            msg.addText("nightmare.bloodwither.gapple_plan");
-                            msg.setColor(EnumChatFormatting.RED);
-                            this.playerTarget.sendChatToPlayer(msg);
+                            sendChatKey("bosses.bloodwither.gapple_plan", EnumChatFormatting.RED);
                         } else if(this.reviveTimer == 400){
                             this.ejectSpecifiedItems(this.playerTarget,Item.appleGold);
                         }

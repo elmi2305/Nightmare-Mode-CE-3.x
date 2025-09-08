@@ -25,7 +25,7 @@ public class GuiIngameMenuMixin extends GuiScreen {
     @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;", ordinal = 0))
     private String manageTextOnCannotEscapeClient(String string){
         if(!NightmareMode.getInstance().getCanLeaveGame()){
-            return I18n.getString("menu.noEscape");
+            return I18n.getString("gui.menu.noEscape");
         }
         return I18n.getString(string);
     }

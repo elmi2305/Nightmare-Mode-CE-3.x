@@ -13,4 +13,9 @@ public class ItemBloodHoe extends HoeItem implements IBloodTool{
         this.setInfernalMaxNumEnchants(4);
         this.setUnlocalizedName("nmBloodHoe");
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
 }

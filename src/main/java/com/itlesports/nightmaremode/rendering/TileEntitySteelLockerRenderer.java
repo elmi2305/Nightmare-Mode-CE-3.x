@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL12;
 @Environment(value= EnvType.CLIENT)
 
 public class TileEntitySteelLockerRenderer extends TileEntitySpecialRenderer {
-    private static final ResourceLocation RES_TRAPPED = new ResourceLocation("textures/blocks/lockerSteel.png");
-    private static final ResourceLocation RES_NORMAL = new ResourceLocation("textures/blocks/lockerSteel.png");
+    private static final ResourceLocation RES_TRAPPED = new ResourceLocation("nightmare_mode:textures/blocks/lockerSteel.png");
+    private static final ResourceLocation RES_NORMAL = new ResourceLocation("nightmare_mode:textures/blocks/lockerSteel.png");
 
     private final ModelChest chestModel = new ModelChest();
 

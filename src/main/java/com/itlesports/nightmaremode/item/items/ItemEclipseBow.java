@@ -14,6 +14,11 @@ public class ItemEclipseBow extends CompositeBowItem {
         this.setUnlocalizedName("nmEclipseBow");
         this.setTextureName("nmEclipseBow");
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public Icon getDrawIcon(int itemInUseDuration) {
         if (itemInUseDuration >= 10) {

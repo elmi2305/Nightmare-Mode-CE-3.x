@@ -11,4 +11,9 @@ public class ItemBloodOrb extends Item {
         this.setUnlocalizedName("nmBloodOrb");
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
 }

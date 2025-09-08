@@ -184,7 +184,6 @@
     "gui.GuiIngameMixin",
     "gui.GuiMainMenuMixin",
     "gui.GuiMixin",
-    "gui.GuiNewChatMixin",
     "gui.GuiOptionsMixin",
     "gui.GuiScreenMixin",
     "gui.GuiSelectWorldMixin",

@@ -17,6 +17,10 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
         this.efficiencyOnProperMaterial = 6.0f;
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         int iToolLevel = 3;

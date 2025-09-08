@@ -10,6 +10,10 @@ public class ItemMagicArrow extends ArrowItem {
         super(iItemID);
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     @Environment(value= EnvType.CLIENT)
     public boolean hasEffect(ItemStack itemStack) {

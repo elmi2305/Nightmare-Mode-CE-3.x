@@ -17,6 +17,10 @@ public class ItemBloodAxe extends AxeItem implements IBloodTool{
         this.setUnlocalizedName("nmBloodAxe");
     }
 
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
     @Override
     public float getStrVsBlock(ItemStack toolItemStack, World world, Block block, int i, int j, int k) {
         int iToolLevel = this.toolMaterial.getHarvestLevel();

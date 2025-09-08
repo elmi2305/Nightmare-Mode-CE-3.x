@@ -15,6 +15,12 @@ public class ItemAR extends Item {
         this.setUnlocalizedName("nmRifle");
     }
 
+
+    public String getModId() {
+        return "nightmare_mode";
+    }
+
+
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!NightmareMode.noHit) {
             world.playSoundAtEntity(player, "random.bow", 0.5F, 2.1F / (itemRand.nextFloat() * 0.4F + 0.8F));

@@ -1,10 +1,9 @@
 package com.itlesports.nightmaremode.rendering;
 
-import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
-public class GuiSteelLocker extends GuiContainer {
+public class GuiLocker extends GuiContainer {
 
     private static final ResourceLocation TEX = new ResourceLocation("textures/gui/steel_locker_gui.png");
 
@@ -21,7 +20,7 @@ public class GuiSteelLocker extends GuiContainer {
 
     private final IInventory inv;
 
-    public GuiSteelLocker(InventoryPlayer playerInv, IInventory inv) {
+    public GuiLocker(InventoryPlayer playerInv, IInventory inv) {
         super(new ContainerSteelLocker(playerInv, inv));
         this.inv = inv;
         this.xSize = GUI_WIDTH;

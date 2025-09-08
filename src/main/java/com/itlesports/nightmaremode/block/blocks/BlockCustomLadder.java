@@ -48,9 +48,9 @@ public class BlockCustomLadder extends LadderBlock {
     @Environment(value= EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         if (this.isStoneLadder()) {
-            this.blockIcon = register.registerIcon("nmStoneLadder");
+            this.blockIcon = register.registerIcon("nightmare_mode:nmStoneLadder");
         } else{
-            this.blockIcon = register.registerIcon("nmIronLadder");
+            this.blockIcon = register.registerIcon("nightmare_mode:nmIronLadder");
         }
     }
 
