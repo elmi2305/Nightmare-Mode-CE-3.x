@@ -5,7 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
-import com.itlesports.nightmaremode.TeleportScheduler;
+import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.network.HandshakeServer;
 import net.minecraft.server.MinecraftServer;

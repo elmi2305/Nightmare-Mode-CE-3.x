@@ -139,20 +139,13 @@ public class NMItems {
         creeperBallSoup = (NMFoodItem) new NMFoodItem(2354, 6, 1f, false, "nmOysterSoup",false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nmOysterSoup").hideFromEMI();
 
         ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nmAchievementSpecialSnowball");
-        ACHIEVEMENT_SPECIAL_LADDER_STONE = new NMItem(2401).setTextureName("nmAchievementStoneLadder");
-        ACHIEVEMENT_SPECIAL_LADDER_IRON = new NMItem(2402).setTextureName("nmAchievementIronLadder");
-        ACHIEVEMENT_SPECIAL_ROAD = new NMItem(2403).setTextureName("nmAchievementRoad");
-        ACHIEVEMENT_SPECIAL_ASPHALT = new NMItem(2404).setTextureName("nmAchievementAsphalt");
         ACHIEVEMENT_SPECIAL_HARDMODE = new NMItem(2405).setTextureName("nmAchievementHardmode");
         ACHIEVEMENT_SPECIAL_BLOODMOON = new NMItem(2406).setTextureName("nmAchievementBloodMoon");
-        ACHIEVEMENT_SPECIAL_BLOODCHEST = new NMItem(2407).setTextureName("nmAchievementBloodChest");
-        ACHIEVEMENT_SPECIAL_LOCKER = new NMItem(2408).setTextureName("nmAchievementSteelLocker");
         ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER = new NMItem(2409).setTextureName("nmAchievementBloodMoonWither");
         ACHIEVEMENT_SPECIAL_ECLIPSE = new NMItem(2410).setTextureName("nmAchievementEclipse");
         ACHIEVEMENT_SPECIAL_MERCHANT = new NMItem(2411).setTextureName("nmAchievementMerchant");
         ACHIEVEMENT_SPECIAL_CHICKEN = new NMItem(2412).setTextureName("nmAchievementChicken");
         ACHIEVEMENT_SPECIAL_DIAMOND = new NMItem(2413).setTextureName("nmAchievementDiamond");
-        ACHIEVEMENT_SPECIAL_BLOOD_BONE = new NMItem(2414).setTextureName("nmAchievementBloodBone");
         ACHIEVEMENT_SPECIAL_SKULL = new NMItem(2415).setTextureName("nmAchievementBloodSkull");
         ACHIEVEMENT_SPECIAL_ARROW_TRIPLE = new NMItem(2416).setTextureName("nmAchievementTripleArrow");
         ACHIEVEMENT_SPECIAL_ARROW_RED = new NMItem(2417).setTextureName("nmAchievementArrowRed");

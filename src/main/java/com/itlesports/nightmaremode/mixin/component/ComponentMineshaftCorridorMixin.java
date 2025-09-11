@@ -12,10 +12,10 @@ import java.util.Random;
 
 @Mixin(ComponentMineshaftCorridor.class)
 public class ComponentMineshaftCorridorMixin {
-    @Redirect(method = "addComponentParts", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemEnchantedBook;func_92114_b(Ljava/util/Random;)Lnet/minecraft/src/WeightedRandomChestContent;"))
-    private WeightedRandomChestContent increaseManuscriptChance(ItemEnchantedBook instance, Random par1Random){
-        return instance.func_92112_a(par1Random,1,1,5);
-    }
+//    @Redirect(method = "addComponentParts", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemEnchantedBook;func_92114_b(Ljava/util/Random;)Lnet/minecraft/src/WeightedRandomChestContent;"))
+//    private WeightedRandomChestContent increaseManuscriptChance(ItemEnchantedBook instance, Random par1Random){
+//        return instance.func_92112_a(par1Random,1,1,5);
+//    }
 
     @Inject(method = "filterChestMinecartContents", at = @At("TAIL"))
     private void injectArrowsIntoMinecart(EntityMinecartChest minecart, CallbackInfo ci) {

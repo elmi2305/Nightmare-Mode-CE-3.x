@@ -54,6 +54,7 @@ tile.nmRoad.name=道路
 tile.nmAsphalt.name=沥青
 tile.nmStoneLadder.name=石质梯子
 tile.nmIronLadder.name=铁质梯子
+tile.nmHellforgeBlock.name=地狱熔炉
 
 container.steelLocker=钢储物柜
 container.inventory=物品栏
@@ -115,15 +116,15 @@ gui.selectworld.warning_config_crash=新配置已加载，建议重启游戏，�
 gui.selectworld.warning_continue=确定要继续吗?
 gui.selectworld.warning_final=这是最后的警告
 
-gui.difficulty.baddream.name=噩梦模式
-gui.difficulty.nightmare.name=梦魇模式
-gui.difficulty.bloodmare.name=血之梦魇
-gui.difficulty.baddream.description1=更轻松的体验。让
-gui.difficulty.baddream.description2=噩梦模式的许多方面
-gui.difficulty.baddream.description3=变得更简单。
-gui.difficulty.nightmare.description1=终极挑战。
-gui.difficulty.nightmare.description2=
-gui.difficulty.nightmare.description3=
+difficulty.baddream.name=噩梦模式
+difficulty.nightmare.name=梦魇模式
+difficulty.bloodmare.name=血之梦魇
+difficulty.baddream.description1=更轻松的体验。让
+difficulty.baddream.description2=噩梦模式的许多方面
+difficulty.baddream.description3=变得更简单。
+difficulty.nightmare.description1=终极挑战。
+difficulty.nightmare.description2=
+difficulty.nightmare.description3=
 
 gui.mainmenu.splash1=噩梦模式！
 gui.mainmenu.splash2=也试试怪物增强附属！
@@ -387,7 +388,7 @@ achievement.nm.bloodSword=血流成河！
 achievement.nm.bloodSword.desc=打造血剑，杀气腾腾
 
 achievement.nm.bloodPickaxe=矿场收割机
-achievement.nm.bloodPickaxe.desc=搞出血镐，挖矿不费劲
+achievement.nm.bloodPickaxe.desc=制作血之镐，可以开采地狱岩
 
 achievement.nm.bloodShovel=挖坟达人
 achievement.nm.bloodShovel.desc=血铲到手，挖坑不累
@@ -478,9 +479,6 @@ achievement.nm.steelMattock.desc=造个鹤嘴锄，随时开挖
 
 achievement.nm.steelBattleAxe=兄弟们冲啊！
 achievement.nm.steelBattleAxe.desc=战斧在手，激情开团
-
-achievement.nm.equipSteelArmor=铁甲无敌
-achievement.nm.equipSteelArmor.desc=穿一身钢甲，谁敢惹你
 
 achievement.nm.pride=傲视深渊
 achievement.nm.pride.desc=深渊想收拾你，你摆出高傲姿态
@@ -586,3 +584,18 @@ achievement.nm.eclipseBow.desc=打造日蚀弓，太阳都怕你
 
 achievement.nm.rifleRpg=爆炸大片
 achievement.nm.rifleRpg.desc=用爆炸方式解决问题，爽快到底
+
+achievement.nm.brimstone=硫磺的秘密
+achievement.nm.brimstone.desc=用灵魂沙漏斗将荧石过滤成硫磺
+
+achievement.nm.gunpowder=现在我们开始炼制了
+achievement.nm.gunpowder.desc=在炼药锅中制造火药
+
+achievement.nm.tnt=我已成为死亡
+achievement.nm.tnt.desc=合成TNT
+
+achievement.nm.groundNetherrack=粉碎的地狱
+achievement.nm.groundNetherrack.desc=用TNT炸毁地狱岩以获得粉碎的地狱岩
+
+achievement.nm.craftHellforge=无尽之焰
+achievement.nm.craftHellforge.desc=合成地狱熔炉，这是砖炉的升级版

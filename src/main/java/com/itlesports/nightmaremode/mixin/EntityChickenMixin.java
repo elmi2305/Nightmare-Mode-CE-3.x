@@ -106,7 +106,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
         }
 
         if(this.ticksExisted % 120 != 0) return;
-        int originalHealth = 4;
+        int originalHealth = 4 + NMUtils.getWorldProgress() * 2;
         double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 4 : 1;
         if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
@@ -143,6 +143,6 @@ public abstract class EntityChickenMixin extends EntityAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(4.0d * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((4.0d + NMUtils.getWorldProgress() * 2) * NMUtils.getNiteMultiplier());
     }
 }

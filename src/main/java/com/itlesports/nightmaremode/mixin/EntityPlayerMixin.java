@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
+import btw.achievement.AchievementTab;
 import btw.achievement.event.AchievementEventDispatcher;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
@@ -14,6 +15,7 @@ import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
+import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
@@ -49,6 +52,88 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
+    }
+//    @Inject(method = "<init>", at = @At("TAIL"))
+//    private void aaaa(World par1World, String par2Str, CallbackInfo ci){
+//        runQualityAssurance();
+//        System.out.println("DOne");
+//    }
+
+    @Unique private static void runQualityAssurance(){
+        AchievementTab tab;
+        tab = TAB_GETTING_STARTED;
+        for (int i = 0; i < tab.achievementList.size(); i++) {
+            for (Object ac : tab.achievementList) {
+                for (Object par : ((Achievement) ac).parentAchievements) {
+                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
+                        System.out.println(
+                                "removeParent("
+                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
+                                        + I18n.getString(((Achievement<?>) par).name) + ");"
+                        );
+                    }
+                }
+            }
+        }
+
+
+        tab = TAB_IRON_AGE;
+        for (int i = 0; i < tab.achievementList.size(); i++) {
+            for (Object ac : tab.achievementList) {
+                for (Object par : ((Achievement) ac).parentAchievements) {
+                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
+                        System.out.println(
+                                "removeParent("
+                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
+                                        + I18n.getString(((Achievement<?>) par).name) + ");"
+                        );
+                    }
+                }
+            }
+        }
+
+        tab = TAB_AUTOMATION;
+        for (int i = 0; i < tab.achievementList.size(); i++) {
+            for (Object ac : tab.achievementList) {
+                for (Object par : ((Achievement) ac).parentAchievements) {
+                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
+                        System.out.println(
+                                "removeParent("
+                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
+                                        + I18n.getString(((Achievement<?>) par).name) + ");"
+                        );
+                    }
+                }
+            }
+        }
+        tab = TAB_END_GAME;
+        for (int i = 0; i < tab.achievementList.size(); i++) {
+            for (Object ac : tab.achievementList) {
+                for (Object par : ((Achievement) ac).parentAchievements) {
+                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
+                        System.out.println(
+                                "removeParent("
+                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
+                                        + I18n.getString(((Achievement<?>) par).name) + ");"
+                        );
+                    }
+                }
+            }
+        }
+        tab = TAB_EXTRAS;
+        for (int i = 0; i < tab.achievementList.size(); i++) {
+            for (Object ac : tab.achievementList) {
+                for (Object par : ((Achievement) ac).parentAchievements) {
+                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
+                        System.out.println(
+                                "removeParent("
+                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
+                                        + I18n.getString(((Achievement<?>) par).name) + ");"
+                        );
+                    }
+                }
+            }
+        }
     }
 
     // can't jump if you have slowness
@@ -572,6 +657,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         return constant;
     }
+
+
+//    @Inject(method = "canHarvestBlock", at = @At("HEAD"),cancellable = true)
+//    private void hardCodeSpecificBlocksToBeMinableBySpecificTools(Block block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
+//        ItemStack held = this.getHeldItem();
+//        if (held != null && held.getItem() instanceof ItemBloodPickaxe && block == Block.netherrack) {
+//            cir.setReturnValue(true);
+//        }
+//    }
 
     @Unique private boolean isPlayerHoldingWindmill(EntityPlayer player) {
         ItemStack currentItemStack = player.inventory.mainInventory[player.inventory.currentItem];

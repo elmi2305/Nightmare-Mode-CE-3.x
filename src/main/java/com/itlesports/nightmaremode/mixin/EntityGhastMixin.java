@@ -32,6 +32,14 @@ public abstract class EntityGhastMixin extends EntityFlying{
         // 20 -> 28 -> 36 -> 44
     }
 
+    @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = 1))
+    private int increaseExplosionSize(int constant){
+        if(NMUtils.getIsBloodMoon()){
+            return constant + 2;
+        }
+        return constant + 1;
+    }
+
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
     private double increaseHordeAttackRange(double par2){
         return (NightmareMode.hordeMode || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;

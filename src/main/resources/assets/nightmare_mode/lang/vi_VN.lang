@@ -1,0 +1,581 @@
+entity.NightmareFireCreeper.name=Creeper lửa
+entity.NightmareLightningCreeper.name=Creeper sét
+entity.NightmareShadowZombie.name=Zombie bóng tối
+entity.NightmareVillager.name=Thương nhân ác mộng
+entity.NightmareGolem.name=Thuộc hạ của Wither
+entity.NightmareBloodWither.name=???
+entity.NightmareFireSpider.name=Nhện lửa
+entity.NightmareStoneZombie.name=Zombie đá
+entity.NightmareMetalCreeper.name=Creeper kim loại
+entity.NightmareSupercriticalCreeper.name=Creeper siêu cấp
+entity.NightmareBlackWidowSpider.name=Nhện góa phụ đen
+entity.NightmareRadioactiveEnderman.name=Enderman phóng xạ
+entity.NightmareDungCreeper.name=Creeper phân
+entity.NightmareBloodZombie.name=Zombie máu
+entity.NightmareFauxVillager.name=Thương nhân lang thang
+entity.NightmareImposterZombie.name=Thương nhân lang thang
+entity.NightmareDrownedSkeleton.name=Bộ xương nước
+entity.NightmareMeltedSkeleton.name=Bộ xương lửa
+item.nmRPG.name=Rocket Launcher
+item.nmRifle.name=Súng trường tấn công
+item.nmBandage.name=Băng gạc
+item.nmNeedles.name=Kim đan sắt
+item.nmItemWitchLocator.name=Bột chế thuốc
+item.nmBloodOrb.name=Huyết đan
+item.nmBloodIngot.name=Huyết thỏi
+item.nmBloodSword.name=Huyết kiếm
+item.nmBloodShovel.name=Xẻng huyết
+item.nmBloodPickaxe.name=Cúp huyết
+item.nmBloodAxe.name=Rìu huyết
+item.nmBloodHoe.name=Cuốc huyết
+item.nmBloodHelmet.name=Huyết miện
+item.nmBloodChestplate.name=Huyết y
+item.nmBloodLeggings.name=Huyết khố
+item.nmBloodBoots.name=Huyết hài
+item.nmDarksunFragment.name=Mảnh nhật thực
+item.nmCalamari.name=Mực
+item.nmCalamariRoast.name=Mực nướng
+item.nmFriedCalamari.name=Mực chiên
+item.nmIronFishingPole.name=Cần câu sắt
+item.nmMagicFeather.name=Lông vũ ma thuật
+item.nmBloodMilk.name=Sữa máu
+item.nmCreeperChop.name=Thịt Creeper
+item.nmCharredFlesh.name=Thịt Ender
+item.nmSpiderFangs.name=Răng nhện
+item.nmHellFireRod.name=Que lửa địa ngục
+item.nmWaterRod.name=Que nước
+item.nmSulfur.name=Lưu huỳnh
+item.nmCreeperTear.name=Nước mắt Creeper
+item.nmSilverLump.name=Cục bạc
+item.nmWitheredBone.name=Xương khô
+item.nmDecayedFlesh.name=Thịt thối rữa
+item.nmGhastTentacle.name=Xúc tu Ghast
+item.nmElementalRod.name=Gậy nguyên tố
+item.nmShadowRod.name=Gậy bóng tối
+item.nmStarOfTheBloodGod.name=Ngôi sao của Huyết Chúa
+item.nmGreg.name=greg
+item.nmSteelBunch.name=Bó thép
+item.nmEclipseBow.name=Cung Nhật thực
+item.nmMagicArrow.name=Mũi tên ma thuật
+item.nmVoidSack.name=Túi hư không
+item.nmVoidMembrane.name=Màng hư không
+item.nmDungApple.name=Táo phân
+item.nmOysterSoup.name=Súp hàu Creeper
+tile.nmSteelOre.name=Quặng thép
+tile.nmSpecialObsidian.name=Đá đấu trường
+tile.nmCryingObsidian.name=Đá đấu trường đang khóc
+tile.nmBloodBone.name=Khối huyết xương
+tile.nmBloodChest.name=Huyết rương
+tile.nmSteelLocker.name=Tủ thép
+container.steelLocker=Tủ thép
+container.inventory=Túi đồ
+tile.nmRoad.name=Khối đường đi
+tile.nmAsphalt.name=Khối nhựa đường
+tile.nmStoneLadder.name=Thang đá
+tile.nmIronLadder.name=Thang sắt
+tile.nmHellforgeBlock.name=Lò Rèn Địa Ngục
+key.nightmaremode.zoomhold=Giữ để phóng to
+key.nightmaremode.zoomtoggle=Chuyển đổi mode phóng to
+emi.trade.NightmareVillager=Thương nhân Ác Mộng
+commands.tpa.usage=/tpa <tên người dùng>
+difficulty.bloodmare.name=Ác mộng Đỏ
+difficulty.nightmare.name=Ác mộng
+difficulty.baddream.name=Điềm xấu
+difficulty.nightmare.description1=Thử thách tối thượng. Độ khó khuyến nghị.
+difficulty.baddream.description1=Chỉ trẻ con mới chơi độ khó này.
+difficulty.baddream.description2=Giảm bớt độ khó nói chung
+difficulty.baddream.description3=so với chế độ Ác mộng.
+deathScreen.nextAttempt=Thế giới tiếp theo
+gui.gameover.tip_prefix=Mẹo:
+gui.gameover.tip1=Tránh xa đại dương!
+gui.gameover.tip2=Mực sẽ trở nên thù địch vĩnh viễn ở Hard Mode.
+gui.gameover.tip3=Mực là đồ ăn tốt nhất mod Ác Mộng.
+gui.gameover.tip4=Đấm quái vật xuống vách đá để có easy kill!
+gui.gameover.tip5=Bạn có thể vừa chạy vừa đấm để đẩy lùi quái vật mạnh hơn.
+gui.gameover.tip6=Bóng tuyết rất hữu ích khi đi săn.
+gui.gameover.tip7=Rương thưởng cho bạn một kiếm đá. Đôi khi đó là tất cả những gì bạn cần.
+gui.gameover.tip8=Quái vật cầm dụng cụ sắt có tầm đánh xa hơn bạn.
+gui.gameover.tip9=Creeper sẽ phát nổ luôn nếu bị cháy! Cẩn thận phản ứng dây chuyền!
+gui.gameover.tip10=Lò gạch đang cháy sẽ đốt các khối dễ cháy phía trước.
+gui.gameover.tip11=Hiệu ứng chậm sẽ ngăn bạn nhảy, chạy và trèo thang.
+gui.gameover.tip12=Quái vật sẽ trở nên mạnh hơn khi bạn thăng tiến. Đừng xem thường chúng!
+gui.gameover.tip13=Núi và các điểm cao là nơi trú ẩn tuyệt vời.
+gui.gameover.tip14=Cây rừng rậm có thể leo lên để trú ẩn nhanh vào đêm đầu.
+gui.gameover.tip15=Quái vật sẽ không xuất hiện trong 90 giây đầu... hãy tận dụng thời gian!
+gui.gameover.tip16=Bạn có thể đỡ xúc tu mực bằng cách đỡ bằng kiếm!
+gui.gameover.tip17=Cúp sắt và kim cương có thể cho thêm sắt và vàng.
+gui.gameover.tip18=Đừng dùng dụng cụ làm vũ khí - sẽ tốn gấp đôi độ bền!
+gui.gameover.tip19=Lửa trại đang cháy có thể đốt các lửa trại hoặc lò gạch bên cạnh! Sử dụng thanh đói một cách khôn ngoan!
+gui.gameover.tip20=Bực mình? Hãy la hét với nhà phát triển trên Discord của mod Ác Mộng. Link ở github.
+gui.gameover.tip21=Biến thể của các quái vật rất nguy hiểm! Tránh đánh chúng nếu chưa biết chúng làm gì.
+gui.gameover.tip22=Tận dụng vụ nổ Creeper để lấy đất và đá dễ dàng!
+gui.gameover.tip23=Câu cá vào đêm trăng tròn là nguồn thực phẩm tuyệt vời.
+gui.gameover.tip24=Luôn mang theo đuốc nếu bị mắc kẹt trong bóng tối!
+gui.gameover.tip25=Mang nhiều block khi đi hang. Block có thể chặn đường nguy hiểm.
+gui.gameover.tip26=Suy nghĩ kỹ trước khi mặc giáp sắt! Giáp càng nặng, bạn đói càng nhanh.
+gui.gameover.tip27=Đôi khi tốt nhất là quay về nhà. Đừng mạo hiểm khi không cần thiết!
+gui.gameover.tip28=Hồ nước nông là nơi xây căn cứ tuyệt vời! Quái vật không xuất hiện dưới nước, nếu có thì cũng bị làm chậm đủ để bạn có thể chạy thoát.
+gui.gameover.tip29=Có thể lấy lò nướng ngay ngày đầu nếu phơi đất sét đủ nhanh! Rất nguy hiểm nhưng cũng rất đáng thử!
+gui.gameover.tip30=Lửa trại trên cột cao 2 block sẽ không đốt sàn bên dưới.
+gui.gameover.tip31=Đi hang tìm kim cương tốt hơn đào thẳng.
+gui.gameover.tip32=Chế tạo băng gạc bằng len và chỉ. Băng gạc có thể cứu mạng bạn!
+gui.gameover.lategame1=Hãy nghỉ ngơi hợp lý và trở lại mạnh mẽ hơn vào lần chơi sau.
+gui.gameover.lategame2=Bạn đã đi xa hơn đa số người chơi. Hãy tự hào về điều đó.
+gui.gameover.lategame3=Sự thăng tiến không bao giờ là lãng phí. Mỗi lần chết đều dạy bạn điều gì đó.
+gui.gameover.lategame4=Bạn đã đi rất xa. Bạn còn có thể tiến xa hơn nữa.
+gui.gameover.lategame5=Đừng để một lần chết quyết định hành trình của bạn.
+gui.gameover.lategame6=Mỗi lần chết, bạn sẽ trở lại mạnh mẽ hơn.
+gui.gameover.lategame7=Bạn sẽ nhớ điều gì bạn đã làm sai, và đó là cách bạn sống sót lần sau.
+gui.gameover.lategame8=Đừng bỏ cuộc.
+gui.gameover.lategame9=Bạn sẽ ổn thôi, chỉ cần nghỉ ngơi một chút.
+gui.menu.noEscape=Không lối thoát
+gui.mainmenu.splash1=Chế độ Ác Mộng!
+gui.mainmenu.splash2=Thử MEA đi!
+gui.mainmenu.splash3=Thử cả Hostile nữa!
+gui.mainmenu.splash4=Mình đang mơ à?
+gui.mainmenu.splash5=Dậy đi nào!
+gui.mainmenu.splash6=Creeper vị cam?!
+gui.mainmenu.splash7=Hay hơn MEA?
+gui.mainmenu.splash8=Chỉ là một giấc mơ tồi tệ thôi!
+gui.mainmenu.splash9=Không phải sinh vật dưới nước chứ!
+gui.mainmenu.splash10=NGƯỜI ĐÂU! ĐI THEO TA!
+gui.mainmenu.splash11=Tỉnh dậy đi!
+gui.mainmenu.splash12=Bấm 1 nếu bạn đồng ý!
+gui.mainmenu.splash13=Đã cập nhật Trăng Máu!
+gui.mainmenu.splash14=Game là dễ nếu bạn giỏi!
+gui.mainmenu.splash15=Ôm cưa đi bạn ey!
+gui.mainmenu.splash16=Thử chế độ Bloodmare đi!
+gui.mainmenu.splash17=Rìu không phải vũ khí!
+gui.mainmenu.splash18=Buff mực nữa đi!
+gui.mainmenu.splash19=Creeper bánh quy kìa!
+gui.mainmenu.splash20=MEA khó hơn!
+gui.mainmenu.splash21=Một vị thần không bao giờ sợ chết!
+gui.mainmenu.splash22=THAM LAM!
+gui.mainmenu.splash23=Mặt trời đâu rồi?
+gui.mainmenu.splash24=Đã cập nhật Nhật thực!
+gui.mainmenu.skibidiplayer=Skibidiplayer
+gui.mainmenu.rizzfriends=Hãy rizz bạn bè của bạn
+gui.options.difficulty.nightmare=Độ khó: Ác Mộng
+gui.options.difficulty.baddream=Độ khó: Điềm xấu
+gui.options.difficulty.bloodmare=Độ khó: Ác Mộng Đỏ
+gui.selectworld.buff_squids=Buff mực
+gui.selectworld.toggle_cancer_worldgen=Bật/tắt sinh thế Cancer
+gui.selectworld.nm_config=Cấu hình mod Ác Mộng
+gui.selectworld.squid_buffed_times=Bạn đã buff mực {0} lần{1}.
+gui.selectworld.squid_strength=Hệ số sức mạnh mực: {0}x
+gui.selectworld.warning_title=Cảnh báo:
+gui.selectworld.warning_recommend_restart=Chúng tôi khuyến nghị bạn khởi động lại trò chơi
+gui.selectworld.warning_config_crash=Đã tải cấu hình mới, có thể làm hỏng trò chơi hoặc thế giới của bạn
+gui.selectworld.warning_continue=Bạn có thực sự chắc chắn muốn tiếp tục không?
+gui.selectworld.warning_final=Đây là cảnh báo cuối cùng
+player.stopSleeping=Dừng ngủ
+gui.config.go_back=Quay lại
+gui.config.switch_pages=Chuyển trang
+gui.config.more_variants=Nhiều biến thể quái vật hơn
+gui.config.tooltip.more_variants=Thêm nhiều biến thể quái mới cho NM
+gui.config.evolved_mobs=Hỗn thế
+gui.config.tooltip.evolved_mobs=Mọi biến thể quái vật đều có thể xuất hiện, bất kể tiến trình thế giới
+gui.config.buffed_squids=Mực được buff
+gui.config.tooltip.buffed_squids=Mực có chỉ số gấp đôi và có thể đuổi theo người chơi trên cạn
+gui.config.nite=NITE
+gui.config.tooltip.nite=Chế độ Ác Mộng quá dễ. Bắt đầu với 3 tim và 3 đùi gà. Nhận lại khi lên cấp. Quái vật mạnh dần theo thời gian. Thức ăn sống an toàn. Giảm tiêu tốn thanh đói và giảm phạt di chuyển. Lấy cảm hứng từ MITE
+gui.config.dark_stormy_night=Đêm giông tố
+gui.config.tooltip.dark_stormy_night=Thế giới luôn có giông bão, giảm ánh sáng và tăng tỉ lệ sinh quái. Sấm nhỏ hơn
+gui.config.no_skybases=Cấm xây căn cứ trên trời
+gui.config.tooltip.no_skybases=Gỗ và ván gỗ có trọng lực
+gui.config.cancer_mode=Chế độ Cancer
+gui.config.tooltip.cancer_mode=Phá hủy thuật toán sinh thế giới, phá renderer, thêm hiệu ứng ngớ ngẩn và đèn nháy. Trải nghiệm Cá tháng Tư thực sự
+gui.config.horde_mode=Chế độ bầy đàn
+gui.config.tooltip.horde_mode=Mọi quái vật đều biết vị trí của bạn. Chúng sẽ đuổi theo bạn từ bất cứ đâu. Trước giờ chúng chỉ nương tay thôi
+gui.config.total_eclipse=Nhật thực toàn phần
+gui.config.tooltip.total_eclipse=Mỗi ngày đều là nhật thực
+gui.config.bloodmare=Bloodmare
+gui.config.tooltip.bloodmare=Mọi đêm đều là Trăng Máu
+gui.config.magic_monsters=Quái vật phép thuật
+gui.config.tooltip.magic_monsters=Mọi quái vật đều bị thay bằng phù thủy
+gui.config.unkillable_mobs=Quái vật bất tử
+gui.config.tooltip.unkillable_mobs=Quái vật không thể bị sát thương cận chiến
+gui.config.no_hit=NoHit
+gui.config.tooltip.no_hit=Một hit là nằm
+gui.config.birthday_bash=Sinh nhật vui vẻ
+gui.config.date_timer=Đồng hồ ngày tháng
+gui.config.tooltip.date_timer=Hiển thị chu kỳ ngày/đêm và số ngày đã chơi trên HUD
+gui.config.real_timer=Đồng hồ thời gian thực
+gui.config.tooltip.real_timer=Hiển thị thời gian chơi trong game
+gui.config.bloodmoon_colors=Màu Trăng Máu
+gui.config.tooltip.bloodmoon_colors=Quyết định màn hình có nhuộm đỏ khi Trăng Máu không. Nên tắt nếu bạn là nhà sáng tạo nội dung
+gui.config.crimson=Crimson
+gui.config.tooltip.crimson=Mọi thứ đều đỏ máu! (Chỉ là hiệu ứng hình ảnh)
+gui.config.config_on_hud=Hiển thị cấu hình trên HUD
+gui.config.tooltip.config_on_hud=Hiển thị các chế độ cấu hình đang hoạt động trên HUD
+gui.config.potion_particles=Hiệu ứng hạt từ thuốc
+gui.config.tooltip.potion_particles=Hiệu ứng hạt từ thuốc có hiện hay không
+gui.config.fishing_alerts=Thông báo câu cá
+gui.config.tooltip.fishing_alerts=Thông báo khi câu được vật phẩm hiếm
+gui.config.cm_rendering=Hiệu ứng CM
+gui.config.tooltip.cm_rendering=Bật/tắt hiệu ứng méo hình của bản Cá tháng Tư. Khuyên dùng cho streamer hoặc người nhạy cảm với ánh sáng
+gui.config.perfect_start=Khởi đầu hoàn hảo
+gui.config.tooltip.perfect_start=Bạn chán phải reset đêm đầu? Tùy chọn này cho bạn bắt đầu từ ngày 2 với lò gạch và rìu. Tuy nhiên chỉ có 6 đùi gà
+gui.config.extra_armor=Thêm giáp
+gui.config.tooltip.extra_armor=Bắt đầu với bộ giáp rẻ
+gui.config.full_bright=Siêu sáng
+gui.config.tooltip.full_bright=Render thế giới ở độ sáng tối đa. Lưu ý: Bóng đen Gloom vẫn xuất hiện.
+gui.warning.line1=bro
+gui.warning.line2=Bạn sắp vào một thế giới có bật chế độ Cancer.
+gui.warning.line3=Nếu đây không phải bản backup hoặc thế giới nháp, hãy quay lại ngay
+gui.warning.line4=bởi vì nó CHẮC CHẮN sẽ bị phá hủy!
+gui.warning.line5=Bạn có chắc chắn muốn làm điều này không? Đây là cảnh báo duy nhất!
+gui.warning.iknow=Tôi biết mình đang làm gì
+gui.warning.goback=Quay lại
+commands.tpa.not_enough_xp=Bạn không đủ XP để dùng lệnh này.
+commands.tpa.cannot_self=Bạn không thể gửi yêu cầu TPA cho chính mình.
+commands.tpa.different_dimension=Không thể gửi yêu cầu TPA. Cả hai người phải ở cùng chiều không gian.
+commands.tpa.sent=Yêu cầu TPA đã gửi tới {target}.
+commands.tpa.request_message={sender} muốn dịch chuyển tới bạn. Gõ /tpa accept để đồng ý.
+commands.tpa.no_request_to_accept=Không có yêu cầu TPA hợp lệ để chấp nhận.
+commands.tpa.sender_offline=Người gửi yêu cầu đã offline.
+commands.tpa.accepted=Đã chấp nhận yêu cầu TPA từ {sender}. Dịch chuyển sau 10 giây...
+commands.tpa.accepted_sender={target} đã chấp nhận yêu cầu dịch chuyển của bạn! Dịch chuyển sau 10 giây...
+commands.tpa.no_request_to_deny=Không có yêu cầu TPA hợp lệ để từ chối.
+commands.tpa.denied_sender={target} đã từ chối yêu cầu dịch chuyển của bạn.
+commands.tpa.denied=Đã từ chối yêu cầu TPA.
+bosses.bloodwither.potion_warning=Phải dùng thuốc mới thắng được ta à? Thật thảm hại.
+bosses.bloodwither.learn_fight=Không biết đánh nhau cho đàng hoàng à?
+bosses.bloodwither.gapple_notice=Ta thấy ngươi mang theo táo vàng...
+bosses.bloodwither.gapple_plan=Ngươi không định dùng chúng chứ?
+world.portal_warning=Còn 3 ngày nữa.
+world.hardmodeBegin=Hard Mode đã bắt đầu.
+bosses.dragons.journeyEnd=Hành trình của ngươi kết thúc tại đây.
+deathScreen.deathTauntMessage1=<???> Thật thảm hại.
+deathScreen.deathTauntMessage2=<???> Đang đùa đấy hả?
+deathScreen.deathTauntMessage3=<???> Đã thử đừng chết chưa?
+deathScreen.deathTauntMessage4=<???> Vấn đề kỹ năng.
+deathScreen.deathTauntMessage5=<???> Lại chết nữa à?
+deathScreen.deathTauntMessage6=<???> Hay lắm.
+deathScreen.deathTauntMessage7=<???> Dễ v** l**.
+deathScreen.deathTauntMessage8=<???> Trình là trình ai chấm?
+deathScreen.deathTauntMessage9=<???> Cố quá thành quá cố đấy.
+deathScreen.deathTauntMessage10=<???> Ngươi không sinh ra để sống lâu.
+deathScreen.deathTauntMessage11=<???> Ngươi nghĩ mình đặc biệt à? Chẳng ai nhớ đến ngươi đâu.
+deathScreen.deathTauntMessage12=<???> Tiềm năng lớn đấy... mà lại phí cho kẻ bất tài.
+deathScreen.deathTauntMessage13=<???> Ánh sáng của ngươi tắt dần, nhưng ta vẫn tồn tại mãi mãi.
+deathScreen.deathTauntMessage14=<???> Tệ hại quá. Thử lại đi.
+deathScreen.deathTauntMessage15=<???> Đó là tất cả những gì ngươi làm được sao?
+deathScreen.deathTauntMessage16=<???> Ngươi chẳng đáng làm vật hiến tế.
+deathScreen.deathTauntMessage17=<???> Hay là ngươi quay lại chơi chế độ cho trẻ mẫu giáo nhỉ?
+deathScreen.deathTauntMessage18=<???> Lại thất bại nữa. Hahaha...
+deathScreen.deathTauntMessage19=<???> Ngươi định gây ấn tượng với ta à?
+bosses.wither_summon_sealevel=Wither phải được triệu hồi trên mực nước biển.
+bosses.wither_summon_too_high=Không thể triệu hồi Wither ở độ cao này. Tọa độ Y phải dưới 200.
+bosses.wither_revive_message=Một vị thần thì không bao giờ sợ chết.
+
+achievementtab.nightmaremode=Chế độ Ác Mộng
+
+achievement.nm.morningSecondDay=Và thế là trò chơi bắt đầu...
+achievement.nm.morningSecondDay.desc=Sống sót qua đêm đầu tiên
+
+achievement.nm.sludge=Sludge!
+achievement.nm.sludge.desc=Chế tạo lò nướng
+
+achievement.nm.hitBurningSkeleton=Thật là không cần thiết
+achievement.nm.hitBurningSkeleton.desc=Bị bắn bởi mũi tên lửa của bộ xương
+
+achievement.nm.killRunningAnimal=Sao mày lại chạy?
+achievement.nm.killRunningAnimal.desc=Giết động vật đang chạy bằng gậy
+
+achievement.btw.craft_hamper=Chúng ta có chuột Hampster ở nhà!
+achievement.btw.craft_hamper.desc=Chế tạo giỏ vải mía lớn
+
+achievement.nm.ironNeedles=Tốc độ bàn thờ    
+achievement.nm.ironNeedles.desc=Chế tạo kim đan sắt!
+
+achievement.nm.bandage=Tôi cần hồi máu
+achievement.nm.bandage.desc=Chế tạo băng gạc
+
+achievement.nm.skyBase=Cao thật là cao
+achievement.nm.skyBase.desc=Xây căn cứ trên trời cách mặt đất ít nhất 8 block
+
+achievement.nm.eatRawFood=Mukbang Gacha
+achievement.nm.eatRawFood.desc=Ăn đồ sống mà không bị ngộ độc
+
+achievement.nm.snowballMob=Mariah Carey đang đến!  
+achievement.nm.snowballMob.desc=Ném bóng tuyết vào động vật hoặc quái vật
+
+achievement.nm.snowballMobKill=Trèo cao ngã đau
+achievement.nm.snowballMobKill.desc=Giết động vật hoặc quái vật bằng sát thương rơi với bóng tuyết
+
+achievement.nm.calamariCook=Sự trả thù ngọt ngào
+achievement.nm.calamariCook.desc=Nướng mực trên lửa trại hoặc lò gạch
+
+achievement.nm.calamariGet=Mực được làm từ mực 
+achievement.nm.calamariGet.desc=Giết mực để lấy mực ăn
+
+achievement.nm.bloodZombieKill=Quái đỏ chứng tỏ quái to
+achievement.nm.bloodZombieKill.desc=Giết Zombie máu
+
+achievement.nm.witherSkeletonKillOverworld=Chuyến đi này đen như than Quảng Ninh...
+achievement.nm.witherSkeletonKillOverworld.desc=Giết bộ xương Wither ở tầng sâu thứ 3
+
+achievement.nm.breakLavaPillow=Bất ngờ ở tâm Trái Đất
+achievement.nm.breakLavaPillow.desc=Đào phải gối dung nham ở tầng sâu thứ 3
+
+achievement.nm.craftPlanter=Nông nghiệp gần thế sao?
+achievement.nm.craftPlanter.desc=Chế tạo chậu cây với 7 viên gạch
+
+achievement.nm.calamariFried=Buffet hải sản
+achievement.nm.calamariFried.desc=Chế biến mực chiên - món ăn ngon nhất
+
+achievement.nm.greed=Tham Lam!
+achievement.nm.greed.desc=Tiếng thì thầm của vực sâu, và bạn đã nghe theo
+
+achievement.btw.find_creeper_oysters=Trang sức gia đình
+achievement.btw.find_creeper_oysters.desc=Giết Creeper để lấy lõi Creeper
+
+achievement.nm.ironSword=Chiến binh
+achievement.nm.ironSword.desc=Nhận kiếm sắt
+
+achievement.nm.ironZombie=Những gì của ngươi là của ta
+achievement.nm.ironZombie.desc=Giết quái vật mang đồ sắt
+
+achievement.nm.ladderWood=Phải leo lên thôi
+achievement.nm.ladderWood.desc=Chế tạo thang
+
+achievement.nm.roadStandard=Giờ cao điểm
+achievement.nm.roadStandard.desc=Chế tạo đường đi bằng đá cuội và sỏi
+
+achievement.nm.ladderStone=Lên cao thật là nhanh!
+achievement.nm.ladderStone.desc=Chế tạo thang đá
+
+achievement.nm.ladderIron=Nhanh như tên bắn
+achievement.nm.ladderIron.desc=Chế tạo thang sắt
+
+achievement.nm.hardmode=Phần dễ chỉ vậy thôi sao?
+achievement.nm.hardmode.desc=Kích hoạt Hard Mode
+
+achievement.nm.bloodOrb=Giọt máu ngoại lai
+achievement.nm.bloodOrb.desc=Nhận huyết cầu
+
+achievement.nm.bloodMoon=Kẻ chinh phục Trăng Máu
+achievement.nm.bloodMoon.desc=Sống sót qua Trăng Máu đầu tiên
+
+achievement.nm.bloodIngot=Rèn từ máu
+achievement.nm.bloodIngot.desc=Chế tạo huyết thỏi
+
+achievement.nm.bloodSword=Sẽ có máu đổ!
+achievement.nm.bloodSword.desc=Chế tạo huyết kiếm
+
+achievement.nm.bloodPickaxe=Thợ mỏ mạch khoáng
+achievement.nm.bloodPickaxe.desc=Chế tạo Cúp Máu, cho phép bạn khai thác Đá Địa Ngục
+
+achievement.nm.bloodShovel=Kẻ đào mộ
+achievement.nm.bloodShovel.desc=Chế tạo huyết xẻng
+
+achievement.nm.bloodAxe=Đồ tể kiêu ngạo
+achievement.nm.bloodAxe.desc=Chế tạo huyết rìu
+
+achievement.nm.bloodHoe=Sứ giả cây gai dầu
+achievement.nm.bloodHoe.desc=Chế tạo huyết cuốc
+
+achievement.nm.shadowJumpScare=Hù!
+achievement.nm.shadowJumpScare.desc=Bị Zombie bóng tối hù dọa
+
+achievement.nm.killTerrence=Ayo Terrence
+achievement.nm.killTerrence.desc=Tìm và giết Terrence
+
+achievement.nm.netherSleep=Giấc mơ nóng bỏng
+achievement.nm.netherSleep.desc=Ngủ trong Nether
+
+achievement.btw.redneck_fishing=Đánh bắt tận diệt
+achievement.btw.redneck_fishing.desc=Ném thuốc nổ xuống hồ để bắt cá
+
+achievement.nm.equipBloodArmor=Khoác lên mình... xác chết?
+achievement.nm.equipBloodArmor.desc=Trang bị đủ bộ huyết giáp
+
+achievement.nm.bloodChest=Huyết rương
+achievement.nm.bloodChest.desc=Chế tạo huyết rương
+
+achievement.nm.wanderingTraderKill=Có một kẻ phản bội trong số chúng ta
+achievement.nm.wanderingTraderKill.desc=Giết "Thương nhân Lang thang"
+
+achievement.nm.mineSteelOre=Hơn cả kim cương
+achievement.nm.mineSteelOre.desc=Khai thác quặng thép sau khi đánh bại Wither
+
+achievement.nm.bloodMoonWither=Một vị thần thì không sợ chết
+achievement.nm.bloodMoonWither.desc=Sống sót qua Trăng Máu sau Wither
+
+achievement.nm.corpseEye=Mắt hoang tàn
+achievement.nm.corpseEye.desc=Chế tạo mắt xác chết
+
+achievement.nm.roadAsphalt=Đường cao tốc
+achievement.nm.roadAsphalt.desc=Chế tạo nhựa đường
+
+achievement.nm.steelLocker=Hơn cả rương để đồ
+achievement.nm.steelLocker.desc=Chế tạo Két Sắt, hộp cất đồ tối thượng
+
+
+achievement.nm.wrath=Cơn thịnh nộ
+achievement.nm.wrath.desc=Những tiếng nói gào thét ra máu, và bạn đã tuân theo
+
+achievement.nm.envy=Ghen tỵ
+achievement.nm.envy.desc=Bạn thèm muốn những gì thuộc về họ, và bạn đã chiếm lấy
+
+achievement.nm.sloth=Lười biếng
+achievement.nm.sloth.desc=Thế giới tiếp tục, và bạn chẳng làm gì cả
+
+achievement.nm.fabric=Tốt hơn cả Lò rèn
+achievement.nm.fabric.desc=Chế tạo Vải
+
+achievement.nm.bed=Đêm nhân
+achievement.nm.bed.desc=Chế tạo một Chiếc Giường
+
+achievement.nm.gluttony=Tham ăn
+achievement.nm.gluttony.desc=Hư không kêu gào cần thêm, và bạn đã cho nó ăn
+
+achievement.nm.lust=Dục vọng
+achievement.nm.lust.desc=Khao khát nuốt chửng bạn, và bạn đã ôm lấy nó
+
+achievement.nm.steelSword=Lưỡi kiếm Vĩnh cửu
+achievement.nm.steelSword.desc=Chế tạo một Kiếm linh hồn
+
+achievement.nm.steelIngot=Tốt hơn kim cương
+achievement.nm.steelIngot.desc=Chế tạo một thép linh hồn
+
+achievement.nm.steelPickaxe=Kẻ Phá Đá Nền
+achievement.nm.steelPickaxe.desc=Chế tạo một Cúp linh hồn
+
+achievement.nm.steelShovel=Tro và Bụi
+achievement.nm.steelShovel.desc=Chế tạo một Xẻng linh hồn
+
+achievement.nm.steelAxe=Lưỡi cắt linh hồn
+achievement.nm.steelAxe.desc=Chế tạo một Rìu linh hồn
+
+achievement.nm.steelHoe=Người Gặt Linh hồn
+achievement.nm.steelHoe.desc=Chế tạo một Cuốc linh hồn
+
+achievement.nm.steelMattock=Máy Khai thác Cầm tay
+achievement.nm.steelMattock.desc=Chế tạo một Cái Xà beng
+
+achievement.nm.steelBattleAxe=NGƯỜI ĐÂU! THEO TA!
+achievement.nm.steelBattleAxe.desc=Chế tạo một Rìu Chiến
+
+achievement.nm.pride=Kiêu hãnh
+achievement.nm.pride.desc=Hố sâu đe dọa kết thúc bạn, và bạn đã thách thức chúng
+
+achievement.nm.eclipse=Kẻ chinh phục Nhật thực
+achievement.nm.eclipse.desc=Sống sót qua Nhật thực đầu tiên của bạn
+
+achievement.nm.eclipseShard=Mảnh Mặt Trời Đen
+achievement.nm.eclipseShard.desc=Nhận một Mảnh Nhật thực bằng cách tiêu diệt Quái vật trong lúc Nhật thực
+
+achievement.nm.beaconGold=Vinh quang lấp lánh
+achievement.nm.beaconGold.desc=Xây dựng một tháp đèn hiệu Vàng cấp 4
+
+achievement.nm.beaconHellfire=Đèn lồng Địa ngục
+achievement.nm.beaconHellfire.desc=Xây dựng một tháp đèn hiệu Lửa Địa ngục cấp 4
+
+achievement.nm.beaconDiamond=Vương miện lấp lánh
+achievement.nm.beaconDiamond.desc=Xây dựng một tháp đèn hiệu Kim cương cấp 4
+
+achievement.nm.beaconDung=Cục Phân Vĩ đại
+achievement.nm.beaconDung.desc=Xây dựng một tháp đèn hiệu Khối Phân cấp 4
+
+achievement.nm.beaconEmerald=Kho báu!
+achievement.nm.beaconEmerald.desc=Xây dựng một tháp đèn hiệu Ngọc lục bảo cấp 4
+
+achievement.nm.beaconGlass=Thấu kính cuối cùng
+achievement.nm.beaconGlass.desc=Xây dựng một tháp đèn hiệu Thủy tinh cấp 4
+
+achievement.nm.beaconGlowstone=Sự u ám vĩnh hằng
+achievement.nm.beaconGlowstone.desc=Xây dựng một tháp đèn hiệu Đá phát sáng cấp 4
+
+achievement.nm.beaconLapis=Con mắt toàn tri
+achievement.nm.beaconLapis.desc=Xây dựng một tháp đèn hiệu Lapis cấp 4
+
+achievement.nm.beaconIron=Ngôi sao Bắc đẩu
+achievement.nm.beaconIron.desc=Xây dựng một tháp đèn hiệu Sắt cấp 4
+
+achievement.nm.beaconEnderBlock=Vận chuyển liên chiều
+achievement.nm.beaconEnderBlock.desc=Xây dựng một tháp đèn hiệu khối Ender cấp 4
+
+
+achievement.nm.beaconAll=Phổ sáng đầy đủ
+achievement.nm.beaconAll.desc=Xây dựng một tháp đèn hiệu cấp 4 cho mọi loại
+
+achievement.nm.magicArrow=Đạn Tăng cường
+achievement.nm.magicArrow.desc=Chế tạo một Mũi Tên Ma thuật
+
+achievement.nm.nightmareMerchant=Biến đổi Thủ thư
+achievement.nm.nightmareMerchant.desc=Làm cho Thương nhân Thủ thư của bạn biến đổi dưới ảnh hưởng của Nhật thực
+
+achievement.nm.killEclipseAnimal=Thảm sát dưới Mặt Trời Đen
+achievement.nm.killEclipseAnimal.desc=Giết một Động vật trong lúc Nhật thực
+
+achievement.nm.magicFeather=Ôi... Mượt quá...
+achievement.nm.magicFeather.desc=Chế tạo một Mũi Tên Ma thuật bằng cách giết một Con Gà trong lúc Nhật thực
+
+achievement.nm.rideEclipseChicken=Tôi biết bay!
+achievement.nm.rideEclipseChicken.desc=Cưỡi một Con Gà Nhật thực và bay lên!
+
+achievement.nm.eclipseCowKick=Úi, đau quá
+achievement.nm.eclipseCowKick.desc=Bị đá bởi một Con Bò Nhật thực
+
+achievement.nm.eclipseCowMilk=Máu hay Sữa?
+achievement.nm.eclipseCowMilk.desc=Vắt sữa một Con Bò Nhật thực để lấy Huyết sữa. Thật kinh tởm
+
+achievement.nm.nightmareMerchantLevel2=Chợ Đen
+achievement.nm.nightmareMerchantLevel2.desc=Làm hài lòng Thương nhân Ác mộng
+
+achievement.nm.nightmareMerchantLevel3=Nghi lễ Đen
+achievement.nm.nightmareMerchantLevel3.desc=Làm hài lòng Thương nhân Ác mộng
+
+achievement.nm.nightmareMerchantLevel4=Một Sự hy sinh xứng đáng
+achievement.nm.nightmareMerchantLevel4.desc=Làm hài lòng Thương nhân Ác mộng
+
+achievement.nm.nightmareMerchantLevel5=Cơn thịnh nộ của Thần Máu
+achievement.nm.nightmareMerchantLevel5.desc=...
+
+achievement.nm.eclipseShadowZombie=Trông quen quá...
+achievement.nm.eclipseShadowZombie.desc=Đánh bại một Zombie bóng tối Nhật thực
+
+achievement.nm.eclipseSquid=Ác Mộng cổ xưa
+achievement.nm.eclipseSquid.desc=Đánh bại một Mực Nhật thực
+
+achievement.nm.eclipseGhast=Thiên thần trên trời
+achievement.nm.eclipseGhast.desc=Đánh bại một Ghast Nhật thực
+
+achievement.nm.eclipseEnderman=Sự trả thù của Rồng
+achievement.nm.eclipseEnderman.desc=Đánh bại một Enderman Nhật thực
+
+achievement.nm.eclipseWitch=Ác quỷ hóa thân
+achievement.nm.eclipseWitch.desc=Đánh bại một Phù thủy Nhật thực. Chúc may mắn!
+
+achievement.nm.killBloodWither=Ta mới là vua
+achievement.nm.killBloodWither.desc=Đánh bại ???
+
+achievement.nm.arrowDamage=Bắn trúng đầu!
+achievement.nm.arrowDamage.desc=Gây hơn 50 sát thương với một Mũi Tên Ma thuật
+
+achievement.nm.arrowPierce=Ngạnh cung
+achievement.nm.arrowPierce.desc=Xuyên qua 5 hoặc nhiều kẻ thù hơn với một Mũi Tên Ma thuật
+
+achievement.nm.eclipseBow=Luyện bằng mặt trời
+achievement.nm.eclipseBow.desc=Chế tạo một Cung Nhật thực
+
+achievement.nm.rifleRpg=Tuyệt đối Điện ảnh
+achievement.nm.rifleRpg.desc=Giải quyết vấn đề theo cách đúng đắn
+
+achievement.nm.brimstone=Bí Mật Lưu Huỳnh
+achievement.nm.brimstone.desc=Lọc Đá Phát Sáng thành Lưu Hoàng bằng Phễu Cát Linh Hồn
+
+achievement.nm.gunpowder=Giờ Chúng Ta Đang Nấu Nướng
+achievement.nm.gunpowder.desc=Tạo Thuốc Súng trong Vạc
+
+achievement.nm.tnt=Ta Đã Trở Thành Cái Chết
+achievement.nm.tnt.desc=Chế tạo Thuốc Nổ TNT
+
+achievement.nm.groundNetherrack=Địa Ngục Bị Nghiền Nát
+achievement.nm.groundNetherrack.desc=Phá nổ Đá Địa Ngục bằng TNT để thu được Đá Địa Ngục Nghiền
+
+achievement.nm.craftHellforge=Ngọn Lửa Vĩnh Hằng
+achievement.nm.craftHellforge.desc=Chế tạo Lò Rèn Địa Ngục, một bản nâng cấp của Lò Gạch
+

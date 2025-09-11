@@ -25,9 +25,13 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         int iToolLevel = 3;
         int iBlockToolLevel = block.getHarvestToolLevel(world, i, j, k);
+        if(block == Block.netherrack){
+            return true;
+        }
         if (iBlockToolLevel > iToolLevel) {
             return false;
         }
+
         if (block == Block.obsidian) {
             return this.toolMaterial.getHarvestLevel() >= 3;
         }
@@ -37,12 +41,16 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
         if (block == Block.blockIron || block == Block.blockLapis) {
             return this.toolMaterial.getHarvestLevel() >= 1;
         }
+
         return block.blockMaterial == Material.rock || block.blockMaterial == Material.iron || block.blockMaterial == Material.anvil || block.blockMaterial == BTWBlocks.netherRockMaterial;
     }
 
     public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         int iToolLevel = 3;
         int iBlockToolLevel = block.getEfficientToolLevel(world, i, j, k);
+        if(block == Block.netherrack){
+            return this.efficiencyOnProperMaterial * 1.5f;
+        }
         if (iBlockToolLevel > iToolLevel) {
             return 1f;
         }

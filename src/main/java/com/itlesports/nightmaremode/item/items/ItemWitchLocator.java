@@ -14,6 +14,7 @@ public class ItemWitchLocator
         super(iItemID);
         this.setBellowsBlowDistance(1);
         this.setFilterableProperties(8);
+        this.setItemRightClickCooldown(120L);
         this.setUnlocalizedName("nmItemWitchLocator");
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }

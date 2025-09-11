@@ -174,7 +174,12 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private Item randomFishingLoot(Item item){
         if(this.fishItem != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
             int worldProgress = this.angler.worldObj != null ? NMUtils.getWorldProgress() : 0;
-            double rarity = getRarity(this.fishItem, this.cap, worldProgress);
+            int iMoonPhase = this.worldObj.getMoonPhase();
+            int phaseMultiplier = 1;
+            if (iMoonPhase == 0) {
+                phaseMultiplier = 2;
+            }
+            double rarity = getRarity(this.fishItem, this.cap / phaseMultiplier, worldProgress);
             String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(textToDisplay);
@@ -203,7 +208,12 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private Item getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
         this.cap = 800;
-        double capModifier = this.isIron ? 1 : (5 - this.getWorldProgressBonus());
+        int iMoonPhase = this.worldObj.getMoonPhase();
+        int phaseMultiplier = 1;
+        if (iMoonPhase == 0) {
+            phaseMultiplier = 2;
+        }
+        double capModifier = (double) (this.isIron ? 1 : (5 - this.getWorldProgressBonus())) / phaseMultiplier;
         int j = this.rand.nextInt((int) (this.cap * capModifier));
         Item itemToDrop;
         if (worldProgress == 0) {

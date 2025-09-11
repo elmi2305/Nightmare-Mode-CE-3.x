@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.achievements;
 
 import btw.achievement.AchievementHandler;
 import btw.achievement.AchievementProvider;
+import btw.achievement.BTWAchievements;
 import btw.achievement.event.BTWAchievementEvents;
 import btw.block.BTWBlocks;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
@@ -44,6 +45,16 @@ public class NMAchievements {
                     .parents(MORNING_SECOND_DAY)
                     .build()
                     .setSecret()
+                    .registerAchievement(TAB_GETTING_STARTED);
+
+    public static final Achievement<ItemStack> CRAFT_BASKET_NM =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(btwLoc("craft_basket"))
+                    .icon(BTWBlocks.wickerBasket)
+                    .displayLocation(1, -5)
+                    .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.customWickerBasket.blockID)
+                    .parents(CRAFT_WICKER)
+                    .build()
                     .registerAchievement(TAB_GETTING_STARTED);
 
     public static final Achievement<DamageSource> HIT_BURNING_SKELETON =
@@ -214,7 +225,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_ROAD =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("roadStandard"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_ROAD)
+                    .icon(NMBlocks.blockRoad)
                     .displayLocation(16, 1)
                     .triggerCondition(data -> data.itemID == NMBlocks.blockRoad.blockID)
                     .parents(CRAFT_STONE_PICKAXE)
@@ -223,7 +234,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_STONE_LADDER =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("ladderStone"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_LADDER_STONE)
+                    .icon(NMBlocks.stoneLadder)
                     .displayLocation(16, 2)
                     .triggerCondition(data -> data.itemID == NMBlocks.stoneLadder.blockID)
                     .parents(CRAFT_STONE_PICKAXE)
@@ -275,7 +286,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_IRON_LADDER =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("ladderIron"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_LADDER_IRON)
+                    .icon(NMBlocks.ironLadder)
                     .displayLocation(1, 3)
                     .triggerCondition(data -> data.itemID == NMBlocks.ironLadder.blockID)
                     .parents(IRON_AGE)
@@ -285,7 +296,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
                     .name(loc("hardmode"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_HARDMODE)
-                    .displayLocation(10, 6)
+                    .displayLocation(10, 7)
                     .triggerCondition(p -> WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || NMUtils.getWorldProgress() > 0)
                     .parents(ENTER_NETHER)
                     .build()
@@ -295,7 +306,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.BloodMoonEvent.class)
                     .name(loc("bloodMoon"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODMOON)
-                    .displayLocation(11, 5)
+                    .displayLocation(11, 6)
                     .triggerCondition(started -> !started)
                     .parents(HARDMODE)
                     .build()
@@ -304,7 +315,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodOrb"))
                     .icon(NMItems.bloodOrb)
-                    .displayLocation(13, 5)
+                    .displayLocation(13, 6)
                     .triggerCondition(item -> item.itemID == NMItems.bloodOrb.itemID)
                     .parents(FIRST_BLOODMOON)
                     .build()
@@ -313,7 +324,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodIngot"))
                     .icon(NMItems.bloodIngot)
-                    .displayLocation(15, 5)
+                    .displayLocation(15, 6)
                     .triggerCondition(item -> item.itemID == NMItems.bloodIngot.itemID)
                     .parents(BLOOD_ORB)
                     .build()
@@ -322,7 +333,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodSword"))
                     .icon(NMItems.bloodSword)
-                    .displayLocation(13, 6)
+                    .displayLocation(13, 7)
                     .triggerCondition(item -> item.itemID == NMItems.bloodSword.itemID)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -331,7 +342,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodPickaxe"))
                     .icon(NMItems.bloodPickaxe)
-                    .displayLocation(14, 6)
+                    .displayLocation(14, 7)
                     .triggerCondition(item -> item.itemID == NMItems.bloodPickaxe.itemID)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -340,7 +351,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodAxe"))
                     .icon(NMItems.bloodAxe)
-                    .displayLocation(15, 6)
+                    .displayLocation(15, 7)
                     .triggerCondition(item -> item.itemID == NMItems.bloodAxe.itemID)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -349,7 +360,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodShovel"))
                     .icon(NMItems.bloodShovel)
-                    .displayLocation(16, 6)
+                    .displayLocation(16, 7)
                     .triggerCondition(item -> item.itemID == NMItems.bloodShovel.itemID)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -358,7 +369,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodHoe"))
                     .icon(NMItems.bloodHoe)
-                    .displayLocation(17, 6)
+                    .displayLocation(17, 7)
                     .triggerCondition(item -> item.itemID == NMItems.bloodHoe.itemID)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -367,7 +378,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.DamageSourcePlayerEvent.class)
                     .name(loc("shadowJumpScare"))
                     .icon(Item.enderPearl)
-                    .displayLocation(11, 6)
+                    .displayLocation(11, 7)
                     .triggerCondition(src -> src.src().getSourceOfDamage() instanceof EntityShadowZombie z && !canSeeEnemy(src.player(), z))
                     .parents(HARDMODE)
                     .build()
@@ -376,7 +387,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> BLOOD_CHEST =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("bloodChest"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODCHEST)
+                    .icon(NMBlocks.bloodChest)
                     .displayLocation(11, -1)
                     .triggerCondition(item -> item.itemID == NMBlocks.bloodChest.blockID)
                     .parents(CRAFT_CHEST)
@@ -386,7 +397,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
                     .name(loc("killTerrence"))
                     .icon(BTWItems.creeperOysters)
-                    .displayLocation(9, 6)
+                    .displayLocation(9, 7)
                     .triggerCondition(data -> data.killedEntity() instanceof EntityCreeper c && Objects.equals(c.getCustomNameTag(), "Terrence"))
                     .parents(HARDMODE)
                     .build()
@@ -396,7 +407,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
                     .name(loc("netherSleep"))
                     .icon(Item.bed)
-                    .displayLocation(9, 5)
+                    .displayLocation(9, 6)
                     .triggerCondition(p -> p.isPlayerSleeping() && p.dimension == -1)
                     .parents(ENTER_NETHER)
                     .build()
@@ -405,7 +416,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
                     .name(loc("equipBloodArmor"))
                     .icon(NMItems.bloodChestplate)
-                    .displayLocation(15, 7)
+                    .displayLocation(15, 8)
                     .triggerCondition(NMUtils::isWearingFullBloodArmor)
                     .parents(BLOOD_INGOT)
                     .build()
@@ -449,6 +460,56 @@ public class NMAchievements {
                     .setSpecial()
                     .registerAchievement(TAB_IRON_AGE);
 
+    public static final Achievement<ItemStack> FILTER_BRIMSTONE =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("brimstone"))
+                    .icon(BTWItems.brimstone)
+                    .displayLocation(11, 5)
+                    .triggerCondition(itemStack -> itemStack.itemID == BTWItems.brimstone.itemID)
+                    .parents(ENTER_NETHER)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+    public static final Achievement<ItemStack> CRAFT_GUNPOWDER =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("gunpowder"))
+                    .icon(Item.gunpowder)
+                    .displayLocation(12, 5)
+                    .triggerCondition(itemStack -> itemStack.itemID == Item.gunpowder.itemID)
+                    .parents(FILTER_BRIMSTONE)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+    public static final Achievement<ItemStack> CRAFT_TNT =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("tnt"))
+                    .icon(Block.tnt)
+                    .displayLocation(13, 5)
+                    .triggerCondition(itemStack -> itemStack.itemID == Block.tnt.blockID)
+                    .parents(CRAFT_GUNPOWDER)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+    public static final Achievement<ItemStack> GET_GROUND_NETHERRACK =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("groundNetherrack"))
+                    .icon(BTWItems.groundNetherrack)
+                    .displayLocation(14, 5)
+                    .triggerCondition(itemStack -> itemStack.itemID == BTWItems.groundNetherrack.itemID)
+                    .parents(CRAFT_TNT)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+
+    public static final Achievement<ItemStack> CRAFT_HELLFORGE =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("craftHellforge"))
+                    .icon(NMBlocks.hellforge)
+                    .displayLocation(13, 2)
+                    .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.hellforge.blockID)
+                    .parents(CRAFT_NETHER_COAL)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+
+
+
+
 
 
 
@@ -487,7 +548,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_ASPHALT =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("roadAsphalt"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_ASPHALT)
+                    .icon(NMBlocks.blockAsphalt)
                     .displayLocation(1, 3)
                     .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.blockAsphalt.blockID)
                     .parents(CRAFT_SOUL_URN)
@@ -496,7 +557,7 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_STEEL_LOCKER =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("steelLocker"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_LOCKER)
+                    .icon(NMBlocks.steelLocker)
                     .displayLocation(11, -2)
                     .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.steelLocker.blockID)
                     .parents(MINE_STEEL)
@@ -593,16 +654,6 @@ public class NMAchievements {
                     .triggerCondition(itemStack -> itemStack.itemID == BTWItems.steelHoe.itemID)
                     .parents(CRAFT_STEEL_INGOT)
                     .build()
-                    .registerAchievement(TAB_AUTOMATION);
-    public static final Achievement<EntityPlayer> WEAR_STEEL_ARMOR =
-            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
-                    .name(loc("equipSteelArmor"))
-                    .icon(BTWItems.plateBreastplate)
-                    .displayLocation(15, -4)
-                    .triggerCondition(NMAchievements::isWearingFullSteelArmor)
-                    .parents(CRAFT_STEEL_INGOT)
-                    .build()
-                    .setSpecial()
                     .registerAchievement(TAB_AUTOMATION);
     public static final Achievement<BTWAchievementEvents.None> LUST =
             AchievementProvider.getBuilder(NMAchievementEvents.LustEvent.class)
@@ -809,7 +860,7 @@ public class NMAchievements {
     public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_3 =
             AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel3"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOOD_BONE)
+                    .icon(NMBlocks.bloodBones)
                     .displayLocation(7, -2)
                     .triggerCondition(data -> data.entity() instanceof NightmareVillager nmv && nmv.getCurrentTradeLevel() >= 3)
                     .parents(NIGHTMARE_MERCHANT_LEVEL_2, ECLIPSE_WITCH)
@@ -1029,6 +1080,10 @@ public class NMAchievements {
         return new ResourceLocation("nm", name);
     }
 
+    private static ResourceLocation btwLoc(String name) {
+        return new ResourceLocation("btw", name);
+    }
+
 
     // HELPER METHODS
     private static boolean getPlayerOnSkybase(EntityPlayer player) {
@@ -1071,12 +1126,12 @@ public class NMAchievements {
         int day = 24000;
 
         // case 1: early greed
-        if(t < (day * 3) && p.posY < 50){
+        if(t < (day * 5) && p.posY < 50){
             return true;
         }
 
         // case 2: middle game greed
-        return t < (24000 * 7) && p.posY < 24;
+        return t < (24000 * 9) && p.posY < 24;
     }
 
     private static final Set<Integer> IRON_ITEM_IDS = new HashSet<Integer>(Arrays.asList(

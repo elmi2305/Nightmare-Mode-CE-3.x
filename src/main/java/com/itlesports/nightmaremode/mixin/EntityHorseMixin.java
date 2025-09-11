@@ -19,7 +19,7 @@ public abstract class EntityHorseMixin extends KickingAnimal {
 
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 20.0d))
     private double increaseHP(double constant){
-        return 24.0 * NMUtils.getNiteMultiplier();
+        return (24.0 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier();
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){

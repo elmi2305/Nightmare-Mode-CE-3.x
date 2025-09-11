@@ -1,23 +1,34 @@
 package com.itlesports.nightmaremode;
 
+import btw.achievement.AchievementTab;
 import btw.block.BTWBlocks;
+import btw.crafting.manager.CauldronCraftingManager;
 import btw.crafting.manager.CrucibleStokedCraftingManager;
+import btw.crafting.manager.MillStoneCraftingManager;
 import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
 import btw.entity.mob.villager.trade.TradeItem;
 import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
 import btw.item.tag.TagOrStack;
 import btw.util.color.Color;
+import com.itlesports.nightmaremode.achievements.AchievementExt;
+import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.AchievementAccessor;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 
 
 import java.util.HashMap;
 
-public class NMInitializer {
+import static btw.achievement.BTWAchievements.*;
+import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
+
+public abstract class NMInitializer implements AchievementExt {
 
     public static void initNightmareRecipes(){
         addCraftingRecipes();
@@ -29,6 +40,157 @@ public class NMInitializer {
         addSoulforgeRecipes();
         addPistonPackingRecipes();
     }
+
+    public static void manipulateAchievements(){
+        addParent(FIND_SHAFT, NMAchievements.MORNING_SECOND_DAY);
+        addParent(FIND_REEDS, NMAchievements.MORNING_SECOND_DAY);
+        addParent(FIND_BONES, NMAchievements.MORNING_SECOND_DAY);
+
+        addParent(COOK_FOOD, NMAchievements.KILL_ANIMAL);
+
+
+        setHidden(CRAFT_HAMPER,true);
+
+        kill(EQUIP_WOOL_ARMOR);
+
+        move(FIND_REEDS,-1,0);
+        move(CRAFT_BASKET,-2,0);
+        move(CRAFT_KNITTING_NEEDLES,-1,0);
+        move(CRAFT_WOOL_KNIT,-1,0);
+        move(MINE_DIAMOND_ORE, 0, 1);
+
+        // wicker stuff for snap 6
+        move(FIND_REEDS, 0, -12);
+        move(CRAFT_WICKER, -1, -12);
+        move(CRAFT_BASKET, -1, -12);
+
+        removeParent(CRAFT_BASKET,GRIND_HEMP_FIBERS);
+        move(CRAFT_BEDROLL, 0, -1);
+
+        // the hemp purge
+
+        switchTab(GRIND_HEMP_FIBERS, TAB_IRON_AGE);
+        switchTab(HARVEST_HEMP, TAB_IRON_AGE);
+        switchTab(CRAFT_MILLSTONE, TAB_IRON_AGE);
+        switchTab(CRAFT_HAND_CRANK, TAB_IRON_AGE);
+        switchTab(FIND_HEMP_SEEDS, TAB_IRON_AGE);
+        switchTab(CRAFT_GEAR, TAB_IRON_AGE);
+        removeParent(CRAFT_GEAR, FIND_LOGS);
+        removeParent(FIND_HEMP_SEEDS, CRAFT_STONE_HOE);
+        kill(CRAFT_STONE_HOE);
+
+        // move everything that was moved down back up
+        move(CRAFT_STONE_SHOVEL, -2, 0);
+        move(CRAFT_WET_BRICKS, -2, 0);
+        move(DRY_BRICKS, -2, 0);
+        move(CRAFT_OVEN, -2, 0);
+        move(SMELT_IRON, -2, 0);
+        move(CRAFT_IRON_CHISEL, -2, 0);
+        move(MAKE_WORK_STUMP, -2, 0);
+        move(FIND_STONE_BRICK, -2, 0);
+        move(CRAFT_STONE_PICKAXE, -2, 0);
+        move(CRAFT_IRON_INGOT, -2, 0);
+        move(MINE_DIAMOND_ORE, -2, 0);
+        move(MINE_REDSTONE_ORE, -2, 0);
+        move(CRAFT_COMPASS, -2, 0);
+        move(CRAFT_BOW_DRILL, 4, 0);
+        // done moving up
+
+
+
+        move(CRAFT_KNITTING_NEEDLES, 3, -2);
+        move(CRAFT_WOOL_KNIT, 3, -2);
+
+        move(CRAFT_KNITTING_NEEDLES, -1, 2);
+        move(CRAFT_WOOL_KNIT, -1, 2);
+        move(CRAFT_BEDROLL, 2, 1);
+        kill(CRAFT_BARK_BOX);
+
+        // 2ND TAB - TAB_IRON_AGE
+        move(CRAFT_CAULDRON, 0, -2);
+
+        // hemp arc
+
+        move(FIND_HEMP_SEEDS, 0, -6);
+        addParent(FIND_HEMP_SEEDS, CRAFT_IRON_HOE);
+        move(HARVEST_HEMP, 2, -7);
+        move(CRAFT_GEAR, -2, -5);
+        addParent(CRAFT_GEAR, CRAFT_PLANKS);
+        move(CRAFT_MILLSTONE, -1, -6);
+        move(CRAFT_HAND_CRANK, -3, -6);
+        move(GRIND_HEMP_FIBERS, 2, -6);
+
+        removeParent(CRAFT_SAIL, CRAFT_PLANKS);
+        addParent(CRAFT_SAIL, CRAFT_FABRIC);
+        destroyParents(CRAFT_BASKET);
+        kill(CRAFT_BASKET);
+        // hemp arc over
+
+        move(USE_EMERALD_PILE, -3, -2);
+
+        move(LOCATE_FORTRESS_WITH_PILE, 0, -2);
+            // shift everything 1 block to the right
+        move(FIND_BLAZE_ROD, 0, 2);
+        move(CRAFT_HIBACHI, 0, 1);
+        move(STOKE_FIRE, 0, 1);
+        move(SPIN_POTTERY, 0, 1);
+        move(CRAFT_CRUCIBLE, 0, 1);
+        move(CRAFT_WATER_WHEEL, 0, 1);
+        move(CRAFT_DYNAMITE, 0, 1);
+        move(REDNECK_FISHING, 0, 1);
+        move(MAKE_HELLFIRE_DUST, 0, 2);
+        move(CRAFT_NETHER_COAL, -1, 1);
+        addParent(MAKE_HELLFIRE_DUST, GET_GROUND_NETHERRACK);
+
+        kill(EXPLODED_WITH_BLASTING_OIL);
+
+
+
+
+        // 3RD TAB - TAB_AUTOMATION
+        kill(TOSS_THE_MILK);
+        move(CONVERT_SOULFORGE, 0, -2);
+        addParent(CONVERT_EYES_OF_ENDER, NMAchievements.CRAFT_CORPSE_EYE);
+        move(FIND_DORMANT_SOULFORGE, 0, -2);
+
+        // 4TH TAB - TAB_END_GAME
+        removeParent(EQUIP_STEEL_ARMOR, CRAFT_STEEL);
+        removeParent(CRAFT_STEEL_COMBO_TOOL, CRAFT_STEEL);
+        removeParent(CRAFT_INFERNAL_ENCHANTER, CRAFT_STEEL);
+        removeParent(USE_INFERNAL_ENCHANTER, CRAFT_INFERNAL_ENCHANTER);
+        removeParent(MAX_INFERNAL_ENCHANT, USE_INFERNAL_ENCHANTER);
+        removeParent(MAX_STEEL_BEACON, CRAFT_STEEL);
+        removeParent(STEEL_BEACON_RESPAWN_ACROSS_DIMENSIONS, MAX_STEEL_BEACON);
+        removeParent(CRAFT_STEEL, KILLED_DRAGON);
+        kill(CRAFT_STEEL_COMBO_TOOL);
+        kill(CRAFT_STEEL);
+
+        // moving steel armor quest to automation
+        switchTab(EQUIP_STEEL_ARMOR, TAB_AUTOMATION);
+        move(EQUIP_STEEL_ARMOR, -2 ,12);
+        addParent(EQUIP_STEEL_ARMOR, CRAFT_STEEL_INGOT);
+        // done, back to endgame
+        removeParent(GET_BOOTSIES, MAX_STEEL_BEACON);
+        kill(GET_BOOTSIES);
+
+
+        kill(CRAFT_INFERNAL_ENCHANTER);
+
+        kill(USE_INFERNAL_ENCHANTER);
+        kill(MAX_INFERNAL_ENCHANT);
+        kill(STEEL_BEACON_RESPAWN_ACROSS_DIMENSIONS);
+
+        move(MAX_STEEL_BEACON, 4, 6);
+
+        setIcon(MAX_STEEL_BEACON, BTWBlocks.soulforgedSteelBlock);
+    }
+
+    private static void switchTab(Achievement acObj, AchievementTab tab){
+        acObj.tab.achievementList.remove(acObj);
+        acObj.tab = tab;
+        tab.achievementList.add(acObj);
+    }
+
     public static void initNightmareTrades(){
         addFarmerTrades();
         addButcherTrades();
@@ -43,12 +205,20 @@ public class NMInitializer {
         BTWItems.plateLeggings.setMaxDamage(729);
         BTWItems.plateBreastplate.setMaxDamage(729);
         BTWItems.plateHelmet.setMaxDamage(729);
+
+        boolean isServer = MinecraftServer.getIsServer();
+        if (!isServer) {
+            BTWItems.emeraldPile.setItemRightClickCooldown( BTWItems.emeraldPile.getItemRightClickCooldown() / 6);
+            BTWItems.soulSandPile.setItemRightClickCooldown( BTWItems.soulSandPile.getItemRightClickCooldown() / 6);
+            NMItems.witchLocator.setItemRightClickCooldown( NMItems.witchLocator.getItemRightClickCooldown() / 6);
+        }
     }
 
 
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
-        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
+//        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
+        EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
@@ -112,7 +282,6 @@ public class NMInitializer {
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticOpaque.blockID, 7,4,8)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID,1)).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).buy().item(BTWItems.diamondArmorPlate.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("looting"))).weight(0.9f).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).buy().item(BTWItems.padding.itemID).itemCount(6,10).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).sell().item(Item.appleGold.itemID).emeraldCost(8,16).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,8201)).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,18)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("unbreaking"))).weight(1.0f).addToTradeList();
@@ -367,6 +536,17 @@ public class NMInitializer {
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
         RecipeManager.addCauldronRecipe(new ItemStack(Item.clay, 8), new ItemStack[]{new ItemStack(BTWItems.netherSludge, 8)});
         RecipeManager.addCauldronRecipe(new ItemStack(NMItems.friedCalamari), new ItemStack[]{new ItemStack(NMItems.calamariRoast), new ItemStack(Item.bowlEmpty)});
+        RecipeManager.addCauldronRecipe(new ItemStack(Item.blazeRod), new ItemStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(Item.stick)});
+
+        // blood sapling and groth nerf: instead of costing 8 urns, they only cost 1
+        CauldronCraftingManager.getInstance().removeRecipe((new ItemStack(BTWBlocks.aestheticVegetation, 1, 2)), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(Item.netherStalkSeeds)});
+        RecipeManager.addCauldronRecipe(new ItemStack(BTWBlocks.aestheticVegetation, 1, 2), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.netherStalkSeeds)});
+
+        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack[]{new ItemStack(BTWBlocks.looseDirt), new ItemStack(BTWItems.netherGrothSpores)}, (TagOrStack[])new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
+        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.netherGrothSpores), (TagOrStack[])new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
+
+
+
         RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
     }
 
@@ -390,6 +570,12 @@ public class NMInitializer {
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.witchLocator,4), new ItemStack(BTWItems.witchWart));
         RecipeManager.addMillStoneRecipe(new ItemStack[]{new ItemStack(NMItems.rifle), new ItemStack(NMItems.rpg)}, new ItemStack[]{new ItemStack(Block.dragonEgg)});
+
+
+        // improve netherrack grinding rates
+        MillStoneCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.groundNetherrack), new ItemStack(Block.netherrack));
+        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.groundNetherrack, 8), new ItemStack(Block.netherrack));
+
     }
 
     private static void addCraftingRecipes(){
@@ -434,7 +620,6 @@ public class NMInitializer {
 
         // fish sandwich
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 1), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
         // fish sandwich end
 
         // remove sinew recipes, add custom ones
@@ -455,11 +640,11 @@ public class NMInitializer {
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodLeggings), new Object[]{"###", "# #", "# #", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodBoots), new Object[]{"# #", "# #",  Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodSword), new Object[]{" # ", "###", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodPickaxe), new Object[]{"###", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodAxe), new Object[]{"#  ", "#X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodShovel), new Object[]{" # ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodHoe), new Object[]{"#X ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.stick)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodSword), new Object[]{" # ", "###", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.blazeRod)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodPickaxe), new Object[]{"###", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.blazeRod)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodAxe), new Object[]{"#  ", "#X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.blazeRod)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodShovel), new Object[]{" # ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.blazeRod)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodHoe), new Object[]{"#X ", " X ", " X ", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot), Character.valueOf('X'), new ItemStack(Item.blazeRod)});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(BTWBlocks.chest)});
 
         RecipeManager.addRecipe(new ItemStack(BTWItems.rawMysteryMeat), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(Item.beefRaw)});
@@ -499,14 +684,28 @@ public class NMInitializer {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.ironLadder, 4), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('S'), BTWItems.hempFibers});
 
         // bark boxes
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxOakBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(Item.silk, 1, 0)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxSpruceBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(Item.silk)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxBirchBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxJungleBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.oakBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.spruceBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.birchBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.jungleBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk, 1, 0)});
+
+
 
         // new wicker basket
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
-        RecipeManager.addRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"###", "#Y#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('Y'), Item.silk});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.customWickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 4), new Object[]{NMBlocks.customWickerBasket});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"SS", "##", "##", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('S'), BTWItems.hempFibers});
+        // hide all baskets from EMI
+        BTWBlocks.wickerBasket.hideFromEMI();
+        BTWBlocks.oakBarkBox.hideFromEMI();
+        BTWBlocks.spruceBarkBox.hideFromEMI();
+        BTWBlocks.birchBarkBox.hideFromEMI();
+        BTWBlocks.jungleBarkBox.hideFromEMI();
+        // done hiding
+
+        // hamper stuff
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"S#S", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), Block.planks, Character.valueOf('S'), BTWItems.rope});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"###", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), Block.planks});
 
         // add compressed block recipes
         RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.creeperOysterBlock, 1), new Object[]{new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters)});
@@ -526,6 +725,50 @@ public class NMInitializer {
         RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 9), new Object[]{new ItemStack(BTWBlocks.spiderEyeBlock)});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 4), new Object[]{new ItemStack(BTWBlocks.spiderEyeSlab)});
 
+
+        // gear stuff
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.gear, 4), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.wood, Character.valueOf('X'), Item.stick});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gear, 2), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.planks, Character.valueOf('X'), Item.stick});
+        // stone hoe
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{" #X", " #S", " # ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), new ItemStack(BTWItems.stone, 1, Short.MAX_VALUE), Character.valueOf('S'), Item.silk});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{"X# ", "S# ", " # ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), new ItemStack(BTWItems.stone, 1, Short.MAX_VALUE), Character.valueOf('S'), Item.silk});
+        // sail recipe
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWBlocks.spruceWoodMouldingAndDecorative});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), Block.planks});
+
+        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodMouldings});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
+
+        // hellforge
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{
+                "NNN",
+                "NBN",
+                "NHN",
+                Character.valueOf('H'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 3),
+                Character.valueOf('B'), Item.blazePowder,
+                Character.valueOf('N'), BTWBlocks.looseNetherBrick
+        });
+
+        // change powder keg recipe for sealed nether
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt, 1), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse});
+        RecipeManager.addRecipe(new ItemStack(Block.tnt, 1), new Object[]{
+                "GFG",
+                "GBG",
+                "NGN",
+                Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11),
+                Character.valueOf('G'), Item.gunpowder,
+                Character.valueOf('N'), BTWItems.nitre,
+                Character.valueOf('F'), BTWItems.fuse});
+
+        // change barrel recipe for powder keg recipe for sealed nether
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.aestheticOpaque, 2, 11), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), BTWItems.glue});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), new Object[]{"###", "# #", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE)});
+
+        // add ground netherrack -> netherrack 1:1 conversion
+        RecipeManager.addShapelessRecipe(new ItemStack(Block.netherrack, 1), new Object[]{new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack)});
+
+
+
     }
 
     private static void addPistonPackingRecipes() {
@@ -536,4 +779,54 @@ public class NMInitializer {
         PistonPackingCraftingManager.instance.removeRecipe((Block)BTWBlocks.spiderEyeBlock, 0 , (TagOrStack[])new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
         RecipeManager.addPistonPackingRecipe((Block)BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
     }
+
+
+
+
+
+
+
+
+
+
+    // ACHIEVEMENT HELPERS
+
+    private static void addParent(Achievement acObj, Achievement achievementToAdd){
+        ((AchievementExt) acObj).nightmareMode$appendParent(achievementToAdd);
+    }
+    private static void setHidden(Achievement acObj, boolean hidden){
+        acObj.isHidden = hidden;
+    }
+    private static void kill(Achievement acObj){
+        acObj.tab.achievementList.remove(acObj);
+    }
+    private static void setDisplay(Achievement acObj, int row, int column){
+        ((AchievementExt) acObj).nightmareMode$setDisplay(row, column);
+    }
+    private static void move(Achievement acObj, int down, int right){
+        setDisplay(acObj,acObj.displayRow + down, acObj.displayColumn + right);
+    }
+    private static void removeParent(Achievement myAchievement, Achievement parentToRemove) {
+        AchievementExt ext = (AchievementExt) (Object) myAchievement;
+        Achievement[] current = ((AchievementAccessor)myAchievement).getParents();
+        Achievement[] updated = ext.nightmareMode$removeParent(current, parentToRemove);
+        ((AchievementAccessor)myAchievement).setParentAchievements(updated);
+    }
+    private static void destroyParents(Achievement myAchievement){
+        ((AchievementAccessor)myAchievement).setParentAchievements(new Achievement[0]);
+    }
+
+    private static void setIcon(Achievement acObj, Block block){
+        AchievementExt ext = (AchievementExt) (Object) acObj;
+        ext.nightmareMode$setIcon(new ItemStack(block));
+    }
+    private static void setIcon(Achievement acObj, Item item){
+        AchievementExt ext = (AchievementExt) (Object) acObj;
+        ext.nightmareMode$setIcon(new ItemStack(item));
+    }
+    private static void setIcon(Achievement acObj, ItemStack stack){
+        AchievementExt ext = (AchievementExt) (Object) acObj;
+        ext.nightmareMode$setIcon(stack);
+    }
+
 }

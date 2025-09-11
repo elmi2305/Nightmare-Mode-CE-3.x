@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.WorldProviderUnderworld;
+import com.itlesports.nightmaremode.underworld.WorldProviderUnderworld;
 import net.minecraft.src.WorldProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

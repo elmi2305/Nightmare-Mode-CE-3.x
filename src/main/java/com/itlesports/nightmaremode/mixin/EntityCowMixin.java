@@ -19,7 +19,7 @@ public abstract class EntityCowMixin extends KickingAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(15d * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((15d + NMUtils.getWorldProgress() * 5) * NMUtils.getNiteMultiplier());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -52,10 +52,18 @@ public abstract class EntityCowMixin extends KickingAnimal {
         }
     }
 
+    @Inject(method = "dropFewItems", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCow;rand:Ljava/util/Random;", ordinal = 0))
+    private void makeCowsDropLeather(boolean killedByPlayer, int lootingModifier, CallbackInfo ci){
+        int numDrops = this.rand.nextInt(3) + this.rand.nextInt(1 + lootingModifier) + 1;
+        for (int i = 0; i < numDrops; ++i) {
+            this.dropItem(Item.leather.itemID, 1);
+        }
+    }
+
     @Inject(method = "updateHungerState", at = @At("HEAD"))
     private void updateHealthState(CallbackInfo ci){
         if(this.ticksExisted % 120 != 0) return;
-        int originalHealth = 15;
+        int originalHealth = 15 + NMUtils.getWorldProgress() * 5;
         double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 2.5 : 1;
         if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
