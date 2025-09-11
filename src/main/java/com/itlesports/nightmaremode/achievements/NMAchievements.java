@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.achievements;
 
 import btw.achievement.AchievementHandler;
 import btw.achievement.AchievementProvider;
+import btw.achievement.BTWAchievements;
 import btw.achievement.event.BTWAchievementEvents;
 import btw.block.BTWBlocks;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
@@ -44,6 +45,16 @@ public class NMAchievements {
                     .parents(MORNING_SECOND_DAY)
                     .build()
                     .setSecret()
+                    .registerAchievement(TAB_GETTING_STARTED);
+
+    public static final Achievement<ItemStack> CRAFT_BASKET_NM =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(btwLoc("craft_basket"))
+                    .icon(BTWBlocks.wickerBasket)
+                    .displayLocation(1, -5)
+                    .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.customWickerBasket.blockID)
+                    .parents(CRAFT_WICKER)
+                    .build()
                     .registerAchievement(TAB_GETTING_STARTED);
 
     public static final Achievement<DamageSource> HIT_BURNING_SKELETON =
@@ -594,16 +605,6 @@ public class NMAchievements {
                     .parents(CRAFT_STEEL_INGOT)
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
-    public static final Achievement<EntityPlayer> WEAR_STEEL_ARMOR =
-            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
-                    .name(loc("equipSteelArmor"))
-                    .icon(BTWItems.plateBreastplate)
-                    .displayLocation(15, -4)
-                    .triggerCondition(NMAchievements::isWearingFullSteelArmor)
-                    .parents(CRAFT_STEEL_INGOT)
-                    .build()
-                    .setSpecial()
-                    .registerAchievement(TAB_AUTOMATION);
     public static final Achievement<BTWAchievementEvents.None> LUST =
             AchievementProvider.getBuilder(NMAchievementEvents.LustEvent.class)
                     .name(loc("lust"))
@@ -1029,6 +1030,10 @@ public class NMAchievements {
         return new ResourceLocation("nm", name);
     }
 
+    private static ResourceLocation btwLoc(String name) {
+        return new ResourceLocation("btw", name);
+    }
+
 
     // HELPER METHODS
     private static boolean getPlayerOnSkybase(EntityPlayer player) {
@@ -1071,12 +1076,12 @@ public class NMAchievements {
         int day = 24000;
 
         // case 1: early greed
-        if(t < (day * 3) && p.posY < 50){
+        if(t < (day * 5) && p.posY < 50){
             return true;
         }
 
         // case 2: middle game greed
-        return t < (24000 * 7) && p.posY < 24;
+        return t < (24000 * 9) && p.posY < 24;
     }
 
     private static final Set<Integer> IRON_ITEM_IDS = new HashSet<Integer>(Arrays.asList(

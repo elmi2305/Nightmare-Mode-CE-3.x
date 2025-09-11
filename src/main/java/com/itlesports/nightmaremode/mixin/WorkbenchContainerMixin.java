@@ -20,8 +20,8 @@ public class WorkbenchContainerMixin extends ContainerWorkbench {
     @Redirect(method = "transferStackInSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Slot;getStack()Lnet/minecraft/src/ItemStack;"))
     private ItemStack aprilFoolsDurabilityOnShiftClick(Slot instance){
         if (NightmareMode.isAprilFools) {
-            double gaussian = this.world.rand.nextGaussian(); // Mean = 0, Std Dev = 1
-            double normalized = (gaussian + 3) / 6; // Shifting and scaling to [0,1]
+            double gaussian = this.world.rand.nextGaussian();
+            double normalized = (gaussian + 3) / 6;
             int damage = (int) (Math.max(0, Math.min(1, normalized)) * instance.getStack().getMaxDamage() - 1);
             instance.getStack().attemptDamageItem(damage, this.world.rand);
         }

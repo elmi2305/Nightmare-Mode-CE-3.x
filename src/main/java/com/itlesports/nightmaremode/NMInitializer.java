@@ -7,6 +7,7 @@ import btw.crafting.recipe.RecipeManager;
 import btw.entity.mob.villager.trade.TradeItem;
 import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
+import btw.item.tag.BTWTags;
 import btw.item.tag.TagOrStack;
 import btw.util.color.Color;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -48,7 +49,8 @@ public class NMInitializer {
 
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
-        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
+//        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
+        EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
@@ -434,7 +436,6 @@ public class NMInitializer {
 
         // fish sandwich
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 1), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
         // fish sandwich end
 
         // remove sinew recipes, add custom ones
@@ -499,14 +500,20 @@ public class NMInitializer {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.ironLadder, 4), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('S'), BTWItems.hempFibers});
 
         // bark boxes
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxOakBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(Item.silk, 1, 0)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxSpruceBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(Item.silk)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxBirchBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.boxJungleBarkBlock), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.oakBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.spruceBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.birchBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk, 1, 0)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.jungleBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk, 1, 0)});
+
+
 
         // new wicker basket
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
-        RecipeManager.addRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"###", "#Y#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('Y'), Item.silk});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.customWickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 4), new Object[]{NMBlocks.customWickerBasket});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"SS", "##", "##", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('S'), BTWItems.hempFibers});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"S#S", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), Block.planks, Character.valueOf('S'), BTWItems.rope});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"###", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), Block.planks});
 
         // add compressed block recipes
         RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.creeperOysterBlock, 1), new Object[]{new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters)});
@@ -525,6 +532,21 @@ public class NMInitializer {
 
         RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 9), new Object[]{new ItemStack(BTWBlocks.spiderEyeBlock)});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.spiderEye, 4), new Object[]{new ItemStack(BTWBlocks.spiderEyeSlab)});
+
+
+        // gear stuff
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.gear, 4), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.wood, Character.valueOf('X'), Item.stick});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gear, 2), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.planks, Character.valueOf('X'), Item.stick});
+
+        // hellforge
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{
+                "NNN",
+                "NBN",
+                "HHH",
+                Character.valueOf('H'), BTWBlocks.aestheticEarth,
+                Character.valueOf('B'), Item.blazePowder,
+                Character.valueOf('N'), BTWBlocks.looseNetherBrick
+        });
 
     }
 

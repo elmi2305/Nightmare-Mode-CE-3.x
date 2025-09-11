@@ -4,6 +4,8 @@ import btw.block.BTWBlocks;
 import btw.block.blocks.BedrockBlock;
 import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
+import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import com.itlesports.nightmaremode.item.NMItemBlock;
@@ -21,6 +23,10 @@ public class NMBlocks {
     public static BlockRoad blockAsphalt;
     public static BlockCustomLadder stoneLadder;
     public static BlockCustomLadder ironLadder;
+
+    public static Block hellforge;
+    public static CustomBasketBlock customWickerBasket;
+
 
     public static void initNightmareBlocks(){
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare_mode:steel_ore");
@@ -57,6 +63,19 @@ public class NMBlocks {
 
         ironLadder = (BlockCustomLadder) new BlockCustomLadder(2314, 2.2f).setUnlocalizedName("nmIronLadder").setTextureName("nightmare_mode:nmIronLadder");
         Item.itemsList[ironLadder.blockID] = new NMItemBlock(NMBlocks.ironLadder.blockID - 256);
+
+
+        hellforge = new BlockHellforge(2315, true);
+        Item.itemsList[hellforge.blockID] = new NMItemBlock(NMBlocks.hellforge.blockID - 256);
+        TileEntity.addMapping(HellforgeTileEntity.class, "Hellforge");
+
+
+        customWickerBasket = new CustomBasketBlock(2316);
+        Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
+        TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
+
+
+
 
     }
 }

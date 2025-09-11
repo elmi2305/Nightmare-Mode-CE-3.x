@@ -54,6 +54,7 @@ tile.nmRoad.name=Road
 tile.nmAsphalt.name=Asphalt
 tile.nmStoneLadder.name=Stone Ladder
 tile.nmIronLadder.name=Iron Ladder
+tile.nmHellforgeBlock.name=Hellforge
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -115,15 +116,15 @@ gui.selectworld.warning_config_crash=New configs were loaded, which may crash yo
 gui.selectworld.warning_continue=Are you absolutely sure you want to continue?
 gui.selectworld.warning_final=This is your final warning
 
-gui.difficulty.baddream.name=Bad Dream
-gui.difficulty.nightmare.name=Nightmare
-gui.difficulty.bloodmare.name=Bloodmare
-gui.difficulty.baddream.description1=A more relaxed experience. Makes
-gui.difficulty.baddream.description2=many aspects of Nightmare Mode
-gui.difficulty.baddream.description3=easier and more forgiving.
-gui.difficulty.nightmare.description1=The ultimate challenge.
-gui.difficulty.nightmare.description2=
-gui.difficulty.nightmare.description3=
+difficulty.baddream.name=Bad Dream
+difficulty.nightmare.name=Nightmare
+difficulty.bloodmare.name=Bloodmare
+difficulty.baddream.description1=A more relaxed experience. Makes
+difficulty.baddream.description2=many aspects of Nightmare Mode
+difficulty.baddream.description3=easier and more forgiving.
+difficulty.nightmare.description1=The ultimate challenge.
+difficulty.nightmare.description2=
+difficulty.nightmare.description3=
 
 gui.mainmenu.splash1=Nightmare Mode!
 gui.mainmenu.splash2=Also try MEA!
@@ -479,8 +480,7 @@ achievement.nm.steelMattock.desc=Craft a Mattock
 achievement.nm.steelBattleAxe=MEN! WITH ME!
 achievement.nm.steelBattleAxe.desc=Craft a Battle Axe
 
-achievement.nm.equipSteelArmor=Untouchable
-achievement.nm.equipSteelArmor.desc=Equip a Full Set of Steel Armor
+achievement.btw.equip_steel_armor=Untouchable
 
 achievement.nm.pride=Pride
 achievement.nm.pride.desc=The Depths threatened your end, and you dared them

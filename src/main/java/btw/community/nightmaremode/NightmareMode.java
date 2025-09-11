@@ -57,7 +57,7 @@ public class NightmareMode extends BTWAddon {
 
     public boolean wasConfigModified;
     public void modifyConfigProperty(String propertyName, String newValue) {
-        String filename = "config/" + this.modID + ".properties"; // Adjust path if needed
+        String filename = "config/" + this.modID + ".properties";
         File config = new File(filename);
 
         // Ensure the file exists before modifying
@@ -75,15 +75,14 @@ public class NightmareMode extends BTWAddon {
         List<String> lines = new ArrayList<>();
         boolean propertyFound = false;
 
-        // Read the config file and modify the specified property
         try (BufferedReader reader = new BufferedReader(new FileReader(config))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith(propertyName + "=")) {
-                    lines.add(propertyName + "=" + newValue); // Modify specified property
+                    lines.add(propertyName + "=" + newValue);
                     propertyFound = true;
                 } else {
-                    lines.add(line); // Keep other settings unchanged
+                    lines.add(line);
                 }
             }
         } catch (IOException e) {
@@ -91,7 +90,7 @@ public class NightmareMode extends BTWAddon {
             return;
         }
 
-        // If the property wasn't found, add it at the end
+        // if the property wasn't found, add it at the end
         if (!propertyFound) {
             lines.add(propertyName + "=" + newValue);
         }
