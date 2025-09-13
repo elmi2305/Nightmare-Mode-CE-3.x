@@ -13,8 +13,6 @@ import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
-import com.itlesports.nightmaremode.network.HandshakeClient;
-import com.itlesports.nightmaremode.network.HandshakeServer;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +31,6 @@ public class NightmareMode extends BTWAddon {
     public static int SKELETON_SUPERCRITICAL = 6;
 
     private static NightmareMode instance;
-    public static String MOD_VERSION;
     public static int worldState;
 
     public WorldGenerator lavaPillowGenThirdStrata;
@@ -153,12 +150,6 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
-        MOD_VERSION = this.getVersionString();
-        this.registerPacketHandler(HandshakeServer.VERSION_ACK_CHANNEL, (packet, player) -> {
-            if (!(player instanceof EntityPlayerMP mp)) return;
-            HandshakeServer.handleVersionAckPacket(mp.playerNetServerHandler, packet);
-        });
-        this.registerPacketHandler(HandshakeClient.VERSION_CHECK_CHANNEL, (packet, player) -> HandshakeClient.handleVersionCheckPacketClient(packet));
         if (!MinecraftServer.getIsServer()) {
             initClientPacketInfo();
         } else{
@@ -282,7 +273,6 @@ public class NightmareMode extends BTWAddon {
 
     @Override
     public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
-        HandshakeServer.onPlayerJoin(serverHandler, playerMP);
         sendWorldStateToClient(serverHandler);
         Packet250CustomPayload onJoinPacket = new Packet250CustomPayload("nm|onJoin", new byte[0]);
         serverHandler.sendPacketToPlayer(onJoinPacket);

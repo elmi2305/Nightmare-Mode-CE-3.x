@@ -7,7 +7,6 @@ import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
-import com.itlesports.nightmaremode.network.HandshakeServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -61,8 +60,6 @@ public abstract class MinecraftServerMixin {
     @Inject(method = "tick", at = @At("RETURN"))
     private void nmOnServerTick(CallbackInfo ci) {
         TeleportScheduler.onServerTick();
-        HandshakeServer.onServerTick();
-
 
         if (this.worldServers[0].getTotalWorldTime() % 30 != 0) return;
         long worldTime = this.worldServers[0].getWorldTime();

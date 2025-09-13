@@ -4,7 +4,6 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.client.NightmareKeyBindings;
 import com.itlesports.nightmaremode.client.ZoomStateAccessor;
-import com.itlesports.nightmaremode.network.HandshakeClient;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -27,11 +26,6 @@ public class MinecraftMixin {
     private boolean wasZooming = false;
     @Unique
     private float originalFov = 0.0f;
-
-    @Inject(method = "runTick", at = @At("TAIL"))
-    private void nmOnClientTick(CallbackInfo ci) {
-        HandshakeClient.onClientTick();
-    }
 
     @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I", remap = false))
     private int nmBlockHotbarScrollWhenZoom() {
