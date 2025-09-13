@@ -25,3 +25,4 @@ accessible class net/minecraft/src/StructureStrongholdStones
 accessible class net/minecraft/src/ComponentStronghold
 accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/SoundSystem;
 accessible field net/minecraft/src/SoundManager soundPoolSounds Lnet/minecraft/src/SoundPool;
+accessible field net/minecraft/src/StatList oneShotStats Ljava/util/Map;

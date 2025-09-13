@@ -21,7 +21,6 @@ import java.util.function.Predicate;
 import static btw.achievement.BTWAchievements.*;
 
 public class NMAchievements {
-//    private static final AchievementTab TAB_NM = new AchievementTab("nightmaremode").setIcon(NMItems.starOfTheBloodGod);
 
     public static final Achievement<Long> MORNING_SECOND_DAY =
             AchievementProvider.getBuilder(NMAchievementEvents.TimeEvent.class)
@@ -203,7 +202,7 @@ public class NMAchievements {
                     .triggerCondition(NMAchievements::isPlayerGreeding)
                     .build()
                     .setSpecial()
-                    .setHidden()
+                    .setSecret()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<BTWAchievementEvents.EntityKilledEventData> IRON_ZOMBIE =
             AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)

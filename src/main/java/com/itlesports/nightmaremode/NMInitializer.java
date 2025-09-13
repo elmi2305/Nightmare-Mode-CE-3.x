@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 
 import java.util.HashMap;
+import java.util.Set;
 
 import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
@@ -797,9 +798,29 @@ public abstract class NMInitializer implements AchievementExt {
     private static void setHidden(Achievement acObj, boolean hidden){
         acObj.isHidden = hidden;
     }
-    private static void kill(Achievement acObj){
-        acObj.tab.achievementList.remove(acObj);
+//    private static void kill(Achievement acObj){
+//        acObj.tab.achievementList.remove(acObj);
+//    }
+
+    private static void kill(Achievement acObj) {
+        StatList.allStats.remove(acObj);
+        StatList.oneShotStats.remove(acObj.statId);
+
+        if (acObj.tab != null) {
+            acObj.tab.achievementList.remove(acObj);
+        }
+
+
+        Set<Achievement<?>> set = AchievementList.achievementsByEventType.get(acObj.eventType);
+        if (set != null) {
+            set.remove(acObj);
+            if (set.isEmpty()) {
+                AchievementList.achievementsByEventType.remove(acObj.eventType);
+            }
+        }
+        acObj.statGuid = null;
     }
+
     private static void setDisplay(Achievement acObj, int row, int column){
         ((AchievementExt) acObj).nightmareMode$setDisplay(row, column);
     }

@@ -22,7 +22,7 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void setHardnessOfBlock(int par1, CallbackInfo ci){
-        this.setHardness(10f);
+        this.setHardness(6f);
     }
 
     @Override

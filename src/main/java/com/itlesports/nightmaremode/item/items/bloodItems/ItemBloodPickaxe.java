@@ -49,7 +49,7 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
         int iToolLevel = 3;
         int iBlockToolLevel = block.getEfficientToolLevel(world, i, j, k);
         if(block == Block.netherrack){
-            return this.efficiencyOnProperMaterial * 1.5f;
+            return this.efficiencyOnProperMaterial * 1.25f;
         }
         if (iBlockToolLevel > iToolLevel) {
             return 1f;
