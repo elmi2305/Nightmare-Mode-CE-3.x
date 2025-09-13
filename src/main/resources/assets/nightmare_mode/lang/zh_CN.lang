@@ -42,7 +42,7 @@ item.nmMagicArrow.name=魔法箭矢
 item.nmVoidSack.name=虚空袋
 item.nmVoidMembrane.name=虚空膜
 item.nmDungApple.name=粪苹果
-item.nmOysterSoup.name=苦力怕牡蛎汤
+item.nmOysterSoup.name=苦力怕酶腺汤
 
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石
@@ -54,7 +54,7 @@ tile.nmRoad.name=道路
 tile.nmAsphalt.name=沥青
 tile.nmStoneLadder.name=石质梯子
 tile.nmIronLadder.name=铁质梯子
-tile.nmHellforgeBlock.name=地狱熔炉
+tile.nmHellforgeBlock.name=地狱砖炉
 
 container.steelLocker=钢储物柜
 container.inventory=物品栏
@@ -360,8 +360,8 @@ achievement.nm.ironSword.desc=拿到铁剑，杀气腾腾
 achievement.nm.ironZombie=铁皮老哥
 achievement.nm.ironZombie.desc=干掉全身铁货的怪物
 
-achievement.nm.ladderWood=冲高吧
-achievement.nm.ladderWood.desc=造点木梯，爬天梯
+achievement.nm.ladderWood=再高点
+achievement.nm.ladderWood.desc=造点木梯，让我们通往云端
 
 achievement.nm.roadStandard=堵车时刻
 achievement.nm.roadStandard.desc=用圆石和砂砾铺马路，修路狂魔
@@ -381,8 +381,8 @@ achievement.nm.bloodOrb.desc=拿到血之宝珠，别乱用！
 achievement.nm.bloodMoon=血月老兵
 achievement.nm.bloodMoon.desc=第一次血月存活，胆子肥了
 
-achievement.nm.bloodIngot=血里炼钢
-achievement.nm.bloodIngot.desc=把血练成钢，硬核工艺
+achievement.nm.bloodIngot=鲜血铸造
+achievement.nm.bloodIngot.desc=制作一个血之锭
 
 achievement.nm.bloodSword=血流成河！
 achievement.nm.bloodSword.desc=打造血剑，杀气腾腾
@@ -418,7 +418,7 @@ achievement.nm.bloodChest=猩红宝箱怪
 achievement.nm.bloodChest.desc=造个血箱，收纳怪物
 
 achievement.nm.wanderingTraderKill=信任危机
-achievement.nm.wanderingTraderKill.desc=宰了“流浪商人”，没你想的善良
+achievement.nm.wanderingTraderKill.desc=杀死一名“流浪商人”
 
 achievement.nm.mineSteelOre=钢比钻石香
 achievement.nm.mineSteelOre.desc=击败凋灵后挖钢矿，矿霸本霸
@@ -480,6 +480,8 @@ achievement.nm.steelMattock.desc=造个鹤嘴锄，随时开挖
 achievement.nm.steelBattleAxe=兄弟们冲啊！
 achievement.nm.steelBattleAxe.desc=战斧在手，激情开团
 
+achievement.btw.equip_steel_armor=不可触碰
+
 achievement.nm.pride=傲视深渊
 achievement.nm.pride.desc=深渊想收拾你，你摆出高傲姿态
 
@@ -516,8 +518,8 @@ achievement.nm.beaconLapis.desc=造个四级青金石信标，洞悉一切
 achievement.nm.beaconIron=北极星指路
 achievement.nm.beaconIron.desc=造个四级铁信标，方向感爆棚
 
-achievement.nm.beaconEnderBlock=穿界快递
-achievement.nm.beaconEnderBlock.desc=造个四级末影信标，任意门上线
+achievement.nm.beaconEnderBlock=跨界快递
+achievement.nm.beaconEnderBlock.desc=造个四级末影信标，全球仓库
 
 achievement.nm.beaconAll=全色系收集
 achievement.nm.beaconAll.desc=集齐所有类型的四级信标，成就达人
@@ -537,23 +539,23 @@ achievement.nm.magicFeather.desc=日蚀期间宰鸡拿魔法箭，真香
 achievement.nm.rideEclipseChicken=老子飞了！
 achievement.nm.rideEclipseChicken.desc=骑日蚀鸡起飞，云端狂飙
 
-achievement.nm.eclipseCowKick=牛踢疼死
+achievement.nm.eclipseCowKick=哎哟，好疼
 achievement.nm.eclipseCowKick.desc=被日蚀牛踢一脚，疼得跳脚
 
 achievement.nm.eclipseCowMilk=血奶还是牛奶？
 achievement.nm.eclipseCowMilk.desc=挤日蚀牛得血奶，重口味警告
 
 achievement.nm.nightmareMerchantLevel2=黑市通关
-achievement.nm.nightmareMerchantLevel2.desc=成功讨好梦魇商人，生意兴隆
+achievement.nm.nightmareMerchantLevel2.desc=成功讨好噩梦商人，生意兴隆
 
 achievement.nm.nightmareMerchantLevel3=暗黑仪式
-achievement.nm.nightmareMerchantLevel3.desc=再度讨好梦魇商人，仪式感拉满
+achievement.nm.nightmareMerchantLevel3.desc=再度讨好噩梦商人，仪式感拉满
 
 achievement.nm.nightmareMerchantLevel4=祭品到位
-achievement.nm.nightmareMerchantLevel4.desc=献祭有诚意，梦魇商人满意
+achievement.nm.nightmareMerchantLevel4.desc=献祭有诚意，噩梦商人满意
 
 achievement.nm.nightmareMerchantLevel5=血神发飙
-achievement.nm.nightmareMerchantLevel5.desc=……
+achievement.nm.nightmareMerchantLevel5.desc=...
 
 achievement.nm.eclipseShadowZombie=这面孔眼熟
 achievement.nm.eclipseShadowZombie.desc=干翻日蚀暗影僵尸，见识套路
@@ -571,7 +573,7 @@ achievement.nm.eclipseWitch=恶魔本魔
 achievement.nm.eclipseWitch.desc=日蚀女巫来袭，祝你好运！
 
 achievement.nm.killBloodWither=技术力爆表
-achievement.nm.killBloodWither.desc=干掉？？？，神秘boss
+achievement.nm.killBloodWither.desc=干掉神秘boss<？？？>
 
 achievement.nm.arrowDamage=一箭爆头
 achievement.nm.arrowDamage.desc=魔法箭一发五十伤，爆裂输出
@@ -594,8 +596,8 @@ achievement.nm.gunpowder.desc=在炼药锅中制造火药
 achievement.nm.tnt=我已成为死亡
 achievement.nm.tnt.desc=合成TNT
 
-achievement.nm.groundNetherrack=粉碎的地狱
-achievement.nm.groundNetherrack.desc=用TNT炸毁地狱岩以获得粉碎的地狱岩
+achievement.nm.groundNetherrack=破碎地狱
+achievement.nm.groundNetherrack.desc=用TNT炸毁地狱岩以获得地狱岩粉尘
 
 achievement.nm.craftHellforge=无尽之焰
-achievement.nm.craftHellforge.desc=合成地狱熔炉，这是砖炉的升级版
+achievement.nm.craftHellforge.desc=合成地狱砖炉，这是砖炉的升级版
