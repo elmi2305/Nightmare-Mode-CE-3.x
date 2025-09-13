@@ -521,11 +521,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(NMItems.bloodLeggings, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(NMItems.bloodBoots, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 3), new ItemStack[]{new ItemStack(NMItems.bloodPickaxe, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(NMItems.bloodSword, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 2), new ItemStack[]{new ItemStack(NMItems.bloodAxe, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 1), new ItemStack[]{new ItemStack(NMItems.bloodShovel, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 1), new ItemStack[]{new ItemStack(NMItems.bloodHoe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 3), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodPickaxe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 4), new ItemStack(Item.blazeRod, 1)}, new ItemStack[]{new ItemStack(NMItems.bloodSword, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 2), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodAxe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 1), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodShovel, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 1), new ItemStack(Item.blazeRod, 3)}, new ItemStack[]{new ItemStack(NMItems.bloodHoe, 1, Short.MAX_VALUE)});
         // done adding
 
         // add other crucible tools and blocks
