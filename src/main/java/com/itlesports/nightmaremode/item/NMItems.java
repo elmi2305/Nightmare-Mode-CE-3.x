@@ -58,20 +58,13 @@ public class NMItems {
     public static FoodItem creeperBallSoup;
 
     public static Item ACHIEVEMENT_SPECIAL_SNOWBALL;
-    public static Item ACHIEVEMENT_SPECIAL_LADDER_STONE;
-    public static Item ACHIEVEMENT_SPECIAL_ROAD;
-    public static Item ACHIEVEMENT_SPECIAL_LADDER_IRON;
-    public static Item ACHIEVEMENT_SPECIAL_ASPHALT;
     public static Item ACHIEVEMENT_SPECIAL_HARDMODE;
     public static Item ACHIEVEMENT_SPECIAL_BLOODMOON;
-    public static Item ACHIEVEMENT_SPECIAL_BLOODCHEST;
-    public static Item ACHIEVEMENT_SPECIAL_LOCKER;
     public static Item ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER;
     public static Item ACHIEVEMENT_SPECIAL_ECLIPSE;
     public static Item ACHIEVEMENT_SPECIAL_MERCHANT;
     public static Item ACHIEVEMENT_SPECIAL_CHICKEN;
     public static Item ACHIEVEMENT_SPECIAL_DIAMOND;
-    public static Item ACHIEVEMENT_SPECIAL_BLOOD_BONE;
     public static Item ACHIEVEMENT_SPECIAL_SKULL;
     public static Item ACHIEVEMENT_SPECIAL_ARROW_TRIPLE;
     public static Item ACHIEVEMENT_SPECIAL_ARROW_RED;

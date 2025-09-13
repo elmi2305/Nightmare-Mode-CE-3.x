@@ -5,7 +5,6 @@ package com.itlesports.nightmaremode.rendering;
 // (powered by FernFlower decompiler)
 //
 
-import btw.block.BTWBlocks;
 import btw.client.render.tileentity.BasketRenderer;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
@@ -20,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
 public class CustomBasketRenderer extends BasketRenderer {
-    private final float storageItemMaxHeight = 0.25F;
 
     public CustomBasketRenderer() {
     }
@@ -35,7 +33,7 @@ public class CustomBasketRenderer extends BasketRenderer {
         ItemStack stack = basket.getStorageStack();
         if (stack != null && basket.lidOpenRatio > 0.01F) {
             int iMetadata = basket.worldObj.getBlockMetadata(basket.xCoord, basket.yCoord, basket.zCoord);
-            EntityItem entity = new EntityItem(basket.worldObj, (double)0.0F, (double)0.0F, (double)0.0F, stack);
+            EntityItem entity = new EntityItem(basket.worldObj, 0.0F, 0.0F, 0.0F, stack);
             entity.hoverStart = 0.0F;
             GL11.glPushMatrix();
             float fCurrentItemHeight = 0.25F * this.getCurrentOpenRatio(basket, fPartialTickCount);
@@ -49,7 +47,7 @@ public class CustomBasketRenderer extends BasketRenderer {
                 GL11.glTranslatef(0.0F, 0.0F, -0.15F);
             }
 
-            RenderManager.instance.renderEntityWithPosYaw(entity, (double)0.0F, (double)0.0F, (double)0.0F, 0.0F, 0.0F);
+            RenderManager.instance.renderEntityWithPosYaw(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
             GL11.glPopMatrix();
         }
 

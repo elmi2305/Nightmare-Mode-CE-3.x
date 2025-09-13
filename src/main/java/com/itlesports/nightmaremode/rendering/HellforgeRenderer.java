@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 @Environment(value= EnvType.CLIENT)
 public class HellforgeRenderer
         extends TileEntitySpecialRenderer {
-    private static final double COOKING_ITEM_VISUAL_OFFSET = 0.25;
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double xCoord, double yCoord, double zCoord, float fPartialTickCount) {
@@ -54,7 +53,7 @@ public class HellforgeRenderer
         int iBrightness = this.getItemRenderBrightnessForBlockToFacing(furnace, iFacing);
         int var11 = iBrightness % 65536;
         int var12 = iBrightness / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)var11 / 1.0f, (float)var12 / 1.0f);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) var11, (float) var12);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         RenderManager.instance.renderEntityWithPosYaw(entityItem, 0.0, 0.0, 0.0, 0.0f, 0.0f);
         GL11.glPopMatrix();

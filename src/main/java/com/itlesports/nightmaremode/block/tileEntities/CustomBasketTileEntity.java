@@ -5,7 +5,6 @@ package com.itlesports.nightmaremode.block.tileEntities;
 // (powered by FernFlower decompiler)
 //
 
-import btw.block.BTWBlocks;
 import btw.block.tileentity.BasketTileEntity;
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.item.util.ItemUtils;

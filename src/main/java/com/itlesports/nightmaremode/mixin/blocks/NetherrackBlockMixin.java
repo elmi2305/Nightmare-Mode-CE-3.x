@@ -1,13 +1,12 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.BTWBlocks;
 import btw.block.blocks.FullBlock;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherrackBlock.class)
 public class NetherrackBlockMixin extends FullBlock {
+    @Unique
     private boolean shouldDropDust = true;
     protected NetherrackBlockMixin(int par1, Material par2Material) {
         super(par1, par2Material);

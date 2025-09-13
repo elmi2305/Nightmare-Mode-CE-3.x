@@ -18,34 +18,13 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class CustomBasketBlock extends BasketBlock {
-    private static final float BASKET_OPEN_HEIGHT = 0.75F;
-    private static final float BASKET_HEIGHT = 0.5F;
-    private static final float BASKET_RIM_WIDTH = 0.0625F;
-    private static final float BASKET_WIDTH_LIP = 0.0F;
-    private static final float BASKET_DEPTH_LIP = 0.0625F;
-    private static final float BASKET_LID_HEIGHT = 0.125F;
-    private static final float BASKET_LID_LAYER_HEIGHT = 0.0625F;
-    private static final float BASKET_LID_LAYER_WIDTH_GAP = 0.0625F;
-    private static final float BASKET_HANDLE_HEIGHT = 0.0625F;
-    private static final float BASKET_HANDLE_WIDTH = 0.125F;
-    private static final float BASKET_HANDLE_HALF_WIDTH = 0.0625F;
-    private static final float BASKET_HANDLE_LENGTH = 0.25F;
-    private static final float BASKET_HANDLE_HALF_LENGTH = 0.125F;
-    private static final float BASKET_INTERIOR_WALL_THICKNESS = 0.0625F;
-    private static final float MIND_THE_GAP = 0.001F;
-    private static final double LID_OPEN_LIP_HEIGHT = (double)0.0625F;
-    private static final double LID_OPEN_LIP_Y_POS = (double)0.9375F;
-    private static final double LID_OPEN_LIP_WIDTH = (double)0.125F;
-    private static final double LID_OPEN_LIP_LENGTH = (double)1.0F;
-    private static final double LID_OPEN_LIP_HALF_LENGTH = (double)0.5F;
-    private static final double LID_OPEN_LIP_HORIZONTAL_OFFSET = (double)0.3125F;
     public BlockModel blockModelBase;
     public BlockModel blockModelBaseOpenCollision;
     public BlockModel blockModelLid;
     public BlockModel blockModelLidFull;
     public BlockModel blockModelInterior;
-    private static AxisAlignedBB boxCollisionLidOpenLip = new AxisAlignedBB((double)0.0F, (double)0.9375F, (double)0.3125F, (double)1.0F, (double)1.0F, (double)0.4375F);
-    private static final Vec3 lidRotationPoint = Vec3.createVectorHelper((double)0.5F, (double)0.375F, (double)0.875F);
+    private static final AxisAlignedBB boxCollisionLidOpenLip = new AxisAlignedBB(0.0D, 0.9375D, 0.3125D, 1.0D, 1.0D, 0.4375D);
+    private static final Vec3 lidRotationPoint = Vec3.createVectorHelper(0.5D, 0.375D, 0.875D);
     @Environment(EnvType.CLIENT)
     private Icon iconBaseOpenTop;
     @Environment(EnvType.CLIENT)
@@ -61,7 +40,7 @@ public class CustomBasketBlock extends BasketBlock {
 
     public CustomBasketBlock(int iBlockID) {
         super(iBlockID, BTWBlocks.wickerMaterial);
-        this.initBlockBounds((double)0.0F, (double)0.0F, (double)0.0F, (double)1.0F, (double)0.5F, (double)1.0F);
+        this.initBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
         this.initModelBase();
         this.initModelBaseOpenCollison();
         this.initModelLid();
@@ -116,7 +95,7 @@ public class CustomBasketBlock extends BasketBlock {
                     CustomBasketTileEntity tileEntity = (CustomBasketTileEntity)world.getBlockTileEntity(i, j, k);
                     ItemStack storageStack = tileEntity.getStorageStack();
                     if (player.inventory.addItemStackToInventory(storageStack)) {
-                        tileEntity.setStorageStack((ItemStack)null);
+                        tileEntity.setStorageStack(null);
                     } else if (!world.isRemote) {
                         this.ejectStorageStack(world, i, j, k);
                     }
@@ -151,9 +130,9 @@ public class CustomBasketBlock extends BasketBlock {
             float xOffset = 0.5F;
             float yOffset = 0.4F;
             float zOffset = 0.5F;
-            double xPos = (double)((float)i + xOffset);
-            double yPos = (double)((float)j + yOffset);
-            double zPos = (double)((float)k + zOffset);
+            double xPos = (float)i + xOffset;
+            double yPos = (float)j + yOffset;
+            double zPos = (float)k + zOffset;
             EntityItem entityitem = new EntityItem(world, xPos, yPos, zPos, storageStack);
             entityitem.motionY = 0.2;
             double fFacingFactor = 0.15;
@@ -177,17 +156,17 @@ public class CustomBasketBlock extends BasketBlock {
 
             entityitem.delayBeforeCanPickup = 10;
             world.spawnEntityInWorld(entityitem);
-            tileEntity.setStorageStack((ItemStack)null);
+            tileEntity.setStorageStack(null);
         }
 
     }
 
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k) {
-        return this.getFixedBlockBoundsFromPool().offset((double)i, (double)j, (double)k);
+        return this.getFixedBlockBoundsFromPool().offset(i, j, k);
     }
 
     public AxisAlignedBB getBlockBoundsFromPoolBasedOnState(IBlockAccess blockAccess, int i, int j, int k) {
-        return !this.getIsOpen(blockAccess, i, j, k) ? AxisAlignedBB.getAABBPool().getAABB((double)0.0F, (double)0.0F, (double)0.0F, (double)1.0F, (double)0.5F, (double)1.0F) : AxisAlignedBB.getAABBPool().getAABB((double)0.0F, (double)0.0F, (double)0.0F, (double)1.0F, (double)0.75F, (double)1.0F);
+        return !this.getIsOpen(blockAccess, i, j, k) ? AxisAlignedBB.getAABBPool().getAABB(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F) : AxisAlignedBB.getAABBPool().getAABB(0.0F, 0.0F, 0.0F, 1.0F, 0.75F, 1.0F);
     }
 
     public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3 startRay, Vec3 endRay) {
@@ -250,31 +229,31 @@ public class CustomBasketBlock extends BasketBlock {
 
     private void initModelBase() {
         this.blockModelBase = new BlockModel();
-        this.blockModelBase.addBox((double)0.0625F, (double)0.0F, (double)0.125F, (double)0.9375F, (double)0.375F, (double)0.875F);
+        this.blockModelBase.addBox(0.0625F, 0.0F, 0.125F, 0.9375F, 0.375F, 0.875F);
     }
 
     private void initModelBaseOpenCollison() {
         this.blockModelBaseOpenCollision = new BlockModel();
-        this.blockModelBaseOpenCollision.addBox((double)0.0625F, (double)0.0F, (double)0.125F, (double)0.9375F, (double)0.75F, (double)0.875F);
+        this.blockModelBaseOpenCollision.addBox(0.0625F, 0.0F, 0.125F, 0.9375F, 0.75F, 0.875F);
     }
 
     private void initModelLid() {
         this.blockModelLid = new BlockModel();
-        this.blockModelLid.addBox((double)0.0F, (double)0.375F, (double)0.0625F, (double)1.0F, (double)0.4375F, (double)0.9375F);
-        this.blockModelLid.addBox((double)0.0625F, (double)0.4375F, (double)0.125F, (double)0.9375F, (double)0.5F, (double)0.875F);
-        this.blockModelLid.addBox((double)0.375F, (double)0.5F, (double)0.4375F, (double)0.625F, (double)0.5625F, (double)0.5625F);
+        this.blockModelLid.addBox(0.0F, 0.375F, 0.0625F, 1.0F, 0.4375F, 0.9375F);
+        this.blockModelLid.addBox(0.0625F, 0.4375F, 0.125F, 0.9375F, 0.5F, 0.875F);
+        this.blockModelLid.addBox(0.375F, 0.5F, 0.4375F, 0.625F, 0.5625F, 0.5625F);
     }
 
     private void initModelLidFull() {
         this.blockModelLidFull = new BlockModel();
-        this.blockModelLidFull.addBox((double)0.0F, (double)0.375F, (double)0.0625F, (double)1.0F, (double)0.4375F, (double)0.9375F);
-        this.blockModelLidFull.addBox((double)0.0625F, (double)0.4375F, (double)0.125F, (double)0.9375F, (double)0.5F, (double)0.875F);
-        this.blockModelLidFull.addBox((double)0.125F, (double)0.5F, (double)0.1875F, (double)0.875F, (double)0.5625F, (double)0.8125F);
+        this.blockModelLidFull.addBox(0.0F, 0.375F, 0.0625F, 1.0F, 0.4375F, 0.9375F);
+        this.blockModelLidFull.addBox(0.0625F, 0.4375F, 0.125F, 0.9375F, 0.5F, 0.875F);
+        this.blockModelLidFull.addBox(0.125F, 0.5F, 0.1875F, 0.875F, 0.5625F, 0.8125F);
     }
 
     private void initModelInterior() {
         this.blockModelInterior = new BlockModel();
-        this.blockModelInterior.addBox(0.8760000000474975, (double)0.375F, 0.8135000000474975, (double)0.124F, (double)0.0625F, (double)0.1865F);
+        this.blockModelInterior.addBox(0.8760000000474975, 0.375F, 0.8135000000474975, 0.124F, 0.0625F, 0.1865F);
     }
 
     private boolean isClickingOnLid(World world, int i, int j, int k, int iSideClicked, float fXClick, float fYClick, float fZClick) {
@@ -376,16 +355,15 @@ public class CustomBasketBlock extends BasketBlock {
         int k = rayTraceHit.blockZ;
         int iMetadata = world.getBlockMetadata(i, j, k);
         int iFacing = this.getFacing(iMetadata);
-        double minYBox = (double)j;
-        double maxYBox = (double)((float)j + 0.5F);
+        double maxYBox = (float)j + 0.5F;
         if (this.getIsOpen(iMetadata)) {
-            if (rayTraceHit.hitVec.yCoord - minYBox >= 0.9364999999525025) {
+            if (rayTraceHit.hitVec.yCoord - (double) j >= 0.9364999999525025) {
                 AxisAlignedBB tempLidBox = boxCollisionLidOpenLip.makeTemporaryCopy();
                 tempLidBox.rotateAroundYToFacing(iFacing);
-                return tempLidBox.offset((double)i, (double)j, (double)k);
+                return tempLidBox.offset(i, j, k);
             }
 
-            maxYBox -= (double)0.125F;
+            maxYBox -= 0.125F;
         }
 
         double minXBox;
@@ -404,6 +382,6 @@ public class CustomBasketBlock extends BasketBlock {
             maxZBox = (double)k + (double)1.0F - (double)0.0625F - (double)0.0625F;
         }
 
-        return AxisAlignedBB.getAABBPool().getAABB(minXBox, minYBox, minZBox, maxXBox, maxYBox, maxZBox);
+        return AxisAlignedBB.getAABBPool().getAABB(minXBox, j, minZBox, maxXBox, maxYBox, maxZBox);
     }
 }

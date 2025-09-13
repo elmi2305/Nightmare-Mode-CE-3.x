@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BasketBlock;
 import btw.block.blocks.HamperBlock;
-import btw.item.BTWItems;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;

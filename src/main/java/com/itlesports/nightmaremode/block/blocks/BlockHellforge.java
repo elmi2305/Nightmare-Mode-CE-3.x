@@ -5,7 +5,6 @@ import btw.block.BTWBlocks;
 import btw.block.model.BlockModel;
 import btw.block.model.OvenModel;
 import btw.world.util.BlockPos;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import net.fabricmc.api.EnvType;
@@ -19,8 +18,6 @@ import static com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntit
 public class BlockHellforge
         extends BlockFurnace {
     protected final BlockModel modelBlockInterior = new OvenModel();
-    protected final float clickYTopPortion = 0.375f;
-    protected final float clickYBottomPortion = 0.375f;
     @Environment(value = EnvType.CLIENT)
     private Icon[] fuelOverlays;
     @Environment(value = EnvType.CLIENT)
@@ -49,8 +46,6 @@ public class BlockHellforge
 
     @Override
     public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick) {
-        int iItemDamage;
-        Item item;
         int iMetadata = world.getBlockMetadata(i, j, k);
         int iBlockFacing = iMetadata & 7;
         if (iBlockFacing != iFacing) {
@@ -71,7 +66,7 @@ public class BlockHellforge
                 --heldStack.stackSize;
                 return true;
             }
-        } else if (fYClick < 0.375f && heldStack != null && ((item = heldStack.getItem()).getCanBeFedDirectlyIntoBrickOven(iItemDamage = heldStack.getItemDamage()) || FUEL_MAP.containsKey(heldStack.itemID))) {
+        } else if (fYClick < 0.375f && heldStack != null && (heldStack.getItem().getCanBeFedDirectlyIntoBrickOven(heldStack.getItemDamage()) || FUEL_MAP.containsKey(heldStack.itemID))) {
             int iItemsConsumed;
             if (!world.isRemote && (iItemsConsumed = tileEntity.attemptToAddFuel(heldStack)) > 0) {
                 if (this.isActive) {
@@ -148,8 +143,7 @@ public class BlockHellforge
 
     @Override
     public boolean setOnFireDirectly(World world, int i, int j, int k) {
-        HellforgeTileEntity tileEntity;
-        if (!this.isActive && (tileEntity = (HellforgeTileEntity) world.getBlockTileEntity(i, j, k)).attemptToLight()) {
+        if (!this.isActive && ((HellforgeTileEntity) world.getBlockTileEntity(i, j, k)).attemptToLight()) {
             world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "mob.ghast.fireball", 1.0f, world.rand.nextFloat() * 0.4f + 0.8f);
             return true;
         }
@@ -174,11 +168,6 @@ public class BlockHellforge
     @Override
     public boolean getIsBlockWarm(IBlockAccess blockAccess, int i, int j, int k) {
         return this.isActive;
-    }
-
-    @Override
-    public boolean doesBlockHopperInsert(World world, int i, int j, int k) {
-        return false;
     }
 
     @Override

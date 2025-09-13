@@ -1177,14 +1177,6 @@ public class NMAchievements {
             BTWItems.plateBreastplate.itemID,
             BTWItems.plateHelmet.itemID
     ));
-    private static boolean isWearingFullSteelArmor(EntityLivingBase entity){
-        for(int i = 1; i < 5; i++){
-            if(entity.getCurrentItemOrArmor(i) == null){return false;}
-            if(entity.getCurrentItemOrArmor(i).itemID == steelArmor.get(i - 1)) continue;
-            return false;
-        }
-        return true;
-    }
 
     private static boolean isWearingNoArmor(EntityLivingBase entity){
         for(int i = 1; i < 5; i++){

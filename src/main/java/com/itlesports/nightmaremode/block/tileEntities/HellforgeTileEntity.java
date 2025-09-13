@@ -2,29 +2,19 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.HopperBlock;
-import btw.block.tileentity.OvenTileEntity;
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.item.BTWItems;
 import btw.item.util.ItemUtils;
-import btw.world.util.BlockPos;
-import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.util.*;
 
 public class HellforgeTileEntity extends TileEntityFurnace implements TileEntityDataPacketHandler {
 
-    private static final float CHANCE_OF_FIRE_SPREAD = 0.01F;
     public static final int FUEL_LIMIT = 16000 * 8;
-    private boolean lightOnNextUpdate = false;
     private ItemStack cookStack = null;
     private int unlitFuelBurnTime = 0;
     private int visualFuelLevel = 0;
-    private final int brickBurnTimeMultiplier = 4;
-    private final int cookTimeMultiplier = 4;
-    private final int maxFuelBurnTime = 14200;
-    private final int visualFuelLevelIncrement = 1600;
-    private final int visualSputterFuelLevel = 400;
 
 
     public void updateEntity() {
@@ -41,7 +31,6 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
             this.furnaceBurnTime += this.unlitFuelBurnTime;
             this.unlitFuelBurnTime = 0;
-            this.lightOnNextUpdate = false;
 
             if (this.canSmelt()) {
                 ++this.furnaceCookTime;
@@ -95,7 +84,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
         tag.setInteger("fcUnlitFuel", this.unlitFuelBurnTime);
         tag.setByte("fcVisualFuel", (byte)this.visualFuelLevel);
     }
-    public static final Map<Integer, Integer> FUEL_MAP = new HashMap<Integer, Integer>();
+    public static final Map<Integer, Integer> FUEL_MAP = new HashMap<>();
 
     static {
         FUEL_MAP.put(Block.netherrack.blockID, 4000);
@@ -136,8 +125,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
             TileEntity te = this.worldObj.getBlockTileEntity(tx, ty, tz);
             // Only chests (not all IInventory)
-            if (te instanceof TileEntityChest) {
-                IInventory inv = (IInventory) te;
+            if (te instanceof TileEntityChest inv) {
                 ItemStack remaining = output.copy();
 
                 for (int slot = 0; slot < inv.getSizeInventory() && remaining.stackSize > 0; slot++) {
@@ -175,8 +163,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
     private void tryConsumeNetherrackBelow() {
         TileEntity te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-        if (!(te instanceof IInventory)) return;
-        IInventory inv = (IInventory) te;
+        if (!(te instanceof IInventory inv)) return;
 
         for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
             ItemStack s = inv.getStackInSlot(slot);
@@ -185,16 +172,6 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
             boolean isNetherrack = s.itemID == Block.netherrack.blockID;
 
             if (isNetherrack) {
-                // consume one
-
-
-                // Add fuel value. Prefer your registry if present:
-                int fuelValue = 0;
-                fuelValue = this.getItemBurnTime(s) * 16;
-
-                if (fuelValue <= 0) fuelValue = 4000; // default fallback
-
-                // Queue fuel to be applied next update (matches your existing logic)
                 if (this.attemptToAddFuel(s) > 0) {
                     s.stackSize -= 1;
                     if (s.stackSize <= 0) inv.setInventorySlotContents(slot, null);
@@ -206,72 +183,6 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
                 break;
             }
         }
-    }
-
-    private void tryPullFromTopHopper() {
-        int ax = this.xCoord;
-        int ay = this.yCoord + 1;
-        int az = this.zCoord;
-
-        TileEntity te = this.worldObj.getBlockTileEntity(ax, ay, az);
-        if (te == null) return;
-
-        boolean looksLikeHopper = te instanceof TileEntityHopper;
-
-        if (!looksLikeHopper) return;
-
-        // check if the hopper block position is powered (hopper powered -> perform transfer)
-        boolean powered = ((HopperBlock)BTWBlocks.hopper).isBlockOn(this.worldObj, ax, ay, az);
-
-        if (!powered) return;
-
-        // te should be an IInventory (most hopper tile entities implement it)
-        IInventory hopperInv = (IInventory) te;
-
-        // find first non-null stack in hopper and attempt to move one item into input (slot 0)
-        for (int hopperSlot = 0; hopperSlot < hopperInv.getSizeInventory(); hopperSlot++) {
-            ItemStack hStack = hopperInv.getStackInSlot(hopperSlot);
-            if (hStack == null) continue;
-
-            ItemStack toMove = hStack.copy();
-            toMove.stackSize = 1;
-
-            // check if input can accept
-            ItemStack input = this.getStackInSlot(0);
-            boolean canInsert = false;
-            if (input == null) canInsert = true;
-            else if (input.isItemEqual(toMove) &&
-                    ItemStack.areItemStackTagsEqual(input, toMove) &&
-                    input.stackSize < input.getMaxStackSize()) canInsert = true;
-
-            if (canInsert) {
-                // decrement hopper stack
-                hStack.stackSize -= 1;
-                if (hStack.stackSize <= 0) hopperInv.setInventorySlotContents(hopperSlot, null);
-                else hopperInv.setInventorySlotContents(hopperSlot, hStack);
-                hopperInv.onInventoryChanged();
-
-                // put into furnace input
-                if (input == null) {
-                    this.setInventorySlotContents(0, toMove);
-                } else {
-                    input.stackSize += 1;
-                    this.setInventorySlotContents(0, input);
-                }
-
-                this.onInventoryChanged();
-                break;
-            }
-        }
-    }
-
-    private boolean canAcceptIntoInput(ItemStack stack) {
-        if (stack == null) return false;
-        ItemStack input = this.getStackInSlot(0);
-        if (input == null) return true;
-        return input.isItemEqual(stack) &&
-                ItemStack.areItemStackTagsEqual(input, stack) &&
-                input.stackSize < input.getMaxStackSize();
     }
 
 
@@ -317,7 +228,6 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
     public boolean attemptToLight() {
         if (this.unlitFuelBurnTime > 0) {
-            this.lightOnNextUpdate = true;
             return true;
         } else {
             return false;
