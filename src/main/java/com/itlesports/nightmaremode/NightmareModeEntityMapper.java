@@ -27,5 +27,6 @@ public class NightmareModeEntityMapper {
         EntityList.addMapping(EntityCustomSkeleton.class, "NightmareBloodMoonSkeleton", 2318);
         EntityList.addMapping(EntitySkeletonDrowned.class, "NightmareDrownedSkeleton", 2319);
         EntityList.addMapping(EntitySkeletonMelted.class, "NightmareMeltedSkeleton", 2320);
+        EntityList.addMapping(EntityObsidianFish.class, "NightmareObsidianFish", 2321);
     }
 }

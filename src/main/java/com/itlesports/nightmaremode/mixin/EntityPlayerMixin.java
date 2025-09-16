@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
+import btw.achievement.AchievementHandler;
 import btw.achievement.AchievementTab;
+import btw.achievement.BTWAchievements;
 import btw.achievement.event.AchievementEventDispatcher;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
@@ -52,88 +54,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     public EntityPlayerMixin(World par1World) {
         super(par1World);
     }
-//    @Inject(method = "<init>", at = @At("TAIL"))
-//    private void aaaa(World par1World, String par2Str, CallbackInfo ci){
-//        runQualityAssurance();
-//        System.out.println("DOne");
-//    }
-
-    @Unique private static void runQualityAssurance(){
-        AchievementTab tab;
-        tab = TAB_GETTING_STARTED;
-        for (int i = 0; i < tab.achievementList.size(); i++) {
-            for (Object ac : tab.achievementList) {
-                for (Object par : ((Achievement) ac).parentAchievements) {
-                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
-                        System.out.println(
-                                "removeParent("
-                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
-                                        + I18n.getString(((Achievement<?>) par).name) + ");"
-                        );
-                    }
-                }
-            }
-        }
-
-
-        tab = TAB_IRON_AGE;
-        for (int i = 0; i < tab.achievementList.size(); i++) {
-            for (Object ac : tab.achievementList) {
-                for (Object par : ((Achievement) ac).parentAchievements) {
-                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
-                        System.out.println(
-                                "removeParent("
-                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
-                                        + I18n.getString(((Achievement<?>) par).name) + ");"
-                        );
-                    }
-                }
-            }
-        }
-
-        tab = TAB_AUTOMATION;
-        for (int i = 0; i < tab.achievementList.size(); i++) {
-            for (Object ac : tab.achievementList) {
-                for (Object par : ((Achievement) ac).parentAchievements) {
-                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
-                        System.out.println(
-                                "removeParent("
-                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
-                                        + I18n.getString(((Achievement<?>) par).name) + ");"
-                        );
-                    }
-                }
-            }
-        }
-        tab = TAB_END_GAME;
-        for (int i = 0; i < tab.achievementList.size(); i++) {
-            for (Object ac : tab.achievementList) {
-                for (Object par : ((Achievement) ac).parentAchievements) {
-                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
-                        System.out.println(
-                                "removeParent("
-                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
-                                        + I18n.getString(((Achievement<?>) par).name) + ");"
-                        );
-                    }
-                }
-            }
-        }
-        tab = TAB_EXTRAS;
-        for (int i = 0; i < tab.achievementList.size(); i++) {
-            for (Object ac : tab.achievementList) {
-                for (Object par : ((Achievement) ac).parentAchievements) {
-                    if (!Objects.equals(I18n.getString(((Achievement) par).tab.getName()), I18n.getString(((Achievement) ac).tab.getName()))) {
-                        System.out.println(
-                                "removeParent("
-                                        + I18n.getString(((Achievement<?>) ac).name) + ", "
-                                        + I18n.getString(((Achievement<?>) par).name) + ");"
-                        );
-                    }
-                }
-            }
-        }
-    }
 
     // can't jump if you have slowness
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
@@ -146,10 +66,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void noHitAttributes(CallbackInfo ci){
         if (NightmareMode.noHit) {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
-            this.getDataWatcher().updateObject(6, (byte)1);
+            this.setHealth(1f);
+//            this.getDataWatcher().updateObject(6, 1);
         } else if(NightmareMode.nite){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
-            this.getDataWatcher().updateObject(6, this.getHealthForExperience());
+//            this.getDataWatcher().updateObject(6, this.getHealthForExperience());
+            this.setHealth(this.getHealthForExperience());
         }
     }
     @Unique private byte getHealthForExperience(){
@@ -358,7 +280,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if(NightmareMode.noHit){
             if(this.getMaxHealth() > 1){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
-                this.getDataWatcher().updateObject(6, (byte)1);
+                this.getDataWatcher().updateObject(6, 0x1);
             }
         } else if(NightmareMode.nite){
             if(this.getMaxHealth() != this.getHealthForExperience()){
@@ -405,6 +327,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageAprilFools(CallbackInfo ci){
+        if(this.ticksExisted % 100 == 0){
+            for(Object ac : TAB_GETTING_STARTED.achievementList){
+                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+            }
+            for(Object ac : TAB_IRON_AGE.achievementList){
+                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+            }
+            for(Object ac : TAB_AUTOMATION.achievementList){
+                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+            }
+            for(Object ac : TAB_END_GAME.achievementList){
+                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+            }
+            for(Object ac : TAB_EXTRAS.achievementList){
+                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+            }
+        }
         if (NightmareMode.isAprilFools) {
             if(this.ticksExisted % soundInterval == (soundInterval - 1)){
                 this.playRandomMobOrItemSound();

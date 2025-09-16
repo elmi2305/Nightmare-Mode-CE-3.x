@@ -10,7 +10,7 @@ public class NMItems {
     public static ItemAR rifle;
     public static ItemBandage bandage;
     public static ItemIronKnittingNeedles ironKnittingNeedles;
-    public static ItemWitchLocator witchLocator;
+    public static ItemStructureLocator witchLocator;
 
     public static ItemBloodOrb bloodOrb;
     public static ItemBloodPickaxe bloodPickaxe;
@@ -71,17 +71,22 @@ public class NMItems {
     public static Item ACHIEVEMENT_SPECIAL_TRIPLE_TEAR;
     public static Item ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE;
 
+    public static ItemStructureLocator templeLocator;
+
+
 
 
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
+
+    public static final Item obsidianShard;
 
     static {
         rpg =(ItemRPG)(new ItemRPG(2309)).setTextureName("nmRPG");
         rifle = (ItemAR)(new ItemAR(2310)).setTextureName("nmRifle");
         bandage = (ItemBandage)(new ItemBandage(2311,0,0f,false)).setTextureName("nmBandage");
         ironKnittingNeedles = (ItemIronKnittingNeedles)(new ItemIronKnittingNeedles(2312)).setTextureName("nmNeedles");
-        witchLocator = (ItemWitchLocator)(new ItemWitchLocator(2314)).setTextureName("nmWitchDust");
+        witchLocator = (ItemStructureLocator)(new ItemStructureLocator(2314, true)).setTextureName("nmWitchDust").setUnlocalizedName("nmItemWitchLocator");
 
         bloodOrb = (ItemBloodOrb)(new ItemBloodOrb(2315)).setTextureName("nmBloodOrb");
         bloodPickaxe = (ItemBloodPickaxe)(new ItemBloodPickaxe(2316, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodPickaxe");
@@ -131,19 +136,25 @@ public class NMItems {
         dungApple = (NMFoodItem) new NMFoodItem(2353, 2, 0.25f, false, "nmDungApple",false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nmDungApple").setCreativeTab(CreativeTabs.tabFood);
         creeperBallSoup = (NMFoodItem) new NMFoodItem(2354, 6, 1f, false, "nmOysterSoup",false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nmOysterSoup").hideFromEMI();
 
-        ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nmAchievementSpecialSnowball");
-        ACHIEVEMENT_SPECIAL_HARDMODE = new NMItem(2405).setTextureName("nmAchievementHardmode");
-        ACHIEVEMENT_SPECIAL_BLOODMOON = new NMItem(2406).setTextureName("nmAchievementBloodMoon");
-        ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER = new NMItem(2409).setTextureName("nmAchievementBloodMoonWither");
-        ACHIEVEMENT_SPECIAL_ECLIPSE = new NMItem(2410).setTextureName("nmAchievementEclipse");
-        ACHIEVEMENT_SPECIAL_MERCHANT = new NMItem(2411).setTextureName("nmAchievementMerchant");
-        ACHIEVEMENT_SPECIAL_CHICKEN = new NMItem(2412).setTextureName("nmAchievementChicken");
-        ACHIEVEMENT_SPECIAL_DIAMOND = new NMItem(2413).setTextureName("nmAchievementDiamond");
-        ACHIEVEMENT_SPECIAL_SKULL = new NMItem(2415).setTextureName("nmAchievementBloodSkull");
-        ACHIEVEMENT_SPECIAL_ARROW_TRIPLE = new NMItem(2416).setTextureName("nmAchievementTripleArrow");
-        ACHIEVEMENT_SPECIAL_ARROW_RED = new NMItem(2417).setTextureName("nmAchievementArrowRed");
-        ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new NMItem(2418).setTextureName("nmAchievementTripleTear");
-        ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nmAchievementBloodZombie");
+        templeLocator = (ItemStructureLocator)(new ItemStructureLocator(2355, false)).setTextureName("nmTempleDust").setUnlocalizedName("nmTempleDust");
+
+
+        obsidianShard = new NMItem(2356).setTextureName("nmObsidianShard").setUnlocalizedName("nmObsidianShard").setCreativeTab(CreativeTabs.tabMaterials);
+
+
+        ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nmAchievementSpecialSnowball").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_HARDMODE = new NMItem(2405).setTextureName("nmAchievementHardmode").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_BLOODMOON = new NMItem(2406).setTextureName("nmAchievementBloodMoon").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER = new NMItem(2409).setTextureName("nmAchievementBloodMoonWither").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_ECLIPSE = new NMItem(2410).setTextureName("nmAchievementEclipse").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_MERCHANT = new NMItem(2411).setTextureName("nmAchievementMerchant").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_CHICKEN = new NMItem(2412).setTextureName("nmAchievementChicken").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_DIAMOND = new NMItem(2413).setTextureName("nmAchievementDiamond").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_SKULL = new NMItem(2415).setTextureName("nmAchievementBloodSkull").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_ARROW_TRIPLE = new NMItem(2416).setTextureName("nmAchievementTripleArrow").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_ARROW_RED = new NMItem(2417).setTextureName("nmAchievementArrowRed").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new NMItem(2418).setTextureName("nmAchievementTripleTear").hideFromEMI();
+        ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nmAchievementBloodZombie").hideFromEMI();
 
     }
 }

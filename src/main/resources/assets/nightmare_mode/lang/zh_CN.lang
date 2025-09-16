@@ -43,6 +43,9 @@ item.nmVoidSack.name=虚空袋
 item.nmVoidMembrane.name=虚空膜
 item.nmDungApple.name=粪苹果
 item.nmOysterSoup.name=苦力怕酶腺汤
+item.nmTempleDust.name=远古之沙
+item.nmObsidianShard.name=黑曜石碎片
+
 
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石
@@ -55,6 +58,8 @@ tile.nmAsphalt.name=沥青
 tile.nmStoneLadder.name=石质梯子
 tile.nmIronLadder.name=铁质梯子
 tile.nmHellforgeBlock.name=地狱砖炉
+tile.nmCrudeObsidian.name=粗制黑曜石
+
 
 container.steelLocker=钢储物柜
 container.inventory=物品栏
@@ -77,6 +82,8 @@ entity.NightmareFauxVillager.name=冒牌村民
 entity.NightmareImposterZombie.name=伪装者僵尸
 entity.NightmareDrownedSkeleton.name=溺骸骷髅
 entity.NightmareMeltedSkeleton.name=熔火骷髅
+entity.NightmareObsidianFish.name=黑曜石鱼
+
 
 key.nightmaremode.zoomhold=按住缩放
 key.nightmaremode.zoomtoggle=切换缩放

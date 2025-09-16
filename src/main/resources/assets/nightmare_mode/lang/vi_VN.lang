@@ -16,6 +16,7 @@ entity.NightmareFauxVillager.name=Thương nhân lang thang
 entity.NightmareImposterZombie.name=Thương nhân lang thang
 entity.NightmareDrownedSkeleton.name=Bộ xương nước
 entity.NightmareMeltedSkeleton.name=Bộ xương lửa
+entity.NightmareObsidianFish.name=Cá Obsidian
 item.nmRPG.name=Rocket Launcher
 item.nmRifle.name=Súng trường tấn công
 item.nmBandage.name=Băng gạc
@@ -61,12 +62,21 @@ item.nmVoidSack.name=Túi hư không
 item.nmVoidMembrane.name=Màng hư không
 item.nmDungApple.name=Táo phân
 item.nmOysterSoup.name=Súp hàu Creeper
+item.nmTempleDust.name=Cát Cổ Đại
+item.nmObsidianShard.name=Mảnh Vỡ Obsidian
+
+
+
+
 tile.nmSteelOre.name=Quặng thép
 tile.nmSpecialObsidian.name=Đá đấu trường
 tile.nmCryingObsidian.name=Đá đấu trường đang khóc
 tile.nmBloodBone.name=Khối huyết xương
 tile.nmBloodChest.name=Huyết rương
 tile.nmSteelLocker.name=Tủ thép
+tile.nmCrudeObsidian.name=Obsidian Thô
+
+
 container.steelLocker=Tủ thép
 container.inventory=Túi đồ
 tile.nmRoad.name=Khối đường đi

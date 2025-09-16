@@ -8,14 +8,15 @@ import net.minecraft.src.*;
 
 import java.util.List;
 
-public class ItemWitchLocator
+public class ItemStructureLocator
         extends Item {
-    public ItemWitchLocator(int iItemID) {
+    private boolean shouldLocateSwamps;
+    public ItemStructureLocator(int iItemID, boolean swamp) {
         super(iItemID);
         this.setBellowsBlowDistance(1);
         this.setFilterableProperties(8);
         this.setItemRightClickCooldown(120L);
-        this.setUnlocalizedName("nmItemWitchLocator");
+        this.shouldLocateSwamps = swamp;
         this.setCreativeTab(CreativeTabs.tabMaterials);
     }
 
@@ -35,7 +36,7 @@ public class ItemWitchLocator
                 for (ChunkPosition pos : positions) {
                     dTargetXPos = pos.x * 16;
                     dTargetZPos = pos.z * 16;
-                    if(world.getBiomeGenForCoords((int)dTargetXPos,(int)dTargetZPos) != BiomeGenBase.swampland) continue;
+                    if(world.getBiomeGenForCoords((int)dTargetXPos,(int)dTargetZPos) != (this.shouldLocateSwamps ? BiomeGenBase.swampland : BiomeGenBase.desert)) continue;
                     EmeraldPileEntity sandEntity = new EmeraldPileEntity(world, player.posX, player.posY + 1.7 - (double)player.yOffset, player.posZ);
                     sandEntity.moveTowards(dTargetXPos, dTargetZPos);
                     world.spawnEntityInWorld(sandEntity);

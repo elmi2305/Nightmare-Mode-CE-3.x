@@ -43,6 +43,8 @@ item.nmVoidSack.name=Void Sack
 item.nmVoidMembrane.name=Void Membrane
 item.nmDungApple.name=Dung Apple
 item.nmOysterSoup.name=Creeper Oyster Stew
+item.nmTempleDust.name=Ancient Sand
+item.nmObsidianShard.name=Obsidian Shard
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
@@ -55,6 +57,7 @@ tile.nmAsphalt.name=Asphalt
 tile.nmStoneLadder.name=Stone Ladder
 tile.nmIronLadder.name=Iron Ladder
 tile.nmHellforgeBlock.name=Hellforge
+tile.nmCrudeObsidian.name=Crude Obsidian
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -77,6 +80,7 @@ entity.NightmareFauxVillager.name=Wandering Trader
 entity.NightmareImposterZombie.name=Wandering Trader
 entity.NightmareDrownedSkeleton.name=Drowned
 entity.NightmareMeltedSkeleton.name=Inferno
+entity.NightmareObsidianFish.name=Obsidian Fish
 
 key.nightmaremode.zoomhold=Hold to zoom
 key.nightmaremode.zoomtoggle=Toggle zoom

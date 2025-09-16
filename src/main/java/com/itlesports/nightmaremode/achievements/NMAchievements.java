@@ -189,7 +189,7 @@ public class NMAchievements {
             AchievementProvider.getBuilder(NMAchievementEvents.BlockBrokenEvent.class)
                     .name(loc("breakLavaPillow"))
                     .icon(BTWBlocks.lavaPillow)
-                    .displayLocation(15, -1)
+                    .displayLocation(14, -1)
                     .triggerCondition(data -> data.blockID() == BTWBlocks.lavaPillow.blockID)
                     .parents(CRAFT_STONE_PICKAXE)
                     .build()
@@ -1207,6 +1207,18 @@ public class NMAchievements {
         }
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

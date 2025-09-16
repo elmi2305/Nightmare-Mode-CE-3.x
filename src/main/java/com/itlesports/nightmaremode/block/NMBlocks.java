@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.block;
 
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrockBlock;
+import btw.block.blocks.FallingFullBlock;
+import btw.block.blocks.FullBlock;
 import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
@@ -26,6 +28,8 @@ public class NMBlocks {
 
     public static Block hellforge;
     public static CustomBasketBlock customWickerBasket;
+
+    public static Block crudeObsidian;
 
 
     public static void initNightmareBlocks(){
@@ -74,7 +78,8 @@ public class NMBlocks {
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
 
-
+        crudeObsidian = new FallingFullBlock(2317, Material.rock).setHardness(50F).setResistance(44f).setUnlocalizedName("nmCrudeObsidian").setTextureName("nmCrudeObsidian").setCreativeTab(CreativeTabs.tabBlock);
+        Item.itemsList[crudeObsidian.blockID] = new NMItemBlock(NMBlocks.crudeObsidian.blockID - 256);
 
 
     }

@@ -212,13 +212,13 @@ public abstract class NMInitializer implements AchievementExt {
             BTWItems.emeraldPile.setItemRightClickCooldown( BTWItems.emeraldPile.getItemRightClickCooldown() / 6);
             BTWItems.soulSandPile.setItemRightClickCooldown( BTWItems.soulSandPile.getItemRightClickCooldown() / 6);
             NMItems.witchLocator.setItemRightClickCooldown( NMItems.witchLocator.getItemRightClickCooldown() / 6);
+            NMItems.templeLocator.setItemRightClickCooldown( NMItems.templeLocator.getItemRightClickCooldown() / 6);
         }
     }
 
 
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
-//        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(12, 16).mandatory().build());
         EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
@@ -549,6 +549,8 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
+
+        RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(Block.obsidian, 4), new ItemStack(Item.ingotGold, 2)});
     }
 
     private static void addOvenRecipes(){
@@ -768,8 +770,18 @@ public abstract class NMInitializer implements AchievementExt {
         // add ground netherrack -> netherrack 1:1 conversion
         RecipeManager.addShapelessRecipe(new ItemStack(Block.netherrack, 1), new Object[]{new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack)});
 
+        // add obsidian recipes
+        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.crudeObsidian, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
 
 
+        RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1), new Object[]{
+                "ICI",
+                "CSC",
+                "ICI",
+                Character.valueOf('C'), Item.clay,
+                Character.valueOf('S'), NMBlocks.crudeObsidian,
+                Character.valueOf('I'), BTWItems.ironNugget}
+        );
     }
 
     private static void addPistonPackingRecipes() {

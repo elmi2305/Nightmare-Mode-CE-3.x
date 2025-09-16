@@ -30,6 +30,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityCustomSkeleton.class, new RenderSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonDrowned.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
+        RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
 
 
 
