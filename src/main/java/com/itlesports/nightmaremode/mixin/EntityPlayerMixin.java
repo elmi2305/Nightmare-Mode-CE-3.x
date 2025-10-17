@@ -1,22 +1,23 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
-import btw.achievement.AchievementHandler;
-import btw.achievement.AchievementTab;
-import btw.achievement.BTWAchievements;
 import btw.achievement.event.AchievementEventDispatcher;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
+import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.network.IHorseTamingClient;
+import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,11 +29,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
-import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
+
 
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean isPlayer();
@@ -50,6 +51,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
+    @Unique private int noArmorTicks;
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -141,8 +143,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public int getMaxInPortalTime() {
-        if(NMUtils.getWorldProgress() > 1) {return 30;}
-        return super.getMaxInPortalTime();
+        if(NMUtils.getWorldProgress() > 1) {return 25;}
+        if(NMUtils.getWorldProgress() > 0) {return 40;}
+        return 60;
     }
 
     @Inject(method = "dropPlayerItemWithRandomChoice", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD)
@@ -223,7 +226,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "sleepInBedAt", at = @At("HEAD"),cancellable = true)
     private void preventPlayerFromSleepingIfBlocked(int par1, int par2, int par3, CallbackInfoReturnable<EnumStatus> cir){
         if(this.worldObj.getBlockId(par1, par2 + 1, par3) != 0){
-            cir.cancel();
+            cir.setReturnValue(EnumStatus.OTHER_PROBLEM);
         }
     }
 
@@ -252,8 +255,30 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageLeavingGameDuringBloodWitherFight(CallbackInfo ci){
+        if(this.ticksExisted % 100 == 0){
+            NightmareMode.getInstance().setCanLeaveGame(!EntityBloodWither.isBossActive());
+        }
+    }
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void manageBloodWitherDeath(DamageSource par1DamageSource, CallbackInfo ci){
+        NightmareMode.getInstance().setCanLeaveGame(true);
+        EntityBloodWither.setBossActive(false);
+    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
     private void managePotionsDuringBloodArmor(CallbackInfo ci){
         Collection activePotions = this.getActivePotionEffects();
+        boolean hasWither = false;
+        for (Object obj : this.worldObj.loadedEntityList) {
+            if (obj instanceof EntityBloodWither) {
+                hasWither = true;
+                break;
+            }
+        }
+        if(!hasWither){
+            NightmareMode.getInstance().setCanLeaveGame(true);
+            EntityBloodWither.setBossActive(false);
+        }
         if (NMUtils.isWearingFullBloodArmorWithoutSword(this)) {
             for(Object activePotion : activePotions){
                 if(activePotion == null) continue;
@@ -266,10 +291,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         } else{
             this.ticksSleeping = 0;
         }
+        if(NMAchievements.isWearingNoArmor(this)){
+            this.noArmorTicks ++;
+        } else{
+            this.noArmorTicks = 0;
+        }
         if(this.ticksExisted % 80 != 0) return;
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.PlayerSleepEvent.class, thisObj, this.ticksSleeping);
+        if (this.posY < 16 && this.dimension == 0) {
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArmorLessEvent.class, thisObj, this.noArmorTicks);
+        }
 
         if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
             NMUtils.setItemStackSizes(32);
@@ -327,23 +360,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageAprilFools(CallbackInfo ci){
-        if(this.ticksExisted % 100 == 0){
-            for(Object ac : TAB_GETTING_STARTED.achievementList){
-                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
-            }
-            for(Object ac : TAB_IRON_AGE.achievementList){
-                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
-            }
-            for(Object ac : TAB_AUTOMATION.achievementList){
-                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
-            }
-            for(Object ac : TAB_END_GAME.achievementList){
-                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
-            }
-            for(Object ac : TAB_EXTRAS.achievementList){
-                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
-            }
-        }
         if (NightmareMode.isAprilFools) {
             if(this.ticksExisted % soundInterval == (soundInterval - 1)){
                 this.playRandomMobOrItemSound();
@@ -486,9 +502,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "dismountEntity", at = @At("TAIL"))
+    private void manageHorseDismount(Entity riddenEntity, CallbackInfo ci){
+        if(riddenEntity instanceof EntityHorse horse && !horse.isTame()) {
+            ((EntityAnimalInvoker)horse).invokeOnNearbyPlayerStartles((EntityPlayer)(Object)this);
+            // that's a lot of casting
+        }
+    }
+
+
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ticksExisted % 4 == 3) {
+        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && !this.worldObj.isRemote && this.ticksExisted % 4 == 3) {
             double range = NMUtils.getIsEclipse() ? 3 : 5;
 
             List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
@@ -503,6 +528,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                     if(tempAnimal instanceof EntitySheep) continue;
                 }
                 boolean isNotSneaking = !this.isSneaking();
+                boolean shouldHorseStayClose = tempAnimal instanceof EntityHorse horse
+                        && ((this.getHeldItem() != null
+                        && this.getHeldItem().itemID == BTWItems.wheat.itemID)
+                        || horse.getInLove() > 0
+                        || horse.isTame()
+                );
+                if(shouldHorseStayClose) continue;
                 boolean isHoldingItemToRunFrom = this.getHeldItem() != null && itemsToRunFrom.contains(this.getHeldItem().itemID);
                 boolean shouldRun = (isNotSneaking || isHoldingItemToRunFrom) && !tempAnimal.getLeashed();
 

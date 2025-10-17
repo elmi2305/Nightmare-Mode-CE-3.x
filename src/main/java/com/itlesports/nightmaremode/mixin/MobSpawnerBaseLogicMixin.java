@@ -38,4 +38,10 @@ public abstract class MobSpawnerBaseLogicMixin {
         }
         return par1Entity;
     }
+
+
+    @Inject(method = "hasReachedSpawnCap", at = @At("RETURN"),cancellable = true)
+    private void uncapSpawner(CallbackInfoReturnable<Boolean> cir){
+        cir.setReturnValue(false);
+    }
 }

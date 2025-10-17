@@ -14,8 +14,8 @@ public abstract class BiomeGenJungleMixin implements BiomeGenBaseAccessor{
     @Inject(method = "<init>", at = @At("TAIL"))
     private void magicMonsters(int par1, CallbackInfo ci){
         if(NightmareMode.magicMonsters){
-            this.getSpawnableMonsterList().clear();
-            this.getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 2, 1, 1));
+            this.nightmareMode$getSpawnableMonsterList().clear();
+            this.nightmareMode$getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 2, 1, 1));
         }
     }
 }

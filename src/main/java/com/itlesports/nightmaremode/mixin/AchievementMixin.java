@@ -6,6 +6,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
 
+import java.util.function.Predicate;
+
 @Mixin(Achievement.class)
 public class AchievementMixin implements AchievementExt {
     @Shadow @Final @Mutable public Achievement[] parentAchievements;
@@ -14,11 +16,17 @@ public class AchievementMixin implements AchievementExt {
     @Mutable @Shadow @Final public int displayColumn;
     @Mutable @Shadow @Final public ResourceLocation id;
     @Mutable @Shadow @Final public ItemStack theItemStack;
+    @Mutable @Shadow @Final public Predicate predicate;
 
     @Override
     public void nightmareMode$setDisplay(int row, int column) {
         this.displayRow = row;
         this.displayColumn = column;
+    }
+
+    @Override
+    public void nightmareMode$setPredicate(Predicate predicate) {
+        this.predicate = predicate;
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIChasePlayer;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntitySheep.class)
 public abstract class EntitySheepMixin extends EntityAnimal {
+    @Shadow public abstract int getFleeceColor();
+
     public EntitySheepMixin(World par1World) {
         super(par1World);
     }
@@ -21,6 +25,18 @@ public abstract class EntitySheepMixin extends EntityAnimal {
     private void manageEclipseChance(World world, CallbackInfo ci){
         NMUtils.manageEclipseChance(this,4);
         this.targetTasks.addTask(12, new EntityAIChasePlayer(this, 1.35f));
+    }
+
+    @Inject(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySheep;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"))
+    private void chanceToDropMoreWool(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        if(bKilledByPlayer){
+            if(this.rand.nextInt(4) == 0){
+                this.entityDropItem(new ItemStack(BTWItems.wool.itemID, 1, BlockColored.getDyeFromBlock(this.getFleeceColor())), 0.0F);
+                if(this.rand.nextInt(4) == 0){
+                    this.entityDropItem(new ItemStack(BTWItems.wool.itemID, 1, BlockColored.getDyeFromBlock(this.getFleeceColor())), 0.0F);
+                }
+            }
+        }
     }
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageJumpAttackAtPlayer(CallbackInfo ci){

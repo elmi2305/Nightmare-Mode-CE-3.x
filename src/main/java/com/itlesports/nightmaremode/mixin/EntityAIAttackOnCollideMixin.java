@@ -32,6 +32,15 @@ public abstract class EntityAIAttackOnCollideMixin {
         boolean isHostile = attacker.worldObj.getDifficulty() == Difficulties.HOSTILE;
         boolean canSeeTarget = attacker.canEntityBeSeen(target);
 
+        if(target.ridingEntity instanceof EntityHorse horse){
+            if(attacker.getDistanceSqToEntity(horse) < 6 && isHostile && ai.attackTick <= 1 && attacker.canEntityBeSeen(horse)){
+                attacker.swingItem();
+                attacker.attackEntityAsMob(horse);
+                ai.attackTick = 8 - NMUtils.getWorldProgress() * 2;
+            }
+        }
+
+
         if (distanceSq < computedRange && isHostile && ai.attackTick <= 1 && canSeeTarget) {
             attacker.swingItem();
             attacker.attackEntityAsMob(target);

@@ -21,32 +21,36 @@ public class BlockWoodMixin extends Block {
         return true;
     }
 
+
     public boolean isFallingBlock() {
-        return NightmareMode.noSkybases;
+        return NightmareMode.noSkybases || super.isFallingBlock();
     }
 
     public void onBlockAdded(World world, int i, int j, int k) {
         if (NightmareMode.noSkybases) {
             this.scheduleCheckForFall(world, i, j, k);
         }
+        super.onBlockAdded(world,i,j,k);
     }
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int iNeighborBlockID) {
         if (NightmareMode.noSkybases) {
             this.scheduleCheckForFall(world, i, j, k);
         }
+        super.onNeighborBlockChange(world,i,j,k,iNeighborBlockID);
     }
 
     public void updateTick(World world, int i, int j, int k, Random rand) {
         if (NightmareMode.noSkybases) {
             this.checkForFall(world, i, j, k);
         }
+        super.updateTick(world,i,j,k,rand);
     }
 
     public int tickRate(World par1World) {
         if (NightmareMode.noSkybases) {
-            return 2;
+            return 4;
         }
-        return 10;
+        return super.tickRate(par1World);
     }
 }

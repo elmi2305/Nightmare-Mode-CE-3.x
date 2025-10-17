@@ -1,9 +1,11 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import btw.item.items.PickaxeItem;
 import com.itlesports.nightmaremode.entity.EntityObsidianFish;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -12,6 +14,8 @@ import java.util.Random;
 
 @Mixin(BlockObsidian.class)
 public class BlockObsidianMixin extends Block {
+    @Unique private boolean shouldDropBlock = false;
+
     protected BlockObsidianMixin(int par1, Material par2Material) {
         super(par1, par2Material);
     }
@@ -33,7 +37,12 @@ public class BlockObsidianMixin extends Block {
     @Override
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
         if (!world.isRemote) {
-            this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(3) + 3 + iFortuneModifier, 8), 0, 1.0F);
+            if (this.shouldDropBlock) {
+                this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, 0, 1.0F);
+                this.shouldDropBlock = false;
+            } else{
+                this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(3) + 3 + iFortuneModifier, 8), 0, 1.0F);
+            }
         }
     }
 
@@ -48,6 +57,9 @@ public class BlockObsidianMixin extends Block {
             fish.setPositionAndUpdate(x + 0.5, y + 0.1, z + 0.5);
             fish.setAttackTarget(player);
             world.spawnEntityInWorld(fish);
+        }
+        if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof PickaxeItem pick && pick.toolMaterial.getHarvestLevel() > 3) {
+            this.shouldDropBlock = true;
         }
     }
 }

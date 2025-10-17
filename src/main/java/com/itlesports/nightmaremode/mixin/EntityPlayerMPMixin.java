@@ -4,6 +4,7 @@ import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EntityPlayerMP.class)
-public abstract class EntityPlayerMPMixin extends EntityPlayer {
+public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 
@@ -37,11 +38,21 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         return chicken.isPotionActive(Potion.damageBoost);
         // mirror of isTired() in EntityChickenMixin
     }
+
     @Unique public boolean isChickenAirborne(EntityChicken chicken){
         return chicken.motionY != 0;
     }
+    @Unique private EnumFacing serverHeldDirection;
 
+    @Override
+    public EnumFacing nm$getHeldDirection() {
+        return serverHeldDirection;
+    }
 
+    @Override
+    public void nm$setHeldDirectionServer(EnumFacing dir) {
+        this.serverHeldDirection = dir;
+    }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
@@ -93,13 +104,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
         }
     }
 
-    @Redirect(method = "isInGloom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
-    private boolean manageGloomDuringBloodMoon(EntityPlayerMP player, Potion potion){
-//        if(NMUtils.getIsBloodMoon()){
-//            return false;
-//        }
-        return player.isPotionActive(potion);
-    }
 
 
     @Inject(method = "isInGloom", at = @At("HEAD"),cancellable = true)
@@ -108,27 +112,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer {
             cir.setReturnValue(false);
         }
     }
-
-//
-//    @Inject(method = "travelToDimension",
-//            at = @At(value = "INVOKE",
-//                    target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",
-//                    ordinal = 2),cancellable = true)
-//    private void initialiseNetherThreeDayPeriod(int par1, CallbackInfo ci){
-//        if (NMUtils.getWorldProgress(this.worldObj) > 0 && this.dimension == 0) {
-//            int dayCount = ((int)Math.ceil((double) this.worldObj.getWorldTime() / 24000)) + (this.worldObj.getWorldTime() % 24000 >= 23459 ? 1 : 0);
-//            if(NMUtils.getIsBloodMoon() || (dayCount % 16 >= 8 && dayCount % 16 <= 9)){
-//                if(this.isTryingToEscapeBloodMoon){
-//                    ChatMessageComponent text1 = new ChatMessageComponent();
-//                    text1.addKey("player.attemptEscapeBloodmoon");
-//                    text1.setColor(EnumChatFormatting.DARK_RED);
-//                    this.sendChatToPlayer(text1);
-//                    this.isTryingToEscapeBloodMoon = false;
-//                }
-//                ci.cancel();
-//            }
-//        }
-//    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageNetherThreeDayPeriod(CallbackInfo ci){

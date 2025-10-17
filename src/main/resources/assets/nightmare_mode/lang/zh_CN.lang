@@ -45,6 +45,7 @@ item.nmDungApple.name=粪苹果
 item.nmOysterSoup.name=苦力怕酶腺汤
 item.nmTempleDust.name=远古之沙
 item.nmObsidianShard.name=黑曜石碎片
+item.nmTimeBottle.name=时间之瓶
 
 
 tile.nmSteelOre.name=钢矿石
@@ -59,6 +60,8 @@ tile.nmStoneLadder.name=石质梯子
 tile.nmIronLadder.name=铁质梯子
 tile.nmHellforgeBlock.name=地狱砖炉
 tile.nmCrudeObsidian.name=粗制黑曜石
+tile.nmAsphaltLayer.name=沥青层
+
 
 
 container.steelLocker=钢储物柜
@@ -72,7 +75,7 @@ entity.NightmareGolem.name=血咒魔像
 entity.NightmareBloodWither.name=血咒凋灵
 entity.NightmareFireSpider.name=火焰蜘蛛
 entity.NightmareStoneZombie.name=石肤僵尸
-entity.NightmareMetalCreeper.name=金属苦力怕
+entity.NightmareObsidianCreeper.name=黑曜石苦力怕
 entity.NightmareSupercriticalCreeper.name=超能苦力怕
 entity.NightmareBlackWidowSpider.name=黑寡妇蜘蛛
 entity.NightmareRadioactiveEnderman.name=辐射末影人
@@ -211,6 +214,10 @@ gui.config.extra_armor=额外护甲
 gui.config.tooltip.extra_armor=开局获得一套简易盔甲
 gui.config.full_bright=高亮模式
 gui.config.tooltip.full_bright=以最大亮度渲染世界。不会绕过黑暗效果
+gui.config.fast_villagers=快速村民
+gui.config.tooltip.fast_villagers=让村民每天重新刷新交易4次
+
+
 
 gui.warning.line1=伙计
 gui.warning.line2=你正在尝试加入一个启用了癌症模式的世界
@@ -219,6 +226,9 @@ gui.warning.line4=因为它很可能会被破坏
 gui.warning.line5=你确定要继续吗？这是给你的最后警告
 gui.warning.iknow=我知道我在做什么
 gui.warning.goback=返回
+
+
+
 
 gui.gameover.tip_prefix=提示：
 gui.gameover.tip1=远离海洋！
@@ -608,3 +618,11 @@ achievement.nm.groundNetherrack.desc=用TNT炸毁地狱岩以获得地狱岩粉�
 
 achievement.nm.craftHellforge=无尽之焰
 achievement.nm.craftHellforge.desc=合成地狱砖炉，这是砖炉的升级版
+
+achievement.nm.sinner=通往地狱的高速路
+achievement.nm.sinner.desc=犯下七宗罪
+
+achievement.nm.dungApple=绝对恶心
+achievement.nm.dungApple.desc=吃下一颗粪苹果。但为什么呢？
+
+

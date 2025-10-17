@@ -9,7 +9,6 @@ import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.item.NMItems;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -105,14 +104,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
 
 
-    // dung creeper variant handled in EntityCreeperVariant.class
+    // dung creeper variant WILL BE handled in EntityCreeperVariant.class
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
     private void manageDungCreeper(CallbackInfo ci){
-        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        EntityCreeper self = (EntityCreeper)(Object)this;
 
-        if(thisObj instanceof EntityDungCreeper){
-            for(int i = 0; i < 12; i++){
-                spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung),3,this.rand);
+        if(self instanceof EntityDungCreeper){
+            int amount = NightmareMode.isAprilFools ? 12 : 4;
+            for(int i = 0; i < amount; i++){
+                spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung), amount / 4,this.rand);
             }
         }
     }
@@ -269,7 +269,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
     private void jumpBeforeExploding(CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
-        if (!(thisObj instanceof EntityMetalCreeper) && !(thisObj instanceof EntitySuperchargedCreeper) && !(thisObj instanceof EntityLightningCreeper)) {
+        if (!(thisObj instanceof EntityObsidianCreeper) && !(thisObj instanceof EntitySuperchargedCreeper) && !(thisObj instanceof EntityLightningCreeper)) {
             // 8 ticks before it explodes
             if (this.timeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
                 EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
@@ -345,7 +345,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void setFuseTimeDependingOnVariant(World world, CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
-        if (thisObj instanceof EntityMetalCreeper) {
+        if (thisObj instanceof EntityObsidianCreeper) {
             this.setFuseTime(60);
         } else if (thisObj instanceof EntitySuperchargedCreeper) {
             this.setFuseTime(15);
@@ -361,7 +361,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private float modifyExplosionSize(float par8) {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
-        float variantExplosionModifier = thisObj instanceof EntityMetalCreeper ? 1.5f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
+        float variantExplosionModifier = thisObj instanceof EntityObsidianCreeper ? 1.5f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
         float bloodmoonModifier = NMUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NMUtils.getNiteMultiplier();

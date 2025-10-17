@@ -93,8 +93,8 @@ public class EntityDungCreeper extends EntityCreeper implements EntityWithCustom
 
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
-        if (this.getNeuteredState() == 0 && this.rand.nextInt(8) == 0) {
-            this.dropItem(Item.fireballCharge.itemID, 1);
+        if (this.getNeuteredState() == 0 && this.rand.nextInt(100) == 0) {
+            this.dropItem(NMItems.dungApple.itemID, 1);
         }
 
 

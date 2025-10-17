@@ -209,8 +209,8 @@ public abstract class EntityWitchMixin extends EntityMob {
 
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
-                int var4 = this.rand.nextInt(9)+4;
-                // 4 - 12
+                int var4 = this.rand.nextInt(9)+6;
+                // 6 - 14
                 if (iLootingModifier > 0) {
                     var4 += this.rand.nextInt(iLootingModifier + 1);
                 }
@@ -230,7 +230,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
                 int itemID = NMItems.voidMembrane.itemID;
 
-                int var4 = this.rand.nextInt(5);
+                int var4 = this.rand.nextInt(5) + 1;
                 if (iLootingModifier > 0) {
                     var4 += this.rand.nextInt(iLootingModifier + 1);
                 }

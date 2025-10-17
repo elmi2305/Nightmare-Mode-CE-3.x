@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode;
 
 import btw.achievement.AchievementTab;
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import btw.crafting.manager.CauldronCraftingManager;
 import btw.crafting.manager.CrucibleStokedCraftingManager;
 import btw.crafting.manager.MillStoneCraftingManager;
@@ -16,8 +17,11 @@ import btw.util.color.Color;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.NMPostItems;
 import com.itlesports.nightmaremode.mixin.AchievementAccessor;
+import com.itlesports.nightmaremode.mixin.BiomeGenBaseAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,6 +29,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
@@ -40,6 +45,90 @@ public abstract class NMInitializer implements AchievementExt {
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
+    }
+    public static void runItemPostInit(){
+        NMPostItems.runPostInit();
+    }
+    public static void initMobSpawning(){
+        addMobToMushroomIslands(EntityGhast.class, 1, 1, 1);
+        addMobToMushroomIslands(EntityFauxVillager.class, 2, 1, 1);
+
+        if (NightmareMode.magicMonsters) {
+            clearAllLandBiomes();
+            addMobToAllLandBiomes(EntityWitch.class, 3, 1, 2);
+            clearAllWaterBiomes();
+        }
+    }
+
+    private static void addMobToMushroomIslands(Class mob, int i, int j, int k){
+        addMobToBiome(mob, i, j, k, BiomeGenBase.mushroomIslandShore);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.mushroomIsland);
+    }
+    private static void clearAllLandBiomes(){
+        clearBiome(BiomeGenBase.plains);
+        clearBiome(BiomeGenBase.desert);
+        clearBiome(BiomeGenBase.extremeHills);
+        clearBiome(BiomeGenBase.forest);
+        clearBiome(BiomeGenBase.taiga);
+        clearBiome(BiomeGenBase.swampland);
+        clearBiome(BiomeGenBase.icePlains);
+        clearBiome(BiomeGenBase.iceMountains);
+        clearBiome(BiomeGenBase.beach);
+        clearBiome(BiomeGenBase.desertHills);
+        clearBiome(BiomeGenBase.forestHills);
+        clearBiome(BiomeGenBase.taigaHills);
+        clearBiome(BiomeGenBase.extremeHillsEdge);
+        clearBiome(BiomeGenBase.jungle);
+        clearBiome(BiomeGenBase.jungleHills);
+    }
+    private static void clearAllWaterBiomes(){
+        clearWaterBiome(BiomeGenBase.ocean);
+        clearWaterBiome(BiomeGenBase.river);
+        clearWaterBiome(BiomeGenBase.frozenOcean);
+        clearWaterBiome(BiomeGenBase.frozenRiver);
+    }
+
+    private static void clearBiome(BiomeGenBase b){
+        ((BiomeGenBaseAccessor)(b)).nightmareMode$getSpawnableMonsterList().clear();
+    }
+    private static void clearWaterBiome(BiomeGenBase b){
+        ((BiomeGenBaseAccessor)(b)).nightmareMode$getSpawnableWaterCreatureList().clear();
+    }
+    private static void addMobToAllBiomes(Class mob, int i, int j, int k){
+        addMobToAllLandBiomes(mob,i,j,k);
+        addMobToAllWaterBiomes(mob,i,j,k);
+    }
+    private static void addMobToAllLandBiomes(Class mob, int i, int j, int k){
+
+        addMobToBiome(mob, i, j, k, BiomeGenBase.plains);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.desert);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.extremeHills);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.forest);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.taiga);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.swampland);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.icePlains);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.iceMountains);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.beach);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.desertHills);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.forestHills);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.taigaHills);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.extremeHillsEdge);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.jungle);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.jungleHills);
+    }
+    private static void addMobToAllWaterBiomes(Class mob, int i, int j, int k){
+        addMobToBiome(mob, i, j, k, BiomeGenBase.ocean);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.river);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.frozenOcean);
+        addMobToBiome(mob, i, j, k, BiomeGenBase.frozenRiver);
+    }
+
+
+    private static void addMobToBiome(Class mob, int i, int j, int k, BiomeGenBase b){
+        ((BiomeGenBaseAccessor)b).nightmareMode$getSpawnableMonsterList().add(new SpawnListEntry(mob, i, j, k));
+    }
+    private static void addWaterMobToBiome(Class mob, int i, int j, int k, BiomeGenBase b){
+        ((BiomeGenBaseAccessor)b).nightmareMode$getSpawnableWaterCreatureList().add(new SpawnListEntry(mob, i, j, k));
     }
 
     public static void manipulateAchievements(){
@@ -107,8 +196,9 @@ public abstract class NMInitializer implements AchievementExt {
         move(CRAFT_BEDROLL, 2, 1);
         kill(CRAFT_BARK_BOX);
 
-        // 2ND TAB - TAB_IRON_AGE
+                            // 2ND TAB - TAB_IRON_AGE
         move(CRAFT_CAULDRON, 0, -2);
+        setCondition(FIND_OBSIDIAN, itemStack -> ((ItemStack)itemStack).itemID == NMBlocks.crudeObsidian.blockID);
 
         // hemp arc
 
@@ -191,6 +281,9 @@ public abstract class NMInitializer implements AchievementExt {
         acObj.tab = tab;
         tab.achievementList.add(acObj);
     }
+    private static void setCondition(Achievement acObj, Predicate predicate){
+        ((AchievementExt) acObj).nightmareMode$setPredicate(predicate);
+    }
 
     public static void initNightmareTrades(){
         addFarmerTrades();
@@ -222,12 +315,12 @@ public abstract class NMInitializer implements AchievementExt {
         EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,8,16)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,4,8)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.4f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(4, 8).weight(1.2f).addToTradeList();
+        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(2, 5).weight(1.2f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(4).buy().item(BTWItems.chowder.itemID).itemCount(2, 4).addToTradeList();
+        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(4).buy().item(BTWItems.chowder.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("efficiency"))).mandatory().addToTradeList();
     }
 
@@ -235,7 +328,9 @@ public abstract class NMInitializer implements AchievementExt {
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(1).buy().item(Item.paper.itemID).itemCount(24, 32).build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(2).variants().addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 2)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.detectorBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 4)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.buddyBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(Block.cobblestoneMossy.blockID, 6)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.blockDispenser.blockID)).build()).finishVariants().mandatory().build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(5).convert().input(TradeItem.fromID(Item.enderPearl.itemID)).conversionCost(6, 8).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().build());
-        EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(5).arcaneScroll().scrollEnchant(Enchantment.power).secondaryEmeraldCost(16, 24).mandatory().build());
+        EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("btw:sell_power_scroll").profession(1).level(5).arcaneScroll().scrollEnchant(Enchantment.power).secondaryEmeraldCost(48, 64).mandatory().build());
+        EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("btw:buy_bat_wings").profession(1).level(3).buy().item(BTWItems.batWing.itemID).itemCount(8, 12).build());
+
 
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(1).buy().item(NMItems.ironKnittingNeedles.itemID).emeraldCost(2,3).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).buy().item(Block.bookShelf.blockID).itemCount(1,2).addToTradeList();
@@ -243,7 +338,7 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).buy().item(Item.redstoneRepeater.itemID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).buy().item(BTWItems.hellfireDust.itemID).itemCount(16,24).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).buy().item(Item.glassBottle.itemID).itemCount(16,24).addToTradeList();
-        TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWItems.wool.itemID,15,4,6)).conversionCost(1, 2).output(TradeItem.fromID(NMItems.bandage.itemID,1,2)).addToTradeList();
+        TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWItems.wool.itemID,15,2,4)).conversionCost(1, 2).output(TradeItem.fromID(NMItems.bandage.itemID,1,2)).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).buy().item(BTWBlocks.blockDispenser.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).buy().item(BTWBlocks.buddyBlock.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).buy().item(BTWBlocks.detectorBlock.blockID).itemCount(1,3).addToTradeList();
@@ -256,18 +351,19 @@ public abstract class NMInitializer implements AchievementExt {
 
 
     private static void addPriestTrades(){
-        EntityVillager.removeCustomTrade(2, TradeProvider.getBuilder().name("nmPriest0").profession(2).level(5).arcaneScroll().scrollEnchant(Enchantment.fortune).secondaryEmeraldCost(24, 32).mandatory().build());
+        EntityVillager.removeCustomTrade(2, TradeProvider.getBuilder().name("btw:sell_fortune_scroll").profession(2).level(5).arcaneScroll().scrollEnchant(Enchantment.fortune).secondaryEmeraldCost(48, 64).mandatory().build());
         EntityVillager.removeLevelUpTrade(2,4);
+
 
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(4,8).addToTradeList();
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(8,16).addToTradeList();
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,10).weight(0.35f).addToTradeList();
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,32,64)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("fortune"))).weight(0.1f).addToTradeList();
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriest0").profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,24)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
+        TradeProvider.getBuilder().name("nmPriest0").profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,10,18)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
 
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(4).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Block.enchantmentTable.blockID)).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmPriest0").profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,26)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).addToTradeList();
+        TradeProvider.getBuilder().name("nmPriest0").profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).addToTradeList();
         TradeProvider.getBuilder().name("nmPriest0").profession(2).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
 
     }
@@ -290,7 +386,7 @@ public abstract class NMInitializer implements AchievementExt {
 
 
     private static void addButcherTrades(){
-        EntityVillager.removeCustomTrade(4, TradeProvider.getBuilder().name("nmButcher0").profession(4).level(5).arcaneScroll().scrollEnchant(Enchantment.sharpness).secondaryEmeraldCost(16, 24).mandatory().build());
+        EntityVillager.removeCustomTrade(4, TradeProvider.getBuilder().name("btw:sell_sharpness_scroll").profession(4).level(5).arcaneScroll().scrollEnchant(Enchantment.sharpness).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmButcher0").profession(4).level(1).buy().item(Item.leash.itemID).itemCount(6,10).addToTradeList();
         TradeProvider.getBuilder().name("nmButcher0").profession(4).level(2).buy().item(Item.swordIron.itemID).buySellSingle().weight(0.3f).addToTradeList();
@@ -370,10 +466,57 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).weight(0.2f).addToTradeList();
 
         // Level 5 Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Item.enderPearl.itemID).itemCount(32, 64).mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(NMItems.rifle.itemID).buySellSingle().mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(NMItems.rpg.itemID).buySellSingle().mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16421,64)).mandatory().addToTradeList();
+        TradeProvider.getBuilder()
+                .name("nmMerchant0")
+                .profession(5)
+                .level(5)
+                .variants()
+                .addTradeVariant(
+                        TradeProvider.getBuilder()
+                                .name("nmMerchant0")
+                                .profession(5)
+                                .level(5)
+                                .sell()
+                                .item(Item.enderPearl.itemID)
+                                .itemCount(32, 64)
+                                .build()
+                )
+                .addTradeVariant(
+                        TradeProvider.getBuilder()
+                                .name("nmMerchant0")
+                                .profession(5)
+                                .level(5)
+                                .sell()
+                                .item(NMItems.rifle.itemID)
+                                .buySellSingle()
+                                .build()
+                )
+                .addTradeVariant(
+                        TradeProvider.getBuilder()
+                                .name("nmMerchant0")
+                                .profession(5)
+                                .level(5)
+                                .sell()
+                                .item(NMItems.rpg.itemID)
+                                .buySellSingle()
+                                .build()
+                )
+                .addTradeVariant(
+                        TradeProvider.getBuilder()
+                                .name("nmMerchant0")
+                                .profession(5)
+                                .level(5)
+                                .convert()
+                                .input(TradeItem.fromID(Item.emerald.itemID))
+                                .secondInput(TradeItem.EMPTY)
+                                .output(TradeItem.fromIDAndMetadata(Item.potion.itemID, 16421, 64))
+                                .build()
+                )
+                .finishVariants()
+                .mandatory()
+                .addToTradeList();
+
+        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(NMPostItems.timeBottle.itemID).buySellSingle().mandatory().addToTradeList();
 
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.waterStill.blockID).buySellSingle().build())
@@ -453,12 +596,8 @@ public abstract class NMInitializer implements AchievementExt {
 
 
     private static void addCrucibleRecipes(){
-        // remove vanilla helmet recipe because it returns 6 ingots instead of 5
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-
-//        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 6), new ItemStack[]{new ItemStack(BTWItems.metalFragment)});
-//        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.steelNugget, 6), new ItemStack[]{new ItemStack(BTWItems.metalFragment)});
+        // refined diamond
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{new ItemStack(BTWItems.diamondIngot), new ItemStack(Item.netherQuartz, 4)});
 
         // replace soul flux with ender slag in SFS ingot recipe, to force SFS mining
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), new ItemStack[]{new ItemStack(Item.ingotIron, 1), new ItemStack(BTWItems.coalDust, 1), new ItemStack(BTWItems.soulUrn, 1), new ItemStack(BTWItems.soulFlux, 1)});
@@ -516,22 +655,37 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         // add blood armor and tool recipes
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 5), new ItemStack[]{new ItemStack(NMItems.bloodHelmet, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 8), new ItemStack[]{new ItemStack(NMItems.bloodChestplate, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(NMItems.bloodLeggings, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(NMItems.bloodBoots, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), new ItemStack[]{new ItemStack(NMItems.bloodHelmet, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), new ItemStack[]{new ItemStack(NMItems.bloodChestplate, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), new ItemStack[]{new ItemStack(NMItems.bloodLeggings, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack[]{new ItemStack(NMItems.bloodBoots, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 3), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodPickaxe, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 4), new ItemStack(Item.blazeRod, 1)}, new ItemStack[]{new ItemStack(NMItems.bloodSword, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 2), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodAxe, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 1), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodShovel, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(BTWItems.diamondIngot, 1), new ItemStack(Item.blazeRod, 3)}, new ItemStack[]{new ItemStack(NMItems.bloodHoe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 3), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodPickaxe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack(Item.blazeRod, 1)}, new ItemStack[]{new ItemStack(NMItems.bloodSword, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodAxe, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 1), new ItemStack(Item.blazeRod, 2)}, new ItemStack[]{new ItemStack(NMItems.bloodShovel, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 1), new ItemStack(Item.blazeRod, 3)}, new ItemStack[]{new ItemStack(NMItems.bloodHoe, 1, Short.MAX_VALUE)});
         // done adding
 
         // add other crucible tools and blocks
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(NMItems.ironKnittingNeedles, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(NMItems.ironFishingPole, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 1), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
+
+        // obsidian post-wither
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(NMBlocks.crudeObsidian)});
+
+
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), (TagOrStack[])new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), (TagOrStack[])new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), (TagOrStack[])new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+
     }
     private static void addCauldronRecipes(){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
@@ -550,7 +704,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
 
-        RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(Block.obsidian, 4), new ItemStack(Item.ingotGold, 2)});
+        RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator, 2), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(NMItems.obsidianShard, 4), new ItemStack(Item.ingotGold)});
     }
 
     private static void addOvenRecipes(){
@@ -636,7 +790,7 @@ public abstract class NMInitializer implements AchievementExt {
         // done with sinew
 
         // add blood recipes
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodIngot), new Object[]{" # ", "#X#", " # ", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(BTWItems.diamondIngot)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.bloodIngot), new Object[]{" # ", "#X#", " # ", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(NMItems.refinedDiamondIngot)});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodHelmet), new Object[]{"###", "# #", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodChestplate), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});
@@ -672,10 +826,12 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"XXX", "XYX", 'X', BTWItems.diamondIngot, 'Y', BTWItems.diamondArmorPlate});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.plateDiamond), new Object[]{"Y Y", "XXX", "XXX", 'X', BTWItems.diamondIngot, 'Y', BTWItems.diamondArmorPlate});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsDiamond), new Object[]{"XXX", "Y Y", "Y Y", 'X', BTWItems.diamondIngot, 'Y', BTWItems.diamondArmorPlate});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), BTWItems.diamondIngot});
 
-        RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"###", "# #", "   ", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
-        RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
-        RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{"###", "# #", "# #", Character.valueOf('#'), new ItemStack(BTWItems.diamondIngot)});
+        RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"###", "# #", "   ", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
+        RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
+        RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{"###", "# #", "# #", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
+        RecipeManager.addRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), NMItems.refinedDiamondIngot});
 
         // road
         RecipeManager.addRecipe(new ItemStack(NMBlocks.blockRoad, 2), new Object[]{"XY", "YX", 'X', Block.gravel, 'Y', BTWBlocks.looseCobblestone});
@@ -774,14 +930,46 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.crudeObsidian, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
 
 
-        RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1), new Object[]{
-                "ICI",
-                "CSC",
-                "ICI",
-                Character.valueOf('C'), Item.clay,
-                Character.valueOf('S'), NMBlocks.crudeObsidian,
-                Character.valueOf('I'), BTWItems.ironNugget}
-        );
+//        RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1), new Object[]{
+//                "ICI",
+//                "CSC",
+//                "ICI",
+//                Character.valueOf('C'), Item.clay,
+//                Character.valueOf('S'), NMBlocks.crudeObsidian,
+//                Character.valueOf('I'), BTWItems.ironNugget}
+//        );
+
+        // make ender chest not stupid
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.enderChest), new Object[]{
+                "OOO",
+                "OEO",
+                "OOO",
+                Character.valueOf('O'), Block.obsidian,
+                Character.valueOf('E'), Item.eyeOfEnder
+        });
+        RecipeManager.addRecipe(new ItemStack(Block.enderChest), new Object[]{
+                "OEO",
+                "OBO",
+                "OOO",
+                Character.valueOf('O'), NMBlocks.crudeObsidian,
+                Character.valueOf('B'), NMBlocks.bloodChest,
+                Character.valueOf('E'), Item.enderPearl
+        });
+
+        // asphalt layer
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.asphaltLayer, 6), new Object[]{
+                "AAA",
+                Character.valueOf('A'), NMBlocks.blockAsphalt,
+        });
+
+
+        // alternate recipes for all diamond items that involve refined ingots
+        RecipeManager.addRecipe(new ItemStack(Item.swordDiamond), new Object[]{"X", "X", "#", Character.valueOf('#'), Item.stick, Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
+        RecipeManager.addRecipe(new ItemStack(Item.pickaxeDiamond), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
+        RecipeManager.addRecipe(new ItemStack(Item.shovelDiamond), new Object[]{"X", "#", "#", Character.valueOf('#'), Item.stick, Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
+        RecipeManager.addRecipe(new ItemStack(Item.axeDiamond), new Object[]{"X ", "X#", " #", Character.valueOf('#'), Item.stick, Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
+        RecipeManager.addRecipe(new ItemStack(BTWItems.diamondChisel), new Object[]{"X", Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
+        RecipeManager.addRecipe(new ItemStack(BTWItems.diamondShears), new Object[]{"X ", " X", Character.valueOf('X'), NMItems.refinedDiamondIngot}).hideFromEMI();
     }
 
     private static void addPistonPackingRecipes() {

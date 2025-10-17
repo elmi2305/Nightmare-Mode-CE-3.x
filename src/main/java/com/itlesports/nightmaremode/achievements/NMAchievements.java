@@ -665,17 +665,27 @@ public class NMAchievements {
                     .setSecret()
                     .registerAchievement(TAB_AUTOMATION);
 
+    public static final Achievement<ItemStack> DUNG_APPLE =
+            AchievementProvider.getBuilder(BTWAchievementEvents.EatenEvent.class)
+                    .name(loc("dungApple"))
+                    .icon(NMItems.dungApple)
+                    .displayLocation(4, 5)
+                    .triggerCondition(item -> item.itemID == NMItems.dungApple.itemID)
+                    .build()
+                    .setHidden()
+                    .registerAchievement(TAB_AUTOMATION);
+
 
 
     // TAB_END_GAME
 
 
-    public static final Achievement<EntityPlayer> PRIDE =
-            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+    public static final Achievement<Integer> PRIDE =
+            AchievementProvider.getBuilder(NMAchievementEvents.ArmorLessEvent.class)
                     .name(loc("pride"))
                     .icon(BTWBlocks.spiderEyeBlock)
                     .displayLocation(-2, -3)
-                    .triggerCondition(p -> isWearingNoArmor(p) && p.posY < 16)
+                    .triggerCondition( p -> p > 600)
                     .build()
                     .setSpecial()
                     .setSecret()
@@ -1059,6 +1069,17 @@ public class NMAchievements {
                     .parents(KILL_BLOODWITHER,NIGHTMARE_MERCHANT_LEVEL_5)
                     .build()
                     .registerAchievement(TAB_END_GAME);
+    public static final Achievement<EntityPlayer> SINNER  =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("sinner"))
+                    .icon(NMBlocks.cryingObsidian)
+                    .displayLocation(-1,4)
+                    .triggerCondition(NMAchievements::hasAllSinAchievements)
+                    .parents()
+                    .build()
+                    .setSecret()
+                    .setSpecial()
+                    .registerAchievement(TAB_END_GAME);
 
 
 
@@ -1177,7 +1198,7 @@ public class NMAchievements {
             BTWItems.plateHelmet.itemID
     ));
 
-    private static boolean isWearingNoArmor(EntityLivingBase entity){
+    public static boolean isWearingNoArmor(EntityLivingBase entity){
         for(int i = 1; i < 5; i++){
             if(entity.getCurrentItemOrArmor(i) == null) continue;
             return false;
@@ -1201,6 +1222,25 @@ public class NMAchievements {
         };
 
         for (Achievement<?> achievement : beaconAchievements) {
+            if (!AchievementHandler.hasUnlocked(player, achievement)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean hasAllSinAchievements(EntityPlayer player) {
+        Achievement<?>[] sinAchievements = new Achievement<?>[] {
+                GREED,
+                PRIDE,
+                LUST,
+                SLOTH,
+                GLUTTONY,
+                WRATH,
+                ENVY
+        };
+
+        for (Achievement<?> achievement : sinAchievements) {
             if (!AchievementHandler.hasUnlocked(player, achievement)) {
                 return false;
             }

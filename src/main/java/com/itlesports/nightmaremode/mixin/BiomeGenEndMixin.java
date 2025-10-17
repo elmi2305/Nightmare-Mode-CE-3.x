@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BiomeGenEndMixin implements BiomeGenBaseAccessor{
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addCreepersToEndSpawnTable(int par1, CallbackInfo ci){
-        this.getSpawnableMonsterList().add(new SpawnListEntry(EntityCreeper.class, 1, 1, 3));
+        this.nightmareMode$getSpawnableMonsterList().add(new SpawnListEntry(EntityCreeper.class, 1, 1, 3));
         if(NightmareMode.magicMonsters){
-            this.getSpawnableMonsterList().clear();
-            this.getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 4, 1, 2));
+            this.nightmareMode$getSpawnableMonsterList().clear();
+            this.nightmareMode$getSpawnableMonsterList().add(new SpawnListEntry(EntityWitch.class, 4, 1, 2));
         }
     }
 }

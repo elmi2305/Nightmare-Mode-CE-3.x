@@ -9,7 +9,7 @@ import java.util.List;
 @Mixin(BiomeGenBase.class)
 public interface BiomeGenBaseAccessor {
     @Accessor("spawnableMonsterList")
-    List getSpawnableMonsterList();
+    List nightmareMode$getSpawnableMonsterList();
     @Accessor("spawnableWaterCreatureList")
-    List getSpawnableWaterCreatureList();
+    List nightmareMode$getSpawnableWaterCreatureList();
 }

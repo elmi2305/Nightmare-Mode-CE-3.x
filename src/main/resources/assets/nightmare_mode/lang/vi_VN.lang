@@ -6,7 +6,7 @@ entity.NightmareGolem.name=Thuộc hạ của Wither
 entity.NightmareBloodWither.name=???
 entity.NightmareFireSpider.name=Nhện lửa
 entity.NightmareStoneZombie.name=Zombie đá
-entity.NightmareMetalCreeper.name=Creeper kim loại
+entity.NightmareObsidianCreeper.name=Creeper Bóng Đá
 entity.NightmareSupercriticalCreeper.name=Creeper siêu cấp
 entity.NightmareBlackWidowSpider.name=Nhện góa phụ đen
 entity.NightmareRadioactiveEnderman.name=Enderman phóng xạ
@@ -64,6 +64,8 @@ item.nmDungApple.name=Táo phân
 item.nmOysterSoup.name=Súp hàu Creeper
 item.nmTempleDust.name=Cát Cổ Đại
 item.nmObsidianShard.name=Mảnh Vỡ Obsidian
+item.nmTimeBottle.name=Chai Thời Gian
+
 
 
 
@@ -75,6 +77,8 @@ tile.nmBloodBone.name=Khối huyết xương
 tile.nmBloodChest.name=Huyết rương
 tile.nmSteelLocker.name=Tủ thép
 tile.nmCrudeObsidian.name=Obsidian Thô
+tile.nmAsphaltLayer.name=Lớp Nhựa Đường
+
 
 
 container.steelLocker=Tủ thép
@@ -230,6 +234,12 @@ gui.config.extra_armor=Thêm giáp
 gui.config.tooltip.extra_armor=Bắt đầu với bộ giáp rẻ
 gui.config.full_bright=Siêu sáng
 gui.config.tooltip.full_bright=Render thế giới ở độ sáng tối đa. Lưu ý: Bóng đen Gloom vẫn xuất hiện.
+gui.config.fast_villagers=Dân Làng Nhanh
+gui.config.tooltip.fast_villagers=Khiến Dân Làng đổi giao dịch 4 lần mỗi ngày
+
+
+
+
 gui.warning.line1=bro
 gui.warning.line2=Bạn sắp vào một thế giới có bật chế độ Cancer.
 gui.warning.line3=Nếu đây không phải bản backup hoặc thế giới nháp, hãy quay lại ngay
@@ -589,3 +599,8 @@ achievement.nm.groundNetherrack.desc=Phá nổ Đá Địa Ngục bằng TNT đ�
 achievement.nm.craftHellforge=Ngọn Lửa Vĩnh Hằng
 achievement.nm.craftHellforge.desc=Chế tạo Lò Rèn Địa Ngục, một bản nâng cấp của Lò Gạch
 
+achievement.nm.sinner=Đường Cao Tốc Đến Địa Ngục
+achievement.nm.sinner.desc=Phạm đủ 7 Đại Tội
+
+achievement.nm.dungApple=Thật Ghê Tởm
+achievement.nm.dungApple.desc=Ăn một Quả Táo Phân. Nhưng tại sao?

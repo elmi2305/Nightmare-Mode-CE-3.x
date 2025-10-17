@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.achievement.BTWAchievements;
 import btw.item.items.*;
+import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.*;
@@ -72,6 +74,7 @@ public class NMItems {
     public static Item ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE;
 
     public static ItemStructureLocator templeLocator;
+    public static Item refinedDiamondIngot;
 
 
 
@@ -141,6 +144,14 @@ public class NMItems {
 
         obsidianShard = new NMItem(2356).setTextureName("nmObsidianShard").setUnlocalizedName("nmObsidianShard").setCreativeTab(CreativeTabs.tabMaterials);
 
+        // this code is done in ItemMixin to replace horse armor
+//        ironHorseArmorAdvanced      = new ItemAdvancedHorseArmor(2357, ItemAdvancedHorseArmor.ArmorTier.IRON).setUnlocalizedName("nmHorseArmorIron").setTextureName("nmHorseArmorIron");
+//        goldHorseArmorAdvanced      = new ItemAdvancedHorseArmor(2358, ItemAdvancedHorseArmor.ArmorTier.GOLD).setUnlocalizedName("nmHorseArmorGold").setTextureName("nmHorseArmorGold");
+//        diamondHorseArmorAdvanced   = new ItemAdvancedHorseArmor(2359, ItemAdvancedHorseArmor.ArmorTier.DIAMOND).setUnlocalizedName("nmHorseArmorDiamond").setTextureName("nmHorseArmorDiamond");
+
+        refinedDiamondIngot = new NMItem(2360).setTextureName("nmRefinedDiamondIngot").setUnlocalizedName("nmRefinedDiamondIngot").setCreativeTab(CreativeTabs.tabMaterials);
+
+
 
         ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nmAchievementSpecialSnowball").hideFromEMI();
         ACHIEVEMENT_SPECIAL_HARDMODE = new NMItem(2405).setTextureName("nmAchievementHardmode").hideFromEMI();
@@ -155,6 +166,9 @@ public class NMItems {
         ACHIEVEMENT_SPECIAL_ARROW_RED = new NMItem(2417).setTextureName("nmAchievementArrowRed").hideFromEMI();
         ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new NMItem(2418).setTextureName("nmAchievementTripleTear").hideFromEMI();
         ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nmAchievementBloodZombie").hideFromEMI();
+
+
+
 
     }
 }

@@ -94,10 +94,6 @@ public class EntitySuperchargedCreeper extends EntityCreeper implements EntityWi
 
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
-        if (this.getNeuteredState() == 0 && this.rand.nextInt(8) == 0) {
-            this.dropItem(Item.fireballCharge.itemID, 1);
-        }
-
 
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0) {

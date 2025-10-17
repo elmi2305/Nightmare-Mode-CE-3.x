@@ -3,7 +3,10 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.status.StatusEffect;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import net.minecraft.src.*;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,9 +18,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(GuiIngame.class)
-public class GuiIngameMixin {
+public class GuiIngameMixin extends Gui{
 
     @Final @Shadow private Minecraft mc;
 
@@ -146,6 +150,213 @@ public class GuiIngameMixin {
         }
         return string;
     }
+    @Unique int heightField = 13;
+    @Unique int widthField = 6;
+
+    @Inject(method = "renderGameOverlay", at = @At("TAIL"))
+    private void drawTamingArrow(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (!(mc.thePlayer.ridingEntity instanceof EntityHorse horse)) return;
+
+        // only show for untamed horses while riding
+        if (!horse.isTame() && horse.riddenByEntity instanceof EntityPlayer) {
+            // read the required direction stored by the horse (updated from packets)
+            byte ordinal = ((IHorseTamingClient) horse).nm$getRequiredDirection();
+            if (ordinal < 0 || ordinal >= EnumFacing.values().length) return;
+
+            EnumFacing required = EnumFacing.values()[ordinal];
+
+            float transparency = this.calcTransparencyForAngles(horse, mc.thePlayer);
+
+            drawArrow(required, horse, transparency);
+
+            FontRenderer fontRenderer = this.mc.fontRenderer;
+            String textToShow = I18n.getString("gui.nm.horseTaming");
+            int stringWidth = fontRenderer.getStringWidth(textToShow);
+
+            ScaledResolution var5 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
+            int iScreenX = var5.getScaledWidth();
+            int iScreenY = var5.getScaledHeight();
+
+            int textX = iScreenX / 2;
+            int textY = iScreenY * 8 / 11;
+
+            fontRenderer.drawStringWithShadow(textToShow, textX - stringWidth / 2, textY, 0XFFFFFF);
+        }
+//        if(Keyboard.isKeyDown(Keyboard.KEY_L)){
+//            heightField -= 1;
+//            System.out.println("height: " + heightField);
+//        }
+//        if(Keyboard.isKeyDown(Keyboard.KEY_K)){
+//            widthField -= 1;
+//            System.out.println("width: "+ widthField);
+//        }
+//        if(Keyboard.isKeyDown(Keyboard.KEY_O)){
+//            heightField += 1;
+//            System.out.println("height: " + heightField);
+//        }
+//        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+//            widthField += 1;
+//            System.out.println("width: "+ widthField);
+//        }
+//        if(Keyboard.isKeyDown(Keyboard.KEY_R)){
+//            widthField = 6;
+//            heightField = 14;
+//        }
+    }
+    @Unique private void drawVerticalProgressBar(int x, int y, int width, int height, int progress, int max, float transparency) {
+        Tessellator tess = Tessellator.instance;
+
+        // Clamp progress
+        float pct = Math.max(0f, Math.min(1f, (float) progress / (float) max));
+        int filledHeight = (int) (pct * height);
+
+
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        // Draw background (dark gray)
+        tess.startDrawingQuads();
+        tess.setColorRGBA_F(0.2f, 0.2f, 0.2f, transparency);
+        tess.addVertex(x, y + height, 0.0);
+        tess.addVertex(x + width, y + height, 0.0);
+        tess.addVertex(x + width, y, 0.0);
+        tess.addVertex(x, y, 0.0);
+        tess.draw();
+
+        // Draw filled portion (green)
+        tess.startDrawingQuads();
+        tess.setColorRGBA_F(0f, 0.8f, 0f, transparency);
+        tess.addVertex(x, y + height, 0.0);
+        tess.addVertex(x + width, y + height, 0.0);
+        tess.addVertex(x + width, y + height - filledHeight, 0.0);
+        tess.addVertex(x, y + height - filledHeight, 0.0);
+        tess.draw();
+
+        // Optional: white outline
+        GL11.glLineWidth(1.5f);
+        tess.startDrawing(GL11.GL_LINE_LOOP);
+        tess.setColorRGBA_F(1f, 1f, 1f, transparency);
+        tess.addVertex(x, y + height, 0.0);
+        tess.addVertex(x + width, y + height, 0.0);
+        tess.addVertex(x + width, y, 0.0);
+        tess.addVertex(x, y, 0.0);
+        tess.draw();
+
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
+    @Unique private void drawArrow(EnumFacing dir, EntityHorse horse, float transparency) {
+        if (dir == null) return;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+        int sw = sr.getScaledWidth();
+        int sh = sr.getScaledHeight();
+
+        int cx = sw / 2;
+        int cy = sh / 2 + 40; // below crosshair
+        int arrowSize = 24;
+        int shaftLength = heightField; // length of the arrow shaft
+        int shaftWidth = widthField;   // width of the arrow shaft
+
+
+
+        float angleDeg;
+        switch (dir) {
+            case NORTH: angleDeg = 0f; break;
+            case SOUTH: angleDeg = 180f; break;
+            case EAST:  angleDeg = 90f; break;
+            case WEST:  angleDeg = -90f; break;
+            default:    angleDeg = 0f; break;
+        }
+
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glTranslatef(cx, cy, 0f);
+        GL11.glRotatef(angleDeg, 0f, 0f, 1f);
+
+        Tessellator tess = Tessellator.instance;
+
+        // ---- draw black fill first ----
+        tess.startDrawingQuads();
+        tess.setColorRGBA_F(0f, 0f, 0f, transparency);
+
+        // shaft (centered vertically)
+        tess.addVertex(-shaftWidth / 2f, shaftLength / 2f, 0.0);
+        tess.addVertex(shaftWidth / 2f, shaftLength / 2f, 0.0);
+        tess.addVertex(shaftWidth / 2f, -shaftLength / 2f, 0.0);
+        tess.addVertex(-shaftWidth / 2f, -shaftLength / 2f, 0.0);
+        tess.draw();
+
+        // arrowhead (triangle tip)
+        tess.startDrawing(GL11.GL_TRIANGLES);
+        tess.setColorRGBA_F(0f, 0f, 0f, transparency);
+        tess.addVertex(-arrowSize / 2.0, -shaftLength / 2.0, 0.0);
+        tess.addVertex(arrowSize / 2.0, -shaftLength / 2.0, 0.0);
+        tess.addVertex(0.0, -arrowSize / 2.0 - 6.0, 0.0); // tip
+        tess.draw();
+
+        // ---- draw white outline ----
+        GL11.glLineWidth(2f);
+        tess.startDrawing(GL11.GL_LINE_LOOP);
+        tess.setColorRGBA_F(1f, 1f, 1f, transparency);
+        // outline shaft
+        tess.addVertex(-shaftWidth / 2f, shaftLength / 2f, 0.0);
+        tess.addVertex(shaftWidth / 2f, shaftLength / 2f, 0.0);
+        tess.addVertex(shaftWidth / 2f, -shaftLength / 2f, 0.0);
+        tess.addVertex(-shaftWidth / 2f, -shaftLength / 2f, 0.0);
+        tess.draw();
+
+        tess.startDrawing(GL11.GL_LINE_LOOP);
+        tess.setColorRGBA_F(1f, 1f, 1f, transparency);
+        // outline arrowhead
+        tess.addVertex(-arrowSize / 2.0, -shaftLength / 2.0, 0.0);
+        tess.addVertex(arrowSize / 2.0, -shaftLength / 2.0, 0.0);
+        tess.addVertex(0.0, -arrowSize / 2.0 - 6.0, 0.0);
+        tess.draw();
+
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
+
+        int barX = cx + 20;
+        int barY = cy - (32/2); // top of bar
+        int barWidth = 6;
+        int barHeight = 32;
+        drawVerticalProgressBar(barX, barY, barWidth, barHeight, ((IHorseTamingClient)horse).nm$getTamingProgress(), 1000, transparency);
+
+    }
+
+    @Unique private float calcTransparencyForAngles(EntityHorse horseHost, EntityPlayer player){
+        double horseYawRad = Math.toRadians(horseHost.rotationYawHead);
+        Vec3 horseForward = Vec3.createVectorHelper(
+                -Math.sin(horseYawRad), // x
+                0.0,
+                Math.cos(horseYawRad)  // z
+        ).normalize();
+
+        double playerYawRad = Math.toRadians(player.rotationYawHead);
+        Vec3 playerForward = Vec3.createVectorHelper(
+                -Math.sin(playerYawRad), // x
+                0.0,
+                Math.cos(playerYawRad)  // z
+        ).normalize();
+
+
+        double dotProduct = horseForward.dotProduct(playerForward);
+
+        if (dotProduct <= 0.15f){
+            return 0.15f;
+        }
+        return (float) Math.min(dotProduct, 1.0f);
+    }
 
     @ModifyConstant(method = "renderGameOverlay", constant = @Constant(floatValue = 220.0f))
     private float makeScreenFadeToBlackWhileSleeping(float constant){
@@ -154,11 +365,6 @@ public class GuiIngameMixin {
 
     @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
     private int modifyNiteFoodOverlay(int original) {
-//        if(AddonHandler.modList.keySet().toString().contains("rpg")) {
-//            NightmareMode.nite = false;
-//            NightmareMode.FORCE_NITE_OFF = true;
-//            return original;
-//        }
         if(!NightmareMode.nite || mc.thePlayer == null){return original;}
         return (int) (NMUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
     }

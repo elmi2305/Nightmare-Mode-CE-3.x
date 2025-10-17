@@ -9,7 +9,7 @@ public class ItemIronKnittingNeedles extends ToolItem {
         super(iItemID, 0, EnumToolMaterial.IRON);
         this.setMaxStackSize(1);
         this.setMaxDamage(64);
-        this.setDamageVsEntity(1);
+        this.setDamageVsEntity(0);
         this.setBuoyant();
         this.setFilterableProperties(4);
         this.setUnlocalizedName("nmNeedles");

@@ -81,4 +81,13 @@ public abstract class HardcoreSpawnUtilsMixin{
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;sendChatToPlayer(Lnet/minecraft/src/ChatMessageComponent;)V",ordinal = 0))
     private static void avoidSendingChatMessage(EntityPlayerMP instance, ChatMessageComponent par1ChatMessageComponent){}
 
+    @Inject(method = "getPlayerSpawnRadius", at = @At("HEAD"),cancellable = true)
+    private static void makePlayerSpawnCloser(World world, CallbackInfoReturnable<Double> cir){
+        cir.setReturnValue(800 * HardcoreSpawnUtils.getWorldTypeRadiusMultiplier(world) * HardcoreSpawnUtils.getGameProgressRadiusMultiplier(world));
+    }
+
+    @Inject(method = "getPlayerSpawnExclusionRadius", at = @At("HEAD"),cancellable = true)
+    private static void makePlayerSpawnCloser0(World world, CallbackInfoReturnable<Double> cir){
+        cir.setReturnValue(400 * HardcoreSpawnUtils.getWorldTypeRadiusMultiplier(world) * HardcoreSpawnUtils.getGameProgressRadiusMultiplier(world));
+    }
 }

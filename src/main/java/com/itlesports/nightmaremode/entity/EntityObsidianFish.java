@@ -15,10 +15,10 @@ public class EntityObsidianFish extends EntitySilverfish {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)32.0F);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.5F);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((double)4.0F);
-        this.getEntityAttribute(BTWAttributes.armor).setAttribute((double)10.0F);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(22.0F);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.5F);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0F);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(10.0F);
     }
 
     protected boolean canTriggerWalking() {
@@ -44,7 +44,7 @@ public class EntityObsidianFish extends EntitySilverfish {
     }
 
     protected Entity findPlayerToAttack() {
-        double var1 = (double)24.0F;
+        double var1 = 24.0F;
         return this.worldObj.getClosestVulnerablePlayerToEntity(this, var1);
     }
 
@@ -85,6 +85,13 @@ public class EntityObsidianFish extends EntitySilverfish {
                 if(p.getHeldItem().getItem() instanceof PickaxeItem){
                     return false;
                 } else{
+                    for (int i = 0; i < 2; i++) {
+                        double offsetX = (this.rand.nextDouble() - 0.5D);
+                        double offsetY = this.rand.nextDouble() * this.height * 1.2D;
+                        double offsetZ = (this.rand.nextDouble() - 0.5D);
+
+                        this.worldObj.playAuxSFX(2278, (int) (this.posX + offsetX), (int) (this.posY + offsetY), (int) (this.posZ + offsetZ), 0);
+                    }
                     p.getHeldItem().attemptDamageItem(8, p.rand);
                     return true;
                 }

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.inventory.container.WorkbenchContainer;
+import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,11 +19,14 @@ public class WorkbenchContainerMixin extends ContainerWorkbench {
 
     @Redirect(method = "transferStackInSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Slot;getStack()Lnet/minecraft/src/ItemStack;"))
     private ItemStack aprilFoolsDurabilityOnShiftClick(Slot instance){
-        if (NightmareMode.isAprilFools) {
+        if (NightmareMode.isAprilFools && instance.slotNumber == 0) {
             double gaussian = this.world.rand.nextGaussian();
             double normalized = (gaussian + 3) / 6;
             int damage = (int) (Math.max(0, Math.min(1, normalized)) * instance.getStack().getMaxDamage() - 1);
             instance.getStack().attemptDamageItem(damage, this.world.rand);
+        }
+        if(instance.getStack() != null && instance.getStack().getItem() instanceof ItemAdvancedHorseArmor && instance.slotNumber == 0){
+            instance.getStack().setItemDamage(instance.getStack().getMaxDamage());
         }
 
         return instance.getStack();

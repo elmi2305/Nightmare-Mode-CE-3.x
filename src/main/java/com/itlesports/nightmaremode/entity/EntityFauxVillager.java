@@ -28,6 +28,25 @@ public class EntityFauxVillager extends EntityMob {
     }
 
     @Override
+    protected void despawnEntity() {
+
+        if(this.ticksExisted % 20 != 0) return;
+        int iChunkZ = MathHelper.floor_double(this.posZ / 16.0);
+        int iChunkX = MathHelper.floor_double(this.posX / 16.0);
+
+        if (!this.worldObj.isChunkActive(iChunkX, iChunkZ)) {
+            this.setDead();
+        } else {
+            EntityPlayer closestPlayer = this.worldObj.getClosestPlayerToEntity(this, 128);
+            if (closestPlayer != null) {
+                this.entityAge = 0;
+            } else if (this.entityAge > 6000 && this.rand.nextInt(1000) == 0) {
+                this.setDead();
+            }
+        }
+    }
+
+    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);

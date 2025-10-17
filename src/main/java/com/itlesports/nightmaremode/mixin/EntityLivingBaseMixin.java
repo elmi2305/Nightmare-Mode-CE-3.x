@@ -30,6 +30,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
         super(par1World);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void increaseStepHeightSlightlyForAsphalt(World par1World, CallbackInfo ci){
+        this.stepHeight = 0.6f;
+    }
     @ModifyConstant(method = "getEyeHeight", constant = @Constant(floatValue = 0.85f))
     private float modifyWitherSkeletonSight(float constant){
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;

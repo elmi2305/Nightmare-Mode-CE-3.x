@@ -45,6 +45,8 @@ item.nmDungApple.name=Dung Apple
 item.nmOysterSoup.name=Creeper Oyster Stew
 item.nmTempleDust.name=Ancient Sand
 item.nmObsidianShard.name=Obsidian Shard
+item.nmTimeBottle.name=Bottle of Time
+item.nmRefinedDiamondIngot.name=Refined Diamond Ingot
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
@@ -58,6 +60,7 @@ tile.nmStoneLadder.name=Stone Ladder
 tile.nmIronLadder.name=Iron Ladder
 tile.nmHellforgeBlock.name=Hellforge
 tile.nmCrudeObsidian.name=Crude Obsidian
+tile.nmAsphaltLayer.name=Asphalt Layer
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -70,7 +73,7 @@ entity.NightmareGolem.name=Wither Minion
 entity.NightmareBloodWither.name=???
 entity.NightmareFireSpider.name=Fire Spider
 entity.NightmareStoneZombie.name=Stone Zombie
-entity.NightmareMetalCreeper.name=Metal Creeper
+entity.NightmareObsidianCreeper.name=Obsidian Creeper
 entity.NightmareSupercriticalCreeper.name=Supercritical Creeper
 entity.NightmareBlackWidowSpider.name=Black Widow Spider
 entity.NightmareRadioactiveEnderman.name=Radioactive Enderman
@@ -108,6 +111,8 @@ status.health.NoHit=No Hit
 gui.nmTimer.day=Day %d
 gui.nmTimer.night=Night %d
 gui.menu.noEscape=No Escape
+gui.nm.horseTaming=Hold the correct direction and match the Horse's angle
+gui.nm.horseMenu=Horse Armor Storage
 
 gui.selectworld.buff_squids=Buff Squids
 gui.selectworld.toggle_cancer_worldgen=Toggle Cancer Worldgen
@@ -208,6 +213,8 @@ gui.config.extra_armor=Extra Armor
 gui.config.tooltip.extra_armor=Starts you off with a cheap set of armor
 gui.config.full_bright=Full Bright
 gui.config.tooltip.full_bright=Renders the world at maximum brightness. Does not bypass gloom
+gui.config.fast_villagers=Fast Villagers
+gui.config.tooltip.fast_villagers=Makes Villagers reset their trades 4 times per day
 
 gui.warning.line1=bro
 gui.warning.line2=you are about to join a world with cancer mode enabled
@@ -605,3 +612,9 @@ achievement.nm.groundNetherrack.desc=Explode Netherrack with TNT to get Ground N
 
 achievement.nm.craftHellforge=Endless Flame
 achievement.nm.craftHellforge.desc=Craft a Hellforge, an upgrade to the Brick Oven
+
+achievement.nm.sinner=Highway To Hell
+achievement.nm.sinner.desc=Commit all 7 Deadly Sins
+
+achievement.nm.dungApple=Absolutely Disgusting
+achievement.nm.dungApple.desc=Eat a Dung Apple. But why?

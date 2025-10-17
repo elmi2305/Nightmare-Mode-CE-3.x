@@ -22,10 +22,8 @@ public class MinecraftMixin {
     @Shadow public EntityRenderer entityRenderer;
 
     @Shadow public EntityClientPlayerMP thePlayer;
-    @Unique
-    private boolean wasZooming = false;
-    @Unique
-    private float originalFov = 0.0f;
+    @Unique private boolean wasZooming = false;
+    @Unique private float originalFov = 0.0f;
 
     @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I", remap = false))
     private int nmBlockHotbarScrollWhenZoom() {

@@ -1,6 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
+import com.itlesports.nightmaremode.nmgui.ContainerHorseArmor;
+import com.itlesports.nightmaremode.nmgui.GuiAdvancedHorseArmor;
+import com.itlesports.nightmaremode.nmgui.InventoryHorseArmor;
 import com.itlesports.nightmaremode.rendering.GuiLocker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,5 +44,16 @@ public abstract class MixinNetClientHandler {
         }
 
         ci.cancel();
+    }
+
+    @Inject(method = "handleOpenWindow", at = @At("HEAD"), cancellable = true)
+    private void onHandleOpenWindow(Packet100OpenWindow packet, CallbackInfo ci) {
+        if (packet.inventoryType == 60) { // our custom GUI ID
+            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+            IInventory inv = new InventoryHorseArmor(player, player.getHeldItem(), player.inventory.currentItem);
+            player.openContainer = new ContainerHorseArmor(player.inventory, inv);
+            Minecraft.getMinecraft().displayGuiScreen(new GuiAdvancedHorseArmor(player.inventory, inv));
+            ci.cancel();
+        }
     }
 }

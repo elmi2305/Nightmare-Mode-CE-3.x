@@ -22,10 +22,8 @@ public class GuiGameOverMixin extends GuiScreen {
     @Unique private String subTip = "";
 
     // Get tips from lang file
-    @Unique
-    private static String[] tips = new String[32];
-    @Unique
-    private static String[] lategameTips = new String[9];
+    @Unique private static String[] tips = new String[32];
+    @Unique private static String[] lategameTips = new String[9];
 
     @Inject(method = "initGui", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GuiGameOver;buttonList:Ljava/util/List;",ordinal = 4,shift = At.Shift.AFTER))
     private void addNewButton(CallbackInfo ci){
@@ -91,14 +89,14 @@ public class GuiGameOverMixin extends GuiScreen {
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
     private void manageExtraButton(GuiButton par1GuiButton, CallbackInfo ci){
         if(par1GuiButton.id == 4){
-            this.mc.displayGuiScreen(null);
+//            this.mc.displayGuiScreen(null);
             if (this.createClicked) {
                 return;
             }
 
             this.createClicked = true;
-            long seed = new Random().nextLong();
-            WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), this.mc.theWorld.getWorldInfo().isMapFeaturesEnabled(), false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
+            long seed = new Random().nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
+            WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), true, false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
             ISaveFormat var1 = this.mc.getSaveLoader();
 
             if(this.mc.theWorld.worldInfo.areCommandsAllowed() || this.mc.theWorld.getWorldInfo().getGameType() == EnumGameType.CREATIVE){

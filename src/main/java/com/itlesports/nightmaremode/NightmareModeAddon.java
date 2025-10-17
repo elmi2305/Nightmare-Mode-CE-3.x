@@ -82,7 +82,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             return entityToSpawn;
         });
         CustomEntityPacketHandler.entryMap.put(19, (world, dataStream, packet) -> {
-            EntityMetalCreeper entityToSpawn = new EntityMetalCreeper(world);
+            EntityObsidianCreeper entityToSpawn = new EntityObsidianCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
             double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;

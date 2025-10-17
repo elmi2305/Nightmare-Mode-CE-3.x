@@ -221,8 +221,24 @@ public class EntityBloodWither extends EntityWither {
                     this.trackedEntities.remove(i);
                     break;
                 }
-                if(this.trackedEntities.get(i) instanceof EntityDragon && this.witherPhase > 0 && this.rand.nextInt(6) == 0){
-                    ((EntityDragon) this.trackedEntities.get(i)).heal(1);
+
+                if(this.trackedEntities.get(i) instanceof EntityDragon dragon){
+                    if (this.witherPhase > 0 && this.rand.nextInt(6) == 0) {
+                        dragon.heal(1);
+                    }
+
+                    if(this.ticksExisted % 20 == 0) {
+
+                        if (dragon.getDistanceSqToEntity(this) > 1600) { // 40 blocks
+                            dragon.targetX = this.origin[0];
+                            dragon.targetY = this.origin[1];
+                            dragon.targetZ = this.origin[2];
+                        }
+                    }
+                }
+                if(!this.worldObj.getLoadedEntityList().contains(this.trackedEntities.get(i))){
+                    this.trackedEntities.remove(i);
+                    break;
                 }
             }
             if(this.isDoingCrystalStorm) {
@@ -1159,5 +1175,14 @@ public class EntityBloodWither extends EntityWither {
     }
     public static boolean isBossActive(){
         return bossActive;
+    }
+    public static void setBossActive(boolean par1){
+        bossActive = par1;
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        super.onDeath(source);
+        bossActive = false;
     }
 }

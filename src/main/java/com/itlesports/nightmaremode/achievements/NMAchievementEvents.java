@@ -128,6 +128,11 @@ public class NMAchievementEvents {
             super();
         }
     }
+    public static class ArmorLessEvent extends AchievementEventDispatcher.AchievementEvent<Integer> {
+        public ArmorLessEvent() {
+            super();
+        }
+    }
 
 
 }

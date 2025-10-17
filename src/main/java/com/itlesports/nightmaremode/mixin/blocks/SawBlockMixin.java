@@ -16,4 +16,8 @@ public class SawBlockMixin {
         return 0.25f;
     }
 
+    @ModifyArg(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;scheduleBlockUpdate(IIIII)V", ordinal = 1), index = 4)
+    private int lowerSawCuttingTime(int par1){
+        return 14;
+    }
 }

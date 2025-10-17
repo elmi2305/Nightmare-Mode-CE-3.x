@@ -30,6 +30,7 @@ public class NMBlocks {
     public static CustomBasketBlock customWickerBasket;
 
     public static Block crudeObsidian;
+    public static BlockAsphaltCarpet asphaltLayer;
 
 
     public static void initNightmareBlocks(){
@@ -78,9 +79,11 @@ public class NMBlocks {
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
 
-        crudeObsidian = new FallingFullBlock(2317, Material.rock).setHardness(50F).setResistance(44f).setUnlocalizedName("nmCrudeObsidian").setTextureName("nmCrudeObsidian").setCreativeTab(CreativeTabs.tabBlock);
+        crudeObsidian = new NMBlock(2317, Material.rock).setHardness(30f).setResistance(35f).setUnlocalizedName("nmCrudeObsidian").setTextureName("nmCrudeObsidian").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[crudeObsidian.blockID] = new NMItemBlock(NMBlocks.crudeObsidian.blockID - 256);
 
+        asphaltLayer = (BlockAsphaltCarpet) new BlockAsphaltCarpet(2318).setHardness(2f).setUnlocalizedName("nmAsphaltLayer").setCreativeTab(CreativeTabs.tabDecorations);
+        Item.itemsList[asphaltLayer.blockID] = new NMItemBlock(NMBlocks.asphaltLayer.blockID - 256);
 
     }
 }

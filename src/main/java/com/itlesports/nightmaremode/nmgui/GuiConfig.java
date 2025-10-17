@@ -38,6 +38,7 @@ public class GuiConfig extends GuiScreen {
 
 
     private GuiColoredButton birthdayBashButton; // 25
+    private GuiColoredButton fastVillagersButton; // 26
 
 
 
@@ -197,6 +198,10 @@ public class GuiConfig extends GuiScreen {
         textToDisplay = cap(Boolean.toString(NightmareMode.fullBright));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.fullBright ? 0x5fe647 : 0x429c32));
 
+        textIndex ++;
+        textToDisplay = cap(Boolean.toString(NightmareMode.fastVillagers));
+        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.fastVillagers ? 0x5fe647 : 0x429c32));
+
         for(Object coloredButton: this.buttonList){
             if(coloredButton instanceof GuiColoredButton tempButton){
                 if(tempButton.shouldDrawToolTip){
@@ -233,6 +238,7 @@ public class GuiConfig extends GuiScreen {
         this.perfectStartButton.drawButton = !par1;
         this.extraArmorButton.drawButton = !par1;
         this.fullBrightButton.drawButton = !par1;
+        this.fastVillagersButton.drawButton = !par1;
     }
 
     @Override
@@ -302,6 +308,7 @@ public class GuiConfig extends GuiScreen {
         addPerfectStartButton(rightColumnX, heightMultiplier, goodBase, goodActive);
         addExtraArmorButton(rightColumnX, heightMultiplier, goodBase, goodActive);
         addFullbrightButton(rightColumnX, heightMultiplier, goodBase, goodActive);
+        addFastVillagersButton(rightColumnX, heightMultiplier, goodBase, goodActive);
 
 
 
@@ -321,6 +328,7 @@ public class GuiConfig extends GuiScreen {
         this.perfectStartButton.drawButton = this.isOnSecondPage;
         this.extraArmorButton.drawButton = this.isOnSecondPage;
         this.fullBrightButton.drawButton = this.isOnSecondPage;
+        this.fastVillagersButton.drawButton = this.isOnSecondPage;
 
         // Buttons visible only on first page
         this.moreVariantsButton.drawButton = !this.isOnSecondPage;
@@ -362,6 +370,8 @@ public class GuiConfig extends GuiScreen {
         this.extraArmorButton.updateState(NightmareMode.extraArmor);
         this.fullBrightButton.updateState(NightmareMode.fullBright);
         this.darkStormyNightmareButton.updateState(NightmareMode.darkStormyNightmare);
+        this.fastVillagersButton.updateState(NightmareMode.fastVillagers);
+
     }
 
     private void addMoreVariantsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
@@ -496,6 +506,11 @@ public class GuiConfig extends GuiScreen {
         this.fullBrightButton.setTooltipText(I18n.getString("gui.config.tooltip.full_bright"));
         this.buttonList.add(this.fullBrightButton);
     }
+    private void addFastVillagersButton(int x, int heightMultiplier, int baseColor, int activeColor) {
+        this.fastVillagersButton = new GuiColoredButton(26, x, heightMultiplier * 7, 100, 20, I18n.getString("gui.config.fast_villagers"), baseColor, activeColor);
+        this.fastVillagersButton.setTooltipText(I18n.getString("gui.config.tooltip.fast_villagers"));
+        this.buttonList.add(this.fastVillagersButton);
+    }
 
     private static String cap(String str) {
         if (str == null || str.isEmpty()) {
@@ -609,6 +624,10 @@ public class GuiConfig extends GuiScreen {
             NightmareMode.fullBright = !NightmareMode.fullBright;
             instance.modifyConfigProperty("FullBright", Boolean.toString(NightmareMode.fullBright));
             this.fullBrightButton.updateState(NightmareMode.fullBright);
+        }  else if (par1GuiButton.id == 26) {
+            NightmareMode.fastVillagers = !NightmareMode.fastVillagers;
+            instance.modifyConfigProperty("FastVillagers", Boolean.toString(NightmareMode.fastVillagers));
+            this.fastVillagersButton.updateState(NightmareMode.fastVillagers);
         }
 //        else if (par1GuiButton.id == 25) {
 //            NightmareMode.birthdayBash = !NightmareMode.birthdayBash;
