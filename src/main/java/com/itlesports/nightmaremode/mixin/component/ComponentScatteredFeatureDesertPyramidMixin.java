@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.component;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +21,7 @@ public class ComponentScatteredFeatureDesertPyramidMixin {
         // par4 default is 10. increasing par4 moves forward in +z
         // par6 default is 10. increasing par6 moves forward in +x
         // thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 10, boundingBox);
-        if (world.getDifficulty() == Difficulties.HOSTILE) {
+        if (world.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 10, boundingBox);
             thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 11, boundingBox);
             thisObj.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 9, boundingBox);

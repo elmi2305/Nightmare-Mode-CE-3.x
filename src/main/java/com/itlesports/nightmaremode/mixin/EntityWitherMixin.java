@@ -5,6 +5,7 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
@@ -191,13 +192,13 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
     @ModifyConstant(method = "updateAITasks", constant = @Constant(intValue = 20,ordinal = 1))
     private int increaseHealingRate2ndPhase(int constant){
-        return this.hasRevived ? 16 : constant;
+        return this.hasRevived ? 14 : constant;
     }
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void manageAnger(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (!(((EntityWither)(Object)this) instanceof EntityBloodWither)) {
-            this.witherAttackTimer = (int) Math.min(this.witherAttackTimer + par2 * 2, this.worldObj.getDifficulty() == Difficulties.HOSTILE ? MINION_INTERVAL : 4000);
+            this.witherAttackTimer = (int) Math.min(this.witherAttackTimer + par2 * 2, this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? MINION_INTERVAL : 4000);
         }
     }
 
@@ -211,7 +212,7 @@ public abstract class EntityWitherMixin extends EntityMob {
                 }
             }
 
-            if (this.witherAttackTimer < (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? MINION_INTERVAL : 4000)) {
+            if (this.witherAttackTimer < (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? MINION_INTERVAL : 4000)) {
                 this.witherAttackTimer += this.rand.nextInt(5)+1;
                 if(this.hasRevived){this.witherAttackTimer += 3;}
             }
@@ -247,7 +248,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             this.setHealth(300);
             if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
@@ -271,7 +272,7 @@ public abstract class EntityWitherMixin extends EntityMob {
     @Inject(method = "updateAITasks", at = @At("HEAD"))
     private void manageMinionSpawning(CallbackInfo ci) {
         if (!(((EntityWither)(Object)this) instanceof EntityBloodWither)) {
-            boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             int spawnDelay = isHostile ? MINION_INTERVAL : 4000;
             int summonStart = isHostile ? 0 : 100;
             int summonEnd = isHostile ? 40 : 140;

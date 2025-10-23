@@ -11,4 +11,6 @@ public interface WorldInfoAccessor {
     void setDeathCounter(EnumGameType par1);
     @Accessor("allowCommands")
     void setJavaCompatibilityLevel(boolean par1);
+    @Accessor("mapFeaturesEnabled")
+    void setMapFeaturesEnabled(boolean par1);
 }

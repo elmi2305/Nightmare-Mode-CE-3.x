@@ -35,7 +35,7 @@ item.nmGhastTentacle.name=Ghast Tentacle
 item.nmElementalRod.name=Elemental Rod
 item.nmShadowRod.name=Shadow Rod
 item.nmStarOfTheBloodGod.name=Star Of The Blood God
-item.nmGreg.name=greg
+item.nmSpeedCoil.name=Speed Coil
 item.nmSteelBunch.name=Steel Bunch
 item.nmEclipseBow.name=Eclipse Shard Bow
 item.nmMagicArrow.name=Magic Arrow
@@ -61,6 +61,7 @@ tile.nmIronLadder.name=Iron Ladder
 tile.nmHellforgeBlock.name=Hellforge
 tile.nmCrudeObsidian.name=Crude Obsidian
 tile.nmAsphaltLayer.name=Asphalt Layer
+tile.nmBloodSawBlock.name=Blood Saw
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -605,10 +606,10 @@ achievement.nm.gunpowder=Now We're Cooking
 achievement.nm.gunpowder.desc=Create Gunpowder in a Cauldron
 
 achievement.nm.tnt=I Am Become Death
-achievement.nm.tnt.desc=Craft TNT
+achievement.nm.tnt.desc=Obtain a Powder Keg
 
 achievement.nm.groundNetherrack=Pulverized Hell
-achievement.nm.groundNetherrack.desc=Explode Netherrack with TNT to get Ground Netherrack
+achievement.nm.groundNetherrack.desc=Explode Netherrack with a Powder Keg to get Ground Netherrack
 
 achievement.nm.craftHellforge=Endless Flame
 achievement.nm.craftHellforge.desc=Craft a Hellforge, an upgrade to the Brick Oven
@@ -618,3 +619,6 @@ achievement.nm.sinner.desc=Commit all 7 Deadly Sins
 
 achievement.nm.dungApple=Absolutely Disgusting
 achievement.nm.dungApple.desc=Eat a Dung Apple. But why?
+
+achievement.nm.craftRefinedDiamond=Bulletproof
+achievement.nm.craftRefinedDiamond.desc=Refine a Diamond Ingot

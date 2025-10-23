@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.JungleSpiderEntity;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.EntityFireSpider;
@@ -56,10 +57,17 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
 
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Override
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+        return super.attackEntityFrom(par1DamageSource,par2);
+    }
+
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
+        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
             if (iLootingModifier > 0) {
@@ -72,7 +80,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -149,12 +157,12 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress()*0.2){
             if (NMUtils.getWorldProgress() <= 1 && !(thisObj instanceof EntityFireSpider)) {
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * NMUtils.getNiteMultiplier()),0));
-            } else if (target.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
                 target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NMUtils.getNiteMultiplier()),1));
                 target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * NMUtils.getNiteMultiplier()),0));
             }
 
-            if (target.worldObj.getDifficulty() == Difficulties.HOSTILE && target instanceof EntityPlayer player) {
+            if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && target instanceof EntityPlayer player) {
                 this.alertNearbySpiders(thisObj,player);
             }
         }
@@ -162,7 +170,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "spitWeb", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void chanceToShootFireball(Entity targetEntity, CallbackInfo ci){
-        boolean isHostile = targetEntity.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = targetEntity.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
         EntitySpider thisObj = (EntitySpider)(Object)this;
         Entity var11 = null;
@@ -240,7 +248,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
             boolean isEclipse = eclipseModifier > 1;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
-            boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
             if(progress==0) {

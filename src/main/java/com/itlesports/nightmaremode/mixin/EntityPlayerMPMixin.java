@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;
@@ -130,7 +131,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && !MinecraftServer.getIsServer()) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !MinecraftServer.getIsServer()) {
             Entity lightningbolt = new EntityLightningBolt(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
             getEntityWorld().addWeatherEffect(lightningbolt);
 

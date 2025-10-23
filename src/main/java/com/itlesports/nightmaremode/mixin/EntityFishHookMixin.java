@@ -78,7 +78,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             new AbstractMap.SimpleEntry<>(NMItems.ghastTentacle, 4),
             new AbstractMap.SimpleEntry<>(NMItems.creeperTear, 1),
             new AbstractMap.SimpleEntry<>(NMItems.spiderFangs, 6),
-            new AbstractMap.SimpleEntry<>(NMItems.greg, 3),
+            new AbstractMap.SimpleEntry<>(NMItems.speedCoil, 3),
             new AbstractMap.SimpleEntry<>(NMItems.waterRod, 9),
             new AbstractMap.SimpleEntry<>(NMItems.elementalRod, 1)
     );
@@ -289,7 +289,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 case 51, 52, 53, 54                     -> NMItems.ghastTentacle;      // 4 occurrences (ghast tentacle)
                 case 55                                 -> NMItems.creeperTear;        // 1 occurrence (creeper tear)
                 case 56, 57, 58, 59, 60, 61             -> NMItems.spiderFangs;        // 6 occurrences (spider fangs)
-                case 62, 63, 64                         -> NMItems.greg;               // 3 occurrences (greg)
+                case 62, 63, 64                         -> NMItems.speedCoil;               // 3 occurrences (greg)
                 case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;           // 9 occurrences (water rod)
                 case 74                                 -> NMItems.elementalRod;       // 1 occurrence (elemental rod)
                 default -> Item.fishRaw;  // Fallback in case of unexpected input

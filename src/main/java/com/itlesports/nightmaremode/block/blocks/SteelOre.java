@@ -50,4 +50,9 @@ public class SteelOre extends OreBlockStaged {
             this.dropItemsIndividually(world, i, j, k, BTWItems.steelNugget.itemID, world.rand.nextInt(5) + 4 + iFortuneModifier, 0, 1.0F);
         }
     }
+
+    @Override
+    public int idDroppedOnConversion(boolean var1, int var2) {
+        return 0;
+    }
 }

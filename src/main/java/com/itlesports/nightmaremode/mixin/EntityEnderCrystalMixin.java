@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,7 +28,7 @@ public abstract class EntityEnderCrystalMixin extends Entity{
         } else if (destroyer instanceof EntityThrowable) {
             destroyer = ((EntityThrowable) destroyer).getThrower();
         }
-        if (destroyer instanceof EntityPlayer && this.dimension != 0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (destroyer instanceof EntityPlayer && this.dimension != 0 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             Entity lightningbolt = new EntityLightningBolt(this.worldObj, destroyer.posX, destroyer.posY-0.5, destroyer.posZ);
             this.worldObj.addWeatherEffect(lightningbolt);
         }

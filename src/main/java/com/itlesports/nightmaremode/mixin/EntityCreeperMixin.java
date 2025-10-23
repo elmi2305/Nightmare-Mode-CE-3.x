@@ -6,6 +6,7 @@ import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -39,7 +40,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -75,7 +76,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int progress = NMUtils.getWorldProgress();
         double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
@@ -88,10 +89,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NMUtils.getNiteMultiplier() - 1) / 20)) + 1));
     }
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
+        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
             int var4 = this.rand.nextInt(3);
             // 0 - 2
             if (iLootingModifier > 0) {
@@ -140,7 +146,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         if(!isHostile){return constant;}
         int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
@@ -175,7 +181,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     shift = At.Shift.AFTER))
     private void explodeIfShorn(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25f : 1;
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
@@ -197,10 +203,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Redirect(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
     private boolean doNotDropCreeperOystersIfShorn(World world){
-        if(world.getDifficulty() != Difficulties.HOSTILE){
-            return world.isRemote;
+        if(world.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+            return true;
         }
-        return true;
+        return world.isRemote;
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void detonateIfFireDamage(DamageSource source, float par2, CallbackInfoReturnable<Boolean> cir){
@@ -257,7 +263,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             return 1;   // set to charged if conditions met
         } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && (progress > 0 || areMobsEvolved)){
             return 1;
-        } else if(thisObj.dimension == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        } else if(thisObj.dimension == 1 && thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 1;
         }
         if(isBloodMoon || isEclipse){
@@ -271,7 +277,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         EntityCreeper thisObj = (EntityCreeper) (Object)this;
         if (!(thisObj instanceof EntityObsidianCreeper) && !(thisObj instanceof EntitySuperchargedCreeper) && !(thisObj instanceof EntityLightningCreeper)) {
             // 8 ticks before it explodes
-            if (this.timeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            if (this.timeSinceIgnited == (this.getFuseTime() - 8) && thisObj.getCreeperState() == 1 && thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 EntityPlayer target = thisObj.worldObj.getClosestVulnerablePlayerToEntity(thisObj,6);
                 thisObj.motionY = 0.38F;
                 if(target != null) {
@@ -286,11 +292,11 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             }
         }
     }
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;canCreepersBreachWalls()Z"), remap = false)
-    private boolean avoidLightningCreeperExplodingThroughWalls(Difficulty instance){
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"), remap = false)
+    private boolean avoidLightningCreeperExplodingThroughWalls(Boolean instance){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         if(thisObj instanceof EntityLightningCreeper) return false;
-        return instance.canCreepersBreachWalls();
+        return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
@@ -366,7 +372,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         float eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NMUtils.getNiteMultiplier();
 
-        if(this.worldObj.getDifficulty() != Difficulties.HOSTILE){
+        if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return (3f + bloodmoonModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
         }
         if(NMUtils.getWorldProgress() >= 2){

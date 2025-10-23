@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
-import btw.achievement.BTWAchievements;
 import btw.item.items.*;
-import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.*;
@@ -45,7 +43,7 @@ public class NMItems {
     public static Item ghastTentacle;
     public static Item elementalRod;
     public static Item shadowRod;
-    public static Item greg;
+    public static Item speedCoil;
     public static NetherStarItem starOfTheBloodGod;
     public static FoodItem calamari;
     public static FoodItem calamariRoast;
@@ -124,7 +122,7 @@ public class NMItems {
         ghastTentacle = (new NMItem(2341)).setTextureName("nmGhastTentacle").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGhastTentacle");
         elementalRod = (new NMItem(2342)).setTextureName("nmElementalRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmElementalRod");
         shadowRod = (new NMItem(2343)).setTextureName("nmShadowRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmShadowRod");
-        greg = (new NMItem(2344)).setTextureName("nmGreg").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmGreg");
+        speedCoil = (new NMItem(2344)).setTextureName("nmSpeedCoil").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmSpeedCoil");
         starOfTheBloodGod = (NMNetherStarItem) new NMNetherStarItem(2345).setMaxStackSize(1).setTextureName("nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
 
         calamari = (NMFoodItem) new NMFoodItem(2346, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nmCalamari").setCreativeTab(CreativeTabs.tabFood);

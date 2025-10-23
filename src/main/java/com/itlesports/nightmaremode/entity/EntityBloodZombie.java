@@ -131,7 +131,7 @@ public class EntityBloodZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((26 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((18 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
     }
 
     @Override

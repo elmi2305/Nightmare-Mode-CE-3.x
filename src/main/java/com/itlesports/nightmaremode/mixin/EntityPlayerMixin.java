@@ -11,6 +11,8 @@ import btw.item.BTWItems;
 import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
 import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.DifficultyParam;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
@@ -60,7 +62,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     // can't jump if you have slowness
     @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
-        if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             cir.setReturnValue(false);
         }
     }
@@ -232,6 +234,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageBlightMovement(CallbackInfo ci){
+//        if(!this.worldObj.worldInfo.isMapFeaturesEnabled()){
+//            ((WorldInfoAccessor)(this.worldObj.worldInfo)).setMapFeaturesEnabled(true);
+//        }
+//        if (this.ticksExisted % 200 == 0) {
+//            this.worldObj.worldInfo.setDifficulty(Difficulties.HOSTILE);
+//        }
+
+
         if (this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID && !this.capabilities.isCreativeMode){
             EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
@@ -513,7 +523,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE && !this.worldObj.isRemote && this.ticksExisted % 4 == 3) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !this.worldObj.isRemote && this.ticksExisted % 4 == 3) {
             double range = NMUtils.getIsEclipse() ? 3 : 5;
 
             List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));

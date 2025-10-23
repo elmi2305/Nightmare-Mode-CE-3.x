@@ -179,7 +179,7 @@ public class NMAchievements {
                     .icon(Item.coal)
                     .displayLocation(16, -1)
                     .triggerCondition(data -> data.killedEntity() instanceof EntitySkeleton skeleton
-                            && skeleton.getSkeletonType() == 1
+                            && skeleton.getSkeletonType().id() == 1
                             && skeleton.dimension == 0)
                     .parents(CRAFT_STONE_PICKAXE)
                     .build()
@@ -458,7 +458,6 @@ public class NMAchievements {
                     .setSecret()
                     .setSpecial()
                     .registerAchievement(TAB_IRON_AGE);
-
     public static final Achievement<ItemStack> FILTER_BRIMSTONE =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("brimstone"))
@@ -495,7 +494,6 @@ public class NMAchievements {
                     .parents(CRAFT_TNT)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
-
     public static final Achievement<ItemStack> CRAFT_HELLFORGE =
             AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
                     .name(loc("craftHellforge"))
@@ -503,6 +501,15 @@ public class NMAchievements {
                     .displayLocation(13, 2)
                     .triggerCondition(itemStack -> itemStack.itemID == NMBlocks.hellforge.blockID)
                     .parents(CRAFT_NETHER_COAL)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+    public static final Achievement<ItemStack> CRAFT_REFINED_DIAMOND =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("craftRefinedDiamond"))
+                    .icon(NMItems.refinedDiamondIngot)
+                    .displayLocation(4, 5)
+                    .triggerCondition(itemStack -> itemStack.itemID == NMItems.refinedDiamondIngot.itemID)
+                    .parents(CRAFT_DIAMOND_INGOT)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
 

@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -102,10 +104,15 @@ public abstract class EntityEndermanMixin extends EntityMob {
         NMUtils.manageEclipseChance(this,10);
     }
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
+        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
             int var4 = this.rand.nextInt(4)+1;
             // 1 - 4
             if (iLootingModifier > 0) {
@@ -118,7 +125,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -143,7 +150,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
     private int increaseAttemptsToTeleportPlayer(int constant){
-        if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             if (NMUtils.getIsBloodMoon()) {
                 return 9;
             } else if(NMUtils.getIsMobEclipsed(this)){
@@ -234,7 +241,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     private void hostileInEnd(CallbackInfoReturnable<Entity> cir, EntityPlayer target){
         if (target != null){
             ItemStack var2 = target.inventory.armorInventory[3];
-            if (target.dimension == 1 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            if (target.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (var2 == null) {
                     this.angerNearbyEndermen(target);
                     cir.setReturnValue(target);
@@ -243,7 +250,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
                     cir.setReturnValue(target);
                 }
             } else {
-                if(var2 != null && var2.itemID == 86){ // carved pumpkin aggros all endermen
+                if(var2 != null && var2.itemID == BTWBlocks.carvedPumpkin.blockID){ // carved pumpkin aggros all endermen
                     this.angerNearbyEndermen(target);
                     cir.setReturnValue(target);
                 }
@@ -281,7 +288,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"), cancellable = true)
     private void attackClosePlayers(CallbackInfoReturnable<Entity> cir){
         EntityPlayer target = null;
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 3.25);
         }
         EntityPlayer effectTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 7);

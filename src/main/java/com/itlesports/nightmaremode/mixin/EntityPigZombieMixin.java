@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -50,7 +51,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.entityToAttack = player;
                 }
             } else {
-                double range = (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 3.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
+                double range = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 3.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
                 if(player != null && this.isPlayerWearingGoldArmor(player)){
                     this.entityToAttack = player;

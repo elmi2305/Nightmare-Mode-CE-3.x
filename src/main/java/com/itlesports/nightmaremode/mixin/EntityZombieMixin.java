@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
@@ -7,6 +8,7 @@ import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntitySkeletonDrowned;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
@@ -39,10 +41,10 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
-            float witherSkeletonChanceModifier = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0f : (float) (0.2f * NMUtils.getNiteMultiplier());
+            float witherSkeletonChanceModifier = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0f : (float) (0.2f * NMUtils.getNiteMultiplier());
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-            if (this.rand.nextInt((this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 6)) < 2 - NMUtils.getNiteMultiplier()) {
+            if (this.rand.nextInt((this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 2 : 6)) < 2 - NMUtils.getNiteMultiplier()) {
                 // 100% on hostile, 33% on relaxed
                 int progress = NMUtils.getWorldProgress();
                 EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
@@ -58,7 +60,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     skeleton.setAttackTarget(this.getAttackTarget());
                     skeleton.entityToAttack = this.getEntityToAttack();
                 }
-                if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+                if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                     if (rand.nextInt(Math.max((int) (25 / NMUtils.getNiteMultiplier()), 1)) == 0) {
                         skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                     }
@@ -91,7 +93,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Unique private boolean canEntitySeeSun(){
         if(this.worldObj.isDaytime() && !this.worldObj.isRainingAtPos((int)this.posX, (int)this.posY, (int)this.posZ) && !this.isChild() && !this.inWater){
             boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY + (double) this.getEyeHeight()), MathHelper.floor_double(this.posZ));
-            return this.worldObj.getDifficulty() == Difficulties.HOSTILE ? canSeeSky : canSeeSky && this.rand.nextBoolean();
+            return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? canSeeSky : canSeeSky && this.rand.nextBoolean();
         }
         return false;
     }
@@ -181,10 +183,15 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
 
     @Override
     protected void entityLivingDropFewItems(boolean par1, int par2) {
-        if (par1 && NMUtils.getIsMobEclipsed(this)) {
+        if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (par2 * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -207,7 +214,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
 
-        if (bloodOrbID > 0 && par1) {
+        if (bloodOrbID > 0 && par1 && isValidForEventLoot) {
             int dropCount = this.rand.nextInt(2); // 0 - 1
             if(((EntityZombie)(Object)this) instanceof EntityPigZombie){
                 dropCount = this.rand.nextInt(6) == 0 ? 1 : 0;
@@ -245,7 +252,7 @@ public abstract class EntityZombieMixin extends EntityMob{
 
             int progress = NMUtils.getWorldProgress();
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 0.5 : 1;
-            boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+            boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
             if (!isEclipse) {
@@ -321,7 +328,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     }
                 }
                 if(isHostile && !wasVariantSelected && this.getCurrentItemOrArmor(4) == null && this.rand.nextInt(24) == 0){
-                    this.setCurrentItemOrArmor(4, new ItemStack(Block.pumpkin));
+                    this.setCurrentItemOrArmor(4, new ItemStack(BTWBlocks.carvedPumpkin));
                     this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26f);
                     this.getEntityAttribute(BTWAttributes.armor).setAttribute(2f);
                     this.equipmentDropChances[4] = 0f;
@@ -434,7 +441,7 @@ public abstract class EntityZombieMixin extends EntityMob{
     private void chanceToSpawnShadowOrCrystal(CallbackInfo ci){
         if (this.worldObj != null) {
             int chance = 60;
-            if(this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+            if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
                 chance = 32;
             }
             if(NMUtils.getIsBloodMoon()){chance /= 2;}
@@ -477,6 +484,15 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
     private void deleteEndCrystalIfZombieDied(CallbackInfo ci){
+        if(!(this.getAttackTarget() instanceof EntityPlayer)){
+            if((this.ticksExisted & 32) == 0){
+                EntityPlayer p;
+                if((p = this.worldObj.getClosestVulnerablePlayerToEntity(this, 20)) != null){
+                    this.setAttackTarget(p);
+                }
+            }
+        }
+
         if (this.worldObj != null) {
             if(isCrystalHead(this)){
                 if(this.getHealth() <= 0.5f){
@@ -513,7 +529,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         for (int i = 0; i < 5; i++) {
             crystalhead.setEquipmentDropChance(i,0f);
         }
-        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.28f);
+        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.38f);
         EntityPlayer nearestPlayer = this.worldObj.getClosestPlayerToEntity(crystalhead, 100);
         if (nearestPlayer != null) {
             crystalhead.setAttackTarget(nearestPlayer);

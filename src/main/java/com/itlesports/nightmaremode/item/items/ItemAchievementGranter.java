@@ -49,8 +49,8 @@ public class ItemAchievementGranter extends ItemFood {
     private void displayAchievement(Achievement achievement, EntityPlayer player){
         if(AchievementHandler.hasUnlocked(player,achievement)) return;
         ChatMessageComponent name = ChatMessageComponent.createFromTranslationKey(achievement.toString());
-        ChatMessageComponent announce = ChatMessageComponent.createFromTranslationKey("achievement.get");
-        ChatMessageComponent msg = ChatMessageComponent.createFromTranslationWithSubstitutions("%s %s %s[%s]", player.username, announce, achievement.formatCode, name);
+        ChatMessageComponent achievementMessage = ChatMessageComponent.createFromText("[").addKey(achievement.toString()).addText("]").setColor(achievement.achievementColor);
+        ChatMessageComponent msg = ChatMessageComponent.createFromText(player.username + " ").appendComponent(ChatMessageComponent.createFromTranslationKey("achievement.get")).addText(" ").appendComponent(achievementMessage);
         if (!achievement.shouldAnnounce || player.worldObj.isRemote) return;
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(msg);
     }

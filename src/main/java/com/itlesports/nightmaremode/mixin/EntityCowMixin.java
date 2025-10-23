@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.KickingAnimal;
+import btw.world.util.difficulty.DifficultyParam;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -41,7 +43,7 @@ public abstract class EntityCowMixin extends KickingAnimal {
                     }
 
                     this.attackEntityFrom(DamageSource.generic, 0.0F);
-                } else if (this.worldObj.getDifficulty().canMilkingStartleCows()) {
+                } else if (this.worldObj.getDifficultyParameter(DifficultyParam.ShouldIncorrectMilkingStartleCows.class)) {
                     this.attackEntityFrom(DamageSource.causePlayerDamage(player), 0.0F);
                 }
 

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,7 +48,7 @@ public abstract class HardcoreSpawnUtilsMixin{
         if(worldServer != null){
             int moonPhase = worldServer.getMoonPhase();
             return par1
-                    + (worldServer.getDifficulty() == Difficulties.HOSTILE ? 18000 : 0)
+                    + (worldServer.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 18000 : 0)
                     + (moonPhase == 3 ? 24000 : 0);
         }
         return par1;

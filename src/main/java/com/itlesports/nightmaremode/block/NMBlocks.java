@@ -31,6 +31,7 @@ public class NMBlocks {
 
     public static Block crudeObsidian;
     public static BlockAsphaltCarpet asphaltLayer;
+    public static BlockBloodSaw bloodSaw;
 
 
     public static void initNightmareBlocks(){
@@ -84,6 +85,10 @@ public class NMBlocks {
 
         asphaltLayer = (BlockAsphaltCarpet) new BlockAsphaltCarpet(2318).setHardness(2f).setUnlocalizedName("nmAsphaltLayer").setCreativeTab(CreativeTabs.tabDecorations);
         Item.itemsList[asphaltLayer.blockID] = new NMItemBlock(NMBlocks.asphaltLayer.blockID - 256);
+
+
+        bloodSaw = (BlockBloodSaw) new BlockBloodSaw(2319).setHardness(8f);
+        Item.itemsList[bloodSaw.blockID] = new NMItemBlock(NMBlocks.bloodSaw.blockID - 256);
 
     }
 }

@@ -31,7 +31,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean superCriticalSkeletonEnhancedSight(EntitySenses instance, Entity entity){
-        if(((EntitySkeleton)this.entityOwner).getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL){
+        if(((EntitySkeleton)this.entityOwner).getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL){
             return true;
         }
         return instance.canSee(entity);

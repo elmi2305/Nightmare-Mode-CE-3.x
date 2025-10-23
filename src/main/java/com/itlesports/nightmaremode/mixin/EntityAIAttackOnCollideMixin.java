@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +30,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         double distanceSq = attacker.getDistanceSqToEntity(target);
         int computedRange = computeRangeForHeldItem(attacker.getHeldItem());
 
-        boolean isHostile = attacker.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = attacker.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         boolean canSeeTarget = attacker.canEntityBeSeen(target);
 
         if(target.ridingEntity instanceof EntityHorse horse){

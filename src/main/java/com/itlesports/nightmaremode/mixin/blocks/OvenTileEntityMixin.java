@@ -4,6 +4,7 @@ import btw.block.tileentity.OvenTileEntity;
 import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntityFurnace;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
 
     @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;isBurning()Z", ordinal = 1))
     private void checkIfItemShouldBurn(CallbackInfo ci){
-        if (this.furnaceItemStacks[2] != null && this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.furnaceBurnTime > 0) {
+        if (this.furnaceItemStacks[2] != null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.furnaceBurnTime > 0) {
             if((
                     this.furnaceItemStacks[2].toString().contains("Cooked")
                     || this.furnaceItemStacks[2].toString().contains("Fried")

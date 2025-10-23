@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 
@@ -18,7 +19,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 4 : 1;
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficulty() == Difficulties.HOSTILE ? 400 : 100) * bloodMoonModifier);
+            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 400 : 100) * bloodMoonModifier);
         }
         return false;
     }

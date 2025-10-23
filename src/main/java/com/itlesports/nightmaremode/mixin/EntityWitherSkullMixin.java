@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
@@ -19,7 +20,7 @@ public abstract class EntityWitherSkullMixin extends EntityFireball{
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
         EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
-        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE && !(thisObj.shootingEntity instanceof EntityBloodWither)){
+        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !(thisObj.shootingEntity instanceof EntityBloodWither)){
             return 2;
         }
         return 1;

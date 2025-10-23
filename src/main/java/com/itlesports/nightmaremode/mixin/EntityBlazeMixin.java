@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityBlaze.class)
 public class EntityBlazeMixin extends EntityMob{
@@ -28,7 +30,7 @@ public class EntityBlazeMixin extends EntityMob{
             int progress = NMUtils.getWorldProgress();
             int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
@@ -39,7 +41,7 @@ public class EntityBlazeMixin extends EntityMob{
                 isVariant = true;
             }
             if(!isVariant){
-                if ((progress >= (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 1) || areMobsEvolved) && rand.nextBoolean()) {
+                if ((progress >= (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 1) || areMobsEvolved) && rand.nextBoolean()) {
                     this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 }
             }
@@ -158,9 +160,15 @@ public class EntityBlazeMixin extends EntityMob{
         return blaze != null && blaze.isPotionActive(Potion.waterBreathing);
     }
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Override
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+        return super.attackEntityFrom(par1DamageSource, par2);
+    }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

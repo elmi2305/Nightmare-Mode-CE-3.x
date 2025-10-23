@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.villager.trade.TradeList;
+import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -519,6 +520,14 @@ public class TradeListMixin {
     private static void BSmith9LowerTrades(Args args) {
         args.set(0, 1);
         args.set(1, 3); // haft 2-4
+    }
+    @ModifyArgs(method = "addBlacksmithTrades",
+            at = @At(value = "INVOKE",
+                    target = "Lbtw/entity/mob/villager/trade/TradeProvider$BuySellCountStep;itemCount(II)Lbtw/entity/mob/villager/trade/TradeProvider$FinalStep;",
+                    ordinal = 16),remap = false)
+    private static void BSmith16LowerTrades(Args args) {
+        args.set(0, 1);
+        args.set(1, 3); // soul flux 16-24
     }
 
     // BUTCHER

@@ -183,9 +183,12 @@ public class NMUtils {
         }
     }
 
+    /**
+     * @param numerator number that gets divided by the NITE multiplier, then rounded to an integer
+     * @param minValue the minimum value is to prevent return value of 0
+     * @return always greater than 0
+     */
     public static int divByNiteMultiplier(int numerator, int minValue){
-        // divides the numerator by the NITE multiplier, rounds down to an integer
-        // to prevent it from returning 0, a minimum value is given
         return (int) Math.max(numerator / NMUtils.getNiteMultiplier(), minValue);
     }
 

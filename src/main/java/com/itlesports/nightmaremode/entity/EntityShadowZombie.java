@@ -5,8 +5,10 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -26,7 +28,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if (this.worldObj.getDifficulty().canCreepersBreachWalls() && par1DamageSource.isExplosion()) {
+        if (this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class) && par1DamageSource.isExplosion()) {
             par2 /= 2.0f;
         }
         if (par1DamageSource == DamageSource.inWall){return false;}
@@ -171,7 +173,7 @@ public class EntityShadowZombie extends EntityZombie {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26d);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NMUtils.getNiteMultiplier());
-        double followDistance = 16.0;
+        double followDistance = 40;
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
             if(NMUtils.getIsBloodMoon()){
@@ -181,14 +183,13 @@ public class EntityShadowZombie extends EntityZombie {
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29d);
 
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(26 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 5 : 2));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(26 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 5 : 2));
                 // 26 -> 31 -> 36 -> 41
                 // relaxed: 24 + 26
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 2 : 1));
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 2 : 1));
                 // 4 -> 6 -> 8 -> 10
                 // relaxed: 4 -> 5 -> 6 -> 7
             }
-            followDistance *= this.worldObj.getDifficulty().getZombieFollowDistanceMultiplier();
         }
 
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);

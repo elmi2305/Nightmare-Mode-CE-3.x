@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +25,7 @@ public class EntitySmallFireballMixin {
     @Inject(method = "onImpact", at = @At("HEAD"))
     private void dangerousBlazeFireballs(MovingObjectPosition par1, CallbackInfo ci){
         EntitySmallFireball thisObj = (EntitySmallFireball)(Object)this;
-        if(thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE && thisObj.dimension == -1 && thisObj.shootingEntity instanceof EntityBlaze blaze){
+        if(thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && thisObj.dimension == -1 && thisObj.shootingEntity instanceof EntityBlaze blaze){
             thisObj.worldObj.newExplosion(blaze,par1.blockX, par1.blockY, par1.blockZ,1,true,true);
         }
     }

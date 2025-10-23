@@ -46,15 +46,15 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
 
     @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
     private String customDifficultyName(Difficulty difficulty){
-        if(difficulty.ID == 2){
+        if(difficulty.index == 2){
             if(NightmareMode.bloodmare){
                 return I18n.getString("difficulty.bloodmare.name");
             }
             return I18n.getString("difficulty.nightmare.name");
-        } else if (difficulty.ID == 0){
+        } else if (difficulty.index == 0){
             return I18n.getString("difficulty.baddream.name");
         }
-        return difficulty.NAME;
+        return difficulty.getLocalizedName();
     }
     @Inject(method = "updateButtonText", at = @At("TAIL"))
     private void lockButtonCannotBeClicked(CallbackInfo ci){

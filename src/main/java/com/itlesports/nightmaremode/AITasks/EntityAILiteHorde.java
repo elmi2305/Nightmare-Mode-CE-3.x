@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
@@ -143,7 +144,7 @@ public class EntityAILiteHorde extends EntityAIBase {
     private void performExtendedMeleeAttack() {
         if (this.targetEntity == null) return;
 
-        if (this.taskOwner.worldObj.getDifficulty() != Difficulties.HOSTILE) return;
+        if (this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) return;
         if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
 
         double distanceSq = this.taskOwner.getDistanceSqToEntity(this.targetEntity);

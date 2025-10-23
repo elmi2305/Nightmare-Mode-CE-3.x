@@ -20,8 +20,8 @@ public class BlockClayMixin {
             world.spawnEntityInWorld(silverfish);
         }
     }
-    @Redirect(method = "dropComponentItemsOnBadBreak", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;shouldOresDropPilesWhenChiseled()Z"), remap = false)
-    private boolean makeClayDropTheBallRegardlessOfDifficulty(Difficulty instance){
+    @Redirect(method = "dropComponentItemsOnBadBreak", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"), remap = false)
+    private boolean makeClayDropTheBallRegardlessOfDifficulty(Boolean instance){
         return false;
         // this makes mining clay with your hands drop the ball instead of clay piles, like the bug in 3a
     }

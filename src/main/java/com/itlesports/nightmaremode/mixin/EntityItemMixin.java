@@ -19,7 +19,7 @@ public abstract class EntityItemMixin extends Entity {
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
     private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getEntityItem() != null && (this.getEntityItem().itemID == NMItems.bloodOrb.itemID || this.getEntityItem().itemID == Item.netherStar.itemID || this.getEntityItem().getItem() instanceof ArcaneScrollItem)){
+        if(this.getEntityItem() != null && (this.getEntityItem().itemID == NMItems.bloodOrb.itemID || this.getEntityItem().itemID == Item.netherStar.itemID  || this.getEntityItem().itemID == NMItems.starOfTheBloodGod.itemID || this.getEntityItem().getItem() instanceof ArcaneScrollItem)){
             cir.setReturnValue(false);
         }
     }

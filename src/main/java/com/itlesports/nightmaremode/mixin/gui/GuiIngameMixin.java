@@ -358,10 +358,7 @@ public class GuiIngameMixin extends Gui{
         return (float) Math.min(dotProduct, 1.0f);
     }
 
-    @ModifyConstant(method = "renderGameOverlay", constant = @Constant(floatValue = 220.0f))
-    private float makeScreenFadeToBlackWhileSleeping(float constant){
-        return 255.0f;
-    }
+
 
     @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
     private int modifyNiteFoodOverlay(int original) {

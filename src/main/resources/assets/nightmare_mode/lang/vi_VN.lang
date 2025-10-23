@@ -54,7 +54,7 @@ item.nmGhastTentacle.name=Xúc tu Ghast
 item.nmElementalRod.name=Gậy nguyên tố
 item.nmShadowRod.name=Gậy bóng tối
 item.nmStarOfTheBloodGod.name=Ngôi sao của Huyết Chúa
-item.nmGreg.name=greg
+item.nmSpeedCoil.name=Cuộn Tốc Độ
 item.nmSteelBunch.name=Bó thép
 item.nmEclipseBow.name=Cung Nhật thực
 item.nmMagicArrow.name=Mũi tên ma thuật
@@ -78,6 +78,8 @@ tile.nmBloodChest.name=Huyết rương
 tile.nmSteelLocker.name=Tủ thép
 tile.nmCrudeObsidian.name=Obsidian Thô
 tile.nmAsphaltLayer.name=Lớp Nhựa Đường
+tile.nmBloodSawBlock.name=Cưa Máu
+
 
 
 
@@ -236,7 +238,8 @@ gui.config.full_bright=Siêu sáng
 gui.config.tooltip.full_bright=Render thế giới ở độ sáng tối đa. Lưu ý: Bóng đen Gloom vẫn xuất hiện.
 gui.config.fast_villagers=Dân Làng Nhanh
 gui.config.tooltip.fast_villagers=Khiến Dân Làng đổi giao dịch 4 lần mỗi ngày
-
+gui.nm.horseTaming=Giữ đúng hướng và căn chỉnh góc của Ngựa
+gui.nm.horseMenu=Kho Giáp Ngựa
 
 
 
@@ -604,3 +607,6 @@ achievement.nm.sinner.desc=Phạm đủ 7 Đại Tội
 
 achievement.nm.dungApple=Thật Ghê Tởm
 achievement.nm.dungApple.desc=Ăn một Quả Táo Phân. Nhưng tại sao?
+
+achievement.nm.craftRefinedDiamond=Chống Đạn
+achievement.nm.craftRefinedDiamond.desc=Tinh luyện một Thỏi Kim Cương

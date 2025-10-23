@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -61,7 +62,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
     @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityDragon;createEnderPortal(II)V"))
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {
-        if (BlockEndPortal.bossDefeated || this.worldObj.getDifficulty() != Difficulties.HOSTILE) {
+        if (BlockEndPortal.bossDefeated || !this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
             NightmareMode.getInstance().shouldStackSizesIncrease = true;
         } else {
@@ -155,7 +156,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
 
         if(!(this.target instanceof EntityPlayer player)) return;
-        int threshold = this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 25 : 40;
+        int threshold = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 25 : 40;
 
 
         if(this.boundingBox.expand(1,1,1).intersectsWith(player.boundingBox)){

@@ -6,6 +6,7 @@ import btw.block.BTWBlocks;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMInitializer;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
@@ -157,6 +158,7 @@ public class NightmareMode extends BTWAddon {
         } else{
             AddonHandler.registerCommand(new TPACommand(), false);
         }
+
 
         NMBlocks.initNightmareBlocks();
         NMInitializer.initNightmareRecipes();

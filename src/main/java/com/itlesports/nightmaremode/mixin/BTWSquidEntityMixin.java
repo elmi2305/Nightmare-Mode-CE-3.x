@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -109,7 +110,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
+        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
             int var4 = this.rand.nextInt(4) + 2;
             // 2 - 5
             if (iLootingModifier > 0) {
@@ -121,7 +122,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
 
 
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
                 if(this.rand.nextInt(12) == 0){
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -133,8 +134,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
         if(bKilledByPlayer && this.canDropCalamari > 0){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
-                if(this.rand.nextInt(12 - worldProgress * 2) == 0){
-                    // 1/12 -> 1/10 -> 1/8 -> 1/6
+                if(this.rand.nextInt(10 - worldProgress * 2) == 0){
+                    // 1/10 -> 1/8 -> 1/6 -> 1/4
                     this.dropItem(NMItems.calamari.itemID, 1);
                 }
             }
@@ -194,7 +195,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
 
-        if(this.worldObj.getDifficulty() == Difficulties.HOSTILE && this.ridingEntity instanceof EntityPlayer player) {
+        if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.ridingEntity instanceof EntityPlayer player) {
             if (this.squidOnHeadTimer > 100 && !EntityBloodWither.isBossActive()) {
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
@@ -220,10 +221,15 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private int reduceDamageInterval(int constant){
         return (int) (15 / buffedSquidBonus);
     }
-
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
     @ModifyArg(method = "applyEntityAttributes", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"))
     private double modifySquidHP(double d) {
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if(this.worldObj == null) return d;
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return (NMUtils.getWorldProgress() > 0 ? 12 * (NMUtils.getWorldProgress()+1) : 18) * buffedSquidBonus * NMUtils.getNiteMultiplier();
             // pre nether 18, hardmode 24, post wither 36, post dragon 48
             // if BS is on, 36 -> 48 -> 72 -> 96
@@ -233,7 +239,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // TENTACLES
     @Inject(method = "updateEntityActionState", at = @At("HEAD"))
     private void lowerTentacleCooldown(CallbackInfo ci) {
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             --this.tentacleAttackCooldownTimer;
             if (NMUtils.getWorldProgress() > 1) {
                 this.tentacleAttackCooldownTimer -= (int) (2 * buffedSquidBonus);
@@ -242,7 +248,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
     private int lowerTentacleAttackCooldownTimer(int constant){
-        if (this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return 100 - (NMUtils.getWorldProgress() * 10);
         }
         return constant;
@@ -308,7 +314,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {
-        if (NMUtils.getWorldProgress() > 0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (NMUtils.getWorldProgress() > 0 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return true;
         }
         return bIsInDarkness;
@@ -322,7 +328,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
     private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
-        if(NMUtils.getWorldProgress()>0 && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+        if(NMUtils.getWorldProgress()>0 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 0f;
         }
         return instance.getBrightness(v);

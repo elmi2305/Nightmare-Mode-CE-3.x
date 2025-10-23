@@ -29,29 +29,29 @@ public class RenderSkeletonMixin {
 
     @Inject(method = "func_110860_a", at = @At("HEAD"), cancellable = true)
     private void manageVariantTextures(EntitySkeleton skeleton, CallbackInfoReturnable<ResourceLocation> cir) {
-        if(skeleton.getSkeletonType() == NightmareMode.SKELETON_JUNGLE){
+        if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_JUNGLE){
             cir.setReturnValue(JUNGLE_SKELETON_TEXTURE);
-        } else if(skeleton.getSkeletonType() == NightmareMode.SKELETON_SUPERCRITICAL) {
+        } else if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL) {
             cir.setReturnValue(SUPERCRITICAL_SKELETON_TEXTURE);
         }
         if (!NMUtils.getIsMobEclipsed(skeleton)) {
-             if(skeleton.getSkeletonType() == 4){
+             if(skeleton.getSkeletonType().id() == 4){
                 cir.setReturnValue(ENDER_SKELETON_TEXTURE);
-            }else if(skeleton.getSkeletonType() == 3){
+            }else if(skeleton.getSkeletonType().id() == 3){
                 cir.setReturnValue(FIRE_SKELETON_TEXTURE);
-            } else if(skeleton.getSkeletonType() == 2){
+            } else if(skeleton.getSkeletonType().id() == 2){
                 cir.setReturnValue(ICE_SKELETON_TEXTURE);
             }
         } else{
-            if(skeleton.getSkeletonType() == 4) {
+            if(skeleton.getSkeletonType().id() == 4) {
                 cir.setReturnValue(ENDER_SKELETON_TEXTURE_ECLIPSE);
-            }else if(skeleton.getSkeletonType() == 3){
+            }else if(skeleton.getSkeletonType().id() == 3){
                 cir.setReturnValue(FIRE_SKELETON_TEXTURE_ECLIPSE);
-            } else if(skeleton.getSkeletonType() == 2){
+            } else if(skeleton.getSkeletonType().id() == 2){
                 cir.setReturnValue(ICE_SKELETON_TEXTURE_ECLIPSE);
-            } else if(skeleton.getSkeletonType() == 1){
+            } else if(skeleton.getSkeletonType().id() == 1){
                 cir.setReturnValue(WITHER_SKELETON_TEXTURE_ECLIPSE);
-            } else if(skeleton.getSkeletonType() == 0){
+            } else if(skeleton.getSkeletonType().id() == 0){
                 cir.setReturnValue(NORMAL_SKELETON_TEXTURE_ECLIPSE);
             }
         }

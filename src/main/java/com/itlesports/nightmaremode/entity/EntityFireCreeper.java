@@ -4,6 +4,7 @@ import btw.entity.EntityWithCustomPacket;
 import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -120,7 +121,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                 if (!this.worldObj.isRemote) {
                     boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if(this.getPowered()){
-                        if(this.isBurning() && this.worldObj.getDifficulty() == Difficulties.HOSTILE){
+                        if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
                             this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2.5),true, var2);
                         } else {
                             this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);

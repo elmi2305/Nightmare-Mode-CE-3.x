@@ -35,7 +35,7 @@ item.nmWitheredBone.name=凋零骨片
 item.nmDecayedFlesh.name=腐化血肉
 item.nmGhastTentacle.name=恶魂触须
 item.nmStarOfTheBloodGod.name=血神之眼
-item.nmGreg.name=格雷格
+item.nmSpeedCoil.name=速度线圈
 item.nmSteelBunch.name=钢粒簇
 item.nmEclipseBow.name=蚀日弓
 item.nmMagicArrow.name=魔法箭矢
@@ -61,6 +61,7 @@ tile.nmIronLadder.name=铁质梯子
 tile.nmHellforgeBlock.name=地狱砖炉
 tile.nmCrudeObsidian.name=粗制黑曜石
 tile.nmAsphaltLayer.name=沥青层
+tile.nmBloodSawBlock.name=血锯
 
 
 
@@ -114,6 +115,8 @@ status.health.NoHit=无伤
 gui.nmTimer.day=白天 %d
 gui.nmTimer.night=夜晚 %d
 gui.menu.noEscape=无处可逃
+gui.nm.horseTaming=保持正确方向并匹配马的角度
+gui.nm.horseMenu=马铠储存
 
 gui.selectworld.buff_squids=强化鱿鱼
 gui.selectworld.toggle_cancer_worldgen=切换癌症世界生成
@@ -625,4 +628,6 @@ achievement.nm.sinner.desc=犯下七宗罪
 achievement.nm.dungApple=绝对恶心
 achievement.nm.dungApple.desc=吃下一颗粪苹果。但为什么呢？
 
+achievement.nm.craftRefinedDiamond=防弹
+achievement.nm.craftRefinedDiamond.desc=精炼一块钻石锭
 

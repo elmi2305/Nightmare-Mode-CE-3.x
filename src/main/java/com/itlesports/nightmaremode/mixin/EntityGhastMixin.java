@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -17,6 +19,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow public abstract boolean getCanSpawnHereNoPlayerDistanceRestrictions();
 
     @Shadow private Entity entityTargeted;
+    @Shadow private Entity targetedEntity;
     @Unique int rageTimer = 0;
     @Unique boolean firstAttack = true;
     @Unique boolean isCreeperVariant = false;
@@ -42,20 +45,27 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
     private double increaseHordeAttackRange(double par2){
-        return (NightmareMode.hordeMode || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
+        return (NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
+    }
+    @Unique private boolean isTargetPlayerAndPumpkin(Entity target){
+        if(target instanceof EntityPlayer p){
+            ItemStack headStack = p.getCurrentItemOrArmor(4);
+            return headStack != null && headStack.getItem().itemID == BTWBlocks.carvedPumpkin.blockID;
+        }
+        return false;
     }
     @ModifyConstant(method = "updateAttackStateClient", constant = @Constant(doubleValue = 4096.0F))
     private double increaseDetectionRangeHorde(double constant){
-        return (float) ((NightmareMode.hordeMode || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
+        return (float) ((NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
     }
     @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean allowShootingThroughWallsBloodMoon(EntityGhast instance, Entity entity){
-        if(NMUtils.getIsBloodMoon() && instance.dimension == -1){return true;}
+        if(this.isTargetPlayerAndPumpkin(this.entityTargeted) ||(NMUtils.getIsBloodMoon() && instance.dimension == -1)){return true;}
         return instance.canEntityBeSeen(entity);
     }
     @Redirect(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean seePlayerThroughWallsHorde(EntityGhast instance, Entity entity){
-        return NightmareMode.hordeMode || (NMUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
+        return NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
     }
 
     @Override
@@ -67,9 +77,14 @@ public abstract class EntityGhastMixin extends EntityFlying{
         return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (bKilledByPlayer) {
+        if (bKilledByPlayer && isValidForEventLoot) {
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(3)+1;
@@ -118,7 +133,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(this.rageTimer > 0){
             this.rageTimer++;
             EntityPlayer entityTargeted = this.worldObj.getClosestVulnerablePlayerToEntity(this, 100.0);
-            if (entityTargeted != null && this.rageTimer % (this.worldObj.getDifficulty() == Difficulties.HOSTILE ? 4 : 8) == 0) {
+            if (entityTargeted != null && this.rageTimer % (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 4 : 8) == 0) {
                 Vec3 ghastLookVec = this.getLook(1.0f);
                 double dFireballX = this.posX + ghastLookVec.xCoord;
                 double dFireballY = this.posY + (double)(this.height / 2.0f);

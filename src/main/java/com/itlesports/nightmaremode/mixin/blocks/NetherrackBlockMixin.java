@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.block.blocks.FullBlock;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
+import btw.world.util.difficulty.DifficultyParam;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import net.minecraft.src.*;
@@ -48,7 +50,7 @@ public class NetherrackBlockMixin extends FullBlock {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;
             int count = NMUtils.getBloodArmorWornCount(player);
             float armorMult = count > 0 ? ((float) count / 4 + 1): 1.0f;
-            return fRelativeHardness / (200.0f * world.getDifficulty().getNoToolBlockHardnessMultiplier() * armorMult);
+            return fRelativeHardness / (200.0f * world.getDifficultyParameter(DifficultyParam.NoToolBlockHardnessMultiplier.class) * armorMult);
         }
 
         return super.getPlayerRelativeBlockHardness(player, world, i, j, k);

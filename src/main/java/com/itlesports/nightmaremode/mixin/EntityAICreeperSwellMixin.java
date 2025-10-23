@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityLightningCreeper;
 import com.itlesports.nightmaremode.entity.EntityObsidianCreeper;
@@ -20,7 +21,7 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughWalls(EntitySenses senses, Entity entity){
-        if (this.creeperAttackTarget.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.creeperAttackTarget.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return true;
         }
         return senses.canSee(this.creeperAttackTarget);

@@ -2,11 +2,14 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.block.BTWBlocks;
 import btw.entity.attribute.BTWAttributes;
+import btw.entity.mob.JungleSpiderEntity;
+import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 
@@ -127,7 +130,7 @@ public class EntityBloodWither extends EntityWither {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);
-        this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0);
+        this.getEntityAttribute(BTWAttributes.armor).setAttribute(12.0);
     }
 
     private boolean hasItemInInventory(EntityPlayer player, Item item) {
@@ -258,6 +261,14 @@ public class EntityBloodWither extends EntityWither {
                 }
                 boolean shouldClear = this.passivityDuration <= 50;
 
+                if(!shouldClear && this.reviveTimer % 40 == 0){
+                    for(int z = 0;
+                        z < 3 && this.summonCrystalHeadAtPos(
+                            this.origin[0] + this.rand.nextInt(20) + 10,
+                            this.origin[1] + 1,
+                            this.origin[2] + this.rand.nextInt(20) + 10);
+                        z++) {}
+                }
                 Iterator<Entity> iterator = this.trackedEntities.iterator();
                 while (iterator.hasNext()) {
                     Entity trackedEntity = iterator.next();
@@ -302,6 +313,57 @@ public class EntityBloodWither extends EntityWither {
             }
         }
     }
+
+
+    private boolean summonCrystalHeadAtPos(int x, int y, int z){
+        if(this.worldObj.getClosestPlayer(x,y,z,4) != null) return false; // can't spawn within the player
+
+
+        EntityZombie crystalhead = new EntityZombie(this.worldObj);
+        Entity crystal = new EntityEnderCrystal(this.worldObj);
+        crystal.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
+        crystalhead.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
+        this.worldObj.spawnEntityInWorld(crystal);
+        this.worldObj.spawnEntityInWorld(crystalhead);
+        crystal.mountEntity(crystalhead);
+
+        ItemStack var1 = new ItemStack(Item.skull,1,1);
+        crystalhead.setCurrentItemOrArmor(4, var1);
+        crystalhead.setCurrentItemOrArmor(0, null);
+        crystalhead.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots))); // black
+        crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings))); // black
+        crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest))); // black
+        for (int i = 0; i < 5; i++) {
+            crystalhead.setEquipmentDropChance(i,0f);
+        }
+        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.38f);
+        EntityPlayer nearestPlayer = this.worldObj.getClosestPlayerToEntity(crystalhead, 40);
+        if (nearestPlayer != null) {
+            crystalhead.setAttackTarget(nearestPlayer);
+            crystalhead.getMoveHelper().setMoveTo(nearestPlayer.posX,nearestPlayer.posY,nearestPlayer.posZ, 1.2f);
+        }
+        return true;
+    }
+
+    private ItemStack setItemColor(ItemStack item){
+        NBTTagCompound var3 = item.getTagCompound();
+        if (var3 == null) {
+            var3 = new NBTTagCompound();
+            item.setTagCompound(var3);
+        }
+        NBTTagCompound var4 = var3.getCompoundTag("display");
+        if (!var3.hasKey("display")) {
+            var3.setCompoundTag("display", var4);
+        }
+
+        var4.setInteger("color", 1052688);
+        item.setTagCompound(var3);
+        return item;
+    }
+
+
+
+
     @Override
     public boolean canBeCollidedWith() {
         return this.activity && (this.getHealthTimer() <= 0 || this.isArmored());
@@ -325,7 +387,7 @@ public class EntityBloodWither extends EntityWither {
         this.setInvisible(false);
         this.isDoingLaserAttack = false;
         this.setTargetY(5d);
-        if(this.previousWorldTime != 0 && this.rand.nextBoolean()){
+        if(this.previousWorldTime != 0 && this.rand.nextInt(4) == 0){
             this.worldObj.setWorldTime(this.previousWorldTime);
             this.previousWorldTime = 0;
         }
@@ -377,7 +439,7 @@ public class EntityBloodWither extends EntityWither {
                 deltaMovement.normalize();
 
                 switch (index){
-                    case 0: // suffocation attack
+                    case 0: // anvil attack + tnt rain on later phases
                         if(player.isPotionActive(Potion.moveSlowdown) && player.getActivePotionEffect(Potion.moveSlowdown).duration < 10){
                             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 30,0));
                         }
@@ -388,12 +450,12 @@ public class EntityBloodWither extends EntityWither {
                                 z = player.posZ + j + this.rand.nextInt(4);
                                 // time to fall (in ticks) is sqrt(2 * 400 * y / 16), which is approximately 31.62277660168379 in this case
 
-                                this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y, (int)(z + deltaMovement.zCoord * 31.62277660168379), this.rand.nextBoolean() ? Block.sand.blockID : Block.gravel.blockID);
-                                this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y + 1, (int)(z + deltaMovement.zCoord * 31.62277660168379), this.rand.nextBoolean() ? Block.sand.blockID : Block.gravel.blockID);
+                                this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y, (int)(z + deltaMovement.zCoord * 31.62277660168379), Block.anvil.blockID);
+                                this.worldObj.setBlock((int)(x + deltaMovement.xCoord * 31.62277660168379), (int)y + 1, (int)(z + deltaMovement.zCoord * 31.62277660168379), Block.anvil.blockID);
                             }
                         }
-                        break;
-                    case 1: // tnt rain
+                        if(this.witherPhase == 0) break;
+                        if((this.ticksExisted + 5) % 3 == 0) break; // every 24 ticks the tnt spawns, but slightly offset from the anvil
                         x = player.posX + rand.nextInt(6);
                         y =  8 + rand.nextInt(10);
                         z = player.posZ + rand.nextInt(6);
@@ -402,6 +464,16 @@ public class EntityBloodWither extends EntityWither {
                         EntityTNTPrimed missile = new EntityTNTPrimed(this.worldObj,x + deltaMovement.xCoord * fuse,player.posY + y, z + deltaMovement.zCoord * fuse);
                         missile.fuse = (int) (fuse * 1.5);
                         this.worldObj.spawnEntityInWorld(missile);
+                        break;
+                    case 1: // tnt rain
+                        x = player.posX + rand.nextInt(6);
+                        y =  8 + rand.nextInt(10);
+                        z = player.posZ + rand.nextInt(6);
+                        int fuseTNT = (int) Math.sqrt(800 * y / 16);
+
+                        EntityTNTPrimed missileTNT = new EntityTNTPrimed(this.worldObj,x + deltaMovement.xCoord * fuseTNT,player.posY + y, z + deltaMovement.zCoord * fuseTNT);
+                        missileTNT.fuse = (int) (fuseTNT * 1.4);
+                        this.worldObj.spawnEntityInWorld(missileTNT);
                         break;
                     case 2:
                         int lightningSpread = 5;
@@ -438,7 +510,7 @@ public class EntityBloodWither extends EntityWither {
                         // standard horde
                         for(int i = 0; i < 8 + this.witherPhase * 3; i ++){
                             EntityLiving mobToSpawn;
-                            int j = this.rand.nextInt(64);
+                            int j = this.rand.nextInt(75);
 
                             mobToSpawn = switch (j) {
                                 case  0,  1,  2,  3,  4,  5,  6,  7,  8,  9 -> new EntityZombie(this.worldObj);        // 10 occurrences
@@ -454,7 +526,9 @@ public class EntityBloodWither extends EntityWither {
                                 case 50, 51, 52, 53, 54, 55, 56 -> new EntityFireCreeper(this.worldObj);               // 7  occurrences
                                 case 57, 58, 59, 60, 61 -> new EntitySilverfish(this.worldObj);                        // 5  occurrences
                                 case 62, 63 -> new EntityPigZombie(this.worldObj);                                     // 2  occurrences
-                                default -> new EntityZombie(this.worldObj); // Fallback in case of unexpected input
+                                case 64, 65,66,67,68, 69, 70,71 -> new EntityNightmareGolem(this.worldObj);
+                                case 72,73, 74, 75 -> new EntityBloodZombie(this.worldObj);
+                                default -> new EntityZombie(this.worldObj); // fallback in case of unexpected input
                             };
                             mobToSpawn.setPositionAndUpdate(this.origin[0] + this.rand.nextInt(20), 200, this.origin[2] + this.rand.nextInt(20));
                             mobToSpawn.setAttackTarget(player);
@@ -564,6 +638,101 @@ public class EntityBloodWither extends EntityWither {
         }
     }
 
+    private void setToNextBloodMoonOrEclipse(){
+        if (this.rand.nextBoolean()) {
+            if(!NMUtils.getIsBloodMoon()){
+                this.previousWorldTime = this.worldObj.getWorldTime();
+                this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
+            }
+        } else {
+            if(!NMUtils.getIsEclipse()){
+                this.previousWorldTime = this.worldObj.getWorldTime();
+                this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
+            }
+        }
+    }
+    private static List<Class<? extends EntityLivingBase>> mobPoolStandard = new ArrayList<Class<? extends EntityLivingBase>>();
+    private static List<Class<? extends EntityLivingBase>> mobPoolAdvanced = new ArrayList<Class<? extends EntityLivingBase>>();
+    private static List<Class<? extends EntityLivingBase>> mobPoolExtreme = new ArrayList<Class<? extends EntityLivingBase>>();
+    private static List<List> mobPoolPool = new ArrayList<List>();
+
+    // Base mobs (always available)
+    static {
+        mobPoolStandard.add(EntityNightmareGolem.class);
+        mobPoolStandard.add(EntityZombie.class);
+        mobPoolStandard.add(EntityShadowZombie.class);
+        mobPoolStandard.add(EntityCreeper.class);
+        mobPoolStandard.add(EntitySkeleton.class);
+        mobPoolStandard.add(EntitySpider.class);
+
+
+
+        mobPoolAdvanced.add(EntityLightningCreeper.class);
+        mobPoolAdvanced.add(EntityFireCreeper.class);
+        mobPoolAdvanced.add(EntityBloodZombie.class);
+        mobPoolAdvanced.add(EntityCaveSpider.class);
+        mobPoolAdvanced.add(EntityObsidianCreeper.class);
+
+
+
+        mobPoolExtreme.add(EntityWitch.class);
+        mobPoolExtreme.add(EntityBlaze.class);
+        mobPoolExtreme.add(EntityPigZombie.class);
+        mobPoolExtreme.add(JungleSpiderEntity.class);
+        mobPoolExtreme.add(EntitySuperchargedCreeper.class);
+
+        mobPoolPool.add(mobPoolStandard);
+        mobPoolPool.add(mobPoolAdvanced);
+        mobPoolPool.add(mobPoolExtreme);
+    }
+
+    public EntityLivingBase getRandomMobFromPool(World world, int weight) {
+
+        List<Class<? extends EntityLivingBase>> mobPool = mobPoolStandard;
+        if(weight < 20){
+            mobPool = mobPoolStandard;
+        } else if(weight < 40){
+             mobPool = mobPoolAdvanced;
+        } else {
+             mobPool = mobPoolExtreme;
+        }
+
+        Class<? extends EntityLivingBase> mobClass = mobPool.get(world.rand.nextInt(mobPool.size()));
+        try {
+            // Create a new instance of the selected mob
+            EntityLivingBase tempEntity = mobClass.getConstructor(World.class).newInstance(world);
+
+            if(this.rand.nextInt(weight) > 20){
+                tempEntity.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000, 2));
+            }
+            if(this.rand.nextInt(weight) > 40){
+                tempEntity.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 10000, this.rand.nextInt(2)));
+            }
+            tempEntity.addPotionEffect(new PotionEffect(Potion.resistance.id, 10000, this.rand.nextInt(2)));
+            return tempEntity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new EntityZombie(world); // fallback
+        }
+    }
+
+    private void spawnScatteredMobs(int weight){
+        weight = Math.max(11, Math.min(weight + 1, 100));
+
+        int count = this.rand.nextInt(Math.max((int)(weight / 20), 1)) + this.rand.nextInt(2)+1;
+
+        for(int i = 0; i < count; i++){
+            int x = this.origin[0] + this.rand.nextInt(30) + 10;
+            int y = this.origin[1] + 1;
+            int z = this.origin[2] + this.rand.nextInt(30) + 10;
+
+
+            EntityLivingBase tempMob = this.getRandomMobFromPool(this.worldObj,weight);
+            tempMob.setPositionAndUpdate(x,y,z);
+            tempMob.setRevengeTarget(playerTarget);
+            this.worldObj.spawnEntityInWorld(tempMob);
+        }
+    }
 
     @Override
     public void onLivingUpdate() {
@@ -587,20 +756,24 @@ public class EntityBloodWither extends EntityWither {
             } while (i == this.currentAttackIndex);
 
             this.currentAttackIndex = i;
+//            System.out.println(this.currentAttackIndex);
             this.setAttackDetails(this.currentAttackIndex, true);
 
-            if (this.rand.nextInt(8) == 0) {
-                if(!NMUtils.getIsBloodMoon()){
-                    this.previousWorldTime = this.worldObj.getWorldTime();
-                    this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
-                }
-            } else if (this.rand.nextInt(8) == 0) {
-                if(!NMUtils.getIsEclipse()){
-                    this.previousWorldTime = this.worldObj.getWorldTime();
-                    this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
+            if (this.rand.nextInt(4) == 0) {
+                this.setToNextBloodMoonOrEclipse();
+            }
+        }
+
+        if(this.ticksExisted % 120 == 0 && this.activity && this.getHealthTimer() <= 0){
+            if(this.rand.nextInt(8) == 0){
+                int weight = this.rand.nextInt(20 * (this.witherPhase + 1)) + (this.ticksExisted / 100);
+                this.spawnScatteredMobs(weight);
+                if(weight > 100){
+                    this.spawnScatteredMobs(weight);
                 }
             }
         }
+
 
         // all the attacks
         // summon attacks: executeAttack -> manageWitherPassivity
@@ -1049,7 +1222,9 @@ public class EntityBloodWither extends EntityWither {
             this.heal(21f);
 
 
-
+            if(this.witherPhase == 1){
+                this.setToNextBloodMoonOrEclipse();
+            }
             this.setAttackDetails(9, true);
             this.baseAttackInterval -= (this.witherPhase * 50 + 50);
             this.witherAttack = this.baseAttackInterval + 199;
@@ -1112,13 +1287,13 @@ public class EntityBloodWither extends EntityWither {
     }
     private void setAttackDetails(int index, boolean isNotSafetyCheck) {
         switch (index) {
-            case 0: // Suffocation attack
+            case 0: // Anvil attack
                 this.currentDurationBetweenAttacks = 8;
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 400;
                 break;
             case 1: // TNT rain
-                this.currentDurationBetweenAttacks = 20;
+                this.currentDurationBetweenAttacks = 14;
                 this.isCurrentAttackSummoning = false;
                 this.currentAttackPassivityLength = 300 + this.witherPhase * 40;
                 break;

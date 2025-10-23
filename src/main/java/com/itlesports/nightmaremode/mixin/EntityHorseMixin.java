@@ -83,7 +83,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
                 }
             }
 
-            int itemID = NMItems.greg.itemID;
+            int itemID = NMItems.speedCoil.itemID;
 
             int var4 = this.rand.nextInt(3);
             if (lootingLevel > 0) {
@@ -433,21 +433,12 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageTaming(CallbackInfo ci){
         if(this.swimmingTicks > 0){
-            if (this.isInWater() || this.worldObj.getBlockMaterial((int) this.posX, (int) (this.posY - 0.5), (int) this.posZ) == Material.water) {
-                if(this.motionY < 0){
-                    this.motionY = 0;
-                }
-                if(this.isHorseJumping()){
+            if (this.isInWater() || this.isInsideOfMaterial(Material.water) || this.worldObj.getBlockMaterial((int) this.posX, (int) (this.posY), (int) this.posZ) == Material.water) {
                     this.motionY = 0.15f;
-                }
+                    this.fallDistance = 0;
             }
-
             this.swimmingTicks--;
         }
-        if (this.isPotionActive(Potion.waterBreathing)) {
-            this.setSwimmingTicks(this.getActivePotionEffect(Potion.waterBreathing).getDuration());
-        }
-
 
         // manage angry at rider
         if(this.entityToAttack == this.riddenByEntity){

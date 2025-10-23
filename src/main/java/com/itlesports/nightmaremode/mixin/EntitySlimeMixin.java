@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -139,7 +140,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
                 }
                 baby.setPositionAndUpdate(thisObj.posX,thisObj.posY,thisObj.posZ);
                 thisObj.worldObj.spawnEntityInWorld(baby);
-                this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficulty() == Difficulties.HOSTILE ? 0 : 2);
+                this.streakModifier += 1 + (float)thisObj.getSlimeSize() + (thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 2);
                 this.splitCounter += 1;
             }
         }

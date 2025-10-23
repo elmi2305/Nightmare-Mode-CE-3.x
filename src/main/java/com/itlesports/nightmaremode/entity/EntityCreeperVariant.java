@@ -6,8 +6,10 @@ import btw.entity.mob.KickingAnimal;
 import btw.entity.mob.behavior.SimpleWanderBehavior;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAICreeperVariantSwell;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -45,7 +47,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         this.tasks.addTask(6, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-        if (par1World != null && par1World.getDifficulty().canCreepersBreachWalls()) {
+        if (par1World != null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
         }
         if (NightmareMode.hordeMode) {
@@ -61,14 +63,14 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         super.applyEntityAttributes();
         double followDistance = 16.0;
         if (this.worldObj != null) {
-            followDistance *= (double)this.worldObj.getDifficulty().getCreeperFollowDistanceMultiplier();
+            followDistance *= (double)((Float)this.worldObj.getDifficultyParameter(DifficultyParam.CreeperFollowDistanceMultiplier.class)).floatValue();
         }
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
 
         int progress = NMUtils.getWorldProgress();
         double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
@@ -125,7 +127,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             } else if (dimension == -1 && variant != FIRE) {
                 result = true;
             }
-        } else if (dimension == 1 && worldObj.getDifficulty() == Difficulties.HOSTILE) {
+        } else if (dimension == 1 && worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             result = true;
         }
 
@@ -205,7 +207,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             if (var1 > 0 && this.timeSinceIgnited == 0) {
                 this.playSound("random.fuse", 1.0f, 0.5f);
             }
-            if (this.worldObj.getDifficulty().canCreepersBreachWalls()) {
+            if (worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (this.getAttackTarget() == null) {
                     if (this.worldObj.rand.nextInt(20) == 0) {
                         this.patienceCounter = (byte)Math.min(this.patienceCounter + 1, 100);
@@ -219,7 +221,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             }
             this.timeSinceIgnited += var1;
 
-            if (this.timeSinceIgnited == (this.fuseTime - 8) && this.getCreeperState() == 1 && this.worldObj.getDifficulty() == Difficulties.HOSTILE) {
+            if (this.timeSinceIgnited == (this.fuseTime - 8) && this.getCreeperState() == 1 && worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this,6);
                 this.motionY = 0.38F;
                 if(target != null) {
@@ -274,7 +276,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     }
 
     private double getCreeperBreachRange(){
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         if(!isHostile){return 36;}
         int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
@@ -338,7 +340,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if ((par1DamageSource == DamageSource.inFire || par1DamageSource == DamageSource.onFire || par1DamageSource == DamageSource.lava) && this.dimension != -1 && !NMUtils.getIsBloodMoon() && !NMUtils.getIsMobEclipsed(this) && !this.isPotionActive(Potion.fireResistance.id)){
             this.determinedToExplode = true;
         }
-        if (this.worldObj.getDifficulty().canCreepersBreachWalls() && par1DamageSource.isExplosion()) {
+        if (worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class) && par1DamageSource.isExplosion()) {
             par2 /= 5.0f;
         }
         if (NMUtils.getIsBloodMoon() && par1DamageSource == DamageSource.drown) {
@@ -404,7 +406,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     @Override
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
-        boolean isHostile = this.worldObj.getDifficulty() == Difficulties.HOSTILE;
+        boolean isHostile = worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25f : 1;
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {

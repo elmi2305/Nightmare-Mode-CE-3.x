@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.world.util.difficulty.Difficulties;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.*;
 import net.minecraft.src.BiomeEndDecorator;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +20,7 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator{
             target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z",
             shift = At.Shift.AFTER))
     private void spawnDragon(CallbackInfo ci){
-        if (this.currentWorld.getDifficulty() == Difficulties.HOSTILE) {
+        if (this.currentWorld.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             EntityDragon var4 = new EntityDragon(this.currentWorld);
             var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
             this.currentWorld.spawnEntityInWorld(var4);

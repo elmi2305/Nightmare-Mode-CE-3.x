@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(WorldProviderHell.class)
 public class WorldProviderHellMixin {
-    @Redirect(method = "generateLightBrightnessTable", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;doesNetherHaveGloom()Z", remap = false))
-    private boolean onlyGloomInNetherIfHardmode(Difficulty instance){
+    @Redirect(method = "generateLightBrightnessTable", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z", remap = false))
+    private boolean onlyGloomInNetherIfHardmode(Boolean instance){
         return WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || NightmareMode.worldState >= 1;
     }
 }
