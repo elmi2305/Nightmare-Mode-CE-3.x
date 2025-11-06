@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(RenderGlobal.class)
 public class RenderGlobalMixin {
-    @Unique private static int index = 0;
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("textures/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("textures/eclipse.png");
 
@@ -36,5 +35,12 @@ public class RenderGlobalMixin {
             GL11.glBlendFunc(770,1);
         }
         GL11.glBlendFunc(sFactor,dFactor);
+    }
+
+    @ModifyArg(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0), index = 3)
+    private float doNotRemoveSunOnBloodRain(float red){
+        if(NMUtils.getIsBloodMoon()) {return 0.6f;}
+
+        return red;
     }
 }

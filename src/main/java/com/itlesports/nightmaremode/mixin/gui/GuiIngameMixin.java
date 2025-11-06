@@ -41,7 +41,7 @@ public class GuiIngameMixin extends Gui{
             }
             int dawnOffset = this.isDawnOrDusk(this.mc.theWorld.getWorldTime());
             FontRenderer fontRenderer = this.mc.fontRenderer;
-            String textToShow = secToTime((int)(Minecraft.getMinecraft().theWorld.getTotalWorldTime() / 20));
+            String textToShow = secToTime((int)(this.mc.theWorld.getTotalWorldTime() / 20));
             int stringWidth = fontRenderer.getStringWidth(textToShow);
             ArrayList<StatusEffect> activeStatuses = mc.thePlayer.getAllActiveStatusEffects();
 
@@ -49,20 +49,48 @@ public class GuiIngameMixin extends Gui{
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
 
-            textToShow = String.format(period, ((int)Math.ceil((double) Minecraft.getMinecraft().theWorld.getWorldTime() / 24000)) + dawnOffset);
+            textToShow = String.format(period, ((int)Math.ceil((double) this.mc.theWorld.getWorldTime() / 24000)) + dawnOffset);
             stringWidth = fontRenderer.getStringWidth(textToShow);
             if(NightmareMode.shouldShowDateTimer){
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
 
-            textToShow = this.getTextForActiveConfig();
-            stringWidth = fontRenderer.getStringWidth(textToShow);
-
-            if(NightmareMode.configOnHud){
+            if(NightmareMode.bloodMoonHelper){
+                textToShow = this.getBloodMoonText(this.mc.theWorld);
+                stringWidth = fontRenderer.getStringWidth(textToShow);
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
+            if(NightmareMode.configOnHud){
+                textToShow = this.getTextForActiveConfig();
+                stringWidth = fontRenderer.getStringWidth(textToShow);
+                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
+            }
+
+
         }
     }
+    @Unique private String getBloodMoonText(World world){
+        if(this.shouldShowBloodMoonCountdown(world)){
+            long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
+            deltaToNextBM /= 24000;
+            deltaToNextBM = (long) Math.floor(deltaToNextBM);
+            String text = "\247c" +I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+            return text;
+        }
+        return "";
+    }
+
+    @Unique private boolean shouldShowBloodMoonCountdown(World world){
+        if(NMUtils.getWorldProgress() > 0) return true;
+
+        if(NightmareMode.getInstance().portalTime > world.getWorldTime()){
+            long timeToNextBloodMoon = NMUtils.getNextBloodMoonTime(world.getWorldTime());
+            return NightmareMode.getInstance().portalTime < timeToNextBloodMoon;
+        }
+        return false;
+    }
+
+
 
     @Unique
     private int isDawnOrDusk(long time){
@@ -159,13 +187,17 @@ public class GuiIngameMixin extends Gui{
 
         if (!(mc.thePlayer.ridingEntity instanceof EntityHorse horse)) return;
 
+
         // only show for untamed horses while riding
         if (!horse.isTame() && horse.riddenByEntity instanceof EntityPlayer) {
             // read the required direction stored by the horse (updated from packets)
             byte ordinal = ((IHorseTamingClient) horse).nm$getRequiredDirection();
             if (ordinal < 0 || ordinal >= EnumFacing.values().length) return;
 
+
             EnumFacing required = EnumFacing.values()[ordinal];
+
+//            System.out.println("horse direction: " + ordinal + " | " + required + "| " + (horse.worldObj.isRemote ? "client" : "server"));
 
             float transparency = this.calcTransparencyForAngles(horse, mc.thePlayer);
 
@@ -207,6 +239,8 @@ public class GuiIngameMixin extends Gui{
     }
     @Unique private void drawVerticalProgressBar(int x, int y, int width, int height, int progress, int max, float transparency) {
         Tessellator tess = Tessellator.instance;
+
+//        System.out.println("progress: " + progress);
 
         // Clamp progress
         float pct = Math.max(0f, Math.min(1f, (float) progress / (float) max));

@@ -13,18 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Item.class)
 public class ItemMixin {
     @Shadow public static Item horseArmorIron;
-
     @Shadow public static Item horseArmorGold;
-
     @Shadow public static Item horseArmorDiamond;
-
     @Shadow public static ItemArmor bootsDiamond;
-
     @Shadow public static ItemArmor helmetDiamond;
-
     @Shadow public static ItemArmor plateDiamond;
-
     @Shadow public static ItemArmor legsDiamond;
+
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void replaceItems(CallbackInfo ci){

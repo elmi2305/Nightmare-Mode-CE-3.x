@@ -47,6 +47,7 @@ item.nmTempleDust.name=Ancient Sand
 item.nmObsidianShard.name=Obsidian Shard
 item.nmTimeBottle.name=Bottle of Time
 item.nmRefinedDiamondIngot.name=Refined Diamond Ingot
+item.nmBloodBottle.name=Crimson Bottle
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
@@ -62,9 +63,15 @@ tile.nmHellforgeBlock.name=Hellforge
 tile.nmCrudeObsidian.name=Crude Obsidian
 tile.nmAsphaltLayer.name=Asphalt Layer
 tile.nmBloodSawBlock.name=Blood Saw
+tile.nmVillagerBlock.name=Villager Vessel
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
+
+villager.profession=Profession
+villager.level=Level
+entity.addonVillagerNightmare.name=Nightmare Merchant
+
 
 entity.NightmareFireCreeper.name=Fire Creeper
 entity.NightmareLightningCreeper.name=Lightning Creeper
@@ -125,6 +132,8 @@ gui.selectworld.warning_recommend_restart=It is recommended that you restart you
 gui.selectworld.warning_config_crash=New configs were loaded, which may crash your game or corrupt your world
 gui.selectworld.warning_continue=Are you absolutely sure you want to continue?
 gui.selectworld.warning_final=This is your final warning
+gui.bloodmoon.in=Blood Moon in
+gui.bloodmoon.days=Days
 
 difficulty.baddream.name=Bad Dream
 difficulty.nightmare.name=Nightmare
@@ -216,6 +225,8 @@ gui.config.full_bright=Full Bright
 gui.config.tooltip.full_bright=Renders the world at maximum brightness. Does not bypass gloom
 gui.config.fast_villagers=Fast Villagers
 gui.config.tooltip.fast_villagers=Makes Villagers reset their trades 4 times per day
+gui.config.blood_moon_helper=Blood Moon Helper
+gui.config.tooltip.blood_moon_helper=Shows you when the next Blood Moon will be
 
 gui.warning.line1=bro
 gui.warning.line2=you are about to join a world with cancer mode enabled
@@ -304,7 +315,11 @@ deathScreen.deathTauntMessage17=<???> Try an easier difficulty?
 deathScreen.deathTauntMessage18=<???> Another failure. How delightful to watch.
 deathScreen.deathTauntMessage19=<???> Was that supposed to impress me?
 
+item.desc.bloodmoon0=Skips the current Blood Moon if one is active
+item.desc.bloodmoon1=Otherwise, skips to the next Blood Moon
+
 achievementtab.nightmaremode=Nightmare Mode
+achievement.nm.grants=Grants the following Achievements:
 
 achievement.nm.morningSecondDay=And So It Begins...
 achievement.nm.morningSecondDay.desc=Survive Your First Night
@@ -567,7 +582,7 @@ achievement.nm.nightmareMerchantLevel4=A Worthy Sacrifice
 achievement.nm.nightmareMerchantLevel4.desc=Appease the Nightmare Merchant
 
 achievement.nm.nightmareMerchantLevel5=Blood God's Wrath
-achievement.nm.nightmareMerchantLevel5.desc=...
+achievement.nm.nightmareMerchantLevel5.desc=
 
 achievement.nm.eclipseShadowZombie=You Look Familiar...
 achievement.nm.eclipseShadowZombie.desc=Defeat an Eclipse Shadow Zombie

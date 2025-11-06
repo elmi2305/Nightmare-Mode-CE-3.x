@@ -642,7 +642,7 @@ public class EntityBloodWither extends EntityWither {
         if (this.rand.nextBoolean()) {
             if(!NMUtils.getIsBloodMoon()){
                 this.previousWorldTime = this.worldObj.getWorldTime();
-                this.worldObj.setWorldTime(getNextBloodMoonTime(this.worldObj.getWorldTime()));
+                this.worldObj.setWorldTime(NMUtils.getNextBloodMoonTime(this.worldObj.getWorldTime()));
             }
         } else {
             if(!NMUtils.getIsEclipse()){
@@ -1241,15 +1241,6 @@ public class EntityBloodWither extends EntityWither {
         this.setHealth(this.getMaxHealth() / 16.0F);
     }
 
-    private static long getNextBloodMoonTime(long currentTime) {
-        int currentDay = (int) Math.ceil((double) currentTime / 24000);
-
-        // Find the next day that satisfies the blood moon cycle (day % 16 == 9)
-        int nextBloodMoonDay = currentDay + (15 - (currentDay % 16) + 9) % 16;
-
-        // Convert back to ticks and set the time to 18000 (nighttime)
-        return (nextBloodMoonDay * 24000L) + 18000;
-    }
     private static long getNextEclipse(long currentTime) {
         return ((currentTime / 24000) + 1) * 24000 + 5000;
     }

@@ -56,12 +56,12 @@ public class ItemAchievementGranter extends ItemFood {
     }
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-
-        list.add("\2472Grants the following Achievements:");
-
-        for (Object ac : this.achievementList) {
-            String name = I18n.getString(ac.toString());
-            list.add("\247e" + name);
+        if (!this.achievementList.isEmpty()) {
+            list.add("\2472" + I18n.getString("achievement.nm.grants"));
+            for (Object ac : this.achievementList) {
+                String name = I18n.getString(ac.toString());
+                list.add("\247e" + name);
+            }
         }
         super.addInformation(stack,player,list,advanced);
     }

@@ -6,11 +6,10 @@ import btw.block.blocks.FallingFullBlock;
 import btw.block.blocks.FullBlock;
 import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
-import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
-import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
-import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
-import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
+import com.itlesports.nightmaremode.block.tileEntities.*;
+import com.itlesports.nightmaremode.item.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.NMItemBlock;
+import com.itlesports.nightmaremode.mixin.render.BTWRenderMapperMixin;
 import net.minecraft.src.*;
 
 public class NMBlocks {
@@ -32,6 +31,7 @@ public class NMBlocks {
     public static Block crudeObsidian;
     public static BlockAsphaltCarpet asphaltLayer;
     public static BlockBloodSaw bloodSaw;
+    public static BlockVillagerBase villagerBlock;
 
 
     public static void initNightmareBlocks(){
@@ -89,6 +89,12 @@ public class NMBlocks {
 
         bloodSaw = (BlockBloodSaw) new BlockBloodSaw(2319).setHardness(8f);
         Item.itemsList[bloodSaw.blockID] = new NMItemBlock(NMBlocks.bloodSaw.blockID - 256);
+
+        villagerBlock = new BlockVillagerBase(2320);
+        Item.itemsList[villagerBlock.blockID] = new ItemVillagerContainer(NMBlocks.villagerBlock.blockID - 256);
+        TileEntity.addMapping(TileEntityVillagerContainer.class, "VillagerContainer");
+
+
 
     }
 }

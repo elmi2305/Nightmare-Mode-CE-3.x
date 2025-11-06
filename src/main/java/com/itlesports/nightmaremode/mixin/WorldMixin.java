@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import btw.world.util.difficulty.DifficultyParam;
+import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -27,6 +29,27 @@ public abstract class WorldMixin {
     @Shadow public WorldInfo worldInfo;
     @Shadow public abstract long getWorldTime();
 
+
+    @Shadow public boolean isRemote;
+
+    @Shadow public abstract void setRainStrength(float par1);
+
+    @Shadow protected float thunderingStrength;
+
+    @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
+    private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir){
+        if(NMUtils.getIsBloodMoon()){
+            this.setRainStrength(2.0f);
+            this.thunderingStrength = 2.0f;
+            cir.setReturnValue(true);
+        }
+    }
+//    @Inject(method = "getDifficultyParameter", at = @At("RETURN"))
+//    private void debugLog(Class<? extends DifficultyParam> param, CallbackInfoReturnable cir){
+//        if(param == NMDifficultyParam.ShouldMobsBeBuffed.class) {
+//            System.out.println("value : " + cir.getReturnValue() + " on " + (this.isRemote ? "client" : "server"));
+//        }
+//    }
 
     @Unique private static float fogHue = 0.0f; // Start hue at 0
 

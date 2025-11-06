@@ -207,4 +207,5 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         text2.setColor(EnumChatFormatting.LIGHT_PURPLE);
         this.mcServer.getConfigurationManager().sendChatMsg(text2);
     }
+
 }

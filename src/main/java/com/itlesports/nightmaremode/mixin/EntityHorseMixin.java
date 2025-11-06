@@ -272,7 +272,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
         }
 
-        if(i == Item.carrot.itemID){
+        if(i == BTWItems.carrot.itemID){
             this.eatFood(1200);
             if (this.rand.nextInt(4) == 0) {
                 this.heal(1f);
@@ -334,7 +334,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             return 1400;
         }
 
-        if(id == Item.carrot.itemID){
+        if(id == BTWItems.carrot.itemID){
             return 1200;
         }
 
@@ -362,7 +362,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             BTWItems.straw.itemID,
             BTWItems.mysteriousGland.itemID,
             Item.sugar.itemID,
-            Item.carrot.itemID,
+            BTWItems.carrot.itemID,
             Item.netherStalkSeeds.itemID,
             Item.goldenCarrot.itemID
 
@@ -396,24 +396,21 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         EnumFacing dir = EnumFacing.values()[requiredDirection];
         // Send updated direction to the client
         EntityHorse horseHost = (EntityHorse)(Object)this;
-        NightmareMode.sendHorseDirectionToAll(horseHost, dir);
+        if (!this.worldObj.isRemote) {
+//            System.out.println("ran first direction send");
+            NightmareMode.sendHorseDirectionToAll(horseHost, dir);
+        }
     }
 
 
-    @Unique
-    private byte nm_requiredDirection = -1;
-    @Unique
-    private int nm_tamingProgress;
-
-
     @Override
-    public void nm$setRequiredDirection(byte ordinal) { this.nm_requiredDirection = ordinal; }
+    public void nm$setRequiredDirection(byte ordinal) { this.requiredDirection = ordinal; }
     @Override
-    public byte nm$getRequiredDirection() { return this.nm_requiredDirection; }
+    public byte nm$getRequiredDirection() { return this.requiredDirection; }
     @Override
-    public void nm$setTamingProgress(int progress) { this.nm_tamingProgress = progress; }
+    public void nm$setTamingProgress(int progress) { this.tamingProgress = progress; }
     @Override
-    public int nm$getTamingProgress() { return nm_tamingProgress; }
+    public int nm$getTamingProgress() { return tamingProgress; }
 
 
 
@@ -465,12 +462,18 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
             return;
         }
-        if(this.worldObj.isRemote) return;
+//        System.out.println(requiredDirection + (this.worldObj.isRemote ? " client" : " server"));
+
+//        if(this.worldObj.isRemote) return;
 
         // server side packet-synced direction tracker
         EnumFacing held = ((IPlayerDirectionTracker) player).nm$getHeldDirection();
 
-//        System.out.println(held + " : " + EnumFacing.values()[requiredDirection] + " : " + requiredDirection + " : " + tamingProgress);
+        // held is null on server, but accurate on client
+
+        if(this.worldObj.isRemote) return;
+//        System.out.println(held + " : " + EnumFacing.values()[requiredDirection] + " : " + requiredDirection + " : " + tamingProgress + " : " + player);
+
 
         double horseYawRad = Math.toRadians(horseHost.rotationYawHead);
         Vec3 horseForward = Vec3.createVectorHelper(

@@ -19,7 +19,8 @@ public class EntityAIShadowTeleport extends EntityAITarget {
         if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
             this.targetEntity = player;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 4 : 1;
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= ((this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 400 : 100) * bloodMoonModifier);
+            int distance = this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 400 : 100;
+            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= distance * bloodMoonModifier;
         }
         return false;
     }

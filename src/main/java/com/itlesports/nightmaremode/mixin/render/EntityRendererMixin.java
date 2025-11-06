@@ -38,6 +38,16 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     @Shadow protected abstract void disableLightmap(double partialTicks);
     @Shadow protected abstract float getFOVModifier(float partialTicks, boolean useFOVSetting);
 
+
+    private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("textures/entity/nmBloodRain.png");
+
+    @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
+    private ResourceLocation bloodMoonCustomRain(ResourceLocation par1ResourceLocation){
+        if(NMUtils.getIsBloodMoon()){
+            return BLOOD_RAIN;
+        }
+        return par1ResourceLocation;
+    }
     @Override
     public boolean nightmareMode$isToggleZoomActive() {
         return nmToggleZoomActive;

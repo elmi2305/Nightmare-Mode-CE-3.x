@@ -144,22 +144,23 @@ public class EntityAILiteHorde extends EntityAIBase {
     private void performExtendedMeleeAttack() {
         if (this.targetEntity == null) return;
 
-        if (this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) return;
-        if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
+        if (this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+            if (!this.taskOwner.canEntityBeSeen(this.targetEntity)) return;
 
-        double distanceSq = this.taskOwner.getDistanceSqToEntity(this.targetEntity);
-        int attackRange = computeRangeForHeldItem(this.taskOwner.getHeldItem());
+            double distanceSq = this.taskOwner.getDistanceSqToEntity(this.targetEntity);
+            int attackRange = computeRangeForHeldItem(this.taskOwner.getHeldItem());
 
-        if (distanceSq < attackRange && this.attackTick <= 1) {
-            this.taskOwner.swingItem();
-            this.taskOwner.attackEntityAsMob(this.targetEntity);
-            this.attackTick = 13 - NMUtils.getWorldProgress() * 2;
-        }
+            if (distanceSq < attackRange && this.attackTick <= 1) {
+                this.taskOwner.swingItem();
+                this.taskOwner.attackEntityAsMob(this.targetEntity);
+                this.attackTick = 13 - NMUtils.getWorldProgress() * 2;
+            }
 
-        if (NMUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {
-            this.taskOwner.swingItem();
-            this.taskOwner.attackEntityAsMob(this.targetEntity);
-            this.attackTick = 20;
+            if (NMUtils.getIsMobEclipsed(this.taskOwner) && distanceSq < 3) {
+                this.taskOwner.swingItem();
+                this.taskOwner.attackEntityAsMob(this.targetEntity);
+                this.attackTick = 20;
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.render;
 import btw.client.render.BTWRenderMapper;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityVillagerContainer;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.rendering.*;
 import net.minecraft.src.RenderManager;

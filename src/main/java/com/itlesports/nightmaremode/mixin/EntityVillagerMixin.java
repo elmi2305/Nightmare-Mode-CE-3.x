@@ -1,7 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.blocks.BlockDispenserBlock;
+import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
 import btw.community.nightmaremode.NightmareMode;
+import btw.inventory.util.InventoryUtils;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,14 +17,46 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
+
 @Mixin(EntityVillager.class)
 public abstract class EntityVillagerMixin extends EntityAgeable implements IMerchant, INpc {
 
     @Shadow protected MerchantRecipeList buyingList;
     @Shadow public static Map<Integer, Class> professionMap;
+
+    @Shadow public abstract int getCurrentTradeLevel();
+
+    @Shadow public abstract int getProfession();
+
+    @Shadow public abstract int getCurrentMaxNumTrades();
+
+    @Shadow public abstract int getCurrentTradeMaxXP();
+
+    @Shadow public abstract int getCurrentTradeXP();
+
+    @Shadow public static int[] xpPerLevel;
+
     public EntityVillagerMixin(World par1World) {
         super(par1World);
     }
+
+    @Override
+    public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
+        int profession = this.getProfession();
+        int level = this.getCurrentTradeLevel();
+//        int trades = this.getCurrentTradeXP();
+
+        int meta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
+
+        ItemStack stack = new ItemStack(NMBlocks.villagerBlock, 1, meta);
+
+        this.setDead();
+        InventoryUtils.addSingleItemToInventory(tileEntity, stack.itemID, stack.getItemDamage());
+        this.worldObj.playAuxSFX(2239, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+
+        return true;
+    }
+
 
 
     @Unique private static long lastCheckedTime = -1;

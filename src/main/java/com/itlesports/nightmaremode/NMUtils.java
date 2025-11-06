@@ -41,8 +41,6 @@ public class NMUtils {
             Item.swordDiamond.itemID,
             Item.axeGold.itemID
     ));
-
-
     public static final List<Item> foodList = new ArrayList<>(Arrays.asList(
             NMItems.calamariRoast,
             NMItems.friedCalamari,
@@ -82,6 +80,31 @@ public class NMUtils {
             BTWItems.steakAndPotatoes
     ));
 
+    public final class VillagerMetaCodec {
+        private static final int PROF_BITS = 3;
+        private static final int LEVEL_BITS = 3;
+
+        private static final int PROF_SHIFT = 0;
+        private static final int LEVEL_SHIFT = PROF_SHIFT + PROF_BITS;
+
+        private static final int PROF_MASK = (1 << PROF_BITS) - 1; // 0x7
+        private static final int LEVEL_MASK = (1 << LEVEL_BITS) - 1; // 0x7
+
+        public static int packMeta(int profession, int level) {
+            return ((profession & PROF_MASK) << PROF_SHIFT)
+                    | ((level & LEVEL_MASK) << LEVEL_SHIFT);
+        }
+
+        public static int getProfession(int meta) {
+            return (meta >> PROF_SHIFT) & PROF_MASK;
+        }
+
+        public static int getLevel(int meta) {
+            return (meta >> LEVEL_SHIFT) & LEVEL_MASK;
+        }
+    }
+
+
 
     public static boolean isIntenseCorruption() {
         return intenseCorruption;
@@ -120,6 +143,16 @@ public class NMUtils {
         if (sndManager.sndSystem.playing("streaming")) {
             sndManager.sndSystem.stop("streaming");
         }
+    }
+
+    public static long getNextBloodMoonTime(long currentTime) {
+        int currentDay = (int) Math.ceil((double) currentTime / 24000);
+
+        // Find the next day that satisfies the blood moon cycle (day % 16 == 9)
+        int nextBloodMoonDay = currentDay + (15 - (currentDay % 16) + 9) % 16;
+
+        // Convert back to ticks and set the time to 18000 (nighttime)
+        return (nextBloodMoonDay * 24000L) + 18000;
     }
 
     public static void forcePlayMusic(String soundID, boolean toLoop) {

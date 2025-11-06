@@ -8,6 +8,7 @@ import btw.entity.component.VariantComponent;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
+import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -46,6 +47,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         super(par1World);
     }
     @Unique int jumpCooldown = 0;
+
 
 
     @Override

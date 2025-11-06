@@ -156,6 +156,7 @@ public class NightmareMode extends BTWAddon {
         if (!MinecraftServer.getIsServer()) {
             initClientPacketInfo();
         } else{
+            initServerPacketInfo();
             AddonHandler.registerCommand(new TPACommand(), false);
         }
 
@@ -184,7 +185,22 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
     }
 
+    @Environment(EnvType.SERVER)
+    private void initServerPacketInfo(){
+        AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                byte dirOrdinal = data.readByte();
 
+                EnumFacing direction = dirOrdinal >= 0 ? EnumFacing.values()[dirOrdinal] : null;
+
+                if (player instanceof IPlayerDirectionTracker) {
+                    ((IPlayerDirectionTracker) player).nm$setHeldDirectionServer(direction);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
         //world state packet handler
@@ -246,18 +262,6 @@ public class NightmareMode extends BTWAddon {
         });
 
 
-        AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
-            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
-                byte dirOrdinal = data.readByte();
-                EnumFacing direction = dirOrdinal >= 0 ? EnumFacing.values()[dirOrdinal] : null;
-
-                if (player instanceof IPlayerDirectionTracker) {
-                    ((IPlayerDirectionTracker) player).nm$setHeldDirectionServer(direction);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
 
 
         AddonHandler.registerPacketHandler("nm|HorseProg", (packet, player) -> {
@@ -274,7 +278,22 @@ public class NightmareMode extends BTWAddon {
                 ex.printStackTrace();
             }
         });
+
+        AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                byte dirOrdinal = data.readByte();
+
+                EnumFacing direction = dirOrdinal >= 0 ? EnumFacing.values()[dirOrdinal] : null;
+
+                if (player instanceof IPlayerDirectionTracker) {
+                    ((IPlayerDirectionTracker) player).nm$setHeldDirectionServer(direction);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
+
 
     private static Packet250CustomPayload createHorseProgressPacket(int horseId, int progress) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -355,6 +374,20 @@ public class NightmareMode extends BTWAddon {
         }
     }
 
+
+
+
+
+    public static void sendHorseDirectionToAll(EntityHorse horse, EnumFacing direction) {
+        Packet250CustomPayload packet = createHorseDirectionPacket(horse.entityId, (byte) direction.ordinal());
+        for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (playerObj instanceof EntityPlayerMP player && player.ridingEntity instanceof EntityHorse) {
+                if (player.getDistanceSqToEntity(horse) < 8 * 8) {
+                    player.playerNetServerHandler.sendPacketToPlayer(packet);
+                }
+            }
+        }
+    }
     private static Packet250CustomPayload createHorseDirectionPacket(int horseId, byte directionOrdinal) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
@@ -368,40 +401,27 @@ public class NightmareMode extends BTWAddon {
 
         return new Packet250CustomPayload("nm|HorseDir", byteStream.toByteArray());
     }
-
-
-
-    public static void sendHorseDirectionToAll(EntityHorse horse, EnumFacing direction) {
-        Packet250CustomPayload packet = createHorseDirectionPacket(horse.entityId, (byte) direction.ordinal());
-        for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-            if (playerObj instanceof EntityPlayerMP player && player.ridingEntity instanceof EntityHorse) {
-                // Optionally check distance so we only send to nearby players
-                if (player.getDistanceSqToEntity(horse) < 8 * 8) {
-                    player.playerNetServerHandler.sendPacketToPlayer(packet);
-                }
-            }
-        }
-    }
-
     public static void sendDirectionUpdate(EnumFacing direction) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
         try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(bos);
-
-            // Write ordinal or -1 if null (no input)
-            out.writeByte(direction == null ? -1 : direction.ordinal());
-
-            Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = "nm|Dir";
-            packet.data = bos.toByteArray();
-            packet.length = bos.size();
-
-            // Send to server
-            Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(packet);
+            // Match the server's read expectations: just send a single byte (-1 = none)
+            dataStream.writeByte(direction == null ? -1 : direction.ordinal());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Use the constructor that automatically sets data and length properly
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|Dir", byteStream.toByteArray());
+
+        // Send to the server
+//        System.out.println("Sending nm|Dir packet, dir=" + direction);
+        // DEBUG: packet does successfully get sent, and interpreted properly here. whether it arrives at the destination is unknown
+        Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(packet);
+//        Minecraft.getMinecraft().getNetHandler().addToSendQueue(packet);
     }
+
 
     @Override
     public void serverPlayerConnectionInitialized(NetServerHandler serverHandler, EntityPlayerMP playerMP) {
@@ -460,6 +480,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean birthdayBash;
     public static Boolean fullBright;
     public static Boolean fastVillagers;
+    public static Boolean bloodMoonHelper;
 
     public boolean canAccessMenu = true;
     public long portalTime = 0;
@@ -514,6 +535,7 @@ public class NightmareMode extends BTWAddon {
         this.registerProperty("BirthdayBash", "False");
         this.registerProperty("FullBright", "False");
         this.registerProperty("FastVillagers", "False");
+        this.registerProperty("BloodMoonHelper", "False");
 
 
         PORTAL_TIME.register();
@@ -554,6 +576,7 @@ public class NightmareMode extends BTWAddon {
         birthdayBash = Boolean.parseBoolean(propertyValues.get("BirthdayBash"));
         fullBright = Boolean.parseBoolean(propertyValues.get("FullBright"));
         fastVillagers = Boolean.parseBoolean(propertyValues.get("FastVillagers"));
+        bloodMoonHelper = Boolean.parseBoolean(propertyValues.get("BloodMoonHelper"));
     }
 
     @Override

@@ -282,8 +282,10 @@ public abstract class EntityWitchMixin extends EntityMob {
     }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void chanceToDropSpecialItems(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if(this.rand.nextInt(Math.max(24 - iLootingModifier, 2)) == 0){
-            this.dropItem(Item.expBottle.itemID, 1);
+        for(int i = 0; i < 1 + iLootingModifier * 2; i++){
+            if(this.rand.nextInt(Math.max(6 - iLootingModifier, 2)) == 0){
+                this.dropItem(Item.expBottle.itemID, 1);
+            }
         }
 
         if(this.rand.nextInt(NMUtils.getIsBloodMoon() ? 2 : 6) == 0){

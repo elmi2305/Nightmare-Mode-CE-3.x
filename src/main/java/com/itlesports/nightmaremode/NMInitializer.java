@@ -150,9 +150,10 @@ public abstract class NMInitializer implements AchievementExt {
         move(CRAFT_WOOL_KNIT,-1,0);
         move(MINE_DIAMOND_ORE, 0, 1);
 
+
         // wicker stuff for snap 6
-        move(FIND_REEDS, 0, -12);
-        move(CRAFT_WICKER, -1, -12);
+        move(FIND_REEDS, 0, -20);
+        move(CRAFT_WICKER, -1, -20);
         move(CRAFT_BASKET, -1, -12);
 
         removeParent(CRAFT_BASKET,GRIND_HEMP_FIBERS);
@@ -203,14 +204,14 @@ public abstract class NMInitializer implements AchievementExt {
 
         // hemp arc
 
-        move(FIND_HEMP_SEEDS, 0, -6);
+        move(FIND_HEMP_SEEDS, -1, -14);
         addParent(FIND_HEMP_SEEDS, CRAFT_IRON_HOE);
-        move(HARVEST_HEMP, 2, -7);
-        move(CRAFT_GEAR, -2, -5);
+        move(HARVEST_HEMP, 1, -15);
+        move(CRAFT_GEAR, -2, -12);
         addParent(CRAFT_GEAR, CRAFT_PLANKS);
-        move(CRAFT_MILLSTONE, -1, -6);
-        move(CRAFT_HAND_CRANK, -3, -6);
-        move(GRIND_HEMP_FIBERS, 2, -6);
+        move(CRAFT_MILLSTONE, -1, -13);
+        move(CRAFT_HAND_CRANK, -3, -13);
+        move(GRIND_HEMP_FIBERS, 1, -14);
 
         removeParent(CRAFT_SAIL, CRAFT_PLANKS);
         addParent(CRAFT_SAIL, CRAFT_FABRIC);
@@ -232,7 +233,7 @@ public abstract class NMInitializer implements AchievementExt {
         move(CRAFT_DYNAMITE, 0, 1);
         move(REDNECK_FISHING, 0, 1);
         move(MAKE_HELLFIRE_DUST, 0, 2);
-        move(CRAFT_NETHER_COAL, -1, 1);
+        move(CRAFT_NETHER_COAL, -1, 2);
         addParent(MAKE_HELLFIRE_DUST, GET_GROUND_NETHERRACK);
 
         kill(EXPLODED_WITH_BLASTING_OIL);
@@ -655,6 +656,17 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotGold, 2), new ItemStack[]{new ItemStack(Item.horseArmorGold)});
         // done adding
 
+        // add gold recipes for golden apples and carrots
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 3), new ItemStack[]{new ItemStack(Item.appleGold)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotGold, 3), new ItemStack[]{new ItemStack(Item.appleGold, 1, 1)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 2), new ItemStack[]{new ItemStack(Item.goldenCarrot)});
+        // done with apples
+
+        // chest
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 6), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.chest)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.chest)});
+        // done with chest
+
 
 
 
@@ -995,6 +1007,20 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('L'), BTWItems.redstoneLatch
         });
         // blood saw, blood conquered
+
+
+
+
+        // crimson bottle
+        RecipeManager.addRecipe(new ItemStack(NMPostItems.bloodMoonBottle), new Object[]{
+                "HSH",
+                "BEB",
+                "HBH",
+                Character.valueOf('B'), NMItems.bloodOrb,
+                Character.valueOf('S'), BTWItems.soulFlux,
+                Character.valueOf('E'), Item.expBottle,
+                Character.valueOf('H'), BTWItems.hellfireDust
+        });
     }
 
     private static void addPistonPackingRecipes() {

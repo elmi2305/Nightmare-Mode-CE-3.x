@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 
+
 @Mixin(EntityMob.class)
 public abstract class EntityMobMixin extends EntityCreature implements EntityLivingAccessor{
     @Unique private int arrowCooldown;
@@ -169,13 +170,6 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
             cir.setReturnValue(false);
         }
     }
-    @Inject(method = "isValidLightLevel", at = @At("HEAD"), cancellable = true)
-    private void ensureEndDimensionSpawns(CallbackInfoReturnable<Boolean> cir){
-        if(this.dimension == 1){
-            cir.setReturnValue(true);
-        }
-    }
-
     @Override
     protected void despawnEntity() {
         boolean isHorde = NightmareMode.hordeMode;
@@ -200,7 +194,6 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
                         return;
                     }
 
-                    // Still chasing target → stay alive
                     this.entityAge = 0;
                 } else {
                     // No target: fall back to player proximity
@@ -212,13 +205,35 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
                     }
                 }
 
+
+
             } else {
+                int mobY = (int) this.posY;
+                int pY = mobY;
+
+                // get the closest player and get distance to it
+                EntityPlayer closestPlayer = null;
+                double dDistSq = Double.MAX_VALUE;
+                for(Object p : this.worldObj.playerEntities){
+                    double newDist = this.getDistanceSqToEntity((Entity) p);
+                    if (newDist < dDistSq) {
+                        dDistSq = newDist;
+                        closestPlayer = (EntityPlayer) p;
+                        pY = (int) ((EntityPlayer) p).posY;
+                    }
+                }
+
+
+                int randomVariance = getRandomVariance(this.worldObj,pY, mobY);
+
                 // Vanilla behavior
-                EntityPlayer closestPlayer = this.worldObj.getClosestPlayerToEntity(this, this.minDistFromPlayerForDespawn());
-                if (closestPlayer != null) {
-                    this.entityAge = 0;
-                } else if (this.entityAge > 600 && this.rand.nextInt(800) == 0) {
-                    this.setDead();
+                double minDist = this.minDistFromPlayerForDespawn();
+                if(dDistSq > minDist*minDist) {
+                    if (closestPlayer == null) {
+                        this.entityAge = 0;
+                    } else if (this.entityAge > 800 && this.rand.nextInt(randomVariance) == 0) {
+                        this.setDead();
+                    }
                 }
             }
 
@@ -227,6 +242,68 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         }
     }
 
+    @Inject(method = "isValidLightLevel", at = @At("HEAD"), cancellable = true)
+    private void ensureEndDimensionSpawns(CallbackInfoReturnable<Boolean> cir){
+        if(this.dimension == 1){
+            cir.setReturnValue(true);
+        }
+    }
+    @Unique
+    private static double getWorldProgressFactor(World world) {
+        long totalTicks = world.getWorldTime();
+        double weekTicks = 24000.0 * 7.0;
+
+        // from 0.1 to 1.0 through the week
+        double progress = Math.min(1.0, totalTicks / weekTicks);
+
+        return 0.1 + (0.9 * progress);
+    }
+
+    @Unique
+    private static int getRandomVariance(World world, int pY, int mobY) {
+        double diff = Math.abs(pY - mobY);
+        double capped = Math.min(diff, 60);
+
+        double logPart = Math.log1p(capped) / Math.log1p(20.0);
+        double linearPart = capped > 20.0 ? (capped - 20.0) / 40.0 : 0.0;
+        double despawnFactor = getDespawnFactor(mobY, logPart, linearPart);
+
+        // Scale with world age (soft start)
+        double progression = getWorldProgressFactor(world);
+        despawnFactor *= progression;
+
+        int baseVariance = 700;
+        int randomVariance = (int)(baseVariance * (1.2 - 0.75 * despawnFactor));
+        randomVariance = Math.max(1, randomVariance);
+        return randomVariance;
+    }
+
+
+    @Unique
+    private static double getDespawnFactor(int mobY, double logPart, double linearPart) {
+        double despawnFactor = 0.6 * logPart + 0.4 * linearPart;
+
+        double caveFactor = 1.0;
+        if (mobY < 40) {
+            caveFactor += (40.0 - mobY) / 40.0 * 0.5; // up to +50% penalty for very deep mobs
+        }
+        despawnFactor *= caveFactor;
+        despawnFactor = Math.min(1.5, despawnFactor); // hard cap
+
+        // for surface mobs
+        if (mobY > 40) {
+            final double SURFACE_PROTECT = 0.25;
+            final double SURFACE_CAP = 0.35;
+            // putting the numbers here so they can easily be changed
+            despawnFactor = Math.min(despawnFactor * SURFACE_PROTECT, SURFACE_CAP);
+        }
+        return despawnFactor;
+    }
+
+    @Override
+    protected double minDistFromPlayerForDespawn() {
+        return super.minDistFromPlayerForDespawn() * 1.25f;
+    }
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){

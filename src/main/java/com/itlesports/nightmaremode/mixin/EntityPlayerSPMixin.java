@@ -39,6 +39,7 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer implements IPlaye
         else currentDirection = null;
         // send packet to server if riding horse
         if (this.ridingEntity instanceof EntityHorse) {
+            // gets sent from the client which makes sense
             NightmareMode.sendDirectionUpdate(currentDirection);
         }
     }

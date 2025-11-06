@@ -37,8 +37,10 @@ public class GuiConfig extends GuiScreen {
     private GuiColoredButton fullBrightButton;           // 25
 
 
-    private GuiColoredButton birthdayBashButton; // 25
+    private GuiColoredButton birthdayBashButton; // unused
+
     private GuiColoredButton fastVillagersButton; // 26
+    private GuiColoredButton bloodMoonHelperButton; // 27
 
 
 
@@ -175,18 +177,19 @@ public class GuiConfig extends GuiScreen {
 
         textToDisplay = cap(Boolean.toString(NightmareMode.potionParticles));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.potionParticles ? 0x428BFF : 0x264f91));
-        textIndex = 1;
-        width += 200;
+        textIndex++;
 
         textToDisplay = cap(Boolean.toString(NightmareMode.shouldDisplayFishingAnnouncements));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.shouldDisplayFishingAnnouncements ? 0x428BFF : 0x264f91));
-        textIndex ++;
+
+        textIndex = 1;
+        width += 200;
 
         textToDisplay = cap(Boolean.toString(NightmareMode.aprilFoolsRendering));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.aprilFoolsRendering ? 0x428BFF : 0x264f91));
-        textIndex ++; // adds one button of gap between green and blue
 
         textIndex ++;
+        textIndex ++; // adds a gap between the green and blue
         textToDisplay = cap(Boolean.toString(NightmareMode.perfectStart));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.perfectStart ? 0x5fe647 : 0x429c32));
 
@@ -201,6 +204,10 @@ public class GuiConfig extends GuiScreen {
         textIndex ++;
         textToDisplay = cap(Boolean.toString(NightmareMode.fastVillagers));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.fastVillagers ? 0x5fe647 : 0x429c32));
+
+        textIndex ++;
+        textToDisplay = cap(Boolean.toString(NightmareMode.bloodMoonHelper));
+        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.bloodMoonHelper ? 0x5fe647 : 0x429c32));
 
         for(Object coloredButton: this.buttonList){
             if(coloredButton instanceof GuiColoredButton tempButton){
@@ -239,6 +246,7 @@ public class GuiConfig extends GuiScreen {
         this.extraArmorButton.drawButton = !par1;
         this.fullBrightButton.drawButton = !par1;
         this.fastVillagersButton.drawButton = !par1;
+        this.bloodMoonHelperButton.drawButton = !par1;
     }
 
     @Override
@@ -299,9 +307,9 @@ public class GuiConfig extends GuiScreen {
         addCrimsonButton(width, heightMultiplier, miscBase, miscActive);
         addConfigOnHudButton(width, heightMultiplier, miscBase, miscActive);
         addPotionParticlesButton(width, heightMultiplier, miscBase, miscActive);
+        addFishingAlertsButton(width, heightMultiplier, miscBase, miscActive);
 
 // Right column buttons
-        addFishingAlertsButton(rightColumnX, heightMultiplier, miscBase, miscActive);
         addCMRenderingButton(rightColumnX, heightMultiplier, miscBase, miscActive);
 
 // beneficial configs
@@ -309,6 +317,7 @@ public class GuiConfig extends GuiScreen {
         addExtraArmorButton(rightColumnX, heightMultiplier, goodBase, goodActive);
         addFullbrightButton(rightColumnX, heightMultiplier, goodBase, goodActive);
         addFastVillagersButton(rightColumnX, heightMultiplier, goodBase, goodActive);
+        addBloodMoonHelperButton(rightColumnX, heightMultiplier, goodBase, goodActive);
 
 
 
@@ -329,6 +338,7 @@ public class GuiConfig extends GuiScreen {
         this.extraArmorButton.drawButton = this.isOnSecondPage;
         this.fullBrightButton.drawButton = this.isOnSecondPage;
         this.fastVillagersButton.drawButton = this.isOnSecondPage;
+        this.bloodMoonHelperButton.drawButton = this.isOnSecondPage;
 
         // Buttons visible only on first page
         this.moreVariantsButton.drawButton = !this.isOnSecondPage;
@@ -371,6 +381,8 @@ public class GuiConfig extends GuiScreen {
         this.fullBrightButton.updateState(NightmareMode.fullBright);
         this.darkStormyNightmareButton.updateState(NightmareMode.darkStormyNightmare);
         this.fastVillagersButton.updateState(NightmareMode.fastVillagers);
+        this.bloodMoonHelperButton.updateState(NightmareMode.bloodMoonHelper);
+
 
     }
 
@@ -482,34 +494,39 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.add(this.potionParticlesButton);
     }
     private void addFishingAlertsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.shouldDisplayFishingAnnouncementsButton = new GuiColoredButton(20, x, heightMultiplier * 1, 100, 20, I18n.getString("gui.config.fishing_alerts"), baseColor, activeColor);
+        this.shouldDisplayFishingAnnouncementsButton = new GuiColoredButton(20, x, heightMultiplier * 7, 100, 20, I18n.getString("gui.config.fishing_alerts"), baseColor, activeColor);
         this.shouldDisplayFishingAnnouncementsButton.setTooltipText(I18n.getString("gui.config.tooltip.fishing_alerts"));
         this.buttonList.add(this.shouldDisplayFishingAnnouncementsButton);
     }
     private void addCMRenderingButton( int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.aprilFoolsRenderingButton = new GuiColoredButton(21, x, heightMultiplier * 2, 100, 20, I18n.getString("gui.config.cm_rendering"), baseColor, activeColor);
+        this.aprilFoolsRenderingButton = new GuiColoredButton(21, x, heightMultiplier * 1, 100, 20, I18n.getString("gui.config.cm_rendering"), baseColor, activeColor);
         this.aprilFoolsRenderingButton.setTooltipText(I18n.getString("gui.config.tooltip.cm_rendering"));
         this.buttonList.add(this.aprilFoolsRenderingButton);
     }
     private void addPerfectStartButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.perfectStartButton = new GuiColoredButton(22, x, heightMultiplier * 4, 100, 20, I18n.getString("gui.config.perfect_start"), baseColor, activeColor);
+        this.perfectStartButton = new GuiColoredButton(22, x, heightMultiplier * 3, 100, 20, I18n.getString("gui.config.perfect_start"), baseColor, activeColor);
         this.perfectStartButton.setTooltipText(I18n.getString("gui.config.tooltip.perfect_start"));
         this.buttonList.add(this.perfectStartButton);
     }
     private void addExtraArmorButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.extraArmorButton = new GuiColoredButton(23, x, heightMultiplier * 5, 100, 20, I18n.getString("gui.config.extra_armor"), baseColor, activeColor);
+        this.extraArmorButton = new GuiColoredButton(23, x, heightMultiplier * 4, 100, 20, I18n.getString("gui.config.extra_armor"), baseColor, activeColor);
         this.extraArmorButton.setTooltipText(I18n.getString("gui.config.tooltip.extra_armor"));
         this.buttonList.add(this.extraArmorButton);
     }
     private void addFullbrightButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.fullBrightButton = new GuiColoredButton(25, x, heightMultiplier * 6, 100, 20, I18n.getString("gui.config.full_bright"), baseColor, activeColor);
+        this.fullBrightButton = new GuiColoredButton(25, x, heightMultiplier * 5, 100, 20, I18n.getString("gui.config.full_bright"), baseColor, activeColor);
         this.fullBrightButton.setTooltipText(I18n.getString("gui.config.tooltip.full_bright"));
         this.buttonList.add(this.fullBrightButton);
     }
     private void addFastVillagersButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.fastVillagersButton = new GuiColoredButton(26, x, heightMultiplier * 7, 100, 20, I18n.getString("gui.config.fast_villagers"), baseColor, activeColor);
+        this.fastVillagersButton = new GuiColoredButton(26, x, heightMultiplier * 6, 100, 20, I18n.getString("gui.config.fast_villagers"), baseColor, activeColor);
         this.fastVillagersButton.setTooltipText(I18n.getString("gui.config.tooltip.fast_villagers"));
         this.buttonList.add(this.fastVillagersButton);
+    }
+    private void addBloodMoonHelperButton(int x, int heightMultiplier, int baseColor, int activeColor) {
+        this.bloodMoonHelperButton = new GuiColoredButton(27, x, heightMultiplier * 7, 100, 20, I18n.getString("gui.config.blood_moon_helper"), baseColor, activeColor);
+        this.bloodMoonHelperButton.setTooltipText(I18n.getString("gui.config.tooltip.blood_moon_helper"));
+        this.buttonList.add(this.bloodMoonHelperButton);
     }
 
     private static String cap(String str) {
@@ -628,11 +645,10 @@ public class GuiConfig extends GuiScreen {
             NightmareMode.fastVillagers = !NightmareMode.fastVillagers;
             instance.modifyConfigProperty("FastVillagers", Boolean.toString(NightmareMode.fastVillagers));
             this.fastVillagersButton.updateState(NightmareMode.fastVillagers);
+        }  else if (par1GuiButton.id == 27) {
+            NightmareMode.bloodMoonHelper = !NightmareMode.bloodMoonHelper;
+            instance.modifyConfigProperty("BloodMoonHelper", Boolean.toString(NightmareMode.bloodMoonHelper));
+            this.bloodMoonHelperButton.updateState(NightmareMode.bloodMoonHelper);
         }
-//        else if (par1GuiButton.id == 25) {
-//            NightmareMode.birthdayBash = !NightmareMode.birthdayBash;
-//            instance.modifyConfigProperty("BirthdayBash", Boolean.toString(NightmareMode.birthdayBash));
-//            this.birthdayBashButton.updateState(NightmareMode.birthdayBash);
-//        }
     }
 }

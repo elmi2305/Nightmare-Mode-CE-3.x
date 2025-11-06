@@ -6,6 +6,7 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import btw.world.util.difficulty.Difficulties;
+import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -476,7 +477,6 @@ public abstract class EntityZombieMixin extends EntityMob{
         return constant;
         // 0.05f -> 0.08f -> 0.11f -> 0.30f
     }
-
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addLungeAI(World par1World, CallbackInfo ci){
         this.targetTasks.addTask(2, new EntityAILunge(this, true));
