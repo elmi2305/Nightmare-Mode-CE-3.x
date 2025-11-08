@@ -686,7 +686,7 @@ public abstract class NMInitializer implements AchievementExt {
         // add other crucible tools and blocks
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(NMItems.ironKnittingNeedles, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(NMItems.ironFishingPole, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 1), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 7), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
 
         // obsidian post-wither
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(NMBlocks.crudeObsidian)});
