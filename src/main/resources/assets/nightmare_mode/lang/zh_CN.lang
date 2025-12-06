@@ -62,7 +62,12 @@ tile.nmHellforgeBlock.name=地狱砖炉
 tile.nmCrudeObsidian.name=粗制黑曜石
 tile.nmAsphaltLayer.name=沥青层
 tile.nmBloodSawBlock.name=血锯
+tile.nmVillagerBlock.name=村民容器
 
+
+villager.profession=职业
+villager.level=等级
+entity.addonVillagerNightmare.name=噩梦商人
 
 
 container.steelLocker=钢储物柜
@@ -87,6 +92,8 @@ entity.NightmareImposterZombie.name=伪装者僵尸
 entity.NightmareDrownedSkeleton.name=溺骸骷髅
 entity.NightmareMeltedSkeleton.name=熔火骷髅
 entity.NightmareObsidianFish.name=黑曜石鱼
+entity.NightmareCreeperGhast.name=苦力怕恶魂
+
 
 
 key.nightmaremode.zoomhold=按住缩放
@@ -219,7 +226,15 @@ gui.config.full_bright=高亮模式
 gui.config.tooltip.full_bright=以最大亮度渲染世界。不会绕过黑暗效果
 gui.config.fast_villagers=快速村民
 gui.config.tooltip.fast_villagers=让村民每天重新刷新交易4次
+gui.config.blood_moon_helper=血月助手
+gui.config.tooltip.blood_moon_helper=显示下一次血月何时出现
 
+
+gui.bloodmoon=血月
+gui.bloodmoon.in=血月将在
+gui.bloodmoon.days=天
+gui.bloodmoon.tonight=今晚
+gui.bloodmoon.tomorrow=明天
 
 
 gui.warning.line1=伙计
@@ -231,6 +246,8 @@ gui.warning.iknow=我知道我在做什么
 gui.warning.goback=返回
 
 
+item.desc.bloodmoon0=Bỏ qua Trăng Máu hiện tại nếu nó đang hoạt động
+item.desc.bloodmoon1=Ngược lại, bỏ qua cho đến Trăng Máu tiếp theo
 
 
 gui.gameover.tip_prefix=提示：
@@ -313,6 +330,8 @@ deathScreen.deathTauntMessage18=<???> 又一次失败，看着真愉快。
 deathScreen.deathTauntMessage19=<???> 这就想感动我？
 
 achievementtab.nightmaremode=噩梦模式
+achievement.nm.grants=Cấp các Thành Tựu sau:
+
 
 achievement.nm.morningSecondDay=故事刚开头……
 achievement.nm.morningSecondDay.desc=熬过第一夜，正式开局！
@@ -479,7 +498,7 @@ achievement.nm.lust.desc=欲望上头，干脆拥抱它
 achievement.nm.steelSword=永恒之刃
 achievement.nm.steelSword.desc=造一把精炼剑，砍翻全场
 
-achievement.nm.steelIngot=钢比钻石牛
+achievement.nm.steelIngot=比下界合金更强
 achievement.nm.steelIngot.desc=炼出钢锭，踏实致富
 
 achievement.nm.steelPickaxe=拆墙利器
@@ -631,3 +650,16 @@ achievement.nm.dungApple.desc=吃下一颗粪苹果。但为什么呢？
 achievement.nm.craftRefinedDiamond=防弹
 achievement.nm.craftRefinedDiamond.desc=精炼一块钻石锭
 
+achievement.nm.craftIronFishingRod=诱饵曾经很真实
+achievement.nm.craftIronFishingRod.desc=制作一把铁钓竿。它更耐用且不需要诱饵
+
+achievement.nm.makeVillagerVessel=装箱完毕
+achievement.nm.makeVillagerVessel.desc=将一个村民变成一个村民容器
+
+achievement.nm.beaconSpider=害虫清除
+achievement.nm.beaconSpider.desc=建造一个4级蜘蛛眼信标
+
+achievement.nm.chainArmor=我由火铸成
+achievement.nm.chainArmor.desc=用一件锁链护甲保护自己免受火焰伤害
+
+tag.nightmare_mode.sandwich_meats=三明治肉类

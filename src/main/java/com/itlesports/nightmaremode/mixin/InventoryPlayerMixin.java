@@ -23,6 +23,8 @@ public class InventoryPlayerMixin {
             thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
             thisObj.addItemStackToInventory(new ItemStack(Item.axeStone));
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
+            thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.looseDirtSlab, 16));
+            thisObj.addItemStackToInventory(new ItemStack(BTWItems.stone, 8));
         }
         if(NightmareMode.isAprilFools){
             thisObj.addItemStackToInventory(new ItemStack(NMItems.creeperBallSoup));

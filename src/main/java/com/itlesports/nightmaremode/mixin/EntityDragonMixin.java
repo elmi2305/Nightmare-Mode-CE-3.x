@@ -3,11 +3,13 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.DireWolfEntity;
 import btw.world.util.WorldUtils;
+import btw.world.util.data.BTWWorldData;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -64,12 +66,19 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     private void onlySpawnOnSecondDragonKill(EntityDragon instance, int var10, int var12) {
         if (BlockEndPortal.bossDefeated || !this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
-            NightmareMode.getInstance().shouldStackSizesIncrease = true;
+            if (MinecraftServer.getServer() != null) {
+                MinecraftServer.getServer().worldServers[0].setData(NightmareMode.DRAGON_DEFEATED, true);
+            }
         } else {
             BlockEndPortal.bossDefeated = true;
         }
     }
 
+//    @Inject(method = "createEnderPortal", at = @At("TAIL"))
+//    private void manageNBT(int par1, int par2, CallbackInfo ci){
+//        this.worldObj.setData(NightmareMode.DRAGON_DEFEATED, true);
+//
+//    }
     @ModifyArg(method = "func_82195_e", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float manageDamageCap(float par2){
         if(par2 > 20){

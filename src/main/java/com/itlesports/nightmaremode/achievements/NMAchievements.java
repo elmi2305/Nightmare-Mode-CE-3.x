@@ -30,7 +30,7 @@ public class NMAchievements {
                     .triggerCondition(time -> {
                         long day = time / 24000L;
                         int timeOfDay = (int) (time % 24000L);
-                        return day == 1 && timeOfDay < 1000;
+                        return day >= 1 && timeOfDay < 1000;
                     })
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
@@ -106,12 +106,12 @@ public class NMAchievements {
                     .parents(FIND_STRING)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<EntityPlayer> MAKE_SKY_BASE =
-            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+    public static final Achievement<BTWAchievementEvents.None> MAKE_SKY_BASE =
+            AchievementProvider.getBuilder(NMAchievementEvents.SkybaseScoreEvent.class)
                     .name(loc("skyBase"))
                     .icon(Block.planks)
                     .displayLocation(9, 1)
-                    .triggerCondition(NMAchievements::getPlayerOnSkybase)
+                    .alwaysTrigger()
                     .parents(FIND_LOGS)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
@@ -512,8 +512,24 @@ public class NMAchievements {
                     .parents(CRAFT_DIAMOND_INGOT)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
-
-
+    public static final Achievement<ItemStack> CRAFT_IRON_ROD =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("craftIronFishingRod"))
+                    .icon(NMItems.ironFishingPole)
+                    .displayLocation(-1, -4)
+                    .triggerCondition(data -> data.itemID == NMItems.ironFishingPole.itemID)
+                    .parents(IRON_AGE)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
+    public static final Achievement<ItemStack> CRAFT_CHAIN_ARMOR =
+            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                    .name(loc("chainArmor"))
+                    .icon(Item.plateChain)
+                    .displayLocation(1, 4)
+                    .triggerCondition(item -> item.getItem() instanceof ItemArmor ar && ar.getArmorMaterial() == EnumArmorMaterial.CHAIN)
+                    .parents(IRON_AGE)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
 
 
 
@@ -678,10 +694,20 @@ public class NMAchievements {
                     .icon(NMItems.dungApple)
                     .displayLocation(4, 5)
                     .triggerCondition(item -> item.itemID == NMItems.dungApple.itemID)
+                    .parents(TRADED_WITH_FARMER)
                     .build()
                     .setHidden()
                     .registerAchievement(TAB_AUTOMATION);
 
+    public static final Achievement<Entity> VILLAGER_VESSEL =
+            AchievementProvider.getBuilder(BTWAchievementEvents.EatEntityWithBlockDispenserEvent.class)
+                    .name(loc("makeVillagerVessel"))
+                    .icon(NMBlocks.villagerBlock)
+                    .displayLocation(6, 1)
+                    .triggerCondition(e -> e instanceof EntityVillager)
+                    .parents(MAKE_COMPANION_CUBE)
+                    .build()
+                    .registerAchievement(TAB_AUTOMATION);
 
 
     // TAB_END_GAME
@@ -1044,6 +1070,16 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
+    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_SPIDER =
+            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+                    .name(loc("beaconSpider"))
+                    .icon(BTWBlocks.spiderEyeBlock)
+                    .displayLocation(12, 5)
+                    .triggerCondition(data -> data.effect() == BTWBeaconEffects.FIRE_RESIST_EFFECT && data.level() == 4)
+                    .parents(CRAFTED_BEACON)
+                    .build()
+                    .registerAchievement(TAB_END_GAME);
+
     public static final Achievement<EntityPlayer> BEACON_ALL =
             AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
                     .name(loc("beaconAll"))
@@ -1061,6 +1097,7 @@ public class NMAchievements {
                             BEACON_GLOWSTONE,
                             BEACON_LAPIS,
                             BEACON_IRON,
+                            BEACON_SPIDER,
                             MAX_STEEL_BEACON)
                     .build()
                     .setSpecial()
@@ -1113,38 +1150,12 @@ public class NMAchievements {
 
 
     // HELPER METHODS
-    private static boolean getPlayerOnSkybase(EntityPlayer player) {
-        World world = player.worldObj;
-        int px = MathHelper.floor_double(player.posX);
-        int pz = MathHelper.floor_double(player.posZ);
-        int py = MathHelper.floor_double(player.posY);
 
-        int[][] offsets = {
-                {5, 0},
-                {-5, 0},
-                {0, 5},
-                {0, -5}
-        };
-
-        int totalHeight = 0;
-
-        for (int[] offset : offsets) {
-            int x = px + offset[0] + randOffset(world.rand);
-            int z = pz + offset[1] + randOffset(world.rand);
-            int height = Math.max(world.getPrecipitationHeight(x, z), 63);
-
-            totalHeight += height;
-        }
-
-        int avgHeight = totalHeight / 4;
-
-        return py >= avgHeight + 8;
-    }
-    private static int randOffset(Random r){return r.nextInt(3) - 1;}
 
     private static boolean isPlayerGreeding(EntityPlayer p){
         World w = p.worldObj;
         long t = w.getTotalWorldTime();
+        if(t % 20 != 0) return false;
 
         // case 0: player is deliberately going for the achievement, or spawned in a ravine
         if(t < 1000){
@@ -1153,12 +1164,12 @@ public class NMAchievements {
         int day = 24000;
 
         // case 1: early greed
-        if(t < (day * 5) && p.posY < 50){
+        if(t < (day * 7) && p.posY < 50){
             return true;
         }
 
         // case 2: middle game greed
-        return t < (24000 * 9) && p.posY < 24;
+        return t < (24000 * 14) && p.posY < 24;
     }
 
     private static final Set<Integer> IRON_ITEM_IDS = new HashSet<Integer>(Arrays.asList(
@@ -1225,6 +1236,7 @@ public class NMAchievements {
                 BEACON_GLOWSTONE,
                 BEACON_LAPIS,
                 BEACON_IRON,
+                BEACON_SPIDER,
                 MAX_STEEL_BEACON
         };
 

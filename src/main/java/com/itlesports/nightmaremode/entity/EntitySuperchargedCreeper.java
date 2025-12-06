@@ -15,7 +15,7 @@ public class EntitySuperchargedCreeper extends EntityCreeper implements EntityWi
     private boolean determinedToExplode = false;
     private int timeSinceIgnited;
     private int fuseTime = 15;
-    private final int explosionRadius = 3;
+    private final int explosionRadius = 6;
     private byte patienceCounter = 20;
 
 
@@ -134,6 +134,11 @@ public class EntitySuperchargedCreeper extends EntityCreeper implements EntityWi
             super.playLivingSound();
         }
 
+    }
+
+    @Override
+    protected float getSoundPitch() {
+        return super.getSoundPitch() + 0.8f;
     }
 
     protected String getLivingSound() {

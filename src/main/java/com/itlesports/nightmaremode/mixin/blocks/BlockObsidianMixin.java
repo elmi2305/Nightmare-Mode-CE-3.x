@@ -21,6 +21,7 @@ public class BlockObsidianMixin extends Block {
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void lowerResistance(int par1, CallbackInfo ci){
+        this.setHardness(40);
         this.setResistance(64);
     }
 
@@ -41,7 +42,7 @@ public class BlockObsidianMixin extends Block {
                 this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, 0, 1.0F);
                 this.shouldDropBlock = false;
             } else{
-                this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(3) + 3 + iFortuneModifier, 8), 0, 1.0F);
+                this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(4) + 3 + iFortuneModifier, 8), 0, 1.0F);
             }
         }
     }

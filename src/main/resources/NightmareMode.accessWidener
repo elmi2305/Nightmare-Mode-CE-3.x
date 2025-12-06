@@ -26,3 +26,6 @@ accessible class net/minecraft/src/ComponentStronghold
 accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/SoundSystem;
 accessible field net/minecraft/src/SoundManager soundPoolSounds Lnet/minecraft/src/SoundPool;
 accessible field net/minecraft/src/StatList oneShotStats Ljava/util/Map;
+accessible field net/minecraft/src/EntityVillager buyingList Lnet/minecraft/src/MerchantRecipeList;
+accessible method btw/inventory/util/InventoryUtils findSlotToMergeItemStackInSlotRange (Lnet/minecraft/src/IInventory;Lnet/minecraft/src/ItemStack;II)I
+accessible class btw/entity/mob/villager/trade/TradeProvider$TradeBuilder

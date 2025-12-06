@@ -133,6 +133,11 @@ public class NMAchievementEvents {
             super();
         }
     }
+    public static class SkybaseScoreEvent extends AchievementEventDispatcher.AchievementEvent<BTWAchievementEvents.None> {
+        public SkybaseScoreEvent() {
+            super();
+        }
+    }
 
 
 }

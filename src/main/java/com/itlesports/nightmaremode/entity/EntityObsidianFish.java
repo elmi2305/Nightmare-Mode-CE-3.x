@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.entity.attribute.BTWAttributes;
 import btw.item.items.PickaxeItem;
+import btw.util.ForkableRandom;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -15,7 +16,7 @@ public class EntityObsidianFish extends EntitySilverfish {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(22.0F);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(12f);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.5F);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4.0F);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(10.0F);
@@ -38,9 +39,9 @@ public class EntityObsidianFish extends EntitySilverfish {
                 }
             }
         }
-        if (!NMUtils.getIsMobEclipsed(this)) {
-            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(3)); // drops clay regardless of dimension, dropping more in the end
-        }
+//        if (!NMUtils.getIsMobEclipsed(this)) {
+            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(3) + 1);
+//        }
     }
 
     protected Entity findPlayerToAttack() {
@@ -60,23 +61,21 @@ public class EntityObsidianFish extends EntitySilverfish {
         return "mob.silverfish.kill";
     }
 
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if (this.isEntityInvulnerable() || this.isBlacklistedDamage(par1DamageSource)) {
+    public boolean attackEntityFrom(DamageSource source, float dmg) {
+        if (this.isEntityInvulnerable() || this.isBlacklistedDamage(source)) {
             return false;
-        } else {
-            return super.attackEntityFrom(par1DamageSource, par2);
         }
+        return super.attackEntityFrom(source, dmg);
     }
 
     private boolean isBlacklistedDamage(DamageSource src) {
-        if( src == DamageSource.fall
+                if(src == DamageSource.fall
                 || src == DamageSource.fallingBlock
                 || src == DamageSource.lava
                 || src == DamageSource.inFire
                 || src == DamageSource.onFire
-                || src == DamageSource.drown){
-            return true;
-        }
+                || src == DamageSource.drown)
+                {return true;}
 
         if(src.getEntity() instanceof EntityPlayer p){
             if(p.getHeldItem() == null){

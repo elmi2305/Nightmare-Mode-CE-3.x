@@ -18,7 +18,8 @@ public class EnumCreatureTypeMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void changeMobCap(CallbackInfo ci){
         if(this.maxNumberOfCreature == 90){
-            this.maxNumberOfCreature = (NightmareMode.worldState == 0 ? 105 : (NightmareMode.worldState == 1 ? 115 : (NightmareMode.worldState == 2 ? 130 : 140)));
+            this.maxNumberOfCreature = (NightmareMode.worldState == 0 ? 100 : (NightmareMode.worldState == 1 ? 110 : (NightmareMode.worldState == 2 ? 120 : 130)));
+                                                        // it used to be 105                 ->                 115                                -> 130-> 140
         }
     }
 }

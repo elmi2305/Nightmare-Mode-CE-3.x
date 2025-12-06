@@ -114,7 +114,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         // diamond: 1.5x drain
     }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
-    private void horseSpeed(CallbackInfo ci){
+    private void horseOnUpdate(CallbackInfo ci){
 
         // manage horse rider
         if (this.isTame()) {
@@ -122,12 +122,12 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             if(this.riddenByEntity instanceof EntityPlayer p && !client){
                 EntityHorse horseHost = (EntityHorse)(Object)this;
 
-                this.hungerCountdown -= this.applyArmorMod(4);
+                this.hungerCountdown -= 3;
                 if(this.isSprinting()){
-                    this.hungerCountdown -= this.applyArmorMod(2);
+                    this.hungerCountdown -= 2;
                 }
                 if(this.isHorseJumping()){
-                    this.hungerCountdown -= this.applyArmorMod(3);
+                    this.hungerCountdown -= 3;
                 }
 
                 if (this.ticksExisted % 4 == 0) {
@@ -261,19 +261,19 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         if(this.hungerCountdown > (24000 - this.getFoodValue(i))) return false;
 
         if(i == BTWItems.wheat.itemID || i == BTWItems.straw.itemID){
-            this.eatFood(1600);
+            this.eatFood(2200);
             return true;
         }
 
         if(i == Item.appleRed.itemID){
-            this.eatFood(1400);
+            this.eatFood(1800);
             addPotion(Potion.regeneration, 600);
             return true;
 
         }
 
         if(i == BTWItems.carrot.itemID){
-            this.eatFood(1200);
+            this.eatFood(2000);
             if (this.rand.nextInt(4) == 0) {
                 this.heal(1f);
             }
@@ -282,28 +282,28 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         }
 
         if(i == Item.goldenCarrot.itemID){
-            this.eatFood(3200);
+            this.eatFood(8000);
             this.heal(8f);
             return true;
 
         }
 
         if(i == Item.sugar.itemID){
-            this.eatFood(400);
-            addPotion(Potion.moveSpeed, 600);
+            this.eatFood(1400);
+            addPotion(Potion.moveSpeed, 700);
             return true;
 
         }
 
         if(i == Item.netherStalkSeeds.itemID){
-            this.eatFood(1500);
-            addPotion(Potion.fireResistance, 600);
+            this.eatFood(2000);
+            addPotion(Potion.fireResistance, 900);
             return true;
 
         }
 
         if(i == BTWItems.mysteriousGland.itemID){
-            this.eatFood(800);
+            this.eatFood(1400);
             addPotion(Potion.waterBreathing,1200);
             this.setSwimmingTicks(1200);
             return true;
@@ -324,34 +324,34 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     }
     @Unique private int getFoodValue(int id){
         if(id == BTWItems.wheat.itemID){
-            return 1600;
+            return 2200;
         }
         if(id == BTWItems.straw.itemID){
-            return 1600;
+            return 2200;
         }
 
         if(id == Item.appleRed.itemID){
-            return 1400;
+            return 1800;
         }
 
         if(id == BTWItems.carrot.itemID){
-            return 1200;
+            return 2000;
         }
 
         if(id == Item.goldenCarrot.itemID){
-            return 3200;
+            return 8000;
         }
 
         if(id == Item.sugar.itemID){
-            return 400;
+            return 1400;
         }
 
         if(id == Item.netherStalkSeeds.itemID){
-            return 1500;
+            return 2000;
         }
 
         if(id == BTWItems.mysteriousGland.itemID){
-            return 800;
+            return 1400;
         }
 
         return 0;
@@ -418,9 +418,8 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Unique private int tamingProgress;
     @Unique private byte requiredDirection = 2;
-    @Unique private int rideTimeTicks = 0; // New: Tracks total ride time for timeout
-    @Unique private static final int TAME_THRESHOLD = 1000; // New: Greater taming interval
-    @Unique private static final int MAX_RIDE_TICKS = TAME_THRESHOLD;
+    @Unique private int rideTimeTicks = 0;
+    @Unique private static final int TAME_THRESHOLD = 1000;
 
     @Override
     public boolean canSwim() {
@@ -455,7 +454,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
         // timeout mechanic
         rideTimeTicks++;
-        if (rideTimeTicks >= MAX_RIDE_TICKS) {
+        if (rideTimeTicks >= 700) {
             player.mountEntity(null);
             this.onNearbyPlayerStartles(player);
             this.resetTamingFields();

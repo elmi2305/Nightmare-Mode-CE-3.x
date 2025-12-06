@@ -189,7 +189,11 @@ public class GuiConfig extends GuiScreen {
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.aprilFoolsRendering ? 0x428BFF : 0x264f91));
 
         textIndex ++;
-        textIndex ++; // adds a gap between the green and blue
+
+//        textToDisplay = cap(Boolean.toString(NightmareMode.onlyPlains));
+//        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.onlyPlains ? 0x5fe647 : 0x429c32));
+
+        textIndex ++;
         textToDisplay = cap(Boolean.toString(NightmareMode.perfectStart));
         this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.perfectStart ? 0x5fe647 : 0x429c32));
 

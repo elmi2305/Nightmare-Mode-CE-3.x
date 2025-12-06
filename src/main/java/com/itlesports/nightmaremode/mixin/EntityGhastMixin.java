@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.entity.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,10 +20,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow public abstract boolean getCanSpawnHereNoPlayerDistanceRestrictions();
 
     @Shadow private Entity entityTargeted;
-    @Shadow private Entity targetedEntity;
     @Unique int rageTimer = 0;
     @Unique boolean firstAttack = true;
-    @Unique boolean isCreeperVariant = false;
 
     public EntityGhastMixin(World world) {
         super(world);
@@ -70,10 +69,6 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Override
     public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-        if(NMUtils.getIsMobEclipsed(this) && this.rand.nextInt(6) == 0){
-            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 0));
-            this.isCreeperVariant = true;
-        }
         return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
@@ -82,6 +77,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
     }
+
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         if (bKilledByPlayer && isValidForEventLoot) {
@@ -96,7 +92,22 @@ public abstract class EntityGhastMixin extends EntityFlying{
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NMUtils.getIsMobEclipsed(this)) {
+
+            if(this.isCreeperVariant()){
+                int itemID = NMItems.creeperTear.itemID;
+
+                int var4 = this.rand.nextInt(3);
+
+                if (iLootingModifier > 0) {
+                    var4 += this.rand.nextInt(iLootingModifier + 1);
+                }
+
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    if(this.rand.nextInt(3) == 0) continue;
+                    this.dropItem(itemID, 1);
+                }
+            }
+            else if (NMUtils.getIsMobEclipsed(this)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -106,9 +117,9 @@ public abstract class EntityGhastMixin extends EntityFlying{
                     }
                 }
 
-                int itemID = this.isCreeperVariant() ? NMItems.creeperTear.itemID : NMItems.ghastTentacle.itemID;
+                int itemID = NMItems.ghastTentacle.itemID;
 
-                int var4 = this.rand.nextInt(3);
+                int var4 = this.rand.nextInt(6);
                 if(this.dimension == -1){
                     var4 += 4;
                 }
@@ -116,10 +127,11 @@ public abstract class EntityGhastMixin extends EntityFlying{
                     var4 += this.rand.nextInt(iLootingModifier + 1);
                 }
                 for (int var5 = 0; var5 < var4; ++var5) {
-                    if(this.rand.nextInt(3) == 0) continue;
+                    if(this.rand.nextBoolean()) continue;
                     this.dropItem(itemID, 1);
                 }
             }
+
         }
     }
 
@@ -191,7 +203,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
 
     @Unique private boolean isCreeperVariant(){
-        return this.isPotionActive(Potion.moveSpeed) || this.isCreeperVariant;
+        EntityGhast thisObj = (EntityGhast)(Object)this;
+        return thisObj instanceof EntityCreeperGhast;
     }
 
 

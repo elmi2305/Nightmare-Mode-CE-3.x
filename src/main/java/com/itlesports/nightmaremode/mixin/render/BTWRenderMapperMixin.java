@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityVillagerContainer;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.rendering.*;
+import net.minecraft.src.RenderGhast;
 import net.minecraft.src.RenderManager;
 import net.minecraft.src.RenderSkeleton;
 import net.minecraft.src.TileEntityRenderer;
@@ -33,6 +34,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
         RenderManager.addEntityRenderer(EntityPhantomZombie.class, new RenderPhantom());
+        RenderManager.addEntityRenderer(EntityCreeperGhast.class, new RenderGhast());
 
 
 

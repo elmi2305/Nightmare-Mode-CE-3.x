@@ -2,23 +2,21 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.BTWMod;
 import btw.achievement.event.AchievementEventDispatcher;
+import btw.achievement.event.BTWAchievementEvents;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
-import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import btw.util.status.PlayerStatusEffects;
 import btw.util.status.StatusEffect;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.DifficultyParam;
+import btw.world.util.data.DataEntry;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,9 +26,11 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.*;
 
+import static btw.community.nightmaremode.NightmareMode.GOLDEN_APPLE_COOLDOWN;
 import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
@@ -50,6 +50,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract boolean isPlayerFullyAsleep();
 
 
+    @Shadow public abstract <T> void setData(DataEntry.PlayerDataEntry<T> var1, T var2);
+
+    @Shadow public abstract <T> T getData(DataEntry.PlayerDataEntry<T> var1);
+
+    @Shadow public abstract World getEntityWorld();
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
@@ -66,21 +71,28 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             cir.setReturnValue(false);
         }
     }
+
+
+//    @Override
+//    public DataEntry.PlayerDataEntry nm$getAppleCooldown() {
+//        return GOLDEN_APPLE_COOLDOWN;
+//    }
+
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void noHitAttributes(CallbackInfo ci){
         if (NightmareMode.noHit) {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
             this.setHealth(1f);
-//            this.getDataWatcher().updateObject(6, 1);
         } else if(NightmareMode.nite){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
-//            this.getDataWatcher().updateObject(6, this.getHealthForExperience());
             this.setHealth(this.getHealthForExperience());
         }
     }
+
     @Unique private byte getHealthForExperience(){
         return (byte) Math.min(MathHelper.floor_double((double) this.experienceLevel / 3) * 2 + 6, 20);
     }
+
     @Inject(method = "doesStatusPreventSprinting", at = @At("HEAD"),cancellable = true)
     private void allowSprintingOnLowHealth(CallbackInfoReturnable<Boolean> cir){
         if(NightmareMode.noHit || NightmareMode.nite){
@@ -94,6 +106,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             cir.setReturnValue(false);
         }
     }
+
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
         if(NightmareMode.isAprilFools){
@@ -203,24 +216,41 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return 0.2f; // punch
     }
 
+
     @Inject(method = "onItemUseFinish", at = @At("HEAD"))
     private void manageWaterDrinking(CallbackInfo ci){
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        if(thisObj.getItemInUse() != null && (thisObj.getItemInUse().itemID == Item.potion.itemID && thisObj.getItemInUse().getItemDamage() == 0)){
-            if (this.isBurning()) {
-                this.extinguish();
+
+        EntityPlayer p = (EntityPlayer)(Object)this;
+
+        if(p.getItemInUse() != null){
+            int usedItemID = p.getItemInUse().itemID;
+
+            if(usedItemID == Item.appleGold.itemID && !this.worldObj.isRemote){
+                if(p.getItemInUse().getItemDamage() == 1){
+                    this.setData(GOLDEN_APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 1800L);
+
+                }
+                this.setData(GOLDEN_APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 600L);
+//                System.out.println(this.getData(GOLDEN_APPLE_COOLDOWN) + " player data" + (this.getEntityWorld().isRemote ? " client" : " server"));
+
             }
-            if(this.isPotionActive(Potion.confusion.id)){
-                this.removePotionEffect(Potion.confusion.id);
-            }
-            if(this.isPotionActive(Potion.blindness.id)){
-                this.removePotionEffect(Potion.blindness.id);
-            }
-            if(this.isPotionActive(Potion.weakness.id)){
-                this.removePotionEffect(Potion.weakness.id);
-            }
-            if(this.isPotionActive(Potion.moveSlowdown.id)){
-                this.removePotionEffect(Potion.moveSlowdown.id);
+
+            if (usedItemID == Item.potion.itemID && p.getItemInUse().getItemDamage() == 0) {
+                if (this.isBurning()) {
+                    this.extinguish();
+                }
+                if(this.isPotionActive(Potion.confusion.id)){
+                    this.removePotionEffect(Potion.confusion.id);
+                }
+                if(this.isPotionActive(Potion.blindness.id)){
+                    this.removePotionEffect(Potion.blindness.id);
+                }
+                if(this.isPotionActive(Potion.weakness.id)){
+                    this.removePotionEffect(Potion.weakness.id);
+                }
+                if(this.isPotionActive(Potion.moveSlowdown.id)){
+                    this.removePotionEffect(Potion.moveSlowdown.id);
+                }
             }
         }
     }
@@ -234,6 +264,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageBlightMovement(CallbackInfo ci){
+
 //        if(!this.worldObj.worldInfo.isMapFeaturesEnabled()){
 //            ((WorldInfoAccessor)(this.worldObj.worldInfo)).setMapFeaturesEnabled(true);
 //        }
@@ -276,8 +307,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         EntityBloodWither.setBossActive(false);
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void managePotionsDuringBloodArmor(CallbackInfo ci){
-        Collection activePotions = this.getActivePotionEffects();
+    private void onUpdateHook(CallbackInfo ci){
+        // manages whether the player can leave during the BW fight
         boolean hasWither = false;
         for (Object obj : this.worldObj.loadedEntityList) {
             if (obj instanceof EntityBloodWither) {
@@ -289,6 +320,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             NightmareMode.getInstance().setCanLeaveGame(true);
             EntityBloodWither.setBossActive(false);
         }
+
+        // makes potions tick slower with full blood armor
+        Collection activePotions = this.getActivePotionEffects();
         if (NMUtils.isWearingFullBloodArmorWithoutSword(this)) {
             for(Object activePotion : activePotions){
                 if(activePotion == null) continue;
@@ -296,6 +330,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
             }
         }
+
+        // tracks achievements
         if(this.isPlayerFullyAsleep()){
             this.ticksSleeping ++;
         } else{
@@ -314,10 +350,53 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArmorLessEvent.class, thisObj, this.noArmorTicks);
         }
 
-        if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
+        if (this.getPlayerOnSkybase()) {
+            skybaseTicks = Math.min(skybaseTicks + 2, 12);
+            if(skybaseTicks == 12) {
+                AchievementEventDispatcher.triggerEvent(NMAchievementEvents.SkybaseScoreEvent.class, thisObj, BTWAchievementEvents.none());
+            }
+        } else{
+            skybaseTicks = Math.max(0,--skybaseTicks);
+        }
+//        if(this.ticksInWater)
+//        if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
+        if(worldObj.worldInfo.getData(NightmareMode.DRAGON_DEFEATED)){
             NMUtils.setItemStackSizes(32);
         }
     }
+
+    @Unique private int skybaseTicks = 0;
+    @Unique
+    private boolean getPlayerOnSkybase() {
+        World world = this.worldObj;
+        int px = MathHelper.floor_double(this.posX);
+        int pz = MathHelper.floor_double(this.posZ);
+        int py = MathHelper.floor_double(this.posY);
+
+        int[][] offsets = {
+                {5, 0},
+                {-5, 0},
+                {0, 5},
+                {0, -5}
+        };
+
+        int totalHeight = 0;
+
+        for (int[] offset : offsets) {
+            int x = px + offset[0] + randOffset(world.rand);
+            int z = pz + offset[1] + randOffset(world.rand);
+            int height = Math.max(world.getPrecipitationHeight(x, z), 63);
+
+            totalHeight += height;
+        }
+
+        int avgHeight = totalHeight / 4;
+
+        return py >= avgHeight + 8;
+    }
+    @Unique
+    private static int randOffset(Random r){return r.nextInt(3) - 1;}
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHealthOnNoHitAndNite(CallbackInfo ci){
         if(NightmareMode.noHit){
@@ -331,23 +410,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
-    @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void manageChainArmor(CallbackInfo ci){
-        if(isWearingFullChainArmor(this) && !areChainPotionsActive(this)){
-            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 110,0));
-            if(this.rand.nextInt(16) == 0){
-                this.addPotionEffect(new PotionEffect(BTWMod.potionFortune.id, 600, 0));
-            }
-            if(this.rand.nextInt(16) == 0){
-                this.addPotionEffect(new PotionEffect(BTWMod.potionLooting.id, 600, 0));
-            }
-            if(this.rand.nextInt(16) == 0){
-                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,1));
-            } else{
-                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,0));
-            }
-        }
-    }
+//    @Inject(method = "onUpdate", at = @At("TAIL"))
+//    private void manageChainArmor(CallbackInfo ci){
+//        if(isWearingFullChainArmor(this) && !areChainPotionsActive(this)){
+//            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 110,0));
+//            if(this.rand.nextInt(16) == 0){
+//                this.addPotionEffect(new PotionEffect(BTWMod.potionFortune.id, 600, 0));
+//            }
+//            if(this.rand.nextInt(16) == 0){
+//                this.addPotionEffect(new PotionEffect(BTWMod.potionLooting.id, 600, 0));
+//            }
+//            if(this.rand.nextInt(16) == 0){
+//                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,1));
+//            } else{
+//                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,0));
+//            }
+//        }
+//    }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHighPoisonInvincibilityFrames(CallbackInfo ci){
         if(this.isPotionActive(Potion.poison) && this.getActivePotionEffect(Potion.poison).getAmplifier() >= 128){
@@ -591,6 +670,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+
+
+//    @ModifyArgs(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
+//    private void attackEntityFromDamage(Args args){
+//        DamageSource src = args.get(0);
+//        float dmg = args.get(1);
+//        if(src.isFireDamage()){
+//
+//        }
+//    }
     @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;

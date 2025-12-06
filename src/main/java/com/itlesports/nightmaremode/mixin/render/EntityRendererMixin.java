@@ -9,12 +9,14 @@ import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 @Mixin(EntityRenderer.class)
@@ -39,6 +41,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     @Shadow protected abstract float getFOVModifier(float partialTicks, boolean useFOVSetting);
 
 
+    @Shadow @Final private int[] lightmapColors;
     private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("textures/entity/nmBloodRain.png");
 
     @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
@@ -161,7 +164,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
                 GL11.glScaled(this.cameraZoom, this.cameraZoom, 1.0D);
             }
 
-            org.lwjgl.util.glu.Project.gluPerspective(this.getFOVModifier(partialTicks, false), (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, this.farPlaneDistance * 2.0F);
+            Project.gluPerspective(this.getFOVModifier(partialTicks, false), (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, this.farPlaneDistance * 2.0F);
 
             if (this.mc.playerController.enableEverythingIsScrewedUpMode()) {
                 float var4 = 0.6666667F;
@@ -197,7 +200,6 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         }
     }
 
-    // MEA CODE. credit to Pot_tx
     @ModifyArgs(method = "updateCameraAndRender(F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;setAngles(FF)V", ordinal = 0))
     private void slowSmoothCameraInWeb(Args args) {
         Entity player = this.mc.thePlayer;
@@ -207,7 +209,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         } catch (Throwable t) {
             // Use reflection as a fallback
             try {
-                java.lang.reflect.Field f = player.getClass().getDeclaredField("isInWeb");
+                Field f = player.getClass().getDeclaredField("isInWeb");
                 f.setAccessible(true);
                 inWeb = f.getBoolean(player);
             } catch (Throwable tt) {
@@ -235,7 +237,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         } catch (Throwable t) {
             // Use reflection as a fallback
             try {
-                java.lang.reflect.Field f = player.getClass().getDeclaredField("isInWeb");
+                Field f = player.getClass().getDeclaredField("isInWeb");
                 f.setAccessible(true);
                 inWeb = f.getBoolean(player);
             } catch (Throwable tt) {
@@ -254,17 +256,72 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         }
     }
 
+    @Unique private int bloodMoonFadeTracker = 1;
+
+    /**
+     * @param par1ArrayOfInteger the lightmap colors array
+     * @return an updated lightmap that adjusts block lighting for events
+     */
     @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
-    private int[] manageNightvisionColor(int[] par1ArrayOfInteger){
-        if(NMUtils.getIsBloodMoon() && NightmareMode.bloodmoonColors) {
-            return bloodmoonForcedBrightness();
-        } else if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
-            if(this.mc.thePlayer.dimension == 1){
+    private int[] manageCustomColorEvents(int[] par1ArrayOfInteger){
+        if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
+            if (this.mc.thePlayer.dimension == 1) {
                 return nightvisionEnd();
             } else {
                 return nightvisionFullbright();
             }
         }
+
+
+        if(NMUtils.getIsBloodMoon()){
+            if(NightmareMode.bloodmoonColors){
+                if(bloodMoonFadeTracker < 800){
+                    bloodMoonFadeTracker++;
+                }
+
+                float t = Math.min(1f, bloodMoonFadeTracker / 800f);
+
+                final float target = 80f;
+
+                for (int i = 0; i < 256; ++i) {
+                    int color = par1ArrayOfInteger[i];
+
+                    int a = (color >> 24) & 0xFF;
+                    int r = (color >> 16) & 0xFF;
+                    int g = (color >> 8) & 0xFF;
+                    int b = color & 0xFF;
+
+
+
+                    int newR = r;
+                    int newG = g;
+                    int newB = b;
+
+                    if(r > 80){
+                        newR = Math.round(r * (1f - t) + target * t);
+
+                    }
+                    if(g > 80){
+                        newG = Math.round(g * (1f - t) + target * t);
+
+                    }
+                    if(b > 80){
+                        newB = Math.round(b * (1f - t) + target * t);
+                    }
+                    // clamp to [0,255]
+                    newR = Math.max(0, Math.min(255, newR));
+                    newG = Math.max(0, Math.min(255, newG));
+                    newB = Math.max(0, Math.min(255, newB));
+
+                    par1ArrayOfInteger[i] = (a << 24) | (newR << 16) | (newG << 8) | newB;
+                }
+
+                return par1ArrayOfInteger;
+            }
+        } else{
+            bloodMoonFadeTracker = 1;
+        }
+
         return par1ArrayOfInteger;
     }
 
@@ -309,10 +366,23 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         Arrays.fill(numbers,-1);
         return numbers;
     }
+
     @Unique
-    private static int[] bloodmoonForcedBrightness(){
+    private int[] bloodmoonForcedBrightness(int mod){
         int[] numbers = new int[256];
-        Arrays.fill(numbers,-12829636); // slightly brighter bloodmoon
+
+        float gradualFadeMult = (float) mod / 800;
+        int colorChannelBrightness = (int) (60 * (1 / gradualFadeMult));
+        for(int iTempMapIndex = 0; iTempMapIndex < 256; ++iTempMapIndex) {
+            this.lightmapColors[iTempMapIndex] = this.lightmapColors[iTempMapIndex] | colorChannelBrightness << 16 | colorChannelBrightness << 8 | colorChannelBrightness;
+        }
+
+
+
+        int calculatedBrightness = 255 << 24 | colorChannelBrightness << 16 | colorChannelBrightness << 8 | colorChannelBrightness;
+        Arrays.fill(numbers,calculatedBrightness);
+//        Arrays.fill(numbers,0xFF3C3C3C);
+        // slightly brighter bloodmoon
         // 255 << 24 | 60 << 16 | 60 << 8 | 60
 
 //        Arrays.fill(numbers,-14145496);

@@ -11,12 +11,15 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 
 @Mixin(EntityAIAttackOnCollide.class)
 public abstract class EntityAIAttackOnCollideMixin {
     @Shadow public World worldObj;
+
+    @Shadow public EntityCreature attacker;
 
     @Inject(method = "updateTask", at = @At("TAIL"))
     private void increaseRangeOnToolHeld(CallbackInfo ci) {
@@ -28,7 +31,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         if (target == null) return;
 
         double distanceSq = attacker.getDistanceSqToEntity(target);
-        int computedRange = computeRangeForHeldItem(attacker.getHeldItem());
+        int computedRangeSq = computeRangeForHeldItem(attacker.getHeldItem());
 
         boolean isHostile = attacker.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         boolean canSeeTarget = attacker.canEntityBeSeen(target);
@@ -42,7 +45,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         }
 
 
-        if (distanceSq < computedRange && isHostile && ai.attackTick <= 1 && canSeeTarget) {
+        if (distanceSq < computedRangeSq && isHostile && ai.attackTick <= 1 && canSeeTarget) {
             attacker.swingItem();
             attacker.attackEntityAsMob(target);
             ai.attackTick = 13 - NMUtils.getWorldProgress() * 2;
@@ -64,5 +67,12 @@ public abstract class EntityAIAttackOnCollideMixin {
             return NMUtils.LESSER_RANGE_ITEMS.contains(itemId) ? 5 : 10;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
+    }
+
+    @Inject(method = "shouldExecute", at = @At(value = "RETURN", ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void checkForRangedAttackBeforeReturning(CallbackInfoReturnable<Boolean> cir, EntityLivingBase target){
+        if(this.attacker.getDistanceSqToEntity(target) < this.computeRangeForHeldItem(this.attacker.getHeldItem())){
+            cir.setReturnValue(true);
+        }
     }
 }

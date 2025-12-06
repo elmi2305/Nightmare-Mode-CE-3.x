@@ -8,7 +8,6 @@ import btw.entity.component.VariantComponent;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -49,6 +48,19 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Unique int jumpCooldown = 0;
 
 
+    @Override
+    protected float getSoundPitch() {
+        return super.getSoundPitch() + (this.getSkeletonType().id() == 1 ? -0.3f : 0f);
+    }
+
+
+    @ModifyArg(method = "playStepSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"), index = 2)
+    private float changePitchBasedOnType(float par2){
+        if(this.getSkeletonType().id() == 1){
+            par2 -= 0.4f;
+        }
+        return par2;
+    }
 
     @Override
     public float knockbackMagnitude() {
@@ -122,6 +134,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
         }
     }
+//    @Redirect(method = "dropFewItems", at = @At(value = "FIELD", target = "Lbtw/item/BTWItems;rottenArrow:Lnet/minecraft/src/Item;"))
+//    private Item allowDroppingRegularArrowsPostWitherBm(){
+//        if(NMUtils.getWorldProgress() > 1 && NMUtils.getIsBloodMoon()){
+//            return Item.arrow;
+//        }
+//        return BTWItems.rottenArrow;
+//    }
 
     @Inject(method = "<init>",
             at = @At(value = "TAIL"))
@@ -204,7 +223,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                 // 24.0 -> 30.0 -> 36.0 -> 40.0
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 * (progress + 1) + (isEclipse ? 1 : 0)) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 + (progress + 1) + (isEclipse ? 1 : 0)) * NMUtils.getNiteMultiplier());
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -548,7 +567,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
     @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lbtw/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
-        return 6;
+        return 7;
     }
 
     @Unique
@@ -616,14 +635,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     private void setArmor(int color, Item... items) {
         for (int i = 0; i < items.length; i++) {
             this.setCurrentItemOrArmor(i + 1, setItemColor(new ItemStack(items[i]), color));
-            this.equipmentDropChances[i + 1] = 0f;
+            this.equipmentDropChances[i + 1] = -1f;
         }
     }
 
     @Unique
     private void setHelmet(int color, Item item) {
         this.setCurrentItemOrArmor(4, setItemColor(new ItemStack(item), color));
-        this.equipmentDropChances[4] = 0f;
+        this.equipmentDropChances[4] = -1f;
     }
 
     @Unique

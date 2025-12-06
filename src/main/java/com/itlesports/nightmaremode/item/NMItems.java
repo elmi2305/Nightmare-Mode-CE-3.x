@@ -1,9 +1,14 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.item.BTWItems;
 import btw.item.items.*;
+import btw.item.tag.BTWTags;
+import btw.item.tag.Tag;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.*;
+
+import static com.itlesports.nightmaremode.achievements.NMAchievements.loc;
 
 public class NMItems {
     public static ItemRPG rpg;
@@ -81,6 +86,10 @@ public class NMItems {
 
 
     public static final Item obsidianShard;
+
+
+
+
 
     static {
         rpg =(ItemRPG)(new ItemRPG(2309)).setTextureName("nmRPG");

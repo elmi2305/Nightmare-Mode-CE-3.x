@@ -58,18 +58,19 @@ public class ItemVillagerContainer extends NMItemBlock {
         int y = j + Facing.offsetsYForSide[facing];
         int z = k + Facing.offsetsZForSide[facing];
 
-        if (!world.isRemote) {
-            EntityVillager villager = new EntityVillager(world);
-            villager.setProfession(profession);
-            villager.setTradeLevel(level);
-//            villager.setTradeExperience(trades);
+        EntityVillager villager = EntityVillager.createVillagerFromProfession(world,profession);
+        villager.setTradeLevel(level);
 
-            villager.setLocationAndAngles(x + 0.5, y, z + 0.5, world.rand.nextFloat() * 360.0F, 0.0F);
+        villager.setLocationAndAngles(x + 0.5, y, z + 0.5, world.rand.nextFloat() * 360.0F, 0.0F);
+        villager.onSpawnWithEgg((EntityLivingData)null);
+
+        if (!world.isRemote) {
             world.spawnEntityInWorld(villager);
         }
 
         stack.stackSize--;
         return true;
     }
+
 
 }

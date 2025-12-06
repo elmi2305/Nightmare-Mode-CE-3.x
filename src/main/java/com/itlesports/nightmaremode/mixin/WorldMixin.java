@@ -36,22 +36,16 @@ public abstract class WorldMixin {
 
     @Shadow protected float thunderingStrength;
 
+    @Shadow public abstract boolean isThundering();
+
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
     private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir){
-        if(NMUtils.getIsBloodMoon()){
-            this.setRainStrength(2.0f);
-            this.thunderingStrength = 2.0f;
+        if(NMUtils.getIsBloodMoon() && (!this.isThundering())){
+            this.setRainStrength(1.0f);
+            this.thunderingStrength = 1.0f;
             cir.setReturnValue(true);
         }
     }
-//    @Inject(method = "getDifficultyParameter", at = @At("RETURN"))
-//    private void debugLog(Class<? extends DifficultyParam> param, CallbackInfoReturnable cir){
-//        if(param == NMDifficultyParam.ShouldMobsBeBuffed.class) {
-//            System.out.println("value : " + cir.getReturnValue() + " on " + (this.isRemote ? "client" : "server"));
-//        }
-//    }
-
-    @Unique private static float fogHue = 0.0f; // Start hue at 0
 
     @Unique private static Vec3 getRainbowFogColorFromWorldTime(long worldTime) {
         float fogHue = (worldTime % 24000) / 24000.0f; // Normalize worldTime to range [0, 1] over a full Minecraft day

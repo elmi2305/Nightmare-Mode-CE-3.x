@@ -148,26 +148,26 @@ public abstract class EntityEndermanMixin extends EntityMob {
         }
     }
 
-    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
-    private int increaseAttemptsToTeleportPlayer(int constant){
-        if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            if (NMUtils.getIsBloodMoon()) {
-                return 9;
-            } else if(NMUtils.getIsMobEclipsed(this)){
-                return 18;
-            }
-            return 6;
-        }
-        return constant;
-    }
-
-    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;teleportRandomly()Z",ordinal = 0))
-    private boolean helpEndermanTeleportPlayerMoreOften(EntityEnderman instance){
-        if(NMUtils.getIsMobEclipsed(this) && this.rand.nextBoolean()){
-            return true;
-        }
-        return this.teleportRandomly();
-    }
+//    @ModifyConstant(method = "onLivingUpdate", constant = @Constant(intValue = 4))
+//    private int increaseAttemptsToTeleportPlayer(int constant){
+//        if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+//            if (NMUtils.getIsBloodMoon()) {
+//                return 9;
+//            } else if(NMUtils.getIsMobEclipsed(this)){
+//                return 18;
+//            }
+//            return 6;
+//        }
+//        return constant;
+//    }
+//
+//    @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityEnderman;teleportRandomly()Z",ordinal = 0))
+//    private boolean helpEndermanTeleportPlayerMoreOften(EntityEnderman instance){
+//        if(NMUtils.getIsMobEclipsed(this) && this.rand.nextBoolean()){
+//            return true;
+//        }
+//        return this.teleportRandomly();
+//    }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 16.0))
     private double canTeleportPlayerFromFurtherAway(double constant){
@@ -270,20 +270,20 @@ public abstract class EntityEndermanMixin extends EntityMob {
         }
     }
 
-    @Inject(method = "onLivingUpdate",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntityEnderman;entityMobOnLivingUpdate()V"))
-    private void updateEnemyTeleport(CallbackInfo ci) {
-        if (!this.worldObj.isRemote && this.isEntityAlive() && this.entityToAttack != null) {
-            if (entityToAttack.getDistanceSqToEntity(this) > 6.0D && entityToAttack.getDistanceSqToEntity(this) < 900) {
-                if (this.teleportDelay++ >= 120 && this.teleportEnemy()) {
-                    this.teleportDelay = 0;
-                }
-            } else if (entityToAttack.getDistanceSqToEntity(this) < 256D) {
-                this.teleportDelay = 0;
-            }
-        }
-    }
+//    @Inject(method = "onLivingUpdate",
+//            at = @At(value = "INVOKE",
+//                    target     = "Lnet/minecraft/src/EntityEnderman;entityMobOnLivingUpdate()V"))
+//    private void updateEnemyTeleport(CallbackInfo ci) {
+//        if (!this.worldObj.isRemote && this.isEntityAlive() && this.entityToAttack != null) {
+//            if (entityToAttack.getDistanceSqToEntity(this) > 6.0D && entityToAttack.getDistanceSqToEntity(this) < 900) {
+//                if (this.teleportDelay++ >= 120 && this.teleportEnemy()) {
+//                    this.teleportDelay = 0;
+//                }
+//            } else if (entityToAttack.getDistanceSqToEntity(this) < 256D) {
+//                this.teleportDelay = 0;
+//            }
+//        }
+//    }
 
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"), cancellable = true)
     private void attackClosePlayers(CallbackInfoReturnable<Entity> cir){
@@ -323,117 +323,117 @@ public abstract class EntityEndermanMixin extends EntityMob {
     }
 
 
-    @Unique protected boolean teleportEnemy() {
-        if (this.entityToAttack == null) return false;
-        Entity target = this.entityToAttack;
-
-        double MAX_Y_DIFF    = 4.0D;  // allowed vertical shift when below 60
-        final double MIN_DISTANCE  = 4.0D;  // minimum straight-line teleport
-        final int    PARTICLE_COUNT = 128;
-
-        Vec3 dir = this.worldObj.getWorldVec3Pool()
-                .getVecFromPool(
-                        this.posX - target.posX,
-                        this.boundingBox.minY + (this.height/2.0F) - target.posY + target.getEyeHeight(),
-                        this.posZ - target.posZ
-                ).normalize();
-
-        double oldX = target.posX, oldY = target.posY, oldZ = target.posZ;
-
-        target.posX = oldX + (this.rand.nextDouble() - 0.5D)*8.0D + dir.xCoord*0.8D;
-        target.posY = oldY + (this.rand.nextInt(16) - 8)   + dir.yCoord*0.8D;
-        target.posZ = oldZ + (this.rand.nextDouble() - 0.5D)*8.0D + dir.zCoord*0.8D;
-
-        double dx = target.posX - oldX;
-        double dy = target.posY - oldY;
-        double dz = target.posZ - oldZ;
-        double distSq = dx*dx + dy*dy + dz*dz;
-        if (distSq < MIN_DISTANCE*MIN_DISTANCE) {
-            // too short, skip teleport
-            target.setPosition(oldX, oldY, oldZ);
-            return false;
-        }
-
-//        if (oldY >= 60.0D || target.posY >= 60.0D){
-            if (Math.abs(target.posY - oldY) > MAX_Y_DIFF) {
-                target.setPosition(oldX, oldY, oldZ);
-                return false;
-            }
+//    @Unique protected boolean teleportEnemy() {
+//        if (this.entityToAttack == null) return false;
+//        Entity target = this.entityToAttack;
+//
+//        double MAX_Y_DIFF    = 4.0D;  // allowed vertical shift when below 60
+//        final double MIN_DISTANCE  = 4.0D;  // minimum straight-line teleport
+//        final int    PARTICLE_COUNT = 128;
+//
+//        Vec3 dir = this.worldObj.getWorldVec3Pool()
+//                .getVecFromPool(
+//                        this.posX - target.posX,
+//                        this.boundingBox.minY + (this.height/2.0F) - target.posY + target.getEyeHeight(),
+//                        this.posZ - target.posZ
+//                ).normalize();
+//
+//        double oldX = target.posX, oldY = target.posY, oldZ = target.posZ;
+//
+//        target.posX = oldX + (this.rand.nextDouble() - 0.5D)*8.0D + dir.xCoord*0.8D;
+//        target.posY = oldY + (this.rand.nextInt(16) - 8)   + dir.yCoord*0.8D;
+//        target.posZ = oldZ + (this.rand.nextDouble() - 0.5D)*8.0D + dir.zCoord*0.8D;
+//
+//        double dx = target.posX - oldX;
+//        double dy = target.posY - oldY;
+//        double dz = target.posZ - oldZ;
+//        double distSq = dx*dx + dy*dy + dz*dz;
+//        if (distSq < MIN_DISTANCE*MIN_DISTANCE) {
+//            // too short, skip teleport
+//            target.setPosition(oldX, oldY, oldZ);
+//            return false;
 //        }
-
-        int xb = MathHelper.floor_double(target.posX),
-                yb = MathHelper.floor_double(target.posY),
-                zb = MathHelper.floor_double(target.posZ);
-
-        // must be in loaded chunk
-        if (!this.worldObj.blockExists(xb, yb, zb)) {
-            target.setPosition(oldX, oldY, oldZ);
-            return false;
-        }
-
-        // ground-finding & clearance (unchanged)
-        boolean canTeleport = false;
-        while (!canTeleport && yb > 0) {
-            int blockId = this.worldObj.getBlockId(xb, yb, zb);
-            if (blockId != 0 && Block.blocksList[blockId].blockMaterial.blocksMovement()) {
-                canTeleport = true;
-                int clearance = MathHelper.ceiling_float_int(target.height);
-                for (int i = 1; i <= clearance; i++) {
-                    int aboveId = this.worldObj.getBlockId(xb, yb + i, zb);
-                    if (aboveId != 0 && Block.blocksList[aboveId].blockMaterial.blocksMovement()) {
-                        canTeleport = false;
-                        target.posY -= clearance + 1;
-                        yb        -= clearance + 1;
-                        break;
-                    }
-                }
-                if (canTeleport) {
-                    target.posY++;
-                    yb++;
-                }
-            } else {
-                target.posY--;
-                yb--;
-            }
-        }
-
-        if (!canTeleport) {
-            target.setPosition(oldX, oldY, oldZ);
-            return false;
-        }
-
-        // suffocation check
-        target.setPosition(target.posX, target.posY, target.posZ);
-        if (target.isEntityInsideOpaqueBlock()) {
-            target.setPosition(oldX, oldY, oldZ);
-            return false;
-        }
-
-        // commit teleport
-        if (target instanceof EntityPlayer) {
-            ((EntityPlayer)target).setPositionAndUpdate(target.posX, target.posY, target.posZ);
-        } else {
-            target.setPosition(target.posX, target.posY, target.posZ);
-        }
-
-        //  particles
-        for (int i = 0; i < PARTICLE_COUNT; i++) {
-            double t  = (double)i/(PARTICLE_COUNT - 1);
-            float  vx = (this.rand.nextFloat() - 0.5F)*0.2F;
-            float  vy = (this.rand.nextFloat() - 0.5F)*0.2F;
-            float  vz = (this.rand.nextFloat() - 0.5F)*0.2F;
-            double px = oldX + dx*t + (this.rand.nextDouble() - 0.5D)*target.width*2.0D;
-            double py = oldY + dy*t + this.rand.nextDouble()*target.height;
-            double pz = oldZ + dz*t + (this.rand.nextDouble() - 0.5D)*target.width*2.0D;
-            this.worldObj.spawnParticle("portal", px, py, pz, vx, vy, vz);
-        }
-
-        // sounds
-        this.worldObj.playSoundEffect(oldX, oldY, oldZ, "mob.endermen.portal", 1.0F, 1.0F);
-        target.playSound   ("mob.endermen.portal", 1.0F, 1.0F);
-
-        return true;
-    }
+//
+////        if (oldY >= 60.0D || target.posY >= 60.0D){
+//            if (Math.abs(target.posY - oldY) > MAX_Y_DIFF) {
+//                target.setPosition(oldX, oldY, oldZ);
+//                return false;
+//            }
+////        }
+//
+//        int xb = MathHelper.floor_double(target.posX),
+//                yb = MathHelper.floor_double(target.posY),
+//                zb = MathHelper.floor_double(target.posZ);
+//
+//        // must be in loaded chunk
+//        if (!this.worldObj.blockExists(xb, yb, zb)) {
+//            target.setPosition(oldX, oldY, oldZ);
+//            return false;
+//        }
+//
+//        // ground-finding & clearance (unchanged)
+//        boolean canTeleport = false;
+//        while (!canTeleport && yb > 0) {
+//            int blockId = this.worldObj.getBlockId(xb, yb, zb);
+//            if (blockId != 0 && Block.blocksList[blockId].blockMaterial.blocksMovement()) {
+//                canTeleport = true;
+//                int clearance = MathHelper.ceiling_float_int(target.height);
+//                for (int i = 1; i <= clearance; i++) {
+//                    int aboveId = this.worldObj.getBlockId(xb, yb + i, zb);
+//                    if (aboveId != 0 && Block.blocksList[aboveId].blockMaterial.blocksMovement()) {
+//                        canTeleport = false;
+//                        target.posY -= clearance + 1;
+//                        yb        -= clearance + 1;
+//                        break;
+//                    }
+//                }
+//                if (canTeleport) {
+//                    target.posY++;
+//                    yb++;
+//                }
+//            } else {
+//                target.posY--;
+//                yb--;
+//            }
+//        }
+//
+//        if (!canTeleport) {
+//            target.setPosition(oldX, oldY, oldZ);
+//            return false;
+//        }
+//
+//        // suffocation check
+//        target.setPosition(target.posX, target.posY, target.posZ);
+//        if (target.isEntityInsideOpaqueBlock()) {
+//            target.setPosition(oldX, oldY, oldZ);
+//            return false;
+//        }
+//
+//        // commit teleport
+//        if (target instanceof EntityPlayer) {
+//            ((EntityPlayer)target).setPositionAndUpdate(target.posX, target.posY, target.posZ);
+//        } else {
+//            target.setPosition(target.posX, target.posY, target.posZ);
+//        }
+//
+//        //  particles
+//        for (int i = 0; i < PARTICLE_COUNT; i++) {
+//            double t  = (double)i/(PARTICLE_COUNT - 1);
+//            float  vx = (this.rand.nextFloat() - 0.5F)*0.2F;
+//            float  vy = (this.rand.nextFloat() - 0.5F)*0.2F;
+//            float  vz = (this.rand.nextFloat() - 0.5F)*0.2F;
+//            double px = oldX + dx*t + (this.rand.nextDouble() - 0.5D)*target.width*2.0D;
+//            double py = oldY + dy*t + this.rand.nextDouble()*target.height;
+//            double pz = oldZ + dz*t + (this.rand.nextDouble() - 0.5D)*target.width*2.0D;
+//            this.worldObj.spawnParticle("portal", px, py, pz, vx, vy, vz);
+//        }
+//
+//        // sounds
+//        this.worldObj.playSoundEffect(oldX, oldY, oldZ, "mob.endermen.portal", 1.0F, 1.0F);
+//        target.playSound   ("mob.endermen.portal", 1.0F, 1.0F);
+//
+//        return true;
+//    }
 
 
 }

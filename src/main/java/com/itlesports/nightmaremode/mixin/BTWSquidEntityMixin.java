@@ -134,8 +134,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
         if(bKilledByPlayer && this.canDropCalamari > 0){
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
-                if(this.rand.nextInt(10 - worldProgress * 2) == 0){
-                    // 1/10 -> 1/8 -> 1/6 -> 1/4
+                if(this.rand.nextInt(2 + worldProgress) == 0){
+                    // 1/2 -> 1/3 -> 1/4 -> 1/5
                     this.dropItem(NMItems.calamari.itemID, 1);
                 }
             }

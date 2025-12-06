@@ -80,7 +80,7 @@ public class NMBlocks {
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
 
-        crudeObsidian = new NMBlock(2317, Material.rock).setHardness(30f).setResistance(35f).setUnlocalizedName("nmCrudeObsidian").setTextureName("nmCrudeObsidian").setCreativeTab(CreativeTabs.tabBlock);
+        crudeObsidian = new BlockCrudeObsidian(2317);
         Item.itemsList[crudeObsidian.blockID] = new NMItemBlock(NMBlocks.crudeObsidian.blockID - 256);
 
         asphaltLayer = (BlockAsphaltCarpet) new BlockAsphaltCarpet(2318).setHardness(2f).setUnlocalizedName("nmAsphaltLayer").setCreativeTab(CreativeTabs.tabDecorations);

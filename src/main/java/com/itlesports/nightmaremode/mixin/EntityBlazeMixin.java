@@ -55,13 +55,22 @@ public class EntityBlazeMixin extends EntityMob{
 
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityBlaze;attackEntityAsMob(Lnet/minecraft/src/Entity;)Z"))
     private void manageInvisibleBlazeAttack(Entity par1Entity, float par2, CallbackInfo ci){
-        EntityBlaze thisObj = (EntityBlaze)(Object)this;
-        if(isInvisible(thisObj)) {
-            thisObj.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4);
-            EntityCreeper bomb = new EntityCreeper(thisObj.worldObj);
-            bomb.copyLocationAndAnglesFrom(thisObj);
-            thisObj.worldObj.spawnEntityInWorld(bomb);
-            thisObj.setDead();
+        EntityBlaze blaze = (EntityBlaze)(Object)this;
+        if(isInvisible(blaze)) {
+
+            for (int i = 0; i < 8; i++) {
+                double offsetX = (this.rand.nextDouble() - 0.5D) * 3.0D;
+                double offsetY = this.rand.nextDouble() * this.height * 1.2D;
+                double offsetZ = (this.rand.nextDouble() - 0.5D) * 3.0D;
+
+                this.worldObj.playAuxSFX(2278, (int) (this.posX + offsetX), (int) (this.posY + offsetY), (int) (this.posZ + offsetZ), 0);
+            }
+
+            blaze.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(4);
+            EntityCreeper bomb = new EntityCreeper(blaze.worldObj);
+            bomb.copyLocationAndAnglesFrom(blaze);
+            blaze.worldObj.spawnEntityInWorld(bomb);
+            blaze.setDead();
         }
     }
     @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 100))

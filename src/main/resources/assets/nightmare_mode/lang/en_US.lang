@@ -92,6 +92,7 @@ entity.NightmareImposterZombie.name=Wandering Trader
 entity.NightmareDrownedSkeleton.name=Drowned
 entity.NightmareMeltedSkeleton.name=Inferno
 entity.NightmareObsidianFish.name=Obsidian Fish
+entity.NightmareCreeperGhast.name=Creeper Ghast
 
 key.nightmaremode.zoomhold=Hold to zoom
 key.nightmaremode.zoomtoggle=Toggle zoom
@@ -132,8 +133,12 @@ gui.selectworld.warning_recommend_restart=It is recommended that you restart you
 gui.selectworld.warning_config_crash=New configs were loaded, which may crash your game or corrupt your world
 gui.selectworld.warning_continue=Are you absolutely sure you want to continue?
 gui.selectworld.warning_final=This is your final warning
+
+gui.bloodmoon=Blood Moon
 gui.bloodmoon.in=Blood Moon in
 gui.bloodmoon.days=Days
+gui.bloodmoon.tonight=Tonight
+gui.bloodmoon.tomorrow=Tomorrow
 
 difficulty.baddream.name=Bad Dream
 difficulty.nightmare.name=Nightmare
@@ -373,7 +378,7 @@ achievement.nm.craftPlanter=Enter Agriculture
 achievement.nm.craftPlanter.desc=Craft a Planter with 7 Bricks
 
 achievement.nm.calamariFried=Ocean's Delight
-achievement.nm.calamariFried.desc=Cook Fried Calamari - The Best Food Item
+achievement.nm.calamariFried.desc=Cook Fried Calamari, the Best Food Item
 
 achievement.nm.greed=Greed
 achievement.nm.greed.desc=Greed whispers from The Abyss, and you listened
@@ -486,7 +491,7 @@ achievement.nm.lust.desc=The desire consumed you, and you embraced it
 achievement.nm.steelSword=Blade Of Eternity
 achievement.nm.steelSword.desc=Craft a Refined Sword
 
-achievement.nm.steelIngot=Better Than Diamonds
+achievement.nm.steelIngot=Better Than Netherite
 achievement.nm.steelIngot.desc=Craft a Steel Ingot
 
 achievement.nm.steelPickaxe=Bedrock Breaker
@@ -557,7 +562,7 @@ achievement.nm.magicArrow.desc=Obtain a Magic Arrow
 achievement.nm.nightmareMerchant=Librarian Transformation
 achievement.nm.nightmareMerchant.desc=Have your Librarian Villager transform under the effects of the Eclipse
 
-achievement.nm.killEclipseAnimal=Slaughter Under the Black Sun
+achievement.nm.killEclipseAnimal=Slaughter Under the Dark Sun
 achievement.nm.killEclipseAnimal.desc=Kill an Animal during an Eclipse
 
 achievement.nm.magicFeather=So... Fluffy...
@@ -637,3 +642,17 @@ achievement.nm.dungApple.desc=Eat a Dung Apple. But why?
 
 achievement.nm.craftRefinedDiamond=Bulletproof
 achievement.nm.craftRefinedDiamond.desc=Refine a Diamond Ingot
+
+achievement.nm.craftIronFishingRod=Bait Used to be Believable
+achievement.nm.craftIronFishingRod.desc=Craft an Iron Fishing Rod. It is more durable and doesn't need bait
+
+achievement.nm.makeVillagerVessel=Boxed and Ready
+achievement.nm.makeVillagerVessel.desc=Turn a Villager into a Villager Vessel
+
+achievement.nm.beaconSpider=Pest Control
+achievement.nm.beaconSpider.desc=Construct a tier 4 Spider Eye Beacon
+
+achievement.nm.chainArmor=I'm Made of Fire
+achievement.nm.chainArmor.desc=Protect yourself from flames with a piece of Chain Armor
+
+tag.nightmare_mode.sandwich_meats=Sandwich Meats

@@ -6,9 +6,9 @@ import btw.block.BTWBlocks;
 import btw.world.biome.BiomeDecoratorBase;
 import btw.world.util.data.DataEntry;
 import btw.world.util.data.DataProvider;
-import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMInitializer;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.tpa.TPACommand;
@@ -137,7 +137,7 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static int getCurrentStackSize(World world) {
-        return NightmareMode.getInstance().shouldStackSizesIncrease ? 32 : 16;
+        return world.getData(NightmareMode.DRAGON_DEFEATED) ? 32 : 16;
     }
     public static void syncItemStackSizesToProgress(World world) {
         int size = getCurrentStackSize(world);
@@ -164,7 +164,7 @@ public class NightmareMode extends BTWAddon {
         NMBlocks.initNightmareBlocks();
         NMInitializer.initNightmareRecipes();
 
-
+        NMTags.initTags();
         NMInitializer.miscInit();
         NMAchievements.initialize();
         NMInitializer.manipulateAchievements();
@@ -483,8 +483,6 @@ public class NightmareMode extends BTWAddon {
     public static Boolean bloodMoonHelper;
 
     public boolean canAccessMenu = true;
-    public long portalTime = 0;
-    public boolean shouldStackSizesIncrease;
 
     public static final DataEntry.WorldDataEntry<Long> PORTAL_TIME =
         DataProvider.getBuilder(Long.class)
@@ -492,7 +490,7 @@ public class NightmareMode extends BTWAddon {
                 .defaultSupplier(() -> 0L)
                 .readNBT(nbt -> nbt.getLong("PortalTime"))
                 .writeNBT((nbt, v) -> nbt.setLong("PortalTime", v))
-                .global()  // attaches GlobalDataComponent
+                .global()
                 .build();
 
     public static final DataEntry.WorldDataEntry<Boolean> DRAGON_DEFEATED =
@@ -504,6 +502,15 @@ public class NightmareMode extends BTWAddon {
                     .global()
                     .build();
 
+    public static final DataEntry.PlayerDataEntry<Long> GOLDEN_APPLE_COOLDOWN =
+            DataProvider.getBuilder(Long.class)
+                    .name("AppleCooldown")
+                    .defaultSupplier(() -> 0L)
+                    .readNBT(nbt -> nbt.getLong("AppleCooldown"))
+                    .writeNBT((nbt, v) -> nbt.setLong("AppleCooldown", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
 
 
 
@@ -540,6 +547,7 @@ public class NightmareMode extends BTWAddon {
 
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
+        GOLDEN_APPLE_COOLDOWN.register();
     }
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;
@@ -556,7 +564,7 @@ public class NightmareMode extends BTWAddon {
         shouldDisplayFishingAnnouncements = Boolean.parseBoolean(propertyValues.get("FishingAnnouncements"));
         bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
         potionParticles = Boolean.parseBoolean(propertyValues.get("PotionParticles"));
-        crimson = Boolean.parseBoolean(propertyValues.get("RedSeaOfDeath"));
+        crimson = Boolean.parseBoolean(propertyValues.get("Crimson"));
         configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
         bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
         buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));

@@ -146,7 +146,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))
     private void dealMagicDamage(EntityPlayerMP instance, int i){
-        this.attackEntityFrom(DamageSource.magic, NMUtils.getWorldProgress() * 2 + this.rand.nextInt(2));
+        this.attackEntityFrom(DamageSource.magic, NMUtils.getWorldProgress() * 2 + this.rand.nextInt(4) + 3);
         // makes fire resistance not bypass the lightning damage
     }
 

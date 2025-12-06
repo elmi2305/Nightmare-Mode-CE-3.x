@@ -22,14 +22,9 @@ public class SimpleWanderBehaviorMixin {
     private void injectShouldExecute(CallbackInfoReturnable<Boolean> cir) {
         if(!(myEntity instanceof EntityMob)) return;
 
-        // small chance to activate wander (same as vanilla)
+        if (this.myEntity.getRNG().nextInt(80) != 0) return;
 
-        if (this.myEntity.getRNG().nextInt(40) != 0) {
-            cir.setReturnValue(false);
-            return;
-        }
-
-        int chanceToDoSmartCheck = 5 + NMUtils.getWorldProgress() * 5 + (NMUtils.getIsBloodMoon() ? 20 : 0) + (NMUtils.getIsEclipse() || NMUtils.getIsMobEclipsed(myEntity) ? 400 : 0);
+        int chanceToDoSmartCheck = this.getChanceForSmartCheck();
 
         if(this.myEntity.getRNG().nextInt(chanceToDoSmartCheck) != 0) return;
 
@@ -37,7 +32,7 @@ public class SimpleWanderBehaviorMixin {
         // find the nearest player
         if(lastCachedPlayer == null || this.myEntity.getRNG().nextInt(20) == 0){
             if(this.myEntity.posY < 40) return;
-            nearestPlayer = this.myEntity.worldObj.getClosestPlayerToEntity(this.myEntity, 128);
+            nearestPlayer = this.myEntity.worldObj.getClosestPlayerToEntity(this.myEntity, 256);
             lastCachedPlayer = nearestPlayer;
         } else{
             nearestPlayer = lastCachedPlayer;
@@ -56,15 +51,19 @@ public class SimpleWanderBehaviorMixin {
             if (targetVec != null) {
                 this.destPos = new BlockPos((int) targetVec.xCoord, (int) targetVec.yCoord, (int) targetVec.zCoord);
                 cir.setReturnValue(true);
-                return;
             }
         }
+    }
 
-        // use the normal one if this failed
-        if (btw.util.RandomPositionGenerator.findSimpleRandomTargetBlock(this.myEntity, 10, 7, this.destPos)) {
-            cir.setReturnValue(true);
-        } else {
-            cir.setReturnValue(false);
-        }
+    @Unique private int getChanceForSmartCheck(){
+        int progress = NMUtils.getWorldProgress();
+        int baseChance = 36;
+                                                        //      b    b/2  b/3  b/4
+        int tempChance = baseChance / (progress + 1);    //     36,  18,  12,  9
+        if(NMUtils.getIsBloodMoon()) {tempChance /= 2;}  //     18,   9,   6,  4
+        if(NMUtils.getIsEclipse()) {tempChance /= 4;}    //     9,   4,   3,   2
+
+        return tempChance;
+
     }
 }

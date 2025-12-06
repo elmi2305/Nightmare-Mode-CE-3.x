@@ -101,14 +101,15 @@ public class BlockPortalMixin{
     }
 
     private void runPortalEffects(World world, int x, int y, int z){
-        long targetTime = Math.max(world.worldInfo.getNBTTagCompound().getLong("PortalTime"), NightmareMode.getInstance().portalTime);
+//        long targetTime = Math.min(world.worldInfo.getNBTTagCompound().getLong("PortalTime"), NightmareMode.getInstance().portalTime);
+        long targetTime = world.getData(NightmareMode.PORTAL_TIME);
 
         if (!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && (targetTime == 0)) {
             if (MinecraftServer.getServer() != null) {
                 MinecraftServer.getServer().worldServers[0].setData(BTWWorldData.NETHER_ACCESSED, false);
             }
 
-            double radius = 16.0;
+            double radius = 32;
             for (Object obj : world.playerEntities) {
                 if (obj instanceof EntityPlayer player) {
                     double dx = player.posX - x;
@@ -128,7 +129,12 @@ public class BlockPortalMixin{
                 }
             }
 
-            NightmareMode.getInstance().portalTime = world.getWorldTime() + 72000;
+//            NightmareMode.getInstance().portalTime = world.getWorldTime() + 72000;
+            world.setData(NightmareMode.PORTAL_TIME, world.getWorldTime() + 72000);
+
+//            if (MinecraftServer.getServer() != null) {
+//                MinecraftServer.getServer().worldServers[0].setData(BTWWorldData.NETHER_ACCESSED, false);
+//            }
             world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + 72000);
             world.playSoundEffect(x,y,z,"mob.wither.death",1f,0.905F);
             // the rest is handled in EntityPlayerMPMixin

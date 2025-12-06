@@ -44,7 +44,6 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
         int profession = this.getProfession();
         int level = this.getCurrentTradeLevel();
-//        int trades = this.getCurrentTradeXP();
 
         int meta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
 
@@ -52,7 +51,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
         this.setDead();
         InventoryUtils.addSingleItemToInventory(tileEntity, stack.itemID, stack.getItemDamage());
-        this.worldObj.playAuxSFX(2239, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+//        this.worldObj.playAuxSFX(2239, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
 
         return true;
     }

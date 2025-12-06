@@ -27,14 +27,12 @@ public abstract class MinecraftServerMixin {
 
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
-        NightmareMode.getInstance().portalTime = this.worldServers[0].worldInfo.getData(NightmareMode.PORTAL_TIME);
-        if (!NightmareMode.getInstance().shouldStackSizesIncrease) {
+    boolean shouldStackSizesIncrease = this.worldServers[0].worldInfo.getData(NightmareMode.DRAGON_DEFEATED);
+        if (shouldStackSizesIncrease) {
+            NMUtils.setItemStackSizes(32);
+        } else{
             NMUtils.setItemStackSizes(16);
         }
-        if(this.worldServers[0].getWorldTime() + 72000 < NightmareMode.getInstance().portalTime){
-            NightmareMode.getInstance().portalTime = 0;
-        }
-
         if (this.worldServers[0].worldInfo.getDifficulty() == Difficulties.HOSTILE){
             if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
                 NightmareMode.worldState = 3;
@@ -79,6 +77,8 @@ public abstract class MinecraftServerMixin {
         }
         if (!NightmareMode.totalEclipse) {
             NightmareMode.setEclipse(this.getIsEclipse(this.worldServers[0], dayCount));
+        } else{
+            NightmareMode.setEclipse(!this.getIsNightFromWorldTime(this.worldServers[0]));
         }
         boolean shouldChangeBloodMoon = NightmareMode.isBloodMoon != oldBloodMoon;
         boolean shouldChangeEclipse = NightmareMode.isEclipse != oldEclipse;

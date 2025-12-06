@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,13 +21,15 @@ import java.util.List;
 
 @Mixin(EntityPigZombie.class)
 public class EntityPigZombieMixin extends EntityZombie {
+    @Shadow private int angerLevel;
+
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addBlockBreakingTask(World par1World, CallbackInfo ci){
-        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
+//        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
     }
 
     @Override
@@ -39,7 +42,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     public Entity findPlayerToAttack() {
-        return this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
+        return this.angerLevel == 0 ? null : this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
@@ -53,7 +56,7 @@ public class EntityPigZombieMixin extends EntityZombie {
             } else {
                 double range = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 3.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
-                if(player != null && this.isPlayerWearingGoldArmor(player)){
+                if(player != null && !this.isPlayerWearingGoldArmor(player)){
                     this.entityToAttack = player;
                 }
             }
@@ -176,10 +179,15 @@ public class EntityPigZombieMixin extends EntityZombie {
         return mob.getHeldItem() != null && getIllegalItems().contains(mob.getHeldItem().itemID);
     }
 
-    @Unique boolean isPlayerWearingGoldArmor(EntityPlayer player){
-        return (player.getCurrentItemOrArmor(1) != null && player.getCurrentItemOrArmor(1).itemID == Item.bootsGold.itemID)
-                || (player.getCurrentItemOrArmor(2) != null && player.getCurrentItemOrArmor(2).itemID == Item.legsGold.itemID)
-                || (player.getCurrentItemOrArmor(3) != null && player.getCurrentItemOrArmor(3).itemID == Item.plateGold.itemID)
-                || (player.getCurrentItemOrArmor(4) != null && player.getCurrentItemOrArmor(4).itemID == Item.helmetGold.itemID);
+    @Unique private boolean isPlayerWearingGoldArmor(EntityPlayer p){
+        return (this.isGold(p.getCurrentItemOrArmor(1))
+                || this.isGold(p.getCurrentItemOrArmor(2))
+                || this.isGold(p.getCurrentItemOrArmor(3))
+                || this.isGold(p.getCurrentItemOrArmor(4)));
+    }
+
+    @Unique private boolean isGold(ItemStack stack){
+        if(stack == null) return false;
+        return stack.getItem() instanceof ItemArmor armor && armor.getArmorMaterial() == EnumArmorMaterial.GOLD;
     }
 }

@@ -225,19 +225,28 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
 
                 int randomVariance = getRandomVariance(this.worldObj,pY, mobY);
-
-                // Vanilla behavior
                 double minDist = this.minDistFromPlayerForDespawn();
-                if(dDistSq > minDist*minDist) {
-                    if (closestPlayer == null) {
-                        this.entityAge = 0;
-                    } else if (this.entityAge > 800 && this.rand.nextInt(randomVariance) == 0) {
+                if (closestPlayer != null && dDistSq > minDist * minDist) {
+                    // player is far enough away to check despawn
+                    // found player is true by default
+                    // distance from mob to player is > 40 blocks
+
+                    // reset age when a player is nearby (so mobs do not despawn while the player is close)
+                    if (this.entityAge > 800 && this.rand.nextInt(randomVariance) == 0) {
+//                    if (this.rand.nextInt(randomVariance) == 0) {
+//                        System.out.println("despawned " + this.getEntityName() + " at y" + mobY + " with variance " + randomVariance + " with pY: " + (int)pY);
                         this.setDead();
                     }
+                } else{
+                    // closest player doesn't exist (no players online)
+                    // OR player exists but distance to player is less than 40 blocks
+                    this.entityAge = 0;
                 }
+
             }
 
         } else {
+            // cannot despawn
             this.entityAge = 0;
         }
     }
@@ -251,7 +260,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Unique
     private static double getWorldProgressFactor(World world) {
         long totalTicks = world.getWorldTime();
-        double weekTicks = 24000.0 * 7.0;
+        double weekTicks = 24000.0 * 8.0 * 3;
 
         // from 0.1 to 1.0 through the week
         double progress = Math.min(1.0, totalTicks / weekTicks);
@@ -268,11 +277,11 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         double linearPart = capped > 20.0 ? (capped - 20.0) / 40.0 : 0.0;
         double despawnFactor = getDespawnFactor(mobY, logPart, linearPart);
 
-        // Scale with world age (soft start)
+        // scale with world time - [0, 1.0] at 24 days
         double progression = getWorldProgressFactor(world);
         despawnFactor *= progression;
 
-        int baseVariance = 700;
+        int baseVariance = 1000;
         int randomVariance = (int)(baseVariance * (1.2 - 0.75 * despawnFactor));
         randomVariance = Math.max(1, randomVariance);
         return randomVariance;
@@ -281,19 +290,20 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Unique
     private static double getDespawnFactor(int mobY, double logPart, double linearPart) {
-        double despawnFactor = 0.6 * logPart + 0.4 * linearPart;
+        double despawnFactor = 0.5 * logPart + 0.3 * linearPart;
+//        double despawnFactor = 0.6 * logPart + 0.4 * linearPart;
 
         double caveFactor = 1.0;
         if (mobY < 40) {
-            caveFactor += (40.0 - mobY) / 40.0 * 0.5; // up to +50% penalty for very deep mobs
+            caveFactor += (40.0 - mobY) / 40.0 * 0.25; // up to +25% penalty for very deep mobs
         }
         despawnFactor *= caveFactor;
         despawnFactor = Math.min(1.5, despawnFactor); // hard cap
 
         // for surface mobs
         if (mobY > 40) {
-            final double SURFACE_PROTECT = 0.25;
-            final double SURFACE_CAP = 0.35;
+            final double SURFACE_PROTECT = 0.2;
+            final double SURFACE_CAP = 0.3;
             // putting the numbers here so they can easily be changed
             despawnFactor = Math.min(despawnFactor * SURFACE_PROTECT, SURFACE_CAP);
         }

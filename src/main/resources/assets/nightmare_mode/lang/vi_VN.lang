@@ -17,6 +17,8 @@ entity.NightmareImposterZombie.name=Thương nhân lang thang
 entity.NightmareDrownedSkeleton.name=Bộ xương nước
 entity.NightmareMeltedSkeleton.name=Bộ xương lửa
 entity.NightmareObsidianFish.name=Cá Obsidian
+entity.NightmareCreeperGhast.name=Ghast Creeper
+
 item.nmRPG.name=Rocket Launcher
 item.nmRifle.name=Súng trường tấn công
 item.nmBandage.name=Băng gạc
@@ -79,8 +81,12 @@ tile.nmSteelLocker.name=Tủ thép
 tile.nmCrudeObsidian.name=Obsidian Thô
 tile.nmAsphaltLayer.name=Lớp Nhựa Đường
 tile.nmBloodSawBlock.name=Cưa Máu
+tile.nmVillagerBlock.name=Bình Dân Làng
 
 
+villager.profession=Nghề nghiệp
+villager.level=Cấp độ
+entity.addonVillagerNightmare.name=Thương Nhân Ác Mộng
 
 
 container.steelLocker=Tủ thép
@@ -238,8 +244,23 @@ gui.config.full_bright=Siêu sáng
 gui.config.tooltip.full_bright=Render thế giới ở độ sáng tối đa. Lưu ý: Bóng đen Gloom vẫn xuất hiện.
 gui.config.fast_villagers=Dân Làng Nhanh
 gui.config.tooltip.fast_villagers=Khiến Dân Làng đổi giao dịch 4 lần mỗi ngày
+gui.config.blood_moon_helper=Trợ Lý Trăng Máu
+gui.config.tooltip.blood_moon_helper=Hiển thị khi nào Trăng Máu tiếp theo sẽ xuất hiện
+
+
+
 gui.nm.horseTaming=Giữ đúng hướng và căn chỉnh góc của Ngựa
 gui.nm.horseMenu=Kho Giáp Ngựa
+
+gui.bloodmoon=Trăng Máu
+gui.bloodmoon.in=Trăng Máu trong
+gui.bloodmoon.days=Ngày
+gui.bloodmoon.tonight=Tối Nay
+gui.bloodmoon.tomorrow=Ngày Mai
+
+
+item.desc.bloodmoon0=Bỏ qua Trăng Máu hiện tại nếu nó đang hoạt động
+item.desc.bloodmoon1=Ngược lại, bỏ qua cho đến Trăng Máu tiếp theo
 
 
 
@@ -291,6 +312,9 @@ deathScreen.deathTauntMessage19=<???> Ngươi định gây ấn tượng với t
 bosses.wither_summon_sealevel=Wither phải được triệu hồi trên mực nước biển.
 bosses.wither_summon_too_high=Không thể triệu hồi Wither ở độ cao này. Tọa độ Y phải dưới 200.
 bosses.wither_revive_message=Một vị thần thì không bao giờ sợ chết.
+
+
+achievement.nm.grants=Cấp các Thành Tựu sau:
 
 achievementtab.nightmaremode=Chế độ Ác Mộng
 
@@ -460,7 +484,7 @@ achievement.nm.lust.desc=Khao khát nuốt chửng bạn, và bạn đã ôm l�
 achievement.nm.steelSword=Lưỡi kiếm Vĩnh cửu
 achievement.nm.steelSword.desc=Chế tạo một Kiếm linh hồn
 
-achievement.nm.steelIngot=Tốt hơn kim cương
+achievement.nm.steelIngot=Tốt Hơn Cả Netherite
 achievement.nm.steelIngot.desc=Chế tạo một thép linh hồn
 
 achievement.nm.steelPickaxe=Kẻ Phá Đá Nền
@@ -610,3 +634,17 @@ achievement.nm.dungApple.desc=Ăn một Quả Táo Phân. Nhưng tại sao?
 
 achievement.nm.craftRefinedDiamond=Chống Đạn
 achievement.nm.craftRefinedDiamond.desc=Tinh luyện một Thỏi Kim Cương
+
+achievement.nm.craftIronFishingRod=Mồi Ngày Xưa Còn Hợp Lý
+achievement.nm.craftIronFishingRod.desc=Chế tạo Cần Câu Sắt. Nó bền hơn và không cần mồi
+
+achievement.nm.makeVillagerVessel=Đóng Hộp Sẵn Sàng
+achievement.nm.makeVillagerVessel.desc=Biến một Dân Làng thành một Bình Dân Làng
+
+achievement.nm.beaconSpider=Diệt Sâu Bọ
+achievement.nm.beaconSpider.desc=Xây dựng Đèn Hiệu Mắt Nhện cấp 4
+
+achievement.nm.chainArmor=Tôi Được Tạo Bằng Lửa
+achievement.nm.chainArmor.desc=Bảo vệ bản thân khỏi lửa bằng một mảnh Giáp Xích
+
+tag.nightmare_mode.sandwich_meats=Thịt Làm Bánh Mì Kẹp

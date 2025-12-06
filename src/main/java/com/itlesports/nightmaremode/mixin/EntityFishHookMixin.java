@@ -98,7 +98,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Shadow public Entity bobber;
 
     @Unique private boolean isIron;
-    @Unique private Item fishItem = Item.fishRaw;
+    @Unique private ItemStack fishItem = new ItemStack(Item.fishRaw);
     @Unique private int cap = 1;
 
     public EntityFishHookMixin(World par1World) {
@@ -139,10 +139,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.angler.dropOneItem(false);
         }
     }
-//    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
-//    private int startingBiteOdds(int constant){
-//        return this.isIron ? 6 : constant;
-//    }
+    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
+    private int startingBiteOdds(int constant){
+        return this.isIron ? 6 : constant;
+    }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
     private int biteChanceMultiplierDay(int constant){
         return this.isIron ? 2 : constant;
@@ -172,7 +172,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
-        if(this.fishItem != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
+        if(this.fishItem.getItem() != Item.fishRaw && NightmareMode.shouldDisplayFishingAnnouncements){
             int worldProgress = this.angler.worldObj != null ? NMUtils.getWorldProgress() : 0;
             int iMoonPhase = this.worldObj.getMoonPhase();
             int phaseMultiplier = 1;
@@ -180,17 +180,17 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 phaseMultiplier = 2;
             }
             double rarity = getRarity(this.fishItem, this.cap / phaseMultiplier, worldProgress);
-            String textToDisplay = "You caught: " + this.fishItem.getItemDisplayName(new ItemStack(this.fishItem)) + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
+            String textToDisplay = "You caught: " + this.fishItem.getDisplayName() + "! Rarity: " + roundIfNeeded(rarity) + "% " + getRarityName(rarity);
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addText(textToDisplay);
             text2.setColor(getRarityColor(rarity));
             this.angler.sendChatToPlayer(text2);
         }
-        return this.fishItem;
+        return this.fishItem.getItem();
     }
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFishHook;playSound(Ljava/lang/String;FF)V"))
     private void playCatchSoundAtPlayer(EntityFishHook instance, String s, float v, float p){
-        if ((this.fishItem = this.getRandomItemForRod()) != Item.fishRaw) {
+        if ((this.fishItem = this.getRandomItemForRod()).getItem() != Item.fishRaw) {
             instance.worldObj.playSoundAtEntity(instance.angler,BTWSoundManager.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
         } else {
             instance.worldObj.playSoundAtEntity(instance.angler, s, v, p);
@@ -205,7 +205,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     }
 
     @Unique
-    private Item getRandomItemForRod(){
+    private ItemStack getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
         this.cap = 800;
         int iMoonPhase = this.worldObj.getMoonPhase();
@@ -295,7 +295,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 default -> Item.fishRaw;  // Fallback in case of unexpected input
             };
         }
-        return itemToDrop;
+        return new ItemStack(itemToDrop,1,0);
     }
     //6 / 540 = 0.0111
     //4 / 540 = 0.0074
@@ -362,8 +362,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     }
 
     @Unique
-    private static double getRarity(Item item, int cap, int progress){
-        return (double) getItemOccurrences(item, progress) * 100 / cap;
+    private static double getRarity(ItemStack item, int cap, int progress){
+        return (double) getItemOccurrences(item.getItem(), progress) * 100 / cap;
     }
 
     @Unique

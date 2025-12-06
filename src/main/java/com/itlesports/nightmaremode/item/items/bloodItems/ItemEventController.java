@@ -33,7 +33,7 @@ public class ItemEventController extends ItemAchievementGranter {
             long time = world.getWorldTime();
 
             if(NMUtils.getIsBloodMoon()){
-                time = (long)((time + 24000) / 24000);
+                time = (long)Math.floor(((double) (time + 24000) / 24000)) * 24000L;
             } else if (!MinecraftServer.getIsServer()) {
                 time = NMUtils.getNextBloodMoonTime(time);
             }

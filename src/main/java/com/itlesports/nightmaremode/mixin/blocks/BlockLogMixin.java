@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,5 +53,10 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
     public boolean canSupportLeaves(IBlockAccess blockAccess, int x, int y, int z) {
         int iMetadata = blockAccess.getBlockMetadata(x, y, z);
         return super.canSupportLeaves(blockAccess, x, y, z) && !this.getIsStump(iMetadata);
+    }
+
+    @Override
+    public boolean isBreakableBarricade(World world, int i, int j, int k) {
+        return NMUtils.getWorldProgress() > 0;
     }
 }

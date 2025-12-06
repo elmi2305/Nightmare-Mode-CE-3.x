@@ -3,8 +3,6 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
@@ -38,6 +36,20 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         ci.cancel();
     }
 
+    @ModifyArg(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"), index = 2)
+    private float changeVariantPitch(float par2){
+        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+
+
+        if(thisObj instanceof EntitySuperchargedCreeper){
+            return par2 + 0.8f;
+        } else if(thisObj instanceof EntityObsidianCreeper){
+            return par2 - 0.4f;
+        } else if(thisObj instanceof EntityLightningCreeper){
+            return par2 + 0.3f;
+        }
+        return par2;
+    }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {

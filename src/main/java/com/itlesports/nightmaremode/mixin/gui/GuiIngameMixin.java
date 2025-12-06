@@ -74,7 +74,22 @@ public class GuiIngameMixin extends Gui{
             long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
             deltaToNextBM /= 24000;
             deltaToNextBM = (long) Math.floor(deltaToNextBM);
-            String text = "\247c" +I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+
+            String when = null;
+            if(deltaToNextBM == 16){
+                when = I18n.getString("gui.bloodmoon.tonight");
+            }
+
+            if(deltaToNextBM == 1 || deltaToNextBM == 0){
+                when = I18n.getString("gui.bloodmoon.tomorrow");
+            }
+            String text = null;
+
+            if(when == null){
+                text = "\247c" + I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+            } else{
+                text = "\247c" + I18n.getString("gui.bloodmoon") +" " + I18n.getString(when);
+            }
             return text;
         }
         return "";
@@ -83,9 +98,10 @@ public class GuiIngameMixin extends Gui{
     @Unique private boolean shouldShowBloodMoonCountdown(World world){
         if(NMUtils.getWorldProgress() > 0) return true;
 
-        if(NightmareMode.getInstance().portalTime > world.getWorldTime()){
+        long portalTime = world.worldInfo.getData(NightmareMode.PORTAL_TIME);
+        if(portalTime > world.getWorldTime()){
             long timeToNextBloodMoon = NMUtils.getNextBloodMoonTime(world.getWorldTime());
-            return NightmareMode.getInstance().portalTime < timeToNextBloodMoon;
+            return portalTime < timeToNextBloodMoon;
         }
         return false;
     }

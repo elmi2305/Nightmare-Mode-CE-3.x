@@ -19,8 +19,6 @@ import java.util.List;
 public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarget {
     @Shadow private EntityLivingBase targetEntity;
 
-    @Shadow @Final private Class targetClass;
-
     public EntityAINearestAttackableTargetMixin(EntityCreature par1EntityCreature, boolean par2) {
         super(par1EntityCreature, par2);
     }
