@@ -50,6 +50,16 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         return par2;
     }
+        @ModifyArg(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"), index = 1)
+        private float manageQuietFireCreeper(float par2){
+            EntityCreeper thisObj = (EntityCreeper)(Object)this;
+
+
+            if(thisObj instanceof EntityFireCreeper) {
+                return 0;
+            }
+            return par2;
+        }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {

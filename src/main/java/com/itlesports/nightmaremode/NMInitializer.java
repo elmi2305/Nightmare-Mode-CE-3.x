@@ -24,6 +24,7 @@ import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.items.NMPostItems;
 import com.itlesports.nightmaremode.mixin.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
@@ -80,7 +81,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityGhast.class, 1, 1, 1);
         addMobToAllBiomes(EntityFireSpider.class, 1, 1, 2);
         addMobToAllBiomes(EntityStoneZombie.class, 1, 1, 2);
-        addMobToAllBiomes(EntityObsidianCreeper.class, 8, 1, 2);
+        addMobToAllBiomes(EntityObsidianCreeper.class, 3, 1, 1);
         addMobToAllBiomes(EntitySuperchargedCreeper.class, 1, 1, 2);
         addMobToAllBiomes(EntityBlackWidowSpider.class, 2, 1, 2);
         addMobToAllBiomes(EntityRadioactiveEnderman.class, 1, 1, 1);
@@ -238,7 +239,6 @@ public abstract class NMInitializer implements AchievementExt {
 
                             // 2ND TAB - TAB_IRON_AGE
         move(CRAFT_CAULDRON, 0, -2);
-        setCondition(FIND_OBSIDIAN, itemStack -> ((ItemStack)itemStack).itemID == NMBlocks.crudeObsidian.blockID);
 
         // hemp arc
 
@@ -915,11 +915,16 @@ public abstract class NMInitializer implements AchievementExt {
         // add other crucible tools and blocks
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(NMItems.ironKnittingNeedles, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(NMItems.ironFishingPole, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 1), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 1), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4)});
 
         // obsidian post-wither
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(NMBlocks.crudeObsidian)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian, 1, 0), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(Block.obsidian, 1, 1)});
+        // done with obsidian
 
+        // remove and re-add steel ingot recipe, so that the obsidian takes priority over it
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
+        // done with steel
 
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
@@ -931,6 +936,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), (TagOrStack[])new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), (TagOrStack[])new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
 
+        // done with refined diamond
         // blood chest and steel locker
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.bloodOrb, 4), new ItemStack[]{new ItemStack(NMBlocks.bloodChest)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.bloodOrb, 4), new ItemStack(BTWItems.steelNugget, 32)}, new ItemStack[]{new ItemStack(NMBlocks.steelLocker)});
@@ -1215,7 +1221,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Block.netherrack, 1), new Object[]{new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack)});
 
         // add obsidian recipes
-        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.crudeObsidian, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
+        RecipeManager.addShapelessRecipe(new ItemStack(Block.obsidian, 1, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
 
 
         // make ender chest not stupid
@@ -1230,7 +1236,7 @@ public abstract class NMInitializer implements AchievementExt {
                 "OEO",
                 "OBO",
                 "OOO",
-                Character.valueOf('O'), NMBlocks.crudeObsidian,
+                Character.valueOf('O'), Block.obsidian,
                 Character.valueOf('B'), NMBlocks.bloodChest,
                 Character.valueOf('E'), Item.enderPearl
         });

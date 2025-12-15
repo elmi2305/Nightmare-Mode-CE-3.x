@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.tradetweaks;
 
 public enum ApplyAction {
     KEEP,     // mutate builder in-place (or do nothing); let original method proceed

@@ -260,12 +260,12 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Unique
     private static double getWorldProgressFactor(World world) {
         long totalTicks = world.getWorldTime();
-        double weekTicks = 24000.0 * 8.0 * 3;
+        double weekTicks = 24000.0 * 8.0;
 
         // from 0.1 to 1.0 through the week
         double progress = Math.min(1.0, totalTicks / weekTicks);
 
-        return 0.1 + (0.9 * progress);
+        return 0.5 + (0.5 * progress);
     }
 
     @Unique
@@ -277,11 +277,11 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         double linearPart = capped > 20.0 ? (capped - 20.0) / 40.0 : 0.0;
         double despawnFactor = getDespawnFactor(mobY, logPart, linearPart);
 
-        // scale with world time - [0, 1.0] at 24 days
+        // scale with world time - [0, 1.0] at 8 days
         double progression = getWorldProgressFactor(world);
         despawnFactor *= progression;
 
-        int baseVariance = 1000;
+        int baseVariance = 900;
         int randomVariance = (int)(baseVariance * (1.2 - 0.75 * despawnFactor));
         randomVariance = Math.max(1, randomVariance);
         return randomVariance;

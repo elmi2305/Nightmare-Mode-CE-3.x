@@ -86,6 +86,7 @@ public class CustomBasketTileEntity extends BasketTileEntity implements TileEnti
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
+
     public ItemStack getStorageStack() {
         return this.storageStack;
     }

@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
@@ -36,5 +38,10 @@ public class InventoryPlayerMixin {
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolChest));
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolHelmet));
         }
+
+
+        // TODO remove this debug
+//        thisObj.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
+
     }
 }

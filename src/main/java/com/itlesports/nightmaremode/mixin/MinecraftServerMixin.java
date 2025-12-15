@@ -9,21 +9,24 @@ import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
+    @Mutable
     @Shadow public WorldServer[] worldServers;
-    @Unique
-    private int oldWorldState;
-    @Unique
-    private boolean oldBloodMoon;
-    @Unique
-    private boolean oldEclipse;
+    @Shadow @Final public Profiler theProfiler;
+
+    @Shadow public abstract ILogAgent getLogAgent();
+
+    @Shadow private ServerConfigurationManager serverConfigManager;
+    @Unique private boolean oldBloodMoon;
+    @Unique private boolean oldEclipse;
 
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
@@ -47,7 +50,6 @@ public abstract class MinecraftServerMixin {
             NightmareMode.worldState = 0;
         }
 
-        oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
 
@@ -105,34 +107,75 @@ public abstract class MinecraftServerMixin {
             NightmareMode.worldState = 0;
         }
         NightmareMode.sendWorldStateToAllPlayers();
-        oldWorldState = NightmareMode.worldState;
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
     }
-//    @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
-//    private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){
-//
-//        if(par1 == NightmareMode.UNDERWORLD_DIMENSION){
-//            cir.setReturnValue(this.worldServers[3]);
-//        }
-//    }
+    @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
+    private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){
 
-// // TODO: DIMENSION STUFF
-//    @ModifyConstant(method = "loadAllWorlds", constant = @Constant(intValue = 3))
-//    private int attemptToIncreaseWorldServerSize(int constant){
-//        return 4;
-//    }
-//    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;difficultyLevel:Lbtw/world/util/difficulty/Difficulty;",ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void loadNightmareWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9){
-//        MinecraftServer server = (MinecraftServer) (Object)this;
-//        WorldSettings var8 = new WorldSettings(var9);
-//        this.worldServers[3] = new WorldServer(server, var7, par2Str, NightmareMode.UNDERWORLD_DIMENSION, var8, this.theProfiler, this.getLogAgent());
+        if(par1 == NightmareMode.UNDERWORLD_DIMENSION){
+            cir.setReturnValue(this.worldServers[3]);
+        }
+    }
+
+    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;worldServers:[Lnet/minecraft/src/WorldServer;",ordinal = 0,shift = At.Shift.AFTER))
+    private void setWorldServerSize(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci){
+        this.worldServers = new WorldServer[4];
+    }
+
+
+//    @Inject(method = "loadAllWorlds", at = @At("TAIL"))
+//    private void nm_addUnderworld(CallbackInfo ci) {
+//        if (this.worldServers.length > 3 && this.worldServers[3] == null) {
+//            MinecraftServer serv = (MinecraftServer) (Object)this;
 //
-//        this.worldServers[3].addWorldAccess(new WorldManager(server, this.worldServers[3]));
-//        if (!this.isSinglePlayer()) {
+//            System.out.println("[nm] Creating Underworld WorldServer for dim 2");
+//
+//            this.worldServers[3] = new WorldServer(
+//                    (MinecraftServer)(Object)this,
+//                    (ISaveHandler) this.anvilConverterForAnvilFile,    // or saveHandler
+//                    this.getFolderName(),               // world name
+//                    2,
+//                    new WorldSettings(0L, EnumGameType.SURVIVAL, true, false, WorldType.DEFAULT),
+//                    this.theProfiler,
+//                    this.getLogAgent()
+//            );
+//
+//            this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
 //            this.worldServers[3].getWorldInfo().setGameType(this.getGameType());
 //        }
 //    }
+
+    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9, WorldSettings var8){
+        MinecraftServer serv = (MinecraftServer) (Object)this;
+        this.worldServers[3] =  new WorldServerMulti(
+                serv,
+                var7,
+                par2Str,
+                2,
+                var8,
+                this.worldServers[3],
+                this.theProfiler,
+                this.getLogAgent());
+        this.serverConfigManager.setPlayerManager(this.worldServers);
+        this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
+
+
+    }
+
+//@Redirect(
+//        method = "loadAllWorlds",
+//        at = @At(
+//                value = "FIELD",
+//                target = "Lnet/minecraft/server/MinecraftServer;worldServers:[Lnet/minecraft/src/WorldServer;",
+//                opcode = Opcodes.PUTFIELD
+//        )
+//)
+//private void redirectWorldServersSet(MinecraftServer instance, WorldServer[] value) {
+//    instance.worldServers = new WorldServer[4];
+//}
+
 
 
 

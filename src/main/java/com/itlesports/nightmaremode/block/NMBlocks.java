@@ -28,7 +28,6 @@ public class NMBlocks {
     public static Block hellforge;
     public static CustomBasketBlock customWickerBasket;
 
-    public static Block crudeObsidian;
     public static BlockAsphaltCarpet asphaltLayer;
     public static BlockBloodSaw bloodSaw;
     public static BlockVillagerBase villagerBlock;
@@ -79,9 +78,6 @@ public class NMBlocks {
         customWickerBasket = new CustomBasketBlock(2316);
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
-
-        crudeObsidian = new BlockCrudeObsidian(2317);
-        Item.itemsList[crudeObsidian.blockID] = new NMItemBlock(NMBlocks.crudeObsidian.blockID - 256);
 
         asphaltLayer = (BlockAsphaltCarpet) new BlockAsphaltCarpet(2318).setHardness(2f).setUnlocalizedName("nmAsphaltLayer").setCreativeTab(CreativeTabs.tabDecorations);
         Item.itemsList[asphaltLayer.blockID] = new NMItemBlock(NMBlocks.asphaltLayer.blockID - 256);

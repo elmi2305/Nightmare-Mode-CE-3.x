@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public class BlockMixin {
+    @Shadow public static Block obsidian;
+
     @Inject(method = "harvestBlock", at = @At("HEAD"))
     private void explodeRandomlyOnBlockBreak(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
         if(NightmareMode.isAprilFools){

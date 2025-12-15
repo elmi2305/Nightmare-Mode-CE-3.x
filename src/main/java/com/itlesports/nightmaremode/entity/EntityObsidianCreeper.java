@@ -19,7 +19,7 @@ import java.util.List;
 public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCustomPacket {
     private boolean determinedToExplode = false;
     private int timeSinceIgnited;
-    private int fuseTime = 60;
+    private int fuseTime = 50;
     private final int explosionRadius = 3;
     private byte patienceCounter = 60;
 
@@ -70,7 +70,7 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
 
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((24 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.18f);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(6f + NMUtils.getWorldProgress() * 2);
     }

@@ -139,10 +139,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.angler.dropOneItem(false);
         }
     }
-    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
-    private int startingBiteOdds(int constant){
-        return this.isIron ? 6 : constant;
-    }
+//    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 1500))
+//    private int startingBiteOdds(int constant){
+//        return this.isIron ? 6 : constant;
+//    }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
     private int biteChanceMultiplierDay(int constant){
         return this.isIron ? 2 : constant;

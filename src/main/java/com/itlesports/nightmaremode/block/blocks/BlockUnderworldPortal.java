@@ -18,13 +18,11 @@ public class BlockUnderworldPortal extends BlockBreakable {
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        if (entity.ridingEntity == null && entity.riddenByEntity == null && entity instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP)entity;
+        if (entity.ridingEntity == null && entity.riddenByEntity == null && entity instanceof EntityPlayerMP player) {
             if (player.timeUntilPortal > 0) return;  // cooldown
             player.timeUntilPortal = 100;
             // transfer:
-            player.mcServer.getConfigurationManager()
-                    .transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
+            player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
         }
     }
 

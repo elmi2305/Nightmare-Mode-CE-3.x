@@ -18,24 +18,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 @Mixin(World.class)
 public abstract class WorldMixin {
 
-    @Shadow public abstract long getTotalWorldTime();
     @Shadow public Random rand;
     @Shadow public WorldInfo worldInfo;
     @Shadow public abstract long getWorldTime();
-
-
     @Shadow public boolean isRemote;
-
     @Shadow public abstract void setRainStrength(float par1);
-
     @Shadow protected float thunderingStrength;
-
     @Shadow public abstract boolean isThundering();
 
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
