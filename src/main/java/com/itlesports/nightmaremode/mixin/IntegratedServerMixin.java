@@ -17,8 +17,6 @@ import java.io.File;
 public abstract class IntegratedServerMixin extends MinecraftServer {
     @Shadow @Final private WorldSettings theWorldSettings;
 
-    @Shadow @Final private ILogAgent serverLogAgent;
-
     public IntegratedServerMixin(File par1File) {
         super(par1File);
     }
@@ -37,7 +35,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
     }
 
     @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/IntegratedServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, boolean isGlobal){
+    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7){
         MinecraftServer serv = (MinecraftServer) (Object)this;
         this.worldServers[3] =  new WorldServerMulti(
                 serv,
@@ -49,6 +47,5 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                 this.theProfiler,
                 this.getLogAgent());
         this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
-
     }
 }

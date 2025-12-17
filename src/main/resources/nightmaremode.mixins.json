@@ -16,6 +16,7 @@
     "BTWItemsMixin",
     "BTWSquidEntityMixin",
     "BucketItemWaterMixin",
+    "ChunkMixin",
     "ChunkProviderGenerateMixin",
     "DifficultiesMixin",
     "DireWolfEntityMixin",

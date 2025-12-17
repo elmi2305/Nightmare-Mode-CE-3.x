@@ -164,21 +164,6 @@ public abstract class MinecraftServerMixin {
 
     }
 
-//@Redirect(
-//        method = "loadAllWorlds",
-//        at = @At(
-//                value = "FIELD",
-//                target = "Lnet/minecraft/server/MinecraftServer;worldServers:[Lnet/minecraft/src/WorldServer;",
-//                opcode = Opcodes.PUTFIELD
-//        )
-//)
-//private void redirectWorldServersSet(MinecraftServer instance, WorldServer[] value) {
-//    instance.worldServers = new WorldServer[4];
-//}
-
-
-
-
     @Unique
     private int isDawnOrDusk(long time){
         if(time % 24000 >= 23459) {

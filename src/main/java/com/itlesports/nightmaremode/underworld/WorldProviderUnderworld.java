@@ -65,12 +65,7 @@ public class WorldProviderUnderworld extends WorldProvider {
         // Desaturated bluish-gray fog
         float fogStrength = 0.4f + (MathHelper.cos(celestialAngle * (float)Math.PI * 2.0f) * 0.1f);
         return Vec3.createVectorHelper(0.08f * fogStrength, 0.02f * fogStrength, 0.02f * fogStrength);
-//        return this.worldObj.getWorldVec3Pool().getVecFromPool(0.08f * fogStrength, 0.02f * fogStrength, 0.02f * fogStrength);
     }
-//    @Override
-//    public Vec3 getFogColor(float par1, float par2) {
-//        return Vec3.createVectorHelper(0,0,0);
-//    }
 
     @Override
     public float[] calcSunriseSunsetColors(float celestialAngle, float fPartialTicks) {
@@ -122,17 +117,19 @@ public class WorldProviderUnderworld extends WorldProvider {
     public boolean canCoordinateBeSpawn(int par1, int par2) {
         return false;
     }
-
-//    public float calculateCelestialAngle(long par1, float par3) {
-//        return 0.5F;
-//    }
-
+    
     @Override
     public ChunkCoordinates getEntrancePortalLocation() {
         // Send them either to the world spawn or a fixed “return portal” spot.
 
         ChunkCoordinates spawn = worldObj.getSpawnPoint();
-        return new ChunkCoordinates(spawn.posX, spawn.posY, spawn.posZ);
+        int safeY = this.worldObj.getTopSolidOrLiquidBlock(spawn.posX,spawn.posY);
+
+        safeY += 1;
+
+        return new ChunkCoordinates(spawn.posX, safeY,spawn.posZ);
+
     }
+
 
 }

@@ -53,13 +53,12 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     public void generateTerrain(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata) {
         int noiseScaleXZ = 4;
         int noiseScaleY = 16;
-        int seaLevel = 63;
+        int seaLevel = 80;
         int noiseSizeX = noiseScaleXZ + 1; // 5
         int noiseSizeY = 17;
         int noiseSizeZ = noiseScaleXZ + 1; // 5
 
-        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 8, chunkZ * 4 - 8, 22, 22);
-//        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, 10, 10);
+        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, noiseSizeX + 5, noiseSizeZ + 5);
 
         this.noiseArray = this.initializeNoiseField(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
 
@@ -100,11 +99,9 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                                 if ((noiseZValue += noiseZStep) > 0.0D) {
                                     blockIDs[blockIndex += blockStride] = (byte)Block.stone.blockID;
                                 }
-                                else if (noiseY * 8 + subY < seaLevel) {
-                                    // edit
+//                                else if (noiseY * 8 + subY < seaLevel) {
 //                                    blockIDs[blockIndex += blockStride] = (byte)Block.waterStill.blockID;
-                                    // edit
-                                }
+//                                }
                                 else {
                                     blockIDs[blockIndex += blockStride] = 0;
                                 }
@@ -125,7 +122,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     public void replaceBlocksForBiome(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata, BiomeGenBase[] biomes) {
-        int seaLevel = 63;
+        int seaLevel = 80;  // Sync with generateTerrain
         double stoneNoiseScale = 0.03125;
         this.stoneNoise = this.noiseGen4.generateNoiseOctaves(this.stoneNoise, chunkX * 16, chunkZ * 16, 0, 16, 16, 1, stoneNoiseScale * 2.0, stoneNoiseScale * 2.0, stoneNoiseScale * 2.0);
         for (int localX = 0; localX < 16; ++localX) {
@@ -154,10 +151,13 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         if (surfaceDepth <= 0) {
                             topBlock = 0;
                             fillerBlock = (short)Block.stone.blockID;
-                        } else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
+                        }
+                        else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
                             topBlock = biome.topBlock;
                             fillerBlock = biome.fillerBlock;
                         }
+
+
                         if (y < seaLevel && topBlock == 0) {
 
                             // edit
@@ -170,11 +170,14 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                             // edit
                         }
                         remainingDepth = surfaceDepth;
-                        if (y >= seaLevel - 1) {
+                        // edit
+                        if (true) {
+//                        if (y >= seaLevel - 1) {
                             blockIDs[blockIndex] = topBlock;
                             metadata[blockIndex] = topBlockMetadata;
                             continue;
                         }
+                        // edit
                         blockIDs[blockIndex] = fillerBlock;
                         metadata[blockIndex] = fillerBlockMetadata;
                         continue;
@@ -203,8 +206,8 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         byte[] metadata = new byte[32768];
         this.generateTerrain(chunkX, chunkZ, blockIDs, metadata);
         // For radius 4: sample 4 (chunk scale) + 2*radius + 1 extra padding → 13 minimum, use 14
-        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 6, chunkZ * 4 - 6, 16, 16);
-//        this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+//        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 6, chunkZ * 4 - 6, 16,16);
+        this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
         this.replaceBlocksForBiome(chunkX, chunkZ, blockIDs, metadata, this.biomesForGeneration);
         this.caveGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
         this.ravineGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
@@ -223,34 +226,36 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         return var4;
     }
 
-    private double[] initializeNoiseField(double[] par1ArrayOfDouble, int par2, int par3, int par4, int par5, int par6, int par7) {
+    private static int parabolicRadius = 5;
+    private static int biomesForGenerationMagicNumber = 10;
+    private double[] initializeNoiseField(double[] par1ArrayOfDouble, int par2x, int par3, int par4z, int par5, int par6, int par7) {
         if (par1ArrayOfDouble == null) {
             par1ArrayOfDouble = new double[par5 * par6 * par7];
         }
         if (this.parabolicField == null) {
-            int radius = 8;  // Increased for broader smoothing & consistent highlands
-            int size = 2 * radius + 1;  // 17
+            int size = 2 * parabolicRadius + 1; // e.g., 3 for radius=1
             this.parabolicField = new float[size * size];
-            for (int dx = -radius; dx <= radius; ++dx) {
-                for (int dy = -radius; dy <= radius; ++dy) {
+            for (int dx = -parabolicRadius; dx <= parabolicRadius; ++dx) {
+                for (int dy = -parabolicRadius; dy <= parabolicRadius; ++dy) {
                     float dist = MathHelper.sqrt_float((float)(dx * dx + dy * dy)) + 0.2F;
-                    // Optional flatter curve: float weight = 10.0F / (dist + 1.0F);  // Uncomment for even smoother blending
-                    this.parabolicField[dx + radius + (dy + radius) * size] = 10.0F / dist;
+                    // Optional tweaks: Adjust 10.0F for stronger/weaker center (higher=more local bias)
+                    this.parabolicField[dx + parabolicRadius + (dy + parabolicRadius) * size] = 10.0F / dist;
                 }
             }
         }
+
         double var44 = 684.412;
         double var45 = 684.412;
 
         // edit
         var44 *= 0.7d; // xz
-//        var45 *= 2; // y
+        var45 *= 1.5d; // y
         // edit
-        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2, par4, par5, par7, 1.121, 1.121, 0.5);
-        this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2, par4, par5, par7, 200.0, 200.0, 0.5);
-        this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2, par3, par4, par5, par6, par7, var44 / 80.0, var45 / 160.0, var44 / 80.0);
-        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2, par3, par4, par5, par6, par7, var44, var45, var44);
-        this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2, par3, par4, par5, par6, par7, var44, var45, var44);
+        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, par5, par7, 1.121, 1.121, 0.5);
+        this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, par5, par7, 200.0, 200.0, 0.5);
+        this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, par3, par4z, par5, par6, par7, var44 / 80.0, var45 / 160.0, var44 / 80.0);
+        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, par3, par4z, par5, par6, par7, var44, var45, var44);
+        this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, par3, par4z, par5, par6, par7, var44, var45, var44);
         int var12 = 0;
         int var13 = 0;
         for (int var14 = 0; var14 < par5; ++var14) {
@@ -258,19 +263,21 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                 float var16 = 0.0f;
                 float var17 = 0.0f;
                 float var18 = 0.0f;
-                int var19 = 8;  // Match radius
-                BiomeGenBase var20 = this.biomesForGeneration[var14 + var19 + (var15 + var19) * 22];  // Stride=22
 
+                int var19 = 2;
+                BiomeGenBase var20 = this.biomesForGeneration[var14 + 2 + (var15 + 2) * (par5 + 5)];
                 for (int var21 = -var19; var21 <= var19; ++var21) {
                     for (int var22 = -var19; var22 <= var19; ++var22) {
-                        BiomeGenBase var23 = this.biomesForGeneration[var14 + var21 + var19 + (var15 + var22 + var19) * 22];
+                        BiomeGenBase var23 = this.biomesForGeneration[var14 + var21 + 2 + (var15 + var22 + 2) * (par5 + 5)];
                         float minH = var23.minHeight;
                         float maxH = var23.maxHeight;
                         if (minH > 0.0F) {
-                            minH = 1.0F + minH * 2.0F;
-                            maxH = 1.0F + maxH * 4.0F;
+                            minH = 1.0F + minH * 3.0F;
+                            maxH = 1.0F + maxH * 2.0F;
+
+//                            minH = Math.max(minH, 0.2f);
                         }
-                        float var24 = this.parabolicField[var21 + var19 + (var22 + var19) * 17] / (minH + 2.0F);  // Size=17
+                        float var24 = this.parabolicField[var21 + 2 + (var22 + 2) * 5] / (minH + 2.0F);
                         if (var23.minHeight > var20.minHeight) {
                             var24 /= 2.0F;
                         }
@@ -320,9 +327,6 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         double var40 = (float)(var46 - (par6 - 4)) / 3.0f;
                         var30 = var30 * (1.0 - var40) + -10.0 * var40;
                     }
-                    // edit
-//                    var30 += 20;
-                    // edit
                     par1ArrayOfDouble[var12] = var30;
                     ++var12;
                 }

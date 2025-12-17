@@ -30,6 +30,9 @@ public abstract class EntityAIAttackOnCollideMixin {
 
         if (target == null) return;
 
+        if(target instanceof EntityPlayer && target.ridingEntity instanceof EntityHorse){
+            target = (EntityLivingBase) target.ridingEntity;
+        }
         double distanceSq = attacker.getDistanceSqToEntity(target);
         int computedRangeSq = computeRangeForHeldItem(attacker.getHeldItem());
 
