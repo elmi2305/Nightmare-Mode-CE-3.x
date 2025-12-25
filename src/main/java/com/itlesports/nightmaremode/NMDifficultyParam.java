@@ -1,12 +1,12 @@
 package com.itlesports.nightmaremode;
 
-import btw.world.util.difficulty.DifficultyParam;
-import btw.world.util.difficulty.DifficultyProvider;
+import api.world.difficulty.DifficultyParam;
+import api.world.difficulty.DifficultyProvider;
 
-import static btw.world.util.difficulty.Difficulties.HOSTILE;
-import static btw.world.util.difficulty.Difficulties.STANDARD;
+import static btw.world.BTWDifficulties.HOSTILE;
+import static btw.world.BTWDifficulties.STANDARD;
 
-public abstract class NMDifficultyParam<T> extends DifficultyParam<T>{
+public abstract class NMDifficultyParam<T> extends DifficultyParam<T> {
 
     public static void init() {}
 

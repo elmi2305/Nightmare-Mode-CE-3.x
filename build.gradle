@@ -24,15 +24,18 @@ repositories {
 		name = 'Babric'
 		url = 'https://maven.glass-launcher.net/babric'
 	}
-	maven {
-		url file('mavenRepo')
-	}
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+    maven {
+        url 'https://btw-community.github.io/btw-mvn/'
+    }
 	mavenCentral() //For fastutil
 }
 
 loom {
 	setIntermediaryUrl('https://maven.legacyfabric.net/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
-	accessWidenerPath = file("src/main/resources/NightmareMode.accessWidener")
+	accessWidenerPath = file('src/main/resources/NightmareMode.accesswidener')
 	addMinecraftJarProcessor(
 			BTWJarReplacer, "BTWJarReplacer", projectDir.toString()
 	)
@@ -63,6 +66,8 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.2.2'
 
 	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.12'
+
+    implementation 'com.typesafe:config:1.4.5'
 }
 
 configurations.all {
@@ -107,22 +112,36 @@ loom {
 	targetCompatibility = JavaVersion.VERSION_17
 }
 
-runClient {
-	dependsOn(jar)
-}
+tasks.register('copyBtwJar', Copy) {
+    def depInter = dependencies.create("maven.modrinth:btwce:${project.btw_version}:intermediary")
+    def depDoc = dependencies.create("maven.modrinth:btwce:${project.btw_version}:javadoc")
+    def depMappings = dependencies.create("btw.community:mappings:1.0.3")
 
-runServer {
-	dependsOn(jar)
+    def config = configurations.detachedConfiguration(depInter, depDoc, depMappings)
+    config.transitive = false
+
+    from config
+    into file("build_BTW/tmp/BTW_dev")
+
+    rename { String fileName ->
+        if (fileName.contains("javadoc")) {
+            return "BTW-CE-Intermediary-javadoc.jar"
+        }
+        if (fileName.contains("mappings")) {
+            return "BTW-CE-mappings.jar"
+        }
+        return "BTW-CE-Intermediary.jar"
+    }
 }
 
 class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
-	String path
 	String name
+	String path
 
 	@javax.inject.Inject
 	BTWJarReplacer(String name, String path) {
-		this.path = path
 		this.name = name
+		this.path = path
 	}
 
 	@Override
@@ -134,13 +153,14 @@ class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
 	void processJar(java.nio.file.Path jar, Spec spec, ProcessorContext context) throws IOException {
 		// Replace the Minecraft jar with the custom one from BTW_dev.
 		// This is just a straight up file replacement, no remapping or anything.
-		if (!Files.exists(Paths.get(path, "build/BTW_dev/BTW_dev.zip"))) {
+		if (!Files.exists(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"))) {
 			// Print a warning if the BTW_dev zip doesn't exist.
 			System.err.println("BTW_dev zip not found, skipping BTWJarReplacer")
 		} else {
-			Files.copy(Paths.get(path, "build/BTW_dev/BTW_dev.zip"), jar, StandardCopyOption.REPLACE_EXISTING)
+			System.out.println("BTW_dev zip found, replacing Minecraft jar with BTW_dev jar.")
+			Files.copy(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"), jar, StandardCopyOption.REPLACE_EXISTING)
 			// Add Javadocs
-			Files.copy(Paths.get(path, "build/BTW_dev/BTW_dev-javadoc.jar"), jar.resolveSibling(jar.getFileName().toString().replace(".jar", "-javadoc.jar")), StandardCopyOption.REPLACE_EXISTING)
+			Files.copy(Paths.get(path, "build_BTW/BTW_dev/BTW_dev-javadoc.jar"), jar.resolveSibling(jar.getFileName().toString().replace(".jar", "-javadoc.jar")), StandardCopyOption.REPLACE_EXISTING)
 		}
 	}
 
@@ -158,7 +178,12 @@ class BTWJarReplacer implements MinecraftJarProcessor<Spec> {
 
 		@Override
 		int hashCode() {
-			return path.hashCode()
+			if (!Files.exists(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip"))) {
+				return name.hashCode()
+			} else {
+				return Files.getLastModifiedTime(Paths.get(path, "build_BTW/BTW_dev/BTW_dev.zip")).hashCode() ^ name.hashCode()
+			}
 		}
 	}
+
 }

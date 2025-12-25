@@ -27,6 +27,6 @@ public class EntitySkeletonMelted extends EntitySkeleton {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(20);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(18);
     }
 }

@@ -32,7 +32,7 @@ public abstract class HopperTileEntityMixin extends TileEntity {
         if(targetTileEntity instanceof HellforgeTileEntity hellforge){
             ItemStack input = hellforge.getStackInSlot(0);
             ejectStack.stackSize = 1; // caps it to 1 so it transfers 1 item at a time
-            if (input == null && this.isItemValidForSmelting(ejectStack.copy(), hellforge)) {
+            if (input == null && this.isItemValidForSmelting(ejectStack.copy())) {
                 hellforge.setInventorySlotContents(0, ejectStack.copy());
                 this.decrStackSize(iStackIndex, 1);
                 this.worldObj.playAuxSFX(2231, this.xCoord, this.yCoord, this.zCoord, 0);
@@ -42,17 +42,19 @@ public abstract class HopperTileEntityMixin extends TileEntity {
         }
     }
 
-    @ModifyArg(method = "updateEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILbtw/entity/mob/possession/PossessionSource;)I"), index = 5)
+    @ModifyArg(method = "updateEntity", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILapi/entity/mob/possession/PossessionSource;)I"), index = 5)
     private int lowerPossessionHopperRadius0(int i){
         return i - 8;
     }
 
-    @ModifyArg(method = "hopperSoulOverload", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILbtw/entity/mob/possession/PossessionSource;)I"), index = 5)
+    @ModifyArg(method = "hopperSoulOverload", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILapi/entity/mob/possession/PossessionSource;)I"), index = 5)
     private int lowerPossessionHopperRadius1(int i){
         return i - 8;
     }
     @Unique
-    protected boolean isItemValidForSmelting(ItemStack stack, HellforgeTileEntity he) {
+    protected boolean isItemValidForSmelting(ItemStack stack) {
         if (stack == null) {
             return false;
         } else {

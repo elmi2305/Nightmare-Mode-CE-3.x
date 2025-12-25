@@ -1,11 +1,10 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.util.status.StatusEffect;
+import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import net.minecraft.src.*;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin extends Gui{
@@ -83,7 +81,7 @@ public class GuiIngameMixin extends Gui{
             if(deltaToNextBM == 1 || deltaToNextBM == 0){
                 when = I18n.getString("gui.bloodmoon.tomorrow");
             }
-            String text = null;
+            String text;
 
             if(when == null){
                 text = "\247c" + I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");

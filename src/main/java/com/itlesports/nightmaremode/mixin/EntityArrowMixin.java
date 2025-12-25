@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.achievement.event.AchievementEventDispatcher;
+import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;

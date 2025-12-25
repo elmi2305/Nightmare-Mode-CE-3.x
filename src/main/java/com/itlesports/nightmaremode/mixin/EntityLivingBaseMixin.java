@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.achievement.event.AchievementEventDispatcher;
+import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.difficulty.Difficulties;
-import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;

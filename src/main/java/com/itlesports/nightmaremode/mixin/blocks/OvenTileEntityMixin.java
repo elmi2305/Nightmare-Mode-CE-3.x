@@ -1,9 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import api.block.TileEntityDataPacketHandler;
 import btw.block.tileentity.OvenTileEntity;
-import btw.block.tileentity.TileEntityDataPacketHandler;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntityFurnace;

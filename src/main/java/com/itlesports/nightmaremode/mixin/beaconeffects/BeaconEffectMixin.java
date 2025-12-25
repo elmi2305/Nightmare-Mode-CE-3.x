@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.beaconeffects;
 
-import btw.block.tileentity.beacon.BeaconEffect;
+import api.block.beacon.BeaconEffect;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.PotionEffect;
 import net.minecraft.src.TileEntityBeacon;

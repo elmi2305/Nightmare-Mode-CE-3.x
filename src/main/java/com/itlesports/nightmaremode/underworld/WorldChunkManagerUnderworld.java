@@ -1,9 +1,8 @@
 package com.itlesports.nightmaremode.underworld;
 
-import btw.world.util.difficulty.Difficulty;
+import api.world.difficulty.Difficulty;
 import net.minecraft.src.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

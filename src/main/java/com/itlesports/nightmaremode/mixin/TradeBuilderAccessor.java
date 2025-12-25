@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.villager.trade.TradeItem;
-import btw.entity.mob.villager.trade.TradeProvider;
-import btw.entity.mob.villager.trade.VillagerTrade;
+import api.entity.mob.villager.TradeItem;
+import api.entity.mob.villager.TradeProvider;
+import api.entity.mob.villager.VillagerTrade;
 import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;

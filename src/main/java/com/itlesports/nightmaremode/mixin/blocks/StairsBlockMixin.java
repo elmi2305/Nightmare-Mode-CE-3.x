@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.blocks.StairsBlock;
+import api.block.blocks.StairsBlock;
 import btw.block.blocks.StairsBlockBase;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.Material;

@@ -1,10 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;

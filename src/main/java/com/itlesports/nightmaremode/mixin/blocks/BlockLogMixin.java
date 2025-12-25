@@ -56,7 +56,7 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
     }
 
     @Override
-    public boolean isBreakableBarricade(World world, int i, int j, int k) {
+    public boolean isBreakableBarricade(World world, int i, int j, int k, boolean adv) {
         return NMUtils.getWorldProgress() > 0;
     }
 }

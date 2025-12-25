@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.achievement.event.AchievementEventDispatcher;
-import btw.achievement.event.BTWAchievementEvents;
+import api.achievement.AchievementEventDispatcher;
 import btw.entity.mob.villager.LibrarianVillagerEntity;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -29,7 +28,7 @@ public class LibrarianVillagerEntityMixin extends EntityVillager {
             } else if (!this.worldObj.isRemote){
                 for (Object o : this.worldObj.playerEntities) {
                     EntityPlayer player = (EntityPlayer)o;
-                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.NightmareMerchantEvent.class, player, BTWAchievementEvents.none());
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.NightmareMerchantEvent.class, player);
                 }
                 NightmareVillager villager = new NightmareVillager(this.worldObj);
                 villager.setPositionAndUpdate(this.posX,this.posY,this.posZ);

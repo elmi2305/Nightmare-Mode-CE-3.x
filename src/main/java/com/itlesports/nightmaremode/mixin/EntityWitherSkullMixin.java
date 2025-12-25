@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;

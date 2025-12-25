@@ -1,16 +1,15 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.EntityNightmareGolem;
-import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -111,7 +110,7 @@ public abstract class EntityWitherMixin extends EntityMob {
             this.setDead();
         }
     }
-    @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true, remap = false)
+    @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true, remap = false)
     private void manageAprilFoolsWitherSetter(CallbackInfo ci){
         if(NMUtils.getWorldProgress() == 0 && NightmareMode.isAprilFools){
             ci.cancel();

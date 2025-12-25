@@ -1,13 +1,13 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.entity.component.VariantComponent;
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
-import btw.entity.component.VariantComponent;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -565,7 +565,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         double chance = ((isHostile ? 0.09 : 0.03) + Math.abs(progress - 1) * 0.02) * bloodMoonModifier * niteMultiplier;
         return (progress >= 1 || areMobsEvolved) && rand.nextFloat() < chance && this.dimension != -1;
     }
-    @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lbtw/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0)
+    @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
         return 7;
     }

@@ -1,13 +1,12 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -104,6 +103,7 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         }
     }
 
+    @Unique
     private boolean getBlockIsStump(Block block, World world, int x, int y, int z) {
         return block instanceof BlockLog && ((BlockLog) block).getIsStump(world.getBlockMetadata(x, y, z));
     }

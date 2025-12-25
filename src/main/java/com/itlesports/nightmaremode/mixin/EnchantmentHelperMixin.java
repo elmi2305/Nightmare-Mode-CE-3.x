@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.world.util.WorldUtils;
+import api.world.WorldUtils;
 import net.minecraft.src.EnchantmentHelper;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;

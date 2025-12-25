@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
-import btw.block.tileentity.TileEntityDataPacketHandler;
+import api.block.TileEntityDataPacketHandler;
+import api.item.util.ItemUtils;
 import btw.item.BTWItems;
-import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 import java.util.*;

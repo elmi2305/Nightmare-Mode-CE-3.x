@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
@@ -27,9 +26,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
         super(par1World);
     }
     @Shadow protected abstract void angerNearbyEndermen(EntityPlayer targetPlayer);
-    @Shadow private int teleportDelay;
     @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
-    @Shadow protected abstract boolean teleportRandomly();
     @Shadow public abstract int getCarried();
     @Shadow public abstract void setCarried(int par1);
 

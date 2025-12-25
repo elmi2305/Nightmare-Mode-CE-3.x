@@ -1,10 +1,8 @@
 package com.itlesports.nightmaremode.mixin.component;
 
-import btw.block.BTWBlocks;
-import btw.block.tileentity.WickerBasketTileEntity;
-import btw.item.util.RandomItemStack;
+
+import api.item.util.RandomItemStack;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.block.blocks.NMBlock;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import net.minecraft.src.ComponentScatteredFeature;
 import net.minecraft.src.ComponentScatteredFeatureSwampHut;

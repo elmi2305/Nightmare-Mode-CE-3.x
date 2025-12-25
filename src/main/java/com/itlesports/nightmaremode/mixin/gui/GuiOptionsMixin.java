@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import api.world.difficulty.Difficulty;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
+import btw.world.BTWDifficulties;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.EnumOptions;
 import net.minecraft.src.GuiOptions;
@@ -20,9 +20,9 @@ public class GuiOptionsMixin {
     private void manageIngameDifficultyDisplay(CallbackInfo ci, int var1, EnumOptions[] var2, int var3, int var4, EnumOptions var5, GuiSmallButton var6){
         Difficulty difficulty = MinecraftServer.getServer().worldServers[0].worldInfo.getDifficulty();
         String difficultyStringFormat = "%s: %s";
-        if(difficulty == Difficulties.HOSTILE){
+        if(difficulty == BTWDifficulties.HOSTILE){
             var6.displayString = String.format(difficultyStringFormat, I18n.getString("selectWorld.difficulty"), I18n.getString("difficulty.nightmare.name"));
-        } else if(difficulty == Difficulties.STANDARD){
+        } else if(difficulty == BTWDifficulties.STANDARD){
             var6.displayString = String.format(difficultyStringFormat, I18n.getString("selectWorld.difficulty"), I18n.getString("difficulty.baddream.name"));
         }
         if(NightmareMode.bloodmare){

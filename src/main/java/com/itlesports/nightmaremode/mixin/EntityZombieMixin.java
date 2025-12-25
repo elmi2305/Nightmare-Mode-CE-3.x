@@ -5,8 +5,6 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -43,15 +41,18 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
-            float witherSkeletonChanceModifier = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0f : (float) (0.2f * NMUtils.getNiteMultiplier());
+            double nite = NMUtils.getNiteMultiplier();
+
+            float witherSkeletonChanceModifier = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0f : (float) (0.2f * nite);
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-            if (this.rand.nextInt((this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 2 : 6)) < 2 - NMUtils.getNiteMultiplier()) {
+            if (this.rand.nextInt((this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 2 : 6)) < 2 - nite) {
                 // 100% on hostile, 33% on relaxed
                 int progress = NMUtils.getWorldProgress();
+
                 EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
                 skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * NMUtils.getNiteMultiplier(), skeleton.getMaxHealth() * NMUtils.getNiteMultiplier()));
+                skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * nite, skeleton.getMaxHealth() * nite));
 
                 for (int i = 0; i < 5; i++) {
                     skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
@@ -64,12 +65,12 @@ public abstract class EntityZombieMixin extends EntityMob{
                     skeleton.entityToAttack = this.getEntityToAttack();
                 }
                 if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-                    if (rand.nextInt(Math.max((int) (25 / NMUtils.getNiteMultiplier()), 1)) == 0) {
+                    if (rand.nextInt(Math.max((int) (25 / nite), 1)) == 0) {
                         skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                     }
                 }
                 if (skeleton.getCurrentItemOrArmor(4) == null){
-                    if (rand.nextInt(Math.max((int) (10 / NMUtils.getNiteMultiplier()), 1)) == 0) {
+                    if (rand.nextInt(Math.max((int) (10 / nite), 1)) == 0) {
                         ItemStack var2 = new ItemStack(Item.skull,1,2);
                         skeleton.setCurrentItemOrArmor(4,var2);
                     }

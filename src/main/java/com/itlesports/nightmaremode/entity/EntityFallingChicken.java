@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.entity;
 
+import api.block.blocks.GroundCoverBlock;
+import api.world.BlockPos;
 import btw.block.blocks.BlockDispenserBlock;
-import btw.block.blocks.GroundCoverBlock;
 import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
-import btw.world.util.BlockPos;
 import net.minecraft.src.*;
 
 public class EntityFallingChicken extends EntityChicken {
@@ -124,10 +124,6 @@ public class EntityFallingChicken extends EntityChicken {
         return false;
     }
 
-    public int getFoodValueMultiplier() {
-        return 1;
-    }
-
     public boolean shouldNotifyBlockOnGraze() {
         return false;
     }
@@ -137,10 +133,6 @@ public class EntityFallingChicken extends EntityChicken {
     public BlockPos getGrazeBlockForPos() {
         BlockPos pos = super.getGrazeBlockForPos();
         return pos != null && GroundCoverBlock.isGroundCoverRestingOnBlock(this.worldObj, pos.x, pos.y, pos.z) ? null : pos;
-    }
-
-    public int getGrazeDuration() {
-        return 20;
     }
 
     public boolean shouldStayInPlaceToGraze() {
@@ -158,13 +150,6 @@ public class EntityFallingChicken extends EntityChicken {
     public void onBecomeFamished() {}
 
     public void updateHungerState() {}
-    public float getGrazeHeadRotationMagnitudeDivisor() {
-        return 3.0F;
-    }
-
-    public float getGrazeHeadRotationRateMultiplier() {
-        return 14.35F;
-    }
 
     public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
         return true;

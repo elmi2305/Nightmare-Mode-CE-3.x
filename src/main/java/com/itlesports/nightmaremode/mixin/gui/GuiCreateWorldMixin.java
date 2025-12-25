@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import api.world.difficulty.Difficulty;
 import btw.client.gui.LockButton;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiCreateWorld;
 import net.minecraft.src.GuiScreen;
@@ -44,7 +44,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
         this.lockDifficulty = true;
     }
 
-    @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lbtw/world/util/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
+    @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lapi/world/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
     private String customDifficultyName(Difficulty difficulty){
         if(difficulty.index == 2){
             if(NightmareMode.bloodmare){

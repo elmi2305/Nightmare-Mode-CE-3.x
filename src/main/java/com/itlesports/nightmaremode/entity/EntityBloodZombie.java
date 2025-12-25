@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
+import api.entity.mob.behavior.SimpleWanderBehavior;
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
 import com.itlesports.nightmaremode.NMUtils;

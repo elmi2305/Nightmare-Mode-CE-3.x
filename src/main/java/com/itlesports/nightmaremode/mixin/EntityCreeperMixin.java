@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.mob.KickingAnimal;
+import api.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.NMDifficultyParam;

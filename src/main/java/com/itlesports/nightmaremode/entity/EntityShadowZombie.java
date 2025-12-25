@@ -1,11 +1,10 @@
 package com.itlesports.nightmaremode.entity;
 
+import api.world.WorldUtils;
+import api.world.difficulty.DifficultyParam;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
 import com.itlesports.nightmaremode.NMDifficultyParam;

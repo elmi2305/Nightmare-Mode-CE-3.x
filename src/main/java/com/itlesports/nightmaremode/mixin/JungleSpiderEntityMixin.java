@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.entity.mob.JungleSpiderEntity;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;

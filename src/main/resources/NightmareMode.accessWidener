@@ -1,5 +1,7 @@
 accessWidener v1 named
 accessible field net/minecraft/src/EntityLiving tasks Lnet/minecraft/src/EntityAITasks;
+accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
+accessible method net/minecraft/src/EntityMagmaCube setSlimeSize (I)V
 accessible method net/minecraft/src/StructureComponent placeBlockAtCurrentPosition (Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V
 accessible field net/minecraft/src/EntityLiving targetTasks Lnet/minecraft/src/EntityAITasks;
 accessible class net/minecraft/src/GuiWorldSlot
@@ -10,12 +12,9 @@ accessible method net/minecraft/src/EntityRenderer getNightVisionBrightness (Lne
 accessible method net/minecraft/src/Item setMaxDamage (I)Lnet/minecraft/src/Item;
 accessible field net/minecraft/src/PotionEffect duration I
 accessible field net/minecraft/src/EntityLivingBase activePotionsMap Ljava/util/HashMap;
-accessible method net/minecraft/src/EntitySlime setSlimeSize (I)V
 accessible method net/minecraft/src/EntityWitherAttackFilter <init> ()V
 accessible method net/minecraft/src/Entity setSize (FF)V
 accessible field net/minecraft/src/EntityCreeper fuseTime I
-accessible field btw/BTWAddon configProperties Ljava/util/ArrayList;
-accessible field btw/BTWAddon configPropertyDefaults Ljava/util/Map;
 accessible field net/minecraft/src/WorldInfo dimension I
 accessible field net/minecraft/src/Teleporter worldServerInstance Lnet/minecraft/src/WorldServer;
 accessible field net/minecraft/src/Teleporter destinationCoordinateKeys Ljava/util/List;
@@ -27,5 +26,9 @@ accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/Sound
 accessible field net/minecraft/src/SoundManager soundPoolSounds Lnet/minecraft/src/SoundPool;
 accessible field net/minecraft/src/StatList oneShotStats Ljava/util/Map;
 accessible field net/minecraft/src/EntityVillager buyingList Lnet/minecraft/src/MerchantRecipeList;
-accessible method btw/inventory/util/InventoryUtils findSlotToMergeItemStackInSlotRange (Lnet/minecraft/src/IInventory;Lnet/minecraft/src/ItemStack;II)I
-accessible class btw/entity/mob/villager/trade/TradeProvider$TradeBuilder
+accessible method api/inventory/InventoryUtils findSlotToMergeItemStackInSlotRange (Lnet/minecraft/src/IInventory;Lnet/minecraft/src/ItemStack;II)I
+accessible method api/achievement/AchievementHandler triggerAchievement (Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/Achievement;)V
+accessible class net/minecraft/src/ComponentScatteredFeature
+accessible field api/block/beacon/BeaconEffectLocation effectID Ljava/lang/String;
+accessible field api/config/AddonConfig currentConfig Lcom/typesafe/config/Config;
+accessible class api/config/ConfigElementValidator

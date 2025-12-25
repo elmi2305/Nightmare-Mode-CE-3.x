@@ -1,15 +1,11 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.BTWBlocks;
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.WorldUtils;
-import btw.world.util.data.BTWWorldData;
-import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.block.blocks.NMBlock;
+import btw.world.BTWWorldData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockPortal.class)
 public class BlockPortalMixin{
-    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
+    @Redirect(method = "updateTick(Lnet/minecraft/src/World;IIILjava/util/Random;)V", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
     private void doNothing(){} // doesn't update the nether flag to be set every tick
 
-    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lbtw/world/util/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
+    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
     private void doNothing1(){} // makes sure the nether flag isn't set as soon as the portal is created
 
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"))

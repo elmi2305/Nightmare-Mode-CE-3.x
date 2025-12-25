@@ -512,7 +512,6 @@ achievement.nm.steelMattock.desc=Craft a Mattock
 achievement.nm.steelBattleAxe=MEN! WITH ME!
 achievement.nm.steelBattleAxe.desc=Craft a Battle Axe
 
-achievement.btw.equip_steel_armor=Untouchable
 
 achievement.nm.pride=Pride
 achievement.nm.pride.desc=The Depths threatened your end, and you dared them
@@ -655,4 +654,28 @@ achievement.nm.beaconSpider.desc=Construct a tier 4 Spider Eye Beacon
 achievement.nm.chainArmor=I'm Made of Fire
 achievement.nm.chainArmor.desc=Protect yourself from flames with a piece of Chain Armor
 
+achievement.nm.alchemyDust=Minced Warts
+achievement.nm.alchemyDust.desc=Use Alchemy Powder to locate Witch Huts
+
+achievement.nm.ancientSand=Like a True Alchemist
+achievement.nm.ancientSand.desc=Use Ancient Sand to locate Desert Temple
+
+
+
+achievement.btw.equip_steel_armor=Untouchable
+achievement.btw.find_shaft=Humble Beginnings
+achievement.btw.craft_fire_plough=First Flames
+achievement.btw.craft_hopper=Automation Begins
+achievement.btw.find_bones=Bare Bones
+achievement.btw.place_tool=Leaving Your Mark
+
+
+achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are great for cutting Hemp
+
+
+
 tag.nightmare_mode.sandwich_meats=Sandwich Meats
+
+
+
+

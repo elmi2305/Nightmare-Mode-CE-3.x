@@ -1,15 +1,14 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.achievement.event.AchievementEventDispatcher;
+import api.achievement.AchievementEventDispatcher;
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulties;
+import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +35,7 @@ public abstract class MinecraftServerMixin {
         } else{
             NMUtils.setItemStackSizes(16);
         }
-        if (this.worldServers[0].worldInfo.getDifficulty() == Difficulties.HOSTILE){
+        if (this.worldServers[0].worldInfo.getDifficulty() == BTWDifficulties.HOSTILE){
             if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
                 NightmareMode.worldState = 3;
             } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {

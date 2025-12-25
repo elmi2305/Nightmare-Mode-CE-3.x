@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.item.items.bloodItems;
 
-import btw.item.items.ArmorItemMod;
+import api.item.items.ArmorItemMod;
 import net.minecraft.src.EnumArmorMaterial;
 
 public class ItemBloodArmor extends ArmorItemMod implements IBloodTool{

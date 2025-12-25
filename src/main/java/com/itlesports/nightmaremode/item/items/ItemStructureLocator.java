@@ -3,21 +3,21 @@ package com.itlesports.nightmaremode.item.items;
  * Decompiled with CFR 0.2.1 (FabricMC 53fa44c9).
  */
 
-import btw.entity.EmeraldPileEntity;
+import btw.entity.LocatorPileEntity;
 import net.minecraft.src.*;
 
 import java.util.List;
 
 public class ItemStructureLocator
         extends Item {
-    private boolean shouldLocateSwamps;
-    public ItemStructureLocator(int iItemID, boolean swamp) {
+    private final int color;
+    private final boolean shouldLocateSwamps;
+    public ItemStructureLocator(int iItemID, boolean swamp, int color) {
         super(iItemID);
-        this.setBellowsBlowDistance(1);
-        this.setFilterableProperties(8);
         this.setItemRightClickCooldown(120L);
         this.shouldLocateSwamps = swamp;
         this.setCreativeTab(CreativeTabs.tabMaterials);
+        this.color = color;
     }
 
     public String getModId() {
@@ -37,13 +37,13 @@ public class ItemStructureLocator
                     dTargetXPos = pos.x * 16;
                     dTargetZPos = pos.z * 16;
                     if(world.getBiomeGenForCoords((int)dTargetXPos,(int)dTargetZPos) != (this.shouldLocateSwamps ? BiomeGenBase.swampland : BiomeGenBase.desert)) continue;
-                    EmeraldPileEntity sandEntity = new EmeraldPileEntity(world, player.posX, player.posY + 1.7 - (double)player.yOffset, player.posZ);
+                    LocatorPileEntity sandEntity = new LocatorPileEntity(world, player.posX, player.posY + 1.7 - (double)player.yOffset, player.posZ, color);
                     sandEntity.moveTowards(dTargetXPos, dTargetZPos);
                     world.spawnEntityInWorld(sandEntity);
                 }
             }
             if (!bHasTarget) {
-                EmeraldPileEntity sandEntity = new EmeraldPileEntity(world, player.posX, player.posY + 1.7 - (double)player.yOffset, player.posZ);
+                LocatorPileEntity sandEntity = new LocatorPileEntity(world, player.posX, player.posY + 1.7 - (double)player.yOffset, player.posZ, color);
                 sandEntity.moveTowards(dTargetXPos, dTargetZPos);
                 world.spawnEntityInWorld(sandEntity);
             }

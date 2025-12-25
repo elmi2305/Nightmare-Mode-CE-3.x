@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.world.util.BlockPos;
+import api.entity.mob.behavior.SimpleWanderBehavior;
+import api.world.BlockPos;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

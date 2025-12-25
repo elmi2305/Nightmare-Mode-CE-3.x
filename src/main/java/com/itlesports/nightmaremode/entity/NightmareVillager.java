@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.entity.mob.villager.trade.VillagerTrade;
-import btw.util.sounds.BTWSoundManager;
+import api.entity.mob.villager.VillagerTrade;
+import btw.util.BTWSounds;
 import net.minecraft.src.*;
 
 import java.util.HashSet;
@@ -54,7 +54,7 @@ public class NightmareVillager extends EntityVillager {
             }
         }
         this.heal(par2 * 3);
-        this.playSound(BTWSoundManager.WITCH_IDLE.sound(),2f,0.1f);
+        this.playSound(BTWSounds.WITCH_IDLE.sound(),2f,0.1f);
         return super.attackEntityFrom(par1DamageSource, par2);
     }
 

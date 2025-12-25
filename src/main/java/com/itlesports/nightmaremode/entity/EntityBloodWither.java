@@ -1,15 +1,15 @@
 package com.itlesports.nightmaremode.entity;
 
+import api.world.WorldUtils;
 import btw.block.BTWBlocks;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
+import com.itlesports.nightmaremode.AITasks.EntityBloodWitherAttackFilter;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 
@@ -49,7 +49,7 @@ public class EntityBloodWither extends EntityWither {
     private int laserIndex; // used to calculate the angle of the laser attack
     private int laserDirection = 1; // 1 or -1. used to switch the laser attack's motion from clockwise to counterclockwise
     private static boolean bossActive = false; // flag used in other areas to ensure specific behavior during the boss fight
-    private static final IEntitySelector attackEntitySelector = new EntityWitherAttackFilter();
+    private static final IEntitySelector attackEntitySelector = new EntityBloodWitherAttackFilter();
     private static final List<Integer> randomFullBlocks = new ArrayList<>(Arrays.asList(
             Block.stone.blockID,
             Block.grass.blockID,
@@ -440,7 +440,7 @@ public class EntityBloodWither extends EntityWither {
 
                 switch (index){
                     case 0: // anvil attack + tnt rain on later phases
-                        if(player.isPotionActive(Potion.moveSlowdown) && player.getActivePotionEffect(Potion.moveSlowdown).duration < 10){
+                        if(player.isPotionActive(Potion.moveSlowdown) && player.getActivePotionEffect(Potion.moveSlowdown).getDuration() < 10){
                             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 30,0));
                         }
                         for (int i = -1 - this.witherPhase; i < 2 + this.witherPhase; i++) {

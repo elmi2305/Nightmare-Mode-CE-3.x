@@ -1,14 +1,13 @@
 package com.itlesports.nightmaremode.achievements;
 
-import btw.achievement.AchievementHandler;
-import btw.achievement.AchievementProvider;
-import btw.achievement.BTWAchievements;
-import btw.achievement.event.BTWAchievementEvents;
+import api.achievement.AchievementEvents;
+import api.achievement.AchievementHandler;
+import api.achievement.AchievementProvider;
+import api.world.WorldUtils;
 import btw.block.BTWBlocks;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.item.BTWItems;
 import btw.item.items.ClubItem;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.*;
@@ -47,7 +46,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_GETTING_STARTED);
 
     public static final Achievement<ItemStack> CRAFT_BASKET_NM =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(btwLoc("craft_basket"))
                     .icon(BTWBlocks.wickerBasket)
                     .displayLocation(1, -5)
@@ -65,13 +64,13 @@ public class NMAchievements {
                     .parents(MORNING_SECOND_DAY)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_ANIMAL =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_ANIMAL =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("killRunningAnimal"))
                     .icon(Item.porkRaw)
                     .displayLocation(2, -1)
                     .triggerCondition(
-                            data -> data.heldItem().isPresent() && (data.killedEntity() instanceof EntityAnimal
+                            data -> data.heldItem().isPresent() && (data.entity() instanceof EntityAnimal
                                     && data.heldItem().get().getItem() instanceof ClubItem)
                     )
                     .parents(CRAFT_WOODEN_CLUB)
@@ -89,7 +88,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_GETTING_STARTED);
 
     public static final Achievement<ItemStack> CRAFT_IRON_NEEDLES =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ironNeedles"))
                     .icon(NMItems.ironKnittingNeedles)
                     .displayLocation(12, 1)
@@ -98,7 +97,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> CRAFT_BANDAGE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bandage"))
                     .icon(NMItems.bandage)
                     .displayLocation(7, -2)
@@ -106,7 +105,7 @@ public class NMAchievements {
                     .parents(FIND_STRING)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.None> MAKE_SKY_BASE =
+    public static final Achievement<AchievementEvents.None> MAKE_SKY_BASE =
             AchievementProvider.getBuilder(NMAchievementEvents.SkybaseScoreEvent.class)
                     .name(loc("skyBase"))
                     .icon(Block.planks)
@@ -147,7 +146,7 @@ public class NMAchievements {
                     .setSpecial()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> KILL_SQUID =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("calamariGet"))
                     .icon(NMItems.calamari)
                     .displayLocation(9, -1)
@@ -155,7 +154,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> COOK_SQUID =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("calamariCook"))
                     .icon(NMItems.calamariRoast)
                     .displayLocation(11, -1)
@@ -163,22 +162,22 @@ public class NMAchievements {
                     .parents(CRAFT_OVEN, KILL_SQUID)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_BLOODZOMBIE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_BLOODZOMBIE =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("bloodZombieKill"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE)
                     .displayLocation(1, -2)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityBloodZombie)
+                    .triggerCondition(data -> data.entity() instanceof EntityBloodZombie)
                     .parents(CRAFT_WOODEN_CLUB)
                     .build()
                     .setSecret()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_WITHER_STRATA_3 =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_WITHER_STRATA_3 =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("witherSkeletonKillOverworld"))
                     .icon(Item.coal)
                     .displayLocation(16, -1)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntitySkeleton skeleton
+                    .triggerCondition(data -> data.entity() instanceof EntitySkeleton skeleton
                             && skeleton.getSkeletonType().id() == 1
                             && skeleton.dimension == 0)
                     .parents(CRAFT_STONE_PICKAXE)
@@ -204,16 +203,16 @@ public class NMAchievements {
                     .setSpecial()
                     .setSecret()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> IRON_ZOMBIE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> IRON_ZOMBIE =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("ironZombie"))
                     .icon(Item.legsIron)
                     .displayLocation(9, -3)
-                    .triggerCondition(data -> hasIronItem(data.killedEntity()))
+                    .triggerCondition(data -> hasIronItem(data.entity()))
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> CRAFT_LADDER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ladderWood"))
                     .icon(Block.ladder)
                     .displayLocation(5, -1)
@@ -222,7 +221,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> CRAFT_ROAD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("roadStandard"))
                     .icon(NMBlocks.blockRoad)
                     .displayLocation(15, -2)
@@ -231,7 +230,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> CRAFT_STONE_LADDER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ladderStone"))
                     .icon(NMBlocks.stoneLadder)
                     .displayLocation(16, 2)
@@ -239,12 +238,12 @@ public class NMAchievements {
                     .parents(CRAFT_STONE_PICKAXE)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_WANDERING_TRADER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_WANDERING_TRADER =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("wanderingTraderKill"))
                     .icon(BTWItems.tannedLeather)
                     .displayLocation(7,-5)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityZombieImposter)
+                    .triggerCondition(data -> data.entity() instanceof EntityZombieImposter)
                     .build()
                     .setHidden()
                     .registerAchievement(TAB_GETTING_STARTED);
@@ -256,7 +255,7 @@ public class NMAchievements {
 
     // IRON AGE
     public static final Achievement<ItemStack> CRAFT_PLANTER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("craftPlanter"))
                     .icon(BTWBlocks.planter)
                     .displayLocation(3, 0)
@@ -265,7 +264,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> GET_FRIED_CALAMARI =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("calamariFried"))
                     .icon(NMItems.friedCalamari)
                     .displayLocation(4, 3)
@@ -274,7 +273,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> GET_IRON_SWORD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ironSword"))
                     .icon(Item.swordIron)
                     .displayLocation(1, -4)
@@ -283,7 +282,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_IRON_LADDER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ladderIron"))
                     .icon(NMBlocks.ironLadder)
                     .displayLocation(1, 3)
@@ -311,7 +310,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_ORB =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodOrb"))
                     .icon(NMItems.bloodOrb)
                     .displayLocation(13, 6)
@@ -320,7 +319,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_INGOT =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodIngot"))
                     .icon(NMItems.bloodIngot)
                     .displayLocation(15, 6)
@@ -329,7 +328,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_SWORD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodSword"))
                     .icon(NMItems.bloodSword)
                     .displayLocation(13, 7)
@@ -338,7 +337,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_PICK =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodPickaxe"))
                     .icon(NMItems.bloodPickaxe)
                     .displayLocation(14, 7)
@@ -347,7 +346,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_AXE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodAxe"))
                     .icon(NMItems.bloodAxe)
                     .displayLocation(15, 7)
@@ -356,7 +355,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_SHOVEL =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodShovel"))
                     .icon(NMItems.bloodShovel)
                     .displayLocation(16, 7)
@@ -365,7 +364,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_HOE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodHoe"))
                     .icon(NMItems.bloodHoe)
                     .displayLocation(17, 7)
@@ -384,7 +383,7 @@ public class NMAchievements {
                     .setSecret()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> BLOOD_CHEST =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bloodChest"))
                     .icon(NMBlocks.bloodChest)
                     .displayLocation(8, -1)
@@ -392,12 +391,12 @@ public class NMAchievements {
                     .parents(CRAFT_CHEST)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_TERRENCE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_TERRENCE =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("killTerrence"))
                     .icon(BTWItems.creeperOysters)
                     .displayLocation(9, 7)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityCreeper c && Objects.equals(c.getCustomNameTag(), "Terrence"))
+                    .triggerCondition(data -> data.entity() instanceof EntityCreeper c && Objects.equals(c.getCustomNameTag(), "Terrence"))
                     .parents(HARDMODE)
                     .build()
                     .setSecret()
@@ -420,18 +419,18 @@ public class NMAchievements {
                     .parents(BLOOD_INGOT)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> ENVY =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> ENVY =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("envy"))
                     .icon(Block.blockEmerald)
                     .displayLocation(8, 8)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityFauxVillager)
+                    .triggerCondition(data -> data.entity() instanceof EntityFauxVillager)
                     .build()
                     .setSecret()
                     .setSpecial()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_FABRIC =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("fabric"))
                     .icon(BTWItems.fabric)
                     .displayLocation(6, -1)
@@ -440,7 +439,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_BED =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bed"))
                     .icon(Item.bed)
                     .displayLocation(6, -2)
@@ -459,7 +458,7 @@ public class NMAchievements {
                     .setSpecial()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> FILTER_BRIMSTONE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("brimstone"))
                     .icon(BTWItems.brimstone)
                     .displayLocation(8, 5)
@@ -468,7 +467,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_GUNPOWDER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("gunpowder"))
                     .icon(Item.gunpowder)
                     .displayLocation(9, 5)
@@ -477,7 +476,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_TNT =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("tnt"))
                     .icon(Block.tnt)
                     .displayLocation(10, 5)
@@ -486,7 +485,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> GET_GROUND_NETHERRACK =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("groundNetherrack"))
                     .icon(BTWItems.groundNetherrack)
                     .displayLocation(11, 5)
@@ -495,7 +494,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_HELLFORGE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("craftHellforge"))
                     .icon(NMBlocks.hellforge)
                     .displayLocation(9, 2)
@@ -504,7 +503,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_REFINED_DIAMOND =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("craftRefinedDiamond"))
                     .icon(NMItems.refinedDiamondIngot)
                     .displayLocation(4, 5)
@@ -513,7 +512,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_IRON_ROD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("craftIronFishingRod"))
                     .icon(NMItems.ironFishingPole)
                     .displayLocation(-1, -4)
@@ -522,7 +521,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
     public static final Achievement<ItemStack> CRAFT_CHAIN_ARMOR =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("chainArmor"))
                     .icon(Item.plateChain)
                     .displayLocation(1, 4)
@@ -531,7 +530,25 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
 
+    public static final Achievement<ItemStack> ALCHEMY_DUST =
+            AchievementProvider.getBuilder(AchievementEvents.ItemUsedEvent.class)
+                    .name(loc("alchemyDust"))
+                    .icon(NMItems.witchLocator)
+                    .displayLocation(5, -3)
+                    .triggerCondition(item -> item.itemID == NMItems.witchLocator.itemID)
+                    .parents(CRAFT_MILLSTONE)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
 
+    public static final Achievement<ItemStack> ANCIENT_SAND =
+            AchievementProvider.getBuilder(AchievementEvents.ItemUsedEvent.class)
+                    .name(loc("ancientSand"))
+                    .icon(NMItems.templeLocator)
+                    .displayLocation(15, -2)
+                    .triggerCondition(item -> item.itemID == NMItems.templeLocator.itemID)
+                    .parents(CRAFT_CRUCIBLE)
+                    .build()
+                    .registerAchievement(TAB_IRON_AGE);
 
 
 
@@ -559,7 +576,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
     public static final Achievement<ItemStack> CRAFT_CORPSE_EYE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("corpseEye"))
                     .icon(BTWItems.corpseEye)
                     .displayLocation(12, 1)
@@ -568,7 +585,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
     public static final Achievement<ItemStack> CRAFT_ASPHALT =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("roadAsphalt"))
                     .icon(NMBlocks.blockAsphalt)
                     .displayLocation(1, 3)
@@ -577,7 +594,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
     public static final Achievement<ItemStack> CRAFT_STEEL_LOCKER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelLocker"))
                     .icon(NMBlocks.steelLocker)
                     .displayLocation(11, -2)
@@ -597,7 +614,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<ItemStack> CRAFT_STEEL_INGOT =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelIngot"))
                     .icon(BTWItems.soulforgedSteelIngot)
                     .displayLocation(12, -4)
@@ -607,7 +624,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<ItemStack> STEEL_SWORD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelSword"))
                     .icon(BTWItems.steelSword)
                     .displayLocation(13, -6)
@@ -618,7 +635,7 @@ public class NMAchievements {
 
 
     public static final Achievement<ItemStack> STEEL_AXE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelAxe"))
                     .icon(BTWItems.steelAxe)
                     .displayLocation(13, -5)
@@ -628,7 +645,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
         public static final Achievement<ItemStack> STEEL_BATTLEAXE =
-                AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                         .name(loc("steelBattleAxe"))
                         .icon(BTWItems.battleaxe)
                         .displayLocation(14, -5)
@@ -639,7 +656,7 @@ public class NMAchievements {
 
 
     public static final Achievement<ItemStack> STEEL_PICKAXE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelPickaxe"))
                     .icon(BTWItems.steelPickaxe)
                     .displayLocation(13, -4)
@@ -649,7 +666,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<ItemStack> STEEL_SHOVEL =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelShovel"))
                     .icon(BTWItems.steelShovel)
                     .displayLocation(13, -3)
@@ -659,7 +676,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
         public static final Achievement<ItemStack> STEEL_MATTOCK =
-                AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+                AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                         .name(loc("steelMattock"))
                         .icon(BTWItems.mattock)
                         .displayLocation(14, -3)
@@ -669,7 +686,7 @@ public class NMAchievements {
                         .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<ItemStack> STEEL_HOE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("steelHoe"))
                     .icon(BTWItems.steelHoe)
                     .displayLocation(13, -2)
@@ -677,7 +694,7 @@ public class NMAchievements {
                     .parents(CRAFT_STEEL_INGOT)
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
-    public static final Achievement<BTWAchievementEvents.None> LUST =
+    public static final Achievement<AchievementEvents.None> LUST =
             AchievementProvider.getBuilder(NMAchievementEvents.LustEvent.class)
                     .name(loc("lust"))
                     .icon(new ItemStack(BTWBlocks.aestheticOpaque, 1, 5)) // soap block
@@ -689,10 +706,10 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<ItemStack> DUNG_APPLE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EatenEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.EatenEvent.class)
                     .name(loc("dungApple"))
                     .icon(NMItems.dungApple)
-                    .displayLocation(4, 5)
+                    .displayLocation(3, 6)
                     .triggerCondition(item -> item.itemID == NMItems.dungApple.itemID)
                     .parents(TRADED_WITH_FARMER)
                     .build()
@@ -700,7 +717,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_AUTOMATION);
 
     public static final Achievement<Entity> VILLAGER_VESSEL =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EatEntityWithBlockDispenserEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.EatEntityWithBlockDispenserEvent.class)
                     .name(loc("makeVillagerVessel"))
                     .icon(NMBlocks.villagerBlock)
                     .displayLocation(6, 1)
@@ -736,7 +753,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> GET_ECLIPSE_SHARD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseShard"))
                     .icon(NMItems.darksunFragment)
                     .displayLocation(5, 0)
@@ -745,7 +762,7 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.None> NIGHTMARE_MERCHANT =
+    public static final Achievement<AchievementEvents.None> NIGHTMARE_MERCHANT =
             AchievementProvider.getBuilder(NMAchievementEvents.NightmareMerchantEvent.class)
                     .name(loc("nightmareMerchant"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_MERCHANT)
@@ -755,18 +772,18 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_ECLIPSE_ANIMAL =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_ECLIPSE_ANIMAL =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("killEclipseAnimal"))
                     .icon(NMItems.creeperChop)
                     .displayLocation(4, 2)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityAnimal a && NMUtils.getIsMobEclipsed(a))
+                    .triggerCondition(data -> data.entity() instanceof EntityAnimal a && NMUtils.getIsMobEclipsed(a))
                     .parents(FIRST_ECLIPSE)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> GET_MAGIC_FEATHER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("magicFeather"))
                     .icon(NMItems.magicFeather)
                     .displayLocation(5, 2)
@@ -775,8 +792,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> RIDE_CHICKEN =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> RIDE_CHICKEN =
+            AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("rideEclipseChicken"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_CHICKEN)
                     .displayLocation(5, 1)
@@ -787,7 +804,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> ECLIPSE_COW_MILK =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseCowMilk"))
                     .icon(NMItems.bloodMilk)
                     .displayLocation(5, 3)
@@ -808,7 +825,7 @@ public class NMAchievements {
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> MAGIC_ARROW =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("magicArrow"))
                     .icon(NMItems.magicArrow)
                     .displayLocation(6, 2)
@@ -819,7 +836,7 @@ public class NMAchievements {
 
 
     public static final Achievement<ItemStack> ECLIPSE_BOW =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseBow"))
                     .icon(NMItems.eclipseBow)
                     .displayLocation(7, 0)
@@ -833,8 +850,8 @@ public class NMAchievements {
 
 
 
-    public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_2 =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_2 =
+            AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel2"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_DIAMOND)
                     .displayLocation(5, -2)
@@ -848,49 +865,49 @@ public class NMAchievements {
 
 
     public static final Achievement<ItemStack> ECLIPSE_SHADOW_ZOMBIE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseShadowZombie"))
                     .icon(NMItems.charredFlesh)
                     .displayLocation(8, -5)
                     .triggerCondition(item -> item.itemID == NMItems.charredFlesh.itemID)
-                    .parents()
+                    .parents(ENTER_END)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> ECLIPSE_SQUID =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseSquid"))
                     .icon(NMItems.voidSack)
                     .displayLocation(6, -5)
                     .triggerCondition(item -> item.itemID == NMItems.voidSack.itemID)
-                    .parents()
+                    .parents(ENTER_END)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
     public static final Achievement<ItemStack> ECLIPSE_GHAST =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseGhast"))
                     .icon(NMItems.ghastTentacle)
                     .displayLocation(6, -3)
                     .triggerCondition(
                             item -> item.itemID == NMItems.ghastTentacle.itemID
                             || item.itemID == NMItems.creeperTear.itemID)
-                    .parents()
+                    .parents(ENTER_END)
                     .build()
                     .registerAchievement(TAB_END_GAME);
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> ECLIPSE_ENDERMAN =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> ECLIPSE_ENDERMAN =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("eclipseEnderman"))
                     .icon(Item.eyeOfEnder)
                     .displayLocation(8, -3)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityEnderman em && NMUtils.getIsMobEclipsed(em))
-                    .parents()
+                    .triggerCondition(data -> data.entity() instanceof EntityEnderman em && NMUtils.getIsMobEclipsed(em))
+                    .parents(ENTER_END)
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
 
     public static final Achievement<ItemStack> ECLIPSE_WITCH  =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("eclipseWitch"))
                     .icon(NMItems.voidMembrane)
                     .displayLocation(7, -4)
@@ -899,8 +916,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_3 =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_3 =
+            AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel3"))
                     .icon(NMBlocks.bloodBones)
                     .displayLocation(7, -2)
@@ -911,8 +928,8 @@ public class NMAchievements {
 
 
 
-    public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_4 =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_4 =
+            AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel4"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_SKULL)
                     .displayLocation(9, -2)
@@ -921,19 +938,19 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.EntityKilledEventData> KILL_BLOODWITHER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityKilledEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_BLOODWITHER =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
                     .name(loc("killBloodWither"))
                     .icon(NMItems.starOfTheBloodGod)
                     .displayLocation(11, 0)
-                    .triggerCondition(data -> data.killedEntity() instanceof EntityBloodWither)
+                    .triggerCondition(data -> data.entity() instanceof EntityBloodWither)
                     .parents(ECLIPSE_BOW, NIGHTMARE_MERCHANT_LEVEL_4)
                     .build()
                     .setSpecial()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_5 =
-            AchievementProvider.getBuilder(BTWAchievementEvents.EntityInteractedEvent.class)
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_5 =
+            AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel5"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_TRIPLE_TEAR)
                     .displayLocation(11, -2)
@@ -971,8 +988,8 @@ public class NMAchievements {
 
 
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_HELLFIRE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_HELLFIRE =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconHellfire"))
                     .icon(new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 3))
                     .displayLocation(9, 4)
@@ -980,8 +997,8 @@ public class NMAchievements {
                     .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_DIAMOND =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_DIAMOND =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconDiamond"))
                     .icon(BTWBlocks.diamondIngot) // you can try guessing the right icon, but you don't have to
                     .displayLocation(10, 4)// keep the same
@@ -989,8 +1006,8 @@ public class NMAchievements {
                     .parents(CRAFTED_BEACON)
                     .build()
                     .registerAchievement(TAB_END_GAME);
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_DUNG =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_DUNG =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconDung"))
                     .icon(new ItemStack(BTWBlocks.aestheticEarth.blockID, 1, 7))
                     .displayLocation(11, 5)
@@ -999,8 +1016,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_EMERALD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_EMERALD =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconEmerald"))
                     .icon(Block.blockEmerald)
                     .displayLocation(12, 6)
@@ -1009,8 +1026,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_GLASS =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_GLASS =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconGlass"))
                     .icon(Block.glass)
                     .displayLocation(13, 5)
@@ -1019,8 +1036,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_GLOWSTONE =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_GLOWSTONE =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconGlowstone"))
                     .icon(Block.glowStone)
                     .displayLocation(14, 4)
@@ -1029,8 +1046,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_GOLD =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_GOLD =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconGold"))
                     .icon(Block.blockGold)
                     .displayLocation(15, 4)
@@ -1039,8 +1056,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_IRON =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_IRON =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconIron"))
                     .icon(Block.blockIron)
                     .displayLocation(13, 3)
@@ -1050,8 +1067,8 @@ public class NMAchievements {
                     .registerAchievement(TAB_END_GAME);
 
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_LAPIS =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_LAPIS =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconLapis"))
                     .icon(Block.blockLapis)
                     .displayLocation(12, 2)
@@ -1060,8 +1077,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_ENDER_BLOCK =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_ENDER_BLOCK =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconEnderBlock"))
                     .icon(new ItemStack(BTWBlocks.aestheticOpaque, 1, 14)) // ender block
                     .displayLocation(11, 3)
@@ -1070,8 +1087,8 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<BTWAchievementEvents.BeaconEventData> BEACON_SPIDER =
-            AchievementProvider.getBuilder(BTWAchievementEvents.BeaconEvent.class)
+    public static final Achievement<AchievementEvents.BeaconEventData> BEACON_SPIDER =
+            AchievementProvider.getBuilder(AchievementEvents.BeaconEvent.class)
                     .name(loc("beaconSpider"))
                     .icon(BTWBlocks.spiderEyeBlock)
                     .displayLocation(12, 5)
@@ -1105,7 +1122,7 @@ public class NMAchievements {
 
 
     public static final Achievement<ItemStack> RIFLE_RPG  =
-            AchievementProvider.getBuilder(BTWAchievementEvents.ItemEvent.class)
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("rifleRpg"))
                     .icon(NMItems.rpg)
                     .displayLocation(12,0)

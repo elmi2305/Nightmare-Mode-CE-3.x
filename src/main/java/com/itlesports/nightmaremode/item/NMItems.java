@@ -1,14 +1,9 @@
 package com.itlesports.nightmaremode.item;
 
-import btw.item.BTWItems;
 import btw.item.items.*;
-import btw.item.tag.BTWTags;
-import btw.item.tag.Tag;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import net.minecraft.src.*;
-
-import static com.itlesports.nightmaremode.achievements.NMAchievements.loc;
 
 public class NMItems {
     public static ItemRPG rpg;
@@ -96,7 +91,7 @@ public class NMItems {
         rifle = (ItemAR)(new ItemAR(2310)).setTextureName("nmRifle");
         bandage = (ItemBandage)(new ItemBandage(2311,0,0f,false)).setTextureName("nmBandage");
         ironKnittingNeedles = (ItemIronKnittingNeedles)(new ItemIronKnittingNeedles(2312)).setTextureName("nmNeedles");
-        witchLocator = (ItemStructureLocator)(new ItemStructureLocator(2314, true)).setTextureName("nmWitchDust").setUnlocalizedName("nmItemWitchLocator");
+        witchLocator = (ItemStructureLocator)(new ItemStructureLocator(2314, true, 0x84bdb8)).setTextureName("nmWitchDust").setUnlocalizedName("nmItemWitchLocator");
 
         bloodOrb = (ItemBloodOrb)(new ItemBloodOrb(2315)).setTextureName("nmBloodOrb");
         bloodPickaxe = (ItemBloodPickaxe)(new ItemBloodPickaxe(2316, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodPickaxe");
@@ -106,7 +101,7 @@ public class NMItems {
         bloodSword = (ItemBloodSword)(new ItemBloodSword(2320, EnumToolMaterial.EMERALD, BLOOD_MOON_DURABILITY)).setTextureName("nmBloodSword");
 
         bloodHelmet = (ItemBloodArmor)(new ItemBloodArmor(2321,EnumArmorMaterial.IRON,0,2, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodHelmet").setUnlocalizedName("nmBloodHelmet");
-        bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,EnumArmorMaterial.DIAMOND,1,4, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate").setMaxDamage(BLOOD_MOON_DURABILITY);
+        bloodChestplate = (ItemBloodArmor)(new ItemBloodArmor(2322,EnumArmorMaterial.DIAMOND,1,4, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodChestplate").setUnlocalizedName("nmBloodChestplate");
         bloodLeggings = (ItemBloodArmor)(new ItemBloodArmor(2323,EnumArmorMaterial.IRON,2,3, BLOOD_MOON_DURABILITY, 0.05d)).setTextureName("nmBloodLeggings").setUnlocalizedName("nmBloodLeggings");
         bloodBoots = (ItemBloodArmor)(new ItemBloodArmor(2324,EnumArmorMaterial.IRON, 3,1, BLOOD_MOON_DURABILITY, 0d)).setTextureName("nmBloodBoots").setUnlocalizedName("nmBloodBoots");
 
@@ -146,7 +141,7 @@ public class NMItems {
         dungApple = (NMFoodItem) new NMFoodItem(2353, 2, 0.25f, false, "nmDungApple",false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nmDungApple").setCreativeTab(CreativeTabs.tabFood);
         creeperBallSoup = (NMFoodItem) new NMFoodItem(2354, 6, 1f, false, "nmOysterSoup",false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nmOysterSoup").hideFromEMI();
 
-        templeLocator = (ItemStructureLocator)(new ItemStructureLocator(2355, false)).setTextureName("nmTempleDust").setUnlocalizedName("nmTempleDust");
+        templeLocator = (ItemStructureLocator)(new ItemStructureLocator(2355, false, 0xFFFF00)).setTextureName("nmTempleDust").setUnlocalizedName("nmTempleDust");
 
 
         obsidianShard = new NMItem(2356).setTextureName("nmObsidianShard").setUnlocalizedName("nmObsidianShard").setCreativeTab(CreativeTabs.tabMaterials);

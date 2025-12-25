@@ -1,20 +1,15 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.community.nightmaremode.NightmareMode;
-import btw.entity.EntityWithCustomPacket;
+import api.entity.EntityWithCustomPacket;
+import api.entity.mob.KickingAnimal;
+import api.item.items.PickaxeItem;
 import btw.entity.attribute.BTWAttributes;
-import btw.entity.mob.KickingAnimal;
-import btw.item.BTWItems;
-import btw.item.items.PickaxeItem;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCustomPacket {
     private boolean determinedToExplode = false;
@@ -149,7 +144,7 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
         if (this.getNeuteredState() == 0) {
             this.dropItem(Block.obsidian.blockID, this.rand.nextInt(2) + 1);
 
-            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(6) + 4);
+            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(4) + 2);
 
         }
 

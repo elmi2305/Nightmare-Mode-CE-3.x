@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.entity.attribute.BTWAttributes;
-import btw.item.items.PickaxeItem;
-import btw.util.ForkableRandom;
+import api.item.items.PickaxeItem;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;

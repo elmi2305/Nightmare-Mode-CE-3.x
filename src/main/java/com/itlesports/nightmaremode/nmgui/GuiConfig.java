@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.nmgui;
 
+import api.config.AddonConfig;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
@@ -104,9 +105,9 @@ public class GuiConfig extends GuiScreen {
         textIndex -= 6;
         width += 200;
 
-        textToDisplay = cap(Boolean.toString(NightmareMode.hordeMode));
-        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.hordeMode ? 0xFF0000 : 0x870101));
-        textIndex ++;
+//        textToDisplay = cap(Boolean.toString(NightmareMode.hordeMode));
+//        this.drawCenteredString(this.fontRenderer, textToDisplay, width + 100 + this.fontRenderer.getStringWidth(textToDisplay), heightMultiplier * textIndex  + 7, (NightmareMode.hordeMode ? 0xFF0000 : 0x870101));
+//        textIndex ++;
 
 
         textToDisplay = cap(Boolean.toString(NightmareMode.totalEclipse));
@@ -228,7 +229,7 @@ public class GuiConfig extends GuiScreen {
         this.cancerModeButton.drawButton = par1;
         this.NITEButton.drawButton = par1;
         this.noSkybasesButton.drawButton = par1;
-        this.hordeModeButton.drawButton = par1;
+//        this.hordeModeButton.drawButton = par1;
         this.totalEclipseButton.drawButton = par1;
         this.bloodmareButton.drawButton = par1;
         this.magicMonstersButton.drawButton = par1;
@@ -286,7 +287,7 @@ public class GuiConfig extends GuiScreen {
         addCancerModeButton(width, heightMultiplier, mediumBase, mediumActive);
 
 // Right column buttons
-        addHordeModeButton(rightColumnX, heightMultiplier, hardBase, hardActive);
+//        addHordeModeButton(rightColumnX, heightMultiplier, hardBase, hardActive);
         addTotalEclipseButton(rightColumnX, heightMultiplier, hardBase, hardActive);
         addBloodmareButton(rightColumnX, heightMultiplier, hardBase, hardActive);
         addMagicMonstersButton(rightColumnX, heightMultiplier, hardBase, hardActive);
@@ -351,7 +352,7 @@ public class GuiConfig extends GuiScreen {
         this.cancerModeButton.drawButton = !this.isOnSecondPage;
         this.NITEButton.drawButton = !this.isOnSecondPage;
         this.noSkybasesButton.drawButton = !this.isOnSecondPage;
-        this.hordeModeButton.drawButton = !this.isOnSecondPage;
+//        this.hordeModeButton.drawButton = !this.isOnSecondPage;
         this.totalEclipseButton.drawButton = !this.isOnSecondPage;
         this.bloodmareButton.drawButton = !this.isOnSecondPage;
         this.magicMonstersButton.drawButton = !this.isOnSecondPage;
@@ -365,7 +366,7 @@ public class GuiConfig extends GuiScreen {
         this.cancerModeButton.updateState(NightmareMode.isAprilFools);
         this.NITEButton.updateState(NightmareMode.nite);
         this.noSkybasesButton.updateState(NightmareMode.noSkybases);
-        this.hordeModeButton.updateState(NightmareMode.hordeMode);
+//        this.hordeModeButton.updateState(NightmareMode.hordeMode);
         this.totalEclipseButton.updateState(NightmareMode.totalEclipse);
         this.bloodmareButton.updateState(NightmareMode.bloodmare);
         this.magicMonstersButton.updateState(NightmareMode.magicMonsters);
@@ -431,27 +432,27 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.add(this.hordeModeButton);
     }
     private void addTotalEclipseButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.totalEclipseButton = new GuiColoredButton(8, x, 2 * heightMultiplier, 100, 20, I18n.getString("gui.config.total_eclipse"), baseColor, activeColor);
+        this.totalEclipseButton = new GuiColoredButton(8, x, 1 * heightMultiplier, 100, 20, I18n.getString("gui.config.total_eclipse"), baseColor, activeColor);
         this.totalEclipseButton.setTooltipText(I18n.getString("gui.config.tooltip.total_eclipse"));
         this.buttonList.add(this.totalEclipseButton);
     }
     private void addBloodmareButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.bloodmareButton = new GuiColoredButton(9, x, 3 * heightMultiplier, 100, 20, I18n.getString("gui.config.bloodmare"), baseColor, activeColor);
+        this.bloodmareButton = new GuiColoredButton(9, x, 2 * heightMultiplier, 100, 20, I18n.getString("gui.config.bloodmare"), baseColor, activeColor);
         this.bloodmareButton.setTooltipText(I18n.getString("gui.config.tooltip.bloodmare"));
         this.buttonList.add(this.bloodmareButton);
     }
     private void addMagicMonstersButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.magicMonstersButton = new GuiColoredButton(10, x, 4 * heightMultiplier, 100, 20, I18n.getString("gui.config.magic_monsters"), baseColor, activeColor);
+        this.magicMonstersButton = new GuiColoredButton(10, x, 3 * heightMultiplier, 100, 20, I18n.getString("gui.config.magic_monsters"), baseColor, activeColor);
         this.magicMonstersButton.setTooltipText(I18n.getString("gui.config.tooltip.magic_monsters"));
         this.buttonList.add(this.magicMonstersButton);
     }
     private void addUnkillableMobsButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.unkillableMobsButton = new GuiColoredButton(11, x, 5 * heightMultiplier, 100, 20, I18n.getString("gui.config.unkillable_mobs"), baseColor, activeColor);
+        this.unkillableMobsButton = new GuiColoredButton(11, x, 4 * heightMultiplier, 100, 20, I18n.getString("gui.config.unkillable_mobs"), baseColor, activeColor);
         this.unkillableMobsButton.setTooltipText(I18n.getString("gui.config.tooltip.unkillable_mobs"));
         this.buttonList.add(this.unkillableMobsButton);
     }
     private void addNoHitButton(int x, int heightMultiplier, int baseColor, int activeColor) {
-        this.noHitButton = new GuiColoredButton(12, x, 6 * heightMultiplier, 100, 20, I18n.getString("gui.config.no_hit"), baseColor, activeColor);
+        this.noHitButton = new GuiColoredButton(12, x, 5 * heightMultiplier, 100, 20, I18n.getString("gui.config.no_hit"), baseColor, activeColor);
         this.noHitButton.setTooltipText(I18n.getString("gui.config.tooltip.no_hit"));
         this.buttonList.add(this.noHitButton);
     }
@@ -543,115 +544,117 @@ public class GuiConfig extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton par1GuiButton) {
         NightmareMode instance = NightmareMode.getInstance();
+        AddonConfig config = NightmareMode.getInstance().addonConfig;
+
 
         if (par1GuiButton.id == 0) {
             this.mc.displayGuiScreen(this.parentGuiScreen);
         } else if (par1GuiButton.id == 1) {
             NightmareMode.moreVariants = !NightmareMode.moreVariants;
-            instance.modifyConfigProperty("MoreVariants", Boolean.toString(NightmareMode.moreVariants));
+            instance.modifyConfigProperty("MoreVariants", NightmareMode.moreVariants, config);
             this.moreVariantsButton.updateState(NightmareMode.moreVariants);
         } else if (par1GuiButton.id == 2) {
             NightmareMode.evolvedMobs = !NightmareMode.evolvedMobs;
-            instance.modifyConfigProperty("EvolvedMobs", Boolean.toString(NightmareMode.evolvedMobs));
+            instance.modifyConfigProperty("EvolvedMobs", NightmareMode.evolvedMobs, config);
             this.evolvedMobsButton.updateState(NightmareMode.evolvedMobs);
         } else if (par1GuiButton.id == 3) {
             NightmareMode.buffedSquids = !NightmareMode.buffedSquids;
-            instance.modifyConfigProperty("BuffedSquids", Boolean.toString(NightmareMode.buffedSquids));
+            instance.modifyConfigProperty("BuffedSquids", NightmareMode.buffedSquids, config);
             this.buffedSquidsButton.updateState(NightmareMode.buffedSquids);
         } else if (par1GuiButton.id == 4) {
             NightmareMode.nite = !NightmareMode.nite;
-            instance.modifyConfigProperty("NITE", Boolean.toString(NightmareMode.nite));
+            instance.modifyConfigProperty("NITE", NightmareMode.nite, config);
             this.NITEButton.updateState(NightmareMode.nite);
         } else if (par1GuiButton.id == 5) {
             NightmareMode.darkStormyNightmare = !NightmareMode.darkStormyNightmare;
-            instance.modifyConfigProperty("DarkStormyNightmare", Boolean.toString(NightmareMode.darkStormyNightmare));
+            instance.modifyConfigProperty("DarkStormyNightmare", NightmareMode.darkStormyNightmare, config);
             this.darkStormyNightmareButton.updateState(NightmareMode.darkStormyNightmare);
         } else if (par1GuiButton.id == 6) {
             NightmareMode.noSkybases = !NightmareMode.noSkybases;
-            instance.modifyConfigProperty("NoSkybases", Boolean.toString(NightmareMode.noSkybases));
+            instance.modifyConfigProperty("NoSkybases", NightmareMode.noSkybases, config);
             this.noSkybasesButton.updateState(NightmareMode.noSkybases);
         } else if (par1GuiButton.id == 7) {
             NightmareMode.isAprilFools = !NightmareMode.isAprilFools;
-            instance.modifyConfigProperty("AprilFoolsPatch", Boolean.toString(NightmareMode.isAprilFools));
+            instance.modifyConfigProperty("AprilFoolsPatch", NightmareMode.isAprilFools, config);
             this.cancerModeButton.updateState(NightmareMode.isAprilFools);
         } else if (par1GuiButton.id == 8) {
             NightmareMode.totalEclipse = !NightmareMode.totalEclipse;
-            instance.modifyConfigProperty("TotalEclipse", Boolean.toString(NightmareMode.totalEclipse));
+            instance.modifyConfigProperty("TotalEclipse", NightmareMode.totalEclipse, config);
             this.totalEclipseButton.updateState(NightmareMode.totalEclipse);
         } else if (par1GuiButton.id == 9) {
             NightmareMode.bloodmare = !NightmareMode.bloodmare;
-            instance.modifyConfigProperty("Bloodmare", Boolean.toString(NightmareMode.bloodmare));
+            instance.modifyConfigProperty("Bloodmare", NightmareMode.bloodmare, config);
             this.bloodmareButton.updateState(NightmareMode.bloodmare);
         } else if (par1GuiButton.id == 10) {
             NightmareMode.magicMonsters = !NightmareMode.magicMonsters;
-            instance.modifyConfigProperty("MagicMonsters", Boolean.toString(NightmareMode.magicMonsters));
+            instance.modifyConfigProperty("MagicMonsters", NightmareMode.magicMonsters, config);
             this.magicMonstersButton.updateState(NightmareMode.magicMonsters);
         } else if (par1GuiButton.id == 11) {
             NightmareMode.unkillableMobs = !NightmareMode.unkillableMobs;
-            instance.modifyConfigProperty("UnkillableMobs", Boolean.toString(NightmareMode.unkillableMobs));
+            instance.modifyConfigProperty("UnkillableMobs", NightmareMode.unkillableMobs, config);
             this.unkillableMobsButton.updateState(NightmareMode.unkillableMobs);
         } else if (par1GuiButton.id == 12) {
             NightmareMode.noHit = !NightmareMode.noHit;
-            instance.modifyConfigProperty("NoHit", Boolean.toString(NightmareMode.noHit));
+            instance.modifyConfigProperty("NoHit", NightmareMode.noHit, config);
             this.noHitButton.updateState(NightmareMode.noHit);
         } else if (par1GuiButton.id == 13) {
             this.setButtonSettings(!this.bloodmareButton.drawButton);
             // sets the second page
         } else if (par1GuiButton.id == 14) {
             NightmareMode.shouldShowDateTimer = !NightmareMode.shouldShowDateTimer;
-            instance.modifyConfigProperty("NmMinecraftDayTimer", Boolean.toString(NightmareMode.shouldShowDateTimer));
+            instance.modifyConfigProperty("NmMinecraftDayTimer", NightmareMode.shouldShowDateTimer, config);
             this.shouldShowDateTimerButton.updateState(NightmareMode.shouldShowDateTimer);
         } else if (par1GuiButton.id == 15) {
             NightmareMode.shouldShowRealTimer = !NightmareMode.shouldShowRealTimer;
-            instance.modifyConfigProperty("NmTimer", Boolean.toString(NightmareMode.shouldShowRealTimer));
+            instance.modifyConfigProperty("NmTimer", NightmareMode.shouldShowRealTimer, config);
             this.shouldShowRealTimerButton.updateState(NightmareMode.shouldShowRealTimer);
         } else if (par1GuiButton.id == 16) {
             NightmareMode.bloodmoonColors = !NightmareMode.bloodmoonColors;
-            instance.modifyConfigProperty("BloodmoonColors", Boolean.toString(NightmareMode.bloodmoonColors));
+            instance.modifyConfigProperty("BloodmoonColors", NightmareMode.bloodmoonColors, config);
             this.bloodmoonColorsButton.updateState(NightmareMode.bloodmoonColors);
         } else if (par1GuiButton.id == 17) {
             NightmareMode.crimson = !NightmareMode.crimson;
-            instance.modifyConfigProperty("Crimson", Boolean.toString(NightmareMode.crimson));
+            instance.modifyConfigProperty("Crimson", NightmareMode.crimson, config);
             this.crimsonButton.updateState(NightmareMode.crimson);
         } else if (par1GuiButton.id == 18) {
             NightmareMode.configOnHud = !NightmareMode.configOnHud;
-            instance.modifyConfigProperty("ConfigOnHUD", Boolean.toString(NightmareMode.configOnHud));
+            instance.modifyConfigProperty("ConfigOnHUD", NightmareMode.configOnHud, config);
             this.configOnHudButton.updateState(NightmareMode.configOnHud);
         } else if (par1GuiButton.id == 19) {
             NightmareMode.potionParticles = !NightmareMode.potionParticles;
-            instance.modifyConfigProperty("PotionParticles", Boolean.toString(NightmareMode.potionParticles));
+            instance.modifyConfigProperty("PotionParticles", NightmareMode.potionParticles, config);
             this.potionParticlesButton.updateState(NightmareMode.potionParticles);
         } else if (par1GuiButton.id == 20) {
             NightmareMode.shouldDisplayFishingAnnouncements = !NightmareMode.shouldDisplayFishingAnnouncements;
-            instance.modifyConfigProperty("FishingAnnouncements", Boolean.toString(NightmareMode.shouldDisplayFishingAnnouncements));
+            instance.modifyConfigProperty("FishingAnnouncements", NightmareMode.shouldDisplayFishingAnnouncements, config);
             this.shouldDisplayFishingAnnouncementsButton.updateState(NightmareMode.shouldDisplayFishingAnnouncements);
         } else if (par1GuiButton.id == 21) {
             NightmareMode.aprilFoolsRendering = !NightmareMode.aprilFoolsRendering;
-            instance.modifyConfigProperty("AprilFoolsWarpedRendering", Boolean.toString(NightmareMode.aprilFoolsRendering));
+            instance.modifyConfigProperty("AprilFoolsWarpedRendering", NightmareMode.aprilFoolsRendering, config);
             this.aprilFoolsRenderingButton.updateState(NightmareMode.aprilFoolsRendering);
         } else if (par1GuiButton.id == 22) {
             NightmareMode.perfectStart = !NightmareMode.perfectStart;
-            instance.modifyConfigProperty("PerfectStart", Boolean.toString(NightmareMode.perfectStart));
+            instance.modifyConfigProperty("PerfectStart", NightmareMode.perfectStart, config);
             this.perfectStartButton.updateState(NightmareMode.perfectStart);
         } else if (par1GuiButton.id == 23) {
             NightmareMode.extraArmor = !NightmareMode.extraArmor;
-            instance.modifyConfigProperty("ExtraArmor", Boolean.toString(NightmareMode.extraArmor));
+            instance.modifyConfigProperty("ExtraArmor", NightmareMode.extraArmor, config);
             this.extraArmorButton.updateState(NightmareMode.extraArmor);
         } else if (par1GuiButton.id == 24) {
             NightmareMode.hordeMode = !NightmareMode.hordeMode;
-            instance.modifyConfigProperty("HordeMode", Boolean.toString(NightmareMode.hordeMode));
+            instance.modifyConfigProperty("HordeMode", NightmareMode.hordeMode, config);
             this.hordeModeButton.updateState(NightmareMode.hordeMode);
         }  else if (par1GuiButton.id == 25) {
             NightmareMode.fullBright = !NightmareMode.fullBright;
-            instance.modifyConfigProperty("FullBright", Boolean.toString(NightmareMode.fullBright));
+            instance.modifyConfigProperty("FullBright", NightmareMode.fullBright, config);
             this.fullBrightButton.updateState(NightmareMode.fullBright);
         }  else if (par1GuiButton.id == 26) {
             NightmareMode.fastVillagers = !NightmareMode.fastVillagers;
-            instance.modifyConfigProperty("FastVillagers", Boolean.toString(NightmareMode.fastVillagers));
+            instance.modifyConfigProperty("FastVillagers", NightmareMode.fastVillagers, config);
             this.fastVillagersButton.updateState(NightmareMode.fastVillagers);
         }  else if (par1GuiButton.id == 27) {
             NightmareMode.bloodMoonHelper = !NightmareMode.bloodMoonHelper;
-            instance.modifyConfigProperty("BloodMoonHelper", Boolean.toString(NightmareMode.bloodMoonHelper));
+            instance.modifyConfigProperty("BloodMoonHelper", NightmareMode.bloodMoonHelper, config);
             this.bloodMoonHelperButton.updateState(NightmareMode.bloodMoonHelper);
         }
     }

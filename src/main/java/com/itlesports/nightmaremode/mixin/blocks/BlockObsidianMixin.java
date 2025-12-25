@@ -1,13 +1,11 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.item.items.PickaxeItem;
-import com.itlesports.nightmaremode.block.NMBlocks;
+import api.item.items.PickaxeItem;
 import com.itlesports.nightmaremode.entity.EntityObsidianFish;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
-import org.lwjgl.Sys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,9 +54,11 @@ public class BlockObsidianMixin extends Block {
     @Override
     public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
         super.onBlockHarvested(world, x, y, z, meta, player);
+        if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof PickaxeItem pick && pick.toolMaterial.getHarvestLevel() > 3) {
+            this.shouldDropBlock = true;
+        }
 
-
-        if (meta == 0) {
+        if (meta == 0 && !this.shouldDropBlock) {
             if(world.rand.nextInt(8) == 0){
                 EntityObsidianFish fish = new EntityObsidianFish(world);
                 fish.setPositionAndUpdate(x + 0.5, y + 0.1, z + 0.5);
@@ -66,9 +66,7 @@ public class BlockObsidianMixin extends Block {
                 world.spawnEntityInWorld(fish);
             }
         }
-        if (player.getHeldItem() != null && player.getHeldItem().getItem() instanceof PickaxeItem pick && pick.toolMaterial.getHarvestLevel() > 3) {
-            this.shouldDropBlock = true;
-        }
+
     }
 
 
@@ -76,6 +74,7 @@ public class BlockObsidianMixin extends Block {
 
     // custom metadata for crude obsidian
 
+    @Unique
     @Environment(EnvType.CLIENT)
     private Icon[] nm_obsidianIcons;
 

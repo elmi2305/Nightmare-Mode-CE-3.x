@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
-import btw.util.sounds.BTWSoundManager;
+import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.rendering.ContainerSteelLocker;
 import net.minecraft.src.*;
@@ -151,7 +151,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory {
         if (numUsingPlayers > 0 && lidAngle == 0F) {
             worldObj.playSoundEffect(
                     xCoord + 0.5, yCoord + 0.5, zCoord + 0.5,
-                    BTWSoundManager.CHEST_OPEN.sound(),
+                    BTWSounds.CHEST_OPEN.sound(),
                     0.5F,
                     worldObj.rand.nextFloat()*0.1F + 0.9F);
         }
@@ -165,7 +165,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory {
             if (lidAngle < 0.5F && prev >= 0.5F) {
                 worldObj.playSoundEffect(
                         xCoord + 0.5, yCoord + 0.5, zCoord + 0.5,
-                        BTWSoundManager.CHEST_CLOSE.sound(),
+                        BTWSounds.CHEST_CLOSE.sound(),
                         0.5F,
                         worldObj.rand.nextFloat()*0.1F + 0.9F);
             }

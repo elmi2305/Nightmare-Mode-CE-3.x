@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
-import btw.achievement.AchievementHandler;
+import api.achievement.AchievementHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
@@ -48,7 +48,7 @@ public class ItemAchievementGranter extends ItemFood {
 
     private void displayAchievement(Achievement achievement, EntityPlayer player){
         if(AchievementHandler.hasUnlocked(player,achievement)) return;
-        ChatMessageComponent name = ChatMessageComponent.createFromTranslationKey(achievement.toString());
+//        ChatMessageComponent name = ChatMessageComponent.createFromTranslationKey(achievement.toString());
         ChatMessageComponent achievementMessage = ChatMessageComponent.createFromText("[").addKey(achievement.toString()).addText("]").setColor(achievement.achievementColor);
         ChatMessageComponent msg = ChatMessageComponent.createFromText(player.username + " ").appendComponent(ChatMessageComponent.createFromTranslationKey("achievement.get")).addText(" ").appendComponent(achievementMessage);
         if (!achievement.shouldAnnounce || player.worldObj.isRemote) return;

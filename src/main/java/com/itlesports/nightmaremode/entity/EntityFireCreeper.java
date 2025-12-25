@@ -1,12 +1,12 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.entity.EntityWithCustomPacket;
-import btw.entity.mob.KickingAnimal;
-import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.world.util.difficulty.Difficulties;
+import api.entity.EntityWithCustomPacket;
+import api.entity.mob.KickingAnimal;
+import api.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.EntitySlimeAccessor;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
@@ -142,7 +142,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                                         }
                                         EntityMagmaCube cube = new EntityMagmaCube(this.worldObj);
                                         cube.setLocationAndAngles(this.posX + (i * 0.2), this.posY + (k * 0.5), this.posZ + (j * 0.2),this.rotationYaw,this.rotationPitch);
-                                        ((EntitySlime)cube).setSlimeSize(1);
+                                        ((EntitySlimeAccessor)(cube)).invokeSetSlimeSize(1);
                                         this.worldObj.spawnEntityInWorld(cube);
                                     }
                                 }

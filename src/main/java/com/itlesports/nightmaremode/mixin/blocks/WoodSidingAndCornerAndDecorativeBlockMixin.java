@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.blocks.SidingAndCornerAndDecorativeBlock;
+import api.block.blocks.SidingAndCornerAndDecorativeBlock;
 import btw.block.blocks.WoodSidingAndCornerAndDecorativeBlock;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.Material;

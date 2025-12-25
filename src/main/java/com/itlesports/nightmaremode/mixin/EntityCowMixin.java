@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.KickingAnimal;
-import btw.world.util.difficulty.DifficultyParam;
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import api.entity.mob.KickingAnimal;
+import api.world.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;

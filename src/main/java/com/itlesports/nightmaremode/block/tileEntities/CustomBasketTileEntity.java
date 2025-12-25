@@ -5,9 +5,9 @@ package com.itlesports.nightmaremode.block.tileEntities;
 // (powered by FernFlower decompiler)
 //
 
+import api.block.TileEntityDataPacketHandler;
+import api.item.util.ItemUtils;
 import btw.block.tileentity.BasketTileEntity;
-import btw.block.tileentity.TileEntityDataPacketHandler;
-import btw.item.util.ItemUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
@@ -94,7 +94,7 @@ public class CustomBasketTileEntity extends BasketTileEntity implements TileEnti
     private void updateVisualContentsState() {
         if (!this.worldObj.isRemote) {
             boolean bHasContents = NMBlocks.customWickerBasket.getHasContents(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-            if (bHasContents != (this.storageStack != null)) {
+            if (bHasContents == (this.storageStack == null)) {
                 NMBlocks.customWickerBasket.setHasContents(this.worldObj, this.xCoord, this.yCoord, this.zCoord, this.storageStack != null);
             }
         }

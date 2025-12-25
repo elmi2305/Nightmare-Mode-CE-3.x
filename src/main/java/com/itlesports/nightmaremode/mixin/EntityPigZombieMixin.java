@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -25,11 +23,6 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
-    }
-
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void addBlockBreakingTask(World par1World, CallbackInfo ci){
-//        this.tasks.addTask(1, new ZombieBreakBarricadeBehaviorHostile(this));
     }
 
     @Override

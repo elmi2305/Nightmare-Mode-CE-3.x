@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.entity.mob.KickingAnimal;
+import api.entity.mob.KickingAnimal;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityHorse;
 import net.minecraft.src.Vec3;

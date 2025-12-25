@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
-import btw.util.sounds.BTWSoundManager;
+import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -191,7 +191,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFishHook;playSound(Ljava/lang/String;FF)V"))
     private void playCatchSoundAtPlayer(EntityFishHook instance, String s, float v, float p){
         if ((this.fishItem = this.getRandomItemForRod()).getItem() != Item.fishRaw) {
-            instance.worldObj.playSoundAtEntity(instance.angler,BTWSoundManager.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
+            instance.worldObj.playSoundAtEntity(instance.angler, BTWSounds.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
         } else {
             instance.worldObj.playSoundAtEntity(instance.angler, s, v, p);
         }

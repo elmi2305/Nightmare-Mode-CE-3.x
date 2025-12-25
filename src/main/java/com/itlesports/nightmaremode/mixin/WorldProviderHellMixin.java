@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.WorldProviderHell;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

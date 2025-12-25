@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.RottenArrowEntity;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;

@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.item.BTWItems;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;

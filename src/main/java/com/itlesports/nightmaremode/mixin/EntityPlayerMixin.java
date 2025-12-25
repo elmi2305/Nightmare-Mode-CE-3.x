@@ -1,16 +1,14 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.BTWMod;
-import btw.achievement.event.AchievementEventDispatcher;
-import btw.achievement.event.BTWAchievementEvents;
+import api.achievement.AchievementEventDispatcher;
+import api.util.status.StatusEffect;
+import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
-import btw.util.status.PlayerStatusEffects;
-import btw.util.status.StatusEffect;
-import btw.world.util.data.DataEntry;
+import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -26,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.*;
 
@@ -52,10 +49,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Shadow public abstract <T> void setData(DataEntry.PlayerDataEntry<T> var1, T var2);
 
-    @Shadow public abstract <T> T getData(DataEntry.PlayerDataEntry<T> var1);
-
-    @Shadow public abstract World getEntityWorld();
-
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
@@ -72,11 +65,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-
-//    @Override
-//    public DataEntry.PlayerDataEntry nm$getAppleCooldown() {
-//        return GOLDEN_APPLE_COOLDOWN;
-//    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void noHitAttributes(CallbackInfo ci){
@@ -353,7 +341,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (this.getPlayerOnSkybase()) {
             skybaseTicks = Math.min(skybaseTicks + 2, 12);
             if(skybaseTicks == 12) {
-                AchievementEventDispatcher.triggerEvent(NMAchievementEvents.SkybaseScoreEvent.class, thisObj, BTWAchievementEvents.none());
+                AchievementEventDispatcher.triggerEvent(NMAchievementEvents.SkybaseScoreEvent.class, thisObj);
             }
         } else{
             skybaseTicks = Math.max(0,--skybaseTicks);
@@ -571,17 +559,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique private static final Collection<StatusEffect> collection = List.of(
-            PlayerStatusEffects.PECKISH,
-            PlayerStatusEffects.STARVING,
-            PlayerStatusEffects.EMACIATED,
-            PlayerStatusEffects.HUNGRY,
-            PlayerStatusEffects.HURT,
-            PlayerStatusEffects.INJURED,
-            PlayerStatusEffects.STARVING,
-            PlayerStatusEffects.WOUNDED,
-            PlayerStatusEffects.DYING,
-            PlayerStatusEffects.CRIPPLED,
-            PlayerStatusEffects.FAMISHED
+            BTWPlayerStatuses.PECKISH,
+            BTWPlayerStatuses.STARVING,
+            BTWPlayerStatuses.EMACIATED,
+            BTWPlayerStatuses.HUNGRY,
+            BTWPlayerStatuses.HURT,
+            BTWPlayerStatuses.INJURED,
+            BTWPlayerStatuses.STARVING,
+            BTWPlayerStatuses.WOUNDED,
+            BTWPlayerStatuses.DYING,
+            BTWPlayerStatuses.CRIPPLED,
+            BTWPlayerStatuses.FAMISHED
     );
 
     @Inject(method = "getAllActiveStatusEffects", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -669,17 +657,26 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 this.ticksInWater = Math.max(this.ticksInWater - 1, 0);
             }
         }
+//        if(this.ticksExisted % 100 == 0){
+//            for(Object ac : TAB_GETTING_STARTED.achievementList){
+//                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+//            }
+//            for(Object ac : TAB_IRON_AGE.achievementList){
+//                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+//            }
+//            for(Object ac : TAB_AUTOMATION.achievementList){
+//                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+//            }
+//            for(Object ac : TAB_END_GAME.achievementList){
+//                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+//            }
+//            for(Object ac : TAB_EXTRAS.achievementList){
+//                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
+//            }
+//        }
     }
 
 
-//    @ModifyArgs(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
-//    private void attackEntityFromDamage(Args args){
-//        DamageSource src = args.get(0);
-//        float dmg = args.get(1);
-//        if(src.isFireDamage()){
-//
-//        }
-//    }
     @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;
@@ -758,5 +755,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             510, // battleaxe
             NMItems.bloodSword.itemID,
             NMItems.bloodAxe.itemID
+            // BTWItems crashes when attempted to be loaded here
     ));
 }

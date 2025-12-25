@@ -1,10 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.DireWolfEntity;
-import btw.world.util.WorldUtils;
-import btw.world.util.data.BTWWorldData;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.NMUtils;

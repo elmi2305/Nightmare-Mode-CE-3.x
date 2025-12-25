@@ -1,9 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.difficulty.Difficulty;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.Difficulty;
-import net.minecraft.src.*;
+import btw.world.BTWDifficulties;
+import net.minecraft.src.EnumGameType;
+import net.minecraft.src.GameRules;
+import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.WorldInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,7 +29,7 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
     private void setTimeToNightAndManageGracePeriod(CallbackInfoReturnable<Long> cir) {
         if (this.shouldCheck) {
             long initialTime = NightmareMode.perfectStart || NightmareMode.darkStormyNightmare ? 24000L : 18000L;
-            long gracePeriodEnd = initialTime + (NightmareMode.bloodmare ? 2400: 2100) + (this.getDifficulty() != Difficulties.HOSTILE ? 2000 : 0); // 1:45 grace period, 3:25 on bad dream
+            long gracePeriodEnd = initialTime + (NightmareMode.bloodmare ? 2400: 2100) + (this.getDifficulty() != BTWDifficulties.HOSTILE ? 2000 : 0); // 1:45 grace period, 3:25 on bad dream
             if (this.totalTime == 0L) {
                 this.worldTime = initialTime;
                 this.theGameRules.addGameRule("doMobSpawning", "false");

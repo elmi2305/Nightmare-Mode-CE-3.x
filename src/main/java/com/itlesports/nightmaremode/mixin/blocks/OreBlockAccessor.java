@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.blocks.OreBlock;
+import api.block.blocks.OreBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.Icon;
