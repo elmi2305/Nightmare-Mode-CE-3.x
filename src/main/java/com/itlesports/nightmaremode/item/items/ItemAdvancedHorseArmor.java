@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import com.itlesports.nightmaremode.item.NMItem;
-import com.itlesports.nightmaremode.mixin.EntityAnimalInvoker;
-import com.itlesports.nightmaremode.mixin.EntityPlayerMPAccessor;
+import com.itlesports.nightmaremode.mixin.entity.EntityPlayerMPAccessor;
 import com.itlesports.nightmaremode.nmgui.ContainerHorseArmor;
 import com.itlesports.nightmaremode.nmgui.InventoryHorseArmor;
 import net.minecraft.src.*;

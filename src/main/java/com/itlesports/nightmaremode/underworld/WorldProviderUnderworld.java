@@ -27,8 +27,7 @@ public class WorldProviderUnderworld extends WorldProvider {
 
     @Override
     public void registerWorldChunkManager() {
-        // Simple for now: use the base WorldChunkManager. Replace later with biome logic.
-        this.worldChunkMgr = new WorldChunkManager(worldObj.getSeed(),WorldType.DEFAULT);
+        this.worldChunkMgr = new WorldChunkManagerUnderworld(this.worldObj.getSeed(), WorldType.DEFAULT);
         this.dimensionId = NightmareMode.UNDERWORLD_DIMENSION;
         this.isHellWorld = false;
         this.hasNoSky = false;
@@ -39,11 +38,6 @@ public class WorldProviderUnderworld extends WorldProvider {
     public boolean canRespawnHere() {
         return false; // Forces returning via portal
     }
-
-//    @Override
-//    public boolean isSurfaceWorld() {
-//        return false; // Treat differently than overworld
-//    }
 
     public boolean isSurfaceWorld() {
         return true;
@@ -95,13 +89,12 @@ public class WorldProviderUnderworld extends WorldProvider {
 
     @Override
     public IChunkProvider createChunkGenerator() {
-//        return new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(),true);
         return new ChunkProviderGenerateUnderworld(this.worldObj, this.worldObj.getSeed());
     }
 
     @Override
     public double getVoidFogYFactor() {
-        return 0.02; // Thick void fog low to the ground
+        return 0.02;
     }
 
     @Override
@@ -111,7 +104,7 @@ public class WorldProviderUnderworld extends WorldProvider {
 
     @Override
     public boolean doesXZShowFog(int x, int z) {
-        return false; // Distant fog everywhere
+        return false;
     }
 
     public boolean canCoordinateBeSpawn(int par1, int par2) {
@@ -120,16 +113,10 @@ public class WorldProviderUnderworld extends WorldProvider {
     
     @Override
     public ChunkCoordinates getEntrancePortalLocation() {
-        // Send them either to the world spawn or a fixed “return portal” spot.
-
         ChunkCoordinates spawn = worldObj.getSpawnPoint();
-        int safeY = this.worldObj.getTopSolidOrLiquidBlock(spawn.posX,spawn.posY);
-
-        safeY += 1;
+        int safeY = this.worldObj.getPrecipitationHeight(spawn.posX,spawn.posZ);
 
         return new ChunkCoordinates(spawn.posX, safeY,spawn.posZ);
 
     }
-
-
 }

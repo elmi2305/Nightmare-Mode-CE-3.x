@@ -2,26 +2,27 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.item.BTWItems;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(BTWItems.class)
 public class BTWItemsMixin {
-    @ModifyConstant(method = "instantiateModItems", constant = @Constant(intValue = 10,ordinal = 0),remap = false)
-    private static int decreaseSteelWeightHelmet(int constant){
+    @ModifyArg(method = "instantiateModItems", at = @At(value = "INVOKE", target = "Lbtw/item/items/ArmorItemSteel;<init>(III)V", ordinal = 0), index = 2)
+    private static int steelHelmet(int w){
         return 1;
     }
-    @ModifyConstant(method = "instantiateModItems", constant = @Constant(intValue = 14,ordinal = 0),remap = false)
-    private static int decreaseSteelWeightChest(int constant){
+    @ModifyArg(method = "instantiateModItems", at = @At(value = "INVOKE", target = "Lbtw/item/items/ArmorItemSteel;<init>(III)V", ordinal = 1), index = 2)
+    private static int steelChest(int w){
         return 4;
     }
-    @ModifyConstant(method = "instantiateModItems", constant = @Constant(intValue = 12,ordinal = 0),remap = false)
-    private static int decreaseSteelWeightLegs(int constant){
+    @ModifyArg(method = "instantiateModItems", at = @At(value = "INVOKE", target = "Lbtw/item/items/ArmorItemSteel;<init>(III)V", ordinal = 2), index = 2)
+    private static int steelLegs(int w){
         return 3;
     }
-    @ModifyConstant(method = "instantiateModItems", constant = @Constant(intValue = 8,ordinal = 3),remap = false)
-    private static int decreaseSteelWeightBoots(int constant){
+    @ModifyArg(method = "instantiateModItems", at = @At(value = "INVOKE", target = "Lbtw/item/items/ArmorItemSteel;<init>(III)V", ordinal = 3), index = 2)
+    private static int steelBoots(int w){
         return 1;
     }
-    // total steel weight: 44 -> 9 (the player can swim and suffers little hunger penalty)
 }

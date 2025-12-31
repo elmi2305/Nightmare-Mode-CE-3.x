@@ -1,11 +1,11 @@
 package com.itlesports.nightmaremode.underworld;
 
-import com.itlesports.nightmaremode.item.NMItems;
+import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -53,7 +53,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     public void generateTerrain(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata) {
         int noiseScaleXZ = 4;
         int noiseScaleY = 16;
-        int seaLevel = 80;
+        int seaLevel = 20;
         int noiseSizeX = noiseScaleXZ + 1; // 5
         int noiseSizeY = 17;
         int noiseSizeZ = noiseScaleXZ + 1; // 5
@@ -98,6 +98,9 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                             for (int subZ = 0; subZ < 4; ++subZ) {
                                 if ((noiseZValue += noiseZStep) > 0.0D) {
                                     blockIDs[blockIndex += blockStride] = (byte)Block.stone.blockID;
+                                    // edit
+//                                    blockIDs[blockIndex += blockStride] = (short) NMBlocks.underCobble.blockID;
+                                    // edit
                                 }
 //                                else if (noiseY * 8 + subY < seaLevel) {
 //                                    blockIDs[blockIndex += blockStride] = (byte)Block.waterStill.blockID;
@@ -122,11 +125,13 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     public void replaceBlocksForBiome(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata, BiomeGenBase[] biomes) {
-        int seaLevel = 80;  // Sync with generateTerrain
+        int seaLevel = 20;
         double stoneNoiseScale = 0.03125;
         this.stoneNoise = this.noiseGen4.generateNoiseOctaves(this.stoneNoise, chunkX * 16, chunkZ * 16, 0, 16, 16, 1, stoneNoiseScale * 2.0, stoneNoiseScale * 2.0, stoneNoiseScale * 2.0);
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
+
+
                 BiomeGenBase biome = biomes[localZ + localX * 16];
                 float biomeTemperature = biome.getFloatTemperature();
                 int surfaceDepth = (int)(this.stoneNoise[localX + localZ * 16] / 3.0 + 3.0 + this.rand.nextDouble() * 0.25);
@@ -135,6 +140,17 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                 byte topBlockMetadata = biome.topBlockMetadata;
                 short fillerBlock = biome.fillerBlock;
                 byte fillerBlockMetadata = biome.fillerBlockMetadata;
+
+                if (biome instanceof BiomeGenHighlands) { // Replace with your actual biome instance
+                    fillerBlock = (short) NMBlocks.underCobble.blockID; // Your special filler
+                }
+//                else if (biome == YourModBiome.flowerFields) {
+//                    fillerBlock = (short) Block.dirt.blockID; // Example: keep dirt under grass
+//                }
+//                else if (biome == YourModBiome.someOtherCustomBiome) {
+//                    fillerBlock = (short) YourModBlocks.deepslate.blockID;
+//                }
+
                 for (int y = 127; y >= 0; --y) {
                     int blockIndex = (localZ * 16 + localX) * 128 + y;
                     if (y <= 0 + this.rand.nextInt(5)) {
@@ -147,9 +163,15 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         continue;
                     }
                     if (currentBlock != Block.stone.blockID) continue;
+                    // edit
+//                    if (currentBlock != NMBlocks.underCobble.blockID) continue;
+                    // edit
                     if (remainingDepth == -1) {
                         if (surfaceDepth <= 0) {
                             topBlock = 0;
+                            // edit
+//                            fillerBlock = (short)NMBlocks.underCobble.blockID;
+                            // edit
                             fillerBlock = (short)Block.stone.blockID;
                         }
                         else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
@@ -247,6 +269,9 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         double var44 = 684.412;
         double var45 = 684.412;
 
+
+        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(par2x * 4, par4z * 4);
+//        System.out.println("biome: "+ biome + " at " +"x"+(par2x * 4) + ", z" +(par4z * 4));
         // edit
         var44 *= 0.7d; // xz
         var45 *= 1.5d; // y
@@ -266,17 +291,16 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
                 int var19 = 2;
                 BiomeGenBase var20 = this.biomesForGeneration[var14 + 2 + (var15 + 2) * (par5 + 5)];
+
                 for (int var21 = -var19; var21 <= var19; ++var21) {
                     for (int var22 = -var19; var22 <= var19; ++var22) {
                         BiomeGenBase var23 = this.biomesForGeneration[var14 + var21 + 2 + (var15 + var22 + 2) * (par5 + 5)];
                         float minH = var23.minHeight;
                         float maxH = var23.maxHeight;
-                        if (minH > 0.0F) {
-                            minH = 1.0F + minH * 3.0F;
-                            maxH = 1.0F + maxH * 2.0F;
-
-//                            minH = Math.max(minH, 0.2f);
-                        }
+//                        if (minH > 0.0F) {
+//                            minH = 1.0F + minH * 3.0F;
+//                            maxH = 1.0F + maxH * 2.0F;
+//                        }
                         float var24 = this.parabolicField[var21 + 2 + (var22 + 2) * 5] / (minH + 2.0F);
                         if (var23.minHeight > var20.minHeight) {
                             var24 /= 2.0F;
@@ -460,7 +484,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     private void btwPostProcessChunk(World worldObj, int iChunkX, int iChunkZ) {
-        if (worldObj.provider.dimensionId == 0) {
+        if (worldObj.provider.dimensionId == 0 || worldObj.provider.dimensionId == NightmareMode.UNDERWORLD_DIMENSION) {
             this.generateStrata(worldObj, iChunkX, iChunkZ);
             this.generateAdditionalBrownMushrooms(worldObj, iChunkX, iChunkZ);
         }
@@ -496,6 +520,17 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     }
                     ++iTempJ;
                 }
+
+                // simply makes every block understone above y48
+                iStrataHeight = 128;
+                while (iTempJ <= iStrataHeight) {
+                    iTempBlockID = chunk.getBlockID(iTempI, iTempJ, iTempK);
+                    if (iTempBlockID == Block.stone.blockID) {
+                        chunk.setBlockIDWithMetadata(iTempI, iTempJ, iTempK, NMBlocks.underCobble.blockID, 0);
+                    }
+                    ++iTempJ;
+                }
+
             }
         }
     }

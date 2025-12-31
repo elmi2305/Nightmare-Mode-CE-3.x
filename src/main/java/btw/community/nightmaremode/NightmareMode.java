@@ -19,7 +19,9 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
-import com.typesafe.config.ConfigValueFactory;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -143,6 +145,10 @@ public class NightmareMode extends BTWAddon {
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
+
+        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
+        BiomeGenBase.biomeList[25] = new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
+        BiomeGenBase.biomeList[26] = new BiomeGenFlowerFields(26).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
     }
 
     @Environment(EnvType.SERVER)

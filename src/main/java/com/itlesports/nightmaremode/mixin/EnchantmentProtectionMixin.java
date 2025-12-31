@@ -28,7 +28,6 @@ public class EnchantmentProtectionMixin {
         if(entity instanceof EntityLivingBase e && (chain = getChainArmorWornCount(e)) != 0){
             double multiplier = 0.15f * (Math.log(chain * chain + 1) * 1.5d); // I love adding unnecessary complexity to random formulas. I promise it actually works really well
             i -= MathHelper.floor_float((float) ((float)i * multiplier));
-//            System.out.println(chain + " | " + multiplier + " | " + i);
             cir.setReturnValue(i);
         }
     }

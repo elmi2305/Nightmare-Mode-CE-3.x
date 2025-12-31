@@ -32,3 +32,18 @@ accessible class net/minecraft/src/ComponentScatteredFeature
 accessible field api/block/beacon/BeaconEffectLocation effectID Ljava/lang/String;
 accessible field api/config/AddonConfig currentConfig Lcom/typesafe/config/Config;
 accessible class api/config/ConfigElementValidator
+accessible method net/minecraft/src/BiomeGenBase setColor (I)Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase setBiomeName (Ljava/lang/String;)Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase setMinMaxHeight (FF)Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase func_76733_a (I)Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase setTemperatureRainfall (FF)Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase setDisableRain ()Lnet/minecraft/src/BiomeGenBase;
+accessible method net/minecraft/src/BiomeGenBase setEnableSnow ()Lnet/minecraft/src/BiomeGenBase;
+accessible field net/minecraft/src/BiomeDecorator grassPerChunk I
+accessible field net/minecraft/src/BiomeDecorator flowersPerChunk I
+accessible field net/minecraft/src/BiomeDecorator treesPerChunk I
+accessible field net/minecraft/src/BiomeDecorator deadBushPerChunk I
+accessible field net/minecraft/src/BiomeDecorator reedsPerChunk I
+accessible field net/minecraft/src/BiomeDecorator cactiPerChunk I
+accessible method net/minecraft/src/ChatMessageComponent getText ()Ljava/lang/String;
+accessible field net/minecraft/src/ChatMessageComponent field_111091_i Ljava/util/List;

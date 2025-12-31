@@ -4,7 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.client.NightmareKeyBindings;
 import com.itlesports.nightmaremode.client.ZoomStateAccessor;
-import com.itlesports.nightmaremode.mixin.EntityAccessor;
+import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

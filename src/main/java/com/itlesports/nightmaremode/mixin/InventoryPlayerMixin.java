@@ -40,7 +40,6 @@ public class InventoryPlayerMixin {
         }
 
 
-        // TODO remove this debug
 //        thisObj.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
 
     }

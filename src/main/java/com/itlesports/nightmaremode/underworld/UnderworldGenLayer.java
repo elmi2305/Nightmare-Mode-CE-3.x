@@ -3,6 +3,7 @@
  */
 package com.itlesports.nightmaremode.underworld;
 
+import com.itlesports.nightmaremode.underworld.biomes.UnderworldGenLayerBiomes;
 import net.minecraft.src.*;
 
 public abstract class UnderworldGenLayer {
@@ -10,51 +11,50 @@ public abstract class UnderworldGenLayer {
     protected GenLayer parent;
     private long chunkSeed;
     private long baseSeed;
-
-    public static GenLayer[] initializeAllBiomeGenerators(long l, WorldType worldType) {
-        GenLayer genLayer = new GenLayerIsland(1L);
-        genLayer = new GenLayerFuzzyZoom(2000L, genLayer);
-        genLayer = new GenLayerAddIsland(1L, genLayer);
-        genLayer = new GenLayerZoom(2001L, genLayer);
-        genLayer = new GenLayerAddIsland(2L, genLayer);
-        genLayer = new GenLayerAddSnow(2L, genLayer);
-        genLayer = new GenLayerZoom(2002L, genLayer);
-        genLayer = new GenLayerAddIsland(3L, genLayer);
-        genLayer = new GenLayerZoom(2003L, genLayer);
-        genLayer = new GenLayerAddIsland(4L, genLayer);
-        genLayer = new GenLayerAddMushroomIsland(5L, genLayer);
-        int n = 4;
+    public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType worldType) {
+        GenLayerIsland var1 = new GenLayerIsland(1L);
+        GenLayerFuzzyZoom var9 = new GenLayerFuzzyZoom(2000L, var1);
+        GenLayerAddIsland var10 = new GenLayerAddIsland(1L, var9);
+        GenLayerZoom var11 = new GenLayerZoom(2001L, var10);
+        var10 = new GenLayerAddIsland(2L, var11);
+        GenLayerAddSnow var12 = new GenLayerAddSnow(2L, var10);
+        var11 = new GenLayerZoom(2002L, var12);
+        var10 = new GenLayerAddIsland(3L, var11);
+        var11 = new GenLayerZoom(2003L, var10);
+        var10 = new GenLayerAddIsland(4L, var11);
+        GenLayerAddMushroomIsland var15 = new GenLayerAddMushroomIsland(5L, var10);
+        GenLayer var17 = GenLayerZoom.magnify(1000L, var15, 0);
+        byte var4 = 4;
         if (worldType == WorldType.LARGE_BIOMES) {
-            n = 6;
+            var4 = 6;
         }
-        GenLayer genLayer2 = genLayer;
-        genLayer2 = GenLayerZoom.magnify(1000L, genLayer2, 0);
-        genLayer2 = new GenLayerRiverInit(100L, genLayer2);
-        genLayer2 = GenLayerZoom.magnify(1000L, genLayer2, n + 2);
-        genLayer2 = new GenLayerRiver(1L, genLayer2);
-        genLayer2 = new GenLayerSmooth(1000L, genLayer2);
-        GenLayer genLayer3 = genLayer;
-        genLayer3 = GenLayerZoom.magnify(1000L, genLayer3, 0);
-        genLayer3 = new GenLayerBiome(200L, genLayer3, worldType);
-        genLayer3 = GenLayerZoom.magnify(1000L, genLayer3, 2);
-        genLayer3 = new GenLayerHills(1000L, genLayer3);
-        for (int i = 0; i < n; ++i) {
-            genLayer3 = new GenLayerZoom(1000 + i, genLayer3);
-            if (i == 0) {
-                genLayer3 = new GenLayerAddIsland(3L, genLayer3);
+        GenLayer var5 = GenLayerZoom.magnify(1000L, var17, 0);
+//        GenLayerRiverInit var19 = new GenLayerRiverInit(100L, var5);
+        var5 = GenLayerZoom.magnify(1000L, var5, var4 + 2);
+//        GenLayerRiver var20 = new GenLayerRiver(1L, var5);
+        GenLayerSmooth var21 = new GenLayerSmooth(1000L, var5);
+        GenLayer var6 = GenLayerZoom.magnify(1000L, var17, 0);
+        GenLayerBiome var23 = new UnderworldGenLayerBiomes(200L, var6, worldType); // Use your custom biome layer here
+        var6 = GenLayerZoom.magnify(1000L, var23, 2);
+        Object var22 = new GenLayerHills(1000L, var6);
+        for (int var7 = 0; var7 < var4; ++var7) {
+            var22 = new GenLayerZoom(1000L + (long)var7, (GenLayer)var22);
+            if (var7 == 0) {
+                var22 = new GenLayerAddIsland(3L, (GenLayer)var22);
             }
-            if (i == 1) {
-                genLayer3 = new GenLayerShore(1000L, genLayer3);
+            if (var7 == 1) {
+                var22 = new GenLayerShore(1000L, (GenLayer)var22);
             }
-            if (i != 1) continue;
-            genLayer3 = new GenLayerSwampRivers(1000L, genLayer3);
+            if (var7 == 1) {
+                var22 = new GenLayerSwampRivers(1000L, (GenLayer)var22);
+            }
         }
-        genLayer3 = new GenLayerSmooth(1000L, genLayer3);
-        GenLayer genLayer4 = genLayer3 = new GenLayerRiverMix(100L, genLayer3, genLayer2);
-        GenLayerVoronoiZoom genLayerVoronoiZoom = new GenLayerVoronoiZoom(10L, genLayer3);
-        genLayer3.initWorldGenSeed(l);
-        genLayerVoronoiZoom.initWorldGenSeed(l);
-        return new GenLayer[]{genLayer3, genLayerVoronoiZoom, genLayer4};
+        GenLayerSmooth var24 = new GenLayerSmooth(1000L, (GenLayer)var22);
+//        GenLayerRiverMix var25 = new GenLayerRiverMix(100L, var24, var21);
+        GenLayerVoronoiZoom var8 = new GenLayerVoronoiZoom(10L, var24);
+        var24.initWorldGenSeed(seed);
+        var8.initWorldGenSeed(seed);
+        return new GenLayer[]{var24, var8, var24};
     }
 
     public UnderworldGenLayer(long l) {

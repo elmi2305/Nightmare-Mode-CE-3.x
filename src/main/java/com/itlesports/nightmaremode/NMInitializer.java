@@ -24,7 +24,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.items.NMPostItems;
 import com.itlesports.nightmaremode.mixin.AchievementAccessor;
-import com.itlesports.nightmaremode.mixin.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -971,6 +971,11 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.emeraldPile, 4), new ItemStack[]{new ItemStack(Item.emerald, 1), new ItemStack(BTWItems.soulSandPile, 8)});
         // diamond pile
+
+        // glass
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Block.glass, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.glass, 16), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
+        // glass
     }
     private static void addCauldronRecipes(){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});

@@ -5,7 +5,7 @@ import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.ObsidianItemBlock;
+import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

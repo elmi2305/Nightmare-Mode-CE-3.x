@@ -6,11 +6,9 @@ import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.item.ItemVillagerContainer;
-import com.itlesports.nightmaremode.item.NMItemBlock;
-import net.minecraft.src.Block;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.Item;
-import net.minecraft.src.TileEntity;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
+import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
+import net.minecraft.src.*;
 
 public class NMBlocks {
     public static Block steelOre;
@@ -32,6 +30,16 @@ public class NMBlocks {
     public static BlockBloodSaw bloodSaw;
     public static BlockVillagerBase villagerBlock;
 
+    public static Block underrock;
+    public static Block understoneSmooth;
+    public static Block underCobble;
+    public static BlockUnderGrass underGrass;
+    public static BlockMultiTextured underDirt;
+    public static BlockMultiTextured flowerGrass;
+    public static BlockMultiTextured flowerDirt;
+
+    public static Block yellowFlowerRoots;
+    public static Block plantMatter;
 
     public static void initNightmareBlocks(){
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare_mode:steel_ore");
@@ -91,6 +99,32 @@ public class NMBlocks {
         TileEntity.addMapping(TileEntityVillagerContainer.class, "VillagerContainer");
 
 
+        underrock = new NMBlock(2321, Material.rock).setTextureName("nmUnderworldRock").setUnlocalizedName("nmUnderworldRock").setCreativeTab(CreativeTabs.tabBlock).setHardness(50f).setResistance(300f);
+        Item.itemsList[underrock.blockID] = new NMItemBlock(NMBlocks.underrock.blockID - 256);
+
+        understoneSmooth = new NMBlock(2322, Material.rock).setTextureName("nmUnderworldRockSmooth").setUnlocalizedName("nmUnderworldRockSmooth").setCreativeTab(CreativeTabs.tabBlock).setHardness(20f).setResistance(10f);
+        Item.itemsList[understoneSmooth.blockID] = new NMItemBlock(NMBlocks.understoneSmooth.blockID - 256);
+
+        underCobble = new NMBlock(2323, Material.rock).setTextureName("nmUnderworldRockCobble").setUnlocalizedName("nmUnderworldRockCobble").setCreativeTab(CreativeTabs.tabBlock).setHardness(10f).setResistance(5f);
+        Item.itemsList[underCobble.blockID] = new NMItemBlock(NMBlocks.underCobble.blockID - 256);
+
+        underGrass = new BlockUnderGrass(2324, Material.grass);
+        Item.itemsList[underGrass.blockID] = new NMItemBlock(NMBlocks.underGrass.blockID - 256);
+
+        underDirt = (BlockMultiTextured) new BlockMultiTextured(2325, Material.grass, "blight_level_4_roots").setUnlocalizedName("nmUnderDirt");
+        Item.itemsList[underDirt.blockID] = new NMItemBlock(NMBlocks.underDirt.blockID - 256);
+
+        flowerGrass = ((BlockMultiTextured) new BlockMultiTextured(2326, Material.grass, "nmFlowerGrassTop", "nmFlowerDirt", "nmFlowerGrassSide").setUnlocalizedName("nmFlowerGrass")).setGrowsVegetation(true);
+        Item.itemsList[flowerGrass.blockID] = new NMItemBlock(NMBlocks.flowerGrass.blockID - 256);
+
+        flowerDirt = ((BlockMultiTextured) new BlockMultiTextured(2327, Material.grass, "nmFlowerDirt").setUnlocalizedName("nmFlowerDirt")).setGrowsVegetation(true);
+        Item.itemsList[flowerDirt.blockID] = new NMItemBlock(NMBlocks.flowerDirt.blockID - 256);
+
+        yellowFlowerRoots = new BlockTallFlower(2328);
+        Item.itemsList[yellowFlowerRoots.blockID] = new ItemBlockTallFlower(NMBlocks.yellowFlowerRoots.blockID - 256);
+
+        plantMatter = new NMBlock(2329, Material.plants).setTextureName("nmPlantMatter").setUnlocalizedName("nmPlantMatter").setCreativeTab(CreativeTabs.tabBlock);
+        Item.itemsList[plantMatter.blockID] = new NMItemBlock(NMBlocks.plantMatter.blockID - 256);
 
     }
 }

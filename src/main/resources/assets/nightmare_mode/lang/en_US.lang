@@ -64,6 +64,11 @@ tile.nmCrudeObsidian.name=Crude Obsidian
 tile.nmAsphaltLayer.name=Asphalt Layer
 tile.nmBloodSawBlock.name=Blood Saw
 tile.nmVillagerBlock.name=Villager Vessel
+tile.nmUnderworldRock.name=Underrock
+tile.nmUnderworldRockSmooth.name=Understone
+tile.nmUnderworldRockCobble.name=Undercobble
+tile.nmUnderGrass.name=Undergrass
+tile.nmUnderDirt.name=Underdirt
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory

@@ -6,7 +6,7 @@ import api.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.mixin.EntitySlimeAccessor;
+import com.itlesports.nightmaremode.mixin.entity.EntitySlimeAccessor;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;

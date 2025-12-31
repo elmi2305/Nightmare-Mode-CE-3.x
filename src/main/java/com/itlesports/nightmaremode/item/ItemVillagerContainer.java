@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item;
 
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import net.minecraft.src.*;
 
 import java.util.List;
