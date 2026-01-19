@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.*;
@@ -122,8 +121,7 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         // 7) Navigator broken → fallback + probe
         if (!this.lastNavSuccess) {
             applyFallbackMotion(dx, dz);
-            boolean success = this.taskOwner.getNavigator()
-                    .tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
+            boolean success = this.taskOwner.getNavigator().tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
             this.lastNavSuccess = success;
             scheduleBrokenProbe();
             return;

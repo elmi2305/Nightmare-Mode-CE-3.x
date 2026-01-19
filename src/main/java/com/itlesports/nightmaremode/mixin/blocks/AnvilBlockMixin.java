@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import api.world.WorldUtils;
 import btw.block.blocks.AnvilBlock;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

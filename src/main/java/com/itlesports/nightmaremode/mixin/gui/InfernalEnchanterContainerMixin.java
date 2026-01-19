@@ -2,12 +2,12 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.inventory.container.InfernalEnchanterContainer;
 import com.itlesports.nightmaremode.item.items.bloodItems.IBloodTool;
-import net.minecraft.src.IInventory;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InfernalEnchanterContainer.class)
 public class InfernalEnchanterContainerMixin {
@@ -57,4 +57,25 @@ public class InfernalEnchanterContainerMixin {
         // this injection just overwrites the established values earlier in the method
         // I'm not about to do 20 modifyConstants for every value
     }
+
+    @Inject(method = "doesEnchantmentConflictWithExistingOnes", at = @At("HEAD"), cancellable = true)
+    private void disallowStackingProtectionTypes(int iEnchantmentIndex, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir){
+        NBTTagList enchantmentTagList = itemStack.getEnchantmentTagList();
+        if (enchantmentTagList != null) {
+            if(getProtectionModifier(itemStack) > 0 && Enchantment.enchantmentsList[iEnchantmentIndex] instanceof EnchantmentProtection){
+                cir.setReturnValue(true     );
+            }
+
+        }
+    }
+
+    private static int getProtectionModifier(ItemStack stack) {
+        return
+                EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack)
+                +  EnchantmentHelper.getEnchantmentLevel(Enchantment.blastProtection.effectId, stack)
+                +  EnchantmentHelper.getEnchantmentLevel(Enchantment.projectileProtection.effectId, stack)
+                +  EnchantmentHelper.getEnchantmentLevel(Enchantment.fireProtection.effectId, stack)
+                ;
+    }
+
 }

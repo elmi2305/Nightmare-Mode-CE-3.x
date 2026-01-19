@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.achievements;
 
-import btw.achievement.event.AchievementEventDispatcher;
-import btw.achievement.event.BTWAchievementEvents;
+import api.achievement.AchievementEventDispatcher;
+import api.achievement.AchievementEvents;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayer;
@@ -88,7 +88,7 @@ public class NMAchievementEvents {
             super();
         }
     }
-    public static class NightmareMerchantEvent extends AchievementEventDispatcher.AchievementEvent<BTWAchievementEvents.None> {
+    public static class NightmareMerchantEvent extends AchievementEventDispatcher.AchievementEvent<AchievementEvents.None> {
 
         public NightmareMerchantEvent() {
             super();
@@ -117,7 +117,7 @@ public class NMAchievementEvents {
         // unused
     }
 
-    public static class LustEvent extends AchievementEventDispatcher.AchievementEvent<BTWAchievementEvents.None> {
+    public static class LustEvent extends AchievementEventDispatcher.AchievementEvent<AchievementEvents.None> {
         public LustEvent() {
             super();
         }
@@ -130,6 +130,11 @@ public class NMAchievementEvents {
     }
     public static class ArmorLessEvent extends AchievementEventDispatcher.AchievementEvent<Integer> {
         public ArmorLessEvent() {
+            super();
+        }
+    }
+    public static class SkybaseScoreEvent extends AchievementEventDispatcher.AchievementEvent<AchievementEvents.None> {
+        public SkybaseScoreEvent() {
             super();
         }
     }

@@ -1,14 +1,16 @@
 package btw.community.nightmaremode;
 
-import btw.AddonHandler;
-import btw.BTWAddon;
+import api.AddonHandler;
+import api.BTWAddon;
+import api.config.AddonConfig;
+import api.world.BiomeDecoratorBase;
+import api.world.data.DataEntry;
+import api.world.data.DataProvider;
 import btw.block.BTWBlocks;
-import btw.world.biome.BiomeDecoratorBase;
-import btw.world.util.data.DataEntry;
-import btw.world.util.data.DataProvider;
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import com.itlesports.nightmaremode.AddonConfigExtender;
 import com.itlesports.nightmaremode.NMInitializer;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.tpa.TPACommand;
@@ -17,6 +19,9 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +29,6 @@ import net.minecraft.src.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.List;
 
 public class NightmareMode extends BTWAddon {
     public static int SKELETON_ICE = 2;
@@ -56,56 +60,14 @@ public class NightmareMode extends BTWAddon {
 
 
     public boolean wasConfigModified;
-    public void modifyConfigProperty(String propertyName, String newValue) {
-        String filename = "config/" + this.modID + ".properties";
-        File config = new File(filename);
+    public void modifyConfigProperty(String propertyName, boolean newValue, AddonConfig config) {
 
-        // Ensure the file exists before modifying
-        if (!config.exists()) {
-            System.out.println("Config file does not exist. Creating a new one.");
-            try {
-                config.getParentFile().mkdirs(); // Ensure config directory exists
-                config.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        List<String> lines = new ArrayList<>();
-        boolean propertyFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(config))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith(propertyName + "=")) {
-                    lines.add(propertyName + "=" + newValue);
-                    propertyFound = true;
-                } else {
-                    lines.add(line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // if the property wasn't found, add it at the end
-        if (!propertyFound) {
-            lines.add(propertyName + "=" + newValue);
-        }
-
-        // Write back the modified config file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(config, false))) {
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ((AddonConfigExtender)(Object)config).nightmareMode$modifyProperty(propertyName,newValue);
         wasConfigModified = true;
     }
+
+
+
 
     @Override
     public String getModID() {
@@ -137,7 +99,7 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static int getCurrentStackSize(World world) {
-        return NightmareMode.getInstance().shouldStackSizesIncrease ? 32 : 16;
+        return world.getData(NightmareMode.DRAGON_DEFEATED) ? 32 : 16;
     }
     public static void syncItemStackSizesToProgress(World world) {
         int size = getCurrentStackSize(world);
@@ -164,7 +126,7 @@ public class NightmareMode extends BTWAddon {
         NMBlocks.initNightmareBlocks();
         NMInitializer.initNightmareRecipes();
 
-
+        NMTags.initTags();
         NMInitializer.miscInit();
         NMAchievements.initialize();
         NMInitializer.manipulateAchievements();
@@ -183,6 +145,10 @@ public class NightmareMode extends BTWAddon {
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
+
+        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
+        BiomeGenBase.biomeList[25] = new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
+        BiomeGenBase.biomeList[26] = new BiomeGenFlowerFields(26).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
     }
 
     @Environment(EnvType.SERVER)
@@ -483,8 +449,6 @@ public class NightmareMode extends BTWAddon {
     public static Boolean bloodMoonHelper;
 
     public boolean canAccessMenu = true;
-    public long portalTime = 0;
-    public boolean shouldStackSizesIncrease;
 
     public static final DataEntry.WorldDataEntry<Long> PORTAL_TIME =
         DataProvider.getBuilder(Long.class)
@@ -492,7 +456,7 @@ public class NightmareMode extends BTWAddon {
                 .defaultSupplier(() -> 0L)
                 .readNBT(nbt -> nbt.getLong("PortalTime"))
                 .writeNBT((nbt, v) -> nbt.setLong("PortalTime", v))
-                .global()  // attaches GlobalDataComponent
+                .global()
                 .build();
 
     public static final DataEntry.WorldDataEntry<Boolean> DRAGON_DEFEATED =
@@ -504,43 +468,16 @@ public class NightmareMode extends BTWAddon {
                     .global()
                     .build();
 
+    public static final DataEntry.PlayerDataEntry<Long> GOLDEN_APPLE_COOLDOWN =
+            DataProvider.getBuilder(Long.class)
+                    .name("AppleCooldown")
+                    .defaultSupplier(() -> 0L)
+                    .readNBT(nbt -> nbt.getLong("AppleCooldown"))
+                    .writeNBT((nbt, v) -> nbt.setLong("AppleCooldown", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
 
-
-
-    @Override
-    public void preInitialize() {
-        this.registerProperty("NmMinecraftDayTimer", "True");
-        this.registerProperty("NmTimer", "True");
-        this.registerProperty("BloodmoonColors", "True");
-        this.registerProperty("Crimson", "False");
-        this.registerProperty("ConfigOnHUD", "True");
-        this.registerProperty("PotionParticles", "True");
-        this.registerProperty("FishingAnnouncements", "True");
-        this.registerProperty("PerfectStart", "False");
-        this.registerProperty("Bloodmare", "False");
-        this.registerProperty("BuffedSquids", "False");
-        this.registerProperty("EvolvedMobs", "False");
-        this.registerProperty("MagicMonsters", "False");
-        this.registerProperty("NoHit", "False");
-        this.registerProperty("TotalEclipse", "False");
-        this.registerProperty("NITE", "False");
-        this.registerProperty("NoSkybases", "False");
-        this.registerProperty("UnkillableMobs", "False");
-        this.registerProperty("MoreVariants", "False");
-        this.registerProperty("AprilFoolsPatch", "False");
-        this.registerProperty("AprilFoolsWarpedRendering", "True");
-        this.registerProperty("ExtraArmor", "False");
-        this.registerProperty("DarkStormyNightmare", "False");
-        this.registerProperty("HordeMode", "False");
-        this.registerProperty("BirthdayBash", "False");
-        this.registerProperty("FullBright", "False");
-        this.registerProperty("FastVillagers", "False");
-        this.registerProperty("BloodMoonHelper", "False");
-
-
-        PORTAL_TIME.register();
-        DRAGON_DEFEATED.register();
-    }
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;
     }
@@ -548,36 +485,81 @@ public class NightmareMode extends BTWAddon {
         return this.canAccessMenu;
     }
 
+
     @Override
-    public void handleConfigProperties(Map<String, String> propertyValues) {
-        shouldShowDateTimer = Boolean.parseBoolean(propertyValues.get("NmMinecraftDayTimer"));
-        shouldShowRealTimer = Boolean.parseBoolean(propertyValues.get("NmTimer"));
-        perfectStart = Boolean.parseBoolean(propertyValues.get("PerfectStart"));
-        shouldDisplayFishingAnnouncements = Boolean.parseBoolean(propertyValues.get("FishingAnnouncements"));
-        bloodmoonColors = Boolean.parseBoolean(propertyValues.get("BloodmoonColors"));
-        potionParticles = Boolean.parseBoolean(propertyValues.get("PotionParticles"));
-        crimson = Boolean.parseBoolean(propertyValues.get("RedSeaOfDeath"));
-        configOnHud = Boolean.parseBoolean(propertyValues.get("ConfigOnHUD"));
-        bloodmare = Boolean.parseBoolean(propertyValues.get("Bloodmare"));
-        buffedSquids = Boolean.parseBoolean(propertyValues.get("BuffedSquids"));
-        evolvedMobs = Boolean.parseBoolean(propertyValues.get("EvolvedMobs"));
-        magicMonsters = Boolean.parseBoolean(propertyValues.get("MagicMonsters"));
-        noHit = Boolean.parseBoolean(propertyValues.get("NoHit"));
-        totalEclipse = Boolean.parseBoolean(propertyValues.get("TotalEclipse"));
-        nite = Boolean.parseBoolean(propertyValues.get("NITE"));
-        noSkybases = Boolean.parseBoolean(propertyValues.get("NoSkybases"));
-        unkillableMobs = Boolean.parseBoolean(propertyValues.get("UnkillableMobs"));
-        moreVariants = Boolean.parseBoolean(propertyValues.get("MoreVariants"));
-        extraArmor = Boolean.parseBoolean(propertyValues.get("ExtraArmor"));
-        isAprilFools = Boolean.parseBoolean(propertyValues.get("AprilFoolsPatch"));
-        aprilFoolsRendering = Boolean.parseBoolean(propertyValues.get("AprilFoolsWarpedRendering"));
-        darkStormyNightmare = Boolean.parseBoolean(propertyValues.get("DarkStormyNightmare"));
-        hordeMode = Boolean.parseBoolean(propertyValues.get("HordeMode"));
-        birthdayBash = Boolean.parseBoolean(propertyValues.get("BirthdayBash"));
-        fullBright = Boolean.parseBoolean(propertyValues.get("FullBright"));
-        fastVillagers = Boolean.parseBoolean(propertyValues.get("FastVillagers"));
-        bloodMoonHelper = Boolean.parseBoolean(propertyValues.get("BloodMoonHelper"));
+    public void preInitialize() {
+        PORTAL_TIME.register();
+        DRAGON_DEFEATED.register();
+        GOLDEN_APPLE_COOLDOWN.register();
     }
+
+    @Override
+    public void registerConfigProperties(AddonConfig config) {
+        super.registerConfigProperties(config);
+        config.registerBoolean("NmMinecraftDayTimer", true);
+        config.registerBoolean("NmTimer", true);
+        config.registerBoolean("BloodmoonColors", true);
+        config.registerBoolean("Crimson", false);
+        config.registerBoolean("ConfigOnHUD", true);
+        config.registerBoolean("PotionParticles", true);
+        config.registerBoolean("FishingAnnouncements", true);
+        config.registerBoolean("PerfectStart", false);
+        config.registerBoolean("Bloodmare", false);
+        config.registerBoolean("BuffedSquids", false);
+        config.registerBoolean("EvolvedMobs", false);
+        config.registerBoolean("MagicMonsters", false);
+        config.registerBoolean("NoHit", false);
+        config.registerBoolean("TotalEclipse", false);
+        config.registerBoolean("NITE", false);
+        config.registerBoolean("NoSkybases", false);
+        config.registerBoolean("UnkillableMobs", false);
+        config.registerBoolean("MoreVariants", false);
+        config.registerBoolean("AprilFoolsPatch", false);
+        config.registerBoolean("AprilFoolsWarpedRendering", true);
+        config.registerBoolean("ExtraArmor", false);
+        config.registerBoolean("DarkStormyNightmare", false);
+        config.registerBoolean("HordeMode", false);
+        config.registerBoolean("BirthdayBash", false);
+        config.registerBoolean("FullBright", false);
+        config.registerBoolean("FastVillagers", false);
+        config.registerBoolean("BloodMoonHelper", false);
+        getInstance().addonConfig = config;
+    }
+
+    @Override
+    public void handleConfigProperties(AddonConfig config) {
+        super.handleConfigProperties(config);
+
+        shouldShowDateTimer = config.getBoolean("NmMinecraftDayTimer");
+        shouldShowRealTimer = config.getBoolean("NmTimer");
+        perfectStart = config.getBoolean("PerfectStart");
+        shouldDisplayFishingAnnouncements = config.getBoolean("FishingAnnouncements");
+        bloodmoonColors = config.getBoolean("BloodmoonColors");
+        potionParticles = config.getBoolean("PotionParticles");
+        crimson = config.getBoolean("Crimson");
+        configOnHud = config.getBoolean("ConfigOnHUD");
+        bloodmare = config.getBoolean("Bloodmare");
+        buffedSquids = config.getBoolean("BuffedSquids");
+        evolvedMobs = config.getBoolean("EvolvedMobs");
+        magicMonsters = config.getBoolean("MagicMonsters");
+        noHit = config.getBoolean("NoHit");
+        totalEclipse = config.getBoolean("TotalEclipse");
+        nite = config.getBoolean("NITE");
+        noSkybases = config.getBoolean("NoSkybases");
+        unkillableMobs = config.getBoolean("UnkillableMobs");
+        moreVariants = config.getBoolean("MoreVariants");
+        extraArmor = config.getBoolean("ExtraArmor");
+        isAprilFools = config.getBoolean("AprilFoolsPatch");
+        aprilFoolsRendering = config.getBoolean("AprilFoolsWarpedRendering");
+        darkStormyNightmare = config.getBoolean("DarkStormyNightmare");
+//        hordeMode = config.getBoolean("HordeMode");
+        hordeMode = false;
+        birthdayBash = config.getBoolean("BirthdayBash");
+        fullBright = config.getBoolean("FullBright");
+        fastVillagers = config.getBoolean("FastVillagers");
+        bloodMoonHelper = config.getBoolean("BloodMoonHelper");
+    }
+
 
     @Override
     public void decorateWorld(BiomeDecoratorBase decorator, World world, Random rand, int x, int z, BiomeGenBase biome) {

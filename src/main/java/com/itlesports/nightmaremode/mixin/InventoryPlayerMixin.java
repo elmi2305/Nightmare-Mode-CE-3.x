@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
@@ -23,6 +25,8 @@ public class InventoryPlayerMixin {
             thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
             thisObj.addItemStackToInventory(new ItemStack(Item.axeStone));
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
+            thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.looseDirtSlab, 16));
+            thisObj.addItemStackToInventory(new ItemStack(BTWItems.stone, 8));
         }
         if(NightmareMode.isAprilFools){
             thisObj.addItemStackToInventory(new ItemStack(NMItems.creeperBallSoup));
@@ -34,5 +38,9 @@ public class InventoryPlayerMixin {
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolChest));
             thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolHelmet));
         }
+
+
+//        thisObj.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
+
     }
 }

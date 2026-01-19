@@ -17,7 +17,7 @@ public class EntityFireSpider extends EntitySpider {
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
         if(this.rand.nextInt(4) == 0){
-            this.dropItem(Item.fireworkCharge.itemID, 1 + iLootingModifier);
+            this.dropItem(Item.fireballCharge.itemID, 1 + iLootingModifier);
         }
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
     }

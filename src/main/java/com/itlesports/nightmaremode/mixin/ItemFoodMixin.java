@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.achievement.event.AchievementEventDispatcher;
+import api.achievement.AchievementEventDispatcher;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

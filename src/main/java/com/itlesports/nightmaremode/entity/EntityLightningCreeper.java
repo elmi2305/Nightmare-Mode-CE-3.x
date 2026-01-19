@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.entity.EntityWithCustomPacket;
-import btw.entity.mob.KickingAnimal;
+import api.entity.EntityWithCustomPacket;
+import api.entity.mob.KickingAnimal;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;

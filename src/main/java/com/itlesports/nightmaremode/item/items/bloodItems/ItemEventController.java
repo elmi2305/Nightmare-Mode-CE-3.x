@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.item.items.bloodItems;
 
-import btw.achievement.AchievementHandler;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.items.ItemAchievementGranter;
 import net.minecraft.server.MinecraftServer;
@@ -9,7 +8,7 @@ import net.minecraft.src.*;
 import java.util.List;
 
 public class ItemEventController extends ItemAchievementGranter {
-    private int eventType = 0;
+    private final int eventType;
 
     public static int EVENT_BLOODMOON = 1;
     public static int EVENT_ECLIPSE  = 2;
@@ -33,7 +32,7 @@ public class ItemEventController extends ItemAchievementGranter {
             long time = world.getWorldTime();
 
             if(NMUtils.getIsBloodMoon()){
-                time = (long)((time + 24000) / 24000);
+                time = (long)Math.floor(((double) (time + 24000) / 24000)) * 24000L;
             } else if (!MinecraftServer.getIsServer()) {
                 time = NMUtils.getNextBloodMoonTime(time);
             }
@@ -53,7 +52,7 @@ public class ItemEventController extends ItemAchievementGranter {
 
     private String getLineForType(int line, int type){
         if(type == EVENT_BLOODMOON){
-            return "item.desc.bloodmoon" + String.valueOf(line);
+            return "item.desc.bloodmoon" + line;
         }
 
         return "";

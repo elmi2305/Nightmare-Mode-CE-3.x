@@ -64,6 +64,11 @@ tile.nmCrudeObsidian.name=Crude Obsidian
 tile.nmAsphaltLayer.name=Asphalt Layer
 tile.nmBloodSawBlock.name=Blood Saw
 tile.nmVillagerBlock.name=Villager Vessel
+tile.nmUnderworldRock.name=Underrock
+tile.nmUnderworldRockSmooth.name=Understone
+tile.nmUnderworldRockCobble.name=Undercobble
+tile.nmUnderGrass.name=Undergrass
+tile.nmUnderDirt.name=Underdirt
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -92,6 +97,7 @@ entity.NightmareImposterZombie.name=Wandering Trader
 entity.NightmareDrownedSkeleton.name=Drowned
 entity.NightmareMeltedSkeleton.name=Inferno
 entity.NightmareObsidianFish.name=Obsidian Fish
+entity.NightmareCreeperGhast.name=Creeper Ghast
 
 key.nightmaremode.zoomhold=Hold to zoom
 key.nightmaremode.zoomtoggle=Toggle zoom
@@ -132,8 +138,12 @@ gui.selectworld.warning_recommend_restart=It is recommended that you restart you
 gui.selectworld.warning_config_crash=New configs were loaded, which may crash your game or corrupt your world
 gui.selectworld.warning_continue=Are you absolutely sure you want to continue?
 gui.selectworld.warning_final=This is your final warning
+
+gui.bloodmoon=Blood Moon
 gui.bloodmoon.in=Blood Moon in
 gui.bloodmoon.days=Days
+gui.bloodmoon.tonight=Tonight
+gui.bloodmoon.tomorrow=Tomorrow
 
 difficulty.baddream.name=Bad Dream
 difficulty.nightmare.name=Nightmare
@@ -373,7 +383,7 @@ achievement.nm.craftPlanter=Enter Agriculture
 achievement.nm.craftPlanter.desc=Craft a Planter with 7 Bricks
 
 achievement.nm.calamariFried=Ocean's Delight
-achievement.nm.calamariFried.desc=Cook Fried Calamari - The Best Food Item
+achievement.nm.calamariFried.desc=Cook Fried Calamari, the Best Food Item
 
 achievement.nm.greed=Greed
 achievement.nm.greed.desc=Greed whispers from The Abyss, and you listened
@@ -486,7 +496,7 @@ achievement.nm.lust.desc=The desire consumed you, and you embraced it
 achievement.nm.steelSword=Blade Of Eternity
 achievement.nm.steelSword.desc=Craft a Refined Sword
 
-achievement.nm.steelIngot=Better Than Diamonds
+achievement.nm.steelIngot=Better Than Netherite
 achievement.nm.steelIngot.desc=Craft a Steel Ingot
 
 achievement.nm.steelPickaxe=Bedrock Breaker
@@ -507,7 +517,6 @@ achievement.nm.steelMattock.desc=Craft a Mattock
 achievement.nm.steelBattleAxe=MEN! WITH ME!
 achievement.nm.steelBattleAxe.desc=Craft a Battle Axe
 
-achievement.btw.equip_steel_armor=Untouchable
 
 achievement.nm.pride=Pride
 achievement.nm.pride.desc=The Depths threatened your end, and you dared them
@@ -557,7 +566,7 @@ achievement.nm.magicArrow.desc=Obtain a Magic Arrow
 achievement.nm.nightmareMerchant=Librarian Transformation
 achievement.nm.nightmareMerchant.desc=Have your Librarian Villager transform under the effects of the Eclipse
 
-achievement.nm.killEclipseAnimal=Slaughter Under the Black Sun
+achievement.nm.killEclipseAnimal=Slaughter Under the Dark Sun
 achievement.nm.killEclipseAnimal.desc=Kill an Animal during an Eclipse
 
 achievement.nm.magicFeather=So... Fluffy...
@@ -637,3 +646,41 @@ achievement.nm.dungApple.desc=Eat a Dung Apple. But why?
 
 achievement.nm.craftRefinedDiamond=Bulletproof
 achievement.nm.craftRefinedDiamond.desc=Refine a Diamond Ingot
+
+achievement.nm.craftIronFishingRod=Bait Used to be Believable
+achievement.nm.craftIronFishingRod.desc=Craft an Iron Fishing Rod. It is more durable and doesn't need bait
+
+achievement.nm.makeVillagerVessel=Boxed and Ready
+achievement.nm.makeVillagerVessel.desc=Turn a Villager into a Villager Vessel
+
+achievement.nm.beaconSpider=Pest Control
+achievement.nm.beaconSpider.desc=Construct a tier 4 Spider Eye Beacon
+
+achievement.nm.chainArmor=I'm Made of Fire
+achievement.nm.chainArmor.desc=Protect yourself from flames with a piece of Chain Armor
+
+achievement.nm.alchemyDust=Minced Warts
+achievement.nm.alchemyDust.desc=Use Alchemy Powder to locate Witch Huts
+
+achievement.nm.ancientSand=Like a True Alchemist
+achievement.nm.ancientSand.desc=Use Ancient Sand to locate Desert Temple
+
+
+
+achievement.btw.equip_steel_armor=Untouchable
+achievement.btw.find_shaft=Humble Beginnings
+achievement.btw.craft_fire_plough=First Flames
+achievement.btw.craft_hopper=Automation Begins
+achievement.btw.find_bones=Bare Bones
+achievement.btw.place_tool=Leaving Your Mark
+
+
+achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are great for cutting Hemp
+
+
+
+tag.nightmare_mode.sandwich_meats=Sandwich Meats
+
+
+
+

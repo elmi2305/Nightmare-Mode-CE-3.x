@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
+import api.block.util.Flammability;
 import btw.block.blocks.LadderBlock;
-import btw.block.util.Flammability;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

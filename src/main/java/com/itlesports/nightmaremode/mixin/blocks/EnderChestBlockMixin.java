@@ -5,6 +5,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
@@ -21,6 +22,8 @@ public class EnderChestBlockMixin extends BlockEnderChest {
         cir.setReturnValue(4);
         // makes ender chests behave like in vanilla, meaning an ender beacon isn't required
     }
+    @Redirect(method = "onBlockActivated", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSoundEffect(DDDLjava/lang/String;FF)V"))
+    private void doNotPlayLoudSound(World world, double x, double y, double z, String sound, float vol, float pitch){}
 
     @Override
     public int idDropped(int i, Random random, int j) {

@@ -1,12 +1,6 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
-
-import btw.util.sounds.BTWSoundManager;
+import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.BlockBloodChest;
 import net.minecraft.src.*;
 
@@ -131,7 +125,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory {
     }
 
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer) {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : par1EntityPlayer.getDistanceSq((double)this.xCoord + (double)0.5F, (double)this.yCoord + (double)0.5F, (double)this.zCoord + (double)0.5F) <= (double)64.0F;
+        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) == this && par1EntityPlayer.getDistanceSq((double) this.xCoord + (double) 0.5F, (double) this.yCoord + (double) 0.5F, (double) this.zCoord + (double) 0.5F) <= (double) 64.0F;
     }
 
     public void updateContainingBlockInfo() {
@@ -139,11 +133,6 @@ public class TileEntityBloodChest extends TileEntity implements IInventory {
         this.adjacentChestChecked = false;
     }
 
-
-    private boolean func_94044_a(int par1, int par2, int par3) {
-        Block var4 = Block.blocksList[this.worldObj.getBlockId(par1, par2, par3)];
-        return var4 != null && var4 instanceof BlockChest ? ((BlockChest)var4).chestType == this.getChestType() : false;
-    }
 
     @Override
     public void updateEntity() {
@@ -179,7 +168,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory {
                     this.xCoord + 0.5D,
                     this.yCoord + 0.5D,
                     this.zCoord + 0.5D,
-                    BTWSoundManager.CHEST_OPEN.sound(),
+                    BTWSounds.CHEST_OPEN.sound(),
                     0.5F,
                     this.worldObj.rand.nextFloat() * 0.1F + 0.9F
             );
@@ -204,7 +193,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory {
                         this.xCoord + 0.5D,
                         this.yCoord + 0.5D,
                         this.zCoord + 0.5D,
-                        BTWSoundManager.CHEST_CLOSE.sound(),
+                        BTWSounds.CHEST_CLOSE.sound(),
                         0.5F,
                         this.worldObj.rand.nextFloat() * 0.1F + 0.9F
                 );
@@ -255,24 +244,5 @@ public class TileEntityBloodChest extends TileEntity implements IInventory {
         this.updateContainingBlockInfo();
     }
 
-    public int getChestType() {
-        if (this.cachedChestType == -1) {
-            if (this.worldObj == null || !(this.getBlockType() instanceof BlockChest)) {
-                return 0;
-            }
 
-            this.cachedChestType = ((BlockChest)this.getBlockType()).chestType;
-        }
-
-        return this.cachedChestType;
-    }
-
-
-    public void clearContents() {
-        for(int i = 0; i < this.getSizeInventory(); ++i) {
-            if (this.getStackInSlot(i) != null) {
-                this.setInventorySlotContents(i, (ItemStack)null);
-            }
-        }
-    }
 }

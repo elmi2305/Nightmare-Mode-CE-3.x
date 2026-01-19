@@ -1,10 +1,10 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 
+import api.world.BlockPos;
 import btw.block.BTWBlocks;
 import btw.block.model.BlockModel;
 import btw.block.model.OvenModel;
-import btw.world.util.BlockPos;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import net.fabricmc.api.EnvType;

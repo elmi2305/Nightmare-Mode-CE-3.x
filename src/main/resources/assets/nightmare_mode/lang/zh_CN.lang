@@ -46,8 +46,7 @@ item.nmOysterSoup.name=苦力怕酶腺汤
 item.nmTempleDust.name=远古之沙
 item.nmObsidianShard.name=黑曜石碎片
 item.nmTimeBottle.name=时间之瓶
-item.nmRefinedDiamondIngot.name=精炼钻石锭
-item.nmBloodBottle.name=猩红之瓶
+
 
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石
@@ -63,20 +62,21 @@ tile.nmHellforgeBlock.name=地狱砖炉
 tile.nmCrudeObsidian.name=粗制黑曜石
 tile.nmAsphaltLayer.name=沥青层
 tile.nmBloodSawBlock.name=血锯
-tile.nmVillagerBlock.name=村民方块
+tile.nmVillagerBlock.name=村民容器
 
-container.steelLocker=钢储物柜
-container.inventory=物品栏
 
 villager.profession=职业
 villager.level=等级
 entity.addonVillagerNightmare.name=噩梦商人
 
 
+container.steelLocker=钢储物柜
+container.inventory=物品栏
+
 entity.NightmareFireCreeper.name=火焰苦力怕
 entity.NightmareLightningCreeper.name=闪电苦力怕
 entity.NightmareShadowZombie.name=暗影僵尸
-entity.NightmareVillager.name=噩梦商人
+entity.NightmareVillager.name=梦魇商人
 entity.NightmareGolem.name=血咒魔像
 entity.NightmareBloodWither.name=血咒凋灵
 entity.NightmareFireSpider.name=火焰蜘蛛
@@ -92,6 +92,9 @@ entity.NightmareImposterZombie.name=伪装者僵尸
 entity.NightmareDrownedSkeleton.name=溺骸骷髅
 entity.NightmareMeltedSkeleton.name=熔火骷髅
 entity.NightmareObsidianFish.name=黑曜石鱼
+entity.NightmareCreeperGhast.name=苦力怕恶魂
+
+
 
 key.nightmaremode.zoomhold=按住缩放
 key.nightmaremode.zoomtoggle=切换缩放
@@ -132,8 +135,6 @@ gui.selectworld.warning_recommend_restart=建议重启游戏
 gui.selectworld.warning_config_crash=新配置已加载，建议重启游戏，否则可能会导致游戏崩溃或损坏您的世界
 gui.selectworld.warning_continue=确定要继续吗?
 gui.selectworld.warning_final=这是最后的警告
-gui.bloodmoon.in=血月还有
-gui.bloodmoon.days=天
 
 difficulty.baddream.name=噩梦模式
 difficulty.nightmare.name=梦魇模式
@@ -223,10 +224,18 @@ gui.config.extra_armor=额外护甲
 gui.config.tooltip.extra_armor=开局获得一套简易盔甲
 gui.config.full_bright=高亮模式
 gui.config.tooltip.full_bright=以最大亮度渲染世界。不会绕过黑暗效果
-gui.config.fast_villagers=快速刷新
-gui.config.tooltip.fast_villagers=让村民每天刷新4次交易
+gui.config.fast_villagers=快速村民
+gui.config.tooltip.fast_villagers=让村民每天重新刷新交易4次
 gui.config.blood_moon_helper=血月助手
-gui.config.tooltip.blood_moon_helper=显示下次血月时间
+gui.config.tooltip.blood_moon_helper=显示下一次血月何时出现
+
+
+gui.bloodmoon=血月
+gui.bloodmoon.in=血月将在
+gui.bloodmoon.days=天
+gui.bloodmoon.tonight=今晚
+gui.bloodmoon.tomorrow=明天
+
 
 gui.warning.line1=伙计
 gui.warning.line2=你正在尝试加入一个启用了癌症模式的世界
@@ -235,6 +244,11 @@ gui.warning.line4=因为它很可能会被破坏
 gui.warning.line5=你确定要继续吗？这是给你的最后警告
 gui.warning.iknow=我知道我在做什么
 gui.warning.goback=返回
+
+
+item.desc.bloodmoon0=Bỏ qua Trăng Máu hiện tại nếu nó đang hoạt động
+item.desc.bloodmoon1=Ngược lại, bỏ qua cho đến Trăng Máu tiếp theo
+
 
 gui.gameover.tip_prefix=提示：
 gui.gameover.tip1=远离海洋！
@@ -315,14 +329,12 @@ deathScreen.deathTauntMessage17=<???> 试试简单难度？
 deathScreen.deathTauntMessage18=<???> 又一次失败，看着真愉快。
 deathScreen.deathTauntMessage19=<???> 这就想感动我？
 
-item.desc.bloodmoon0=如果现在是血月，则跳过这个血月
-item.desc.bloodmoon1=否则，将切换到下一个血月
-
 achievementtab.nightmaremode=噩梦模式
-achievement.nm.grants=授予以下成就：
+achievement.nm.grants=Cấp các Thành Tựu sau:
 
-achievement.nm.morningSecondDay=故事的开始……
-achievement.nm.morningSecondDay.desc=熬过第一夜，正式开始！
+
+achievement.nm.morningSecondDay=故事刚开头……
+achievement.nm.morningSecondDay.desc=熬过第一夜，正式开局！
 
 achievement.nm.sludge=黏糊糊的开局！
 achievement.nm.sludge.desc=首日就把砖炉整出来，牛！
@@ -486,7 +498,7 @@ achievement.nm.lust.desc=欲望上头，干脆拥抱它
 achievement.nm.steelSword=永恒之刃
 achievement.nm.steelSword.desc=造一把精炼剑，砍翻全场
 
-achievement.nm.steelIngot=钢比钻石牛
+achievement.nm.steelIngot=比下界合金更强
 achievement.nm.steelIngot.desc=炼出钢锭，踏实致富
 
 achievement.nm.steelPickaxe=拆墙利器
@@ -603,7 +615,7 @@ achievement.nm.killBloodWither=技术力爆表
 achievement.nm.killBloodWither.desc=干掉神秘boss<？？？>
 
 achievement.nm.arrowDamage=一箭爆头
-achievement.nm.arrowDamage.desc=魔法箭一发五十点伤害，爆裂输出
+achievement.nm.arrowDamage.desc=魔法箭一发五十伤，爆裂输出
 
 achievement.nm.arrowPierce=穿心连击
 achievement.nm.arrowPierce.desc=一箭串5怪，穿透专家
@@ -620,7 +632,7 @@ achievement.nm.brimstone.desc=用灵魂沙漏斗将荧石过滤成硫磺
 achievement.nm.gunpowder=现在我们开始炼制了
 achievement.nm.gunpowder.desc=在炼药锅中制造火药
 
-achievement.nm.tnt=成为毁灭者
+achievement.nm.tnt=我已成为死亡
 achievement.nm.tnt.desc=合成TNT
 
 achievement.nm.groundNetherrack=破碎地狱
@@ -633,7 +645,21 @@ achievement.nm.sinner=通往地狱的高速路
 achievement.nm.sinner.desc=犯下七宗罪
 
 achievement.nm.dungApple=绝对恶心
-achievement.nm.dungApple.desc=吃下一颗粪苹果。但为什么要吃呢？
+achievement.nm.dungApple.desc=吃下一颗粪苹果。但为什么呢？
 
 achievement.nm.craftRefinedDiamond=防弹
 achievement.nm.craftRefinedDiamond.desc=精炼一块钻石锭
+
+achievement.nm.craftIronFishingRod=诱饵曾经很真实
+achievement.nm.craftIronFishingRod.desc=制作一把铁钓竿。它更耐用且不需要诱饵
+
+achievement.nm.makeVillagerVessel=装箱完毕
+achievement.nm.makeVillagerVessel.desc=将一个村民变成一个村民容器
+
+achievement.nm.beaconSpider=害虫清除
+achievement.nm.beaconSpider.desc=建造一个4级蜘蛛眼信标
+
+achievement.nm.chainArmor=我由火铸成
+achievement.nm.chainArmor.desc=用一件锁链护甲保护自己免受火焰伤害
+
+tag.nightmare_mode.sandwich_meats=三明治肉类

@@ -7,6 +7,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 
+import java.util.Random;
+
 import static net.minecraft.src.EntityVillager.*;
 
 public class BlockVillagerBase extends NMBlockContainer{
@@ -107,25 +109,46 @@ public class BlockVillagerBase extends NMBlockContainer{
     }
 
     @Override
-    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int par5, float par6, int par7) {
+            int profession = NMUtils.VillagerMetaCodec.getProfession(par5);
+            int level = NMUtils.VillagerMetaCodec.getLevel(par5);
+            int encodedMeta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
 
+            ItemStack drop = new ItemStack(this.blockID, 1, encodedMeta);
+            this.dropBlockAsItem_do(world, x, y, z, drop);
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int oldBlockId, int oldMeta) {
-        if (!world.isRemote) {
-            TileEntityVillagerContainer te = (TileEntityVillagerContainer) world.getBlockTileEntity(x, y, z);
-            if (te != null) {
-                int profession = te.getProfession();
-                int level = te.getLevel();
-                int encodedMeta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
-
-                ItemStack drop = new ItemStack(this.blockID, 1, encodedMeta);
-                this.dropBlockAsItem_do(world, x, y, z, drop);
-            }
-        }
-
-        world.removeBlockTileEntity(x, y, z);
+    public int quantityDropped(Random par1Random) {
+        return 1;
     }
+
+    @Override
+    public ItemStack getStackRetrievedByBlockDispenser(World world, int i, int j, int k) {
+        int iMetadata = world.getBlockMetadata(i, j, k);
+        return this.createStackedBlock(iMetadata);
+    }
+    public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
+        dropBlockAsItemWithChance(world,i,j,k,iMetadata,fChanceOfDrop, 0);
+        return true;
+    }
+
+
+    //    @Override
+//    public void breakBlock(World world, int x, int y, int z, int oldBlockId, int oldMeta) {
+//        if (!world.isRemote) {
+//            TileEntityVillagerContainer te = (TileEntityVillagerContainer) world.getBlockTileEntity(x, y, z);
+//            if (te != null) {
+//                int profession = te.getProfession();
+//                int level = te.getLevel();
+//                int encodedMeta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
+//
+//                ItemStack drop = new ItemStack(this.blockID, 1, encodedMeta);
+//                this.dropBlockAsItem_do(world, x, y, z, drop);
+//            }
+//        }
+//
+//        world.removeBlockTileEntity(x, y, z);
+//    }
 
 }

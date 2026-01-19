@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.tileentity.CampfireTileEntity;
-import btw.world.util.difficulty.Difficulties;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

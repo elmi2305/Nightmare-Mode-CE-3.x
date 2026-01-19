@@ -1,15 +1,14 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 
+import api.block.MechanicalBlock;
+import api.util.MiscUtils;
+import api.world.BlockPos;
 import btw.block.BTWBlocks;
-import btw.block.MechanicalBlock;
-import btw.block.util.MechPowerUtils;
 import btw.client.render.util.RenderUtils;
 import btw.crafting.manager.SawCraftingManager;
 import btw.item.BTWItems;
-import btw.util.CustomDamageSource;
-import btw.util.MiscUtils;
-import btw.world.util.BlockPos;
+import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,15 +20,6 @@ import java.util.Random;
 public class BlockBloodSaw
         extends Block
         implements MechanicalBlock {
-    private static final int POWER_CHANGE_TICK_RATE = 10;
-    private static final int SAW_TIME_BASE_TICK_RATE = 20;
-    private static final int SAW_TIME_TICK_RATE_VARIANCE = 4;
-    public static final float BASE_HEIGHT = 0.75f;
-    public static final float BLADE_LENGTH = 0.625f;
-    public static final float BLADE_HALF_LENGTH = 0.3125f;
-    public static final float BLADE_WIDTH = 0.015625f;
-    public static final float BLADE_HALF_WIDTH = 0.0078125f;
-    public static final float BLADE_HEIGHT = 0.25f;
     @Environment(value = EnvType.CLIENT)
     private Icon iconFront;
     @Environment(value = EnvType.CLIENT)
@@ -108,7 +98,7 @@ public class BlockBloodSaw
         if (bOn != bReceivingPower) {
             this.emitSawParticles(world, i, j, k, rand);
             this.setBlockOn(world, i, j, k, bReceivingPower);
-            world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "minecart.base", 1.0f + rand.nextFloat() * 0.1f, 1.5f + rand.nextFloat() * 0.1f);
+            world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "minecart.base", 0.2f + rand.nextFloat() * 0.1f, 1.5f + rand.nextFloat() * 0.1f);
             this.scheduleUpdateIfRequired(world, i, j, k);
         } else {
             this.sawBlockToFront(world, i, j, k, rand);
@@ -150,14 +140,14 @@ public class BlockBloodSaw
             List collisionList = null;
             collisionList = world.getEntitiesWithinAABB(EntityLivingBase.class, sawBox);
             if (collisionList != null && !collisionList.isEmpty()) {
-                DamageSource source = CustomDamageSource.damageSourceSaw;
+                DamageSource source = BTWDamageSources.damageSourceSaw;
                 int iDamage = 8;
                 BlockPos targetPos = new BlockPos(i, j, k);
                 targetPos.addFacingAsOffset(iFacing);
                 int iTargetBlockID = world.getBlockId(targetPos.x, targetPos.y, targetPos.z);
                 int iTargetMetadata = world.getBlockMetadata(targetPos.x, targetPos.y, targetPos.z);
                 if (iTargetBlockID == BTWBlocks.aestheticOpaque.blockID && (iTargetMetadata == 13 || iTargetMetadata == 12)) {
-                    source = CustomDamageSource.damageSourceChoppingBlock;
+                    source = BTWDamageSources.damageSourceChoppingBlock;
                     iDamage *= 2;
                     if (iTargetMetadata == 13) {
                         world.setBlockMetadataWithNotify(targetPos.x, targetPos.y, targetPos.z, 12);
@@ -272,7 +262,7 @@ public class BlockBloodSaw
             Block targetBlock = Block.blocksList[world.getBlockId(targetPos.x, targetPos.y, targetPos.z)];
             int targetMetadata = world.getBlockMetadata(targetPos.x, targetPos.y, targetPos.z);
             if (targetBlock != null && (targetBlock.blockMaterial.isSolid() || SawCraftingManager.instance.getRecipe(targetBlock, targetMetadata) != null || targetBlock.doesBlockDropAsItemOnSaw(world, targetPos.x, targetPos.y, targetPos.z))) {
-                world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "minecart.base", 1.5f + world.rand.nextFloat() * 0.1f, 1.9f + world.rand.nextFloat() * 0.1f);
+                world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "minecart.base", 0.2f + world.rand.nextFloat() * 0.1f, 1.9f + world.rand.nextFloat() * 0.1f);
                 world.scheduleBlockUpdate(i, j, k, this.blockID, 10);
             }
         }

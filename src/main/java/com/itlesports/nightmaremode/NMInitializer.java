@@ -1,6 +1,12 @@
 package com.itlesports.nightmaremode;
 
-import btw.achievement.AchievementTab;
+import api.achievement.AchievementTab;
+import api.entity.mob.villager.TradeItem;
+import api.entity.mob.villager.TradeProvider;
+import api.item.tag.TagInstance;
+import api.item.tag.TagOrStack;
+import api.util.color.Color;
+import btw.achievement.BTWAchievements;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.crafting.manager.CauldronCraftingManager;
@@ -8,25 +14,21 @@ import btw.crafting.manager.CrucibleStokedCraftingManager;
 import btw.crafting.manager.MillStoneCraftingManager;
 import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
-import btw.entity.mob.villager.trade.TradeItem;
-import btw.entity.mob.villager.trade.TradeProvider;
 import btw.item.BTWItems;
-import btw.item.tag.BTWTags;
-import btw.item.tag.TagInstance;
-import btw.item.tag.TagOrStack;
-import btw.util.color.Color;
+import btw.item.BTWTags;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.items.NMPostItems;
 import com.itlesports.nightmaremode.mixin.AchievementAccessor;
-import com.itlesports.nightmaremode.mixin.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
-
 
 import java.util.HashMap;
 import java.util.Set;
@@ -46,7 +48,11 @@ public abstract class NMInitializer implements AchievementExt {
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
+
+
     }
+
+
     public static void runItemPostInit(){
         NMPostItems.runPostInit();
     }
@@ -54,11 +60,36 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToMushroomIslands(EntityGhast.class, 1, 1, 1);
         addMobToMushroomIslands(EntityFauxVillager.class, 2, 1, 1);
 
-        if (NightmareMode.magicMonsters) {
+        if (NightmareMode.magicMonsters != null && NightmareMode.magicMonsters) {
             clearAllLandBiomes();
             addMobToAllLandBiomes(EntityWitch.class, 3, 1, 2);
+            addMobToNether(EntityWitch.class,40,1,2);
+            addMobToEnd(EntityWitch.class,4,1,2);
             clearAllWaterBiomes();
         }
+
+        addMobToEnd(EntityCreeper.class, 1, 1, 3);
+
+        addMobToNether(EntityCreeper.class, 15,1,1);
+        addMobToNether(EntityFireCreeper.class, 40,1,1);
+        addMobToNether(EntityCustomSkeleton.class, 30,1,3);
+        addMobToNether(EntityShadowZombie.class, 20,1,1);
+        addMobToNether(EntityObsidianCreeper.class, 4,1,1);
+
+
+        addMobToAllBiomes(EntityFireCreeper.class, 4, 1, 2);
+        addMobToAllBiomes(EntityGhast.class, 1, 1, 1);
+        addMobToAllBiomes(EntityFireSpider.class, 1, 1, 2);
+        addMobToAllBiomes(EntityStoneZombie.class, 1, 1, 2);
+        addMobToAllBiomes(EntityObsidianCreeper.class, 3, 1, 1);
+        addMobToAllBiomes(EntitySuperchargedCreeper.class, 1, 1, 2);
+        addMobToAllBiomes(EntityBlackWidowSpider.class, 2, 1, 2);
+        addMobToAllBiomes(EntityRadioactiveEnderman.class, 1, 1, 1);
+        addMobToAllBiomes(EntityDungCreeper.class, 3, 1, 1);
+        addMobToAllBiomes(EntityLightningCreeper.class, 1, 1, 1);
+        addMobToAllBiomes(EntityBloodZombie.class, 2, 1, 1);
+        addMobToAllBiomes(EntityFauxVillager.class, 1, 1, 1);
+
     }
 
     private static void addMobToMushroomIslands(Class mob, int i, int j, int k){
@@ -117,6 +148,13 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToBiome(mob, i, j, k, BiomeGenBase.jungle);
         addMobToBiome(mob, i, j, k, BiomeGenBase.jungleHills);
     }
+
+    private static void addMobToNether (Class mob, int i, int j, int k){
+        addMobToBiome(mob, i, j, k, BiomeGenBase.hell);
+    }
+    private static void addMobToEnd(Class mob, int i, int j, int k){
+        addMobToBiome(mob, i, j, k, BiomeGenBase.sky);
+    }
     private static void addMobToAllWaterBiomes(Class mob, int i, int j, int k){
         addMobToBiome(mob, i, j, k, BiomeGenBase.ocean);
         addMobToBiome(mob, i, j, k, BiomeGenBase.river);
@@ -141,7 +179,13 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         setHidden(CRAFT_HAMPER,true);
-
+//        move(CRAFT_HAMPER, -1, 0);
+//
+//        move(BTWAchievements.CRAFT_PLANTER,);
+//        removeParent(BTWAchievements.CRAFT_PLANTER, STOKE_FIRE);
+//        removeParent(BTWAchievements.CRAFT_PLANTER, SPIN_POTTERY);
+        kill(BTWAchievements.CRAFT_PLANTER);
+        kill(USE_DIAMOND_PILE);
         kill(EQUIP_WOOL_ARMOR);
 
         move(FIND_REEDS,-1,0);
@@ -149,6 +193,9 @@ public abstract class NMInitializer implements AchievementExt {
         move(CRAFT_KNITTING_NEEDLES,-1,0);
         move(CRAFT_WOOL_KNIT,-1,0);
         move(MINE_DIAMOND_ORE, 0, 1);
+
+        move(PLACE_TOOL, 3, 0);
+        move(MINE_DIAMOND_ORE, 0, -5);
 
 
         // wicker stuff for snap 6
@@ -200,7 +247,6 @@ public abstract class NMInitializer implements AchievementExt {
 
                             // 2ND TAB - TAB_IRON_AGE
         move(CRAFT_CAULDRON, 0, -2);
-        setCondition(FIND_OBSIDIAN, itemStack -> ((ItemStack)itemStack).itemID == NMBlocks.crudeObsidian.blockID);
 
         // hemp arc
 
@@ -219,7 +265,6 @@ public abstract class NMInitializer implements AchievementExt {
         kill(CRAFT_BASKET);
         // hemp arc over
 
-        move(USE_EMERALD_PILE, -3, -2);
 
         move(CRAFT_HAND_CRANK, 2,0);
         move(LOCATE_FORTRESS_WITH_PILE, 0, -2);
@@ -279,6 +324,10 @@ public abstract class NMInitializer implements AchievementExt {
         move(MAX_STEEL_BEACON, 4, 6);
 
         setIcon(MAX_STEEL_BEACON, BTWBlocks.soulforgedSteelBlock);
+
+        kill(EXPLODED_WITH_BLASTING_OIL);
+        kill(MAKE_COMPANION_SLAB);
+        move(POWER_THE_CAKE, -2, 0);
     }
 
     private static void switchTab(Achievement acObj, AchievementTab tab){
@@ -299,6 +348,193 @@ public abstract class NMInitializer implements AchievementExt {
         addNightmareVillagerTrades();
     }
 
+    public static void editExistingTrades(){
+        // farmer
+        TradeTweaks.setInputCount("btw:buy_loose_dirt", 12, 24);
+        TradeTweaks.setInputCount("btw:buy_logs", 8,16);
+            TradeTweaks.setInputCount("btw:buy_logs_variant_oak", 12,16);
+            TradeTweaks.setInputCount("btw:buy_logs_variant_spruce", 8,16);
+            TradeTweaks.setInputCount("btw:buy_logs_variant_birch", 12,16);
+            TradeTweaks.setInputCount("btw:buy_logs_variant_jungle", 4,8);
+        TradeTweaks.setInputCount("btw:buy_brown_wool", 2,4);
+        TradeTweaks.setOutputCount("btw:buy_brown_wool", 2,3);
+        TradeTweaks.setInputCount("btw:buy_bone_meal", 6,12);
+        TradeTweaks.setOutputCount("btw:buy_iron_hoe", 1,2);
+        TradeTweaks.setInputCount("btw:buy_sugar", 6,12);
+        TradeTweaks.setInputCount("btw:buy_cocoa_beans", 4,8);
+        TradeTweaks.setInputCount("btw:buy_brown_mushrooms", 3,6);
+        TradeTweaks.setInputCount("btw:buy_hemp_seeds", 4,8);
+        TradeTweaks.setInputCount("btw:buy_eggs", 2,6);
+        TradeTweaks.setInputCount("btw:buy_glass_panes", 16,16);
+        TradeTweaks.setInputCount("btw:buy_milk_bucket", 1,1);
+        TradeTweaks.setOutputCount("btw:sell_wheat", 4,8);
+
+//        TradeTweaks.setInputCount("btw:sell_apple", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_millstone", 0,0);
+        TradeTweaks.setInputCount("btw:sell_sugar_cane_roots", 1,1);
+        TradeTweaks.setOutputCount("btw:sell_sugar_cane_roots", 2,3);
+        TradeTweaks.setInputCount("btw:buy_melons", 2,4);
+        TradeTweaks.setInputCount("btw:buy_pumpkins", 2,4);
+//        TradeTweaks.setInputCount("btw:buy_chocolate", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_shears", 2,3);
+//        TradeTweaks.setInputCount("btw:buy_flint_and_steel", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_flint_and_steel", 1,2);
+//        TradeTweaks.setInputCount("btw:buy_soap", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_bread", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_egg_foods", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_water_wheel", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_cement_bucket", 0,0);
+        TradeTweaks.setInputCount("btw:buy_light_block", 1,2);
+        TradeTweaks.setInputCount("btw:buy_stump_remover", 1,2);
+//        TradeTweaks.setInputCount("btw:sell_desserts", 1,3); // does nothing cause variant trade
+//        TradeTweaks.setInputCount("btw:buy_stake_and_string", 1,1);
+//        TradeTweaks.setInputCount("btw:buy_planters", 4,8);
+//        TradeTweaks.setInputCount("btw:sell_mycelium", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_looting_scroll", 0,0);
+
+
+
+
+
+        // librarian
+        TradeTweaks.setInputCount("btw:buy_paper", 4,8);
+        TradeTweaks.setInputCount("btw:buy_ink", 4,6);
+        TradeTweaks.setInputCount("btw:buy_feathers", 4,6);
+//        TradeTweaks.setInputCount("btw:buy_book_and_quill", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_ancient_manuscript", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_redstone", 0,0);
+        TradeTweaks.setInputCount("btw:buy_redstone_latch", 1,2);
+//        TradeTweaks.setInputCount("btw:buy_piston", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_turntable", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_brewing_stand", 4,4);
+//        TradeTweaks.setInputCount("btw:sell_advanced_redstone", 0,0); // does nothing because it's a variant trade
+        TradeTweaks.setInputCount("btw:buy_nether_wart", 4,8);
+        TradeTweaks.setInputCount("btw:buy_glowstone", 8,16);
+        TradeTweaks.setInputCount("btw:buy_nitre", 16,24);
+        TradeTweaks.setInputCount("btw:buy_spider_eyes", 2,4);
+//        TradeTweaks.setInputCount("btw:sell_bookshelf", 0,0);
+        TradeTweaks.setInputCount("btw:buy_witch_warts", 1,2);
+        TradeTweaks.setInputCount("btw:buy_mysterious_glands", 4,6);
+        TradeTweaks.setInputCount("btw:buy_fermented_spider_eyes", 2,4);
+        TradeTweaks.setInputCount("btw:buy_ghast_tears", 1,2);
+        TradeTweaks.setInputCount("btw:buy_magma_cream", 1,2);
+        TradeTweaks.setInputCount("btw:buy_blaze_powder", 2,3);
+//        TradeTweaks.setInputCount("btw:buy_ender_spectacles", 0,0);
+        TradeTweaks.setInputCount("btw:buy_brimstone", 4,8);
+        TradeTweaks.setInputCount("btw:buy_blood_wood_saplings", 1,1);
+        TradeTweaks.setInputCount("btw:buy_nether_groth_spores", 1,1);
+//        TradeTweaks.setInputCount("btw:convert_eyes_of_ender", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_power_scroll", 0,0);
+
+
+
+
+
+
+
+
+        // priest
+        TradeTweaks.setInputCount("btw:buy_hemp", 3,6);
+        TradeTweaks.setInputCount("btw:buy_red_mushrooms", 4,6);
+        TradeTweaks.setInputCount("btw:buy_cactus", 3,6);
+//        TradeTweaks.setInputCount("btw:buy_paintings", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_flint_and_steel", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_enchanting_table", 3,3);
+//        TradeTweaks.setInputCount("btw:enchant_tools", 0,0);
+//        TradeTweaks.setInputCount("btw:enchant_iron_armor", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_vessel_of_the_dragon", 0,0);
+        TradeTweaks.setInputCount("btw:buy_mob_heads", 1,3);
+            TradeTweaks.setInputCount("btw:buy_mob_heads_variant_skeleton", 2,4);
+            TradeTweaks.setInputCount("btw:buy_mob_heads_variant_zombie", 2,4);
+            TradeTweaks.setInputCount("btw:buy_mob_heads_variant_creeper", 1,2);
+        TradeTweaks.setInputCount("btw:buy_bone_block", 1,3);
+        TradeTweaks.setInputCount("btw:buy_rotten_flesh_block", 2,4);
+//        TradeTweaks.setInputCount("btw:convert_infused_skull_level_up", 0,0);
+        TradeTweaks.setInputCount("btw:buy_candles", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_black", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_white", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_red", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_yellow", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_blue", 2,4);
+            TradeTweaks.setInputCount("btw:buy_candles_variant_green", 2,4);
+        TradeTweaks.setInputCount("btw:buy_soul_urn", 1,2);
+        TradeTweaks.setInputCount("btw:buy_canvas", 1,1);
+//        TradeTweaks.setOutputCount("btw:buy_infernal_enchanter", 0,0);
+//        TradeTweaks.setInputCount("btw:convert_infused_skull", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_fortune_scroll", 0,0);
+
+
+        // blacksmith
+        TradeTweaks.setInputCount("btw:buy_coal", 8,12);
+        TradeTweaks.setInputCount("btw:buy_birch_logs", 8,12);
+        TradeTweaks.setInputCount("btw:buy_iron_nuggets", 6,10);
+        TradeTweaks.setOutputCount("btw:buy_oven", 2,2);
+        TradeTweaks.setOutputCount("btw:buy_anvil_level_up", 3,6);
+        TradeTweaks.setInputCount("btw:buy_hibachi", 1,1);
+        TradeTweaks.setOutputCount("btw:buy_hibachi", 1,2);
+        TradeTweaks.setInputCount("btw:buy_gold_nuggets", 2,6);
+        TradeTweaks.setInputCount("btw:buy_charcoal", 2,4);
+        TradeTweaks.setInputCount("btw:buy_iron_ingot", 1,1);
+        TradeTweaks.setOutputCount("btw:buy_iron_ingot", 2,3);
+//        TradeTweaks.setInputCount("btw:sell_iron_equipment", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_bellows", 3,6);
+        TradeTweaks.setInputCount("btw:buy_nethercoal", 6,12);
+        TradeTweaks.setInputCount("btw:buy_creeper_oysters", 8,12);
+        TradeTweaks.setInputCount("btw:buy_diamonds", 1,2);
+        TradeTweaks.setOutputCount("btw:buy_diamonds", 2,2);
+        TradeTweaks.setInputCount("btw:buy_padding", 2,4);
+        TradeTweaks.setInputCount("btw:buy_straps", 6,8);
+//        TradeTweaks.setInputCount("btw:sell_chain_armor", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_crucible", 4,4);
+//        TradeTweaks.setInputCount("btw:buy_soul_urns_blacksmith", 0,0);
+        TradeTweaks.setInputCount("btw:buy_hafts", 1,2);
+        TradeTweaks.setInputCount("btw:buy_mining_charges", 1,2);
+//        TradeTweaks.setInputCount("btw:sell_diamond_equipment", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_steel_ingots", 2,4);
+        TradeTweaks.setOutputCount("btw:buy_steel_ingots", 4,4);
+        TradeTweaks.setInputCount("btw:buy_soul_flux", 1,4);
+//        TradeTweaks.setInputCount("btw:sell_steel_tools", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_unbreaking_scroll", 0,0);
+
+
+
+        // butcher
+        TradeTweaks.setInputCount("btw:buy_arrows", 3,6);
+        TradeTweaks.setOutputCount("btw:buy_shears_butcher", 2,2);
+//        TradeTweaks.setInputCount("btw:buy_fishing_rod", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_bow", 1,2);
+//        TradeTweaks.setInputCount("btw:sell_meat", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_cauldron", 3,4);
+        TradeTweaks.setInputCount("btw:buy_flour", 4,6);
+        TradeTweaks.setInputCount("btw:buy_dung", 1,3);
+        TradeTweaks.setInputCount("btw:buy_spruce_bark", 16,24);
+        TradeTweaks.setInputCount("btw:buy_leather", 2,4);
+//        TradeTweaks.setInputCount("btw:sell_mid_tier_foods", 0,0);
+        TradeTweaks.setOutputCount("btw:buy_saw", 4,6);
+        TradeTweaks.setInputCount("btw:buy_potatoes", 4,6);
+        TradeTweaks.setInputCount("btw:buy_carrots", 3,4);
+        TradeTweaks.setInputCount("btw:buy_wolf_chops", 1,2);
+//        TradeTweaks.setInputCount("btw:buy_liver", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_saddle", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_dinners", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_tanned_leather", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_breeding_harness", 0,0);
+        TradeTweaks.setInputCount("btw:buy_mystery_meat", 1,1);
+        TradeTweaks.setInputCount("btw:buy_screw", 1,2);
+        TradeTweaks.setOutputCount("btw:buy_screw", 3,4);
+//        TradeTweaks.setInputCount("btw:buy_composite_bow", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_hearty_stew", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_tanned_leather_armor", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_dirty_chopping_block", 0,0);
+//        TradeTweaks.setInputCount("btw:convert_runed_skull", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_dynamite", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_battleaxe", 0,0);
+//        TradeTweaks.setInputCount("btw:buy_companion_cube", 0,0);
+        TradeTweaks.setInputCount("btw:buy_broadhead_arrows", 2,4);
+//        TradeTweaks.setInputCount("btw:buy_lightning_rod_and_soap", 0,0);
+//        TradeTweaks.setInputCount("btw:sell_sharpness_scroll", 0,0);
+    }
+
     public static void miscInit(){
         BTWItems.plateBoots.setMaxDamage(729);
         BTWItems.plateLeggings.setMaxDamage(729);
@@ -308,6 +544,7 @@ public abstract class NMInitializer implements AchievementExt {
         boolean isServer = MinecraftServer.getIsServer();
         if (!isServer) {
             BTWItems.emeraldPile.setItemRightClickCooldown( BTWItems.emeraldPile.getItemRightClickCooldown() / 6);
+            BTWItems.diamondPile.setItemRightClickCooldown( BTWItems.emeraldPile.getItemRightClickCooldown() / 6);
             BTWItems.soulSandPile.setItemRightClickCooldown( BTWItems.soulSandPile.getItemRightClickCooldown() / 6);
             NMItems.witchLocator.setItemRightClickCooldown( NMItems.witchLocator.getItemRightClickCooldown() / 6);
             NMItems.templeLocator.setItemRightClickCooldown( NMItems.templeLocator.getItemRightClickCooldown() / 6);
@@ -321,7 +558,7 @@ public abstract class NMInitializer implements AchievementExt {
         EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
 
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,4,8)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
+        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,2,4)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.4f).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(2, 5).weight(1.2f).addToTradeList();
@@ -343,7 +580,7 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).buy().item(Item.book.itemID).itemCount(3,6).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).buy().item(Item.redstoneRepeater.itemID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).buy().item(BTWItems.hellfireDust.itemID).itemCount(16,24).addToTradeList();
-        TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).buy().item(Item.glassBottle.itemID).itemCount(16,24).addToTradeList();
+//        TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).buy().item(Item.glassBottle.itemID).itemCount(16,24).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWItems.wool.itemID,15,2,4)).conversionCost(1, 2).output(TradeItem.fromID(NMItems.bandage.itemID,1,2)).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).buy().item(BTWBlocks.blockDispenser.blockID).itemCount(1,2).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).buy().item(BTWBlocks.buddyBlock.blockID).itemCount(1,2).addToTradeList();
@@ -610,15 +847,15 @@ public abstract class NMInitializer implements AchievementExt {
         // done replacing
 
         // remove all gold recipes from crucible
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.ingotGold, 2), (TagOrStack[])new ItemStack[]{new ItemStack(Item.pickaxeGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 12), (TagOrStack[])new ItemStack[]{new ItemStack(Item.axeGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 12), (TagOrStack[])new ItemStack[]{new ItemStack(Item.swordGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 6), (TagOrStack[])new ItemStack[]{new ItemStack(Item.hoeGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 6), (TagOrStack[])new ItemStack[]{new ItemStack(Item.shovelGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 30), (TagOrStack[])new ItemStack[]{new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 48), (TagOrStack[])new ItemStack[]{new ItemStack(Item.plateGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 42), (TagOrStack[])new ItemStack[]{new ItemStack(Item.legsGold, 1, Short.MAX_VALUE)});
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 24), (TagOrStack[])new ItemStack[]{new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.ingotGold, 2), new ItemStack[]{new ItemStack(Item.pickaxeGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 12), new ItemStack[]{new ItemStack(Item.axeGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 12), new ItemStack[]{new ItemStack(Item.swordGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 6), new ItemStack[]{new ItemStack(Item.hoeGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 6), new ItemStack[]{new ItemStack(Item.shovelGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 30), new ItemStack[]{new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 48), new ItemStack[]{new ItemStack(Item.plateGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 42), new ItemStack[]{new ItemStack(Item.legsGold, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 24), new ItemStack[]{new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 3), new ItemStack[]{new ItemStack(Item.pocketSundial)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.ingotGold, 9), new ItemStack[]{new ItemStack(Block.blockGold)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Item.goldNugget, 5), new ItemStack[]{new ItemStack(BTWItems.ocularOfEnder)});
@@ -663,8 +900,8 @@ public abstract class NMInitializer implements AchievementExt {
         // done with apples
 
         // chest
-        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 6), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.chest)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.chest)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 6), new ItemStack[]{new ItemStack(BTWBlocks.chest)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget), new ItemStack[]{new ItemStack(BTWBlocks.chest)});
         // done with chest
 
 
@@ -686,22 +923,59 @@ public abstract class NMInitializer implements AchievementExt {
         // add other crucible tools and blocks
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(NMItems.ironKnittingNeedles, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(NMItems.ironFishingPole, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 7), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 1), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4)});
 
         // obsidian post-wither
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(NMBlocks.crudeObsidian)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian, 1, 0), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(Block.obsidian, 1, 1)});
+        // done with obsidian
 
+        // remove and re-add steel ingot recipe, so that the obsidian takes priority over it
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
+        // done with steel
 
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), (TagOrStack[])new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), (TagOrStack[])new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), (TagOrStack[])new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
 
+        // done with refined diamond
+        // blood chest and steel locker
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.bloodOrb, 4), new ItemStack[]{new ItemStack(NMBlocks.bloodChest)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.bloodOrb, 4), new ItemStack(BTWItems.steelNugget, 32)}, new ItemStack[]{new ItemStack(NMBlocks.steelLocker)});
+
+
+        // chainmail
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(BTWItems.mail)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 1), new ItemStack[]{new ItemStack(BTWItems.mail, 3)});
+
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 13), new ItemStack[]{new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 21), new ItemStack[]{new ItemStack(Item.plateChain, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 19), new ItemStack[]{new ItemStack(Item.legsChain, 1, Short.MAX_VALUE)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 11), new ItemStack[]{new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE)});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(Item.plateChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 3), new ItemStack[]{new ItemStack(Item.legsChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE)});
+
+
+        // diamond pile
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondPile, 8), new ItemStack[]{new ItemStack(Item.diamond, 1), new ItemStack(BTWItems.soulSandPile, 8)});
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.emeraldPile, 8), new ItemStack[]{new ItemStack(Item.emerald, 1), new ItemStack(BTWItems.soulSandPile, 8)});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.emeraldPile, 4), new ItemStack[]{new ItemStack(Item.emerald, 1), new ItemStack(BTWItems.soulSandPile, 8)});
+        // diamond pile
+
+        // glass
+        CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Block.glass, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.glass, 16), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
+        // glass
     }
     private static void addCauldronRecipes(){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
@@ -710,11 +984,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addCauldronRecipe(new ItemStack(Item.blazeRod), new ItemStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(Item.stick)});
 
         // blood sapling and groth nerf: instead of costing 8 urns, they only cost 1
-        CauldronCraftingManager.getInstance().removeRecipe((new ItemStack(BTWBlocks.aestheticVegetation, 1, 2)), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(Item.netherStalkSeeds)});
-        RecipeManager.addCauldronRecipe(new ItemStack(BTWBlocks.aestheticVegetation, 1, 2), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.netherStalkSeeds)});
+        CauldronCraftingManager.getInstance().removeRecipe((new ItemStack(BTWBlocks.aestheticVegetation, 1, 2)), new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(Item.netherStalkSeeds)});
+        RecipeManager.addCauldronRecipe(new ItemStack(BTWBlocks.aestheticVegetation, 1, 2), new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.netherStalkSeeds)});
 
-        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack[]{new ItemStack(BTWBlocks.looseDirt), new ItemStack(BTWItems.netherGrothSpores)}, (TagOrStack[])new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
-        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.netherGrothSpores), (TagOrStack[])new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
+        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack[]{new ItemStack(BTWBlocks.looseDirt), new ItemStack(BTWItems.netherGrothSpores)}, new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
+        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.netherGrothSpores), new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
 
 
 
@@ -737,6 +1011,12 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.aestheticEarth.blockID, 4, 6),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), BTWBlocks.looseDirt});
         RecipeManager.addSoulforgeRecipe(new ItemStack(Block.sandStone, 4),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), Block.sand});
 
+        // block dispenser
+//        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{"####", "#ZZ#", "YTTY", "YXXY", Character.valueOf('#'), TagInstance.of(BTWTags.mossyCobblestones), Character.valueOf('X'), Item.redstone, Character.valueOf('Y'), TagInstance.of(BTWTags.stoneBrickItems), Character.valueOf('Z'), BTWItems.soulUrn, Character.valueOf('T'), Block.torchRedstoneActive});
+//        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{"####", "#ZZ#", "YTTY", "YXXY", Character.valueOf('#'), TagInstance.of(BTWTags.mossyCobblestones), Character.valueOf('X'), Item.redstone, Character.valueOf('Y'), TagInstance.of(BTWTags.stoneBrickItems), Character.valueOf('Z'), BTWItems.soulUrn, Character.valueOf('T'), Block.torchRedstoneActive});
+
+        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{"# # ", " # #", "# # ", " # #", Character.valueOf('#'), BTWItems.ironNugget});
+        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{" # #", "# # ", " # #", "# # ", Character.valueOf('#'), BTWItems.ironNugget});
 
     }
     private static void addCampfireRecipes(){
@@ -802,9 +1082,14 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.magicArrow, 4), new Object[]{new ItemStack(NMItems.magicFeather), new ItemStack(Item.stick), new ItemStack(BTWItems.soulFlux), new ItemStack(BTWItems.broadheadArrowHead)});
         // done adding misc recipes
 
-        // fish sandwich
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.fishCooked)});
-        // fish sandwich end
+        // tasty sandwich
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), BTWTags.cookedMeats});
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(BTWItems.hamAndEggs)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 3), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.bread), new ItemStack(BTWItems.cookedKebab)});
+
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), NMTags.sandwichMeats});
+        // tasty sandwich end
 
         // remove sinew recipes, add custom ones
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.sinewExtractingBeef, 1, 600), new Object[]{new ItemStack(Item.beefCooked), new ItemStack(Item.beefCooked), new ItemStack(BTWItems.sharpStone)});
@@ -913,16 +1198,16 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         // gear stuff
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.gear, 4), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.wood, Character.valueOf('X'), Item.stick});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.gear, 4), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), BTWTags.logs, Character.valueOf('X'), Item.stick});
         RecipeManager.addRecipe(new ItemStack(BTWItems.gear, 2), new Object[]{" X ", "X#X", " X ", Character.valueOf('#'), Block.planks, Character.valueOf('X'), Item.stick});
         // stone hoe
-        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{" #X", " #S", " # ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), new ItemStack(BTWItems.stone, 1, Short.MAX_VALUE), Character.valueOf('S'), Item.silk});
-        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{"X# ", "S# ", " # ", Character.valueOf('#'), Item.stick, Character.valueOf('X'), new ItemStack(BTWItems.stone, 1, Short.MAX_VALUE), Character.valueOf('S'), Item.silk});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{"X#", "S#", " #", '#', Item.stick, 'X', BTWTags.looseRocks, 'S', BTWTags.strings});
+
         // sail recipe
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodMouldings});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodenMouldings});
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
 
-        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodMouldings});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodenMouldings});
         RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
 
         // hellforge
@@ -954,7 +1239,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Block.netherrack, 1), new Object[]{new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack)});
 
         // add obsidian recipes
-        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.crudeObsidian, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
+        RecipeManager.addShapelessRecipe(new ItemStack(Block.obsidian, 1, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
 
 
         // make ender chest not stupid
@@ -969,7 +1254,7 @@ public abstract class NMInitializer implements AchievementExt {
                 "OEO",
                 "OBO",
                 "OOO",
-                Character.valueOf('O'), NMBlocks.crudeObsidian,
+                Character.valueOf('O'), Block.obsidian,
                 Character.valueOf('B'), NMBlocks.bloodChest,
                 Character.valueOf('E'), Item.enderPearl
         });
@@ -991,8 +1276,8 @@ public abstract class NMInitializer implements AchievementExt {
         // done refining
 
         // chest
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodSidings, Character.valueOf('I'), Item.ingotIron});
-        RecipeManager.addRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodSidings, Character.valueOf('I'), BTWItems.ironNugget});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), Item.ingotIron});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), BTWItems.ironNugget});
         // done chest
 
         // blood saw
@@ -1021,16 +1306,61 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('E'), Item.expBottle,
                 Character.valueOf('H'), BTWItems.hellfireDust
         });
+
+        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 6), new Object[]{
+                "SNS",
+                "NIN",
+                "SNS",
+                Character.valueOf('I'), Item.ingotIron,
+                Character.valueOf('S'), BTWTags.strings,
+                Character.valueOf('N'), BTWItems.ironNugget
+        });
+
+        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 6), new Object[]{
+                "SNS",
+                "NIN",
+                "SNS",
+                Character.valueOf('I'), Item.ingotIron,
+                Character.valueOf('N'), BTWTags.strings,
+                Character.valueOf('S'), BTWItems.ironNugget
+        });
+
+        // new BD recipe:
+//        RecipeManager.addRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{
+//                "MVM",
+//                "SLS",
+//                "MRM",
+//                Character.valueOf('M'), BTWTags.mossyCobblestones,
+//                Character.valueOf('L'), BTWItems.redstoneLatch,
+//                Character.valueOf('R'), Block.blockRedstone,
+//                Character.valueOf('D'), Block.vine,
+//                Character.valueOf('S'), BTWItems.soulUrn
+//        });
+
+
+
+        // dynamite
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.sawDust});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.soulDust});
+
+        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.sawDust});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.soulDust});
+        // done with dynamite
+
+        // book
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
+        // done with book
     }
 
     private static void addPistonPackingRecipes() {
         // oysters
-        PistonPackingCraftingManager.instance.removeRecipe((Block)BTWBlocks.creeperOysterBlock, 0 , (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
-        RecipeManager.addPistonPackingRecipe((Block)BTWBlocks.creeperOysterBlock, new ItemStack(BTWItems.creeperOysters, 9));
+        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.creeperOysterBlock, 0 , new ItemStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
+        RecipeManager.addPistonPackingRecipe(BTWBlocks.creeperOysterBlock, new ItemStack(BTWItems.creeperOysters, 9));
 
         // spider eyes
-        PistonPackingCraftingManager.instance.removeRecipe((Block)BTWBlocks.spiderEyeBlock, 0 , (TagOrStack[])new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
-        RecipeManager.addPistonPackingRecipe((Block)BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
+        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.spiderEyeBlock, 0 , new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
+        RecipeManager.addPistonPackingRecipe(BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
     }
 
 
@@ -1050,9 +1380,6 @@ public abstract class NMInitializer implements AchievementExt {
     private static void setHidden(Achievement acObj, boolean hidden){
         acObj.isHidden = hidden;
     }
-//    private static void kill(Achievement acObj){
-//        acObj.tab.achievementList.remove(acObj);
-//    }
 
     private static void kill(Achievement acObj) {
         StatList.allStats.remove(acObj);
@@ -1080,7 +1407,7 @@ public abstract class NMInitializer implements AchievementExt {
         setDisplay(acObj,acObj.displayRow + down, acObj.displayColumn + right);
     }
     private static void removeParent(Achievement myAchievement, Achievement parentToRemove) {
-        AchievementExt ext = (AchievementExt) (Object) myAchievement;
+        AchievementExt ext = (AchievementExt) myAchievement;
         Achievement[] current = ((AchievementAccessor)myAchievement).getParents();
         Achievement[] updated = ext.nightmareMode$removeParent(current, parentToRemove);
         ((AchievementAccessor)myAchievement).setParentAchievements(updated);
@@ -1090,15 +1417,15 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void setIcon(Achievement acObj, Block block){
-        AchievementExt ext = (AchievementExt) (Object) acObj;
+        AchievementExt ext = (AchievementExt) acObj;
         ext.nightmareMode$setIcon(new ItemStack(block));
     }
     private static void setIcon(Achievement acObj, Item item){
-        AchievementExt ext = (AchievementExt) (Object) acObj;
+        AchievementExt ext = (AchievementExt) acObj;
         ext.nightmareMode$setIcon(new ItemStack(item));
     }
     private static void setIcon(Achievement acObj, ItemStack stack){
-        AchievementExt ext = (AchievementExt) (Object) acObj;
+        AchievementExt ext = (AchievementExt) acObj;
         ext.nightmareMode$setIcon(stack);
     }
 

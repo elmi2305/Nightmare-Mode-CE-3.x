@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.ScrewPumpBlock;
-import btw.block.util.MechPowerUtils;
+import api.block.util.MechPowerUtils;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

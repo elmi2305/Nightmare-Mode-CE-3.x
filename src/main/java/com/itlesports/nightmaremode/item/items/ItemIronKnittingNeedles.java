@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
-import btw.item.items.ToolItem;
+import api.item.items.ToolItem;
 import net.minecraft.src.*;
 
 public class ItemIronKnittingNeedles extends ToolItem {
@@ -11,7 +11,6 @@ public class ItemIronKnittingNeedles extends ToolItem {
         this.setMaxDamage(64);
         this.setDamageVsEntity(0);
         this.setBuoyant();
-        this.setFilterableProperties(4);
         this.setUnlocalizedName("nmNeedles");
         this.setCreativeTab(CreativeTabs.tabTools);
     }

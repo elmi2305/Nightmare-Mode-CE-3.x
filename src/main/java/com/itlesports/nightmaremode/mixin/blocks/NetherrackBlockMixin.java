@@ -1,10 +1,9 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.block.blocks.FullBlock;
+import api.block.blocks.FullBlock;
+import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
-import btw.world.util.difficulty.DifficultyParam;
-import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import net.minecraft.src.*;

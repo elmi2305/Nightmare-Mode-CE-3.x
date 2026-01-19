@@ -1,6 +1,7 @@
 # gradle
 .gradle/
 build/
+build_BTW/
 out/
 classes/
 

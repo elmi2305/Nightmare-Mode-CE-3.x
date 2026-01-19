@@ -5,8 +5,10 @@ import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public class BlockMixin {
+    @Shadow public static Block obsidian;
+
+    @Inject(method = "<clinit>", at = @At("TAIL"))
+    private static void performObsidianRewrite(CallbackInfo ci){
+        Item.itemsList[obsidian.blockID] = new ObsidianItemBlock(obsidian.blockID - 256);
+    }
+
+
     @Inject(method = "harvestBlock", at = @At("HEAD"))
     private void explodeRandomlyOnBlockBreak(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
         if(NightmareMode.isAprilFools){
@@ -30,6 +40,7 @@ public class BlockMixin {
         ItemStack item = player.getHeldItem();
         if (item != null) {
             int blockID = thisObj.blockID;
+            if(EnchantmentHelper.getSilkTouchModifier(player)){return;}
 
             if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) < 4){
                 if (blockID == Block.oreIron.blockID) {

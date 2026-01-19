@@ -9,12 +9,15 @@ public class ItemAR extends Item {
     public ItemAR(int par1) {
         super(par1);
         this.maxStackSize = 1;
-        this.setMaxDamage(2000);
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.setBuoyant();
         this.setUnlocalizedName("nmRifle");
     }
 
+    @Override
+    public boolean isDamageable() {
+        return false;
+    }
 
     public String getModId() {
         return "nightmare_mode";

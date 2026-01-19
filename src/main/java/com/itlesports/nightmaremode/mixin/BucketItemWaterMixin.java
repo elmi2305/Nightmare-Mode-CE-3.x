@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.util.MiscUtils;
 import btw.item.items.BucketItemWater;
-import btw.util.MiscUtils;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;

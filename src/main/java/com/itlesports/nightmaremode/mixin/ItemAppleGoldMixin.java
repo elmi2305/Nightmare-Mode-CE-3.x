@@ -9,11 +9,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static btw.community.nightmaremode.NightmareMode.GOLDEN_APPLE_COOLDOWN;
+
 @Mixin(ItemAppleGold.class)
 public abstract class ItemAppleGoldMixin extends ItemFood{
-    @Unique
-    private long timeUntilUsage;
-
     public ItemAppleGoldMixin(int par1, int par2, float par3, boolean par4) {
         super(par1, par2, par3, par4);
     }
@@ -62,18 +61,11 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
         if (!NightmareMode.noHit) {
             entityPlayer.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 2400, 1)); // absorption
         }
-
-        this.timeUntilUsage = world.getTotalWorldTime() + 1800; // enchanted gapple cooldown, 90s
-    }
-
-    @Inject(method = "onFoodEaten",at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",ordinal = 0,shift = At.Shift.AFTER))
-    private void addCooldownForRegularGaps(ItemStack stack, World world, EntityPlayer player, CallbackInfo ci){
-        this.timeUntilUsage = world.getTotalWorldTime() + 600; // regular gap cooldown, 30s
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!player.isPotionActive(Potion.hunger) && world.getTotalWorldTime() >= this.timeUntilUsage) {
+        if (!player.isPotionActive(Potion.hunger) && world.getTotalWorldTime() >= player.getData(GOLDEN_APPLE_COOLDOWN)) {
             player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
         } else {
             player.onCantConsume();

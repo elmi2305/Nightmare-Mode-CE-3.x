@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.entity.EntityCreeperGhast;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,12 +16,12 @@ public class RenderGhastMixin {
 
     @Inject(method = "func_110867_a", at = @At("HEAD"),cancellable = true)
     private void eclipseTextures(EntityGhast par1, CallbackInfoReturnable<ResourceLocation> cir) {
+        if (par1 instanceof EntityCreeperGhast) {
+            cir.setReturnValue(GHAST_CREEPER);
+            return;
+        }
         if (NMUtils.getIsMobEclipsed(par1)) {
-            if (par1.isPotionActive(Potion.moveSpeed)) {
-                cir.setReturnValue(GHAST_CREEPER);
-            } else {
-                cir.setReturnValue(GHAST_ECLIPSE);
-            }
+            cir.setReturnValue(GHAST_ECLIPSE);
         }
     }
 }

@@ -1,17 +1,15 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
-import btw.block.BTWBlocks;
-import btw.block.blocks.HopperBlock;
-import btw.block.tileentity.TileEntityDataPacketHandler;
+import api.block.TileEntityDataPacketHandler;
+import api.item.util.ItemUtils;
 import btw.item.BTWItems;
-import btw.item.util.ItemUtils;
 import net.minecraft.src.*;
 
 import java.util.*;
 
 public class HellforgeTileEntity extends TileEntityFurnace implements TileEntityDataPacketHandler {
 
-    public static final int FUEL_LIMIT = 16000 * 8;
+    public static final int FUEL_LIMIT = 132000;
     private ItemStack cookStack = null;
     private int unlitFuelBurnTime = 0;
     private int visualFuelLevel = 0;
@@ -87,8 +85,9 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
     public static final Map<Integer, Integer> FUEL_MAP = new HashMap<>();
 
     static {
-        FUEL_MAP.put(Block.netherrack.blockID, 4000);
-        FUEL_MAP.put(BTWItems.nethercoal.itemID, 100000);
+        FUEL_MAP.put(BTWItems.groundNetherrack.itemID, 400);
+        FUEL_MAP.put(Block.netherrack.blockID, 3200);
+        FUEL_MAP.put(BTWItems.nethercoal.itemID, 65000);
     }
 
     public static int getFuelValue(int id) {
@@ -169,9 +168,9 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
             ItemStack s = inv.getStackInSlot(slot);
             if (s == null) continue;
 
-            boolean isNetherrack = s.itemID == Block.netherrack.blockID;
+            boolean isValidFuel = (s.itemID == Block.netherrack.blockID || s.itemID == BTWItems.nethercoal.itemID) || s.itemID == BTWItems.groundNetherrack.itemID;
 
-            if (isNetherrack) {
+            if (isValidFuel) {
                 if (this.attemptToAddFuel(s) > 0) {
                     s.stackSize -= 1;
                     if (s.stackSize <= 0) inv.setInventorySlotContents(slot, null);
@@ -197,9 +196,9 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
     protected int getCookTimeForCurrentItem() {
         float multiplier;
         if(this.furnaceBurnTime == 0){
-            multiplier = 0.2f;
+            multiplier = 0.5f;
         } else{
-            multiplier = (float) Math.min((this.furnaceBurnTime / FUEL_LIMIT) * 8, 16);
+            multiplier = (float) Math.min((((float) this.furnaceBurnTime / FUEL_LIMIT) * 6f), 6f);
         }
         return (int)(super.getCookTimeForCurrentItem() / multiplier);
     }
@@ -319,7 +318,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
                     iNumItemsBurned = stack.stackSize;
                 }
 
-                this.unlitFuelBurnTime += (this.getItemBurnTime(stack) * 16) * iNumItemsBurned;
+                this.unlitFuelBurnTime += this.getItemBurnTime(stack) * iNumItemsBurned;
                 this.onInventoryChanged();
             }
         }
@@ -335,7 +334,6 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
                 iNewFuelLevel = 1;
             } else {
                 iNewFuelLevel = iTotalBurnTime / 16000 + 2;
-//                iNewFuelLevel = iTotalBurnTime / 1600 + 2;
             }
         }
 

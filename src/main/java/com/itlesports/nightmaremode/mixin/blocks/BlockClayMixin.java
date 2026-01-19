@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.world.util.difficulty.Difficulty;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

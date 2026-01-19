@@ -1,7 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.community.nightmaremode.NightmareMode;
-import btw.world.util.WorldUtils;
 import com.itlesports.nightmaremode.client.NightmareKeyBindings;
 import com.itlesports.nightmaremode.client.ZoomStateAccessor;
 import net.minecraft.src.*;
@@ -21,7 +19,6 @@ public class MinecraftMixin {
     @Shadow public GuiScreen currentScreen;
     @Shadow public EntityRenderer entityRenderer;
 
-    @Shadow public EntityClientPlayerMP thePlayer;
     @Unique private boolean wasZooming = false;
     @Unique private float originalFov = 0.0f;
 
@@ -46,19 +43,6 @@ public class MinecraftMixin {
         } else if (this.wasZooming) {
             this.gameSettings.fovSetting = originalFov;
             this.wasZooming = false;
-        }
-
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) && Keyboard.isKeyDown(Keyboard.KEY_F4) && NightmareMode.getInstance() != null && !NightmareMode.getInstance().getCanLeaveGame()) {
-            if (NightmareMode.worldState == 0) {
-                ChatMessageComponent text2 = new ChatMessageComponent();
-                text2.addText("<???> " + ("nightmare.hardmode_begun"));
-                text2.setColor(EnumChatFormatting.DARK_RED);
-                this.thePlayer.sendChatToPlayer(text2);
-                this.thePlayer.playSound("mob.wither.death",1.0f,0.905f);
-                WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
-                NightmareMode.worldState = 1;
-            }
         }
     }
 }

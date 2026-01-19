@@ -1,24 +1,20 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.community.nightmaremode.NightmareMode;
-import btw.entity.EntityWithCustomPacket;
+import api.entity.EntityWithCustomPacket;
+import api.entity.mob.KickingAnimal;
+import api.item.items.PickaxeItem;
 import btw.entity.attribute.BTWAttributes;
-import btw.entity.mob.KickingAnimal;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCustomPacket {
     private boolean determinedToExplode = false;
     private int timeSinceIgnited;
-    private int fuseTime = 60;
+    private int fuseTime = 50;
     private final int explosionRadius = 3;
     private byte patienceCounter = 60;
 
@@ -33,7 +29,7 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
 
     @Override
     public boolean getCanSpawnHere() {
-        return (this.posY < 30 || this.dimension == -1) && super.getCanSpawnHere();
+        return (this.posY < 20 || this.dimension == -1) && super.getCanSpawnHere();
     }
 
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
@@ -67,7 +63,9 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
         int progress = NMUtils.getWorldProgress();
         double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((32 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+
+
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((24 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.18f);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(6f + NMUtils.getWorldProgress() * 2);
     }
@@ -75,38 +73,43 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
     @Override
     public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
 
-    @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if(par1DamageSource.getEntity() instanceof EntityPlayer target){
-            Item heldItem = null;
-            if(target.getHeldItem() != null){
-                heldItem = target.getHeldItem().getItem();
-            }
-
-            int progress =  NMUtils.getWorldProgress();
-
-            if(heldItem != null){
-                if (itemsThatCanAttackTheZombie.contains(heldItem.itemID)) {
-                    return super.attackEntityFrom(par1DamageSource, par2);
-                } else{
-                    this.playSound("random.break",0.5f, 1.8f);
-                    target.getHeldItem().attemptDamageItem(this.rand.nextInt(4 + progress * 2) + progress + 1, this.rand);
-                }
-            }
+    public boolean attackEntityFrom(DamageSource source, float dmg) {
+        if (this.isEntityInvulnerable() || this.isBlacklistedDamage(source)) {
             return false;
         }
-        return super.attackEntityFrom(par1DamageSource, par2);
+        return super.attackEntityFrom(source, dmg);
     }
 
-    private static final List<Integer> itemsThatCanAttackTheZombie = new ArrayList<>(Arrays.asList(
-            Item.pickaxeStone.itemID,
-            Item.pickaxeIron.itemID,
-            Item.pickaxeDiamond.itemID,
-            BTWItems.steelPickaxe.itemID,
-            BTWItems.mattock.itemID,
-            NMItems.bloodPickaxe.itemID
-    ));
+    private boolean isBlacklistedDamage(DamageSource src) {
+        if(src == DamageSource.fall
+                || src == DamageSource.fallingBlock
+                || src == DamageSource.lava
+                || src == DamageSource.inFire
+                || src == DamageSource.onFire
+                || src == DamageSource.drown)
+        {return true;}
 
+        if(src.getEntity() instanceof EntityLivingBase p){
+            if(p.getHeldItem() == null){
+                return true;
+            } else{
+                if(p.getHeldItem().getItem() instanceof PickaxeItem){
+                    return false;
+                } else{
+                    for (int i = 0; i < 2; i++) {
+                        double offsetY = this.rand.nextDouble() * this.height * 1.2D;
+                        this.worldObj.playAuxSFX(2278, (int) this.posX, (int) (this.posY + offsetY), (int) this.posZ, 0);
+                    }
+                    p.getHeldItem().attemptDamageItem(3, p.rand);
+                    return true;
+                }
+            }
+        }
+        if(src == DamageSource.magic){
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public Packet getSpawnPacketForThisEntity() {
@@ -140,6 +143,9 @@ public class EntityObsidianCreeper extends EntityCreeper implements EntityWithCu
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
         if (this.getNeuteredState() == 0) {
             this.dropItem(Block.obsidian.blockID, this.rand.nextInt(2) + 1);
+
+            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(4) + 2);
+
         }
 
 

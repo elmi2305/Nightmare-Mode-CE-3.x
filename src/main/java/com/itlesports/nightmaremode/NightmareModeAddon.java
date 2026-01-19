@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode;
 
-import btw.AddonHandler;
-import btw.BTWAddon;
+import api.AddonHandler;
+import api.BTWAddon;
+import api.util.AddonSoundRegistryEntry;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
-import btw.util.sounds.AddonSoundRegistryEntry;
 import com.itlesports.nightmaremode.entity.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,11 +34,6 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
         if (instance == null)
             instance = new NightmareModeAddon();
         return instance;
-    }
-
-    @Override
-    public void postInitialize() {
-        super.postInitialize();
     }
 
     @Override

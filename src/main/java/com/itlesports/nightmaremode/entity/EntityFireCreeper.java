@@ -1,12 +1,12 @@
 package com.itlesports.nightmaremode.entity;
 
-import btw.entity.EntityWithCustomPacket;
-import btw.entity.mob.KickingAnimal;
-import btw.entity.mob.behavior.SimpleWanderBehavior;
-import btw.world.util.difficulty.Difficulties;
+import api.entity.EntityWithCustomPacket;
+import api.entity.mob.KickingAnimal;
+import api.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.entity.EntitySlimeAccessor;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
@@ -76,12 +76,14 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
         }
 
     }
+
+
     public void onUpdate() {
         if (this.isEntityAlive()) {
             this.lastActiveTime = this.timeSinceIgnited;
             int var1 = this.getCreeperState();
             if (var1 > 0 && this.timeSinceIgnited == 0) {
-                this.playSound("random.fuse", 1.0F, 0.5F);
+                this.playSound("random.fuse", 1.0F, 0.7f);
             }
 
             if (this.getAttackTarget() == null) {
@@ -127,7 +129,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                             this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)(this.explosionRadius * 2),true, var2);
                         }
                     } else {
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius, true, var2);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, (float)this.explosionRadius + 0.25f, true, var2);
                     }
                     if(NMUtils.getIsMobEclipsed(this)){
                         EntityLivingBase target = this.getAttackTarget();
@@ -140,7 +142,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
                                         }
                                         EntityMagmaCube cube = new EntityMagmaCube(this.worldObj);
                                         cube.setLocationAndAngles(this.posX + (i * 0.2), this.posY + (k * 0.5), this.posZ + (j * 0.2),this.rotationYaw,this.rotationPitch);
-                                        ((EntitySlime)cube).setSlimeSize(1);
+                                        ((EntitySlimeAccessor)(cube)).invokeSetSlimeSize(1);
                                         this.worldObj.spawnEntityInWorld(cube);
                                     }
                                 }
@@ -239,6 +241,11 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
             super.playLivingSound();
         }
 
+    }
+
+    @Override
+    protected float getSoundPitch() {
+        return super.getSoundPitch() + 0.2f;
     }
 
     protected String getLivingSound() {

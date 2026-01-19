@@ -1,11 +1,10 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import btw.util.status.StatusEffect;
+import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import net.minecraft.src.*;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin extends Gui{
@@ -74,7 +72,22 @@ public class GuiIngameMixin extends Gui{
             long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
             deltaToNextBM /= 24000;
             deltaToNextBM = (long) Math.floor(deltaToNextBM);
-            String text = "\247c" +I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+
+            String when = null;
+            if(deltaToNextBM == 16){
+                when = I18n.getString("gui.bloodmoon.tonight");
+            }
+
+            if(deltaToNextBM == 1 || deltaToNextBM == 0){
+                when = I18n.getString("gui.bloodmoon.tomorrow");
+            }
+            String text;
+
+            if(when == null){
+                text = "\247c" + I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+            } else{
+                text = "\247c" + I18n.getString("gui.bloodmoon") +" " + I18n.getString(when);
+            }
             return text;
         }
         return "";
@@ -83,9 +96,10 @@ public class GuiIngameMixin extends Gui{
     @Unique private boolean shouldShowBloodMoonCountdown(World world){
         if(NMUtils.getWorldProgress() > 0) return true;
 
-        if(NightmareMode.getInstance().portalTime > world.getWorldTime()){
+        long portalTime = world.worldInfo.getData(NightmareMode.PORTAL_TIME);
+        if(portalTime > world.getWorldTime()){
             long timeToNextBloodMoon = NMUtils.getNextBloodMoonTime(world.getWorldTime());
-            return NightmareMode.getInstance().portalTime < timeToNextBloodMoon;
+            return portalTime < timeToNextBloodMoon;
         }
         return false;
     }

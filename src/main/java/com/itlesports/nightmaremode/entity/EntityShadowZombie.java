@@ -1,11 +1,10 @@
 package com.itlesports.nightmaremode.entity;
 
+import api.world.WorldUtils;
+import api.world.difficulty.DifficultyParam;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
-import btw.world.util.WorldUtils;
-import btw.world.util.difficulty.Difficulties;
-import btw.world.util.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
 import com.itlesports.nightmaremode.NMDifficultyParam;
@@ -26,6 +25,14 @@ public class EntityShadowZombie extends EntityZombie {
         NMUtils.manageEclipseChance(this,2);
 
     }
+
+
+    @Override
+    protected float getSoundPitch() {
+        return 0.8f + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f;
+    }
+
+
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         if (this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class) && par1DamageSource.isExplosion()) {
@@ -104,6 +111,7 @@ public class EntityShadowZombie extends EntityZombie {
             }
         }
     }
+
     private void seekSkybases() {
         double targetX;
         double targetZ;
@@ -112,6 +120,7 @@ public class EntityShadowZombie extends EntityZombie {
         double foundPosY = this.posY;
         double foundPosZ = this.posZ;
         boolean isWood = false;
+
         for (int i = 0; i < 12; i++) {
             int verticalRange = 20;
             targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
@@ -218,14 +227,14 @@ public class EntityShadowZombie extends EntityZombie {
         }
     }
     private void teleportBehindTarget(EntityPlayer targetPlayer) {
-        // Get player's facing direction (yaw) and calculate the opposite direction
-        float yaw = targetPlayer.rotationYaw + 180; // 180° to teleport behind
+        // get player's facing direction (yaw) and calculate the opposite direction
+        float yaw = targetPlayer.rotationYaw + 180;
         double radians = Math.toRadians(yaw);
 
-        // Random distance between 5 and 10 blocks
+        // random distance between 5 and 10 blocks
         double distance = 5 + this.rand.nextInt(6);
 
-        // Calculate the position behind the player
+        // recalculate the position behind the player
         int xOffset = (int) (-Math.sin(radians) * distance);
         int zOffset = (int) (Math.cos(radians) * distance);
 
@@ -233,7 +242,7 @@ public class EntityShadowZombie extends EntityZombie {
         int targetY = MathHelper.floor_double(targetPlayer.posY);
         int targetZ = MathHelper.floor_double(targetPlayer.posZ + zOffset);
 
-        // Ensure the teleport location is valid
+        // ensure the teleport location is valid
         if (this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 &&
                 this.worldObj.getBlockId(targetX, targetY - 1, targetZ) != 0 &&
                 this.worldObj.getBlockId(targetX, targetY + 1, targetZ) == 0) {
