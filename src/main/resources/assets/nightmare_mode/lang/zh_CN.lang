@@ -24,16 +24,16 @@ item.nmBloodMilk.name=鲜血牛奶
 item.nmCreeperChop.name=苦力怕肉排
 item.nmCharredFlesh.name=焦化腐肉
 item.nmSpiderFangs.name=蜘蛛毒牙
-item.nmWaterRod.name=水流棒
 item.nmHellFireRod.name=地狱火棒
-item.nmElementalRod.name=元素棒
-item.nmShadowRod.name=暗影棒
+item.nmWaterRod.name=水流棒
 item.nmSulfur.name=硫磺
 item.nmCreeperTear.name=苦力怕之泪
 item.nmSilverLump.name=银块
 item.nmWitheredBone.name=凋零骨片
 item.nmDecayedFlesh.name=腐化血肉
 item.nmGhastTentacle.name=恶魂触须
+item.nmElementalRod.name=元素棒
+item.nmShadowRod.name=暗影棒
 item.nmStarOfTheBloodGod.name=血神之眼
 item.nmSpeedCoil.name=速度线圈
 item.nmSteelBunch.name=钢粒簇
@@ -46,7 +46,8 @@ item.nmOysterSoup.name=苦力怕酶腺汤
 item.nmTempleDust.name=远古之沙
 item.nmObsidianShard.name=黑曜石碎片
 item.nmTimeBottle.name=时间之瓶
-
+item.nmRefinedDiamondIngot.name=精炼钻石锭
+item.nmBloodBottle.name=猩红之瓶
 
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石
@@ -63,15 +64,19 @@ tile.nmCrudeObsidian.name=粗制黑曜石
 tile.nmAsphaltLayer.name=沥青层
 tile.nmBloodSawBlock.name=血锯
 tile.nmVillagerBlock.name=村民容器
+tile.nmUnderworldRock.name=地下岩
+tile.nmUnderworldRockSmooth.name=平滑地下岩
+tile.nmUnderworldRockCobble.name=地下圆石
+tile.nmUnderGrass.name=地下草方块
+tile.nmUnderDirt.name=地下泥土
 
+container.steelLocker=钢储物柜
+container.inventory=物品栏
 
 villager.profession=职业
 villager.level=等级
 entity.addonVillagerNightmare.name=噩梦商人
 
-
-container.steelLocker=钢储物柜
-container.inventory=物品栏
 
 entity.NightmareFireCreeper.name=火焰苦力怕
 entity.NightmareLightningCreeper.name=闪电苦力怕
@@ -93,8 +98,6 @@ entity.NightmareDrownedSkeleton.name=溺骸骷髅
 entity.NightmareMeltedSkeleton.name=熔火骷髅
 entity.NightmareObsidianFish.name=黑曜石鱼
 entity.NightmareCreeperGhast.name=苦力怕恶魂
-
-
 
 key.nightmaremode.zoomhold=按住缩放
 key.nightmaremode.zoomtoggle=切换缩放
@@ -135,6 +138,12 @@ gui.selectworld.warning_recommend_restart=建议重启游戏
 gui.selectworld.warning_config_crash=新配置已加载，建议重启游戏，否则可能会导致游戏崩溃或损坏您的世界
 gui.selectworld.warning_continue=确定要继续吗?
 gui.selectworld.warning_final=这是最后的警告
+
+gui.bloodmoon=血月
+gui.bloodmoon.in=血月将在
+gui.bloodmoon.days=天
+gui.bloodmoon.tonight=今晚
+gui.bloodmoon.tomorrow=明天
 
 difficulty.baddream.name=噩梦模式
 difficulty.nightmare.name=梦魇模式
@@ -227,15 +236,7 @@ gui.config.tooltip.full_bright=以最大亮度渲染世界。不会绕过黑暗�
 gui.config.fast_villagers=快速村民
 gui.config.tooltip.fast_villagers=让村民每天重新刷新交易4次
 gui.config.blood_moon_helper=血月助手
-gui.config.tooltip.blood_moon_helper=显示下一次血月何时出现
-
-
-gui.bloodmoon=血月
-gui.bloodmoon.in=血月将在
-gui.bloodmoon.days=天
-gui.bloodmoon.tonight=今晚
-gui.bloodmoon.tomorrow=明天
-
+gui.config.tooltip.blood_moon_helper=显示下一次血月于何时出现
 
 gui.warning.line1=伙计
 gui.warning.line2=你正在尝试加入一个启用了癌症模式的世界
@@ -244,11 +245,6 @@ gui.warning.line4=因为它很可能会被破坏
 gui.warning.line5=你确定要继续吗？这是给你的最后警告
 gui.warning.iknow=我知道我在做什么
 gui.warning.goback=返回
-
-
-item.desc.bloodmoon0=Bỏ qua Trăng Máu hiện tại nếu nó đang hoạt động
-item.desc.bloodmoon1=Ngược lại, bỏ qua cho đến Trăng Máu tiếp theo
-
 
 gui.gameover.tip_prefix=提示：
 gui.gameover.tip1=远离海洋！
@@ -329,9 +325,11 @@ deathScreen.deathTauntMessage17=<???> 试试简单难度？
 deathScreen.deathTauntMessage18=<???> 又一次失败，看着真愉快。
 deathScreen.deathTauntMessage19=<???> 这就想感动我？
 
-achievementtab.nightmaremode=噩梦模式
-achievement.nm.grants=Cấp các Thành Tựu sau:
+item.desc.bloodmoon0=如果当前是血月，则跳过当前血月
+item.desc.bloodmoon1=否则，跳至下一个血月
 
+achievementtab.nightmaremode=噩梦模式
+achievement.nm.grants=授予以下成就：
 
 achievement.nm.morningSecondDay=故事刚开头……
 achievement.nm.morningSecondDay.desc=熬过第一夜，正式开局！
@@ -519,12 +517,11 @@ achievement.nm.steelMattock.desc=造个鹤嘴锄，随时开挖
 achievement.nm.steelBattleAxe=兄弟们冲啊！
 achievement.nm.steelBattleAxe.desc=战斧在手，激情开团
 
-achievement.btw.equip_steel_armor=不可触碰
 
 achievement.nm.pride=傲视深渊
 achievement.nm.pride.desc=深渊想收拾你，你摆出高傲姿态
 
-achievement.nm.eclipse=黑日征服者
+achievement.nm.eclipse=日蚀征服者
 achievement.nm.eclipse.desc=在第一次日蚀中活下来，硬核玩家
 
 achievement.nm.eclipseShard=暗日碎片
@@ -662,4 +659,28 @@ achievement.nm.beaconSpider.desc=建造一个4级蜘蛛眼信标
 achievement.nm.chainArmor=我由火铸成
 achievement.nm.chainArmor.desc=用一件锁链护甲保护自己免受火焰伤害
 
+achievement.nm.alchemyDust=碎疣
+achievement.nm.alchemyDust.desc=使用炼金粉末定位女巫小屋
+
+achievement.nm.ancientSand=像真正的炼金术士一样
+achievement.nm.ancientSand.desc=使用远古沙定位沙漠神殿
+
+
+
+achievement.btw.equip_steel_armor=不可触碰
+achievement.btw.find_shaft=卑微的开端
+achievement.btw.craft_fire_plough=初燃之火
+achievement.btw.craft_hopper=自动化的开始
+achievement.btw.find_bones=赤裸的骨头
+achievement.btw.place_tool=留下你的印记
+
+
+achievement.btw.craft_iron_shears.desc=获得一把铁剪刀。这非常适合剪大麻。
+
+
+
 tag.nightmare_mode.sandwich_meats=三明治肉类
+
+
+
+
