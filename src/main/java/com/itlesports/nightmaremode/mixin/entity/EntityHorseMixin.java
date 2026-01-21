@@ -1,9 +1,11 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.mob.KickingAnimal;
+import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.block.blocks.BlockRoad;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
@@ -42,11 +44,49 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         return (24.0 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier();
     }
 
+    @Unique
+    private float getInternalSpeedModifier() {
+        float fMoveSpeed = 1.0f;
+        if (this.onGround && this.isAffectedByMovementModifiers()) {
+            Block blockOn;
+            int iGroundK;
+            int iGroundJ;
+            int iGroundI = MathHelper.floor_double(this.posX);
+            if (WorldUtils.isGroundCoverOnBlock(this.worldObj, iGroundI, iGroundJ = MathHelper.floor_double(this.posY - 0.03 - (double)this.yOffset), iGroundK = MathHelper.floor_double(this.posZ))) {
+                fMoveSpeed *= 0.8f;
+            }
+            if ((blockOn = Block.blocksList[this.worldObj.getBlockId(iGroundI, iGroundJ, iGroundK)]) == null || blockOn.getCollisionBoundingBoxFromPool(this.worldObj, iGroundI, iGroundJ, iGroundK) == null) {
+                float fHalfWidth = this.width / 2.0f;
+                int iCenterGroundI = iGroundI;
+                iGroundI = MathHelper.floor_double(this.posX + (double)fHalfWidth);
+                blockOn = Block.blocksList[this.worldObj.getBlockId(iGroundI, iGroundJ, iGroundK)];
+                if (!(blockOn != null && blockOn.getCollisionBoundingBoxFromPool(this.worldObj, iGroundI, iGroundJ, iGroundK) != null || (blockOn = Block.blocksList[this.worldObj.getBlockId(iGroundI = MathHelper.floor_double(this.posX - (double)fHalfWidth), iGroundJ, iGroundK)]) != null && blockOn.getCollisionBoundingBoxFromPool(this.worldObj, iGroundI, iGroundJ, iGroundK) != null || (blockOn = Block.blocksList[this.worldObj.getBlockId(iGroundI = iCenterGroundI, iGroundJ, iGroundK = MathHelper.floor_double(this.posZ + (double)fHalfWidth))]) != null && blockOn.getCollisionBoundingBoxFromPool(this.worldObj, iGroundI, iGroundJ, iGroundK) != null)) {
+                    iGroundK = MathHelper.floor_double(this.posZ - (double)fHalfWidth);
+                    blockOn = Block.blocksList[this.worldObj.getBlockId(iGroundI, iGroundJ, iGroundK)];
+                }
+            }
+            if (blockOn != null) {
+                fMoveSpeed *= blockOn.getMovementModifier(this.worldObj, iGroundI, iGroundJ, iGroundK);
+                if(blockOn instanceof BlockRoad){
+                    fMoveSpeed *= 1.25f;
+                }
+            }
+            fMoveSpeed *= this.getLandMovementModifier();
+        }
+        if (fMoveSpeed < 0.0f) {
+            fMoveSpeed = 0.0f;
+        }
+
+        
+        return fMoveSpeed;
+    }
+
     @Override
     public float getAIMoveSpeed() {
         float modifier = this.getWeightFromArmor();
         float speedModifier = this.isPotionActive(Potion.moveSpeed) ? (float) (1.2f + (0.2 * (this.getActivePotionEffect(Potion.moveSpeed).getAmplifier() - 1))) : 1.0f;
-        return super.getAIMoveSpeed() * modifier * speedModifier;
+        float internalSpeedModifier = this.getInternalSpeedModifier();
+        return super.getAIMoveSpeed() * modifier * speedModifier * internalSpeedModifier;
     }
 
     @Unique private float getWeightFromArmor(){

@@ -32,20 +32,20 @@ public class BlockMultiTextured extends NMBlock {
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 
-    public BlockMultiTextured(int par1, Material par2Material, String s) {
-        this(par1, par2Material, s, s, s, s, s, s);
+    public BlockMultiTextured(int id, Material material, String allSides) {
+        this(id, material, allSides, allSides, allSides, allSides, allSides, allSides);
     }
-    public BlockMultiTextured(int par1, Material par2Material, String s, boolean canGrowVegetation) {
-        this(par1, par2Material, s);
+    public BlockMultiTextured(int id, Material material, String allSides, boolean canGrowVegetation) {
+        this(id, material, allSides);
         this.canGrowVegetation = canGrowVegetation;
     }
 
 
-    public BlockMultiTextured(int par1, Material par2Material, String top, String bot, String side) {
-        this(par1, par2Material, bot, top, side, side, side, side);
+    public BlockMultiTextured(int id, Material material, String top, String bot, String sides) {
+        this(id, material, bot, top, sides, sides, sides, sides);
     }
-    public BlockMultiTextured(int par1, Material par2Material, String top, String bot, String side, boolean canGrowVegetation) {
-        this(par1, par2Material, bot, top, side);
+    public BlockMultiTextured(int id, Material material, String top, String bot, String side, boolean canGrowVegetation) {
+        this(id, material, bot, top, side);
         this.canGrowVegetation = canGrowVegetation;
     }
 

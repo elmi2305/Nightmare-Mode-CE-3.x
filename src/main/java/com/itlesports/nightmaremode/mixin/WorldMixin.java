@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import com.itlesports.nightmaremode.NMConfUtils;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -29,6 +31,9 @@ public abstract class WorldMixin {
     @Shadow public abstract void setRainStrength(float par1);
     @Shadow protected float thunderingStrength;
     @Shadow public abstract boolean isThundering();
+
+
+    @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> worldDataEntry, T t);
 
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
     private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir){
@@ -59,6 +64,10 @@ public abstract class WorldMixin {
         return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
     }
 
+    @Inject(method = "initialize", at = @At("TAIL"))
+    private void setDataOnInit(WorldSettings par1WorldSettings, CallbackInfo ci){
+        this.setData(NightmareMode.CONFIGS_CREATED, NMConfUtils.getClientConfigData());
+    }
 
     @Inject(method = "getFogColor", at = @At("RETURN"), cancellable = true)
     private void changeFogColor(CallbackInfoReturnable<Vec3> cir){
@@ -162,6 +171,7 @@ public abstract class WorldMixin {
 
         return 1 + ((double) this.getWorldTime() / baseInterval) * 0.01;
     }
+
 
     @Inject(method = "isDaytime", at = @At("HEAD"),cancellable = true)
     private void eclipseNightTime(CallbackInfoReturnable<Boolean> cir){

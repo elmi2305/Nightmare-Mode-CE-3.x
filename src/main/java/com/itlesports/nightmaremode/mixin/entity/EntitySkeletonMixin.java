@@ -247,6 +247,10 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         }
         return bound;
     }
+    @ModifyConstant(method = "onSpawnWithEgg", constant = @Constant(doubleValue = 50.0))
+    private double reduceHeightWitherSkeletonCanSpawn(double constant){
+        return 30d;
+    }
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNotCatchFireInSun(EntitySkeleton instance){}

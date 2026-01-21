@@ -103,7 +103,6 @@ public class GuiMainMenuMixin extends GuiScreen {
     private void modifyColorsOnBloodmare0(Args args){
         if (NightmareMode.bloodmare) {
             args.set(0, (255 << 16) | (40 << 8) | 40);
-            args.set(1, 40);
         }
     }
 

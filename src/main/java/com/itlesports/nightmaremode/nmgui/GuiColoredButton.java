@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.nmgui;
 
+import com.itlesports.nightmaremode.NMConfUtils;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.Minecraft;
@@ -25,6 +26,7 @@ public class GuiColoredButton extends GuiButton {
     private String tooltipText;
     private boolean state;
     public boolean shouldDrawToolTip;
+    private NMConfUtils.CONFIG configValue;
 
     public GuiColoredButton(int id, int x, int y, int width, int height, String label,
                             int hoverTextColor, int unpressedTextColor, int baseColor) {
@@ -154,7 +156,17 @@ public class GuiColoredButton extends GuiButton {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0xCC000000);
+
+        int borderThickness = 1;
+        drawRect(
+                boxX - borderThickness,
+                boxY - borderThickness,
+                boxX + boxWidth + borderThickness,
+                boxY + boxHeight + borderThickness,
+                0xAAFFFFFF
+        );
+
+        drawRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0xDF000000);
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -199,5 +211,12 @@ public class GuiColoredButton extends GuiButton {
     }
     public String getTooltipText() {
         return this.tooltipText;
+    }
+    public NMConfUtils.CONFIG getConfigValue(){
+        return this.configValue;
+    }
+
+    public void setConfigValue(NMConfUtils.CONFIG conf){
+        this.configValue = conf;
     }
 }

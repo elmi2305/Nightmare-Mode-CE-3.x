@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
+import com.itlesports.nightmaremode.NMConfUtils;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.network.IHorseTamingClient;
 import net.minecraft.src.*;
@@ -17,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+
+import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin extends Gui{
@@ -59,7 +62,8 @@ public class GuiIngameMixin extends Gui{
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
             if(NightmareMode.configOnHud){
-                textToShow = this.getTextForActiveConfig();
+
+                textToShow = NMConfUtils.getTextForActiveConfig(this.mc.theWorld.worldInfo.getData(CONFIGS_CREATED));
                 stringWidth = fontRenderer.getStringWidth(textToShow);
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
@@ -112,85 +116,6 @@ public class GuiIngameMixin extends Gui{
             return 1;
         }
         return 0;
-    }
-    @Unique private String getTextForActiveConfig(){
-        String string = "";
-        int count = 0;
-        if(NightmareMode.bloodmare){
-            string += "BM";
-            count++;
-        }
-        if(NightmareMode.totalEclipse){
-            if(count > 0){
-                string += "+";
-            }
-            string += "TE";
-            count++;
-        }
-        if(NightmareMode.evolvedMobs){
-            if(count > 0){
-                string += "+";
-            }
-            string += "EM";
-            count++;
-        }
-        if(NightmareMode.buffedSquids){
-            if(count > 0){
-                string += "+";
-            }
-            string += "BS";
-            count++;
-        }
-        if(NightmareMode.magicMonsters){
-            if(count > 0){
-                string += "+";
-            }
-            string += "MM";
-        }
-        if(NightmareMode.nite){
-            if(count > 0){
-                string += "+";
-            }
-            string += "NITE";
-        }
-        if(NightmareMode.noSkybases){
-            if(count > 0){
-                string += "+";
-            }
-            string += "NS";
-        }
-        if(NightmareMode.unkillableMobs){
-            if(count > 0){
-                string += "+";
-            }
-            string += "UM";
-        }
-        if(NightmareMode.moreVariants){
-            if(count > 0){
-                string += "+";
-            }
-            string += "MV";
-        }
-        if(NightmareMode.isAprilFools){
-            if(count > 0){
-                string += "+";
-            }
-            string += "CM";
-        }
-        if(NightmareMode.hordeMode){
-            if(count > 0){
-                string += "+";
-            }
-            string += "HM";
-        }
-        if(NightmareMode.noHit){
-            if (count > 0) {
-                string = "NoHit " + string;
-            } else{
-                string += "NoHit";
-            }
-        }
-        return string;
     }
     @Unique int heightField = 13;
     @Unique int widthField = 6;

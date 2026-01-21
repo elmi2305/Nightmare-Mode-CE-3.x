@@ -3,13 +3,11 @@ package com.itlesports.nightmaremode.mixin.render;
 import btw.client.render.BTWRenderMapper;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityVillagerContainer;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.rendering.*;
-import net.minecraft.src.RenderGhast;
-import net.minecraft.src.RenderManager;
-import net.minecraft.src.RenderSkeleton;
-import net.minecraft.src.TileEntityRenderer;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,6 +38,7 @@ public class BTWRenderMapperMixin {
 
         TileEntityRenderer.instance.addSpecialRendererForClass(HellforgeTileEntity.class, new HellforgeRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(CustomBasketTileEntity.class, new CustomBasketRenderer());
+        TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityDisenchantmentTable.class, new RenderDisenchantmentTable());
 
     }
 }

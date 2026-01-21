@@ -82,6 +82,7 @@ tile.nmCrudeObsidian.name=Obsidian Thô
 tile.nmAsphaltLayer.name=Lớp Nhựa Đường
 tile.nmBloodSawBlock.name=Cưa Máu
 tile.nmVillagerBlock.name=Bình Dân Làng
+tile.nmDisenchantmentTable.name=Bàn Giải Phép
 
 
 villager.profession=Nghề nghiệp
@@ -191,6 +192,9 @@ gui.selectworld.warning_config_crash=Đã tải cấu hình mới, có thể là
 gui.selectworld.warning_continue=Bạn có thực sự chắc chắn muốn tiếp tục không?
 gui.selectworld.warning_final=Đây là cảnh báo cuối cùng
 player.stopSleeping=Dừng ngủ
+
+gui.container_disenchantment=Bàn Giải Phép
+
 gui.config.go_back=Quay lại
 gui.config.switch_pages=Chuyển trang
 gui.config.more_variants=Nhiều biến thể quái vật hơn
@@ -246,7 +250,21 @@ gui.config.fast_villagers=Dân Làng Nhanh
 gui.config.tooltip.fast_villagers=Khiến Dân Làng đổi giao dịch 4 lần mỗi ngày
 gui.config.blood_moon_helper=Trợ Lý Trăng Máu
 gui.config.tooltip.blood_moon_helper=Hiển thị khi nào Trăng Máu tiếp theo sẽ xuất hiện
-
+gui.config.real_time=Thời Gian Thực
+gui.config.tooltip.real_time=Ngày và Đêm kéo dài 12 giờ ngoài đời thực. Chế độ Khó kích hoạt vào Ngày 3. Hậu Kỳ kích hoạt vào Ngày 5. LƯU Ý: Nếu cấu hình này được bật, không cấu hình nào khác có thể được hoàn thành
+gui.config.clear.morevariants=Điều kiện hoàn thành: Đánh bại Rồng Ender
+gui.config.clear.evolvedmobs=Điều kiện hoàn thành: Đánh bại ???
+gui.config.clear.buffedsquids=Điều kiện hoàn thành: Đánh bại ???
+gui.config.clear.nite=Điều kiện hoàn thành: Đánh bại Rồng Ender
+gui.config.clear.darkstormynightmare=Điều kiện hoàn thành: Đánh bại Rồng Ender
+gui.config.clear.noskybases=Điều kiện hoàn thành: Đánh bại ???
+gui.config.clear.isaprilfools=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.realtime=Điều kiện hoàn thành: Sống sót qua Đêm U Ám đầu tiên
+gui.config.clear.totaleclipse=Điều kiện hoàn thành: Đánh bại một Trăng Máu
+gui.config.clear.bloodmare=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.magicmonsters=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.unkillablemobs=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.nohit=Điều kiện hoàn thành: Vào Chế độ Khó
 
 
 gui.nm.horseTaming=Giữ đúng hướng và căn chỉnh góc của Ngựa
@@ -287,8 +305,17 @@ bosses.bloodwither.potion_warning=Phải dùng thuốc mới thắng được ta
 bosses.bloodwither.learn_fight=Không biết đánh nhau cho đàng hoàng à?
 bosses.bloodwither.gapple_notice=Ta thấy ngươi mang theo táo vàng...
 bosses.bloodwither.gapple_plan=Ngươi không định dùng chúng chứ?
+
+world.endgameBegin=<???> Hậu Kỳ đã bắt đầu.
 world.portal_warning=Còn 3 ngày nữa.
 world.hardmodeBegin=Hard Mode đã bắt đầu.
+
+world.config.using_help=Phát hiện các cấu hình hỗ trợ trên máy khách của bạn.
+world.config.progress_wiped=Toàn bộ tiến trình cấu hình đã bị xóa cho Thế Giới này.
+world.config.no_match=Bạn đang sử dụng các cấu hình không được bật khi Thế Giới này được tạo.
+world.config.relaxed=Các thành tựu cấu hình chỉ khả dụng ở Độ Khó Nightmare.
+world.config.cheating=Thành tựu cấu hình không khả dụng trong các Thế Giới có gian lận.
+
 bosses.dragons.journeyEnd=Hành trình của ngươi kết thúc tại đây.
 deathScreen.deathTauntMessage1=<???> Thật thảm hại.
 deathScreen.deathTauntMessage2=<???> Đang đùa đấy hả?

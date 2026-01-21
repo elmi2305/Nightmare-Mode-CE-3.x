@@ -549,7 +549,7 @@ public abstract class NMInitializer implements AchievementExt {
             NMItems.witchLocator.setItemRightClickCooldown( NMItems.witchLocator.getItemRightClickCooldown() / 6);
             NMItems.templeLocator.setItemRightClickCooldown( NMItems.templeLocator.getItemRightClickCooldown() / 6);
         }
-
+        NMConfUtils.initConfigFile();
     }
 
 
@@ -678,7 +678,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         // Level 2 Trades
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).convert().input(TradeItem.fromIDAndMetadata(Item.potion.itemID, 8229, 1,2)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID)).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.1f).addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.7f).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.decayedFlesh.itemID).itemCount(4, 6).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.silverLump.itemID).itemCount(2, 3).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).sell().item(NMItems.dungApple.itemID).buySellSingle().weight(0.3f).addToTradeList();
@@ -1018,6 +1018,9 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{"# # ", " # #", "# # ", " # #", Character.valueOf('#'), BTWItems.ironNugget});
         RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{" # #", "# # ", " # #", "# # ", Character.valueOf('#'), BTWItems.ironNugget});
 
+        // make soulforge craftable with soulforge
+        RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.soulforge, 1), new Object[]{"#BB#", " #  ", " #  ", "####", Character.valueOf('#'), BTWItems.soulforgedSteelIngot,Character.valueOf('B'), BTWBlocks.soulforgedSteelBlock});
+
     }
     private static void addCampfireRecipes(){
         RecipeManager.addCampfireRecipe(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast));
@@ -1058,7 +1061,7 @@ public abstract class NMInitializer implements AchievementExt {
                 " S#",
                 "S Y", Character.valueOf('#'), Item.silk, Character.valueOf('Y'), BTWItems.ironNugget,Character.valueOf('S'), Item.stick});
 
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.fishingRod), new Object[]{new ItemStack(Item.stick), BTWTags.strings, BTWTags.strings, BTWTags.fishingHooks});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.fishingRod), new Object[]{TagInstance.of(BTWTags.lowQualityToolHandles), BTWTags.fineStrings, BTWTags.fineStrings, BTWTags.fishingHooks});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.ironFishingPole,1), new Object[]{"  #", " #X", "Y #", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('X'), BTWItems.rope, Character.valueOf('Y'), Item.ingotIron});
         // fishing recipes added

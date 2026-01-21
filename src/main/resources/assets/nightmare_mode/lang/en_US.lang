@@ -69,6 +69,7 @@ tile.nmUnderworldRockSmooth.name=Understone
 tile.nmUnderworldRockCobble.name=Undercobble
 tile.nmUnderGrass.name=Undergrass
 tile.nmUnderDirt.name=Underdirt
+tile.nmDisenchantmentTable.name=Disenchantment Table
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory
@@ -127,6 +128,9 @@ gui.nmTimer.night=Night %d
 gui.menu.noEscape=No Escape
 gui.nm.horseTaming=Hold the correct direction and match the Horse's angle
 gui.nm.horseMenu=Horse Armor Storage
+
+
+gui.container_disenchantment=Disenchantment Table
 
 gui.selectworld.buff_squids=Buff Squids
 gui.selectworld.toggle_cancer_worldgen=Toggle Cancer Worldgen
@@ -237,6 +241,27 @@ gui.config.fast_villagers=Fast Villagers
 gui.config.tooltip.fast_villagers=Makes Villagers reset their trades 4 times per day
 gui.config.blood_moon_helper=Blood Moon Helper
 gui.config.tooltip.blood_moon_helper=Shows you when the next Blood Moon will be
+gui.config.real_time=Real Time
+gui.config.tooltip.real_time=Day and Night last 12 real-life hours. Hardmode activates on Day 3. Endgame activates on Day 5. NOTE: If this config is active, no other configs can be completed
+
+
+
+
+
+
+gui.config.clear.morevariants=Clear Condition: Defeat the Ender Dragon
+gui.config.clear.evolvedmobs=Clear Condition: Defeat ???
+gui.config.clear.buffedsquids=Clear Condition: Defeat ???
+gui.config.clear.nite=Clear Condition: Defeat the Ender Dragon
+gui.config.clear.darkstormynightmare=Clear Condition: Defeat the Ender Dragon
+gui.config.clear.noskybases=Clear Condition: Defeat ???
+gui.config.clear.isaprilfools=Clear Condition: Enter Hardmode
+gui.config.clear.realtime=Clear Condition: Survive the first Gloom Night
+gui.config.clear.totaleclipse=Clear Condition: Defeat a Blood Moon
+gui.config.clear.bloodmare=Clear Condition: Enter Hardmode
+gui.config.clear.magicmonsters=Clear Condition: Enter Hardmode
+gui.config.clear.unkillablemobs=Clear Condition: Enter Hardmode
+gui.config.clear.nohit=Clear Condition: Enter Hardmode
 
 gui.warning.line1=bro
 gui.warning.line2=you are about to join a world with cancer mode enabled
@@ -293,7 +318,13 @@ player.stopSleeping=Stop Sleeping
 player.attemptEscapeBloodmoon=<???> Running from the Bloodmoon? Pathetic.
 
 world.hardmodeBegin=<???> Hardmode has begun.
+world.endgameBegin=<???> Endgame has begun.
 world.portal_warning=3 days remain.
+world.config.using_help=Helpful configs were detected on your client.
+world.config.progress_wiped=All config progress has been wiped for this World.
+world.config.no_match=You are using configs which were not active when this World was created.
+world.config.relaxed=Config achievements are only available on Nightmare Difficulty.
+world.config.cheating=Config achievements aren't available on cheated Worlds.
 
 bosses.wither_summon_sealevel=<???> The Wither must be summoned above sea level.
 bosses.wither_summon_too_high=<???> The Wither cannot be summoned this high. Y coordinate must be under 200.

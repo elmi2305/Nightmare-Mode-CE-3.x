@@ -69,6 +69,8 @@ tile.nmUnderworldRockSmooth.name=平滑地下岩
 tile.nmUnderworldRockCobble.name=地下圆石
 tile.nmUnderGrass.name=地下草方块
 tile.nmUnderDirt.name=地下泥土
+tile.nmDisenchantmentTable.name=祛魔台
+
 
 container.steelLocker=钢储物柜
 container.inventory=物品栏
@@ -127,6 +129,7 @@ gui.nmTimer.night=夜晚 %d
 gui.menu.noEscape=无处可逃
 gui.nm.horseTaming=保持正确方向并匹配马的角度
 gui.nm.horseMenu=马铠储存
+gui.container_disenchantment=祛魔台
 
 gui.selectworld.buff_squids=强化鱿鱼
 gui.selectworld.toggle_cancer_worldgen=切换癌症世界生成
@@ -237,6 +240,24 @@ gui.config.fast_villagers=快速村民
 gui.config.tooltip.fast_villagers=让村民每天重新刷新交易4次
 gui.config.blood_moon_helper=血月助手
 gui.config.tooltip.blood_moon_helper=显示下一次血月于何时出现
+gui.config.real_time=现实时间
+gui.config.tooltip.real_time=昼夜各持续12小时现实时间。第3天进入困难模式，第5天进入终局阶段。注意：启用此配置后，其他配置将无法完成
+
+gui.config.clear.morevariants=完成条件：击败末影龙
+gui.config.clear.evolvedmobs=完成条件：击败 ???
+gui.config.clear.buffedsquids=完成条件：击败 ???
+gui.config.clear.nite=完成条件：击败末影龙
+gui.config.clear.darkstormynightmare=完成条件：击败末影龙
+gui.config.clear.noskybases=完成条件：击败 ???
+gui.config.clear.isaprilfools=完成条件：进入困难模式
+gui.config.clear.realtime=完成条件：存活度过第一个幽暗之夜
+gui.config.clear.totaleclipse=完成条件：击败一次血月
+gui.config.clear.bloodmare=完成条件：进入困难模式
+gui.config.clear.magicmonsters=完成条件：进入困难模式
+gui.config.clear.unkillablemobs=完成条件：进入困难模式
+gui.config.clear.nohit=完成条件：进入困难模式
+
+
 
 gui.warning.line1=伙计
 gui.warning.line2=你正在尝试加入一个启用了癌症模式的世界
@@ -292,8 +313,15 @@ gui.gameover.lategame9=你会没事的，休息一下再继续吧。
 player.stopSleeping=起床
 player.attemptEscapeBloodmoon=<???> 试图逃离血月？真是可悲。
 
+world.endgameBegin=<???> 终局已经开始。
 world.portal_warning=还剩3天。
 world.hardmodeBegin=困难模式开始。
+
+world.config.using_help=检测到你的客户端正在使用辅助配置。
+world.config.progress_wiped=该世界的所有配置进度已被清除。
+world.config.no_match=你正在使用创建该世界时未启用的配置。
+world.config.relaxed=配置成就仅在 Nightmare 难度下可用。
+world.config.cheating=作弊世界中无法获得配置成就。
 
 bosses.wither_summon_sealevel=<???> 凋灵必须在海平面以上召唤。
 bosses.wither_summon_too_high=<???> 凋灵不能在如此高的位置召唤。高度应小于200。

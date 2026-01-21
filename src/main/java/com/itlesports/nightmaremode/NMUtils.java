@@ -41,6 +41,66 @@ public class NMUtils {
             Item.swordDiamond.itemID,
             Item.axeGold.itemID
     ));
+
+
+    public static final List<Boolean> CONFIG_SET = new ArrayList<>(Arrays.asList(
+            // all the hard configs
+            NightmareMode.moreVariants, // dragon
+            NightmareMode.bloodmare, // hm
+            NightmareMode.totalEclipse, // bm
+            NightmareMode.buffedSquids, // ???
+            NightmareMode.evolvedMobs, // ???
+            NightmareMode.magicMonsters, // hm
+            NightmareMode.noHit, // hm
+            NightmareMode.nite, // dragon
+            NightmareMode.noSkybases, // ???
+            NightmareMode.unkillableMobs, // 1 week
+            NightmareMode.darkStormyNightmare, // dragon
+            NightmareMode.realTime // first gloom
+    ));
+//    public static final List<String> CONFIG_NAME_SET = new ArrayList<>(Arrays.asList(
+//            // all the hard configs
+//            "moreVariants",
+//            "bloodmare",
+//            "totalEclipse",
+//            "buffedSquids",
+//            "evolvedMobs",
+//            "magicMonsters",
+//            "noHit",
+//            "nite",
+//            "noSkybases",
+//            "unkillableMobs",
+//            "darkStormyNightmare",
+//            "realTime"
+//    ));
+//
+//    public static final List<String> CONFIG_DRAGON_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "moreVariants",
+//            "nite",
+//            "darkStormyNightmare"
+//    ));
+//
+//    public static final List<String> CONFIG_BLOODMOON_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "totalEclipse"
+//    ));
+//    public static final List<String> CONFIG_HARDMODE_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "bloodmare",
+//            "magicMonsters",
+//            "noHit"
+//    ));
+//    public static final List<String> CONFIG_BW_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "buffedSquids",
+//            "evolvedMobs",
+//            "noSkybases"
+//    ));
+//    public static final List<String> CONFIG_WEEK_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "unkillableMobs"
+//    ));
+//    public static final List<String> CONFIG_GLOOM_COMPLETED = new ArrayList<>(Arrays.asList(
+//            "realTime"
+//    ));
+
+
     public static final List<Item> foodList = new ArrayList<>(Arrays.asList(
             NMItems.calamariRoast,
             NMItems.friedCalamari,

@@ -83,7 +83,7 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
 
 
                 if (this.rand.nextBoolean()) {
-                    if (player.getHeldItem() != null && EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, player.getHeldItem()) != 0) {
+                    if (player.getHeldItem() != null && EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, player.getHeldItem()) == 0) {
                         player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
                     }
                 }

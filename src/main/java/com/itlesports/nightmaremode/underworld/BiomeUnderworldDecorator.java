@@ -5,17 +5,23 @@ import api.util.ForkableRandom;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenBigFlower;
+import com.itlesports.nightmaremode.underworld.worldgen.WorldGenDroopingFlower;
+import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallBulbFlower;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallFlowers;
 import net.minecraft.src.*;
 
 public class BiomeUnderworldDecorator extends BiomeDecorator {
     protected WorldGenerator tallPlantGen;
-    protected WorldGenerator tallFlowerTreeGen;
+    protected WorldGenerator tallFlowerTulipGen;
+    protected WorldGenerator tallFlowerBulbGen;
+    protected WorldGenerator tallFlowerDroopingGen;
 
     public BiomeUnderworldDecorator(BiomeGenBase par1BiomeGenBase) {
         super(par1BiomeGenBase);
         this.tallPlantGen = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5);
-        this.tallFlowerTreeGen = new WorldGenBigFlower();
+        this.tallFlowerTulipGen = new WorldGenBigFlower();
+        this.tallFlowerBulbGen = new WorldGenTallBulbFlower();
+        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
     }
 
 
@@ -24,35 +30,42 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         int var4;
         int var3;
         int var2;
-        int var1;
+        int numPerChunk;
         this.generateOres();
-        for (var1 = 0; var1 < this.sandPerChunk2; ++var1) {
+        for (numPerChunk = 0; numPerChunk < this.sandPerChunk2; ++numPerChunk) {
             var2 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var3 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.sandGen.generate(this.currentWorld, this.randomGenerator, var2, this.currentWorld.getTopSolidOrLiquidBlock(var2, var3), var3);
         }
-        for (var1 = 0; var1 < this.clayPerChunk; ++var1) {
+        for (numPerChunk = 0; numPerChunk < this.clayPerChunk; ++numPerChunk) {
             var2 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var3 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.clayGen.generate(this.currentWorld, this.randomGenerator, var2, this.currentWorld.getTopSolidOrLiquidBlock(var2, var3), var3);
         }
-        for (var1 = 0; var1 < this.sandPerChunk; ++var1) {
+        for (numPerChunk = 0; numPerChunk < this.sandPerChunk; ++numPerChunk) {
             var2 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var3 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.sandGen.generate(this.currentWorld, this.randomGenerator, var2, this.currentWorld.getTopSolidOrLiquidBlock(var2, var3), var3);
         }
 
-        var1 = this.treesPerChunk;
+        numPerChunk = this.treesPerChunk;
         if (this.randomGenerator.nextInt(10) == 0) {
-            ++var1;
+            ++numPerChunk;
         }
 
-        for (var2 = 0; var2 < var1; ++var2) {
-            var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            var4 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-            WorldGenerator var5 = tallFlowerTreeGen;
-            var5.setScale(1.0, 1.0, 1.0);
-            var5.generate(this.currentWorld, this.randomGenerator, var3, this.currentWorld.getHeightValue(var3, var4), var4);
+        WorldGenerator treeGen;
+
+        treeGen = this.getTreeGenForBiome();
+//        treeGen = tallFlowerDroopingGen;
+
+        if (treeGen != null) {
+            for (var2 = 0; var2 < numPerChunk; ++var2) {
+                var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
+                var4 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+    //            WorldGenerator var5 = this.getTreeGenForBiome();
+                treeGen.setScale(1.0, 1.0, 1.0);
+                treeGen.generate(this.currentWorld, this.randomGenerator, var3, this.currentWorld.getHeightValue(var3, var4), var4);
+            }
         }
 
         for (var2 = 0; var2 < this.bigMushroomsPerChunk; ++var2) {
@@ -68,7 +81,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
             var4 = this.randomGenerator.nextInt(128);
             int var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.plantYellowGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
+
             if (!(this.biome instanceof BiomeGenFlowerFields)) continue;
+
             if (this.randomGenerator.nextInt(4) != 0 || !(this.biome instanceof BiomeGenFlowerFields)) continue;
             var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var4 = this.randomGenerator.nextInt(10) + 60;
@@ -167,5 +182,18 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
         ForkableRandom forkedRand = ForkableRandom.forkRandom(this.randomGenerator);
         AddonHandler.decorateWorld(this, this.currentWorld, forkedRand, this.chunk_X, this.chunk_Z, this.biome);
+    }
+
+    private WorldGenerator getTreeGenForBiome(){
+        if(this.biome instanceof BiomeGenFlowerFields){
+            if(this.randomGenerator.nextBoolean() || this.randomGenerator.nextInt(3) == 0){
+                return tallFlowerTulipGen;
+            }
+            if(this.randomGenerator.nextBoolean()){
+                return tallFlowerBulbGen;
+            }
+            return tallFlowerDroopingGen;
+        }
+        return null;
     }
 }

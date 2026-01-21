@@ -47,7 +47,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.entityToAttack = player;
                 }
             } else {
-                double range = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 6.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
+                double range = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 8.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
                 if(player != null && !this.isPlayerWearingGoldArmor(player)){
                     this.entityToAttack = player;

@@ -47,3 +47,11 @@ accessible field net/minecraft/src/BiomeDecorator reedsPerChunk I
 accessible field net/minecraft/src/BiomeDecorator cactiPerChunk I
 accessible method net/minecraft/src/ChatMessageComponent getText ()Ljava/lang/String;
 accessible field net/minecraft/src/ChatMessageComponent field_111091_i Ljava/util/List;
+accessible method net/minecraft/src/MapGenStructureIO func_143031_a (Ljava/lang/Class;Ljava/lang/String;)V
+accessible field net/minecraft/src/GuiScreen fontRenderer Lnet/minecraft/src/FontRenderer;
+accessible method net/minecraft/src/MapGenStructureIO func_143034_b (Ljava/lang/Class;Ljava/lang/String;)V
+accessible method net/minecraft/src/GuiSelectWorld func_82313_g (Lnet/minecraft/src/GuiSelectWorld;)Ljava/lang/String;
+accessible method net/minecraft/src/GuiSelectWorld func_82314_j (Lnet/minecraft/src/GuiSelectWorld;)[Ljava/lang/String;
+accessible method net/minecraft/src/GuiSelectWorld func_82311_i (Lnet/minecraft/src/GuiSelectWorld;)Ljava/lang/String;
+accessible class net/minecraft/src/SlotEnchantment
+accessible class net/minecraft/src/SlotEnchantmentTable

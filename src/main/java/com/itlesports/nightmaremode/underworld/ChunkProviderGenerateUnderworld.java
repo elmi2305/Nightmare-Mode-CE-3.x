@@ -2,8 +2,8 @@ package com.itlesports.nightmaremode.underworld;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.MapGenScatteredFeatureUnderworld;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     private MapGenStronghold strongholdGenerator = new MapGenStronghold();
     private MapGenVillage villageGenerator = new MapGenVillage();
     private MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
-    private MapGenScatteredFeature scatteredFeatureGenerator = new MapGenScatteredFeature();
+    private MapGenScatteredFeatureUnderworld scatteredFeatureGenerator = new MapGenScatteredFeatureUnderworld();
     private MapGenBase ravineGenerator = new MapGenRavine();
     private BiomeGenBase[] biomesForGeneration;
     double[] noise3;
@@ -250,6 +250,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
     private static int parabolicRadius = 5;
     private static int biomesForGenerationMagicNumber = 10;
+
     private double[] initializeNoiseField(double[] par1ArrayOfDouble, int par2x, int par3, int par4z, int par5, int par6, int par7) {
         if (par1ArrayOfDouble == null) {
             par1ArrayOfDouble = new double[par5 * par6 * par7];
@@ -535,21 +536,21 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         }
     }
 
-    public MapGenStronghold getStrongholdGenerator() {
-        return this.strongholdGenerator;
-    }
-
-    public MapGenVillage getVillageGenerator() {
-        return this.villageGenerator;
-    }
-
-    public MapGenMineshaft getMineshaftGenerator() {
-        return this.mineshaftGenerator;
-    }
-
-    public MapGenScatteredFeature getScatteredFeatureGenerator() {
-        return this.scatteredFeatureGenerator;
-    }
+//    public MapGenStronghold getStrongholdGenerator() {
+//        return this.strongholdGenerator;
+//    }
+//
+//    public MapGenVillage getVillageGenerator() {
+//        return this.villageGenerator;
+//    }
+//
+//    public MapGenMineshaft getMineshaftGenerator() {
+//        return this.mineshaftGenerator;
+//    }
+//
+//    public CustomMapGenSF getScatteredFeatureGenerator() {
+//        return this.scatteredFeatureGenerator;
+//    }
 }
 
 

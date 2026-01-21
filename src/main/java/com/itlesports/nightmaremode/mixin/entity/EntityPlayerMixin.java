@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import api.achievement.AchievementEventDispatcher;
+import api.achievement.AchievementHandler;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
@@ -9,6 +10,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
+import com.itlesports.nightmaremode.NMConfUtils;
 import com.itlesports.nightmaremode.NMDifficultyParam;
 import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -17,6 +19,7 @@ import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,8 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
+import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 import static btw.community.nightmaremode.NightmareMode.GOLDEN_APPLE_COOLDOWN;
-import static com.itlesports.nightmaremode.NMUtils.chainArmor;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
@@ -251,15 +254,153 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
-    @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void manageBlightMovement(CallbackInfo ci){
+    @Unique
+    private boolean isInvalidConfig(int[] wConf){
+        int[] pConf = NMConfUtils.getClientConfigData();
+        return !Arrays.equals(pConf, wConf);
+    }
 
-//        if(!this.worldObj.worldInfo.isMapFeaturesEnabled()){
-//            ((WorldInfoAccessor)(this.worldObj.worldInfo)).setMapFeaturesEnabled(true);
-//        }
-//        if (this.ticksExisted % 200 == 0) {
-//            this.worldObj.worldInfo.setDifficulty(Difficulties.HOSTILE);
-//        }
+    @Unique
+    private boolean isWorldUsingConfigs(int[] wConf){
+        int[] nullConf = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        return !Arrays.equals(nullConf, wConf);
+    }
+
+    @Unique private static void invalidateConfig(){
+        MinecraftServer.getServer().worldServers[0].setData(CONFIGS_CREATED, new int[]{
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                }
+        );
+    }
+
+
+
+
+    @Unique private void checkAndValidateConfig(){
+        if(this.worldObj.worldInfo.areCommandsAllowed() || this.capabilities.isCreativeMode || this.capabilities.allowFlying || this.worldObj.worldInfo.getGameType() == EnumGameType.CREATIVE){
+            // player is currently cheating
+//            System.out.println("XX detecting cheating. wouldn't apply");
+
+            EntityPlayer self = (EntityPlayer)(Object)this;
+
+            ChatMessageComponent text1 = new ChatMessageComponent();
+            text1.addKey("world.config.cheating");
+            text1.setColor(EnumChatFormatting.DARK_RED);
+            self.sendChatToPlayer(text1);
+
+            text1 = new ChatMessageComponent();
+            text1.addKey("world.config.progress_wiped");
+            text1.setColor(EnumChatFormatting.DARK_RED);
+            self.sendChatToPlayer(text1);
+
+            invalidateConfig();
+            return;
+        }
+
+
+        for (NMConfUtils.CONFIG conf : NMConfUtils.confList) {
+            if(!conf.isActive()) continue;
+
+            if(NightmareMode.realTime){
+                if(this.shouldActivate(NMConfUtils.CONFIG.REAL_TIME)){
+                    this.completeConfig(NMConfUtils.CONFIG.REAL_TIME);
+                }
+                break;
+            }
+
+            if(this.shouldActivate(conf)){
+                this.completeConfig(conf);
+            }
+        }
+    }
+    
+    @Unique private boolean shouldActivate(NMConfUtils.CONFIG conf){
+        EntityPlayer p = (EntityPlayer)(Object)this;
+
+        return switch (conf.getClearCondition()) {
+            case CLEAR_BLOODMOON -> (AchievementHandler.hasUnlocked(p, NMAchievements.FIRST_BLOODMOON) && NMUtils.getWorldProgress() > 0);
+            case CLEAR_DRAGON -> (NMUtils.getWorldProgress() > 2);
+            case CLEAR_ECLIPSE -> (NMUtils.getWorldProgress() > 2 && AchievementHandler.hasUnlocked(p, NMAchievements.KILL_BLOODWITHER));
+            case CLEAR_GLOOM -> (this.worldObj.getWorldTime() > 120000);
+            case CLEAR_HARDMODE -> (NMUtils.getWorldProgress() > 0);
+            case CLEAR_WEEK -> (this.worldObj.getWorldTime() > 140000);
+            default -> false;
+        };
+    }
+
+
+    @Unique private void completeConfig(NMConfUtils.CONFIG conf){
+        NMConfUtils.setConfig(conf.getId() - 1, 1);
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void onUpdateHookTail(CallbackInfo ci){
+
+        if ((this.ticksExisted % 100 == 1 || NMConfUtils.isClientUsingHelpConfig()) && !this.worldObj.isRemote) {
+            EntityPlayer self = (EntityPlayer)(Object)this;
+
+            int[] wConf = this.worldObj.getData(CONFIGS_CREATED);
+            if(!this.isWorldUsingConfigs(wConf)) return;
+            // if the configs were invalidated, this returns early and prevents looping
+            if(this.isInvalidConfig(wConf)){
+//                System.out.println("X player config didn't match world config");
+//                System.out.println(Arrays.toString(wConf) + " | " + Arrays.toString(NMConfUtils.getClientConfigData()));
+                ChatMessageComponent text1 = new ChatMessageComponent();
+                text1.addKey("world.config.no_match");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                text1 = new ChatMessageComponent();
+                text1.addKey("world.config.progress_wiped");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                invalidateConfig();
+            } else if(NMConfUtils.isClientUsingHelpConfig()){
+//                System.out.println("X player is using helpful configs");
+
+                ChatMessageComponent text1 = new ChatMessageComponent();
+
+                text1.addKey("world.config.using_help");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                text1 = new ChatMessageComponent();
+                text1.addKey("world.config.progress_wiped");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                invalidateConfig();
+            } else if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+                ChatMessageComponent text1 = new ChatMessageComponent();
+                text1.addKey("world.config.relaxed");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                text1 = new ChatMessageComponent();
+                text1.addKey("world.config.progress_wiped");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+
+                invalidateConfig();
+            }
+            else{
+                this.checkAndValidateConfig();
+            }
+        }
 
 
         if (this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID && !this.capabilities.isCreativeMode){
@@ -284,6 +425,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageLeavingGameDuringBloodWitherFight(CallbackInfo ci){
         if(this.ticksExisted % 100 == 0){
@@ -539,18 +682,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique private void playRandomMobOrItemSound(){
         this.playSound(sounds.get(this.rand.nextInt(sounds.size())), 0.1f + this.rand.nextFloat() * 0.2f, 0.6f + this.rand.nextFloat() * 0.4f);
-    }
-
-    @Unique private static boolean areChainPotionsActive(EntityLivingBase player){
-        return player.isPotionActive(Potion.digSpeed) || player.isPotionActive(Potion.moveSpeed);
-    }
-    @Unique private static boolean isWearingFullChainArmor(EntityLivingBase entity){
-        for(int i = 1; i < 5; i++){
-            if(entity.getCurrentItemOrArmor(i) == null){return false;}
-            if(entity.getCurrentItemOrArmor(i).itemID == chainArmor.get(i - 1)) continue;
-            return false;
-        }
-        return true;
     }
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){

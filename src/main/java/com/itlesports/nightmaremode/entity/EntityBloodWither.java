@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.entity;
 import api.world.WorldUtils;
 import btw.block.BTWBlocks;
 import btw.entity.attribute.BTWAttributes;
+import btw.entity.mob.BTWCaveSpiderEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityBloodWitherAttackFilter;
@@ -20,7 +21,7 @@ public class EntityBloodWither extends EntityWither {
     private final float[] previousHeadYaw = new float[2]; // Previous tick's yaw values for the heads. unused
     private final int[] headAttackCounts = new int[2]; // Counters for the number of attacks by the heads
 
-    private int baseAttackInterval = 600;
+    private int baseAttackInterval = 700;
     private int attackCycle; // used to be headAttackCooldowns. repurposed to track the cycle an attack is in. eg. the lightning attack has 3 cycles, prep, telegraph and fire
     private int shieldRegenCooldown; // Cooldown timer for regenerating the shield
     private int witherAttack; // controls which AI attack the wither should currently use
@@ -261,9 +262,9 @@ public class EntityBloodWither extends EntityWither {
                 }
                 boolean shouldClear = this.passivityDuration <= 50;
 
-                if(!shouldClear && this.reviveTimer % 40 == 0){
+                if(!shouldClear && this.passivityDuration % 120 == 0){
                     for(int z = 0;
-                        z < 3 && this.summonCrystalHeadAtPos(
+                        z < 2 && this.summonCrystalHeadAtPos(
                             this.origin[0] + this.rand.nextInt(20) + 10,
                             this.origin[1] + 1,
                             this.origin[2] + this.rand.nextInt(20) + 10);
@@ -387,7 +388,7 @@ public class EntityBloodWither extends EntityWither {
         this.setInvisible(false);
         this.isDoingLaserAttack = false;
         this.setTargetY(5d);
-        if(this.previousWorldTime != 0 && this.rand.nextInt(4) == 0){
+        if(this.previousWorldTime != 0){
             this.worldObj.setWorldTime(this.previousWorldTime);
             this.previousWorldTime = 0;
         }
@@ -508,9 +509,9 @@ public class EntityBloodWither extends EntityWither {
                         break;
                     case 3:
                         // standard horde
-                        for(int i = 0; i < 8 + this.witherPhase * 3; i ++){
+                        for(int i = 0; i < 6 + this.witherPhase * 3; i ++){
                             EntityLiving mobToSpawn;
-                            int j = this.rand.nextInt(75);
+                            int j = this.rand.nextInt(69);
 
                             mobToSpawn = switch (j) {
                                 case  0,  1,  2,  3,  4,  5,  6,  7,  8,  9 -> new EntityZombie(this.worldObj);        // 10 occurrences
@@ -526,8 +527,8 @@ public class EntityBloodWither extends EntityWither {
                                 case 50, 51, 52, 53, 54, 55, 56 -> new EntityFireCreeper(this.worldObj);               // 7  occurrences
                                 case 57, 58, 59, 60, 61 -> new EntitySilverfish(this.worldObj);                        // 5  occurrences
                                 case 62, 63 -> new EntityPigZombie(this.worldObj);                                     // 2  occurrences
-                                case 64, 65,66,67,68, 69, 70,71 -> new EntityNightmareGolem(this.worldObj);
-                                case 72,73, 74, 75 -> new EntityBloodZombie(this.worldObj);
+                                case 64 -> new EntityNightmareGolem(this.worldObj);
+                                case 65,66,67,68 -> new EntityBloodZombie(this.worldObj);
                                 default -> new EntityZombie(this.worldObj); // fallback in case of unexpected input
                             };
                             mobToSpawn.setPositionAndUpdate(this.origin[0] + this.rand.nextInt(20), 200, this.origin[2] + this.rand.nextInt(20));
@@ -593,7 +594,7 @@ public class EntityBloodWither extends EntityWither {
                         }
                     case 7:
                         if(this.trackedEntities.isEmpty()) {
-                            for(int i = 0; i < 6 + this.witherPhase * 2; i++){
+                            for(int i = 0; i < 4 + this.witherPhase * 2; i++){
                                 EntityNightmareGolem tempGolem = new EntityNightmareGolem(this.worldObj);
                                 tempGolem.setPositionAndUpdate(this.origin[0] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(20), 200, this.origin[2] + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(20));
                                 this.trackedEntities.add(tempGolem);
@@ -639,7 +640,7 @@ public class EntityBloodWither extends EntityWither {
     }
 
     private void setToNextBloodMoonOrEclipse(){
-        if (this.rand.nextBoolean()) {
+        if (this.rand.nextInt(4) == 0) {
             if(!NMUtils.getIsBloodMoon()){
                 this.previousWorldTime = this.worldObj.getWorldTime();
                 this.worldObj.setWorldTime(NMUtils.getNextBloodMoonTime(this.worldObj.getWorldTime()));
@@ -670,7 +671,7 @@ public class EntityBloodWither extends EntityWither {
         mobPoolAdvanced.add(EntityLightningCreeper.class);
         mobPoolAdvanced.add(EntityFireCreeper.class);
         mobPoolAdvanced.add(EntityBloodZombie.class);
-        mobPoolAdvanced.add(EntityCaveSpider.class);
+        mobPoolAdvanced.add(BTWCaveSpiderEntity.class);
         mobPoolAdvanced.add(EntityObsidianCreeper.class);
 
 
@@ -752,11 +753,12 @@ public class EntityBloodWither extends EntityWither {
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
             int i;
             do {
+                // decide which attack to do
                 i = this.rand.nextInt(9);
             } while (i == this.currentAttackIndex);
 
             this.currentAttackIndex = i;
-//            System.out.println(this.currentAttackIndex);
+//            System.out.println("currently doing attack: " + this.currentAttackIndex);
             this.setAttackDetails(this.currentAttackIndex, true);
 
             if (this.rand.nextInt(4) == 0) {
@@ -1328,7 +1330,7 @@ public class EntityBloodWither extends EntityWither {
                 }
                 this.currentDurationBetweenAttacks = 2;
                 this.isCurrentAttackSummoning = false;
-                this.currentAttackPassivityLength = 1000;
+                this.currentAttackPassivityLength = 700;
                 break;
             default: // placeholder attack that does nothing. used for reviving
                 if (isNotSafetyCheck) {

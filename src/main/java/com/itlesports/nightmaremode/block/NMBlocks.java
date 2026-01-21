@@ -40,6 +40,13 @@ public class NMBlocks {
 
     public static Block yellowFlowerRoots;
     public static Block plantMatter;
+    public static Block disenchantmentTable;
+    public static Block mushroomStem;
+    public static Block mushroomFloorPartial;
+    public static Block mushroomFloor;
+    public static Block mushInnardsBreakable;
+
+    public static Block moltenGlass;
 
     public static void initNightmareBlocks(){
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare_mode:steel_ore");
@@ -54,7 +61,7 @@ public class NMBlocks {
         specialObsidian = ((BedrockBlock) new BedrockBlock(2308).setTextureName("nightmare_mode:nmSpecialObsidian").setUnlocalizedName("nmSpecialObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock));
         Item.itemsList[specialObsidian.blockID] = new NMItemBlock(NMBlocks.specialObsidian.blockID - 256);
 
-        underworldPortal = (BlockUnderworldPortal) new BlockUnderworldPortal(2309).setUnlocalizedName("underworld_portal");
+        underworldPortal = (BlockUnderworldPortal) new BlockUnderworldPortal(2309).setUnlocalizedName("underworld_portal").setTextureName("underworld_portal");
         Item.itemsList[underworldPortal.blockID] = new NMItemBlock(NMBlocks.underworldPortal.blockID - 256);
 
         bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 0).setTextureName("nightmare_mode:chestBlood").setUnlocalizedName("nmBloodChest");
@@ -123,8 +130,24 @@ public class NMBlocks {
         yellowFlowerRoots = new BlockTallFlower(2328);
         Item.itemsList[yellowFlowerRoots.blockID] = new ItemBlockTallFlower(NMBlocks.yellowFlowerRoots.blockID - 256);
 
-        plantMatter = new NMBlock(2329, Material.plants).setTextureName("nmPlantMatter").setUnlocalizedName("nmPlantMatter").setCreativeTab(CreativeTabs.tabBlock);
+        plantMatter = new NMBlock(2329, Material.wood).setTextureName("nmPlantMatter").setUnlocalizedName("nmPlantMatter").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[plantMatter.blockID] = new NMItemBlock(NMBlocks.plantMatter.blockID - 256);
+
+        disenchantmentTable = new BlockDisenchantmentTable(2330).setTextureName("nmDisenchantmentTable").setUnlocalizedName("nmDisenchantmentTable").setCreativeTab(CreativeTabs.tabBlock);
+        Item.itemsList[disenchantmentTable.blockID] = new NMItemBlock(NMBlocks.disenchantmentTable.blockID - 256);
+        TileEntity.addMapping(TileEntityDisenchantmentTable.class, "TileEntityDisenchantmentTable");
+
+        mushroomStem = new BlockMultiTextured(2331, Material.wood, "nmMushStem").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushStem");
+        Item.itemsList[mushroomStem.blockID] = new NMItemBlock(NMBlocks.mushroomStem.blockID - 256);
+
+        mushroomFloorPartial = new BlockMultiTextured(2332, Material.wood, "nmMushFloor", "nmMushStem", "nmMushFloor").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushStem");
+        Item.itemsList[mushroomFloorPartial.blockID] = new NMItemBlock(NMBlocks.mushroomFloorPartial.blockID - 256);
+
+        mushroomFloor = new BlockMultiTextured(2333, Material.wood, "nmMushFloor").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushFloor");
+        Item.itemsList[mushroomFloor.blockID] = new NMItemBlock(NMBlocks.mushroomFloor.blockID - 256);
+
+        mushInnardsBreakable = new BlockMultiTextured(2334, Material.wood, "nmMushInnards").setHardness(5f).setResistance(10f).setUnlocalizedName("nmMushInnards");
+        Item.itemsList[mushInnardsBreakable.blockID] = new NMItemBlock(NMBlocks.mushroomFloor.blockID - 256);
 
     }
 }

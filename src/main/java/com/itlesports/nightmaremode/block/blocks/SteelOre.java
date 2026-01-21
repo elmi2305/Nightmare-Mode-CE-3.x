@@ -19,6 +19,17 @@ public class SteelOre extends OreBlockStaged {
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setChiselsEffectiveOn(false);
         this.setChiselsCanHarvest(false);
+        this.setResistance(100f);
+    }
+
+    @Override
+    public void onRemovedByBlockDispenser(World world, int i, int j, int k) {
+        return;
+    }
+
+    @Override
+    public ItemStack getStackRetrievedByBlockDispenser(World world, int i, int j, int k) {
+        return null;
     }
 
     public int idDropped(int iMetadata, Random rand, int iFortuneModifier) {

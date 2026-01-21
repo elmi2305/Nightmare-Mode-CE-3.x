@@ -4,6 +4,8 @@ import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.JungleSpiderEntity;
+import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
+import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
@@ -19,10 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -38,6 +37,17 @@ public abstract class EntityZombieMixin extends EntityMob{
     }
 
     @Shadow public abstract boolean isVillager();
+
+    @Shadow public abstract boolean isChild();
+
+    @ModifyArg(method = "entityInit", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/DataWatcher;addObject(ILjava/lang/Object;)V", ordinal = 0), index = 1)
+    private Object addBabyZombies(Object par2Obj){
+        if(NightmareMode.moreVariants){
+            return this.rand.nextInt(32) == 0 ? (byte)1 : par2Obj;
+        }
+        return par2Obj;
+    }
+
 
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
@@ -431,6 +441,10 @@ public abstract class EntityZombieMixin extends EntityMob{
             this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(((double) progress / (isBloodMoon ? 5 : 10)) * NMUtils.getNiteMultiplier());
 
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0d + (progress > 0 ? 1 : 0)) * NMUtils.getNiteMultiplier());
+
+            if(this.isChild()){
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
+            }
         }
     }
 
@@ -449,6 +463,12 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
+    @Inject(method = "addRandomArmor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityZombie;entityLivingAddRandomArmor()V", shift = At.Shift.AFTER), cancellable = true)
+    private void avoidAddingSwordToBloodZombie(CallbackInfo ci){
+        EntityZombie thisObj =(EntityZombie)(Object)this;
+        if(thisObj instanceof EntityBloodZombie) {ci.cancel();}
+    }
+
     @Inject(method = "addRandomArmor", // summons crystalhead zombie on a 1% chance
             at = @At("TAIL"))
     private void chanceToSpawnShadowOrCrystal(CallbackInfo ci){
@@ -492,6 +512,10 @@ public abstract class EntityZombieMixin extends EntityMob{
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addLungeAI(World par1World, CallbackInfo ci){
         this.targetTasks.addTask(2, new EntityAILunge(this, true));
+        if(this.isChild()){
+            this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehaviorHostile.class);
+            this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
+        }
     }
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
@@ -521,6 +545,9 @@ public abstract class EntityZombieMixin extends EntityMob{
         crystal.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
         crystalhead.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
         this.worldObj.spawnEntityInWorld(crystal);
+        for (int i = 0; i < 5; i++) {
+            crystalhead.setEquipmentDropChance(i,-1f);
+        }
         this.worldObj.spawnEntityInWorld(crystalhead);
         crystal.mountEntity(crystalhead);
 
@@ -530,9 +557,7 @@ public abstract class EntityZombieMixin extends EntityMob{
         crystalhead.setCurrentItemOrArmor(1, setItemColor(new ItemStack(BTWItems.woolBoots))); // black
         crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings))); // black
         crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest))); // black
-        for (int i = 0; i < 5; i++) {
-            crystalhead.setEquipmentDropChance(i,-1f);
-        }
+
         crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.38f);
         EntityPlayer nearestPlayer = this.worldObj.getClosestPlayerToEntity(crystalhead, 100);
         if (nearestPlayer != null) {

@@ -19,9 +19,8 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
+import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.StructureScatteredFeatureStartUnderworld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -36,6 +35,9 @@ public class NightmareMode extends BTWAddon {
     public static int SKELETON_ENDER = 4;
     public static int SKELETON_JUNGLE = 5;
     public static int SKELETON_SUPERCRITICAL = 6;
+
+
+    public static int GUI_DISENCHANTER = 145;
 
     private static NightmareMode instance;
     public static int worldState;
@@ -146,9 +148,17 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
 
-        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
-        BiomeGenBase.biomeList[25] = new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
-        BiomeGenBase.biomeList[26] = new BiomeGenFlowerFields(26).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
+//        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
+//        BiomeGenBase.biomeList[25] = new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
+//        BiomeGenBase.biomeList[26] = new BiomeGenFlowerFields(26).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
+
+
+//        System.out.println("DEBUGGING IN NIGTHMAREMODE.JAVA");
+        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.blightlands;
+        BiomeGenBase.biomeList[25] = BiomeGenUnderworld.highlands;
+        BiomeGenBase.biomeList[26] = BiomeGenUnderworld.flowerFields;
+//        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.flowerFields;
+        MapGenStructureIO.func_143034_b(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }
 
     @Environment(EnvType.SERVER)
@@ -447,6 +457,9 @@ public class NightmareMode extends BTWAddon {
     public static Boolean fullBright;
     public static Boolean fastVillagers;
     public static Boolean bloodMoonHelper;
+    public static Boolean realTime;
+
+
 
     public boolean canAccessMenu = true;
 
@@ -461,10 +474,10 @@ public class NightmareMode extends BTWAddon {
 
     public static final DataEntry.WorldDataEntry<Boolean> DRAGON_DEFEATED =
             DataProvider.getBuilder(Boolean.class)
-                    .name("HasDragonBeenDefeated")
+                    .name("DragonDefeated")
                     .defaultSupplier(() -> false)
-                    .readNBT(nbt -> nbt.getBoolean("HasDragonBeenDefeated"))
-                    .writeNBT((nbt, v) -> nbt.setBoolean("HasDragonBeenDefeated", v))
+                    .readNBT(nbt -> nbt.getBoolean("DragonDefeated"))
+                    .writeNBT((nbt, v) -> nbt.setBoolean("DragonDefeated", v))
                     .global()
                     .build();
 
@@ -478,6 +491,31 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.WorldDataEntry<int[]> CONFIGS_CREATED =
+            DataProvider.getBuilder(int[].class)
+                    .name("ConfigsInit")
+                    .defaultSupplier(() -> new int[]{
+                                    0, // NightmareMode.moreVariants
+                                    0, // NightmareMode.bloodmare
+                                    0, // NightmareMode.totalEclipse
+                                    0, // NightmareMode.buffedSquids
+                                    0, // NightmareMode.evolvedMobs
+                                    0, // NightmareMode.magicMonsters
+                                    0, // NightmareMode.noHit
+                                    0, // NightmareMode.nite
+                                    0, // NightmareMode.noSkybases
+                                    0, // NightmareMode.unkillableMobs
+                                    0, // NightmareMode.darkStormyNightmare
+                                    0, // NightmareMode.realTime
+                                    0  // NightmareMode.isAprilFools
+                            }
+
+                    )
+                    .readNBT(nbt -> nbt.getIntArray("ConfigsInit"))
+                    .writeNBT((nbt, v) -> nbt.setIntArray("ConfigsInit", v))
+                    .global()
+                    .build();
+
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;
     }
@@ -485,12 +523,15 @@ public class NightmareMode extends BTWAddon {
         return this.canAccessMenu;
     }
 
-
+    public static int logical(Boolean b){
+        return b ? 1 : 0;
+    }
     @Override
     public void preInitialize() {
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
         GOLDEN_APPLE_COOLDOWN.register();
+        CONFIGS_CREATED.register();
     }
 
     @Override
@@ -523,6 +564,7 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("FullBright", false);
         config.registerBoolean("FastVillagers", false);
         config.registerBoolean("BloodMoonHelper", false);
+        config.registerBoolean("RealTime", false);
         getInstance().addonConfig = config;
     }
 
@@ -558,6 +600,7 @@ public class NightmareMode extends BTWAddon {
         fullBright = config.getBoolean("FullBright");
         fastVillagers = config.getBoolean("FastVillagers");
         bloodMoonHelper = config.getBoolean("BloodMoonHelper");
+        realTime = config.getBoolean("RealTime");
     }
 
 
