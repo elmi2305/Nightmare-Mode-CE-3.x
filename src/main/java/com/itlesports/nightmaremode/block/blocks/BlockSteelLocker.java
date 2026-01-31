@@ -195,7 +195,7 @@ public class BlockSteelLocker extends BlockContainer {
 
     @Override
     public void registerIcons(IconRegister reg){
-        this.blockIcon = reg.registerIcon("nightmare_mode:lockerSteel_particle");
+        this.blockIcon = reg.registerIcon("nightmare:lockerSteel_particle");
     }
 
 }

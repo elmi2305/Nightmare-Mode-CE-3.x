@@ -42,105 +42,7 @@ public class NMUtils {
             Item.axeGold.itemID
     ));
 
-
-    public static final List<Boolean> CONFIG_SET = new ArrayList<>(Arrays.asList(
-            // all the hard configs
-            NightmareMode.moreVariants, // dragon
-            NightmareMode.bloodmare, // hm
-            NightmareMode.totalEclipse, // bm
-            NightmareMode.buffedSquids, // ???
-            NightmareMode.evolvedMobs, // ???
-            NightmareMode.magicMonsters, // hm
-            NightmareMode.noHit, // hm
-            NightmareMode.nite, // dragon
-            NightmareMode.noSkybases, // ???
-            NightmareMode.unkillableMobs, // 1 week
-            NightmareMode.darkStormyNightmare, // dragon
-            NightmareMode.realTime // first gloom
-    ));
-//    public static final List<String> CONFIG_NAME_SET = new ArrayList<>(Arrays.asList(
-//            // all the hard configs
-//            "moreVariants",
-//            "bloodmare",
-//            "totalEclipse",
-//            "buffedSquids",
-//            "evolvedMobs",
-//            "magicMonsters",
-//            "noHit",
-//            "nite",
-//            "noSkybases",
-//            "unkillableMobs",
-//            "darkStormyNightmare",
-//            "realTime"
-//    ));
-//
-//    public static final List<String> CONFIG_DRAGON_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "moreVariants",
-//            "nite",
-//            "darkStormyNightmare"
-//    ));
-//
-//    public static final List<String> CONFIG_BLOODMOON_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "totalEclipse"
-//    ));
-//    public static final List<String> CONFIG_HARDMODE_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "bloodmare",
-//            "magicMonsters",
-//            "noHit"
-//    ));
-//    public static final List<String> CONFIG_BW_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "buffedSquids",
-//            "evolvedMobs",
-//            "noSkybases"
-//    ));
-//    public static final List<String> CONFIG_WEEK_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "unkillableMobs"
-//    ));
-//    public static final List<String> CONFIG_GLOOM_COMPLETED = new ArrayList<>(Arrays.asList(
-//            "realTime"
-//    ));
-
-
-    public static final List<Item> foodList = new ArrayList<>(Arrays.asList(
-            NMItems.calamariRoast,
-            NMItems.friedCalamari,
-            Item.appleRed,
-            Item.pumpkinPie,
-            Item.cookie,
-            Item.porkCooked,
-            Item.beefCooked,
-            Item.chickenCooked,
-            Item.fishCooked,
-            BTWItems.cookedCheval,
-            BTWItems.cookedLiver,
-            BTWItems.mashedMelon,
-            Item.melon,
-            BTWItems.cookedKebab,
-            BTWItems.cookedMutton,
-            BTWItems.cookedMysteryMeat,
-            BTWItems.cookedScrambledEggs,
-            BTWItems.cookedWolfChop,
-            BTWItems.donut,
-            BTWItems.cookedCarrot,
-            BTWItems.chocolate,
-            Item.bakedPotato,
-            BTWItems.boiledPotato,
-            Item.potato,
-            BTWItems.porkDinner,
-            BTWItems.hardBoiledEgg,
-            BTWItems.steakDinner,
-            BTWItems.wolfDinner,
-            BTWItems.hamAndEggs,
-            BTWItems.chowder,
-            BTWItems.heartyStew,
-            BTWItems.chickenSoup,
-            Item.goldenCarrot,
-            Item.bread,
-            BTWItems.tastySandwich,
-            BTWItems.steakAndPotatoes
-    ));
-
-    public final class VillagerMetaCodec {
+    public static final class VillagerMetaCodec {
         private static final int PROF_BITS = 3;
         private static final int LEVEL_BITS = 3;
 
@@ -188,8 +90,9 @@ public class NMUtils {
 
     public static void setItemStackSizes(int par1){
         Item.potion.setMaxStackSize((int)(par1 / 2));
-        for(Item item : foodList){
-            if(item.getItemStackLimit() != par1){
+
+        for(Item item : Item.itemsList){
+            if(item instanceof ItemFood){
                 item.setMaxStackSize(par1);
             }
         }
@@ -234,13 +137,6 @@ public class NMUtils {
             NMItems.bloodAxe.itemID,
             NMItems.bloodShovel.itemID,
             NMItems.bloodHoe.itemID
-    ));
-
-    public static final List<Integer> chainArmor = new ArrayList<>(Arrays.asList(
-            Item.bootsChain.itemID,
-            Item.legsChain.itemID,
-            Item.plateChain.itemID,
-            Item.helmetChain.itemID
     ));
 
     public static double getNiteMultiplier(){

@@ -21,7 +21,7 @@ public class ItemStructureLocator
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

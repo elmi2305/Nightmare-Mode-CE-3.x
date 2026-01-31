@@ -19,7 +19,7 @@ public class ItemRPG extends Item {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {

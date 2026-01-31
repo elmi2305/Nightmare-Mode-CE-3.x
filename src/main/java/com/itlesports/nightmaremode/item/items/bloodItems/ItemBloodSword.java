@@ -16,7 +16,7 @@ public class ItemBloodSword extends SwordItem implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 }

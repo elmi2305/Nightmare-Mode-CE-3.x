@@ -72,31 +72,4 @@ public abstract class HopperTileEntityMixin extends TileEntity {
             return var1 != null;
         }
     }
-
-
-    /**
-     * @author elmi
-     * @reason temporary bugfix for the hoppers
-     */
-    @Overwrite
-    public static Optional<Tag> getTagForFilter(ItemStack filterStack) {
-        Tag filterTag = null;
-        for (Tag tag : Filtering.hopperFilterTags) {
-            if (!tag.test(filterStack, true)) continue;
-            filterTag = tag;
-            break;
-        }
-        return Optional.ofNullable(filterTag);
-    }
-
-    /**
-     * @author elmi
-     * @reason temporary bugfix for the hoppers
-     */
-    @Overwrite
-    public boolean canCurrentFilterProcessItem(ItemStack itemStack) {
-        ItemStack filterStack = this.getStackInSlot(18);
-        Optional<Tag> filterTag = HopperTileEntity.getTagForFilter(filterStack);
-        return filterTag.map(tag -> Optional.ofNullable(Filtering.hopperFilterTagMap.get(tag)).map(tagMap -> tagMap.test(itemStack, true)).orElse(Boolean.TRUE)).orElse(Boolean.TRUE);
-    }
 }

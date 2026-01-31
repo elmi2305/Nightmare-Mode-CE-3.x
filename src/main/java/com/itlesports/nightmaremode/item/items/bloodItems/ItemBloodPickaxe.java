@@ -18,7 +18,7 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

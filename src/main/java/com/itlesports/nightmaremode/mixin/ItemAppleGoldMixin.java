@@ -3,13 +3,12 @@ package com.itlesports.nightmaremode.mixin;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static btw.community.nightmaremode.NightmareMode.GOLDEN_APPLE_COOLDOWN;
+import static btw.community.nightmaremode.NightmareMode.APPLE_COOLDOWN;
 
 @Mixin(ItemAppleGold.class)
 public abstract class ItemAppleGoldMixin extends ItemFood{
@@ -65,7 +64,7 @@ public abstract class ItemAppleGoldMixin extends ItemFood{
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!player.isPotionActive(Potion.hunger) && world.getTotalWorldTime() >= player.getData(GOLDEN_APPLE_COOLDOWN)) {
+        if (!player.isPotionActive(Potion.hunger) && world.getTotalWorldTime() >= player.getData(APPLE_COOLDOWN)) {
             player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
         } else {
             player.onCantConsume();

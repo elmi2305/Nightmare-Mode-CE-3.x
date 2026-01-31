@@ -16,7 +16,7 @@ public class ItemFlamethrower extends Item {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 

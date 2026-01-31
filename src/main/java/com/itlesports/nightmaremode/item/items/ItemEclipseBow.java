@@ -16,7 +16,7 @@ public class ItemEclipseBow extends CompositeBowItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

@@ -9,6 +9,6 @@ public class NMItemBucketMilk extends ItemBucketMilk {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 }

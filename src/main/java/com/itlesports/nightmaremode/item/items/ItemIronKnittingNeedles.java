@@ -16,7 +16,7 @@ public class ItemIronKnittingNeedles extends ToolItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

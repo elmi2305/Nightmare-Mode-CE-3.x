@@ -73,14 +73,14 @@ public class NightmareMode extends BTWAddon {
 
     @Override
     public String getModID() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     public static NightmareMode getInstance() {
         if (instance == null) {
             instance = new NightmareMode();
         }
-        instance.modID = "nightmare_mode";
+        instance.modID = "nightmare";
         return instance;
     }
 
@@ -481,7 +481,7 @@ public class NightmareMode extends BTWAddon {
                     .global()
                     .build();
 
-    public static final DataEntry.PlayerDataEntry<Long> GOLDEN_APPLE_COOLDOWN =
+    public static final DataEntry.PlayerDataEntry<Long> APPLE_COOLDOWN =
             DataProvider.getBuilder(Long.class)
                     .name("AppleCooldown")
                     .defaultSupplier(() -> 0L)
@@ -530,7 +530,7 @@ public class NightmareMode extends BTWAddon {
     public void preInitialize() {
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
-        GOLDEN_APPLE_COOLDOWN.register();
+        APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
     }
 

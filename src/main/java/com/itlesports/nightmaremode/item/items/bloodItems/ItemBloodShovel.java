@@ -15,7 +15,7 @@ public class ItemBloodShovel extends ShovelItem implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.Random;
 
 @Mixin(StructureScatteredFeatureStart.class)
 public class StructureScatteredFeatureStartMixin extends StructureStart {
+
     @Inject(method = "<init>(Lnet/minecraft/src/World;Ljava/util/Random;II)V", at = @At("TAIL"))
     private void addCustomFeatures(World world, Random rand, int chunkX, int chunkZ, CallbackInfo ci) {
         BiomeGenBase biome = world.getBiomeGenForCoords(chunkX * 16 + 8, chunkZ * 16 + 8);

@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.underworld;
 
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 
 public class WorldProviderUnderworld extends WorldProvider {
     private float[] colorsSunriseSunsetUnderworld = new float[4];
@@ -14,14 +16,15 @@ public class WorldProviderUnderworld extends WorldProvider {
         return "Underworld";
     }
 
-
     @Override
     public void generateLightBrightnessTable() {
-        float var1 = 0.1F;
-
-        for(int var2 = 0; var2 <= 10; ++var2) {
-            float var3 = 1.0F - (float)var2 / 10.0F;
-            this.lightBrightnessTable[var2] = (1.0F - var3) / (var3 * 3.0F + 1.0F) * (1.0F - var1) + var1;
+        float ambient = 0.0f;
+        for (int level = 0; level <= 15; ++level) {
+            float norm = (float) level / 20.0f;
+            float base = (float) Math.pow(norm, 2.5f);
+            float brightness = base;
+            brightness = Math.max(0.0f, Math.min(1.0f, brightness));
+            this.lightBrightnessTable[level] = brightness * (1.0f - ambient) + ambient;
         }
     }
 

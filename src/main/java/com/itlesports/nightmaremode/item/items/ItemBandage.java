@@ -13,7 +13,7 @@ public class ItemBandage extends ItemFood {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     private long timeUntilUsage;

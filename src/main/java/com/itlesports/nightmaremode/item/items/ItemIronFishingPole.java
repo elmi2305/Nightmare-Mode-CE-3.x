@@ -12,7 +12,7 @@ public class ItemIronFishingPole extends ItemFishingRod {
 
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

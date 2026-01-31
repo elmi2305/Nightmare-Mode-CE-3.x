@@ -20,7 +20,7 @@ public class ItemAR extends Item {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 

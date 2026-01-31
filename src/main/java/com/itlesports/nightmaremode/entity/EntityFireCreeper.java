@@ -79,7 +79,7 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
 
     public void onUpdate() {
-        if (this.isEntityAlive()) {
+        if (this.isEntityAlive() && this.worldObj != null) {
             this.lastActiveTime = this.timeSinceIgnited;
             int var1 = this.getCreeperState();
             if (var1 > 0 && this.timeSinceIgnited == 0) {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "nightmare_mode",
+  "id": "nightmare",
   "version": "${version}",
 
   "name": "Nightmare Mode",
@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/nightmare_mode/icon.png",
+  "icon": "assets/nightmare/icon.png",
 
   "environment": "*",
   "entrypoints": {

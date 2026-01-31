@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.tileentity.UnfiredBrickTileEntity;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NMUtils;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,7 @@ public class UnfiredBrickTileEntityMixin {
 
     @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"))
     private int enableCookingOnEclipse(World instance, int i, int j, int k){
-        if(NMUtils.getIsEclipse()){
+        if(NMUtils.getIsEclipse() || (NightmareMode.darkStormyNightmare)){
             return 31;
         }
         return instance.getBlockNaturalLightValueMaximum(i,j,k);

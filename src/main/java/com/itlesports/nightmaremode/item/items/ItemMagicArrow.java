@@ -11,7 +11,7 @@ public class ItemMagicArrow extends ArrowItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

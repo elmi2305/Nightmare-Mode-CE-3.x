@@ -15,7 +15,7 @@ public class ItemBloodHoe extends HoeItem implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 }

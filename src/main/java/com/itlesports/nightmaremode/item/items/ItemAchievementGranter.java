@@ -18,7 +18,7 @@ public class ItemAchievementGranter extends ItemFood {
         }
     }
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
 

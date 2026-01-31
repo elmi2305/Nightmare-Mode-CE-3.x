@@ -19,6 +19,7 @@ public class BlockMultiTextured extends NMBlock {
     private String iconWestName;
     private String iconEastName;
     private boolean canGrowVegetation;
+    private boolean isExplosive;
 
     public BlockMultiTextured(int par1, Material par2Material, String bot, String top, String s, String n, String w, String e) {
         super(par1, par2Material);
@@ -39,6 +40,7 @@ public class BlockMultiTextured extends NMBlock {
         this(id, material, allSides);
         this.canGrowVegetation = canGrowVegetation;
     }
+
 
 
     public BlockMultiTextured(int id, Material material, String top, String bot, String sides) {
@@ -92,6 +94,28 @@ public class BlockMultiTextured extends NMBlock {
         return this;
     }
 
+    @Override
+    public void onBlockDestroyedByExplosion(World w, int x, int y, int z, Explosion par5Explosion) {
+        if(!w.isRemote && this.isExplosive){
+            EntitySilverfish sf = new EntitySilverfish(w);
+            sf.setPosition(x,y,z);
+            w.spawnEntityInWorld(sf);
+        }
+        super.onBlockDestroyedByExplosion(w, x, y, z, par5Explosion);
+    }
+
+    @Override
+    public void onBlockDestroyedByPlayer(World w, int x, int y, int z, int meta) {
+        if(this.isExplosive){
+            w.createExplosion(null,x,y,z, 2.75f, true);
+        }
+        super.onBlockDestroyedByPlayer(w, x, y, z, meta);
+    }
+
+    public BlockMultiTextured setIsExplosive(boolean b){
+        this.isExplosive = b;
+        return this;
+    }
     public boolean canReedsGrowOnBlock(World world, int x, int y, int z) {
         return this.canGrowVegetation;
     }

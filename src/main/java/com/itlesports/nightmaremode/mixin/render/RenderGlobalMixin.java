@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.NMUtils;
+import com.prupe.mcpatcher.sky.SkyRenderer;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -22,8 +23,183 @@ public abstract class RenderGlobalMixin {
 
     @Shadow public abstract void renderCloudsFancy(float par1);
 
+    @Shadow @Final private static ResourceLocation locationSunPng;
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("textures/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("textures/eclipse.png");
+    @Unique private static final ResourceLocation CRACK = new ResourceLocation("textures/crack.png");
+
+    /*
+
+    CUSTOM MOON
+
+     */
+
+    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
+    private int changeMoonSkyTexture(Tessellator instance){
+        // avoids drawing the moon, it is manually drawn later
+        return 0;
+    }
+    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
+    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){}
+    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
+    private void setUpUVForMoon(float par1, CallbackInfo ci){
+        Tessellator var23 = Tessellator.instance;
+
+        float var12 = 20.0f;
+
+        int var28 = this.theWorld.getMoonPhase();
+
+        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(ECLIPSE));
+        float uMin = 0.0f;
+        float uMax = 1.0f;
+        float vMin = 0.0f;
+        float vMax = 1.0f;
+
+        var23.startDrawingQuads();
+        var23.addVertexWithUV(-var12, -100.0,  var12, uMax, vMax);
+        var23.addVertexWithUV( var12, -100.0,  var12, uMin, vMax);
+        var23.addVertexWithUV( var12, -100.0, -var12, uMin, vMin);
+        var23.addVertexWithUV(-var12, -100.0, -var12, uMax, vMin);
+
+        var23.draw();
+    }
+
+
+
+    /*
+
+    CUSTOM SUN
+
+     */
+
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 2))
+//    private int avoidDrawingInitialSun(Tessellator instance){
+//        // avoids drawing the moon, it is manually drawn later
+//        return 0;
+//    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 1))
+//    private void doNotStartDrawingSunQuads(Tessellator instance){}
+//    private float sunAnimationProgress = 0.0f;       // 0.0 → 1.0 over the animation window
+//    private long lastWorldTime = -1L;                // To detect time changes / wrap-around
+//    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal = 2))
+//    private void setUpCustomSun(float par1, CallbackInfo ci){
+//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(locationSunPng));
+//        Tessellator var23 = Tessellator.instance;  // Assuming var23 is Tessellator.instance
+//
+//        float sunSize = 30.0f;
+//        float crackThreshold = 0.6f;
+//        float crackAlpha = MathHelper.clamp_float(sunAnimationProgress / crackThreshold, 0.0f, 1.0f);
+//        float shatterProgress = MathHelper.clamp_float((sunAnimationProgress - crackThreshold) / (1.0f - crackThreshold), 0.0f, 1.0f);
+//        float pieceFade = 1.0f - shatterProgress;
+//        float spread = shatterProgress * 12.0f;
+//
+//        ResourceLocation sunTex = SkyRenderer.setupCelestialObject(locationSunPng);
+//        ResourceLocation crackTex = CRACK;  // Your 32x32 crack texture
+//
+//        if (sunAnimationProgress < crackThreshold) {
+//            // Phase 1: Normal sun + fading-in crack overlay
+//            this.renderEngine.bindTexture(sunTex);
+//            var23.startDrawingQuads();
+//            var23.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+//            var23.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
+//            var23.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
+//            var23.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
+//            var23.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
+//            var23.draw();
+//
+//            // Black crack overlay (fades in perfectly over 32-unit sun)
+//            this.renderEngine.bindTexture(crackTex);
+//            var23.startDrawingQuads();
+//            var23.setColorRGBA_F(0.0F, 0.0F, 0.0F, crackAlpha);
+//            var23.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
+//            var23.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
+//            var23.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
+//            var23.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
+//            var23.draw();
+//        } else {
+//            // Phase 2: Shatter into 4 rotating, spreading, fading pieces using partial sun UVs for realism
+//            this.renderEngine.bindTexture(sunTex);
+//            float pieceSize = sunSize * 0.65f;
+//
+//            // Translate to sun center for per-piece transforms (Y=100 fixed)
+//            GL11.glPushMatrix();
+//            GL11.glTranslatef(0.0F, 100.0F, 0.0F);
+//
+//            // Piece data: offsets (X,Z), base rotation (degrees), UV bounds (minU,maxU,minV,maxV)
+//            float[][] offsets = {
+//                    {-spread * 0.7f, -spread * 0.7f},
+//                    { spread * 0.7f, -spread * 0.7f},
+//                    {-spread * 0.5f,  spread * 0.8f},
+//                    { spread * 0.6f,  spread * 0.5f}
+//            };
+//            float[] baseRotations = {90.0f, -120.0f, 45.0f, -80.0f};
+//            float[][] uvs = {
+//                    {0.0f, 0.55f, 0.0f, 0.55f},   // Bottom-left shard
+//                    {0.45f, 1.0f, 0.0f, 0.55f},   // Bottom-right
+//                    {0.0f, 0.55f, 0.45f, 1.0f},   // Top-left
+//                    {0.45f, 1.0f, 0.45f, 1.0f}    // Top-right
+//            };
+//
+//            for (int i = 0; i < 4; i++) {
+//                GL11.glPushMatrix();
+//                GL11.glTranslatef(offsets[i][0], 0.0F, offsets[i][1]);
+//                GL11.glRotatef(baseRotations[i] + shatterProgress * 720.0f, 0.0F, 1.0F, 0.0F);  // Spin + tumble
+//
+//                var23.startDrawingQuads();
+//                var23.setColorRGBA_F(1.0F, 1.0F, 1.0F, pieceFade);
+//                float minU = uvs[i][0], maxU = uvs[i][1];
+//                float minV = uvs[i][2], maxV = uvs[i][3];
+//                var23.addVertexWithUV(-pieceSize,   0.0D, -pieceSize,   minU, minV);
+//                var23.addVertexWithUV( pieceSize,   0.0D, -pieceSize,   maxU, minV);
+//                var23.addVertexWithUV( pieceSize,   0.0D,  pieceSize,   maxU, maxV);
+//                var23.addVertexWithUV(-pieceSize,   0.0D,  pieceSize,   minU, maxV);
+//                var23.draw();
+//
+//                GL11.glPopMatrix();
+//            }
+//
+//            GL11.glPopMatrix();
+//        }
+//    }
+//    @Inject(method = "renderSky", at = @At("HEAD"))
+//    private void trackProgress(float par1, CallbackInfo ci){
+//        World world = Minecraft.getMinecraft().theWorld;
+//        if (world == null) {
+//            sunAnimationProgress = 0.0f;
+//            return;
+//        }
+//
+//        long currentTime = world.getWorldTime();           // full world time (increases forever)
+//        long timeOfDay = currentTime % 24000L;             // 0–23999
+//
+//        if (currentTime < lastWorldTime || Math.abs(currentTime - lastWorldTime) > 1000) {
+//            // Time was set backwards or jumped → reset animation state if needed
+//            sunAnimationProgress = 0.0f;
+//        }
+//        lastWorldTime = currentTime;
+//
+//        final long ANIM_START = 11300L;   // Slightly before official sunset for anticipation
+//        final long ANIM_END   = 11800L;   // Slightly after for lingering effect
+//        final long ANIM_LENGTH = ANIM_END - ANIM_START;
+//
+//        if (timeOfDay >= ANIM_START && timeOfDay <= ANIM_END) {
+//            sunAnimationProgress = (float)(timeOfDay - ANIM_START) / (float)ANIM_LENGTH;
+//            sunAnimationProgress = MathHelper.clamp_float(sunAnimationProgress, 0.0f, 1.0f);
+//        } else if (timeOfDay > ANIM_END || timeOfDay < ANIM_START - 1000) {
+//            sunAnimationProgress = 0.0f;
+//        } else {
+//            sunAnimationProgress = 0.0f;
+//        }
+//
+//        sunAnimationProgress = MathHelper.clamp_float(
+//                sunAnimationProgress + par1 / 20.0f * 0.01f,  // tiny smoothing
+//                0.0f, 1.0f
+//        );
+//        sunAnimationProgress = Math.min(sunAnimationProgress, 1.0f);
+//        sunAnimationProgress = Math.max(sunAnimationProgress, 0f);
+//
+//    }
+
 
     @ModifyArg(method = "renderSky", at = @At(value = "INVOKE", target = "Lcom/prupe/mcpatcher/sky/SkyRenderer;setupCelestialObject(Lnet/minecraft/src/ResourceLocation;)Lnet/minecraft/src/ResourceLocation;",ordinal = 2))
     private ResourceLocation manageBloodMoonTexture(ResourceLocation defaultTexture){

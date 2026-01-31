@@ -31,8 +31,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
+import static btw.achievement.BTWAchievements.*;
 import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
-import static btw.community.nightmaremode.NightmareMode.GOLDEN_APPLE_COOLDOWN;
+import static btw.community.nightmaremode.NightmareMode.APPLE_COOLDOWN;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
@@ -219,10 +220,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
             if(usedItemID == Item.appleGold.itemID && !this.worldObj.isRemote){
                 if(p.getItemInUse().getItemDamage() == 1){
-                    this.setData(GOLDEN_APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 1800L);
+                    this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 1800L);
 
                 }
-                this.setData(GOLDEN_APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 600L);
+                this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 600L);
 //                System.out.println(this.getData(GOLDEN_APPLE_COOLDOWN) + " player data" + (this.getEntityWorld().isRemote ? " client" : " server"));
 
             }
@@ -348,7 +349,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHookTail(CallbackInfo ci){
-
         if ((this.ticksExisted % 100 == 1 || NMConfUtils.isClientUsingHelpConfig()) && !this.worldObj.isRemote) {
             EntityPlayer self = (EntityPlayer)(Object)this;
 

@@ -8,6 +8,6 @@ public class NMNetherStarItem extends NetherStarItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 }

@@ -8,6 +8,6 @@ public class NMItem extends Item {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 }

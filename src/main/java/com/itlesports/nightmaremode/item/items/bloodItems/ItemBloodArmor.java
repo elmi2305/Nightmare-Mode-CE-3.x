@@ -14,7 +14,7 @@ public class ItemBloodArmor extends ArmorItemMod implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override

@@ -458,7 +458,7 @@ public class GuiConfig extends GuiScreen {
             );
             button.setTooltipText(I18n.getString(option.getTooltipKey()));
             if (option.getConfigEnum() != null) {
-                System.out.println("set: "+ option.getConfigEnum());
+//                System.out.println("set: "+ option.getConfigEnum());
                 button.setConfigValue(option.getConfigEnum());
             }
             this.buttonList.add(button);

@@ -256,6 +256,6 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public void registerIcons(IconRegister par1IconRegister) {
-        this.blockIcon = par1IconRegister.registerIcon("nightmare_mode:chestBlood_particle");
+        this.blockIcon = par1IconRegister.registerIcon("nightmare:chestBlood_particle");
     }
 }

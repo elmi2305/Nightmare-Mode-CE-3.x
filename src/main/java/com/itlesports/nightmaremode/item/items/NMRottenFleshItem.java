@@ -8,6 +8,6 @@ public class NMRottenFleshItem extends RottenFleshItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 }

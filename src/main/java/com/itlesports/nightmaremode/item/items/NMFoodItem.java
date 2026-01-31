@@ -9,6 +9,6 @@ public class NMFoodItem extends FoodItem {
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 }

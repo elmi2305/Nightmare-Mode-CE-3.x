@@ -18,7 +18,7 @@ public class ItemBloodAxe extends AxeItem implements IBloodTool{
     }
 
     public String getModId() {
-        return "nightmare_mode";
+        return "nightmare";
     }
 
     @Override
