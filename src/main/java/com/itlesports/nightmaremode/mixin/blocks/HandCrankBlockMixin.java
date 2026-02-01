@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class HandCrankBlockMixin {
     @ModifyConstant(method = "onBlockActivated", constant = @Constant(floatValue = 1.0f, ordinal = 0))
     private float increaseHungerDrain(float constant){
-        return constant * 2.5f;
+        return constant * 3.0f;
     }
 }

@@ -27,12 +27,12 @@ public abstract class HopperTileEntityMixin extends TileEntity {
 
     @ModifyConstant(method = "attemptToEjectXPIntoHopper", constant = @Constant(intValue = 100), remap = false)
     private int increaseExperienceCapacity(int xp) {
-        return 1000;
+        return xp * 10;
     }
 
     @ModifyConstant(method = "attemptToSwallowXPOrb", constant = @Constant(intValue = 100), remap = false)
     private int increaseExperienceCapacity1(int xp) {
-        return 1000;
+        return xp * 10;
     }
 
     @Inject(method = "attemptToEjectStackFromInv", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockTileEntity(III)Lnet/minecraft/src/TileEntity;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherrackBlock.class)
 public class NetherrackBlockMixin extends FullBlock {
-    @Unique
-    private boolean shouldDropDust = true;
+    @Unique private boolean shouldDropDust = true;
+
     protected NetherrackBlockMixin(int par1, Material par2Material) {
         super(par1, par2Material);
     }

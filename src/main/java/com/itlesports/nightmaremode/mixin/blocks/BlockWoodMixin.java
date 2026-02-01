@@ -21,7 +21,6 @@ public class BlockWoodMixin extends Block {
         return true;
     }
 
-
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();
     }
