@@ -10,6 +10,7 @@ import java.util.*;
 public class NMUtils {
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
+
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(
             NMItems.bloodSword.itemID,
             NMItems.bloodBoots.itemID,

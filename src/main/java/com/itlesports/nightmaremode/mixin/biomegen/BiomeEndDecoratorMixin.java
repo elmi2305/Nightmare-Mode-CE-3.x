@@ -20,9 +20,9 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator{
             shift = At.Shift.AFTER))
     private void spawnDragon(CallbackInfo ci){
         if (this.currentWorld.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            EntityDragon var4 = new EntityDragon(this.currentWorld);
-            var4.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
-            this.currentWorld.spawnEntityInWorld(var4);
+            EntityDragon dragon = new EntityDragon(this.currentWorld);
+            dragon.setLocationAndAngles(0.0, 64.0, 0.0, this.randomGenerator.nextFloat() * 360.0F, 0.0F);
+            this.currentWorld.spawnEntityInWorld(dragon);
         }
     }
 }

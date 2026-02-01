@@ -541,6 +541,9 @@ public abstract class NMInitializer implements AchievementExt {
         BTWItems.plateBreastplate.setMaxDamage(729);
         BTWItems.plateHelmet.setMaxDamage(729);
 
+        WorldGenReed.addBiomeToGenerator(BiomeGenBase.river);
+
+
         boolean isServer = MinecraftServer.getIsServer();
         if (!isServer) {
             BTWItems.emeraldPile.setItemRightClickCooldown( BTWItems.emeraldPile.getItemRightClickCooldown() / 6);
