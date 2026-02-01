@@ -9,27 +9,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.itlesports.nightmaremode.NMFields.CRIMSON_COLOR;
+
 @Mixin(BlockTallGrass.class)
 public class BlockTallGrassMixin {
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "getBlockColor", at = @At(value = "RETURN"), cancellable = true)
     private void redGrass0(CallbackInfoReturnable<Integer> cir){
         if(NightmareMode.crimson){
-            cir.setReturnValue(14163743);
+            cir.setReturnValue(CRIMSON_COLOR);
         }
     }
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "getRenderColor", at = @At(value = "RETURN"), cancellable = true)
     private void redGrass1(CallbackInfoReturnable<Integer> cir){
         if(NightmareMode.crimson){
-            cir.setReturnValue(14163743);
+            cir.setReturnValue(CRIMSON_COLOR);
         }
     }
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "colorMultiplier", at = @At(value = "RETURN"), cancellable = true)
     private void redGrass2(CallbackInfoReturnable<Integer> cir){
         if(NightmareMode.crimson){
-            cir.setReturnValue(14163743);
+            cir.setReturnValue(CRIMSON_COLOR);
         }
     }
 }

@@ -17,6 +17,7 @@ public class BlockMushroomMixin extends BlockFlower {
     protected BlockMushroomMixin(int par1, Material par2Material) {
         super(par1, par2Material);
     }
+
     @Inject(method = "updateTick", at = @At("HEAD"))
     private void declareWorld(World world, int x, int y, int z, Random rand, CallbackInfo ci){
         this.worldObj = world;
@@ -26,9 +27,10 @@ public class BlockMushroomMixin extends BlockFlower {
     private int increaseChanceToSpread(int bound){
         return 7;
     }
+
     @ModifyConstant(method = "updateTick", constant = @Constant(intValue = 4,ordinal = 0))
     private int decreaseMushroomDetectionRange(int constant){
-        if(this.worldObj != null && this.worldObj.worldInfo != null && this.worldObj.worldInfo.dimension == 0){
+        if(this.worldObj != null && this.worldObj.worldInfo != null && this.worldObj.provider.dimensionId == 0){
             return 2;
         }
         return constant ;

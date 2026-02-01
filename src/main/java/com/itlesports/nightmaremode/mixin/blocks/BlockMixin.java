@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
@@ -7,6 +8,7 @@ import com.itlesports.nightmaremode.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Block.class)
 public class BlockMixin {
     @Shadow public static Block obsidian;
+    @Shadow @Final public int blockID;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){
@@ -36,20 +39,20 @@ public class BlockMixin {
 
     @Inject(method = "harvestBlock", at = @At("HEAD"))
     private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
-        Block thisObj = (Block)(Object)this;
         ItemStack item = player.getHeldItem();
-        if (item != null) {
-            int blockID = thisObj.blockID;
+        if (item != null && item.getItem() instanceof PickaxeItem pi) {
+            int blockID = this.blockID;
+
             if(EnchantmentHelper.getSilkTouchModifier(player)){return;}
 
-            if(item.itemID == Item.pickaxeIron.itemID && world.rand.nextInt(7) < 4){
+            if(pi.toolMaterial.getHarvestLevel() == 2 && world.rand.nextInt(7) < 4){
                 if (blockID == Block.oreIron.blockID) {
                     // 4/7 chance (57%)
                     summonEntity(world,x,y,z,BTWItems.ironOreChunk);
                 } else if(blockID == Block.oreGold.blockID){
                     summonEntity(world,x,y,z,BTWItems.goldOreChunk);
                 }
-            } else if((item.itemID == Item.pickaxeDiamond.itemID || item.itemID == BTWItems.steelPickaxe.itemID || item.itemID == NMItems.bloodPickaxe.itemID) && world.rand.nextInt(4) < 3) {
+            } else if((pi.toolMaterial.getHarvestLevel() >= 3) && world.rand.nextInt(4) != 0) {
                 // 3/4 chance (75%)
                 if (blockID == Block.oreIron.blockID) {
                     summonEntity(world, x, y, z, BTWItems.ironOreChunk);
