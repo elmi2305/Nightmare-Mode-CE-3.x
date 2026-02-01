@@ -14,14 +14,14 @@ public class BlockFluidMixin extends Block{
     @ModifyArg(method = "registerIcons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/IconRegister;registerIcon(Ljava/lang/String;)Lnet/minecraft/src/Icon;",ordinal = 2))
     private String redWater1(String texture){
         if (NightmareMode.bloodmare || NightmareMode.crimson) {
-            return "nightmare:nightmare_water_flow";
+            return "nightmare:nightmare_water_still";
         }
         return texture;
     }
     @ModifyArg(method = "registerIcons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/IconRegister;registerIcon(Ljava/lang/String;)Lnet/minecraft/src/Icon;",ordinal = 3))
     private String redWater2(String texture){
         if (NightmareMode.bloodmare || NightmareMode.crimson) {
-            return "nightmare:nightmare_water_still";
+            return "nightmare:nightmare_water_flow";
         }
         return texture;
     }
