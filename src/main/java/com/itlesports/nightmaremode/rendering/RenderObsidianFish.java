@@ -11,7 +11,7 @@ import net.minecraft.src.*;
 
 @Environment(EnvType.CLIENT)
 public class RenderObsidianFish extends RenderLiving {
-    private static final ResourceLocation silverfishTextures = new ResourceLocation("textures/entity/nmObsidianFish.png");
+    private static final ResourceLocation silverfishTextures = new ResourceLocation("nightmare:textures/entity/nmObsidianFish.png");
 
     public RenderObsidianFish() {
         super(new ModelSilverfish(), 0.3F);

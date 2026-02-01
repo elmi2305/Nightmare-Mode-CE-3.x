@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDisenchantmentTable extends TileEntitySpecialRenderer
 {
-    private static final ResourceLocation enchantingTableBookTextures = new ResourceLocation("textures/entity/disenchanterBook.png");
+    private static final ResourceLocation enchantingTableBookTextures = new ResourceLocation("nightmare:textures/entity/disenchanterBook.png");
     private ModelBook enchantmentBook = new ModelBook();
 
     public void renderTileEntityEnchantmentTableAt(TileEntityDisenchantmentTable te, double x, double y, double z, float partialTick)

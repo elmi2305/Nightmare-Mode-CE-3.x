@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderCreeper.class)
 public class RenderCreeperMixin {
-    @Unique private static final ResourceLocation CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/creeperEclipseHigh.png");
-    @Unique private static final ResourceLocation CREEPER_TEXTURE_NETHER = new ResourceLocation("textures/entity/creeperNether0.png");
+    @Unique private static final ResourceLocation CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/creeperEclipseHigh.png");
+    @Unique private static final ResourceLocation CREEPER_TEXTURE_NETHER = new ResourceLocation("nightmare:textures/entity/creeperNether0.png");
 
     @Inject(method = "getCreeperTextures", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityCreeper par1EntityCreeper, CallbackInfoReturnable<ResourceLocation> cir){

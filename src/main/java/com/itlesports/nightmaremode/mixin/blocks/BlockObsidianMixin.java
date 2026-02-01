@@ -83,7 +83,7 @@ public class BlockObsidianMixin extends Block {
     public void registerIcons(IconRegister reg) {
         nm_obsidianIcons = new Icon[4];
         nm_obsidianIcons[0] = reg.registerIcon("minecraft:obsidian");
-        nm_obsidianIcons[1] = reg.registerIcon("nmCrudeObsidian");
+        nm_obsidianIcons[1] = reg.registerIcon("nightmare:nmCrudeObsidian");
     }
 
     @Override

@@ -10,7 +10,7 @@ public class RenderPhantom extends RenderBiped{
     public RenderPhantom() {
         super(new ModelZombie(), 0.5f, 1.0f);
     }
-    private static final ResourceLocation zombieTextures = new ResourceLocation("textures/entity/nmPhantom.png");
+    private static final ResourceLocation zombieTextures = new ResourceLocation("nightmare:textures/entity/nmPhantom.png");
     private ModelBiped field_82434_o = this.modelBipedMain;
     private ModelZombieVillager zombieVillagerModel = new ModelZombieVillager();
     protected ModelBiped field_82437_k;

@@ -82,7 +82,6 @@
     "blocks.BlockEndPortalMixin",
     "blocks.BlockFenceGateMixin",
     "blocks.BlockFluidMixin",
-    "blocks.BlockGlassMixin",
     "blocks.BlockGrassMixin",
     "blocks.BlockLeavesMixin",
     "blocks.BlockLogMixin",
@@ -201,7 +200,6 @@
     "gui.LoadingScreenRendererMixin",
     "gui.RenderItemMixin",
     "render.RenderBipedMixin",
-    "render.RenderBlocksMixin",
     "render.RenderLivingEntityMixin",
     "render.RenderManagerMixin",
     "render.TileEntityRendererMixin"
@@ -249,7 +247,6 @@
     "render.RenderGlobalMixin",
     "render.RenderHorseMixin",
     "render.RenderPigMixin",
-    "render.RenderPlayerMixin",
     "render.RenderSheepMixin",
     "render.RenderSkeletonMixin",
     "render.RenderSlimeMixin",

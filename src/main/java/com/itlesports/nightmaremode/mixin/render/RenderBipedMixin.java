@@ -18,7 +18,7 @@ public abstract class RenderBipedMixin extends RenderLiving {
     private static void allowRenderingDiamondArmor(ItemArmor par0ItemArmor, int par1, CallbackInfoReturnable<ResourceLocation> cir) {
         if (par0ItemArmor instanceof ArmorItemDiamond) {
             int layer = (par1 == 2) ? 2 : 1;
-            String texture = String.format("textures/armor/nm_diamond_layer_%d.png", layer);
+            String texture = String.format("nightmare:textures/armor/nm_diamond_layer_%d.png", layer);
             cir.setReturnValue(new ResourceLocation(texture));
         }
     }

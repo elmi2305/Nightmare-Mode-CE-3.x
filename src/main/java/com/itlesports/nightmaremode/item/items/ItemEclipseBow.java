@@ -12,7 +12,7 @@ public class ItemEclipseBow extends CompositeBowItem {
         super(iItemID);
         this.setMaxDamage(1000);
         this.setUnlocalizedName("nmEclipseBow");
-        this.setTextureName("nmEclipseBow");
+        this.setTextureName("nightmare:nmEclipseBow");
     }
 
     public String getModId() {

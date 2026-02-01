@@ -13,17 +13,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderSkeleton.class)
 public class RenderSkeletonMixin {
-    @Unique private static final ResourceLocation FIRE_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeletonFire.png");
-    @Unique private static final ResourceLocation ICE_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeletonIce.png");
-    @Unique private static final ResourceLocation ENDER_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeletonEnder.png");
-    @Unique private static final ResourceLocation JUNGLE_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeletonJungle.png");
-    @Unique private static final ResourceLocation SUPERCRITICAL_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeletonSupercritical.png");
+    @Unique private static final ResourceLocation FIRE_SKELETON_TEXTURE = new ResourceLocation("nightmare:textures/entity/skeletonFire.png");
+    @Unique private static final ResourceLocation ICE_SKELETON_TEXTURE = new ResourceLocation("nightmare:textures/entity/skeletonIce.png");
+    @Unique private static final ResourceLocation ENDER_SKELETON_TEXTURE = new ResourceLocation("nightmare:textures/entity/skeletonEnder.png");
+    @Unique private static final ResourceLocation JUNGLE_SKELETON_TEXTURE = new ResourceLocation("nightmare:textures/entity/skeletonJungle.png");
+    @Unique private static final ResourceLocation SUPERCRITICAL_SKELETON_TEXTURE = new ResourceLocation("nightmare:textures/entity/skeletonSupercritical.png");
 
-    @Unique private static final ResourceLocation FIRE_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/fireskeletonEclipse.png");
-    @Unique private static final ResourceLocation ICE_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/iceskeletonEclipse.png");
-    @Unique private static final ResourceLocation ENDER_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/enderskeletonEclipse.png");
-    @Unique private static final ResourceLocation WITHER_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/witherskeletonEclipse.png");
-    @Unique private static final ResourceLocation NORMAL_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/normalskeletonEclipse.png");
+    @Unique private static final ResourceLocation FIRE_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/fireskeletonEclipse.png");
+    @Unique private static final ResourceLocation ICE_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/iceskeletonEclipse.png");
+    @Unique private static final ResourceLocation ENDER_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/enderskeletonEclipse.png");
+    @Unique private static final ResourceLocation WITHER_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/witherskeletonEclipse.png");
+    @Unique private static final ResourceLocation NORMAL_SKELETON_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/normalskeletonEclipse.png");
 
 
 

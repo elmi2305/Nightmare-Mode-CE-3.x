@@ -23,17 +23,17 @@ public class GuiMainMenuMixin extends GuiScreen {
     @Shadow @Final private static Random rand;
     @Unique private static ResourceLocation MENU = null;
 
-    @Unique private final ResourceLocation BLOODMARE_CLEAN = new ResourceLocation("textures/NightmareModeBloodmareClean.png");
-    @Unique private final ResourceLocation BLOODMARE = new ResourceLocation("textures/NightmareModeBloodmare.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE = new ResourceLocation("textures/NightmareMode.png");
-    @Unique private final ResourceLocation CANCER_MODE = new ResourceLocation("textures/CancerMode.png");
-    @Unique private final ResourceLocation BTW_CANCER = new ResourceLocation("textures/BTWCancer.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_RED = new ResourceLocation("textures/NightmareModeRed.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_DARK = new ResourceLocation("textures/NightmareModeDark.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_GREEN = new ResourceLocation("textures/NightmareModeGreen.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_BLUE = new ResourceLocation("textures/NightmareModeBlue.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_MISSING = new ResourceLocation("textures/NightmareModeMissing.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_PURPLE = new ResourceLocation("textures/NightmareModeMissing.png");
+    @Unique private final ResourceLocation BLOODMARE_CLEAN = new ResourceLocation("nightmare:textures/menu/NightmareModeBloodmareClean.png");
+    @Unique private final ResourceLocation BLOODMARE = new ResourceLocation("nightmare:textures/menu/NightmareModeBloodmare.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE = new ResourceLocation("nightmare:textures/menu/NightmareMode.png");
+    @Unique private final ResourceLocation CANCER_MODE = new ResourceLocation("nightmare:textures/menu/CancerMode.png");
+    @Unique private final ResourceLocation BTW_CANCER = new ResourceLocation("nightmare:textures/menu/BTWCancer.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_RED = new ResourceLocation("nightmare:textures/menu/NightmareModeRed.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_DARK = new ResourceLocation("nightmare:textures/menu/NightmareModeDark.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_GREEN = new ResourceLocation("nightmare:textures/menu/NightmareModeGreen.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_BLUE = new ResourceLocation("nightmare:textures/menu/NightmareModeBlue.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_MISSING = new ResourceLocation("nightmare:textures/menu/NightmareModeMissing.png");
+    @Unique private final ResourceLocation NIGHTMARE_MODE_PURPLE = new ResourceLocation("nightmare:textures/menu/NightmareModePurple.png");
     @Unique private final List<ResourceLocation> logoList = Arrays.asList(
             NIGHTMARE_MODE_RED,
             NIGHTMARE_MODE_DARK,
@@ -47,7 +47,9 @@ public class GuiMainMenuMixin extends GuiScreen {
     private void manageSplashText(CallbackInfo ci){
         this.splashText = getLocalizedSplash();
         if (MENU == null) {
-            MENU = NightmareMode.isAprilFools ? CANCER_MODE : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN) : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
+            MENU = NightmareMode.isAprilFools ? CANCER_MODE
+                    : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN)
+                    : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
         }
     }
 

@@ -17,6 +17,6 @@ public class GuiMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void redeclareBackgroundField(CallbackInfo ci){
-        optionsBackground = new ResourceLocation("textures/gui/dirtBackground.png");
+        optionsBackground = new ResourceLocation("nightmare:textures/gui/dirtBackground.png");
     }
 }

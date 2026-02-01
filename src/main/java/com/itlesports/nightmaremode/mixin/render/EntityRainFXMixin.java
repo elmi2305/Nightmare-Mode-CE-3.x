@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.NMUtils;
-import com.prupe.mcpatcher.cc.Colorizer;
 import net.minecraft.src.EntityFX;
 import net.minecraft.src.EntityRainFX;
 import net.minecraft.src.World;

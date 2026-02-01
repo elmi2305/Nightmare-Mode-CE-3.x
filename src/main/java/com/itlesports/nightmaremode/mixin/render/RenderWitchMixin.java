@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderWitch.class)
 public class RenderWitchMixin {
-    @Unique private static final ResourceLocation WITCH_ECLIPSE = new ResourceLocation("textures/entity/witchEclipse.png");
+    @Unique private static final ResourceLocation WITCH_ECLIPSE = new ResourceLocation("nightmare:textures/entity/witchEclipse.png");
 
     @Inject(method = "getWitchTextures", at = @At("HEAD"),cancellable = true)
     private void eclipseWitchTextures(EntityWitch par1EntityWitch, CallbackInfoReturnable<ResourceLocation> cir){

@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
 public class GuiAdvancedHorseArmor extends GuiContainer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/horseGui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/gui/horseGui.png");
     private final IInventory armorInv;
 
     public GuiAdvancedHorseArmor(InventoryPlayer playerInv, IInventory armorInv) {

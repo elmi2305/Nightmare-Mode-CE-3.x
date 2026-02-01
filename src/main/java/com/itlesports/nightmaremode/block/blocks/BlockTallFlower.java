@@ -116,8 +116,8 @@ public class BlockTallFlower extends BlockFlower {
         String[] names = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion5", "dandelion5", "dandelion5", };
 
         for (int i = 0; i < names.length; i++) {
-            bottomIcons[i] = reg.registerIcon("nmTallFlower_" + names[i] + "_bottom");
-            topIcons[i] = reg.registerIcon("nmTallFlower_" + names[i] + "_top");
+            bottomIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_bottom");
+            topIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_top");
         }
     }
 

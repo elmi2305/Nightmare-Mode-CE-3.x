@@ -20,9 +20,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot {
 
 
     @Shadow @Final GuiSelectWorld parentWorldGui;
-    private static final ResourceLocation WORLD_BASIC = new ResourceLocation("textures/gui/world_basic.png");
-    private static final ResourceLocation WORLD_BLOODMOON = new ResourceLocation("textures/gui/world_bloodmoon_layer.png");
-    private static final ResourceLocation WORLD_ECLIPSE = new ResourceLocation("textures/gui/world_eclipse_layer.png");
+    @Unique private static final ResourceLocation WORLD_BASIC = new ResourceLocation("nightmare:textures/gui/world_basic.png");
 
     public GuiWorldSlotMixin(Minecraft minecraft, int i, int j, int k, int l, int m) {
         super(minecraft, i, j, k, l, m);

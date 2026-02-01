@@ -7,7 +7,7 @@ import static btw.community.nightmaremode.NightmareMode.UNDERWORLD_DIMENSION;
 public class BlockUnderworldPortal extends BlockBreakable {
 
     public BlockUnderworldPortal(int id) {
-        super(id, "underworld_portal", Material.portal, false);
+        super(id, "nightmare:underworld_portal", Material.portal, false);
         setHardness(-1.0f);
         setLightValue(0.75f);
         setTickRandomly(true);

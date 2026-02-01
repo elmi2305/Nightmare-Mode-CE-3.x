@@ -5,7 +5,7 @@ import net.minecraft.src.RenderIronGolem;
 import net.minecraft.src.ResourceLocation;
 
 public class RenderNightmareGolem extends RenderIronGolem {
-    private static final ResourceLocation NIGHTMARE_GOLEM = new ResourceLocation("textures/entity/nmGolem.png");
+    private static final ResourceLocation NIGHTMARE_GOLEM = new ResourceLocation("nightmare:textures/entity/nmGolem.png");
 
     @Override
     protected ResourceLocation getIronGolemTextures(EntityIronGolem entityIronGolem) {

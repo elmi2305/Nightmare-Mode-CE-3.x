@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(CanvasRenderer.class)
 public abstract class CanvasRendererMixin extends Render {
     @Unique
-    private ResourceLocation nmCanvas = new ResourceLocation("textures/entity/nmCanvas.png");
+    private ResourceLocation nmCanvas = new ResourceLocation("nightmare:textures/entity/nmCanvas.png");
 
     @ModifyArg(method = "func_158_a", at = @At(value = "INVOKE", target = "Lbtw/client/render/entity/CanvasRenderer;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private ResourceLocation customCanvasPaintings(ResourceLocation par1){

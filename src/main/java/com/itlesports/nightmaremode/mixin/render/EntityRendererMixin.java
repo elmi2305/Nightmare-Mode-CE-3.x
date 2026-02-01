@@ -75,23 +75,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             long worldTime = this.mc.theWorld.getWorldTime();
             long timeOfDay = worldTime % 24000L;
 
-            // Calculate target fog alpha based on time of day
-            // Night is roughly 12542 to 23458 (sunset to sunrise)
-            float targetAlpha = 0.0f;
-
-            if (timeOfDay >= 12542 && timeOfDay <= 23458) {
-                // Nighttime - fog should be visible
-                targetAlpha = 1.0f;
-            } else if (timeOfDay >= 11542 && timeOfDay < 12542) {
-                // Sunset fade-in (1000 ticks before night = ~50 seconds)
-                // But we want 120 tick fade, so calculate accordingly
-                float sunsetProgress = (timeOfDay - 11542) / 1000.0f;
-                targetAlpha = Math.min(1.0f, sunsetProgress * (1000.0f / 240.0f));
-            } else if (timeOfDay > 23458 && timeOfDay <= 24458) {
-                // Sunrise fade-out (1000 ticks after night)
-                float sunriseProgress = (timeOfDay - 23458) / 1000.0f;
-                targetAlpha = Math.max(0.0f, 1.0f - sunriseProgress * (1000.0f / 240.0f));
-            }
+            float targetAlpha = getTargetAlpha(timeOfDay);
 
             // Smooth interpolation over 120 ticks (6 seconds at 20 TPS)
             float fadeSpeed = 1.0f / 240.0f;
@@ -137,7 +121,6 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
             GL11.glFogf(GL11.GL_FOG_DENSITY, density);
 
-            // 2. Handle special cases
             int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, par2);
 
             if (entity.isPotionActive(Potion.blindness)) {
@@ -155,24 +138,40 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
                 GL11.glFogf(GL11.GL_FOG_DENSITY, (0.065f + pulse * 1.2f) * this.underworldFogAlpha);
             }
 
-            // 3. Set up NV fog distance if available
             if (GLContext.getCapabilities().GL_NV_fog_distance) {
                 GL11.glFogi(0x855A, 0x855B);
             }
 
-            // 4. Material setup - must come before enabling fog
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             GL11.glNormal3f(0.0f, -1.0f, 0.0f);
 
-            // 5. Enable color material with proper settings
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
 
-            // 6. Finally enable fog - this must be last
             GL11.glEnable(GL11.GL_FOG);
 
             ci.cancel();
         }
+    }
+
+    @Unique
+    private float getTargetAlpha(long timeOfDay) {
+        float targetAlpha = 0.0f;
+
+        if (timeOfDay >= 12542 && timeOfDay <= 23458) {
+            // Nighttime - fog should be visible
+            targetAlpha = 1.0f;
+        } else if (timeOfDay >= 11542 && timeOfDay < 12542) {
+            // Sunset fade-in (1000 ticks before night = ~50 seconds)
+            // But we want 120 tick fade, so calculate accordingly
+            float sunsetProgress = (timeOfDay - 11542) / 1000.0f;
+            targetAlpha = Math.min(1.0f, sunsetProgress * (1000.0f / 240.0f));
+        } else if (timeOfDay > 23458 && timeOfDay <= 24458) {
+            // Sunrise fade-out (1000 ticks after night)
+            float sunriseProgress = (timeOfDay - 23458) / 1000.0f;
+            targetAlpha = Math.max(0.0f, 1.0f - sunriseProgress * (1000.0f / 240.0f));
+        }
+        return targetAlpha;
     }
 
     @Inject(method = "updateCameraAndRender", at = @At("HEAD"))
@@ -371,11 +370,6 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     }
 
     @Unique private int bloodMoonFadeTracker = 1;
-
-    /**
-     * @param par1ArrayOfInteger the lightmap colors array
-     * @return an updated lightmap that adjusts block lighting for events
-     */
     @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
     private int[] manageCustomColorEvents(int[] par1ArrayOfInteger){
         if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
@@ -478,29 +472,6 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     private static int[] nightvisionFullbright(){
         int[] numbers = new int[256];
         Arrays.fill(numbers,-1);
-        return numbers;
-    }
-
-    @Unique
-    private int[] bloodmoonForcedBrightness(int mod){
-        int[] numbers = new int[256];
-
-        float gradualFadeMult = (float) mod / 800;
-        int colorChannelBrightness = (int) (60 * (1 / gradualFadeMult));
-        for(int iTempMapIndex = 0; iTempMapIndex < 256; ++iTempMapIndex) {
-            this.lightmapColors[iTempMapIndex] = this.lightmapColors[iTempMapIndex] | colorChannelBrightness << 16 | colorChannelBrightness << 8 | colorChannelBrightness;
-        }
-
-
-
-        int calculatedBrightness = 255 << 24 | colorChannelBrightness << 16 | colorChannelBrightness << 8 | colorChannelBrightness;
-        Arrays.fill(numbers,calculatedBrightness);
-//        Arrays.fill(numbers,0xFF3C3C3C);
-        // slightly brighter bloodmoon
-        // 255 << 24 | 60 << 16 | 60 << 8 | 60
-
-//        Arrays.fill(numbers,-14145496);
-        // 255 << 24 | 40 << 16 | 40 << 8 | 40
         return numbers;
     }
 }

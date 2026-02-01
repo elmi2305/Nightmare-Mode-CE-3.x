@@ -36,7 +36,7 @@ public class BlockBloodSaw
         this.setFireProperties(5, 20);
         this.setStepSound(soundMetalFootstep);
         this.setUnlocalizedName("nmBloodSawBlock");
-        this.setTextureName("nmBloodSaw");
+        this.setTextureName("nightmare:nmBloodSaw");
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabRedstone);
     }
@@ -404,9 +404,9 @@ public class BlockBloodSaw
     @Environment(value = EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
-        this.iconFront = register.registerIcon("nm_saw_front");
-        this.iconBladeOff = register.registerIcon("nm_saw_blade");
-        this.iconBladeOn = register.registerIcon("saw_blade_powered");
+        this.iconFront = register.registerIcon("nightmare:nm_saw_front");
+        this.iconBladeOff = register.registerIcon("nightmare:nm_saw_blade");
+        this.iconBladeOn = register.registerIcon("nightmare:saw_blade_powered");
     }
 
     @Override

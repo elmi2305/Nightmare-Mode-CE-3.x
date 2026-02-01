@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 public class ItemIronFishingPole extends ItemFishingRod {
     public ItemIronFishingPole(int par1) {
         super(par1);
-        this.setTextureName("nmIronFishingPole");
+        this.setTextureName("nightmare:nmIronFishingPole");
         this.setUnlocalizedName("nmIronFishingPole");
         this.setMaxDamage(250);
     }

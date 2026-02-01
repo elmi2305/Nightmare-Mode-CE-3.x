@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderVillager.class)
 public class RenderVillagerMixin {
-    @Unique private static final ResourceLocation NIGHTMARE_VILLAGER = new ResourceLocation("textures/entity/nmVillager1.png");
+    @Unique private static final ResourceLocation NIGHTMARE_VILLAGER = new ResourceLocation("nightmare:textures/entity/nmVillager1.png");
 
     @Inject(method = "func_110902_a", at = @At("HEAD"),cancellable = true)
     private void renderCustomNightmareVillager(EntityVillager par1EntityVillager, CallbackInfoReturnable<ResourceLocation> cir){

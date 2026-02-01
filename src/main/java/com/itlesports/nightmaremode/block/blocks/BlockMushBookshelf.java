@@ -19,7 +19,7 @@ public class BlockMushBookshelf extends BlockBookshelf {
 
     @Override
     public void registerIcons(IconRegister reg) {
-        iconTop = reg.registerIcon("nmMushBookshelfTop");
+        iconTop = reg.registerIcon("nightmare:nmMushBookshelfTop");
         super.registerIcons(reg);
     }
 

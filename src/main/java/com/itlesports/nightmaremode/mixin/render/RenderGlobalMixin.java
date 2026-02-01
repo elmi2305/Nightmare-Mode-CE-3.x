@@ -24,9 +24,9 @@ public abstract class RenderGlobalMixin {
     @Shadow public abstract void renderCloudsFancy(float par1);
 
     @Shadow @Final private static ResourceLocation locationSunPng;
-    @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("textures/bloodmoon.png");
-    @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("textures/eclipse.png");
-    @Unique private static final ResourceLocation CRACK = new ResourceLocation("textures/crack.png");
+    @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/bloodmoon.png");
+    @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/eclipse.png");
+    @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/crack.png");
 
     /*
 
@@ -232,13 +232,13 @@ public abstract class RenderGlobalMixin {
 
 
     @Unique
-    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_special_2.png");
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_special_4.png"); // implemented a minor fix for 3 by just repeating the texture so it loops. this makes it look too pattern-y and bad. looks good for red events
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_special_3.png"); // goes really well for a dark / purple aesthetic, if only it was a proper skybox and looped
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_special_2.png"); // kinda bleh low-key, but it could work as a decent pattern when colored
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_special_1.png"); // insanely good for astral style events, a-la stardust pillar from terraria
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_black_2.png"); // good for blue moon
-//    private static final ResourceLocation SKYBOX =  new ResourceLocation("textures/underworld/underworld_sky_black_1.png"); // solid day color scheme
+    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_special_2.png");
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_special_4.png"); // implemented a minor fix for 3 by just repeating the texture so it loops. this makes it look too pattern-y and bad. looks good for red events
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_special_3.png"); // goes really well for a dark / purple aesthetic, if only it was a proper skybox and looped
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_special_2.png"); // kinda bleh low-key, but it could work as a decent pattern when colored
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_special_1.png"); // insanely good for astral style events, a-la stardust pillar from terraria
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_black_2.png"); // good for blue moon
+//    private static final ResourceLocation SKYBOX =  new ResourceLocation("nightmare:textures/underworld/underworld_sky_black_1.png"); // solid day color scheme
 
 
     @Redirect(

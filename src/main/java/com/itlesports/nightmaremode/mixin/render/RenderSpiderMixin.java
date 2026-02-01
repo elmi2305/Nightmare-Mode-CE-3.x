@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RenderSpider.class)
 public class RenderSpiderMixin {
     @Unique private boolean eclipseEyes;
-    @Unique private static final ResourceLocation SPIDER_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/spiderEclipseHigh.png");
-    @Unique private static final ResourceLocation SPIDER_TEXTURE_FIRE = new ResourceLocation("textures/entity/spiderFire.png");
-    @Unique private static final ResourceLocation SPIDER_TEXTURE_BLACK = new ResourceLocation("textures/entity/spiderBlackWidow.png");
-    @Unique private static final ResourceLocation NOTHING = new ResourceLocation("textures/entity/nothing.png");
+    @Unique private static final ResourceLocation SPIDER_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/spiderEclipseHigh.png");
+    @Unique private static final ResourceLocation SPIDER_TEXTURE_FIRE = new ResourceLocation("nightmare:textures/entity/spiderFire.png");
+    @Unique private static final ResourceLocation SPIDER_TEXTURE_BLACK = new ResourceLocation("nightmare:textures/entity/spiderBlackWidow.png");
+    @Unique private static final ResourceLocation NOTHING = new ResourceLocation("nightmare:textures/entity/nothing.png");
 
     @Inject(method = "getSpiderTextures", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntitySpider par1EntitySpider, CallbackInfoReturnable<ResourceLocation> cir) {

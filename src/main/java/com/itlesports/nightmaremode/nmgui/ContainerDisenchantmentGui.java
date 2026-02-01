@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
 public class ContainerDisenchantmentGui extends GuiContainer {
-    private static final ResourceLocation FREEZER_TEXTURE = new ResourceLocation("textures/gui/guiDisenchantment.png");
+    private static final ResourceLocation FREEZER_TEXTURE = new ResourceLocation("nightmare:textures/gui/guiDisenchantment.png");
     public TileEntityDisenchantmentTable tileEntity;
 
     public ContainerDisenchantmentGui(InventoryPlayer par1InventoryPlayer, TileEntityDisenchantmentTable par2TileEntityDispenser)

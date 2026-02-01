@@ -23,7 +23,7 @@ public class ItemBlockTallFlower extends NMItemBlock {
     @Override
     public void registerIcons(IconRegister reg) {
         for(int i = 0; i < icons.length; i ++){
-            icons[i] = reg.registerIcon("nmTallFlower_" + names[i] + "_top");
+            icons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_top");
         }
     }
 

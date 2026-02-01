@@ -182,9 +182,9 @@ public class BlockHellforge
     @Override
     @Environment(value = EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("hellforge");
-        this.furnaceIconTop = register.registerIcon("hellforge_top");
-        this.furnaceIconFront = register.registerIcon("hellforge_front_lit");
+        this.blockIcon = register.registerIcon("nightmare:hellforge");
+        this.furnaceIconTop = register.registerIcon("nightmare:hellforge_top");
+        this.furnaceIconFront = register.registerIcon("nightmare:hellforge_front_lit");
         this.fuelOverlays = new Icon[9];
         for (int iTempIndex = 0; iTempIndex < 9; ++iTempIndex) {
             this.fuelOverlays[iTempIndex] = register.registerIcon("btw:oven_fuel_overlay_" + iTempIndex);

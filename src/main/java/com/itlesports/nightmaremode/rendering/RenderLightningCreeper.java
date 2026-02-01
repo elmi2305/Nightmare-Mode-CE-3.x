@@ -8,7 +8,7 @@ public class RenderLightningCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("textures/entity/lightningCreeper.png");
+    private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/lightningCreeper.png");
 
     public RenderLightningCreeper() {
         super();

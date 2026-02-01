@@ -5,8 +5,8 @@ import net.minecraft.src.*;
 
 public class RenderFauxVillager extends RenderLiving {
     protected ModelVillager villagerModel;
-    public static final ResourceLocation VILLAGER_TEXTURE = new ResourceLocation("textures/entity/fauxVillager.png");
-    public static final ResourceLocation VILLAGER_TEXTURE_RED = new ResourceLocation("textures/entity/fauxVillagerRed.png");
+    public static final ResourceLocation VILLAGER_TEXTURE = new ResourceLocation("nightmare:textures/entity/fauxVillager.png");
+    public static final ResourceLocation VILLAGER_TEXTURE_RED = new ResourceLocation("nightmare:textures/entity/fauxVillagerRed.png");
 
     public RenderFauxVillager() {
         super(new ModelVillager(0.0f), 0.5f);

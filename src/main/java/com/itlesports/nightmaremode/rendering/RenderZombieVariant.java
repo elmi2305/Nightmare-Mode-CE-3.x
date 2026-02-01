@@ -9,19 +9,19 @@ import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.Unique;
 
 public class RenderZombieVariant extends RenderZombie {
-    private static final ResourceLocation bloodZombieTexture0 = new ResourceLocation("textures/entity/zombieFleshFrame00.png");
-    private static final ResourceLocation bloodZombieTexture1 = new ResourceLocation("textures/entity/zombieFleshFrame11.png");
-    private static final ResourceLocation bloodZombieTexture2 = new ResourceLocation("textures/entity/zombieFleshFrame22.png");
-    private static final ResourceLocation bloodZombieTexture3 = new ResourceLocation("textures/entity/zombieFleshFrame33.png");
-    private static final ResourceLocation bloodZombieTexture4 = new ResourceLocation("textures/entity/zombieFleshFrame44.png");
+    private static final ResourceLocation bloodZombieTexture0 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame00.png");
+    private static final ResourceLocation bloodZombieTexture1 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame11.png");
+    private static final ResourceLocation bloodZombieTexture2 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame22.png");
+    private static final ResourceLocation bloodZombieTexture3 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame33.png");
+    private static final ResourceLocation bloodZombieTexture4 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame44.png");
 
 
-    private static final ResourceLocation imposterZombieTexture = new ResourceLocation("textures/entity/zombieImposter.png");
+    private static final ResourceLocation imposterZombieTexture = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
 
 
 
-    private static final ResourceLocation shadowZombieTextures = new ResourceLocation("textures/entity/shadowzombie.png");
-    private static final ResourceLocation shadowZombieTexturesEclipse = new ResourceLocation("textures/entity/shadowzombieEclipse.png");
+    private static final ResourceLocation shadowZombieTextures = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
+    private static final ResourceLocation shadowZombieTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
 
     @Override protected ResourceLocation func_110863_a(EntityZombie par1EntityZombie) {
         if(par1EntityZombie instanceof EntityBloodZombie){

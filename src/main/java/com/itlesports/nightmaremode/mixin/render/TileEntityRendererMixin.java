@@ -23,7 +23,6 @@ public abstract class TileEntityRendererMixin {
     @Shadow public Map specialRendererMap;
     @Shadow public static TileEntityRenderer instance;
 
-    @Shadow public abstract Map getSpecialRendererMap();
 
     @Inject(method = "<init>",at = @At("TAIL"))
     private void addCustomNightmareRendering(CallbackInfo ci){
@@ -37,17 +36,4 @@ public abstract class TileEntityRendererMixin {
         ((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntityBloodChest.class)).setTileEntityRenderer(thisObj);
         ((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntitySteelLocker.class)).setTileEntityRenderer(thisObj);
     }
-
-//    @Inject(method = "getSpecialRendererForEntity", at = @At("HEAD"),cancellable = true)
-//    private void addBloodChestRendering(TileEntity par1TileEntity, CallbackInfoReturnable<TileEntitySpecialRenderer> cir){
-//        if(par1TileEntity instanceof TileEntityBloodChest){
-//            cir.setReturnValue((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntityBloodChest.class));
-//        }
-//    }
-//    @Inject(method = "getSpecialRendererForClass", at = @At("HEAD"),cancellable = true)
-//    private void addBloodChestRendering0(Class par1Class, CallbackInfoReturnable<TileEntitySpecialRenderer> cir){
-//        if(par1Class == TileEntityBloodChest.class){
-//            cir.setReturnValue((TileEntitySpecialRenderer) this.specialRendererMap.get(TileEntityBloodChest.class));
-//        }
-//    }
 }

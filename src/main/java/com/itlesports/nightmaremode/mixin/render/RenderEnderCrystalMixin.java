@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RenderEnderCrystal.class)
 public class RenderEnderCrystalMixin {
     @Unique private boolean isInOverworld;
-    @Unique private static final ResourceLocation CRYSTAL_NO_BASE = new ResourceLocation("textures/entity/enderCrystalNoBase.png");
+    @Unique private static final ResourceLocation CRYSTAL_NO_BASE = new ResourceLocation("nightmare:textures/entity/enderCrystalNoBase.png");
 
     @Inject(method = "getEnderCrystalTextures", at = @At("RETURN"),cancellable = true)
     private void setCrystalNoBase(EntityEnderCrystal par1, CallbackInfoReturnable<ResourceLocation> cir){

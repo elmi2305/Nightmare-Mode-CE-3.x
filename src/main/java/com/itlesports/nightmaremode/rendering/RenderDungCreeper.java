@@ -7,8 +7,8 @@ import org.lwjgl.opengl.GL11;
 public class RenderDungCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
-    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeperDung.png");
+    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("nightmare:textures/entity/creeper/creeper_armor.png");
+    public static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
 
     public RenderDungCreeper() {
         super();

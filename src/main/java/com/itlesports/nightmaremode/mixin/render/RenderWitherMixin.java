@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderWither.class)
 public class RenderWitherMixin {
-    @Unique private static final ResourceLocation BLOOD_WITHER = new ResourceLocation("textures/entity/bloodWither.png");
+    @Unique private static final ResourceLocation BLOOD_WITHER = new ResourceLocation("nightmare:textures/entity/bloodWither.png");
 
     @Inject(method = "func_110911_a", at = @At("HEAD"),cancellable = true)
     private void sheepEclipseTextures(EntityWither par1EntityWither, CallbackInfoReturnable<ResourceLocation> cir){

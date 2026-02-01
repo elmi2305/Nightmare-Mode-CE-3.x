@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderZombie.class)
 public class RenderZombieMixin {
-    @Unique private static final ResourceLocation ZOMBIE_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/zombieEclipseHigh.png");
-    @Unique private static final ResourceLocation PIGMAN_TEXTURE_ECLIPSE = new ResourceLocation("textures/entity/zombiePigmanEclipse.png");
-    @Unique private static final ResourceLocation ZOMBIE_TEXTURE_STONE = new ResourceLocation("textures/entity/zombieStone.png");
+    @Unique private static final ResourceLocation ZOMBIE_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/zombieEclipseHigh.png");
+    @Unique private static final ResourceLocation PIGMAN_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/zombiePigmanEclipse.png");
+    @Unique private static final ResourceLocation ZOMBIE_TEXTURE_STONE = new ResourceLocation("nightmare:textures/entity/zombieStone.png");
 
     @Inject(method = "func_110863_a", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityZombie par1EntityZombie, CallbackInfoReturnable<ResourceLocation> cir){

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderPig.class)
 public class RenderPigMixin {
-    @Unique private static final ResourceLocation PIG_ECLIPSE = new ResourceLocation("textures/entity/pigEclipseCreeper.png");
+    @Unique private static final ResourceLocation PIG_ECLIPSE = new ResourceLocation("nightmare:textures/entity/pigEclipseCreeper.png");
 
     @Inject(method = "getPigTextures", at = @At("HEAD"),cancellable = true)
     private void pigEclipseTextures(EntityPig par1EntityPig, CallbackInfoReturnable<ResourceLocation> cir){

@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RenderEnderman.class)
 public class RenderEndermanMixin {
     @Unique private boolean eclipseEyes;
-    @Unique private static final ResourceLocation ENDERMAN_ECLIPSE = new ResourceLocation("textures/entity/endermanEclipseTux.png");
-    @Unique private static final ResourceLocation ENDERMAN_GREEN = new ResourceLocation("textures/entity/endermanRadioactive.png");
-    @Unique private static final ResourceLocation ENDERMAN_ECLIPSE_EYES = new ResourceLocation("textures/entity/endermanEclipseEyes.png");
+    @Unique private static final ResourceLocation ENDERMAN_ECLIPSE = new ResourceLocation("nightmare:textures/entity/endermanEclipseTux.png");
+    @Unique private static final ResourceLocation ENDERMAN_GREEN = new ResourceLocation("nightmare:textures/entity/endermanRadioactive.png");
+    @Unique private static final ResourceLocation ENDERMAN_ECLIPSE_EYES = new ResourceLocation("nightmare:textures/entity/endermanEclipseEyes.png");
 
     @Inject(method = "getEndermanTextures", at = @At("HEAD"), cancellable = true)
     private void endermanEclipseTextures(EntityEnderman par1EntityEnderman, CallbackInfoReturnable<ResourceLocation> cir) {

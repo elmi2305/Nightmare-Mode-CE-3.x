@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(LoadingScreenRenderer.class)
 public class LoadingScreenRendererMixin {
     @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
-    private ResourceLocation setCustomBackground(ResourceLocation par1ResourceLocation){
+    private ResourceLocation setCustomBackground(ResourceLocation resource){
         if(NightmareMode.bloodmare){
-            return new ResourceLocation("textures/gui/bloodNightmare.png");
+            return new ResourceLocation("nightmare:textures/gui/bloodNightmare.png");
         }
-        return new ResourceLocation("textures/gui/dirtBackground.png");
+        return resource;
     }
 }

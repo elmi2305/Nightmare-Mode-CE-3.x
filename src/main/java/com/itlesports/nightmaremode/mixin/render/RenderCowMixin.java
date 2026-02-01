@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderCow.class)
 public class RenderCowMixin {
-    @Unique private static final ResourceLocation COW_ECLIPSE = new ResourceLocation("textures/entity/cowEclipse.png");
+    @Unique private static final ResourceLocation COW_ECLIPSE = new ResourceLocation("nightmare:textures/entity/cowEclipse.png");
 
     @Inject(method = "getCowTextures", at = @At("HEAD"),cancellable = true)
     private void cowEclipseTextures(EntityCow par1EntityCow, CallbackInfoReturnable<ResourceLocation> cir){

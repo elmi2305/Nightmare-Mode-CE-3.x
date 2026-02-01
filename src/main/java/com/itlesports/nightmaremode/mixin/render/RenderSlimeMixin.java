@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderSlime.class)
 public class RenderSlimeMixin {
-    @Unique private static final ResourceLocation SLIME_1 = new ResourceLocation("textures/entity/slime1.png");
-    @Unique private static final ResourceLocation SLIME_2 = new ResourceLocation("textures/entity/slime2.png");
-    @Unique private static final ResourceLocation SLIME_3 = new ResourceLocation("textures/entity/slime3.png");
-    @Unique private static final ResourceLocation SLIME_4 = new ResourceLocation("textures/entity/slime4.png");
-    @Unique private static final ResourceLocation SLIME_5 = new ResourceLocation("textures/entity/slime5.png");
-    @Unique private static final ResourceLocation SLIME_6 = new ResourceLocation("textures/entity/slime6.png");
-    @Unique private static final ResourceLocation SLIME_7 = new ResourceLocation("textures/entity/slime7.png");
-    @Unique private static final ResourceLocation SLIME_8 = new ResourceLocation("textures/entity/slime8.png");
+    @Unique private static final ResourceLocation SLIME_1 = new ResourceLocation("nightmare:textures/entity/slime1.png");
+    @Unique private static final ResourceLocation SLIME_2 = new ResourceLocation("nightmare:textures/entity/slime2.png");
+    @Unique private static final ResourceLocation SLIME_3 = new ResourceLocation("nightmare:textures/entity/slime3.png");
+    @Unique private static final ResourceLocation SLIME_4 = new ResourceLocation("nightmare:textures/entity/slime4.png");
+    @Unique private static final ResourceLocation SLIME_5 = new ResourceLocation("nightmare:textures/entity/slime5.png");
+    @Unique private static final ResourceLocation SLIME_6 = new ResourceLocation("nightmare:textures/entity/slime6.png");
+    @Unique private static final ResourceLocation SLIME_7 = new ResourceLocation("nightmare:textures/entity/slime7.png");
+    @Unique private static final ResourceLocation SLIME_8 = new ResourceLocation("nightmare:textures/entity/slime8.png");
 
     @Inject(method = "getSlimeTextures", at = @At("HEAD"),cancellable = true)
     private void slimeEclipseTextures(EntitySlime par1, CallbackInfoReturnable<ResourceLocation> cir){

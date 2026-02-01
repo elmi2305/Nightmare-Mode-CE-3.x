@@ -8,7 +8,7 @@ public class RenderSupercriticalCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public static final ResourceLocation SUPER_CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeperSupercritical.png");
+    public static final ResourceLocation SUPER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperSupercritical.png");
 
     public RenderSupercriticalCreeper() {
         super();

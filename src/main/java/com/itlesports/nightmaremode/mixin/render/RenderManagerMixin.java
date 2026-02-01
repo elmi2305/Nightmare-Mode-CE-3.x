@@ -14,14 +14,10 @@ import java.util.Random;
 
 @Mixin(RenderManager.class)
 public class RenderManagerMixin {
-    @Unique
-    private static final Random random = new Random();
-    @Unique
-    private static long lastChangeTime = 0;
-    @Unique
-    private static int activeEffect = -1; // -1 means no effect
-    @Unique
-    private static int threshold = 100; // -1 means no effect
+    @Unique private static final Random random = new Random();
+    @Unique private static long lastChangeTime = 0;
+    @Unique private static int activeEffect = -1; // -1 means no effect
+    @Unique private static int threshold = 100; // -1 means no effect
 
     @Inject(method = "renderEntity", at = @At("TAIL"))
     private void destroyRenderingTemporarily(Entity par1Entity, float par2, CallbackInfo ci) {

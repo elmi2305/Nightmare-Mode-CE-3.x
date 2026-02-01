@@ -21,8 +21,8 @@ public class GuiSlotMixin {
     @ModifyArg(method = "overlayBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private ResourceLocation drawCustomBackground1(ResourceLocation par1ResourceLocation){
         if(NightmareMode.bloodmare){
-            return new ResourceLocation("textures/gui/bloodNightmare.png");
+            return new ResourceLocation("nightmare:textures/gui/bloodNightmare.png");
         }
-        return new ResourceLocation("textures/gui/dirtBackground.png");
+        return new ResourceLocation("nightmare:textures/gui/dirtBackground.png");
     }
 }

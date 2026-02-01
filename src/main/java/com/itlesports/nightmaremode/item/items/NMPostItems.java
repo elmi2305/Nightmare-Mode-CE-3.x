@@ -13,8 +13,8 @@ public class NMPostItems {
     public static ItemEventController bloodMoonBottle;
 
     static {
-        timeBottle = (ItemAchievementGranter) new ItemAchievementGranter(2500, NMAchievements.GREED, NMAchievements.CRAFT_OVEN_FAST).setUnlocalizedName("nmTimeBottle").setTextureName("nmTimeBottle").setCreativeTab(CreativeTabs.tabFood);
-        bloodMoonBottle = (ItemEventController) new ItemEventController(2501, EVENT_BLOODMOON).setUnlocalizedName("nmBloodBottle").setTextureName("nmBloodBottle").setCreativeTab(CreativeTabs.tabFood);
+        timeBottle = (ItemAchievementGranter) new ItemAchievementGranter(2500, NMAchievements.GREED, NMAchievements.CRAFT_OVEN_FAST).setUnlocalizedName("nmTimeBottle").setTextureName("nightmare:nmTimeBottle").setCreativeTab(CreativeTabs.tabFood);
+        bloodMoonBottle = (ItemEventController) new ItemEventController(2501, EVENT_BLOODMOON).setUnlocalizedName("nmBloodBottle").setTextureName("nightmare:nmBloodBottle").setCreativeTab(CreativeTabs.tabFood);
     }
     public static void runPostInit(){}
 }

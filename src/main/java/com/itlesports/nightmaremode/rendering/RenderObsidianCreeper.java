@@ -8,7 +8,7 @@ public class RenderObsidianCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    private static final ResourceLocation OBSIDIAN_CREEPER_TEXTURE = new ResourceLocation("textures/entity/nmObsidianCreeper.png");
+    private static final ResourceLocation OBSIDIAN_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmObsidianCreeper.png");
 
     public RenderObsidianCreeper() {
         super();

@@ -31,8 +31,8 @@ public class BlockUnderGrass extends NMBlock {
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
         this.blockIcon = register.registerIcon("dirt");
-        this.iconEveryOtherSide = register.registerIcon("blight_level_4_side");
-        this.iconGrassTop = register.registerIcon("blight_level_4_top");
+        this.iconEveryOtherSide = register.registerIcon("nightmare:blight_level_4_side");
+        this.iconGrassTop = register.registerIcon("nightmare:blight_level_4_top");
     }
 
     public boolean canEndermenPickUpBlock(World world, int x, int y, int z) {

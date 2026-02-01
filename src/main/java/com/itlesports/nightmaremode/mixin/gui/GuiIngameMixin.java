@@ -29,6 +29,11 @@ public class GuiIngameMixin extends Gui{
     @Unique
     private int amountRendered = 0;
 
+
+    @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
+    private void renderVignetteInUnderworld(float par1, boolean par2, int par3, int par4, CallbackInfo ci){
+
+    }
     @Inject(method = "drawPenaltyText(II)V", at = @At("TAIL"))
     private void drawTimer(int iScreenX, int iScreenY, CallbackInfo cbi){
         if(!mc.thePlayer.isDead){

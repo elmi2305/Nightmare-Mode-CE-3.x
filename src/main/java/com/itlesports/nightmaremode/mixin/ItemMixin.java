@@ -28,9 +28,9 @@ public class ItemMixin {
         horseArmorDiamond = new ItemAdvancedHorseArmor(163, ItemAdvancedHorseArmor.ArmorTier.DIAMOND).setUnlocalizedName("horsearmordiamond").setTextureName("diamond_horse_armor");
 
 
-        bootsDiamond = (ItemArmor) bootsDiamond.setTextureName("nmDiamondBoots");
-        helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nmDiamondHelmet");
-        plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nmDiamondChestplate");
-        legsDiamond = (ItemArmor) legsDiamond.setTextureName("nmDiamondLeggings");
+        bootsDiamond = (ItemArmor) bootsDiamond.setTextureName("nightmare:nmDiamondBoots");
+        helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nightmare:nmDiamondHelmet");
+        plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nightmare:nmDiamondChestplate");
+        legsDiamond = (ItemArmor) legsDiamond.setTextureName("nightmare:nmDiamondLeggings");
     }
 }

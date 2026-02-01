@@ -21,7 +21,7 @@ public class BlockVillagerBase extends NMBlockContainer{
         this.setFireProperties(5, 20);
         this.setStepSound(soundClothFootstep);
         this.setUnlocalizedName("nmVillagerBlock");
-        this.setTextureName("nmVillagerBlock");
+        this.setTextureName("nightmare:nmVillagerBlock");
     }
 
     public boolean hasTileEntity() {
@@ -50,11 +50,11 @@ public class BlockVillagerBase extends NMBlockContainer{
 
         for (int i = 0; i < professionCount; i++) {
             String prof = getTextureForProfession(i);
-            iconTop[i] = new Icon[] { iconRegister.registerIcon("villagers/villager_" + prof + "_top") };
-            iconBottom[i] = new Icon[] { iconRegister.registerIcon("villagers/villager_" + prof + "_bottom") };
-            iconFront[i] = new Icon[] { iconRegister.registerIcon("villagers/villager_" + prof + "_front") };
-            iconSide[i] = new Icon[] { iconRegister.registerIcon("villagers/villager_" + prof + "_side") };
-            iconBack[i] = new Icon[] { iconRegister.registerIcon("villagers/villager_" + prof + "_back") };
+            iconTop[i] = new Icon[] { iconRegister.registerIcon("nightmare:villagers/villager_" + prof + "_top") };
+            iconBottom[i] = new Icon[] { iconRegister.registerIcon("nightmare:villagers/villager_" + prof + "_bottom") };
+            iconFront[i] = new Icon[] { iconRegister.registerIcon("nightmare:villagers/villager_" + prof + "_front") };
+            iconSide[i] = new Icon[] { iconRegister.registerIcon("nightmare:villagers/villager_" + prof + "_side") };
+            iconBack[i] = new Icon[] { iconRegister.registerIcon("nightmare:villagers/villager_" + prof + "_back") };
         }
     }
 

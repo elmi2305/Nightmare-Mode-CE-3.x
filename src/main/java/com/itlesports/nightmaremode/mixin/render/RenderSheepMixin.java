@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RenderSheep.class)
 public class RenderSheepMixin {
-    @Unique private static final ResourceLocation SHEEP_ECLIPSE = new ResourceLocation("textures/entity/sheepEclipse.png");
+    @Unique private static final ResourceLocation SHEEP_ECLIPSE = new ResourceLocation("nightmare:textures/entity/sheepEclipse.png");
 
     @Inject(method = "func_110883_a", at = @At("HEAD"),cancellable = true)
     private void sheepEclipseTextures(EntitySheep par1EntitySheep, CallbackInfoReturnable<ResourceLocation> cir){

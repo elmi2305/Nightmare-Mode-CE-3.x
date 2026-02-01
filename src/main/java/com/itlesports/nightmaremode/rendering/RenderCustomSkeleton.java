@@ -7,8 +7,8 @@ import net.minecraft.src.RenderSkeleton;
 import net.minecraft.src.ResourceLocation;
 
 public class RenderCustomSkeleton extends RenderSkeleton {
-    private static final ResourceLocation skeletonDrowned = new ResourceLocation("textures/entity/skeletonDrowned.png");
-    private static final ResourceLocation skeletonMelted = new ResourceLocation("textures/entity/skeletonMelted.png");
+    private static final ResourceLocation skeletonDrowned = new ResourceLocation("nightmare:textures/entity/skeletonDrowned.png");
+    private static final ResourceLocation skeletonMelted = new ResourceLocation("nightmare:textures/entity/skeletonMelted.png");
 
     @Override
     protected ResourceLocation func_110860_a(EntitySkeleton entitySkeleton) {

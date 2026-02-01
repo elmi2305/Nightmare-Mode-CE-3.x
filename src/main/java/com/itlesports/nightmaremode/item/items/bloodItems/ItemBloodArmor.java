@@ -30,6 +30,6 @@ public class ItemBloodArmor extends ArmorItemMod implements IBloodTool{
 
     @Override
     public String getWornTextureDirectory() {
-        return "textures/armor/";
+        return "nightmare:textures/armor/";
     }
 }
