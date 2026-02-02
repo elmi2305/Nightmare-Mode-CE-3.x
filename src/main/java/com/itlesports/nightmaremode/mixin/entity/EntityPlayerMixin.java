@@ -286,6 +286,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 }
         );
     }
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void invalidateConfigOnDeath(DamageSource par1DamageSource, CallbackInfo ci){
+        invalidateConfig();
+    }
 
 
 
