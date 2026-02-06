@@ -7,6 +7,7 @@ import api.world.BiomeDecoratorBase;
 import api.world.data.DataEntry;
 import api.world.data.DataProvider;
 import btw.block.BTWBlocks;
+import com.itlesports.nightmaremode.util.NMEntityMapper;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.NMInitializer;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -126,6 +127,8 @@ public class NightmareMode extends BTWAddon {
 
 
         NMBlocks.initNightmareBlocks();
+        NMEntityMapper.createModEntityMappings();
+        NMEntityMapper.createTileEntityMappings();
         NMInitializer.initNightmareRecipes();
 
         NMTags.initTags();
