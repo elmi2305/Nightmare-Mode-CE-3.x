@@ -13,11 +13,9 @@ import java.util.Random;
 @Mixin(WoodSidingAndCornerAndDecorativeBlock.class)
 public class WoodSidingAndCornerAndDecorativeBlockMixin extends SidingAndCornerAndDecorativeBlock {
 
-
     public WoodSidingAndCornerAndDecorativeBlockMixin(int iBlockID, Material material, String sTextureName, float fHardness, float fResistance, StepSound stepSound, String name) {
         super(iBlockID, material, sTextureName, fHardness, fResistance, stepSound, name);
     }
-
 
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();

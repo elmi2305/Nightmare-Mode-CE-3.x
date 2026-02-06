@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -25,6 +26,12 @@ public abstract class EntityMixin {
         if (prog > 1) return;
 
         ci.cancel();
+    }
+
+    @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"),cancellable = true)
+    private void injectCorrectlyParameterizedExplosionMethod(Explosion par1Explosion, World par2World, int par3, int par4, int par5, Block par6Block, CallbackInfoReturnable<Float> cir){
+            Entity thisObj = (Entity) (Object) this;
+            cir.setReturnValue(par6Block.getExplosionResistance(thisObj, par2World, par3, par4, par5));
     }
 
 

@@ -29,7 +29,30 @@ public class BlockObsidianMixin extends Block {
     }
 
     @Override
+    public float getBlockHardness(World w, int x, int y, int z) {
+        return super.getBlockHardness(w, x, y, z);
+    }
+
+
+    @Override
+    public float getExplosionResistance(Entity entity, World w, int x, int y, int z) {
+        int meta = w.getBlockMetadata(x,y,z);
+        if(meta == 1){
+            float returnValue = this.blockResistance / 5.0f;
+            returnValue /= 2;
+            return returnValue;
+        }
+        return super.getExplosionResistance(entity, w, x, y, z);
+    }
+
+    @Override
+    public Block setHardness(float par1) {
+        return super.setHardness(par1);
+    }
+
+    @Override
     public int idDropped(int meta, Random rand, int fortune) {
+        // this seemingly never runs?
         return meta == 0 ? NMItems.obsidianShard.itemID : Block.obsidian.blockID;
     }
 
@@ -42,7 +65,7 @@ public class BlockObsidianMixin extends Block {
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
         if (!world.isRemote) {
             if (this.shouldDropBlock) {
-                this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, 0, 1.0F);
+                this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, iMetadata, 1.0F);
                 this.shouldDropBlock = false;
             } else{
                 this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(4) + 3 + iFortuneModifier, 8), 0, 1.0F);

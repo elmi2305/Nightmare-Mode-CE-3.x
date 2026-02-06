@@ -21,8 +21,7 @@ import java.util.List;
 @Mixin(BTWSquidEntity.class)
 public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
-    @Unique
-    private int canDropCalamari = 0;
+    @Unique private int calamariDropCountdown = 0;
 
     @Shadow(remap = false) protected abstract void retractTentacleAttackOnCollision();
 
@@ -82,7 +81,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageRecentParries(CallbackInfo ci){
-        this.canDropCalamari = Math.max(--this.canDropCalamari, 0);
+        this.calamariDropCountdown = Math.max(--this.calamariDropCountdown, 0);
 
         if (this.ticksExisted % 160 == 0) {
             this.recentParryCount = Math.max(recentParryCount - 1, 0);
@@ -105,47 +104,71 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return par1;
     }
 
+
     @Inject(method = "dropFewItems", at = @At("TAIL"))
-    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
+    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci) {
+        if (!bKilledByPlayer || !isValidForEventLoot) {
+            return;
+        }
+
+        dropBloodOrbs(iLootingModifier);
+        dropDarksunFragments(iLootingModifier);
+        dropCalamari(iLootingModifier);
+    }
+
+    @Unique
+    private void dropBloodOrbs(int lootingModifier) {
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
-            int var4 = this.rand.nextInt(4) + 2;
-            // 2 - 5
-            if (iLootingModifier > 0) {
-                var4 += this.rand.nextInt(iLootingModifier + 1);
-            }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                this.dropItem(bloodOrbID, 1);
-            }
+        if (bloodOrbID == 0) {
+            return;
         }
 
-
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
-            for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
-                if(this.rand.nextInt(12) == 0){
-                    this.dropItem(NMItems.darksunFragment.itemID, 1);
-                    if (this.rand.nextBoolean()) {
-                        break;
-                    }
-                }
-            }
+        int count = this.rand.nextInt(4) + 2;
+        if (lootingModifier > 0) {
+            count += this.rand.nextInt(lootingModifier + 1);
         }
-        if(bKilledByPlayer && this.canDropCalamari > 0){
-            for(int i = 0; i < (iLootingModifier * 2) + 1; i++){
-                if(this.rand.nextInt(2 + worldProgress) == 0){
-                    // 1/2 -> 1/3 -> 1/4 -> 1/5
-                    this.dropItem(NMItems.calamari.itemID, 1);
+
+        for (int i = 0; i < count; i++) {
+            this.dropItem(bloodOrbID, 1);
+        }
+    }
+
+    @Unique
+    private void dropDarksunFragments(int lootingModifier) {
+        if (!NMUtils.getIsMobEclipsed(this)) {
+            return;
+        }
+
+        for (int i = 0; i < (lootingModifier * 2) + 1; i++) {
+            if (this.rand.nextInt(12) == 0) {
+                this.dropItem(NMItems.darksunFragment.itemID, 1);
+                if (this.rand.nextBoolean()) {
+                    break;
                 }
             }
         }
     }
-    
+
+    @Unique
+    private void dropCalamari(int lootingModifier) {
+        if (this.calamariDropCountdown <= 0) {
+            return;
+        }
+
+        int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
+        for (int i = 0; i < (lootingModifier * 2) + 1; i++) {
+            if (this.rand.nextInt(2 + worldProgress) == 0) {
+                this.dropItem(NMItems.calamari.itemID, 1);
+            }
+        }
+    }
+
+
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void manageCalamariDrop(DamageSource damageSource, float iDamageAmount, CallbackInfoReturnable<Boolean> cir){
         if (!this.worldObj.isRemote) {
             if(damageSource.getSourceOfDamage() instanceof EntityPlayer){
-                this.canDropCalamari = 40;
+                this.calamariDropCountdown = 40;
             }
         }
     }
@@ -309,7 +332,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private boolean canSeeThroughWalls2(BTWSquidEntity instance, Entity entity){
         return true;
     }
-    
+
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"),ordinal = 0)
     private boolean hostilePostNether(boolean bIsInDarkness) {

@@ -15,7 +15,6 @@ public abstract class WoodSlabBlockMixin extends BlockHalfSlab {
         super(par1, par2, par3Material);
     }
 
-
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();
     }

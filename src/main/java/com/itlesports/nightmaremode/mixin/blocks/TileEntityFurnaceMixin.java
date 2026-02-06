@@ -23,6 +23,7 @@ public class TileEntityFurnaceMixin {
             BTWItems.unfiredCrudeBrick.itemID,
             BTWItems.unfiredNetherBrick.itemID
     ));
+
     @Inject(method = "getCookTimeForCurrentItem", at = @At("HEAD"), cancellable = true)
     private void makeClayCookEarly(CallbackInfoReturnable<Integer> cir) {
         ItemStack stack = this.furnaceItemStacks[0];

@@ -34,35 +34,35 @@ public abstract class RenderGlobalMixin {
 
      */
 
-    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
-    private int changeMoonSkyTexture(Tessellator instance){
-        // avoids drawing the moon, it is manually drawn later
-        return 0;
-    }
-    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
-    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){}
-    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
-    private void setUpUVForMoon(float par1, CallbackInfo ci){
-        Tessellator var23 = Tessellator.instance;
-
-        float var12 = 20.0f;
-
-        int var28 = this.theWorld.getMoonPhase();
-
-        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(ECLIPSE));
-        float uMin = 0.0f;
-        float uMax = 1.0f;
-        float vMin = 0.0f;
-        float vMax = 1.0f;
-
-        var23.startDrawingQuads();
-        var23.addVertexWithUV(-var12, -100.0,  var12, uMax, vMax);
-        var23.addVertexWithUV( var12, -100.0,  var12, uMin, vMax);
-        var23.addVertexWithUV( var12, -100.0, -var12, uMin, vMin);
-        var23.addVertexWithUV(-var12, -100.0, -var12, uMax, vMin);
-
-        var23.draw();
-    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
+//    private int changeMoonSkyTexture(Tessellator instance){
+//        // avoids drawing the moon, it is manually drawn later
+//        return 0;
+//    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
+//    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){}
+//    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
+//    private void setUpUVForMoon(float par1, CallbackInfo ci){
+//        Tessellator var23 = Tessellator.instance;
+//
+//        float var12 = 20.0f;
+//
+//        int var28 = this.theWorld.getMoonPhase();
+//
+//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(ECLIPSE));
+//        float uMin = 0.0f;
+//        float uMax = 1.0f;
+//        float vMin = 0.0f;
+//        float vMax = 1.0f;
+//
+//        var23.startDrawingQuads();
+//        var23.addVertexWithUV(-var12, -100.0,  var12, uMax, vMax);
+//        var23.addVertexWithUV( var12, -100.0,  var12, uMin, vMax);
+//        var23.addVertexWithUV( var12, -100.0, -var12, uMin, vMin);
+//        var23.addVertexWithUV(-var12, -100.0, -var12, uMax, vMin);
+//
+//        var23.draw();
+//    }
 
 
 

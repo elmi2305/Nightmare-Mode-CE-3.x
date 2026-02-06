@@ -15,10 +15,16 @@ public class UnfiredBrickTileEntityMixin {
     }
 
     @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"))
-    private int enableCookingOnEclipse(World instance, int i, int j, int k){
-        if(NMUtils.getIsEclipse() || (NightmareMode.darkStormyNightmare)){
+    private int enableCookingOnEclipse(World w, int i, int j, int k){
+        if(NMUtils.getIsEclipse()){
             return 31;
         }
-        return instance.getBlockNaturalLightValueMaximum(i,j,k);
+        if(NightmareMode.darkStormyNightmare){
+            long time = w.getWorldTime() % 24000;
+            if(time > 0 && time < 13000){
+                return 31;
+            }
+        }
+        return w.getBlockNaturalLightValueMaximum(i,j,k);
     }
 }
