@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,9 +23,6 @@ import java.util.List;
 @Mixin(EntityArrow.class)
 public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
     @Shadow public Entity shootingEntity;
-    @Unique private float damageDone = 0;
-    @Unique private final List<EntityLivingBase> entitiesHit = new ArrayList<>();
-
 
     public EntityArrowMixin(World par1World) {
         super(par1World);
@@ -36,28 +34,29 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
         instance.playSound(s,v,b);
     }
 
-
     @Inject(method = "onUpdate",
             at = @At(value = "FIELD",
                     target = "Lnet/minecraft/src/EntityArrow;shootingEntity:Lnet/minecraft/src/Entity;",
-                    ordinal = 5), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void skeletonArrowImpactEffects(CallbackInfo ci, int var16, Vec3 var17, Vec3 var3, MovingObjectPosition var4){
-        if (this.shootingEntity instanceof EntitySkeleton skeleton && var4.entityHit instanceof EntityLivingBase hitEntity) {
-            if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_ICE){
-                hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100,0));
-                hitEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140,0));
-            } else if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_ENDER){
-                skeleton.setPositionAndUpdate(hitEntity.posX,hitEntity.posY,hitEntity.posZ);
-                skeleton.playSound("mob.endermen.portal",1.0F,1.0F);
-                skeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordIron));
-            } else if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_JUNGLE){
+                    ordinal = 5, opcode = Opcodes.GETFIELD), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void skeletonArrowImpactEffects(CallbackInfo ci, int var16, Vec3 var17, Vec3 var3, MovingObjectPosition mop) {
+        if (this.shootingEntity instanceof EntitySkeleton skeleton && mop.entityHit instanceof EntityLivingBase hitEntity) {
+            int id = skeleton.getSkeletonType().id();
+
+            if (id == NightmareMode.SKELETON_ICE) {
+                hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 0));
+                hitEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140, 0));
+
+            } else if (id == NightmareMode.SKELETON_ENDER) {
+                skeleton.setPositionAndUpdate(hitEntity.posX, hitEntity.posY, hitEntity.posZ);
+                skeleton.playSound("mob.endermen.portal", 1.0F, 1.0F);
+                skeleton.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
+
+            } else if (id == NightmareMode.SKELETON_JUNGLE) {
                 if (!hitEntity.isPotionActive(Potion.moveSlowdown)) {
-                    // 75% chance to apply Slowness if the target doesn't already have it
                     if (this.rand.nextFloat() < 0.75f) {
                         hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 3));
                     }
                 } else {
-                    // If the target already has Slowness, roll for Poison or Blindness
                     int i = this.rand.nextInt(4);
                     if (i == 0) {
                         hitEntity.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 0));
@@ -65,56 +64,24 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                         hitEntity.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                     }
                 }
-            } else if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL){
-                this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,this.isBurning() && !this.isBeingRainedOn(),true);
-            }
-        }
-        EntityArrow thisObj = ((EntityArrow)(Object)this);
-        if(thisObj instanceof EntityMagicArrow){
-            if(this.shootingEntity instanceof EntityPlayer player && var4.entityHit != null){
-                if( var4.entityHit instanceof EntityLivingBase entityLivingBase){
-                    if (!this.entitiesHit.contains(var4.entityHit)) {
-                        this.entitiesHit.add(entityLivingBase);
-                        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArrowEnemyHitEvent.class, player, this.entitiesHit.size());
-                    }
-                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.ArrowDamageEvent.class, player, this.damageDone);
-                }
 
-
-
-                if (this.rand.nextBoolean()) {
-                    if (player.getHeldItem() != null && EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, player.getHeldItem()) == 0) {
-                        player.inventory.addItemStackToInventory(new ItemStack(NMItems.magicArrow));
-                    }
-                }
+            } else if (id == NightmareMode.SKELETON_SUPERCRITICAL) {
+                this.worldObj.newExplosion(
+                        skeleton,
+                        this.posX, this.posY, this.posZ,
+                        1.2f,
+                        this.isBurning() && !this.isBeingRainedOn(),
+                        true
+                );
             }
         }
     }
+
 
     @Inject(method = "notifyCollidingBlockOfImpact", at = @At("HEAD"))
     private void supercriticalSkeletonArrowExplosion(CallbackInfo ci){
         if(this.shootingEntity instanceof EntitySkeleton skeleton && skeleton.getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL){
-            this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,false,true);
-        }
-    }
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityArrow;setDead()V",ordinal = 1))
-    private void magicArrowPierce(EntityArrow instance){
-        if (!(instance instanceof EntityMagicArrow)) {
-            instance.setDead();
-        }
-    }
-
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
-    private boolean magicArrowDamageDuringPierce(Entity instance, DamageSource par1DamageSource, float par2){
-        EntityArrow thisObj = ((EntityArrow)(Object)this);
-        if (thisObj instanceof EntityMagicArrow) {
-            ((EntityAccessor)instance).setInvulnerable(false);
-            instance.attackEntityFrom(par1DamageSource,par2);
-            this.damageDone += par2;
-
-            return true;
-        } else {
-            return instance.attackEntityFrom(par1DamageSource, par2);
+            this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,this.isBurning() && !this.isBeingRainedOn(),true);
         }
     }
 }

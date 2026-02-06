@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityAnimal.class)
 public abstract class EntityAnimalMixin extends EntityAgeable {
+    @Unique private int timeOfLastAttack;
+
     public EntityAnimalMixin(World par1World) {
         super(par1World);
     }
@@ -23,14 +25,12 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
     private void squidAvoidAnimalsOnEclipse(CallbackInfoReturnable<Boolean> cir){
         cir.setReturnValue(!NMUtils.getIsMobEclipsed(this));
     }
-    @Unique
-    private int timeOfLastAttack = -400;
 
     @Inject(method = "updateHealing", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
         if (this.worldObj != null && NMUtils.getIsEclipse()) {
-            if(this.ticksExisted % 20 == 0 && this.timeOfLastAttack + 400 < this.ticksExisted){
+            if(this.ticksExisted % 20 == 0 && this.timeOfLastAttack < (this.ticksExisted - 400)){
                 shouldIncreaseHealth = true;
             }
         }
