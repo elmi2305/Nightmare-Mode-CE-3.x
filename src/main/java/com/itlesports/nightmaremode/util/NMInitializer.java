@@ -48,8 +48,6 @@ public abstract class NMInitializer implements AchievementExt {
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
-
-
     }
 
 

@@ -137,7 +137,6 @@
     "component.ComponentStrongholdStairsStraightMixin",
     "component.ComponentVillageChurchMixin",
     "component.StructureScatteredFeatureStartMixin",
-    "entity.BTWEntityMapperMixin",
     "entity.BTWSquidEntityMixin",
     "entity.DireWolfEntityMixin",
     "entity.DynamiteEntityMixin",
