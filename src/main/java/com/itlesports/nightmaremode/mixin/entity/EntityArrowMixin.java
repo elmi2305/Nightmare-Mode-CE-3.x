@@ -66,13 +66,7 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                 }
 
             } else if (id == NightmareMode.SKELETON_SUPERCRITICAL) {
-                this.worldObj.newExplosion(
-                        skeleton,
-                        this.posX, this.posY, this.posZ,
-                        1.2f,
-                        this.isBurning() && !this.isBeingRainedOn(),
-                        true
-                );
+                this.worldObj.newExplosion(skeleton, this.posX, this.posY, this.posZ, 1.2f, this.isBurning() && !this.isBeingRainedOn(), true);
             }
         }
     }
