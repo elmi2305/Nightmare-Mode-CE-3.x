@@ -191,8 +191,8 @@ public class NMBlocks {
         mushBookshelf = new BlockMushBookshelf(2344).setHardness(-1f).setResistance(10f).setUnlocalizedName("nmMushBookshelf").setTextureName("nightmare:nmMushBookshelf");
         Item.itemsList[mushBookshelf.blockID] = new NMItemBlock(NMBlocks.mushBookshelf.blockID - 256);
 
-        darkSandstone = new BlockMultiTextured(2345, Material.rock, "nightmare:nmSandstone_top", "nightmare:nmSandstone_bottom", "nightmare:nmSandstone_side").setHardness(10).setResistance(10f).setUnlocalizedName("nmDarkSandstone");
-        Item.itemsList[darkSandstone.blockID] = new NMItemBlock(NMBlocks.darkSandstone.blockID - 256);
+//        darkSandstone = new BlockMultiTextured(2345, Material.rock, "nightmare:nmSandstone_top", "nightmare:nmSandstone_bottom", "nightmare:nmSandstone_side").setHardness(10).setResistance(10f).setUnlocalizedName("nmDarkSandstone");
+//        Item.itemsList[darkSandstone.blockID] = new NMItemBlock(NMBlocks.darkSandstone.blockID - 256);
 
 //        bloodsidian = new BlockMultiTextured(2346, Material.rock, "nightmare:nmBloodsidian").setHardness()
     }

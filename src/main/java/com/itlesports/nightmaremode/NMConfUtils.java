@@ -151,7 +151,7 @@ public class NMConfUtils {
         };
     }
 
-    private static final String FILE_NAME = "nightmareconf.nmconf";
+    private static final String FILE_NAME = "nmsavedata.nmdata";
     public static final int CONFIG_COUNT = 13;
 
     private static File getConfigFile() {
@@ -161,7 +161,7 @@ public class NMConfUtils {
     /* =============================
        File initialization
        ============================= */
-    private static final String KEY_STRING = "ThisIsAVeryLongAndConvolutedSecretKeyStringThatIsAtLeast32CharactersForAES256!"; // Adjust to taste; must be >=32 chars for 256-bit
+    private static final String KEY_STRING = "ThisIsAVeryLongAndConvolutedSecretKeyStringThatIsAtLeast32CharactersForAES256!";
     // Derive key once (static)
     private static SecretKey getKey() {
         try {

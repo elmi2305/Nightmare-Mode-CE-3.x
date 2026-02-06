@@ -1,12 +1,10 @@
 package com.itlesports.nightmaremode.mixin.component;
 
 import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
