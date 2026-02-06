@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.client.NightmareKeyBindings;
+import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;

@@ -4,7 +4,7 @@ import api.block.blocks.FullBlock;
 import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.SaveFormatExt;
+import com.itlesports.nightmaremode.util.interfaces.SaveFormatExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

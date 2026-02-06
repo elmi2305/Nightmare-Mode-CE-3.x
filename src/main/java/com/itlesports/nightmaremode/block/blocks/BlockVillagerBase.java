@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityVillagerContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

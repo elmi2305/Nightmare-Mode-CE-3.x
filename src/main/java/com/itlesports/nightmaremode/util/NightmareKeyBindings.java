@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.client;
+package com.itlesports.nightmaremode.util;
 
 import net.minecraft.src.KeyBinding;
 

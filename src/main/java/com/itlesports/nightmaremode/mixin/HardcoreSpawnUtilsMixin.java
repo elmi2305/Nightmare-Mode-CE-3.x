@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

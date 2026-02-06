@@ -7,8 +7,8 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
-import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 

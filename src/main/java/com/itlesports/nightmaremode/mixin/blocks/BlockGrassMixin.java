@@ -6,16 +6,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockGrass;
 import net.minecraft.src.Material;
-import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Random;
-
-import static com.itlesports.nightmaremode.NMFields.CRIMSON_COLOR;
+import static com.itlesports.nightmaremode.util.NMFields.CRIMSON_COLOR;
 
 @Mixin(BlockGrass.class)
 public class BlockGrassMixin extends Block {

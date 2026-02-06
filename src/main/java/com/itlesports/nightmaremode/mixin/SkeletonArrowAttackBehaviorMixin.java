@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

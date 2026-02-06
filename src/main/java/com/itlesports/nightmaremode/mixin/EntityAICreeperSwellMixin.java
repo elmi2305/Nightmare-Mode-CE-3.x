@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityLightningCreeper;
 import com.itlesports.nightmaremode.entity.EntityObsidianCreeper;
 import net.minecraft.src.*;

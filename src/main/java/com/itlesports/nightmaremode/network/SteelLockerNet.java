@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.network;
 import api.BTWAddon;
 import api.network.CustomPacketHandler;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
-import com.itlesports.nightmaremode.rendering.ContainerSteelLocker;
+import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayInputStream;

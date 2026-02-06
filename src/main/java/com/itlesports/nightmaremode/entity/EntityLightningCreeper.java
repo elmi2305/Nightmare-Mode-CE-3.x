@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.entity;
 
 import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -19,43 +19,16 @@ public class EntityLightningCreeper extends EntityCreeper implements EntityWithC
     public EntityLightningCreeper(World par1World) {
         super(par1World);
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
-//        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
     }
 
     protected void entityInit() {
         super.entityInit();
     }
-
-    private int failCountNullWorld = 0;
-    private int failCountNoThunderOrProgress = 0;
-
     @Override
     public boolean getCanSpawnHere() {
         if (this.worldObj == null) return false;
         int worldProgress = NMUtils.getWorldProgress();
-        boolean bCanSpawn = false;
-
-        if (this.worldObj.isThundering() || worldProgress > 0) {
-            bCanSpawn = true;
-        } else {
-            failCountNoThunderOrProgress++;
-        }
-
-        boolean finalSpawn = bCanSpawn && super.getCanSpawnHere() && this.posY > 50;
-
-//        if (finalSpawn) {
-//            ChatMessageComponent text = new ChatMessageComponent();
-//            text.addText("Mob spawned at x: " + Math.floor(this.posX) +
-//                    " y: " + Math.floor(this.posY) +
-//                    " z: " + Math.floor(this.posZ) + "\n");
-//            text.addText("Spawn condition fail counts:\n");
-//            text.addText("- No thunder & no world progress: " + failCountNoThunderOrProgress);
-//            text.setColor(EnumChatFormatting.BLUE);
-//            EntityPlayer player = this.worldObj.getClosestPlayerToEntity(this, -1);
-//            if (player != null) {
-//                player.sendChatToPlayer(text);
-//            }
-//        }
+        boolean finalSpawn = this.worldObj.isThundering() || worldProgress > 0 && super.getCanSpawnHere() && this.posY > 50;
 
         return finalSpawn;
     }

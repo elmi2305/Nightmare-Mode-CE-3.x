@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiIngameMenu;
 import net.minecraft.src.GuiScreen;

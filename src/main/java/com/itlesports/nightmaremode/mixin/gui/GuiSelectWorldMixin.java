@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.nmgui.GuiColoredButton;
 import com.itlesports.nightmaremode.nmgui.GuiConfig;
 import com.itlesports.nightmaremode.nmgui.GuiWarning;

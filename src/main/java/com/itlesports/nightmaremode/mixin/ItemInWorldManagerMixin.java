@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.achievement.AchievementEventDispatcher;
 import api.item.items.PickaxeItem;
 import btw.item.items.ChiselItem;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;

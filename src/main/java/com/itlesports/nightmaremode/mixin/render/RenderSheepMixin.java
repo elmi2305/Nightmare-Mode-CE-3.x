@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntitySheep;
 import net.minecraft.src.RenderSheep;
 import net.minecraft.src.ResourceLocation;

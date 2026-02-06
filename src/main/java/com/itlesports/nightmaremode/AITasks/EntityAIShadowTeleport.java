@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
-import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityAIShadowTeleport extends EntityAITarget {

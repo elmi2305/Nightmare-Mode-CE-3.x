@@ -2,10 +2,9 @@ package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.nmgui.*;
-import com.itlesports.nightmaremode.rendering.GuiLocker;
+import com.itlesports.nightmaremode.nmgui.GuiLocker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

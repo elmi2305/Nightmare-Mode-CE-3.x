@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 import java.util.Set;

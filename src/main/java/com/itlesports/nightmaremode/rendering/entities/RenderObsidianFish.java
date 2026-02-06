@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 //
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by FernFlower decompiler)

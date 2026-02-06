@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

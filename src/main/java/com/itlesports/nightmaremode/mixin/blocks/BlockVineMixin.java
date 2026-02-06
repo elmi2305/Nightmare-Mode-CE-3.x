@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.itlesports.nightmaremode.NMFields.CRIMSON_COLOR;
+import static com.itlesports.nightmaremode.util.NMFields.CRIMSON_COLOR;
 
 @Mixin(BlockVine.class)
 public class BlockVineMixin {

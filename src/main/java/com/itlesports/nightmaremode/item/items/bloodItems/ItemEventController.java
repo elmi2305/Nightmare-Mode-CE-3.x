@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.item.items.bloodItems;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.ItemAchievementGranter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;

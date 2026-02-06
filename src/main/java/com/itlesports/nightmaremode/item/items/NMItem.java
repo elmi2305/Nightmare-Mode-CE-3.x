@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.item;
+package com.itlesports.nightmaremode.item.items;
 
 import net.minecraft.src.Item;
 

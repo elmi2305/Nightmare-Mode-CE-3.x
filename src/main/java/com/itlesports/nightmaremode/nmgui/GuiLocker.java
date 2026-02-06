@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.nmgui;
 
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;

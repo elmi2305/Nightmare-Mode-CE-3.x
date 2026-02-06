@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.biomegen;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.NoiseGenerator;
 import net.minecraft.src.NoiseGeneratorOctaves;
 import org.spongepowered.asm.mixin.Mixin;

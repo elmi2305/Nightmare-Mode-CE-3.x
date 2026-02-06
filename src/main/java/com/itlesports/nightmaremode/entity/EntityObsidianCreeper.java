@@ -4,7 +4,7 @@ import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
 import api.item.items.PickaxeItem;
 import btw.entity.attribute.BTWAttributes;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 

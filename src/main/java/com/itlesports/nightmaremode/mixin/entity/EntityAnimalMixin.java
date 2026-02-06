@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityAgeable;
 import net.minecraft.src.EntityAnimal;

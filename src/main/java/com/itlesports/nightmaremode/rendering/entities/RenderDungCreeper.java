@@ -1,38 +1,35 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 
-import com.itlesports.nightmaremode.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityFireCreeper;
+import com.itlesports.nightmaremode.entity.EntityDungCreeper;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
-public class RenderFireCreeper extends RenderCreeper {
+public class RenderDungCreeper extends RenderCreeper {
 
     private final ModelBase creeperModel = new ModelCreeper(2.0f);
-    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
-    public static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/firecreeper.png");
-    public static final ResourceLocation FIRE_CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/firecreeperEclipseHigh.png");
-    public static final ResourceLocation FIRE_CREEPER_TEXTURE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
+    private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("nightmare:textures/entity/creeper/creeper_armor.png");
+    public static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
 
-    public RenderFireCreeper() {
+    public RenderDungCreeper() {
         super();
     }
     @Override
     protected ResourceLocation getCreeperTextures(EntityCreeper par1EntityCreeper) {
-        if (par1EntityCreeper instanceof EntityFireCreeper) {
-            return NMUtils.getIsMobEclipsed(par1EntityCreeper) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (par1EntityCreeper.getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
+        if (par1EntityCreeper instanceof EntityDungCreeper) {
+            return DUNG_CREEPER_TEXTURE;
         } else {return super.getEntityTexture(par1EntityCreeper);}
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity) {
-        if(par1Entity instanceof EntityFireCreeper) {
-            return NMUtils.getIsMobEclipsed((EntityFireCreeper) par1Entity) ? FIRE_CREEPER_TEXTURE_ECLIPSE : (((EntityFireCreeper) par1Entity).getPowered() ? FIRE_CREEPER_TEXTURE_CHARGED : FIRE_CREEPER_TEXTURE);
+        if(par1Entity instanceof EntityDungCreeper) {
+            return DUNG_CREEPER_TEXTURE;
         } else {
             return super.getEntityTexture(par1Entity);
         }
     }
 
 
-    protected int renderCreeperPassModel(EntityFireCreeper par1EntityCreeper, int par2, float par3) {
+    protected int renderCreeperPassModel(EntityDungCreeper par1EntityCreeper, int par2, float par3) {
         if (par1EntityCreeper.getPowered()) {
             GL11.glDepthMask(!par1EntityCreeper.isInvisible());
             if (par2 == 1) {
@@ -64,6 +61,6 @@ public class RenderFireCreeper extends RenderCreeper {
     }
     @Override
     protected int shouldRenderPass(EntityLivingBase par1EntityLivingBase, int par2, float par3) {
-        return this.renderCreeperPassModel((EntityFireCreeper)par1EntityLivingBase, par2, par3);
+        return this.renderCreeperPassModel((EntityDungCreeper)par1EntityLivingBase, par2, par3);
     }
 }

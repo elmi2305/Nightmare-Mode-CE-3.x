@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 
 import net.minecraft.src.EntityIronGolem;
 import net.minecraft.src.RenderIronGolem;

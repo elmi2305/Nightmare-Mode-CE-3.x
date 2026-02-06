@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.biomegen;
 
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import net.minecraft.src.*;
 import net.minecraft.src.BiomeEndDecorator;
 import org.spongepowered.asm.mixin.Mixin;

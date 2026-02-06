@@ -1,14 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.NMConfUtils;
-import com.itlesports.nightmaremode.SaveFormatExt;
+import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.interfaces.SaveFormatExt;
 import net.minecraft.src.SaveFormatComparator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Mixin(SaveFormatComparator.class)
 public abstract class SaveFormatComparatorMixin implements SaveFormatExt, Comparable {

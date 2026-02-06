@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.client;
+package com.itlesports.nightmaremode.util.interfaces;
 
 /**
  * Original interface kept unchanged to satisfy existing mixins (e.g. MinecraftMixin).

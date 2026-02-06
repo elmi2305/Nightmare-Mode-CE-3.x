@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import com.itlesports.nightmaremode.NMConfUtils;
-import com.itlesports.nightmaremode.SaveFormatExt;
+import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.interfaces.SaveFormatExt;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;

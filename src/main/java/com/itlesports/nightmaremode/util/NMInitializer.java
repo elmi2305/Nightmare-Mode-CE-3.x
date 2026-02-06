@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util;
 
 import api.achievement.AchievementTab;
 import api.entity.mob.villager.TradeItem;

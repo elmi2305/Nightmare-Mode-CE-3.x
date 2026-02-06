@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityRadioactiveEnderman extends EntityEnderman {

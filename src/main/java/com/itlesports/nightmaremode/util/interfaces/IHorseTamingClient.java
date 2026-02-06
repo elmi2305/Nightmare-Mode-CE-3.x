@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.network;
+package com.itlesports.nightmaremode.util.interfaces;
 
 public interface IHorseTamingClient {
     void nm$setRequiredDirection(byte ordinal);

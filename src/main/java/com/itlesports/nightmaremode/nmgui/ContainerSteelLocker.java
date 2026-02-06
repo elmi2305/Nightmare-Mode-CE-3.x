@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.nmgui;
 
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import net.minecraft.src.*;

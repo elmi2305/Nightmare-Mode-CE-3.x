@@ -4,7 +4,7 @@ import api.inventory.InventoryUtils;
 import btw.block.blocks.BlockDispenserBlock;
 import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.*;

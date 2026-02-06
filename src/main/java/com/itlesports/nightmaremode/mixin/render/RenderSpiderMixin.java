@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.EntityFireSpider;
 import net.minecraft.src.EntitySpider;

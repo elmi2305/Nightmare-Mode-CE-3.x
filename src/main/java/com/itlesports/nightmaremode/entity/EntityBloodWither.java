@@ -7,7 +7,7 @@ import btw.entity.mob.BTWCaveSpiderEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityBloodWitherAttackFilter;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;

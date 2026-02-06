@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import com.itlesports.nightmaremode.client.NightmareKeyBindings;
-import com.itlesports.nightmaremode.client.ZoomStateAccessor;
+import com.itlesports.nightmaremode.util.NightmareKeyBindings;
+import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

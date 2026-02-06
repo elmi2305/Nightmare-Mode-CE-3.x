@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.achievement.AchievementEventDispatcher;
 import btw.entity.mob.villager.LibrarianVillagerEntity;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.EntityPlayer;

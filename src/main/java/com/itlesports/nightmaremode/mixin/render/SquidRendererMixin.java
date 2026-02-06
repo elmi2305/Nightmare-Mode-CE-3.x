@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.client.render.entity.SquidRenderer;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.ResourceLocation;

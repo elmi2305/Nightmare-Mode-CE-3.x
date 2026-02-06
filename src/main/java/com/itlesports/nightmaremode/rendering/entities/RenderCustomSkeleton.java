@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 
 import com.itlesports.nightmaremode.entity.EntitySkeletonDrowned;
 import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;

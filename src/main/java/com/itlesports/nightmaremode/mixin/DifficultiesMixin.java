@@ -4,7 +4,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.difficulty.Difficulty;
 import api.world.difficulty.DifficultyParam;
 import btw.world.BTWDifficulties;
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

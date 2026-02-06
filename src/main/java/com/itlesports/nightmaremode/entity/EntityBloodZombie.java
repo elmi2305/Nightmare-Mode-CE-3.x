@@ -4,7 +4,7 @@ import api.entity.mob.behavior.SimpleWanderBehavior;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 

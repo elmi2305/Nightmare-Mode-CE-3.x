@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
-import com.itlesports.nightmaremode.rendering.ContainerSteelLocker;
+import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
 import net.minecraft.src.*;
 
 public class TileEntitySteelLocker extends TileEntity implements IInventory {

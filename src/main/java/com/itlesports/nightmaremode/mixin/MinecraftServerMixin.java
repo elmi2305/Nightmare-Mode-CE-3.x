@@ -4,7 +4,7 @@ import api.achievement.AchievementEventDispatcher;
 import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWDifficulties;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.server.MinecraftServer;

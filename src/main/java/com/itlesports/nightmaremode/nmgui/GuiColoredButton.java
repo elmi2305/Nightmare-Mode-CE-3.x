@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.nmgui;
 
-import com.itlesports.nightmaremode.NMConfUtils;
+import com.itlesports.nightmaremode.util.NMConfUtils;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.Minecraft;
@@ -10,13 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiColoredButton extends GuiButton {
-    public static final int STANDARD_DISABLED = -6250336;
-    public static final int STANDARD_ENABLED = 16777120;
-    public static final int STANDARD_HOVER = 14737632;
-    public static final int STANDARD_BASE = 0xFFFFFF;
-    public static final int OLD_HOVER = 0xC74C50;
-
-
     private final int textColorDisabled;
     private final int textColorHover;
     private int textColorUnpressed;

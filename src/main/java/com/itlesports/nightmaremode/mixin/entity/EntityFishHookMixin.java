@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.util.BTWSounds;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

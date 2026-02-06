@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.entity;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 public class EntitySkeletonMelted extends EntitySkeleton {

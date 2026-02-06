@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.NightmareModeAddon;
-import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

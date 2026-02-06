@@ -2,12 +2,11 @@ package com.itlesports.nightmaremode.nmgui;
 
 import api.config.AddonConfig;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMConfUtils;
+import com.itlesports.nightmaremode.util.NMConfUtils;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.I18n;
 import net.minecraft.src.Tessellator;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;

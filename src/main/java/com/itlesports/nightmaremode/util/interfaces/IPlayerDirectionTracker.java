@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.network;
+package com.itlesports.nightmaremode.util.interfaces;
 
 import net.minecraft.src.EnumFacing;
 

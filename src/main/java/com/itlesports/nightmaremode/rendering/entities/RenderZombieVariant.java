@@ -1,6 +1,6 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityZombieImposter;
 import net.minecraft.src.EntityZombie;

@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.config.AddonConfig;
 import api.config.ConfigElementValidator;
-import com.itlesports.nightmaremode.AddonConfigExtender;
+import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import com.typesafe.config.ConfigValueFactory;

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.nmgui.GuiConfig;

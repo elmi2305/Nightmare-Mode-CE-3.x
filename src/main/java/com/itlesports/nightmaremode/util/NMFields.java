@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util;
 
 // a collection of static fields used around the codebase
 public class NMFields {

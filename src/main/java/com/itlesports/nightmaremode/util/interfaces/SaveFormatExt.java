@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util.interfaces;
 
 public interface SaveFormatExt {
     int[] nightmareMode$getConfArray();

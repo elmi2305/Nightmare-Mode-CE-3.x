@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;

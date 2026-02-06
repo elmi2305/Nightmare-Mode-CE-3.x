@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.underworld.poi;
 
 import net.minecraft.src.ItemStack;
 

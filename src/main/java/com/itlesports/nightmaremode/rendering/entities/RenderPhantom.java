@@ -1,8 +1,7 @@
-package com.itlesports.nightmaremode.rendering;
+package com.itlesports.nightmaremode.rendering.entities;
 
 import com.itlesports.nightmaremode.entity.EntityPhantomZombie;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.GL11;
 
 public class RenderPhantom extends RenderBiped{
 
@@ -12,12 +11,10 @@ public class RenderPhantom extends RenderBiped{
     }
     private static final ResourceLocation zombieTextures = new ResourceLocation("nightmare:textures/entity/nmPhantom.png");
     private ModelBiped field_82434_o = this.modelBipedMain;
-    private ModelZombieVillager zombieVillagerModel = new ModelZombieVillager();
     protected ModelBiped field_82437_k;
     protected ModelBiped field_82435_l;
     protected ModelBiped field_82436_m;
     protected ModelBiped field_82433_n;
-    private int field_82431_q = 1;
 
     @Override
     protected void func_82421_b() {

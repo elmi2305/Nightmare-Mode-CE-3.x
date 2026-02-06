@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
-import static com.itlesports.nightmaremode.NMFields.CRIMSON_COLOR;
+import static com.itlesports.nightmaremode.util.NMFields.CRIMSON_COLOR;
 
 @Mixin(BlockLeaves.class)
 public class BlockLeavesMixin extends BlockLeavesBase {

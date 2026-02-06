@@ -5,7 +5,7 @@ import btw.block.blocks.BedrockBlock;
 import btw.item.items.StoneItem;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.tileEntities.*;
-import com.itlesports.nightmaremode.item.ItemVillagerContainer;
+import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import net.minecraft.src.*;

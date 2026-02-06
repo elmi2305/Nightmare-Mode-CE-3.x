@@ -8,7 +8,7 @@ import btw.block.BTWBlocks;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.item.BTWItems;
 import btw.item.items.ClubItem;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.item.NMItems;

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode;
+package com.itlesports.nightmaremode.util;
 
 import api.world.difficulty.DifficultyParam;
 import api.world.difficulty.DifficultyProvider;

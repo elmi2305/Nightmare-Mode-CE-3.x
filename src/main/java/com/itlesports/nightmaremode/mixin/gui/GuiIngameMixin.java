@@ -2,9 +2,9 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
-import com.itlesports.nightmaremode.NMConfUtils;
-import com.itlesports.nightmaremode.NMUtils;
-import com.itlesports.nightmaremode.network.IHorseTamingClient;
+import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;

@@ -10,15 +10,15 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
-import com.itlesports.nightmaremode.NMConfUtils;
-import com.itlesports.nightmaremode.NMDifficultyParam;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityAnimalInvoker;
-import com.itlesports.nightmaremode.network.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
-import static btw.achievement.BTWAchievements.*;
 import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 import static btw.community.nightmaremode.NightmareMode.APPLE_COOLDOWN;
 

@@ -1,8 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
-import com.prupe.mcpatcher.sky.SkyRenderer;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;

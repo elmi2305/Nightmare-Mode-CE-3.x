@@ -3,18 +3,14 @@ package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures;
 import api.world.BlockPos;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.LootEntry;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
-import com.itlesports.nightmaremode.item.NMItem;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.underworld.poi.LootEntry;
 import net.minecraft.src.*;
-import org.lwjgl.Sys;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 

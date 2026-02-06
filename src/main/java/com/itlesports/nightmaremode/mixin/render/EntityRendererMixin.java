@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.NMUtils;
-import com.itlesports.nightmaremode.client.NightmareKeyBindings;
-import com.itlesports.nightmaremode.client.ZoomStateAccessor;
+import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NightmareKeyBindings;
+import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;

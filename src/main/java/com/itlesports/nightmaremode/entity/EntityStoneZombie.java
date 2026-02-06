@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.NMUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 

@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.component;
 
-import com.itlesports.nightmaremode.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
