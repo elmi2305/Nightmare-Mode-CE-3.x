@@ -181,25 +181,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         return player.getCurrentItemOrArmor(armorIndex) != null && player.getCurrentItemOrArmor(armorIndex).itemID == itemToCheck.itemID;
     }
 
-    @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ServerConfigurationManager;sendChatMsg(Lnet/minecraft/src/ChatMessageComponent;)V",shift = At.Shift.AFTER))
-    private void manageTauntingChatMessage(DamageSource par1DamageSource, CallbackInfo ci){
-        if (NMUtils.getWorldProgress() != 3) {
-            ChatMessageComponent text2 = new ChatMessageComponent();
-            text2.addKey(getDeathMessages().get(this.rand.nextInt(getDeathMessages().size())));
-            text2.setColor(EnumChatFormatting.RED);
-            this.mcServer.getConfigurationManager().sendChatMsg(text2);
-        }
-    }
-
-    @Unique
-    private static @NotNull List<String> getDeathMessages() {
-        List<String> messageList = new ArrayList<>();
-        for (int i = 1; i <= 19; i++){
-            messageList.add("deathScreen.deathTauntMessage"+i);
-        }
-        return messageList;
-    }
-
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))
     private void manageEndDialogue(int par1, CallbackInfo ci){
         ChatMessageComponent text2 = new ChatMessageComponent();

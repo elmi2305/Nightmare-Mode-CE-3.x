@@ -778,7 +778,7 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.mobSpawner.blockID).buySellSingle().build())
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.dragonEgg.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.workbench.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(BTWBlocks.workbench.blockID).buySellSingle().build())
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(BTWBlocks.axlePowerSource.blockID).buySellSingle().build())
                 .finishVariants().mandatory().addToTradeList();
 
@@ -822,6 +822,18 @@ public abstract class NMInitializer implements AchievementExt {
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2302, 3, 6)).build())
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2303, 3, 6)).build())
                 .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2306, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2307, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2308, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2309, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2310, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2311, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2312, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2313, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2314, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2315, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2316, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2321, 3, 6)).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2322, 3, 6)).build())
                 .finishVariants().mandatory().addToTradeList();
 
 

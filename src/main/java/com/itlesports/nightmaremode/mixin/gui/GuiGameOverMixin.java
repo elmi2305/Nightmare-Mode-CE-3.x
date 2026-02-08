@@ -3,11 +3,14 @@ package com.itlesports.nightmaremode.mixin.gui;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -20,6 +23,7 @@ public class GuiGameOverMixin extends GuiScreen {
     @Unique private static int TIP_CHAR_LIMIT = 60;
     @Unique private String tip = "";
     @Unique private String subTip = "";
+    @Unique private String deathMessage = "";
 
     // Get tips from lang file
     @Unique private static String[] tips = new String[32];
@@ -38,8 +42,14 @@ public class GuiGameOverMixin extends GuiScreen {
     }
 
     @Inject(method = "initGui", at = @At("HEAD"))
-    private void declareChosenTip(CallbackInfo ci){
+    private void declareChosenTipAndDeathMessage(CallbackInfo ci){
         this.selectRandomTip();
+        this.deathMessage = I18n.getString(getDeathMessages().get(this.random.nextInt(getDeathMessages().size())));
+    }
+
+    @ModifyArg(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiGameOver;drawCenteredString(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V", ordinal = 0), index = 3)
+    private int changeHeightOfYouDiedText(int par3){
+        return par3 - 10;
     }
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiScreen;drawScreen(IIF)V"))
@@ -52,13 +62,33 @@ public class GuiGameOverMixin extends GuiScreen {
 
         if (!this.subTip.isEmpty()) {
             this.drawCenteredString(this.fontRenderer, this.subTip, centerX, initialY + 20, 0xFFFFFF);
+        }
+
+
+        if (this.deathMessage != null) {
+            float textSizeMod = 1.25f;
+
+            GL11.glPushMatrix();
+            GL11.glScalef(textSizeMod, textSizeMod, textSizeMod);
+            int scaledCenterX = (int)(centerX / textSizeMod);
+            int scaledCenterY = (int) (70 / textSizeMod);
+            this.drawCenteredString(this.fontRenderer, this.deathMessage, scaledCenterX, scaledCenterY, 0xFF0000);
+            GL11.glPopMatrix();
 
         }
     }
 
+    @Unique
+    private static @NotNull List<String> getDeathMessages() {
+        List<String> messageList = new ArrayList<>();
+        for (int i = 1; i <= 19; i++){
+            messageList.add("deathScreen.deathTauntMessage"+i);
+        }
+        return messageList;
+    }
+
     @Unique private void selectRandomTip() {
         if (tips[0] == null) {
-            // Only load once for performance
             for (int i = 0; i < tips.length; ++i) {
                 tips[i] = I18n.getString("gui.gameover.tip" + (i+1));
             }
