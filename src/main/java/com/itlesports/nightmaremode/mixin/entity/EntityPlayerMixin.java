@@ -12,6 +12,7 @@ import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMSanityUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
@@ -31,8 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
-import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
-import static btw.community.nightmaremode.NightmareMode.APPLE_COOLDOWN;
+import static btw.community.nightmaremode.NightmareMode.*;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
@@ -49,9 +49,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract boolean isPlayerSleeping();
     @Shadow public abstract void wakeUpPlayer(boolean par1, boolean par2, boolean par3);
     @Shadow public abstract boolean isPlayerFullyAsleep();
-
-
     @Shadow public abstract <T> void setData(DataEntry.PlayerDataEntry<T> var1, T var2);
+
+
+    @Shadow public abstract <T> T getData(DataEntry.PlayerDataEntry<T> var1);
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
@@ -223,8 +224,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
                 }
                 this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 600L);
-//                System.out.println(this.getData(GOLDEN_APPLE_COOLDOWN) + " player data" + (this.getEntityWorld().isRemote ? " client" : " server"));
-
             }
 
             if (usedItemID == Item.potion.itemID && p.getItemInUse().getItemDamage() == 0) {
@@ -267,23 +266,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return !Arrays.equals(nullConf, wConf);
     }
 
-    @Unique private static void invalidateConfig(){
-        MinecraftServer.getServer().worldServers[0].setData(CONFIGS_CREATED, new int[]{
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0
-                }
-        );
+    @Unique private void invalidateConfig(){
+        if(this.worldObj.isRemote) return;
+        int[] zeroConfigs = new int[NMConfUtils.CONFIG_COUNT];
+        Arrays.fill(zeroConfigs, 0);
+
+        for(WorldServer serv : MinecraftServer.getServer().worldServers){
+            serv.setData(CONFIGS_CREATED, zeroConfigs);
+        }
     }
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void invalidateConfigOnDeath(DamageSource par1DamageSource, CallbackInfo ci){
@@ -404,8 +394,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 this.checkAndValidateConfig();
             }
         }
+        // manage underworld events
+        if(this.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+            if(this.ticksExisted % 10 == 0){
+                // recalculate drain amount every 10 ticks
+                drainAmount = this.getSanityDrain();
+            }
+            this.setData(SANITY, this.getData(SANITY) + drainAmount);
 
+            if(this.ticksExisted % 10 == 0 && this.isSneaking()){
+                System.out.println("current sanity is: " + this.getData(SANITY));
+            }
+        }
 
+        // manage blight effects
         if (this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID && !this.capabilities.isCreativeMode){
             EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
@@ -428,6 +430,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
     }
+
+    @Unique private double drainAmount;
+
+    @Unique
+    public double getSanityDrain() {
+        return NMSanityUtils.getSanityDrainPerTick((EntityPlayer)(Object)this);
+    }
+
 
 
     @Inject(method = "onUpdate", at = @At("TAIL"))

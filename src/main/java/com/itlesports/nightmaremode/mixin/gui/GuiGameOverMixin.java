@@ -67,7 +67,6 @@ public class GuiGameOverMixin extends GuiScreen {
 
         if (this.deathMessage != null) {
             float textSizeMod = 1.25f;
-
             GL11.glPushMatrix();
             GL11.glScalef(textSizeMod, textSizeMod, textSizeMod);
             int scaledCenterX = (int)(centerX / textSizeMod);

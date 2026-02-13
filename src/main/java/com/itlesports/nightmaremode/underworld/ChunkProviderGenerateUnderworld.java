@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.underworld;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
-import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.MapGenScatteredFeatureUnderworld;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.MapGenScatteredFeatureUnderworld;
 import net.minecraft.src.*;
 
 import java.util.List;

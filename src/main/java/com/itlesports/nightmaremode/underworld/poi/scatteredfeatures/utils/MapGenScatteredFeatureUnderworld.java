@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures;
+package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;

@@ -21,7 +21,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
-import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.StructureScatteredFeatureStartUnderworld;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
@@ -494,6 +494,16 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.PlayerDataEntry<Double> SANITY =
+            DataProvider.getBuilder(Double.class)
+                    .name("Sanity")
+                    .defaultSupplier(() -> 0D)
+                    .readNBT(nbt -> nbt.getDouble("Sanity"))
+                    .writeNBT((nbt, v) -> nbt.setDouble("Sanity", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
     public static final DataEntry.WorldDataEntry<int[]> CONFIGS_CREATED =
             DataProvider.getBuilder(int[].class)
                     .name("ConfigsInit")
@@ -535,6 +545,7 @@ public class NightmareMode extends BTWAddon {
         DRAGON_DEFEATED.register();
         APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
+        SANITY.register();
     }
 
     @Override

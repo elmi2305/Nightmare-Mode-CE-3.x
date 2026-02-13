@@ -6,10 +6,13 @@ import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
 import net.minecraft.src.*;
 
 public class BiomeGenUnderworld extends BiomeGenBase {
+    // biome specific information
+    private float drainMultiplier = 1.0f; // 1.0f means no biome penalty. higher means you lose sanity and lower means you gain it
 
-    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
-    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
+
+    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
+    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(-0.1F, 0.1F).setDisableRain();
 
 
     protected BiomeGenUnderworld(int par1) {
@@ -38,4 +41,14 @@ public class BiomeGenUnderworld extends BiomeGenBase {
         this.theBiomeDecorator = new BiomeUnderworldDecorator(this);
     }
 
+
+
+    public float getDrainMultiplier() {
+        return drainMultiplier;
+    }
+
+    public BiomeGenUnderworld setDrainMultiplier(float drainMultiplier) {
+        this.drainMultiplier = drainMultiplier;
+        return this;
+    }
 }

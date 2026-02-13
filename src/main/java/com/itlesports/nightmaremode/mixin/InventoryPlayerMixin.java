@@ -19,28 +19,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InventoryPlayerMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void perfectStart(EntityPlayer par1EntityPlayer, CallbackInfo ci){
-        InventoryPlayer thisObj = (InventoryPlayer)(Object)this;
+        InventoryPlayer inv = (InventoryPlayer)(Object)this;
 
         if (NightmareMode.perfectStart) {
-            thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
-            thisObj.addItemStackToInventory(new ItemStack(Item.axeStone));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
-            thisObj.addItemStackToInventory(new ItemStack(BTWBlocks.looseDirtSlab, 16));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.stone, 8));
+            inv.addItemStackToInventory(new ItemStack(BTWBlocks.idleOven));
+            inv.addItemStackToInventory(new ItemStack(Item.axeStone));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.tangledWeb));
+            inv.addItemStackToInventory(new ItemStack(BTWBlocks.looseDirtSlab, 16));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.stone, 8));
         }
         if(NightmareMode.isAprilFools){
-            thisObj.addItemStackToInventory(new ItemStack(NMItems.creeperBallSoup));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.bedroll,64));
+            inv.addItemStackToInventory(new ItemStack(NMItems.creeperBallSoup));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.bedroll,64));
         }
         if(NightmareMode.extraArmor){
-            thisObj.addItemStackToInventory(new ItemStack(Item.bootsLeather));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolLeggings));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolChest));
-            thisObj.addItemStackToInventory(new ItemStack(BTWItems.woolHelmet));
+            inv.addItemStackToInventory(new ItemStack(Item.bootsLeather));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.woolLeggings));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.woolChest));
+            inv.addItemStackToInventory(new ItemStack(BTWItems.woolHelmet));
         }
 
 
-        thisObj.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
+        inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
 
     }
 }

@@ -16,86 +16,36 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class BigMushroom extends ComponentScatteredFeature {
-    public BigMushroom() {} // required
-
-    public BigMushroom(Random random, int x, int z) {
-        super(random, x, 63, z, 64,64,64);
-    }
-    private final Random structureRand = new Random();
-
+public class ObsidianSpike extends ComponentScatteredFeature {
+    public ObsidianSpike() {
+    } // required
 
     private static final int[] paletteIDs = new int[]{
-            Block.jukebox.blockID, // storage
+            Block.jukebox.blockID,
             NMBlocks.mushroomCapYellow.blockID,
             NMBlocks.mushroomCapWhite.blockID,
             NMBlocks.mushroomWallYellow.blockID,
-            NMBlocks.mushroomStem.blockID, // base of the plant
-            NMBlocks.mushroomStem.blockID, // inner mushiness
+            NMBlocks.mushroomStem.blockID,
+            NMBlocks.mushroomStem.blockID,
             Block.hay.blockID,
-            NMBlocks.mushroomFloorPartialYellow.blockID, // actual
+            NMBlocks.mushroomFloorPartialYellow.blockID,
             NMBlocks.flowerGrass.blockID,
-            NMBlocks.mushroomStem.blockID, // underside gills
-            NMBlocks.mushroomStem.blockID, // the ceiling of the top part which used to be netherrack
+            NMBlocks.mushroomStem.blockID,
+            NMBlocks.mushroomStem.blockID,
             NMBlocks.mushroomTopFloorYellow.blockID,
-            BTWBlocks.unlitCampfire.blockID, // actual
-            NMBlocks.yellowFlowerRoots.blockID, // actual
-            NMBlocks.mushroomWallPurple.blockID, // actual
-            Block.mobSpawner.blockID, // ambient in rooms
-            NMBlocks.mushInnardsBreakable.blockID, // actual
-            Block.blockIron.blockID, // simply the wall on the top part between sections
-            NMBlocks.mushroomFloorPartialPurple.blockID, // actual
+            BTWBlocks.unlitCampfire.blockID,
+            NMBlocks.yellowFlowerRoots.blockID,
+            NMBlocks.mushroomWallPurple.blockID,
+            Block.mobSpawner.blockID,
+            NMBlocks.mushInnardsBreakable.blockID,
+            Block.blockIron.blockID,
+            NMBlocks.mushroomFloorPartialPurple.blockID,
             BTWBlocks.saw.blockID,
-            Block.pistonStickyBase.blockID, // storage ig
-            Block.bookShelf.blockID, // storage
+            Block.pistonStickyBase.blockID,
+            Block.bookShelf.blockID,
             BTWBlocks.hopper.blockID,
-            Block.chest.blockID, // decor
-            Block.web.blockID,
-            BTWBlocks.pulley.blockID, // storage
-            BTWBlocks.aestheticOpaque.blockID, // barrel storage
-            BTWBlocks.gearBox.blockID, // storage
-            Block.flowerPot.blockID, // pot in storage
-            NMBlocks.mushroomTopFloorPurple.blockID, // actual
-            Block.fence.blockID,
-            Block.waterStill.blockID, // farm area
-            Block.cloth.blockID,
-            BTWBlocks.blockDispenser.blockID, // bd in storage
-            Block.music.blockID, // storage
-            Block.blockNetherQuartz.blockID, // table thing
-            BTWBlocks.plainCandle.blockID, // enchanting area
-            BTWBlocks.quartzSidingAndCorner.blockID, // bench
-            Block.jukebox.blockID, // actual
-            Block.tnt.blockID, // actual
-            BTWBlocks.dragonVessel.blockID, // storage
-            NMBlocks.bloodChest.blockID, // loot
-            Block.mobSpawner.blockID, // spawner in the storage TODO
-            Block.pistonBase.blockID, // storage
-            Block.blockIron.blockID, // top reward
-            Block.blockGold.blockID, // top reward
-            Block.blockDiamond.blockID, // reward room top
-            BTWBlocks.planter.blockID, // soul sand planter
-            Block.netherStalk.blockID,
-            BTWBlocks.turntable.blockID, // storage
-            Block.stoneSingleSlab.blockID, // slab at the start
-            BTWBlocks.quartzMouldingAndDecorative.blockID, // needs meta 8, it's the brewing stand table
-            Block.brewingStand.blockID,
-            Block.cauldron.blockID, // cauldron for the brewing stand, needs water meta chance
-            NMBlocks.mushInnardsBreakableExplosive.blockID, // actual
-            NMBlocks.mushBookshelf.blockID, // for enchanting
-            Block.enchantmentTable.blockID, // enchanting
-            BTWBlocks.soulforge.blockID, // storage
-            Block.brick.blockID, // actual forge
-            BTWBlocks.plainCandle.blockID, //
-            BTWBlocks.idleOven.blockID, // needs facing meta
-            BTWBlocks.vase.blockID, // forge
-            NMBlocks.disenchantmentTable.blockID,
-            BTWBlocks.planter.blockID, // empty planter
-            Block.stoneSingleSlab.blockID, // actual
-            Block.oreIron.blockID, // actual
-            Block.anvil.blockID, // actual
-            BTWBlocks.workStump.blockID, // stump in alchemy room
-            Block.rail.blockID // in forge
-        };
+    };
+
 
     private static int[] meta = new int[]{
             0,
@@ -112,68 +62,11 @@ public class BigMushroom extends ComponentScatteredFeature {
             0,
             0,
             0,
-            0,
-            0, // Block.mobSpawner.blockID,
-            0,
-            0,
-            0,
-            -6, // BTWBlocks.saw.blockID,
-            -6, // Block.pistonStickyBase.blockID,
-            0,
-            0,
-            -6, //Block.chest.blockID,
-            0,
-            0,
-            11, //BTWBlocks.aestheticOpaque.blockID, // barrel storage
-            -6,// BTWBlocks.gearBox.blockID, // storage
-            -3, // Block.flowerPot.blockID, // pot in storage
-            0,
-            0,
-            0,
-            7, // Block.cloth.blockID,
-            -6, // BTWBlocks.blockDispenser.blockID, // bd in storage
-            0,
-            0, // Block.blockNetherQuartz.blockID, // table thing
-            -4, // BTWBlocks.plainCandle.blockID, // enchanting area
-            12, // BTWBlocks.quartzSidingAndCorner.blockID, // bench
-            0,
-            0,
-            0,
-            -6, // NMBlocks.bloodChest.blockID,
-            -64, // Block.mobSpawner.blockID, // spawner in the storage TODO
-            -6, // Block.pistonBase.blockID,
-            0,
-            0,
-            0,
-            8, // BTWBlocks.planter.blockID, // soul sand planter
-            0,
-            0,
-            0,
-            8, // BTWBlocks.quartzMouldingAndDecorative.blockID, // it's the brewing stand table
-            0,
-            -4, // Block.cauldron.blockID, // cauldron for the brewing stand, needs water meta chance
-            0,
-            0,
-            0,
-            0, // BTWBlocks.soulforge.blockID, // storage
-            0,
-            -4, // BTWBlocks.plainCandle.blockID,
-            2   , // BTWBlocks.idleOven.blockID, // needs facing meta
-            -16, // BTWBlocks.vase.blockID, // forge
-            0,
-            0,
-            8, // Block.stoneSingleSlab.blockID, // needs meta 8
-            0, // Block.oreIron.blockID, // random strata
-            0,
-            0,
-            0,
+            0
     };
 
-
-
-    // === MAIN MUSHROOM GENERATION ============================================
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
-        String path = "structures/mushroom.nbt";
+        String path = "structures/spike.nbt";
         placeFromNBT(world, box, path, paletteIDs);
         return true;
     }
@@ -350,14 +243,9 @@ public class BigMushroom extends ComponentScatteredFeature {
         this.placeBlockAtCurrentPosition(world, blockID, metadata, localX, localY, localZ, boundingBox);
     }
 
-
-    public void placeBlockAtCurrentPositiona(World world, int blockID, int meta, int x, int y, int z, StructureBoundingBox par7StructureBoundingBox) {
-        int zPos = this.getZWithOffset(x, z);
-        int yPos = this.getYWithOffset(y);
-        int xPos = this.getXWithOffset(x, z);
-        if (par7StructureBoundingBox.isVecInside(xPos, yPos, zPos)) {
-            world.setBlock(xPos, yPos, zPos, blockID, meta, 2);
-        }
+    public ObsidianSpike(Random random, int x, int z) {
+        super(random, x, 63, z, 64, 64, 64);
     }
 
+    private final Random structureRand = new Random();
 }

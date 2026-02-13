@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMSanityUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
@@ -20,6 +21,10 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
+
+import static btw.community.nightmaremode.NightmareMode.SANITY;
+import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
+import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAccessor {
@@ -71,11 +76,11 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     private void doUnderworldFog(int par1, float par2, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
 
-        if (entity.dimension == NightmareMode.UNDERWORLD_DIMENSION) {
+        if (entity.dimension == NightmareMode.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p) {
             long worldTime = this.mc.theWorld.getWorldTime();
             long timeOfDay = worldTime % 24000L;
 
-            float targetAlpha = getTargetAlpha(timeOfDay);
+            float targetAlpha = Math.max(getTargetAlpha(timeOfDay), getPlayerSanityFogModifier(p));
 
             // Smooth interpolation over 120 ticks (6 seconds at 20 TPS)
             float fadeSpeed = 1.0f / 240.0f;
@@ -152,6 +157,20 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
 
             ci.cancel();
         }
+    }
+
+    @Unique private float getPlayerSanityFogModifier(EntityPlayer p){
+        double sanity = p.getData(SANITY);
+
+        if (sanity >= MAX_SANITY){
+            // player is fully insane
+            return (float) Math.min((sanity - MAX_SANITY + 30) / 30, 16.0f);
+        } else if(sanity > CRITICAL_SANITY) {
+            // player is very insane, intense fog
+            return (float) Math.min((sanity - CRITICAL_SANITY) / 30, 1.0);
+        }
+
+        return 0f;
     }
 
     @Unique

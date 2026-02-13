@@ -182,5 +182,37 @@ public class NMBlocks {
 //        Item.itemsList[darkSandstone.blockID] = new NMItemBlock(NMBlocks.darkSandstone.blockID - 256);
 
 //        bloodsidian = new BlockMultiTextured(2346, Material.rock, "nightmare:nmBloodsidian").setHardness()
+
+
+
+        hideStuffFromEmi();
+    }
+
+    private static void hideStuffFromEmi(){
+        // this hides all the underworld blocks from people that are nosy
+        yellowFlowerRoots.hideFromEMI();
+        plantMatter.hideFromEMI();
+        disenchantmentTable.hideFromEMI();
+        mushroomStem.hideFromEMI();
+        mushroomFloorPartialYellow.hideFromEMI();
+        mushroomPurple.hideFromEMI();
+        mushInnardsBreakable.hideFromEMI();
+        mushInnardsBreakableExplosive.hideFromEMI();
+        mushroomTopFloorYellow.hideFromEMI();
+        mushroomFloorYellow.hideFromEMI();
+        mushroomWallYellow.hideFromEMI();
+        mushroomFloorPartialPurple.hideFromEMI();
+        mushroomWallPurple.hideFromEMI();
+        mushroomTopFloorPurple.hideFromEMI();
+        mushroomCapYellow.hideFromEMI();
+        mushroomCapWhite.hideFromEMI();
+        mushBookshelf.hideFromEMI();
+        underrock.hideFromEMI();
+        understoneSmooth.hideFromEMI();
+        underCobble.hideFromEMI();
+        underGrass.hideFromEMI();
+        underDirt.hideFromEMI();
+        flowerGrass.hideFromEMI();
+        flowerDirt.hideFromEMI();
     }
 }

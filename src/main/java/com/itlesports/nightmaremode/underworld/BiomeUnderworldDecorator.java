@@ -21,7 +21,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         this.tallPlantGen = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5);
         this.tallFlowerTulipGen = new WorldGenBigFlower();
         this.tallFlowerBulbGen = new WorldGenTallBulbFlower();
-        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
+//        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
     }
 
 
@@ -189,10 +189,10 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
             if(this.randomGenerator.nextBoolean() || this.randomGenerator.nextInt(3) == 0){
                 return tallFlowerTulipGen;
             }
-            if(this.randomGenerator.nextBoolean()){
+//            if(this.randomGenerator.nextBoolean()){
                 return tallFlowerBulbGen;
-            }
-            return tallFlowerDroopingGen;
+//            }
+//            return tallFlowerDroopingGen;
         }
         return null;
     }

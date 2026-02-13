@@ -1,6 +1,7 @@
-package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures;
+package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;

@@ -145,6 +145,7 @@ public class NMUtils {
         return NightmareMode.getInstance().NITE_MULTIPLIER;
     }
 
+
     public static int getWorldProgress() {
         return NightmareMode.worldState;
     }
