@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import api.world.WorldUtils;
 
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
@@ -17,7 +18,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
@@ -141,6 +145,13 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             double par6 = this.posZ;
             float par8 = 3.0f;
             this.worldObj.createExplosion(null, par2, par4, par6, par8, true);
+        }
+        if(this.worldObj.isRemote) return;
+        int[] zeroConfigs = new int[NMConfUtils.CONFIG_COUNT];
+        Arrays.fill(zeroConfigs, 0);
+
+        for(WorldServer serv : MinecraftServer.getServer().worldServers){
+            serv.setData(CONFIGS_CREATED, zeroConfigs);
         }
     }
 

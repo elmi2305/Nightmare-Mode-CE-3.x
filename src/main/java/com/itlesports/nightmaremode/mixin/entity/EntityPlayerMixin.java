@@ -275,10 +275,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             serv.setData(CONFIGS_CREATED, zeroConfigs);
         }
     }
-    @Inject(method = "onDeath", at = @At("HEAD"))
-    private void invalidateConfigOnDeath(DamageSource par1DamageSource, CallbackInfo ci){
-        invalidateConfig();
-    }
 
 
 

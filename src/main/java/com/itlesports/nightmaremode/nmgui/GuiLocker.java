@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiLocker extends GuiContainer {
 
-    private static final ResourceLocation TEX = new ResourceLocation("textures/gui/steel_locker_gui.png");
+    private static final ResourceLocation TEX = new ResourceLocation("nightmare:textures/gui/steel_locker_gui.png");
 
     private static final int GUI_WIDTH = 356;
     private static final int GUI_HEIGHT = 240;
