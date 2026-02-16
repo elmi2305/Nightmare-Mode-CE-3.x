@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin.component;
 
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageClosed;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageOpen;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +20,10 @@ public class StructureScatteredFeatureStartMixin extends StructureStart {
         BiomeGenBase biome = world.getBiomeGenForCoords(chunkX * 16 + 8, chunkZ * 16 + 8);
         if (biome == BiomeGenUnderworld.flowerFields) {
             this.components.add(new BigMushroom(rand, chunkX * 16, chunkZ * 16));
+        }
+        if(biome == BiomeGenUnderworld.highlands){
+            this.components.add(new RibcageClosed(rand, chunkX * 16, chunkZ * 16));
+            this.components.add(new RibcageOpen(rand, chunkX * 16, chunkZ * 16));
         }
     }
 }

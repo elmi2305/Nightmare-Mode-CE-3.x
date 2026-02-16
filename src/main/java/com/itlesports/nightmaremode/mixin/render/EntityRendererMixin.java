@@ -53,7 +53,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     @Shadow protected abstract FloatBuffer setFogColorBuffer(float par1, float par2, float par3, float par4);
 
     @Shadow private boolean cloudFog;
-    private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("textures/entity/nmBloodRain.png");
+    private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/entity/nmBloodRain.png");
 
     @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
     private ResourceLocation bloodMoonCustomRain(ResourceLocation par1ResourceLocation){

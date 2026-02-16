@@ -648,7 +648,7 @@ public class EntityBloodWither extends EntityWither {
         } else {
             if(!NMUtils.getIsEclipse()){
                 this.previousWorldTime = this.worldObj.getWorldTime();
-                this.worldObj.setWorldTime(getNextEclipse(this.worldObj.getWorldTime()));
+                this.worldObj.setWorldTime(NMUtils.getNextEclipseTime(this.worldObj.getWorldTime()));
             }
         }
     }
@@ -1243,9 +1243,7 @@ public class EntityBloodWither extends EntityWither {
         this.setHealth(this.getMaxHealth() / 16.0F);
     }
 
-    private static long getNextEclipse(long currentTime) {
-        return ((currentTime / 24000) + 1) * 24000 + 5000;
-    }
+
     private ItemStack[] getRandomItem(){
         return new ItemStack[]{
                 new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),

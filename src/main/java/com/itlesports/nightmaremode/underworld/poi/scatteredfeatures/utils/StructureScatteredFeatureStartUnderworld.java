@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageClosed;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageOpen;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;
@@ -17,6 +19,10 @@ public class StructureScatteredFeatureStartUnderworld extends StructureStart {
         ArrayList<Supplier<ComponentScatteredFeature>> feature = new ArrayList<Supplier<ComponentScatteredFeature>>();
         if (biome == BiomeGenUnderworld.flowerFields) {
             feature.add(() -> new BigMushroom(rand, chunkX * 16, chunkZ * 16));
+        }
+        if (biome == BiomeGenUnderworld.highlands) {
+            feature.add(() -> new RibcageClosed(rand, chunkX * 16, chunkZ * 16));
+            feature.add(() -> new RibcageOpen(rand, chunkX * 16, chunkZ * 16));
         }
 
         if (!feature.isEmpty()) {

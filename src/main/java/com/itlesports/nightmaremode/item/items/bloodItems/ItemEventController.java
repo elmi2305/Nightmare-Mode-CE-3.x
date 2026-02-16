@@ -38,6 +38,16 @@ public class ItemEventController extends ItemAchievementGranter {
             }
             world.setWorldTime(time);
         }
+        if(type == EVENT_ECLIPSE){
+            long time = world.getWorldTime();
+
+            if(NMUtils.getIsEclipse()){
+                time = (long)Math.floor(((double) (time + 24000) / 24000)) * 24000L;
+            } else if (!MinecraftServer.getIsServer()) {
+                time = NMUtils.getNextEclipseTime(time);
+            }
+            world.setWorldTime(time);
+        }
     }
 
     @Override
@@ -53,6 +63,9 @@ public class ItemEventController extends ItemAchievementGranter {
     private String getLineForType(int line, int type){
         if(type == EVENT_BLOODMOON){
             return "item.desc.bloodmoon" + line;
+        }
+        if(type == EVENT_ECLIPSE){
+            return "item.desc.eclipse" + line;
         }
 
         return "";

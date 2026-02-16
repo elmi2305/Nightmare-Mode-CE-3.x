@@ -119,6 +119,10 @@ public class NMUtils {
         return (nextBloodMoonDay * 24000L) + 18000;
     }
 
+    public static long getNextEclipseTime(long currentTime) {
+        return ((currentTime / 24000) + 1) * 24000;
+    }
+
     public static void forcePlayMusic(String soundID, boolean toLoop) {
         SoundManager sndManager = Minecraft.getMinecraft().sndManager;
         shushMusic();
