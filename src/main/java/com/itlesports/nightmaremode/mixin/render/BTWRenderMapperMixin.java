@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
 import net.minecraft.src.*;
@@ -33,6 +34,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
         RenderManager.addEntityRenderer(EntityPhantomZombie.class, new RenderPhantom());
         RenderManager.addEntityRenderer(EntityCreeperGhast.class, new RenderGhast());
+        RenderManager.addEntityRenderer(FlowerZombie.class, new RenderZombieVariant());
 
 
 

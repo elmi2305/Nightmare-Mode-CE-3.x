@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.util;
 import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.TileEntity;
 
@@ -30,6 +31,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntitySkeletonMelted.class, "NmMeltedSkeleton", 2320);
         EntityList.addMapping(EntityObsidianFish.class, "NmObsidianFish", 2321);
         EntityList.addMapping(EntityCreeperGhast.class, "NmCreeperGhast", 2322, 0xd5e2f7, 0x3bb507);
+        EntityList.addMapping(FlowerZombie.class, "NmFlowerZombie", 2323, 0x00FF00, 0x0000FF);
     }
 
     public static void createTileEntityMappings(){

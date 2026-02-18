@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.rendering.entities;
 
+import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityZombieImposter;
@@ -18,19 +19,24 @@ public class RenderZombieVariant extends RenderZombie {
 
     private static final ResourceLocation imposterZombieTexture = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
 
+    private static final ResourceLocation flowerZombieTextures = new ResourceLocation("nightmare:textures/entity/flowerZombie.png");
+
 
 
     private static final ResourceLocation shadowZombieTextures = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
     private static final ResourceLocation shadowZombieTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
 
-    @Override protected ResourceLocation func_110863_a(EntityZombie par1EntityZombie) {
-        if(par1EntityZombie instanceof EntityBloodZombie){
-            return this.getTextureForTicksExisted(par1EntityZombie.ticksExisted);
+    @Override protected ResourceLocation func_110863_a(EntityZombie zombie) {
+        if(zombie instanceof EntityBloodZombie){
+            return this.getTextureForTicksExisted(zombie.ticksExisted);
         }
-        if(par1EntityZombie instanceof EntityZombieImposter){
+        if(zombie instanceof EntityZombieImposter){
             return imposterZombieTexture;
         }
-        return NMUtils.getIsMobEclipsed(par1EntityZombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
+        if(zombie instanceof FlowerZombie){
+            return flowerZombieTextures;
+        }
+        return NMUtils.getIsMobEclipsed(zombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
     }
 
     @Unique

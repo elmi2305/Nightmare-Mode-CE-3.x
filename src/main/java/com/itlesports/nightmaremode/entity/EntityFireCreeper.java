@@ -24,15 +24,6 @@ public class EntityFireCreeper extends EntityCreeper implements EntityWithCustom
 
     public EntityFireCreeper(World par1World) {
         super(par1World);
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAICreeperSwell(this));
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityOcelot.class, 6.0F, 1.0, 1.2));
-        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0, false));
-        this.tasks.addTask(5, new SimpleWanderBehavior(this, 0.8F));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 20f));
-        this.tasks.addTask(6, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
-        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
         NMUtils.manageEclipseChance(this,10);

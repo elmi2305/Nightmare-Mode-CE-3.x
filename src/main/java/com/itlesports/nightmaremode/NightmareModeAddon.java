@@ -13,6 +13,8 @@ import net.minecraft.src.Packet24MobSpawn;
 
 import java.util.List;
 
+import static com.itlesports.nightmaremode.util.NMFields.*;
+
 public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
 
@@ -50,7 +52,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
 
     @Environment (EnvType.CLIENT)
     private static void addPacketManagementForCustomEntities() {
-        CustomEntityPacketHandler.entryMap.put(18, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(CREEPER_FIRE, (world, dataStream, packet) -> {
             EntityFireCreeper entityToSpawn = new EntityFireCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
@@ -76,7 +78,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(19, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(CREEPER_OBSIDIAN, (world, dataStream, packet) -> {
             EntityObsidianCreeper entityToSpawn = new EntityObsidianCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
@@ -102,7 +104,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(20, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(CREEPER_SUPERCRITICAL, (world, dataStream, packet) -> {
             EntitySuperchargedCreeper entityToSpawn = new EntitySuperchargedCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
@@ -128,7 +130,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(21, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(CREEPER_DUNG, (world, dataStream, packet) -> {
             EntityDungCreeper entityToSpawn = new EntityDungCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
@@ -154,7 +156,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(22, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(CREEPER_LIGHTNING, (world, dataStream, packet) -> {
             EntityLightningCreeper entityToSpawn = new EntityLightningCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);

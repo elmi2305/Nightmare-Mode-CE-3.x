@@ -10,6 +10,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
+import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMSanityUtils;
@@ -785,6 +786,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 //            ci.cancel();
 //        }
 //    }
+
+
+    @Override
+    protected float applyArmorCalculations(DamageSource damageSource, float damageAmount) {
+        if(damageSource.getSourceOfDamage() instanceof IFlowerMob){
+            return (damageAmount / 2) + super.applyArmorCalculations(damageSource, damageAmount);
+        }
+        return super.applyArmorCalculations(damageSource, damageAmount);
+    }
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageSeaOfDeath(CallbackInfo ci){
         if(NightmareMode.bloodmare){

@@ -11,8 +11,6 @@ public class EntitySkeletonMelted extends EntitySkeleton {
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float damage) {
         if(damageSource.getSourceOfDamage() instanceof EntityLivingBase attacker && this.rand.nextBoolean()){
-
-
             attacker.setFire(1 + NMUtils.getWorldProgress() * 2 + (this.rand.nextInt(3) == 0 ? 1 : 0));
         }
         if(damageSource.isFireDamage()){return false;}

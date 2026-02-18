@@ -20,7 +20,6 @@ import java.util.Random;
 
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
-    @Unique private boolean areMobsEvolved = NightmareMode.evolvedMobs;
 
     @Shadow private int timeSinceIgnited;
     @Shadow public int fuseTime;
@@ -38,27 +37,28 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @ModifyArg(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"), index = 2)
     private float changeVariantPitch(float par2){
-        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        EntityCreeper self = (EntityCreeper)(Object)this;
 
-
-        if(thisObj instanceof EntitySuperchargedCreeper){
+        if(self instanceof EntitySuperchargedCreeper){
             return par2 + 0.8f;
-        } else if(thisObj instanceof EntityObsidianCreeper){
+        } else if(self instanceof EntityObsidianCreeper){
             return par2 - 0.4f;
-        } else if(thisObj instanceof EntityLightningCreeper){
+        } else if(self instanceof EntityLightningCreeper){
             return par2 + 0.3f;
         }
         return par2;
+        // OBSOLETED
     }
         @ModifyArg(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;playSound(Ljava/lang/String;FF)V"), index = 1)
         private float manageQuietFireCreeper(float par2){
-            EntityCreeper thisObj = (EntityCreeper)(Object)this;
+            EntityCreeper self = (EntityCreeper)(Object)this;
 
 
-            if(thisObj instanceof EntityFireCreeper) {
+            if(self instanceof EntityFireCreeper) {
                 return 0;
             }
             return par2;
+            // OBSOLETED
         }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
@@ -143,6 +143,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung), amount / 4,this.rand);
             }
         }
+
+        // OBSOLETED
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
@@ -168,22 +170,12 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){
-        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
-        if(!isHostile){return constant;}
-        int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
-        int i = NMUtils.getWorldProgress();
-
-        return switch (i) {
-            case 0 ->  36 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 6b   10.4b
-            case 1 ->  81 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 9b   15.57b
-            case 2, 3 -> 121 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 11b  19.03b
-            default -> constant;
-        };
+        return getCreeperBreachRange(constant);
     }
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){
-        if(this.getDataWatcher().getWatchableObjectByte(17) == 1) {
+        if(isCharged()) {
             this.dropItem(Item.ghastTear.itemID, 1);
             if (rand.nextInt(3) == 0) {
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
@@ -270,28 +262,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @ModifyConstant(method = "entityInit", constant = @Constant(intValue = 0,ordinal = 0))
     private int chanceToSpawnCharged(int constant){
-        EntityCreeper thisObj = (EntityCreeper)(Object)this;
-        int progress = NMUtils.getWorldProgress();
-        boolean isBloodMoon = NMUtils.getIsBloodMoon();
-        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
-
-        if(thisObj instanceof EntityLightningCreeper){
-            return 1;
-        }
-        if((progress > 0 || areMobsEvolved) && (thisObj.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
-            if(thisObj.rand.nextInt(10) == 0 && thisObj.dimension == 0) {
-                thisObj.setCustomNameTag("Terrence");
-            }
-            return 1;   // set to charged if conditions met
-        } else if((thisObj.dimension == -1 && !(thisObj instanceof EntityFireCreeper)) && (progress > 0 || areMobsEvolved)){
-            return 1;
-        } else if(thisObj.dimension == 1 && thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            return 1;
-        }
-        if(isBloodMoon || isEclipse){
-            return rand.nextInt(6) == 0 ? 1 : 0;
-        }
-        return 0;
+        return shouldSpawnCharged();
     }
 
     @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
@@ -316,18 +287,18 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"), remap = false)
     private boolean avoidLightningCreeperExplodingThroughWalls(Boolean instance){
-        EntityCreeper thisObj = (EntityCreeper)(Object)this;
-        if(thisObj instanceof EntityLightningCreeper) return false;
+        EntityCreeper self = (EntityCreeper)(Object)this;
+        if(self instanceof EntityLightningCreeper) return false;
         return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+        // OBSOLETED
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
     private boolean lightningCreeperAvoidsExploding(World instance){
-        EntityCreeper thisObj = (EntityCreeper)(Object)this;
+        // OBSOLETED
+        EntityCreeper c = (EntityCreeper)(Object)this;
 
-
-
-        if(!instance.isRemote && thisObj instanceof EntityLightningCreeper){
+        if(!instance.isRemote && c instanceof EntityLightningCreeper){
             EntityPlayer player;
             if(this.getAttackTarget() instanceof EntityPlayer targetPlayer){
                 player = targetPlayer;
@@ -345,7 +316,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             this.setDead();
         }
 
-        if (thisObj instanceof EntityLightningCreeper) {
+        if (c instanceof EntityLightningCreeper) {
             return true;
         }
         return instance.isRemote;
@@ -358,17 +329,17 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Override
     public boolean isSecondaryTargetForSquid() {
-        return NMUtils.getIsBloodMoon() && this.getDataWatcher().getWatchableObjectByte(17) == 0 && !this.inWater;
+        return NMUtils.getIsBloodMoon() && isCharged() && !this.inWater;
     }
 
     @Override
     public Entity getHeadCrabSharedAttackTarget() {
         return this.getAttackTarget();
     }
+
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void manageEclipseChance(World world, CallbackInfo ci){
-        NMUtils.manageEclipseChance(this,12);
-    }
+    private void manageEclipseChance(World world, CallbackInfo ci){NMUtils.manageEclipseChance(this,12);}
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setFuseTimeDependingOnVariant(World world, CallbackInfo ci){
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
@@ -380,6 +351,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         } else if (thisObj instanceof EntityLightningCreeper) {
             this.setFuseTime(90 - NMUtils.getWorldProgress() * 10);
         }
+        // OBSOLETED
     }
 
     @ModifyArg(method = "onUpdate",
@@ -387,6 +359,16 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
+        return getExplosionSize();
+    }
+
+
+
+
+    // HELPER METHODS
+
+    @Unique
+    private float getExplosionSize() {
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
         float variantExplosionModifier = thisObj instanceof EntityObsidianCreeper ? 1.5f : (thisObj instanceof EntitySuperchargedCreeper ? 1.4f : 1f);
@@ -404,18 +386,6 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
     }
-
-
-
-
-
-
-
-
-    // HELPER METHODS
-
-
-
 
     @Unique
     private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
@@ -453,5 +423,50 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 !NMUtils.getIsBloodMoon() &&
                 !NMUtils.getIsMobEclipsed(this) &&
                 !this.isPotionActive(Potion.fireResistance.id);
+    }
+    @Unique
+    private double getCreeperBreachRange(double constant) {
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+        if(!isHostile){
+            return constant;
+        }
+        int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
+        int i = NMUtils.getWorldProgress();
+
+        return switch (i) {
+            case 0 -> 36 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 6b   10.4b
+            case 1 -> 81 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 9b   15.57b
+            case 2, 3 -> 121 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 11b  19.03b
+            default -> constant;
+        };
+    }
+    @Unique
+    private boolean isCharged() {
+        return this.getDataWatcher().getWatchableObjectByte(17) == 1;
+    }
+    @Unique
+    private int shouldSpawnCharged() {
+        EntityCreeper self = (EntityCreeper)(Object)this;
+        int progress = NMUtils.getWorldProgress();
+        boolean isBloodMoon = NMUtils.getIsBloodMoon();
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+
+        if(self instanceof EntityLightningCreeper){
+            return 1;
+        }
+        if((progress > 0 || NightmareMode.evolvedMobs) && (self.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
+            if(self.rand.nextInt(10) == 0 && self.dimension == 0) {
+                self.setCustomNameTag("Terrence");
+            }
+            return 1;
+        } else if((self.dimension == -1 && !(self instanceof EntityFireCreeper)) && (progress > 0 || NightmareMode.evolvedMobs)){
+            return 1;
+        } else if(self.dimension == 1 && self.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+            return 1;
+        }
+        if(isBloodMoon || isEclipse){
+            return rand.nextInt(6) == 0 ? 1 : 0;
+        }
+        return 0;
     }
 }
