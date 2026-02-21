@@ -94,7 +94,7 @@ public class NMUtils {
         Item.potion.setMaxStackSize((int)(par1 / 2));
 
         for(Item item : Item.itemsList){
-            if(item instanceof ItemFood && ((ItemAccessor)(item)).getMaxStackSize() > 4 ){
+            if(item instanceof ItemFood && ((ItemAccessor)(item)).getMaxStackSize() > 4 ){ // anything declared less than 4 is intentional
                 item.setMaxStackSize(par1);
             }
         }
