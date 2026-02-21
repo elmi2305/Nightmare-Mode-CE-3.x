@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.creepers;
 
 import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
@@ -17,18 +17,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.CREEPER_FIRE;
+
 public class EntityCreeperVariant extends EntityMob implements EntityWithCustomPacket {
+    // this is an extension of the creeper class that has all the functionality implemented from the EntityCreeperMixin, though this corresponds to the variants
     private boolean determinedToExplode = false;
     private int lastActiveTime;
     private int timeSinceIgnited;
-    public int fuseTime = 30;
-    private int explosionRadius = 3;
-    private byte patienceCounter = (byte)100;
+    protected byte patienceCounter = (byte)100;
 
     // unique
-    protected int variantType; // must be overridden by children. this is responsible for the spawn packet, so it must match in the packet register too. corresponds to the CREEPER_[TYPE] fields in NMFields
+    public int fuseTime = 30;
+    protected int explosionRadius = 3;
+    protected float explosionMultiplier = 1; // each creeper has a multiplier that it applies to the default explosion strength of 3
+    public int variantType; // must be overridden by children. this is responsible for the spawn packet, so it must match in the packet register too. corresponds to the CREEPER_[TYPE] fields in NMFields
     protected float soundPitchModifier; // different for every creeper variant
     private boolean isValidForEventLoot; // used for every mob
+    protected boolean canLunge = true; // whether it should lunge. false for a few variants
 
     public EntityCreeperVariant(World par1World) {
         super(par1World);
@@ -44,14 +49,6 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if (par1World != null && ((Boolean)par1World.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue()) {
             this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
         }
-
-//        if (this.variantType == NMFields.CREEPER_OBSIDIAN) {
-//            this.setFuseTime(60);
-//        } else if (this.variantType == NMFields.CREEPER_SUPERCRITICAL) {
-//            this.setFuseTime(15);
-//        } else if (this.variantType == NMFields.CREEPER_LIGHTNING) {
-//            this.setFuseTime(90 - NMUtils.getWorldProgress() * 10);
-//        }
 
         NMUtils.manageEclipseChance(this,12);
     }
@@ -175,6 +172,23 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             if (this.timeSinceIgnited < 0) {
                 this.timeSinceIgnited = 0;
             }
+            if (this.canLunge) {
+                // 8 ticks before it explodes
+                if (this.timeSinceIgnited == (this.fuseTime - 8) && this.getCreeperState() == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+                    EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this,6);
+                    this.motionY = 0.38F;
+                    if(target != null) {
+                        double dx = target.posX - this.posX;
+                        double dz = target.posZ - this.posZ;
+                        Vec3 vector = Vec3.createVectorHelper(dx, 0, dz);
+                        vector.normalize();
+                        this.motionX = vector.xCoord * 0.18;
+                        this.motionZ = vector.zCoord * 0.18;
+                        this.faceEntity(target,100f,100f);
+                    }
+                }
+            }
+
             if (this.timeSinceIgnited >= this.fuseTime) {
                 this.timeSinceIgnited = this.fuseTime;
                 if (!this.worldObj.isRemote) {
@@ -202,28 +216,27 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
                     boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, this.explosionRadius * 2, var2);
+                        float baseChargedMultiplier = 2f;
+                        if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.variantType == CREEPER_FIRE){
+                            baseChargedMultiplier = 2.5f;
+                        }
+                        this.worldObj.createExplosion(this, this.posX, this.posY + (double) this.getEyeHeight(), this.posZ, this.explosionRadius * baseChargedMultiplier * explosionMultiplier, var2);
+
                     } else {
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, this.explosionRadius, var2);
+                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, this.explosionRadius * explosionMultiplier, var2);
                     }
 
                     if(NightmareMode.isAprilFools){
                         this.worldObj.spawnEntityInWorld(new EntityTNTPrimed(this.worldObj,this.posX,this.posY,this.posZ,this));
                     }
-
-                    if(this.variantType == NMFields.CREEPER_DUNG){
-                        int amount = NightmareMode.isAprilFools ? 12 : 4;
-                        for(int i = 0; i < amount; i++){
-                            spawnItemExplosion(this.worldObj,this, new ItemStack(BTWItems.dung), amount / 4,this.rand);
-                        }
-                    }
-
+                    this.onDeathEffect(); // some creepers do special things on death
                     this.setDead();
                 }
             }
         }
         super.onUpdate();
     }
+    protected void onDeathEffect(){};
     @Override
     public boolean isImmuneToHeadCrabDamage() {
         return true;
@@ -317,7 +330,29 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
             }
         }
-        // eclipse drops
+
+        this.doBloodOrbDrops(bKilledByPlayer, iLootingModifier);
+        this.doEclipseDrops(bKilledByPlayer, iLootingModifier);
+
+        if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iLootingModifier) > 0)) {
+            this.dropItem(BTWItems.creeperOysters.itemID, 1);
+        }
+    }
+    protected void doBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier) {
+        // overridden by most creepers
+        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
+        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
+            int var4 = this.rand.nextInt(3);
+            // 0 - 2
+            if (iLootingModifier > 0) {
+                var4 += this.rand.nextInt(iLootingModifier + 1);
+            }
+            for (int var5 = 0; var5 < var4; ++var5) {
+                this.dropItem(bloodOrbID, 1);
+            }
+        }
+    }
+    protected void doEclipseDrops(boolean bKilledByPlayer, int iLootingModifier) {
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
@@ -339,39 +374,21 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 this.dropItem(itemID, 1);
             }
         }
-
-        // blood orb drops
-        int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer && isValidForEventLoot) {
-            int var4 = this.rand.nextInt(3);
-            // 0 - 2
-            if (iLootingModifier > 0) {
-                var4 += this.rand.nextInt(iLootingModifier + 1);
-            }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                this.dropItem(bloodOrbID, 1);
-            }
-        }
-
-        if (this.getNeuteredState() == 0 && (this.rand.nextInt(3) == 0 || this.rand.nextInt(1 + iLootingModifier) > 0)) {
-            this.dropItem(BTWItems.creeperOysters.itemID, 1);
-        }
     }
 
     @Override
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
-        float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25f : 1;
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
-            if (!this.worldObj.isRemote && !this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+            if (!this.worldObj.isRemote && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
-                    boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                    boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 8 * bloodMoonModifier, var2);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == CREEPER_FIRE, mobGriefing);
                     } else {
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 3 * bloodMoonModifier, var2);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == CREEPER_FIRE, mobGriefing);
                     }
                     if (!NMUtils.getIsMobEclipsed(this)) {
                         this.setDead();
@@ -498,7 +515,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     private float getExplosionSize() {
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
-        float variantExplosionModifier = this.variantType == NMFields.CREEPER_OBSIDIAN ? 1.5f : (this.variantType == NMFields.CREEPER_SUPERCRITICAL ? 1.4f : 1f);
+        float variantExplosionModifier = 1f;
         float bloodmoonModifier = NMUtils.getIsBloodMoon() ? 0.25f : 0;
         float eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NMUtils.getNiteMultiplier();
@@ -514,11 +531,11 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
     }
 
-    private static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
+    protected static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
         for (int i = 0; i < amount; i++) {
-            double theta = random.nextDouble() * 2 * Math.PI; // Horizontal angle
-            double phi = random.nextDouble() * Math.PI;       // Vertical angle
-            double radius = 0.5 + random.nextDouble() * 0.5; // Sphere size (0.5 - 1 block radius)
+            double theta = random.nextDouble() * 2 * Math.PI;
+            double phi = random.nextDouble() * Math.PI;
+            double radius = 0.5 + random.nextDouble() * 0.5;
 
             double xOffset = radius * Math.sin(phi) * Math.cos(theta);
             double yOffset = radius * Math.cos(phi);
@@ -528,15 +545,12 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             double spawnY = entity.posY + yOffset;
             double spawnZ = entity.posZ + zOffset;
 
-            // Create item entity
             EntityItem itemEntity = new EntityItem(world, spawnX, spawnY, spawnZ, itemStack.copy());
 
-            // Outward momentum (normalized direction vector)
             itemEntity.motionX = xOffset * 0.5;
             itemEntity.motionY = yOffset * 0.5;
             itemEntity.motionZ = zOffset * 0.5;
 
-            // Spawn the item entity
             world.spawnEntityInWorld(itemEntity);
         }
     }
@@ -566,26 +580,22 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             default -> constant;
         };
     }
-    private boolean isCharged() {
+    public boolean isCharged() {
         return this.getDataWatcher().getWatchableObjectByte(17) == 1;
     }
-    private int shouldSpawnCharged() {
-        EntityCreeper self = (EntityCreeper)(Object)this;
+    protected int shouldSpawnCharged() {
         int progress = NMUtils.getWorldProgress();
         boolean isBloodMoon = NMUtils.getIsBloodMoon();
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-        if(self instanceof EntityLightningCreeper){
-            return 1;
-        }
-        if((progress > 0 || NightmareMode.evolvedMobs) && (self.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
-            if(self.rand.nextInt(10) == 0 && self.dimension == 0) {
-                self.setCustomNameTag("Terrence");
+        if((progress > 0 || NightmareMode.evolvedMobs) && (this.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
+            if(this.rand.nextInt(10) == 0 && this.dimension == 0) {
+                this.setCustomNameTag("Terrence");
             }
             return 1;
-        } else if((self.dimension == -1 && !(self instanceof EntityFireCreeper)) && (progress > 0 || NightmareMode.evolvedMobs)){
+        } else if((this.dimension == -1 && !(this.variantType == CREEPER_FIRE)) && (progress > 0 || NightmareMode.evolvedMobs)){
             return 1;
-        } else if(self.dimension == 1 && self.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+        } else if(this.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 1;
         }
         if(isBloodMoon || isEclipse){

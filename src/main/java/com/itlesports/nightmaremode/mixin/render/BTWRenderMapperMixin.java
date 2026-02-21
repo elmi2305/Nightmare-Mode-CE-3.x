@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
@@ -18,14 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BTWRenderMapperMixin {
     @Inject(method = "initEntityRenderers", at = @At("TAIL"),remap = false)
     private static void doNightmareEntityRenderMapping(CallbackInfo ci){
-        RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderFireCreeper());
+        RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderZombieVariant());
         RenderManager.addEntityRenderer(EntityBloodZombie.class, new RenderZombieVariant());
         RenderManager.addEntityRenderer(EntityNightmareGolem.class, new RenderNightmareGolem());
-        RenderManager.addEntityRenderer(EntityObsidianCreeper.class, new RenderObsidianCreeper());
-        RenderManager.addEntityRenderer(EntitySuperchargedCreeper.class, new RenderSupercriticalCreeper());
-        RenderManager.addEntityRenderer(EntityDungCreeper.class, new RenderDungCreeper());
-        RenderManager.addEntityRenderer(EntityLightningCreeper.class, new RenderLightningCreeper());
+        RenderManager.addEntityRenderer(EntityObsidianCreeper.class, new RenderCreeperVariant());
+        RenderManager.addEntityRenderer(EntityNitroCreeper.class, new RenderCreeperVariant());
+        RenderManager.addEntityRenderer(EntityDungCreeper.class, new RenderCreeperVariant());
+        RenderManager.addEntityRenderer(EntityLightningCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityFauxVillager.class, new RenderFauxVillager());
         RenderManager.addEntityRenderer(EntityZombieImposter.class, new RenderZombieVariant());
         RenderManager.addEntityRenderer(EntityCustomSkeleton.class, new RenderSkeleton());

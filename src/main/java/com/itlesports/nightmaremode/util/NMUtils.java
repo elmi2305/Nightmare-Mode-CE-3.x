@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.util;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.ItemAccessor;
 import net.minecraft.src.*;
 
 import java.util.*;
@@ -93,7 +94,7 @@ public class NMUtils {
         Item.potion.setMaxStackSize((int)(par1 / 2));
 
         for(Item item : Item.itemsList){
-            if(item instanceof ItemFood){
+            if(item instanceof ItemFood && ((ItemAccessor)(item)).getMaxStackSize() > 4 ){
                 item.setMaxStackSize(par1);
             }
         }

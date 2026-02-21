@@ -6,6 +6,7 @@ import net.minecraft.src.*;
 public class EntityAIBurrow extends EntityAIBase {
 
     private final EntityCreature entity;
+    private final float minDistFromPlayer; // minimum distance that it can burrow to
     private EntityPlayer targetPlayer;
     private double targetX, targetY, targetZ;
     private double targetBuriedY; // Y where it stops sinking (old location)
@@ -22,11 +23,15 @@ public class EntityAIBurrow extends EntityAIBase {
     private boolean isBurrowed = false;
     private int burrowPhase = 0; // 0 = idle, 1 = sinking, 2 = fully burrowed (invisible), 3 = rising
 
-    public EntityAIBurrow(EntityCreature entity, int burrowTicks) {
+    public EntityAIBurrow(EntityCreature entity, int burrowTicks, float minDistFromPlayer) {
         this.entity = entity;
         this.burrowTicks = burrowTicks;
+        this.minDistFromPlayer = minDistFromPlayer;
         this.cooldownTimer = 20;
         this.setMutexBits(3);
+    }
+    public EntityAIBurrow(EntityCreature entity, int burrowTicks) {
+        this(entity, burrowTicks, 0.0F);
     }
 
     @Override
@@ -146,7 +151,16 @@ public class EntityAIBurrow extends EntityAIBase {
     }
 
     private void calculateUnburrowPosition() {
-        double radius = 0.75d + this.entity.getRNG().nextDouble() * 0.25;
+        if (this.targetPlayer == null) {
+            this.targetX = this.entity.posX;
+            this.targetY = this.entity.posY;
+            this.targetZ = this.entity.posZ;
+            this.buriedTargetY = this.targetY - this.burrowDepth;
+            return;
+        }
+
+        double minRadius = Math.max(0.75D, this.minDistFromPlayer);
+        double radius = minRadius + this.entity.getRNG().nextDouble() * 0.25D;
         double angle = this.entity.getRNG().nextDouble() * 2.0D * Math.PI;
 
         this.targetX = this.targetPlayer.posX + Math.cos(angle) * radius;

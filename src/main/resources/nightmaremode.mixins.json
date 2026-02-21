@@ -29,6 +29,7 @@
     "HardcoreSpawnUtilsMixin",
     "IntegratedServerMixin",
     "InventoryPlayerMixin",
+    "ItemAccessor",
     "ItemAppleGoldMixin",
     "ItemBowMixin",
     "ItemEnderEyeMixin",

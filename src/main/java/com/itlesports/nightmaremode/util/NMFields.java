@@ -10,4 +10,5 @@ public class NMFields {
     public static int CREEPER_SUPERCRITICAL = 20;
     public static int CREEPER_DUNG = 21;
     public static int CREEPER_LIGHTNING = 22;
+    public static int CREEPER_FLOWER = 23;
 }

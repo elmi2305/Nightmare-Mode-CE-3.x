@@ -7,6 +7,10 @@ import btw.entity.mob.BTWCaveSpiderEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityBloodWitherAttackFilter;
+import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
+import com.itlesports.nightmaremode.entity.creepers.EntityLightningCreeper;
+import com.itlesports.nightmaremode.entity.creepers.EntityNitroCreeper;
+import com.itlesports.nightmaremode.entity.creepers.EntityObsidianCreeper;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -680,7 +684,7 @@ public class EntityBloodWither extends EntityWither {
         mobPoolExtreme.add(EntityBlaze.class);
         mobPoolExtreme.add(EntityPigZombie.class);
         mobPoolExtreme.add(JungleSpiderEntity.class);
-        mobPoolExtreme.add(EntitySuperchargedCreeper.class);
+        mobPoolExtreme.add(EntityNitroCreeper.class);
 
         mobPoolPool.add(mobPoolStandard);
         mobPoolPool.add(mobPoolAdvanced);

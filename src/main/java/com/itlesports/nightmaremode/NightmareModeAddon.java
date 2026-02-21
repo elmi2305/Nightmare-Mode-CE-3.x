@@ -4,7 +4,7 @@ import api.AddonHandler;
 import api.BTWAddon;
 import api.util.AddonSoundRegistryEntry;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
-import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.creepers.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -105,7 +105,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             return entityToSpawn;
         });
         CustomEntityPacketHandler.entryMap.put(CREEPER_SUPERCRITICAL, (world, dataStream, packet) -> {
-            EntitySuperchargedCreeper entityToSpawn = new EntitySuperchargedCreeper(world);
+            EntityNitroCreeper entityToSpawn = new EntityNitroCreeper(world);
             Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
             par1Packet24MobSpawn.readPacketData(dataStream);
             double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;

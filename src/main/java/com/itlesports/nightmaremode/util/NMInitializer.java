@@ -20,6 +20,7 @@ import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.items.NMPostItems;
@@ -80,7 +81,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityFireSpider.class, 1, 1, 2);
         addMobToAllBiomes(EntityStoneZombie.class, 1, 1, 2);
         addMobToAllBiomes(EntityObsidianCreeper.class, 3, 1, 1);
-        addMobToAllBiomes(EntitySuperchargedCreeper.class, 1, 1, 2);
+        addMobToAllBiomes(EntityNitroCreeper.class, 1, 1, 2);
         addMobToAllBiomes(EntityBlackWidowSpider.class, 2, 1, 2);
         addMobToAllBiomes(EntityRadioactiveEnderman.class, 1, 1, 1);
         addMobToAllBiomes(EntityDungCreeper.class, 3, 1, 1);

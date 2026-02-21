@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.util;
 import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.entity.*;
+import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.TileEntity;
@@ -18,7 +19,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityFireSpider.class, "NmFireSpider", 2307, 12874496, 10232320);
         EntityList.addMapping(EntityStoneZombie.class, "NmStoneZombie", 2308, 11119017, 0);
         EntityList.addMapping(EntityObsidianCreeper.class, "NmObsidianCreeper", 2309, 0x453E7D, 0);
-        EntityList.addMapping(EntitySuperchargedCreeper.class, "NmSupercriticalCreeper", 2310, 16721408, 3148800);
+        EntityList.addMapping(EntityNitroCreeper.class, "NmSupercriticalCreeper", 2310, 16721408, 3148800);
         EntityList.addMapping(EntityBlackWidowSpider.class, "NmBlackWidowSpider", 2311, 0, 12189696);
         EntityList.addMapping(EntityRadioactiveEnderman.class, "NmRadioactiveEnderman", 2312, 0x0, 0x1dbd15);
         EntityList.addMapping(EntityDungCreeper.class, "NmDungCreeper", 2313, 0xC4AE84, 0x0);
