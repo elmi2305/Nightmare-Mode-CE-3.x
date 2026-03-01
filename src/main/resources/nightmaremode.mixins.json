@@ -209,6 +209,7 @@
     "GameSettingsMixin",
     "MinecraftMixin",
     "MixinNetClientHandler",
+    "NetClientHandlerExt",
     "SaveFormatComparatorMixin",
     "WorldClientMixin",
     "blocks.MillstoneBlockMixin",

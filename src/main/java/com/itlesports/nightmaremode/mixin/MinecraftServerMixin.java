@@ -60,39 +60,54 @@ public abstract class MinecraftServerMixin {
     private void nmOnServerTick(CallbackInfo ci) {
         TeleportScheduler.onServerTick();
 
-        if (this.worldServers[0].getTotalWorldTime() % 30 != 0) return;
-        long worldTime = this.worldServers[0].getWorldTime();
+        WorldServer world = this.worldServers[0];
 
-        for (Object o : this.worldServers[0].playerEntities) {
+        if (world.getTotalWorldTime() % 30 != 0) return;
+
+        long worldTime = world.getWorldTime();
+
+        for (Object o : world.playerEntities) {
             EntityPlayer player = (EntityPlayer)o;
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeEvent.class, player, this.worldServers[0].getWorldTime());
+            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeEvent.class, player, world.getWorldTime());
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeItemEvent.class, player, new NMAchievementEvents.TimeItemEvent.Context(player, worldTime));
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MiscPlayerEvent.class, player, player);
         }
-        
-        int dayCount = (int) Math.ceil((double) this.worldServers[0].getWorldTime() / 24000) + this.isDawnOrDusk(this.worldServers[0].getWorldTime());
-        if (!NightmareMode.bloodmare) {
-            NightmareMode.setBloodmoon(this.getIsBloodMoon(this.worldServers[0], dayCount));
-        } else {
-            NightmareMode.setBloodmoon(this.getIsNightFromWorldTime(this.worldServers[0]));
-        }
-        if (!NightmareMode.totalEclipse) {
-            NightmareMode.setEclipse(this.getIsEclipse(this.worldServers[0], dayCount));
-        } else{
-            NightmareMode.setEclipse(!this.getIsNightFromWorldTime(this.worldServers[0]));
-        }
+
+        int dayCount = (int) Math.ceil((double) worldTime / 24000) + this.isDawnOrDusk(worldTime);
+
+
+        boolean isNight = this.getIsNightFromWorldTime(world);
+
+        // blood moon
+        NightmareMode.setBloodmoon(
+                !NightmareMode.bloodmare
+                        ? this.getIsBloodMoon(world, dayCount)
+                        : isNight
+        );
+
+        // eclipse
+        NightmareMode.setEclipse(
+                !NightmareMode.totalEclipse
+                        ? this.getIsEclipse(world, dayCount)
+                        : !isNight
+        );
+
         boolean shouldChangeBloodMoon = NightmareMode.isBloodMoon != oldBloodMoon;
-        boolean shouldChangeEclipse = NightmareMode.isEclipse != oldEclipse;
+        boolean shouldChangeEclipse   = NightmareMode.isEclipse   != oldEclipse;
+
         if (shouldChangeBloodMoon || shouldChangeEclipse) {
-            for (Object o : this.worldServers[0].playerEntities) {
-                EntityPlayer player = (EntityPlayer)o;
+            for (Object o : world.playerEntities) {
+                EntityPlayer player = (EntityPlayer) o;
+
                 if (shouldChangeBloodMoon) {
                     AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BloodMoonEvent.class, player, NightmareMode.isBloodMoon);
                 }
+
                 if (shouldChangeEclipse) {
                     AchievementEventDispatcher.triggerEvent(NMAchievementEvents.EclipseEvent.class, player, NightmareMode.isEclipse);
                 }
             }
+
             NightmareMode.sendBloodmoonEclipseToAllPlayers();
         }
 
@@ -105,9 +120,11 @@ public abstract class MinecraftServerMixin {
         } else {
             NightmareMode.worldState = 0;
         }
+
         NightmareMode.sendWorldStateToAllPlayers();
+
         oldBloodMoon = NightmareMode.isBloodMoon;
-        oldEclipse = NightmareMode.isEclipse;
+        oldEclipse   = NightmareMode.isEclipse;
     }
     @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
     private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){

@@ -1,8 +1,9 @@
 package com.itlesports.nightmaremode.util;
+
 import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
-import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
+import com.itlesports.nightmaremode.entity.underworld.*;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.TileEntity;
 
@@ -27,12 +28,18 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityBloodZombie.class, "NmBloodZombie", 2315, 0xFF1021, 0xffffff);
         EntityList.addMapping(EntityFauxVillager.class, "NmFauxVillager", 2316, 0x4287f5, 0xdded2d);
         EntityList.addMapping(EntityZombieImposter.class, "NmImposterZombie", 2317);
-        EntityList.addMapping(EntityCustomSkeleton.class, "NmBloodMoonSkeleton", 2318);
+        EntityList.addMapping(EntityBloodMoonSkeleton.class, "NmBloodMoonSkeleton", 2318);
         EntityList.addMapping(EntitySkeletonDrowned.class, "NmDrownedSkeleton", 2319);
         EntityList.addMapping(EntitySkeletonMelted.class, "NmMeltedSkeleton", 2320);
         EntityList.addMapping(EntityObsidianFish.class, "NmObsidianFish", 2321);
         EntityList.addMapping(EntityCreeperGhast.class, "NmCreeperGhast", 2322, 0xd5e2f7, 0x3bb507);
         EntityList.addMapping(FlowerZombie.class, "NmFlowerZombie", 2323, 0x00FF00, 0x0000FF);
+        EntityList.addMapping(EntityPollenCloud.class, "NmPollenCloud", 2324, 0x00FFFF, 0xFF00FF);
+        EntityList.addMapping(FlowerCreeper.class, "NmFlowerCreeper", 2325, 0x00FF00, 0x0000FF);
+        EntityList.addMapping(FlowerSkeleton.class, "NmFlowerSkeleton", 2326, 0x00FF00, 0x0000FF);
+
+        EntityList.addMapping(EntitySporeArrow.class, "NmSporeArrow", 2327);
+        EntityList.addMapping(EntityMagicArrow.class, "NmMagicArrow", 2328);
     }
 
     public static void createTileEntityMappings(){

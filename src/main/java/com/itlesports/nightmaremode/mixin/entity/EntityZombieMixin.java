@@ -51,19 +51,26 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Unique public void onKilledBySun() {
         if (!this.worldObj.isRemote) {
-            double nite = NMUtils.getNiteMultiplier();
+            final int SKULL_SLOT = 4;
 
-            float witherSkeletonChanceModifier = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0f : (float) (0.2f * nite);
+            double niteMultiplier = NMUtils.getNiteMultiplier();
+            float witherSkeletonChanceModifier = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)
+                    ? 0f
+                    : (float) (0.2f * niteMultiplier);
+
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            int progress = NMUtils.getWorldProgress();
 
-            if (this.rand.nextInt((this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 2 : 6)) < 2 - nite) {
-                // 100% on hostile, 33% on relaxed
-                int progress = NMUtils.getWorldProgress();
-
+            if (this.rand.nextInt((this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)
+                    ? 2
+                    : 6)) < 2 - niteMultiplier) {
                 EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
                 skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * nite, skeleton.getMaxHealth() * nite));
+                int health = (int) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * niteMultiplier,
+                        skeleton.getMaxHealth() * niteMultiplier);
+                skeleton.setHealth((float) health);
 
+                // Set equipment drop chance to -1f to prevent dropping items
                 for (int i = 0; i < 5; i++) {
                     skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
                     skeleton.setEquipmentDropChance(i, -1f);
@@ -74,24 +81,32 @@ public abstract class EntityZombieMixin extends EntityMob{
                     skeleton.setAttackTarget(this.getAttackTarget());
                     skeleton.entityToAttack = this.getEntityToAttack();
                 }
-                if (skeleton.getCurrentItemOrArmor(0) == null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-                    if (rand.nextInt(Math.max((int) (25 / nite), 1)) == 0) {
+
+                // Set random equipment
+                if (skeleton.getCurrentItemOrArmor(SKULL_SLOT) == null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+                    if (rand.nextInt(Math.max((int) (25 / niteMultiplier), 1)) == 0) {
                         skeleton.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                     }
                 }
-                if (skeleton.getCurrentItemOrArmor(4) == null){
-                    if (rand.nextInt(Math.max((int) (10 / nite), 1)) == 0) {
-                        ItemStack var2 = new ItemStack(Item.skull,1,2);
-                        skeleton.setCurrentItemOrArmor(4,var2);
+
+                // Set random skull equipment
+                if (skeleton.getCurrentItemOrArmor(SKULL_SLOT) == null) {
+                    if (rand.nextInt(Math.max((int) (10 / niteMultiplier), 1)) == 0) {
+                        ItemStack var2 = new ItemStack(Item.skull, 1, 2);
+                        skeleton.setCurrentItemOrArmor(SKULL_SLOT, var2);
                     }
                 }
-                if((progress >= 1 || areMobsEvolved) && this.rand.nextFloat() <= (0.3 - witherSkeletonChanceModifier)){
+
+                // Set skeleton type based on progress and areMobsEvolved
+                if (progress >= 1 || areMobsEvolved && rand.nextFloat() <= (0.3 - witherSkeletonChanceModifier)) {
                     skeleton.setSkeletonType(1);
                 }
 
-                if(isEclipse){
+                // Set random skeleton type for eclipse
+                if (isEclipse) {
                     skeleton.setSkeletonType(this.rand.nextInt(5));
                 }
+
                 this.worldObj.spawnEntityInWorld(skeleton);
                 this.setDead();
             }

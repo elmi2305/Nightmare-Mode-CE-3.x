@@ -11,7 +11,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
 
     public EntityFireCreeper(World w) {
         super(w);
-        this.variantType = NMFields.CREEPER_FIRE;
+        this.variantType = NMFields.PACKET_CREEPER_FIRE;
         this.soundPitchModifier = 0.2f;
         this.fuseTime = 25;
     }

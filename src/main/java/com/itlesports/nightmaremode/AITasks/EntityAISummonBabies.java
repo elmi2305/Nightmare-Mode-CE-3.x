@@ -39,7 +39,7 @@ public class EntityAISummonBabies extends EntityAIBase {
             return false;
         }
 
-        EntityPlayer player = this.entity.worldObj.getClosestPlayerToEntity(this.entity, 20.0D);
+        EntityPlayer player = this.entity.worldObj.getClosestVulnerablePlayerToEntity(this.entity, 20.0D);
         if (player != null && this.entity.getDistanceSqToEntity(player) <= 36) {
             this.targetPlayer = player;
 //            System.out.println("DEBUG: EntityAISummonBabies - Player 8-20 blocks away, starting summons for " + this.entity.getEntityName());

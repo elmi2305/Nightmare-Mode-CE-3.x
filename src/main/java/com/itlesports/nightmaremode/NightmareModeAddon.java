@@ -5,6 +5,9 @@ import api.BTWAddon;
 import api.util.AddonSoundRegistryEntry;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
 import com.itlesports.nightmaremode.entity.creepers.*;
+import com.itlesports.nightmaremode.entity.underworld.EntityPollenCloud;
+import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
+import com.itlesports.nightmaremode.entity.underworld.FlowerCreeper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -52,25 +55,25 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
 
     @Environment (EnvType.CLIENT)
     private static void addPacketManagementForCustomEntities() {
-        CustomEntityPacketHandler.entryMap.put(CREEPER_FIRE, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_FIRE, (world, dataStream, packet) -> {
             EntityFireCreeper entityToSpawn = new EntityFireCreeper(world);
-            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
-            par1Packet24MobSpawn.readPacketData(dataStream);
-            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
-            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
-            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
-            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
-            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
-            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
-            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
-            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
-            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
-            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
             entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
-            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
-            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
-            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
-            List var14 = par1Packet24MobSpawn.getMetadata();
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
             if (var14 != null) {
                 entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
             }
@@ -78,25 +81,25 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(CREEPER_OBSIDIAN, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_OBSIDIAN, (world, dataStream, packet) -> {
             EntityObsidianCreeper entityToSpawn = new EntityObsidianCreeper(world);
-            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
-            par1Packet24MobSpawn.readPacketData(dataStream);
-            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
-            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
-            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
-            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
-            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
-            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
-            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
-            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
-            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
-            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
             entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
-            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
-            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
-            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
-            List var14 = par1Packet24MobSpawn.getMetadata();
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
             if (var14 != null) {
                 entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
             }
@@ -104,25 +107,25 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(CREEPER_SUPERCRITICAL, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_SUPERCRITICAL, (world, dataStream, packet) -> {
             EntityNitroCreeper entityToSpawn = new EntityNitroCreeper(world);
-            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
-            par1Packet24MobSpawn.readPacketData(dataStream);
-            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
-            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
-            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
-            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
-            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
-            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
-            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
-            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
-            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
-            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
             entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
-            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
-            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
-            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
-            List var14 = par1Packet24MobSpawn.getMetadata();
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
             if (var14 != null) {
                 entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
             }
@@ -130,25 +133,25 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(CREEPER_DUNG, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_DUNG, (world, dataStream, packet) -> {
             EntityDungCreeper entityToSpawn = new EntityDungCreeper(world);
-            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
-            par1Packet24MobSpawn.readPacketData(dataStream);
-            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
-            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
-            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
-            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
-            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
-            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
-            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
-            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
-            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
-            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
             entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
-            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
-            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
-            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
-            List var14 = par1Packet24MobSpawn.getMetadata();
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
             if (var14 != null) {
                 entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
             }
@@ -156,30 +159,81 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
-        CustomEntityPacketHandler.entryMap.put(CREEPER_LIGHTNING, (world, dataStream, packet) -> {
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_LIGHTNING, (world, dataStream, packet) -> {
             EntityLightningCreeper entityToSpawn = new EntityLightningCreeper(world);
-            Packet24MobSpawn par1Packet24MobSpawn = new Packet24MobSpawn();
-            par1Packet24MobSpawn.readPacketData(dataStream);
-            double var2 = (double) par1Packet24MobSpawn.xPosition / 32.0;
-            double var4 = (double) par1Packet24MobSpawn.yPosition / 32.0;
-            double var6 = (double) par1Packet24MobSpawn.zPosition / 32.0;
-            float var8 = (float) (par1Packet24MobSpawn.yaw * 360) / 256.0f;
-            float var9 = (float) (par1Packet24MobSpawn.pitch * 360) / 256.0f;
-            entityToSpawn.serverPosX = par1Packet24MobSpawn.xPosition;
-            entityToSpawn.serverPosY = par1Packet24MobSpawn.yPosition;
-            entityToSpawn.serverPosZ = par1Packet24MobSpawn.zPosition;
-            entityToSpawn.rotationYawHead = (float) (par1Packet24MobSpawn.headYaw * 360) / 256.0f;
-            entityToSpawn.entityId = par1Packet24MobSpawn.entityId;
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
             entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
-            entityToSpawn.motionX = (float) par1Packet24MobSpawn.velocityX / 8000.0f;
-            entityToSpawn.motionY = (float) par1Packet24MobSpawn.velocityY / 8000.0f;
-            entityToSpawn.motionZ = (float) par1Packet24MobSpawn.velocityZ / 8000.0f;
-            List var14 = par1Packet24MobSpawn.getMetadata();
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
             if (var14 != null) {
                 entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
             }
             int timeSinceIgnited = dataStream.readInt();
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
+            return entityToSpawn;
+        });
+
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_FLOWER, (world, dataStream, packet) -> {
+            FlowerCreeper entityToSpawn = new FlowerCreeper(world);
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
+            entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
+            if (var14 != null) {
+                entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
+            }
+            int timeSinceIgnited = dataStream.readInt();
+            entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
+            return entityToSpawn;
+        });
+        CustomEntityPacketHandler.entryMap.put(PACKET_SPORE, (world, dataStream, packet) -> {
+            double radius = dataStream.readDouble();
+            EntityPollenCloud entityToSpawn = new EntityPollenCloud(world, radius);
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
+            entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
+            if (var14 != null) {
+                entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
+            }
             return entityToSpawn;
         });
     }

@@ -7,7 +7,7 @@ import net.minecraft.src.*;
 public class EntityLightningCreeper extends EntityCreeperVariant{
     public EntityLightningCreeper(World par1World) {
         super(par1World);
-        this.variantType = NMFields.CREEPER_LIGHTNING;
+        this.variantType = NMFields.PACKET_CREEPER_LIGHTNING;
         this.soundPitchModifier = 0.3f;
         this.fuseTime = 90 - NMUtils.getWorldProgress() * 10;
         this.canLunge = false;

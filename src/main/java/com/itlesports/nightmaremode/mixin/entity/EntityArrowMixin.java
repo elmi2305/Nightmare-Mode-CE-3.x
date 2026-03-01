@@ -1,24 +1,16 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
-import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
-import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
-import com.itlesports.nightmaremode.entity.EntityMagicArrow;
-import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(EntityArrow.class)
 public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
@@ -33,6 +25,7 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
         if(instance instanceof InfiniteArrowEntity) return;
         instance.playSound(s,v,b);
     }
+
 
     @Inject(method = "onUpdate",
             at = @At(value = "FIELD",

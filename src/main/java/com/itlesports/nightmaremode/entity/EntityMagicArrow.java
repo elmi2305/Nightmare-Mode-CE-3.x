@@ -1,8 +1,10 @@
 package com.itlesports.nightmaremode.entity;
 
 import api.achievement.AchievementEventDispatcher;
+import api.entity.EntityWithCustomPacket;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
+import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
 import net.minecraft.src.*;
@@ -10,7 +12,9 @@ import net.minecraft.src.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityMagicArrow extends EntityArrow {
+import static com.itlesports.nightmaremode.util.NMFields.VEHICLE_MAGIC;
+
+public class EntityMagicArrow extends EntityArrow implements EntityWithCustomPacket {
     private float damageDone = 0;
     private final List<EntityLivingBase> entitiesHit = new ArrayList<>();
 
@@ -22,6 +26,13 @@ public class EntityMagicArrow extends EntityArrow {
     public EntityMagicArrow(World world, EntityLivingBase entityLiving, float f) {
         super(world, entityLiving, f);
     }
+    public EntityMagicArrow(World par1World, double par2, double par4, double par6) {
+        super(par1World);
+        this.renderDistanceWeight = 10.0;
+        this.setSize(0.5f, 0.5f);
+        this.setPosition(par2, par4, par6);
+        this.yOffset = 0.0f;
+    }
 
     public Item getCorrespondingItem() {
         return NMItems.magicArrow;
@@ -30,6 +41,7 @@ public class EntityMagicArrow extends EntityArrow {
     @Override
     public void onUpdate() {
         super.onEntityUpdate();
+
 
         initializeRotationIfNeeded();
         updateGroundState();
@@ -510,5 +522,34 @@ public class EntityMagicArrow extends EntityArrow {
             this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
             this.ticksInGround = 0;
         }
+    }
+
+    @Override
+    public Packet getSpawnPacketForThisEntity() {
+        return new Packet23VehicleSpawn(this, getVehicleSpawnPacketType(), this.shootingEntity == null ? this.entityId : this.shootingEntity.entityId);
+    }
+
+    @Override
+    public int getTrackerViewDistance() {
+        return 64;
+    }
+
+    @Override
+    public int getTrackerUpdateFrequency() {
+        return 20;
+    }
+
+    @Override
+    public boolean getTrackMotion() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldServerTreatAsOversized() {
+        return false;
+    }
+
+    public static int getVehicleSpawnPacketType() {
+        return VEHICLE_MAGIC;
     }
 }

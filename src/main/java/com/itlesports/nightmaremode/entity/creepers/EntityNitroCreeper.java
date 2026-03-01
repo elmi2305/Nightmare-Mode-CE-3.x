@@ -6,7 +6,7 @@ import net.minecraft.src.World;
 public class EntityNitroCreeper extends EntityCreeperVariant {
     public EntityNitroCreeper(World par1World) {
         super(par1World);
-        this.variantType = NMFields.CREEPER_SUPERCRITICAL;
+        this.variantType = NMFields.PACKET_CREEPER_SUPERCRITICAL;
         this.soundPitchModifier = 0.8f;
         this.fuseTime = 15;
         this.explosionMultiplier = 1.4f;

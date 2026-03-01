@@ -10,7 +10,7 @@ import net.minecraft.src.*;
 public class EntityObsidianCreeper extends EntityCreeperVariant{
     public EntityObsidianCreeper(World par1World) {
         super(par1World);
-        this.variantType = NMFields.CREEPER_OBSIDIAN;
+        this.variantType = NMFields.PACKET_CREEPER_OBSIDIAN;
         this.soundPitchModifier = -0.4f;
         this.fuseTime = 50;
         this.explosionMultiplier = 1.5f;

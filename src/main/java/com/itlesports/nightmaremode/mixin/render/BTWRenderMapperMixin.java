@@ -6,6 +6,9 @@ import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
+import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
+import com.itlesports.nightmaremode.entity.underworld.FlowerCreeper;
+import com.itlesports.nightmaremode.entity.underworld.FlowerSkeleton;
 import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
@@ -29,13 +32,17 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityLightningCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityFauxVillager.class, new RenderFauxVillager());
         RenderManager.addEntityRenderer(EntityZombieImposter.class, new RenderZombieVariant());
-        RenderManager.addEntityRenderer(EntityCustomSkeleton.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityBloodMoonSkeleton.class, new RenderSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonDrowned.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
         RenderManager.addEntityRenderer(EntityPhantomZombie.class, new RenderPhantom());
         RenderManager.addEntityRenderer(EntityCreeperGhast.class, new RenderGhast());
         RenderManager.addEntityRenderer(FlowerZombie.class, new RenderZombieVariant());
+        RenderManager.addEntityRenderer(FlowerCreeper.class, new RenderCreeperVariant());
+        RenderManager.addEntityRenderer(FlowerSkeleton.class, new RenderCustomSkeleton());
+        RenderManager.addEntityRenderer(EntityMagicArrow.class, new RenderCustomArrow());
+        RenderManager.addEntityRenderer(EntitySporeArrow.class, new RenderCustomArrow());
 
 
 

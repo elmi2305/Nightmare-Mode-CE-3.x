@@ -45,22 +45,21 @@ public abstract class WorldMixin {
     }
 
     @Unique private static Vec3 getRainbowFogColorFromWorldTime(long worldTime) {
-        float fogHue = (worldTime % 24000) / 24000.0f; // Normalize worldTime to range [0, 1] over a full Minecraft day
+        float fogHue = (worldTime % 24000) / 24000.0f;
 
-        // Convert HSB to RGB
+        // convert HSB to RGB
         Color color = Color.getHSBColor(fogHue, 1.0f, 1.0f);
 
-        // Normalize RGB values (0-255) to Minecraft's 0-1 range
         return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
     }
 
     @Unique private static Vec3 getRainbowSkyColorFromWorldTime(long worldTime) {
-        float fogHue = (worldTime % 24000) / 24000.0f; // Normalize worldTime to range [0, 1] over a full Minecraft day
+        float fogHue = (worldTime % 24000) / 24000.0f;
 
-        // Convert HSB to RGB
+        // convert HSB to RGB
         Color color = Color.getHSBColor(fogHue, 1.0f, 1.0f);
 
-        // Normalize RGB values (0-255) to Minecraft's 0-1 range
+        // normalize RGB values (0-255) to 0-1 range
         return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
     }
 
@@ -84,21 +83,21 @@ public abstract class WorldMixin {
                 double y = color.yCoord;
                 double z = color.zCoord;
 
-                // Target ratio
+                // target ratio
                 double rx = 0.50196;
                 double ry = 0.06359;
                 double rz = 0.03591;
 
-                // Normalize the ratio
+                // normalize the ratio
                 double ratioMagnitude = Math.sqrt(rx * rx + ry * ry + rz * rz);
                 double normX = rx / ratioMagnitude;
                 double normY = ry / ratioMagnitude;
                 double normZ = rz / ratioMagnitude;
 
-                // Compute the magnitude of the original vector
+                // compute the magnitude of the original vector
                 double vMagnitude = Math.sqrt(x * x + y * y + z * z);
 
-                // Scale the normalized ratio to match the original vector's magnitude
+                // scale the normalized ratio to match the original vector's magnitude
                 double newX = normX * vMagnitude;
                 double newY = normY * vMagnitude;
                 double newZ = normZ * vMagnitude;
@@ -114,22 +113,19 @@ public abstract class WorldMixin {
 
     @Inject(method = "isBoundingBoxBurning", at = @At("RETURN"),cancellable = true)
     private void manageBurningItemImmunity(Entity entity, CallbackInfoReturnable<Boolean> cir){
-        if(entity instanceof EntityItem item
-                && (
-                Objects.equals(item.getEntityItem().itemID, Item.magmaCream.itemID)
-                        || Objects.equals(item.getEntityItem().itemID, Item.blazeRod.itemID)
-                        || Objects.equals(item.getEntityItem().itemID, NMItems.bloodOrb.itemID)
-        )
-        ){
-            cir.setReturnValue(false);
+        if(entity instanceof EntityItem item) {
+            int itemID = item.getEntityItem().itemID;
+            if (itemID == Item.magmaCream.itemID || itemID == Item.blazeRod.itemID || itemID == NMItems.bloodOrb.itemID) {
+                cir.setReturnValue(false);
+            }
         }
     }
 
 
     @Inject(method = "handleMaterialAcceleration", at = @At("HEAD"),cancellable = true)
-    private void manageSquidNoGravityWater(AxisAlignedBB par1AxisAlignedBB, Material par2Material, Entity par3Entity, CallbackInfoReturnable<Boolean> cir){
-        if(par3Entity instanceof BTWSquidEntity && (NMUtils.getIsMobEclipsed((BTWSquidEntity) par3Entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
-            par3Entity.inWater = true;
+    private void manageSquidNoGravityWater(AxisAlignedBB par1AxisAlignedBB, Material par2Material, Entity entity, CallbackInfoReturnable<Boolean> cir){
+        if(entity instanceof BTWSquidEntity && (NMUtils.getIsMobEclipsed((BTWSquidEntity) entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
+            entity.inWater = true;
             cir.setReturnValue(true);
         }
     }

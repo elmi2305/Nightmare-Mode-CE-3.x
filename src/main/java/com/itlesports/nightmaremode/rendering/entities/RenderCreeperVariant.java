@@ -27,6 +27,8 @@ public class RenderCreeperVariant extends RenderLiving {
 
     private static final ResourceLocation OBSIDIAN_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmObsidianCreeper.png");
 
+    private static final ResourceLocation FLOWER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmFlowerCreeper.png");
+
 
     private ModelBase creeperModel = new ModelCreeper(2.0f);
 
@@ -104,7 +106,7 @@ public class RenderCreeperVariant extends RenderLiving {
     }
 
     protected ResourceLocation getCreeperTextures(EntityCreeperVariant entity) {
-        if(entity.variantType == CREEPER_FIRE){
+        if(entity.variantType == PACKET_CREEPER_FIRE){
             if(NMUtils.getIsMobEclipsed(entity)){
                 return FIRE_CREEPER_TEXTURE_ECLIPSE;
             } else if(entity.isCharged()){
@@ -112,17 +114,20 @@ public class RenderCreeperVariant extends RenderLiving {
             }
             return FIRE_CREEPER_TEXTURE;
         }
-        else if(entity.variantType == CREEPER_DUNG){
+        else if(entity.variantType == PACKET_CREEPER_DUNG){
             return DUNG_CREEPER_TEXTURE;
         }
-        else if(entity.variantType == CREEPER_LIGHTNING){
+        else if(entity.variantType == PACKET_CREEPER_LIGHTNING){
             return LIGHTNING_CREEPER_TEXTURE;
         }
-        else if(entity.variantType == CREEPER_OBSIDIAN){
+        else if(entity.variantType == PACKET_CREEPER_OBSIDIAN){
             return OBSIDIAN_CREEPER_TEXTURE;
         }
-        else if(entity.variantType == CREEPER_SUPERCRITICAL){
+        else if(entity.variantType == PACKET_CREEPER_SUPERCRITICAL){
             return SUPER_CREEPER_TEXTURE;
+        }
+        else if(entity.variantType == PACKET_CREEPER_FLOWER){
+            return FLOWER_CREEPER_TEXTURE;
         }
         return creeperTextures;
     }

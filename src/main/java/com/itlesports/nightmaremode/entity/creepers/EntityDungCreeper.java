@@ -10,7 +10,7 @@ import net.minecraft.src.World;
 public class EntityDungCreeper extends EntityCreeperVariant{
     public EntityDungCreeper(World par1World) {
         super(par1World);
-        this.variantType = NMFields.CREEPER_DUNG;
+        this.variantType = NMFields.PACKET_CREEPER_DUNG;
     }
 
     @Override

@@ -37,7 +37,7 @@ public class EntityAICreeperVariantSwell extends EntityAIBase {
         }
         EntityLivingBase var1 = this.swellingCreeper.getAttackTarget();
         int range = 9;
-        if(this.swellingCreeper.variantType == NMFields.CREEPER_LIGHTNING){
+        if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_LIGHTNING){
             range = 5;
         }
         return this.swellingCreeper.getCreeperState() > 0 || var1 != null && this.swellingCreeper.getDistanceSqToEntity(var1) < range;
@@ -46,10 +46,10 @@ public class EntityAICreeperVariantSwell extends EntityAIBase {
     @Override
     public void updateTask() {
         double retentionDistance = 36.0;
-        if(this.swellingCreeper.variantType == NMFields.CREEPER_OBSIDIAN){
+        if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_OBSIDIAN){
             retentionDistance = 81;
         }
-        if(this.swellingCreeper.variantType == NMFields.CREEPER_LIGHTNING){
+        if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_LIGHTNING){
             retentionDistance = 4096;
         }
 

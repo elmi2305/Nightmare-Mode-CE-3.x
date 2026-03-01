@@ -4,10 +4,11 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
-public class EntityCustomSkeleton extends EntitySkeleton {
+public class EntityBloodMoonSkeleton extends EntitySkeleton {
 
-    public EntityCustomSkeleton(World par1World) {
+    public EntityBloodMoonSkeleton(World par1World) {
         super(par1World);
+        // this skeleton is just used for the blood moon of the nether
         if (this.dimension == -1 && NMUtils.getIsBloodMoon()) {
             int skeletonType = this.rand.nextInt(4) == 0 ? NightmareMode.SKELETON_FIRE : 1;
             this.setSkeletonType(skeletonType);

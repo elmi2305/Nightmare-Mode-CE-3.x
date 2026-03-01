@@ -10,52 +10,52 @@ import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.Unique;
 
 public class RenderZombieVariant extends RenderZombie {
-    private static final ResourceLocation bloodZombieTexture0 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame00.png");
-    private static final ResourceLocation bloodZombieTexture1 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame11.png");
-    private static final ResourceLocation bloodZombieTexture2 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame22.png");
-    private static final ResourceLocation bloodZombieTexture3 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame33.png");
-    private static final ResourceLocation bloodZombieTexture4 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame44.png");
+    private static final ResourceLocation bz0 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame00.png");
+    private static final ResourceLocation bz1 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame11.png");
+    private static final ResourceLocation bz2 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame22.png");
+    private static final ResourceLocation bz3 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame33.png");
+    private static final ResourceLocation bz4 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame44.png");
 
 
-    private static final ResourceLocation imposterZombieTexture = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
+    private static final ResourceLocation izTextures = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
 
-    private static final ResourceLocation flowerZombieTextures = new ResourceLocation("nightmare:textures/entity/flowerZombie.png");
+    private static final ResourceLocation fzTextures = new ResourceLocation("nightmare:textures/entity/flowerZombie.png");
 
 
 
-    private static final ResourceLocation shadowZombieTextures = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
-    private static final ResourceLocation shadowZombieTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
+    private static final ResourceLocation szTextures = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
+    private static final ResourceLocation szTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
 
     @Override protected ResourceLocation func_110863_a(EntityZombie zombie) {
         if(zombie instanceof EntityBloodZombie){
             return this.getTextureForTicksExisted(zombie.ticksExisted);
         }
         if(zombie instanceof EntityZombieImposter){
-            return imposterZombieTexture;
+            return izTextures;
         }
         if(zombie instanceof FlowerZombie){
-            return flowerZombieTextures;
+            return fzTextures;
         }
-        return NMUtils.getIsMobEclipsed(zombie) ? shadowZombieTexturesEclipse : shadowZombieTextures;
+        return NMUtils.getIsMobEclipsed(zombie) ? szTexturesEclipse : szTextures;
     }
 
     @Unique
     private ResourceLocation getTextureForTicksExisted(int ticks){
         int ticksMod100 = ticks % 100;
         if(ticksMod100 < 88){
-            return bloodZombieTexture0;
+            return bz0;
         }
         else if(ticksMod100 < 91){
-            return bloodZombieTexture1;
+            return bz1;
         }
         else if(ticksMod100 < 94){
-            return bloodZombieTexture2;
+            return bz2;
         }
         else if(ticksMod100 < 97){
-            return bloodZombieTexture3;
+            return bz3;
         }
         else {
-            return bloodZombieTexture4;
+            return bz4;
         }
     }
 }

@@ -41,7 +41,7 @@ public class EntityAIBurrow extends EntityAIBase {
             return false;
         }
 
-        EntityPlayer player = this.entity.worldObj.getClosestPlayerToEntity(this.entity, 25.0D);
+        EntityPlayer player = this.entity.worldObj.getClosestVulnerablePlayerToEntity(this.entity, 25.0D);
         if (player != null && this.entity.getDistanceSqToEntity(player) >= 36) {
             this.targetPlayer = player;
 //            System.out.println("DEBUG: EntityAIBurrow - Player in range (>=16), starting burrow for " + this.entity.getEntityName());

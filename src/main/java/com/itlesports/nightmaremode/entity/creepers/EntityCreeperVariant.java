@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Random;
 
-import static com.itlesports.nightmaremode.util.NMFields.CREEPER_FIRE;
+import static com.itlesports.nightmaremode.util.NMFields.PACKET_CREEPER_FIRE;
 
 public class EntityCreeperVariant extends EntityMob implements EntityWithCustomPacket {
     // this is an extension of the creeper class that has all the functionality implemented from the EntityCreeperMixin, though this corresponds to the variants
@@ -35,8 +35,8 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     private boolean isValidForEventLoot; // used for every mob
     protected boolean canLunge = true; // whether it should lunge. false for a few variants
 
-    public EntityCreeperVariant(World par1World) {
-        super(par1World);
+    public EntityCreeperVariant(World w) {
+        super(w);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAICreeperVariantSwell(this));
         this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityOcelot.class, 6.0f, 1.0, 1.2));
@@ -46,7 +46,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         this.tasks.addTask(6, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
         this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-        if (par1World != null && ((Boolean)par1World.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue()) {
+        if (w != null && ((Boolean)w.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue()) {
             this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
         }
 
@@ -155,7 +155,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             if (var1 > 0 && this.timeSinceIgnited == 0) {
                 this.playSound("random.fuse", 1.0f, 0.5f + soundPitchModifier);
             }
-            if (((Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue() && this.variantType != NMFields.CREEPER_LIGHTNING) {
+            if (((Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue() && this.variantType != NMFields.PACKET_CREEPER_LIGHTNING) {
 
                 if (this.getAttackTarget() == null) {
                     if (this.worldObj.rand.nextInt(20) == 0) {
@@ -193,7 +193,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 this.timeSinceIgnited = this.fuseTime;
                 if (!this.worldObj.isRemote) {
 
-                    if(this.variantType == NMFields.CREEPER_LIGHTNING){
+                    if(this.variantType == NMFields.PACKET_CREEPER_LIGHTNING){
                         EntityPlayer player;
                         if(this.getAttackTarget() instanceof EntityPlayer targetPlayer){
                             player = targetPlayer;
@@ -217,7 +217,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                     boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
                         float baseChargedMultiplier = 2f;
-                        if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.variantType == CREEPER_FIRE){
+                        if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.variantType == PACKET_CREEPER_FIRE){
                             baseChargedMultiplier = 2.5f;
                         }
                         this.worldObj.createExplosion(this, this.posX, this.posY + (double) this.getEyeHeight(), this.posZ, this.explosionRadius * baseChargedMultiplier * explosionMultiplier, var2);
@@ -232,11 +232,14 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                     this.onDeathEffect(); // some creepers do special things on death
                     this.setDead();
                 }
+                this.onServerAndClientDeathEffect();
+
             }
         }
         super.onUpdate();
     }
     protected void onDeathEffect(){};
+    protected void onServerAndClientDeathEffect(){};
     @Override
     public boolean isImmuneToHeadCrabDamage() {
         return true;
@@ -386,9 +389,9 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
                     boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     } else {
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     }
                     if (!NMUtils.getIsMobEclipsed(this)) {
                         this.setDead();
@@ -593,7 +596,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 this.setCustomNameTag("Terrence");
             }
             return 1;
-        } else if((this.dimension == -1 && !(this.variantType == CREEPER_FIRE)) && (progress > 0 || NightmareMode.evolvedMobs)){
+        } else if((this.dimension == -1 && !(this.variantType == PACKET_CREEPER_FIRE)) && (progress > 0 || NightmareMode.evolvedMobs)){
             return 1;
         } else if(this.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 1;

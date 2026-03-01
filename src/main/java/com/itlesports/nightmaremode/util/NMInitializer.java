@@ -71,7 +71,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         addMobToNether(EntityCreeper.class, 15,1,1);
         addMobToNether(EntityFireCreeper.class, 40,1,1);
-        addMobToNether(EntityCustomSkeleton.class, 30,1,3);
+        addMobToNether(EntityBloodMoonSkeleton.class, 30,1,3);
         addMobToNether(EntityShadowZombie.class, 20,1,1);
         addMobToNether(EntityObsidianCreeper.class, 4,1,1);
 
@@ -671,6 +671,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addNightmareVillagerTrades(){
         // Level 1 Trades
+        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Item.rottenFlesh.itemID).itemCount(8, 16).defaultTrade().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Item.dyePowder.itemID, Color.BLACK.colorID).itemCount(12, 18).weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).weight(0.3f).addToTradeList();
@@ -937,7 +938,7 @@ public abstract class NMInitializer implements AchievementExt {
         // add other crucible tools and blocks
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(NMItems.ironKnittingNeedles, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(NMItems.ironFishingPole, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 7), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 7), new ItemStack[]{new ItemStack(NMBlocks.ironLadder, 4)});
 
         // obsidian post-wither
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.obsidian, 1, 0), new ItemStack[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.clay),new ItemStack(Block.obsidian, 1, 1)});
