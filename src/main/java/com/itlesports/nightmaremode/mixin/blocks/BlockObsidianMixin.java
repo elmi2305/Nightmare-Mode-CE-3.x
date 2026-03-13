@@ -39,7 +39,7 @@ public class BlockObsidianMixin extends Block {
         int meta = w.getBlockMetadata(x,y,z);
         if(meta == 1){
             float returnValue = this.blockResistance / 5.0f;
-            returnValue /= 2;
+            returnValue /= 3;
             return returnValue;
         }
         return super.getExplosionResistance(entity, w, x, y, z);

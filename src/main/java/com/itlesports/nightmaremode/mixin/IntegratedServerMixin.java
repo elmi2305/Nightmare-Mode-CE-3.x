@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.AddonHandler;
+import api.world.difficulty.Difficulty;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.server.MinecraftServer;
@@ -9,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -35,16 +38,9 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
         return super.worldServerForDimension(par1);
     }
 
-    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
-    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci){
+    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/IntegratedServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, boolean isGlobal){
         MinecraftServer serv = (MinecraftServer) (Object)this;
-        ISaveHandler var7;
-        if (this.getActiveAnvilConverter().isWorldGlobal(par1Str)) {
-            var7 = this.getActiveAnvilConverter().getSaveLoader2(par1Str, true);
-            this.setDifficulty(BTWDifficulties.HOSTILE_LOCKED);
-        } else {
-            var7 = this.getActiveAnvilConverter().getSaveLoader(par1Str, true);
-        }
         this.worldServers[3] =  new WorldServerMulti(
                 serv,
                 var7,
@@ -56,5 +52,23 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                 this.getLogAgent());
         this.getConfigurationManager().setPlayerManager(this.worldServers);
         this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
+
+        AddonHandler.initializeDifficultyCommon(this.difficultyLevel);
+        AddonHandler.initializeDifficultyServer(this.difficultyLevel);
+        if (isGlobal) {
+            this.setDifficultyForAllWorlds(BTWDifficulties.HOSTILE_LOCKED);
+            this.worldServers[0].worldInfo.setData(BTWDifficulties.DIFFICULTY_LOCKED, true);
+        } else {
+            this.setDifficultyForAllWorlds(this.theWorldSettings.getDifficulty());
+        }
     }
+    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
+    private void doNothing(Difficulty mod){
+        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
+    }
+    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyServer(Lapi/world/difficulty/Difficulty;)V"))
+    private void doNothing0(Difficulty mod){
+        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
+    }
+
 }

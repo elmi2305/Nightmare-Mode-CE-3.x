@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.AddonHandler;
 import api.achievement.AchievementEventDispatcher;
 import api.world.WorldUtils;
 import api.world.difficulty.Difficulty;
@@ -31,6 +32,8 @@ public abstract class MinecraftServerMixin {
     @Shadow protected Difficulty difficultyLevel;
 
 
+    @Shadow
+    public abstract void setDifficultyForAllWorlds(Difficulty difficulty);
 
     @Unique private boolean oldBloodMoon;
     @Unique private boolean oldBlueMoon;
@@ -157,60 +160,32 @@ public abstract class MinecraftServerMixin {
         this.worldServers = new WorldServer[4];
     }
 
-
-//    @Inject(method = "loadAllWorlds", at = @At("TAIL"))
-//    private void nm_addUnderworld(CallbackInfo ci) {
-//        if (this.worldServers.length > 3 && this.worldServers[3] == null) {
-//            MinecraftServer serv = (MinecraftServer) (Object)this;
-//
-//            System.out.println("[nm] Creating Underworld WorldServer for dim 2");
-//
-//            this.worldServers[3] = new WorldServer(
-//                    (MinecraftServer)(Object)this,
-//                    (ISaveHandler) this.anvilConverterForAnvilFile,    // or saveHandler
-//                    this.getFolderName(),               // world name
-//                    2,
-//                    new WorldSettings(0L, EnumGameType.SURVIVAL, true, false, WorldType.DEFAULT),
-//                    this.theProfiler,
-//                    this.getLogAgent()
-//            );
-//
-//            this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
-//            this.worldServers[3].getWorldInfo().setGameType(this.getGameType());
-//        }
-//    }
-
-    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci){
+    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9, WorldSettings var8){
         MinecraftServer serv = (MinecraftServer) (Object)this;
-        ISaveHandler var7;
-        if (this.getActiveAnvilConverter().isWorldGlobal(par1Str)) {
-            var7 = this.getActiveAnvilConverter().getSaveLoader2(par1Str, true);
-            this.setDifficulty(BTWDifficulties.HOSTILE_LOCKED);
-        } else {
-            var7 = this.getActiveAnvilConverter().getSaveLoader(par1Str, true);
-        }
-        WorldSettings worldSettings;
-        WorldInfo var9 = var7.loadWorldInfo();
-        if (var9 == null) {
-            worldSettings = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType, this.difficultyLevel, false);
-            worldSettings.func_82750_a(par6Str);
-        } else {
-            worldSettings = new WorldSettings(var9);
-        }
         this.worldServers[3] =  new WorldServerMulti(
                 serv,
                 var7,
                 par2Str,
                 NMFields.UNDERWORLD_DIMENSION,
-                worldSettings,
+                var8,
                 this.worldServers[3],
                 this.theProfiler,
                 this.getLogAgent());
         this.getConfigurationManager().setPlayerManager(this.worldServers);
         this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
 
-
+        AddonHandler.initializeDifficultyCommon(this.difficultyLevel);
+        AddonHandler.initializeDifficultyServer(this.difficultyLevel);
+        this.setDifficultyForAllWorlds(var8.getDifficulty());
+    }
+    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
+    private void doNothing(Difficulty mod){
+        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
+    }
+    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyServer(Lapi/world/difficulty/Difficulty;)V"))
+    private void doNothing0(Difficulty mod){
+        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
     }
 
     @Unique
@@ -227,15 +202,6 @@ public abstract class MinecraftServerMixin {
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
 
-    @Unique private boolean getIsBlueMoon(World world){
-//        if(NMUtils.getWorldProgress() <= 1){return false;}
-        // TODO include the upper condition. it's off for debugging
-
-//        World world1 = this.worldServerForDimension(NMFields.UNDERWORLD_DIMENSION);
-//        if (world1 == null) return false;
-        // this doesn't work
-        return this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
-    }
     @Unique private boolean getIsNightFromWorldTime(World world){
         return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
     }

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.mob.KickingAnimal;
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,8 +31,9 @@ public abstract class EntityMixin {
 
     @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"),cancellable = true)
     private void injectCorrectlyParameterizedExplosionMethod(Explosion par1Explosion, World par2World, int par3, int par4, int par5, Block par6Block, CallbackInfoReturnable<Float> cir){
-            Entity thisObj = (Entity) (Object) this;
-            cir.setReturnValue(par6Block.getExplosionResistance(thisObj, par2World, par3, par4, par5));
+        Entity thisObj = (Entity) (Object) this;
+        cir.setReturnValue(par6Block.getExplosionResistance(thisObj, par2World, par3, par4, par5));
+        return;
     }
 
 

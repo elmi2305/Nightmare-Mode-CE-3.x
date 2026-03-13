@@ -5,10 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Random;
@@ -19,8 +16,14 @@ public class SteelOre extends OreBlockStaged {
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setChiselsEffectiveOn(false);
         this.setChiselsCanHarvest(false);
-        this.setResistance(100f);
+        this.setResistance(100000f);
     }
+
+    @Override
+    public float getExplosionResistance(Entity entity, World world, int i, int j, int k) {
+        return this.getExplosionResistance(entity);
+    }
+
 
     @Override
     public void onRemovedByBlockDispenser(World world, int i, int j, int k) {
