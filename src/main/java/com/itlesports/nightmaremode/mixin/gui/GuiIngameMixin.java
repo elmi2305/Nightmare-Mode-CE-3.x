@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.util.NMConfUtils;
-import com.itlesports.nightmaremode.util.NMSanityUtils;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import net.minecraft.src.*;
@@ -33,7 +33,7 @@ public class GuiIngameMixin extends Gui{
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
     private void renderUnderworldSanity(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             double sanity = this.mc.thePlayer.getData(SANITY);
 
             double sanityPercent = Math.min(sanity / MAX_SANITY, 1.0);

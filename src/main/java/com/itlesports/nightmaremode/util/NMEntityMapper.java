@@ -40,6 +40,8 @@ public class NMEntityMapper {
 
         EntityList.addMapping(EntitySporeArrow.class, "NmSporeArrow", 2327);
         EntityList.addMapping(EntityMagicArrow.class, "NmMagicArrow", 2328);
+
+        EntityList.addMapping(EntityBlackHole.class, "NmBlackHole", 2329, 0, 0);
     }
 
     public static void createTileEntityMappings(){

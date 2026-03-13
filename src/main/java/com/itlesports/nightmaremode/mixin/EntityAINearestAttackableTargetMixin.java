@@ -35,7 +35,7 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
 
     @Inject(method = "shouldExecute", at = @At("HEAD"),cancellable = true)
     private void forceTargetPlayer(CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
+        if (this.taskOwner instanceof EntityBloodZombie) {
             if (this.targetEntity != null) return;
             EntityPlayer nearestPlayer = this.taskOwner.worldObj.getClosestPlayerToEntity(this.taskOwner, -1);
             if(nearestPlayer != null){
@@ -48,7 +48,7 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
 
     @Inject(method = "getTargetDistance", at = @At("HEAD"),cancellable = true)
     private void bypassExpensiveAABB(CallbackInfoReturnable<Double> cir){
-        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
+        if (this.taskOwner instanceof EntityBloodZombie) {
             cir.setReturnValue(1d);
         }
     }

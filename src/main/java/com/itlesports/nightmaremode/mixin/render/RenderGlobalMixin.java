@@ -1,7 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.prupe.mcpatcher.sky.SkyRenderer;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -26,6 +27,7 @@ public abstract class RenderGlobalMixin {
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/eclipse.png");
     @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/crack.png");
+    @Unique private static final ResourceLocation BLUE_MOON = new ResourceLocation("nightmare:textures/bluemoon.png");
 
     /*
 
@@ -33,35 +35,44 @@ public abstract class RenderGlobalMixin {
 
      */
 
-//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
-//    private int changeMoonSkyTexture(Tessellator instance){
-//        // avoids drawing the moon, it is manually drawn later
-//        return 0;
-//    }
-//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
-//    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){}
-//    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
-//    private void setUpUVForMoon(float par1, CallbackInfo ci){
-//        Tessellator var23 = Tessellator.instance;
-//
-//        float var12 = 20.0f;
-//
-//        int var28 = this.theWorld.getMoonPhase();
-//
-//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(ECLIPSE));
-//        float uMin = 0.0f;
-//        float uMax = 1.0f;
-//        float vMin = 0.0f;
-//        float vMax = 1.0f;
-//
-//        var23.startDrawingQuads();
-//        var23.addVertexWithUV(-var12, -100.0,  var12, uMax, vMax);
-//        var23.addVertexWithUV( var12, -100.0,  var12, uMin, vMax);
-//        var23.addVertexWithUV( var12, -100.0, -var12, uMin, vMin);
-//        var23.addVertexWithUV(-var12, -100.0, -var12, uMax, vMin);
-//
-//        var23.draw();
-//    }
+    @Unique private boolean isUnderWorld(){
+        return this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION;
+    }
+
+    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
+    private int changeMoonSkyTexture(Tessellator instance){
+        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return 0;        // avoids drawing the moon, it is manually drawn later
+        return instance.draw();
+    }
+    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
+    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){
+        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return;        // avoids drawing the moon, it is manually drawn later
+        instance.startDrawingQuads();
+    }
+    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
+    private void setUpUVForMoon(float par1, CallbackInfo ci){
+        if(!this.isUnderWorld() || !NMUtils.getIsBlueMoon()) return;
+        // only runs in UW
+        Tessellator var23 = Tessellator.instance;
+
+        float size = 30.0f;
+
+        int phase = this.theWorld.getMoonPhase();
+
+        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(BLUE_MOON));
+        float uMin = 0.0f;
+        float uMax = 1.0f;
+        float vMin = 0.0f;
+        float vMax = 1.0f;
+
+        var23.startDrawingQuads();
+        var23.addVertexWithUV(-size, -100.0,  size, uMax, vMax);
+        var23.addVertexWithUV( size, -100.0,  size, uMin, vMax);
+        var23.addVertexWithUV( size, -100.0, -size, uMin, vMin);
+        var23.addVertexWithUV(-size, -100.0, -size, uMax, vMin);
+
+        var23.draw();
+    }
 
 
 
@@ -248,7 +259,7 @@ public abstract class RenderGlobalMixin {
             )
     )
     private void redirectGlCallList(int list) {
-        if(this.mc.thePlayer.dimension == NightmareMode.UNDERWORLD_DIMENSION) {
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
             try {
                 if (list == this.glSkyList) {
                     renderTexturedSkyDome();
@@ -362,7 +373,7 @@ public abstract class RenderGlobalMixin {
     }
     @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldClient;getHorizon()D"))
     private double patchHorizon(WorldClient wcl) {
-        if(this.mc.thePlayer.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             return -99;
         }
         return wcl.getHorizon();
@@ -370,7 +381,7 @@ public abstract class RenderGlobalMixin {
 
     @Inject(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderGlobal;renderCloudsFancy(F)V"), cancellable = true)
     private void manageCloudSpikyUnderworld(float par1, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             this.renderFancyUnderworldClouds(par1);
         } else{
             this.renderCloudsFancy(par1);

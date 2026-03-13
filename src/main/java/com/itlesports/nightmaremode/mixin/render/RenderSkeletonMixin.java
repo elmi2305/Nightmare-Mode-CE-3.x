@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.RenderSkeleton;
@@ -29,9 +29,9 @@ public class RenderSkeletonMixin {
 
     @Inject(method = "func_110860_a", at = @At("HEAD"), cancellable = true)
     private void manageVariantTextures(EntitySkeleton skeleton, CallbackInfoReturnable<ResourceLocation> cir) {
-        if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_JUNGLE){
+        if(skeleton.getSkeletonType().id() == NMFields.SKELETON_JUNGLE){
             cir.setReturnValue(JUNGLE_SKELETON_TEXTURE);
-        } else if(skeleton.getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL) {
+        } else if(skeleton.getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL) {
             cir.setReturnValue(SUPERCRITICAL_SKELETON_TEXTURE);
         }
         if (!NMUtils.getIsMobEclipsed(skeleton)) {

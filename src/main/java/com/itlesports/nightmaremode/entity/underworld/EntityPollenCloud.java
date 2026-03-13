@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.entity.underworld;
 
 import api.entity.EntityWithCustomPacket;
-import btw.entity.attribute.BTWAttributes;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;

@@ -16,9 +16,4 @@ public class EntityThrowableMixin {
         return 0.1;
     }
 
-
-    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;canBeCollidedWith()Z"))
-    private void allowSnowballsToHitPlayers(CallbackInfo ci){
-
-    }
 }

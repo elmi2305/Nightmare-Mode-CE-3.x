@@ -4,6 +4,7 @@ import api.achievement.AchievementEventDispatcher;
 import api.achievement.AchievementHandler;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
+import api.world.difficulty.DifficultyParam;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
 import btw.community.nightmaremode.NightmareMode;
@@ -11,16 +12,14 @@ import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
-import com.itlesports.nightmaremode.util.NMConfUtils;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
-import com.itlesports.nightmaremode.util.NMSanityUtils;
-import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
+import net.fabricmc.loom.util.Strings;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +42,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
     @Shadow public FoodStats foodStats;
-    @Shadow public abstract boolean attackEntityFrom(DamageSource par1DamageSource, float par2);
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
     @Shadow public int experienceLevel;
     @Shadow protected abstract int decreaseAirSupply(int iAirSupply);
@@ -54,6 +52,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
     @Shadow public abstract <T> T getData(DataEntry.PlayerDataEntry<T> var1);
+
+    @Shadow
+    protected abstract void detonateCarriedBlastingOil();
+
+    @Shadow
+    public abstract void addStat(StatBase par1StatBase, int par2);
+
+    @Shadow
+    protected abstract boolean isCarryingBlastingOil();
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
@@ -71,6 +78,51 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource src, float amount) {
+        if (this.isEntityInvulnerable()) {
+            return false;
+        }
+        if (this.capabilities.disableDamage && !src.canHarmInCreative()) {
+            return false;
+        }
+        this.entityAge = 0;
+        if (this.getHealth() <= 0.0f) {
+            return false;
+        }
+        EntityPlayer self = (EntityPlayer)(Object)this;
+
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourceEvent.class, self, src);
+        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourcePlayerEvent.class, self, new NMAchievementEvents.DamageSourcePlayerEvent.DamageSourceData(self, src));
+
+        if (this.isPlayerSleeping() && !this.worldObj.isRemote) {
+            this.wakeUpPlayer(true, true, false);
+        }
+        if (src.isDifficultyScaled()) {
+            if (this.worldObj.difficultySetting == 0) {
+                amount = 0.0f;
+            }
+            if (this.worldObj.difficultySetting == 1) {
+                amount = amount / 2.0f + 1.0f;
+            }
+            if (this.worldObj.difficultySetting == 3) {
+                amount = amount * 3.0f / 2.0f;
+            }
+        }
+        if (amount == 0.0f && !(src.getSourceOfDamage() instanceof EntityThrowable)) {
+            return false;
+        }
+        Entity var3 = src.getEntity();
+        if (var3 instanceof EntityArrow && ((EntityArrow)var3).shootingEntity != null) {
+            var3 = ((EntityArrow)var3).shootingEntity;
+        }
+        this.addStat(StatList.damageTakenStat, Math.round(amount * 10.0f));
+        if (!this.isDead && this.isCarryingBlastingOil()) {
+            this.detonateCarriedBlastingOil();
+            return false;
+        }
+        return super.attackEntityFrom(src, amount);
+    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void noHitAttributes(CallbackInfo ci){
@@ -392,16 +444,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
         // manage underworld events
-        if(this.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+        if(this.dimension == NMFields.UNDERWORLD_DIMENSION){
             if(this.ticksExisted % 10 == 0){
                 // recalculate drain amount every 10 ticks
                 drainAmount = this.getSanityDrain();
             }
             this.setData(SANITY, this.getData(SANITY) + drainAmount);
 
-            if(this.ticksExisted % 10 == 0 && this.isSneaking()){
-                System.out.println("current sanity is: " + this.getData(SANITY));
+            if(this.ticksExisted % 20 == 0 && this.isSneaking()){
+//                System.out.println("current sanity is: " + this.getData(SANITY));
             }
+        }
+        if(this.ticksExisted % 10 == 0 && this.isSneaking()){
+            System.out.println("blue moon: " + Strings.capitalize(String.valueOf(NMUtils.getIsBlueMoon())) + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER"));
+//            System.out.println(this.worldObj.getDifficultyParameter(DifficultyParam.CreeperFollowDistanceMultiplier.class) + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER")); // returns false for some reason
+//            System.out.println(this.worldObj.worldInfo.getDifficulty().getLocalizedName() + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER"));
         }
 
         // manage blight effects
@@ -835,13 +892,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
     }
 
-    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
-    private void manageAchievementDamageSource(DamageSource source, float par2, CallbackInfoReturnable<Boolean> cir){
-        EntityPlayer self = (EntityPlayer)(Object)this;
-
-        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourceEvent.class, self, source);
-        AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourcePlayerEvent.class, self, new NMAchievementEvents.DamageSourcePlayerEvent.DamageSourceData(self, source));
-    }
 
     // removes the check for daytime and kicking the player out of the bed if it turns day. this enables infinite sleeping
     @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))

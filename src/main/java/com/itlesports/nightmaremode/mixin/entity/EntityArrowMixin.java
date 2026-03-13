@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,16 +35,16 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
         if (this.shootingEntity instanceof EntitySkeleton skeleton && mop.entityHit instanceof EntityLivingBase hitEntity) {
             int id = skeleton.getSkeletonType().id();
 
-            if (id == NightmareMode.SKELETON_ICE) {
+            if (id == NMFields.SKELETON_ICE) {
                 hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 0));
                 hitEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140, 0));
 
-            } else if (id == NightmareMode.SKELETON_ENDER) {
+            } else if (id == NMFields.SKELETON_ENDER) {
                 skeleton.setPositionAndUpdate(hitEntity.posX, hitEntity.posY, hitEntity.posZ);
                 skeleton.playSound("mob.endermen.portal", 1.0F, 1.0F);
                 skeleton.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
 
-            } else if (id == NightmareMode.SKELETON_JUNGLE) {
+            } else if (id == NMFields.SKELETON_JUNGLE) {
                 if (!hitEntity.isPotionActive(Potion.moveSlowdown)) {
                     if (this.rand.nextFloat() < 0.75f) {
                         hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 3));
@@ -58,7 +58,7 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                     }
                 }
 
-            } else if (id == NightmareMode.SKELETON_SUPERCRITICAL) {
+            } else if (id == NMFields.SKELETON_SUPERCRITICAL) {
                 this.worldObj.newExplosion(skeleton, this.posX, this.posY, this.posZ, 1.2f, this.isBurning() && !this.isBeingRainedOn(), true);
             }
         }
@@ -67,7 +67,7 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
 
     @Inject(method = "notifyCollidingBlockOfImpact", at = @At("HEAD"))
     private void supercriticalSkeletonArrowExplosion(CallbackInfo ci){
-        if(this.shootingEntity instanceof EntitySkeleton skeleton && skeleton.getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL){
+        if(this.shootingEntity instanceof EntitySkeleton skeleton && skeleton.getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL){
             this.worldObj.newExplosion(skeleton,this.posX,this.posY,this.posZ,1.2f,this.isBurning() && !this.isBeingRainedOn(),true);
         }
     }

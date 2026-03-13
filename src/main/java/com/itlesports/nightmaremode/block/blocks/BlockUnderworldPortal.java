@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import net.minecraft.src.*;
 
-import static btw.community.nightmaremode.NightmareMode.UNDERWORLD_DIMENSION;
+import static com.itlesports.nightmaremode.util.NMFields.UNDERWORLD_DIMENSION;
 
 public class BlockUnderworldPortal extends BlockBreakable {
 

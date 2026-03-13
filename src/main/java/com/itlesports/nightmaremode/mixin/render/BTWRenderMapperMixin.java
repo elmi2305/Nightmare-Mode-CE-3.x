@@ -6,10 +6,7 @@ import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
-import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
-import com.itlesports.nightmaremode.entity.underworld.FlowerCreeper;
-import com.itlesports.nightmaremode.entity.underworld.FlowerSkeleton;
-import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
+import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
 import net.minecraft.src.*;
@@ -43,6 +40,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(FlowerSkeleton.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntityMagicArrow.class, new RenderCustomArrow());
         RenderManager.addEntityRenderer(EntitySporeArrow.class, new RenderCustomArrow());
+        RenderManager.addEntityRenderer(EntityBlackHole.class, new RenderBlackHole());
 
 
 

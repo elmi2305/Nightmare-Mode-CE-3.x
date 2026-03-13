@@ -18,18 +18,18 @@ public abstract class EntityAITargetMixin extends EntityAIBase {
 
     @Inject(method = "canEasilyReach", at = @At("HEAD"),cancellable = true)
     private void canAlwaysReach(EntityLivingBase par1EntityLivingBase, CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
+        if (this.taskOwner instanceof EntityBloodZombie) {
             cir.setReturnValue(true);
         }
     }
     @Redirect(method = "continueExecuting", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreature;getDistanceSqToEntity(Lnet/minecraft/src/Entity;)D"))
     private double bypassDistanceLimit(EntityCreature instance, Entity entity){
-        return (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) ? 0d : instance.getDistanceSqToEntity(entity);
+        return (this.taskOwner instanceof EntityBloodZombie) ? 0d : instance.getDistanceSqToEntity(entity);
     }
 
     @Inject(method = "isSuitableTarget", at = @At(value = "HEAD"), cancellable = true)
     private void ensurePlayerTargetting(EntityLivingBase par1EntityLivingBase, boolean par2, CallbackInfoReturnable<Boolean> cir){
-        if (NightmareMode.hordeMode || this.taskOwner instanceof EntityBloodZombie) {
+        if (this.taskOwner instanceof EntityBloodZombie) {
             if (par1EntityLivingBase instanceof EntityPlayer) {
                 this.targetSearchStatus = 1;
                 this.shouldCheckSight = false;

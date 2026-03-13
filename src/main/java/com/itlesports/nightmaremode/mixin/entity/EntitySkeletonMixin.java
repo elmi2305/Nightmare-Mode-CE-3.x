@@ -11,6 +11,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.SkeletonChaseSmart;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBurningArrow;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -25,11 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
-
-    @Unique private boolean areMobsEvolved = NightmareMode.evolvedMobs;
-
-    @Unique private SkeletonChaseSmart aiRangedAttackHorde = new SkeletonChaseSmart((EntitySkeleton)(Object)this, 1.0f, 60, 24f);
-    @Unique private EntityAIChaseTargetSmart aiMeleeAttackHorde = new EntityAIChaseTargetSmart(this, 1.25f);
     @Unique int jumpCooldown = 0;
 
 
@@ -145,21 +141,6 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         this.tasks.removeAllTasksOfClass(EntityAIRestrictSun.class);
     }
 
-    @Inject(method = "setCombatTask", at = @At("TAIL"))
-    private void hordeModeCombatTask(CallbackInfo ci){
-        if (NightmareMode.hordeMode) {
-            this.tasks.removeTask(this.aiMeleeAttack);
-            this.tasks.removeTask(this.aiRangedAttack);
-            this.tasks.removeTask(this.aiMeleeAttackHorde);
-            this.tasks.removeTask(this.aiRangedAttackHorde);
-            ItemStack heldStack = this.getHeldItem();
-            if (heldStack != null && heldStack.itemID == Item.bow.itemID) {
-                this.tasks.addTask(4, this.aiRangedAttackHorde);
-            } else {
-                this.tasks.addTask(4, this.aiMeleeAttackHorde);
-            }
-        }
-    }
     @ModifyConstant(method = "applyEntityAttributes", constant = @Constant(doubleValue = 0.25))
     private double increaseMoveSpeed(double constant){
         if (this.worldObj != null) {
@@ -228,9 +209,9 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Inject(method = "preInitCreature", at = @At("TAIL"))
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
-            if((NMUtils.getIsBloodMoon() || areMobsEvolved) && this.rand.nextInt(16) == 0 && this.getSkeletonType().id() == 0){
+            if((NMUtils.getIsBloodMoon() || NightmareMode.evolvedMobs) && this.rand.nextInt(16) == 0 && this.getSkeletonType().id() == 0){
                 this.setSkeletonType(1);
-            } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || areMobsEvolved) && this.getSkeletonType().id() == 0){
+            } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || NightmareMode.evolvedMobs) && this.getSkeletonType().id() == 0){
                 this.setSkeletonType(1);
             }
         }
@@ -557,13 +538,13 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Unique
     private boolean shouldSpawnEnderSkeleton(int progress, boolean isHostile, double bloodMoonModifier, double niteMultiplier) {
         double chance = (0.13 + Math.abs(progress - 2) * (isHostile ? 0.07 : 0.03)) * bloodMoonModifier * niteMultiplier;
-        return (progress >= 2 || areMobsEvolved) && rand.nextFloat() < chance;
+        return (progress >= 2 || NightmareMode.evolvedMobs) && rand.nextFloat() < chance;
     }
 
     @Unique
     private boolean shouldSpawnFireSkeleton(int progress, boolean isHostile, double bloodMoonModifier, double niteMultiplier) {
         double chance = ((isHostile ? 0.09 : 0.03) + Math.abs(progress - 1) * 0.02) * bloodMoonModifier * niteMultiplier;
-        return (progress >= 1 || areMobsEvolved) && rand.nextFloat() < chance && this.dimension != -1;
+        return (progress >= 1 || NightmareMode.evolvedMobs) && rand.nextFloat() < chance && this.dimension != -1;
     }
     @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
@@ -600,14 +581,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
     @Unique
     private void setEnderSkeleton() {
-        this.setSkeletonType(NightmareMode.SKELETON_ENDER);
+        this.setSkeletonType(NMFields.SKELETON_ENDER);
         this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
     }
 
     @Unique
     private void setFireSkeleton() {
-        this.setSkeletonType(NightmareMode.SKELETON_FIRE);
+        this.setSkeletonType(NMFields.SKELETON_FIRE);
         this.clearArmor();
         this.setFire(10000);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
@@ -615,20 +596,20 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
 
     @Unique
     private void setIceSkeleton() {
-        this.setSkeletonType(NightmareMode.SKELETON_ICE);
+        this.setSkeletonType(NMFields.SKELETON_ICE);
         this.setHelmet(13260, BTWItems.woolHelmet);
     }
 
     @Unique
     private void setJungleSkeleton() {
-        this.setSkeletonType(NightmareMode.SKELETON_JUNGLE);
+        this.setSkeletonType(NMFields.SKELETON_JUNGLE);
     }
     @Unique
     private void setSuperCriticalSkeleton() {
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
-        this.setSkeletonType(NightmareMode.SKELETON_SUPERCRITICAL);
+        this.setSkeletonType(NMFields.SKELETON_SUPERCRITICAL);
     }
 
     @Unique

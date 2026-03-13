@@ -148,7 +148,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         EntityMob mob = (EntityMob)(Object)this;
 
         // Only apply when relevant
-        if (!NightmareMode.hordeMode && !(mob instanceof EntityBloodZombie)) return;
+        if (!(mob instanceof EntityBloodZombie)) return;
 
         EntityPlayer player = worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, -1);
         if (player == null) return;
@@ -172,7 +172,6 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     }
     @Override
     protected void despawnEntity() {
-        boolean isHorde = NightmareMode.hordeMode;
         if (!this.getPersistence() && this.canDespawn()) {
             int chunkX = MathHelper.floor_double(this.posX / 16.0);
             int chunkZ = MathHelper.floor_double(this.posZ / 16.0);
@@ -182,67 +181,39 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
                 return;
             }
 
-            if (isHorde) {
-                // Horde mode: prioritize target-based despawning
-                EntityLivingBase target = this.getAttackTarget();
+            int mobY = (int) this.posY;
+            int pY = mobY;
 
-                if (target != null && target.isEntityAlive()) {
-                    double distSq = this.getDistanceSqToEntity(target);
-
-                    if (distSq > 48.0 * 48.0) {
-                        this.setDead();
-                        return;
-                    }
-
-                    this.entityAge = 0;
-                } else {
-                    // No target: fall back to player proximity
-                    EntityPlayer closestPlayer = this.worldObj.getClosestPlayerToEntity(this, this.minDistFromPlayerForDespawn());
-                    if (closestPlayer != null) {
-                        this.entityAge = 0;
-                    } else if (this.entityAge > 600 && this.rand.nextInt(800) == 0) {
-                        this.setDead();
-                    }
+            // get the closest player and get distance to it
+            EntityPlayer closestPlayer = null;
+            double dDistSq = Double.MAX_VALUE;
+            for(Object p : this.worldObj.playerEntities){
+                double newDist = this.getDistanceSqToEntity((Entity) p);
+                if (newDist < dDistSq) {
+                    dDistSq = newDist;
+                    closestPlayer = (EntityPlayer) p;
+                    pY = (int) ((EntityPlayer) p).posY;
                 }
+            }
 
 
+            int randomVariance = getRandomVariance(this.worldObj,pY, mobY);
+            double minDist = this.minDistFromPlayerForDespawn();
+            if (closestPlayer != null && dDistSq > minDist * minDist) {
+                // player is far enough away to check despawn
+                // found player is true by default
+                // distance from mob to player is > 40 blocks
 
-            } else {
-                int mobY = (int) this.posY;
-                int pY = mobY;
-
-                // get the closest player and get distance to it
-                EntityPlayer closestPlayer = null;
-                double dDistSq = Double.MAX_VALUE;
-                for(Object p : this.worldObj.playerEntities){
-                    double newDist = this.getDistanceSqToEntity((Entity) p);
-                    if (newDist < dDistSq) {
-                        dDistSq = newDist;
-                        closestPlayer = (EntityPlayer) p;
-                        pY = (int) ((EntityPlayer) p).posY;
-                    }
-                }
-
-
-                int randomVariance = getRandomVariance(this.worldObj,pY, mobY);
-                double minDist = this.minDistFromPlayerForDespawn();
-                if (closestPlayer != null && dDistSq > minDist * minDist) {
-                    // player is far enough away to check despawn
-                    // found player is true by default
-                    // distance from mob to player is > 40 blocks
-
-                    // reset age when a player is nearby (so mobs do not despawn while the player is close)
-                    if (this.entityAge > 800 && this.rand.nextInt(randomVariance) == 0) {
+                // reset age when a player is nearby (so mobs do not despawn while the player is close)
+                if (this.entityAge > 800 && this.rand.nextInt(randomVariance) == 0) {
 //                    if (this.rand.nextInt(randomVariance) == 0) {
 //                        System.out.println("despawned " + this.getEntityName() + " at y" + mobY + " with variance " + randomVariance + " with pY: " + (int)pY);
-                        this.setDead();
-                    }
-                } else{
-                    // closest player doesn't exist (no players online)
-                    // OR player exists but distance to player is less than 40 blocks
-                    this.entityAge = 0;
+                    this.setDead();
                 }
-
+            } else{
+                // closest player doesn't exist (no players online)
+                // OR player exists but distance to player is less than 40 blocks
+                this.entityAge = 0;
             }
 
         } else {

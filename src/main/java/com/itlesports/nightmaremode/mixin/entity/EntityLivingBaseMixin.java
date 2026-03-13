@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -127,11 +128,13 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
 
 
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityLivingBase;limbSwingAmount:F"))
+    @Inject(method = "attackEntityFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityLivingBase;limbSwingAmount:F", opcode = Opcodes.PUTFIELD))
     private void enemyHitByPlayerAchievements(DamageSource src, float damage, CallbackInfoReturnable<Boolean> cir){
         if (src.getSourceOfDamage() instanceof EntitySnowball sb) {
             EntityPlayer player = sb.getThrower() instanceof EntityPlayer ? (EntityPlayer) sb.getThrower() : null;
-            // manually triggered
+            EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
+            // only players can get achievements, and the player cannot get it by hitting themselves
+            if (player == null && player != thisObj) return;
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, player, false);
             this.lastTimeWasSnowballed = this.ticksExisted;
             this.lastSnowBaller = player;

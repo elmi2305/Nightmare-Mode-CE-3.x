@@ -949,6 +949,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
         // done with steel
 
+
+        // refined diamond
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 6), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
@@ -974,10 +976,10 @@ public abstract class NMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 19), new ItemStack[]{new ItemStack(Item.legsChain, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.ironNugget, 11), new ItemStack[]{new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(Item.plateChain, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 3), new ItemStack[]{new ItemStack(Item.legsChain, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), new ItemStack[]{new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), new ItemStack[]{new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 6), new ItemStack[]{new ItemStack(Item.plateChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 5), new ItemStack[]{new ItemStack(Item.legsChain, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 3), new ItemStack[]{new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE)});
 
 
         // diamond pile

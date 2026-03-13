@@ -16,7 +16,7 @@ public class PathNavigateMixin {
 
     @Inject(method = "func_111269_d", at = @At("HEAD"),cancellable = true)
     private void increasePathRange(CallbackInfoReturnable<Float> cir){
-        if (NightmareMode.hordeMode || this.theEntity instanceof EntityBloodZombie) {
+        if (this.theEntity instanceof EntityBloodZombie) {
             cir.setReturnValue(80f);
         }
     }

@@ -31,18 +31,11 @@ import java.io.*;
 import java.util.*;
 
 public class NightmareMode extends BTWAddon {
-    public static int SKELETON_ICE = 2;
-    public static int SKELETON_FIRE = 3;
-    public static int SKELETON_ENDER = 4;
-    public static int SKELETON_JUNGLE = 5;
-    public static int SKELETON_SUPERCRITICAL = 6;
-
-
-    public static int GUI_DISENCHANTER = 145;
 
     private static NightmareMode instance;
-    public static int worldState;
 
+
+    // world gen
     public WorldGenerator lavaPillowGenThirdStrata;
     public WorldGenerator silverfishGenFirstStrata;
     public WorldGenerator silverfishGenSecondStrata;
@@ -51,11 +44,45 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator steelOreGenExposedToAir;
     public WorldGenerator steelOreGen;
 
+    // events
     public static boolean isBloodMoon;
     public static boolean isEclipse;
-    public double NITE_MULTIPLIER = 1;
+    public static boolean isBlueMoon;
 
-    public static final int UNDERWORLD_DIMENSION = 2;
+    // misc
+    public boolean canAccessMenu = true;
+    public double NITE_MULTIPLIER = 1;
+    public static int worldState;
+
+    // configs
+    public static Boolean shouldShowDateTimer;
+    public static Boolean shouldShowRealTimer;
+    public static Boolean bloodmoonColors;
+    public static Boolean crimson;
+    public static Boolean bloodmare;
+    public static Boolean configOnHud;
+    public static Boolean totalEclipse;
+    public static Boolean buffedSquids;
+    public static Boolean evolvedMobs;
+    public static Boolean magicMonsters;
+    public static Boolean noHit;
+    public static Boolean perfectStart;
+    public static Boolean nite;
+    public static Boolean noSkybases;
+    public static Boolean unkillableMobs;
+    public static Boolean potionParticles;
+    public static Boolean moreVariants;
+    public static Boolean shouldDisplayFishingAnnouncements;
+    public static Boolean isAprilFools;
+    public static Boolean aprilFoolsRendering;
+    public static Boolean extraArmor;
+    public static Boolean darkStormyNightmare;
+    public static Boolean birthdayBash;
+    public static Boolean fullBright;
+    public static Boolean fastVillagers;
+    public static Boolean bloodMoonHelper;
+    public static Boolean realTime;
+
 
     public NightmareMode(){
         super();
@@ -182,7 +209,7 @@ public class NightmareMode extends BTWAddon {
     }
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
-        //world state packet handler
+        // world state packet handler
         AddonHandler.registerPacketHandler("nm|stat", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             int worldState = -1;
@@ -196,12 +223,13 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
-
+        // bloodmoon eclipse sync
         AddonHandler.registerPacketHandler("nm|BMEC", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
                 isBloodMoon = dataStream.readBoolean();
                 isEclipse = dataStream.readBoolean();
+                isBlueMoon = dataStream.readBoolean();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -210,7 +238,7 @@ public class NightmareMode extends BTWAddon {
                 ((EntityRendererAccessor) mc.entityRenderer).nightmaremode$updateLightmap(1.0f);
             }
         });
-
+        // stacksize sync
         AddonHandler.registerPacketHandler("nm|stacksize", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
@@ -221,12 +249,12 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
-
+        // the direction the horse desires
         AddonHandler.registerPacketHandler("nm|HorseDir", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
                 int horseId = dataStream.readInt();
-                byte directionOrdinal = dataStream.readByte(); // read as byte
+                byte directionOrdinal = dataStream.readByte();
 
                 Minecraft mc = Minecraft.getMinecraft();
                 if (mc != null && mc.theWorld != null) {
@@ -242,7 +270,7 @@ public class NightmareMode extends BTWAddon {
 
 
 
-
+        // horse progress (for the GUI to draw)
         AddonHandler.registerPacketHandler("nm|HorseProg", (packet, player) -> {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
@@ -257,7 +285,7 @@ public class NightmareMode extends BTWAddon {
                 ex.printStackTrace();
             }
         });
-
+        // the current held direction by the player (horse minigame)
         AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
             try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
                 byte dirOrdinal = data.readByte();
@@ -279,8 +307,8 @@ public class NightmareMode extends BTWAddon {
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
-            dataStream.writeInt(horseId);       // horse entity ID
-            dataStream.writeInt(progress);      // current taming progress
+            dataStream.writeInt(horseId);
+            dataStream.writeInt(progress);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -314,13 +342,14 @@ public class NightmareMode extends BTWAddon {
     }
 
 
-    private static Packet250CustomPayload createBloodMoonAndEclipsePacket(){
+    private static Packet250CustomPayload createMoonAndSunEventPacket(){
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
             dataStream.writeBoolean(isBloodMoon);
             dataStream.writeBoolean(isEclipse);
+            dataStream.writeBoolean(isBlueMoon);
         } catch (Exception var4) {
             var4.printStackTrace();
         }
@@ -335,6 +364,9 @@ public class NightmareMode extends BTWAddon {
     public static void setBloodmoon(boolean par1){
         isBloodMoon = par1;
     }
+    public static void setBlueMoon(boolean par1){
+        isBlueMoon = par1;
+    }
 
     public static void sendWorldStateToAllPlayers() {
         Packet250CustomPayload packet = createWorldStatePacket();
@@ -344,8 +376,8 @@ public class NightmareMode extends BTWAddon {
             }
         }
     }
-    public static void sendBloodmoonEclipseToAllPlayers(){
-        Packet250CustomPayload packet = createBloodMoonAndEclipsePacket();
+    public static void sendMoonAndSunEventsToAllPlayers() {
+        Packet250CustomPayload packet = createMoonAndSunEventPacket();
         for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
@@ -433,38 +465,10 @@ public class NightmareMode extends BTWAddon {
         }
     }
 
-    public static Boolean shouldShowDateTimer;
-    public static Boolean shouldShowRealTimer;
-    public static Boolean bloodmoonColors;
-    public static Boolean crimson;
-    public static Boolean bloodmare;
-    public static Boolean configOnHud;
-    public static Boolean totalEclipse;
-    public static Boolean buffedSquids;
-    public static Boolean evolvedMobs;
-    public static Boolean magicMonsters;
-    public static Boolean noHit;
-    public static Boolean perfectStart;
-    public static Boolean nite;
-    public static Boolean noSkybases;
-    public static Boolean unkillableMobs;
-    public static Boolean potionParticles;
-    public static Boolean moreVariants;
-    public static Boolean shouldDisplayFishingAnnouncements;
-    public static Boolean isAprilFools;
-    public static Boolean aprilFoolsRendering;
-    public static Boolean extraArmor;
-    public static Boolean darkStormyNightmare;
-    public static Boolean hordeMode;
-    public static Boolean birthdayBash;
-    public static Boolean fullBright;
-    public static Boolean fastVillagers;
-    public static Boolean bloodMoonHelper;
-    public static Boolean realTime;
 
 
 
-    public boolean canAccessMenu = true;
+
 
     public static final DataEntry.WorldDataEntry<Long> PORTAL_TIME =
         DataProvider.getBuilder(Long.class)
@@ -573,7 +577,6 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("AprilFoolsWarpedRendering", true);
         config.registerBoolean("ExtraArmor", false);
         config.registerBoolean("DarkStormyNightmare", false);
-        config.registerBoolean("HordeMode", false);
         config.registerBoolean("BirthdayBash", false);
         config.registerBoolean("FullBright", false);
         config.registerBoolean("FastVillagers", false);
@@ -608,8 +611,6 @@ public class NightmareMode extends BTWAddon {
         isAprilFools = config.getBoolean("AprilFoolsPatch");
         aprilFoolsRendering = config.getBoolean("AprilFoolsWarpedRendering");
         darkStormyNightmare = config.getBoolean("DarkStormyNightmare");
-//        hordeMode = config.getBoolean("HordeMode");
-        hordeMode = false;
         birthdayBash = config.getBoolean("BirthdayBash");
         fullBright = config.getBoolean("FullBright");
         fastVillagers = config.getBoolean("FastVillagers");

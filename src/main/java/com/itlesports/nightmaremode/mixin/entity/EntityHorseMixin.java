@@ -19,9 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Mixin(EntityHorse.class)
 public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTamingClient, IPlayerDirectionTracker {
@@ -43,6 +41,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     private double increaseHP(double constant){
         return (24.0 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier();
     }
+
 
     @Unique
     private float getInternalSpeedModifier() {
@@ -161,13 +160,14 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             boolean client = this.worldObj.isRemote;
             if(this.riddenByEntity instanceof EntityPlayer p && !client){
                 EntityHorse horseHost = (EntityHorse)(Object)this;
+//                    System.out.println(this.hungerCountdown + " | " + this.getHungerLevel());
 
                 this.hungerCountdown -= 3;
                 if(this.isSprinting()){
                     this.hungerCountdown -= 2;
                 }
                 if(this.isHorseJumping()){
-                    this.hungerCountdown -= 3;
+                    this.hungerCountdown -= 300;
                 }
 
                 if (this.ticksExisted % 4 == 0) {
@@ -286,71 +286,64 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         // eats wheat - default item
         return this.eatFoodItem(new ItemStack(BTWItems.wheat));
     }
+    @Unique
+    private static final Map<Integer, Integer> FOOD_TICKS = new HashMap<Integer, Integer>() {{
+        put(BTWItems.wheat.itemID, 2200);
+        put(BTWItems.straw.itemID, 2200);
+        put(Item.appleRed.itemID, 1800);
+        put(BTWItems.carrot.itemID, 2000);
+        put(Item.goldenCarrot.itemID, 8000);
+        put(Item.sugar.itemID, 1400);
+        put(Item.netherStalkSeeds.itemID, 2000);
+        put(BTWItems.mysteriousGland.itemID, 1400);
+    }};
 
-    @Unique private boolean eatFoodItem(ItemStack itemStack){
-        // ensures stack isn't null.
-        // horse must be hungry enough to eat specific item
-        // attempts to eat item stack and grants the desired effect.
-        // returns true if succeeded
+    @Unique
+    private boolean eatFoodItem(ItemStack itemStack) {
+        if (itemStack == null) return false;
 
-        if(itemStack == null) return false;
         Item item = itemStack.getItem();
         if (item == null) return false;
-        int i = item.itemID;
 
-        if(this.hungerCountdown > (24000 - this.getFoodValue(i))) return false;
+        int id = item.itemID;
+        int foodValue = getFoodValue(id);
 
-        if(i == BTWItems.wheat.itemID || i == BTWItems.straw.itemID){
-            this.eatFood(2200);
-            return true;
-        }
+        if (foodValue == 0) return false;
+        if (this.hungerCountdown > (24000 - foodValue)) return false;
 
-        if(i == Item.appleRed.itemID){
-            this.eatFood(1800);
+        this.eatFood(foodValue);
+
+        if (id == Item.appleRed.itemID) {
             addPotion(Potion.regeneration, 600);
-            return true;
-
         }
-
-        if(i == BTWItems.carrot.itemID){
-            this.eatFood(2000);
+        else if (id == BTWItems.carrot.itemID) {
             if (this.rand.nextInt(4) == 0) {
                 this.heal(1f);
             }
-            return true;
-
         }
-
-        if(i == Item.goldenCarrot.itemID){
-            this.eatFood(8000);
+        else if (id == Item.goldenCarrot.itemID) {
             this.heal(8f);
-            return true;
-
         }
-
-        if(i == Item.sugar.itemID){
-            this.eatFood(1400);
+        else if (id == Item.sugar.itemID) {
             addPotion(Potion.moveSpeed, 700);
-            return true;
-
         }
-
-        if(i == Item.netherStalkSeeds.itemID){
-            this.eatFood(2000);
+        else if (id == Item.netherStalkSeeds.itemID) {
             addPotion(Potion.fireResistance, 900);
-            return true;
-
         }
-
-        if(i == BTWItems.mysteriousGland.itemID){
-            this.eatFood(1400);
-            addPotion(Potion.waterBreathing,1200);
+        else if (id == BTWItems.mysteriousGland.itemID) {
+            addPotion(Potion.waterBreathing, 1200);
             this.setSwimmingTicks(1200);
-            return true;
         }
 
-        return false;
+        return true;
     }
+
+    @Unique
+    private int getFoodValue(int id) {
+        Integer value = FOOD_TICKS.get(id);
+        return value != null ? value : 0;
+    }
+
 
     @Unique private void setSwimmingTicks(int i) {
         this.swimmingTicks = i;
@@ -362,52 +355,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         }
         this.addPotionEffect(new PotionEffect(type.id, duration, 0));
     }
-    @Unique private int getFoodValue(int id){
-        if(id == BTWItems.wheat.itemID){
-            return 2200;
-        }
-        if(id == BTWItems.straw.itemID){
-            return 2200;
-        }
 
-        if(id == Item.appleRed.itemID){
-            return 1800;
-        }
-
-        if(id == BTWItems.carrot.itemID){
-            return 2000;
-        }
-
-        if(id == Item.goldenCarrot.itemID){
-            return 8000;
-        }
-
-        if(id == Item.sugar.itemID){
-            return 1400;
-        }
-
-        if(id == Item.netherStalkSeeds.itemID){
-            return 2000;
-        }
-
-        if(id == BTWItems.mysteriousGland.itemID){
-            return 1400;
-        }
-
-        return 0;
-    }
-    private static final List<Integer> horseFood = new ArrayList<>(Arrays.asList(
-            Item.appleRed.itemID,
-            BTWItems.wheat.itemID,
-            BTWItems.straw.itemID,
-            BTWItems.mysteriousGland.itemID,
-            Item.sugar.itemID,
-            BTWItems.carrot.itemID,
-            Item.netherStalkSeeds.itemID,
-            Item.goldenCarrot.itemID
-
-            // unused
-    ));
     @Inject(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityHorse;fleeingTick:I"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void allowHorseMounting(EntityPlayer player, CallbackInfoReturnable<Boolean> cir, ItemStack item){
         if(item != null) {
@@ -415,26 +363,18 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             // custom hand feeding code
         }
 
-        if (item != null && item.func_111282_a(player, this))
-        {
-            // feed I think
-            cir.setReturnValue(true);
-            // this never runs
-        }
-        else
-        {
-            // set mount and begin taming
-            this.func_110237_h(player);
-            this.resetTamingFields();
-            this.beginTamingProcess();
-            cir.setReturnValue(true);
-        }
+        // set mount and begin taming
+        if(this.isChild()) return;
+        this.func_110237_h(player);
+        this.resetTamingFields();
+        this.beginTamingProcess();
+        cir.setReturnValue(true);
     }
 
     @Unique private void beginTamingProcess(){
         if(this.isTame()) return;
         EnumFacing dir = EnumFacing.values()[requiredDirection];
-        // Send updated direction to the client
+        // send updated direction to the client
         EntityHorse horseHost = (EntityHorse)(Object)this;
         if (!this.worldObj.isRemote) {
 //            System.out.println("ran first direction send");

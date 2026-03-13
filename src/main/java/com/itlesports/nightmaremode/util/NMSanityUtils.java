@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.util;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.*;
@@ -87,7 +86,7 @@ public final class NMSanityUtils {
         int bx = MathHelper.floor_double(player.posX);
         int bz = MathHelper.floor_double(player.posZ);
 
-        if(player.dimension == NightmareMode.UNDERWORLD_DIMENSION) {
+        if(player.dimension == NMFields.UNDERWORLD_DIMENSION) {
             BiomeGenBase tempBiome = world.getBiomeGenForCoords(bx, bz);
             if (tempBiome == null) return 0.0;
 

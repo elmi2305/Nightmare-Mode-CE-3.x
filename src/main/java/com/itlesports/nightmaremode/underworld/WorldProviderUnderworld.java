@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.underworld;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 
 public class WorldProviderUnderworld extends WorldProvider {
     private float[] colorsSunriseSunsetUnderworld = new float[4];
@@ -31,7 +29,7 @@ public class WorldProviderUnderworld extends WorldProvider {
     @Override
     public void registerWorldChunkManager() {
         this.worldChunkMgr = new WorldChunkManagerUnderworld(this.worldObj.getSeed(), WorldType.DEFAULT);
-        this.dimensionId = NightmareMode.UNDERWORLD_DIMENSION;
+        this.dimensionId = NMFields.UNDERWORLD_DIMENSION;
         this.isHellWorld = false;
         this.hasNoSky = false;
     }

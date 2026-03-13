@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityBlaze.class)
 public class EntityBlazeMixin extends EntityMob{
-    @Unique private static boolean areMobsEvolved = NightmareMode.evolvedMobs;
-
     @Unique private int dashTimer = 0;
 
     public EntityBlazeMixin(World par1World) {
@@ -39,7 +37,7 @@ public class EntityBlazeMixin extends EntityMob{
                 isVariant = true;
             }
             if(!isVariant){
-                if ((progress >= (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 1) || areMobsEvolved) && rand.nextBoolean()) {
+                if ((progress >= (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 1) || NightmareMode.evolvedMobs) && rand.nextBoolean()) {
                     this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 }
             }

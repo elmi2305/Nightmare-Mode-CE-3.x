@@ -73,7 +73,7 @@ public class NMBlocks {
         underworldPortal = (BlockUnderworldPortal) new BlockUnderworldPortal(2309).setUnlocalizedName("underworld_portal").setTextureName("nightmare:underworld_portal");
         Item.itemsList[underworldPortal.blockID] = new NMItemBlock(NMBlocks.underworldPortal.blockID - 256);
 
-        bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 0).setTextureName("nightmare:chestBlood").setUnlocalizedName("nmBloodChest");
+        bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 1).setTextureName("nightmare:chestBlood").setUnlocalizedName("nmBloodChest");
         Item.itemsList[bloodChest.blockID] = new NMItemBlock(NMBlocks.bloodChest.blockID - 256);
 
         steelLocker = (BlockSteelLocker) new BlockSteelLocker(2355, 1).setTextureName("nightmare:lockerSteel").setUnlocalizedName("nmSteelLocker");

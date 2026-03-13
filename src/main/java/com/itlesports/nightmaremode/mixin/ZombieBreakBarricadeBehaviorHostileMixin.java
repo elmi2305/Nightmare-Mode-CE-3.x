@@ -25,7 +25,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
     @Inject(method = "updateTask", at = @At("HEAD"))
     private void toolZombieBreaksFaster(CallbackInfo ci){
-        if(this.associatedEntity instanceof EntityBloodZombie || NightmareMode.hordeMode){
+        if(this.associatedEntity instanceof EntityBloodZombie){
             this.breakingTime += 8;
         }
 

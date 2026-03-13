@@ -43,7 +43,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
     private double increaseHordeAttackRange(double par2){
-        return (NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
+        return (this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
     }
     @Unique private boolean isTargetPlayerAndPumpkin(Entity target){
         if(target instanceof EntityPlayer p){
@@ -54,7 +54,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @ModifyConstant(method = "updateAttackStateClient", constant = @Constant(doubleValue = 4096.0F))
     private double increaseDetectionRangeHorde(double constant){
-        return (float) ((NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
+        return (float) ((this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
     }
     @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean allowShootingThroughWallsBloodMoon(EntityGhast instance, Entity entity){
@@ -63,7 +63,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @Redirect(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean seePlayerThroughWallsHorde(EntityGhast instance, Entity entity){
-        return NightmareMode.hordeMode || this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
+        return this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
     }
 
     @Override

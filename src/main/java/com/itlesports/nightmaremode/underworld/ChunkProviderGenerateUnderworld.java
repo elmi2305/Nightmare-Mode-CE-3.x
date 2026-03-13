@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.underworld;
 
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.MapGenScatteredFeatureUnderworld;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -485,7 +485,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     private void btwPostProcessChunk(World worldObj, int iChunkX, int iChunkZ) {
-        if (worldObj.provider.dimensionId == 0 || worldObj.provider.dimensionId == NightmareMode.UNDERWORLD_DIMENSION) {
+        if (worldObj.provider.dimensionId == 0 || worldObj.provider.dimensionId == NMFields.UNDERWORLD_DIMENSION) {
             this.generateStrata(worldObj, iChunkX, iChunkZ);
             this.generateAdditionalBrownMushrooms(worldObj, iChunkX, iChunkZ);
         }

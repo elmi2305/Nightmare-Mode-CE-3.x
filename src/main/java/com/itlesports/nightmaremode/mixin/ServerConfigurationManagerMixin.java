@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.Entity;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.Teleporter;
@@ -13,7 +13,7 @@ public class ServerConfigurationManagerMixin {
 
     @Redirect(method = "transferEntityToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Teleporter;placeInPortal(Lnet/minecraft/src/Entity;DDDF)V"))
     private void doNotGenerateNetherPortalForUnderworld(Teleporter instance, Entity d, double e, double f, double g, float v){
-        if(d.dimension == NightmareMode.UNDERWORLD_DIMENSION) return;
+        if(d.dimension == NMFields.UNDERWORLD_DIMENSION) return;
 
         instance.placeInPortal(d,e,f,g,v);
     }

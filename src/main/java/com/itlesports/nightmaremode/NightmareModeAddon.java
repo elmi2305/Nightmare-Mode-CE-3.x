@@ -5,6 +5,7 @@ import api.BTWAddon;
 import api.util.AddonSoundRegistryEntry;
 import btw.client.network.packet.handler.CustomEntityPacketHandler;
 import com.itlesports.nightmaremode.entity.creepers.*;
+import com.itlesports.nightmaremode.entity.underworld.EntityBlackHole;
 import com.itlesports.nightmaremode.entity.underworld.EntityPollenCloud;
 import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
 import com.itlesports.nightmaremode.entity.underworld.FlowerCreeper;
@@ -215,6 +216,30 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
         CustomEntityPacketHandler.entryMap.put(PACKET_SPORE, (world, dataStream, packet) -> {
             double radius = dataStream.readDouble();
             EntityPollenCloud entityToSpawn = new EntityPollenCloud(world, radius);
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
+            entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
+            if (var14 != null) {
+                entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
+            }
+            return entityToSpawn;
+        });
+        CustomEntityPacketHandler.entryMap.put(PACKET_BLACKHOLE, (world, dataStream, packet) -> {
+            double radius = dataStream.readDouble();
+            EntityBlackHole entityToSpawn = new EntityBlackHole(world, radius);
             Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
             mobSpawnPacket.readPacketData(dataStream);
             double var2 = (double) mobSpawnPacket.xPosition / 32.0;

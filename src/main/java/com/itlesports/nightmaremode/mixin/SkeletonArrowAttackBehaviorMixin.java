@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
@@ -31,7 +31,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean superCriticalSkeletonEnhancedSight(EntitySenses instance, Entity entity){
-        if(((EntitySkeleton)this.entityOwner).getSkeletonType().id() == NightmareMode.SKELETON_SUPERCRITICAL){
+        if(((EntitySkeleton)this.entityOwner).getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL){
             return true;
         }
         return instance.canSee(entity);

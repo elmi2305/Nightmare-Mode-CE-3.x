@@ -13,11 +13,7 @@ public class EntityBloodZombie extends EntityZombie {
         super(par1World);
         this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
         this.tasks.removeAllTasksOfClass(EntityAIChaseTargetSmart.class);
-        if (NightmareMode.hordeMode) {
-            this.tasks.addTask(6, new EntityAIChaseTargetSmart(this, 1.0f));
-        } else{
-            this.tasks.addTask(6, new EntityAILiteHorde(this, 1.0f));
-        }
+        this.tasks.addTask(6, new EntityAILiteHorde(this, 1.0f));
 
         this.tasks.removeAllTasksOfClass(SimpleWanderBehavior.class);
 

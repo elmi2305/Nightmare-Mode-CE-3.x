@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMSanityUtils;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
@@ -71,12 +72,14 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     public boolean nightmareMode$isToggleZoomKeyHeld() {
         return Keyboard.isKeyDown(NightmareKeyBindings.nmZoomToggle.keyCode);
     }
-    private float underworldFogAlpha = 0.0f;
+
+    @Unique private float underworldFogAlpha = 0.0f;
     @Inject(method = "setupFog", at = @At("HEAD"),cancellable = true)
     private void doUnderworldFog(int par1, float par2, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
 
-        if (entity.dimension == NightmareMode.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p) {
+        if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p && NMUtils.getIsSolarFlare()) {
+            //// DEBUG: returning because getIsSolarFlare just returns false
             long worldTime = this.mc.theWorld.getWorldTime();
             long timeOfDay = worldTime % 24000L;
 
@@ -96,14 +99,11 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
                 return;
             }
 
-            // === FOG CALCULATIONS ===
             float timeFactor = (float) timeOfDay / 24000.0f;
 
-            // Slower, gentler pulse
             float pulse = 0.008f * (float) Math.sin(worldTime * 0.015f);
             float warp = 0.004f * (float) Math.cos(entity.posY * 0.08f + worldTime * 0.012f);
 
-            // Fog color with alpha blending
             float red   = 0.07f + 0.015f * (float) Math.sin(worldTime * 0.022f + par2 * 0.8f) + warp;
             float green = 0.015f + 0.008f * (float) Math.cos(worldTime * 0.018f + par2);
             float blue  = 0.04f  + 0.012f * (float) Math.sin(worldTime * 0.025f + par2) - warp;
@@ -112,16 +112,12 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             green = MathHelper.clamp_float(green, 0.005f, 0.06f);
             blue  = MathHelper.clamp_float(blue,  0.025f, 0.10f);
 
-            // Base density calculations
             float baseDensity = 0.048f + 0.012f * timeFactor;
             float density = baseDensity + pulse;
             density = MathHelper.clamp_float(density, 0.038f, 0.072f);
 
-            // Apply alpha fade to density
             density *= this.underworldFogAlpha;
 
-            // === GL STATE SETUP - Order matters! ===
-            // 1. Set fog parameters BEFORE enabling fog
             GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
             GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
             GL11.glFogf(GL11.GL_FOG_DENSITY, density);
@@ -388,9 +384,27 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         }
     }
 
-    @Unique private int bloodMoonFadeTracker = 1;
+    @Unique private float strobeHue = 0f;
+    @Unique private int getRainbowStrobeColor(float speed) {
+        strobeHue += speed;
+
+        if (strobeHue > 1f) {
+            strobeHue -= 1f;
+        }
+
+        int rgb = Color.HSBtoRGB(strobeHue, 1.0f, 1.0f);
+
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+
+        return (0xAA << 24) | (r << 16) | (g << 8) | b;
+    }
+
+
+    @Unique private int fadeTracker = 1;
     @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
-    private int[] manageCustomColorEvents(int[] par1ArrayOfInteger){
+    private int[] manageCustomColorEvents(int[] originalArray){
         if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
             if (this.mc.thePlayer.dimension == 1) {
                 return nightvisionEnd();
@@ -399,57 +413,74 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             }
         }
 
+        if(NMUtils.getIsBlueMoon()){
+            if(fadeTracker < 800){
+                fadeTracker++;
+            }
 
+            // funny strobe effect
+//            int strobeColor = getRainbowStrobeColor(0.008f);
+//            getCurrentColorFade(originalArray, strobeColor, 0.8f);
+
+            getCurrentColorFade(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
+//            System.out.println("hi");
+            return originalArray;
+        }
+        else // cannot run concurrently, blood moons and blue moons are mutually exclusive
         if(NMUtils.getIsBloodMoon()){
             if(NightmareMode.bloodmoonColors){
-                if(bloodMoonFadeTracker < 800){
-                    bloodMoonFadeTracker++;
+                if(fadeTracker < 800){
+                    fadeTracker++;
                 }
 
-                float t = Math.min(1f, bloodMoonFadeTracker / 800f);
+                getCurrentColorFade(originalArray, 0x00505050, 0.9f);
 
-                final float target = 80f;
-
-                for (int i = 0; i < 256; ++i) {
-                    int color = par1ArrayOfInteger[i];
-
-                    int a = (color >> 24) & 0xFF;
-                    int r = (color >> 16) & 0xFF;
-                    int g = (color >> 8) & 0xFF;
-                    int b = color & 0xFF;
-
-
-
-                    int newR = r;
-                    int newG = g;
-                    int newB = b;
-
-                    if(r > 80){
-                        newR = Math.round(r * (1f - t) + target * t);
-
-                    }
-                    if(g > 80){
-                        newG = Math.round(g * (1f - t) + target * t);
-
-                    }
-                    if(b > 80){
-                        newB = Math.round(b * (1f - t) + target * t);
-                    }
-                    // clamp to [0,255]
-                    newR = Math.max(0, Math.min(255, newR));
-                    newG = Math.max(0, Math.min(255, newG));
-                    newB = Math.max(0, Math.min(255, newB));
-
-                    par1ArrayOfInteger[i] = (a << 24) | (newR << 16) | (newG << 8) | newB;
-                }
-
-                return par1ArrayOfInteger;
+                return originalArray;
             }
         } else{
-            bloodMoonFadeTracker = 1;
+            fadeTracker = 1;
         }
 
-        return par1ArrayOfInteger;
+        return originalArray;
+    }
+
+    @Unique
+    private void getCurrentColorFade(int[] originalArray, int targetColor, float intensity) {
+        float t = Math.min(1f, fadeTracker / 800f);
+        float tEffective = t * Math.max(0f, Math.min(1f, intensity));
+
+        int aTarget = (targetColor >> 24) & 0xFF;
+        int rTarget = (targetColor >> 16) & 0xFF;
+        int gTarget = (targetColor >> 8) & 0xFF;
+        int bTarget = targetColor & 0xFF;
+
+        for (int i = 0; i < 256; ++i) {
+            int color = originalArray[i];
+
+            int a = (color >> 24) & 0xFF;
+            int r = (color >> 16) & 0xFF;
+            int g = (color >> 8) & 0xFF;
+            int b = color & 0xFF;
+
+            int newA = a;
+            int newR = r;
+            int newG = g;
+            int newB = b;
+
+            if (r > rTarget) newR = Math.round(r * (1f - tEffective) + rTarget * tEffective);
+            if (g > gTarget) newG = Math.round(g * (1f - tEffective) + gTarget * tEffective);
+            if (b > bTarget) newB = Math.round(b * (1f - tEffective) + bTarget * tEffective);
+            if (aTarget != 0) {
+                if (a > aTarget) newA = Math.round(a * (1f - tEffective) + aTarget * tEffective);
+            }
+
+            newA = Math.max(0, Math.min(255, newA));
+            newR = Math.max(0, Math.min(255, newR));
+            newG = Math.max(0, Math.min(255, newG));
+            newB = Math.max(0, Math.min(255, newB));
+
+            originalArray[i] = (newA << 24) | (newR << 16) | (newG << 8) | newB;
+        }
     }
 
     @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V", remap = false))

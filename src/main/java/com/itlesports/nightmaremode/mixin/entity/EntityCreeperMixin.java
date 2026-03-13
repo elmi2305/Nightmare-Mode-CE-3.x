@@ -60,13 +60,6 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void addHordeTasks(World par1World, CallbackInfo ci){
-        if (NightmareMode.hordeMode) {
-            this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
-            this.tasks.addTask(4, new EntityAIChaseTargetSmart(this, 1.0D));
-        }
-    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){

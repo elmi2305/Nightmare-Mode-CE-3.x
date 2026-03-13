@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityAgeable;
@@ -46,7 +46,7 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
     }
     @Inject(method = "isSubjectToHunger", at = @At("HEAD"), cancellable = true)
     private void nonSubjectToHungerInUnderworld(CallbackInfoReturnable<Boolean> cir){
-        if(this.dimension == NightmareMode.UNDERWORLD_DIMENSION){
+        if(this.dimension == NMFields.UNDERWORLD_DIMENSION){
             cir.setReturnValue(false);
         }
     }
