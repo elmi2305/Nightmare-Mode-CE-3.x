@@ -160,14 +160,14 @@ public class NMUtils {
     public static boolean getIsSolarFlare(){
         return false;
     }
-    public static boolean getIsEntityBlueMooned(EntityLivingBase entity){
-        if(entity == null) return false;
-        if(entity.dimension != NMFields.UNDERWORLD_DIMENSION) return false;
-        return getIsBlueMoon();
-    }
-    public static boolean getIsBlueMoon(){
-        return NightmareMode.isBlueMoon;
-    }
+//    public static boolean getIsEntityBlueMooned(EntityLivingBase entity){
+//        if(entity == null) return false;
+//        if(entity.dimension != NMFields.UNDERWORLD_DIMENSION) return false;
+//        return getIsBlueMoon();
+//    }
+//    public static boolean getIsBlueMoon(){
+//        return NightmareMode.isBlueMoon;
+//    }
     public static boolean getIsEclipse(){
         return NightmareMode.isEclipse;
     }

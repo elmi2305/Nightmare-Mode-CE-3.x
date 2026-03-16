@@ -39,40 +39,40 @@ public abstract class RenderGlobalMixin {
         return this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION;
     }
 
-    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
-    private int changeMoonSkyTexture(Tessellator instance){
-        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return 0;        // avoids drawing the moon, it is manually drawn later
-        return instance.draw();
-    }
-    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
-    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){
-        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return;        // avoids drawing the moon, it is manually drawn later
-        instance.startDrawingQuads();
-    }
-    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
-    private void setUpUVForMoon(float par1, CallbackInfo ci){
-        if(!this.isUnderWorld() || !NMUtils.getIsBlueMoon()) return;
-        // only runs in UW
-        Tessellator var23 = Tessellator.instance;
-
-        float size = 30.0f;
-
-        int phase = this.theWorld.getMoonPhase();
-
-        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(BLUE_MOON));
-        float uMin = 0.0f;
-        float uMax = 1.0f;
-        float vMin = 0.0f;
-        float vMax = 1.0f;
-
-        var23.startDrawingQuads();
-        var23.addVertexWithUV(-size, -100.0,  size, uMax, vMax);
-        var23.addVertexWithUV( size, -100.0,  size, uMin, vMax);
-        var23.addVertexWithUV( size, -100.0, -size, uMin, vMin);
-        var23.addVertexWithUV(-size, -100.0, -size, uMax, vMin);
-
-        var23.draw();
-    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 3))
+//    private int changeMoonSkyTexture(Tessellator instance){
+//        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return 0;        // avoids drawing the moon, it is manually drawn later
+//        return instance.draw();
+//    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
+//    private void doNothingAndDoNotStartDrawingMoon(Tessellator instance){
+//        if(this.isUnderWorld() && NMUtils.getIsBlueMoon()) return;        // avoids drawing the moon, it is manually drawn later
+//        instance.startDrawingQuads();
+//    }
+//    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", shift = At.Shift.AFTER, ordinal =  3))
+//    private void setUpUVForMoon(float par1, CallbackInfo ci){
+//        if(!this.isUnderWorld() || !NMUtils.getIsBlueMoon()) return;
+//        // only runs in UW
+//        Tessellator var23 = Tessellator.instance;
+//
+//        float size = 30.0f;
+//
+//        int phase = this.theWorld.getMoonPhase();
+//
+//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(BLUE_MOON));
+//        float uMin = 0.0f;
+//        float uMax = 1.0f;
+//        float vMin = 0.0f;
+//        float vMax = 1.0f;
+//
+//        var23.startDrawingQuads();
+//        var23.addVertexWithUV(-size, -100.0,  size, uMax, vMax);
+//        var23.addVertexWithUV( size, -100.0,  size, uMin, vMax);
+//        var23.addVertexWithUV( size, -100.0, -size, uMin, vMin);
+//        var23.addVertexWithUV(-size, -100.0, -size, uMax, vMin);
+//
+//        var23.draw();
+//    }
 
 
 

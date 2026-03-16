@@ -24,21 +24,22 @@ public abstract class MinecraftServerMixin {
     @Shadow @Final public Profiler theProfiler;
     @Shadow public abstract ILogAgent getLogAgent();
     @Shadow public abstract ServerConfigurationManager getConfigurationManager();
-    @Shadow public abstract void setDifficulty(Difficulty difficultyLevel);
-    @Shadow public abstract ISaveFormat getActiveAnvilConverter();
-    @Shadow public abstract EnumGameType getGameType();
-    @Shadow public abstract boolean canStructuresSpawn();
-    @Shadow public abstract boolean isHardcore();
-    @Shadow protected Difficulty difficultyLevel;
-
+//    @Shadow(remap = false) protected Difficulty difficultyLevel;
+//    @Shadow(remap = false) public abstract void setDifficultyForAllWorlds(Difficulty difficulty);
 
     @Shadow
-    public abstract void setDifficultyForAllWorlds(Difficulty difficulty);
-
+    private ServerConfigurationManager serverConfigManager;
     @Unique private boolean oldBloodMoon;
-    @Unique private boolean oldBlueMoon;
     @Unique private boolean oldEclipse;
-
+    // copied because it kept crashing when I tried shadowing it normally
+    @Unique
+    private void setDifficultyForAllWorlds(Difficulty difficulty) {
+        for (int var2 = 0; var2 < this.worldServers.length; ++var2) {
+            WorldServer var3 = this.worldServers[var2];
+            if (var3 == null) continue;
+            var3.worldInfo.setDifficulty(difficulty);
+        }
+    }
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
         boolean shouldStackSizesIncrease = this.worldServers[0].worldInfo.getData(NightmareMode.DRAGON_DEFEATED);
@@ -63,11 +64,9 @@ public abstract class MinecraftServerMixin {
 
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse = NightmareMode.isEclipse;
-//        oldBlueMoon = NightmareMode.isBlueMoon;
 
         NightmareMode.isEclipse = false;
         NightmareMode.isBloodMoon = false;
-//        NightmareMode.isBlueMoon = false;
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
@@ -106,12 +105,9 @@ public abstract class MinecraftServerMixin {
                         : !isNight
         );
 
-        // blue moon
-
 
         boolean shouldChangeBloodMoon = NightmareMode.isBloodMoon != oldBloodMoon;
         boolean shouldChangeEclipse   = NightmareMode.isEclipse   != oldEclipse;
-        boolean shouldChangeBlueMoon   = NightmareMode.isBlueMoon   != oldBlueMoon;
 
         if (shouldChangeBloodMoon || shouldChangeEclipse) {
             for (Object o : world.playerEntities) {
@@ -125,7 +121,6 @@ public abstract class MinecraftServerMixin {
                     AchievementEventDispatcher.triggerEvent(NMAchievementEvents.EclipseEvent.class, player, NightmareMode.isEclipse);
                 }
 
-                // todo ACHIEVEMENT FOR BLUE MOON
             }
 
             NightmareMode.sendMoonAndSunEventsToAllPlayers();
@@ -145,7 +140,6 @@ public abstract class MinecraftServerMixin {
 
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse   = NightmareMode.isEclipse;
-        oldBlueMoon   = NightmareMode.isBlueMoon;
     }
     @Inject(method = "worldServerForDimension", at = @At("HEAD"),cancellable = true)
     private void giveWorldServerForUnderworld(int par1, CallbackInfoReturnable<WorldServer> cir){
@@ -167,22 +161,41 @@ public abstract class MinecraftServerMixin {
                 serv,
                 var7,
                 par2Str,
-                NMFields.UNDERWORLD_DIMENSION,
+                2,
                 var8,
                 this.worldServers[3],
                 this.theProfiler,
                 this.getLogAgent());
-        this.getConfigurationManager().setPlayerManager(this.worldServers);
+        this.serverConfigManager.setPlayerManager(this.worldServers);
         this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
-
-        AddonHandler.initializeDifficultyCommon(this.difficultyLevel);
-        AddonHandler.initializeDifficultyServer(this.difficultyLevel);
         this.setDifficultyForAllWorlds(var8.getDifficulty());
+
     }
+//    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9, WorldSettings var8){
+//        MinecraftServer serv = (MinecraftServer) (Object)this;
+//        this.worldServers[3] =  new WorldServerMulti(
+//                serv,
+//                var7,
+//                par2Str,
+//                NMFields.UNDERWORLD_DIMENSION,
+//                var8,
+//                this.worldServers[3],
+//                this.theProfiler,
+//                this.getLogAgent());
+//        this.getConfigurationManager().setPlayerManager(this.worldServers);
+//        this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
+//        Difficulty difficultyLevel = var8.getDifficulty();
+//        AddonHandler.initializeDifficultyCommon(difficultyLevel);
+//        AddonHandler.initializeDifficultyServer(difficultyLevel);
+//        this.setDifficultyForAllWorlds(var8.getDifficulty());
+//    }
+
     @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
     private void doNothing(Difficulty mod){
         // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
     }
+    // TODO: consider removing altogether
     @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyServer(Lapi/world/difficulty/Difficulty;)V"))
     private void doNothing0(Difficulty mod){
         // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work

@@ -4,6 +4,7 @@ import api.world.WorldUtils;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,48 +14,66 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @Mixin(WorldServer.class)
-public abstract class WorldServerMixin extends World {
+public abstract class WorldServerMixin extends World implements WorldServerExt {
     @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> entry, T value);
 
     @Unique private boolean oldBlueMoon;
     @Unique private int subTick = 0;
 
+
+
     public WorldServerMixin(ISaveHandler par1ISaveHandler, String par2Str, WorldProvider par3WorldProvider, WorldSettings par4WorldSettings, Profiler par5Profiler, ILogAgent par6ILogAgent) {
         super(par1ISaveHandler, par2Str, par3WorldProvider, par4WorldSettings, par5Profiler, par6ILogAgent);
     }
 
-    @Inject(method = "initialize", at = @At("TAIL"))
-    private void resetBlueMoonStuff(WorldSettings par1WorldSettings, CallbackInfo ci){
-        oldBlueMoon = NightmareMode.isBlueMoon;
-        NightmareMode.isBlueMoon = false;
-    }
+//    @Inject(method = "initialize", at = @At("TAIL"))
+//    private void resetBlueMoonStuff(WorldSettings par1WorldSettings, CallbackInfo ci){
+//        oldBlueMoon = NightmareMode.isBlueMoon;
+//        NightmareMode.isBlueMoon = false;
+//    }
+
+    @Unique private boolean isBlueMoonWorld;
     @Inject(method = "tick", at = @At("TAIL"))
     private void manageBlueMoons(CallbackInfo ci){
-        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION){
-            NightmareMode.setBlueMoon(
-                    this.getIsBlueMoon(this)
-            );
-            if(this.getWorldTime() % 100 != 1) return;
-
-            boolean shouldChangeBlueMoon   = NightmareMode.isBlueMoon   != oldBlueMoon;
-            if(shouldChangeBlueMoon){
-                System.out.println("sending packet");
-                NightmareMode.sendMoonAndSunEventsToAllPlayers();
-            }
-
-            oldBlueMoon   = NightmareMode.isBlueMoon;
-
-
+//        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION){
+//            if(time % 100 != 1) return;
+//            NightmareMode.setBlueMoon(
+//                    this.getIsBlueMoon(this)
+//            );
+//            boolean shouldChangeBlueMoon   = NightmareMode.isBlueMoon   != oldBlueMoon;
+//            if(shouldChangeBlueMoon){
+//                System.out.println("sending packet");
+//                NightmareMode.sendMoonAndSunEventsToAllPlayers();
+//            }
+//
+//            oldBlueMoon   = NightmareMode.isBlueMoon;
+//        }
+        long time = this.getWorldTime();
+        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION &&time % 20 == 1 && !this.isRemote) {
+            // only server logic for now
+            this.setBlueMoonWorld(this.calculateIsBlueMoon(this));
+//            System.out.println("calculated blue moon: " + this.isBlueMoonWorld);
+        } else{
+            this.setBlueMoonWorld(false);
         }
     }
-    @Unique private boolean getIsBlueMoon(World world){
+    @Unique private void setBlueMoonWorld(boolean b){
+        this.isBlueMoonWorld = b;
+    }
+
+
+    @Unique private boolean calculateIsBlueMoon(World world){
 //        if(NMUtils.getWorldProgress() <= 1){return false;}
         // TODO include the upper condition. it's off for debugging
 
-        return this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
+//        System.out.println(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION ? "UNDERWORLD" : "SOMETHING ELSE");
+//        System.out.println("Night: " + getIsNightFromWorldTime(world));
+//        System.out.println("Moon Phase: " + world.getMoonPhase());
+//        System.out.println("OUTPUT: " + (this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0));
+//        System.out.println(" ");
+        // works as expected
+        return this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
     }
     @Unique private boolean getIsNightFromWorldTime(World world){
         return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
@@ -98,5 +117,16 @@ public abstract class WorldServerMixin extends World {
             }
         }
         return worldTime;
+    }
+
+    @Override
+    public boolean nightmareMode$getIsBlueMoon() {
+        return this.isBlueMoonWorld;
+    }
+
+    @Override
+    public void nightmareMode$setIsBlueMoon(boolean isBlueMoon) {
+        this.setBlueMoonWorld(isBlueMoon);
+        // probably won't be used - no need to call it externally
     }
 }

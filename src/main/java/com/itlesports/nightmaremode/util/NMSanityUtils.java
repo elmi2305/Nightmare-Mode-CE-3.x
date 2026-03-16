@@ -50,11 +50,12 @@ public final class NMSanityUtils {
 
 
         if (player.ticksExisted % 40 == 0 && player.isSneaking()) {
-            System.out.println("sanity drain from LIGHT: " + getLightDrain(player));
-            System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
-            System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
-            System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
-            System.out.println(" ");
+            //// DEBUG
+//            System.out.println("sanity drain from LIGHT: " + getLightDrain(player));
+//            System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
+//            System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
+//            System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
+//            System.out.println(" ");
         }
 
         return Math.max(0.0, drain);

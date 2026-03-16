@@ -413,20 +413,20 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
             }
         }
 
-        if(NMUtils.getIsBlueMoon()){
-            if(fadeTracker < 800){
-                fadeTracker++;
-            }
-
-            // funny strobe effect
-//            int strobeColor = getRainbowStrobeColor(0.008f);
-//            getCurrentColorFade(originalArray, strobeColor, 0.8f);
-
-            getCurrentColorFade(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
-//            System.out.println("hi");
-            return originalArray;
-        }
-        else // cannot run concurrently, blood moons and blue moons are mutually exclusive
+//        if(NMUtils.getIsBlueMoon()){
+//            if(fadeTracker < 800){
+//                fadeTracker++;
+//            }
+//
+//            // funny strobe effect
+////            int strobeColor = getRainbowStrobeColor(0.008f);
+////            getCurrentColorFade(originalArray, strobeColor, 0.8f);
+//
+//            getCurrentColorFade(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
+////            System.out.println("hi");
+//            return originalArray;
+//        }
+//        else // cannot run concurrently, blood moons and blue moons are mutually exclusive
         if(NMUtils.getIsBloodMoon()){
             if(NightmareMode.bloodmoonColors){
                 if(fadeTracker < 800){

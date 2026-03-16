@@ -47,7 +47,6 @@ public class NightmareMode extends BTWAddon {
     // events
     public static boolean isBloodMoon;
     public static boolean isEclipse;
-    public static boolean isBlueMoon;
 
     // misc
     public boolean canAccessMenu = true;
@@ -229,7 +228,6 @@ public class NightmareMode extends BTWAddon {
             try {
                 isBloodMoon = dataStream.readBoolean();
                 isEclipse = dataStream.readBoolean();
-                isBlueMoon = dataStream.readBoolean();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -349,7 +347,6 @@ public class NightmareMode extends BTWAddon {
         try {
             dataStream.writeBoolean(isBloodMoon);
             dataStream.writeBoolean(isEclipse);
-            dataStream.writeBoolean(isBlueMoon);
         } catch (Exception var4) {
             var4.printStackTrace();
         }
@@ -363,9 +360,6 @@ public class NightmareMode extends BTWAddon {
     }
     public static void setBloodmoon(boolean par1){
         isBloodMoon = par1;
-    }
-    public static void setBlueMoon(boolean par1){
-        isBlueMoon = par1;
     }
 
     public static void sendWorldStateToAllPlayers() {

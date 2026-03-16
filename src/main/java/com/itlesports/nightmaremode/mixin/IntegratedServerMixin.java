@@ -39,7 +39,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
     }
 
     @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/IntegratedServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, boolean isGlobal){
+    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7){
         MinecraftServer serv = (MinecraftServer) (Object)this;
         this.worldServers[3] =  new WorldServerMulti(
                 serv,
@@ -55,7 +55,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
 
         AddonHandler.initializeDifficultyCommon(this.difficultyLevel);
         AddonHandler.initializeDifficultyServer(this.difficultyLevel);
-        if (isGlobal) {
+        if (false) {
             this.setDifficultyForAllWorlds(BTWDifficulties.HOSTILE_LOCKED);
             this.worldServers[0].worldInfo.setData(BTWDifficulties.DIFFICULTY_LOCKED, true);
         } else {
