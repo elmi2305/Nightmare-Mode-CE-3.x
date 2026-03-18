@@ -12,6 +12,7 @@
     "BonusBasketGeneratorMixin",
     "BTWItemsMixin",
     "BucketItemWaterMixin",
+    "ChunkMixin",
     "DifficultiesMixin",
     "EmiConfigMixin",
     "EnchantmentDurabilityMixin",
