@@ -16,35 +16,31 @@ public class UnderworldGenLayerBiomes extends GenLayerBiome {
     }
 
     @Override
-    public int[] getInts(int par1, int par2, int par3, int par4) {
+    public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight) {
         // Call super, but it uses the vanilla list—override to use your array
-        int[] var5 = this.parent.getInts(par1, par2, par3, par4);
-        int[] var6 = IntCache.getIntCache(par3 * par4);
-        for (int var7 = 0; var7 < par4; ++var7) {
-            for (int var8 = 0; var8 < par3; ++var8) {
-                this.initChunkSeed(var8 + par1, var7 + par2);
-                int var9 = var5[var8 + var7 * par3];
+        int[] ints = this.parent.getInts(areaX, areaY, areaWidth, areaHeight);
+        int[] intCache = IntCache.getIntCache(areaWidth * areaHeight);
+        for (int x = 0; x < areaHeight; ++x) {
+            for (int y = 0; y < areaWidth; ++y) {
+                this.initChunkSeed(y + areaX, x + areaY);
+                int var9 = ints[y + x * areaWidth];
                 if (var9 == 0) {
-                    var6[var8 + var7 * par3] = 0;
-                }
-                else if (var9 == BiomeGenBase.mushroomIsland.biomeID) {
-                    var6[var8 + var7 * par3] = var9; // Keep if needed
+                    intCache[y + x * areaWidth] = 0;
                 }
                 else if (var9 == 1) {
-                    // Plains-like: Pick from your list (e.g., flower fields rare)
 //                    if (this.nextInt(20) == 0) { // Control rarity (1/20 chance for flower fields)
-//                        var6[var8 + var7 * par3] = BiomeGenBase.biomeList[42].biomeID; // Flower Fields
+//                        intCache[y + x * areaWidth] = BiomeGenBase.biomeList[42].biomeID; // Flower Fields
 //                    }
 //                    else {
-                        var6[var8 + var7 * par3] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
+                        intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
 //                    }
                 }
                 else {
                     // Add logic for other var9 values (e.g., 2=desert, etc.) to map to your biomes
-                    var6[var8 + var7 * par3] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
+                    intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
                 }
             }
         }
-        return var6;
+        return intCache;
     }
 }

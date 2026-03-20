@@ -12,6 +12,7 @@ public abstract class UnderworldGenLayer {
     private long chunkSeed;
     private long baseSeed;
     public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType worldType) {
+
         GenLayerIsland var1 = new GenLayerIsland(1L);
         GenLayerFuzzyZoom var9 = new GenLayerFuzzyZoom(2000L, var1);
         GenLayerAddIsland var10 = new GenLayerAddIsland(1L, var9);
@@ -22,38 +23,43 @@ public abstract class UnderworldGenLayer {
         var10 = new GenLayerAddIsland(3L, var11);
         var11 = new GenLayerZoom(2003L, var10);
         var10 = new GenLayerAddIsland(4L, var11);
-        GenLayerAddMushroomIsland var15 = new GenLayerAddMushroomIsland(5L, var10);
-        GenLayer var17 = GenLayerZoom.magnify(1000L, var15, 0);
+
+        // directly use the land mask
+        GenLayer var17 = GenLayerZoom.magnify(1000L, var10, 0);
+
         byte var4 = 4;
         if (worldType == WorldType.LARGE_BIOMES) {
             var4 = 6;
         }
+
         GenLayer var5 = GenLayerZoom.magnify(1000L, var17, 0);
-//        GenLayerRiverInit var19 = new GenLayerRiverInit(100L, var5);
+
+        // Rivers already removed by you
         var5 = GenLayerZoom.magnify(1000L, var5, var4 + 2);
-//        GenLayerRiver var20 = new GenLayerRiver(1L, var5);
         GenLayerSmooth var21 = new GenLayerSmooth(1000L, var5);
         GenLayer var6 = GenLayerZoom.magnify(1000L, var17, 0);
-        GenLayerBiome var23 = new UnderworldGenLayerBiomes(200L, var6, worldType); // Use your custom biome layer here
+        GenLayerBiome var23 = new UnderworldGenLayerBiomes(200L, var6, worldType); // your custom biome layer
         var6 = GenLayerZoom.magnify(1000L, var23, 2);
+
         Object var22 = new GenLayerHills(1000L, var6);
         for (int var7 = 0; var7 < var4; ++var7) {
             var22 = new GenLayerZoom(1000L + (long)var7, (GenLayer)var22);
+
             if (var7 == 0) {
                 var22 = new GenLayerAddIsland(3L, (GenLayer)var22);
             }
-            if (var7 == 1) {
-                var22 = new GenLayerShore(1000L, (GenLayer)var22);
-            }
-            if (var7 == 1) {
-                var22 = new GenLayerSwampRivers(1000L, (GenLayer)var22);
-            }
+
+            // REMOVED: GenLayerShore
+            // REMOVED: GenLayerSwampRivers
         }
+
         GenLayerSmooth var24 = new GenLayerSmooth(1000L, (GenLayer)var22);
-//        GenLayerRiverMix var25 = new GenLayerRiverMix(100L, var24, var21);
+
         GenLayerVoronoiZoom var8 = new GenLayerVoronoiZoom(10L, var24);
+
         var24.initWorldGenSeed(seed);
         var8.initWorldGenSeed(seed);
+
         return new GenLayer[]{var24, var8, var24};
     }
 
