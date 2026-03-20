@@ -28,12 +28,12 @@ public class UnderworldGenLayerBiomes extends GenLayerBiome {
                     intCache[y + x * areaWidth] = 0;
                 }
                 else if (var9 == 1) {
-//                    if (this.nextInt(20) == 0) { // Control rarity (1/20 chance for flower fields)
-//                        intCache[y + x * areaWidth] = BiomeGenBase.biomeList[42].biomeID; // Flower Fields
-//                    }
-//                    else {
-                        intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
-//                    }
+                    if (this.nextInt(8) == 0) { // Control rarity (1/20 chance for flower fields)
+                        intCache[y + x * areaWidth] = underworldBiomes[2].biomeID; // Flower Fields
+                    }
+                    else {
+                        intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length - 1)].biomeID;
+                    }
                 }
                 else {
                     // Add logic for other var9 values (e.g., 2=desert, etc.) to map to your biomes

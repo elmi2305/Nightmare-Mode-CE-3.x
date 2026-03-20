@@ -9,10 +9,19 @@ public class BiomeGenUnderworld extends BiomeGenBase {
     // biome specific information
     private float drainMultiplier = 1.0f; // 1.0f means no biome penalty. higher means you lose sanity and lower means you gain it
 
+    private static final float BLIGHT_MIN = 1.1f;
+    private static final float BLIGHT_MAX = 1.5f;
 
-    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains").setMinMaxHeight(1.8F, 2.0f);
-    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(2.0F, 3F).setDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(1.0f, 1.001F).setDisableRain();
+    private static final float HIGH_MIN = 2.2f;
+    private static final float HIGH_MAX = 3.5f;
+
+    private static final float FLOWER_MIN = 0.5f;
+    private static final float FLOWER_MAX = 0.501f;
+
+
+    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains").setMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
+    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(HIGH_MIN, HIGH_MAX).setDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(FLOWER_MIN, FLOWER_MAX).setDisableRain();
 
 
     protected BiomeGenUnderworld(int par1) {

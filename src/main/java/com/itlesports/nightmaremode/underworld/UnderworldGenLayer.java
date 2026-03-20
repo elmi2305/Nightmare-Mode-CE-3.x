@@ -55,6 +55,8 @@ public abstract class UnderworldGenLayer {
 
         GenLayerSmooth var24 = new GenLayerSmooth(1000L, (GenLayer)var22);
 
+        // RiverMix already removed by you
+
         GenLayerVoronoiZoom var8 = new GenLayerVoronoiZoom(10L, var24);
 
         var24.initWorldGenSeed(seed);

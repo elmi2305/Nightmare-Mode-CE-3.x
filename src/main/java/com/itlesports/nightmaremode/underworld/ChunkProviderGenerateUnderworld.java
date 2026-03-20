@@ -57,7 +57,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8);
     }
 
-    private int seaLevel = 63;
+    private int seaLevel = 10;
 
     public void generateTerrain(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata) {
         byte noiseScaleXZ = 4;
@@ -68,7 +68,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, noiseSizeX + 5, noiseSizeZ + 5);
 
-        this.noiseArray = this.initializeNoiseField(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
+        this.noiseArray = this.initializeNoiseFieldOriginal(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
 
         int blockStride = 256;                            // CHANGED: was 128
         double horizontalInterpStep = 0.25;
@@ -120,12 +120,12 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
                             for (byte subZ = 0; subZ < 4; ++subZ) {
                                 if ((noiseZValue += noiseZStep) > 0.0D) {
-                                    blockIDs[blockIndex += blockStride] = (short) NMBlocks.underCobble.blockID;  // your preferred block
+                                    blockIDs[blockIndex += blockStride] = (short) NMBlocks.underCobble.blockID;
                                 }
-                                else if(noiseY * 8 + subX < seaLevel){
-                                    blockIDs[blockIndex += blockStride] = (short) Block.waterStill.blockID;
-
-                                }
+//                                else if(noiseY * 8 + subX < seaLevel){
+//                                    blockIDs[blockIndex += blockStride] = (short) Block.waterStill.blockID;
+//
+//                                }
 
                                 else {
                                     blockIDs[blockIndex += blockStride] = 0;
@@ -195,15 +195,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         if (surfaceDepth <= 0) {
                             topBlock = 0;
                             fillerBlock = (short) Block.stone.blockID;
-                        } else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
-                            topBlock = biome.topBlock;
-                            fillerBlock = biome.fillerBlock;
                         }
-
-                        if (y < seaLevel && topBlock == 0) {
-                            topBlock = (short) Block.waterStill.blockID;
-                        }
-
 
                         remainingDepth = surfaceDepth;
 
@@ -264,7 +256,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
     private static int parabolicRadius = 10;
 
-    private double[] initializeNoiseField(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
+    private double[] initializeNoiseFieldOriginal(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
         if (theNoiseArray == null) {
             theNoiseArray = new double[noiseSizeX * noiseSizeY * noiseSizeZ];
         }
@@ -292,11 +284,11 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         // can not do this because it causes lots of issues with noise abruptly changing
 //        }
         // edit
-        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
         this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, noiseSizeX, noiseSizeZ, 200.0, 200.0, 0.5);
+        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
         this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44 / 80.0, var45 / 160.0, var44 / 80.0);
-        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
         this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
+        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
         short var12 = 0;
         short var13 = 0;
         int biomeStride = noiseSizeX + 5;
@@ -384,6 +376,121 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         double var40 = (float)(var46 - yTopLimit) / 3.0f;
                         var30 = var30 * (1.0 - var40) + -10.0 * var40;
                     }
+                    theNoiseArray[var12] = var30;
+                    ++var12;
+                }
+            }
+        }
+        return theNoiseArray;
+    }
+
+
+    private double[] initializeNoiseField(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
+        if (theNoiseArray == null) {
+            theNoiseArray = new double[noiseSizeX * noiseSizeY * noiseSizeZ];
+        }
+        if (this.parabolicField == null) {
+            int size = 2 * parabolicRadius + 1;
+            this.parabolicField = new float[size * size];
+            for (int dx = -parabolicRadius; dx <= parabolicRadius; ++dx) {
+                for (int dy = -parabolicRadius; dy <= parabolicRadius; ++dy) {
+                    float dist = MathHelper.sqrt_float((float)(dx * dx + dy * dy)) + 0.2F;
+                    this.parabolicField[dx + parabolicRadius + (dy + parabolicRadius) * size] = 10.0F / dist;
+                }
+            }
+        }
+
+        double var44 = 684.412;  // XZ scale
+        double var45 = 684.412;  // Y scale
+
+        // === TUNED FOR HUGE MOUNTAINS + NO FLOATS ===
+        var44 *= 0.55D;   // Bigger horizontal features (was 0.7)
+        var45 *= 1.8D;    // Taller mountains (uncommented + boosted)
+
+        this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, noiseSizeX, noiseSizeZ, 200.0, 200.0, 0.5);
+        // noise5 is generated but unused in vanilla — you can remove the line if you want
+        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
+        this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44 / 160.0, var45 / 320.0, var44 / 160.0); // SLOWER selector = huge smooth ranges
+        this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
+        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
+
+        short var12 = 0;
+        short var13 = 0;
+        int biomeStride = noiseSizeX + 5;
+        double noiseYDiv32 = (double)noiseSizeY / 32.0;
+        double noiseYDiv4 = (double)noiseSizeY / 4.0D;
+        byte yTopLimit = (byte)(noiseSizeY - 4);
+
+        for (byte var14 = 0; var14 < noiseSizeX; ++var14) {
+            for (byte var15 = 0; var15 < noiseSizeZ; ++var15) {
+                float var16 = 0.0f;
+                float var17 = 0.0f;
+                float var18 = 0.0f;
+
+                int biomeBase = var14 + 2 + (var15 + 2) * biomeStride;
+                BiomeGenBase var20 = this.biomesForGeneration[biomeBase];
+
+                for (byte var21 = -2; var21 <= 2; ++var21) {
+                    for (byte var22 = -2; var22 <= 2; ++var22) {
+                        BiomeGenBase var23 = this.biomesForGeneration[biomeBase + var21 + var22 * biomeStride];
+                        float minH = var23.minHeight;
+                        float maxH = var23.maxHeight;
+
+                        // RE-ENABLED + TUNED: this is what gives proper huge mountains in biomes
+                        if (minH > 0.0F) {
+                            minH = 1.0F + minH * 4.0F;   // stronger mountains
+                            maxH = 1.0F + maxH * 3.0F;
+                        }
+
+                        float var24 = this.parabolicField[var21 + 2 + (var22 + 2) * 5] / (minH + 2.0F);
+                        if (var23.minHeight > var20.minHeight) var24 /= 2.0F;
+
+                        var16 += maxH * var24;
+                        var17 += minH * var24;
+                        var18 += var24;
+                    }
+                }
+                var16 /= var18;
+                var17 /= var18;
+                var16 = var16 * 0.9f + 0.1f;
+                var17 = (var17 * 4.0f - 1.0f) / 8.0f;
+
+                // === SMOOTHER LOW-FREQ HEIGHT VARIATION (no more abrupt jumps) ===
+                double var47 = this.noise6[var13] / 8000.0D;
+                var47 = var47 * 5.0D - 2.0D;          // simplified + stronger (was complex if-chain)
+                var47 = Math.max(-1.0D, Math.min(1.0D, var47)); // clean clamp
+
+                ++var13;
+
+                for (byte var46 = 0; var46 < noiseSizeY; ++var46) {
+                    double var48 = var17;
+                    double var26 = var16;
+
+                    var48 += var47 * 1.0D;                    // much stronger low-freq for huge ranges
+                    var48 = var48 * noiseYDiv32;
+
+                    double var28 = noiseYDiv4 + var48 * 5.0D; // higher multiplier = taller base mountains
+
+                    double var30 = 0;
+                    double var32 = ((double)var46 - var28) * 12.0 * 128 / 128.0 / var26;
+                    if (var32 < 0.0) var32 *= 4.0;
+
+                    double var34 = this.noise1[var12] / 512.0;
+                    double var36 = this.noise2[var12] / 512.0;
+
+                    // === THE BIG ONE: SMOOTH SELECTOR (no more abrupt spikes/islands) ===
+                    double var38 = (this.noise3[var12] / 25.0 + 1.0) / 2.0; // /25 instead of /10 = 2.5× slower changes
+                    var38 = MathHelper.clamp_float((float) var38, 0.0F, 1.0F);     // force clean blend
+                    var30 = var34 + (var36 - var34) * var38;                // always smooth blend, no hard if-snap
+
+                    var30 -= var32;
+
+                    // stronger roof pull-down (kills any remaining floaters)
+                    if (var46 > yTopLimit) {
+                        double var40 = (float)(var46 - yTopLimit) / 3.0f;
+                        var30 = var30 * (1.0 - var40) + -15.0 * var40;   // -15 instead of -10
+                    }
+
                     theNoiseArray[var12] = var30;
                     ++var12;
                 }
