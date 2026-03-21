@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.World;
 
@@ -13,5 +14,9 @@ public class EntityNitroCreeper extends EntityCreeperVariant {
         this.explosionRadius = 6;
         this.patienceCounter = (byte)20;
         this.canLunge = false;
+    }
+    @Override
+    public boolean getCanSpawnHere() {
+        return NightmareMode.moreVariants && super.getCanSpawnHere();
     }
 }

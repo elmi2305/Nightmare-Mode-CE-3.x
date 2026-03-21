@@ -14,6 +14,11 @@ public class EntityDungCreeper extends EntityCreeperVariant{
     }
 
     @Override
+    public boolean getCanSpawnHere() {
+        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
+    }
+
+    @Override
     protected void onDeathEffect() {
         super.onDeathEffect();
         int amount = NightmareMode.isAprilFools ? 12 : 4;

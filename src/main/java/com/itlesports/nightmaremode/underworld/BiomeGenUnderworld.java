@@ -3,25 +3,30 @@ package com.itlesports.nightmaremode.underworld;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
 import net.minecraft.src.*;
 
 public class BiomeGenUnderworld extends BiomeGenBase {
     // biome specific information
     private float drainMultiplier = 1.0f; // 1.0f means no biome penalty. higher means you lose sanity and lower means you gain it
 
-    private static final float BLIGHT_MIN = 1.1f;
-    private static final float BLIGHT_MAX = 1.5f;
+    private static final float BLIGHT_MIN = 0.5f;
+    private static final float BLIGHT_MAX = 0.9f;
 
-    private static final float HIGH_MIN = 2.2f;
-    private static final float HIGH_MAX = 3.5f;
+    private static final float HIGH_MIN = 1.0f;
+    private static final float HIGH_MAX = 1.5f;
 
-    private static final float FLOWER_MIN = 0.5f;
-    private static final float FLOWER_MAX = 0.501f;
+    private static final float FLOWER_MIN = 0.25f;
+    private static final float FLOWER_MAX = 0.2501f;
+
+    private static final float VOID_MIN = 0.25f;
+    private static final float VOID_MAX = 0.2501f;
 
 
     public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains").setMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
     public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(HIGH_MIN, HIGH_MAX).setDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(FLOWER_MIN, FLOWER_MAX).setDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
+    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) new BiomeGenShadowRealm(27).setDrainMultiplier(1.8f).setBiomeName("UnderworldVoid").setMinMaxHeight(VOID_MIN, VOID_MAX).setDisableRain();
 
 
     protected BiomeGenUnderworld(int par1) {

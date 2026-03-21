@@ -34,11 +34,10 @@ public abstract class UnderworldGenLayer {
 
         GenLayer var5 = GenLayerZoom.magnify(1000L, var17, 0);
 
-        // Rivers already removed by you
         var5 = GenLayerZoom.magnify(1000L, var5, var4 + 2);
         GenLayerSmooth var21 = new GenLayerSmooth(1000L, var5);
         GenLayer var6 = GenLayerZoom.magnify(1000L, var17, 0);
-        GenLayerBiome var23 = new UnderworldGenLayerBiomes(200L, var6, worldType); // your custom biome layer
+        GenLayer var23 = new UnderworldGenLayerBiomes(200L, var6, worldType);
         var6 = GenLayerZoom.magnify(1000L, var23, 2);
 
         Object var22 = new GenLayerHills(1000L, var6);
@@ -48,14 +47,9 @@ public abstract class UnderworldGenLayer {
             if (var7 == 0) {
                 var22 = new GenLayerAddIsland(3L, (GenLayer)var22);
             }
-
-            // REMOVED: GenLayerShore
-            // REMOVED: GenLayerSwampRivers
         }
 
         GenLayerSmooth var24 = new GenLayerSmooth(1000L, (GenLayer)var22);
-
-        // RiverMix already removed by you
 
         GenLayerVoronoiZoom var8 = new GenLayerVoronoiZoom(10L, var24);
 

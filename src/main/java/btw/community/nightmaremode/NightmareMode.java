@@ -186,6 +186,7 @@ public class NightmareMode extends BTWAddon {
         BiomeGenBase.biomeList[24] = BiomeGenUnderworld.blightlands;
         BiomeGenBase.biomeList[25] = BiomeGenUnderworld.highlands;
         BiomeGenBase.biomeList[26] = BiomeGenUnderworld.flowerFields;
+        BiomeGenBase.biomeList[27] = BiomeGenUnderworld.shadowRealm;
 //        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.flowerFields;
         MapGenStructureIO.func_143034_b(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }

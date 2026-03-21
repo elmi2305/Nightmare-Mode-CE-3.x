@@ -20,7 +20,7 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
 
     @Override
     public boolean getCanSpawnHere() {
-        return (this.posY < 20 || this.dimension == -1) && super.getCanSpawnHere();
+        return (this.posY < 24 || this.dimension == -1) && super.getCanSpawnHere();
     }
 
     @Override

@@ -57,20 +57,20 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8);
     }
 
-    private int seaLevel = 10;
+    private int seaLevel = 10; // unused
 
     public void generateTerrain(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata) {
         byte noiseScaleXZ = 4;
-        byte noiseScaleY = 32;          // CHANGED: was 16 → now 32 sections (32*8 = 256 blocks)
+        byte noiseScaleY = 32;
         byte noiseSizeX = (byte)(noiseScaleXZ + 1); // 5
-        byte noiseSizeY = 33;           // CHANGED: was 17 → now 33
+        byte noiseSizeY = 33;
         byte noiseSizeZ = (byte)(noiseScaleXZ + 1); // 5
 
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, noiseSizeX + 5, noiseSizeZ + 5);
 
-        this.noiseArray = this.initializeNoiseFieldOriginal(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
+        this.noiseArray = this.initializeNoiseFieldInLayers(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
 
-        int blockStride = 256;                            // CHANGED: was 128
+        int blockStride = 256; // CHANGED: was 128
         double horizontalInterpStep = 0.25;
         double depthInterpStep = 0.25;
 
@@ -161,7 +161,6 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                 short fillerBlock = biome.fillerBlock;
                 byte fillerBlockMetadata = biome.fillerBlockMetadata;
 
-                // Your custom biome overrides (now they will actually run)
                 if (biome instanceof BiomeGenHighlands) {
                     fillerBlock = (short) NMBlocks.underCobble.blockID;
                     topBlock = (short) NMBlocks.underCobble.blockID;
@@ -199,19 +198,18 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
                         remainingDepth = surfaceDepth;
 
-                        // Place the biome top block at the real surface
                         blockIDs[blockIndex] = topBlock;
                         metadata[blockIndex] = topBlockMetadata;
                         continue;
                     }
 
-                    // Place filler blocks below the surface
+                    // place filler blocks below the surface
                     if (remainingDepth > 0) {
                         --remainingDepth;
                         blockIDs[blockIndex] = fillerBlock;
                         metadata[blockIndex] = fillerBlockMetadata;
 
-                        // Sandstone edge case (rarely hits in underworld)
+                        // sandstone edge case
                         if (remainingDepth == 0 && fillerBlock == Block.sand.blockID && fillerBlockMetadata == 0) {
                             remainingDepth = this.rand.nextInt(4);
                             fillerBlock = (short) Block.sandStone.blockID;
@@ -255,7 +253,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     private static int parabolicRadius = 10;
-
+/*
     private double[] initializeNoiseFieldOriginal(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
         if (theNoiseArray == null) {
             theNoiseArray = new double[noiseSizeX * noiseSizeY * noiseSizeZ];
@@ -278,8 +276,8 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 //        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(par2x * 4, par4z * 4);
 //        System.out.println("biome: "+ biome + " at " +"x"+(par2x * 4) + ", z" +(par4z * 4));
         // edit
-        var44 *= 0.7d; // xz
-//        var45 *= 1.5d; // y
+        var44 *= 0.40d; // xz
+//        var45 *= 0.1d; // y
 //        if (biome == BiomeGenUnderworld.flowerFields) {
         // can not do this because it causes lots of issues with noise abruptly changing
 //        }
@@ -383,9 +381,9 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         }
         return theNoiseArray;
     }
+*/
 
-
-    private double[] initializeNoiseField(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
+    private double[] initializeNoiseFieldInLayers(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
         if (theNoiseArray == null) {
             theNoiseArray = new double[noiseSizeX * noiseSizeY * noiseSizeZ];
         }
@@ -403,12 +401,12 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         double var44 = 684.412;  // XZ scale
         double var45 = 684.412;  // Y scale
 
-        // === TUNED FOR HUGE MOUNTAINS + NO FLOATS ===
-        var44 *= 0.55D;   // Bigger horizontal features (was 0.7)
-        var45 *= 1.8D;    // Taller mountains (uncommented + boosted)
+        // tune both of them
+        var44 *= 0.55D;   // xz
+        var45 *= 1.8D;    // y
 
         this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, noiseSizeX, noiseSizeZ, 200.0, 200.0, 0.5);
-        // noise5 is generated but unused in vanilla — you can remove the line if you want
+        // noise5 is generated but unused in vanilla. can remove it for performance
         this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
         this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44 / 160.0, var45 / 320.0, var44 / 160.0); // SLOWER selector = huge smooth ranges
         this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
@@ -436,7 +434,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         float minH = var23.minHeight;
                         float maxH = var23.maxHeight;
 
-                        // RE-ENABLED + TUNED: this is what gives proper huge mountains in biomes
+                        // amplifying mountains, though this applies for everything. CAN TUNE
                         if (minH > 0.0F) {
                             minH = 1.0F + minH * 4.0F;   // stronger mountains
                             maxH = 1.0F + maxH * 3.0F;
@@ -455,9 +453,9 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                 var16 = var16 * 0.9f + 0.1f;
                 var17 = (var17 * 4.0f - 1.0f) / 8.0f;
 
-                // === SMOOTHER LOW-FREQ HEIGHT VARIATION (no more abrupt jumps) ===
+
                 double var47 = this.noise6[var13] / 8000.0D;
-                var47 = var47 * 5.0D - 2.0D;          // simplified + stronger (was complex if-chain)
+                var47 = var47 * 5.0D - 2.0D;          // simplified
                 var47 = Math.max(-1.0D, Math.min(1.0D, var47)); // clean clamp
 
                 ++var13;
@@ -466,28 +464,37 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     double var48 = var17;
                     double var26 = var16;
 
-                    var48 += var47 * 1.0D;                    // much stronger low-freq for huge ranges
+                    var48 += var47 * 1.0D; // much stronger low-freq for huge ranges
                     var48 = var48 * noiseYDiv32;
 
                     double var28 = noiseYDiv4 + var48 * 5.0D; // higher multiplier = taller base mountains
 
-                    double var30 = 0;
-                    double var32 = ((double)var46 - var28) * 12.0 * 128 / 128.0 / var26;
-                    if (var32 < 0.0) var32 *= 4.0;
+                    double var30;
+                    if (var20.biomeID == BiomeGenUnderworld.shadowRealm.biomeID) {
 
-                    double var34 = this.noise1[var12] / 512.0;
-                    double var36 = this.noise2[var12] / 512.0;
+                        double flatSurfaceY = 120.0;
+                        var30 = (flatSurfaceY - (double) var46) * 16.0;   // higher multiplier = sharper/stronger cutoff
 
-                    // === THE BIG ONE: SMOOTH SELECTOR (no more abrupt spikes/islands) ===
-                    double var38 = (this.noise3[var12] / 25.0 + 1.0) / 2.0; // /25 instead of /10 = 2.5× slower changes
-                    var38 = MathHelper.clamp_float((float) var38, 0.0F, 1.0F);     // force clean blend
-                    var30 = var34 + (var36 - var34) * var38;                // always smooth blend, no hard if-snap
 
-                    var30 -= var32;
+                    } else {
+                        double var32 = ((double) var46 - var28) * 12.0 * 128 / 128.0 / var26;
+                        if (var32 < 0.0) var32 *= 4.0;
 
+                        double var34 = this.noise1[var12] / 512.0;
+                        double var36 = this.noise2[var12] / 512.0;
+
+                        // === THE BIG ONE: SMOOTH SELECTOR (no more abrupt spikes/islands) ===
+                        double var38 = (this.noise3[var12] / 25.0 + 1.0) / 2.0; // div by 25 instead of by 10 || slower changes
+                        var38 = MathHelper.clamp_float((float) var38, 0.0F, 1.0F);     // force clean blend
+                        var30 = var34 + (var36 - var34) * var38;                // always smooth blend, no hard if-snap
+
+                        var30 -= var32;
+
+
+                    }
                     // stronger roof pull-down (kills any remaining floaters)
                     if (var46 > yTopLimit) {
-                        double var40 = (float)(var46 - yTopLimit) / 3.0f;
+                        double var40 = (float) (var46 - yTopLimit) / 3.0f;
                         var30 = var30 * (1.0 - var40) + -15.0 * var40;   // -15 instead of -10
                     }
 
@@ -498,6 +505,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         }
         return theNoiseArray;
     }
+
     @Override
     public boolean chunkExists(int par1, int par2) {
         return true;
