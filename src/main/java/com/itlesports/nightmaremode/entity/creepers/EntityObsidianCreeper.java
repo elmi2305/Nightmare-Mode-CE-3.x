@@ -1,11 +1,15 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
 import api.item.items.PickaxeItem;
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
+
+import static com.itlesports.nightmaremode.util.NMFields.PACKET_CREEPER_FIRE;
 
 public class EntityObsidianCreeper extends EntityCreeperVariant{
     public EntityObsidianCreeper(World par1World) {
@@ -57,6 +61,38 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) {
+            if(NightmareMode.devMode){
+                boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+
+                if (playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
+                    if (!this.worldObj.isRemote && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+                        if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
+                            boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                            if (this.getPowered()) {
+                                if (NightmareMode.devMode) {
+                                    ChatMessageComponent text2 = new ChatMessageComponent();
+                                    text2.addText("[CHARGED] Calculated Explosion strength: " + getExplosionSize() * 2 * this.explosionMultiplier + " FOR: " + this.getEntityName());
+                                    text2.setColor(EnumChatFormatting.BLUE);
+                                    player.sendChatToPlayer(text2);
+                                }
+
+                                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                            } else {
+                                if (NightmareMode.devMode) {
+                                    ChatMessageComponent text2 = new ChatMessageComponent();
+                                    text2.addText("[NORMAL] Calculated Explosion strength: " + getExplosionSize() * this.explosionMultiplier + " FOR: " + this.getEntityName());
+                                    text2.setColor(EnumChatFormatting.GREEN);
+                                    player.sendChatToPlayer(text2);
+                                }
+                                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                            }
+                            this.setDead();
+                            return true;
+                        }
+                    }
+                }
+                return super.interact(player);
+            }
             playersCurrentItem.attemptDamageItem(6, this.rand);
             this.playSound("random.break", 1.0f, 1.0f);
         }

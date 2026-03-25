@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.entity.creepers;
 import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
 import api.entity.mob.behavior.SimpleWanderBehavior;
+import api.util.color.Color;
 import api.world.difficulty.DifficultyParam;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
@@ -23,7 +24,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     // this is an extension of the creeper class that has all the functionality implemented from the EntityCreeperMixin, though this corresponds to the variants
     private boolean determinedToExplode = false;
     private int lastActiveTime;
-    private int timeSinceIgnited;
+    protected int timeSinceIgnited;
     protected byte patienceCounter = (byte)100;
 
     // unique
@@ -214,16 +215,16 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                     }
 
 
-                    boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+                    boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
                         float baseChargedMultiplier = 2f;
                         if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.variantType == PACKET_CREEPER_FIRE){
                             baseChargedMultiplier = 2.5f;
                         }
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double) this.getEyeHeight(), this.posZ, this.explosionRadius * baseChargedMultiplier * explosionMultiplier, var2);
-
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * baseChargedMultiplier * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     } else {
-                        this.worldObj.createExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, this.explosionRadius * explosionMultiplier, var2);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+
                     }
 
                     if(NightmareMode.isAprilFools){
@@ -389,25 +390,25 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                 if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
                     boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
+                        if (NightmareMode.devMode) {
+                            ChatMessageComponent text2 = new ChatMessageComponent();
+                            text2.addText("[CHARGED] Calculated Explosion strength: " + getExplosionSize() * 2 * this.explosionMultiplier + " FOR: " + this.getEntityName());
+                            text2.setColor(EnumChatFormatting.BLUE);
+                            player.sendChatToPlayer(text2);
+                        }
+
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     } else {
+                        if (NightmareMode.devMode) {
+                            ChatMessageComponent text2 = new ChatMessageComponent();
+                            text2.addText("[NORMAL] Calculated Explosion strength: " + getExplosionSize() * this.explosionMultiplier + " FOR: " + this.getEntityName());
+                            text2.setColor(EnumChatFormatting.GREEN);
+                            player.sendChatToPlayer(text2);
+                        }
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     }
-                    if (!NMUtils.getIsMobEclipsed(this)) {
-                        this.setDead();
-                    } else{
-                        if (this.getAttackTarget() instanceof EntityPlayer target) {
-                            double deltaX = this.posX - target.posX;
-                            double deltaZ = this.posZ - target.posZ;
-                            Vec3 vector = Vec3.createVectorHelper(deltaX, 0, deltaZ);
-                            vector.normalize();
-                            this.motionX = vector.xCoord * 0.2;
-                            this.motionZ = vector.zCoord * 0.2;
-                            this.timeSinceIgnited = 0;
-                            this.fuseTime = 20;
-                        }
-                        this.motionY = 0.5f;
-                    }
+                    this.setDead();
+
                     return true;
                 }
             }
@@ -516,7 +517,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     // HELPER METHODS
 
-    private float getExplosionSize() {
+    protected float getExplosionSize() {
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
         float variantExplosionModifier = 1f;
         float bloodmoonModifier = NMUtils.getIsBloodMoon() ? 0.25f : 0;

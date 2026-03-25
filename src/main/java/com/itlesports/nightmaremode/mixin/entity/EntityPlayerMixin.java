@@ -389,7 +389,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHookTail(CallbackInfo ci){
-        if ((this.ticksExisted % 100 == 1 || NMConfUtils.isClientUsingHelpConfig()) && !this.worldObj.isRemote) {
+        if ((this.ticksExisted % 100 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !this.worldObj.isRemote && !MinecraftServer.getIsServer()) {
             EntityPlayer self = (EntityPlayer)(Object)this;
 
             int[] wConf = this.worldObj.getData(CONFIGS_CREATED);
@@ -442,7 +442,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
         // manage underworld events
-        if(this.dimension == NMFields.UNDERWORLD_DIMENSION){
+        if(this.dimension == NMFields.UNDERWORLD_DIMENSION && devMode){
             if(this.ticksExisted % 10 == 0){
                 // recalculate drain amount every 10 ticks
                 drainAmount = this.getSanityDrain();
@@ -450,7 +450,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.setData(SANITY, this.getData(SANITY) + drainAmount);
 
             if(this.ticksExisted % 20 == 0 && this.isSneaking()){
-//                System.out.println("current sanity is: " + this.getData(SANITY));
+                System.out.println("current sanity is: " + this.getData(SANITY));
             }
         }
 //        if(this.ticksExisted % 10 == 0 && this.isSneaking()){
@@ -468,25 +468,27 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 //        }
 
         // manage blight effects
-        if (this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID && !this.capabilities.isCreativeMode){
-            EntityPlayer thisObj = (EntityPlayer)(Object)this;
+        if(this.ticksExisted % 20 == 0) {
+            if (!this.capabilities.isCreativeMode && this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID) {
+                EntityPlayer thisObj = (EntityPlayer) (Object) this;
 
-            int i = MathHelper.floor_double(this.posX);
-            int j = MathHelper.floor_double(this.posY-1);
-            int k = MathHelper.floor_double(this.posZ);
+                int i = MathHelper.floor_double(this.posX);
+                int j = MathHelper.floor_double(this.posY - 1);
+                int k = MathHelper.floor_double(this.posZ);
 
-            if(this.worldObj.getBlockMetadata(i,j,k) == 0){
-                this.addPlayerPotionEffect(thisObj,Potion.weakness.id);
-            } else if (this.worldObj.getBlockMetadata(i,j,k) == 1){
-                this.addPlayerPotionEffect(thisObj,Potion.poison.id);
-            } else if (this.worldObj.getBlockMetadata(i,j,k) == 2){
-                this.addPlayerPotionEffect(thisObj,Potion.wither.id);
-                this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
-            } else if (this.worldObj.getBlockMetadata(i,j,k) == 4){
-                this.addPlayerPotionEffect(thisObj,Potion.wither.id);
-                this.addPlayerPotionEffect(thisObj,Potion.moveSlowdown.id);
-                this.addPlayerPotionEffect(thisObj,Potion.blindness.id);
-                this.addPlayerPotionEffect(thisObj,Potion.weakness.id);
+                if (this.worldObj.getBlockMetadata(i, j, k) == 0) {
+                    this.addPlayerPotionEffect(thisObj, Potion.weakness.id);
+                } else if (this.worldObj.getBlockMetadata(i, j, k) == 1) {
+                    this.addPlayerPotionEffect(thisObj, Potion.poison.id);
+                } else if (this.worldObj.getBlockMetadata(i, j, k) == 2) {
+                    this.addPlayerPotionEffect(thisObj, Potion.wither.id);
+                    this.addPlayerPotionEffect(thisObj, Potion.moveSlowdown.id);
+                } else if (this.worldObj.getBlockMetadata(i, j, k) == 4) {
+                    this.addPlayerPotionEffect(thisObj, Potion.wither.id);
+                    this.addPlayerPotionEffect(thisObj, Potion.moveSlowdown.id);
+                    this.addPlayerPotionEffect(thisObj, Potion.blindness.id);
+                    this.addPlayerPotionEffect(thisObj, Potion.weakness.id);
+                }
             }
         }
     }

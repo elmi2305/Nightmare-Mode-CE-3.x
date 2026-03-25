@@ -73,6 +73,7 @@ public class NMItems {
 
     public static ItemStructureLocator templeLocator;
     public static Item refinedDiamondIngot;
+    public static Item lightningBolt;
 
 
 
@@ -153,6 +154,7 @@ public class NMItems {
 
         refinedDiamondIngot = new NMItem(2360).setTextureName("nightmare:nmRefinedDiamondIngot").setUnlocalizedName("nmRefinedDiamondIngot").setCreativeTab(CreativeTabs.tabMaterials);
 
+        lightningBolt = new ItemLightningBolt(2361).setTextureName("nightmare:nmLightning").setUnlocalizedName("nmLightning").setCreativeTab(CreativeTabs.tabMisc);
 
 
         ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nightmare:nmAchievementSpecialSnowball").hideFromEMI();

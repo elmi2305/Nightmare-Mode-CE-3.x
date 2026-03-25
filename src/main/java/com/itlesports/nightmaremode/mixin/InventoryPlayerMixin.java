@@ -40,7 +40,8 @@ public class InventoryPlayerMixin {
         }
 
 
-        inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
-
+        if (NightmareMode.devMode) {
+            inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
+        }
     }
 }

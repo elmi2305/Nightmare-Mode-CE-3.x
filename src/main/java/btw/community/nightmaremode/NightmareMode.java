@@ -34,6 +34,8 @@ public class NightmareMode extends BTWAddon {
 
     private static NightmareMode instance;
 
+    public static boolean devMode = true;
+
 
     // world gen
     public WorldGenerator lavaPillowGenThirdStrata;
