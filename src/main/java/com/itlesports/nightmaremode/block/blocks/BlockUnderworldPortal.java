@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks;
 
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
 
 import static com.itlesports.nightmaremode.util.NMFields.UNDERWORLD_DIMENSION;
@@ -22,7 +23,14 @@ public class BlockUnderworldPortal extends BlockBreakable {
             if (player.timeUntilPortal > 0) return;  // cooldown
             player.timeUntilPortal = 100;
             // transfer:
-            player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
+            if (NightmareMode.devMode) {
+                player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
+            } else {
+                ChatMessageComponent text = new ChatMessageComponent();
+                text.addText("<???> Nice try. ");
+                text.setColor(EnumChatFormatting.RED);
+                player.sendChatToPlayer(text);
+            }
         }
     }
     @Override

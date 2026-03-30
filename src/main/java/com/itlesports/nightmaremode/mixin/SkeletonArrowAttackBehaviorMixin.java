@@ -74,7 +74,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
     private void addBowSlapBehavior(CallbackInfoReturnable<Boolean> cir){
         EntityLivingBase target = this.entityAttackTarget;
         EntityLivingBase owner = this.entityOwner;
-        if (target != null && owner.ticksExisted % 20 == 0 && owner.getDistanceSqToEntity(target) <= 1 && target instanceof EntityPlayer && owner.getHeldItem().getItem() == Item.bow){
+        if (target != null && owner.ticksExisted % 20 == 0 && owner.getDistanceSqToEntity(target) <= 2 && target instanceof EntityPlayer && owner.getHeldItem() != null && owner.getHeldItem().getItem() == Item.bow){
             if(owner.canEntityBeSeen(target)){
                 owner.attackEntityAsMob(target);
                 owner.swingItem();

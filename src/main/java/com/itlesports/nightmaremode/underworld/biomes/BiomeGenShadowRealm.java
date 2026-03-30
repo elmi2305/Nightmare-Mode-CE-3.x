@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.underworld.biomes;
 
-import btw.entity.mob.BTWCaveSpiderEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
@@ -18,8 +17,8 @@ public class BiomeGenShadowRealm extends BiomeGenUnderworld {
         this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 5, 1, 4));
 
 
-        this.topBlock = (short) NMBlocks.blockAsphalt.blockID;
-        this.fillerBlock = (short)NMBlocks.blockRoad.blockID;
+        this.topBlock = (short) NMBlocks.voidStone.blockID;
+        this.fillerBlock = (short)NMBlocks.voidStone.blockID; // hi
 
     }
 }

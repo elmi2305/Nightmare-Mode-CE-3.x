@@ -407,7 +407,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
         this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, noiseSizeX, noiseSizeZ, 200.0, 200.0, 0.5);
         // noise5 is generated but unused in vanilla. can remove it for performance
-        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
+//        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
         this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44 / 160.0, var45 / 320.0, var44 / 160.0); // SLOWER selector = huge smooth ranges
         this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
         this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
@@ -470,10 +470,13 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     double var28 = noiseYDiv4 + var48 * 5.0D; // higher multiplier = taller base mountains
 
                     double var30;
-                    if (var20.biomeID == BiomeGenUnderworld.shadowRealm.biomeID) {
-
-                        double flatSurfaceY = 120.0;
-                        var30 = (flatSurfaceY - (double) var46) * 16.0;   // higher multiplier = sharper/stronger cutoff
+                    if (false) {
+//                    if (var20.biomeID == BiomeGenUnderworld.flowerFields.biomeID) {
+//                        double flatY = 35.0D;
+//                        var30 = (flatY - (double)var46) ;
+//                        double var32 = ((double) var46 - var28) * 12.0 * 128 / 128.0 / var26;
+//                        if (var32 < 0.0) var32 *= 4.0;
+//                        var30 -= var32;
 
 
                     } else {
@@ -483,7 +486,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                         double var34 = this.noise1[var12] / 512.0;
                         double var36 = this.noise2[var12] / 512.0;
 
-                        // === THE BIG ONE: SMOOTH SELECTOR (no more abrupt spikes/islands) ===
+                        // smooth selector (no more abrupt spikes/islands)
                         double var38 = (this.noise3[var12] / 25.0 + 1.0) / 2.0; // div by 25 instead of by 10 || slower changes
                         var38 = MathHelper.clamp_float((float) var38, 0.0F, 1.0F);     // force clean blend
                         var30 = var34 + (var36 - var34) * var38;                // always smooth blend, no hard if-snap
@@ -636,9 +639,13 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     @Override
-    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4) {
-        BiomeGenBase var5 = this.worldObj.getBiomeGenForCoords(par2, par4);
-        return var5 == null ? null : (par1EnumCreatureType == EnumCreatureType.monster && this.scatteredFeatureGenerator.func_143030_a(par2, par3, par4) ? this.scatteredFeatureGenerator.getScatteredFeatureSpawnList() : var5.getSpawnableList(par1EnumCreatureType));
+    public List getPossibleCreatures(EnumCreatureType mobType, int x, int y, int z) {
+        BiomeGenBase biomeGenBase = this.worldObj.getBiomeGenForCoords(x, z);
+        return biomeGenBase == null ? null : (mobType == EnumCreatureType.monster &&
+                this.scatteredFeatureGenerator.shouldUseStructureSpawnTable(x, y, z)
+                ? this.scatteredFeatureGenerator.getScatteredFeatureSpawnList()
+                : biomeGenBase.getSpawnableList(mobType));
+        // whether I should use the structure's spawn table or the biome's spawn table. shouldUseStructureSpawnTable() has the structure checking logic. currently it just checks for a witch hut
     }
 
     @Override

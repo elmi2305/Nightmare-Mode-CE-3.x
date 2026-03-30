@@ -24,9 +24,10 @@ public class UnderworldGenLayerBiomes extends GenLayer {
                 int currentBiomeId = ints[y + x * areaWidth];
                 if (currentBiomeId == 0) {
                     intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
+//                    intCache[y + x * areaWidth] = 0;
                 }
                 else if (currentBiomeId == 1) {
-                    if (this.nextInt(8) == 0) {
+                    if (this.nextInt(4) == 0) {
                         intCache[y + x * areaWidth] = underworldBiomes[2].biomeID; // shadow realm
                     }
                     else {

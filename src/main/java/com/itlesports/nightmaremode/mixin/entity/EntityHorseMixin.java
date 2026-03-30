@@ -17,17 +17,25 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
 @Mixin(EntityHorse.class)
 public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTamingClient, IPlayerDirectionTracker {
-    @Shadow protected abstract void func_110237_h(EntityPlayer par1EntityPlayer);
-    @Shadow public abstract boolean isHorseJumping();
-    @Shadow public abstract boolean isTame();
-    @Shadow private AnimalChest horseChest;
 
+
+    @Shadow
+    private AnimalChest horseChest;
+
+
+    @Shadow
+    public abstract boolean isTame();
+
+    @Shadow
+    public abstract boolean isHorseJumping();
+
+    @Shadow
+    protected abstract void func_110237_h(EntityPlayer par1EntityPlayer);
 
     @Unique private int swimmingTicks;
     @Unique private int kickCooldown = 20;
@@ -167,7 +175,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
                     this.hungerCountdown -= 2;
                 }
                 if(this.isHorseJumping()){
-                    this.hungerCountdown -= 300;
+                    this.hungerCountdown -= 3;
                 }
 
                 if (this.ticksExisted % 4 == 0) {
@@ -286,17 +294,21 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         // eats wheat - default item
         return this.eatFoodItem(new ItemStack(BTWItems.wheat));
     }
-    @Unique
-    private static final Map<Integer, Integer> FOOD_TICKS = new HashMap<Integer, Integer>() {{
-        put(BTWItems.wheat.itemID, 2200);
-        put(BTWItems.straw.itemID, 2200);
-        put(Item.appleRed.itemID, 1800);
-        put(BTWItems.carrot.itemID, 2000);
-        put(Item.goldenCarrot.itemID, 8000);
-        put(Item.sugar.itemID, 1400);
-        put(Item.netherStalkSeeds.itemID, 2000);
-        put(BTWItems.mysteriousGland.itemID, 1400);
-    }};
+
+    private static Map<Integer,Integer> FOOD_TICKS = new HashMap<>();
+    private Map<Integer,Integer> getFoodItemMap(){
+        if(FOOD_TICKS.isEmpty()) {
+            FOOD_TICKS.put(BTWItems.wheat.itemID, 2200);
+            FOOD_TICKS.put(BTWItems.straw.itemID, 2200);
+            FOOD_TICKS.put(Item.appleRed.itemID, 1800);
+            FOOD_TICKS.put(BTWItems.carrot.itemID, 2000);
+            FOOD_TICKS.put(Item.goldenCarrot.itemID, 8000);
+            FOOD_TICKS.put(Item.sugar.itemID, 1400);
+            FOOD_TICKS.put(Item.netherStalkSeeds.itemID, 2000);
+            FOOD_TICKS.put(BTWItems.mysteriousGland.itemID, 1400);
+        }
+        return FOOD_TICKS;
+    }
 
     @Unique
     private boolean eatFoodItem(ItemStack itemStack) {
@@ -340,7 +352,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Unique
     private int getFoodValue(int id) {
-        Integer value = FOOD_TICKS.get(id);
+        Integer value = this.getFoodItemMap().get(id);
         return value != null ? value : 0;
     }
 
@@ -356,8 +368,10 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         this.addPotionEffect(new PotionEffect(type.id, duration, 0));
     }
 
-    @Inject(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityHorse;fleeingTick:I"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void allowHorseMounting(EntityPlayer player, CallbackInfoReturnable<Boolean> cir, ItemStack item){
+    @Inject(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityHorse;fleeingTick:I"), cancellable = true)
+    private void allowHorseMounting(EntityPlayer player, CallbackInfoReturnable<Boolean> cir){
+        ItemStack item = player.inventory.getCurrentItem();
+
         if(item != null) {
             this.eatFoodItem(item);
             // custom hand feeding code

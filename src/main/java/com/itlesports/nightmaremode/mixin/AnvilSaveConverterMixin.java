@@ -25,10 +25,10 @@ public abstract class AnvilSaveConverterMixin extends SaveFormatOld {
     @Shadow protected abstract int getSaveVersion();
 
     @Unique private WorldInfo tempWorldInfo;
-    @Inject(method = "getSaveList", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;getWorldName()Ljava/lang/String;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void saveWorldInfoTemp(CallbackInfoReturnable<List> cir, ArrayList var1, File[] var2, File[] var3, int var4, int var5, File var6, String var7, WorldInfo var8){
-        this.tempWorldInfo = var8;
-    }
+//    @Inject(method = "getSaveList", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;getWorldName()Ljava/lang/String;"), locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void saveWorldInfoTemp(CallbackInfoReturnable<List> cir, ArrayList var1, File[] var2, File[] var3, int var4, int var5, File var6, String var7, WorldInfo var8){
+//        this.tempWorldInfo = var8;
+//    }
 
     @Inject(method = "getSaveList", at = @At(value = "INVOKE", target = "Ljava/util/ArrayList;add(Ljava/lang/Object;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addConfigsToSaveHandler(CallbackInfoReturnable<List> cir, ArrayList var1, File[] var2, File[] var3, int var4, int var5, File var6, String var7, WorldInfo var8){
@@ -40,7 +40,7 @@ public abstract class AnvilSaveConverterMixin extends SaveFormatOld {
         boolean var9 = var8.getSaveVersion() != this.getSaveVersion();
 
         SaveFormatComparator sfc = new SaveFormatComparator(var7, var10, var8.getLastTimePlayed(), var11, var8.getGameType(), var9, var8.isHardcoreModeEnabled(), var8.areCommandsAllowed());
-        int[] activeConfArray = this.tempWorldInfo.getData(NightmareMode.CONFIGS_CREATED);
+        int[] activeConfArray = var8.getData(NightmareMode.CONFIGS_CREATED);
 
         ((SaveFormatExt) sfc).nightmareMode$setConfArray(activeConfArray);
         this.tempWorldInfo = null;

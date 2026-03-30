@@ -55,6 +55,8 @@ public class NMBlocks {
     public static Block mushBookshelf;
     public static Block darkSandstone;
     public static Block bloodsidian;
+    public static Block voidStone;
+    public static Block lightStone;
 
 
     public static void initNightmareBlocks(){
@@ -182,6 +184,14 @@ public class NMBlocks {
 //        Item.itemsList[darkSandstone.blockID] = new NMItemBlock(NMBlocks.darkSandstone.blockID - 256);
 
 //        bloodsidian = new BlockMultiTextured(2346, Material.rock, "nightmare:nmBloodsidian").setHardness()
+
+        voidStone = new BlockMultiTextured(2345, Material.rock, "nightmare:nmVoidStone");
+        Item.itemsList[voidStone.blockID] = new NMItemBlock(NMBlocks.voidStone.blockID - 256);
+
+
+        lightStone = new BlockMultiTextured(2346, Material.rock, "nightmare:nmLightStone");
+        Item.itemsList[lightStone.blockID] = new NMItemBlock(NMBlocks.lightStone.blockID - 256);
+
 
 
 

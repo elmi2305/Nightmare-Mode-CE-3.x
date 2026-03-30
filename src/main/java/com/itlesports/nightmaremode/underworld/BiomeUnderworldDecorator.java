@@ -53,9 +53,10 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
             ++numPerChunk;
         }
 
-        WorldGenerator treeGen;
+        WorldGenerator treeGen = null;
 
-        treeGen = this.getTreeGenForBiome();
+        // DEBUG: removed tree gen
+//        treeGen = this.getTreeGenForBiome();
 //        treeGen = tallFlowerDroopingGen;
 
         if (treeGen != null) {
