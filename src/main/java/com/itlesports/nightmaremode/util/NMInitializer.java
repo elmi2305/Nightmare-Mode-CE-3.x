@@ -23,6 +23,7 @@ import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
+import com.itlesports.nightmaremode.item.items.NMItem;
 import com.itlesports.nightmaremode.item.items.NMPostItems;
 import com.itlesports.nightmaremode.mixin.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
@@ -54,6 +55,14 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void runItemPostInit(){
         NMPostItems.runPostInit();
+    }
+    public static void runDevModePostInit(){
+        if(NightmareMode.devMode) return;
+        // hides dev-build exclusive features & code from noobs
+
+        NMItems.hideItems();
+        NMBlocks.hideBlocks();
+
     }
     public static void initMobSpawning(){
         addMobToMushroomIslands(EntityGhast.class, 1, 1, 1);

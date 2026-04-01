@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
@@ -173,6 +174,10 @@ public class NMItems {
 
 
 
-
     }
+
+    public static void hideItems(){
+        lightningBolt.hideFromEMI().setCreativeTab(null);
+    }
+
 }

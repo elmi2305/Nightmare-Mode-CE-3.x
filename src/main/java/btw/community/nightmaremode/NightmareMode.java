@@ -165,6 +165,7 @@ public class NightmareMode extends BTWAddon {
         NMInitializer.manipulateAchievements();
 
         NMInitializer.runItemPostInit();
+        NMInitializer.runDevModePostInit();
         NMInitializer.initNightmareTrades();
         NMInitializer.initMobSpawning();
 

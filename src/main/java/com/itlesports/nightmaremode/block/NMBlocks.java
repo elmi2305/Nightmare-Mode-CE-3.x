@@ -195,34 +195,38 @@ public class NMBlocks {
 
 
 
-        hideStuffFromEmi();
     }
 
-    private static void hideStuffFromEmi(){
+    public static void hideBlocks(){
         // this hides all the underworld blocks from people that are nosy
-        yellowFlowerRoots.hideFromEMI();
-        plantMatter.hideFromEMI();
-        disenchantmentTable.hideFromEMI();
-        mushroomStem.hideFromEMI();
-        mushroomFloorPartialYellow.hideFromEMI();
-        mushroomPurple.hideFromEMI();
-        mushInnardsBreakable.hideFromEMI();
-        mushInnardsBreakableExplosive.hideFromEMI();
-        mushroomTopFloorYellow.hideFromEMI();
-        mushroomFloorYellow.hideFromEMI();
-        mushroomWallYellow.hideFromEMI();
-        mushroomFloorPartialPurple.hideFromEMI();
-        mushroomWallPurple.hideFromEMI();
-        mushroomTopFloorPurple.hideFromEMI();
-        mushroomCapYellow.hideFromEMI();
-        mushroomCapWhite.hideFromEMI();
-        mushBookshelf.hideFromEMI();
-        underrock.hideFromEMI();
-        understoneSmooth.hideFromEMI();
-        underCobble.hideFromEMI();
-        underGrass.hideFromEMI();
-        underDirt.hideFromEMI();
-        flowerGrass.hideFromEMI();
-        flowerDirt.hideFromEMI();
+
+        yellowFlowerRoots = yellowFlowerRoots.hideFromEMI().setCreativeTab(null);
+        plantMatter = plantMatter.hideFromEMI().setCreativeTab(null);
+        disenchantmentTable = disenchantmentTable.hideFromEMI().setCreativeTab(null);
+        mushroomStem = mushroomStem.hideFromEMI().setCreativeTab(null);
+        mushroomFloorPartialYellow = mushroomFloorPartialYellow.hideFromEMI().setCreativeTab(null);
+        mushroomPurple = mushroomPurple.hideFromEMI().setCreativeTab(null);
+        mushInnardsBreakable = mushInnardsBreakable.hideFromEMI().setCreativeTab(null);
+        mushInnardsBreakableExplosive = mushInnardsBreakableExplosive.hideFromEMI().setCreativeTab(null);
+        mushroomTopFloorYellow = mushroomTopFloorYellow.hideFromEMI().setCreativeTab(null);
+        mushroomFloorYellow = mushroomFloorYellow.hideFromEMI().setCreativeTab(null);
+        mushroomWallYellow = mushroomWallYellow.hideFromEMI().setCreativeTab(null);
+        mushroomFloorPartialPurple = mushroomFloorPartialPurple.hideFromEMI().setCreativeTab(null);
+        mushroomWallPurple = mushroomWallPurple.hideFromEMI().setCreativeTab(null);
+        mushroomTopFloorPurple = mushroomTopFloorPurple.hideFromEMI().setCreativeTab(null);
+        mushroomCapYellow = mushroomCapYellow.hideFromEMI().setCreativeTab(null);
+        mushroomCapWhite = mushroomCapWhite.hideFromEMI().setCreativeTab(null);
+        voidStone = voidStone.hideFromEMI().setCreativeTab(null);
+        lightStone = lightStone.hideFromEMI().setCreativeTab(null);
+        underrock = underrock.hideFromEMI().setCreativeTab(null);
+        understoneSmooth = understoneSmooth.hideFromEMI().setCreativeTab(null);
+        underCobble = underCobble.hideFromEMI().setCreativeTab(null);
+        mushBookshelf = mushBookshelf.hideFromEMI().setCreativeTab(null);
+
+        underGrass = (BlockUnderGrass) underGrass.hideFromEMI().setCreativeTab(null);
+        underDirt = (BlockMultiTextured) underDirt.hideFromEMI().setCreativeTab(null);
+        flowerGrass = (BlockMultiTextured) flowerGrass.hideFromEMI().setCreativeTab(null);
+        flowerDirt = (BlockMultiTextured) flowerDirt.hideFromEMI().setCreativeTab(null);
+
     }
 }
