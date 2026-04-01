@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
+
 
 @Mixin(EntityWitch.class)
 public abstract class EntityWitchMixin extends EntityMob {
@@ -141,119 +143,130 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Unique private boolean isValidForEventLoot = false;
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
-    private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (bKilledByPlayer) {
-            if (NightmareMode.magicMonsters) {
-                Item itemToDrop = null;
-                for (int i = 0; i < 3; i++) {
-                    int j = this.rand.nextInt(163);
-                    if (this.dimension == 0) {
-                        itemToDrop = switch (j) {
-                            case  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12                  -> BTWItems.nitre;           // 18
-                            case 13, 14, 15, 16, 17, 18, 19, 20, 21, 22                              -> Item.rottenFlesh;         // 20
-                            case 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34                      -> Item.spiderEye;           // 12
-                            case 35, 36, 37, 38                                                      -> Item.fireballCharge;      // 4
-                            case 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51                  -> Item.clay;                // 13
-                            case 52, 53, 54, 55                                                      -> Item.enderPearl;          // 4
-                            case 56, 57, 58, 59, 60, 61, 62, 63                                      -> BTWItems.witchWart;       // 8
-                            case 64, 65, 66, 67, 68, 69, 70                                          -> BTWItems.mysteriousGland; // 7
-                            case 71, 72, 73, 74, 75, 76, 77, 78, 79                                  -> NMItems.calamari;         // 9
-                            case 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94          -> Item.bone;                // 15
-                            case 95, 96, 97, 98, 99, 100, 101                                        -> Item.slimeBall;           // 7
-                            case 102, 103, 104, 105, 106, 107, 108, 109, 110                         -> Item.potion;              // 9
-                            case 111, 112, 113, 114, 115, 116                                        -> Item.fermentedSpiderEye;  // 6
-                            case 117, 118, 119, 120, 121, 122, 123, 124, 125                         -> Item.dyePowder;           // 9
-                            case 126, 127, 128                                                       -> Item.skull;               // 3
-                            case 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140          -> Item.arrow;               // 12
-                            case 141, 142, 143, 144                                                  -> Item.bow;                 // 4
-                            case 145                                                                 -> Item.plateIron;           // 2
-                            case 146                                                                 -> Item.bootsIron;           // 3
-                            case 147                                                                 -> Item.legsIron;            // 2
-                            case 148                                                                 -> Item.helmetIron;          // 4
-                            case 149, 150, 151, 152, 153                                             -> BTWItems.creeperOysters;  // 14
-                            case 154, 155, 156, 157, 158, 159, 160, 161, 162                         -> Item.silk;                // 14
-                            default -> BTWItems.witchWart;
-                        };
-                    } else if(this.dimension == -1){
-                        j = this.rand.nextInt(37);
-                        itemToDrop = switch (j) {
-                            case 0, 1, 2, 3, 4, 5, 6, 29, 30, 31, 32, 33     -> Item.blazeRod;
-                            case 7, 8, 9, 10, 11, 12, 13, 24, 25, 26, 27, 28 -> Item.magmaCream;
-                            case 14, 15, 16, 17, 18                          -> Item.ghastTear;
-                            case 19, 20, 21, 22, 23                          -> Item.goldNugget;
-                            case 34                                          -> Item.swordGold;
-                            case 35                                          -> Item.plateGold;
-                            case 36                                          -> Item.legsGold;
-                            default -> BTWItems.witchWart;
-                        };
-                    }
-                    if(NMUtils.getIsMobEclipsed(this)){
-                        j = this.rand.nextInt(80);
-                        itemToDrop = switch (j) {
-                            case  0,  1,  2,  3,  4  -> NMItems.magicFeather;
-                            case  5,  6,  7,  8,  9  -> NMItems.creeperChop;
-                            case 10, 11, 12, 13, 14  -> NMItems.magicArrow;
-                            case 15, 16               -> NMItems.bloodMilk;
-                            case 17, 18, 19, 20, 21, 22 -> NMItems.calamari;
-                            case 23, 24, 25, 26, 27, 28, 29 -> NMItems.silverLump;
-                            case 30, 31, 32, 33, 34, 35, 36, 37, 38 -> BTWItems.soulFlux;
-                            case 39, 40, 41, 42      -> NMItems.voidMembrane;
-                            case 43, 44, 45, 46, 47  -> NMItems.voidSack;
-                            case 48, 49, 50          -> NMItems.charredFlesh;
-                            case 51, 52, 53, 54      -> NMItems.ghastTentacle;
-                            case 55, 56, 57          -> NMItems.creeperTear;
-                            case 58, 59, 60, 61      -> NMItems.spiderFangs;
-                            case 62, 63, 64          -> NMItems.speedCoil;
-                            case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;
-                            case 74, 75              -> NMItems.elementalRod;
-                            case 76, 77, 78, 79      -> NMItems.decayedFlesh;
-                            default -> Item.fishRaw;  // Fallback in case of unexpected input
-                        };
-                    }
+    private void allowBloodOrbDrops(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (!killedByPlayer) return;
 
+        Random rand = this.rand;
 
-                    if (itemToDrop != null) {
-                        this.dropItem(itemToDrop.itemID, 1);
-                    }
+        boolean eclipsed = NMUtils.getIsMobEclipsed(this);
+        boolean validLoot = isValidForEventLoot;
+
+        // 🔮 MAGIC DROPS
+        if (NightmareMode.magicMonsters) {
+            for (int i = 0; i < 3; i++) {
+                Item drop;
+
+                if (eclipsed) {
+                    drop = getRandomWeighted(rand, ECLIPSE_ITEMS, ECLIPSE_WEIGHTS);
+                } else if (this.dimension == -1) {
+                    drop = getRandomWeighted(rand, NETHER_ITEMS, NETHER_WEIGHTS);
+                } else {
+                    drop = getRandomWeighted(rand, OVERWORLD_ITEMS, OVERWORLD_WEIGHTS);
+                }
+
+                this.dropItem(drop.itemID, 1);
+            }
+        }
+
+        // 🌕 BLOOD MOON ORBS
+        if (validLoot && NMUtils.getIsBloodMoon()) {
+            int count = 6 + rand.nextInt(9); // 6–14
+            if (looting > 0) count += rand.nextInt(looting + 1);
+
+            for (int i = 0; i < count; i++) {
+                this.dropItem(NMItems.bloodOrb.itemID, 1);
+            }
+        }
+
+        // 🌑 ECLIPSE BONUS DROPS
+        if (eclipsed && validLoot) {
+
+            // Darksun fragments (improved chance logic)
+            int attempts = looting * 2 + 1;
+            for (int i = 0; i < attempts; i++) {
+                if (rand.nextInt(8) == 0) {
+                    this.dropItem(NMItems.darksunFragment.itemID, 1);
+                    if (rand.nextBoolean()) break;
                 }
             }
 
+            // Void membrane drops
+            int count = 1 + rand.nextInt(5);
+            if (looting > 0) count += rand.nextInt(looting + 1);
 
-
-            int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-            if (bloodOrbID > 0 && isValidForEventLoot) {
-                int var4 = this.rand.nextInt(9)+6;
-                // 6 - 14
-                if (iLootingModifier > 0) {
-                    var4 += this.rand.nextInt(iLootingModifier + 1);
-                }
-                for (int var5 = 0; var5 < var4; ++var5) {
-                    this.dropItem(bloodOrbID, 1);
-                }
-            }
-            if (NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
-                for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
-                    if (this.rand.nextInt(8) == 0) {
-                        this.dropItem(NMItems.darksunFragment.itemID, 1);
-                        if (this.rand.nextBoolean()) {
-                            break;
-                        }
-                    }
-                }
-
-                int itemID = NMItems.voidMembrane.itemID;
-
-                int var4 = this.rand.nextInt(5) + 1;
-                if (iLootingModifier > 0) {
-                    var4 += this.rand.nextInt(iLootingModifier + 1);
-                }
-                for (int var5 = 0; var5 < var4; ++var5) {
-                    if(this.rand.nextInt(3) == 0) continue;
-                    this.dropItem(itemID, 1);
+            for (int i = 0; i < count; i++) {
+                if (rand.nextInt(3) != 0) { // cleaner than continue
+                    this.dropItem(NMItems.voidMembrane.itemID, 1);
                 }
             }
         }
     }
+
+
+    @Unique
+    private static Item getRandomWeighted(Random rand, Item[] items, int[] weights) {
+        int total = 0;
+        for (int w : weights) total += w;
+
+        int r = rand.nextInt(total);
+
+        for (int i = 0; i < items.length; i++) {
+            r -= weights[i];
+            if (r < 0) return items[i];
+        }
+
+        return items[0]; // fallback
+    }
+    @Unique
+    private static final Item[] OVERWORLD_ITEMS = {
+            BTWItems.nitre, Item.rottenFlesh, Item.spiderEye, Item.fireballCharge,
+            Item.clay, Item.enderPearl, BTWItems.witchWart, BTWItems.mysteriousGland,
+            NMItems.calamari, Item.bone, Item.slimeBall, Item.potion,
+            Item.fermentedSpiderEye, Item.dyePowder, Item.skull, Item.arrow,
+            Item.bow, Item.plateIron, Item.bootsIron, Item.legsIron,
+            Item.helmetIron, BTWItems.creeperOysters, Item.silk
+    };
+
+    @Unique
+    private static final int[] OVERWORLD_WEIGHTS = {
+            18, 20, 12, 4,
+            13, 4, 8, 7,
+            9, 15, 7, 9,
+            6, 9, 3, 12,
+            4, 2, 3, 2,
+            4, 14, 14
+    };
+
+    @Unique
+    private static final Item[] NETHER_ITEMS = {
+            Item.blazeRod, Item.magmaCream, Item.ghastTear,
+            Item.goldNugget, Item.swordGold, Item.plateGold, Item.legsGold
+    };
+
+    @Unique
+    private static final int[] NETHER_WEIGHTS = {
+            12, 12, 5,
+            5, 1, 1, 1
+    };
+    @Unique
+    private static final Item[] ECLIPSE_ITEMS = {
+            NMItems.magicFeather, NMItems.creeperChop, NMItems.magicArrow,
+            NMItems.bloodMilk, NMItems.calamari, NMItems.silverLump,
+            BTWItems.soulFlux, NMItems.voidMembrane, NMItems.voidSack,
+            NMItems.charredFlesh, NMItems.ghastTentacle, NMItems.creeperTear,
+            NMItems.spiderFangs, NMItems.speedCoil, NMItems.waterRod,
+            NMItems.elementalRod, NMItems.decayedFlesh
+    };
+
+    @Unique
+    private static final int[] ECLIPSE_WEIGHTS = {
+            5, 5, 5,
+            2, 6, 7,
+            9, 4, 5,
+            3, 4, 3,
+            4, 3, 9,
+            2, 4
+    };
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addWitchSpecificAITasks(World par1World, CallbackInfo ci){
@@ -267,10 +280,11 @@ public abstract class EntityWitchMixin extends EntityMob {
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 30 : 0;
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+            double niteMultiplier = NMUtils.getNiteMultiplier();
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
             // 20 -> 24 -> 28 -> 32
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4 * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4 * (1 + (niteMultiplier - 1) / 20));
         }
     }
 
@@ -313,21 +327,25 @@ public abstract class EntityWitchMixin extends EntityMob {
         if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return constant;
         }
-        if (this.getAttackTarget() != null) {
-            double dist = this.getDistanceSqToEntity(this.getAttackTarget());
-            float velocityTuning = 0;
-            if(Math.sqrt(dist) > 15){
-                velocityTuning = (float)Math.sqrt(dist)/27;
-                return 0.6f+velocityTuning;
+        Entity target = this.getAttackTarget();
+        if (target != null) {
+            double distSq = this.getDistanceSqToEntity(target);
+
+            if (distSq > 225) {
+                float dist = (float)Math.sqrt(distSq);
+                return 0.6f + dist / 27f;
             }
-            if (Math.sqrt(dist) > 8) {
-                velocityTuning = (float)Math.sqrt(dist)/30;
-                return 0.6f+velocityTuning;
+
+            if (distSq > 64) {
+                float dist = (float)Math.sqrt(distSq);
+                return 0.6f + dist / 30f;
             }
-            if (Math.sqrt(dist) < 5){
+
+            if (distSq < 25) {
                 return 0.6f;
             }
-            return 0.75f +velocityTuning;
+
+            return 0.75f;
         }
         return constant;
     }

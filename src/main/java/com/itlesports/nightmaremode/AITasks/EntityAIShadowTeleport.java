@@ -26,21 +26,23 @@ public class EntityAIShadowTeleport extends EntityAITarget {
 
     @Override
     public boolean continueExecuting() {
-        boolean bIsBloodmoon = NMUtils.getIsBloodMoon();
-        int minimumOffset = bIsBloodmoon ? 0 : 1;
-        int xOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
-        int zOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
+        if (this.cooldown == 0) {
+            boolean bIsBloodmoon = NMUtils.getIsBloodMoon();
+            int minimumOffset = bIsBloodmoon ? 0 : 1;
+            int xOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
+            int zOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
 
-        int targetX = MathHelper.floor_double(this.targetEntity.posX + xOffset);
-        int targetY = MathHelper.floor_double(this.targetEntity.posY);
-        int targetZ = MathHelper.floor_double(this.targetEntity.posZ + zOffset);
+            int targetX = MathHelper.floor_double(this.targetEntity.posX + xOffset);
+            int targetY = MathHelper.floor_double(this.targetEntity.posY);
+            int targetZ = MathHelper.floor_double(this.targetEntity.posZ + zOffset);
 
-        if(this.canTeleportHere(this.taskOwner.worldObj, targetX,targetY,targetZ) && this.cooldown == 0){
+            if(this.canTeleportHere(this.taskOwner.worldObj, targetX,targetY,targetZ)){
 
-            int shadowCooldown = NMUtils.getIsBloodMoon() ? 10 : 20;
-            this.taskOwner.setPositionAndUpdate(targetX,targetY, targetZ);
-            this.taskOwner.playSound("mob.endermen.portal",2.0F,1.0F);
-            this.cooldown = shadowCooldown + this.taskOwner.rand.nextInt(20)+1;
+                int shadowCooldown = NMUtils.getIsBloodMoon() ? 10 : 20;
+                this.taskOwner.setPositionAndUpdate(targetX,targetY, targetZ);
+                this.taskOwner.playSound("mob.endermen.portal",2.0F,1.0F);
+                this.cooldown = shadowCooldown + this.taskOwner.rand.nextInt(20)+1;
+            }
         }
 
         this.cooldown = Math.max(--this.cooldown, 0);
@@ -50,7 +52,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
 
     private boolean canTeleportHere(World world, int targetX, int targetY, int targetZ) {
         return world.getBlockId(targetX, targetY, targetZ) == 0
-                && world.getBlockId(targetX, targetY - 1, targetZ) != 0
-                && world.getBlockId(targetX, targetY + 1, targetZ) == 0;
+                && world.getBlockId(targetX, targetY + 1, targetZ) == 0
+                && world.getBlockId(targetX, targetY - 1, targetZ) != 0;
     }
 }

@@ -32,7 +32,7 @@ public class SimpleWanderBehaviorMixin {
         // find the nearest player
         if(lastCachedPlayer == null || this.myEntity.getRNG().nextInt(20) == 0){
             if(this.myEntity.posY < 40) return;
-            nearestPlayer = this.myEntity.worldObj.getClosestPlayerToEntity(this.myEntity, 256);
+            nearestPlayer = this.myEntity.worldObj.getClosestPlayerToEntity(this.myEntity, 72);
             lastCachedPlayer = nearestPlayer;
         } else{
             nearestPlayer = lastCachedPlayer;

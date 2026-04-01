@@ -518,20 +518,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         NightmareMode.getInstance().setCanLeaveGame(true);
         EntityBloodWither.setBossActive(false);
     }
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHook(CallbackInfo ci){
-        // manages whether the player can leave during the BW fight
-        boolean hasWither = false;
-        for (Object obj : this.worldObj.loadedEntityList) {
-            if (obj instanceof EntityBloodWither) {
-                hasWither = true;
-                break;
-            }
-        }
-        if(!hasWither){
-            NightmareMode.getInstance().setCanLeaveGame(true);
-            EntityBloodWither.setBossActive(false);
-        }
 
         // makes potions tick slower with full blood armor
         Collection activePotions = this.getActivePotionEffects();
@@ -802,7 +791,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageRunningFromPlayer(CallbackInfo ci){
-        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !this.worldObj.isRemote && this.ticksExisted % 4 == 3) {
+        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !this.worldObj.isRemote && this.ticksExisted % 10 == 0) {
             double range = NMUtils.getIsEclipse() ? 3 : 5;
 
             List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(range, range, range));
@@ -839,8 +828,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void slowIfInWeb(CallbackInfo ci){
         if(this.isInWeb) {
-            this.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 10, 3));
-            this.addPotionEffect(new PotionEffect(Potion.weakness.id, 10, 1));
+            addWebPotion(Potion.moveSlowdown, 3);
+            addWebPotion(Potion.weakness, 0);
+        }
+    }
+
+    @Unique private void addWebPotion(Potion potion, int amplifier) {
+        if(!this.isPotionActive(potion)){
+            this.addPotionEffect(new PotionEffect(potion.id,10,amplifier));
         }
     }
 //    @Inject(method = "onUpdate", at = @At("TAIL"))

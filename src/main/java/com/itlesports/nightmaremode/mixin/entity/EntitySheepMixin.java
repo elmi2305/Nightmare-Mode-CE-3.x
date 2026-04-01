@@ -56,8 +56,9 @@ public abstract class EntitySheepMixin extends EntityAnimal {
         if(this.ticksExisted % 120 != 0) return;
         int originalHealth = 8 + NMUtils.getWorldProgress() * 5;
         double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 2.5 : 1;
-        if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        if(this.getMaxHealth() != originalHealth * niteMultiplier * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * niteMultiplier * eclipseModifier);
         }
     }
 
@@ -76,7 +77,8 @@ public abstract class EntitySheepMixin extends EntityAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((8d + NMUtils.getWorldProgress() * 4) * NMUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.23F * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((8d + NMUtils.getWorldProgress() * 4) * niteMultiplier);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.23F * (1 + (niteMultiplier - 1) / 20));
     }
 }

@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.entity;
 
 import api.entity.mob.behavior.SimpleWanderBehavior;
-import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -12,7 +10,6 @@ public class EntityBloodZombie extends EntityZombie {
     public EntityBloodZombie(World par1World) {
         super(par1World);
         this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
-        this.tasks.removeAllTasksOfClass(EntityAIChaseTargetSmart.class);
         this.tasks.addTask(6, new EntityAILiteHorde(this, 1.0f));
 
         this.tasks.removeAllTasksOfClass(SimpleWanderBehavior.class);
@@ -39,21 +36,8 @@ public class EntityBloodZombie extends EntityZombie {
         if (this.worldObj.isDaytime()) {
             return false;
         }
-        EntityPlayer nearbyPlayer = null;
-        double closestDistSq = 70 * 70;
 
-        for (Object obj : this.worldObj.playerEntities) {
-            if (!(obj instanceof EntityPlayer player)) continue;
-
-            double dx = player.posX - this.posX;
-            double dz = player.posZ - this.posZ;
-            double distSq = dx * dx + dz * dz;
-
-            if (distSq <= closestDistSq) {
-                closestDistSq = distSq;
-                nearbyPlayer = player;
-            }
-        }
+        EntityPlayer nearbyPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX, this.posY, this.posZ, 70);
 
         if (nearbyPlayer == null) {
             return false;
@@ -120,14 +104,6 @@ public class EntityBloodZombie extends EntityZombie {
     }
 
     public void onLivingUpdate() {
-        if(!this.hasAttackTarget()){
-            EntityPlayer player = this.worldObj.getClosestPlayerToEntity(this,120);
-            if(player != null && !player.capabilities.isCreativeMode){
-                this.setAttackTarget(player);
-                this.getMoveHelper().setMoveTo(player.posX,player.posY,player.posZ,1.2f);
-            }
-        }
-
         super.onLivingUpdate();
     }
 
@@ -135,6 +111,7 @@ public class EntityBloodZombie extends EntityZombie {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((18 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((120d));
     }
 
     @Override

@@ -146,6 +146,7 @@ public class NMUtils {
     ));
 
     public static double getNiteMultiplier(){
+        if(!NightmareMode.nite) return 1;
         if(NightmareMode.getInstance() == null){return 1;}
         return NightmareMode.getInstance().NITE_MULTIPLIER;
     }

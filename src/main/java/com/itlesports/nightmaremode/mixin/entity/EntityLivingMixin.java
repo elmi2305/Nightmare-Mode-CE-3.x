@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(EntityLiving.class)
-public abstract class EntityLivingMixin extends EntityLivingBase {
+public abstract class   EntityLivingMixin extends EntityLivingBase {
     public EntityLivingMixin(World par1World) {
         super(par1World);
     }
@@ -37,13 +37,13 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
     private void chanceToSpawnWithLeatherArmor(CallbackInfo ci) {
         if (this.worldObj != null) {
             float streakModifier = 0.0f;
-            List<ItemStack> leatherArmorList = getLeatherArmor();
+            List<Integer> leatherArmor = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
                     if(rand.nextFloat() < (0.04f + NMUtils.getWorldProgress()*0.02) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
-                        this.setCurrentItemOrArmor(i, leatherArmorList.get(i-1));
+                        this.setCurrentItemOrArmor(i, new ItemStack(leatherArmor.get(i - 1), 1 ,rand.nextInt(EnumArmorMaterial.CLOTH.getDurability(i - 1))));
                         this.equipmentDropChances[i] = 0f;
                     }
                 }
@@ -76,18 +76,15 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
         }
     }
 
-    @Unique
-    private static @NotNull List<ItemStack> getLeatherArmor() {
-        ItemStack boots = new ItemStack(Item.bootsLeather);
-        ItemStack pants = new ItemStack(Item.legsLeather);
-        ItemStack chest = new ItemStack(Item.plateLeather);
-        ItemStack helmet = new ItemStack(Item.helmetLeather);
+    @Unique private static List<Integer> leatherArmorList = new ArrayList<>(4);
 
-        List<ItemStack> leatherArmorList = new ArrayList<>(4);
-        leatherArmorList.add(boots);
-        leatherArmorList.add(pants);
-        leatherArmorList.add(chest);
-        leatherArmorList.add(helmet);
+    @Unique private static @NotNull List<Integer> getLeatherArmor() {
+        if (leatherArmorList.isEmpty()) {
+            leatherArmorList.add(Item.bootsLeather.itemID);
+            leatherArmorList.add(Item.legsLeather.itemID);
+            leatherArmorList.add(Item.plateLeather.itemID);
+            leatherArmorList.add(Item.helmetLeather.itemID);
+        }
         return leatherArmorList;
     }
 }

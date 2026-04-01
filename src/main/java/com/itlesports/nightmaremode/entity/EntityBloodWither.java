@@ -753,7 +753,7 @@ public class EntityBloodWither extends EntityWither {
         if(this.playerTarget == null){
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
-        bossActive = this.playerTarget != null;
+        setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive());
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
             int i;
             do {
@@ -1346,13 +1346,13 @@ public class EntityBloodWither extends EntityWither {
     public static boolean isBossActive(){
         return bossActive;
     }
-    public static void setBossActive(boolean par1){
-        bossActive = par1;
+    public static void setBossActive(boolean value){
+        bossActive = value;
     }
 
     @Override
     public void onDeath(DamageSource source) {
+        setBossActive(false);
         super.onDeath(source);
-        bossActive = false;
     }
 }

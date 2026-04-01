@@ -26,6 +26,7 @@ public class NMFields {
     public static int VEHICLE_MAGIC = 2301;
 
     // skeleton types
+    public static int SKELETON_WITHER = 1; // vanilla wither skeleton type
     public static int SKELETON_ICE = 2;
     public static int SKELETON_FIRE = 3;
     public static int SKELETON_ENDER = 4;

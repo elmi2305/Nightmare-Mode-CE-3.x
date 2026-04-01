@@ -19,7 +19,7 @@ public class EntityAILiteHorde extends EntityAIBase {
     private double lastPosX, lastPosZ;
     private int stuckInPlaceTicks = 0;
     private int stuckInPlaceInstances = 0;
-    private static final int STUCK_IN_PLACE_THRESHOLD = 10;
+    private static final int STUCK_IN_PLACE_THRESHOLD = 30;
 
 
     private static final int MAX_PATHFINDING_RANGE = 32;

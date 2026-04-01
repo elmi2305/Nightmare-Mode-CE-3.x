@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Mixin(EntityPigZombie.class)
@@ -40,7 +41,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
-        if (this.entityToAttack == null) {
+        if (this.entityToAttack == null && (this.ticksExisted + this.entityId) % 20 == 0) { // using entityID to throttle the checks so all pigmen don't check on the same tick
             if(NMUtils.getIsBloodMoon()){
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
                 if (player != null) {
@@ -145,26 +146,27 @@ public class EntityPigZombieMixin extends EntityZombie {
         return super.attackEntityAsMob(attackedEntity);
     }
 
-    @Unique
-    private static @NotNull List<Integer> getIllegalItems() {
-        List<Integer> illegalItemList = new ArrayList<>(16);
-        illegalItemList.add(Item.swordStone.itemID);
-        illegalItemList.add(Item.swordIron.itemID);
-        illegalItemList.add(Item.swordGold.itemID);
-        illegalItemList.add(BTWItems.steelSword.itemID);
-        illegalItemList.add(Item.axeStone.itemID);
-        illegalItemList.add(Item.axeDiamond.itemID);
-        illegalItemList.add(Item.axeIron.itemID);
-        illegalItemList.add(Item.shovelIron.itemID);
-        illegalItemList.add(Item.shovelStone.itemID);
-        illegalItemList.add(Item.shovelGold.itemID);
-        illegalItemList.add(Item.shovelDiamond.itemID);
+    @Unique private static HashSet<Integer> illegalItemList = new HashSet<>(16);
+    @Unique private static @NotNull HashSet<Integer> getIllegalItems() {
+        if (illegalItemList.isEmpty()) {
+            illegalItemList.add(Item.swordStone.itemID);
+            illegalItemList.add(Item.swordIron.itemID);
+            illegalItemList.add(Item.swordGold.itemID);
+            illegalItemList.add(BTWItems.steelSword.itemID);
+            illegalItemList.add(Item.axeStone.itemID);
+            illegalItemList.add(Item.axeDiamond.itemID);
+            illegalItemList.add(Item.axeIron.itemID);
+            illegalItemList.add(Item.shovelIron.itemID);
+            illegalItemList.add(Item.shovelStone.itemID);
+            illegalItemList.add(Item.shovelGold.itemID);
+            illegalItemList.add(Item.shovelDiamond.itemID);
 
-        illegalItemList.add(BTWItems.boneClub.itemID);
-        illegalItemList.add(Item.swordWood.itemID);
-        illegalItemList.add(Item.swordDiamond.itemID);
-        illegalItemList.add(Item.axeGold.itemID);
-        illegalItemList.add(Item.pickaxeStone.itemID);
+            illegalItemList.add(BTWItems.boneClub.itemID);
+            illegalItemList.add(Item.swordWood.itemID);
+            illegalItemList.add(Item.swordDiamond.itemID);
+            illegalItemList.add(Item.axeGold.itemID);
+            illegalItemList.add(Item.pickaxeStone.itemID);
+        }
 
         return illegalItemList;
     }

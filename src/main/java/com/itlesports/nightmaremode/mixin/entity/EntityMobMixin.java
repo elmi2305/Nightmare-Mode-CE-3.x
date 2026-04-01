@@ -86,7 +86,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
-        if (this.worldObj != null && this.worldObj.isRemote) {
+        if (this.worldObj != null && !this.worldObj.isRemote) {
             if(this.ticksExisted % (120 - NMUtils.getWorldProgress() * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
                 shouldIncreaseHealth = true;
             }
@@ -99,7 +99,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("TAIL"))
     private void timeEntityWasRecentlyHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if (this.worldObj.isRemote) {
+        if (!this.worldObj.isRemote) {
             this.timeOfLastAttack = this.ticksExisted;
         }
     }
@@ -117,8 +117,14 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void avoidAttackingWitches(CallbackInfo ci){
+        if(this.ticksExisted % 4 == 0)  return;
+
         EntityMob thisObj = (EntityMob)(Object)this;
-        if(thisObj.getAttackTarget() instanceof EntityWitch || thisObj.getAttackTarget() instanceof EntityWither || (thisObj.getAttackTarget() instanceof EntitySpider && thisObj instanceof EntitySkeleton)){
+
+        EntityLivingBase attackTarget = thisObj.getAttackTarget();
+        if(attackTarget == null) return;
+
+        if(attackTarget instanceof EntityWitch || attackTarget instanceof EntityWither || (attackTarget instanceof EntitySpider && thisObj instanceof EntitySkeleton)){
             thisObj.setAttackTarget(null);
         }
     }
@@ -288,6 +294,10 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void ensureExperienceGain(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+
+    }
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void increaseExperienceGained(CallbackInfo ci){
         if(NMUtils.getIsBloodMoon()){
             boolean bIsPostWither = WorldUtils.gameProgressHasWitherBeenSummonedServerOnly();
             this.experienceValue = bIsPostWither ? 40 : 20;
@@ -298,33 +308,37 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
-        EntityMob thisObj = (EntityMob)(Object)this;
-        if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
-            if(thisObj.worldObj.getBlockId(MathHelper.floor_double(thisObj.posX),MathHelper.floor_double(thisObj.posY-1),MathHelper.floor_double(thisObj.posZ)) == BTWBlocks.aestheticEarth.blockID){
-                int i = MathHelper.floor_double(thisObj.posX);
-                int j = MathHelper.floor_double(thisObj.posY-1);
-                int k = MathHelper.floor_double(thisObj.posZ);
 
-                if(thisObj.worldObj.getBlockMetadata(i,j,k) == 0){
-                    this.addBlightPotionEffect(thisObj,Potion.regeneration.id);
-                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 1){
-                    this.addBlightPotionEffect(thisObj,Potion.regeneration.id);
-                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
-                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 2){
-                    this.addBlightPotionEffect(thisObj,Potion.moveSpeed.id);
-                    this.addBlightPotionEffect(thisObj,Potion.damageBoost.id);
-                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
-                } else if (thisObj.worldObj.getBlockMetadata(i,j,k) == 3){
-                    this.addBlightPotionEffect(thisObj,Potion.moveSpeed.id);
-                    this.addBlightPotionEffect(thisObj,Potion.damageBoost.id);
-                    this.addBlightPotionEffect(thisObj,Potion.resistance.id);
-                    this.addBlightPotionEffect(thisObj,Potion.invisibility.id);
+        if (NMUtils.getWorldProgress() > 1 && this.ticksExisted % 40 == 0) {
+            if(this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID){
+                int i = MathHelper.floor_double(this.posX);
+                int j = MathHelper.floor_double(this.posY - 1);
+                int k = MathHelper.floor_double(this.posZ);
+
+
+                int meta = this.worldObj.getBlockMetadata(i, j, k);
+
+                if(meta == 3){
+                    this.addBlightPotionEffect(this,Potion.moveSpeed.id);
+                    this.addBlightPotionEffect(this,Potion.damageBoost.id);
+                    this.addBlightPotionEffect(this,Potion.resistance.id);
+                    this.addBlightPotionEffect(this,Potion.invisibility.id);
+                }
+                else if (meta == 2) {
+                    this.addBlightPotionEffect(this, Potion.moveSpeed.id);
+                    this.addBlightPotionEffect(this, Potion.damageBoost.id);
+                    this.addBlightPotionEffect(this, Potion.resistance.id);
+                } else if (meta == 1){
+                    this.addBlightPotionEffect(this,Potion.regeneration.id);
+                    this.addBlightPotionEffect(this,Potion.resistance.id);
+                } else if(meta == 0){
+                    this.addBlightPotionEffect(this,Potion.regeneration.id);
                 }
             }
         }
     }
 
-    @Unique private void addBlightPotionEffect(EntityMob mob, int potionID){
+    @Unique private void addBlightPotionEffect(EntityCreature mob, int potionID){
         if(!mob.isPotionActive(potionID)){
             mob.addPotionEffect(new PotionEffect(potionID,100,0));
         }

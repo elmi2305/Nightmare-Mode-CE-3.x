@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Mixin(EntityZombie.class)
@@ -163,7 +164,8 @@ public abstract class EntityZombieMixin extends EntityMob{
         }
 
         skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-        skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * NMUtils.getNiteMultiplier(), skeleton.getMaxHealth() * NMUtils.getNiteMultiplier()));
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * niteMultiplier, skeleton.getMaxHealth() * niteMultiplier));
         for (int i = 0; i < 5; i++) {
             skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
             skeleton.setEquipmentDropChance(i,this.equipmentDropChances[i]);
@@ -287,19 +289,22 @@ public abstract class EntityZombieMixin extends EntityMob{
             boolean wasVariantSelected = false;
 
             int progress = NMUtils.getWorldProgress();
-            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 0.5 : 1;
+            boolean isBloodMoon = NMUtils.getIsBloodMoon();
+            double bloodMoonModifier = isBloodMoon ? 0.5 : 1;
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
+            double niteMultiplier = NMUtils.getNiteMultiplier();
+
             if (!isEclipse) {
                 // NON ECLIPSE
-                if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 50 : 100) * bloodMoonModifier * (1 / NMUtils.getNiteMultiplier())), 2)) == 0) {
+                if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 50 : 100) * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0) {
                     this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
                     // 3.0 -> 4.0 -> 6.0 -> 7.0
                     wasVariantSelected = true;
-                } else if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier * (1 / NMUtils.getNiteMultiplier())), 2)) == 0) {
+                } else if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
@@ -307,13 +312,13 @@ public abstract class EntityZombieMixin extends EntityMob{
                     wasVariantSelected = true;
                 }
 
-                if(rand.nextInt(Math.max(MathHelper.floor_double(16 * bloodMoonModifier * (1 / NMUtils.getNiteMultiplier())), 2)) == 0 && isHostile && this.posY <= 50){
+                if(rand.nextInt(Math.max(MathHelper.floor_double(16 * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0 && isHostile && this.posY <= 50){
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
                     this.equipmentDropChances[0] = -1f;
-                    List<ItemStack> leatherArmor = getLeatherArmor();
+                    List<Integer> leatherArmor = getLeatherArmor();
                     for (int i = 1; i <= 4; i++) {
                         if(this.getCurrentItemOrArmor(i) == null){
-                            this.setCurrentItemOrArmor(i, leatherArmor.get(i - 1));
+                            this.setCurrentItemOrArmor(i, new ItemStack(leatherArmor.get(i - 1), 1 ,rand.nextInt(EnumArmorMaterial.CLOTH.getDurability(i - 1))));
                             this.equipmentDropChances[i] = -1f;
                         }
                     }
@@ -324,17 +329,17 @@ public abstract class EntityZombieMixin extends EntityMob{
 
 
                 if (progress == 1 || NightmareMode.evolvedMobs) {
-                    if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier * (1 / NMUtils.getNiteMultiplier())), 2)) == 0) {
+                    if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0) {
                         this.setCurrentItemOrArmor(0, new ItemStack(Item.axeGold));
                         this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetGold));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
-                        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isHostile ? 0.34f : 0.29f) * ((NMUtils.getNiteMultiplier() - 1) / 20 + 1));
+                        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isHostile ? 0.34f : 0.29f) * ((niteMultiplier - 1) / 20 + 1));
                         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
                         this.equipmentDropChances[0] = -1f;
                         this.equipmentDropChances[4] = -1f;
                         wasVariantSelected = true;
                     }
-                } else if (rand.nextInt((int) Math.max(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier) * (1 / NMUtils.getNiteMultiplier()), 2)) == 0 && (progress > 1 || NightmareMode.evolvedMobs)) {
+                } else if (rand.nextInt((int) Math.max(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier) * (1 / niteMultiplier), 2)) == 0 && (progress > 1 || NightmareMode.evolvedMobs)) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
                     this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
@@ -343,8 +348,8 @@ public abstract class EntityZombieMixin extends EntityMob{
                     wasVariantSelected = true;
                 }
 
-                if(isHostile && (NMUtils.getIsBloodMoon() || NightmareMode.evolvedMobs)){
-                    if(rand.nextInt((int) Math.max(50 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0){
+                if(isHostile && (isBloodMoon || NightmareMode.evolvedMobs)){
+                    if(rand.nextInt((int) Math.max(50 * (1 / niteMultiplier), 2)) == 0){
                         this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3));
                         this.equipmentDropChances[0] = -1f;
@@ -355,9 +360,9 @@ public abstract class EntityZombieMixin extends EntityMob{
                         if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
                             if(rand.nextFloat() < 0.07f + streakModifier){
                                 streakModifier += 0.01f;
-                                streakModifier += (float) (NMUtils.getNiteMultiplier() - 1);
-                                List<ItemStack> diamondArmor = getDiamondArmor();
-                                this.setCurrentItemOrArmor(i, diamondArmor.get(i - 1));
+                                streakModifier += (float) (niteMultiplier - 1);
+                                List<Integer> diamondArmorID = getDiamondArmor();
+                                this.setCurrentItemOrArmor(i, new ItemStack(diamondArmorID.get(i - 1), 1, 0));
                                 this.equipmentDropChances[i] = -1;
                             }
                         }
@@ -372,19 +377,19 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
             else{
                 // ECLIPSE
-                if (rand.nextInt((int) Math.max(8 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0) {
+                if (rand.nextInt((int) Math.max(8 * (1 / niteMultiplier), 2)) == 0) {
                     this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.boneClub));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
                     // 3.0 -> 4.0 -> 6.0 -> 7.0
-                } else if (rand.nextInt((int) Math.max(8 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0) {
+                } else if (rand.nextInt((int) Math.max(8 * (1 / niteMultiplier), 2)) == 0) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
                     // 2.0 -> 3.0 -> 4.0 -> 5.0
                 }
 
-                if(rand.nextInt((int) Math.max(8 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0 && isHostile){
+                if(rand.nextInt((int) Math.max(8 * (1 / niteMultiplier), 2)) == 0 && isHostile){
                     if (this.posY <= 45) {
                         this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
                         this.equipmentDropChances[0] = -1f;
@@ -395,7 +400,7 @@ public abstract class EntityZombieMixin extends EntityMob{
                     }
                 }
 
-                if (rand.nextInt((int) Math.max(10 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0) {
+                if (rand.nextInt((int) Math.max(10 * (1 / niteMultiplier), 2)) == 0) {
                     ItemStack var1 = new ItemStack(Item.axeGold);
                     ItemStack var2 = new ItemStack(Item.helmetGold);
                     this.setCurrentItemOrArmor(0, var1);
@@ -414,18 +419,15 @@ public abstract class EntityZombieMixin extends EntityMob{
             }
         }
     }
-    @Unique
-    private static @NotNull List<ItemStack> getLeatherArmor() {
-        ItemStack boots = new ItemStack(Item.bootsLeather);
-        ItemStack pants = new ItemStack(Item.legsLeather);
-        ItemStack chest = new ItemStack(Item.plateLeather);
-        ItemStack helmet = new ItemStack(Item.helmetLeather);
+    @Unique private static List<Integer> leatherArmorList = new ArrayList<>(4);
 
-        List<ItemStack> leatherArmorList = new ArrayList<>(4);
-        leatherArmorList.add(boots);
-        leatherArmorList.add(pants);
-        leatherArmorList.add(chest);
-        leatherArmorList.add(helmet);
+    @Unique private static @NotNull List<Integer> getLeatherArmor() {
+        if (leatherArmorList.isEmpty()) {
+            leatherArmorList.add(Item.bootsLeather.itemID);
+            leatherArmorList.add(Item.legsLeather.itemID);
+            leatherArmorList.add(Item.plateLeather.itemID);
+            leatherArmorList.add(Item.helmetLeather.itemID);
+        }
         return leatherArmorList;
     }
 
@@ -446,14 +448,15 @@ public abstract class EntityZombieMixin extends EntityMob{
             } catch (RuntimeException ignored) {}
 
 
-            this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * NMUtils.getNiteMultiplier());
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 24 : 20) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NMUtils.getNiteMultiplier());
+            double niteMultiplier = NMUtils.getNiteMultiplier();
+            this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 24 : 20) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
             // 40 -> 46 -> 52 -> 58 eclipse
             // 24 -> 32 -> 40 -> 48 bm
             // 20 -> 26 -> 32 -> 38 normal
-            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(((double) progress / (isBloodMoon ? 5 : 10)) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(((double) progress / (isBloodMoon ? 5 : 10)) * niteMultiplier);
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0d + (progress > 0 ? 1 : 0)) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0d + (progress > 0 ? 1 : 0)) * niteMultiplier);
 
             if(this.isChild()){
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.34f);
@@ -467,11 +470,13 @@ public abstract class EntityZombieMixin extends EntityMob{
                     ordinal = 0))
     private void setDamageIfIronSword(CallbackInfo ci){
         if (this.worldObj!= null) {
+            int worldProgress = NMUtils.getWorldProgress();
+            double niteMultiplier = NMUtils.getNiteMultiplier();
             if(NMUtils.getIsBloodMoon()){
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((Math.floor(4.0 + (NMUtils.getWorldProgress()) * 2.5)) * NMUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((Math.floor(4.0 + worldProgress * 2.5)) * niteMultiplier);
                 // 4.0 -> 6.0 -> 9.0 -> 11.0
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((Math.floor(4.0 + (NMUtils.getWorldProgress()) * 1.75)) * NMUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((Math.floor(4.0 + worldProgress * 1.75)) * niteMultiplier);
                 // 4.0 -> 5.0 -> 7.0 -> 9.0
             }
         }
@@ -493,9 +498,12 @@ public abstract class EntityZombieMixin extends EntityMob{
             if(NMUtils.getIsBloodMoon()){chance /= 2;}
             if(NMUtils.getIsMobEclipsed(this)){chance /= 4;}
 
-            if((NMUtils.getWorldProgress() >= 2 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(chance * (1 / NMUtils.getNiteMultiplier()), 4)) == 0){
+            int worldProgress = NMUtils.getWorldProgress();
+            double niteMultiplier = NMUtils.getNiteMultiplier();
+
+            if((worldProgress >= 2 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(chance * (1 / niteMultiplier), 4)) == 0){
                 summonCrystalHeadAtPos();
-            } else if((NMUtils.getWorldProgress() >= 1 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(4 * (1 / NMUtils.getNiteMultiplier()), 2)) == 0){
+            } else if((worldProgress >= 1 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(4 * (1 / niteMultiplier), 2)) == 0){
                 summonShadowZombieAtPos((EntityZombie)(Object)this);
             }
         }
@@ -513,10 +521,11 @@ public abstract class EntityZombieMixin extends EntityMob{
             if((EntityZombie)(Object)this instanceof EntityShadowZombie){
                 return 0;
             }
-            if(NMUtils.getWorldProgress()==3){return 0.3f;}
+            int worldProgress = NMUtils.getWorldProgress();
+            if(worldProgress ==3){return 0.3f;}
             else {
                 int bloodMoonToolBonus = NMUtils.getIsBloodMoon() ? 2 : 1;
-                return (float) ((0.05F + (NMUtils.getWorldProgress() * (0.03 * bloodMoonToolBonus))) * NMUtils.getNiteMultiplier());
+                return (float) ((0.05F + (worldProgress * (0.03 * bloodMoonToolBonus))) * NMUtils.getNiteMultiplier());
             }
         }
         return constant;
@@ -533,8 +542,11 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
     private void deleteEndCrystalIfZombieDied(CallbackInfo ci){
-        if(!(this.getAttackTarget() instanceof EntityPlayer)){
-            if((this.ticksExisted & 32) == 0){
+
+        EntityLivingBase target = this.getAttackTarget();
+        if(target != null && !(target instanceof EntityPlayer)){
+            // specifically if they're targetting an animal or something else that isn't the player
+            if((this.ticksExisted & 63) == 0){
                 EntityPlayer p;
                 if((p = this.worldObj.getClosestVulnerablePlayerToEntity(this, 20)) != null){
                     this.setAttackTarget(p);
@@ -618,39 +630,23 @@ public abstract class EntityZombieMixin extends EntityMob{
         return par1Entity.riddenByEntity instanceof EntityEnderCrystal;
     }
 
-    @Unique
-    private static @NotNull List<ItemStack> getDiamondArmor() {
-        ItemStack boots = new ItemStack(Item.bootsDiamond);
-        ItemStack pants = new ItemStack(Item.legsDiamond);
-        ItemStack chest = new ItemStack(Item.plateDiamond);
-        ItemStack helmet = new ItemStack(Item.helmetDiamond);
-
-        List<ItemStack> advancedArmorList = new ArrayList<>(4);
-        advancedArmorList.add(boots);
-        advancedArmorList.add(pants);
-        advancedArmorList.add(chest);
-        advancedArmorList.add(helmet);
-        return advancedArmorList;
+    @Unique private static List<Integer> ARMOR_DIAMOND = new ArrayList<>(4);
+    @Unique private static @NotNull List<Integer> getDiamondArmor() {
+        if (ARMOR_DIAMOND.isEmpty()) {
+            ARMOR_DIAMOND.add(Item.bootsDiamond.itemID);
+            ARMOR_DIAMOND.add(Item.legsDiamond.itemID);
+            ARMOR_DIAMOND.add(Item.plateDiamond.itemID);
+            ARMOR_DIAMOND.add(Item.helmetDiamond.itemID);
+        }
+        return ARMOR_DIAMOND;
     }
 
-    @Unique
-    private static @NotNull List<Integer> getDiamondArmorIDs() {
-        ItemStack boots = new ItemStack(Item.bootsDiamond);
-        ItemStack pants = new ItemStack(Item.legsDiamond);
-        ItemStack chest = new ItemStack(Item.plateDiamond);
-        ItemStack helmet = new ItemStack(Item.helmetDiamond);
 
-        List<Integer> advancedArmorList = new ArrayList<>(4);
-        advancedArmorList.add(boots.itemID);
-        advancedArmorList.add(pants.itemID);
-        advancedArmorList.add(chest.itemID);
-        advancedArmorList.add(helmet.itemID);
-        return advancedArmorList;
-    }
 
     @Unique private boolean isWearingAnyDiamondArmor(EntityMob mob){
         for(int i = 1; i < 5; i++){
-            if(mob.getCurrentItemOrArmor(i) != null && getDiamondArmorIDs().contains(mob.getCurrentItemOrArmor(i).itemID)){
+            ItemStack armorStack = mob.getCurrentItemOrArmor(i);
+            if(armorStack != null && getDiamondArmor().contains(armorStack.itemID)){
                 return true;
             }
         }

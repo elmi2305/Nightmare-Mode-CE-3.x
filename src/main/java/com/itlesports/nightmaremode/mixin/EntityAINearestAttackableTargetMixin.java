@@ -37,7 +37,7 @@ public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarge
     private void forceTargetPlayer(CallbackInfoReturnable<Boolean> cir){
         if (this.taskOwner instanceof EntityBloodZombie) {
             if (this.targetEntity != null) return;
-            EntityPlayer nearestPlayer = this.taskOwner.worldObj.getClosestPlayerToEntity(this.taskOwner, -1);
+            EntityPlayer nearestPlayer = this.taskOwner.worldObj.getClosestPlayerToEntity(this.taskOwner, 80);
             if(nearestPlayer != null){
                 this.targetEntity = nearestPlayer;
                 cir.setReturnValue(true);

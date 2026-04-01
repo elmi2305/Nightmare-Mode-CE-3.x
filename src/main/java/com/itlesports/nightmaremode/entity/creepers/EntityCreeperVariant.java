@@ -74,9 +74,10 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NMUtils.getNiteMultiplier() - 1) / 20)) + 1));
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));
     }
 
     @Override
@@ -577,10 +578,11 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
 
+        final double niteMultiplier = NMUtils.getNiteMultiplier();
         return switch (i) {
-            case 0 -> 36 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 6b   10.4b
-            case 1 -> 81 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 9b   15.57b
-            case 2, 3 -> 121 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 11b  19.03b
+            case 0 -> 36 * bloodMoonModifier * niteMultiplier;  // 6b   10.4b
+            case 1 -> 81 * bloodMoonModifier * niteMultiplier;  // 9b   15.57b
+            case 2, 3 -> 121 * bloodMoonModifier * niteMultiplier; // 11b  19.03b
             default -> constant;
         };
     }

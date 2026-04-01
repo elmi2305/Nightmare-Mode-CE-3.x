@@ -69,6 +69,7 @@ public abstract class EntityWitherMixin extends EntityMob {
     private void destroyBlocksAbove(CallbackInfo ci){
         EntityLivingBase target = this.getAttackTarget();
         if(target != null && this.posY - target.posY < 4) {
+            if (this.ticksExisted % 4 != 0) return; // throttle for performance
             for (int i = -1; i < 1; i++) {
                 for (int j = -1; j < 1; j++) {
                     this.destroyBlock(this.worldObj, (int) this.posX + i, (int) this.posY + 3, (int) this.posZ + j);

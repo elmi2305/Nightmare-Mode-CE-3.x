@@ -155,11 +155,12 @@ public abstract class EntitySpiderMixin extends EntityMob{
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress()*0.2){
+            double niteMultiplier = NMUtils.getNiteMultiplier();
             if (NMUtils.getWorldProgress() <= 1 && !(thisObj instanceof EntityFireSpider)) {
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * NMUtils.getNiteMultiplier()),0));
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * niteMultiplier),0));
             } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * NMUtils.getNiteMultiplier()),1));
-                target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * NMUtils.getNiteMultiplier()),0));
+                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * niteMultiplier),1));
+                target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * niteMultiplier),0));
             }
 
             if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && target instanceof EntityPlayer player) {
@@ -251,22 +252,23 @@ public abstract class EntitySpiderMixin extends EntityMob{
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
+            double niteMultiplier = NMUtils.getNiteMultiplier();
             if(progress==0) {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier)* NMUtils.getNiteMultiplier());
-                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier)* niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (niteMultiplier - 1) / 20));
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
                 // 13 -> 20 -> 27 -> 34
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double(((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0)) * NMUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double(((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0)) * niteMultiplier);
                 // 4 -> 6 -> 8 -> 10
-                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isEclipse ? 0.9f : 0.85f) * (1 + (NMUtils.getNiteMultiplier() - 1) / 20)); // slightly increases move speed
+                this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isEclipse ? 0.9f : 0.85f) * (1 + (niteMultiplier - 1) / 20)); // slightly increases move speed
             }
             if(this.rand.nextInt(20 - progress) == 0 && !(thisObj instanceof JungleSpiderEntity)){
                 this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000,0));
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1)) * NMUtils.getNiteMultiplier());
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1)) * niteMultiplier);
                 // 12 -> 18 -> 24 -> 30
             }
         }
@@ -277,11 +279,10 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @Unique
     private void alertNearbySpiders(EntitySpider spider, EntityPlayer targetPlayer){
         if (spider.worldObj != null) {
-            List list = spider.worldObj.getEntitiesWithinAABBExcludingEntity(spider, spider.boundingBox.expand(32.0, 16.0, 32.0));
+            List list = spider.worldObj.getEntitiesWithinAABB(EntitySpider.class, spider.boundingBox.expand(16, 8, 16));
             for (Object tempEntity : list) {
-                if (!(tempEntity instanceof EntitySpider tempSpider)) continue;
-                if (tempSpider.entityToAttack != null) continue;
-                tempSpider.entityToAttack = targetPlayer;
+                if (((EntitySpider)tempEntity).entityToAttack != null) continue;
+                ((EntitySpider)tempEntity).entityToAttack = targetPlayer;
             }
         }
     }

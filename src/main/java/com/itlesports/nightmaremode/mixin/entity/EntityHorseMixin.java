@@ -228,11 +228,12 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         if(this.ticksExisted % 120 != 0) return;
         int originalHealth = 24;
         double eclipseModifier = NMUtils.getIsEclipse() ? 1.5 : 1;
-        if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        if(this.getMaxHealth() != originalHealth * niteMultiplier * eclipseModifier){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * niteMultiplier * eclipseModifier);
         }
 
-        float speed = (float) ((NMUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f) * NMUtils.getNiteMultiplier());
+        float speed = (float) ((NMUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f) * niteMultiplier);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(speed);
     }
 

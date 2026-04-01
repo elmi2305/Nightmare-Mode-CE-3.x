@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import api.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.AITasks.EntityAIChaseTargetSmart;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -25,6 +24,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Shadow public int fuseTime;
 
     @Shadow public abstract void onKickedByAnimal(KickingAnimal kickingAnimal);
+
+    @Shadow
+    public abstract boolean getPowered();
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
@@ -74,9 +76,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((NMUtils.getNiteMultiplier() - 1) / 20)) + 1));
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));
     }
 
     @Unique private boolean isValidForEventLoot = false;
@@ -128,7 +131,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){
-        if(isCharged()) {
+        if(getPowered()) {
             this.dropItem(Item.ghastTear.itemID, 1);
             if (rand.nextInt(3) == 0) {
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
@@ -243,7 +246,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Override
     public boolean isSecondaryTargetForSquid() {
-        return NMUtils.getIsBloodMoon() && isCharged() && !this.inWater;
+        return NMUtils.getIsBloodMoon() && getPowered() && !this.inWater;
     }
 
     @Override
@@ -328,16 +331,13 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
 
-        return switch (i) {
-            case 0 -> 36 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 6b   10.4b
-            case 1 -> 81 * bloodMoonModifier * NMUtils.getNiteMultiplier();  // 9b   15.57b
-            case 2, 3 -> 121 * bloodMoonModifier * NMUtils.getNiteMultiplier(); // 11b  19.03b
+        float returnValue = (float) switch (i) {
+            case 0 -> 36;  // 6b   10.4b
+            case 1 -> 81;  // 9b   15.57b
+            case 2, 3 -> 121; // 11b  19.03b
             default -> constant;
         };
-    }
-    @Unique
-    private boolean isCharged() {
-        return this.getDataWatcher().getWatchableObjectByte(17) == 1;
+        return returnValue * bloodMoonModifier * NMUtils.getNiteMultiplier();
     }
     @Unique
     private int shouldSpawnCharged() {

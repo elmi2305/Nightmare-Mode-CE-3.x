@@ -109,24 +109,24 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         {return true;}
 
         if(src.getEntity() instanceof EntityLivingBase p){
-            if(p.getHeldItem() == null){
-                return true;
-            } else{
-                if(p.getHeldItem().getItem() instanceof PickaxeItem){
-                    return false;
-                } else{
-                    for (int i = 0; i < 2; i++) {
-                        double offsetY = this.rand.nextDouble() * this.height * 1.2D;
-                        this.worldObj.playAuxSFX(2278, (int) this.posX, (int) (this.posY + offsetY), (int) this.posZ, 0);
-                    }
-                    p.getHeldItem().attemptDamageItem(3, p.rand);
-                    return true;
-                }
+            if(p.getHeldItem() == null) return true;
+
+            if(p.getHeldItem().getItem() instanceof PickaxeItem) return false;
+
+
+            for (int i = 0; i < 2; i++) {
+                double offsetY = this.rand.nextDouble() * this.height * 1.2D;
+                this.worldObj.playAuxSFX(2278, (int) this.posX, (int) (this.posY + offsetY), (int) this.posZ, 0);
             }
+            p.getHeldItem().attemptDamageItem(3, p.rand);
+            return true;
+
         }
+
         if(src == DamageSource.magic){
             return false;
         }
         return true;
     }
+
 }

@@ -77,23 +77,21 @@ public class EntityObsidianFish extends EntitySilverfish {
                 {return true;}
 
         if(src.getEntity() instanceof EntityPlayer p){
-            if(p.getHeldItem() == null){
-                return true;
-            } else{
-                if(p.getHeldItem().getItem() instanceof PickaxeItem){
-                    return false;
-                } else{
-                    for (int i = 0; i < 2; i++) {
-                        double offsetX = (this.rand.nextDouble() - 0.5D);
-                        double offsetY = this.rand.nextDouble() * this.height * 1.2D;
-                        double offsetZ = (this.rand.nextDouble() - 0.5D);
+            if(p.getHeldItem() == null) return true;
 
-                        this.worldObj.playAuxSFX(2278, (int) (this.posX + offsetX), (int) (this.posY + offsetY), (int) (this.posZ + offsetZ), 0);
-                    }
-                    p.getHeldItem().attemptDamageItem(8, p.rand);
-                    return true;
-                }
+            if(p.getHeldItem().getItem() instanceof PickaxeItem){
+                return false;
             }
+
+            for (int i = 0; i < 2; i++) {
+                double offsetX = (this.rand.nextDouble() - 0.5D);
+                double offsetY = this.rand.nextDouble() * this.height * 1.2D;
+                double offsetZ = (this.rand.nextDouble() - 0.5D);
+                this.worldObj.playAuxSFX(2278, (int) (this.posX + offsetX), (int) (this.posY + offsetY), (int) (this.posZ + offsetZ), 0);
+            }
+            p.getHeldItem().attemptDamageItem(8, p.rand);
+            return true;
+
         }
         return false;
     }

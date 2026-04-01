@@ -90,55 +90,55 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void explore() {
-        for (int i = 0; i < 4; i++) {
-            double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
+        double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+        double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+        double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
 
-            int chance = 30;
-            int verticalRange = 12;
-            chance -= (int) Math.min(Math.max(targetY - this.posY, 0) * 2, 24);
+        boolean isWood = this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood;
+        int verticalRange = isWood ? 20 : 12;
 
-            if (this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood) {
-                chance = Math.max(chance - 16, 2);
-                verticalRange = 20;
-            }
+        if (Math.abs(targetY - this.posY) >= verticalRange) return;
 
-            if (Math.abs(targetY - this.posY) < verticalRange && this.rand.nextInt(chance) == 0) {
-                this.setPositionAndUpdate(targetX, targetY, targetZ);
-                this.getNavigator().clearPathEntity();
-                break;
-            }
+        double heightAbove = Math.max(targetY - this.posY, 0);
+        int chance = (int) Math.max(30 - Math.min(heightAbove * 2, 24), 2);
+        if (isWood) chance = Math.max(chance - 16, 2);
+
+        if (this.rand.nextInt(chance) == 0) {
+            this.setPositionAndUpdate(targetX, targetY, targetZ);
+            this.getNavigator().clearPathEntity();
         }
     }
 
     private void seekSkybases() {
-        double targetX;
-        double targetZ;
-        double targetY;
         double foundPosX = this.posX;
-        double foundPosY = this.posY;
+        double foundPosY = this.posY;  // actual surface Y for teleport
         double foundPosZ = this.posZ;
-        boolean isWood = false;
+        double bestScore = this.posY;  // comparison score (Y+4 for wood, Y otherwise)
+        boolean found = false;
 
-        for (int i = 0; i < 12; i++) {
-            int verticalRange = 20;
-            targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
-            if(this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood){
-                verticalRange = 24;
-                isWood = true;
-            }
+        for (int i = 0; i < 6; i++) {
+            double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+            double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
 
-            if(Math.abs(targetY - this.posY) < verticalRange && (isWood ? targetY + 4 : targetY) > foundPosY){
+            boolean isWood = this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood;
+            int verticalRange = isWood ? 24 : 20;
+
+            if (Math.abs(targetY - this.posY) >= verticalRange) continue;
+
+            double score = isWood ? targetY + 6 : targetY;
+            if (score > bestScore) {
+                bestScore = score;
                 foundPosX = targetX;
                 foundPosY = targetY;
                 foundPosZ = targetZ;
+                found = true;
+                if (isWood) break; // wood is the highest-priority target; no need to keep searching
             }
         }
-        if(foundPosX != this.posX && foundPosY >= this.posY && foundPosZ != this.posZ){
-            this.setPositionAndUpdate(foundPosX,foundPosY,foundPosZ);
+
+        if (found) {
+            this.setPositionAndUpdate(foundPosX, foundPosY, foundPosZ);
             this.getNavigator().clearPathEntity();
         }
     }

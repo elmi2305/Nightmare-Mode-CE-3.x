@@ -26,14 +26,16 @@ public class EntityAIWitchLightningStrike extends EntityAITarget {
     public boolean continueExecuting() {
         if(this.cooldown >= 200){
             this.cooldown = 200;
-            List list = this.taskOwner.worldObj.getEntitiesWithinAABBExcludingEntity(this.taskOwner, this.taskOwner.boundingBox.expand(10,4,10));
-            for (Object tempEntity : list) {
-                if(tempEntity instanceof EntityCreeper creeper && creeper.getDataWatcher().getWatchableObjectByte(17) == 0){
-                    creeper.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000,0));
-                    Entity lightningbolt = new EntityLightningBolt(this.taskOwner.worldObj, creeper.posX, creeper.posY + 1, creeper.posZ);
-                    this.taskOwner.worldObj.addWeatherEffect(lightningbolt);
-                    this.cooldown = 0;
-                    break;
+            if (this.taskOwner.ticksExisted % 20 == 0) {
+                List list = this.taskOwner.worldObj.getEntitiesWithinAABBExcludingEntity(this.taskOwner, this.taskOwner.boundingBox.expand(10,4,10));
+                for (Object tempEntity : list) {
+                    if(tempEntity instanceof EntityCreeper creeper && creeper.getDataWatcher().getWatchableObjectByte(17) == 0){
+                        creeper.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 1000,0));
+                        Entity lightningbolt = new EntityLightningBolt(this.taskOwner.worldObj, creeper.posX, creeper.posY + 1, creeper.posZ);
+                        this.taskOwner.worldObj.addWeatherEffect(lightningbolt);
+                        this.cooldown = 0;
+                        break;
+                    }
                 }
             }
         }
