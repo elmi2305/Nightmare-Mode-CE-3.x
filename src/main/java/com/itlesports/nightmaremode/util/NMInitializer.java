@@ -1383,6 +1383,16 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
         // done with book
+
+
+        // change map recipe
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.emptyMap, 1), new Object[]{"#S#", "#X#", "#S#", Character.valueOf('#'), Item.paper, Character.valueOf('X'), Item.compass, Character.valueOf('S'), BTWItems.soulUrn});
+        RecipeManager.addRecipe(new ItemStack(Item.emptyMap, 1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), Item.paper, Character.valueOf('X'), Item.compass});
+        // done changing map
+
+        // calamari with nitre
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.curedMeat, 1), new Object[]{NMItems.calamari, BTWItems.nitre});
+        // done with calamari
     }
 
     private static void addPistonPackingRecipes() {
