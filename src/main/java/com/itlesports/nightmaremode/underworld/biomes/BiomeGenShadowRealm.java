@@ -18,7 +18,7 @@ public class BiomeGenShadowRealm extends BiomeGenUnderworld {
 
 
         this.topBlock = (short) NMBlocks.voidStone.blockID;
-        this.fillerBlock = (short)NMBlocks.voidStone.blockID; // hi
+        this.fillerBlock = (short)NMBlocks.voidStone.blockID;
 
     }
 }

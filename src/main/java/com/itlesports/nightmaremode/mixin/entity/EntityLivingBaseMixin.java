@@ -134,7 +134,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
             EntityPlayer player = sb.getThrower() instanceof EntityPlayer ? (EntityPlayer) sb.getThrower() : null;
             EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
             // only players can get achievements, and the player cannot get it by hitting themselves
-            if (player == null && player != thisObj) return;
+            if (player == null || player == thisObj) return;
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, player, false);
             this.lastTimeWasSnowballed = this.ticksExisted;
             this.lastSnowBaller = player;
