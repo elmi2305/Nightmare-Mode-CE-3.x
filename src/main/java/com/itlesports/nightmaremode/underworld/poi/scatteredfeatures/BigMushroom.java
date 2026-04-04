@@ -20,10 +20,10 @@ public class BigMushroom extends ComponentScatteredFeature {
     public BigMushroom() {} // required
 
     public BigMushroom(Random random, int x, int z) {
-        super(random, x, 63, z, 64,64,64);
+        super(random, x, BASE_HEIGHT, z, 64,64,64);
     }
     private final Random structureRand = new Random();
-
+    private static final byte BASE_HEIGHT = 63;
 
     private static final int[] paletteIDs = new int[]{
             Block.jukebox.blockID, // storage
@@ -266,7 +266,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                 }
 
                 int numItems = structureRand.nextInt(7) + 4;
-                if(bp.y > 93){
+                if(bp.y > (BASE_HEIGHT + 30)){
                     // this is just the upper 2 chests
                     numItems += 10;
                 }
