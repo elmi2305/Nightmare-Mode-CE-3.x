@@ -86,7 +86,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageHealingOverTime(CallbackInfo ci){
         boolean shouldIncreaseHealth = false;
-        if (this.worldObj != null && !this.worldObj.isRemote) {
+        if (this.worldObj != null && this.worldObj.isRemote) {
             if(this.ticksExisted % (120 - NMUtils.getWorldProgress() * 10) == 0 && this.timeOfLastAttack + 140 < this.ticksExisted){
                 shouldIncreaseHealth = true;
             }
@@ -99,7 +99,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     @Inject(method = "entityMobAttackEntityFrom", at = @At("TAIL"))
     private void timeEntityWasRecentlyHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if (!this.worldObj.isRemote) {
+        if (this.worldObj.isRemote) {
             this.timeOfLastAttack = this.ticksExisted;
         }
     }
