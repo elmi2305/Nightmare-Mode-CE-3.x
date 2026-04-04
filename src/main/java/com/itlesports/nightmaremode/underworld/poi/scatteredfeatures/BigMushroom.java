@@ -207,7 +207,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             lootPool.add(new LootEntry(new ItemStack(NMItems.bloodBoots), 1, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(NMItems.bloodShovel), 2, 0, 1));
 
-            // Calculate total weight once (for efficiency)
+            // calculate total weight once (for efficiency)
             int totalWeight = 0;
             for (LootEntry entry : lootPool) {
                 totalWeight += entry.weight;
@@ -260,7 +260,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                 }
                 TileEntityBloodChest chestTE = (TileEntityBloodChest) chest;
 
-                // Clear the chest first if needed (vanilla dungeons start empty)
+                // clear the chest first if needed (vanilla dungeons start empty)
                 for (int slot = 0; slot < chestTE.getSizeInventory(); slot++) {
                     chestTE.setInventorySlotContents(slot, null);
                 }
@@ -274,7 +274,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                 for (int itemIndex = 0; itemIndex < numItems; itemIndex++) {
                     if (totalWeight <= 0) break; // No loot defined
 
-                    // Weighted random selection
+                    // weighted random selection
                     int randWeight = structureRand.nextInt(totalWeight);
                     int currentWeight = 0;
                     LootEntry selected = null;
@@ -290,10 +290,10 @@ public class BigMushroom extends ComponentScatteredFeature {
                         ItemStack toAdd = selected.stack.copy();
                         toAdd.stackSize = selected.minCount + structureRand.nextInt(selected.maxCount - selected.minCount + 1);
 
-                        // Find a random empty slot (like vanilla randomization)
+                        // find a random empty slot (like vanilla randomization)
                         int attempts = 0;
                         int slot = structureRand.nextInt(chestTE.getSizeInventory());
-                        while (chestTE.getStackInSlot(slot) != null && attempts < 10) { // Limit attempts to avoid infinite loop
+                        while (chestTE.getStackInSlot(slot) != null && attempts < 10) {
                             slot = structureRand.nextInt(chestTE.getSizeInventory());
                             attempts++;
                         }
@@ -327,7 +327,7 @@ public class BigMushroom extends ComponentScatteredFeature {
         int valueToReturn = meta[index];
         int special = 0;
         if(valueToReturn < 0){
-            // negative metadata calculates the meta as a random number from 0 to positive meta
+            // negative metadata calculates the meta as a random number from 0 to abs(meta)
             valueToReturn = this.structureRand.nextInt(-valueToReturn);
             return valueToReturn;
         }
@@ -351,7 +351,7 @@ public class BigMushroom extends ComponentScatteredFeature {
     }
 
 
-    public void placeBlockAtCurrentPositiona(World world, int blockID, int meta, int x, int y, int z, StructureBoundingBox par7StructureBoundingBox) {
+    public void placeBlockAtCurrentPositionUnused(World world, int blockID, int meta, int x, int y, int z, StructureBoundingBox par7StructureBoundingBox) {
         int zPos = this.getZWithOffset(x, z);
         int yPos = this.getYWithOffset(y);
         int xPos = this.getXWithOffset(x, z);

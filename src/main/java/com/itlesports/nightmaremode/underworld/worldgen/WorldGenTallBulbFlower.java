@@ -10,107 +10,99 @@ import java.util.Random;
 
 public class WorldGenTallBulbFlower extends WorldGenerator {
 
-    private int leafMeta = 0;   // Metadata for bulb leaves
-    private int metaWood = 0;   // Metadata for stem
+    private int leafMeta = 0;
+    private int metaWood = 0;
 
     @Override
     public boolean generate(World world, Random rand, int baseX, int baseY, int baseZ) {
-        return generateFlowerAt(world, rand, baseX, baseY, baseZ);
-    }
-
-    /**
-     * Generates a single tall bulb flower at the given base position.
-     * Tall stem with slight XZ curve + large bulbous spherical head.
-     */
-    private boolean generateFlowerAt(World world, Random rand, int baseX, int baseY, int baseZ) {
-        // Taller stem: 8-14 blocks
-        int stemHeight = rand.nextInt(9) + 9;
+        byte stemHeight = (byte) (rand.nextInt(9) + 9);
 
         if (baseY < 1 || baseY + stemHeight + 4 > 255) {
             return false;
         }
 
-        // Slight curve: X or Z axis
-        int curveDX = 0, curveDZ = 0;
-        if (rand.nextBoolean()) {
-            curveDX = rand.nextBoolean() ? 1 : -1;
-        } else {
-            curveDZ = rand.nextBoolean() ? 1 : -1;
+        // validate ground before continuing
+        int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
+        if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
+                && groundId != NMBlocks.flowerGrass.blockID) {
+            return false;
         }
 
-        // Minimal shift: 0-2 blocks total, upper stem only
-        int totalShift = rand.nextInt(3);
-        int startCurve = Math.max(1, stemHeight * 2 / 3);
-        int steps = stemHeight - startCurve;
-        int spacing = (totalShift == 0 || steps == 0) ? Integer.MAX_VALUE : Math.max(1, (int) Math.ceil((double) steps / totalShift));
+        byte curveDX = 0, curveDZ = 0;
+        if (rand.nextBoolean()) {
+            curveDX = (byte) (rand.nextBoolean() ? 1 : -1);
+        } else {
+            curveDZ = (byte) (rand.nextBoolean() ? 1 : -1);
+        }
 
-        // Precompute & validate stem path
-        int[] pathX = new int[stemHeight];
-        int[] pathY = new int[stemHeight];
-        int[] pathZ = new int[stemHeight];
+        byte totalShift = (byte) rand.nextInt(3);
+        byte startCurve = (byte) Math.max(1, stemHeight * 2 / 3);
+        byte steps = (byte) (stemHeight - startCurve);
+        int spacing = (totalShift == 0 || steps == 0) ? Integer.MAX_VALUE
+                : Math.max(1, (int) Math.ceil((double) steps / totalShift));
 
-        int accumulatedShift = 0;
-        int shiftsDone = 0;
+        // validate stem
+        int curX = baseX, curZ = baseZ;
+        int accumulated = 0, shifted = 0;
         for (int i = 0; i < stemHeight; ++i) {
-            if (i >= startCurve && shiftsDone < totalShift && ((i - startCurve) % spacing == 0)) {
-                accumulatedShift++;
-                shiftsDone++;
+            if (i >= startCurve && shifted < totalShift && (i - startCurve) % spacing == 0) {
+                accumulated++;
+                shifted++;
             }
-            pathX[i] = baseX + accumulatedShift * curveDX;
-            pathY[i] = baseY + i;
-            pathZ[i] = baseZ + accumulatedShift * curveDZ;
-
-            if (pathY[i] < 0 || pathY[i] >= 256 || !isReplaceable(world, pathX[i], pathY[i], pathZ[i])) {
+            curX = baseX + accumulated * curveDX;
+            curZ = baseZ + accumulated * curveDZ;
+            int curY = baseY + i;
+            if (curY < 0 || curY >= 256 || !isReplaceable(world, curX, curY, curZ)) {
                 return false;
             }
         }
-
-        // Bulb head: centered 1 block above tip, radius 2.5 (filled sphere)
-        int tipX = pathX[stemHeight - 1];
+        int tipX = curX;
         int tipY = baseY + stemHeight;
-        int tipZ = pathZ[stemHeight - 1];
-        float bulbRadius = (rand.nextBoolean() ? 3.5f : 2.5f);
-        float bulbRadiusSq = bulbRadius * bulbRadius;
+        int tipZ = curZ;
+
+        // bulb
+        float bulbRadius = rand.nextBoolean() ? 3.5f : 2.5f;
+        int bulbRadiusSqInt = (int)(bulbRadius * bulbRadius); // 6 for r=2.5, 12 for r=3.5
+        byte rByte = (byte) MathHelper.ceiling_float_int(bulbRadius);   // 3 or 4
         int bulbCenterY = tipY + 1;
 
-        // Validate bulb space (loop over bounding box)
-        int rInt = MathHelper.ceiling_float_int(bulbRadius);
-        for (int dy = -rInt; dy <= rInt; ++dy) {
+        for (int dy = -rByte; dy <= rByte; ++dy) {
             int by = bulbCenterY + dy;
             if (by < 0 || by >= 256) return false;
-            for (int dx = -rInt; dx <= rInt; ++dx) {
-                for (int dz = -rInt; dz <= rInt; ++dz) {
-                    if (dx * dx + dy * dy + dz * dz <= bulbRadiusSq) {
-                        if (!isReplaceable(world, tipX + dx, by, tipZ + dz)) {
-                            return false;
-                        }
+            for (int dx = -rByte; dx <= rByte; ++dx) {
+                for (int dz = -rByte; dz <= rByte; ++dz) {
+                    if (dx * dx + dy * dy + dz * dz <= bulbRadiusSqInt
+                            && !isReplaceable(world, tipX + dx, by, tipZ + dz)) {
+                        return false;
                     }
                 }
             }
         }
 
-        // Validate ground
-        int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
-        if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID && groundId != NMBlocks.flowerGrass.blockID) {
-            return false;
-        }
 
-        // Place dirt base
-        setBlock(world, baseX, baseY - 1, baseZ, Block.dirt.blockID);
+        // place the dirt below
+        setBlock(world, baseX, baseY - 1, baseZ, NMBlocks.flowerDirt.blockID);
 
-        // Place stem
+        // recompute stem path identically
+        curX = baseX; curZ = baseZ; accumulated = 0; shifted = 0;
         for (int i = 0; i < stemHeight; ++i) {
-            setBlockAndMetadata(world, pathX[i], pathY[i], pathZ[i], NMBlocks.plantMatter.blockID, this.metaWood);
+            if (i >= startCurve && shifted < totalShift && (i - startCurve) % spacing == 0) {
+                accumulated++;
+                shifted++;
+            }
+            curX = baseX + accumulated * curveDX;
+            curZ = baseZ + accumulated * curveDZ;
+            setBlockAndMetadata(world, curX, baseY + i, curZ, NMBlocks.plantMatter.blockID, this.metaWood);
         }
 
-        // Place bulbous sphere head
-        for (int dy = -rInt; dy <= rInt; ++dy) {
+        // place bulb sphere with same integer distance threshold.
+        for (int dy = -rByte; dy <= rByte; ++dy) {
             int by = bulbCenterY + dy;
-            for (int dx = -rInt; dx <= rInt; ++dx) {
-                for (int dz = -rInt; dz <= rInt; ++dz) {
-                    float distSq = dx * dx + dy * dy + dz * dz;
-                    if (distSq <= bulbRadiusSq) {
-                        setBlockAndMetadata(world, tipX + dx, by, tipZ + dz, Block.leaves.blockID, this.leafMeta);
+            for (int dx = -rByte; dx <= rByte; ++dx) {
+                for (int dz = -rByte; dz <= rByte; ++dz) {
+                    if (dx * dx + dy * dy + dz * dz <= bulbRadiusSqInt) {
+                        setBlockAndMetadata(world, tipX + dx, by, tipZ + dz,
+                                Block.leaves.blockID, this.leafMeta);
                     }
                 }
             }
@@ -119,12 +111,10 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
         return true;
     }
 
-    /**
-     * Checks if block at (x,y,z) is replaceable.
-     */
     private boolean isReplaceable(World world, int x, int y, int z) {
         int id = world.getBlockId(x, y, z);
-        return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID ||
-                id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID || id == NMBlocks.flowerGrass.blockID;
+        return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID
+                || id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID
+                || id == NMBlocks.flowerGrass.blockID;
     }
 }
