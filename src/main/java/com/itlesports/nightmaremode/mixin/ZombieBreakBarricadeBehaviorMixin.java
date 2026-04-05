@@ -6,9 +6,13 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(ZombieBreakBarricadeBehavior.class)
 public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
@@ -25,12 +29,28 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
             int iBlockID = world.getBlockId(i, j, k);
             if (iBlockID != 0) {
                 Block block = Block.blocksList[iBlockID];
-                if (block.blockID == Block.obsidian.blockID || block.blockID == Block.bedrock.blockID || block instanceof BlockPortal || block.blockID == Block.mobSpawner.blockID || block.blockID == BTWBlocks.lavaPillow.blockID) {
+                if (getAvoidedBlocks().contains(iBlockID)) {
+                    System.out.println("Encountered avoided block: " + block.getLocalizedName());
                     cir.setReturnValue(null);
-                } else if (block.blockMaterial == Material.rock || block.blockMaterial == Material.wood || block.blockMaterial == Material.glass || block.blockMaterial == Material.iron) {
+                    return;
+                }
+                if (block.blockMaterial == Material.rock || block.blockMaterial == Material.wood || block.blockMaterial == Material.glass || block.blockMaterial == Material.iron) {
                     cir.setReturnValue(block);
                 }
             }
         }
+    }
+
+    @Unique private static Set<Integer> AVOIDED_BLOCKS = new HashSet<>();
+    @Unique private static Set<Integer> getAvoidedBlocks(){
+        if(AVOIDED_BLOCKS.isEmpty()){
+            AVOIDED_BLOCKS.add(Block.obsidian.blockID);
+            AVOIDED_BLOCKS.add(Block.bedrock.blockID);
+            AVOIDED_BLOCKS.add(Block.portal.blockID);
+            AVOIDED_BLOCKS.add(Block.endPortal.blockID);
+            AVOIDED_BLOCKS.add(Block.mobSpawner.blockID);
+            AVOIDED_BLOCKS.add(BTWBlocks.lavaPillow.blockID);
+        }
+        return AVOIDED_BLOCKS;
     }
 }

@@ -21,6 +21,11 @@ public class BlockLeavesMixin extends BlockLeavesBase {
     }
 
 
+    @Override
+    public boolean isBreakableBarricade(World world, int i, int j, int k, boolean advancedBreaker) {
+        return false;
+    }
+
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "getBlockColor", at = @At(value = "RETURN"), cancellable = true)
     private void redLeaves0(CallbackInfoReturnable<Integer> cir){

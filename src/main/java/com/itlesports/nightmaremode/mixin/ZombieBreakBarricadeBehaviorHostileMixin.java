@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.item.items.ShovelItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
+import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodShovel;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +36,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
             if(getFastItems().contains(heldItem.itemID)){
                 this.breakingTime += 1;
-                if(this.targetBlock.blockMaterial == Material.ground && heldItem.getDisplayName().contains("Shovel")){
+                if(this.targetBlock.blockMaterial == Material.ground && heldItem.getItem() instanceof ShovelItem){
                     this.breakingTime += 3;
                 }
             }
