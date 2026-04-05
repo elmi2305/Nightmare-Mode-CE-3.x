@@ -26,8 +26,7 @@ public class EntityLightningCreeper extends EntityCreeperVariant{
     @Override
     public boolean getCanSpawnHere() {
         if (this.worldObj == null) return false;
-        int worldProgress = NMUtils.getWorldProgress();
-        boolean finalSpawn = this.worldObj.isThundering() || worldProgress > 0 && super.getCanSpawnHere() && this.posY > 50;
+        boolean finalSpawn = this.worldObj.isThundering() && super.getCanSpawnHere() && this.posY > 50;
 
         return finalSpawn;
     }
