@@ -70,7 +70,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
             }
         }
     }
-    @Inject(method = "continueExecuting", at = @At("TAIL"))
+    @Inject(method = "continueExecuting", at = @At("TAIL"), cancellable = true)
     private void addBowSlapBehavior(CallbackInfoReturnable<Boolean> cir){
         EntityLivingBase target = this.entityAttackTarget;
         EntityLivingBase owner = this.entityOwner;
@@ -80,7 +80,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
                 owner.swingItem();
 
                 this.attackCooldownCounter = 25;
-
+                cir.setReturnValue(false);
             }
         }
     }
