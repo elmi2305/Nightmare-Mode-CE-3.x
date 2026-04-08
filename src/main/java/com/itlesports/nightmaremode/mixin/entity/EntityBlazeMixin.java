@@ -3,16 +3,19 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.EntityBlazeVariantExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityBlaze.class)
-public class EntityBlazeMixin extends EntityMob{
+public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt {
     @Unique private int dashTimer = 0;
 
     public EntityBlazeMixin(World par1World) {
@@ -24,20 +27,23 @@ public class EntityBlazeMixin extends EntityMob{
         if(this.worldObj != null) {
             boolean isVariant = false;
             int progress = NMUtils.getWorldProgress();
-            int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic(this) ? 20 : 10) : 0;
+            int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic() ? 20 : 10) : 0;
+            Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (isHostile ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
             if(NMUtils.getIsMobEclipsed(this)){
                 if(rand.nextBoolean()){
+                    this.nm$setBlazeVariant((byte) NMFields.BLAZE_AQUA);
                     this.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 1000000, 0));
                 }
                 isVariant = true;
             }
             if(!isVariant){
-                if ((progress >= (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 1) || NightmareMode.evolvedMobs) && rand.nextBoolean()) {
+                if ((progress >= (isHostile ? 0 : 1) || NightmareMode.evolvedMobs) && rand.nextBoolean()) {
+                    this.nm$setBlazeVariant((byte) NMFields.BLAZE_SHADOW);
                     this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 1000000, 0));
                 }
             }
@@ -46,15 +52,15 @@ public class EntityBlazeMixin extends EntityMob{
 
     @ModifyConstant(method = "attackEntity", constant = @Constant(floatValue = 30.0f))
     private float invisibleBlazePassivity(float constant){
-        return isInvisible(this) ? 0f : 30f;
+        return isInvisibleBlaze() ? 0f : 30f;
     }
 
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityBlaze;attackEntityAsMob(Lnet/minecraft/src/Entity;)Z"))
     private void manageInvisibleBlazeAttack(Entity par1Entity, float par2, CallbackInfo ci){
         EntityBlaze blaze = (EntityBlaze)(Object)this;
-        if(isInvisible(blaze)) {
+        if(isInvisibleBlaze()) {
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 6; i++) {
                 double offsetX = (this.rand.nextDouble() - 0.5D) * 3.0D;
                 double offsetY = this.rand.nextDouble() * this.height * 1.2D;
                 double offsetZ = (this.rand.nextDouble() - 0.5D) * 3.0D;
@@ -72,45 +78,56 @@ public class EntityBlazeMixin extends EntityMob{
     @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 100))
     private int lowerBlazeAttackCooldown(int constant) {
         if (NMUtils.getIsMobEclipsed(this) && this.getActivePotionEffects().isEmpty()){
-            return 50;
+            return 50; // hacky. should be redone. this is stupid
         }
         return constant;
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageBlazeDash(CallbackInfo ci){
-        EntityBlaze thisObj = (EntityBlaze)(Object)this;
-        if(thisObj.entityToAttack instanceof EntityPlayer target){
-            int threshold = NMUtils.getIsMobEclipsed(this) ? 80 : 200;
-            double distToPlayer = this.getDistanceSqToEntity(target);
-            boolean isEclipse = threshold == 80;
+        if(this.entityToAttack instanceof EntityPlayer target){
 
-            if(distToPlayer < 49 && isEclipse){
+            double distToPlayerSq = this.getDistanceSqToEntity(target);
+            double aggroRange = this.getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue();
+
+            if(distToPlayerSq > (aggroRange * aggroRange) + 124){
+                // expected aggro range is 900, +124 makes it 1024, so the aggro resets after 32 blocks
+                // set to null because it shouldn't care about the player anymore if it lost aggro. previously it just kept the last seen player
+                this.entityToAttack = null;
+                return;
+            }
+
+
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            int threshold = isEclipse ? 80 : 200;
+
+            if(isEclipse && distToPlayerSq < 49){
+                // it goes vroom when close to the player
                 this.dashTimer += 3;
             }
 
-            this.dashTimer++;
-            if (this.dashTimer > threshold){
-                double var1 = target.posX - thisObj.posX;
-                double var2 = target.posY - thisObj.posY;
-                double var3 = target.posZ - thisObj.posZ;
+            this.dashTimer = Math.min(this.dashTimer + 1 , threshold);
+            if (this.dashTimer == threshold){
+                double dx = target.posX - this.posX;
+                double dy = target.posY - this.posY;
+                double dz = target.posZ - this.posZ;
 
-                if(this.getDistanceSqToEntity(target) < 49 && isEclipse && !this.isInvisible()){
-                    var1 *= -1.5;
-                    var2 *= -1;
-                    var3 *= -1.5;
+                if(distToPlayerSq < 49 && isEclipse && !this.isInvisibleBlaze()){
+                    dx *= -1.5;
+                    dy *= -1;
+                    dz *= -1.5;
                 }
 
-                Vec3 vector = Vec3.createVectorHelper(var1, var2, var3);
+                Vec3 vector = Vec3.createVectorHelper(dx, dy, dz);
                 vector.normalize();
-                thisObj.motionX = vector.xCoord * 0.12;
-                thisObj.motionY = vector.yCoord * 0.18 + 0.4 + (this.rand.nextFloat() * 0.2);
-                thisObj.motionZ = vector.zCoord * 0.12;
+                this.motionX = vector.xCoord * 0.12;
+                this.motionY = vector.yCoord * 0.18 + 0.4 + (this.rand.nextFloat() * 0.2);
+                this.motionZ = vector.zCoord * 0.12;
                 this.dashTimer = 0;
-            } else if(this.dashTimer > threshold - 20){
-                thisObj.motionX = 0;
-                thisObj.motionY = 0;
-                thisObj.motionZ = 0;
+            } else if(this.dashTimer > (threshold - 20)){
+                this.motionX = 0;
+                this.motionY = 0;
+                this.motionZ = 0;
             }
         }
     }
@@ -124,7 +141,7 @@ public class EntityBlazeMixin extends EntityMob{
     @ModifyArg(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private Entity manageWaterBlazeAttack(Entity projectile){
         if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NMUtils.getIsMobEclipsed(this)) {
-            if(isAquatic(this)){
+            if(isAquatic()){
                 BTWSquidEntity squid = new BTWSquidEntity(this.worldObj);
 
                 double posX = this.posX + getRandomOffsetFromPosition(this);
@@ -151,6 +168,10 @@ public class EntityBlazeMixin extends EntityMob{
 
         return projectile;
     }
+    @Inject(method = "entityInit", at = @At("TAIL"))
+    private void doBlazeVariantInDataWatcher(CallbackInfo ci){
+        this.dataWatcher.addObject(20,(byte) 0);
+    }
 
 
     @Unique private static double getRandomOffsetFromPosition(EntityLivingBase entity){
@@ -158,11 +179,11 @@ public class EntityBlazeMixin extends EntityMob{
     }
 
 
-    @Unique private static boolean isInvisible(EntityMob blaze){
-        return blaze != null && blaze.isPotionActive(Potion.invisibility);
+    @Unique private boolean isInvisibleBlaze() {
+        return this.nm$getBlazeVariant() == NMFields.BLAZE_SHADOW;
     }
-    @Unique private static boolean isAquatic(EntityMob blaze){
-        return blaze != null && blaze.isPotionActive(Potion.waterBreathing);
+    @Unique private boolean isAquatic(){
+        return this.nm$getBlazeVariant() == NMFields.BLAZE_AQUA;
     }
 
     @Unique private boolean isValidForEventLoot = false;
@@ -183,7 +204,7 @@ public class EntityBlazeMixin extends EntityMob{
                 }
             }
 
-            int itemID = isAquatic(this) ? NMItems.waterRod.itemID : isInvisible(this) ? NMItems.shadowRod.itemID : NMItems.fireRod.itemID;
+            int itemID = isAquatic() ? NMItems.waterRod.itemID : isInvisibleBlaze() ? NMItems.shadowRod.itemID : NMItems.fireRod.itemID;
 
             int var4 = this.rand.nextInt(3);
             if(this.dimension == -1){
@@ -197,5 +218,15 @@ public class EntityBlazeMixin extends EntityMob{
                 this.dropItem(itemID, 1);
             }
         }
+    }
+
+    @Unique
+    public byte nm$getBlazeVariant() {
+        return this.dataWatcher.getWatchableObjectByte(20);
+    }
+
+    @Unique
+    public void nm$setBlazeVariant(byte variantType) {
+        this.dataWatcher.updateObject(20,variantType);
     }
 }
