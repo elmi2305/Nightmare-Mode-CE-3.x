@@ -1025,7 +1025,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator, 2), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(NMItems.obsidianShard, 4), new ItemStack(Item.ingotGold)});
 
-        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{new ItemStack(BTWItems.boiledPotato), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.heartyMeats), new ItemStack(Item.bowlEmpty, 5)});
+        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{TagInstance.of(BTWTags.cookedPotatoes), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.heartyMeats), new ItemStack(Item.bowlEmpty, 5)});
         RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{new ItemStack(BTWItems.boiledPotato), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.cookedMeats), new ItemStack(Item.bowlEmpty, 5)});
 
     }

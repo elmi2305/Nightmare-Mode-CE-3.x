@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
+import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -43,7 +44,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
         }
         return constant;
     }
-
     @ModifyConstant(method = "moveEntityWithHeading", constant = @Constant(doubleValue = 0.2))
     private double modifyLadderClimbRateBasedOnLadder(double constant){
         int blockX = MathHelper.floor_double(this.posX);
