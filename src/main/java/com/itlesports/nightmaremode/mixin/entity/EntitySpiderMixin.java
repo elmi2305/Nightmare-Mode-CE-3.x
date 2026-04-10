@@ -105,7 +105,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void manageHardmodeSpiderSpawns(EntityLivingData entityData, CallbackInfoReturnable<EntityLivingData> cir){
-        if(NMUtils.getWorldProgress() >= 1 && this.rand.nextInt(6) == 0 && this.worldObj.getAmbientBeaconEffectAtLocation(BTWBeaconEffects.JUNGLE_SPIDER_REPELLENT.EFFECT_NAME, (int)this.posX, (int)this.posY, (int)this.posZ) <= 0){
+        if(NMUtils.getWorldProgress() >= 1 && this.rand.nextInt(6) == 0 && this.worldObj.getAmbientBeaconEffectAtLocation(BTWBeaconEffects.JUNGLE_SPIDER_REPELLENT.effectName, (int)this.posX, (int)this.posY, (int)this.posZ) <= 0){
             JungleSpiderEntity caveSpider = new JungleSpiderEntity(this.worldObj);
             caveSpider.copyLocationAndAnglesFrom(this);
             this.setDead();

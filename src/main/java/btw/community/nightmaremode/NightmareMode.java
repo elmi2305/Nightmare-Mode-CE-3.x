@@ -2,11 +2,14 @@ package btw.community.nightmaremode;
 
 import api.AddonHandler;
 import api.BTWAddon;
+import api.client.mojapi.UserProfile;
 import api.config.AddonConfig;
 import api.world.BiomeDecoratorBase;
 import api.world.data.DataEntry;
 import api.world.data.DataProvider;
+import api.world.difficulty.DifficultyParam;
 import btw.block.BTWBlocks;
+import com.google.gson.GsonBuilder;
 import com.itlesports.nightmaremode.util.NMEntityMapper;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.NMInitializer;
@@ -28,6 +31,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class NightmareMode extends BTWAddon {

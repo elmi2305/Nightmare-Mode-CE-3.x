@@ -59,7 +59,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         }
 
         // toggle if I don't want
-        if (true) {
+        if (false) {
             numPerChunk = this.treesPerChunk + (this.randomGenerator.nextInt(3) == 0 ? 1 : 0);
             WorldGenerator treeGen = this.getTreeGenForBiome();
 
