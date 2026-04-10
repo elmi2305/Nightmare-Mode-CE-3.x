@@ -13,21 +13,21 @@ import java.util.Objects;
 
 @Mixin(BeaconEffectLocationList.class)
 public class BELocationListMixin {
-//    @Shadow public List effectLocations;
+    @Shadow public List effectLocations;
 
-//    @Inject(method = "getMostPowerfulBeaconEffectForLocation", at = @At("HEAD"), cancellable = true, remap = false)
-//    public void getMostPowerfulBeaconEffectForLocation(String effectID, int iIPos, int iKPos, CallbackInfoReturnable<Integer> cir) {
-//        int maxLevel = 0;
-//
-//        for (Object effectLocation : this.effectLocations) {
-//            BeaconEffectLocation point = (BeaconEffectLocation) effectLocation;
-//
-//            if (!Objects.equals(point.effectID, effectID)) continue;
-//            if (point.effectLevel <= maxLevel) continue;
-//
-//            maxLevel = point.effectLevel;
-//        }
-//
-//        cir.setReturnValue(maxLevel);
-//    }
+    @Inject(method = "getMostPowerfulBeaconEffectForLocation", at = @At("HEAD"), cancellable = true, remap = false)
+    public void getMostPowerfulBeaconEffectForLocation(String effectID, int iIPos, int iKPos, CallbackInfoReturnable<Integer> cir) {
+        int maxLevel = 0;
+
+        for (Object effectLocation : this.effectLocations) {
+            BeaconEffectLocation point = (BeaconEffectLocation) effectLocation;
+
+            if (!Objects.equals(point.effectID, effectID)) continue;
+            if (point.effectLevel <= maxLevel) continue;
+
+            maxLevel = point.effectLevel;
+        }
+
+        cir.setReturnValue(maxLevel);
+    }
 }
