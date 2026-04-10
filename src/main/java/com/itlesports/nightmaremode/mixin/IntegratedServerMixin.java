@@ -6,6 +6,7 @@ import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +26,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
         super(par1File);
     }
 
-    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/src/IntegratedServer;worldServers:[Lnet/minecraft/src/WorldServer;",ordinal = 0, shift = At.Shift.AFTER))
+    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/src/IntegratedServer;worldServers:[Lnet/minecraft/src/WorldServer;", ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
     private void setWorldServerSize(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci){
         this.worldServers = new WorldServer[4];
     }
@@ -62,13 +63,4 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
             this.setDifficultyForAllWorlds(this.theWorldSettings.getDifficulty());
         }
     }
-    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
-    private void doNothing(Difficulty mod){
-        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
-    }
-    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyServer(Lapi/world/difficulty/Difficulty;)V"))
-    private void doNothing0(Difficulty mod){
-        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
-    }
-
 }

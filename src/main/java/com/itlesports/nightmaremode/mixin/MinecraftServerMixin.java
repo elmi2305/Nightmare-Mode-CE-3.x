@@ -191,16 +191,6 @@ public abstract class MinecraftServerMixin {
 //        this.setDifficultyForAllWorlds(var8.getDifficulty());
 //    }
 
-    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyCommon(Lapi/world/difficulty/Difficulty;)V"))
-    private void doNothing(Difficulty mod){
-        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
-    }
-    // TODO: consider removing altogether
-    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lapi/AddonHandler;initializeDifficultyServer(Lapi/world/difficulty/Difficulty;)V"))
-    private void doNothing0(Difficulty mod){
-        // this call does nothing so the two above it can run at the right time while still capturing the save handler. capturing it by injecting before the calls did not seem to work
-    }
-
     @Unique
     private int isDawnOrDusk(long time){
         if(time % 24000 >= 23459) {
