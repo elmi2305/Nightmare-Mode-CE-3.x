@@ -2,10 +2,10 @@ package com.itlesports.nightmaremode.underworld.worldgen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.Block;
-import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class WorldGenTallBulbFlower extends WorldGenerator {
@@ -13,99 +13,67 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
     private int leafMeta = 0;
     private int metaWood = 0;
 
+    private static final int[][] BULB_SMALL;
+    private static final int[][] BULB_LARGE;
+    static {
+        ArrayList<int[]> s = new ArrayList<>(), l = new ArrayList<>();
+        for (int dy = -4; dy <= 4; dy++)
+            for (int dx = -4; dx <= 4; dx++)
+                for (int dz = -4; dz <= 4; dz++) {
+                    int d = dx * dx + dy * dy + dz * dz;
+                    if (d <= 6)  s.add(new int[]{dx, dy, dz});
+                    if (d <= 12) l.add(new int[]{dx, dy, dz});
+                }
+        BULB_SMALL = s.toArray(new int[0][]);
+        BULB_LARGE = l.toArray(new int[0][]);
+    }
+
     @Override
     public boolean generate(World world, Random rand, int baseX, int baseY, int baseZ) {
-        byte stemHeight = (byte) (rand.nextInt(9) + 9);
+        int stemHeight = rand.nextInt(9) + 9;
+        if (baseY < 1 || baseY + stemHeight + 5 > 255) return false;
 
-        if (baseY < 1 || baseY + stemHeight + 4 > 255) {
-            return false;
-        }
-
-        // validate ground before continuing
         int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
         if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
-                && groundId != NMBlocks.flowerGrass.blockID) {
-            return false;
+                && groundId != NMBlocks.flowerGrass.blockID) return false;
+
+        int ldx = 0, ldz = 0;
+        switch (rand.nextInt(5)) {
+            case 0: ldx =  1; break;
+            case 1: ldx = -1; break;
+            case 2: ldz =  1; break;
+            case 3: ldz = -1; break;
         }
 
-        byte curveDX = 0, curveDZ = 0;
-        if (rand.nextBoolean()) {
-            curveDX = (byte) (rand.nextBoolean() ? 1 : -1);
-        } else {
-            curveDZ = (byte) (rand.nextBoolean() ? 1 : -1);
-        }
-
-        byte totalShift = (byte) rand.nextInt(3);
-        byte startCurve = (byte) Math.max(1, stemHeight * 2 / 3);
-        byte steps = (byte) (stemHeight - startCurve);
-        int spacing = (totalShift == 0 || steps == 0) ? Integer.MAX_VALUE
-                : Math.max(1, (int) Math.ceil((double) steps / totalShift));
-
-        // validate stem
-        int curX = baseX, curZ = baseZ;
-        int accumulated = 0, shifted = 0;
-        for (int i = 0; i < stemHeight; ++i) {
-            if (i >= startCurve && shifted < totalShift && (i - startCurve) % spacing == 0) {
-                accumulated++;
-                shifted++;
-            }
-            curX = baseX + accumulated * curveDX;
-            curZ = baseZ + accumulated * curveDZ;
-            int curY = baseY + i;
-            if (curY < 0 || curY >= 256 || !isReplaceable(world, curX, curY, curZ)) {
-                return false;
-            }
-        }
-        int tipX = curX;
+        int leanAt = stemHeight - 3;
+        int tipX = baseX + ldx;
         int tipY = baseY + stemHeight;
-        int tipZ = curZ;
+        int tipZ = baseZ + ldz;
 
-        // bulb
-        float bulbRadius = rand.nextBoolean() ? 3.5f : 2.5f;
-        int bulbRadiusSqInt = (int)(bulbRadius * bulbRadius); // 6 for r=2.5, 12 for r=3.5
-        byte rByte = (byte) MathHelper.ceiling_float_int(bulbRadius);   // 3 or 4
-        int bulbCenterY = tipY + 1;
-
-        for (int dy = -rByte; dy <= rByte; ++dy) {
-            int by = bulbCenterY + dy;
-            if (by < 0 || by >= 256) return false;
-            for (int dx = -rByte; dx <= rByte; ++dx) {
-                for (int dz = -rByte; dz <= rByte; ++dz) {
-                    if (dx * dx + dy * dy + dz * dz <= bulbRadiusSqInt
-                            && !isReplaceable(world, tipX + dx, by, tipZ + dz)) {
-                        return false;
-                    }
-                }
-            }
+        for (int i = 0; i < stemHeight; i++) {
+            int bx = baseX + (i >= leanAt ? ldx : 0);
+            int bz = baseZ + (i >= leanAt ? ldz : 0);
+            if (!isReplaceable(world, bx, baseY + i, bz)) return false;
         }
 
+        int[][] bulb = rand.nextBoolean() ? BULB_LARGE : BULB_SMALL;
+        int bulbCY = tipY + 1;
+        for (int[] o : bulb) {
+            int by = bulbCY + o[1];
+            if (by < 0 || by >= 256) return false;
+            if (!isReplaceable(world, tipX + o[0], by, tipZ + o[2])) return false;
+        }
 
-        // place the dirt below
         setBlock(world, baseX, baseY - 1, baseZ, NMBlocks.flowerDirt.blockID);
 
-        // recompute stem path identically
-        curX = baseX; curZ = baseZ; accumulated = 0; shifted = 0;
-        for (int i = 0; i < stemHeight; ++i) {
-            if (i >= startCurve && shifted < totalShift && (i - startCurve) % spacing == 0) {
-                accumulated++;
-                shifted++;
-            }
-            curX = baseX + accumulated * curveDX;
-            curZ = baseZ + accumulated * curveDZ;
-            setBlockAndMetadata(world, curX, baseY + i, curZ, NMBlocks.plantMatter.blockID, this.metaWood);
+        for (int i = 0; i < stemHeight; i++) {
+            int bx = baseX + (i >= leanAt ? ldx : 0);
+            int bz = baseZ + (i >= leanAt ? ldz : 0);
+            setBlockAndMetadata(world, bx, baseY + i, bz, NMBlocks.plantMatter.blockID, metaWood);
         }
 
-        // place bulb sphere with same integer distance threshold.
-        for (int dy = -rByte; dy <= rByte; ++dy) {
-            int by = bulbCenterY + dy;
-            for (int dx = -rByte; dx <= rByte; ++dx) {
-                for (int dz = -rByte; dz <= rByte; ++dz) {
-                    if (dx * dx + dy * dy + dz * dz <= bulbRadiusSqInt) {
-                        setBlockAndMetadata(world, tipX + dx, by, tipZ + dz,
-                                Block.leaves.blockID, this.leafMeta);
-                    }
-                }
-            }
+        for (int[] o : bulb) {
+            setBlockAndMetadata(world, tipX + o[0], bulbCY + o[1], tipZ + o[2], Block.leaves.blockID, leafMeta);
         }
 
         return true;
