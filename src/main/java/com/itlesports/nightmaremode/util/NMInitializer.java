@@ -1393,6 +1393,7 @@ public abstract class NMInitializer implements AchievementExt {
         // calamari with nitre
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.curedMeat, 1), new Object[]{NMItems.calamari, BTWItems.nitre});
         // done with calamari
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.loom), new Object[]{"SSW", "SBG", "WGW", 'W', TagInstance.of(BTWTags.woodenSidings), 'S', BTWBlocks.slatsPane, 'G', BTWItems.gear, 'B', BTWItems.belt});
     }
 
     private static void addPistonPackingRecipes() {

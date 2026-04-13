@@ -12,7 +12,7 @@ public class BiomeGenShadowRealm extends BiomeGenUnderworld {
         this.spawnableMonsterList.clear();
 
         this.spawnableMonsterList.add(new SpawnListEntry(EntityShadowZombie.class, 15, 2, 6));
-
+        // add squids
         this.spawnableMonsterList.add(new SpawnListEntry(EntitySkeleton.class, 1, 1, 1));
         this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 5, 1, 4));
 

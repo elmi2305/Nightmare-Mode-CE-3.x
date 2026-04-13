@@ -37,6 +37,9 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
                 this.theGameRules.addGameRule("doMobSpawning", "true");
                 this.shouldCheck = false;
             }
+            if(NightmareMode.devMode){
+                this.theGameRules.addGameRule("extendedDebugAccess", "creativeOnly");
+            }
         }
     }
 

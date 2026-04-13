@@ -29,6 +29,7 @@
     "FoodItemMixin",
     "FoodStatsMixin",
     "HardcoreSpawnUtilsMixin",
+    "IntegratedServerMixin",
     "InventoryPlayerMixin",
     "ItemAccessor",
     "ItemAppleGoldMixin",
