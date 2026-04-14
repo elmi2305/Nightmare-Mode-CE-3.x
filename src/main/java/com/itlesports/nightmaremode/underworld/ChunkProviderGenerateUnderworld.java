@@ -165,11 +165,16 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     fillerBlock = (short) NMBlocks.underCobble.blockID;
                     topBlock = (short) NMBlocks.underCobble.blockID;
                 } else if (biome instanceof BiomeGenFlowerFields) {
-                    fillerBlock = (short) NMBlocks.flowerDirt.blockID;
-                    topBlock = (short) NMBlocks.flowerGrass.blockID;
+                    fillerBlock = (short) NMBlocks.underFlowerDirts.blockID; // flower dirt
+                    topBlock = (short) NMBlocks.underFlowerDirts.blockID; // flower grass
+
+                    topBlockMetadata = (short) NMBlocks.META_FLOWER_GRASS;
+                    fillerBlockMetadata = (short) NMBlocks.META_FLOWER_DIRT;
                 } else if (biome instanceof BiomeGenBlightlands) {
-                    fillerBlock = (short) NMBlocks.underDirt.blockID;
+                    fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
                     topBlock = (short) NMBlocks.underGrass.blockID;
+
+                    fillerBlockMetadata = (short) NMBlocks.META_UNDER_DIRT;
                 }
 
                 int remainingDepth = -1;

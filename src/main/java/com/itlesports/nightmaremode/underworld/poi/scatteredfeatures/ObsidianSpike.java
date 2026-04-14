@@ -21,31 +21,22 @@ public class ObsidianSpike extends ComponentScatteredFeature {
     } // required
 
     private static final int[] paletteIDs = new int[]{
-            Block.jukebox.blockID,
-            NMBlocks.mushroomCapYellow.blockID,
-            NMBlocks.mushroomCapWhite.blockID,
-            NMBlocks.mushroomWallYellow.blockID,
-            NMBlocks.mushroomStem.blockID,
-            NMBlocks.mushroomStem.blockID,
-            Block.hay.blockID,
-            NMBlocks.mushroomFloorPartialYellow.blockID,
-            NMBlocks.flowerGrass.blockID,
-            NMBlocks.mushroomStem.blockID,
-            NMBlocks.mushroomStem.blockID,
-            NMBlocks.mushroomTopFloorYellow.blockID,
-            BTWBlocks.unlitCampfire.blockID,
-            NMBlocks.yellowFlowerRoots.blockID,
-            NMBlocks.mushroomWallPurple.blockID,
-            Block.mobSpawner.blockID,
-            NMBlocks.mushInnardsBreakable.blockID,
-            Block.blockIron.blockID,
-            NMBlocks.mushroomFloorPartialPurple.blockID,
-            BTWBlocks.saw.blockID,
-            Block.pistonStickyBase.blockID,
-            Block.bookShelf.blockID,
-            BTWBlocks.hopper.blockID,
+            Block.jukebox.blockID, // jukebox
+            NMBlocks.mushBlocks.blockID, // yellow cap
+            NMBlocks.mushBlocks.blockID, // white cap
+            NMBlocks.mushBlocks.blockID, // yellow wall
+            NMBlocks.mushBlocks.blockID, // stem
+            NMBlocks.mushBlocks.blockID, // stem
+            Block.hay.blockID, // hay bale
+            NMBlocks.mushBlocks.blockID, // partial yellow floor
+            NMBlocks.underFlowerDirts.blockID, // flower grass
+            NMBlocks.mushBlocks.blockID, // stem
+            NMBlocks.mushBlocks.blockID, // stem
+            NMBlocks.mushBlocks.blockID, // top yellow floor
+            BTWBlocks.unlitCampfire.blockID, // unlit campfire
+            NMBlocks.yellowFlowerRoots.blockID, // yellow roots
     };
-
+ // unused
 
     private static int[] meta = new int[]{
             0,

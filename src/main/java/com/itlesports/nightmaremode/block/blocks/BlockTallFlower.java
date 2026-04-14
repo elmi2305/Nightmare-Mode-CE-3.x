@@ -1,12 +1,13 @@
 package com.itlesports.nightmaremode.block.blocks;
 
-import com.itlesports.nightmaremode.block.NMBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Random;
+
+import static com.itlesports.nightmaremode.util.NMFields.FLOWER_NAMES;
 
 public class BlockTallFlower extends BlockFlower {
     @Environment(EnvType.CLIENT)
@@ -22,6 +23,7 @@ public class BlockTallFlower extends BlockFlower {
     public static int LILAC = 2;
     public static int SUNFLOWER = 3;
     public static int BERRYBUSH = 4;
+    public static int LAVAFLOWER = 5;
 
     public BlockTallFlower(int blockID) {
         super(blockID, Material.plants);
@@ -29,11 +31,10 @@ public class BlockTallFlower extends BlockFlower {
         this.setStepSound(soundGrassFootstep);
         this.setUnlocalizedName("tallFlower");
         this.setCreativeTab(CreativeTabs.tabDecorations);
-        this.setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
+        this.initBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
         this.setTickRandomly(false);
     }
 
-    // --- Placement: Only allow bottom, and place top if possible ---
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
         return super.canPlaceBlockAt(world, x, y, z) && world.isAirBlock(x, y + 1, z);
@@ -44,7 +45,7 @@ public class BlockTallFlower extends BlockFlower {
         int type = stack.getItemDamage() & TYPE_MASK;
         world.setBlock(x, y, z, this.blockID, type, 2);  // Bottom half
 
-        if (world.isAirBlock(x, y + 1, z)) {
+        if (type != LAVAFLOWER && world.isAirBlock(x, y + 1, z)) {
             world.setBlock(x, y + 1, z, this.blockID, type | TOP_FLAG, 2);  // Top half
         }
     }
@@ -113,11 +114,9 @@ public class BlockTallFlower extends BlockFlower {
         bottomIcons = new Icon[8];
         topIcons = new Icon[8];
 
-        String[] names = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion5", "dandelion5", "dandelion5", };
-
-        for (int i = 0; i < names.length; i++) {
-            bottomIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_bottom");
-            topIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_top");
+        for (int i = 0; i < FLOWER_NAMES.length; i++) {
+            bottomIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + FLOWER_NAMES[i] + "_bottom");
+            topIcons[i] = reg.registerIcon("nightmare:nmTallFlower_" + FLOWER_NAMES[i] + "_top");
         }
     }
 

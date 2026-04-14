@@ -36,4 +36,8 @@ public class NMFields {
     // blaze types
     public static int BLAZE_SHADOW = 1;
     public static int BLAZE_AQUA = 2;
+
+    // custom flower names
+    public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion6", "dandelion7", "dandelion8"};
+
 }

@@ -26,25 +26,25 @@ public class BigMushroom extends ComponentScatteredFeature {
     private static final byte BASE_HEIGHT = 63;
 
     private static final int[] paletteIDs = new int[]{
-            Block.jukebox.blockID, // storage
-            NMBlocks.mushroomCapYellow.blockID,
-            NMBlocks.mushroomCapWhite.blockID,
-            NMBlocks.mushroomWallYellow.blockID,
-            NMBlocks.mushroomStem.blockID, // base of the plant
-            NMBlocks.mushroomStem.blockID, // inner mushiness
-            Block.hay.blockID,
-            NMBlocks.mushroomFloorPartialYellow.blockID, // actual
-            NMBlocks.flowerGrass.blockID,
-            NMBlocks.mushroomStem.blockID, // underside gills
-            NMBlocks.mushroomStem.blockID, // the ceiling of the top part which used to be netherrack
-            NMBlocks.mushroomTopFloorYellow.blockID,
+            Block.jukebox.blockID, // in the storage room
+            NMBlocks.mushBlocks.blockID, // yellow cap
+            NMBlocks.mushBlocks.blockID, // white cap
+            NMBlocks.mushBlocks.blockID, // yellow wall
+            NMBlocks.mushBlocks.blockID, // base of the plant
+            NMBlocks.mushBlocks.blockID, // inner mushiness
+            Block.hay.blockID, // in the store room
+            NMBlocks.mushBlocks.blockID, // partial yellow floor
+            NMBlocks.underFlowerDirts.blockID, // flower grass
+            NMBlocks.mushBlocks.blockID, // underside gills
+            NMBlocks.mushBlocks.blockID, // the ceiling of the top part which used to be netherrack
+            NMBlocks.mushBlocks.blockID, // top floor, yellow
             BTWBlocks.unlitCampfire.blockID, // actual
             NMBlocks.yellowFlowerRoots.blockID, // actual
-            NMBlocks.mushroomWallPurple.blockID, // actual
+            NMBlocks.mushBlocks.blockID, // purple wall
             Block.mobSpawner.blockID, // ambient in rooms
-            NMBlocks.mushInnardsBreakable.blockID, // actual
-            Block.blockIron.blockID, // simply the wall on the top part between sections
-            NMBlocks.mushroomFloorPartialPurple.blockID, // actual
+            NMBlocks.mushInnards.blockID, // breakable innards
+            NMBlocks.mushBlocks.blockID, // simply the wall on the top part between sections
+            NMBlocks.mushBlocks.blockID, // partial floor purple
             BTWBlocks.saw.blockID,
             Block.pistonStickyBase.blockID, // storage ig
             Block.bookShelf.blockID, // storage
@@ -55,7 +55,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             BTWBlocks.aestheticOpaque.blockID, // barrel storage
             BTWBlocks.gearBox.blockID, // storage
             Block.flowerPot.blockID, // pot in storage
-            NMBlocks.mushroomTopFloorPurple.blockID, // actual
+            NMBlocks.mushBlocks.blockID, // top floor purple
             Block.fence.blockID,
             Block.waterStill.blockID, // farm area
             Block.cloth.blockID,
@@ -80,7 +80,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             BTWBlocks.quartzMouldingAndDecorative.blockID, // needs meta 8, it's the brewing stand table
             Block.brewingStand.blockID,
             Block.cauldron.blockID, // cauldron for the brewing stand, needs water meta chance
-            NMBlocks.mushInnardsBreakableExplosive.blockID, // actual
+            NMBlocks.mushInnards.blockID, // explosive innards
             NMBlocks.mushBookshelf.blockID, // for enchanting
             Block.enchantmentTable.blockID, // enchanting
             BTWBlocks.soulforge.blockID, // storage
@@ -99,24 +99,24 @@ public class BigMushroom extends ComponentScatteredFeature {
 
     private static int[] meta = new int[]{
             0,
+            NMBlocks.META_MUSH_CAP_YELLOW,
+            NMBlocks.META_MUSH_CAP_WHITE,
+            NMBlocks.META_MUSH_WALL_YELLOW,
+            NMBlocks.META_MUSH_STEM,
+            NMBlocks.META_MUSH_STEM,
+            0,
+            NMBlocks.META_MUSH_FLOOR_PARTIAL_YELLOW,
+            NMBlocks.META_FLOWER_GRASS,
+            NMBlocks.META_MUSH_STEM,
+            NMBlocks.META_MUSH_STEM,
+            NMBlocks.META_MUSH_TOP_FLOOR_YELLOW,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            NMBlocks.META_MUSH_WALL_PURPLE,
             0, // Block.mobSpawner.blockID,
-            0,
-            0,
-            0,
+            NMBlocks.META_MUSH_INNARDS_BREAKABLE,
+            NMBlocks.META_MUSH_STEM, // wall top room
+            NMBlocks.META_MUSH_FLOOR_PARTIAL_PURPLE,
             -6, // BTWBlocks.saw.blockID,
             -6, // Block.pistonStickyBase.blockID,
             0,
@@ -127,7 +127,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             11, //BTWBlocks.aestheticOpaque.blockID, // barrel storage
             -6,// BTWBlocks.gearBox.blockID, // storage
             -3, // Block.flowerPot.blockID, // pot in storage
-            0,
+            NMBlocks.META_MUSH_TOP_FLOOR_PURPLE,
             0,
             0,
             7, // Block.cloth.blockID,
@@ -152,17 +152,17 @@ public class BigMushroom extends ComponentScatteredFeature {
             8, // BTWBlocks.quartzMouldingAndDecorative.blockID, // it's the brewing stand table
             0,
             -4, // Block.cauldron.blockID, // cauldron for the brewing stand, needs water meta chance
-            0,
+            NMBlocks.META_MUSH_INNARDS_EXPLOSIVE,
             0,
             0,
             0, // BTWBlocks.soulforge.blockID, // storage
             0,
             -4, // BTWBlocks.plainCandle.blockID,
-            2   , // BTWBlocks.idleOven.blockID, // needs facing meta
+            4   , // BTWBlocks.idleOven.blockID, // needs facing meta
             -16, // BTWBlocks.vase.blockID, // forge
             0,
             0,
-            8, // Block.stoneSingleSlab.blockID, // needs meta 8
+            4, // Block.stoneSingleSlab.blockID, // needs meta 4
             0, // Block.oreIron.blockID, // random strata
             0,
             0,

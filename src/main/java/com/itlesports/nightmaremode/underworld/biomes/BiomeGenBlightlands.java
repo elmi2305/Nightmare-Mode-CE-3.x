@@ -10,11 +10,14 @@ public class BiomeGenBlightlands extends BiomeGenUnderworld {
     public BiomeGenBlightlands(int par1) {
         super(par1);
         this.theBiomeDecorator.generateLakes = true;
-        this.theBiomeDecorator.treesPerChunk = 1; // doesn't generate due to undergrass not supporting trees
+        this.theBiomeDecorator.treesPerChunk = 1; // doesn't generate due to undergrass not supporting regular trees TODO
         this.theBiomeDecorator.flowersPerChunk = 2;
         this.theBiomeDecorator.grassPerChunk = 3;
+
         this.topBlock = (short) NMBlocks.underGrass.blockID;
-        this.fillerBlock = (short) NMBlocks.underDirt.blockID;
+        this.fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
+        this.topBlockMetadata = (short) NMBlocks.META_FLOWER_GRASS;
+        this.fillerBlockMetadata = (short) NMBlocks.META_FLOWER_DIRT;
 
         this.spawnableCreatureList.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
 

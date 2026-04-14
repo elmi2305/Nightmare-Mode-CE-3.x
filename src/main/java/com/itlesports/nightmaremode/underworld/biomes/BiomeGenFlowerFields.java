@@ -9,11 +9,14 @@ public class BiomeGenFlowerFields extends BiomeGenUnderworld {
     public BiomeGenFlowerFields(int par1) {
         super(par1);
         this.theBiomeDecorator.generateLakes = false;
-        this.theBiomeDecorator.flowersPerChunk = 4;
+        this.theBiomeDecorator.flowersPerChunk = 8;
         this.theBiomeDecorator.grassPerChunk = 2;
         this.theBiomeDecorator.treesPerChunk = 0; // flower gen handled in BiomeUnderworldDecorator
-        this.topBlock = (short) NMBlocks.flowerGrass.blockID;
-        this.fillerBlock = (short) NMBlocks.flowerDirt.blockID;
+        this.topBlock = (short) NMBlocks.underFlowerDirts.blockID;
+        this.fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
+
+        this.topBlockMetadata = (short) NMBlocks.META_FLOWER_GRASS;
+        this.fillerBlockMetadata = (short) NMBlocks.META_FLOWER_DIRT;
 
         this.spawnableCreatureList.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
 

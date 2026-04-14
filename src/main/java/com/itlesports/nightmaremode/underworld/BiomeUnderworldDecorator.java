@@ -4,6 +4,7 @@ import api.AddonHandler;
 import api.util.ForkableRandom;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenUnderHell;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenBigFlower;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenDroopingFlower;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallBulbFlower;
@@ -12,6 +13,7 @@ import net.minecraft.src.*;
 
 public class BiomeUnderworldDecorator extends BiomeDecorator {
     protected WorldGenerator tallPlantGen;
+    protected WorldGenerator lavaPlantGen;
     protected WorldGenerator tallFlowerTulipGen;
     protected WorldGenerator tallFlowerBulbGen;
     protected WorldGenerator tallFlowerDroopingGen;
@@ -23,7 +25,8 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
     public BiomeUnderworldDecorator(BiomeGenBase par1BiomeGenBase) {
         super(par1BiomeGenBase);
-        this.tallPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5);
+        this.tallPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, false);
+        this.lavaPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, true);
         this.tallFlowerTulipGen = new WorldGenBigFlower();
         this.tallFlowerBulbGen  = new WorldGenTallBulbFlower();
 //        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
@@ -59,9 +62,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         }
 
         // toggle if I don't want
-        if (true) {
+        if (false) {
 //            numPerChunk = this.treesPerChunk + (this.randomGenerator.nextInt(3) == 0 ? 1 : 0);
-            numPerChunk = 1;
+            numPerChunk = this.randomGenerator.nextInt(3) == 0 ? 1 : 0;
             WorldGenerator treeGen = this.getTreeGenForBiome();
 
             if (treeGen != null) {
@@ -83,7 +86,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         boolean isFlowerFields = this.biome instanceof BiomeGenFlowerFields;
         for (var2 = 0; var2 < this.flowersPerChunk; ++var2) {
             var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
-            var4 = this.randomGenerator.nextInt(128);
+            var4 = this.randomGenerator.nextInt(128) + 40;
             int var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.plantYellowGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
 
@@ -94,6 +97,17 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
             var4 = this.randomGenerator.nextInt(40) + 40;
             var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
             this.tallPlantGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
+        }
+
+        boolean isHellWorld = this.biome instanceof BiomeGenUnderHell;
+
+        if (isHellWorld) {
+            for (var2 = 0; var2 < this.flowersPerChunk; ++var2) {
+                var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
+                var4 = this.randomGenerator.nextInt(128);
+                int var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+                this.tallPlantGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
+            }
         }
 
         for (var2 = 0; var2 < this.grassPerChunk; ++var2) {

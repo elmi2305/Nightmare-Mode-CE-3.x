@@ -33,6 +33,8 @@ public class UnderworldGenLayerBiomes extends GenLayer {
                     else {
                         intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID; // everything other than flower fields
                     }
+                    intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
+
                 }
                 else {
                     intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;

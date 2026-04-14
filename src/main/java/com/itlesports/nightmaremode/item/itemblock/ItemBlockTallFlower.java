@@ -1,13 +1,16 @@
 package com.itlesports.nightmaremode.item.itemblock;
 
+import com.itlesports.nightmaremode.block.blocks.BlockTallFlower;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.Icon;
 import net.minecraft.src.IconRegister;
 import net.minecraft.src.ItemStack;
 
+import static com.itlesports.nightmaremode.util.NMFields.FLOWER_NAMES;
+
 public class ItemBlockTallFlower extends NMItemBlock {
-    private final String[] names = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion5", "dandelion5", "dandelion5"};
 //    private final String[] names = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5"};
-    private final Icon[] icons = new Icon[names.length];
+    private final Icon[] icons = new Icon[FLOWER_NAMES.length];
     public ItemBlockTallFlower(int par1) {
         super(par1);
         this.setHasSubtypes(true);
@@ -16,14 +19,18 @@ public class ItemBlockTallFlower extends NMItemBlock {
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
-        String name = names[meta & 7];
+        String name = FLOWER_NAMES[meta & 7];
         return "tile.nmTallFlower." + name;
     }
 
     @Override
     public void registerIcons(IconRegister reg) {
         for(int i = 0; i < icons.length; i ++){
-            icons[i] = reg.registerIcon("nightmare:nmTallFlower_" + names[i] + "_top");
+            String path = "_top";
+            if(i == BlockTallFlower.LAVAFLOWER){
+                path = "_bottom";
+            }
+            icons[i] = reg.registerIcon("nightmare:nmTallFlower_" + FLOWER_NAMES[i] + path);
         }
     }
 

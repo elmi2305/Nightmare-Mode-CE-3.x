@@ -1,9 +1,6 @@
 package com.itlesports.nightmaremode.underworld;
 
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
+import com.itlesports.nightmaremode.underworld.biomes.*;
 import net.minecraft.src.*;
 
 import java.util.ArrayList;
@@ -27,6 +24,9 @@ public class BiomeGenUnderworld extends BiomeGenBase {
     private static final float VOID_MIN = 0.25f;
     private static final float VOID_MAX = 0.2501f;
 
+    private static final float DEFAULT_MIN = 0.5f;
+    private static final float DEFAULT_MAX = 0.6f;
+
 //    private static final float BLIGHT_MIN = 0.1f;
 //    private static final float BLIGHT_MAX = 0.3f;
 
@@ -44,6 +44,7 @@ public class BiomeGenUnderworld extends BiomeGenBase {
     public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(HIGH_MIN, HIGH_MAX).setDisableRain();
     public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
     public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) new BiomeGenShadowRealm(27).setDrainMultiplier(1.8f).setBiomeName("UnderworldVoid").setMinMaxHeight(VOID_MIN, VOID_MAX).setDisableRain();
+    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) new BiomeGenUnderHell(28).setDrainMultiplier(1.0f).setBiomeName("UnderworldHell").setMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
 
     public static List biomelist = new ArrayList<>();
     static{
@@ -51,6 +52,7 @@ public class BiomeGenUnderworld extends BiomeGenBase {
         biomelist.add(highlands);
         biomelist.add(flowerFields);
         biomelist.add(shadowRealm);
+        biomelist.add(underHell);
     }
     protected BiomeGenUnderworld(int par1) {
         super(par1);
