@@ -1,10 +1,14 @@
 package com.itlesports.nightmaremode.block;
 
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.blocks.*;
+import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTextured;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
+import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
 import net.minecraft.src.*;
 
 public class NMBlocks {
@@ -31,33 +35,67 @@ public class NMBlocks {
     public static Block understoneSmooth;
     public static Block underCobble;
     public static BlockUnderGrass underGrass;
-    public static BlockMultiTextured underDirt;
-    public static BlockMultiTextured flowerGrass;
-    public static BlockMultiTextured flowerDirt;
 
     public static Block yellowFlowerRoots;
     public static Block plantMatter;
     public static Block disenchantmentTable;
-    public static Block mushroomStem;
-    public static Block mushroomFloorPartialYellow;
-    public static Block mushroomPurple;
-    public static Block mushInnardsBreakable;
-    public static Block mushInnardsBreakableExplosive;
-    public static Block mushroomTopFloorYellow;
-    public static Block mushroomFloorYellow;
-    public static Block mushroomWallYellow;
-    public static Block mushroomFloorPartialPurple;
-    public static Block mushroomWallPurple;
-    public static Block mushroomTopFloorPurple;
-    public static Block mushroomCapYellow;
-    public static Block mushroomCapWhite;
+
+    // -------------------------------------------------------------------------
+    // Underworld grass / dirt  (Material.grass)
+    // -------------------------------------------------------------------------
+
+    public static BlockMetaMultiTextured underFlowerDirts;
+    public static final int META_UNDER_DIRT   = 0;
+    public static final int META_FLOWER_GRASS = 1;
+    public static final int META_FLOWER_DIRT  = 2;
+
+    // -------------------------------------------------------------------------
+    // Mushroom structure blocks (Material.rock, indestructible)
+    // -------------------------------------------------------------------------
+
+    public static BlockMetaMultiTextured mushBlocks;
+    public static final int META_MUSH_STEM                 = 0;
+    public static final int META_MUSH_FLOOR_PARTIAL_YELLOW = 1;
+    public static final int META_MUSH_PURPLE               = 2;
+    public static final int META_MUSH_TOP_FLOOR_YELLOW     = 3;
+    public static final int META_MUSH_FLOOR_YELLOW         = 4;
+    public static final int META_MUSH_WALL_YELLOW          = 5;
+    public static final int META_MUSH_FLOOR_PARTIAL_PURPLE = 6;
+    public static final int META_MUSH_WALL_PURPLE          = 7;
+    public static final int META_MUSH_TOP_FLOOR_PURPLE     = 8;
+    public static final int META_MUSH_CAP_YELLOW           = 9;
+    public static final int META_MUSH_CAP_WHITE            = 10;
+
+    // -------------------------------------------------------------------------
+    // Mushroom innards blocks (Material.rock, destructible)
+    // -------------------------------------------------------------------------
+
+    public static BlockMetaMultiTextured mushInnards;
+    public static final int META_MUSH_INNARDS_BREAKABLE = 0;
+    public static final int META_MUSH_INNARDS_EXPLOSIVE = 1;
 
     public static Block mushBookshelf;
-    public static Block darkSandstone;
-    public static Block bloodsidian;
-    public static Block voidStone;
-    public static Block lightStone;
 
+    // -------------------------------------------------------------------------
+    // Misc UW stones (Material.rock), mostly unused
+    // -------------------------------------------------------------------------
+    public static BlockMetaMultiTextured underStones;
+
+    public static final int META_VOID_STONE  = 0;
+    public static final int META_LIGHT_STONE = 1;
+
+    // -------------------------------------------------------------------------
+    // Misc hell stones (Material.rock)
+    // -------------------------------------------------------------------------
+    public static BlockMetaMultiTextured hellStones;
+
+    public static final int META_HELLSTONE = 0;
+
+
+
+    // -------------------------------------------------------------------------
+    // INITIALIZE THE BLOCKS
+    // -------------------------------------------------------------------------
 
     public static void initNightmareBlocks(){
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare:steel_ore");
@@ -84,7 +122,7 @@ public class NMBlocks {
         blockRoad = (BlockRoad) new BlockRoad(2311, 1.5f).setUnlocalizedName("nmRoad").setTextureName("nightmare:nmRoad");
         Item.itemsList[blockRoad.blockID] = new NMItemBlock(NMBlocks.blockRoad.blockID - 256);
 
-        blockAsphalt =  (BlockRoad) new BlockRoad(2312, 1.85f).setUnlocalizedName("nmAsphalt").setTextureName("nightmare:nmAsphalt");
+        blockAsphalt = (BlockRoad) new BlockRoad(2312, 1.85f).setUnlocalizedName("nmAsphalt").setTextureName("nightmare:nmAsphalt");
         Item.itemsList[blockAsphalt.blockID] = new NMItemBlock(NMBlocks.blockAsphalt.blockID - 256);
 
         stoneLadder = (BlockCustomLadder) new BlockCustomLadder(2313, 1.5f).setUnlocalizedName("nmStoneLadder").setTextureName("nightmare:nmStoneLadder");
@@ -120,14 +158,26 @@ public class NMBlocks {
         underGrass = new BlockUnderGrass(2324, Material.grass);
         Item.itemsList[underGrass.blockID] = new NMItemBlock(NMBlocks.underGrass.blockID - 256);
 
-        underDirt = (BlockMultiTextured) new BlockMultiTextured(2325, Material.grass, "nightmare:blight_level_4_roots").setUnlocalizedName("nmUnderDirt");
-        Item.itemsList[underDirt.blockID] = new NMItemBlock(NMBlocks.underDirt.blockID - 256);
+        // Underworld grass / dirt group
+        underFlowerDirts = new BlockMetaMultiTextured(2325, Material.grass,
+                /* 0: underDirt      */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:blight_level_4_roots")
+                .name("nmUnderDirt")
+                .build(),
 
-        flowerGrass = ((BlockMultiTextured) new BlockMultiTextured(2326, Material.grass, "nightmare:nmFlowerGrassTop", "nightmare:nmFlowerDirt", "nightmare:nmFlowerGrassSide").setUnlocalizedName("nmFlowerGrass")).setGrowsVegetation(true);
-        Item.itemsList[flowerGrass.blockID] = new NMItemBlock(NMBlocks.flowerGrass.blockID - 256);
+                /* 1: flowerGrass    */ BlockMetaMultiTextured.Variant
+                .topBotSides("nightmare:nmFlowerGrassTop", "nightmare:nmFlowerDirt", "nightmare:nmFlowerGrassSide")
+                .growsVegetation()
+                .name("nmFlowerGrass")
+                .build(),
 
-        flowerDirt = ((BlockMultiTextured) new BlockMultiTextured(2327, Material.grass, "nightmare:nmFlowerDirt").setUnlocalizedName("nmFlowerDirt")).setGrowsVegetation(true);
-        Item.itemsList[flowerDirt.blockID] = new NMItemBlock(NMBlocks.flowerDirt.blockID - 256);
+                /* 2: flowerDirt     */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmFlowerDirt")
+                .growsVegetation()
+                .name("nmFlowerDirt")
+                .build()
+        );
+        Item.itemsList[underFlowerDirts.blockID] = new NMItemBlockMeta(underFlowerDirts.blockID - 256, underFlowerDirts);
 
         yellowFlowerRoots = new BlockTallFlower(2328);
         Item.itemsList[yellowFlowerRoots.blockID] = new ItemBlockTallFlower(NMBlocks.yellowFlowerRoots.blockID - 256);
@@ -138,95 +188,131 @@ public class NMBlocks {
         disenchantmentTable = new BlockDisenchantmentTable(2330).setTextureName("nightmare:nmDisenchantmentTable").setUnlocalizedName("nmDisenchantmentTable").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[disenchantmentTable.blockID] = new NMItemBlock(NMBlocks.disenchantmentTable.blockID - 256);
 
-        mushroomStem = new BlockMultiTextured(2331, Material.rock, "nightmare:nmMushStem").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushStem");
-        Item.itemsList[mushroomStem.blockID] = new NMItemBlock(NMBlocks.mushroomStem.blockID - 256);
+        // Mushroom structure blocks
+        mushBlocks = new BlockMetaMultiTextured(2331, Material.rock,
+                /* 0: mushroomStem                */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushStem")
+                .hardness(-1f).resistance(1000f)
+                .name("nmMushStem")
+                .build(),
+                /* 1: mushroomFloorPartialYellow  */ BlockMetaMultiTextured.Variant
+                .topBotSides("nightmare:nmMushFloorYellow", "nightmare:nmMushStem", "nightmare:nmMushFloorYellow")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomFloorPartial")
+                .build(),
+                /* 2: mushroomPurple              */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushPurple")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomFloor")
+                .build(),
+                /* 3: mushroomTopFloorYellow      */ BlockMetaMultiTextured.Variant
+                .topBotSides("nightmare:nmMushPurple", "nightmare:nmMushInnardsYellow", "nightmare:nmMushPurple")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomFloorSecond")
+                .build(),
+                /* 4: mushroomFloorYellow         */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushYellow")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomFloorYellow")
+                .build(),
+                /* 5: mushroomWallYellow          */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushYellow")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomWall")
+                .build(),
+                /* 6: mushroomFloorPartialPurple  */ BlockMetaMultiTextured.Variant
+                .topBotSides("nightmare:nmMushPurple", "nightmare:nmMushStem", "nightmare:nmMushPurple")
+                .hardness(-1f).resistance(1000f)
+                .name("mushroomFloorPartialPurple")
+                .build(),
+                /* 7: mushroomWallPurple          */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushPurple")
+                .hardness(-1f).resistance(1000f)
+                .name("nmMushWallPurple")
+                .build(),
+                /* 8: mushroomTopFloorPurple      */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushPurple")
+                .hardness(-1f).resistance(1000f)
+                .name("nmMushTopPurple")
+                .build(),
+                /* 9: mushroomCapYellow           */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushCapYellow")
+                .hardness(-1f).resistance(1000f)
+                .name("nmMushCapYellow")
+                .build(),
+                /* 10: mushroomCapWhite           */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushCapWhite")
+                .hardness(-1f).resistance(1000f)
+                .name("nmMushCapWhite")
+                .build()
+        );
+        Item.itemsList[mushBlocks.blockID] = new NMItemBlockMeta(mushBlocks.blockID - 256, mushBlocks);
 
-        mushroomFloorPartialYellow = new BlockMultiTextured(2332, Material.rock, "nightmare:nmMushFloorYellow", "nightmare:nmMushStem", "nightmare:nmMushFloorYellow").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomFloorPartial");
-        Item.itemsList[mushroomFloorPartialYellow.blockID] = new NMItemBlock(NMBlocks.mushroomFloorPartialYellow.blockID - 256);
-
-        mushroomPurple = new BlockMultiTextured(2333, Material.rock, "nightmare:nmMushPurple").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomFloor");
-        Item.itemsList[mushroomPurple.blockID] = new NMItemBlock(NMBlocks.mushroomPurple.blockID - 256);
-
-        mushInnardsBreakable = new BlockMultiTextured(2334, Material.rock, "nightmare:nmMushStemBreakable").setHardness(5f).setResistance(10f).setUnlocalizedName("mushInnardsBreakable");
-        Item.itemsList[mushInnardsBreakable.blockID] = new NMItemBlock(NMBlocks.mushInnardsBreakable.blockID - 256);
-
-        mushInnardsBreakableExplosive = new BlockMultiTextured(2335, Material.rock, "nightmare:nmMushStemBreakable").setIsExplosive(true).setHardness(2f).setResistance(0f).setUnlocalizedName("mushInnardsBreakableExplosive");
-        Item.itemsList[mushInnardsBreakableExplosive.blockID] = new NMItemBlock(NMBlocks.mushInnardsBreakableExplosive.blockID - 256);
-
-        mushroomTopFloorYellow = new BlockMultiTextured(2336, Material.rock, "nightmare:nmMushPurple", "nightmare:nmMushInnardsYellow", "nightmare:nmMushPurple").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomFloorSecond");
-        Item.itemsList[mushroomTopFloorYellow.blockID] = new NMItemBlock(NMBlocks.mushroomTopFloorYellow.blockID - 256);
-
-        mushroomFloorYellow = new BlockMultiTextured(2337, Material.rock, "nightmare:nmMushYellow").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomFloorYellow");
-        Item.itemsList[mushroomFloorYellow.blockID] = new NMItemBlock(NMBlocks.mushroomFloorYellow.blockID - 256);
-
-        mushroomWallYellow = new BlockMultiTextured(2338, Material.rock, "nightmare:nmMushYellow").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomWall");
-        Item.itemsList[mushroomWallYellow.blockID] = new NMItemBlock(NMBlocks.mushroomWallYellow.blockID - 256);
-
-        mushroomFloorPartialPurple = new BlockMultiTextured(2339, Material.rock, "nightmare:nmMushPurple", "nightmare:nmMushStem", "nightmare:nmMushPurple").setHardness(-1f).setResistance(1000f).setUnlocalizedName("mushroomFloorPartial");
-        Item.itemsList[mushroomFloorPartialPurple.blockID] = new NMItemBlock(NMBlocks.mushroomFloorPartialPurple.blockID - 256);
-
-        mushroomWallPurple = new BlockMultiTextured(2340, Material.rock, "nightmare:nmMushPurple").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushWallPurple");
-        Item.itemsList[mushroomWallPurple.blockID] = new NMItemBlock(NMBlocks.mushroomWallPurple.blockID - 256);
-
-        mushroomTopFloorPurple = new BlockMultiTextured(2341, Material.rock, "nightmare:nmMushPurple", "nightmare:nmMushPurple", "nightmare:nmMushPurple").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushTopPurple");
-        Item.itemsList[mushroomTopFloorPurple.blockID] = new NMItemBlock(NMBlocks.mushroomTopFloorPurple.blockID - 256);
-
-        mushroomCapYellow = new BlockMultiTextured(2342, Material.rock, "nightmare:nmMushCapYellow").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushCapYellow");
-        Item.itemsList[mushroomCapYellow.blockID] = new NMItemBlock(NMBlocks.mushroomCapYellow.blockID - 256);
-
-        mushroomCapWhite = new BlockMultiTextured(2343, Material.rock, "nightmare:nmMushCapWhite").setHardness(-1f).setResistance(1000f).setUnlocalizedName("nmMushCapWhite");
-        Item.itemsList[mushroomCapWhite.blockID] = new NMItemBlock(NMBlocks.mushroomCapWhite.blockID - 256);
+        // Mushroom innards block group
+        mushInnards = new BlockMetaMultiTextured(2334, Material.rock,
+                /* 0: mushInnardsBreakable         */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushStemBreakable")
+                .hardness(5f).resistance(10f)
+                .name("mushInnardsBreakable")
+                .build(),
+                /* 1: mushInnardsBreakableExplosive */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmMushStemBreakable")
+                .hardness(2f).resistance(0f)
+                .explosive()
+                .name("mushInnardsBreakableExplosive")
+                .build()
+        );
+        Item.itemsList[mushInnards.blockID] = new NMItemBlockMeta(mushInnards.blockID - 256, mushInnards);
 
         mushBookshelf = new BlockMushBookshelf(2344).setHardness(-1f).setResistance(10f).setUnlocalizedName("nmMushBookshelf").setTextureName("nightmare:nmMushBookshelf");
         Item.itemsList[mushBookshelf.blockID] = new NMItemBlock(NMBlocks.mushBookshelf.blockID - 256);
 
-//        darkSandstone = new BlockMultiTextured(2345, Material.rock, "nightmare:nmSandstone_top", "nightmare:nmSandstone_bottom", "nightmare:nmSandstone_side").setHardness(10).setResistance(10f).setUnlocalizedName("nmDarkSandstone");
-//        Item.itemsList[darkSandstone.blockID] = new NMItemBlock(NMBlocks.darkSandstone.blockID - 256);
+        // Underworld stones
+        underStones = new BlockMetaMultiTextured(2345, Material.rock,
+                /* 0: voidStone  */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmVoidStone")
+                .name("nmVoidStone")
+                .build(),
+                /* 1: lightStone */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:nmLightStone")
+                .name("nmLightStone")
+                .build()
+        );
+        Item.itemsList[underStones.blockID] = new NMItemBlockMeta(underStones.blockID - 256, underStones);
 
-//        bloodsidian = new BlockMultiTextured(2346, Material.rock, "nightmare:nmBloodsidian").setHardness()
-
-        voidStone = new BlockMultiTextured(2345, Material.rock, "nightmare:nmVoidStone");
-        Item.itemsList[voidStone.blockID] = new NMItemBlock(NMBlocks.voidStone.blockID - 256);
-
-
-        lightStone = new BlockMultiTextured(2346, Material.rock, "nightmare:nmLightStone");
-        Item.itemsList[lightStone.blockID] = new NMItemBlock(NMBlocks.lightStone.blockID - 256);
-
-
-
-
+        // Misc hell stones group
+        hellStones = new BlockMetaMultiTextured(2346, Material.rock,
+                /* 0: hellstone */ BlockMetaMultiTextured.Variant
+                .allSides("nightmare:hellfire")
+                .name("nmHellstone")
+                .build()
+        );
+        Item.itemsList[hellStones.blockID] = new NMItemBlockMeta(hellStones.blockID - 256, hellStones);
     }
 
     public static void hideBlocks(){
-        // this hides all the underworld blocks from people that are nosy
+        if(NightmareMode.devMode) return;
 
+        // hiding by groups instead of individually. again, this is just to keep nosy people from asking me what certain things do
         yellowFlowerRoots = yellowFlowerRoots.hideFromEMI().setCreativeTab(null);
-        plantMatter = plantMatter.hideFromEMI().setCreativeTab(null);
+        plantMatter       = plantMatter.hideFromEMI().setCreativeTab(null);
         disenchantmentTable = disenchantmentTable.hideFromEMI().setCreativeTab(null);
-        mushroomStem = mushroomStem.hideFromEMI().setCreativeTab(null);
-        mushroomFloorPartialYellow = mushroomFloorPartialYellow.hideFromEMI().setCreativeTab(null);
-        mushroomPurple = mushroomPurple.hideFromEMI().setCreativeTab(null);
-        mushInnardsBreakable = mushInnardsBreakable.hideFromEMI().setCreativeTab(null);
-        mushInnardsBreakableExplosive = mushInnardsBreakableExplosive.hideFromEMI().setCreativeTab(null);
-        mushroomTopFloorYellow = mushroomTopFloorYellow.hideFromEMI().setCreativeTab(null);
-        mushroomFloorYellow = mushroomFloorYellow.hideFromEMI().setCreativeTab(null);
-        mushroomWallYellow = mushroomWallYellow.hideFromEMI().setCreativeTab(null);
-        mushroomFloorPartialPurple = mushroomFloorPartialPurple.hideFromEMI().setCreativeTab(null);
-        mushroomWallPurple = mushroomWallPurple.hideFromEMI().setCreativeTab(null);
-        mushroomTopFloorPurple = mushroomTopFloorPurple.hideFromEMI().setCreativeTab(null);
-        mushroomCapYellow = mushroomCapYellow.hideFromEMI().setCreativeTab(null);
-        mushroomCapWhite = mushroomCapWhite.hideFromEMI().setCreativeTab(null);
-        voidStone = voidStone.hideFromEMI().setCreativeTab(null);
-        lightStone = lightStone.hideFromEMI().setCreativeTab(null);
-        underrock = underrock.hideFromEMI().setCreativeTab(null);
-        understoneSmooth = understoneSmooth.hideFromEMI().setCreativeTab(null);
-        underCobble = underCobble.hideFromEMI().setCreativeTab(null);
+
+        underFlowerDirts = (BlockMetaMultiTextured) underFlowerDirts.hideFromEMI().setCreativeTab(null);
+
+        mushBlocks = (BlockMetaMultiTextured) mushBlocks.hideFromEMI().setCreativeTab(null);
+
+        mushInnards = (BlockMetaMultiTextured) mushInnards.hideFromEMI().setCreativeTab(null);
+
         mushBookshelf = mushBookshelf.hideFromEMI().setCreativeTab(null);
 
-        underGrass = (BlockUnderGrass) underGrass.hideFromEMI().setCreativeTab(null);
-        underDirt = (BlockMultiTextured) underDirt.hideFromEMI().setCreativeTab(null);
-        flowerGrass = (BlockMultiTextured) flowerGrass.hideFromEMI().setCreativeTab(null);
-        flowerDirt = (BlockMultiTextured) flowerDirt.hideFromEMI().setCreativeTab(null);
+        underStones = (BlockMetaMultiTextured) underStones.hideFromEMI().setCreativeTab(null);
 
+        hellStones = (BlockMetaMultiTextured) hellStones.hideFromEMI().setCreativeTab(null);
+
+        underGrass = (BlockUnderGrass) underGrass.hideFromEMI().setCreativeTab(null);
+        underrock        = underrock.hideFromEMI().setCreativeTab(null);
+        understoneSmooth = understoneSmooth.hideFromEMI().setCreativeTab(null);
+        underCobble      = underCobble.hideFromEMI().setCreativeTab(null);
     }
 }
