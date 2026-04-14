@@ -8,10 +8,10 @@ import net.minecraft.src.WorldGenerator;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class WorldGenBigFlower extends WorldGenerator {
+public class WorldGenTulip extends WorldGenerator {
 
-    private int leafMeta = 0;
-    private int metaWood = 0;
+    private final int leafMeta = 0;
+    private final int metaWood = 0;
 
     private static final int[][] HEAD_OFFSETS;
     private static final int[][] LIP_OFFSETS;
@@ -48,30 +48,20 @@ public class WorldGenBigFlower extends WorldGenerator {
     }
 
     private boolean generateFlowerAt(World world, Random rand, int baseX, int baseY, int baseZ) {
-        int stemHeight = rand.nextInt(4) + 6;
+        int stemHeight = 7 + rand.nextInt(3);
         if (baseY < 1 || baseY + stemHeight + 4 > 255) return false;
 
         int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
         if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
                 && (groundId != NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(baseX,baseY - 1, baseZ) != NMBlocks.META_FLOWER_GRASS)) return false;
 
-        int ldx = 0, ldz = 0;
-        if (rand.nextBoolean()) ldx = rand.nextBoolean() ? 1 : -1;
-        else                    ldz = rand.nextBoolean() ? 1 : -1;
-
-        int totalShift = rand.nextInt(2) + 1;
-        int leanAt     = stemHeight * 2 / 3;
-        int steps      = stemHeight - leanAt;
-        int spacing    = steps == 0 ? Integer.MAX_VALUE : Math.max(1, (int) Math.ceil((double) steps / totalShift));
-
-        int acc = 0, shifted = 0;
         for (int i = 0; i < stemHeight; i++) {
-            if (i >= leanAt && shifted < totalShift && (i - leanAt) % spacing == 0) { acc++; shifted++; }
-            if (!isReplaceable(world, baseX + acc * ldx, baseY + i, baseZ + acc * ldz)) return false;
+            if (!isReplaceable(world, baseX, baseY + i, baseZ)) return false;
         }
-        int tipX = baseX + acc * ldx;
+
+        int tipX = baseX;
         int tipY = baseY + stemHeight;
-        int tipZ = baseZ + acc * ldz;
+        int tipZ = baseZ;
 
         for (int[] o : HEAD_OFFSETS) {
             int hy = tipY + o[1];
@@ -85,22 +75,22 @@ public class WorldGenBigFlower extends WorldGenerator {
         setBlock(world, baseX, baseY - 1, baseZ, Block.dirt.blockID);
 
         int leafCap = Math.min(3, stemHeight / 3);
-        acc = 0; shifted = 0;
         for (int i = 0; i < stemHeight; i++) {
-            if (i >= leanAt && shifted < totalShift && (i - leanAt) % spacing == 0) { acc++; shifted++; }
-            int cx = baseX + acc * ldx, cz = baseZ + acc * ldz, cy = baseY + i;
-            setBlockAndMetadata(world, cx, cy, cz, NMBlocks.plantMatter.blockID, metaWood);
+            int cy = baseY + i;
+            setBlockAndMetadata(world, baseX, cy, baseZ, NMBlocks.plantMatter.blockID, metaWood);
 
             if (i > 0 && i <= leafCap) {
-                if (ldx != 0) { placeLeaf(world, cx, cy, cz + 1); placeLeaf(world, cx, cy, cz - 1); }
-                else          { placeLeaf(world, cx + 1, cy, cz); placeLeaf(world, cx - 1, cy, cz); }
+                placeLeaf(world, baseX + 1, cy, baseZ);
+                placeLeaf(world, baseX - 1, cy, baseZ);
+                placeLeaf(world, baseX, cy, baseZ + 1);
+                placeLeaf(world, baseX, cy, baseZ - 1);
                 if (rand.nextInt(3) == 0) {
-                    int bx = ldx != 0 ? ldx : (rand.nextBoolean() ? 1 : -1);
-                    int bz = ldz != 0 ? ldz : (rand.nextBoolean() ? 1 : -1);
-                    placeLeaf(world, cx + bx, cy, cz + bz);
+                    int bx = rand.nextBoolean() ? 1 : -1;
+                    int bz = rand.nextBoolean() ? 1 : -1;
+                    placeLeaf(world, baseX + bx, cy, baseZ + bz);
                 }
             }
-            if (i > 2 && rand.nextInt(4) == 0) generateMiniBranch(world, rand, cx, cy, cz);
+            if (i > 2 && rand.nextInt(4) == 0) generateMiniBranch(world, rand, baseX, cy, baseZ);
         }
 
         for (int[] o : HEAD_OFFSETS) placeLeaf(world, tipX + o[0], tipY + o[1], tipZ + o[2]);

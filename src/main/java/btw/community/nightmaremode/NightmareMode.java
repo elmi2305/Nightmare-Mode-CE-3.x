@@ -2,37 +2,33 @@ package btw.community.nightmaremode;
 
 import api.AddonHandler;
 import api.BTWAddon;
-import api.client.mojapi.UserProfile;
 import api.config.AddonConfig;
 import api.world.BiomeDecoratorBase;
 import api.world.data.DataEntry;
 import api.world.data.DataProvider;
-import api.world.difficulty.DifficultyParam;
 import btw.block.BTWBlocks;
-import com.google.gson.GsonBuilder;
-import com.itlesports.nightmaremode.util.NMEntityMapper;
-import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
-import com.itlesports.nightmaremode.util.NMInitializer;
-import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.item.NMTags;
-import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
-import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
-import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
+import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
+import com.itlesports.nightmaremode.util.NMEntityMapper;
+import com.itlesports.nightmaremode.util.NMInitializer;
+import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
+import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
+import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Random;
 
 public class NightmareMode extends BTWAddon {
 
@@ -194,6 +190,7 @@ public class NightmareMode extends BTWAddon {
         BiomeGenBase.biomeList[25] = BiomeGenUnderworld.highlands;
         BiomeGenBase.biomeList[26] = BiomeGenUnderworld.flowerFields;
         BiomeGenBase.biomeList[27] = BiomeGenUnderworld.shadowRealm;
+        BiomeGenBase.biomeList[28] = BiomeGenUnderworld.underHell;
 //        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.flowerFields;
         MapGenStructureIO.func_143034_b(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }

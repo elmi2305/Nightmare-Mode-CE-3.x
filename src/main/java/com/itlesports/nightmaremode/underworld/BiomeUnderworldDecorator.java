@@ -5,8 +5,7 @@ import api.util.ForkableRandom;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenUnderHell;
-import com.itlesports.nightmaremode.underworld.worldgen.WorldGenBigFlower;
-import com.itlesports.nightmaremode.underworld.worldgen.WorldGenDroopingFlower;
+import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTulip;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallBulbFlower;
 import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallFlowers;
 import net.minecraft.src.*;
@@ -27,7 +26,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         super(par1BiomeGenBase);
         this.tallPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, false);
         this.lavaPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, true);
-        this.tallFlowerTulipGen = new WorldGenBigFlower();
+        this.tallFlowerTulipGen = new WorldGenTulip();
         this.tallFlowerBulbGen  = new WorldGenTallBulbFlower();
 //        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
 
@@ -62,9 +61,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         }
 
         // toggle if I don't want
-        if (false) {
+        if (true) {
 //            numPerChunk = this.treesPerChunk + (this.randomGenerator.nextInt(3) == 0 ? 1 : 0);
-            numPerChunk = this.randomGenerator.nextInt(3) == 0 ? 1 : 0;
+            numPerChunk = this.randomGenerator.nextInt(3) == 0 ? 0 : 1;
             WorldGenerator treeGen = this.getTreeGenForBiome();
 
             if (treeGen != null) {
@@ -202,13 +201,10 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
     private WorldGenerator getTreeGenForBiome(){
         if(this.biome instanceof BiomeGenFlowerFields){
-            if(this.randomGenerator.nextBoolean() || this.randomGenerator.nextInt(3) == 0){
+            if(this.randomGenerator.nextFloat() < 0.25){
                 return tallFlowerTulipGen;
             }
-//            if(this.randomGenerator.nextBoolean()){
             return tallFlowerBulbGen;
-//            }
-//            return tallFlowerDroopingGen;
         }
         return null;
     }

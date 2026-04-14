@@ -7,6 +7,7 @@ public class UnderworldGenLayerBiomes extends GenLayer {
             BiomeGenBase.biomeList[24], // Underworld Plains
             BiomeGenBase.biomeList[25], // Underworld Desert
             BiomeGenBase.biomeList[27], // Shadow Realm
+            BiomeGenBase.biomeList[28], // Hell
     };
 
     public UnderworldGenLayerBiomes(long par1, GenLayer par3GenLayer, WorldType par4WorldType) {

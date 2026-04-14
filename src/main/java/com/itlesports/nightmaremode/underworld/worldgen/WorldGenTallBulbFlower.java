@@ -30,50 +30,35 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
 
     @Override
     public boolean generate(World world, Random rand, int baseX, int baseY, int baseZ) {
-        int stemHeight = rand.nextInt(9) + 9;
+        int stemHeight = 12 + rand.nextInt(3);
         if (baseY < 1 || baseY + stemHeight + 5 > 255) return false;
 
         int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
         if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
                 && (groundId != NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(baseX,baseY - 1, baseZ) != NMBlocks.META_FLOWER_GRASS)) return false;
 
-        int ldx = 0, ldz = 0;
-        switch (rand.nextInt(5)) {
-            case 0: ldx =  1; break;
-            case 1: ldx = -1; break;
-            case 2: ldz =  1; break;
-            case 3: ldz = -1; break;
-        }
-
-        int leanAt = stemHeight - 3;
-        int tipX = baseX + ldx;
-        int tipY = baseY + stemHeight;
-        int tipZ = baseZ + ldz;
-
         for (int i = 0; i < stemHeight; i++) {
-            int bx = baseX + (i >= leanAt ? ldx : 0);
-            int bz = baseZ + (i >= leanAt ? ldz : 0);
-            if (!isReplaceable(world, bx, baseY + i, bz)) return false;
+            if (!isReplaceable(world, baseX, baseY + i, baseZ)) return false;
         }
+
+        int tipY = baseY + stemHeight;
 
         int[][] bulb = rand.nextBoolean() ? BULB_LARGE : BULB_SMALL;
         int bulbCY = tipY + 1;
         for (int[] o : bulb) {
             int by = bulbCY + o[1];
             if (by < 0 || by >= 256) return false;
-            if (!isReplaceable(world, tipX + o[0], by, tipZ + o[2])) return false;
+            if (!isReplaceable(world, baseX + o[0], by, baseZ + o[2])) return false;
         }
 
         setBlockAndMetadata(world, baseX, baseY - 1, baseZ, NMBlocks.underFlowerDirts.blockID, NMBlocks.META_FLOWER_DIRT);
 
         for (int i = 0; i < stemHeight; i++) {
-            int bx = baseX + (i >= leanAt ? ldx : 0);
-            int bz = baseZ + (i >= leanAt ? ldz : 0);
-            setBlockAndMetadata(world, bx, baseY + i, bz, NMBlocks.plantMatter.blockID, metaWood);
+            setBlockAndMetadata(world, baseX, baseY + i, baseZ, NMBlocks.plantMatter.blockID, metaWood);
         }
 
         for (int[] o : bulb) {
-            setBlockAndMetadata(world, tipX + o[0], bulbCY + o[1], tipZ + o[2], Block.leaves.blockID, leafMeta);
+            setBlockAndMetadata(world, baseX + o[0], bulbCY + o[1], baseZ + o[2], Block.leaves.blockID, leafMeta);
         }
 
         return true;
