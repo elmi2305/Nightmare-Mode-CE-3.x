@@ -4,7 +4,6 @@ import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.block.blocks.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 
 import btw.BTWMod;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlockContainer;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.nmgui.ContainerDisenchantment;
 import net.fabricmc.api.EnvType;

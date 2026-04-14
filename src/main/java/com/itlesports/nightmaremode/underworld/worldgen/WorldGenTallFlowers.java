@@ -11,11 +11,13 @@ public class WorldGenTallFlowers extends WorldGenerator {
     private final int plantBlockId;
     private final int types;
     private final Block plantBlock;
+    private final boolean exactType; // if true, we only want the metadata provided by this.types. otherwise, roll a random number between 0 and this.types
 
-    public WorldGenTallFlowers(int par1, int types) {
-        this.plantBlockId = par1;
+    public WorldGenTallFlowers(int id, int types, boolean exactType) {
+        this.plantBlockId = id;
         this.types = types;
-        this.plantBlock = Block.blocksList[par1];
+        this.exactType = exactType;
+        this.plantBlock = Block.blocksList[id];
     }
 
     @Override
@@ -31,7 +33,7 @@ public class WorldGenTallFlowers extends WorldGenerator {
             // ground adjacency and block-specific placement rules (checks the block below)
             if (!this.plantBlock.canBlockStayDuringGenerate(w, nx, ny, nz)) continue;
 
-            int type = rand.nextInt(this.types);
+            int type = this.exactType ? this.types : rand.nextInt(this.types);
             w.setBlock(nx, ny, nz, this.plantBlockId, type, 2);
             // sunflower often needs top half
             if (type == BlockTallFlower.SUNFLOWER || rand.nextInt(6) != 0) {

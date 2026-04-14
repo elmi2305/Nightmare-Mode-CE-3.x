@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks;
 
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlockContainer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityVillagerContainer;
 import net.fabricmc.api.EnvType;
@@ -11,7 +12,7 @@ import java.util.Random;
 
 import static net.minecraft.src.EntityVillager.*;
 
-public class BlockVillagerBase extends NMBlockContainer{
+public class BlockVillagerBase extends NMBlockContainer {
     public BlockVillagerBase(int par1) {
         super(par1, Material.cloth);
         this.setCreativeTab(CreativeTabs.tabDecorations);

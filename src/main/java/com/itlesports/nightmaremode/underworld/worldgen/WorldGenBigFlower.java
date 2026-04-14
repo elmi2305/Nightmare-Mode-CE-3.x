@@ -53,7 +53,7 @@ public class WorldGenBigFlower extends WorldGenerator {
 
         int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
         if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
-                && groundId != NMBlocks.flowerGrass.blockID) return false;
+                && (groundId != NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(baseX,baseY - 1, baseZ) != NMBlocks.META_FLOWER_GRASS)) return false;
 
         int ldx = 0, ldz = 0;
         if (rand.nextBoolean()) ldx = rand.nextBoolean() ? 1 : -1;
@@ -114,7 +114,7 @@ public class WorldGenBigFlower extends WorldGenerator {
         int id = world.getBlockId(x, y, z);
         return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID
                 || id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID
-                || id == NMBlocks.flowerGrass.blockID;
+                || (id == NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(x,y,z) == NMBlocks.META_FLOWER_GRASS);
     }
 
     private void placeLeaf(World world, int x, int y, int z) {

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.block.blocks;
+package com.itlesports.nightmaremode.block.blocks.templates;
 
 import net.minecraft.src.Block;
 import net.minecraft.src.Material;

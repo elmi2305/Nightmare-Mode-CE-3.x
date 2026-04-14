@@ -5,6 +5,7 @@ import api.item.util.ItemUtils;
 import api.world.difficulty.DifficultyParam;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;

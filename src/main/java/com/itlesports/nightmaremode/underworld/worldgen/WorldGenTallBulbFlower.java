@@ -35,7 +35,7 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
 
         int groundId = world.getBlockId(baseX, baseY - 1, baseZ);
         if (groundId != Block.grass.blockID && groundId != Block.dirt.blockID
-                && groundId != NMBlocks.flowerGrass.blockID) return false;
+                && (groundId != NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(baseX,baseY - 1, baseZ) != NMBlocks.META_FLOWER_GRASS)) return false;
 
         int ldx = 0, ldz = 0;
         switch (rand.nextInt(5)) {
@@ -64,7 +64,7 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
             if (!isReplaceable(world, tipX + o[0], by, tipZ + o[2])) return false;
         }
 
-        setBlock(world, baseX, baseY - 1, baseZ, NMBlocks.flowerDirt.blockID);
+        setBlockAndMetadata(world, baseX, baseY - 1, baseZ, NMBlocks.underFlowerDirts.blockID, NMBlocks.META_FLOWER_DIRT);
 
         for (int i = 0; i < stemHeight; i++) {
             int bx = baseX + (i >= leanAt ? ldx : 0);
@@ -83,6 +83,6 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
         int id = world.getBlockId(x, y, z);
         return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID
                 || id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID
-                || id == NMBlocks.flowerGrass.blockID;
+                || (id == NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(x,y,z) == NMBlocks.META_FLOWER_GRASS);
     }
 }
