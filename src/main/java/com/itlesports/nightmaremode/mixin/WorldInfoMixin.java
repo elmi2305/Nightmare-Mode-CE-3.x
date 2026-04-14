@@ -23,6 +23,9 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
     @Shadow private GameRules theGameRules;
     @Shadow private long totalTime;
     @Shadow public abstract Difficulty getDifficulty();
+
+    @Shadow
+    private boolean allowCommands;
     @Unique private boolean shouldCheck = true;
 
     @Inject(method = "getWorldTime()J", at = @At("HEAD"))
@@ -39,6 +42,8 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor{
             }
             if(NightmareMode.devMode){
                 this.theGameRules.addGameRule("extendedDebugAccess", "creativeOnly");
+                this.allowCommands = true;
+                this.worldTime = 0;
             }
         }
     }
