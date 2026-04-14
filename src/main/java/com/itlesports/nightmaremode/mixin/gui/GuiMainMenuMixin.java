@@ -1,11 +1,11 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import net.minecraft.src.GuiMainMenu;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.I18n;
-import net.minecraft.src.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
+import btw.world.BTWDifficulties;
+import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.NMUtils;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.*;
+
 
 @Mixin(GuiMainMenu.class)
 public class GuiMainMenuMixin extends GuiScreen {
@@ -42,6 +43,7 @@ public class GuiMainMenuMixin extends GuiScreen {
             NIGHTMARE_MODE_MISSING,
             NIGHTMARE_MODE_PURPLE
     );
+    @Unique private boolean createClicked; // used to make sure the Jump In dev mode button isn't activated twice
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void manageSplashText(CallbackInfo ci){
@@ -50,6 +52,57 @@ public class GuiMainMenuMixin extends GuiScreen {
             MENU = NightmareMode.isAprilFools ? CANCER_MODE
                     : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN)
                     : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
+        }
+    }
+
+    @Inject(method = "addSingleplayerMultiplayerButtons", at = @At("HEAD"))
+    private void addJumpInButtonDevMode(int par1, int par2, CallbackInfo ci){
+        if(!NightmareMode.devMode) return;
+        this.buttonList.add(new GuiButton(25, this.width / 2 - 100, par1 + par2 * 2, "Jump In"));
+    }
+
+    @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
+    private void doCustomButton(GuiButton par1GuiButton, CallbackInfo ci){
+        if(par1GuiButton.id == 25 && NightmareMode.devMode){
+            if (this.createClicked) {
+                return;
+            }
+
+            this.createClicked = true;
+            long seed = new Random().nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
+
+//            WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), true, false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
+
+            WorldSettings settings = null;
+
+            if (NightmareMode.devMode) {
+                settings = new WorldSettings(seed, EnumGameType.CREATIVE, true, false, WorldType.DEFAULT, BTWDifficulties.HOSTILE,true);
+            }
+
+
+            ISaveFormat var1 = this.mc.getSaveLoader();
+
+            settings.enableCommands();
+
+
+            List saveList = null;
+            try {
+                saveList = var1.getSaveList();
+            } catch (AnvilConverterException ignored) {}
+
+            saveList.sort(null);
+            String mostRecentWorld = NMUtils.updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
+
+            try {
+                if (MinecraftServer.getServer() != null) {
+                    MinecraftServer.getServer().stopServer();
+                    this.mc.loadWorld(null);
+                }
+                this.mc.launchIntegratedServer(NMUtils.makeUseableName(mostRecentWorld,this.mc), mostRecentWorld.trim(), settings);
+                this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
+            } catch (Exception e) {
+                ci.cancel();
+            }
         }
     }
 

@@ -5,8 +5,11 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.ItemAccessor;
 import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NMUtils {
     private static double buffedSquidBonus = 1;
@@ -43,6 +46,43 @@ public class NMUtils {
             Item.swordDiamond.itemID,
             Item.axeGold.itemID
     ));
+
+    @Unique
+    public static String updateWorldName(String input) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(input);
+
+        long largest = Long.MIN_VALUE;
+        int start = -1, end = -1;
+        while (matcher.find()) {
+            long num = Long.parseLong(matcher.group());
+            if (num > largest) {
+                largest = num;
+                start = matcher.start();
+                end = matcher.end();
+            }
+        }
+        if (largest == Long.MIN_VALUE) {
+            return input;
+        }
+        long incrementedValue = largest + (Long.signum(largest));
+        StringBuilder updatedString = new StringBuilder(input);
+        updatedString.replace(start, end, String.valueOf(incrementedValue));
+        return updatedString.toString();
+    }
+
+    @Unique
+    public static String makeUseableName(String worldName, Minecraft minecraft) {
+        String trim = worldName.trim();
+        for (char var4 : ChatAllowedCharacters.allowedCharactersArray) {
+            trim = trim.replace(var4, '_');
+        }
+        if (MathHelper.stringNullOrLengthZero(trim)) {
+            trim = "World";
+        }
+        trim = GuiCreateWorld.func_73913_a(minecraft.getSaveLoader(), trim);
+        return trim;
+    }
 
     public static final class VillagerMetaCodec {
         private static final int PROF_BITS = 3;

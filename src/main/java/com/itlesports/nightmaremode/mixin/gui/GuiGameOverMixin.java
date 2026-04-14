@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Mixin(GuiGameOver.class)
 public class GuiGameOverMixin extends GuiScreen {
@@ -138,14 +136,14 @@ public class GuiGameOverMixin extends GuiScreen {
             } catch (AnvilConverterException ignored) {}
 
             saveList.sort(null);
-            String mostRecentWorld = updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
+            String mostRecentWorld = NMUtils.updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
 
             try {
                 if (MinecraftServer.getServer() != null) {
                     MinecraftServer.getServer().stopServer();
                     this.mc.loadWorld(null);
                 }
-                this.mc.launchIntegratedServer(this.makeUseableName(mostRecentWorld), mostRecentWorld.trim(), settings);
+                this.mc.launchIntegratedServer(NMUtils.makeUseableName(mostRecentWorld, this.mc), mostRecentWorld.trim(), settings);
                 this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
             } catch (Exception e) {
                 ci.cancel();
@@ -153,40 +151,4 @@ public class GuiGameOverMixin extends GuiScreen {
         }
     }
 
-    @Unique
-    private String makeUseableName(String worldName) {
-        String trim = worldName.trim();
-        for (char var4 : ChatAllowedCharacters.allowedCharactersArray) {
-            trim = trim.replace(var4, '_');
-        }
-        if (MathHelper.stringNullOrLengthZero(trim)) {
-            trim = "World";
-        }
-        trim = GuiCreateWorld.func_73913_a(this.mc.getSaveLoader(), trim);
-        return trim;
-    }
-
-    @Unique
-    private static String updateWorldName(String input) {
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(input);
-
-        long largest = Long.MIN_VALUE;
-        int start = -1, end = -1;
-        while (matcher.find()) {
-            long num = Long.parseLong(matcher.group());
-            if (num > largest) {
-                largest = num;
-                start = matcher.start();
-                end = matcher.end();
-            }
-        }
-        if (largest == Long.MIN_VALUE) {
-            return input;
-        }
-        long incrementedValue = largest + (Long.signum(largest));
-        StringBuilder updatedString = new StringBuilder(input);
-        updatedString.replace(start, end, String.valueOf(incrementedValue));
-        return updatedString.toString();
-    }
 }
