@@ -546,7 +546,7 @@ public class GuiConfig extends GuiScreen {
             if (option != null) {
                 boolean newValue = !this.getValue(option);
                 this.setValue(option, newValue);
-                instance.modifyConfigProperty(option.getConfigKey(), newValue, config);
+                instance.modifyConfigProperty(option.getConfigKey(), newValue, config, option.getPage() == Page.ONE);
                 GuiColoredButton button = this.buttons.get(option);
                 if (button != null) {
                     button.updateState(newValue);

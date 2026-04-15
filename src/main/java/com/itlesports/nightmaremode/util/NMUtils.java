@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.util;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.ItemAccessor;
 import net.minecraft.src.*;
@@ -269,5 +270,36 @@ public class NMUtils {
     public static boolean isHoldingBloodSword(EntityLivingBase entity){
         if(entity.getCurrentItemOrArmor(0) == null){return false;}
         return entity.getCurrentItemOrArmor(0).itemID == bloodArmor.get(0);
+    }
+
+    public static WorldSettings decodeSettings(String code, long seed) {
+        if (code == null || code.length() < 5) {
+            code = "STDHF"; // fallback
+        }
+        char g = code.charAt(0);
+        char s = code.charAt(1);
+        char w = code.charAt(2);
+        char d = code.charAt(3);
+        char c = code.charAt(4);
+
+        WorldSettings settings = new WorldSettings(seed,
+                (g == 'C')
+                        ? EnumGameType.CREATIVE
+                        : EnumGameType.SURVIVAL,
+                (s == 'T'),
+                false, // hardcore
+                (w == 'F')
+                        ? WorldType.FLAT : ((w == 'L') ? WorldType.LARGE_BIOMES : WorldType.DEFAULT),
+                (d == 'H')
+                        ? BTWDifficulties.HOSTILE
+                        : BTWDifficulties.STANDARD,
+                true // difficulty locked
+                );
+        if(c == 'T'){
+            settings.enableCommands();
+        } else{
+            settings.disableCommands();
+        }
+        return settings;
     }
 }

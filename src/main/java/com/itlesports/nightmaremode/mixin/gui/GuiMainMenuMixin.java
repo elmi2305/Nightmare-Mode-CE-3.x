@@ -2,7 +2,8 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWDifficulties;
-import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.nmgui.GuiTexturedButton;
+import com.itlesports.nightmaremode.nmgui.GuiWorldInfoConfig;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -11,11 +12,17 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 
 @Mixin(GuiMainMenu.class)
@@ -43,6 +50,8 @@ public class GuiMainMenuMixin extends GuiScreen {
             NIGHTMARE_MODE_MISSING,
             NIGHTMARE_MODE_PURPLE
     );
+    @Unique private final ResourceLocation GEAR = new ResourceLocation("nightmare:textures/gui/gear.png");
+
     @Unique private boolean createClicked; // used to make sure the Jump In dev mode button isn't activated twice
 
     @Inject(method = "initGui", at = @At("TAIL"))
@@ -57,28 +66,24 @@ public class GuiMainMenuMixin extends GuiScreen {
 
     @Inject(method = "addSingleplayerMultiplayerButtons", at = @At("HEAD"))
     private void addJumpInButtonDevMode(int par1, int par2, CallbackInfo ci){
-        if(!NightmareMode.devMode) return;
-        this.buttonList.add(new GuiButton(25, this.width / 2 - 100, par1 + par2 * 2, "Jump In"));
+        int w = 178;
+        int h = 20;
+        this.buttonList.add(new GuiButton(25, this.width / 2 - 100, par1 + par2 * 2, w, h, I18n.getString("selectWorld.create")));
+        this.buttonList.add(new GuiTexturedButton(26, this.width / 2 - 100 + w + 1, par1 + par2 * 2, 20, 20, GEAR));
     }
 
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
     private void doCustomButton(GuiButton par1GuiButton, CallbackInfo ci){
-        if(par1GuiButton.id == 25 && NightmareMode.devMode){
+        if(par1GuiButton.id == 25){
             if (this.createClicked) {
                 return;
             }
 
             this.createClicked = true;
-            long seed = new Random().nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
+            long seed = rand.nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
 
-//            WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), true, false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
 
-            WorldSettings settings = null;
-
-            if (NightmareMode.devMode) {
-                settings = new WorldSettings(seed, EnumGameType.CREATIVE, true, false, WorldType.DEFAULT, BTWDifficulties.HOSTILE,true);
-            }
-
+            WorldSettings settings = NMUtils.decodeSettings(NightmareMode.getInstance().addonConfig.getString("WorldInfoString"), seed);
 
             ISaveFormat var1 = this.mc.getSaveLoader();
 
@@ -103,6 +108,8 @@ public class GuiMainMenuMixin extends GuiScreen {
             } catch (Exception e) {
                 ci.cancel();
             }
+        } else if(par1GuiButton.id == 26 && NightmareMode.devMode){
+            this.mc.displayGuiScreen(new GuiWorldInfoConfig(this, NightmareMode.getInstance().addonConfig.getString("WorldInfoString")));
         }
     }
 

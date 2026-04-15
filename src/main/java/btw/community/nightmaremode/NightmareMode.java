@@ -91,10 +91,10 @@ public class NightmareMode extends BTWAddon {
 
 
     public boolean wasConfigModified;
-    public void modifyConfigProperty(String propertyName, boolean newValue, AddonConfig config) {
+    public void modifyConfigProperty(String propertyName, Object newValue, AddonConfig config, boolean shouldAlert) {
 
         ((AddonConfigExtender)(Object)config).nightmareMode$modifyProperty(propertyName,newValue);
-        wasConfigModified = true;
+        wasConfigModified = shouldAlert;
     }
 
 
@@ -581,6 +581,7 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("FastVillagers", false);
         config.registerBoolean("BloodMoonHelper", false);
         config.registerBoolean("RealTime", false);
+        config.registerString("WorldInfoString", "STDHF");
         getInstance().addonConfig = config;
     }
 

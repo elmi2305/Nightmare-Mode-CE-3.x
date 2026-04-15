@@ -332,8 +332,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int i = NMUtils.getWorldProgress();
 
         float returnValue = (float) switch (i) {
-            case 0 -> 36;  // 6b   10.4b
-            case 1 -> 81;  // 9b   15.57b
+            case 0 -> 36;     // 6b   10.4b
+            case 1 -> 81;     // 9b   15.57b
             case 2, 3 -> 121; // 11b  19.03b
             default -> constant;
         };
