@@ -20,7 +20,7 @@ public abstract class AddonConfigMixin implements AddonConfigExtender {
     @Shadow protected abstract void writeConfig();
 
     @Override
-    public void nightmareMode$modifyProperty(String path, boolean newValue) {
+    public void nightmareMode$modifyProperty(String path, Object newValue) {
         // ensure the path exists and is registered
         if (!this.currentConfig.hasPath(path)) {
             throw new IllegalArgumentException("Config path '" + path + "' does not exist");
@@ -48,4 +48,6 @@ public abstract class AddonConfigMixin implements AddonConfigExtender {
         this.hasChanged = true;
         this.writeConfig();
     }
+
+
 }
