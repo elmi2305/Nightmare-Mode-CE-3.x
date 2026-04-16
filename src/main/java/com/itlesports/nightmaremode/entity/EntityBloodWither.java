@@ -92,17 +92,24 @@ public class EntityBloodWither extends EntityWither {
             BTWBlocks.deepStrataStoneBrickStairs.blockID,
             BTWBlocks.workStump.blockID
     )); // unused
-    private static final List<Integer> GOOD_EFFECTS = new ArrayList<>(Arrays.asList(
-            Potion.regeneration.id,
-            Potion.fireResistance.id,
-            Potion.digSpeed.id,
-            Potion.resistance.id,
-            Potion.damageBoost.id,
-            Potion.moveSpeed.id,
-            Potion.field_76434_w.id,
-            Potion.field_76444_x.id,
-            Potion.field_76443_y.id
+    private static final Set<Integer> GOOD_EFFECTS = new HashSet<>(Arrays.asList(
+            Potion.regeneration.id, Potion.fireResistance.id, Potion.digSpeed.id,
+            Potion.resistance.id, Potion.damageBoost.id, Potion.moveSpeed.id,
+            Potion.field_76434_w.id, Potion.field_76444_x.id, Potion.field_76443_y.id
     ));
+
+    private static final List<Class<? extends EntityLivingBase>> mobPoolStandard = List.of(
+            EntityNightmareGolem.class, EntityZombie.class, EntityShadowZombie.class,
+            EntityCreeper.class, EntitySkeleton.class, EntitySpider.class
+    );
+    private static final List<Class<? extends EntityLivingBase>> mobPoolAdvanced = List.of(
+            EntityLightningCreeper.class, EntityFireCreeper.class, EntityBloodZombie.class,
+            BTWCaveSpiderEntity.class, EntityObsidianCreeper.class
+    );
+    private static final List<Class<? extends EntityLivingBase>> mobPoolExtreme = List.of(
+            EntityWitch.class, EntityBlaze.class, EntityPigZombie.class,
+            JungleSpiderEntity.class, EntityNitroCreeper.class
+    );
 
 
     public EntityBloodWither(World world) {
@@ -139,54 +146,37 @@ public class EntityBloodWither extends EntityWither {
     }
 
     private boolean hasItemInInventory(EntityPlayer player, Item item) {
-        List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
-        for (ItemStack stack : inventory) {
-            if (stack != null && stack.getItem() == item) {
-                return true;
-            }
+        for (ItemStack stack : player.inventory.mainInventory) {
+            if (stack != null && stack.getItem() == item) return true;
         }
         return false;
     }
     private void ejectSpecifiedItems(EntityPlayer player, Item item) {
-        // Get the player's inventory
-        List<ItemStack> inventory = Arrays.stream(player.inventory.mainInventory).toList();
-
-        // Loop through each slot
-        for (int i = 0; i < inventory.size(); i++) {
-            ItemStack stack = inventory.get(i);
-            if(stack == null) continue;
-
-            if (stack.getItem() == item) {
-                player.dropPlayerItemWithRandomChoice(stack, false);
-                player.inventory.mainInventory[i] = null;
+        ItemStack[] inv = player.inventory.mainInventory;
+        for (int i = 0; i < inv.length; i++) {
+            if (inv[i] != null && inv[i].getItem() == item) {
+                player.dropPlayerItemWithRandomChoice(inv[i], false);
+                inv[i] = null;
             }
         }
     }
-    private static boolean isUsingPotions(EntityPlayer player){
-        if (player.getActivePotionEffects().isEmpty()){
-            return false;
-        }
-        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
-        for(PotionEffect potionEffect : potionEffects){
-            if(GOOD_EFFECTS.contains(potionEffect.getPotionID())){
-                return true;
-            }
+    private static boolean isUsingPotions(EntityPlayer player) {
+        Collection<PotionEffect> effects = player.getActivePotionEffects();
+        if (effects.isEmpty()) return false;
+        for (PotionEffect effect : effects) {
+            if (GOOD_EFFECTS.contains(effect.getPotionID())) return true;
         }
         return false;
     }
 
-    private void destroyActivePotions(EntityPlayer player){
-        if (player.getActivePotionEffects().isEmpty()){
-            return;
+    private void destroyActivePotions(EntityPlayer player) {
+        Collection<PotionEffect> effects = player.getActivePotionEffects();
+        if (effects.isEmpty()) return;
+        List<Integer> toRemove = new ArrayList<>();
+        for (PotionEffect effect : (Collection<PotionEffect>) effects) {
+            if (GOOD_EFFECTS.contains(effect.getPotionID())) toRemove.add(effect.getPotionID());
         }
-
-        List<Integer> effectsToRemove = player.getActivePotionEffects().stream()
-                .map(effect -> ((PotionEffect) effect).getPotionID()) // Explicit cast to PotionEffect
-                .filter(GOOD_EFFECTS::contains)
-                .toList();
-
-        // Remove each effect
-        effectsToRemove.forEach(player::removePotionEffect);
+        toRemove.forEach(player::removePotionEffect);
     }
 
     private void manageWitherPassivity(boolean isTrackingEntity){
@@ -274,24 +264,20 @@ public class EntityBloodWither extends EntityWither {
                             this.origin[2] + this.rand.nextInt(20) + 10);
                         z++) {}
                 }
-                Iterator<Entity> iterator = this.trackedEntities.iterator();
-                while (iterator.hasNext()) {
-                    Entity trackedEntity = iterator.next();
-
-                    if (shouldClear) {
-                        if (trackedEntity.riddenByEntity != null) {
-                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
-                        }
-                        trackedEntity.setDead();
-                        continue; // Skip further processing if clearing is needed
+                Iterator<Entity> it = this.trackedEntities.iterator();
+                while (it.hasNext()) {
+                    Entity e = it.next();
+                    if (e.isDead) { it.remove(); continue; }  // isDead covers world removal
+                    if (e.posY < 199 && !e.noClip) {
+                        e.setLocationAndAngles(this.origin[0], 200, this.origin[2], e.rotationYaw, e.rotationPitch);
                     }
-                    if (trackedEntity.posY <= 200 || trackedEntity.isDead) {
-                        if (trackedEntity.riddenByEntity == null) {
-                            trackedEntity.setDead();
-                        } else {
-                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
+                    if (e instanceof EntityDragon dragon) {
+                        if (this.witherPhase > 0 && this.rand.nextInt(6) == 0) dragon.heal(1);
+                        if (this.ticksExisted % 20 == 0 && dragon.getDistanceSqToEntity(this) > 1600) {
+                            dragon.targetX = this.origin[0];
+                            dragon.targetY = this.origin[1];
+                            dragon.targetZ = this.origin[2];
                         }
-                        iterator.remove(); // Remove entity safely
                     }
                 }
 
@@ -367,8 +353,18 @@ public class EntityBloodWither extends EntityWither {
     }
 
 
-
-
+    private void moveTowardOrigin() {
+        double dx = this.origin[0] - this.posX;
+        double dz = this.origin[2] - this.posZ;
+        double dy = (this.origin[1] - 4) - this.posY;
+        double distSq = dx * dx + dz * dz;
+        if (distSq > 2) {
+            double dist = MathHelper.sqrt_double(distSq);
+            this.motionX += (dx / dist * 0.5 - this.motionX) * 0.2f;
+            this.motionZ += (dz / dist * 0.5 - this.motionZ) * 0.2f;
+            if (this.isDoingLaserAttack) this.motionY += (dy / dist * 0.5 - this.motionY) * 0.2f;
+        }
+    }
     @Override
     public boolean canBeCollidedWith() {
         return this.activity && (this.getHealthTimer() <= 0 || this.isArmored());
@@ -494,14 +490,10 @@ public class EntityBloodWither extends EntityWither {
                                     Entity lightningbolt = new EntityLightningBolt(this.worldObj, this.lightningX[i], 200, this.lightningZ[i]);
                                     this.worldObj.addWeatherEffect(lightningbolt);
                                 } else if(this.attackCycle % 4 == 0) {
-                                    Entity scatteredBolt0 = new EntityLightningBolt(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] + lightningSpread);
-                                    Entity scatteredBolt1 = new EntityLightningBolt(this.worldObj, this.lightningX[i] + lightningSpread, 200, this.lightningZ[i] - lightningSpread);
-                                    Entity scatteredBolt2 = new EntityLightningBolt(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] + lightningSpread);
-                                    Entity scatteredBolt3 = new EntityLightningBolt(this.worldObj, this.lightningX[i] - lightningSpread, 200, this.lightningZ[i] - lightningSpread);
-                                    this.worldObj.addWeatherEffect(scatteredBolt0);
-                                    this.worldObj.addWeatherEffect(scatteredBolt1);
-                                    this.worldObj.addWeatherEffect(scatteredBolt2);
-                                    this.worldObj.addWeatherEffect(scatteredBolt3);
+                                    int[] d = {lightningSpread, -lightningSpread};
+                                    for (int ox : d) for (int oz : d) {
+                                        this.worldObj.addWeatherEffect(new EntityLightningBolt(this.worldObj, this.lightningX[i] + ox, 200, this.lightningZ[i] + oz));
+                                    }
                                     this.lightningX[i] = this.lightningZ[i] = 0;
                                 } else {
                                     for (int j = 2; j < 10; j++) {
@@ -596,6 +588,7 @@ public class EntityBloodWither extends EntityWither {
                             blaze3.entityToAttack = this.playerTarget;
                             blaze4.entityToAttack = this.playerTarget;
                         }
+                        break;
                     case 7:
                         if(this.trackedEntities.isEmpty()) {
                             for(int i = 0; i < 4 + this.witherPhase * 2; i++){
@@ -620,20 +613,7 @@ public class EntityBloodWither extends EntityWither {
                             this.spawnWitherSkullWithYaw((this.laserIndex + 180) % 360, 1, false);
                             this.spawnWitherSkullWithYaw((this.laserIndex + 270) % 360, 1, false);
                         } else{
-                            double deltaY;
-                            double targetDistanceSquared;
-                            double deltaX = this.origin[0] - this.posX;
-                            double deltaZ = this.origin[2] - this.posZ;
-                            deltaY = (this.origin[1] - 4) - this.posY;
-                            targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
-                            if (targetDistanceSquared > 2) {
-                                double distance = MathHelper.sqrt_double(targetDistanceSquared);
-                                this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.2f;
-                                this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.2f;
-                                if(this.isDoingLaserAttack){
-                                    this.motionY += (deltaY / distance * 0.5 - this.motionY) * 0.2f;
-                                }
-                            }
+                            moveTowardOrigin();
                         }
                         break;
                     default:
@@ -656,68 +636,22 @@ public class EntityBloodWither extends EntityWither {
             }
         }
     }
-    private static List<Class<? extends EntityLivingBase>> mobPoolStandard = new ArrayList<Class<? extends EntityLivingBase>>();
-    private static List<Class<? extends EntityLivingBase>> mobPoolAdvanced = new ArrayList<Class<? extends EntityLivingBase>>();
-    private static List<Class<? extends EntityLivingBase>> mobPoolExtreme = new ArrayList<Class<? extends EntityLivingBase>>();
-    private static List<List> mobPoolPool = new ArrayList<List>();
-
-    // Base mobs (always available)
-    static {
-        mobPoolStandard.add(EntityNightmareGolem.class);
-        mobPoolStandard.add(EntityZombie.class);
-        mobPoolStandard.add(EntityShadowZombie.class);
-        mobPoolStandard.add(EntityCreeper.class);
-        mobPoolStandard.add(EntitySkeleton.class);
-        mobPoolStandard.add(EntitySpider.class);
-
-
-
-        mobPoolAdvanced.add(EntityLightningCreeper.class);
-        mobPoolAdvanced.add(EntityFireCreeper.class);
-        mobPoolAdvanced.add(EntityBloodZombie.class);
-        mobPoolAdvanced.add(BTWCaveSpiderEntity.class);
-        mobPoolAdvanced.add(EntityObsidianCreeper.class);
-
-
-
-        mobPoolExtreme.add(EntityWitch.class);
-        mobPoolExtreme.add(EntityBlaze.class);
-        mobPoolExtreme.add(EntityPigZombie.class);
-        mobPoolExtreme.add(JungleSpiderEntity.class);
-        mobPoolExtreme.add(EntityNitroCreeper.class);
-
-        mobPoolPool.add(mobPoolStandard);
-        mobPoolPool.add(mobPoolAdvanced);
-        mobPoolPool.add(mobPoolExtreme);
-    }
 
     public EntityLivingBase getRandomMobFromPool(World world, int weight) {
+        List<Class<? extends EntityLivingBase>> pool;
+        if (weight < 20) pool = mobPoolStandard;
+        else if (weight < 40) pool = mobPoolAdvanced;
+        else pool = mobPoolExtreme;
 
-        List<Class<? extends EntityLivingBase>> mobPool = mobPoolStandard;
-        if(weight < 20){
-            mobPool = mobPoolStandard;
-        } else if(weight < 40){
-             mobPool = mobPoolAdvanced;
-        } else {
-             mobPool = mobPoolExtreme;
-        }
-
-        Class<? extends EntityLivingBase> mobClass = mobPool.get(world.rand.nextInt(mobPool.size()));
         try {
-            // Create a new instance of the selected mob
-            EntityLivingBase tempEntity = mobClass.getConstructor(World.class).newInstance(world);
-
-            if(this.rand.nextInt(weight) > 20){
-                tempEntity.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000, 2));
-            }
-            if(this.rand.nextInt(weight) > 40){
-                tempEntity.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 10000, this.rand.nextInt(2)));
-            }
-            tempEntity.addPotionEffect(new PotionEffect(Potion.resistance.id, 10000, this.rand.nextInt(2)));
-            return tempEntity;
+            EntityLivingBase entity = pool.get(world.rand.nextInt(pool.size())).getConstructor(World.class).newInstance(world);
+            if (this.rand.nextInt(weight) > 20) entity.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000, 2));
+            if (this.rand.nextInt(weight) > 40) entity.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 10000, this.rand.nextInt(2)));
+            entity.addPotionEffect(new PotionEffect(Potion.resistance.id, 10000, this.rand.nextInt(2)));
+            return entity;
         } catch (Exception e) {
             e.printStackTrace();
-            return new EntityZombie(world); // fallback
+            return new EntityZombie(world);
         }
     }
 
@@ -822,7 +756,6 @@ public class EntityBloodWither extends EntityWither {
                 }
                 deltaX = primaryTarget.posX - this.posX;
                 deltaZ = primaryTarget.posZ - this.posZ;
-                double deltaY;
                 targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
                 if (targetDistanceSquared > 9.0 && this.activity && !this.isDoingLaserAttack) {
                     double distance = MathHelper.sqrt_double(targetDistanceSquared);
@@ -833,18 +766,7 @@ public class EntityBloodWither extends EntityWither {
                     this.setPositionAndUpdate(primaryTarget.posX,210, primaryTarget.posZ);
                 }
                 if(!this.trackedEntities.isEmpty() || this.isDoingLaserAttack){
-                    deltaX = this.origin[0] - this.posX;
-                    deltaZ = this.origin[2] - this.posZ;
-                    deltaY = (this.origin[1] - 4) - this.posY;
-                    targetDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
-                    if (targetDistanceSquared > 2) {
-                        double distance = MathHelper.sqrt_double(targetDistanceSquared);
-                        this.motionX += (deltaX / distance * 0.5 - this.motionX) * 0.2f;
-                        this.motionZ += (deltaZ / distance * 0.5 - this.motionZ) * 0.2f;
-                        if(this.isDoingLaserAttack){
-                            this.motionY += (deltaY / distance * 0.5 - this.motionY) * 0.2f;
-                        }
-                    }
+                    moveTowardOrigin();
                 }
                 if(bIsArmored && targetDistanceSquared < 3){
                     this.attackEntity(primaryTarget, 4f);
@@ -926,25 +848,19 @@ public class EntityBloodWither extends EntityWither {
     }
 
     private double getHeadX(int headIndex) {
-        if (headIndex <= 0) {
-            return this.posX; // Return the central position for the main body
-        }
-        float angleOffset = (this.renderYawOffset + (180 * (headIndex - 1))) / 180.0f * (float) Math.PI;
-        float offsetX = MathHelper.cos(angleOffset); // Calculate X offset
-        return this.posX + offsetX * 1.3; // Add offset to the X position
+        if (headIndex <= 0) return this.posX;
+        float angle = (this.renderYawOffset + 180f * (headIndex - 1)) / 180f * (float) Math.PI;
+        return this.posX + MathHelper.cos(angle) * 1.3;
     }
 
     private double getHeadY(int headIndex) {
-        return headIndex <= 0 ? this.posY + 3.0 : this.posY + 2.2; // Return different heights based on index
+        return headIndex <= 0 ? this.posY + 3.0 : this.posY + 2.2;
     }
 
     private double getHeadZ(int headIndex) {
-        if (headIndex <= 0) {
-            return this.posZ; // Return the central position for the main body
-        }
-        float angleOffset = (this.renderYawOffset + (180 * (headIndex - 1))) / 180.0f * (float) Math.PI;
-        float offsetZ = MathHelper.sin(angleOffset); // Calculate Z offset
-        return this.posZ + offsetZ * 1.3; // Add offset to the Z position
+        if (headIndex <= 0) return this.posZ;
+        float angle = (this.renderYawOffset + 180f * (headIndex - 1)) / 180f * (float) Math.PI;
+        return this.posZ + MathHelper.sin(angle) * 1.3;
     }
     public int getHealthTimer() {
         return this.dataWatcher.getWatchableObjectInt(20);
@@ -952,45 +868,19 @@ public class EntityBloodWither extends EntityWither {
     public void setHealthTimer(int par1) {
         this.dataWatcher.updateObject(20, par1);
     }
-    private double getHeadXPositionOffset(int par1) {
-        if (par1 <= 0) {
-            return this.posX;
-        }
-        float var2 = (this.renderYawOffset + (float)(180 * (par1 - 1))) / 180.0f * (float)Math.PI;
-        float var3 = MathHelper.cos(var2);
-        return this.posX + (double)var3 * 1.3;
-    }
 
-    private double getHeadYPositionOffset(int headIndex) {
-        return headIndex <= 0 ? this.posY + 3.0 : this.posY + 2.2;
-    }
-
-    private double getHeadZPositionOffset(int headIndex) {
-        if (headIndex <= 0) {
-            return this.posZ;
-        }
-        float angle = (this.renderYawOffset + (float)(180 * (headIndex - 1))) / 180.0f * (float)Math.PI;
-        float sinAngle = MathHelper.sin(angle);
-        return this.posZ + (double)sinAngle * 1.3;
-    }
 
     private void spawnEntity(int headIndex, double targetX, double targetY, double targetZ, boolean isInvulnerable) {
         this.worldObj.playAuxSFXAtEntity(null, 1014, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-        double offsetX = this.getHeadXPositionOffset(headIndex);
-        double offsetY = this.getHeadYPositionOffset(headIndex);
-        double offsetZ = this.getHeadZPositionOffset(headIndex);
-        double deltaX = targetX - offsetX;
-        double deltaY = targetY - offsetY;
-        double deltaZ = targetZ - offsetZ;
-        EntityWitherSkull witherSkull = new EntityWitherSkull(this.worldObj, this, deltaX, deltaY, deltaZ);
-        if (isInvulnerable) {
-            witherSkull.setInvulnerable(true);
-        }
-        witherSkull.posY = offsetY;
-        witherSkull.posX = offsetX;
-        witherSkull.posZ = offsetZ;
-        this.worldObj.spawnEntityInWorld(witherSkull);
+        double ox = this.getHeadX(headIndex);
+        double oy = this.getHeadY(headIndex);
+        double oz = this.getHeadZ(headIndex);
+        EntityWitherSkull skull = new EntityWitherSkull(this.worldObj, this, targetX - ox, targetY - oy, targetZ - oz);
+        if (isInvulnerable) skull.setInvulnerable(true);
+        skull.posX = ox; skull.posY = oy; skull.posZ = oz;
+        this.worldObj.spawnEntityInWorld(skull);
     }
+
     private void shootArrowWithYaw(float yaw, float speed) {
         // Convert yaw to radians
         double radians = Math.toRadians(yaw);
@@ -1034,34 +924,16 @@ public class EntityBloodWither extends EntityWither {
 
     private void spawnWitherSkullWithYaw(float yaw, float speed, boolean isInvulnerable) {
         this.worldObj.playAuxSFXAtEntity(null, 1014, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-
-        double offsetX = this.getHeadXPositionOffset(0);
-        double offsetY = this.getHeadYPositionOffset(0) - 1;
-        double offsetZ = this.getHeadZPositionOffset(0);
-
-        // Convert yaw to radians for calculations
         double radians = Math.toRadians(yaw);
-
-        // Calculate directional velocity
-        double deltaX = -Math.sin(radians);
-        double deltaZ = Math.cos(radians);
-        double deltaY = 0.0;
-
-        EntityWitherSkull witherSkull = new EntityWitherSkull(this.worldObj, this, deltaX, deltaY, deltaZ);
-
-        if (isInvulnerable) {
-            witherSkull.setInvulnerable(true);
-        }
-        // Apply movement
-        this.setSkullHeading(deltaX, deltaY, deltaZ, speed, 0,witherSkull);
-
-        witherSkull.posY = offsetY;
-        witherSkull.posX = offsetX;
-        witherSkull.posZ = offsetZ;
-
-        this.worldObj.spawnEntityInWorld(witherSkull);
+        double dx = -Math.sin(radians), dz = Math.cos(radians);
+        EntityWitherSkull skull = new EntityWitherSkull(this.worldObj, this, dx, 0.0, dz);
+        if (isInvulnerable) skull.setInvulnerable(true);
+        this.setSkullHeading(dx, 0.0, dz, speed, 0, skull);
+        skull.posX = this.getHeadX(0);
+        skull.posY = this.getHeadY(0) - 1;
+        skull.posZ = this.getHeadZ(0);
+        this.worldObj.spawnEntityInWorld(skull);
     }
-
 
 
     private void setTargetButInsteadItJustShoots(int par1, EntityLivingBase par2EntityLivingBase) {
@@ -1088,7 +960,7 @@ public class EntityBloodWither extends EntityWither {
             // builds the platform of the wither arena, in a lag efficient way
 
             // places one line every 2 ticks
-            if(isBetween(healthTimer,40,400)){
+            if(isWithin(healthTimer,40,400)){
                 int line = healthTimer - 40;
                 // line holds a value between 0 and 360
                 if (line % 2 == 0) {
@@ -1138,7 +1010,9 @@ public class EntityBloodWither extends EntityWither {
                     this.headAttackCounts[i - 1] = 0;
                 }
                 if ((targetId = this.getWatchedTargetId(i)) > 0) {
-                    Entity targetEntity = this.worldObj.getEntityByID(targetId) == null ? this.worldObj.getClosestVulnerablePlayerToEntity(this,30) : this.worldObj.getEntityByID(targetId);
+                    Entity targetEntity = this.worldObj.getEntityByID(targetId);
+                    if (targetEntity == null) targetEntity = this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
+
                     if (targetEntity != null && targetEntity.isEntityAlive() && this.getDistanceSqToEntity(targetEntity) <= 900.0 && this.canEntityBeSeen(targetEntity)) {
                         this.setTargetButInsteadItJustShoots(i + 1, (EntityLivingBase)targetEntity);
                         this.headPitch[i - 1] = this.ticksExisted + 40 + this.rand.nextInt(20);
@@ -1197,7 +1071,7 @@ public class EntityBloodWither extends EntityWither {
         }
     }
 
-    private static boolean isBetween(int num, int min, int max){
+    private static boolean isWithin(int num, int min, int max){
         return num >= min && num <= max;
     }
 
@@ -1213,16 +1087,16 @@ public class EntityBloodWither extends EntityWither {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+    public boolean attackEntityFrom(DamageSource src, float amount) {
         boolean bIsArmored = this.isArmored();
-        par2 /= 1.5f;
+        amount /= 1.5f;
         int damageCap = bIsArmored ? 30 : 15;
-        if(par2 > damageCap){
-            par2 = damageCap;
+        if(amount > damageCap){
+            amount = damageCap;
         } else{
-            par2 = Math.min(par2 * 1.5f, 30);
+            amount = Math.min(amount * 1.5f, 30);
         }
-        if (this.witherPhase < 2 && this.getHealth() <= (par2 + 1)) {
+        if (this.witherPhase < 2 && this.getHealth() <= (amount + 1)) {
             this.witherPhase += 1;
             this.reviveTimer = 600;
             this.heal(21f);
@@ -1237,7 +1111,7 @@ public class EntityBloodWither extends EntityWither {
             this.worldObj.playAuxSFX(2279, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
             return false;
         } else{
-            return this.activity && super.entityMobAttackEntityFrom(par1DamageSource, par2);
+            return this.activity && super.entityMobAttackEntityFrom(src, amount);
         }
     }
 
@@ -1248,38 +1122,21 @@ public class EntityBloodWither extends EntityWither {
     }
 
 
-    private ItemStack[] getRandomItem(){
-        return new ItemStack[]{
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0),
-                new ItemStack(randomFullBlocks.get(this.rand.nextInt(randomFullBlocks.size())), 1, 0)
-        };
+    private ItemStack[] getRandomItem() {
+        int size = randomFullBlocks.size();
+        ItemStack[] items = new ItemStack[9];
+        for (int i = 0; i < 9; i++) items[i] = new ItemStack(randomFullBlocks.get(this.rand.nextInt(size)), 1, 0);
+        return items;
     }
-    private static boolean areItemStackArraysEqual(ItemStack[] array1, ItemStack[] array2) {
-        // Check if both arrays are null or have the same reference
-        if (array1 == array2) {
-            return true;
-        }
-
-        // Check if either array is null or lengths are different
-        if (array1 == null || array2 == null || array1.length != array2.length) {
-            return false;
-        }
-
-        // Compare each item stack in both arrays
-        for (int i = 0; i < array1.length; i++) {
-            if (!ItemStack.areItemStacksEqual(array1[i], array2[i])) {
-                return false;
-            }
+    private static boolean areItemStackArraysEqual(ItemStack[] a, ItemStack[] b) {
+        if (a == b) return true;
+        if (a == null || b == null || a.length != b.length) return false;
+        for (int i = 0; i < a.length; i++) {
+            if (!ItemStack.areItemStacksEqual(a[i], b[i])) return false;
         }
         return true;
     }
+
     private void setAttackDetails(int index, boolean isNotSafetyCheck) {
         switch (index) {
             case 0: // Anvil attack
