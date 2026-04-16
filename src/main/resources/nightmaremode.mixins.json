@@ -186,6 +186,7 @@
     "entity.EntityWitchMixin",
     "entity.EntityWitherMixin",
     "entity.EntityWitherSkullMixin",
+    "entity.EntityWolfMixin",
     "entity.EntityZombieMixin",
     "entity.JungleSpiderEntityMixin",
     "entity.KickingAnimalAccessor",
