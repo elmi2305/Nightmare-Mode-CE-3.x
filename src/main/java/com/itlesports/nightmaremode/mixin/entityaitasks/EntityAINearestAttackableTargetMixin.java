@@ -1,19 +1,14 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityShadowZombie;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.List;
 
 @Mixin(EntityAINearestAttackableTarget.class)
 public abstract class EntityAINearestAttackableTargetMixin extends EntityAITarget {

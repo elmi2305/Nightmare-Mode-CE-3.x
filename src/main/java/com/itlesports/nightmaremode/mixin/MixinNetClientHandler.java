@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
+import com.itlesports.nightmaremode.mixin.interfaces.NetClientHandlerExt;
 import com.itlesports.nightmaremode.nmgui.*;
 import com.itlesports.nightmaremode.nmgui.GuiLocker;
 import net.minecraft.src.*;

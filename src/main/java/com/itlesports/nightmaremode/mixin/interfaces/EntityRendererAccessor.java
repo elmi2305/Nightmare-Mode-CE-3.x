@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.interfaces;
 
 import net.minecraft.src.EntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;

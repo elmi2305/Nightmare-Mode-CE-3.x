@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;

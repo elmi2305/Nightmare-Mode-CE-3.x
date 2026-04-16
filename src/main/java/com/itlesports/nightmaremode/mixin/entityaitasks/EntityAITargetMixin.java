@@ -1,6 +1,5 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

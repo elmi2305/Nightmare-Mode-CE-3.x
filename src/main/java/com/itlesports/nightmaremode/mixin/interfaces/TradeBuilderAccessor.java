@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.interfaces;
 
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;

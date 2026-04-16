@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.interfaces;
 
 import net.minecraft.src.AnimalChest;
 import net.minecraft.src.EntityHorse;

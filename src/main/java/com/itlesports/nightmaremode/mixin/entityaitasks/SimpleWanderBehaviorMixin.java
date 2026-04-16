@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import api.entity.mob.behavior.SimpleWanderBehavior;
 import api.world.BlockPos;

@@ -11,7 +11,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
-import com.itlesports.nightmaremode.mixin.EntityRendererAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;

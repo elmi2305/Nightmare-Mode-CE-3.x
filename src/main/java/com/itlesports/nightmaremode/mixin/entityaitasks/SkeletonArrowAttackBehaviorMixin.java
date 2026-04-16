@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import com.itlesports.nightmaremode.util.NMFields;

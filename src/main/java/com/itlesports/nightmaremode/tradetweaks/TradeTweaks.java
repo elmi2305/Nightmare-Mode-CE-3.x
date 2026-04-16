@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.tradetweaks;
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;
 import api.entity.mob.villager.VillagerTrade;
-import com.itlesports.nightmaremode.mixin.TradeBuilderAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.TradeBuilderAccessor;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.ResourceLocation;
 

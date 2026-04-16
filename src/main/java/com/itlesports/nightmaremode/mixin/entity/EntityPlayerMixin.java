@@ -16,7 +16,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.mixin.EntityAnimalInvoker;
+import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.difficulty.Difficulty;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWDifficulties;
+import com.itlesports.nightmaremode.mixin.interfaces.WorldInfoAccessor;
 import net.minecraft.src.EnumGameType;
 import net.minecraft.src.GameRules;
 import net.minecraft.src.NBTTagCompound;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(WorldInfo.class)
-public abstract class WorldInfoMixin implements WorldInfoAccessor{
+public abstract class WorldInfoMixin implements WorldInfoAccessor {
     @Shadow private long worldTime;
     @Shadow private GameRules theGameRules;
     @Shadow private long totalTime;

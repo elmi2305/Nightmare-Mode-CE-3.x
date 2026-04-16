@@ -4,7 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.mixin.ItemAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 

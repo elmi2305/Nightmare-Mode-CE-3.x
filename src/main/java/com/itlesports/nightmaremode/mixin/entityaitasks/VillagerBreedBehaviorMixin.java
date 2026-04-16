@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.entity.mob.behavior.VillagerBreedBehavior;
 import net.minecraft.src.Entity;

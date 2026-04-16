@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.mixin;
+package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.block.BTWBlocks;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
