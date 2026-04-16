@@ -106,7 +106,9 @@ public class GuiMainMenuMixin extends GuiScreen {
                 this.mc.launchIntegratedServer(NMUtils.makeUseableName(mostRecentWorld,this.mc), mostRecentWorld.trim(), settings);
                 this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
             } catch (Exception e) {
+                this.createClicked = false;
                 ci.cancel();
+                return;
             }
         } else if(par1GuiButton.id == 26 && NightmareMode.devMode){
             this.mc.displayGuiScreen(new GuiWorldInfoConfig(this, NightmareMode.getInstance().addonConfig.getString("WorldInfoString")));

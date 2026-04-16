@@ -922,6 +922,21 @@ public class EntityBloodWither extends EntityWither {
         skull.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(y, flatDistance) * (180.0F / Math.PI));
     }
 
+    @Override
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+        super.writeEntityToNBT(par1NBTTagCompound);
+        if (this.origin != null) {
+            par1NBTTagCompound.setIntArray("origin", this.origin);
+        }
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+        super.readEntityFromNBT(par1NBTTagCompound);
+        if (par1NBTTagCompound.hasKey("origin")) {
+            this.origin = par1NBTTagCompound.getIntArray("origin");
+        }
+    }
     private void spawnWitherSkullWithYaw(float yaw, float speed, boolean isInvulnerable) {
         this.worldObj.playAuxSFXAtEntity(null, 1014, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
         double radians = Math.toRadians(yaw);
@@ -952,22 +967,43 @@ public class EntityBloodWither extends EntityWither {
         }
     }
 
+    private static int[] arenaPattern;
+
+    private static void bakeArenaPattern(Random rand) {
+        if (arenaPattern != null) return;
+        arenaPattern = new int[3600];
+        for (int i = 0; i < 3600; i++) {
+            arenaPattern[i] = rand.nextBoolean()
+                    ? NMBlocks.specialObsidian.blockID
+                    : NMBlocks.cryingObsidian.blockID;
+        }
+    }
+
+
+
+    private void getOriginPosArray(){
+        if(this.origin == null){
+
+        }
+    }
+
     @Override
     protected void updateAITasks() {
         if (this.getHealthTimer() > 0) {
 
             int healthTimer = this.getHealthTimer() - 1;
-            // builds the platform of the wither arena, in a lag efficient way
 
-            // places one line every 2 ticks
-            if(isWithin(healthTimer,40,400)){
-                int line = healthTimer - 40;
-                // line holds a value between 0 and 360
-                if (line % 2 == 0) {
-                    placeBlocksAtLinePartial(this.worldObj, this.origin[0] - 30, 199, this.origin[2] + 30, MathHelper.floor_double((double) line / 2));
+            if (healthTimer == 399) bakeArenaPattern(this.rand);
+
+            if (isWithin(healthTimer, 140, 320)) {
+                int tick  = healthTimer - 140;           // 180..0
+                int start = (180 - tick) * 20;         // 0..3580, 20 blocks/tick
+                int bx = this.origin[0] - 30;
+                int bz = this.origin[2] + 30;
+                for (int b = start; b < Math.min(start + 20, arenaPattern.length); b++) {
+                    this.worldObj.setBlock(bx + (b % 60), 199, bz - (b / 60), arenaPattern[b], 0, 2);
                 }
             }
-
             if(healthTimer == 30){
                 Entity lightningbolt = new EntityLightningBolt(this.worldObj, this.posX, this.posY + 1, this.posZ);
                 this.worldObj.addWeatherEffect(lightningbolt);
@@ -1084,7 +1120,10 @@ public class EntityBloodWither extends EntityWither {
 
         wither.origin = new int[]{x, 200, z};
         world.spawnEntityInWorld(wither);
+        bakeArenaPattern(world.rand);
     }
+
+
 
     @Override
     public boolean attackEntityFrom(DamageSource src, float amount) {
