@@ -14,6 +14,7 @@ import net.minecraft.src.*;
 public class NMBlocks {
     public static Block steelOre;
     public static Block bloodBones;
+    public static Block bloodBonesUpgraded;
     public static Block cryingObsidian;
     public static Block specialObsidian;
     public static BlockUnderworldPortal underworldPortal;
@@ -107,7 +108,7 @@ public class NMBlocks {
         cryingObsidian = new BlockCryingObsidian(2307).setTextureName("nightmare:nmCryingObsidian").setUnlocalizedName("nmCryingObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[cryingObsidian.blockID] = new NMItemBlock(NMBlocks.cryingObsidian.blockID - 256);
 
-        specialObsidian = new NMBlock(2308, Material.rock).setTextureName("nightmare:nmSpecialObsidian").setUnlocalizedName("nmSpecialObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock);
+        specialObsidian = new BlockCryingObsidian(2308).setTextureName("nightmare:nmSpecialObsidian").setUnlocalizedName("nmSpecialObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[specialObsidian.blockID] = new NMItemBlock(NMBlocks.specialObsidian.blockID - 256);
 
         underworldPortal = (BlockUnderworldPortal) new BlockUnderworldPortal(2309).setUnlocalizedName("underworld_portal").setTextureName("nightmare:underworld_portal");
@@ -288,6 +289,14 @@ public class NMBlocks {
                 .build()
         );
         Item.itemsList[hellStones.blockID] = new NMItemBlockMeta(hellStones.blockID - 256, hellStones);
+
+
+
+
+
+        bloodBonesUpgraded = new BloodBoneBlock(2347).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock);
+        Item.itemsList[bloodBonesUpgraded.blockID] = new NMItemBlock(NMBlocks.bloodBonesUpgraded.blockID - 256);
+
     }
 
     public static void hideBlocks(){
