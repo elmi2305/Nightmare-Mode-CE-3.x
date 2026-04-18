@@ -936,6 +936,7 @@ public class EntityBloodWither extends EntityWither {
         if (par1NBTTagCompound.hasKey("origin")) {
             this.origin = par1NBTTagCompound.getIntArray("origin");
         }
+        bakeArenaPattern(this.rand); // creates a new pattern, irrelevant for now
     }
     private void spawnWitherSkullWithYaw(float yaw, float speed, boolean isInvulnerable) {
         this.worldObj.playAuxSFXAtEntity(null, 1014, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
