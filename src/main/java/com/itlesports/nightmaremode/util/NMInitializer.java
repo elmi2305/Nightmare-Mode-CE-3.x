@@ -1004,6 +1004,10 @@ public abstract class NMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Block.glass, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.glass, 16), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         // glass
+
+        // flint and steel
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.flintAndSteel), (TagOrStack[])new ItemStack[]{new ItemStack(Item.flint), new ItemStack(BTWItems.ironNugget), new ItemStack(BTWItems.coalDust)});
+        // done flint
     }
     private static void addCauldronRecipes(){
         RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
@@ -1392,7 +1396,20 @@ public abstract class NMInitializer implements AchievementExt {
         // calamari with nitre
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.curedMeat, 1), new Object[]{NMItems.calamari, BTWItems.nitre});
         // done with calamari
+        // remove loom
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.loom), new Object[]{"SSW", "SBG", "WGW", 'W', TagInstance.of(BTWTags.woodenSidings), 'S', BTWBlocks.slatsPane, 'G', BTWItems.gear, 'B', BTWItems.belt});
+        // done loom
+
+        // firestarters
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.flintAndSteel, 1), new Object[]{new ItemStack(BTWItems.ironNugget), new ItemStack(Item.flint)});
+//        RecipeManager.addShapelessRecipe(new ItemStack(Item.flintAndSteel, 1), new Object[]{new ItemStack(BTWItems.steelNugget), new ItemStack(Item.flint)});
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
+        // done with firestarters
+
+
+        // FINISHER
     }
 
     private static void addPistonPackingRecipes() {

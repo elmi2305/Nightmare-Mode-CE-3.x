@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.item.items.FireStarterItemPrimitive;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.Item;
@@ -21,6 +22,8 @@ public class ItemMixin {
     @Shadow public static ItemArmor legsDiamond;
 
 
+    @Shadow public static Item flintAndSteel;
+
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void replaceItems(CallbackInfo ci){
         horseArmorIron    = new ItemAdvancedHorseArmor(161, ItemAdvancedHorseArmor.ArmorTier.IRON).setUnlocalizedName("horsearmormetal").setTextureName("iron_horse_armor");
@@ -32,5 +35,7 @@ public class ItemMixin {
         helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nightmare:nmDiamondHelmet");
         plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nightmare:nmDiamondChestplate");
         legsDiamond = (ItemArmor) legsDiamond.setTextureName("nightmare:nmDiamondLeggings");
+
+        flintAndSteel = flintAndSteel.setMaxDamage(128);
     }
 }
