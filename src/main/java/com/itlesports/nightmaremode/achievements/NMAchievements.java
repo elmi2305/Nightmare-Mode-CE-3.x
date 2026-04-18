@@ -305,7 +305,7 @@ public class NMAchievements {
                     .name(loc("bloodMoon"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODMOON)
                     .displayLocation(11, 6)
-                    .triggerCondition(started -> !started)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > 0)
                     .parents(HARDMODE)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
@@ -746,7 +746,7 @@ public class NMAchievements {
                     .name(loc("eclipse"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_ECLIPSE)
                     .displayLocation(3, 0)
-                    .triggerCondition(started -> !started)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > 2)
                     .parents(KILLED_DRAGON)
                     .build()
                     .setSpecial()
