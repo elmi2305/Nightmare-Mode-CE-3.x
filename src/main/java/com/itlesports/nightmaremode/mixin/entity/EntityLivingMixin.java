@@ -74,6 +74,7 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
                 this.setDead();
             }
         }
+        // mirrored in EntityMobMixin
     }
 
     @Unique private static List<Integer> leatherArmorList = new ArrayList<>(4);

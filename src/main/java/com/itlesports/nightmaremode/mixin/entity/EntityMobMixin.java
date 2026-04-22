@@ -179,6 +179,29 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Override
     protected void despawnEntity() {
         if (!this.getPersistence() && this.canDespawn()) {
+            if(this.ticksExisted % 300 == 299 && NMUtils.getIsBloodMoon()){
+                EntityPlayer nearestPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX, this.posY, this.posZ, 128);
+
+                if (nearestPlayer != null) {
+                    double verticalDistance = Math.abs(nearestPlayer.posY - this.posY);
+
+                    if (verticalDistance > 20) {
+                        boolean isOnNonWoodMaterial = this.worldObj.getBlockMaterial(
+                                (int) this.posX,
+                                (int) (this.posY - 1),
+                                (int) this.posZ
+                        ) != Material.wood;
+
+                        if (rand.nextInt(3) == 0 && isOnNonWoodMaterial) {
+                            this.setDead();
+                        }
+                    }
+                } else {
+                    this.setDead();
+                }
+                return;
+            }
+
             int chunkX = MathHelper.floor_double(this.posX / 16.0);
             int chunkZ = MathHelper.floor_double(this.posZ / 16.0);
 
