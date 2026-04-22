@@ -34,12 +34,6 @@ public class BTWItemsMixin {
 
     @Inject(method = "instantiateModItems", at = @At("TAIL"), remap = false)
     private static void replaceItems(CallbackInfo ci){
-        firePlough = new FireStarterItemPrimitive(22313, 330, 0.04f, -0.1f, 0.1f, 0.0011f).setUnlocalizedName("fcItemFireStarterSticks").setTextureName("btw:fire_plough");
-        bowDrill = new FireStarterItemPrimitive(22314, 400, 0.025f, -0.1f, 0.1f , 0.0056f).setUnlocalizedName("fcItemFireStarterBow").setTextureName("btw:bow_drill");
-
-        // old stats:
-//        firePlough = new FireStarterItemPrimitive(22313, 250, 0.05f, -0.1f, 0.1f, 0.001f).setUnlocalizedName("fcItemFireStarterSticks").setTextureName("btw:fire_plough");
-//        bowDrill = new FireStarterItemPrimitive(22314, 250, 0.025f, -0.1f, 0.1f, 0.004f).setUnlocalizedName("fcItemFireStarterBow").setTextureName("btw:bow_drill");
 
     }
 }

@@ -35,7 +35,5 @@ public class ItemMixin {
         helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nightmare:nmDiamondHelmet");
         plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nightmare:nmDiamondChestplate");
         legsDiamond = (ItemArmor) legsDiamond.setTextureName("nightmare:nmDiamondLeggings");
-
-        flintAndSteel = flintAndSteel.setMaxDamage(128);
     }
 }
