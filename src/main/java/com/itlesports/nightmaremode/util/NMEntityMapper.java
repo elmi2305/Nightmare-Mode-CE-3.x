@@ -34,14 +34,12 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityObsidianFish.class, "NmObsidianFish", 2321);
         EntityList.addMapping(EntityCreeperGhast.class, "NmCreeperGhast", 2322, 0xd5e2f7, 0x3bb507);
         EntityList.addMapping(FlowerZombie.class, "NmFlowerZombie", 2323, 0x00FF00, 0x0000FF);
-        EntityList.addMapping(EntityPollenCloud.class, "NmPollenCloud", 2324, 0x00FFFF, 0xFF00FF);
+        EntityList.addMapping(EntityPollenCloud.class, "NmPollenCloud", 2324);
         EntityList.addMapping(FlowerCreeper.class, "NmFlowerCreeper", 2325, 0x00FF00, 0x0000FF);
         EntityList.addMapping(FlowerSkeleton.class, "NmFlowerSkeleton", 2326, 0x00FF00, 0x0000FF);
-
         EntityList.addMapping(EntitySporeArrow.class, "NmSporeArrow", 2327);
         EntityList.addMapping(EntityMagicArrow.class, "NmMagicArrow", 2328);
-
-        EntityList.addMapping(EntityBlackHole.class, "NmBlackHole", 2329, 0, 0);
+        EntityList.addMapping(EntityBlackHole.class, "NmBlackHole", 2329);
     }
 
     public static void createTileEntityMappings(){
@@ -51,5 +49,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
         TileEntity.addMapping(TileEntityVillagerContainer.class, "VillagerContainer");
         TileEntity.addMapping(TileEntityDisenchantmentTable.class, "TileEntityDisenchantmentTable");
+        TileEntity.addMapping(TileEntityBloodBone.class, "TileEntityBloodBone");
     }
 }
