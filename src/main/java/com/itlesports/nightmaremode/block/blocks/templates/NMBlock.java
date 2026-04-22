@@ -7,4 +7,10 @@ public class NMBlock extends Block {
     public NMBlock(int par1, Material par2Material) {
         super(par1, par2Material);
     }
+
+
+    @Override
+    public String getModId() {
+        return "nightmare";
+    }
 }

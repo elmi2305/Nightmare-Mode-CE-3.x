@@ -45,6 +45,7 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor {
                 this.theGameRules.addGameRule("extendedDebugAccess", "creativeOnly");
                 this.allowCommands = true;
                 this.worldTime = 0;
+                this.shouldCheck = false;
             }
         }
     }

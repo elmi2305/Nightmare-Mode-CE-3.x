@@ -292,11 +292,6 @@ public class NMBlocks {
 
 
 
-
-
-        bloodBonesUpgraded = new BloodBoneBlock(2347).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock);
-        Item.itemsList[bloodBonesUpgraded.blockID] = new NMItemBlock(NMBlocks.bloodBonesUpgraded.blockID - 256);
-
     }
 
     public static void hideBlocks(){
