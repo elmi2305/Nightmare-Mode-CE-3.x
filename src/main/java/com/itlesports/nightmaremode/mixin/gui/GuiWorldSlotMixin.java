@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.interfaces.GuiSelectWorldExt;
+import com.itlesports.nightmaremode.util.interfaces.GuiWorldSlotExt;
 import com.itlesports.nightmaremode.util.interfaces.SaveFormatExt;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -14,10 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(GuiWorldSlot.class)
-public abstract class GuiWorldSlotMixin extends GuiSlot {
-
+public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotExt {
+    private Map<Integer, int[]> starHitboxes = new HashMap<>();  // Tracks star positions
 
     @Shadow @Final GuiSelectWorld parentWorldGui;
     @Unique private static final ResourceLocation WORLD_BASIC = new ResourceLocation("nightmare:textures/gui/world_basic.png");
@@ -26,11 +30,28 @@ public abstract class GuiWorldSlotMixin extends GuiSlot {
         super(minecraft, i, j, k, l, m);
     }
 
-
     @Inject(method = "drawSlot", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void captureConfigAndDrawAccordingText(int worldTextIndex, int xPos, int yPos, int par5, Tessellator tess, CallbackInfo ci, SaveFormatComparator sfc){
-
         SaveFormatExt sfcExt = (SaveFormatExt) (sfc);
+
+        int starX = xPos - 60;
+        int starY = yPos + 10;
+        int starSize = 12;
+
+        // we put the hitboxes here
+        starHitboxes.put(worldTextIndex, new int[]{starX, starY, starSize, starSize});
+
+        boolean isFavorited = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$isFavorited(sfc.getFileName());
+        boolean isHovered = isMouseOverStar(starX, starY, starSize);
+        boolean isSelected = this.isSelected(worldTextIndex);
+        boolean isHoveredOverWorld = this.isMouseOverWorld(starX, starY, starSize);
+
+        // when to draw it
+        if (isFavorited || isSelected || isHovered || isHoveredOverWorld) {
+            drawStar(starX, starY, starSize, isFavorited);
+        }
+
+
         int[] confArray = sfcExt.nightmareMode$getConfArray();
 
         GuiWorldSlot self = (GuiWorldSlot) (Object)this;
@@ -180,5 +201,110 @@ public abstract class GuiWorldSlotMixin extends GuiSlot {
         tess.addVertexWithUV(x + 32, yPos,   0, 1, 0);
         tess.addVertexWithUV(x, yPos, 0, 0, 0);
         tess.draw();
+    }
+
+
+    @Unique
+    private boolean isMouseOverStar(int starX, int starY, int starSize) {
+        int mouseX = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$getLastMouseX();
+        int mouseY = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$getLastMouseY();
+
+        return mouseX >= starX && mouseX <= starX + starSize &&
+                mouseY >= starY && mouseY <= starY + starSize;
+    }
+    @Unique
+    private boolean isMouseOverWorld(int starX, int starY, int starSize) {
+        int xOffset = 280;
+        int yOffset = 11;
+        int mouseX = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$getLastMouseX();
+        int mouseY = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$getLastMouseY();
+
+        return mouseX >= starX && mouseX <= starX + starSize + xOffset &&
+                mouseY >= starY - yOffset && mouseY <= starY + starSize + yOffset;
+    }
+
+    @Unique
+    private void drawStar(int textX, int textY, int size, boolean filled) {
+        // Use Unicode star character for simplicity
+        int color = filled ? 0xFFFFAA00 : 0xFF888888; // Gold for filled, gray for outline
+        int outlineColor = 0xFFFFFFFF;
+
+        int radius = 6;
+        float outerR = radius;
+        float innerR = radius * 0.5f;
+        float cx = (float) textX + (float) radius / 2 + 4;
+        float cy = (float) textY + (float) radius / 2 + 4;
+
+        Tessellator t = Tessellator.instance;
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
+        // --- Fill (only if active) ---
+        GL11.glColor4f(
+                ((color >> 16) & 255) / 255f,
+                ((color >> 8) & 255) / 255f,
+                (color & 255) / 255f,
+                1.0f
+        );
+
+        t.startDrawing(GL11.GL_TRIANGLE_FAN);
+        t.addVertex(cx, cy, 0);
+
+        for (int i = 0; i <= 10; i++) {
+            float angle = (float) (Math.PI * 2 * i / 10.0 - Math.PI / 2);
+            float r = (i % 2 == 0) ? outerR : innerR;
+            float x = cx + (float) Math.cos(angle) * r;
+            float y = cy + (float) Math.sin(angle) * r;
+            t.addVertex(x, y, 0);
+        }
+
+        t.draw();
+
+        // --- Outline ---
+        GL11.glLineWidth(1.5f);
+        GL11.glColor4f(
+                ((outlineColor >> 16) & 255) / 255f,
+                ((outlineColor >> 8) & 255) / 255f,
+                (outlineColor & 255) / 255f,
+                1.0f
+        );
+
+        t.startDrawing(GL11.GL_LINE_LOOP);
+
+        for (int i = 0; i < 10; i++) {
+            float angle = (float) (Math.PI * 2 * i / 10.0 - Math.PI / 2);
+            float r = (i % 2 == 0) ? outerR : innerR;
+            float x = cx + (float) Math.cos(angle) * r;
+            float y = cy + (float) Math.sin(angle) * r;
+            t.addVertex(x, y, 0);
+        }
+
+        t.draw();
+
+        // restore state
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+
+
+//        this.parentWorldGui.drawString(this.parentWorldGui.fontRenderer, starChar, textX, textY, color);
+    }
+
+
+    @Override
+    public int nightmareMode$getStarClicked(double mouseX, double mouseY) {
+        // Check each tracked hitbox to see if the mouse click is within it
+        for (Map.Entry<Integer, int[]> entry : starHitboxes.entrySet()) {
+            int[] box = entry.getValue();
+            if (mouseX >= box[0] && mouseX <= box[0] + box[2] &&
+                    mouseY >= box[1] && mouseY <= box[1] + box[3]) {
+                return entry.getKey();
+            }
+        }
+        return -1;
     }
 }
