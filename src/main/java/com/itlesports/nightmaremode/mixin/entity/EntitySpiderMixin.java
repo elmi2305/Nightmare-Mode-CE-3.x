@@ -4,8 +4,8 @@ import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.entity.mob.JungleSpiderEntity;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBlackWidowSpider;
-import com.itlesports.nightmaremode.entity.EntityFireSpider;
+import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
+import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -156,11 +156,13 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress()*0.2){
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            if (NMUtils.getWorldProgress() <= 1 && !(thisObj instanceof EntityFireSpider)) {
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * niteMultiplier),0));
-            } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-                target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * niteMultiplier),1));
-                target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * niteMultiplier),0));
+            if (!(thisObj instanceof EntityFireSpider)) {
+                if (NMUtils.getWorldProgress() <= 1) {
+                    target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * niteMultiplier),0));
+                } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+                    target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * niteMultiplier),1));
+                    target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * niteMultiplier),0));
+                }
             }
 
             if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && target instanceof EntityPlayer player) {
