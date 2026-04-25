@@ -49,7 +49,7 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
             GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, I18n.getString("gui.selectworld.toggle_cancer_worldgen"));
             this.buttonList.add(chaosButton);
         }
-        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 80, 20, I18n.getString("gui.selectworld.nm_config"), 0xFFFFFF, 0xd4d4d4, 0xFF0000));
+        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 110, 20, I18n.getString("gui.selectworld.nm_config"), 0xFFFFFF, 0xd4d4d4, 0xFF0000));
     }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))
