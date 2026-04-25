@@ -204,11 +204,16 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                         }
 
                         if (player != null) {
-                            int worldState = NMUtils.getWorldProgress();
-                            double xOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
-                            double zOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
-                            Entity lightningbolt = new EntityLightningBolt(this.worldObj, player.posX + xOffset, player.posY - 0.5, player.posZ + zOffset);
-                            this.worldObj.addWeatherEffect(lightningbolt);
+                            for (;;) {
+                                if(player.getDistanceSqToEntity(this) > 1024) break;
+
+                                int worldState = NMUtils.getWorldProgress();
+                                double xOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
+                                double zOffset = (this.rand.nextFloat() * (3 - worldState)) / 4 * (this.rand.nextBoolean() ? 1 : -1);
+                                Entity lightningbolt = new EntityLightningBolt(this.worldObj, player.posX + xOffset, player.posY - 0.5, player.posZ + zOffset);
+                                this.worldObj.addWeatherEffect(lightningbolt);
+                                break;
+                            }
                         }
                         this.setDead();
                         super.onUpdate();
@@ -519,21 +524,22 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     // HELPER METHODS
 
     protected float getExplosionSize() {
-        float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
-        float variantExplosionModifier = 1f;
-        float bloodmoonModifier = NMUtils.getIsBloodMoon() ? 0.25f : 0;
-        float eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
-        float niteModifier = (float) NMUtils.getNiteMultiplier();
+        float aprilFools = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
+        float variantMod = 1f;
+        float bloodmoon = NMUtils.getIsBloodMoon() ? 0.25f : 0;
+        float eclipse = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
+        float nite = (float) NMUtils.getNiteMultiplier();
+        int p = NMUtils.getWorldProgress();
 
         if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            return (3f + bloodmoonModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
+            return (3f + bloodmoon) * nite * variantMod * aprilFools;
         }
-        if(NMUtils.getWorldProgress() >= 2){
-            return (4.2f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
-        } else if(NMUtils.getWorldProgress() == 1){
-            return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
+        if(p >= 2){
+            return (4.2f + bloodmoon + eclipse) * nite * variantMod * aprilFools;
+        } else if(p == 1){
+            return (3.6f + bloodmoon + eclipse) * nite * variantMod * aprilFools;
         }
-        return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * variantExplosionModifier * aprilFoolsExplosionModifier;
+        return (3.375f + bloodmoon + eclipse) * nite * variantMod * aprilFools;
     }
 
     protected static void spawnItemExplosion(World world, Entity entity, ItemStack itemStack, int amount, Random random) {
