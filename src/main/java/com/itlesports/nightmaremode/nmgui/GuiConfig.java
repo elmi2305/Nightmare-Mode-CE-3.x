@@ -197,8 +197,8 @@ public class GuiConfig extends GuiScreen {
 
 
         int fillColor = 0;
-        int outlineColor = 0xFFFFFF;    // white outline
-        float starRadius = 8.0f;        // tweak size as needed (8–10 looks good)
+        int outlineColor = 0xFFFFFF;
+        float starRadius = 8.0f;
 
         for (Object button : this.buttonList) {
             if (button instanceof GuiColoredButton tempButton) {
@@ -276,7 +276,7 @@ public class GuiConfig extends GuiScreen {
                 String textToDisplay = cap(Boolean.toString(value));
                 int color = value ? option.getActiveColor() : option.getBaseColor();
                 int stringWidth = this.fontRenderer.getStringWidth(textToDisplay);
-                int textX = button.xPosition + 100 + stringWidth;
+                int textX = button.xPosition + 110 + stringWidth;
                 int textY = button.yPosition + 7;
 
                 this.drawCenteredString(this.fontRenderer, textToDisplay, textX, textY, color);
@@ -422,7 +422,7 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.clear();
         this.buttons.clear();
 
-        int baseX = this.width / 8;
+        int baseX = this.width / 8 - 40;
         int rightColumnX = baseX + 200;
         int heightMultiplier = 25;
 
@@ -449,7 +449,7 @@ public class GuiConfig extends GuiScreen {
                     option.getId(),
                     x,
                     y,
-                    100,
+                    110,
                     20,
                     I18n.getString(option.getDisplayKey()),
                     option.getBaseColor(),
@@ -467,7 +467,7 @@ public class GuiConfig extends GuiScreen {
             // tooltip
 //            System.out.println(isFirstPage);
             if (isFirstPage) {
-                int starX = x + 150;
+                int starX = x + 130;
                 int starY = y + 2;
                 int hitboxSize = 20;
 

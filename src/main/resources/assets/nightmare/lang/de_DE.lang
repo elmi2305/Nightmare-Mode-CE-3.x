@@ -1,7 +1,7 @@
 item.nmRPG.name=Raketenwerfer
 item.nmRifle.name=Sturmgewehr
 item.nmBandage.name=Bandage
-item.nmNeedles.name=Stricknadeln aus Eisen
+item.nmNeedles.name=Eiserne Stricknadeln
 item.nmItemWitchLocator.name=Alchemiepulver
 item.nmBloodOrb.name=Blutkugel
 item.nmBloodIngot.name=Blutbarren
@@ -11,437 +11,437 @@ item.nmBloodPickaxe.name=Blutspitzhacke
 item.nmBloodAxe.name=Blutaxt
 item.nmBloodHoe.name=Bluthacke
 item.nmBloodHelmet.name=Bluthelm
-item.nmBloodChestplate.name=Blut-Brustpanzer
-item.nmBloodLeggings.name=Blutgamaschen
+item.nmBloodChestplate.name=Blutbrustpanzer
+item.nmBloodLeggings.name=Blutbeinschutz
 item.nmBloodBoots.name=Blutstiefel
-item.nmDarksunFragment.name=Eclipse-Scherbe
+item.nmDarksunFragment.name=Finsternissscherbe
 item.nmCalamari.name=Calamari
-item.nmCalamariRoast.name=Calamari-Braten
-item.nmFriedCalamari.name=Frittierte Calamari
+item.nmCalamariRoast.name=Gebratener Calamari
+item.nmFriedCalamari.name=Frittierter Calamari
 item.nmIronFishingPole.name=Eiserne Angelrute
-item.nmMagicFeather.name=Magische Feder
+item.nmMagicFeather.name=Magiefeder
 item.nmBloodMilk.name=Blutmilch
-item.nmCreeperChop.name=Creeper Chop
+item.nmCreeperChop.name=Creeperfleisch
 item.nmCharredFlesh.name=Enderfleisch
 item.nmSpiderFangs.name=Spinnenzähne
 item.nmHellFireRod.name=Höllenfeuerrute
 item.nmWaterRod.name=Wasserrute
 item.nmSulfur.name=Schwefel
-item.nmCreeperTear.name=Kriechender Riss
-item.nmSilverLump.name=Silberklumpen
-item.nmWitheredBone.name=Verdorrter Knochen
-item.nmDecayedFlesh.name=Verfallenes Fleisch
-item.nmGhastTentacle.name=Grässlicher Tentakel
+item.nmCreeperTear.name=Creeperträne
+item.nmSilverLump.name=Silberbrocken
+item.nmWitheredBone.name=Ausgetrockneter Knochen
+item.nmDecayedFlesh.name=Verwestes Fleisch
+item.nmGhastTentacle.name=Ghasttentakel
 item.nmElementalRod.name=Elementarstab
 item.nmShadowRod.name=Schattenstab
 item.nmStarOfTheBloodGod.name=Stern des Blutgottes
-item.nmSpeedCoil.name=Geschwindigkeitsspule
+item.nmSpeedCoil.name=Schnelligkeitsspirale
 item.nmSteelBunch.name=Stahlbündel
-item.nmEclipseBow.name=Eclipse-Splitterbogen
-item.nmMagicArrow.name=Magischer Pfeil
-item.nmVoidSack.name=Leerensack
-item.nmVoidMembrane.name=Leere Membran
-item.nmDungApple.name=Mistapfel
-item.nmOysterSoup.name=Creeper-Austerneintopf
-item.nmTempleDust.name=Uralter Sand
-item.nmObsidianShard.name=Obsidiansplitter
-item.nmTimeBottle.name=Flasche Zeit
-item.nmRefinedDiamondIngot.name=Raffinierter Diamantbarren
-item.nmBloodBottle.name=Purpurrote Flasche
+item.nmEclipseBow.name=Finsternisscherbenbogen
+item.nmMagicArrow.name=Magiepfeil
+item.nmVoidSack.name=Leerenbeutel
+item.nmVoidMembrane.name=Leerenmembran
+item.nmDungApple.name=Kotapfel
+item.nmOysterSoup.name=Creeperausterneintopf
+item.nmTempleDust.name=Antiker Sand
+item.nmObsidianShard.name=Obsidianscherbe
+item.nmTimeBottle.name=Flasche der Zeit
+item.nmRefinedDiamondIngot.name=Veredelter Diamantbarren
+item.nmBloodBottle.name=Purpurflasche
 
 tile.nmSteelOre.name=Stahlerz
 tile.nmSpecialObsidian.name=Arenastein
 tile.nmCryingObsidian.name=Weinender Arenastein
 tile.nmBloodBone.name=Blutknochenblock
-tile.nmBloodChest.name=Blutkiste
-tile.nmSteelLocker.name=Stahlspind
+tile.nmBloodChest.name=Bluttruhe
+tile.nmSteelLocker.name=Stahlschrank
 tile.nmRoad.name=Straße
 tile.nmAsphalt.name=Asphalt
 tile.nmStoneLadder.name=Steinleiter
 tile.nmIronLadder.name=Eisenleiter
 tile.nmHellforgeBlock.name=Höllenschmiede
-tile.nmCrudeObsidian.name=Roher Obsidian
+tile.nmCrudeObsidian.name=Rohobsidian
 tile.nmAsphaltLayer.name=Asphaltschicht
 tile.nmBloodSawBlock.name=Blutsäge
-tile.nmVillagerBlock.name=Dorfbewohnerschiff
-tile.nmUnderworldRock.name=Unterfels
-tile.nmUnderworldRockSmooth.name=Glatter Unterfels
-tile.nmUnderworldRockCobble.name=Unterkopfsteinpflaster
+tile.nmVillagerBlock.name=Dorfbewohnergefäß
+tile.nmUnderworldRock.name=Untergestein
+tile.nmUnderworldRockSmooth.name=Glatter Unterstein
+tile.nmUnderworldRockCobble.name=Unterbruchgestein
 tile.nmUnderGrass.name=Untergras
-tile.nmUnderDirt.name=Unterboden
-tile.nmDisenchantmentTable.name=Tisch der Ernüchterung
+tile.nmUnderDirt.name=Untererde
+tile.nmDisenchantmentTable.name=Entzaubertisch
 
-container.steelLocker=Stahlspind
+container.steelLocker=Stahlschrank
 container.inventory=Inventar
 
 villager.profession=Beruf
-villager.level=Ebene
+villager.level=Stufe
 entity.addonVillagerNightmare.name=Albtraumhändler
 
 
-entity.NmFireCreeper.name=Feuerkriecher
-entity.NmLightningCreeper.name=Blitzkriecher
+entity.NmFireCreeper.name=Feuercreeper
+entity.NmLightningCreeper.name=Blitzcreeper
 entity.NmShadowZombie.name=Schattenzombie
 entity.NmVillager.name=Albtraumhändler
-entity.NmGolem.name=Wither-Diener
+entity.NmGolem.name=Wither-Handlanger
 entity.NmBloodWither.name=???
 entity.NmFireSpider.name=Feuerspinne
 entity.NmStoneZombie.name=Steinzombie
-entity.NmObsidianCreeper.name=Obsidian-Kriecher
-entity.NmSupercriticalCreeper.name=Überkritischer Creeper
-entity.NmBlackWidowSpider.name=Schwarze Witwenspinne
+entity.NmObsidianCreeper.name=Obsidiancreeper
+entity.NmSupercriticalCreeper.name=Superkritischer Creeper
+entity.NmBlackWidowSpider.name=Schwarze Witwe
 entity.NmRadioactiveEnderman.name=Radioaktiver Enderman
-entity.NmDungCreeper.name=Mistkriecher
+entity.NmDungCreeper.name=Kotcreeper
 entity.NmBloodZombie.name=Blutzombie
-entity.NmFauxVillager.name=Wandernder Händler
-entity.NmImposterZombie.name=Wandernder Händler
-entity.NmDrownedSkeleton.name=Ertrunken
+entity.NmFauxVillager.name=Fahrender Händler
+entity.NmImposterZombie.name=Fahrender Händler
+entity.NmDrownedSkeleton.name=Ertrunkener
 entity.NmMeltedSkeleton.name=Inferno
 entity.NmObsidianFish.name=Obsidianfisch
-entity.NmCreeperGhast.name=Creeper-Ghast
+entity.NmCreeperGhast.name=Creeperghast
 
-key.nightmaremode.zoomhold=Zum Zoomen gedrückt halten
+key.nightmaremode.zoomhold=Zum Heranzoomen gedrückt halten
 key.nightmaremode.zoomtoggle=Zoom umschalten
 
-commands.tpa.usage=/tpa <Benutzername>
-commands.tpa.not_enough_xp=Sie verfügen nicht über genügend XP, um diesen Befehl zu verwenden.
-commands.tpa.cannot_self=Sie können keine TPA-Anfrage an sich selbst senden.
+commands.tpa.usage=/tpa <Spieler>
+commands.tpa.not_enough_xp=Du hast nicht genügend Erfahrungspunkte um diesen befehl zu verwenden.
+commands.tpa.cannot_self=Du kannst keine TPA-Anfrage an dich selbst senden.
 commands.tpa.different_dimension=TPA-Anfrage konnte nicht gesendet werden. Beide Spieler müssen sich in derselben Dimension befinden.
 commands.tpa.sent=TPA-Anfrage an %s gesendet.
-commands.tpa.request_message=%s möchte sich zu dir teleportieren. Geben Sie /tpa Accept ein, um es zuzulassen.
-commands.tpa.no_request_to_accept=Keine gültigen TPA-Anfragen zur Annahme.
+commands.tpa.request_message=%s möchte sich zu dir teleportieren. Gib zum akzeptieren /tpa accept ein .
+commands.tpa.no_request_to_accept=Keine gültigen TPA-Anfragen zum akzeptieren.
 commands.tpa.sender_offline=Der Spieler, der die Anfrage gesendet hat, ist nicht mehr online.
-commands.tpa.accepted=Akzeptierte TPA-Anfrage von %s. Teleportieren in 10 Sekunden...
-commands.tpa.accepted_sender=%s hat deine Teleportanfrage angenommen! Teleportieren in 10 Sekunden...
-commands.tpa.teleport_success=Nach %s teleportiert.
-commands.tpa.teleport_cancelled=Teleport abgebrochen: Spieler hat die Dimension geändert.
+commands.tpa.accepted=Akzeptierte TPA-Anfrage von %s. Teleportierung in 10 Sekunden...
+commands.tpa.accepted_sender=%s hat deine Teleportanfrage akzeptiert! Teleportierung in 10 Sekunden...
+commands.tpa.teleport_success=Zu %s teleportiert.
+commands.tpa.teleport_cancelled=Teleport abgebrochen: Spieler hat die Dimension gewechselt.
 commands.tpa.no_request_to_deny=Keine gültigen TPA-Anfragen zum Ablehnen.
-commands.tpa.denied_sender=%s hat Ihre Teleportanfrage abgelehnt.
+commands.tpa.denied_sender=%s hat deine Teleportanfrage abgelehnt.
 commands.tpa.denied=Die TPA-Anfrage wurde abgelehnt.
 
 emi.trade.NightmareVillager=Albtraumhändler
 
-status.health.NoHit=Kein Treffer
+status.health.NoHit=NoHit
 
 gui.nmTimer.day=Tag %d
 gui.nmTimer.night=Nacht %d
 gui.menu.noEscape=Kein Entkommen
-gui.nm.horseTaming=Halten Sie die richtige Richtung und passen Sie den Winkel des Pferdes an
-gui.nm.horseMenu=Lagerung von Pferderüstungen
+gui.nm.horseTaming=Halte die korrekte Richtung und passe dich dem Winkel des Pferdes an
+gui.nm.horseMenu=Pferderüstungslager
 
 
-gui.container_disenchantment=Tisch der Ernüchterung
+gui.container_disenchantment=Entzauberungstisch
 
-gui.selectworld.buff_squids=Buff-Tintenfische
-gui.selectworld.toggle_cancer_worldgen=Krebs-Weltgenerierung umschalten
-gui.selectworld.nm_config=NM-Konfiguration
-gui.selectworld.squid_buffed_times=Du hast {0}mal{1} Tintenfische gestärkt.
-gui.selectworld.squid_strength=Multiplikator der Tintenfischstärke: {0}x
+gui.selectworld.buff_squids=Stärke die Tintenfische
+gui.selectworld.toggle_cancer_worldgen=Geisteskranke Weltgenerierung
+gui.selectworld.nm_config=NM-Konfig
+gui.selectworld.squid_buffed_times=Du hast Tintenfische {0} mal{1} gestärkt.
+gui.selectworld.squid_strength=Tintenfisch-Stärkemultiplikator: {0}x
 gui.selectworld.warning_title=Warnung:
 gui.selectworld.warning_recommend_restart=Es wird empfohlen, das Spiel neu zu starten
-gui.selectworld.warning_config_crash=Es wurden neue Konfigurationen geladen, die Ihr Spiel zum Absturz bringen oder Ihre Welt beschädigen können
-gui.selectworld.warning_continue=Sind Sie absolut sicher, dass Sie fortfahren möchten?
-gui.selectworld.warning_final=Dies ist Ihre letzte Warnung
+gui.selectworld.warning_config_crash=Es wurden neue Konfigurationen geladen, die dein Spiel zum Absturz bringen oder Ihre Welt beschädigen können
+gui.selectworld.warning_continue=Bist du absolut sicher, dass du fortfahren möchtest?
+gui.selectworld.warning_final=Dies ist deine letzte Warnung
 
 gui.bloodmoon=Blutmond
-gui.bloodmoon.in=Blutmond herein
-gui.bloodmoon.days=Tage
-gui.bloodmoon.tonight=Heute Abend
+gui.bloodmoon.in=Blutmond in
+gui.bloodmoon.days=Tagen
+gui.bloodmoon.tonight=Heute Nacht
 gui.bloodmoon.tomorrow=Morgen
 
-difficulty.baddream.name=Schlechter Traum
+difficulty.baddream.name=Schlechter Schlaf
 difficulty.nightmare.name=Alptraum
-difficulty.bloodmare.name=Blutstute
-difficulty.baddream.description1=Ein entspannteres Erlebnis. Macht
+difficulty.bloodmare.name=Bluttraum
+difficulty.baddream.description1=Ein etwas entspannteres Erlebnis. Macht
 difficulty.baddream.description2=viele Aspekte des Albtraummodus
 difficulty.baddream.description3=einfacher und verzeihender.
-difficulty.nightmare.description1=Die ultimative Herausforderung.
+difficulty.nightmare.description1=Die Ultimative Herausforderung.
 difficulty.nightmare.description2=
 difficulty.nightmare.description3=
 
 gui.mainmenu.splash1=Albtraummodus!
-gui.mainmenu.splash2=Probieren Sie auch MEA aus!
-gui.mainmenu.splash3=Versuchen Sie es auch mit Hostile!
+gui.mainmenu.splash2=Probiere auch mal MEA!
+gui.mainmenu.splash3=Probiere auch mal den Feindlich-Modus!
 gui.mainmenu.splash4=Träume ich?
-gui.mainmenu.splash5=Wach, wach!
-gui.mainmenu.splash6=Schlingpflanzen mit Orangengeschmack?!
+gui.mainmenu.splash5=Raus aus den Federn!
+gui.mainmenu.splash6=Creeper mit Orangengeschmack?!
 gui.mainmenu.splash7=Besser als MEA?
-gui.mainmenu.splash8=Es ist nur ein böser Traum!
-gui.mainmenu.splash9=Nicht die Wasserlebewesen!
-gui.mainmenu.splash10=MÄNNER! MIT MIR!
-gui.mainmenu.splash11=Aufwachen!
-gui.mainmenu.splash12=Geben Sie 1 ein, wenn Sie damit einverstanden sind!
+gui.mainmenu.splash8=Es ist nur ein Albtraum!
+gui.mainmenu.splash9=Nicht die Wasserkreaturen!
+gui.mainmenu.splash10=MÄNNER! MIR NACH!
+gui.mainmenu.splash11=Aufstehen!
+gui.mainmenu.splash12=Tippe 1, wenn du zustimmst!
 gui.mainmenu.splash13=Jetzt mit Blutmonden!
 gui.mainmenu.splash14=Es ist einfach, wenn du gut bist!
-gui.mainmenu.splash15=Umarme die Säge!
-gui.mainmenu.splash16=Probieren Sie auch Bloodmare aus!
+gui.mainmenu.splash15=Umarm' die Säge!
+gui.mainmenu.splash16=Probiere auch mal den Bluttraum-Modus!
 gui.mainmenu.splash17=Äxte sind keine Waffen!
-gui.mainmenu.splash18=Buff Tintenfische!
-gui.mainmenu.splash19=Cookie Creepers!
+gui.mainmenu.splash18=Stärke die Tintenfische!
+gui.mainmenu.splash19=Kekscreeper!
 gui.mainmenu.splash20=MEA ist schwieriger!
-gui.mainmenu.splash21=Ein Gott hat keine Angst vor dem Tod!
+gui.mainmenu.splash21=Ein Gott fürchtet keinen Tod!
 gui.mainmenu.splash22=Gier!
 gui.mainmenu.splash23=Zerschmetterte Sonne!
 gui.mainmenu.splash24=Jetzt mit Sonnenfinsternissen!
-gui.mainmenu.skibidiplayer=Skibidiplayer
+gui.mainmenu.skibidiplayer=Skibidispieler
 gui.mainmenu.rizzfriends=Rizz deine Freunde
 
-gui.config.go_back=Geh zurück
+gui.config.go_back=Zurück
 gui.config.switch_pages=Seiten wechseln
-gui.config.more_variants=Weitere Varianten
-gui.config.tooltip.more_variants=Fügt NM verschiedene neue Varianten hinzu
-gui.config.evolved_mobs=Entwickelte Mobs
-gui.config.tooltip.evolved_mobs=Alle Mob-Varianten können erscheinen, unabhängig vom Weltfortschritt
-gui.config.buffed_squids=Polierte Tintenfische
+gui.config.more_variants=Mehr Varianten
+gui.config.tooltip.more_variants=Fügt verschiedene neue Varianten zu NM hinzu
+gui.config.evolved_mobs=Weiterentwickelte Monster
+gui.config.tooltip.evolved_mobs=Alle Monstervarianten können auftauchen, unabhängig vom Weltfortschritt
+gui.config.buffed_squids=Gestärkte Tintenfische
 gui.config.tooltip.buffed_squids=Tintenfische haben doppelte Werte und können den Spieler an Land verfolgen
 gui.config.nite=NITE
-gui.config.tooltip.nite=Albtraum ist zu einfach. Beginnen Sie mit 3 Herzen und Schenkeln. Erhalte sie zurück, indem du ein Level aufsteigst. Mobs werden stärker, je länger du spielst. Rohkost ist unbedenklich. Reduzierte Hungerkosten und Bewegungseinbußen. Inspiriert von MITE
+gui.config.tooltip.nite=Albtraum ist zu einfach. Beginne mit 3 Herzen und Hungerkeulen. Erhalte sie zurück, indem du Erfahrungslevel aufsteigst. Monster werden stärker, je länger du spielst. Rohes Fleisch ist unbedenklich. Reduzierte Hungerkosten und Bewegungseinbußen. Inspiriert von MITE
 gui.config.dark_stormy_night=Dunkle stürmische Nacht
-gui.config.tooltip.dark_stormy_night=Die Welt ist einem ständigen Gewitter ausgesetzt, das das Licht verringert und die Spawnrate der Feinde erhöht. Donner ist leiser
-gui.config.no_skybases=Keine Skybases
+gui.config.tooltip.dark_stormy_night=Die Welt steht unter einem ununterbrochenem Gewitter, das das Licht verringert und die Erscheinungsrate von Monstern erhöht. Donner ist leiser
+gui.config.no_skybases=Keine Himmelsbasen
 gui.config.tooltip.no_skybases=Baumstämme und Bretter unterliegen der Schwerkraft
-gui.config.cancer_mode=Krebsmodus
-gui.config.tooltip.cancer_mode=Zerstört den Weltgenerierungsalgorithmus, zerstört den Renderer, fügt dumme Funktionen und blinkende Lichter hinzu. Das wahre Aprilscherz-Erlebnis
-gui.config.horde_mode=Horde-Modus
-gui.config.tooltip.horde_mode=Alle Mobs sind sich Ihrer Position vollkommen bewusst. Sie werden Sie von überall aus verfolgen und verfolgen. Vorher haben sie dich einfach geschont
-gui.config.total_eclipse=Totale Sonnenfinsternis
+gui.config.cancer_mode=Geisteskrank-Modus
+gui.config.tooltip.cancer_mode=Zerstört den Weltgenerierungsalgorithmus, zerstört die Bildausgabe, fügt dumme Funktionen und flackernde Lichter hinzu. Das wahre Aprilscherz-Erlebnis
+gui.config.horde_mode=Hordenmodus
+gui.config.tooltip.horde_mode=Alle Mobs sind sich deiner Position vollkommen bewusst. Sie werden dich von überall aufspüren und verfolgen. Sie haben dich vorher bloß verschont
+gui.config.total_eclipse=Totale Finsternis
 gui.config.tooltip.total_eclipse=Jeder Tag ist eine Sonnenfinsternis
-gui.config.bloodmare=Blutstute
+gui.config.bloodmare=Bluttraum
 gui.config.tooltip.bloodmare=Jede Nacht ist ein Blutmond
 gui.config.magic_monsters=Magische Monster
-gui.config.tooltip.magic_monsters=Alle Mobs werden durch Hexen ersetzt
-gui.config.unkillable_mobs=Untötbare Mobs
-gui.config.tooltip.unkillable_mobs=Mobs können keinen Nahkampfschaden erleiden
+gui.config.tooltip.magic_monsters=Alle Monster werden durch Hexen ersetzt
+gui.config.unkillable_mobs=Unsterbliche Monster
+gui.config.tooltip.unkillable_mobs=Monster können keinen Nahkampfschaden erleiden
 gui.config.no_hit=NoHit
-gui.config.tooltip.no_hit=Ein Schlag, und du bist raus
+gui.config.tooltip.no_hit=Ein Gegentreffer, und du bist raus
 gui.config.birthday_bash=Alles Gute zum Geburtstag
 gui.config.date_timer=Datums-Timer
-gui.config.tooltip.date_timer=Zeigt den Tag/Nacht-Zyklus und die Anzahl der gespielten Tage im HUD an
-gui.config.real_timer=Echter Timer
-gui.config.tooltip.real_timer=Zeigt die mit dem Spielen verbrachte Zeit im Spiel an
+gui.config.tooltip.date_timer=Zeigt den Tag/Nacht-Zyklus und die Anzahl der gespielten Tage in der HUD an
+gui.config.real_timer=Echtzeit-Timer
+gui.config.tooltip.real_timer=Zeigt die mit dem Spielen verbrachte Zeit an
 gui.config.bloodmoon_colors=Blutmondfarben
-gui.config.tooltip.bloodmoon_colors=Legt fest, ob der Bildschirm während eines Blutmondes rot getönt werden soll. Wir empfehlen Ihnen, dies zu deaktivieren, wenn Sie Inhalte erstellen
-gui.config.crimson=Purpur
+gui.config.tooltip.bloodmoon_colors=Legt fest, ob der Bildschirm während eines Blutmondes rot getönt werden soll. Es ist Empfehlenswert dies zu Deaktivieren wenn du ein Content-creator bist
+gui.config.crimson=Purpurmodus
 gui.config.tooltip.crimson=Alles ist blutrot! Rein optisch
-gui.config.config_on_hud=Konfiguration im HUD
-gui.config.tooltip.config_on_hud=Zeigt die aktiven Konfigurationsmodi im HUD an
+gui.config.config_on_hud=Konfig im HUD
+gui.config.tooltip.config_on_hud=Zeigt die aktiven Konfig-Modi im HUD an
 gui.config.potion_particles=Trankpartikel
-gui.config.tooltip.potion_particles=Ob Partikel aus Tränken erscheinen sollen oder nicht
-gui.config.fishing_alerts=Angelwarnungen
-gui.config.tooltip.fishing_alerts=Ob seltene, durch Angeln erhaltene Tropfen im Chat angezeigt werden sollen
+gui.config.tooltip.potion_particles=Ob Partikel von Trankeffekten erscheinen sollen oder nicht
+gui.config.fishing_alerts=Angelmeldungen
+gui.config.tooltip.fishing_alerts=Legt fest ob seltene durch Angeln erhaltene Gegenstände im Chat angezeigt werden sollen
 gui.config.cm_rendering=CM-Rendering
-gui.config.tooltip.cm_rendering=Aktiviert/deaktiviert die verzerrten Rendering-Effekte des Aprilscherz-Patches. Empfohlen für Streamer oder Menschen mit empfindlichen Augen
+gui.config.tooltip.cm_rendering=Aktiviert / deaktiviert die verzerrten Darstellungseffekte der Aprilscherz-Version. Empfohlen für Streamer oder Menschen mit empfindlichen Augen
 gui.config.perfect_start=Perfekter Start
-gui.config.tooltip.perfect_start=Sind Sie es leid, in der ersten Nacht immer wieder neu zu starten? Bei dieser Option starten Sie am zweiten Tag mit einem Steinofen und einer Axt. Sie beginnen jedoch mit nur 6 Schenkeln
-gui.config.extra_armor=Zusätzliche Rüstung
-gui.config.tooltip.extra_armor=Beginnen Sie mit einer billigen Rüstung
+gui.config.tooltip.perfect_start=Bist du es leid in der ersten Nacht immer und immer wieder neu starten zu müssen? Mit dieser Option startest du am zweiten Tag mit einem Ziegelstein-Backofen und einer Axt. Jedoch startest du mit nur 6 Hungerkeulen
+gui.config.extra_armor=Extrarüstung
+gui.config.tooltip.extra_armor=Starte mit einem billigen Rüstungsset
 gui.config.full_bright=Volle Helligkeit
-gui.config.tooltip.full_bright=Rendert die Welt mit maximaler Helligkeit. Umgeht die Dunkelheit nicht
+gui.config.tooltip.full_bright=Stellt die Welt mit maximaler Helligkeit dar. Umgeht jedoch nicht komplette dunkelheit
 gui.config.fast_villagers=Schnelle Dorfbewohner
-gui.config.tooltip.fast_villagers=Lässt die Dorfbewohner ihre Geschäfte viermal am Tag zurücksetzen
+gui.config.tooltip.fast_villagers=Lässt Dorfbewohner ihre Handelsangebote viermal am Tag erneuern
 gui.config.blood_moon_helper=Blutmond-Helfer
-gui.config.tooltip.blood_moon_helper=Zeigt Ihnen, wann der nächste Blutmond sein wird
+gui.config.tooltip.blood_moon_helper=Zeigt dir wann der nächste Blutmond sein wird
 gui.config.real_time=Echtzeit
-gui.config.tooltip.real_time=Tag und Nacht dauern 12 Stunden im echten Leben. Der Hardmode wird am 3. Tag aktiviert. Endgame wird am 5. Tag aktiviert. HINWEIS: Wenn diese Konfiguration aktiv ist, können keine anderen Konfigurationen abgeschlossen werden
+gui.config.tooltip.real_time=Tag und Nacht dauern 12 Echte Stunden. Der Hardmode wird am 3. Tag aktiviert. Das Endgame wird am 5. Tag aktiviert. HINWEIS: Wenn diese Konfigoption aktiv ist, sind andere Konfigoptionen nicht gewinnbar
 
 
 
 
 
 
-gui.config.clear.morevariants=Klare Bedingung: Besiege den Ender-Drachen
-gui.config.clear.evolvedmobs=Klare Bedingung: Niederlage ???
-gui.config.clear.buffedsquids=Klare Bedingung: Niederlage ???
-gui.config.clear.nite=Klare Bedingung: Besiege den Ender-Drachen
-gui.config.clear.darkstormynightmare=Klare Bedingung: Besiege den Ender-Drachen
-gui.config.clear.noskybases=Klare Bedingung: Niederlage ???
-gui.config.clear.isaprilfools=Bedingung löschen: Hardmode aufrufen
-gui.config.clear.realtime=Klare Bedingung: Überlebe die erste Düsternacht
-gui.config.clear.totaleclipse=Klare Bedingung: Besiege einen Blutmond
-gui.config.clear.bloodmare=Bedingung löschen: Hardmode aufrufen
-gui.config.clear.magicmonsters=Bedingung löschen: Hardmode aufrufen
-gui.config.clear.unkillablemobs=Bedingung löschen: Hardmode aufrufen
-gui.config.clear.nohit=Bedingung löschen: Hardmode aufrufen
+gui.config.clear.morevariants=Ziel: Töte den Enderdrachen
+gui.config.clear.evolvedmobs=Ziel: Töte ???
+gui.config.clear.buffedsquids=Ziel: Töte ???
+gui.config.clear.nite=Ziel: Töte den Enderdrachen
+gui.config.clear.darkstormynightmare=Ziel: Töte den Enderdrachen
+gui.config.clear.noskybases=Ziel: Töte ???
+gui.config.clear.isaprilfools=Ziel: Erreiche Hardmode
+gui.config.clear.realtime=Ziel: Überlebe die erste Neumondnacht
+gui.config.clear.totaleclipse=Ziel: Überlebe einen Blutmond
+gui.config.clear.bloodmare=Ziel: Erreiche Hardmode
+gui.config.clear.magicmonsters=Ziel: Erreiche Hardmode
+gui.config.clear.unkillablemobs=Ziel: Erreiche Hardmode
+gui.config.clear.nohit=Ziel: Erreiche Hardmode
 
-gui.warning.line1=Bruder
-gui.warning.line2=Sie sind dabei, einer Welt mit aktiviertem Krebsmodus beizutreten
-gui.warning.line3=Wenn dies kein Backup oder eine Wegwerfwelt ist, kehren Sie jetzt um
-gui.warning.line4=denn es wird wahrscheinlich zerstört werden
-gui.warning.line5=Sind Sie absolut sicher, dass Sie dies tun möchten? Dies ist Ihre einzige Warnung
-gui.warning.iknow=Ich weiß, was ich tue
-gui.warning.goback=Geh zurück
+gui.warning.line1=bro
+gui.warning.line2=du bist dabei, einer Welt mit aktiviertem Geisteskrankmodus beizutreten
+gui.warning.line3=falls dies kein Backup oder eine Wegwerfwelt ist, lass es sein
+gui.warning.line4=denn sie WIRD höchstwarscheinlich zerstört werden.
+gui.warning.line5=bist du dir absolut sicher, dass du das tun willst? Dies ist deine einzige Warnung
+gui.warning.iknow=Ich weiß was ich tue
+gui.warning.goback=Zurück
 
 gui.gameover.tip_prefix=Tipp:
-gui.gameover.tip1=Halten Sie sich vom Meer fern!
-gui.gameover.tip2=Tintenfische werden im Hardmode dauerhaft feindselig.
-gui.gameover.tip3=Für Calamari, das beste Nahrungsmittel, können Tintenfische getötet werden.
-gui.gameover.tip4=Schlage Mobs von Klippen, um sie leicht zu töten.
-gui.gameover.tip5=Du kannst Mobs sprinten und schlagen, um zusätzlichen Rückstoß zu verursachen.
+gui.gameover.tip1=Bleib weit weg vom Ozean!
+gui.gameover.tip2=Tintenfische werden im Hardmode Permanent feindlich.
+gui.gameover.tip3=Tintenfische können für Calamari getötet werden, das beste Nahrungsmittel.
+gui.gameover.tip4=Stoße Monster Klippen herunter um sie leicht zu töten.
+gui.gameover.tip5=Du kannst Monster schlagen während du Sprintest um zusätzlichen Rückstoß zu verursachen..
 gui.gameover.tip6=Schneebälle eignen sich hervorragend zum Jagen.
-gui.gameover.tip7=Die Bonustruhe enthält ein Steinschwert. Manchmal ist das alles, was Sie brauchen.
-gui.gameover.tip8=Mobs mit Eisenwerkzeugen haben eine größere Reichweite als du.
-gui.gameover.tip9=Creepers explodieren schnell, wenn sie in Brand geraten! Vorsicht vor Kettenreaktionen!
-gui.gameover.tip10=Angezündete Ziegelöfen zünden brennbare Blöcke vor ihnen an.
-gui.gameover.tip11=Langsamkeit hindert Sie daran, zu springen, zu sprinten und Leitern zu erklimmen.
-gui.gameover.tip12=Mobs werden mit zunehmendem Fortschritt stärker. Unterschätze sie nicht!
-gui.gameover.tip13=Berge und hohe Gipfel bieten einen tollen Schutz.
-gui.gameover.tip14=Dschungelbäume können bestiegen werden, um in den frühen Nächten schnell und einfach Schutz zu finden.
-gui.gameover.tip15=In den ersten 90 Sekunden spawnen keine Mobs. Nutzen Sie das aus!
-gui.gameover.tip16=Sie können Tintenfischtentakel abwehren, indem Sie sie mit Ihrem Schwert blockieren!
-gui.gameover.tip17=Eisen- und Diamantspitzhacken können zusätzliches Eisen und Gold aus Erzadern liefern.
-gui.gameover.tip18=Benutzen Sie Werkzeuge nicht als Waffen – das verbraucht die doppelte Haltbarkeit!
-gui.gameover.tip19=Angezündete Lagerfeuer können benachbarte Lagerfeuer oder Steinöfen entzünden! Nutzen Sie Ihren Hunger sinnvoll!
-gui.gameover.tip20=Verrückt? Schreien Sie den Entwickler auf dem NM Discord-Server an. Es ist in der Github-Version verlinkt.
-gui.gameover.tip21=Mob-Varianten sind sehr gefährlich! Vermeiden Sie es, gegen sie zu kämpfen, es sei denn, Sie wissen, was sie tun.
-gui.gameover.tip22=Benutze Creeper-Explosionen, um Schmutz und Steine ​​freizubekommen!
+gui.gameover.tip7=Die Bonustruhe gibt dir ein Steinschwert. Manchmal ist das alles was du brauchst.
+gui.gameover.tip8=Monster mit Eisenwerkzeugen haben eine größere Reichweite als du.
+gui.gameover.tip9=Creeper explodieren schnell, wenn sie in Brand geraten! Vorsicht vor Kettenreaktionen!
+gui.gameover.tip10=Angezündete Ziegelstein-Backofen zünden brennbare Blöcke vor ihnen an.
+gui.gameover.tip11=Langsamkeit hindert dich daran zu springen, zu sprinten und Leitern zu erklimmen.
+gui.gameover.tip12=Monster werden mit zunehmendem Fortschritt stärker. Unterschätze sie nicht!
+gui.gameover.tip13=Berge und hohe Gipfel bieten hervorragenden Schutz.
+gui.gameover.tip14=Tropenbäume können beklettert werden um in den frühen Nächten schnell und einfach Schutz zu finden.
+gui.gameover.tip15=In den ersten 90 Sekunden erscheinen keine Monster. Nutze dies gut aus!
+gui.gameover.tip16=Du kannst Tintenfischtentakel abwehren indem du mit deinem Schwert blockst!
+gui.gameover.tip17=Eisen- und Diamantspitzhacken können zusätzliches Eisen und Gold aus Erzadern fördern.
+gui.gameover.tip18=Nutze Werkzeuge nicht als Waffen - es verbraucht doppelt so viel Haltbarkeit!
+gui.gameover.tip19=Angezündete Lagerfeuer können benachbarte Lagerfeuer oder Ziegelstein-Backöfen entzünden! Nutze deine Hungerleiste Sinnvoll!
+gui.gameover.tip20=Wütend? Geh und schreie den Entwickler auf dem NM Discord-Server an. Dieser ist in der Github-Seite verlinkt.
+gui.gameover.tip21=Monstervarianten sind sehr gefährlich! Vermeide es gegen sie zu kämpfen wenn du nicht weißt was diese tun.
+gui.gameover.tip22=Nutze Creeper-Explosionen um ganz einfach viel Erde und Steine zu bekommen!
 gui.gameover.tip23=Angeln bei Vollmond ist eine großartige Nahrungsquelle.
-gui.gameover.tip24=Nehmen Sie immer ein paar Taschenlampen mit, falls Sie in die Dunkelheit geraten!
-gui.gameover.tip25=Bringen Sie viele Blöcke mit, wenn Sie in die Höhle gehen. Damit können Sie gefährliche Wege absperren.
-gui.gameover.tip26=Überlegen Sie zweimal, ob Sie sich eine Eisenrüstung anschaffen sollten! Schwere Rüstung erhöht deinen Hungerverlust.
-gui.gameover.tip27=Manchmal ist es das Beste, sich umzudrehen und nach Hause zu gehen. Gehen Sie keine unnötigen Risiken ein!
-gui.gameover.tip28=Flachwasserbecken eignen sich hervorragend als Ausgangspunkt! Mobs können nicht im Wasser spawnen.
-gui.gameover.tip29=Sie können am ersten Tag einen Steinofen bekommen, wenn Sie den Lehm schnell genug hineinlegen! Riskant, aber lohnend.
-gui.gameover.tip30=Platzieren Sie Lagerfeuer auf 2 Blocks hohen Säulen! Es verhindert, dass sie den Boden, auf dem sie stehen, verbrennen.
-gui.gameover.tip31=Es ist besser, nach Diamanten zu suchen, als sie abzubauen.
-gui.gameover.tip32=Basteln Sie Bandagen aus Wolle und Schnur. Sie können Ihr Leben retten!
-gui.gameover.lategame1=Es ist wichtig, Pausen einzulegen. Komm stärker zurück.
-gui.gameover.lategame2=Du bist weiter gekommen als die meisten. Seien Sie stolz darauf.
+gui.gameover.tip24=Habe immer ein paar Fackeln bei dir falls du in die Dunkelheit gerätst!
+gui.gameover.tip25=Nimm viele Blöcke mit wenn du in eine Höhle gehst. Dies lässt dich gefährliche Abschnitte absperren.
+gui.gameover.tip26=Überlege dir gut ob du dir wirklich Eisenrüstung Schmieden solltest! Schwere Rüstung zu tragen macht dich schneller Hungrig.
+gui.gameover.tip27=Manchmal ist es das Beste was du tun kannst dich umzudrehen und nach Hause zu gehen. Gehe keine unnötigen Risiken ein!
+gui.gameover.tip28=Flache Wasserflächen sind ein hervorragender Ort für ein Zuhause! Monster können nicht im Wasser erscheinen.
+gui.gameover.tip29=Du kannst am ersten Tag einen Ziegelstein-Backofen bekommen wenn du den Lehm schnell genug niederlegst! Riskant, aber es lohnt sich.
+gui.gameover.tip30=Platziere Lagerfeuer auf 2 Blöcke hohen Säulen! Es verhindert, dass sie den Boden auf dem sie stehen in Brand setzen.
+gui.gameover.tip31=In Höhlen nach Diamanten zu suchen ist besser als Strip-Mining.
+gui.gameover.tip32=Stelle Bandagen aus etwas Wolle und Faden her. Diese können dein Leben retten!
+gui.gameover.lategame1=Es ist wichtig Pausen einzulegen. Komm gestärkt zurück.
+gui.gameover.lategame2=Du bist weiter gekommen als die meisten. Sei stolz darauf.
 gui.gameover.lategame3=Fortschritt ist niemals verschwendet. Jeder Tod lehrt dich etwas.
-gui.gameover.lategame4=Du bist so weit gekommen. Sie können sogar noch weiter gehen.
-gui.gameover.lategame5=Lassen Sie nicht zu, dass ein einziger Todesfall Ihre Reise bestimmt.
-gui.gameover.lategame6=Jedes Mal, wenn du stirbst, kommst du stärker zurück.
-gui.gameover.lategame7=Du wirst dich daran erinnern, was schief gelaufen ist, und so wirst du das nächste Mal überleben.
+gui.gameover.lategame4=Du bist so weit gekommen. Du kannst sicherlich sogar noch weiter kommen.
+gui.gameover.lategame5=Lasse einen Tod nicht deine Reise bestimmen.
+gui.gameover.lategame6=Jedes Mal wenn du stirbst, kommst du stärker zurück.
+gui.gameover.lategame7=Du wirst dich daran erinnern was schief gelaufen ist, und so wirst du das nächste Mal überleben.
 gui.gameover.lategame8=Gib nicht auf.
-gui.gameover.lategame9=Alles wird gut, gönnen Sie sich einfach eine kleine Pause.
+gui.gameover.lategame9=Alles wird gut, leg einfach eine kleine Pause ein.
 
-player.stopSleeping=Hör auf zu schlafen
+player.stopSleeping=Aufstehen
 player.attemptEscapeBloodmoon=<???> Flucht vor dem Blutmond? Erbärmlich.
 
 world.hardmodeBegin=<???> Der Hardmode hat begonnen.
 world.endgameBegin=<???> Das Endspiel hat begonnen.
-world.portal_warning=Es verbleiben noch 3 Tage.
-world.config.using_help=Auf Ihrem Client wurden hilfreiche Konfigurationen erkannt.
-world.config.progress_wiped=Der gesamte Konfigurationsfortschritt für diese Welt wurde gelöscht.
-world.config.no_match=Sie verwenden Konfigurationen, die zum Zeitpunkt der Erstellung dieser Welt nicht aktiv waren.
-world.config.relaxed=Konfigurationserfolge sind nur auf der Schwierigkeitsstufe „Albtraum“ verfügbar.
-world.config.cheating=Konfigurationserfolge sind auf betrogenen Welten nicht verfügbar.
+world.portal_warning=3 Tage übrig.
+world.config.using_help=Auf deinem Client wurden hilfreiche Konfigs erkannt.
+world.config.progress_wiped=Der gesamte Konfigfortschritt für diese Welt wurde gelöscht.
+world.config.no_match=Du verwendest Konfigs die nicht aktiv waren wenn diese Welt erstellt wurde.
+world.config.relaxed=Konfig-Erfolge sind nur verfügbar auf der Albtraum-Schwierigkeit.
+world.config.cheating=Konfig-Erfolge sind auf Cheatwelten nicht verfügbar.
 
 bosses.wither_summon_sealevel=<???> Der Wither muss über dem Meeresspiegel beschworen werden.
 bosses.wither_summon_too_high=<???> Der Wither kann nicht so hoch beschworen werden. Die Y-Koordinate muss unter 200 liegen.
-bosses.wither_revive_message=<Wider> Ein Gott hat keine Angst vor dem Tod.
-bosses.dragons.journeyEnd=<Die Zwillinge> Ihre Reise endet hier.
-bosses.bloodwither.potion_warning=Mussten Sie Zaubertränke benutzen, nur um mich zu besiegen? Erbärmlich.
-bosses.bloodwither.learn_fight=Kann man nicht lernen, richtig zu kämpfen?
-bosses.bloodwither.gapple_notice=Wie ich sehe, hast du ein paar goldene Äpfel mitgebracht ...
-bosses.bloodwither.gapple_plan=Du hattest doch nicht vor, sie zu benutzen, oder?
+bosses.wither_revive_message=<Wither> Ein Gott fürchtet keinen Tod.
+bosses.dragons.journeyEnd=<Die Zwillinge> Deine Reise endet hier.
+bosses.bloodwither.potion_warning=Du musstest Tränke benutzen nur um mich zu besiegen? Erbärmlich.
+bosses.bloodwither.learn_fight=Kannst du nicht lernen vernünftig zu kämpfen?
+bosses.bloodwither.gapple_notice=Wie ich sehe hast du ein paar goldene Äpfel mitgebracht...
+bosses.bloodwither.gapple_plan=Du hattest doch nicht etwa vor diese zu nutzen, oder?
 
 deathScreen.nextAttempt=Nächster Versuch
 deathScreen.deathTauntMessage1=<???> Erbärmlich.
 deathScreen.deathTauntMessage2=<???> Wirklich?
-deathScreen.deathTauntMessage3=<???> Haben Sie versucht, nicht zu sterben?
-deathScreen.deathTauntMessage4=<???> Skill-Problem.
+deathScreen.deathTauntMessage3=<???> Hast du versucht nicht zu sterben?
+deathScreen.deathTauntMessage4=<???> Skill issue.
 deathScreen.deathTauntMessage5=<???> Schon wieder tot?
-deathScreen.deathTauntMessage6=<???> Schön.
+deathScreen.deathTauntMessage6=<???> Gut gemacht.
 deathScreen.deathTauntMessage7=<???> Einfach.
 deathScreen.deathTauntMessage8=<???> Nicht einmal annähernd.
-deathScreen.deathTauntMessage9=<???> Machen Sie sich nicht die Mühe, es zu versuchen.
-deathScreen.deathTauntMessage10=<???> Du bist nicht für die Ewigkeit gebaut.
-deathScreen.deathTauntMessage11=<???> Hast du gedacht, dass du etwas Besonderes bist? Du bist nicht einmal unvergesslich.
-deathScreen.deathTauntMessage12=<???> Solch ein Potenzial... verschwendet an jemanden, der so völlig inkompetent ist.
-deathScreen.deathTauntMessage13=<???> Dein Licht verblasst, aber ich bleibe ewig.
-deathScreen.deathTauntMessage14=<???> Erbärmlicher Versuch. Versuchen Sie es erneut.
-deathScreen.deathTauntMessage15=<???> Ist das das Beste, was Sie tun können?
-deathScreen.deathTauntMessage16=<???> Nicht einmal ein würdiges Opfer.
-deathScreen.deathTauntMessage17=<???> Versuchen Sie es mit einem einfacheren Schwierigkeitsgrad?
-deathScreen.deathTauntMessage18=<???> Ein weiterer Fehler. Wie schön anzusehen.
+deathScreen.deathTauntMessage9=<???> Mach dir nicht die Mühe.
+deathScreen.deathTauntMessage10=<???> Du bist nicht für die Ewigkeit geschaffen.
+deathScreen.deathTauntMessage11=<???> Dachtest du das du etwas Besonderes bist? Du bist noch nicht einmal Erinnerungswürdig.
+deathScreen.deathTauntMessage12=<???> Solch Potenzial... verschwendet an jemanden so dermaßen Inkompetent.
+deathScreen.deathTauntMessage13=<???> Dein Licht verblasst, aber ich bleibe für die Ewigkeit.
+deathScreen.deathTauntMessage14=<???> Erbärmlicher Versuch. Probier's nochmal.
+deathScreen.deathTauntMessage15=<???> Ist dies das Beste das du draufhast?
+deathScreen.deathTauntMessage16=<???> Nicht einmal eine würdige Opfergabe.
+deathScreen.deathTauntMessage17=<???> Versuch' eine einfachere Schwierigkeit?
+deathScreen.deathTauntMessage18=<???> Schon wieder versagt. Wie entzückend anzusehen.
 deathScreen.deathTauntMessage19=<???> Sollte mich das beeindrucken?
 
-item.desc.bloodmoon0=Überspringt den aktuellen Blutmond, falls einer aktiv ist
+item.desc.bloodmoon0=Überspringt den derzeitigen Blutmond, falls einer aktiv ist
 item.desc.bloodmoon1=Andernfalls springt zum nächsten Blutmond
 
 achievementtab.nightmaremode=Albtraummodus
 achievement.nm.grants=Gewährt die folgenden Erfolge:
 
-achievement.nm.morningSecondDay=Und so beginnt es ...
+achievement.nm.morningSecondDay=Und so beginnt es...
 achievement.nm.morningSecondDay.desc=Überlebe deine erste Nacht
 
-achievement.nm.sludge=Schlamm!
-achievement.nm.sludge.desc=Stelle am ersten Tag einen Steinofen her
+achievement.nm.sludge=Sludge!
+achievement.nm.sludge.desc=Fertige am ersten Tag einen Ziegelstein-Backofen
 
-achievement.nm.hitBurningSkeleton=Das ist einfach unnötig
-achievement.nm.hitBurningSkeleton.desc=Werde vom brennenden Pfeil eines Skeletts getroffen
+achievement.nm.hitBurningSkeleton=Das war jetzt aber wirklich unnötig
+achievement.nm.hitBurningSkeleton.desc=Werde von einen brennenden Pfeil eines Skeletts getroffen
 
-achievement.nm.killRunningAnimal=Warum rennst du?
-achievement.nm.killRunningAnimal.desc=Töte ein rennendes Tier mit deiner Keule
+achievement.nm.killRunningAnimal=Warum flüchtest du?
+achievement.nm.killRunningAnimal.desc=Töte ein flüchtendes Tier mit einer Keule
 
-achievement.btw.craft_hamper=Hampter
-achievement.btw.craft_hamper.desc=Stelle einen Korb her
+achievement.btw.craft_hamper=Etwas Lagerplatz
+achievement.btw.craft_hamper.desc=Stelle einen Deckelkorb her
 
 achievement.nm.ironNeedles=Turbo-Oma
-achievement.nm.ironNeedles.desc=Basteln Sie verbesserte Stricknadeln!
+achievement.nm.ironNeedles.desc=Schmiede bessere Stricknadeln!
 
 achievement.nm.bandage=Ich brauche Heilung
-achievement.nm.bandage.desc=Stelle einen Verband her
+achievement.nm.bandage.desc=Stelle eine Bandage her
 
 achievement.nm.skyBase=Kopf in den Wolken
-achievement.nm.skyBase.desc=Bauen Sie eine Himmelsbasis, die mindestens 8 Blocks über dem Boden liegt
+achievement.nm.skyBase.desc=Baue eine Himmelsbasis, die sich mindestens 8 Blöcke über dem Boden befindet
 
-achievement.nm.eatRawFood=Lass uns spielen gehen
-achievement.nm.eatRawFood.desc=Essen Sie Rohkost, ohne eine Lebensmittelvergiftung zu bekommen
+achievement.nm.eatRawFood=Zeit für Glücksspiel
+achievement.nm.eatRawFood.desc=Esse rohes Fleisch, ohne dir eine Lebensmittelvergiftung einzuhandeln
 
 achievement.nm.snowballMob=Kühler Empfang
-achievement.nm.snowballMob.desc=Schlage ein Tier oder Monster mit einem Schneeball
+achievement.nm.snowballMob.desc=Treffe ein Tier oder Monster mit einem Schneeball
 
 achievement.nm.snowballMobKill=Je größer sie sind...
-achievement.nm.snowballMobKill.desc=Töte ein Tier oder Monster mit Fallschaden mit einem Schneeball
+achievement.nm.snowballMobKill.desc=Töte ein Tier oder Monster mit Fallschaden durch einen Schneeball
 
-achievement.nm.calamariCook=Süße Rache
-achievement.nm.calamariCook.desc=Bereiten Sie Calamari-Braten am Lagerfeuer oder im Steinofen zu
+achievement.nm.calamariCook=Rache ist Süß
+achievement.nm.calamariCook.desc=Bereite gebratenen Calamari am Lagerfeuer oder im Ziegelstein-Backofen zu
 
 achievement.nm.calamariGet=Blut im Wasser
 achievement.nm.calamariGet.desc=Töte einen Tintenfisch für Calamari
 
-achievement.nm.bloodZombieKill=Was zum Teufel war das?!
+achievement.nm.bloodZombieKill=Was zur Hölle war das?!
 achievement.nm.bloodZombieKill.desc=Töte einen Blutzombie
 
 achievement.nm.witherSkeletonKillOverworld=Riecht nach Kohle
-achievement.nm.witherSkeletonKillOverworld.desc=Töte ein Wither-Skelett in den Tiefen von Strata 3
+achievement.nm.witherSkeletonKillOverworld.desc=Töte ein Witherskelett in der sehr Tiefen Schwarzstein-Schicht
 
 achievement.nm.breakLavaPillow=Warm und bequem
-achievement.nm.breakLavaPillow.desc=Bauen Sie ein Lavakissen in den Tiefen von Strata 3 ab
+achievement.nm.breakLavaPillow.desc=Baue ein Lavakissen in der sehr Tiefen Schwarzstein-Schicht ab
 
-achievement.nm.craftPlanter=Betreten Sie die Landwirtschaft
-achievement.nm.craftPlanter.desc=Stelle einen Pflanzer mit 7 Steinen her
+achievement.nm.craftPlanter=Einstieg in die Landwirtschaft
+achievement.nm.craftPlanter.desc=Fertige einen Pflanztopf aus 7 Ziegelsteinen
 
-achievement.nm.calamariFried=Ocean's Delight
-achievement.nm.calamariFried.desc=Frittierte Calamari kochen - das beste Lebensmittel
+achievement.nm.calamariFried=Ozean's Spezialität
+achievement.nm.calamariFried.desc=Koche frittierte Calamari, das nahrhafteste Essen
 
 achievement.nm.greed=Gier
-achievement.nm.greed.desc=Gier flüstert aus dem Abgrund, und du hast zugehört
+achievement.nm.greed.desc=Gier flüsterte aus dem Abgrund, und du hast zugehört
 
-achievement.btw.find_creeper_oysters=Mods, stiehl ihm die Eier
-achievement.btw.find_creeper_oysters.desc=Töte einen Creeper für Creeper-Austern
+achievement.btw.find_creeper_oysters=Mods, stehlt seine Eier
+achievement.btw.find_creeper_oysters.desc=Töte einen Creeper für Creeperaustern
 
 achievement.nm.ironSword=Chromklinge
-achievement.nm.ironSword.desc=Besorge dir ein Eisenschwert
+achievement.nm.ironSword.desc=Erhalte ein Eisenschwert
 
-achievement.nm.ironZombie=Herr Chrome
-achievement.nm.ironZombie.desc=Töte ein Monster mit Eisenausrüstung
+achievement.nm.ironZombie=Herr Chrom
+achievement.nm.ironZombie.desc=Töte ein Monster das Eisenrüstung trägt
 
-achievement.nm.ladderWood=Man muss nach oben gehen
-achievement.nm.ladderWood.desc=Stelle einige Leitern her
+achievement.nm.ladderWood=Man muss nach oben gelangen
+achievement.nm.ladderWood.desc=Fertige ein paar Leitern
 
-achievement.nm.roadStandard=Hauptverkehrszeit
-achievement.nm.roadStandard.desc=Handwerksstraße mit Kopfsteinpflaster und Schotter
+achievement.nm.roadStandard=Berufsverkehr
+achievement.nm.roadStandard.desc=Fertige Straßenblöcke aus Bruchstein und Kies
 
 achievement.nm.ladderStone=Die Ränge erklimmen
-achievement.nm.ladderStone.desc=Stelle eine Steinleiter her
+achievement.nm.ladderStone.desc=Fertige eine Steinleiter
 
 achievement.nm.ladderIron=Spitzenleistung
-achievement.nm.ladderIron.desc=Stelle eine Eisenleiter her
+achievement.nm.ladderIron.desc=Schmiede eine Eisenleiter
 
 achievement.nm.hardmode=Das war der einfache Teil?
-achievement.nm.hardmode.desc=Betreten Sie den Hardmode
+achievement.nm.hardmode.desc=Erreiche den Hardmode
 
 achievement.nm.bloodOrb=Nicht für Notfalltransfusionen!
 achievement.nm.bloodOrb.desc=Erhalte eine Blutkugel
@@ -449,168 +449,168 @@ achievement.nm.bloodOrb.desc=Erhalte eine Blutkugel
 achievement.nm.bloodMoon=Blutmond-Eroberer
 achievement.nm.bloodMoon.desc=Überlebe deinen ersten Blutmond
 
-achievement.nm.bloodIngot=In Blut geschmiedet
-achievement.nm.bloodIngot.desc=Stelle einen Blutbarren her
+achievement.nm.bloodIngot=Aus Blut Geschmiedet
+achievement.nm.bloodIngot.desc=Schmiede einen Blutbarren
 
-achievement.nm.bloodSword=Es wird Blutvergießen geben!
-achievement.nm.bloodSword.desc=Stelle ein Blutschwert her
+achievement.nm.bloodSword=Blut wird fließen!
+achievement.nm.bloodSword.desc=Schmiede ein Blutschwert
 
 achievement.nm.bloodPickaxe=Aderbergmann
-achievement.nm.bloodPickaxe.desc=Stelle eine Blutspitzhacke her, mit der du Netherrack abbauen kannst
+achievement.nm.bloodPickaxe.desc=Schmiede eine Blutspitzhacke, welche dich Netherrack abbauen lässt
 
 achievement.nm.bloodShovel=Totengräber
-achievement.nm.bloodShovel.desc=Stelle eine Blutschaufel her
+achievement.nm.bloodShovel.desc=Schmiede eine Blutschaufel
 
-achievement.nm.bloodAxe=Metzger-Waschtisch
-achievement.nm.bloodAxe.desc=Stelle eine Blutaxt her
+achievement.nm.bloodAxe=Metzger's Favorit
+achievement.nm.bloodAxe.desc=Schmiede eine Blutaxt
 
-achievement.nm.bloodHoe=Vorbote von Hanf
-achievement.nm.bloodHoe.desc=Stelle eine Bluthacke her
+achievement.nm.bloodHoe=Vorbote des Hanfes
+achievement.nm.bloodHoe.desc=Schmiede eine Bluthacke
 
-achievement.nm.shadowJumpScare=Buuuuh!
-achievement.nm.shadowJumpScare.desc=Lass dich von einem Schattenzombie in Angst und Schrecken versetzen
+achievement.nm.shadowJumpScare=Buh!
+achievement.nm.shadowJumpScare.desc=Werde von einem Schattenzombie erschreckt
 
 achievement.nm.killTerrence=Ayo Terrence
 achievement.nm.killTerrence.desc=Finde und töte Terrence
 
 achievement.nm.netherSleep=Fiebertraum
-achievement.nm.netherSleep.desc=Schlafen Sie im Nether
+achievement.nm.netherSleep.desc=Schlafe im Nether
 
 achievement.btw.redneck_fishing=Moderne Lösungen
-achievement.btw.redneck_fishing.desc=Wirf Dynamit in einen See, um Fische zu bekommen
+achievement.btw.redneck_fishing.desc=Wirf Dynamit in einen See um Fische zu erhalten
 
-achievement.nm.equipBloodArmor=Mich bedecken mit... Leichen?
-achievement.nm.equipBloodArmor.desc=Rüste dich mit einem kompletten Satz Blutrüstung aus
+achievement.nm.equipBloodArmor=Bedeck mich mit... Leichen?
+achievement.nm.equipBloodArmor.desc=Trage eine komplette Blutrüstung
 
-achievement.nm.bloodChest=Crimson-Nachahmer
-achievement.nm.bloodChest.desc=Stelle eine Blutkiste her
+achievement.nm.bloodChest=Purpurne Nachmacherei
+achievement.nm.bloodChest.desc=Baue eine Bluttruhe
 
 achievement.nm.wanderingTraderKill=Vertrauensprobleme
-achievement.nm.wanderingTraderKill.desc=Töte einen „Wandernden Händler“
+achievement.nm.wanderingTraderKill.desc=Töte einen "Fahrenden Händler"
 
 achievement.nm.mineSteelOre=Besser als Diamanten
-achievement.nm.mineSteelOre.desc=Bauen Sie Stahlerz ab, nachdem Sie The Wither besiegt haben
+achievement.nm.mineSteelOre.desc=Baue nach dem töten des Withers Stahlerz ab
 
-achievement.nm.bloodMoonWither=Ein Gott hat keine Angst vor dem Tod
-achievement.nm.bloodMoonWither.desc=Überlebe einen Post-Wither-Blutmond
+achievement.nm.bloodMoonWither=Ein Gott fürchtet keinen Tod
+achievement.nm.bloodMoonWither.desc=Überlebe einen Nach-Wither Blutmond
 
-achievement.nm.corpseEye=Auge der Verwüstung
-achievement.nm.corpseEye.desc=Stelle ein Leichenauge her
+achievement.nm.corpseEye=Auge der Trostlosigkeit
+achievement.nm.corpseEye.desc=Fertige ein Leichenauge
 
-achievement.nm.roadAsphalt=Laufen in den 90ern
-achievement.nm.roadAsphalt.desc=Asphalt herstellen
+achievement.nm.roadAsphalt=Schneller als die Polizei erlaubt
+achievement.nm.roadAsphalt.desc=Fertige Asphaltblöcke
 
-achievement.nm.steelLocker=Jenseits von Schloss und Schlüssel
-achievement.nm.steelLocker.desc=Stelle einen Stahlspind her, die ultimative Aufbewahrungseinheit
+achievement.nm.steelLocker=Hinter Schloss und Riegel-
+achievement.nm.steelLocker.desc=Fertige einen Stahlschrank, die Ultimative Aufbewahrungseinheit
 
 achievement.nm.wrath=Zorn
 achievement.nm.wrath.desc=Die Stimmen schrien nach Blut, und du hast gehorcht
 
 achievement.nm.envy=Neid
-achievement.nm.envy.desc=Du wolltest, was ihnen gehört, und du hast es dir genommen
+achievement.nm.envy.desc=Du sehntest dich nach dem das ihnen gehörte, und du hast es dir genommen
 
-achievement.nm.sloth=Faultier
-achievement.nm.sloth.desc=Die Welt hat sich weiterentwickelt und du hast nichts getan
+achievement.nm.sloth=Faulheit
+achievement.nm.sloth.desc=Die Welt drehte sich weiter, und du tatst garnichts
 
 achievement.nm.fabric=Besser als Forge
-achievement.nm.fabric.desc=Bastelstoff
+achievement.nm.fabric.desc=Fertige Stoff
 
-achievement.nm.bed=Nächtlich
-achievement.nm.bed.desc=Stelle ein Bett her
+achievement.nm.bed=Nachteule
+achievement.nm.bed.desc=Baue ein Bett
 
 achievement.nm.gluttony=Völlerei
 achievement.nm.gluttony.desc=Die Leere schrie nach mehr, und du hast sie gefüttert
 
-achievement.nm.lust=Lust
-achievement.nm.lust.desc=Das Verlangen verzehrte dich und du hast es angenommen
+achievement.nm.lust=Lüstern
+achievement.nm.lust.desc=Das Verlangen verzehrte dich und du hast nachgegeben
 
 achievement.nm.steelSword=Klinge der Ewigkeit
-achievement.nm.steelSword.desc=Stelle ein raffiniertes Schwert her
+achievement.nm.steelSword.desc=Schmiede ein Verfeinertes Schwert
 
 achievement.nm.steelIngot=Besser als Netherit
-achievement.nm.steelIngot.desc=Stelle einen Stahlbarren her
+achievement.nm.steelIngot.desc=Schmiede einen Stahlbarren
 
 achievement.nm.steelPickaxe=Grundgesteinsbrecher
-achievement.nm.steelPickaxe.desc=Stelle eine raffinierte Spitzhacke her
+achievement.nm.steelPickaxe.desc=Schmiede eine Verfeinerte Spitzhacke
 
 achievement.nm.steelShovel=Asche und Staub
-achievement.nm.steelShovel.desc=Stelle eine raffinierte Schaufel her
+achievement.nm.steelShovel.desc=Schmiede eine Verfeinerte Schaufel
 
 achievement.nm.steelAxe=Seelengeschmiedeter Schlitzer
-achievement.nm.steelAxe.desc=Stelle eine raffinierte Axt her
+achievement.nm.steelAxe.desc=Schmiede eine Verfeinerte Axt
 
 achievement.nm.steelHoe=Ernter der Seelen
-achievement.nm.steelHoe.desc=Stelle eine raffinierte Hacke her
+achievement.nm.steelHoe.desc=Schmiede eine Verfeinerte Hacke
 
 achievement.nm.steelMattock=Handbagger
-achievement.nm.steelMattock.desc=Stelle einen Mattock her
+achievement.nm.steelMattock.desc=Schmiede eine Breithacke
 
-achievement.nm.steelBattleAxe=MÄNNER! MIT MIR!
-achievement.nm.steelBattleAxe.desc=Stelle eine Streitaxt her
+achievement.nm.steelBattleAxe=MÄNNER! MIR NACH!
+achievement.nm.steelBattleAxe.desc=Schmiede eine Kriegsaxt
 
 
 achievement.nm.pride=Stolz
-achievement.nm.pride.desc=Die Tiefen bedrohten dein Ende, und du hast sie herausgefordert
+achievement.nm.pride.desc=Die Tiefen drohten mit deinem Ende, and du hast sie herausgefordert
 
-achievement.nm.eclipse=Eroberer der Sonnenfinsternis
+achievement.nm.eclipse=Eroberer der Sonnenfinsterniss
 achievement.nm.eclipse.desc=Überlebe deine erste Sonnenfinsternis
 
 achievement.nm.eclipseShard=Dunkles Sonnenfragment
-achievement.nm.eclipseShard.desc=Erhalte einen Eclipse-Splitter, indem du während einer Eclipse ein Monster tötest
+achievement.nm.eclipseShard.desc=Erhalte eine Finsternissscherbe, indem du während einer Sonnenfinsterniss ein Monster tötest
 
 achievement.nm.beaconGold=Strahlender Ruhm
-achievement.nm.beaconGold.desc=Baue ein goldenes Leuchtfeuer der Stufe 4
+achievement.nm.beaconGold.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Goldblöcken
 
 achievement.nm.beaconHellfire=Höllenlaterne
-achievement.nm.beaconHellfire.desc=Baue ein Höllenfeuersignal der Stufe 4
+achievement.nm.beaconHellfire.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Konzentrierten Höllenfeuer-Blöcken
 
 achievement.nm.beaconDiamond=Kronjuwel
-achievement.nm.beaconDiamond.desc=Baue ein Diamond Beacon der Stufe 4
+achievement.nm.beaconDiamond.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Diamantblöcken
 
-achievement.nm.beaconDung=Der große mächtige Kot
-achievement.nm.beaconDung.desc=Baue ein Dung-Leuchtfeuer der Stufe 4
+achievement.nm.beaconDung=Der große mächtige Kothaufen
+achievement.nm.beaconDung.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Kotblöcken
 
 achievement.nm.beaconEmerald=Schatz!
-achievement.nm.beaconEmerald.desc=Baue ein Smaragd-Leuchtfeuer der Stufe 4
+achievement.nm.beaconEmerald.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Smaragdblöcken
 
 achievement.nm.beaconGlass=Letztes Prisma
-achievement.nm.beaconGlass.desc=Baue ein Glasfeuer der Stufe 4
+achievement.nm.beaconGlass.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Glasblöcken
 
-achievement.nm.beaconGlowstone=Ewige Finsternis
-achievement.nm.beaconGlowstone.desc=Baue ein Glowstone-Leuchtfeuer der Stufe 4
+achievement.nm.beaconGlowstone=Ewiges Licht
+achievement.nm.beaconGlowstone.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Glowstone-Blöcken
 
-achievement.nm.beaconLapis=Das allsehende Auge
-achievement.nm.beaconLapis.desc=Baue ein Lapis-Leuchtfeuer der Stufe 4
+achievement.nm.beaconLapis=Allsehendes Augue
+achievement.nm.beaconLapis.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Lapislazuliblöcken
 
 achievement.nm.beaconIron=Der Nordstern
-achievement.nm.beaconIron.desc=Baue ein Eisenfeuer der Stufe 4
+achievement.nm.beaconIron.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Eisenblöcken
 
 achievement.nm.beaconEnderBlock=Interdimensionaler Transport
-achievement.nm.beaconEnderBlock.desc=Baue einen Ender-Beacon der Stufe 4
+achievement.nm.beaconEnderBlock.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Enderblöcken
 
 achievement.nm.beaconAll=Volles Spektrum
-achievement.nm.beaconAll.desc=Konstruieren Sie ein Signalfeuer der Stufe 4 jedes Typs
+achievement.nm.beaconAll.desc=Konstruiere ein Stufe 4 Leuchtfeuer jeder Art
 
 achievement.nm.magicArrow=Verbesserte Munition
-achievement.nm.magicArrow.desc=Besorge dir einen magischen Pfeil
+achievement.nm.magicArrow.desc=Erhalte einen Magiepfeil
 
 achievement.nm.nightmareMerchant=Bibliothekarische Transformation
-achievement.nm.nightmareMerchant.desc=Lassen Sie Ihren Bibliothekar-Dorfbewohner unter den Auswirkungen der Sonnenfinsternis verwandeln
+achievement.nm.nightmareMerchant.desc=Lasse deinen Bibliothekar-Dorfbewohner sich unter der Wirkung der Sonnenfinsterniss Transformieren
 
-achievement.nm.killEclipseAnimal=Gemetzel unter der dunklen Sonne
+achievement.nm.killEclipseAnimal=Abschlachtung unter der dunklen Sonne
 achievement.nm.killEclipseAnimal.desc=Töte ein Tier während einer Sonnenfinsternis
 
-achievement.nm.magicFeather=Also... Flauschig...
-achievement.nm.magicFeather.desc=Erhalte einen magischen Pfeil, indem du während einer Sonnenfinsternis ein Huhn tötest
+achievement.nm.magicFeather=So... Flauschig...
+achievement.nm.magicFeather.desc=Erhalte eine Magiefeder, indem du während einer Sonnenfinsternis ein Huhn tötest
 
 achievement.nm.rideEclipseChicken=Ich kann fliegen!
-achievement.nm.rideEclipseChicken.desc=Besteigen Sie ein Eclipse-Huhn und fliegen Sie los!
+achievement.nm.rideEclipseChicken.desc=Besteig ein Sonnenfinsterniss-Huhn und fliege los!
 
-achievement.nm.eclipseCowKick=Autsch, das tat weh
-achievement.nm.eclipseCowKick.desc=Lass dich von einer Eclipse-Kuh treten
+achievement.nm.eclipseCowKick=Aua, das tat weh!
+achievement.nm.eclipseCowKick.desc=Werde von einer Sonnenfinsterniss-Kuh getreten
 
 achievement.nm.eclipseCowMilk=Blut oder Milch?
-achievement.nm.eclipseCowMilk.desc=Melken Sie eine Eclipse-Kuh, um Blutmilch zu erhalten. Wie ekelhaft
+achievement.nm.eclipseCowMilk.desc=Melke eine Sonnenfinsterniss-Kuh für Blutmilch. Wie ekelhaft
 
 achievement.nm.nightmareMerchantLevel2=Schwarzmarkt
 achievement.nm.nightmareMerchantLevel2.desc=Besänftige den Albtraumhändler
@@ -618,83 +618,83 @@ achievement.nm.nightmareMerchantLevel2.desc=Besänftige den Albtraumhändler
 achievement.nm.nightmareMerchantLevel3=Dunkles Ritual
 achievement.nm.nightmareMerchantLevel3.desc=Besänftige den Albtraumhändler
 
-achievement.nm.nightmareMerchantLevel4=Ein würdiges Opfer
+achievement.nm.nightmareMerchantLevel4=Eine würdige Opfergabe
 achievement.nm.nightmareMerchantLevel4.desc=Besänftige den Albtraumhändler
 
-achievement.nm.nightmareMerchantLevel5=Blut Gottes Zorn
+achievement.nm.nightmareMerchantLevel5=Des Blutgott's Zorn
 achievement.nm.nightmareMerchantLevel5.desc=
 
-achievement.nm.eclipseShadowZombie=Du siehst bekannt aus...
-achievement.nm.eclipseShadowZombie.desc=Besiege einen Eclipse Shadow Zombie
+achievement.nm.eclipseShadowZombie=Du kommst mir bekannt vor...
+achievement.nm.eclipseShadowZombie.desc=Töte einen Sonnenfinsterniss-Schattenzombie
 
-achievement.nm.eclipseSquid=Unheimliche Schrecken
-achievement.nm.eclipseSquid.desc=Besiege einen Eclipse-Tintenfisch
+achievement.nm.eclipseSquid=Horror des Jenseits
+achievement.nm.eclipseSquid.desc=Töte einen Sonnenfinsterniss-Tintenfisch
 
 achievement.nm.eclipseGhast=Engel im Himmel
-achievement.nm.eclipseGhast.desc=Besiege einen Eclipse Ghast
+achievement.nm.eclipseGhast.desc=Töte einen Sonnenfinsterniss-Ghast
 
-achievement.nm.eclipseEnderman=Die Rache des Drachen
-achievement.nm.eclipseEnderman.desc=Besiege einen Eclipse Enderman
+achievement.nm.eclipseEnderman=Des Drachen's Rache
+achievement.nm.eclipseEnderman.desc=Töte einen Sonnenfinsterniss-Enderman
 
-achievement.nm.eclipseWitch=Der inkarnierte Teufel
-achievement.nm.eclipseWitch.desc=Besiege eine Eclipse-Hexe. Viel Glück!
+achievement.nm.eclipseWitch=Die Verkörperung des Teufels
+achievement.nm.eclipseWitch.desc=Töte eine Sonnenfinsterniss-Hexe. Viel Glück!
 
-achievement.nm.killBloodWither=Fertigkeit ausgestellt
-achievement.nm.killBloodWither.desc=Verlust ???
+achievement.nm.killBloodWither=Skill Issue'd
+achievement.nm.killBloodWither.desc=Töte ???
 
 achievement.nm.arrowDamage=Kopfschuss!
-achievement.nm.arrowDamage.desc=Verursache über 50 Schaden mit einem einzigen Zauberpfeil
+achievement.nm.arrowDamage.desc=Verursache mehr als 50 Schaden mit einem einzigen Magiepfeil
 
-achievement.nm.arrowPierce=Arbalistisch
-achievement.nm.arrowPierce.desc=Durchbohre 5 oder mehr Feinde mit einem einzigen magischen Pfeil
+achievement.nm.arrowPierce=Fünf auf einen Streich
+achievement.nm.arrowPierce.desc=Durchbohre 5 oder mehr Monster mit einem einzigen Magiepfeil
 
 achievement.nm.eclipseBow=Sonnengeschmiedet!
-achievement.nm.eclipseBow.desc=Stelle einen Eclipse-Bogen her
+achievement.nm.eclipseBow.desc=Schmiede einen Finsternisscherbenbogen
 
-achievement.nm.rifleRpg=Absolutes Kino
-achievement.nm.rifleRpg.desc=Lösen Sie Ihre Probleme richtig
+achievement.nm.rifleRpg=Absolut Kinowürdig
+achievement.nm.rifleRpg.desc=Lösen Sie Ihre Probleme auf die richtige Art und Weise
 
 achievement.nm.brimstone=Schwefelhaltige Geheimnisse
-achievement.nm.brimstone.desc=Filtern Sie Glowstone mit einem Soul Sand Hopper zu Schwefel
+achievement.nm.brimstone.desc=Filtere Glowstone mittels einem Seelensand-Trichter zu Schwefel
 
-achievement.nm.gunpowder=Jetzt kochen wir
-achievement.nm.gunpowder.desc=Erstelle Schießpulver in einem Kessel
+achievement.nm.gunpowder=Jetzt kochen wir mit Feuer!
+achievement.nm.gunpowder.desc=Stelle Schießpulver im Kessel her
 
-achievement.nm.tnt=Ich bin zum Tod geworden
-achievement.nm.tnt.desc=Besorgen Sie sich ein Pulverfass
+achievement.nm.tnt=Todbringer
+achievement.nm.tnt.desc=Erhalte ein Pulverfass
 
 achievement.nm.groundNetherrack=Pulverisierte Hölle
-achievement.nm.groundNetherrack.desc=Explodieren Sie Netherrack mit einem Pulverfass, um gemahlenes Netherrack zu erhalten
+achievement.nm.groundNetherrack.desc=Sprenge Netherrack mit einem Pulverfass, um gemahlenen Netherrack zu erhalten
 
-achievement.nm.craftHellforge=Endlose Flamme
-achievement.nm.craftHellforge.desc=Stelle eine Höllenschmiede her, ein Upgrade für den Steinofen
+achievement.nm.craftHellforge=Unendliche Flamme
+achievement.nm.craftHellforge.desc=Baue eine Höllenschmiede, eine Verbesserung gegenüber dem Ziegelstein-Backofen
 
 achievement.nm.sinner=Autobahn zur Hölle
 achievement.nm.sinner.desc=Begehe alle 7 Todsünden
 
 achievement.nm.dungApple=Absolut widerlich
-achievement.nm.dungApple.desc=Iss einen Mistapfel. Aber warum?
+achievement.nm.dungApple.desc=Iss einen Kotapfel. Aber warum?
 
 achievement.nm.craftRefinedDiamond=Kugelsicher
-achievement.nm.craftRefinedDiamond.desc=Veredeln Sie einen Diamantbarren
+achievement.nm.craftRefinedDiamond.desc=Veredle einen Diamantbarren
 
-achievement.nm.craftIronFishingRod=Köder waren früher glaubwürdig
+achievement.nm.craftIronFishingRod=Profiangler
 achievement.nm.craftIronFishingRod.desc=Stelle eine Angelrute aus Eisen her. Es ist haltbarer und benötigt keinen Köder
 
 achievement.nm.makeVillagerVessel=Verpackt und fertig
-achievement.nm.makeVillagerVessel.desc=Verwandle einen Dorfbewohner in ein Dorfbewohnerschiff
+achievement.nm.makeVillagerVessel.desc=Verwandle einen Dorfbewohner in ein Dorfbewohnergefäß
 
 achievement.nm.beaconSpider=Schädlingsbekämpfung
-achievement.nm.beaconSpider.desc=Baue ein Spinnenaugen-Leuchtfeuer der Stufe 4
+achievement.nm.beaconSpider.desc=Konstruiere ein Stufe 4 Leuchtfeuer mit Spinnenaugenblöcken
 
-achievement.nm.chainArmor=Ich bin aus Feuer
-achievement.nm.chainArmor.desc=Schützen Sie sich mit einem Stück Kettenrüstung vor Flammen
+achievement.nm.chainArmor=Ich bin aus Feuer gemacht
+achievement.nm.chainArmor.desc=Schütze dich mit einem Stück Kettenrüstung vor Flammen
 
 achievement.nm.alchemyDust=Gehackte Warzen
-achievement.nm.alchemyDust.desc=Verwenden Sie Alchemiepulver, um Hexenhütten zu finden
+achievement.nm.alchemyDust.desc=Verwende Alchemiepulver, um Hexenhütten zu finden
 
 achievement.nm.ancientSand=Wie ein wahrer Alchemist
-achievement.nm.ancientSand.desc=Benutzen Sie Uralten Sand, um den Wüstentempel zu finden
+achievement.nm.ancientSand.desc=Benutze Antiken Sand um einen Wüstentempel zu finden
 
 
 
@@ -703,10 +703,10 @@ achievement.btw.find_shaft=Bescheidene Anfänge
 achievement.btw.craft_fire_plough=Erste Flammen
 achievement.btw.craft_hopper=Die Automatisierung beginnt
 achievement.btw.find_bones=Nackte Knochen
-achievement.btw.place_tool=Hinterlassen Sie Ihre Spuren
+achievement.btw.place_tool=Hinterlasse deine Spuren
 
 
-achievement.btw.craft_iron_shears.desc=Besorgen Sie sich eine Eisenschere. Diese eignen sich hervorragend zum Schneiden von Hanf
+achievement.btw.craft_iron_shears.desc=Schmiede eine Eisenschere. Diese eignen sich hervorragend zum Schneiden von Hanf
 
 
 
