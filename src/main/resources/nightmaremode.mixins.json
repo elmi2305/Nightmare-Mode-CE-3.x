@@ -52,6 +52,7 @@
     "WorldProviderMixin",
     "WorldServerMixin",
     "beaconeffects.BELocationListMixin",
+    "biomegen.BiomeDecoratorMixin",
     "biomegen.BiomeEndDecoratorMixin",
     "biomegen.BiomeGenBaseAccessor",
     "biomegen.BiomeGenBaseMixin",
