@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.variants;
 
 import api.entity.mob.behavior.SimpleWanderBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;

@@ -5,7 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;

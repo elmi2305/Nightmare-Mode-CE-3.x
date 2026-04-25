@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
+import com.itlesports.nightmaremode.entity.variants.EntityRadioactiveEnderman;
 import net.minecraft.src.EntityEnderman;
 import net.minecraft.src.RenderEnderman;
 import net.minecraft.src.ResourceLocation;

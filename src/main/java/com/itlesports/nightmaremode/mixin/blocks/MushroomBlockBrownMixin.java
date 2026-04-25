@@ -26,10 +26,10 @@ public class MushroomBlockBrownMixin {
     private int increaseAttemptsToSpread(int constant){
         return 6;
     }
-    @Inject(method = "updateTick", at = @At("HEAD"))
-    private  void  a(World world, int x, int y, int z, Random rand, CallbackInfo ci){
-        System.out.println("hi " + x + " " + y + " " + z);
-    }
+//    @Inject(method = "updateTick", at = @At("HEAD"))
+//    private  void  a(World world, int x, int y, int z, Random rand, CallbackInfo ci){
+//        System.out.println("hi " + x + " " + y + " " + z);
+//    }
 //    @Redirect(method = "canBlockStayDuringGenerate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/WorldProvider;dimensionId:I", opcode = Opcodes.GETFIELD))
 //    private int growBrownMushroomsInNether(WorldProvider instance){
 //        return 0; // grows in all dims where the provider generates them

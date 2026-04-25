@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.variants;
 
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntitySkeleton;

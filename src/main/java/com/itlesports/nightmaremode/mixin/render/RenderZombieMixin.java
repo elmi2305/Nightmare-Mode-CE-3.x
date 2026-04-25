@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityStoneZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityStoneZombie;
 import net.minecraft.src.EntityPigZombie;
 import net.minecraft.src.EntityZombie;
 import net.minecraft.src.RenderZombie;

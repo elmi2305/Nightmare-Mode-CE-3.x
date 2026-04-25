@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.rendering.entities;
 
-import com.itlesports.nightmaremode.entity.EntitySkeletonDrowned;
-import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;
+import com.itlesports.nightmaremode.entity.variants.EntitySkeletonDrowned;
+import com.itlesports.nightmaremode.entity.variants.EntitySkeletonMelted;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.RenderSkeleton;
 import net.minecraft.src.ResourceLocation;

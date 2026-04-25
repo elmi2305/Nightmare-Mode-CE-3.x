@@ -10,10 +10,10 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
-import com.itlesports.nightmaremode.entity.EntitySkeletonDrowned;
-import com.itlesports.nightmaremode.entity.EntityShadowZombie;
-import com.itlesports.nightmaremode.entity.EntitySkeletonMelted;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntitySkeletonDrowned;
+import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
+import com.itlesports.nightmaremode.entity.variants.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Mixin(EntityZombie.class)

@@ -4,7 +4,7 @@ package com.itlesports.nightmaremode.rendering.entities;
 // (powered by FernFlower decompiler)
 //
 
-import com.itlesports.nightmaremode.entity.EntityObsidianFish;
+import com.itlesports.nightmaremode.entity.variants.EntityObsidianFish;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;

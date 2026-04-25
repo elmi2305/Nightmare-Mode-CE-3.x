@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.variants;
 
 import api.world.WorldUtils;
 import api.world.difficulty.DifficultyParam;

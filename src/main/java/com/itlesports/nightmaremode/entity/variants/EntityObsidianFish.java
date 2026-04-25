@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.variants;
 
 import btw.entity.attribute.BTWAttributes;
 import api.item.items.PickaxeItem;

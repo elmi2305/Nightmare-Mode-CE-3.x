@@ -158,9 +158,7 @@ public class NMConfUtils {
         return new File(FILE_NAME);
     }
 
-    /* =============================
-       File initialization
-       ============================= */
+
     private static final String KEY_STRING = "ThisIsAVeryLongAndConvolutedSecretKeyStringThatIsAtLeast32CharactersForAES256!";
     // Derive key once (static)
     private static SecretKey getKey() {

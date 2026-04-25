@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.entity;
+package com.itlesports.nightmaremode.entity.variants;
 
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
