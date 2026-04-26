@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
-import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -31,6 +30,13 @@ public abstract class EntityLivingBaseMixin extends Entity implements EntityAcce
         super(par1World);
     }
 
+    @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isChild()Z"))
+    private boolean babyZombiesInMvDropTheirItems(EntityLivingBase e){
+        if(NightmareMode.moreVariants){
+            if(e instanceof EntityZombie) return false; // baby zombies drop items like adult zombies do
+        }
+        return e.isChild();
+    }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void increaseStepHeightSlightlyForAsphalt(World par1World, CallbackInfo ci){
         this.stepHeight = 0.6f;
