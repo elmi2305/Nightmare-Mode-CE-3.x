@@ -66,7 +66,7 @@ public abstract class EntityAIAttackOnCollideMixin {
 
         int itemId = heldItem.itemID;
         if (NMUtils.LONG_RANGE_ITEMS.contains(itemId)) {
-            return NMUtils.LESSER_RANGE_ITEMS.contains(itemId) ? 5 : 10;
+            return (NMUtils.LESSER_RANGE_ITEMS.contains(itemId) || this.attacker.isChild()) ? 5 : 10;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
     }
