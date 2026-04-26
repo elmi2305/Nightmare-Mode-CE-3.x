@@ -41,9 +41,21 @@ public abstract class EntityZombieMixin extends EntityMob{
     @ModifyArg(method = "entityInit", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/DataWatcher;addObject(ILjava/lang/Object;)V", ordinal = 0), index = 1)
     private Object addBabyZombies(Object par2Obj){
         if(NightmareMode.moreVariants){
-            return this.rand.nextInt(32) == 0 ? (byte)1 : par2Obj;
+
+            boolean willBeBaby = this.rand.nextInt(32) == 0;
+            if(willBeBaby){
+                this.setSize(this.width, 0.4f);
+                return (byte)1;
+            }
+            return par2Obj;
         }
         return par2Obj;
+    }
+    @Inject(method = "setChild", at = @At("TAIL"))
+    private void setChildHeight(boolean par1, CallbackInfo ci){
+        if(par1){
+            this.setSize(this.width, 0.4f);
+        }
     }
 
 
