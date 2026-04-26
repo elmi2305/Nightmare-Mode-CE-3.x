@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
-import com.itlesports.nightmaremode.entity.EntityShadowZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
