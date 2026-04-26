@@ -4,7 +4,7 @@ import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityRadioactiveEnderman;
+import com.itlesports.nightmaremode.entity.variants.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;

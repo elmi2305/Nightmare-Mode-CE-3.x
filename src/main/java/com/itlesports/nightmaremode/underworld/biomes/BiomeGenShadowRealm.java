@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.underworld.biomes;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.entity.EntityShadowZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.*;
 

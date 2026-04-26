@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.AITasks;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import net.minecraft.src.*;
 
 import java.util.Set;

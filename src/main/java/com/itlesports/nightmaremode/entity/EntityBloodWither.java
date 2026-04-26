@@ -11,6 +11,8 @@ import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.creepers.EntityLightningCreeper;
 import com.itlesports.nightmaremode.entity.creepers.EntityNitroCreeper;
 import com.itlesports.nightmaremode.entity.creepers.EntityObsidianCreeper;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;

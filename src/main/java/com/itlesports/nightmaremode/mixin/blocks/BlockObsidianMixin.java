@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.item.items.PickaxeItem;
-import com.itlesports.nightmaremode.entity.EntityObsidianFish;
+import com.itlesports.nightmaremode.entity.variants.EntityObsidianFish;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

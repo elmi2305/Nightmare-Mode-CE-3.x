@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.AITasks;
 
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import net.minecraft.src.*;
 
 public class EntityAILunge extends EntityAITarget {

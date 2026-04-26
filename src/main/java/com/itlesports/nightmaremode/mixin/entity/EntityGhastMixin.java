@@ -1,10 +1,9 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityCreeperGhast;
+import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
