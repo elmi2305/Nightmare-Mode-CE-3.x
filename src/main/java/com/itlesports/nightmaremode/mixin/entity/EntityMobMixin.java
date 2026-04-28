@@ -3,10 +3,14 @@ package com.itlesports.nightmaremode.mixin.entity;
 import api.world.WorldUtils;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.LocatorPileEntity;
 import btw.entity.RottenArrowEntity;
+import com.itlesports.nightmaremode.entity.EntityBloodAltar;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBloodZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.util.interfaces.LocatorPileEntityExt;
 import net.minecraft.src.*;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.List;
 
 
 @Mixin(EntityMob.class)
@@ -24,6 +29,62 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
     public EntityMobMixin(World par1World) {
         super(par1World);
+    }
+
+    @Override
+    public void onDeath(DamageSource dmgSource) {
+//        System.out.println(this.worldObj.isRemote + " " + this.getEntityName());
+        boolean client = this.worldObj.isRemote;
+        boolean shouldActivate = NMUtils.getIsBloodMoon() && NMUtils.getWorldProgress() > 0;
+        if (shouldActivate) {
+
+            AxisAlignedBB aabb = this.boundingBox.expand(16, 8, 16);
+            List<EntityBloodAltar> altars = this.worldObj.getEntitiesWithinAABB(EntityBloodAltar.class, aabb);
+
+            if (!altars.isEmpty()) {
+                EntityBloodAltar nearest = getNearestAltar(altars);
+
+                if (nearest != null) {
+                    LocatorPileEntity particle = new LocatorPileEntity(
+                            this.worldObj,
+                            this.posX,
+                            this.posY + this.height * 0.5,
+                            this.posZ,
+                            0xFF0000
+                    );
+                    LocatorPileEntityExt lpe = (LocatorPileEntityExt) particle;
+                    lpe.nightmareMode$setDenominator(1);
+                    lpe.nightmareMode$moveTowards3D(nearest.posX,nearest.posY, nearest.posZ);
+                    if (!client) {
+                        this.worldObj.spawnEntityInWorld(particle);
+                    }
+
+                    nearest.notifyOfSacrifice();
+
+                    this.worldObj.playAuxSFX(2286, (int)Math.round(this.posX), (int)Math.round(this.posY), (int)Math.round(this.posZ), 0);
+                }
+            }
+        }
+
+        super.onDeath(dmgSource);
+    }
+
+    @Unique private @Nullable EntityBloodAltar getNearestAltar(List<EntityBloodAltar> altars) {
+        EntityBloodAltar nearest = null;
+        double nearestDistSq = Double.MAX_VALUE;
+
+        for (EntityBloodAltar altar : altars) {
+            double dx = altar.posX - this.posX;
+            double dy = altar.posY - this.posY;
+            double dz = altar.posZ - this.posZ;
+            double distSq = dx*dx + dy*dy + dz*dz;
+
+            if (distSq < nearestDistSq) {
+                nearestDistSq = distSq;
+                nearest = altar;
+            }
+        }
+        return nearest;
     }
 
     @Override
