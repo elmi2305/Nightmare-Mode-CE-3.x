@@ -99,6 +99,7 @@ entity.NmDrownedSkeleton.name=Ertrunkener
 entity.NmMeltedSkeleton.name=Inferno
 entity.NmObsidianFish.name=Obsidianfisch
 entity.NmCreeperGhast.name=Creeperghast
+entity.entityBloodAltar.name=Fortschritt
 
 key.nightmaremode.zoomhold=Zum Heranzoomen gedrückt halten
 key.nightmaremode.zoomtoggle=Zoom umschalten

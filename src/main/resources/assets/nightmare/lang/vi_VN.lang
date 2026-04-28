@@ -99,6 +99,7 @@ entity.NmDrownedSkeleton.name=Bộ xương nước
 entity.NmMeltedSkeleton.name=Bộ xương lửa
 entity.NmObsidianFish.name=Cá Obsidian
 entity.NmCreeperGhast.name=Ghast Creeper
+entity.entityBloodAltar.name=Tiến triển
 
 key.nightmaremode.zoomhold=Giữ để phóng to
 key.nightmaremode.zoomtoggle=Chuyển đổi mode phóng to

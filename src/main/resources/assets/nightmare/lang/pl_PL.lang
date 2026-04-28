@@ -98,7 +98,8 @@ entity.NmImposterZombie.name=Wędrujący handlarz
 entity.NmDrownedSkeleton.name=Utonął
 entity.NmMeltedSkeleton.name=Piekło
 entity.NmObsidianFish.name=Obsydianowa Ryba
-entity.NmCreeperGhast.name=Creeper Ghast
+entity.NmCreeperGhast.name=Creeper-Ghast
+entity.entityBloodAltar.name=Postęp
 
 key.nightmaremode.zoomhold=Przytrzymaj, aby powiększyć
 key.nightmaremode.zoomtoggle=Przełącz powiększenie

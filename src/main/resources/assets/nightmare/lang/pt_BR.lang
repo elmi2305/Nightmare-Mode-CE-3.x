@@ -99,6 +99,7 @@ entity.NmDrownedSkeleton.name=Afogado
 entity.NmMeltedSkeleton.name=Inferno
 entity.NmObsidianFish.name=Peixe Obsidiana
 entity.NmCreeperGhast.name=Rastejante Fantasmagórico
+entity.entityBloodAltar.name=Progresso
 
 key.nightmaremode.zoomhold=Segure para ampliar
 key.nightmaremode.zoomtoggle=Alternar zoom
