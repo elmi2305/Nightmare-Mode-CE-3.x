@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.underworld.biomes;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.entity.EntityMushWorm;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.EntityHorse;
 import net.minecraft.src.SpawnListEntry;
@@ -11,7 +12,7 @@ public class BiomeGenFlowerFields extends BiomeGenUnderworld {
         this.theBiomeDecorator.generateLakes = false;
         this.theBiomeDecorator.flowersPerChunk = 8;
         this.theBiomeDecorator.grassPerChunk = 2;
-        this.theBiomeDecorator.treesPerChunk = 0; // flower gen handled in BiomeUnderworldDecorator
+        this.theBiomeDecorator.treesPerChunk = 0;
         this.topBlock = (short) NMBlocks.underFlowerDirts.blockID;
         this.fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
 
@@ -19,7 +20,7 @@ public class BiomeGenFlowerFields extends BiomeGenUnderworld {
         this.fillerBlockMetadata = (short) NMBlocks.META_FLOWER_DIRT;
 
         this.spawnableCreatureList.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
-
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityMushWorm.class, 8, 2, 4));
     }
 
     @Override
