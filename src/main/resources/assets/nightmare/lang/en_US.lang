@@ -48,6 +48,13 @@ item.nmObsidianShard.name=Obsidian Shard
 item.nmTimeBottle.name=Bottle of Time
 item.nmRefinedDiamondIngot.name=Refined Diamond Ingot
 item.nmBloodBottle.name=Crimson Bottle
+item.nmVillagerOrb.name=Villager Orb
+item.nmVillagerOrb.farmer.name=Farmer Orb
+item.nmVillagerOrb.librarian.name=Librarian Orb
+item.nmVillagerOrb.blacksmith.name=Blacksmith Orb
+item.nmVillagerOrb.butcher.name=Butcher Orb
+item.nmVillagerOrb.priest.name=Priest Orb
+item.nmVillagerOrb.nightmare.name=Nightmare Orb
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone

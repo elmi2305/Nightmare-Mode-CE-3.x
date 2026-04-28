@@ -9,9 +9,21 @@ public class TileEntityVillagerContainer extends TileEntity {
     private int profession;
     private int level;
 
-    public void setLevel(int level) { this.level = level; }
+    public int getProfession() {
+        return profession;
+    }
 
-    public int getLevel() { return level; }
+    public void setProfession(int profession) {
+        this.profession = profession;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {

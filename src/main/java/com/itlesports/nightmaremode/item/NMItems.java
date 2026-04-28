@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.item;
 
-import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
@@ -75,6 +74,7 @@ public class NMItems {
     public static ItemStructureLocator templeLocator;
     public static Item refinedDiamondIngot;
     public static Item lightningBolt;
+    public static Item villagerOrb;
 
 
 
@@ -129,7 +129,7 @@ public class NMItems {
         elementalRod = (new NMItem(2342)).setTextureName("nightmare:nmElementalRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmElementalRod");
         shadowRod = (new NMItem(2343)).setTextureName("nightmare:nmShadowRod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmShadowRod");
         speedCoil = (new NMItem(2344)).setTextureName("nightmare:nmSpeedCoil").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmSpeedCoil");
-        starOfTheBloodGod = (NMNetherStarItem) new NMNetherStarItem(2345).setMaxStackSize(1).setTextureName("nightmare:nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
+        starOfTheBloodGod = (NMBloodStarItem) new NMBloodStarItem(2345).setMaxStackSize(1).setTextureName("nightmare:nmStarOfTheBloodGod").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmStarOfTheBloodGod");
 
         calamari = (NMFoodItem) new NMFoodItem(2346, 3, 0f, true, "nmCalamari",true).setStandardFoodPoisoningEffect().setTextureName("nightmare:nmCalamari").setCreativeTab(CreativeTabs.tabFood);
         calamariRoast = (NMFoodItem) new NMFoodItem(2347, 8, 0.25f, true, "nmCalamariRoast",true).setTextureName("nightmare:nmCalamariRoast").setCreativeTab(CreativeTabs.tabFood);
@@ -156,6 +156,22 @@ public class NMItems {
         refinedDiamondIngot = new NMItem(2360).setTextureName("nightmare:nmRefinedDiamondIngot").setUnlocalizedName("nmRefinedDiamondIngot").setCreativeTab(CreativeTabs.tabMaterials);
 
         lightningBolt = new ItemLightningBolt(2361).setTextureName("nightmare:nmLightning").setUnlocalizedName("nmLightning").setCreativeTab(CreativeTabs.tabMisc);
+
+        villagerOrb = new ItemVillagerOrb(2362).setUnlocalizedName("nmVillagerOrb");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nightmare:nmAchievementSpecialSnowball").hideFromEMI();

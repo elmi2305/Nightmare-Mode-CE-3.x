@@ -14,6 +14,7 @@ public class ItemVillagerContainer extends NMItemBlock {
         super(id);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
+        this.hideFromEMI();
     }
 
     @Override
@@ -25,21 +26,23 @@ public class ItemVillagerContainer extends NMItemBlock {
     }
 
 
-    private String getTextureForProfession(int profession){
-        if(profession == PROFESSION_ID_FARMER){
-            return "Farmer";
-        } else if(profession == PROFESSION_ID_LIBRARIAN){
-            return "Librarian";
-        } else if(profession == PROFESSION_ID_BLACKSMITH){
-            return "Blacksmith";
-        } else if(profession == PROFESSION_ID_BUTCHER){
-            return "Butcher";
-        } else if(profession == PROFESSION_ID_PRIEST){
-            return "Priest";
-        } else if(profession == 5){
-            return "Nightmare";
+    private String getTextureForProfession(int profession) {
+        switch (profession) {
+            case PROFESSION_ID_FARMER:
+                return "Farmer";
+            case PROFESSION_ID_LIBRARIAN:
+                return "Librarian";
+            case PROFESSION_ID_BLACKSMITH:
+                return "Blacksmith";
+            case PROFESSION_ID_BUTCHER:
+                return "Butcher";
+            case PROFESSION_ID_PRIEST:
+                return "Priest";
+            case 5:
+                return "Nightmare";
+            default:
+                return "Farmer"; // Fallback instead of null
         }
-        return null;
     }
 
     @Override
