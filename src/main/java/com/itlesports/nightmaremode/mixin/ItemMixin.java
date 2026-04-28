@@ -21,8 +21,7 @@ public class ItemMixin {
     @Shadow public static ItemArmor plateDiamond;
     @Shadow public static ItemArmor legsDiamond;
 
-
-    @Shadow public static Item flintAndSteel;
+    @Shadow public static Item netherStar;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void replaceItems(CallbackInfo ci){
@@ -35,5 +34,7 @@ public class ItemMixin {
         helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nightmare:nmDiamondHelmet");
         plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nightmare:nmDiamondChestplate");
         legsDiamond = (ItemArmor) legsDiamond.setTextureName("nightmare:nmDiamondLeggings");
+
+        netherStar = netherStar.setMaxDamage(4);
     }
 }
