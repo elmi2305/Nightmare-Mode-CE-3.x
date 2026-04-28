@@ -102,7 +102,7 @@ public class NMBlocks {
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare:steel_ore");
         Item.itemsList[steelOre.blockID] = new NMItemBlock(NMBlocks.steelOre.blockID - 256);
 
-        bloodBones = new BloodBoneBlock(2306).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock);
+        bloodBones = new NMBlock(2306, Material.rock).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[bloodBones.blockID] = new NMItemBlock(NMBlocks.bloodBones.blockID - 256);
 
         cryingObsidian = new BlockCryingObsidian(2307).setTextureName("nightmare:nmCryingObsidian").setUnlocalizedName("nmCryingObsidian").setHardness(-1.0F).setResistance(6000000.0F).setCreativeTab(CreativeTabs.tabBlock);
@@ -290,6 +290,8 @@ public class NMBlocks {
         );
         Item.itemsList[hellStones.blockID] = new NMItemBlockMeta(hellStones.blockID - 256, hellStones);
 
+        bloodBonesUpgraded = new BloodBoneBlock(2347).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
+        Item.itemsList[bloodBonesUpgraded.blockID] = new NMItemBlock(NMBlocks.bloodBonesUpgraded.blockID - 256);
 
 
     }
