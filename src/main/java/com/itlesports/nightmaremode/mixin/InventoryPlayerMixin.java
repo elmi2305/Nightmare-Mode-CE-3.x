@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.NMItem;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.Item;
@@ -41,6 +42,17 @@ public class InventoryPlayerMixin {
 
         if (NightmareMode.devMode) {
             inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
+//            inv.addItemStackToInventory(new ItemStack(NMBlocks.bloodBonesUpgraded));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.steelSword));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.plateBoots));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.plateLeggings));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.plateBreastplate));
+//            inv.addItemStackToInventory(new ItemStack(Item.netherStar));
+//            inv.addItemStackToInventory(new ItemStack(NMItems.rifle));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.cementBucket));
+//            inv.addItemStackToInventory(new ItemStack(BTWItems.heartyStew, 64));
+//            inv.addItemStackToInventory(new ItemStack(Item.appleGold, 64, 1));
+//            inv.addItemStackToInventory(new ItemStack(373, 64, 16421));
         }
     }
 }
