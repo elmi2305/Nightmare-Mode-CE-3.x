@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -80,7 +81,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NMUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);

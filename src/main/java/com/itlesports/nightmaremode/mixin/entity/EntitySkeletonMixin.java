@@ -101,7 +101,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NMUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);

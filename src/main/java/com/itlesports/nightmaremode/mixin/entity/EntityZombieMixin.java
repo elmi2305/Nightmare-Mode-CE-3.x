@@ -237,7 +237,7 @@ public abstract class EntityZombieMixin extends EntityMob{
 
     @Override
     protected void entityLivingDropFewItems(boolean par1, int par2) {
-        if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
+        if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
             for(int i = 0; i < (par2 * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

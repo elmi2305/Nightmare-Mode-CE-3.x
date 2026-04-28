@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
@@ -105,7 +106,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
                     this.dropItem(itemID, 1);
                 }
             }
-            else if (NMUtils.getIsMobEclipsed(this)) {
+            else if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);

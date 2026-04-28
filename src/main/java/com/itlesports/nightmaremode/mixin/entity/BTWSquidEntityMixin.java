@@ -96,7 +96,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;dropItem(II)Lnet/minecraft/src/EntityItem;"),index = 0)
     private int eclipseDropVoidSacks(int par1){
-        if(NMUtils.getIsMobEclipsed(this)){
+        if(NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)){
             // makes it drop void sacks instead of mysterious glands
             return NMItems.voidSack.itemID;
         }

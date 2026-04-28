@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.tileentity.beacon.BTWBeaconEffects;
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.JungleSpiderEntity;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -80,7 +81,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

@@ -179,7 +179,7 @@ public abstract class EntityWitchMixin extends EntityMob {
         }
 
         // 🌑 ECLIPSE BONUS DROPS
-        if (eclipsed && validLoot) {
+        if (eclipsed && validLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
 
             // Darksun fragments (improved chance logic)
             int attempts = looting * 2 + 1;

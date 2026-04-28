@@ -4,8 +4,8 @@ import api.inventory.InventoryUtils;
 import btw.block.blocks.BlockDispenserBlock;
 import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,17 +39,15 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         int profession = this.getProfession();
         int level = this.getCurrentTradeLevel();
 
-        int meta = NMUtils.VillagerMetaCodec.packMeta(profession, level);
+        int itemMeta = NMUtils.VillagerMetaCodec.packItemMeta(profession, level);
 
-        ItemStack stack = new ItemStack(NMBlocks.villagerBlock, 1, meta);
+        ItemStack stack = new ItemStack(NMItems.villagerOrb, 1, itemMeta);
 
         this.setDead();
         InventoryUtils.addSingleItemToInventory(tileEntity, stack.itemID, stack.getItemDamage());
 
         return true;
     }
-
-
 
     @Unique private static long lastCheckedTime = -1;
     @Unique private static boolean shouldResetTrades = false;

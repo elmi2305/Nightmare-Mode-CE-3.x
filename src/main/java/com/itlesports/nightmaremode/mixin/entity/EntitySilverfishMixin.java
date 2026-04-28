@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -41,7 +42,7 @@ public class EntitySilverfishMixin extends EntityMob{
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int looting) {
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
             for(int i = 0; i < (looting * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

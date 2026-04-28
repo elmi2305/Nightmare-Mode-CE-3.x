@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
 import api.entity.mob.behavior.SimpleWanderBehavior;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -80,7 +81,7 @@ public class EntityBloodZombie extends EntityZombie {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (isValidForEventLoot && NMUtils.getIsMobEclipsed(this)) {
+        if (isValidForEventLoot && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

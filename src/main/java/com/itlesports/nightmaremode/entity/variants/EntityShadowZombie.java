@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.entity.variants;
 
 import api.world.WorldUtils;
 import api.world.difficulty.DifficultyParam;
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
@@ -66,7 +67,7 @@ public class EntityShadowZombie extends EntityZombie {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= 2)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

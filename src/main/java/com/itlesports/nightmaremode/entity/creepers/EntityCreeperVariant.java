@@ -363,7 +363,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
     }
     protected void doEclipseDrops(boolean bKilledByPlayer, int iLootingModifier) {
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
