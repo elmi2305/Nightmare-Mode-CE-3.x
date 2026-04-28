@@ -3,10 +3,12 @@ package com.itlesports.nightmaremode.mixin.render;
 import btw.client.render.BTWRenderMapper;
 import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
+import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
 import net.minecraft.src.*;
@@ -33,6 +35,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntitySkeletonDrowned.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
+        RenderManager.addEntityRenderer(EntityMushWorm.class, new RenderMushWorm());
         RenderManager.addEntityRenderer(EntityPhantomZombie.class, new RenderPhantom());
         RenderManager.addEntityRenderer(EntityCreeperGhast.class, new RenderGhast());
         RenderManager.addEntityRenderer(FlowerZombie.class, new RenderZombieVariant());
@@ -41,12 +44,14 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityMagicArrow.class, new RenderCustomArrow());
         RenderManager.addEntityRenderer(EntitySporeArrow.class, new RenderCustomArrow());
         RenderManager.addEntityRenderer(EntityBlackHole.class, new RenderBlackHole());
+        RenderManager.addEntityRenderer(EntityBloodAltar.class, new RenderBloodAltar());
 
 
 
         TileEntityRenderer.instance.addSpecialRendererForClass(HellforgeTileEntity.class, new HellforgeRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(CustomBasketTileEntity.class, new CustomBasketRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityDisenchantmentTable.class, new RenderDisenchantmentTable());
+        TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityBloodBone.class, new TileEntityBloodBoneRenderer());
 
     }
 }

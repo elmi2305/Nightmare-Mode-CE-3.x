@@ -35,7 +35,7 @@ public abstract class WorldClientMixin extends World {
 
     @ModifyArgs(method = "playSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/SoundManager;playSound(Ljava/lang/String;FFFFF)V"))
     private void modifySoundOfLightning(Args args){
-        if(NightmareMode.darkStormyNightmare && args.get(0).equals("ambient.weather.thunder")){
+        if((NightmareMode.darkStormyNightmare || NightmareMode.devMode) && args.get(0).equals("ambient.weather.thunder")){
             float vol = args.get(4);
             args.set(4,vol * 0.0005f);
         }

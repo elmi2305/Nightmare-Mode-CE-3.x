@@ -4,6 +4,7 @@ import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
+import com.itlesports.nightmaremode.entity.variants.*;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.TileEntity;
 
@@ -11,17 +12,17 @@ public class NMEntityMapper {
     public NMEntityMapper(){}
 
     public static void createModEntityMappings() {
-        EntityList.addMapping(EntityFireCreeper.class, "NmFireCreeper", 2301, 15770182, 16643820);
-        EntityList.addMapping(EntityShadowZombie.class, "NmShadowZombie", 2302, 0, 0);
-        EntityList.addMapping(NightmareVillager.class, "NmVillager", 2303, 0, 16711680);
+        EntityList.addMapping(EntityFireCreeper.class, "NmFireCreeper", 2301, 0xF0C826, 0xFE0C04);
+        EntityList.addMapping(EntityShadowZombie.class, "NmShadowZombie", 2302, 0x0, 0x0);
+        EntityList.addMapping(NightmareVillager.class, "NmVillager", 2303, 0x0, 0xFF0000);
         EntityList.addMapping(EntityBloodWither.class, "NmBloodWither", 2304);
         EntityList.addMapping(EntityFallingChicken.class, "NmFallingChicken", 2305);
-        EntityList.addMapping(EntityNightmareGolem.class, "NmGolem", 2306, 16711680, 0);
-        EntityList.addMapping(EntityFireSpider.class, "NmFireSpider", 2307, 12874496, 10232320);
-        EntityList.addMapping(EntityStoneZombie.class, "NmStoneZombie", 2308, 11119017, 0);
-        EntityList.addMapping(EntityObsidianCreeper.class, "NmObsidianCreeper", 2309, 0x453E7D, 0);
-        EntityList.addMapping(EntityNitroCreeper.class, "NmSupercriticalCreeper", 2310, 16721408, 3148800);
-        EntityList.addMapping(EntityBlackWidowSpider.class, "NmBlackWidowSpider", 2311, 0, 12189696);
+        EntityList.addMapping(EntityNightmareGolem.class, "NmGolem", 2306, 0xFF0000, 0x0);
+        EntityList.addMapping(EntityFireSpider.class, "NmFireSpider", 2307, 0xC47000, 0x9C2F00);
+        EntityList.addMapping(EntityStoneZombie.class, "NmStoneZombie", 2308, 0xA9A159, 0x0);
+        EntityList.addMapping(EntityObsidianCreeper.class, "NmObsidianCreeper", 2309, 0x453E7D, 0x0);
+        EntityList.addMapping(EntityNitroCreeper.class, "NmSupercriticalCreeper", 2310, 0xFF0200, 0x300600);
+        EntityList.addMapping(EntityBlackWidowSpider.class, "NmBlackWidowSpider", 2311, 0x0, 0xB9E030);
         EntityList.addMapping(EntityRadioactiveEnderman.class, "NmRadioactiveEnderman", 2312, 0x0, 0x1dbd15);
         EntityList.addMapping(EntityDungCreeper.class, "NmDungCreeper", 2313, 0xC4AE84, 0x0);
         EntityList.addMapping(EntityLightningCreeper.class, "NmLightningCreeper", 2314, 0x008D91, 0x0);
@@ -40,6 +41,8 @@ public class NMEntityMapper {
         EntityList.addMapping(EntitySporeArrow.class, "NmSporeArrow", 2327);
         EntityList.addMapping(EntityMagicArrow.class, "NmMagicArrow", 2328);
         EntityList.addMapping(EntityBlackHole.class, "NmBlackHole", 2329);
+        EntityList.addMapping(EntityBloodAltar.class, "NmBloodAltarTracker", 2330, 0x0, 0x0);
+        EntityList.addMapping(EntityMushWorm.class, "NmMushWorm", 2331, 0xFF6B6B, 0x808080);
     }
 
     public static void createTileEntityMappings(){
