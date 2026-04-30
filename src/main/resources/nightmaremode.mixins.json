@@ -97,6 +97,7 @@
     "blocks.NetherrackBlockMixin",
     "blocks.OreBlockAccessor",
     "blocks.OvenTileEntityMixin",
+    "blocks.PlantsBlockMixin",
     "blocks.PotatoBlockMixin",
     "blocks.SawBlockMixin",
     "blocks.ScrewPumpBlockMixin",
