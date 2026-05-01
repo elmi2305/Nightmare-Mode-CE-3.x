@@ -23,7 +23,7 @@ public class BigMushroom extends ComponentScatteredFeature {
         super(random, x, BASE_HEIGHT, z, 64,64,64);
     }
     private final Random structureRand = new Random();
-    private static final byte BASE_HEIGHT = 63;
+    private static final byte BASE_HEIGHT = 50;
 
     private static final int[] paletteIDs = new int[]{
             Block.jukebox.blockID, // in the storage room
