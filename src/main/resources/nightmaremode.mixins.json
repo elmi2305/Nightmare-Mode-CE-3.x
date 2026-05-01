@@ -64,6 +64,7 @@
     "blocks.BlockClayMixin",
     "blocks.BlockEndPortalMixin",
     "blocks.BlockFenceGateMixin",
+    "blocks.BlockFireMixin",
     "blocks.BlockFluidMixin",
     "blocks.BlockGrassMixin",
     "blocks.BlockLeavesMixin",
