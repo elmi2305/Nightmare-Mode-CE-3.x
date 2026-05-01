@@ -261,6 +261,7 @@ public abstract class RenderGlobalMixin {
     private void redirectGlCallList(int list) {
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
             try {
+                // always render custom sky texture, regardless of time
                 if (list == this.glSkyList) {
                     renderTexturedSkyDome();
                 } else {
@@ -404,7 +405,14 @@ public abstract class RenderGlobalMixin {
         this.renderEngine.bindTexture(locationCloudsPng);
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 771);
-        Vec3 var15 = this.theWorld.getCloudColour(par1);
+
+        // use white clouds for underworld instead of time-based color
+        Vec3 var15;
+        if (this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
+            var15 = Vec3.createVectorHelper(1.0, 1.0, 1.0); // white clouds
+        } else {
+            var15 = this.theWorld.getCloudColour(par1);
+        }
 
 
         float var16 = (float)var15.xCoord;
