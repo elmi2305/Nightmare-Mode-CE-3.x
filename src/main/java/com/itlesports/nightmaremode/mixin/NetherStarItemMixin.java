@@ -40,7 +40,7 @@ public class NetherStarItemMixin extends ItemSimpleFoiled {
             if(tileEntity instanceof TileEntityBloodBone te){
                 if(((BloodBoneBlock)(blockTarget)).getNetherStarSide() != iFacing) return false;
                 if(te.isActive() && w.isRemote) return false;
-                te.cancelRitual(); // resets the fields when the ritual is started. prevents anger state and other stuff from carrying over.
+                te.resetFields(); // resets the fields when the ritual is started. prevents anger state and other stuff from carrying over.
                 te.setActive(true);
                 w.playSoundEffect(x,y,z, "mob.wither.death", 0.5f, 0.905F);
                 if (!w.isRemote) {
