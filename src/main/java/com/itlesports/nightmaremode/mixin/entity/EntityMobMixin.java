@@ -5,6 +5,7 @@ import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.LocatorPileEntity;
 import btw.entity.RottenArrowEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
 import com.itlesports.nightmaremode.entity.EntityBloodAltar;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
@@ -43,8 +44,10 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
 
             if (!altars.isEmpty()) {
                 EntityBloodAltar nearest = getNearestAltar(altars);
-
                 if (nearest != null) {
+                    TileEntityBloodBone altar = nearest.getAltar();
+                    if(altar.getLivingEntities().contains(this)) return; // tracked entities do not count
+
                     LocatorPileEntity particle = new LocatorPileEntity(
                             this.worldObj,
                             this.posX,
