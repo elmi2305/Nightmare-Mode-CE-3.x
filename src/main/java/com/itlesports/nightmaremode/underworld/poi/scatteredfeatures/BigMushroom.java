@@ -290,6 +290,12 @@ public class BigMushroom extends ComponentScatteredFeature {
                         ItemStack toAdd = selected.stack.copy();
                         toAdd.stackSize = selected.minCount + structureRand.nextInt(selected.maxCount - selected.minCount + 1);
 
+                        // clamp stack size to item's max stack size
+                        int maxStackSize = toAdd.getItem().getItemStackLimit();
+                        if (toAdd.stackSize > maxStackSize) {
+                            toAdd.stackSize = maxStackSize;
+                        }
+
                         // find a random empty slot (like vanilla randomization)
                         int attempts = 0;
                         int slot = structureRand.nextInt(chestTE.getSizeInventory());
