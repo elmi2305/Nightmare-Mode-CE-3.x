@@ -15,16 +15,14 @@ public class BloodBoneBlock extends NMBlockTileEntity {
 
     @Override
     public int onBlockPlaced(World w, int x, int y, int z, int facing, float par6, float par7, float par8, int par9) {
-        if (w.isRemote) {
-            EntityPlayer placer = w.getClosestPlayer(x,y,z, 12);
+        EntityPlayer placer = w.getClosestPlayer(x, y, z, 12);
 
-            int iFacing = 4;
-            if(placer != null) {
-                iFacing = MiscUtils.convertPlacingEntityOrientationToBlockFacingReversed(placer);
-            }
-
-            this.netherStarSide = (byte) iFacing;
+        int iFacing = 4;
+        if(placer != null) {
+            iFacing = MiscUtils.convertPlacingEntityOrientationToBlockFacingReversed(placer);
         }
+
+        this.netherStarSide = (byte) iFacing;
         return super.onBlockPlaced(w, x, y, z, facing, par6, par7, par8, par9);
     }
 
