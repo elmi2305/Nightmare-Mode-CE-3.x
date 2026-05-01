@@ -20,6 +20,7 @@ public class NMBlocks {
     public static BlockUnderworldPortal underworldPortal;
     public static BlockBloodChest bloodChest;
     public static BlockSteelLocker steelLocker;
+    public static BlockSteelFrame steelFrame;
     public static BlockRoad blockRoad;
     public static BlockRoad blockAsphalt;
     public static BlockCustomLadder stoneLadder;
@@ -119,6 +120,9 @@ public class NMBlocks {
 
         steelLocker = (BlockSteelLocker) new BlockSteelLocker(2355, 1).setTextureName("nightmare:lockerSteel").setUnlocalizedName("nmSteelLocker");
         Item.itemsList[steelLocker.blockID] = new NMItemBlock(NMBlocks.steelLocker.blockID - 256);
+
+        steelFrame = (BlockSteelFrame) new BlockSteelFrame(2360).setCreativeTab(CreativeTabs.tabBlock);
+        Item.itemsList[steelFrame.blockID] = new NMItemBlock(NMBlocks.steelFrame.blockID - 256);
 
         blockRoad = (BlockRoad) new BlockRoad(2311, 1.5f).setUnlocalizedName("nmRoad").setTextureName("nightmare:nmRoad");
         Item.itemsList[blockRoad.blockID] = new NMItemBlock(NMBlocks.blockRoad.blockID - 256);

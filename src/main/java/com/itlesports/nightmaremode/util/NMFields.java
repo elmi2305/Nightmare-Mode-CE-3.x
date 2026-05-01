@@ -20,6 +20,7 @@ public class NMFields {
     // other entities
     public static int PACKET_SPORE = 24; // EntityPollenCloud
     public static int PACKET_BLACKHOLE = 25; // EntityBlackHole
+    public static int PACKET_BLOOD_ALTAR = 26; // EntityBloodAltar
 
     // vehicle types
     public static int VEHICLE_SPORE = 2300;

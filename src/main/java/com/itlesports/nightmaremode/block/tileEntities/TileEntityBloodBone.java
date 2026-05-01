@@ -13,11 +13,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 public class TileEntityBloodBone extends TileEntity implements TileEntityDataPacketHandler {
     private boolean activityState; // whether the ritual is going on or nah
     private byte ritualTicks; // counter that goes up once every 64 ticks. tends to overflow.
     private Set<EntityLivingBase> livingEntities; // entities it summoned
+    private Set<UUID> livingEntityUUIDs; // UUIDs for persistent tracking across world loads
     private boolean isAngry; // server and client anger state
     public float xRot; // client only
     public float yRot; // client only
@@ -34,12 +36,12 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
     public TileEntityBloodBone() {
         super();
         this.livingEntities = new HashSet<>();
+        this.livingEntityUUIDs = new HashSet<>();
         this.rand = new Random();
     }
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        System.out.println("Reading from NBT");
 
         if(tag.hasKey("activityState")) {
             this.activityState = tag.getBoolean("activityState");
@@ -56,38 +58,46 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if(tag.hasKey("successfulIncrements")) {
             this.successfulIncrements = tag.getInteger("successfulIncrements");
         }
+
+        if(tag.hasKey("sacrifices")) {
+            this.sacrifices = tag.getInteger("sacrifices");
+        }
+
         if(tag.hasKey("trackedItemStack")) {
             NBTTagCompound tagTrackedItemStack = tag.getCompoundTag("trackedItemStack");
             this.trackedItemStack = new ItemStack(tagTrackedItemStack.getInteger("id"), 1, tagTrackedItemStack.getInteger("damage"));
         }
 
-//        if(tag.hasKey("xRot")) {
-//            this.xRot = tag.getFloat("xRot");
-//        }
-//        if(tag.hasKey("zRot")) {
-//            this.zRot = tag.getFloat("zRot");
-//        }
-//        if(tag.hasKey("yRot")) {
-//            this.yRot = tag.getFloat("yRot");
-//        }
-
-        if(this.livingEntities == null) {
-            this.livingEntities = new HashSet<>();
+        if(this.livingEntityUUIDs == null) {
+            this.livingEntityUUIDs = new HashSet<>();
         }
 
-        NBTTagList list = tag.getTagList("entities");
+        NBTTagList list = tag.getTagList("entityUUIDs");
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound currentTag = (NBTTagCompound) list.tagAt(i);
-            int entityID = currentTag.getInteger("entityID");
-
-            if(this.worldObj != null) {
-                Entity entity = this.worldObj.getEntityByID(entityID);
-                if (entity instanceof EntityLivingBase && entity.isEntityAlive()) {
-                    this.livingEntities.add((EntityLivingBase) entity);
-                }
+            String uuidString = currentTag.getString("uuid");
+            if(uuidString != null && !uuidString.isEmpty()) {
+                this.livingEntityUUIDs.add(UUID.fromString(uuidString));
             }
         }
-        readCustomNBT(tag);
+
+        // rebuild livingEntities from UUIDs if world is available
+        if(this.worldObj != null && !this.livingEntityUUIDs.isEmpty()) {
+            this.livingEntities = new HashSet<>();
+            for(UUID uuid : this.livingEntityUUIDs) {
+                for(Object entityObj : this.worldObj.loadedEntityList) {
+                    if(entityObj instanceof EntityLivingBase) {
+                        EntityLivingBase entity = (EntityLivingBase) entityObj;
+                        if(entity.getUniqueID().equals(uuid) && entity.isEntityAlive()) {
+                            this.livingEntities.add(entity);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            this.livingEntities = new HashSet<>();
+        }
     }
 
     private Set<EntityLivingBase> validateSet(Set<EntityLivingBase> set) {
@@ -113,36 +123,30 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        System.out.println("Wrote to NBT");
         tag.setBoolean("activityState", this.activityState);
         tag.setByte("ritualTicks", this.ritualTicks);
         tag.setBoolean("angry", this.isAngry);
         tag.setInteger("successfulIncrements", this.successfulIncrements);
-//        tag.setFloat("xRot", this.xRot);
-//        tag.setFloat("zRot", this.zRot);
-//        tag.setFloat("yRot", this.yRot);
-        // rotation only set on client, doesn't save on server lol
+        tag.setInteger("sacrifices", this.sacrifices);
 
         if (this.trackedItemStack != null) {
             NBTTagCompound tagTrackedItemStack = new NBTTagCompound();
             tagTrackedItemStack.setInteger("id", this.trackedItemStack.itemID);
             tagTrackedItemStack.setInteger("damage", this.trackedItemStack.getItemDamage());
+            tag.setTag("trackedItemStack", tagTrackedItemStack);
         }
 
-
-        if(this.livingEntities != null) {
+        if(this.livingEntityUUIDs != null) {
             NBTTagList list = new NBTTagList();
 
-            for (EntityLivingBase entity : this.livingEntities) {
-                if (entity == null || !entity.isEntityAlive()) continue;
+            for(UUID uuid : this.livingEntityUUIDs) {
                 NBTTagCompound currentTag = new NBTTagCompound();
-                currentTag.setInteger("entityID", entity.entityId);
+                currentTag.setString("uuid", uuid.toString());
                 list.appendTag(currentTag);
             }
 
-            tag.setTag("entities", list);
+            tag.setTag("entityUUIDs", list);
         }
-        writeCustomNBT(tag);
     }
 
     @Override
@@ -192,79 +196,12 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if ((world.getWorldTime() & 63) == 0) {
             this.checkForConditionsAndIncrement();
         }
-
-
-
-
-    }
-
-    public void readCustomNBT(NBTTagCompound tag) {
-        System.out.println("Reading from custom NBT");
-
-        if(tag.hasKey("activityState")) {
-            this.activityState = tag.getBoolean("activityState");
-        }
-
-        if(tag.hasKey("ritualTicks")) {
-            this.ritualTicks = tag.getByte("ritualTicks");
-        }
-
-        if(tag.hasKey("angry")) {
-            this.isAngry = tag.getBoolean("angry");
-        }
-
-        if(tag.hasKey("successfulIncrements")) {
-            this.successfulIncrements = tag.getInteger("successfulIncrements");
-        }
-
-        if(tag.hasKey("spinSpeed")) {
-            this.spinSpeed = tag.getFloat("spinSpeed");
-        }
-
-        if(this.livingEntities == null) {
-            this.livingEntities = new HashSet<>();
-        }
-
-        NBTTagList list = tag.getTagList("entities");
-        for (int i = 0; i < list.tagCount(); i++) {
-            NBTTagCompound currentTag = (NBTTagCompound) list.tagAt(i);
-            int entityID = currentTag.getInteger("entityID");
-
-            if(this.worldObj != null) {
-                Entity entity = this.worldObj.getEntityByID(entityID);
-                if (entity instanceof EntityLivingBase && entity.isEntityAlive()) {
-                    this.livingEntities.add((EntityLivingBase) entity);
-                }
-            }
-        }
-    }
-
-    public void writeCustomNBT(NBTTagCompound tag) {
-        System.out.println("Wrote custom NBT");
-        tag.setBoolean("activityState", this.activityState);
-        tag.setByte("ritualTicks", this.ritualTicks);
-        tag.setBoolean("angry", this.isAngry);
-        tag.setInteger("successfulIncrements", this.successfulIncrements);
-        tag.setFloat("spinSpeed", this.spinSpeed);
-
-        if(this.livingEntities != null) {
-            NBTTagList list = new NBTTagList();
-
-            for (EntityLivingBase entity : this.livingEntities) {
-                if (entity == null || !entity.isEntityAlive()) continue;
-                NBTTagCompound currentTag = new NBTTagCompound();
-                currentTag.setInteger("entityID", entity.entityId);
-                list.appendTag(currentTag);
-            }
-
-            tag.setTag("entities", list);
-        }
     }
 
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
-        writeCustomNBT(nbttagcompound);
+        this.writeToNBT(nbttagcompound);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, nbttagcompound);
     }
 
@@ -349,7 +286,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if(this.isAngry && this.successfulIncrements >= 8) {
             this.setAngry(false);
             this.successfulIncrements = 0;
-            System.out.println("DEBUG: Anger state reverted after 10 successful increments");
+            this.syncToClients(); // Fix: sync after reset
         }
 
         if(this.getRitualTicks() % 4 == 0 && this.getRitualTicks() > 0){
@@ -363,24 +300,30 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         this.setActive(true);
     }
 
+    public Set<EntityLivingBase> getLivingEntities() {
+        return this.livingEntities;
+    }
+
     private boolean canIncrementRitual() {
         if(this.livingEntities == null || this.livingEntities.isEmpty()) {
             return true;
         }
 
-        Iterator<EntityLivingBase> iterator = this.livingEntities.iterator();
-        while(iterator.hasNext()) {
-            EntityLivingBase entity = iterator.next();
-            if(entity == null || !entity.isEntityAlive()) {
-                iterator.remove();
-                System.out.println("DEBUG: Removed dead tracked entity");
+        Set<EntityLivingBase> aliveEntities = new HashSet<>();
+        Set<UUID> aliveUUIDs = new HashSet<>();
+
+        for(EntityLivingBase entity : this.livingEntities) {
+            if(entity != null && entity.isEntityAlive()) {
+                aliveEntities.add(entity);
+                aliveUUIDs.add(entity.getUniqueID());
             }
         }
 
+        // Update the sets
+        this.livingEntities = aliveEntities;
+        this.livingEntityUUIDs = aliveUUIDs;
+
         boolean canIncrement = this.livingEntities.isEmpty();
-        if(!canIncrement) {
-            System.out.println("DEBUG: " + this.livingEntities.size() + " tracked entities still alive");
-        }
         return canIncrement;
     }
     private static final Class<? extends EntityLiving>[] summonableMobs = new Class[] {
@@ -425,6 +368,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             mob.setPosition(spawnX, spawnY, spawnZ);
             this.worldObj.spawnEntityInWorld(mob);
             this.livingEntities.add(mob);
+            this.livingEntityUUIDs.add(mob.getUniqueID());
 
             System.out.println("DEBUG: Summoned zombie " + (i+1) + " at " + (int)spawnX + ", " + (int)spawnY + ", " + (int)spawnZ);
         }
@@ -528,12 +472,11 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     public void setActive(boolean active){
         this.activityState = active;
-        // DEBUG: spawning on client too
-        if(active  && markerEntity == null) {
+        // Only spawn on server - client will get it via normal entity sync
+        if(active && markerEntity == null && !this.worldObj.isRemote) {
             markerEntity = new EntityBloodAltar(worldObj);
             markerEntity.bindToAltar(this);
             worldObj.spawnEntityInWorld(markerEntity);
-            System.out.println("DEBUG: Spawned marker entity");
         }
     }
     @Override
@@ -597,10 +540,31 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if(this.livingEntities != null) {
             this.livingEntities.clear();
         }
+        if(this.livingEntityUUIDs != null) {
+            this.livingEntityUUIDs.clear();
+        }
         if(markerEntity != null) {
             markerEntity.setDead();
         }
         ejectItemStack();
+        this.syncToClients();
+    }
+    public void resetFields() {
+        this.successfulIncrements = 0;
+        this.ritualTicks = 0;
+        this.setActive(false);
+        this.sacrifices = 0;
+        if(this.livingEntities != null) {
+            this.livingEntities.clear();
+        }
+        if(this.livingEntityUUIDs != null) {
+            this.livingEntityUUIDs.clear();
+        }
+        if(markerEntity != null) {
+            markerEntity.setDead();
+            markerEntity = null;
+        }
+        this.trackedItemStack = null;
         this.syncToClients();
     }
 
@@ -615,7 +579,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     @Override
     public void readNBTFromPacket(NBTTagCompound tag) {
-        readCustomNBT(tag);
-        System.out.println("DEBUG: Client received sync packet - ticks: " + this.getRitualTicks() + ", angry: " + this.isAngry);
+        this.readFromNBT(tag);
     }
 }
