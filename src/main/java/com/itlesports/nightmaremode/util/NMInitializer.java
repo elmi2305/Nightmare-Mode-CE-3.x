@@ -40,6 +40,9 @@ import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
 
 public abstract class NMInitializer implements AchievementExt {
+    private static void finishRecipes(String type){
+        System.out.println("Finished initializing: [" + type + "]");
+    }
 
     public static void initNightmareRecipes(){
         addCraftingRecipes();
@@ -50,11 +53,14 @@ public abstract class NMInitializer implements AchievementExt {
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
+        finishRecipes("All Recipes");
     }
 
 
     public static void runItemPostInit(){
         NMPostItems.runPostInit();
+        finishRecipes("Item Post-Initialization");
+
     }
     public static void runDevModePostInit(){
         if(NightmareMode.devMode) return;
@@ -62,6 +68,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         NMItems.hideItems();
         NMBlocks.hideBlocks();
+        finishRecipes("Dev mode Item/Block hiding");
 
     }
     public static void initMobSpawning(){
@@ -98,6 +105,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityBloodZombie.class, 2, 1, 1);
         addMobToAllBiomes(EntityFauxVillager.class, 1, 1, 1);
 
+        finishRecipes("Mob Biome Spawning");
     }
 
     private static void addMobToMushroomIslands(Class mob, int i, int j, int k){
@@ -336,6 +344,8 @@ public abstract class NMInitializer implements AchievementExt {
         kill(EXPLODED_WITH_BLASTING_OIL);
         kill(MAKE_COMPANION_SLAB);
         move(POWER_THE_CAKE, -2, 0);
+        finishRecipes("Achievement Edits");
+
     }
 
     private static void switchTab(Achievement acObj, AchievementTab tab){
@@ -354,6 +364,8 @@ public abstract class NMInitializer implements AchievementExt {
         addLibrarianTrades();
         addBlacksmithTrades();
         addNightmareVillagerTrades();
+        finishRecipes("All Trades");
+
     }
 
     public static void editExistingTrades(){
@@ -541,6 +553,9 @@ public abstract class NMInitializer implements AchievementExt {
         TradeTweaks.setInputCount("btw:buy_broadhead_arrows", 2,4);
 //        TradeTweaks.setInputCount("btw:buy_lightning_rod_and_soap", 0,0);
 //        TradeTweaks.setInputCount("btw:sell_sharpness_scroll", 0,0);
+
+        finishRecipes("Trade Tweaks");
+
     }
 
     public static void miscInit(){
@@ -560,7 +575,10 @@ public abstract class NMInitializer implements AchievementExt {
             NMItems.witchLocator.setItemRightClickCooldown( NMItems.witchLocator.getItemRightClickCooldown() / 6);
             NMItems.templeLocator.setItemRightClickCooldown( NMItems.templeLocator.getItemRightClickCooldown() / 6);
         }
+        finishRecipes("Miscellaneous");
         NMConfUtils.initConfigFile();
+        finishRecipes("Config");
+
     }
 
 
@@ -576,6 +594,9 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(4).buy().item(BTWItems.chowder.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("efficiency"))).mandatory().addToTradeList();
+
+        finishRecipes("Farmer Trades");
+
     }
 
     private static void addLibrarianTrades(){
@@ -600,6 +621,8 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(4).sell().item(BTWItems.soulFlux.itemID).itemCount(2,4).weight(1.2f).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
         TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(5).convert().input(TradeItem.fromID(BTWItems.corpseEye.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,4,10)).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().addToTradeList();
+
+        finishRecipes("Librarian Trades");
     }
 
 
@@ -623,6 +646,8 @@ public abstract class NMInitializer implements AchievementExt {
 
         TradeProvider.getBuilder().name("nmPriestOcular").profession(2).level(2).buy().item(BTWItems.ocularOfEnder.itemID).emeraldCost(2, 2).addAsLevelUpTrade();
 
+        finishRecipes("Priest Trades");
+
     }
 
 
@@ -639,6 +664,8 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).sell().item(Item.appleGold.itemID).emeraldCost(8,16).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,8201)).addToTradeList();
         TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,18)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("unbreaking"))).weight(1.0f).addToTradeList();
+
+        finishRecipes("Blacksmith Trades");
     }
 
 
@@ -649,6 +676,9 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmButcher0").profession(4).level(2).buy().item(Item.swordIron.itemID).buySellSingle().weight(0.3f).addToTradeList();
         TradeProvider.getBuilder().name("nmButcher0").profession(4).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,6,12)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("thorns"))).addToTradeList();
         TradeProvider.getBuilder().name("nmButcher0").profession(4).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("feather"))).weight(2.0f).addToTradeList();
+
+        finishRecipes("Butcher Trades");
+
     }
 
 
@@ -861,6 +891,8 @@ public abstract class NMInitializer implements AchievementExt {
 
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.02f).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(1.2f).addToTradeList();
+        finishRecipes("Nightmare Merchant Trades");
+
     }
 
 
@@ -1005,6 +1037,7 @@ public abstract class NMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Block.glass, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.glass, 16), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         // glass
+        finishRecipes("Crucible Recipes");
 
     }
     private static void addCauldronRecipes(){
@@ -1028,11 +1061,14 @@ public abstract class NMInitializer implements AchievementExt {
 
         CauldronCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{TagInstance.of(BTWTags.cookedPotatoes), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.heartyMeats), new ItemStack(Item.bowlEmpty, 5)});
         RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{new ItemStack(BTWItems.boiledPotato), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.cookedMeats), new ItemStack(Item.bowlEmpty, 5)});
+        finishRecipes("Cauldron Recipes");
 
     }
 
     private static void addOvenRecipes(){
         FurnaceRecipes.smelting().addSmelting(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast), 0.0f);
+        finishRecipes("Oven Recipes");
+
     }
     private static void addSoulforgeRecipes(){
         RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.canvas), new Object[]{"MMMM", "MFFM", "MFFM", "MMMM", Character.valueOf('F'), BTWItems.fabric, Character.valueOf('M'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE)});
@@ -1051,9 +1087,13 @@ public abstract class NMInitializer implements AchievementExt {
         // make soulforge craftable with soulforge
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.soulforge, 1), new Object[]{"#BB#", " #  ", " #  ", "####", Character.valueOf('#'), BTWItems.soulforgedSteelIngot,Character.valueOf('B'), BTWBlocks.soulforgedSteelBlock});
 
+        finishRecipes("Soulforge Recipes");
+
     }
     private static void addCampfireRecipes(){
         RecipeManager.addCampfireRecipe(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast));
+        finishRecipes("Campfire Recipes");
+
     }
     private static void addMillstoneRecipes(){
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
@@ -1063,6 +1103,7 @@ public abstract class NMInitializer implements AchievementExt {
         // improve netherrack grinding rates
         MillStoneCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.groundNetherrack), new ItemStack(Block.netherrack));
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.groundNetherrack, 8), new ItemStack(Block.netherrack));
+        finishRecipes("Millstone Recipes");
 
     }
 
@@ -1407,7 +1448,8 @@ public abstract class NMInitializer implements AchievementExt {
         // done with firestarters
 
 
-        // FINISHER
+        finishRecipes("Crafting Recipes");
+
     }
 
     private static void addPistonPackingRecipes() {
@@ -1418,6 +1460,8 @@ public abstract class NMInitializer implements AchievementExt {
         // spider eyes
         PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.spiderEyeBlock, 0 , new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
+        finishRecipes("Piston Packing Recipes");
+
     }
 
 
