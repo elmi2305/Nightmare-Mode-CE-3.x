@@ -24,6 +24,10 @@ public abstract class RenderGlobalMixin {
     @Shadow public abstract void renderCloudsFancy(float par1);
 
     @Shadow @Final private static ResourceLocation locationSunPng;
+    @Shadow
+    private int glSkyList2;
+    @Shadow
+    private int starGLCallList;
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/eclipse.png");
     @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/crack.png");
@@ -262,14 +266,13 @@ public abstract class RenderGlobalMixin {
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
             try {
                 // always render custom sky texture, regardless of time
-                if (list == this.glSkyList) {
+                if (list == this.glSkyList || list == this.starGLCallList) {
                     renderTexturedSkyDome();
                 } else {
                     // for other lists (stars etc.) preserve original behavior
                     GL11.glCallList(list);
                 }
             } catch (Throwable t) {
-                // Safety fallback — if anything goes wrong, fall back to calling list
                 t.printStackTrace();
                 GL11.glCallList(list);
             }
