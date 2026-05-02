@@ -9,8 +9,8 @@ public class BlockSteelFrame extends Block {
 
     public BlockSteelFrame(int id) {
         super(id, Material.rock);
-//        setHardness(1.5F); // Reduced hardness to allow fire ignition
-//        setResistance(10.0F);
+        setHardness(4.5F);
+        setResistance(100.0F);
         this.setFireProperties(Flammability.NONE);
         this.setFireProperties(0,0);
         setStepSound(soundMetalFootstep);

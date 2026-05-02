@@ -36,7 +36,6 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
     public EntityPollenCloud(World world, double x, double y, double z, double rad) {
         this(world, x, y, z);
         this.radius = rad;
-        System.out.println("set to " + rad);
     }
 
     @Override

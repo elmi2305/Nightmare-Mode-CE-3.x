@@ -15,10 +15,10 @@ public class EntityBloodAltar extends EntityLiving implements EntityWithCustomPa
         super(world);
         this.setHealth(this.getMaxHealth());
 
-        this.setSize(0.1f, 0.1f); // Increased size for better tracking
+        this.setSize(0.1f, 0.1f);
         this.isImmuneToFire = true;
         this.noClip = true;
-        this.renderDistanceWeight = 10.0f; // Increased render distance for better tracking
+        this.renderDistanceWeight = 10.0f;
     }
 
     public void notifyOfSacrifice(){
