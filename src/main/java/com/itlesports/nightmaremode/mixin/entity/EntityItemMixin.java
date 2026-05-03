@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.item.items.ArcaneScrollItem;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.template.NMItemIndestructible;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,7 +51,7 @@ public abstract class EntityItemMixin extends Entity {
 
         if(item.getItem() instanceof ArcaneScrollItem) return false;
 
-        if(item.getItem() instanceof NMItemIndestructible) return false;
+        if(item.getItem() instanceof NMItem && ((NMItem) item.getItem()).isIndestructible()) return false;
 
         return true;
     }
