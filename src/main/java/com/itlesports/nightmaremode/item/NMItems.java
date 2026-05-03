@@ -3,6 +3,9 @@ package com.itlesports.nightmaremode.item;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
+import com.itlesports.nightmaremode.item.items.template.ItemStructureLocator;
+import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
 
 public class NMItems {
@@ -75,6 +78,8 @@ public class NMItems {
     public static Item refinedDiamondIngot;
     public static Item lightningBolt;
     public static Item villagerOrb;
+    public static Item refinedElement;
+    public static Item witherSoul;
 
 
 
@@ -159,6 +164,9 @@ public class NMItems {
 
         villagerOrb = new ItemVillagerOrb(2362).setUnlocalizedName("nmVillagerOrb");
 
+        refinedElement = new NMItem(2363).setTextureName("nightmare:refinedElement").setUnlocalizedName("nmRefinedElement").setCreativeTab(CreativeTabs.tabMaterials);
+
+        witherSoul = new NMItem(2364).setTextureName("nightmare:witherSoul").setUnlocalizedName("nmWitherSoul").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
