@@ -24,7 +24,7 @@ import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
-import com.itlesports.nightmaremode.item.items.NMPostItems;
+import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.mixin.interfaces.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
@@ -40,9 +40,7 @@ import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
 
 public abstract class NMInitializer implements AchievementExt {
-    private static void finishRecipes(String type){
-        System.out.println("Finished initializing: [" + type + "]");
-    }
+    private static void finishRecipes(String type){System.out.println("Finished initializing: [" + type + "]");}
 
     public static void initNightmareRecipes(){
         addCraftingRecipes();
@@ -1061,6 +1059,10 @@ public abstract class NMInitializer implements AchievementExt {
 
         CauldronCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{TagInstance.of(BTWTags.cookedPotatoes), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.heartyMeats), new ItemStack(Item.bowlEmpty, 5)});
         RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{new ItemStack(BTWItems.boiledPotato), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.cookedMeats), new ItemStack(Item.bowlEmpty, 5)});
+
+        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.refinedElement), new TagOrStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.redstone, 3), new ItemStack(BTWItems.steelNugget, 4)});
+        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.refinedElement), new TagOrStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.redstone, 3), new ItemStack(NMItems.steelBunch)});
+
         finishRecipes("Cauldron Recipes");
 
     }
@@ -1086,6 +1088,17 @@ public abstract class NMInitializer implements AchievementExt {
 
         // make soulforge craftable with soulforge
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.soulforge, 1), new Object[]{"#BB#", " #  ", " #  ", "####", Character.valueOf('#'), BTWItems.soulforgedSteelIngot,Character.valueOf('B'), BTWBlocks.soulforgedSteelBlock});
+//        // add loom
+//        RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.loom, 1), new Object[]{
+//                "AAAA",
+//                "AAAA",
+//                "AAAA",
+//                "AAAA",
+//                Character.valueOf('A'), BTWItems.soulforgedSteelIngot,
+//                Character.valueOf('B'), BTWItems.soulforgedSteelIngot,
+//                Character.valueOf('C'), BTWItems.soulforgedSteelIngot,
+//                Character.valueOf('D'), BTWBlocks.soulforgedSteelBlock});
+
 
         finishRecipes("Soulforge Recipes");
 
@@ -1437,6 +1450,14 @@ public abstract class NMInitializer implements AchievementExt {
         // done with calamari
         // remove loom
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.loom), new Object[]{"SSW", "SBG", "WGW", 'W', TagInstance.of(BTWTags.woodenSidings), 'S', BTWBlocks.slatsPane, 'G', BTWItems.gear, 'B', BTWItems.belt});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.loom), new Object[]{
+                "SSS",
+                "WBW",
+                "WGW",
+                'W', TagInstance.of(BTWTags.stoneBrickItems),
+                'S', BTWItems.soulforgedSteelIngot,
+                'G', BTWItems.screw,
+                'B', NMItems.refinedElement});
         // done loom
 
         // firestarters
