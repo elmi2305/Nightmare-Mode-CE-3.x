@@ -38,7 +38,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(NMUtils.getIsBloodMoon()){
             return constant + 2;
         }
-        return constant + 1;
+        return constant + NMUtils.getWorldProgress() > 0 ? 1 : 0;
     }
 
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
