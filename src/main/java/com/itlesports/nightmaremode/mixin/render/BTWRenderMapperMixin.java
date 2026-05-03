@@ -1,10 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.client.render.BTWRenderMapper;
-import com.itlesports.nightmaremode.block.tileEntities.CustomBasketTileEntity;
-import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
-import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
-import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
+import com.itlesports.nightmaremode.block.tileEntities.*;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
@@ -45,6 +42,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntitySporeArrow.class, new RenderCustomArrow());
         RenderManager.addEntityRenderer(EntityBlackHole.class, new RenderBlackHole());
         RenderManager.addEntityRenderer(EntityBloodAltar.class, new RenderBloodAltar());
+        RenderManager.addEntityRenderer(EntityRitualPortal.class, new RenderRitualPortalEntity());
 
 
 
@@ -52,6 +50,7 @@ public class BTWRenderMapperMixin {
         TileEntityRenderer.instance.addSpecialRendererForClass(CustomBasketTileEntity.class, new CustomBasketRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityDisenchantmentTable.class, new RenderDisenchantmentTable());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityBloodBone.class, new TileEntityBloodBoneRenderer());
+        TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityPortalCore.class, new TileEntityPortalCoreRenderer());
 
     }
 }
