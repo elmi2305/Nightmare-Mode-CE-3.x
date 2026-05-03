@@ -239,20 +239,23 @@ public abstract class EntityGhastMixin extends EntityFlying{
             return constant * 2;
         }
         if(thisObj.worldObj != null && NMUtils.getWorldProgress()>0){
-            return constant - NMUtils.getWorldProgress()*2 -1;
+            return constant - NMUtils.getWorldProgress() * 2 -1;
             // 9 -> 7 -> 4 -> 2
         }
         return constant;
     }
     @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 20,ordinal = 1))
     private int lowerAttackThreshold(int constant){
-        EntityGhast thisObj = (EntityGhast)(Object)this;
-        if(thisObj.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
+        EntityGhast g = (EntityGhast)(Object)this;
+        int progress = NMUtils.getWorldProgress();
+
+
+        if(g.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
             return NMUtils.divByNiteMultiplier(constant * 2, 10);
         }
-        if(thisObj.worldObj != null && NMUtils.getWorldProgress()>0){
-            return NMUtils.divByNiteMultiplier((int) (constant - NMUtils.getWorldProgress() * 1.5 - 5), 8);
-            // 15 -> 13 -> 12 -> 10
+        if(g.worldObj != null && progress > 0){
+            return NMUtils.divByNiteMultiplier((int) (constant - progress * 1.5 - 2), 8);
+            // 18 -> 16 -> 15 -> 13
         }
         return constant;
     }
