@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -169,7 +170,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
     }
 
-    @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I",ordinal = 2),cancellable = true)
+    @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I", ordinal = 2, opcode = Opcodes.GETFIELD),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
         if(NMUtils.getIsMobEclipsed(this) && this.isCreeperVariant()){
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 40,0));
