@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
 
 public class ItemLightningBolt extends NMItem {

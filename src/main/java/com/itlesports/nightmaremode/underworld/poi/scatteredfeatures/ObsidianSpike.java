@@ -7,7 +7,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.NMPostItems;
+import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.underworld.poi.LootEntry;
 import net.minecraft.src.*;
 

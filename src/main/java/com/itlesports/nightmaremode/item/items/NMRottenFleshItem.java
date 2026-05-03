@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import btw.item.items.RottenFleshItem;
+import com.itlesports.nightmaremode.util.NMFields;
 
 public class NMRottenFleshItem extends RottenFleshItem {
     public NMRottenFleshItem(int iItemID) {
@@ -8,6 +9,6 @@ public class NMRottenFleshItem extends RottenFleshItem {
     }
 
     public String getModId() {
-        return "nightmare";
+        return NMFields.modID;
     }
 }

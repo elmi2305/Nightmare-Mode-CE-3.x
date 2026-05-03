@@ -1,6 +1,7 @@
-package com.itlesports.nightmaremode.item.items;
+package com.itlesports.nightmaremode.item;
 
 import com.itlesports.nightmaremode.achievements.NMAchievements;
+import com.itlesports.nightmaremode.item.items.template.ItemAchievementGranter;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemEventController;
 import net.minecraft.src.CreativeTabs;
 

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.item.items;
+package com.itlesports.nightmaremode.item.items.template;
 
 import api.achievement.AchievementHandler;
 import net.minecraft.server.MinecraftServer;

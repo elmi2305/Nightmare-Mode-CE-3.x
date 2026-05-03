@@ -3,40 +3,43 @@ package com.itlesports.nightmaremode.util;
 // a collection of static fields used around the codebase
 public class NMFields {
 
+    // mod ID
+    public static final String modID = "nightmare";
+
     // dimension
     public static final int UNDERWORLD_DIMENSION = 2;
 
     // color (hexadecimal)
-    public static int CRIMSON_COLOR = 0xD81F1F;
+    public static final int CRIMSON_COLOR = 0xD81F1F;
 
     // creeper variants
-    public static int PACKET_CREEPER_FIRE = 18;
-    public static int PACKET_CREEPER_OBSIDIAN = 19;
-    public static int PACKET_CREEPER_SUPERCRITICAL = 20;
-    public static int PACKET_CREEPER_DUNG = 21;
-    public static int PACKET_CREEPER_LIGHTNING = 22;
-    public static int PACKET_CREEPER_FLOWER = 23;
+    public static final int PACKET_CREEPER_FIRE = 18;
+    public static final int PACKET_CREEPER_OBSIDIAN = 19;
+    public static final int PACKET_CREEPER_SUPERCRITICAL = 20;
+    public static final int PACKET_CREEPER_DUNG = 21;
+    public static final int PACKET_CREEPER_LIGHTNING = 22;
+    public static final int PACKET_CREEPER_FLOWER = 23;
 
     // other entities
-    public static int PACKET_SPORE = 24; // EntityPollenCloud
-    public static int PACKET_BLACKHOLE = 25; // EntityBlackHole
-    public static int PACKET_BLOOD_ALTAR = 26; // EntityBloodAltar
+    public static final int PACKET_SPORE = 24; // EntityPollenCloud
+    public static final int PACKET_BLACKHOLE = 25; // EntityBlackHole
+    public static final int PACKET_BLOOD_ALTAR = 26; // EntityBloodAltar
 
     // vehicle types
-    public static int VEHICLE_SPORE = 2300;
-    public static int VEHICLE_MAGIC = 2301;
+    public static final int VEHICLE_SPORE = 2300;
+    public static final int VEHICLE_MAGIC = 2301;
 
     // skeleton types
-    public static int SKELETON_WITHER = 1; // vanilla wither skeleton type
-    public static int SKELETON_ICE = 2;
-    public static int SKELETON_FIRE = 3;
-    public static int SKELETON_ENDER = 4;
-    public static int SKELETON_JUNGLE = 5;
-    public static int SKELETON_SUPERCRITICAL = 6;
+    public static final int SKELETON_WITHER = 1; // vanilla wither skeleton type
+    public static final int SKELETON_ICE = 2;
+    public static final int SKELETON_FIRE = 3;
+    public static final int SKELETON_ENDER = 4;
+    public static final int SKELETON_JUNGLE = 5;
+    public static final int SKELETON_SUPERCRITICAL = 6;
 
     // blaze types
-    public static int BLAZE_SHADOW = 1;
-    public static int BLAZE_AQUA = 2;
+    public static final int BLAZE_SHADOW = 1;
+    public static final int BLAZE_AQUA = 2;
 
     // custom flower names
     public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion6", "dandelion7", "dandelion8"};

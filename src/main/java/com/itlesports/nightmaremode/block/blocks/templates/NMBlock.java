@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks.templates;
 
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.Block;
 import net.minecraft.src.Material;
 
@@ -11,6 +12,6 @@ public class NMBlock extends Block {
 
     @Override
     public String getModId() {
-        return "nightmare";
+        return NMFields.modID;
     }
 }

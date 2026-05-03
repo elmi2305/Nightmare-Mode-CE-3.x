@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.entity.EntityPlayerMPAccessor;
 import com.itlesports.nightmaremode.nmgui.ContainerHorseArmor;
 import com.itlesports.nightmaremode.nmgui.InventoryHorseArmor;

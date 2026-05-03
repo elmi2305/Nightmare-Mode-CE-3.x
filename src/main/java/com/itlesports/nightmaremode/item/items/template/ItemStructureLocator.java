@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.item.items;
+package com.itlesports.nightmaremode.item.items.template;
 /*
  * Decompiled with CFR 0.2.1 (FabricMC 53fa44c9).
  */

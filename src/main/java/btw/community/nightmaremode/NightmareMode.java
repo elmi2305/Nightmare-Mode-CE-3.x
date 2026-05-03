@@ -17,6 +17,7 @@ import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import com.itlesports.nightmaremode.util.NMEntityMapper;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMInitializer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
@@ -102,14 +103,14 @@ public class NightmareMode extends BTWAddon {
 
     @Override
     public String getModID() {
-        return "nightmare";
+        return NMFields.modID;
     }
 
     public static NightmareMode getInstance() {
         if (instance == null) {
             instance = new NightmareMode();
         }
-        instance.modID = "nightmare";
+        instance.modID = NMFields.modID;
         return instance;
     }
 

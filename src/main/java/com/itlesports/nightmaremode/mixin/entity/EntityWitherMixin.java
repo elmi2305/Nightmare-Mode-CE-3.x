@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -58,6 +59,10 @@ public abstract class EntityWitherMixin extends EntityMob {
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;II)V"),index = 2)
     private int makeWitherDropSmiteScroll(int par2){
         return Enchantment.smite.effectId;
+    }
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void dropWitherSoul(boolean par1, int par2, CallbackInfo ci){
+        this.dropItem(NMItems.witherSoul.itemID, 1);
     }
 
     @ModifyConstant(method = "attackEntityFrom", constant = @Constant(intValue = 20))

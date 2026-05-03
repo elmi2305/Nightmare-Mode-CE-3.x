@@ -1,5 +1,6 @@
-package com.itlesports.nightmaremode.item.items;
+package com.itlesports.nightmaremode.item.items.template;
 
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.Item;
 
 public class NMItem extends Item {
@@ -8,6 +9,6 @@ public class NMItem extends Item {
     }
 
     public String getModId() {
-        return "nightmare";
+        return NMFields.modID;
     }
 }
