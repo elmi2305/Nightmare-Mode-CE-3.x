@@ -112,11 +112,6 @@ public class EntityPigZombieMixin extends EntityZombie {
         }
     }
 
-    @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
-    private int reduceDropRatesFromPigMen(int bound){
-        return bound - 1;
-    }
-
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
