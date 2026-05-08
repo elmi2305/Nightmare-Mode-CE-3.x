@@ -55,9 +55,11 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawSquidText(int par1, int par2, float par3, CallbackInfo ci){
         if (NightmareMode.isAprilFools) {
-            String timesText = I18n.getString("gui.selectworld.squid_buffed_times")
-                    .replace("{0}", Integer.toString(num))
-                    .replace("{1}", num == 1 ? "" : "s");
+            String timesText = "gui.selectworld.squid_buffed_times_plural";
+            if(num == 1) {
+                timesText = "gui.selectworld.squid_buffed_times"
+            }
+            timesText = I18n.getString(timesText).replace("{0}", Integer.toString(num));
             this.drawCenteredString(this.fontRenderer, timesText, this.width / 16 + this.fontRenderer.getStringWidth(timesText) / 2 - 20, this.height / 2 + 25, 0xFFFFFF);
 
             String strengthText = I18n.getString("gui.selectworld.squid_strength")
