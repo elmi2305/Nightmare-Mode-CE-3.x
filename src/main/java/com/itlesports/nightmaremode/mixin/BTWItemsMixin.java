@@ -1,7 +1,10 @@
 package com.itlesports.nightmaremode.mixin;
 
 import api.item.items.FireStarterItemPrimitive;
+import api.item.items.SeedFoodItem;
+import btw.block.BTWBlocks;
 import btw.item.BTWItems;
+import btw.item.items.FoodItem;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemArmor;
@@ -14,6 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BTWItemsMixin {
     @Shadow public static Item firePlough;
     @Shadow public static Item bowDrill;
+
+    @Shadow public static Item carrot;
+    @Shadow public static Item cookedCarrot;
+    @Shadow public static Item boiledPotato;
 
     @ModifyArg(method = "instantiateModItems", at = @At(value = "INVOKE", target = "Lbtw/item/items/ArmorItemSteel;<init>(III)V", ordinal = 0), index = 2)
     private static int steelHelmet(int w){
@@ -34,6 +41,9 @@ public class BTWItemsMixin {
 
     @Inject(method = "instantiateModItems", at = @At("TAIL"), remap = false)
     private static void replaceItems(CallbackInfo ci){
+        carrot = new SeedFoodItem(22341, 1, 0.0f, BTWBlocks.floweringCarrotCrop.blockID).setAsBasicPigFood().setUnlocalizedName("fcItemCarrot").setTextureName("carrot");
+        cookedCarrot = new FoodItem(22246, 1, 0.0f, false, "fcItemCarrotCooked").setAsBasicPigFood().setTextureName("btw:cooked_carrot");
+        boiledPotato = new FoodItem(22242, 1, 0.0f, false, "fcItemPotatoBoiled").setAsBasicPigFood().setTextureName("btw:boiled_potato");
 
     }
 }

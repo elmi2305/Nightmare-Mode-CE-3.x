@@ -1,10 +1,9 @@
 package com.itlesports.nightmaremode.mixin;
 
 import api.item.items.FireStarterItemPrimitive;
+import api.item.items.SeedFoodItem;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemArmor;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,6 +21,8 @@ public class ItemMixin {
     @Shadow public static ItemArmor legsDiamond;
 
     @Shadow public static Item netherStar;
+    @Shadow public static Item potato;
+    @Shadow public static Item bakedPotato;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void replaceItems(CallbackInfo ci){
@@ -34,6 +35,9 @@ public class ItemMixin {
         helmetDiamond = (ItemArmor) helmetDiamond.setTextureName("nightmare:nmDiamondHelmet");
         plateDiamond  = (ItemArmor) plateDiamond.setTextureName("nightmare:nmDiamondChestplate");
         legsDiamond = (ItemArmor) legsDiamond.setTextureName("nightmare:nmDiamondLeggings");
+
+        potato = new SeedFoodItem(136, 1, 0.0f, Block.potato.blockID).setAsBasicPigFood().setUnlocalizedName("potato").setTextureName("potato");
+        bakedPotato = new ItemFood(137, 1, 0.0f, false).setAsBasicPigFood().setUnlocalizedName("potatoBaked").setTextureName("potato_baked");
 
         netherStar = netherStar.setMaxDamage(4);
     }
