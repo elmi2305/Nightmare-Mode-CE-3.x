@@ -57,7 +57,7 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
         if (NightmareMode.isAprilFools) {
             String timesText = "gui.selectworld.squid_buffed_times_plural";
             if(num == 1) {
-                timesText = "gui.selectworld.squid_buffed_times"
+                timesText = "gui.selectworld.squid_buffed_times";
             }
             timesText = I18n.getString(timesText).replace("{0}", Integer.toString(num));
             this.drawCenteredString(this.fontRenderer, timesText, this.width / 16 + this.fontRenderer.getStringWidth(timesText) / 2 - 20, this.height / 2 + 25, 0xFFFFFF);
