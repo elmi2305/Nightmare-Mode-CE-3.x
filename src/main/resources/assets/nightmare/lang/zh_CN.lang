@@ -137,6 +137,7 @@ gui.selectworld.buff_squids=强化鱿鱼
 gui.selectworld.toggle_cancer_worldgen=切换癌症世界生成
 gui.selectworld.nm_config=噩梦模式配置
 gui.selectworld.squid_buffed_times=你已强化鱿鱼 {0} 次
+gui.selectworld.squid_buffed_times_plural=你已强化鱿鱼 {0} 次
 gui.selectworld.squid_strength=鱿鱼强度倍率：{0}x
 gui.selectworld.warning_title=警告:
 gui.selectworld.warning_recommend_restart=建议重启游戏

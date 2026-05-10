@@ -5,6 +5,7 @@ import net.minecraft.src.World;
 
 public class EntityBurningArrow extends EntityArrow {
     public EntityBurningArrow(World par1World, EntityArrow arrow) {
+        // Laura was here
         super(par1World);
         this.setFire(400);
         this.motionX = arrow.motionX;
