@@ -4,41 +4,19 @@ package com.itlesports.nightmaremode.block.blocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore;
 import net.minecraft.src.*;
 
-import static com.itlesports.nightmaremode.util.underworld.RitualState.VALID_IDLE;
-
-/**
- * PortalCoreBlock — the block the player places at the center of the altar.
- *
- * Registration (in your mod init):
- *   NightmareBlocks.PORTAL_CORE = new PortalCoreBlock(YOUR_BLOCK_ID);
- *   GameRegistry.registerBlock(NightmareBlocks.PORTAL_CORE, "portalCore");
- *   ClientRegistry.bindTileEntitySpecialRenderer(
- *       TileEntityPortalCore.class, new TileEntityPortalCoreRenderer());
- *   GameRegistry.registerTileEntity(TileEntityPortalCore.class, "portalCore");
- *
- * Player interaction:
- *   Right-click with Wither Soul → catalyst inserted if structure is valid.
- *   Right-click empty-handed    → chat feedback about current ritual state.
- */
 public class BlockPortalCore extends BlockContainer {
 
     public BlockPortalCore(int id) {
         super(id, Material.rock);
         this.setHardness(5.0f);
-        this.setResistance(2000.0f); // Very hard to blast away mid-ritual
+        this.setResistance(2000.0f);
         this.setUnlocalizedName("portalCore");
         this.setTextureName("nightmare:portalCore");
     }
 
-    // -----------------------------------------------------------------------
-    //  Player interaction
-    // -----------------------------------------------------------------------
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z,
-                                    EntityPlayer player,
-                                    int side, float hitX, float hitY, float hitZ) {
-        // All state mutation happens server-side only
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         if (world.isRemote) return true;
 
         TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -47,13 +25,11 @@ public class BlockPortalCore extends BlockContainer {
         TileEntityPortalCore core = (TileEntityPortalCore) te;
         ItemStack held = player.getHeldItem();
 
-        // Attempt catalyst insertion
         if (held != null && core.tryInsertCatalyst(held)) {
             consumeOneItem(player, held);
             return true;
         }
 
-        // Otherwise give state feedback
         sendStateFeedback(player, core.getState());
         return true;
     }
@@ -85,15 +61,9 @@ public class BlockPortalCore extends BlockContainer {
         }
     }
 
-    // -----------------------------------------------------------------------
-    //  Lifecycle
-    // -----------------------------------------------------------------------
-
     @Override
     public void onBlockAdded(World world, int x, int y, int z) {
         super.onBlockAdded(world, x, y, z);
-        // The TileEntity's first updateEntity() tick will pick up validation.
-        // Nothing extra needed here — the TESR will check immediately.
     }
 
     @Override
@@ -106,9 +76,6 @@ public class BlockPortalCore extends BlockContainer {
         super.breakBlock(world, x, y, z, blockId, meta);
     }
 
-    // -----------------------------------------------------------------------
-    //  Rendering flags — TESR handles all visuals
-    // -----------------------------------------------------------------------
 
     @Override
     public boolean renderAsNormalBlock() { return false; }
@@ -127,10 +94,6 @@ public class BlockPortalCore extends BlockContainer {
 
     @Override
     public boolean hasTileEntity(){return true;}
-
-    // -----------------------------------------------------------------------
-    //  Tile entity factory
-    // -----------------------------------------------------------------------
 
     @Override
     public TileEntity createNewTileEntity(World world) {
