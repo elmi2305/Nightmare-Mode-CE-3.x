@@ -94,7 +94,7 @@
     "blocks.KilnBlockMixin",
     "blocks.MillstoneTileEntityMixin",
     "blocks.MushroomBlockBrownMixin",
-    "blocks.MyceliumBlockMixin",
+    "blocks.BlockMyceliumMixin",
     "blocks.NetherrackBlockMixin",
     "blocks.OreBlockAccessor",
     "blocks.OvenTileEntityMixin",
