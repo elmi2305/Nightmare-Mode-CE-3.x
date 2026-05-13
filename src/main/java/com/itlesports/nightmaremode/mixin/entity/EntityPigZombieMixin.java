@@ -49,10 +49,15 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.entityToAttack = player;
                 }
             } else {
-                double range = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 8.0 : 2.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
-                EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, range);
-                if(player != null && !this.isPlayerWearingGoldArmor(player)){
-                    this.entityToAttack = player;
+                double baseRange = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 8.0 : 5.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
+                EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, baseRange);
+                if(player != null){
+                    int goldArmorCount = this.countGoldArmor(player);
+                    // range values for gold armor: 0 = base, 1 = 90%, 2 = 60%, 3 = 35%, 4 = 5% of base
+                    double actualRange = Math.max((1.1428d - Math.pow(goldArmorCount * 0.25, 1.2)) * (baseRange - 1), 2); // the magic double is 1 + 1/baseRange
+                    if(player.getDistanceSqToEntity(this) <= actualRange * actualRange){
+                        this.entityToAttack = player;
+                    }
                 }
             }
         }
@@ -170,11 +175,14 @@ public class EntityPigZombieMixin extends EntityZombie {
         return mob.getHeldItem() != null && getIllegalItems().contains(mob.getHeldItem().itemID);
     }
 
-    @Unique private boolean isPlayerWearingGoldArmor(EntityPlayer p){
-        return (this.isGold(p.getCurrentItemOrArmor(1))
-                || this.isGold(p.getCurrentItemOrArmor(2))
-                || this.isGold(p.getCurrentItemOrArmor(3))
-                || this.isGold(p.getCurrentItemOrArmor(4)));
+    @Unique private int countGoldArmor(EntityPlayer p){
+        int count = 0;
+        for(int i = 1; i <= 4; i++){
+            if(this.isGold(p.getCurrentItemOrArmor(i))){
+                count++;
+            }
+        }
+        return count;
     }
 
     @Unique private boolean isGold(ItemStack stack){
