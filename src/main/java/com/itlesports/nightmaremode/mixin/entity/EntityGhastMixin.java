@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow public abstract boolean getCanSpawnHereNoPlayerDistanceRestrictions();
 
-    @Shadow private Entity entityTargeted;
+    @Shadow
+    private Entity entityTargeted;
     @Unique int rageTimer = 0;
     @Unique boolean firstAttack = true;
 
@@ -174,21 +175,22 @@ public abstract class EntityGhastMixin extends EntityFlying{
     private void manageCreeperEclipseVariant(CallbackInfo ci){
         if(NMUtils.getIsMobEclipsed(this) && this.isCreeperVariant()){
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 40,0));
+            Entity target = this.entityTargeted;
             if(this.firstAttack){
-                this.worldObj.playSoundEffect(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ, "mob.ghast.scream",1f,0.8f);
+                this.worldObj.playSoundEffect(target.posX,target.posY,target.posZ, "mob.ghast.scream",1f,0.8f);
                 this.firstAttack = false;
             }
 
-            // Get the positions of the entity and the player
-            Vec3 playerPos = Vec3.createVectorHelper(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ);
+            Vec3 playerPos = Vec3.createVectorHelper(target.posX,target.posY,target.posZ);
             Vec3 entityPos = Vec3.createVectorHelper(this.posX,this.posY,this.posZ);
-            // Calculate the direction vector
+
+            // direction vector
             Vec3 velocity = entityPos.subtract(playerPos);
             velocity.normalize();
 
-            // Calculate the velocity vector
+            // velocity scale
             velocity.scale(0.1d);
-            if (this.getDistanceSqToEntity(this.entityTargeted) > 4) {
+            if (this.getDistanceSqToEntity(target) > 4) {
                 if (this.hurtResistantTime <= 8) {
                     this.motionX = velocity.xCoord;
                     this.motionY = velocity.yCoord;
@@ -199,6 +201,58 @@ public abstract class EntityGhastMixin extends EntityFlying{
                 this.setDead();
             }
             ci.cancel();
+        }
+    }
+
+    @ModifyConstant(method = "updateEntityActionState", constant = @Constant(intValue = 20))
+    private int modifyAttackThreshold(int constant){
+        EntityGhast g = (EntityGhast)(Object)this;
+        int progress = NMUtils.getWorldProgress();
+
+        if(g.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
+            return NMUtils.divByNiteMultiplier(constant * 2, 10);
+        }
+
+        if(g.dimension != -1) return constant;
+
+        // nether
+        boolean postWither = NMUtils.getWorldProgress() > 1;
+        boolean belowHalfHealth = this.getHealth() <= this.getMaxHealth() * 0.5f;
+
+        if(belowHalfHealth || postWither){
+            return NMUtils.divByNiteMultiplier((int) (constant - progress * 1.5 - 2), 8);
+            // 18 -> 16 -> 15 -> 13
+        }
+        return (int)(constant * 1.2);
+        // 24 by default, pre hm and hm
+    }
+
+
+
+    @Inject(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;isCourseTraversable(DDDD)Z", shift = At.Shift.AFTER))
+    private void avoidGettingTooCloseToPlayer(CallbackInfo ci){
+        EntityGhast g = (EntityGhast)(Object)this;
+        Entity target = this.entityTargeted;
+        if(target != null && target.isEntityAlive()){
+            double distSq = g.getDistanceSqToEntity(target);
+            if(distSq < 256.0){
+                // calculate direction away from player
+                double awayX = g.posX - target.posX;
+                double awayY = g.posY - target.posY;
+                double awayZ = g.posZ - target.posZ;
+                double length = MathHelper.sqrt_double(awayX * awayX + awayY * awayY + awayZ * awayZ);
+
+                if(length > 0){
+                    // set new waypoint further away from player
+                    double targetDist = 24.0; // try to maintain 24 blocks distance
+                    g.waypointX = g.posX + (awayX / length) * targetDist;
+                    g.waypointY = g.posY + (awayY / length) * targetDist + (g.rand.nextDouble() * 8.0 - 4.0); // add some vertical variation
+                    g.waypointZ = g.posZ + (awayZ / length) * targetDist;
+
+                    // clamp waypoint to reasonable bounds
+                    g.waypointY = Math.max(g.posY - 16.0, Math.min(g.posY + 16.0, g.waypointY));
+                }
+            }
         }
     }
 
@@ -245,21 +299,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
         return constant;
     }
-    @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 20,ordinal = 1))
-    private int lowerAttackThreshold(int constant){
-        EntityGhast g = (EntityGhast)(Object)this;
-        int progress = NMUtils.getWorldProgress();
 
-
-        if(g.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
-            return NMUtils.divByNiteMultiplier(constant * 2, 10);
-        }
-        if(g.worldObj != null && progress > 0){
-            return NMUtils.divByNiteMultiplier((int) (constant - progress * 1.5 - 2), 8);
-            // 18 -> 16 -> 15 -> 13
-        }
-        return constant;
-    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
@@ -269,15 +309,16 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "fireAtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private void boostGhastForwardOnEclipse(CallbackInfo ci){
         if (NMUtils.getIsMobEclipsed(this) && this.rand.nextInt(3) == 0) {
-            Vec3 playerPos = Vec3.createVectorHelper(this.entityTargeted.posX,this.entityTargeted.posY,this.entityTargeted.posZ);
+            Entity target = this.entityTargeted;
+            Vec3 playerPos = Vec3.createVectorHelper(target.posX,target.posY,target.posZ);
             Vec3 entityPos = Vec3.createVectorHelper(this.posX,this.posY,this.posZ);
-            // Calculate the direction vector
+            // calculate the direction vector
             Vec3 velocity = entityPos.subtract(playerPos);
             velocity.normalize();
 
-            // Calculate the velocity vector
+            // calculate the velocity vector
             velocity.scale(0.02d);
-            if (this.getDistanceSqToEntity(this.entityTargeted) > 256) {
+            if (this.getDistanceSqToEntity(target) > 256) {
                 this.motionX = velocity.xCoord;
                 this.motionY = velocity.yCoord;
                 this.motionZ = velocity.zCoord;
@@ -288,7 +329,19 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
     private int lowerAttackCooldownOnFire(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;
-        return (int) ((- 10 - thisObj.rand.nextInt(21)) * NMUtils.getNiteMultiplier());
-        // from -10 to -30
+        int baseCooldown = (int) ((- 10 - thisObj.rand.nextInt(21)) * NMUtils.getNiteMultiplier());
+
+        if(thisObj.dimension != -1) return baseCooldown;
+
+        boolean postWither = NMUtils.getWorldProgress() > 1;
+        boolean belowHalfHealth = this.getHealth() <= this.getMaxHealth() * 0.5f;
+
+        if(postWither){
+            return (int)(baseCooldown * 0.7); // faster cooldown by default
+        }
+        if(belowHalfHealth){
+            return (int)(baseCooldown * 0.8); // faster cooldown when below half health
+        }
+        return (int)(baseCooldown * 1.2); // slower cooldown by default
     }
 }
