@@ -53,8 +53,8 @@ public class EntityPigZombieMixin extends EntityZombie {
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, baseRange);
                 if(player != null){
                     int goldArmorCount = this.countGoldArmor(player);
-                    // range values for gold armor: 0 = base, 1 = 90%, 2 = 60%, 3 = 35%, 4 = 5% of base
-                    double actualRange = Math.max((1.1428d - Math.pow(goldArmorCount * 0.25, 1.2)) * (baseRange - 1), 2); // the magic double is 1 + 1/baseRange
+                    // range values for gold armor: 0 = 8, 1 = 4, 2 = 2, 3 = 1, 4 = 1/2
+                    double actualRange = baseRange / (1 << goldArmorCount);
                     if(player.getDistanceSqToEntity(this) <= actualRange * actualRange){
                         this.entityToAttack = player;
                     }
