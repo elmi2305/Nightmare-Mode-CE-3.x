@@ -28,6 +28,10 @@ public class RitualStructureValidator {
      * or when doing a periodic re-check in INVALID state.
      */
     public static boolean validate(World world, int cx, int cy, int cz) {
+//        boolean check1 = checkCenterPillar(world, cx, cy, cz);
+//        boolean check2 = checkCornerPillars(world, cx, cy, cz);
+//        boolean check3 = checkCornerBridges(world, cx, cy, cz);
+//        boolean check4 = checkSkyExposure(world, cx, cy, cz);
         return checkCenterPillar(world, cx, cy, cz)
                 && checkCornerPillars(world, cx, cy, cz)
                 && checkCornerBridges(world, cx, cy, cz)
@@ -72,26 +76,8 @@ public class RitualStructureValidator {
         return true;
     }
 
-    /**
-     * The inner ring (everything between the corner pillars) must be air
-     * at ground level and at Y+1, so the ritual space stays open.
-     * Skips the core position itself (that's the portal core block, not air).
-     */
-//    private static boolean checkInnerSpaceClear(World world, int cx, int cy, int cz) {
-//        for (int dx = -1; dx <= 1; dx++) {
-//            for (int dz = -1; dz <= 1; dz++) {
-//                if (dx == 0 && dz == 0) continue;
-//                world.setBlock(cx + dx, cy, cz+dz, BTWBlocks.hibachi.blockID);
-//
-//                if (!isPassableAt(world, cx + dx, cy, cz + dz))     return false;
-//                if (!isPassableAt(world, cx + dx, cy + 1, cz + dz)) return false;
-//            }
-//        }
-//        return true;
-//    }
-
     private static boolean checkSkyExposure(World world, int cx, int cy, int cz) {
-        return world.canBlockSeeTheSky(cx, cy, cz);
+        return world.canBlockSeeTheSky(cx, cy + 1, cz);
     }
 
     private static boolean isSteelAt(World world, int x, int y, int z) {
