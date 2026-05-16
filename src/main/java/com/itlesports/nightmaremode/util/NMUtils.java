@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.util;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.BTWDifficulties;
+import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import net.minecraft.src.*;
@@ -86,6 +87,86 @@ public class NMUtils {
             }
         }
         return NightmareMode.isEclipse;
+    }
+
+    // Ritual proximity detection methods
+    public static boolean isNearActiveRitual(EntityPlayer player, double range) {
+        if (player == null || player.worldObj == null) {
+            return false;
+        }
+
+        World world = player.worldObj;
+
+        List<?> nearbyEntities = world.getEntitiesWithinAABB(EntityRitualPortal.class, player.boundingBox.expand(range, range, range));
+
+        for (Object entityObj : nearbyEntities) {
+            if (entityObj instanceof EntityRitualPortal) {
+                EntityRitualPortal portal = (EntityRitualPortal) entityObj;
+
+                if (portal.isEntityAlive() && portal.getRitualProgress() < 1.0f) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static float getRitualIntensity(EntityPlayer player, double range) {
+        if (player == null || player.worldObj == null) {
+            return 0f;
+        }
+
+        World world = player.worldObj;
+        float maxIntensity = 0f;
+
+        List<?> nearbyEntities = world.getEntitiesWithinAABB(EntityRitualPortal.class, player.boundingBox.expand(range, range, range));
+
+        for (Object entityObj : nearbyEntities) {
+            if (entityObj instanceof EntityRitualPortal) {
+                EntityRitualPortal portal =
+                    (EntityRitualPortal) entityObj;
+
+                if (portal.isEntityAlive() && portal.getRitualProgress() < 1.0f) {
+                    double distance = player.getDistance(portal.posX, portal.posY, portal.posZ);
+                    float proximityIntensity = 1.0f - (float) (distance / range);
+                    float ritualProgress = portal.getRitualProgress();
+
+                    float intensity = proximityIntensity * (0.5f + ritualProgress * 0.5f);
+                    maxIntensity = Math.max(maxIntensity, intensity);
+                }
+            }
+        }
+
+        return Math.max(0f, Math.min(1f, maxIntensity));
+    }
+
+    public static EntityRitualPortal getNearestActiveRitual(EntityPlayer player, double range) {
+        if (player == null || player.worldObj == null) {
+            return null;
+        }
+
+        World world = player.worldObj;
+        EntityRitualPortal nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        List<?> nearbyEntities = world.getEntitiesWithinAABB(EntityRitualPortal.class, player.boundingBox.expand(range, range, range));
+
+        for (Object entityObj : nearbyEntities) {
+            if (entityObj instanceof EntityRitualPortal) {
+                EntityRitualPortal portal = (EntityRitualPortal) entityObj;
+
+                if (portal.isEntityAlive() && portal.getRitualProgress() < 1.0f) {
+                    double distance = player.getDistance(portal.posX, portal.posY, portal.posZ);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearest = portal;
+                    }
+                }
+            }
+        }
+
+        return nearest;
     }
 
     public static void manageEclipseChance(EntityLivingBase mob, int chance) {

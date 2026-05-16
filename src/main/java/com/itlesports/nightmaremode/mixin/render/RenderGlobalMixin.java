@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.prupe.mcpatcher.sky.SkyRenderer;
+import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -24,15 +24,15 @@ public abstract class RenderGlobalMixin {
     @Shadow public abstract void renderCloudsFancy(float par1);
 
     @Shadow @Final private static ResourceLocation locationSunPng;
-    @Shadow
-    private int glSkyList2;
-    @Shadow
-    private int starGLCallList;
-    @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/bloodmoon.png");
-    @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/eclipse.png");
-    @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/crack.png");
-    @Unique private static final ResourceLocation BLUE_MOON = new ResourceLocation("nightmare:textures/bluemoon.png");
+    @Shadow private int glSkyList2;
+    @Shadow private int starGLCallList;
 
+    @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/moon/bloodmoon.png");
+    @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/moon/eclipse.png");
+    @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/moon/crack.png");
+    @Unique private static final ResourceLocation BLUE_MOON = new ResourceLocation("nightmare:textures/moon/bluemoon.png");
+    @Unique private static final ResourceLocation SKYBOX_RED = new ResourceLocation("nightmare:textures/effects/red.png");
+    @Unique private static final ResourceLocation STARE = new ResourceLocation("nightmare:textures/effects/stare.png");
     /*
 
     CUSTOM MOON
@@ -289,37 +289,37 @@ public abstract class RenderGlobalMixin {
         final float uRepeat = 1.0f;
         final float vRepeat = 1.0f;
 
-        // Attempt to bind the texture (best-effort for 1.6.4)
+        // attempt to bind the texture (best-effort for 1.6.4)
         if (this.mc != null && this.mc.renderEngine != null) {
             try {
-                this.mc.renderEngine.bindTexture(SKYBOX);
+                this.mc.renderEngine.bindTexture(SKYBOX_RED);
             } catch (Exception e) {
                 System.out.println("ERROR: Failed to bind texture");
-                // ignore binding failure (we'll fall back to plain color)
+                // ignore binding failure (falls back to plain color)
             }
         }
 
-        // --- SAVE & SET SAFE GL STATE ---
+        // SAVE & SET GL STATE
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glPushMatrix();
 
-        // Ensure depth test is enabled, and we use LEQUAL so sun/quads render fine.
+        // depth
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthFunc(GL11.GL_LEQUAL);
         GL11.glDepthMask(false);
 
-        // Reasonable defaults - ensure texture 2D is enabled
+        // getting ready to draw
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glDisable(GL11.GL_CULL_FACE); // We want to see inside the dome
+        GL11.glDisable(GL11.GL_CULL_FACE);
 
-        // change color of the dome instead of using residual color (blue sky)
+        // dome color, if required
 //        GL11.glColor4f(0.9f, 0.1f, 0.1f, 1f);
 
 
 
-        // Start drawing dome geometry
+        // start drawing the skybox
         Tessellator tess = Tessellator.instance;
 
         for (int lat = 0; lat < latSteps; lat++) {
@@ -357,7 +357,7 @@ public abstract class RenderGlobalMixin {
                 float v0 = (float) lat / latSteps * vRepeat;
                 float v1 = (float) (lat + 1) / latSteps * vRepeat;
 
-                // Add quad (order chosen for consistent winding)
+                // add quad
                 tess.addVertexWithUV(x10, y1, z10, u0, v1);
                 tess.addVertexWithUV(x11, y1, z11, u1, v1);
                 tess.addVertexWithUV(x01, y0, z01, u1, v0);
@@ -367,7 +367,6 @@ public abstract class RenderGlobalMixin {
         }
 
 
-        // --- RESTORE GL STATE ---
         // restore depth write and set a safe color
         GL11.glDepthMask(true);
         GL11.glColor4f(1f, 1f, 1f, 1f);
@@ -433,7 +432,6 @@ public abstract class RenderGlobalMixin {
         int numLayers = 3;
         float layerSpacing = 11.0f;
         float baseAlpha = 0.9f;
-        float var26 = 9.765625E-4f;
         int var24 = 4;
         int var25 = 8;
         float freq = 0.2f;
@@ -590,5 +588,274 @@ public abstract class RenderGlobalMixin {
         tess.addVertexWithUV(points[2][0], points[2][1], points[2][2], uBase + uvScale, vBase);
         tess.addVertexWithUV(points[6][0], points[6][1], points[6][2], uBase + uvScale, vBase + uvScale);
         tess.addVertexWithUV(points[5][0], points[5][1], points[5][2], uBase, vBase + uvScale);
+    }
+
+
+    @Unique private float horrorSkyIntensity = 0f;
+    @Unique private float horrorSkyRotation = 0f;
+    @Unique private long horrorSkyLastUpdate = 0L;
+
+    @Inject(method = "renderSky", at = @At("TAIL"))
+    private void renderHorrorSkyEffects(float par1, CallbackInfo ci) {
+        if (this.mc.thePlayer == null || this.mc.theWorld == null) {
+            return;
+        }
+
+        double ritualRange = 128.0;
+        float targetIntensity = NMUtils.getRitualIntensity(this.mc.thePlayer, ritualRange);
+
+        float fadeSpeed = 0.02f;
+        if (this.horrorSkyIntensity < targetIntensity) {
+            this.horrorSkyIntensity = Math.min(targetIntensity, this.horrorSkyIntensity + fadeSpeed);
+        } else if (this.horrorSkyIntensity > targetIntensity) {
+            this.horrorSkyIntensity = Math.max(targetIntensity, this.horrorSkyIntensity - fadeSpeed);
+        }
+
+        // skip rendering if too low
+        if (this.horrorSkyIntensity < 0.01f) {
+            return;
+        }
+
+        // animation state
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - horrorSkyLastUpdate > 50) {
+            horrorSkyRotation += 0.5f * this.horrorSkyIntensity;
+            horrorSkyLastUpdate = currentTime;
+        }
+
+        // Render horror sky effects
+        renderRitualSkybox();
+        renderSkyboxObjects();
+    }
+
+    @Unique
+    private void renderRitualSkybox() {
+        final float radius = 120;
+        final int latSteps = 12;
+        final int lonSteps = 48;
+
+        if (this.mc.renderEngine == null) return;
+
+        try {
+            this.mc.renderEngine.bindTexture(SKYBOX_RED);
+        } catch (Exception e) {
+            return;
+        }
+
+        GL11.glPushAttrib(
+                GL11.GL_ENABLE_BIT
+                        | GL11.GL_COLOR_BUFFER_BIT
+                        | GL11.GL_DEPTH_BUFFER_BIT
+                        | GL11.GL_CURRENT_BIT
+                        | GL11.GL_TEXTURE_BIT
+        );
+
+        GL11.glPushMatrix();
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glDepthMask(false);
+
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, this.horrorSkyIntensity);
+
+        GL11.glRotatef(this.horrorSkyRotation * 0.1f, 0.0f, 1.0f, 0.0f);
+
+        Tessellator tess = Tessellator.instance;
+
+        for (int lat = 0; lat < latSteps; lat++) {
+            double minTheta = -Math.PI / 6.0;
+            double maxTheta = Math.PI / 2.0;
+            double theta0 = minTheta + (maxTheta - minTheta) * ((double) lat / latSteps);
+            double theta1 = minTheta + (maxTheta - minTheta) * ((double) (lat + 1) / latSteps);
+
+            double y0 = Math.sin(theta0) * radius;
+            double y1 = Math.sin(theta1) * radius;
+
+            double r0 = Math.cos(theta0) * radius;
+            double r1 = Math.cos(theta1) * radius;
+
+            tess.startDrawingQuads();
+            for (int lon = 0; lon < lonSteps; lon++) {
+                double phi0 = 2.0 * Math.PI * ((double) lon / lonSteps);
+                double phi1 = 2.0 * Math.PI * ((double) (lon + 1) / lonSteps);
+
+                double x00 = r0 * Math.cos(phi0);
+                double z00 = r0 * Math.sin(phi0);
+
+                double x01 = r0 * Math.cos(phi1);
+                double z01 = r0 * Math.sin(phi1);
+
+                double x10 = r1 * Math.cos(phi0);
+                double z10 = r1 * Math.sin(phi0);
+
+                double x11 = r1 * Math.cos(phi1);
+                double z11 = r1 * Math.sin(phi1);
+
+                float u0 = (float) lon / lonSteps;
+                float u1 = (float) (lon + 1) / lonSteps;
+                float v0 = (float) lat / latSteps;
+                float v1 = (float) (lat + 1) / latSteps;
+
+                tess.addVertexWithUV(x10, y1, z10, u0, v1);
+                tess.addVertexWithUV(x11, y1, z11, u1, v1);
+                tess.addVertexWithUV(x01, y0, z01, u1, v0);
+                tess.addVertexWithUV(x00, y0, z00, u0, v0);
+            }
+            tess.draw();
+        }
+
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
+    }
+
+
+    @Unique
+    private static final SkyboxObject[] EYES = {
+            new SkyboxObject(11.0F, 22.0F),
+            new SkyboxObject( 11.0f,  22.0f ),
+            new SkyboxObject( 29.0f,  81.0f ),
+            new SkyboxObject( 47.0f,  52.0f ),
+            new SkyboxObject( 63.0f,  19.0f ),
+            new SkyboxObject(101.0f,  36.0f ),
+            new SkyboxObject(117.0f,  57.0f ),
+            new SkyboxObject(133.0f,  14.0f ),
+            new SkyboxObject(151.0f,  65.0f ),
+            new SkyboxObject(169.0f,  42.0f ),
+            new SkyboxObject(205.0f,  24.0f ),
+            new SkyboxObject(223.0f,  61.0f ),
+            new SkyboxObject(241.0f,  33.0f ),
+            new SkyboxObject(277.0f,  17.0f ),
+            new SkyboxObject(295.0f,  53.0f ),
+            new SkyboxObject(313.0f,  27.0f ),
+            new SkyboxObject(349.0f,  46.0f )
+    };
+
+    @Unique
+    private void renderSkyboxObjects() {
+        if (this.mc.renderEngine == null) return;
+
+        try {
+            this.mc.renderEngine.bindTexture(STARE);
+        } catch (Exception e) {
+            return;
+        }
+
+        EntityLivingBase player = mc.thePlayer;
+        Vec3 lookVec = player.getLookVec();
+
+        final float eyeRadius = 100.0f;
+        final float eyeSize   = 8.0f + 4.0f * this.horrorSkyIntensity;
+        final float pulse     = 1.0f + 0.03f * (float)Math.sin(System.currentTimeMillis() * 0.003);
+
+        Tessellator tess = Tessellator.instance;
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDepthMask(false);
+
+        for (SkyboxObject eye : EYES) {
+
+            float yawRad   = (float)Math.toRadians(eye.yaw);
+            float pitchRad = (float)Math.toRadians(eye.pitch);
+
+            double dirX = -MathHelper.cos(pitchRad) * MathHelper.sin(yawRad);
+            double dirY =  MathHelper.sin(pitchRad);
+            double dirZ = -MathHelper.cos(pitchRad) * MathHelper.cos(yawRad);
+
+            Vec3 eyeDir = Vec3.createVectorHelper(dirX, dirY, dirZ).normalize();
+
+            double dot = lookVec.dotProduct(eyeDir);
+            boolean lookedAt = dot > 0.98;
+
+            // smooth animation
+            long now = System.currentTimeMillis();
+            float delta = (now - eye.lastRenderMs) / 1000f;
+            eye.lastRenderMs = now;
+
+            // override state if player looks at eye
+            if (lookedAt && eye.state != SkyboxObject.EyeState.CLOSING && eye.state != SkyboxObject.EyeState.CLOSED) {
+                eye.state = SkyboxObject.EyeState.CLOSING;
+                eye.stateTimer = now;
+            }
+
+            float openCloseSpeed = 6.0f;
+
+            switch (eye.state) {
+                case CLOSED:
+                    eye.openness = 0f;
+                    if (now - eye.stateTimer > eye.nextOpenDelay && !lookedAt) {
+                        eye.state = SkyboxObject.EyeState.OPENING;
+                        eye.stateTimer = now;
+                    }
+                    break;
+
+                case OPENING:
+                    eye.openness = Math.min(1f, eye.openness + delta * openCloseSpeed);
+                    if (eye.openness >= 1f) {
+                        eye.state = SkyboxObject.EyeState.OPEN;
+                        eye.stateTimer = now;
+                    }
+                    break;
+
+                case OPEN:
+                    eye.openness = 1f;
+                    if (now - eye.stateTimer > eye.openDuration) {
+                        eye.state = SkyboxObject.EyeState.CLOSING;
+                        eye.stateTimer = now;
+                    }
+                    break;
+
+                case CLOSING:
+                    eye.openness = Math.max(0f, eye.openness - delta * openCloseSpeed);
+                    if (eye.openness <= 0f) {
+                        eye.state = SkyboxObject.EyeState.CLOSED;
+                        eye.stateTimer = now;
+                        // randomize next cycle
+                        eye.nextOpenDelay = (long)(2000 + Math.random() * 5000);
+                        eye.openDuration  = (long)(300  + Math.random() * 600);
+                    }
+                    break;
+            }
+
+            GL11.glPushMatrix();
+
+            // rotate to sky position
+            GL11.glRotatef(eye.yaw, 0.0f, 1.0f, 0.0f);
+            GL11.glRotatef(eye.pitch, 1.0f, 0.0f, 0.0f);
+
+            // move outward into sky sphere
+            GL11.glTranslatef(0.0f, 0.0f, -eyeRadius);
+
+            // scale quad
+            GL11.glScalef(
+                    pulse * eyeSize,
+                    pulse * eyeSize * eye.openness, // vertical squash - the eye shuts
+                    1.0f
+            );
+
+            float brightness = 0.3F + 0.7F * eye.openness;
+            GL11.glColor4f(
+                    brightness,
+                    brightness,
+                    brightness,
+                    (this.horrorSkyIntensity / 9.0F)
+            );
+
+            // billboard quad
+            tess.startDrawingQuads();
+
+            tess.addVertexWithUV(-1.0, -1.0, 0.0, 0.0, 0.0);
+            tess.addVertexWithUV( 1.0, -1.0, 0.0, 1.0, 0.0);
+            tess.addVertexWithUV( 1.0,  1.0, 0.0, 1.0, 1.0);
+            tess.addVertexWithUV(-1.0,  1.0, 0.0, 0.0, 1.0);
+
+            tess.draw();
+
+            GL11.glPopMatrix();
+        }
+        GL11.glDepthMask(true);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 }
