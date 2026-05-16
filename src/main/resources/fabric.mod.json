@@ -35,7 +35,7 @@
     "nightmaremode.mixins.json"
   ],
 
-  "accessWidener" : "NightmareMode.accessWidener",
+  "accessWidener" : "NightmareMode.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.9",
     "minecraft": "1.6.4"
