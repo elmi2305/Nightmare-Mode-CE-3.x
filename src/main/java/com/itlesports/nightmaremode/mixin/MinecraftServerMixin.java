@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import api.AddonHandler;
 import api.achievement.AchievementEventDispatcher;
 import api.world.WorldUtils;
 import api.world.difficulty.Difficulty;
@@ -23,9 +22,6 @@ public abstract class MinecraftServerMixin {
     @Mutable @Shadow public WorldServer[] worldServers;
     @Shadow @Final public Profiler theProfiler;
     @Shadow public abstract ILogAgent getLogAgent();
-    @Shadow public abstract ServerConfigurationManager getConfigurationManager();
-//    @Shadow(remap = false) protected Difficulty difficultyLevel;
-//    @Shadow(remap = false) public abstract void setDifficultyForAllWorlds(Difficulty difficulty);
 
     @Shadow
     private ServerConfigurationManager serverConfigManager;
@@ -49,9 +45,9 @@ public abstract class MinecraftServerMixin {
             NMUtils.setItemStackSizes(16);
         }
         if (this.worldServers[0].worldInfo.getDifficulty() == BTWDifficulties.HOSTILE){
-            if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
+            if (shouldStackSizesIncrease) {
                 NightmareMode.worldState = 3;
-            } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
+            } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
                 NightmareMode.worldState = 2;
             } else if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
                 NightmareMode.worldState = 1;
@@ -126,9 +122,9 @@ public abstract class MinecraftServerMixin {
             NightmareMode.sendMoonAndSunEventsToAllPlayers();
         }
 
-        if (WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
+        if (this.worldServers[0].worldInfo.getData(NightmareMode.DRAGON_DEFEATED)) {
             NightmareMode.worldState = 3;
-        } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
+        } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
             NightmareMode.worldState = 2;
         } else if (WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
             NightmareMode.worldState = 1;
