@@ -26,6 +26,7 @@ public class RenderCreeperVariant extends RenderLiving {
     private static final ResourceLocation FIRE_CREEPER_TEXTURE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
 
     private static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
+    private static final ResourceLocation DUNG_CREEPER_TEXTURE_OLD = new ResourceLocation("nightmare:textures/entity/creeperDungOld.png");
 
     private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/lightningCreeper.png");
 
@@ -117,6 +118,8 @@ public class RenderCreeperVariant extends RenderLiving {
     }
 
     protected ResourceLocation getCreeperTextures(EntityCreeperVariant entity) {
+        boolean usingLegacy = RenderUtils.shouldRenderLegacyModel();
+
         if(entity.variantType == PACKET_CREEPER_FIRE){
             if(NMUtils.getIsMobEclipsed(entity)){
                 return FIRE_CREEPER_TEXTURE_ECLIPSE;
@@ -126,7 +129,7 @@ public class RenderCreeperVariant extends RenderLiving {
             return FIRE_CREEPER_TEXTURE;
         }
         else if(entity.variantType == PACKET_CREEPER_DUNG){
-            return DUNG_CREEPER_TEXTURE;
+            return usingLegacy ? DUNG_CREEPER_TEXTURE_OLD : DUNG_CREEPER_TEXTURE;
         }
         else if(entity.variantType == PACKET_CREEPER_LIGHTNING){
             return LIGHTNING_CREEPER_TEXTURE;
