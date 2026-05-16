@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore;
+import com.itlesports.nightmaremode.util.underworld.RitualState;
 import net.minecraft.src.*;
 
 public class BlockPortalCore extends BlockContainer {
@@ -10,8 +11,7 @@ public class BlockPortalCore extends BlockContainer {
         super(id, Material.rock);
         this.setHardness(5.0f);
         this.setResistance(2000.0f);
-        this.setUnlocalizedName("portalCore");
-        this.setTextureName("nightmare:portalCore");
+        this.setLightOpacity(1);
     }
 
 
@@ -25,12 +25,12 @@ public class BlockPortalCore extends BlockContainer {
         TileEntityPortalCore core = (TileEntityPortalCore) te;
         ItemStack held = player.getHeldItem();
 
-        if (held != null && core.tryInsertCatalyst(held)) {
+        if (held != null && side == 1 && core.tryInsertCatalyst(held)) {
             consumeOneItem(player, held);
             return true;
         }
 
-        sendStateFeedback(player, core.getState());
+        sendStateFeedback(core.getState());
         return true;
     }
 
@@ -41,7 +41,12 @@ public class BlockPortalCore extends BlockContainer {
         }
     }
 
-    private void sendStateFeedback(EntityPlayer player, com.itlesports.nightmaremode.util.underworld.RitualState state) {
+    @Override
+    public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
+        return false;
+    }
+
+    private void sendStateFeedback(RitualState state) {
         switch (state) {
             case INVALID:
                 System.out.println("The altar is incomplete.");
@@ -76,21 +81,9 @@ public class BlockPortalCore extends BlockContainer {
         super.breakBlock(world, x, y, z, blockId, meta);
     }
 
-
-    @Override
-    public boolean renderAsNormalBlock() { return false; }
-
     @Override
     public boolean isOpaqueCube() { return false; }
 
-    @Override
-    public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
-        // prevents rendering it while placed. tile entity does render
-        return false;
-    }
-
-//    @Override
-//    public int getRenderType()           { return -1; } // TESR only, no standard render
 
     @Override
     public boolean hasTileEntity(){return true;}
