@@ -18,7 +18,6 @@ public class ModelDungCreeper extends ModelCreeper {
         this.head = new ModelRenderer(this, 0 ,2);
         this.head.addBox(-4F, -6F, -4F, 8, 6, 8, scale);
         this.head.setRotationPoint(0F, 4F, 0F);
-        //this.head.addBox()
 
         // Add extra head details
         this.head2 = new ModelRenderer(this, 44, 0);

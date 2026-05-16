@@ -35,8 +35,8 @@ public class RenderCreeperVariant extends RenderLiving {
 
     private static final ResourceLocation FLOWER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmFlowerCreeper.png");
 
-    private ModelBase[] creeperModel = {new ModelCreeper(0), new ModelCreeper(2)};
-    private ModelDungCreeper[] creeperDungModel = {new ModelDungCreeper(0), new ModelDungCreeper(2)};
+    private final ModelBase[] creeperModel = {new ModelCreeper(0), new ModelCreeper(2)};
+    private final ModelDungCreeper[] creeperDungModel = {new ModelDungCreeper(0), new ModelDungCreeper(2)};
 
     protected void updateCreeperScale(EntityCreeperVariant mob, float par2) {
         float flashIntensity = mob.getCreeperFlashIntensity(par2);
