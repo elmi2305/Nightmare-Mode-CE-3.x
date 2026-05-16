@@ -74,9 +74,11 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     }
 
     @Unique private float underworldFogAlpha = 0.0f;
+    @Unique private float horrorFogAlpha = 0.0f;
     @Inject(method = "setupFog", at = @At("HEAD"),cancellable = true)
     private void doUnderworldFog(int par1, float par2, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
+//        if(NightmareMode.devMode) return;
 
         if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p && NMUtils.getIsSolarFlare()) {
             //// DEBUG: returning because getIsSolarFlare just returns false
@@ -153,6 +155,68 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
 
             ci.cancel();
         }
+
+        // UW RITUAL FOG STUFF
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
+            double ritualRange = 128.0;
+            float ritualIntensity = NMUtils.getRitualIntensity(player, ritualRange);
+
+            if (ritualIntensity > 0.01f) {
+                float fadeSpeed = 0.02f;
+                if (this.horrorFogAlpha < ritualIntensity) {
+                    this.horrorFogAlpha = Math.min(ritualIntensity, this.horrorFogAlpha + fadeSpeed);
+                } else if (this.horrorFogAlpha > ritualIntensity) {
+                    this.horrorFogAlpha = Math.max(ritualIntensity, this.horrorFogAlpha - fadeSpeed);
+                }
+
+                long worldTime = this.mc.theWorld.getWorldTime();
+                float pulse = 0.003f * (float) Math.sin(worldTime * 0.02f);
+
+                float red   = 0.12f + 0.03f * (float) Math.sin(worldTime * 0.015f + par2 * 0.5f);
+                float green = 0.04f + 0.02f * (float) Math.cos(worldTime * 0.018f + par2);
+                float blue  = 0.06f + 0.02f * (float) Math.sin(worldTime * 0.022f + par2);
+
+                red   = MathHelper.clamp_float(red,   0.08f, 0.18f);
+                green = MathHelper.clamp_float(green, 0.02f, 0.08f);
+                blue  = MathHelper.clamp_float(blue,  0.04f, 0.10f);
+
+                float baseDensity = 0.035f + 0.025f * this.horrorFogAlpha;
+                float density = baseDensity + pulse * this.horrorFogAlpha;
+                density = MathHelper.clamp_float(density, 0.025f, 0.085f);
+
+                GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
+                GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
+                GL11.glFogf(GL11.GL_FOG_DENSITY, density);
+
+                int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, par2);
+
+                if (entity.isPotionActive(Potion.blindness)) {
+                    GL11.glFogf(GL11.GL_FOG_DENSITY, (0.12f + pulse * 1.2f) * this.horrorFogAlpha);
+                } else if (blockId > 0 && Block.blocksList[blockId].blockMaterial == Material.water) {
+                    GL11.glFogf(GL11.GL_FOG_DENSITY, (0.07f + pulse * 0.6f) * this.horrorFogAlpha);
+                    GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(0.10f, 0.03f, 0.05f, 1.0f));
+                } else if (blockId > 0 && Block.blocksList[blockId].blockMaterial == Material.lava) {
+                    GL11.glFogf(GL11.GL_FOG_DENSITY, (0.40f + pulse * 0.4f) * this.horrorFogAlpha);
+                    GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(0.20f, 0.08f, 0.04f, 1.0f));
+                } else if (this.cloudFog) {
+                    GL11.glFogf(GL11.GL_FOG_DENSITY, (0.055f + pulse * 0.8f) * this.horrorFogAlpha);
+                }
+
+                if (GLContext.getCapabilities().GL_NV_fog_distance) {
+                    GL11.glFogi(0x855A, 0x855B);
+                }
+
+                GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                GL11.glNormal3f(0.0f, -1.0f, 0.0f);
+
+                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+
+                GL11.glEnable(GL11.GL_FOG);
+                ci.cancel();
+            }
+        }
     }
 
     @Unique private float getPlayerSanityFogModifier(EntityPlayer p){
@@ -174,15 +238,14 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         float targetAlpha = 0.0f;
 
         if (timeOfDay >= 12542 && timeOfDay <= 23458) {
-            // Nighttime - fog should be visible
+            // night - fog should be visible
             targetAlpha = 1.0f;
         } else if (timeOfDay >= 11542 && timeOfDay < 12542) {
-            // Sunset fade-in (1000 ticks before night = ~50 seconds)
-            // But we want 120 tick fade, so calculate accordingly
+            // sunset fade-in (1000 ticks before night)
             float sunsetProgress = (timeOfDay - 11542) / 1000.0f;
             targetAlpha = Math.min(1.0f, sunsetProgress * (1000.0f / 240.0f));
         } else if (timeOfDay > 23458 && timeOfDay <= 24458) {
-            // Sunrise fade-out (1000 ticks after night)
+            // sunrise fade-out (1000 ticks after night)
             float sunriseProgress = (timeOfDay - 23458) / 1000.0f;
             targetAlpha = Math.max(0.0f, 1.0f - sunriseProgress * (1000.0f / 240.0f));
         }
