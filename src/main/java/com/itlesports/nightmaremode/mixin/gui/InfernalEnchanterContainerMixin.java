@@ -62,7 +62,7 @@ public class InfernalEnchanterContainerMixin {
     private void disallowStackingProtectionTypes(int iEnchantmentIndex, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir){
         NBTTagList enchantmentTagList = itemStack.getEnchantmentTagList();
         if (enchantmentTagList != null) {
-            if(getProtectionModifier(itemStack) > 0 && Enchantment.enchantmentsList[iEnchantmentIndex] instanceof EnchantmentProtection){
+            if(getProtectionModifier(itemStack) > 0 && (Enchantment.enchantmentsList[iEnchantmentIndex] instanceof EnchantmentProtection && Enchantment.enchantmentsList[iEnchantmentIndex] != Enchantment.featherFalling)){
                 cir.setReturnValue(true     );
             }
 

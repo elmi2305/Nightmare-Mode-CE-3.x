@@ -16,7 +16,8 @@ public class EnchantmentProtectionMixin {
 
     @Inject(method = "canApplyTogether", at = @At("HEAD"),cancellable = true)
     private void cannotApplyProtectionsTogether(Enchantment par1, CallbackInfoReturnable<Boolean> cir){
-        if(par1 instanceof EnchantmentProtection){
+
+        if(par1 instanceof EnchantmentProtection && par1 != Enchantment.featherFalling){ // isn't feather falling
             cir.setReturnValue(false);
         }
     }
