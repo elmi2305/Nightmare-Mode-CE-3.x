@@ -26,6 +26,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) protected abstract void retractTentacleAttackOnCollision();
 
 
+    @Shadow
+    private float randomMotionVecY;
     // unique fields
     @Unique private int calamariDropCountdown = 0; // how many ticks the squid is eligible to drop calamari. set every time the player hits the squid
     @Unique private int squidOnHeadTimer = 0; // tracks how long the squid is riding something
@@ -372,6 +374,19 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             return true;
         }
         return super.isInsideOfMaterial(par1Material);
+    }
+
+//    @Inject(method = "getDepthBeneathSurface", at = @At("RETURN"), cancellable = true, remap = false)
+//    private void overrideDepthDuringEclipse(float fMaxDepthToConsider, CallbackInfoReturnable<Float> cir){
+//        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2) {
+//            cir.setReturnValue(200f);
+//        }
+//    }
+    @Inject(method = "updateEntityActionState", at = @At("TAIL"))
+    private void doEclipseMovement(CallbackInfo ci){
+        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
+            this.randomMotionVecY = this.rand.nextFloat() * 0.2f - 0.1f;
+        }
     }
 
 
