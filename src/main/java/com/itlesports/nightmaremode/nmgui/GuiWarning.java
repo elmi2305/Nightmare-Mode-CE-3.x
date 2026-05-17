@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.nmgui;
 
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.I18n;
@@ -18,6 +19,7 @@ public class GuiWarning extends GuiScreen {
     }
 
     public static boolean hasPlayerAgreed() {
+        if(NightmareMode.devMode) return true;
         return playerHasAgreed;
     }
 
