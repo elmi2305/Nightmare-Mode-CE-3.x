@@ -188,7 +188,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityCreeper;setDead()V"))
     private void manageNotKillingSelf(EntityCreeper creeper){
         if(NMUtils.getIsMobEclipsed(this)){
-            if(creeper.getAttackTarget() instanceof EntityPlayer target){
+            EntityLivingBase target = creeper.getAttackTarget();
+            if(target != null){
                 double var1 = this.posX - target.posX;
                 double var2 = this.posZ - target.posZ;
                 Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
@@ -197,8 +198,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.motionZ = vector.zCoord * 0.2;
                 this.timeSinceIgnited = 0;
                 this.fuseTime = 20;
+                this.motionY = 0.5f;
+            } else{
+                this.setDead();
             }
-            this.motionY = 0.5f;
         } else{
             this.setDead();
         }
