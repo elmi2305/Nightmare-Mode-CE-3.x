@@ -251,19 +251,14 @@ gui.config.tooltip.real_time=Dzień i noc trwają 12 prawdziwych godzin. Hardmod
 
 
 
-gui.config.clear.morevariants=Stan jasny: Pokonaj Smoka Kresu
-gui.config.clear.evolvedmobs=Stan jasny: Porażka ???
-gui.config.clear.buffedsquids=Stan jasny: Porażka ???
-gui.config.clear.nite=Stan jasny: Pokonaj Smoka Kresu
-gui.config.clear.darkstormynightmare=Stan jasny: Pokonaj Smoka Kresu
-gui.config.clear.noskybases=Stan jasny: Porażka ???
-gui.config.clear.isaprilfools=Wyczyść warunek: Wejdź do trybu Hardmode
-gui.config.clear.realtime=Stan czysty: Przetrwaj pierwszą Mroczną Noc
-gui.config.clear.totaleclipse=Stan jasny: Pokonaj Krwawy Księżyc
-gui.config.clear.bloodmare=Wyczyść warunek: Wejdź do trybu Hardmode
-gui.config.clear.magicmonsters=Wyczyść warunek: Wejdź do trybu Hardmode
-gui.config.clear.unkillablemobs=Wyczyść warunek: Wejdź do trybu Hardmode
-gui.config.clear.nohit=Wyczyść warunek: Wejdź do trybu Hardmode
+gui.config.clear.dragon=Wyczyść warunek: Pokonaj Ender Dragon
+gui.config.clear.hardmode=Wyczyść warunek: Wejdź w tryb Hardmode
+gui.config.clear.bw=Wyczyść warunek: Pokonaj ???
+gui.config.clear.bloodmoon=Wyczyść warunek: Pokonaj Krwawy Księżyc
+gui.config.clear.eclipse=Wyczyść warunek: Pokonaj zaćmienie
+gui.config.clear.week=Wyczyść warunek: Przeżyj 7 dni
+gui.config.clear.gloom=Wyczyść warunek: Przeżyj pierwszą noc mroku
+
 
 gui.warning.line1=bracie
 gui.warning.line2=zaraz dołączysz do świata z włączonym trybem raka
