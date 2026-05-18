@@ -251,19 +251,13 @@ gui.config.tooltip.real_time=Dia e Noite duram 12 horas na vida real. Hardmode �
 
 
 
-gui.config.clear.morevariants=Condição clara: Derrote o Dragão Ender
-gui.config.clear.evolvedmobs=Condição clara: derrota ???
-gui.config.clear.buffedsquids=Condição clara: derrota ???
-gui.config.clear.nite=Condição clara: Derrote o Dragão Ender
-gui.config.clear.darkstormynightmare=Condição clara: Derrote o Dragão Ender
-gui.config.clear.noskybases=Condição clara: derrota ???
-gui.config.clear.isaprilfools=Condição clara: entre no Hardmode
-gui.config.clear.realtime=Condição clara: sobreviva à primeira noite sombria
-gui.config.clear.totaleclipse=Condição clara: Derrote uma Lua de Sangue
-gui.config.clear.bloodmare=Condição clara: entre no Hardmode
-gui.config.clear.magicmonsters=Condição clara: entre no Hardmode
-gui.config.clear.unkillablemobs=Condição clara: entre no Hardmode
-gui.config.clear.nohit=Condição clara: entre no Hardmode
+gui.config.clear.dragon=Condição clara: Derrote o Dragão Ender
+gui.config.clear.hardmode=Condição clara: entre no Hardmode
+gui.config.clear.bw=Condição clara: derrota ???
+gui.config.clear.bloodmoon=Condição clara: Derrote uma Lua de Sangue
+gui.config.clear.eclipse=Condição clara: Derrota a un eclipse
+gui.config.clear.week=Condição clara: Sobrevive 7 días
+gui.config.clear.gloom=Condição clara: sobreviva à primeira noite sombria
 
 gui.warning.line1=irmão
 gui.warning.line2=você está prestes a ingressar em um mundo com o modo câncer ativado
