@@ -22,6 +22,7 @@ import static btw.community.nightmaremode.NightmareMode.logical;
 
 public class NMConfUtils {
     public static final List<CONFIG> confList = new ArrayList<>();
+    public static void initConfigs(){}
     static{
         confList.add(CONFIG.MORE_VARIANTS);
         confList.add(CONFIG.EVOLVED_MOBS);
@@ -39,56 +40,54 @@ public class NMConfUtils {
     }
 
     public enum CONFIG {
-        MORE_VARIANTS(1, "moreVariants", GuiConfig.ConfigOption.MORE_VARIANTS, ClearCondition.CLEAR_BW){
+        MORE_VARIANTS(1, "moreVariants", ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.moreVariants;}
         },
-        BLOODMARE(2, "bloodmare", GuiConfig.ConfigOption.BLOODMARE, ClearCondition.CLEAR_HARDMODE){
+        BLOODMARE(2, "bloodmare", ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.bloodmare;}
         },
-        TOTAL_ECLIPSE(3, "totalEclipse", GuiConfig.ConfigOption.TOTAL_ECLIPSE, ClearCondition.CLEAR_BLOODMOON){
+        TOTAL_ECLIPSE(3, "totalEclipse", ClearCondition.CLEAR_BLOODMOON){
             @Override public boolean isActive() {return NightmareMode.totalEclipse;}
         },
-        BUFFED_SQUIDS(4, "buffedSquids", GuiConfig.ConfigOption.BUFFED_SQUIDS, ClearCondition.CLEAR_DRAGON){
+        BUFFED_SQUIDS(4, "buffedSquids", ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.buffedSquids;}
         },
-        EVOLVED_MOBS(5, "evolvedMobs", GuiConfig.ConfigOption.EVOLVED_MOBS, ClearCondition.CLEAR_BW){
+        EVOLVED_MOBS(5, "evolvedMobs", ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.evolvedMobs;}
         },
-        MAGIC_MONSTERS(6, "magicMonsters", GuiConfig.ConfigOption.MAGIC_MONSTERS, ClearCondition.CLEAR_HARDMODE){
+        MAGIC_MONSTERS(6, "magicMonsters", ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.magicMonsters;}
         },
-        NO_HIT(7, "noHit", GuiConfig.ConfigOption.NO_HIT, ClearCondition.CLEAR_DRAGON){
+        NO_HIT(7, "noHit", ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.noHit;}
         },
-        NITE(8, "nite", GuiConfig.ConfigOption.NITE, ClearCondition.CLEAR_DRAGON){
+        NITE(8, "nite", ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.nite;}
         },
-        NO_SKYBASES(9, "noSkybases", GuiConfig.ConfigOption.NO_SKYBASES, ClearCondition.CLEAR_BW){
+        NO_SKYBASES(9, "noSkybases", ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.noSkybases;}
         },
-        UNKILLABLE_MOBS(10, "unkillableMobs", GuiConfig.ConfigOption.UNKILLABLE_MOBS, ClearCondition.CLEAR_HARDMODE){
+        UNKILLABLE_MOBS(10, "unkillableMobs", ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.unkillableMobs;}
         },
-        DARK_STORMY_NIGHTMARE(11, "darkStormyNightmare", GuiConfig.ConfigOption.DARK_STORMY_NIGHTMARE, ClearCondition.CLEAR_DRAGON){
+        DARK_STORMY_NIGHTMARE(11, "darkStormyNightmare", ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.darkStormyNightmare;}
         },
-        REAL_TIME(12, "realTime", GuiConfig.ConfigOption.REAL_TIME, ClearCondition.CLEAR_GLOOM){
+        REAL_TIME(12, "realTime", ClearCondition.CLEAR_GLOOM){
             @Override public boolean isActive() {return NightmareMode.realTime;}
         },
-        CANCER_MODE(13, "isAprilFools", GuiConfig.ConfigOption.CANCER_MODE, ClearCondition.CLEAR_HARDMODE){
+        CANCER_MODE(13, "isAprilFools", ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.isAprilFools;}
         };
 
         private final int id;
         private final String fieldName;
         private final ClearCondition clearCondition;
-        private final GuiConfig.ConfigOption guiOption;
 
-        CONFIG(int id, String fieldName, GuiConfig.ConfigOption configOption, ClearCondition clearCondition) {
+        CONFIG(int id, String fieldName, ClearCondition clearCondition) {
             this.id = id;
             this.fieldName = fieldName;
             this.clearCondition = clearCondition;
-            this.guiOption = configOption;
         }
 
         public int getId() {
@@ -100,16 +99,6 @@ public class NMConfUtils {
         }
         public ClearCondition getClearCondition(){
             return this.clearCondition;
-        }
-
-        public CONFIG getConfForGui(GuiConfig.ConfigOption configOption){
-            for(CONFIG conf : confList){
-                if(conf.guiOption == configOption){
-                    return conf;
-                }
-            }
-            System.out.println("failed to get config for gui: " + configOption.getDisplayKey());
-            return null;
         }
 
         public enum ClearCondition {
@@ -124,7 +113,7 @@ public class NMConfUtils {
                 this.unlocalizedName = unlocalizedName;
             }
 
-            private String unlocalizedName = "";
+            private final String unlocalizedName;
             public String getNameUnlocalized(){
                 return unlocalizedName;
             }
