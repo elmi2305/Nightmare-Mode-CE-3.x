@@ -374,7 +374,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return switch (conf.getClearCondition()) {
             case CLEAR_BLOODMOON -> (AchievementHandler.hasUnlocked(p, NMAchievements.FIRST_BLOODMOON) && NMUtils.getWorldProgress() > 0);
             case CLEAR_DRAGON -> (NMUtils.getWorldProgress() > 2);
-            case CLEAR_ECLIPSE -> (NMUtils.getWorldProgress() > 2 && AchievementHandler.hasUnlocked(p, NMAchievements.KILL_BLOODWITHER));
+            case CLEAR_BW -> (NMUtils.getWorldProgress() > 2 && AchievementHandler.hasUnlocked(p, NMAchievements.KILL_BLOODWITHER));
             case CLEAR_GLOOM -> (this.worldObj.getWorldTime() > 120000);
             case CLEAR_HARDMODE -> (NMUtils.getWorldProgress() > 0);
             case CLEAR_WEEK -> (this.worldObj.getWorldTime() > 140000);
