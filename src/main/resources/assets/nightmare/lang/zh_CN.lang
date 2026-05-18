@@ -251,19 +251,14 @@ gui.config.tooltip.real_time=昼夜各持续12小时现实时间。第3天进入
 
 
 
-gui.config.clear.morevariants=完成条件：击败末影龙
-gui.config.clear.evolvedmobs=完成条件：击败 ???
-gui.config.clear.buffedsquids=完成条件：击败 ???
-gui.config.clear.nite=完成条件：击败末影龙
-gui.config.clear.darkstormynightmare=完成条件：击败末影龙
-gui.config.clear.noskybases=完成条件：击败 ???
-gui.config.clear.isaprilfools=完成条件：进入困难模式
-gui.config.clear.realtime=完成条件：存活度过第一个幽暗之夜
-gui.config.clear.totaleclipse=完成条件：击败一次血月
-gui.config.clear.bloodmare=完成条件：进入困难模式
-gui.config.clear.magicmonsters=完成条件：进入困难模式
-gui.config.clear.unkillablemobs=完成条件：进入困难模式
-gui.config.clear.nohit=完成条件：进入困难模式
+gui.config.clear.dragon=完成条件：击败末影龙
+gui.config.clear.hardmode=完成条件：进入困难模式
+gui.config.clear.bw=完成条件：击败 ???
+gui.config.clear.bloodmoon=完成条件：击败一次血月
+gui.config.clear.eclipse=完成条件：击败日蚀
+gui.config.clear.week=完成条件：存活7天
+gui.config.clear.gloom=完成条件：存活度过第一个幽暗之夜
+
 
 gui.warning.line1=伙计
 gui.warning.line2=你正在尝试加入一个启用了癌症模式的世界
