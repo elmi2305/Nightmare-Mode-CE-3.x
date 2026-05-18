@@ -22,7 +22,6 @@ import static btw.community.nightmaremode.NightmareMode.logical;
 
 public class NMConfUtils {
     public static final List<CONFIG> confList = new ArrayList<>();
-
     static{
         confList.add(CONFIG.MORE_VARIANTS);
         confList.add(CONFIG.EVOLVED_MOBS);
@@ -40,7 +39,7 @@ public class NMConfUtils {
     }
 
     public enum CONFIG {
-        MORE_VARIANTS(1, "moreVariants", GuiConfig.ConfigOption.MORE_VARIANTS, ClearCondition.CLEAR_ECLIPSE){
+        MORE_VARIANTS(1, "moreVariants", GuiConfig.ConfigOption.MORE_VARIANTS, ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.moreVariants;}
         },
         BLOODMARE(2, "bloodmare", GuiConfig.ConfigOption.BLOODMARE, ClearCondition.CLEAR_HARDMODE){
@@ -52,19 +51,19 @@ public class NMConfUtils {
         BUFFED_SQUIDS(4, "buffedSquids", GuiConfig.ConfigOption.BUFFED_SQUIDS, ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.buffedSquids;}
         },
-        EVOLVED_MOBS(5, "evolvedMobs", GuiConfig.ConfigOption.EVOLVED_MOBS, ClearCondition.CLEAR_ECLIPSE){
+        EVOLVED_MOBS(5, "evolvedMobs", GuiConfig.ConfigOption.EVOLVED_MOBS, ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.evolvedMobs;}
         },
         MAGIC_MONSTERS(6, "magicMonsters", GuiConfig.ConfigOption.MAGIC_MONSTERS, ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.magicMonsters;}
         },
-        NO_HIT(7, "noHit", GuiConfig.ConfigOption.NO_HIT, ClearCondition.CLEAR_HARDMODE){
+        NO_HIT(7, "noHit", GuiConfig.ConfigOption.NO_HIT, ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.noHit;}
         },
         NITE(8, "nite", GuiConfig.ConfigOption.NITE, ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.nite;}
         },
-        NO_SKYBASES(9, "noSkybases", GuiConfig.ConfigOption.NO_SKYBASES, ClearCondition.CLEAR_ECLIPSE){
+        NO_SKYBASES(9, "noSkybases", GuiConfig.ConfigOption.NO_SKYBASES, ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.noSkybases;}
         },
         UNKILLABLE_MOBS(10, "unkillableMobs", GuiConfig.ConfigOption.UNKILLABLE_MOBS, ClearCondition.CLEAR_HARDMODE){
@@ -114,16 +113,39 @@ public class NMConfUtils {
         }
 
         public enum ClearCondition {
-            CLEAR_BLOODMOON,
-            CLEAR_HARDMODE,
-            CLEAR_DRAGON,
-            CLEAR_ECLIPSE,
-            CLEAR_WEEK,
-            CLEAR_GLOOM
+            CLEAR_BLOODMOON("gui.config.clear.bloodmoon"),
+            CLEAR_HARDMODE("gui.config.clear.hardmode"),
+            CLEAR_DRAGON("gui.config.clear.dragon"),
+            CLEAR_BW("gui.config.clear.bw"),
+            CLEAR_WEEK("gui.config.clear.week"),
+            CLEAR_GLOOM("gui.config.clear.gloom");
+
+            ClearCondition(String unlocalizedName){
+                this.unlocalizedName = unlocalizedName;
+            }
+
+            private String unlocalizedName = "";
+            public String getNameUnlocalized(){
+                return unlocalizedName;
+            }
         }
         public abstract boolean isActive();
 
-        public void initConfig(){}
+        public static void initConfig(){
+            System.out.println(MORE_VARIANTS);
+            System.out.println(EVOLVED_MOBS);
+            System.out.println(BUFFED_SQUIDS);
+            System.out.println(NITE);
+            System.out.println(DARK_STORMY_NIGHTMARE);
+            System.out.println(NO_SKYBASES);
+            System.out.println(CANCER_MODE);
+            System.out.println(TOTAL_ECLIPSE);
+            System.out.println(BLOODMARE);
+            System.out.println(MAGIC_MONSTERS);
+            System.out.println(UNKILLABLE_MOBS);
+            System.out.println(NO_HIT);
+            System.out.println(REAL_TIME);
+        }
     }
 
 
