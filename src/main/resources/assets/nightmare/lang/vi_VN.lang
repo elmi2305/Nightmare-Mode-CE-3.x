@@ -251,19 +251,13 @@ gui.config.tooltip.real_time=Ngày và Đêm kéo dài 12 giờ ngoài đời th
 
 
 
-gui.config.clear.morevariants=Điều kiện hoàn thành: Đánh bại Rồng Ender
-gui.config.clear.evolvedmobs=Điều kiện hoàn thành: Đánh bại ???
-gui.config.clear.buffedsquids=Điều kiện hoàn thành: Đánh bại ???
-gui.config.clear.nite=Điều kiện hoàn thành: Đánh bại Rồng Ender
-gui.config.clear.darkstormynightmare=Điều kiện hoàn thành: Đánh bại Rồng Ender
-gui.config.clear.noskybases=Điều kiện hoàn thành: Đánh bại ???
-gui.config.clear.isaprilfools=Điều kiện hoàn thành: Vào Chế độ Khó
-gui.config.clear.realtime=Điều kiện hoàn thành: Sống sót qua Đêm U Ám đầu tiên
-gui.config.clear.totaleclipse=Điều kiện hoàn thành: Đánh bại một Trăng Máu
-gui.config.clear.bloodmare=Điều kiện hoàn thành: Vào Chế độ Khó
-gui.config.clear.magicmonsters=Điều kiện hoàn thành: Vào Chế độ Khó
-gui.config.clear.unkillablemobs=Điều kiện hoàn thành: Vào Chế độ Khó
-gui.config.clear.nohit=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.dragon=Điều kiện hoàn thành: Đánh bại Rồng Ender
+gui.config.clear.hardmode=Điều kiện hoàn thành: Vào Chế độ Khó
+gui.config.clear.bw=Điều kiện hoàn thành: Đánh bại ???
+gui.config.clear.bloodmoon=Điều kiện hoàn thành: Đánh bại một Trăng Máu
+gui.config.clear.eclipse=Điều kiện rõ ràng: Đánh bại nhật thực
+gui.config.clear.week=Điều kiện sống sót: Sống sót 7 ngày
+gui.config.clear.gloom=Điều kiện hoàn thành: Sống sót qua Đêm U Ám đầu tiên
 
 gui.warning.line1=bro
 gui.warning.line2=Bạn sắp vào một thế giới có bật chế độ Cancer.
