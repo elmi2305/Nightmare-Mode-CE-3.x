@@ -376,16 +376,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return super.isInsideOfMaterial(par1Material);
     }
 
-//    @Inject(method = "getDepthBeneathSurface", at = @At("RETURN"), cancellable = true, remap = false)
-//    private void overrideDepthDuringEclipse(float fMaxDepthToConsider, CallbackInfoReturnable<Float> cir){
-//        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2) {
-//            cir.setReturnValue(200f);
-//        }
-//    }
+
     @Inject(method = "updateEntityActionState", at = @At("TAIL"))
     private void doEclipseMovement(CallbackInfo ci){
         if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
-            this.randomMotionVecY = this.rand.nextFloat() * 0.2f - 0.1f;
+            this.randomMotionVecY = this.rand.nextFloat() - 0.5f;
         }
     }
 
