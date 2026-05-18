@@ -471,7 +471,7 @@ public class GuiConfig extends GuiScreen {
                 int starY = y + 2;
                 int hitboxSize = 20;
 
-                String clearCondition = I18n.getString("gui.config.clear." + option.getFieldName().toLowerCase());
+                String clearCondition = I18n.getString(option.getConfigEnum().getClearCondition().getNameUnlocalized());
 
                 GuiInvisibleTooltipArea starTooltipArea = new GuiInvisibleTooltipArea(
                         200 + option.getId(),
@@ -485,6 +485,7 @@ public class GuiConfig extends GuiScreen {
             }
         }
     }
+
     private void initializeButtonStates() {
         for (ConfigOption option : ConfigOption.values()) {
             GuiColoredButton button = this.buttons.get(option);
