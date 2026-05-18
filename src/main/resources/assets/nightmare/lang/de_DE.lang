@@ -251,19 +251,14 @@ gui.config.tooltip.real_time=Tag und Nacht dauern 12 Echte Stunden. Der Hardmode
 
 
 
-gui.config.clear.morevariants=Ziel: Töte den Enderdrachen
-gui.config.clear.evolvedmobs=Ziel: Töte ???
-gui.config.clear.buffedsquids=Ziel: Töte ???
-gui.config.clear.nite=Ziel: Töte den Enderdrachen
-gui.config.clear.darkstormynightmare=Ziel: Töte den Enderdrachen
-gui.config.clear.noskybases=Ziel: Töte ???
-gui.config.clear.isaprilfools=Ziel: Erreiche Hardmode
-gui.config.clear.realtime=Ziel: Überlebe die erste Neumondnacht
-gui.config.clear.totaleclipse=Ziel: Überlebe einen Blutmond
-gui.config.clear.bloodmare=Ziel: Erreiche Hardmode
-gui.config.clear.magicmonsters=Ziel: Erreiche Hardmode
-gui.config.clear.unkillablemobs=Ziel: Erreiche Hardmode
-gui.config.clear.nohit=Ziel: Erreiche Hardmode
+gui.config.clear.dragon=Ziel: Töte den Enderdrachen
+gui.config.clear.hardmode=Ziel: Erreiche Hardmode
+gui.config.clear.bw=Ziel: Töte ???
+gui.config.clear.bloodmoon=Ziel: Überlebe einen Blutmond
+gui.config.clear.eclipse=Ziel: Besiege eine Sonnenfinsternis
+gui.config.clear.week=Ziel: Überlebe 7 Tage
+gui.config.clear.gloom=Ziel: Überlebe die erste Neumondnacht
+
 
 gui.warning.line1=bro
 gui.warning.line2=du bist dabei, einer Welt mit aktiviertem Geisteskrankmodus beizutreten
