@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.rendering.entities;
 
+import btw.client.render.util.RenderUtils;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
+import com.itlesports.nightmaremode.rendering.entities.models.ModelDungCreeper;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -10,7 +12,11 @@ import static com.itlesports.nightmaremode.util.NMFields.*;
 public class RenderCreeperVariant extends RenderLiving {
     public RenderCreeperVariant() {
         super(new ModelCreeper(), 0.5f);
+        this.mainModel = creeperModel[0];
     }
+
+    private static final int MODEL_BASE = 0;
+    private static final int MODEL_ARMOR = 1;
 
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private static final ResourceLocation creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
@@ -20,6 +26,7 @@ public class RenderCreeperVariant extends RenderLiving {
     private static final ResourceLocation FIRE_CREEPER_TEXTURE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
 
     private static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
+    private static final ResourceLocation DUNG_CREEPER_TEXTURE_OLD = new ResourceLocation("nightmare:textures/entity/creeperDungOld.png");
 
     private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/lightningCreeper.png");
 
@@ -29,8 +36,8 @@ public class RenderCreeperVariant extends RenderLiving {
 
     private static final ResourceLocation FLOWER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmFlowerCreeper.png");
 
-
-    private ModelBase creeperModel = new ModelCreeper(2.0f);
+    private final ModelBase[] creeperModel = {new ModelCreeper(0), new ModelCreeper(2)};
+    private final ModelDungCreeper[] creeperDungModel = {new ModelDungCreeper(0), new ModelDungCreeper(2)};
 
     protected void updateCreeperScale(EntityCreeperVariant mob, float par2) {
         float flashIntensity = mob.getCreeperFlashIntensity(par2);
@@ -66,6 +73,11 @@ public class RenderCreeperVariant extends RenderLiving {
         return var5 << 24 | var6 << 16 | var7 << 8 | var8;
     }
 
+    protected void renderCreeper(EntityCreeperVariant c, double par2, double par4, double par6, float par8, float par9) {
+        this.mainModel = getCreeperModels(c)[MODEL_BASE];
+        super.doRenderLiving(c, par2, par4, par6, par8, par9);
+    }
+
     protected int renderCreeperPassModel(EntityCreeperVariant c, int par2, float par3) {
         if (c.getPowered()) {
             if (c.isInvisible()) {
@@ -81,7 +93,7 @@ public class RenderCreeperVariant extends RenderLiving {
                 float var5 = var4 * 0.01f;
                 float var6 = var4 * 0.01f;
                 GL11.glTranslatef(var5, var6, 0.0f);
-                this.setRenderPassModel(this.creeperModel);
+                this.setRenderPassModel(getCreeperModels(c)[MODEL_ARMOR]);
                 GL11.glMatrixMode(5888);
                 GL11.glEnable(3042);
                 float var7 = 0.5f;
@@ -106,6 +118,8 @@ public class RenderCreeperVariant extends RenderLiving {
     }
 
     protected ResourceLocation getCreeperTextures(EntityCreeperVariant entity) {
+        boolean usingLegacy = RenderUtils.shouldRenderLegacyModel();
+
         if(entity.variantType == PACKET_CREEPER_FIRE){
             if(NMUtils.getIsMobEclipsed(entity)){
                 return FIRE_CREEPER_TEXTURE_ECLIPSE;
@@ -115,7 +129,7 @@ public class RenderCreeperVariant extends RenderLiving {
             return FIRE_CREEPER_TEXTURE;
         }
         else if(entity.variantType == PACKET_CREEPER_DUNG){
-            return DUNG_CREEPER_TEXTURE;
+            return usingLegacy ? DUNG_CREEPER_TEXTURE_OLD : DUNG_CREEPER_TEXTURE;
         }
         else if(entity.variantType == PACKET_CREEPER_LIGHTNING){
             return LIGHTNING_CREEPER_TEXTURE;
@@ -130,6 +144,25 @@ public class RenderCreeperVariant extends RenderLiving {
             return FLOWER_CREEPER_TEXTURE;
         }
         return creeperTextures;
+    }
+
+    /**
+     * Returns a model array that is equivalent to the provided entity
+     * @param entity Creeper entity
+     * @return An array of models
+     */
+    protected ModelBase[] getCreeperModels(EntityCreeperVariant entity)
+    {
+        // If we're using the legacy render flag, only use
+        // base creeper model
+        if (RenderUtils.shouldRenderLegacyModel()) {
+            return creeperModel;
+        }
+
+        return switch (entity.variantType) {
+            case PACKET_CREEPER_DUNG -> creeperDungModel;
+            default -> creeperModel;
+        };
     }
 
     @Override
@@ -155,5 +188,10 @@ public class RenderCreeperVariant extends RenderLiving {
     @Override
     protected ResourceLocation getEntityTexture(Entity entity) {
         return this.getCreeperTextures((EntityCreeperVariant) entity);
+    }
+
+    @Override
+    public void doRender(Entity entity, double par2, double par4, double par6, float par8, float par9) {
+        this.renderCreeper((EntityCreeperVariant) entity, par2, par4, par6, par8, par9);
     }
 }
