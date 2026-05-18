@@ -258,19 +258,13 @@ gui.config.tooltip.real_time=Day and Night last 12 real-life hours. Hardmode act
 
 
 
-gui.config.clear.morevariants=Clear Condition: Defeat the Ender Dragon
-gui.config.clear.evolvedmobs=Clear Condition: Defeat ???
-gui.config.clear.buffedsquids=Clear Condition: Defeat ???
-gui.config.clear.nite=Clear Condition: Defeat the Ender Dragon
-gui.config.clear.darkstormynightmare=Clear Condition: Defeat the Ender Dragon
-gui.config.clear.noskybases=Clear Condition: Defeat ???
-gui.config.clear.isaprilfools=Clear Condition: Enter Hardmode
-gui.config.clear.realtime=Clear Condition: Survive the first Gloom Night
-gui.config.clear.totaleclipse=Clear Condition: Defeat a Blood Moon
-gui.config.clear.bloodmare=Clear Condition: Enter Hardmode
-gui.config.clear.magicmonsters=Clear Condition: Enter Hardmode
-gui.config.clear.unkillablemobs=Clear Condition: Enter Hardmode
-gui.config.clear.nohit=Clear Condition: Enter Hardmode
+gui.config.clear.dragon=Clear Condition: Defeat the Ender Dragon
+gui.config.clear.hardmode=Clear Condition: Enter Hardmode
+gui.config.clear.bw=Clear Condition: Defeat ???
+gui.config.clear.bloodmoon=Clear Condition: Defeat a Blood Moon
+gui.config.clear.eclipse=Clear Condition: Defeat an Eclipse
+gui.config.clear.week=Clear Condition: Survive 7 days
+gui.config.clear.gloom=Clear Condition: Survive the First Gloom Night
 
 gui.warning.line1=bro
 gui.warning.line2=you are about to join a world with cancer mode enabled
