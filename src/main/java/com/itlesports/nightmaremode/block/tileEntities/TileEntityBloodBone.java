@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class TileEntityBloodBone extends TileEntity implements TileEntityDataPacketHandler {
     private boolean activityState; // whether the ritual is going on or nah
-    private byte ritualTicks; // counter that goes up once every 64 ticks. tends to overflow.
+    private int ritualTicks; // counter that goes up once every 64 ticks. tends to overflow.
     private Set<EntityLivingBase> livingEntities; // entities it summoned
     private Set<UUID> livingEntityUUIDs; // UUIDs for persistent tracking across world loads
     private boolean isAngry; // server and client anger state
@@ -48,7 +48,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         }
 
         if(tag.hasKey("ritualTicks")) {
-            this.ritualTicks = tag.getByte("ritualTicks");
+            this.ritualTicks = tag.getInteger("ritualTicks");
         }
 
         if(tag.hasKey("angry")) {
@@ -124,7 +124,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setBoolean("activityState", this.activityState);
-        tag.setByte("ritualTicks", this.ritualTicks);
+        tag.setInteger("ritualTicks", this.ritualTicks);
         tag.setBoolean("angry", this.isAngry);
         tag.setInteger("successfulIncrements", this.successfulIncrements);
         tag.setInteger("sacrifices", this.sacrifices);
@@ -156,7 +156,8 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     @Override
     public void updateEntity() {
-        if(this.dead) return;
+//        if(this.dead) return;
+        System.out.println("updating");
         super.updateEntity();
 
         World world = this.worldObj;
@@ -528,7 +529,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
     }
 
     private void setRitualTicks(int ritualTicks){
-        this.ritualTicks = (byte) ritualTicks;
+        this.ritualTicks = ritualTicks;
     }
 
     public void cancelRitual(){
