@@ -380,7 +380,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "updateEntityActionState", at = @At("TAIL"))
     private void doEclipseMovement(CallbackInfo ci){
         if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
-            this.randomMotionVecY = this.rand.nextFloat() - 0.5f;
+            if (this.randomMotionVecY == 0.0f || this.randomMotionVecY == -0.1f) { // hardcoded -0.1f recalculation. hack to simulate fluid movement
+                this.randomMotionVecY = this.rand.nextFloat() - 0.5f;
+            }
         }
     }
 
