@@ -580,11 +580,16 @@ public abstract class EntityZombieMixin extends EntityMob{
         Entity crystal = new EntityEnderCrystal(this.worldObj);
         crystal.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
         crystalhead.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-        this.worldObj.spawnEntityInWorld(crystal);
+
+        if (!this.worldObj.isRemote) {
+            this.worldObj.spawnEntityInWorld(crystal);
+        }
         for (int i = 0; i < 5; i++) {
             crystalhead.setEquipmentDropChance(i,-1f);
         }
-        this.worldObj.spawnEntityInWorld(crystalhead);
+        if (!this.worldObj.isRemote) {
+            this.worldObj.spawnEntityInWorld(crystalhead);
+        }
         crystal.mountEntity(crystalhead);
 
         ItemStack var1 = new ItemStack(Item.skull,1,1);
@@ -594,8 +599,8 @@ public abstract class EntityZombieMixin extends EntityMob{
         crystalhead.setCurrentItemOrArmor(2, setItemColor(new ItemStack(BTWItems.woolLeggings))); // black
         crystalhead.setCurrentItemOrArmor(3, setItemColor(new ItemStack(BTWItems.woolChest))); // black
 
-        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.38f);
-        EntityPlayer nearestPlayer = this.worldObj.getClosestPlayerToEntity(crystalhead, 100);
+        crystalhead.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.35f);
+        EntityPlayer nearestPlayer = this.worldObj.getClosestVulnerablePlayerToEntity(crystalhead, 100);
         if (nearestPlayer != null) {
             crystalhead.setAttackTarget(nearestPlayer);
             crystalhead.getMoveHelper().setMoveTo(nearestPlayer.posX,nearestPlayer.posY,nearestPlayer.posZ, 1.2f);
