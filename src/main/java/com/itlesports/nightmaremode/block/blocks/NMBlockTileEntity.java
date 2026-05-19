@@ -8,12 +8,18 @@ import net.minecraft.src.World;
 
 public abstract class NMBlockTileEntity extends NMBlock implements ITileEntityProvider {
 
-    public NMBlockTileEntity(int par1, Material par2Material) {
-        super(par1, par2Material);
+    public NMBlockTileEntity(int id, Material m) {
+        super(id, m);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world) {
         return null;
+    }
+
+    @Override
+    public void breakBlock(World w, int x, int y, int z, int par5, int par6) {
+        super.breakBlock(w, x, y, z, par5, par6);
+        w.removeBlockTileEntity(x,y,z);
     }
 }
