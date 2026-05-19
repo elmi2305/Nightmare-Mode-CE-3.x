@@ -270,11 +270,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             int usedItemID = p.getItemInUse().itemID;
 
             if(usedItemID == Item.appleGold.itemID && !this.worldObj.isRemote){
-                if(p.getItemInUse().getItemDamage() == 1){
-                    this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 1800L);
-
-                }
-                this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + 600L);
+                int offset = p.getItemInUse().getItemDamage() == 1 ? 1800 : 600;
+                this.setData(APPLE_COOLDOWN, this.worldObj.getTotalWorldTime() + offset);
             }
 
             if (usedItemID == Item.potion.itemID && p.getItemInUse().getItemDamage() == 0) {
