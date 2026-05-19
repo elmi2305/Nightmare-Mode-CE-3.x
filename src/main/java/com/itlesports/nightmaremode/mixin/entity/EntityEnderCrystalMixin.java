@@ -32,6 +32,17 @@ public abstract class EntityEnderCrystalMixin extends Entity{
         }
     }
 
+    @Override
+    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
+        if (!this.worldObj.isRemote) {
+            int range = this.isRiding() ? 1 : 4;
+            if(this.getDistanceSqToEntity(par1EntityPlayer) >= range) return;
+            this.worldObj.createExplosion(null, this.posX, this.posY, this.posZ, 6.0f, true);
+            this.setDead();
+        }
+        super.onCollideWithPlayer(par1EntityPlayer);
+    }
+
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlock(IIII)Z"))
     private boolean spawnFireOnlyInEnd(World instance, int par1, int par2, int par3, int par4){
         if(this.dimension != 0){
