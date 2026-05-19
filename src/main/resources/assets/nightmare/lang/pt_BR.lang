@@ -120,6 +120,8 @@ commands.tpa.no_request_to_deny=Nenhuma solicitação válida de TPA para negar.
 commands.tpa.denied_sender=%s negou seu pedido de teletransporte.
 commands.tpa.denied=Negado o pedido de TPA.
 
+commands.state.usage=/ws <0|1|2|3>
+
 emi.trade.NightmareVillager=Comerciante Pesadelo
 
 status.health.NoHit=Sem acerto

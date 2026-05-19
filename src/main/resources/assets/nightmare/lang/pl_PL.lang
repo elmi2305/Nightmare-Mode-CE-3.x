@@ -120,6 +120,9 @@ commands.tpa.no_request_to_deny=Brak ważnych żądań TPA do odrzucenia.
 commands.tpa.denied_sender=%s odrzucił Twoją prośbę o teleport.
 commands.tpa.denied=Odrzucono żądanie TPA.
 
+commands.state.usage=/ws <0|1|2|3>
+
+
 emi.trade.NightmareVillager=Sprzedawca Koszmarów
 
 status.health.NoHit=Bez trafienia

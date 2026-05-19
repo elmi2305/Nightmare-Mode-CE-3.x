@@ -120,6 +120,8 @@ commands.tpa.no_request_to_deny=Keine gültigen TPA-Anfragen zum Ablehnen.
 commands.tpa.denied_sender=%s hat deine Teleportanfrage abgelehnt.
 commands.tpa.denied=Die TPA-Anfrage wurde abgelehnt.
 
+commands.state.usage=/ws <0|1|2|3>
+
 emi.trade.NightmareVillager=Albtraumhändler
 
 status.health.NoHit=NoHit

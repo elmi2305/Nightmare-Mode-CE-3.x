@@ -120,6 +120,8 @@ commands.tpa.no_request_to_deny=没有待拒绝的TPA请求。
 commands.tpa.denied_sender=%s拒绝了你的传送请求。
 commands.tpa.denied=已拒绝TPA请求。
 
+commands.state.usage=/ws <0|1|2|3>
+
 emi.trade.NightmareVillager=梦魇商人
 
 status.health.NoHit=无伤

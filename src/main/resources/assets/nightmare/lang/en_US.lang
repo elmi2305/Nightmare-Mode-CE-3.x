@@ -127,6 +127,8 @@ commands.tpa.no_request_to_deny=No valid TPA requests to deny.
 commands.tpa.denied_sender=%s denied your teleport request.
 commands.tpa.denied=Denied the TPA request.
 
+commands.state.usage=/ws <0|1|2|3>
+
 emi.trade.NightmareVillager=Nightmare Merchant
 
 status.health.NoHit=No Hit

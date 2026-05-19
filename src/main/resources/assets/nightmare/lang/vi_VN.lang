@@ -120,6 +120,8 @@ commands.tpa.no_request_to_deny=Không có yêu cầu TPA hợp lệ để từ 
 commands.tpa.denied_sender={target} đã từ chối yêu cầu dịch chuyển của bạn.
 commands.tpa.denied=Đã từ chối yêu cầu TPA.
 
+commands.state.usage=/ws <0|1|2|3>
+
 emi.trade.NightmareVillager=Thương nhân Ác Mộng
 
 status.health.NoHit=Không trúng
