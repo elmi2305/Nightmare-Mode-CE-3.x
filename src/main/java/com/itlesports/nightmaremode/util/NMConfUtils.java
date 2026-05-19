@@ -22,7 +22,6 @@ import static btw.community.nightmaremode.NightmareMode.logical;
 
 public class NMConfUtils {
     public static final List<CONFIG> confList = new ArrayList<>();
-    public static void initConfigs(){}
     static{
         confList.add(CONFIG.MORE_VARIANTS);
         confList.add(CONFIG.EVOLVED_MOBS);
@@ -119,22 +118,6 @@ public class NMConfUtils {
             }
         }
         public abstract boolean isActive();
-
-        public static void initConfig(){
-            System.out.println(MORE_VARIANTS);
-            System.out.println(EVOLVED_MOBS);
-            System.out.println(BUFFED_SQUIDS);
-            System.out.println(NITE);
-            System.out.println(DARK_STORMY_NIGHTMARE);
-            System.out.println(NO_SKYBASES);
-            System.out.println(CANCER_MODE);
-            System.out.println(TOTAL_ECLIPSE);
-            System.out.println(BLOODMARE);
-            System.out.println(MAGIC_MONSTERS);
-            System.out.println(UNKILLABLE_MOBS);
-            System.out.println(NO_HIT);
-            System.out.println(REAL_TIME);
-        }
     }
 
 
