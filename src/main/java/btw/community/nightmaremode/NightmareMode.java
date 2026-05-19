@@ -16,10 +16,10 @@ import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
-import com.itlesports.nightmaremode.util.NMEntityMapper;
-import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.NMInitializer;
-import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.*;
+import com.itlesports.nightmaremode.util.command.EventCommand;
+import com.itlesports.nightmaremode.util.command.RevertEventTimeCommand;
+import com.itlesports.nightmaremode.util.command.WorldStateCommand;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
@@ -153,6 +153,9 @@ public class NightmareMode extends BTWAddon {
             initServerPacketInfo();
             AddonHandler.registerCommand(new TPACommand(), false);
         }
+        AddonHandler.registerCommand(new WorldStateCommand(), false);
+        AddonHandler.registerCommand(new EventCommand(), false);
+        AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
 
 
         NMBlocks.initNightmareBlocks();
