@@ -24,7 +24,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
     public float xRot; // client only
     public float yRot; // client only
     public float zRot; // client only
-    private boolean dead; // used because of tile entity nonsense that lets it remain active after deactivating. don't ask me how
     private int successfulIncrements; // differs from ritual ticks because it only increments when conditions are valid
     private final Random rand;
     private float spinSpeed = 1.0F; // how fast to vroom
@@ -156,8 +155,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     @Override
     public void updateEntity() {
-//        if(this.dead) return;
-        System.out.println("updating");
         super.updateEntity();
 
         World world = this.worldObj;
@@ -408,7 +405,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     private void killSelf(){
         this.cancelRitual();
-        this.dead = true;
     }
 
     public static boolean isBeingObstructedByNeighbors(World world, int x, int y, int z) {
