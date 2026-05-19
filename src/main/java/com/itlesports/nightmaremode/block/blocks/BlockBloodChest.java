@@ -104,39 +104,39 @@ public class BlockBloodChest extends BlockContainer {
         super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
     }
 
-    public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6) {
-        TileEntityBloodChest var7 = (TileEntityBloodChest) par1World.getBlockTileEntity(par2, par3, par4);
-        if (var7 != null) {
-            for (int var8 = 0; var8 < var7.getSizeInventory(); ++var8) {
-                ItemStack var9 = var7.getStackInSlot(var8);
-                if (var9 != null) {
+    public void breakBlock(World w, int x, int y, int z, int par5, int par6) {
+        TileEntityBloodChest te = (TileEntityBloodChest) w.getBlockTileEntity(x, y, z);
+        if (te != null) {
+            for (int var8 = 0; var8 < te.getSizeInventory(); ++var8) {
+                ItemStack stack = te.getStackInSlot(var8);
+                if (stack != null) {
                     float var10 = this.random.nextFloat() * 0.8F + 0.1F;
                     float var11 = this.random.nextFloat() * 0.8F + 0.1F;
 
-                    EntityItem var14;
-                    for (float var12 = this.random.nextFloat() * 0.8F + 0.1F; var9.stackSize > 0; par1World.spawnEntityInWorld(var14)) {
+                    EntityItem itemEntity;
+                    for (float var12 = this.random.nextFloat() * 0.8F + 0.1F; stack.stackSize > 0; w.spawnEntityInWorld(itemEntity)) {
                         int var13 = this.random.nextInt(21) + 10;
-                        if (var13 > var9.stackSize) {
-                            var13 = var9.stackSize;
+                        if (var13 > stack.stackSize) {
+                            var13 = stack.stackSize;
                         }
 
-                        var9.stackSize -= var13;
-                        var14 = new EntityItem(par1World, (double) ((float) par2 + var10), (double) ((float) par3 + var11), (double) ((float) par4 + var12), new ItemStack(var9.itemID, var13, var9.getItemDamage()));
-                        float var15 = 0.05F;
-                        var14.motionX = (double) ((float) this.random.nextGaussian() * var15);
-                        var14.motionY = (double) ((float) this.random.nextGaussian() * var15 + 0.2F);
-                        var14.motionZ = (double) ((float) this.random.nextGaussian() * var15);
-                        if (var9.hasTagCompound()) {
-                            var14.getEntityItem().setTagCompound((NBTTagCompound) var9.getTagCompound().copy());
+                        stack.stackSize -= var13;
+                        itemEntity = new EntityItem(w, (double) ((float) x + var10), (double) ((float) y + var11), (double) ((float) z + var12), new ItemStack(stack.itemID, var13, stack.getItemDamage()));
+                        float velMultiplier = 0.05F;
+                        itemEntity.motionX = (double) ((float) this.random.nextGaussian() * velMultiplier);
+                        itemEntity.motionY = (double) ((float) this.random.nextGaussian() * velMultiplier + 0.2F);
+                        itemEntity.motionZ = (double) ((float) this.random.nextGaussian() * velMultiplier);
+                        if (stack.hasTagCompound()) {
+                            itemEntity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
                         }
                     }
                 }
             }
-
-            par1World.func_96440_m(par2, par3, par4, par5);
+            // notify comparators that this block changed
+            w.func_96440_m(x, y, z, par5);
         }
 
-        super.breakBlock(par1World, par2, par3, par4, par5, par6);
+        super.breakBlock(w, x, y, z, par5, par6);
     }
 
     @Override
