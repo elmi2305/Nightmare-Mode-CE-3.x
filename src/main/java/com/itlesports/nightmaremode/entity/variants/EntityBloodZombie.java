@@ -117,7 +117,7 @@ public class EntityBloodZombie extends EntityZombie {
 
     @Override
     protected void addRandomArmor() {
-        if (this.rand.nextFloat() < 0.03f && this.worldObj.getWorldTime() > 120000) {
+        if (this.rand.nextFloat() < 0.01f && this.worldObj.getWorldTime() > 240000) {
             int iHeldType = this.rand.nextInt(3);
             if (iHeldType == 0) {
                 this.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
