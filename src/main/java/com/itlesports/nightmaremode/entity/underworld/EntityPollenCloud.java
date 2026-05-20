@@ -85,7 +85,7 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
      * • reddust = subtle poison-green tint on some particles
      */
     private void spawnPollenParticles() {
-        int amountOfParticles = MathHelper.floor_double(5.6d * radius); // 28 on 5 radius
+        int amountOfParticles = MathHelper.floor_double(4.6d * radius); // 23 on 5 radius
         for (int i = 0; i < amountOfParticles; i++) {
 
             // generate a uniform random point inside a sphere
