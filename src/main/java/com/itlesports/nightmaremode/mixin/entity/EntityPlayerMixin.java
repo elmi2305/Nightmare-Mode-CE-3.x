@@ -18,6 +18,7 @@ import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.mixin.interfaces.EntityFireworkRocketAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -328,21 +329,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
     @Unique private void checkAndValidateConfig(){
+
         if(this.worldObj.worldInfo.areCommandsAllowed() || this.capabilities.isCreativeMode || this.capabilities.allowFlying || this.worldObj.worldInfo.getGameType() == EnumGameType.CREATIVE){
             // player is currently cheating
 //            System.out.println("XX detecting cheating. wouldn't apply");
 
             EntityPlayer self = (EntityPlayer)(Object)this;
 
-            ChatMessageComponent text1 = new ChatMessageComponent();
-            text1.addKey("world.config.cheating");
-            text1.setColor(EnumChatFormatting.DARK_RED);
-            self.sendChatToPlayer(text1);
+            if (!this.worldObj.isRemote) {
+                ChatMessageComponent text1 = new ChatMessageComponent();
+                text1.addKey("world.config.cheating");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
 
-            text1 = new ChatMessageComponent();
-            text1.addKey("world.config.progress_wiped");
-            text1.setColor(EnumChatFormatting.DARK_RED);
-            self.sendChatToPlayer(text1);
+                text1 = new ChatMessageComponent();
+                text1.addKey("world.config.progress_wiped");
+                text1.setColor(EnumChatFormatting.DARK_RED);
+                self.sendChatToPlayer(text1);
+            }
 
             invalidateConfig();
             return;
@@ -352,17 +356,139 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         for (NMConfUtils.CONFIG conf : NMConfUtils.confList) {
             if(!conf.isActive()) continue;
 
+            // RT is handled explicitly because it directly modifies the world state and is separate from other configs
             if(NightmareMode.realTime){
                 if(this.shouldActivate(NMConfUtils.CONFIG.REAL_TIME)){
                     this.completeConfig(NMConfUtils.CONFIG.REAL_TIME);
+                    this.spawnConfigCompletionEffects();
                 }
                 break;
             }
 
             if(this.shouldActivate(conf)){
                 this.completeConfig(conf);
+                this.spawnConfigCompletionEffects();
             }
         }
+    }
+
+    @Unique private void spawnConfigCompletionEffects(){
+        // play the level-up sound as a celebratory cue
+        this.playSound("random.levelup", 0.75f, 1.0f);
+
+        // spawn a radial burst of happyVillager and note particles around the player
+        double cx = this.posX;
+        double cy = this.posY + 1.0;
+        double cz = this.posZ;
+        int particleCount = 24;
+
+        double angle;
+        double radius;
+        double ox;
+        double oz;
+        double vy;
+
+        for (int i = 0; i < particleCount; i++) {
+            angle = (2.0 * Math.PI * i) / particleCount;
+            radius = 2.0;
+            ox = Math.cos(angle) * radius;
+            oz = Math.sin(angle) * radius;
+            vy = 0.15 + this.rand.nextDouble() * 0.2;
+
+            String particleName = "happyVillager";
+            this.worldObj.spawnParticle(particleName, cx + ox, cy - 1.75, cz + oz, ox * 0.1, vy, oz * 0.1);
+        }
+
+        for (int i = 0; i < particleCount; i++) {
+            angle = (2.0 * Math.PI * i) / particleCount;
+            radius = 3.0;
+            ox = Math.cos(angle) * radius;
+            oz = Math.sin(angle) * radius;
+            vy = 0.15 + this.rand.nextDouble() * 0.2;
+
+            String particleName = "note";
+            this.worldObj.spawnParticle(particleName, cx + ox, cy - 1.5, cz + oz, ox * 0.1, vy, oz * 0.1);
+        }
+
+//        for (int i = 0; i < 8; i++) {
+//            double ox = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double oz = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double vy = 0.3 + this.rand.nextDouble() * 0.3;
+//            this.worldObj.playAuxSFX(2004, (int) (cx + ox), (int) (cy + vy), (int) (cz + oz), 0);
+//        }
+//        for (int i = 0; i < 2; i++) {
+//            double ox = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double oz = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double vy = 0.3 + this.rand.nextDouble() * 0.3;
+//            this.worldObj.playAuxSFX(2002, (int) (cx + ox), (int) (cy + vy), (int) (cz + oz), 0);
+//        }
+
+//        for (int i = 0; i < 1; i++) {
+//            double ox = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double oz = (this.rand.nextDouble() - 0.5) * 0.8;
+//            double vy = 0.3 + this.rand.nextDouble() * 0.3;
+//            this.worldObj.playAuxSFX(2003, (int) (cx + ox), (int) (cy + vy), (int) (cz + oz), 0);
+//        }
+
+
+        // firework explosion
+//        System.out.println("launching fireworky");
+        if (!this.worldObj.isRemote) {
+            this.launchCelebrationFirework(cx, cy + 0.5, cz, 14 /* gold */, 11 /* yellow */);
+            this.launchCelebrationFirework(cx + 0.5, cy, cz + 0.5, 9 /* cyan */, 5 /* purple */);
+        }
+    }
+
+    @Unique private void launchCelebrationFirework(double x, double y, double z, int color1, int color2){
+        // build fireworks NBT: burst type (3), two colors, trail + twinkle flags
+        NBTTagCompound fireworksTag = new NBTTagCompound();
+        fireworksTag.setByte("Flight", (byte) 0);
+
+        NBTTagCompound explosion = new NBTTagCompound();
+        explosion.setByte("Type", (byte) 3);  // burst shape
+        explosion.setBoolean("Trail", true);
+        explosion.setBoolean("Flicker", true);
+        // encode two dye colors as packed rgb ints
+        explosion.setIntArray("Colors", new int[]{ dyeToRGB(color1), dyeToRGB(color2) });
+        explosion.setIntArray("FadeColors", new int[]{ dyeToRGB(color2) });
+
+        NBTTagList explosionList = new NBTTagList();
+        explosionList.appendTag(explosion);
+        fireworksTag.setTag("Explosions", explosionList);
+
+        NBTTagCompound itemTag = new NBTTagCompound();
+        itemTag.setTag("Fireworks", fireworksTag);
+
+        ItemStack fireworkItem = new ItemStack(Item.firework, 1);
+        fireworkItem.setTagCompound(itemTag);
+
+        EntityFireworkRocket rocket = new EntityFireworkRocket(this.worldObj, x, y + (this.rand.nextFloat() - 0.5f) * 0.5f, z, fireworkItem);
+        rocket.motionY = 0;
+
+        ((EntityFireworkRocketAccessor) rocket).setLifetime(0);
+        this.worldObj.spawnEntityInWorld(rocket);
+    }
+
+    @Unique private static int dyeToRGB(int dyeMeta){
+        return switch (dyeMeta) {
+            case 0  -> 0x1D1D21; // black
+            case 1  -> 0x832532; // red
+            case 2  -> 0x5E7C16; // green
+            case 3  -> 0x835432; // brown
+            case 4  -> 0x3C44AA; // blue
+            case 5  -> 0x8932B8; // purple
+            case 6  -> 0x169C9C; // cyan
+            case 7  -> 0x9D9D97; // light gray
+            case 8  -> 0x474F52; // gray
+            case 9  -> 0x00AAAA; // light blue (used as cyan)
+            case 10 -> 0x80C71F; // lime
+            case 11 -> 0xF9801D; // orange
+            case 12 -> 0xF38BAA; // pink
+            case 13 -> 0x474F52; // gray
+            case 14 -> 0xFFD83D; // gold / yellow
+            case 15 -> 0xF9FFFE; // white
+            default -> 0xFFFFFF;
+        };
     }
     
     @Unique private boolean shouldActivate(NMConfUtils.CONFIG conf){
@@ -386,57 +512,70 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHookTail(CallbackInfo ci){
-        if ((this.ticksExisted % 100 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !this.worldObj.isRemote && !MinecraftServer.getIsServer()) {
+        if ((this.ticksExisted % 100 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !MinecraftServer.getIsServer()) {
             EntityPlayer self = (EntityPlayer)(Object)this;
+
+            boolean client = this.worldObj.isRemote;
+
 
             int[] wConf = this.worldObj.getData(CONFIGS_CREATED);
             if(!this.isWorldUsingConfigs(wConf)) return;
             // if the configs were invalidated, this returns early and prevents looping
-            if(this.isInvalidConfig(wConf)){
-//                System.out.println("X player config didn't match world config");
-//                System.out.println(Arrays.toString(wConf) + " | " + Arrays.toString(NMConfUtils.getClientConfigData()));
-                ChatMessageComponent text1 = new ChatMessageComponent();
-                text1.addKey("world.config.no_match");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
+            if (this.isInvalidConfig(wConf)) {
+                //                System.out.println("X player config didn't match world config");
+                //                System.out.println(Arrays.toString(wConf) + " | " + Arrays.toString(NMConfUtils.getClientConfigData()));
+                if (!client) {
+                    ChatMessageComponent text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.no_match");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
 
-                text1 = new ChatMessageComponent();
-                text1.addKey("world.config.progress_wiped");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
-
-                invalidateConfig();
-            } else if(NMConfUtils.isClientUsingHelpConfig()){
-//                System.out.println("X player is using helpful configs");
-
-                ChatMessageComponent text1 = new ChatMessageComponent();
-
-                text1.addKey("world.config.using_help");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
-
-                text1 = new ChatMessageComponent();
-                text1.addKey("world.config.progress_wiped");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
+                    text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.progress_wiped");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+                }
 
                 invalidateConfig();
-            } else if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-                ChatMessageComponent text1 = new ChatMessageComponent();
-                text1.addKey("world.config.relaxed");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
+                return;
 
-                text1 = new ChatMessageComponent();
-                text1.addKey("world.config.progress_wiped");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                self.sendChatToPlayer(text1);
+            } else if (NMConfUtils.isClientUsingHelpConfig()) {
+                //                System.out.println("X player is using helpful configs");
+
+                if (!client) {
+                    ChatMessageComponent text1 = new ChatMessageComponent();
+
+                    text1.addKey("world.config.using_help");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+
+                    text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.progress_wiped");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+                }
 
                 invalidateConfig();
+                return;
+
+            } else if (!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+                if (!client) {
+                    ChatMessageComponent text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.relaxed");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+
+                    text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.progress_wiped");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+                }
+
+                invalidateConfig();
+                return;
             }
-            else{
-                this.checkAndValidateConfig();
-            }
+
+            this.checkAndValidateConfig();
         }
         // manage underworld events
         if(this.dimension == NMFields.UNDERWORLD_DIMENSION && devMode){
