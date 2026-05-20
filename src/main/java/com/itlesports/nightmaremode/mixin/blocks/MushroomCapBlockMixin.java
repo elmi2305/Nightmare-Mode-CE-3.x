@@ -18,7 +18,7 @@ import java.util.Random;
 
 @Mixin(MushroomCapBlock.class)
 public class MushroomCapBlockMixin extends BlockMushroomCap {
-    @Shadow @Final protected int mushroomType;
+    @Shadow(remap = false) @Final protected int mushroomType;
 
     public MushroomCapBlockMixin(int i, Material material, int j) {
         super(i, material, j);
