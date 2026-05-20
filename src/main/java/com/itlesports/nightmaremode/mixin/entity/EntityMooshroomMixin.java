@@ -21,6 +21,11 @@ public class EntityMooshroomMixin extends EntityCow {
     }
 
     @Override
+    public boolean interact(EntityPlayer player) {
+        return super.entityAnimalInteract(player);
+    }
+
+    @Override
     protected void updateKickAttack() {
         if(this.kickAttackCooldownTimer > 10){
             this.kickAttackCooldownTimer = 10;
