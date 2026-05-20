@@ -72,14 +72,7 @@ public abstract class NMInitializer implements AchievementExt {
     public static void initMobSpawning(){
         addMobToMushroomIslands(EntityGhast.class, 1, 1, 1);
         addMobToMushroomIslands(EntityFauxVillager.class, 2, 1, 1);
-
-        if (NightmareMode.magicMonsters != null && NightmareMode.magicMonsters) {
-            clearAllLandBiomes();
-            addMobToAllLandBiomes(EntityWitch.class, 3, 1, 2);
-            addMobToNether(EntityWitch.class,40,1,2);
-            addMobToEnd(EntityWitch.class,4,1,2);
-            clearAllWaterBiomes();
-        }
+        addMobToMushroomIslands(EntityMushWorm.class, 5, 1, 1);
 
         addMobToEnd(EntityCreeper.class, 1, 1, 3);
 
@@ -104,6 +97,13 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityFauxVillager.class, 1, 1, 1);
         addMobToAllBiomes(EntityCreeperGhast.class, 1, 1, 2);
 
+        if (NightmareMode.magicMonsters != null && NightmareMode.magicMonsters) {
+            clearAllLandBiomes();
+            addMobToAllLandBiomes(EntityWitch.class, 3, 1, 2);
+            addMobToNether(EntityWitch.class,40,1,2);
+            addMobToEnd(EntityWitch.class,4,1,2);
+            clearAllWaterBiomes();
+        }
         finishRecipes("Mob Biome Spawning");
     }
 
