@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.AddonHandler;
+import btw.BTWMod;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import net.minecraft.src.*;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -32,6 +35,10 @@ public class MinecraftMixin {
         return Mouse.getEventDWheel();
     }
 
+    @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
+    private String changeWindowText(String newTitle){
+        return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Nightmare Mode v"+ AddonHandler.getModByID("nightmare").getVersionString();
+    }
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
         if (Keyboard.isKeyDown(NightmareKeyBindings.nmZoomHold.keyCode) && this.currentScreen == null) {
