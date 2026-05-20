@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.block.blocks.MushroomCapBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.entity.EntityMushWorm;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.BlockMushroomCap;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
@@ -28,6 +29,9 @@ public class MushroomCapBlockMixin extends BlockMushroomCap {
         if (this.mushroomType != 0) {
             cir.setReturnValue(BTWItems.redMushroom.itemID);
             return;
+        }
+        if(NMUtils.getWorldProgress() > 0){
+            cir.setReturnValue(BTWItems.brownMushroom.itemID);
         }
         cir.setReturnValue(0);
     }
