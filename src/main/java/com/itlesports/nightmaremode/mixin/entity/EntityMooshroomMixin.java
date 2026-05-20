@@ -47,7 +47,7 @@ public class EntityMooshroomMixin extends EntityCow {
                     Vec3 lineOfSightOrigin = Vec3.createVectorHelper(this.posX, this.posY + (double)(this.height / 2.0f), this.posZ);
                     for (Object o : potentialCollisionList) {
                         EntityLivingBase tempEntity = (EntityLivingBase)o;
-                        if (tempEntity instanceof KickingAnimal || !tempEntity.isEntityAlive() || tempEntity.ridingEntity == this || !this.canEntityBeSeenForAttackToCenterOfMass(tempEntity, lineOfSightOrigin) && !(this.getXZDistanceSqToEntity(tempEntity) <= 1.5625)) continue;
+                        if (tempEntity instanceof KickingAnimal || !tempEntity.isEntityAlive() || tempEntity.ridingEntity == this || !this.canEntityBeSeenForAttackToCenterOfMass(tempEntity, lineOfSightOrigin)) continue;
                         bAttackLaunched = true;
                         ((KickingAnimalAccessor)(this)).invokeKickAttackHitTarget(tempEntity);
                     }
