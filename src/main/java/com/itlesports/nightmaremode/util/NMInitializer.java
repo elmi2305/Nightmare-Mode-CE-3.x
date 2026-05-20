@@ -735,6 +735,7 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.blazeRod.itemID).emeraldCost(2, 4).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.nameTag.itemID).emeraldCost(2, 4).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.spiderFangs.itemID).itemCount(2, 4).addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.ghastTentacle.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.sulfur.itemID).itemCount(3, 6).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.charredFlesh.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.magmaCream.itemID).itemCount(6, 8).addToTradeList();
@@ -746,6 +747,7 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.waterRod.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.voidSack.itemID).itemCount(1,3).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.creeperChop.itemID).itemCount(1, 1).addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.witheredBone.itemID).itemCount(1, 2).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.elementalRod.itemID).itemCount(1, 1).weight(0.6f).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.voidMembrane.itemID).itemCount(1, 1).addToTradeList();
         TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.darksunFragment.itemID).itemCount(1, 1).addToTradeList();
