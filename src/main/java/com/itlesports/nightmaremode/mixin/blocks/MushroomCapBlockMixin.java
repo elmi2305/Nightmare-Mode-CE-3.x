@@ -41,7 +41,7 @@ public class MushroomCapBlockMixin extends BlockMushroomCap {
 
         if (w.rand.nextInt(4) == 0 && !w.isRemote) {
             EntityMushWorm worm = new EntityMushWorm(w);
-            worm.setPositionAndUpdate(x,y,z);
+            worm.setPositionAndUpdate(x + 0.5f,y,z + 0.5f);
             w.spawnEntityInWorld(worm);
         }
         super.breakBlock(w, x, y, z, side, meta);
