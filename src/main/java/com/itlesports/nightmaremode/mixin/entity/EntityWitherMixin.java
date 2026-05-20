@@ -62,7 +62,9 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void dropWitherSoul(boolean par1, int par2, CallbackInfo ci){
-        this.dropItem(NMItems.witherSoul.itemID, 1);
+        if (NightmareMode.devMode) {
+            this.dropItem(NMItems.witherSoul.itemID, 1);
+        }
     }
 
     @ModifyConstant(method = "attackEntityFrom", constant = @Constant(intValue = 20))
