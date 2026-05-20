@@ -145,7 +145,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "updateWeather", at = @At("TAIL"))
     private void manageRainAndBloodMoon(CallbackInfo ci){
-        if (!NightmareMode.darkStormyNightmare && !NightmareMode.devMode && this.worldInfo.areCommandsAllowed()) {
+        if (!NightmareMode.darkStormyNightmare && !NightmareMode.devMode && !this.worldInfo.areCommandsAllowed()) {
             if(this.getWorldTime() < 140000){
                 this.worldInfo.setRaining(false);
             }
