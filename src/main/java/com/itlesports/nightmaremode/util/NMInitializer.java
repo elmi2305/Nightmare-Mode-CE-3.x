@@ -72,7 +72,7 @@ public abstract class NMInitializer implements AchievementExt {
     public static void initMobSpawning(){
         addMobToMushroomIslands(EntityGhast.class, 1, 1, 1);
         addMobToMushroomIslands(EntityFauxVillager.class, 2, 1, 1);
-        addMobToMushroomIslands(EntityMushWorm.class, 5, 1, 1);
+        addMobToMushroomIslands(EntityMushWorm.class, 2, 1, 1);
 
         addMobToEnd(EntityCreeper.class, 1, 1, 3);
 
