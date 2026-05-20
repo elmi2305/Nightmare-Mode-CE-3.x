@@ -22,11 +22,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Shadow private int timeSinceIgnited;
     @Shadow public int fuseTime;
-
     @Shadow public abstract void onKickedByAnimal(KickingAnimal kickingAnimal);
-
-    @Shadow
-    public abstract boolean getPowered();
+    @Shadow public abstract boolean getPowered();
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);

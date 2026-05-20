@@ -43,7 +43,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityBlackHole.class, "NmBlackHole", 2329);
         EntityList.addMapping(EntityBloodAltar.class, "NmBloodAltarTracker", 2330, 0x0, 0x0);
         EntityList.addMapping(EntityMushWorm.class, "NmMushWorm", 2331, 0xFF6B6B, 0x808080);
-        EntityList.addMapping(EntityRitualPortal.class, "NmEntityRitualPortal", 2332, 0xFFFFFF, 0x808080);
+        EntityList.addMapping(EntityRitualPortal.class, "NmEntityRitualPortal", 2332);
     }
 
     public static void createTileEntityMappings(){

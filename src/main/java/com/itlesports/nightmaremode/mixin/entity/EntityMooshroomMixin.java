@@ -22,6 +22,7 @@ public class EntityMooshroomMixin extends EntityCow {
 
     @Override
     public boolean interact(EntityPlayer player) {
+        // delegates to EntityAnimal super, so it cannot be milked
         return super.entityAnimalInteract(player);
     }
 
@@ -29,6 +30,7 @@ public class EntityMooshroomMixin extends EntityCow {
     protected void updateKickAttack() {
         if(this.kickAttackCooldownTimer > 10){
             this.kickAttackCooldownTimer = 10;
+            // crude way of maxing out the cooldown timer
         }
         // differs in kick range and cooldown
         if (this.kickAttackInProgressCounter >= 0) {
