@@ -263,6 +263,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private double noGravityOnEclipse1(double constant){
         return NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 ? 1d : constant;
     }
+    @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;ridingEntity:Lnet/minecraft/src/Entity;", opcode = Opcodes.GETFIELD))
+    private Entity treatPlayersAsAlwaysNotBeingBoated(EntityPlayer instance){
+        // TODO: BTW FIXES THIS IN THE NEW VERSION, REMOVE
+        return null; // not riding anything
+    }
 
     // increasing the squid range
 
@@ -355,7 +360,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
 
     // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is not in water
-    @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z", ordinal = 0, opcode = Opcodes.GETFIELD))
+    @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z", ordinal = 1, opcode = Opcodes.GETFIELD))
     private boolean tentacleEvenIfBeached(BTWSquidEntity instance){
         return true;
     }
