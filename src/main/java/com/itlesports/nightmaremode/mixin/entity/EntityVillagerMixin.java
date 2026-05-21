@@ -38,6 +38,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
         int profession = this.getProfession();
         int level = this.getCurrentTradeLevel();
+        if(this.getHealth() < 10 || this.isDead) return false; // if the villager is about to die, it cannot be vacuumed up. prevents exploits with grabbing them while they're dying / about to die
 
         int itemMeta = NMUtils.VillagerMetaCodec.packItemMeta(profession, level);
 
