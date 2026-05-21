@@ -19,6 +19,7 @@ import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.Struc
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.util.command.EventCommand;
 import com.itlesports.nightmaremode.util.command.RevertEventTimeCommand;
+import com.itlesports.nightmaremode.util.command.WarpCommand;
 import com.itlesports.nightmaremode.util.command.WorldStateCommand;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
@@ -35,7 +36,7 @@ public class NightmareMode extends BTWAddon {
 
     private static NightmareMode instance;
 
-    public static boolean devMode = true;
+    public static boolean devMode = false;
 
 
     // world gen
@@ -156,6 +157,7 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerCommand(new WorldStateCommand(), false);
         AddonHandler.registerCommand(new EventCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
+        AddonHandler.registerCommand(new WarpCommand(), false);
 
 
         NMBlocks.initNightmareBlocks();
