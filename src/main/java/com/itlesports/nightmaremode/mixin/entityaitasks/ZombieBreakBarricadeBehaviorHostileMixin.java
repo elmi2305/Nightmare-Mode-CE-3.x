@@ -33,9 +33,9 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         int timeSpentBreaking = this.associatedEntity instanceof EntityZombieExt ext ? ext.nightmareMode$getTimeSpentBreaking() : 0;
 
         if(this.associatedEntity instanceof EntityZombieExt ext){
-            ext.nightmareMode$setTimeSpentBreaking(Math.min(timeSpentBreaking + 1, 168));
+            ext.nightmareMode$setTimeSpentBreaking(Math.min(timeSpentBreaking + 1, 178));
         }
-        int increase = timeSpentBreaking > 40 ? ((timeSpentBreaking - 40) / 16 ) : 0;
+        int increase = timeSpentBreaking > 50 ? ((timeSpentBreaking - 50) / 32 ) : 0;
         this.breakingTime += increase;
 
         if (this.associatedEntity.getHeldItem() != null) {
