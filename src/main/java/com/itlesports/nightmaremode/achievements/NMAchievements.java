@@ -721,7 +721,7 @@ public class NMAchievements {
     public static final Achievement<Entity> VILLAGER_VESSEL =
             AchievementProvider.getBuilder(AchievementEvents.EatEntityWithBlockDispenserEvent.class)
                     .name(loc("makeVillagerVessel"))
-                    .icon(NMBlocks.villagerBlock)
+                    .icon(NMItems.villagerOrb)
                     .displayLocation(6, 1)
                     .triggerCondition(e -> e instanceof EntityVillager)
                     .parents(MAKE_COMPANION_CUBE)
