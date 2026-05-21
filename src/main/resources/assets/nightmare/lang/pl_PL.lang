@@ -48,6 +48,15 @@ item.nmObsidianShard.name=Odłamek Obsydianu
 item.nmTimeBottle.name=Butelka czasu
 item.nmRefinedDiamondIngot.name=Sztabka rafinowanego diamentu
 item.nmBloodBottle.name=Karmazynowa butelka
+item.nmVillagerOrb.name=Kula Wieśniaka
+item.nmVillagerOrb.farmer.name=Kula Rolnika
+item.nmVillagerOrb.librarian.name=Kula Bibliotekarza
+item.nmVillagerOrb.blacksmith.name=Kula Kowala
+item.nmVillagerOrb.butcher.name=Kula Rzeźnika
+item.nmVillagerOrb.priest.name=Kula Kapłana
+item.nmVillagerOrb.nightmare.name=Kula Koszmaru
+item.nmWitherSoul.name=Dusza Withera
+
 
 tile.nmSteelOre.name=Ruda stali
 tile.nmSpecialObsidian.name=Kamień Areny

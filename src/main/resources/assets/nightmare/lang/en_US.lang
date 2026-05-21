@@ -55,6 +55,7 @@ item.nmVillagerOrb.blacksmith.name=Blacksmith Orb
 item.nmVillagerOrb.butcher.name=Butcher Orb
 item.nmVillagerOrb.priest.name=Priest Orb
 item.nmVillagerOrb.nightmare.name=Nightmare Orb
+item.nmWitherSoul.name=Wither Soul
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone

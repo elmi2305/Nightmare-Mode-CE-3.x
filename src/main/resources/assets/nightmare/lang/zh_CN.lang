@@ -48,6 +48,14 @@ item.nmObsidianShard.name=黑曜石碎片
 item.nmTimeBottle.name=时间之瓶
 item.nmRefinedDiamondIngot.name=精炼钻石锭
 item.nmBloodBottle.name=猩红之瓶
+item.nmVillagerOrb.name=村民之球
+item.nmVillagerOrb.farmer.name=农民之球
+item.nmVillagerOrb.librarian.name=图书管理员之球
+item.nmVillagerOrb.blacksmith.name=铁匠之球
+item.nmVillagerOrb.butcher.name=屠夫之球
+item.nmVillagerOrb.priest.name=牧师之球
+item.nmVillagerOrb.nightmare.name=梦魇之球
+item.nmWitherSoul.name=凋灵之魂
 
 tile.nmSteelOre.name=钢矿石
 tile.nmSpecialObsidian.name=竞技场石

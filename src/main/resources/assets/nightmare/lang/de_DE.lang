@@ -48,6 +48,15 @@ item.nmObsidianShard.name=Obsidianscherbe
 item.nmTimeBottle.name=Flasche der Zeit
 item.nmRefinedDiamondIngot.name=Veredelter Diamantbarren
 item.nmBloodBottle.name=Purpurflasche
+item.nmVillagerOrb.name=Dorfbewohner-Orb
+item.nmVillagerOrb.farmer.name=Bauern-Orb
+item.nmVillagerOrb.librarian.name=Bibliothekar-Orb
+item.nmVillagerOrb.blacksmith.name=Schmiede-Orb
+item.nmVillagerOrb.butcher.name=Metzger-Orb
+item.nmVillagerOrb.priest.name=Priester-Orb
+item.nmVillagerOrb.nightmare.name=Albtraum-Orb
+item.nmWitherSoul.name=Wither-Seele
+
 
 tile.nmSteelOre.name=Stahlerz
 tile.nmSpecialObsidian.name=Arenastein

@@ -48,6 +48,15 @@ item.nmObsidianShard.name=Fragmento de Obsidiana
 item.nmTimeBottle.name=Garrafa do Tempo
 item.nmRefinedDiamondIngot.name=Lingote de diamante refinado
 item.nmBloodBottle.name=Garrafa Carmesim
+item.nmVillagerOrb.name=Orbe do Aldeão
+item.nmVillagerOrb.farmer.name=Orbe do Fazendeiro
+item.nmVillagerOrb.librarian.name=Orbe do Bibliotecário
+item.nmVillagerOrb.blacksmith.name=Orbe do Ferreiro
+item.nmVillagerOrb.butcher.name=Orbe do Açougueiro
+item.nmVillagerOrb.priest.name=Orbe do Sacerdote
+item.nmVillagerOrb.nightmare.name=Orbe do Pesadelo
+item.nmWitherSoul.name=Alma do Wither
+
 
 tile.nmSteelOre.name=Minério de aço
 tile.nmSpecialObsidian.name=Pedra da Arena

@@ -48,6 +48,14 @@ item.nmObsidianShard.name=Mảnh Vỡ Obsidian
 item.nmTimeBottle.name=Chai Thời Gian
 item.nmRefinedDiamondIngot.name=Thỏi kim cương tinh chế
 item.nmBloodBottle.name=Chai đỏ thẫm
+item.nmVillagerOrb.name=Quả cầu Dân làng
+item.nmVillagerOrb.farmer.name=Quả cầu Nông dân
+item.nmVillagerOrb.librarian.name=Quả cầu Thủ thư
+item.nmVillagerOrb.blacksmith.name=Quả cầu Thợ rèn
+item.nmVillagerOrb.butcher.name=Quả cầu Đồ tể
+item.nmVillagerOrb.priest.name=Quả cầu Linh mục
+item.nmVillagerOrb.nightmare.name=Quả cầu Ác mộng
+item.nmWitherSoul.name=Linh hồn Wither
 
 tile.nmSteelOre.name=Quặng thép
 tile.nmSpecialObsidian.name=Đá đấu trường
