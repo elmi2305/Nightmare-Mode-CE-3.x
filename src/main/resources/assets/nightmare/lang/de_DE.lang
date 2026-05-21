@@ -100,6 +100,8 @@ entity.NmMeltedSkeleton.name=Inferno
 entity.NmObsidianFish.name=Obsidianfisch
 entity.NmCreeperGhast.name=Creeperghast
 entity.entityBloodAltar.name=Fortschritt
+entity.NmMushWorm.name=Pilzwurm
+
 
 key.nightmaremode.zoomhold=Zum Heranzoomen gedrückt halten
 key.nightmaremode.zoomtoggle=Zoom umschalten

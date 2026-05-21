@@ -99,7 +99,8 @@ entity.NmDrownedSkeleton.name=溺骸骷髅
 entity.NmMeltedSkeleton.name=熔火骷髅
 entity.NmObsidianFish.name=黑曜石鱼
 entity.NmCreeperGhast.name=苦力怕恶魂
-entity.entityBloodAltar.name=???
+entity.entityBloodAltar.name=进步
+entity.NmMushWorm.name=蘑菇虫
 
 key.nightmaremode.zoomhold=按住缩放
 key.nightmaremode.zoomtoggle=切换缩放

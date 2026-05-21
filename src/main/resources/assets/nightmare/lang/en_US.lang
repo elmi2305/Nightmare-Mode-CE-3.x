@@ -107,6 +107,7 @@ entity.NmMeltedSkeleton.name=Inferno
 entity.NmObsidianFish.name=Obsidian Fish
 entity.NmCreeperGhast.name=Creeper Ghast
 entity.entityBloodAltar.name=Progress
+entity.NmMushWorm.name=Mush Worm
 
 key.nightmaremode.zoomhold=Hold to zoom
 key.nightmaremode.zoomtoggle=Toggle zoom
