@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import api.AddonHandler;
 import btw.community.nightmaremode.NightmareMode;
-import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.nmgui.GuiTexturedButton;
 import com.itlesports.nightmaremode.nmgui.GuiWorldInfoConfig;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -70,6 +70,17 @@ public class GuiMainMenuMixin extends GuiScreen {
         int h = 20;
         this.buttonList.add(new GuiButton(25, this.width / 2 - 100, par1 + par2 * 2, w, h, I18n.getString("selectWorld.create")));
         this.buttonList.add(new GuiTexturedButton(26, this.width / 2 - 100 + w + 1, par1 + par2 * 2, 20, 20, GEAR));
+    }
+    @Inject(method = "updateScreen", at = @At("TAIL"))
+    private void disableOptionsIfXray(CallbackInfo ci){
+        if(AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")){
+            this.splashText = "Probably Shouldn't Xray!";
+            ((GuiButton)(this.buttonList.get(1))).enabled = false;
+            ((GuiButton)(this.buttonList.get(0))).enabled = false;
+            ((GuiButton)(this.buttonList.get(2))).enabled = false;
+            ((GuiButton)(this.buttonList.get(3))).enabled = false;
+            ((GuiButton)(this.buttonList.get(5))).enabled = false;
+        }
     }
 
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)

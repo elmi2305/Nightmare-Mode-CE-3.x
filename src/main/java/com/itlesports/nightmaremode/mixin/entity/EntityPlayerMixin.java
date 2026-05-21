@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import api.AddonHandler;
 import api.achievement.AchievementEventDispatcher;
 import api.achievement.AchievementHandler;
 import api.util.status.StatusEffect;
@@ -510,8 +511,32 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         NMConfUtils.setConfig(conf.getId() - 1, 1);
     }
 
+    @Unique private void addonStuff(){
+        if(devMode) return;
+        if(AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")){
+            if(!this.isPotionActive(Potion.blindness)){
+                ChatMessageComponent text2 = new ChatMessageComponent();
+                text2.addText("<???> Using Xray mod? How pathetic.");
+                text2.setColor(EnumChatFormatting.RED);
+                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(text2);
+            }
+            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 100));
+            if(this.rand.nextInt(40) == 0){
+                this.worldObj.playSoundEffect(this.posX,this.posY,this.posZ,"mob.wither.death",2.0F,0.905F);
+            }
+            if(this.worldObj.getWorldTime() % 100 == 99){
+                Entity lightningbolt = new EntityLightningBolt(this.worldObj, this.posX, this.posY, this.posZ);
+                this.worldObj.addWeatherEffect(lightningbolt);
+            }
+            if(this.worldObj.getWorldTime() % 400 == 399){
+                this.attackEntityFrom(DamageSource.outOfWorld, 200f);
+            }
+        }
+    }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHookTail(CallbackInfo ci){
+        this.addonStuff();
+
         if ((this.ticksExisted % 100 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !MinecraftServer.getIsServer()) {
             EntityPlayer self = (EntityPlayer)(Object)this;
 
