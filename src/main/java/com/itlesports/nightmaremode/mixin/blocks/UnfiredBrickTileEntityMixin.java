@@ -3,20 +3,29 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.block.tileentity.UnfiredBrickTileEntity;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
+import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(UnfiredBrickTileEntity.class)
-public class UnfiredBrickTileEntityMixin {
+public class UnfiredBrickTileEntityMixin extends TileEntity {
+    @Shadow private boolean isCooking;
+
     @ModifyConstant(method = "updateCooking", constant = @Constant(intValue = 11900),remap = false)
     private int reduceClayCookTime(int constant){
+        if(this.worldObj.provider.dimensionId == -1){
+            return constant / 2;
+        }
         return 11400;
     }
 
+
     @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"))
     private int enableCookingOnEclipse(World w, int i, int j, int k){
-        if(NMUtils.getIsEclipse()){
+        if(NMUtils.getIsEclipse() || this.worldObj.provider.dimensionId == -1){
             return 31;
         }
         if(NightmareMode.darkStormyNightmare){
