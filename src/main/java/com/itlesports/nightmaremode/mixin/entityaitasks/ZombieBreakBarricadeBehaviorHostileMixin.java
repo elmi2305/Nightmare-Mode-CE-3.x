@@ -6,6 +6,7 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,13 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         if(this.associatedEntity instanceof EntityBloodZombie){
             this.breakingTime += 8;
         }
+        int timeSpentBreaking = this.associatedEntity instanceof EntityZombieExt ext ? ext.nightmareMode$getTimeSpentBreaking() : 0;
+
+        if(this.associatedEntity instanceof EntityZombieExt ext){
+            ext.nightmareMode$setTimeSpentBreaking(Math.min(timeSpentBreaking + 1, 168));
+        }
+        int increase = timeSpentBreaking > 40 ? ((timeSpentBreaking - 40) / 16 ) : 0;
+        this.breakingTime += increase;
 
         if (this.associatedEntity.getHeldItem() != null) {
             ItemStack heldItem = this.associatedEntity.getHeldItem();
@@ -58,9 +66,19 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         Entity target = this.associatedEntity.getAttackTarget();
         if(this.associatedEntity.isAirBorne){
             cir.setReturnValue(false);
+            return;
         }
         if (target == null) return;
         if (this.associatedEntity.ticksExisted % 3 != 0) return;
+
+        if (this.associatedEntity instanceof EntityZombieExt ext && ext.nightmareMode$getLungedAgo() > 0) {
+            if(this.associatedEntity.getNavigator().tryMoveToEntityLiving(target, this.associatedEntity.getAIMoveSpeed())){
+                // creates the path entity, if a path exists it cancels the break.
+//                System.out.println("caught you!");
+                cir.setReturnValue(false);
+                return;
+            }
+        }
 
 
         // all runs every 3rd tick
