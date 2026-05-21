@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.entity.variants.EntitySkeletonDrowned;
 import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.entity.variants.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,15 +29,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EntityZombie.class)
-public abstract class EntityZombieMixin extends EntityMob{
+public abstract class EntityZombieMixin extends EntityMob implements EntityZombieExt {
+
+    @Shadow public abstract boolean isVillager();
+    @Shadow public abstract boolean isChild();
 
     public EntityZombieMixin(World par1World) {
         super(par1World);
     }
 
-    @Shadow public abstract boolean isVillager();
 
-    @Shadow public abstract boolean isChild();
+
+    @Unique private int lungedAgo;
+
+    @Override
+    public int nightmareMode$getLungedAgo() {
+        return lungedAgo;
+    }
+
+    @Override
+    public void nightmareMode$setLungedAgo(int lungedAgo) {
+        this.lungedAgo = lungedAgo;
+    }
+
+    @Unique private int timeSpentBreaking;
+
+    @Override
+    public int nightmareMode$getTimeSpentBreaking() {
+        return this.timeSpentBreaking;
+    }
+
+    @Override
+    public void nightmareMode$setTimeSpentBreaking(int timeSpentBreaking) {
+        this.timeSpentBreaking = timeSpentBreaking;
+    }
 
     @ModifyArg(method = "entityInit", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/DataWatcher;addObject(ILjava/lang/Object;)V", ordinal = 0), index = 1)
     private Object addBabyZombies(Object par2Obj){
@@ -544,13 +570,28 @@ public abstract class EntityZombieMixin extends EntityMob{
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addLungeAI(World par1World, CallbackInfo ci){
-        this.targetTasks.addTask(2, new EntityAILunge(this, true));
+        this.targetTasks.addTask(3, new EntityAILunge(this, true));
+//                this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+//        EntityZombie thisObj =(EntityZombie)(Object)this;
+//
+//        this.targetEntitySelector = new ZombieSecondaryTargetFilter(thisObj);
+//
+//        this.tasks.addTask(2, new EntityAIZombieAttack(thisObj, EntityPlayer.class, this.getAIMoveSpeed(), false));
         if(this.isChild()){
             this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehaviorHostile.class);
             this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
         }
     }
 
+    @Inject(method = "onUpdate" ,at = @At("HEAD"))
+    private void onUpdateHook(CallbackInfo ci){
+        if(this.lungedAgo > 0){
+            this.lungedAgo--;
+        }
+        if((this.ticksExisted & 3) == 0 && this.timeSpentBreaking > 0){
+            this.timeSpentBreaking--;
+        }
+    }
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
     private void deleteEndCrystalIfZombieDied(CallbackInfo ci){
 
