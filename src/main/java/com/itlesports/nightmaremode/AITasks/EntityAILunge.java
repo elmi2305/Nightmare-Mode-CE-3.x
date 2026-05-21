@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.AITasks;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
 import net.minecraft.src.*;
 
 public class EntityAILunge extends EntityAITarget {
@@ -53,12 +54,21 @@ public class EntityAILunge extends EntityAITarget {
             this.taskOwner.motionY = 0.34;
             this.taskOwner.motionZ = clamp(vector.zCoord * 0.2, 1.0);
 
+            this.taskOwner.getNavigator().tryMoveToEntityLiving(this.taskOwner.getAttackTarget(), this.taskOwner.getAIMoveSpeed());
+//            if(this.taskOwner.getAttackTarget() == null){
+//                System.out.println("null target");
+//            }
+
             if(isEclipse){
                 this.cooldown = isHoldingItem ? 20 + this.taskOwner.rand.nextInt(20) : 0;
             }
             else {
                 this.cooldown = 20 + this.taskOwner.rand.nextInt(20);
+//                this.cooldown = 5;
                 // 1 second with a variance of 1s
+            }
+            if(this.taskOwner instanceof EntityZombieExt ezx){
+                ezx.nightmareMode$setLungedAgo((byte) 15);
             }
         }
 
