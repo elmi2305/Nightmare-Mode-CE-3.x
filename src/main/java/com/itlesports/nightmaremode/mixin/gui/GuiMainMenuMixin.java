@@ -121,7 +121,7 @@ public class GuiMainMenuMixin extends GuiScreen {
                 ci.cancel();
                 return;
             }
-        } else if(par1GuiButton.id == 26 && NightmareMode.devMode){
+        } else if(par1GuiButton.id == 26){
             this.mc.displayGuiScreen(new GuiWorldInfoConfig(this, NightmareMode.getInstance().addonConfig.getString("WorldInfoString")));
         }
     }

@@ -211,7 +211,7 @@ public class GuiWorldInfoConfig extends GuiScreen {
         this.buttonList.clear();
         this.buttons.clear();
 
-        int buttonWidth = 80;
+        int buttonWidth = 120;
         int buttonHeight = 20;
         int startX = this.width / 2 - buttonWidth / 2 - 100;
         int startY = this.height / 2 - 62;
@@ -225,7 +225,7 @@ public class GuiWorldInfoConfig extends GuiScreen {
         }
 
         this.buttonList.add(new GuiButton(1, startX, this.height * 7 / 8, 80, 20, I18n.getString("gui.cancel")));
-        this.buttonList.add(new GuiButton(2, startX + 100, this.height * 7 / 8, 140, 20, I18n.getString("config.emi.presets.defaults")));
+        this.buttonList.add(new GuiButton(2, startX + 100, this.height * 7 / 8, 140, 20, I18n.getString("gui.nm.restoredefaults")));
     }
 
     @Override
@@ -233,7 +233,7 @@ public class GuiWorldInfoConfig extends GuiScreen {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        this.drawCenteredString(this.fontRenderer, "World Info Config", this.width / 2, 18, 0xFFFFFF);
+        this.drawCenteredString(this.fontRenderer, I18n.getString("gui.nm.worldinfoconfig"), this.width / 2, 18, 0xFFFFFF);
     }
 
     @Override
