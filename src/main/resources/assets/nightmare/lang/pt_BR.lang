@@ -157,6 +157,10 @@ gui.selectworld.warning_config_crash=Novas configurações foram carregadas, o q
 gui.selectworld.warning_continue=Você tem certeza absoluta de que deseja continuar?
 gui.selectworld.warning_final=Este é o seu aviso final
 
+gui.nm.worldinfoconfig=Configuração de Informações do Mundo
+gui.nm.restoredefaults=Restaurar Padrões
+gui.nm.structures=Gerar Estruturas
+
 gui.bloodmoon=Lua de Sangue
 gui.bloodmoon.in=Lua de Sangue em
 gui.bloodmoon.days=Dias

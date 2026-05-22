@@ -141,6 +141,10 @@ gui.menu.noEscape=No Escape
 gui.nm.horseTaming=Hold the correct direction and match the Horse's angle
 gui.nm.horseMenu=Horse Armor Storage
 
+gui.nm.worldinfoconfig=World Info Config
+gui.nm.restoredefaults=Restore Defaults
+gui.nm.structures=Generate Structures
+
 
 gui.container_disenchantment=Disenchantment Table
 

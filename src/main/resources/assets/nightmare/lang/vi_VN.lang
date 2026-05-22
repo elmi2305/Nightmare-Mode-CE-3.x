@@ -156,6 +156,10 @@ gui.selectworld.warning_config_crash=Đã tải cấu hình mới, có thể là
 gui.selectworld.warning_continue=Bạn có thực sự chắc chắn muốn tiếp tục không?
 gui.selectworld.warning_final=Đây là cảnh báo cuối cùng
 
+gui.nm.worldinfoconfig=Cấu hình Thông tin Thế giới
+gui.nm.restoredefaults=Khôi phục Mặc định
+gui.nm.structures=Tạo cấu trúc
+
 gui.bloodmoon=Trăng Máu
 gui.bloodmoon.in=Trăng Máu trong
 gui.bloodmoon.days=Ngày

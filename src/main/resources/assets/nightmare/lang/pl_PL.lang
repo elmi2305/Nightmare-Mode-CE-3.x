@@ -158,6 +158,10 @@ gui.selectworld.warning_config_crash=Załadowano nowe konfiguracje, które mogą
 gui.selectworld.warning_continue=Czy jesteś całkowicie pewien, że chcesz kontynuować?
 gui.selectworld.warning_final=To jest twoje ostatnie ostrzeżenie
 
+gui.nm.worldinfoconfig=Konfiguracja Informacji o Świecie
+gui.nm.restoredefaults=Przywróć Domyślne
+gui.nm.structures=Generuj Struktury
+
 gui.bloodmoon=Krwawy Księżyc
 gui.bloodmoon.in=Krwawy Księżyc w
 gui.bloodmoon.days=Dni
