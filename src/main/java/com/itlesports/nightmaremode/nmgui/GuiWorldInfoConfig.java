@@ -36,7 +36,7 @@ public class GuiWorldInfoConfig extends GuiScreen {
 
     private enum SettingType {
         GAME_MODE(20, purgeLastNonletter(I18n.getString("selectWorld.gameMode")), new char[] {'S', 'C'}, new String[] {I18n.getString("gameMode.survival"), I18n.getString("gameMode.creative")}),
-        STRUCTURES(21, getSecondWordAndPurge(I18n.getString("selectWorld.mapFeatures")), new char[] {'T', 'F'}, new String[] {I18n.getString("options.on"), I18n.getString("options.off")}),
+        STRUCTURES(21, I18n.getString("gui.nm.structures"), new char[] {'T', 'F'}, new String[] {I18n.getString("options.on"), I18n.getString("options.off")}),
         WORLD_TYPE(22, purgeLastNonletter(I18n.getString("selectWorld.mapType")), new char[] {'D', 'F', 'L'}, new String[] {I18n.getString("generator.default"), I18n.getString("generator.flat"), I18n.getString("generator.largeBiomes")}),
         DIFFICULTY(23, I18n.getString("options.difficulty"), new char[] {'H', 'S'}, new String[] {I18n.getString("difficulty.nightmare.name"), I18n.getString("difficulty.baddream.name")}),
         CHEATS(24, I18n.getString("selectWorld.cheats"), new char[] {'F', 'T'}, new String[] {I18n.getString("options.off"), I18n.getString("options.on")});
@@ -94,22 +94,6 @@ public class GuiWorldInfoConfig extends GuiScreen {
         }
 
         return str;
-    }
-    private static String getSecondWordAndPurge(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-
-        str = str.trim();
-
-        int firstSpace = str.indexOf(' ');
-        if (firstSpace == -1 || firstSpace == str.length() - 1) {
-            return str; // keep original if no second word
-        }
-
-        String second = str.substring(firstSpace + 1).trim();
-
-        return purgeLastNonletter(second);
     }
 
     private final class SettingButton extends GuiColoredButton {
