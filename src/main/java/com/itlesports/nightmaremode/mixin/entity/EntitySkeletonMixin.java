@@ -546,7 +546,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         double chance = ((isHostile ? 0.09 : 0.03) + Math.abs(progress - 1) * 0.02) * bloodMoonModifier * niteMultiplier;
         return (progress >= 1 || NightmareMode.evolvedMobs) && rand.nextFloat() < chance && this.dimension != -1;
     }
-    @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0)
+    @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0, remap = false)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
         return 7;
     }

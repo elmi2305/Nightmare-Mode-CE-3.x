@@ -308,6 +308,7 @@ public class NMBlocks {
         if(NightmareMode.devMode) return;
 
         // hiding by groups instead of individually. again, this is just to keep nosy people from asking me what certain things do
+        underworldPortal = (BlockUnderworldPortal) underworldPortal.hideFromEMI().setCreativeTab(null);
         yellowFlowerRoots = yellowFlowerRoots.hideFromEMI().setCreativeTab(null);
         plantMatter       = plantMatter.hideFromEMI().setCreativeTab(null);
         disenchantmentTable = disenchantmentTable.hideFromEMI().setCreativeTab(null);

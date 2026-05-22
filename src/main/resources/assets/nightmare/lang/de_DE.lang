@@ -158,7 +158,7 @@ gui.selectworld.warning_config_crash=Es wurden neue Konfigurationen geladen, die
 gui.selectworld.warning_continue=Bist du absolut sicher, dass du fortfahren möchtest?
 gui.selectworld.warning_final=Dies ist deine letzte Warnung
 
-gui.nm.worldinfoconfig=Weltinformations-Konfiguration
+gui.nm.worldinfoconfig=Weltinfo-Konfig
 gui.nm.restoredefaults=Standard Wiederherstellen
 gui.nm.structures=Strukturen Generieren
 

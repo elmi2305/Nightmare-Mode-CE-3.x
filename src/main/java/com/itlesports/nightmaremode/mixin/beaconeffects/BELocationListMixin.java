@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Mixin(BeaconEffectLocationList.class)
 public class BELocationListMixin {
-    @Shadow public List effectLocations;
+    @Shadow(remap = false) public List effectLocations;
 
     @Inject(method = "getMostPowerfulBeaconEffectForLocation", at = @At("HEAD"), cancellable = true, remap = false)
     public void getMostPowerfulBeaconEffectForLocation(String effectID, int iIPos, int iKPos, CallbackInfoReturnable<Integer> cir) {

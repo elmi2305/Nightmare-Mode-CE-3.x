@@ -26,7 +26,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Shadow(remap = false) protected abstract void retractTentacleAttackOnCollision();
 
 
-    @Shadow
+    @Shadow(remap = false)
     private float randomMotionVecY;
     // unique fields
     @Unique private int calamariDropCountdown = 0; // how many ticks the squid is eligible to drop calamari. set every time the player hits the squid

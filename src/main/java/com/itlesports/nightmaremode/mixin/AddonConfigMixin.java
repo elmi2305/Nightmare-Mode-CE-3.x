@@ -14,10 +14,10 @@ import java.util.Map;
 
 @Mixin(AddonConfig.class)
 public abstract class AddonConfigMixin implements AddonConfigExtender {
-    @Shadow public Config currentConfig;
-    @Shadow @Final Map<String, ConfigElementValidator> pathValidatorMap;
-    @Shadow private boolean hasChanged;
-    @Shadow protected abstract void writeConfig();
+    @Shadow(remap = false) public Config currentConfig;
+    @Shadow(remap = false) @Final Map<String, ConfigElementValidator> pathValidatorMap;
+    @Shadow(remap = false) private boolean hasChanged;
+    @Shadow(remap = false) protected abstract void writeConfig();
 
     @Override
     public void nightmareMode$modifyProperty(String path, Object newValue) {

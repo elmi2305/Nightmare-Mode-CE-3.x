@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EmiConfig.class)
 public class EmiConfigMixin {
-    @Shadow public static EffectLocation effectLocation;
+    @Shadow(remap = false) public static EffectLocation effectLocation;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void manageDefaultConfig(CallbackInfo ci){

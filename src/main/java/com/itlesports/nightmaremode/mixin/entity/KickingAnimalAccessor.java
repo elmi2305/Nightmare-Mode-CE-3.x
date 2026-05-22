@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(KickingAnimal.class)
 public interface KickingAnimalAccessor {
-    @Invoker("launchKickAttack")
+    @Invoker(value = "launchKickAttack", remap = false)
     void invokeLaunchKickAttack();
     @Invoker("kickAttackHitTarget")
     void invokeKickAttackHitTarget(Entity hitEntity);

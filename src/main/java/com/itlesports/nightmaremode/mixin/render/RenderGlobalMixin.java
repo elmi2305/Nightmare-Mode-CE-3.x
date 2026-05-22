@@ -237,7 +237,7 @@ public abstract class RenderGlobalMixin {
         GL11.glBlendFunc(sFactor,dFactor);
     }
 
-    @ModifyArg(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0), index = 3)
+    @ModifyArg(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0), index = 3, remap = false)
     private float doNotRemoveSunOnBloodRain(float red){
         if(NMUtils.getIsBloodMoon()) {return 0.6f;}
 
@@ -260,7 +260,7 @@ public abstract class RenderGlobalMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glCallList(I)V"
-            )
+            ), remap = false
     )
     private void redirectGlCallList(int list) {
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {

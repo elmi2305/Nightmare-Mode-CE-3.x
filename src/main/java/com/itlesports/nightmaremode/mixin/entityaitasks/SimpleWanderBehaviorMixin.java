@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class SimpleWanderBehaviorMixin {
 
     @Shadow private EntityCreature myEntity;
-    @Shadow protected BlockPos destPos;
+    @Shadow(remap = false) protected BlockPos destPos;
     @Unique private EntityPlayer lastCachedPlayer = null;
 
     @Inject(method = "shouldExecute", at = @At("HEAD"), cancellable = true)

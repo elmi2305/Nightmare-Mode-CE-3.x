@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BTWDifficulties.class)
 public class DifficultiesMixin {
-    @Shadow @Final public static Difficulty HOSTILE;
+    @Shadow(remap = false) @Final public static Difficulty HOSTILE;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void editHostile(CallbackInfo ci){
