@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityMushWorm;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -32,6 +33,11 @@ public class EntitySilverfishMixin extends EntityMob{
                 this.setDead();
             }
         }
+    }
+    @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntitySilverfish;worldObj:Lnet/minecraft/src/World;", ordinal = 0), cancellable = true)
+    private void returnIfMushWorm(CallbackInfo ci){
+        EntitySilverfish sf = (EntitySilverfish) (Object)this;
+        if(sf instanceof EntityMushWorm) {ci.cancel();}
     }
     @Unique
     private boolean isValidForEventLoot = false;
