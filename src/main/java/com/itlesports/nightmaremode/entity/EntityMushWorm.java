@@ -7,6 +7,7 @@ import net.minecraft.src.*;
 public class EntityMushWorm extends EntitySilverfish {
     public EntityMushWorm(World par1World) {
         super(par1World);
+        this.experienceValue = 0;
     }
 
     protected void applyEntityAttributes() {
@@ -17,7 +18,6 @@ public class EntityMushWorm extends EntitySilverfish {
     }
 
     protected void dropFewItems(boolean bKilledByPlayer, int looting) {
-        super.dropFewItems(bKilledByPlayer, looting);
         this.dropItem(BTWItems.redMushroom.itemID, looting + this.rand.nextInt(2));
     }
 
@@ -26,6 +26,7 @@ public class EntityMushWorm extends EntitySilverfish {
         super.onUpdate();
     }
 
+    @Override
     protected void updateEntityActionState() {
         super.updateEntityActionState();
         if (!this.worldObj.isRemote) {
