@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
+import static btw.block.BTWBlockIDs.MUSHROOM_CAP_RED_BLOCK_ID;
+
 @Mixin(MushroomCapBlock.class)
 public class MushroomCapBlockMixin extends BlockMushroomCap {
     @Shadow(remap = false) @Final protected int mushroomType;
@@ -37,13 +39,12 @@ public class MushroomCapBlockMixin extends BlockMushroomCap {
     }
 
     @Override
-    public void breakBlock(World w, int x, int y, int z, int side, int meta) {
-
-        if (w.rand.nextInt(4) == 0 && !w.isRemote) {
+    public void breakBlock(World w, int x, int y, int z, int id, int meta) {
+        if (w.rand.nextInt(8) == 0 && !w.isRemote && this.mushroomType != 0 && id == MUSHROOM_CAP_RED_BLOCK_ID) {
             EntityMushWorm worm = new EntityMushWorm(w);
             worm.setPositionAndUpdate(x + 0.5f,y,z + 0.5f);
             w.spawnEntityInWorld(worm);
         }
-        super.breakBlock(w, x, y, z, side, meta);
+        super.breakBlock(w, x, y, z, id, meta);
     }
 }
