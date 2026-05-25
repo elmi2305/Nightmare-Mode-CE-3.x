@@ -125,7 +125,6 @@
     "component.StructureScatteredFeatureStartMixin",
     "entity.BTWSquidEntityMixin",
     "entity.DireWolfEntityMixin",
-    "entity.DynamiteEntityMixin",
     "entity.EntityAccessor",
     "entity.EntityAnimalMixin",
     "entity.EntityArrowMixin",
