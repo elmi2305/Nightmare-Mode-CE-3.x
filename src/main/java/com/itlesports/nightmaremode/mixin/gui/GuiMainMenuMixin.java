@@ -93,12 +93,9 @@ public class GuiMainMenuMixin extends GuiScreen {
             this.createClicked = true;
             long seed = rand.nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
 
-
             WorldSettings settings = NMUtils.decodeSettings(NightmareMode.getInstance().addonConfig.getString("WorldInfoString"), seed);
 
             ISaveFormat var1 = this.mc.getSaveLoader();
-
-            settings.enableCommands();
 
 
             List saveList = null;
