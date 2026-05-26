@@ -622,24 +622,12 @@ public abstract class NMInitializer implements AchievementExt {
         buy(name, profession, level, id, meta, count1, count2, weight, false, 0, 0);
     }
 
-    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, boolean levelUp) {
-        buy(name, profession, level, id, meta, count1, count2, 1.0f, levelUp, 0, 0);
-    }
-
-    private static void sell(String name, int profession, int level, int id, int meta) {
-        sell(name, profession, level, id, meta, 1, 1, 1.0f, false, 1, 1);
-    }
-
     private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2) {
         sell(name, profession, level, id, meta, count1, count2, 1.0f, false,1 , 1);
     }
 
     private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, float weight) {
         sell(name, profession, level, id, meta, count1, count2, weight, false, 0, 0);
-    }
-
-    private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, boolean levelUp) {
-        sell(name, profession, level, id, meta, count1, count2, 1.0f, levelUp, 0,0 );
     }
 
     private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp, boolean mandatory) {
@@ -675,11 +663,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, boolean levelUp, boolean mandatory) {
         convert(name, profession, level, firstInput, secondInput, output, 1.0f, levelUp, mandatory);
     }
-
-    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp) {
-        convert(name, profession, level, firstInput, secondInput, output, weight, levelUp, false);
-    }
-
+    
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
         EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
