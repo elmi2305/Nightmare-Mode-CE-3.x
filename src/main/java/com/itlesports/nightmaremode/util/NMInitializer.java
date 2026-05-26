@@ -614,8 +614,8 @@ public abstract class NMInitializer implements AchievementExt {
     private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2) {
         buy(name, profession, level, id, meta, count1, count2, 1.0f, false, 0, 0);
     }
-    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, int cost1, int cost2) {
-        buy(name, profession, level, id, meta, count1, count2, 1.0f, false, cost1, cost2);
+    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, int minCount, int maxCount) {
+        buy(name, profession, level, id, meta, count1, count2, 1.0f, false, minCount, maxCount);
     }
 
     private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, float weight) {
@@ -823,58 +823,50 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addNightmareVillagerTrades(){
-        // Level 1 Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power"))).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Item.rottenFlesh.itemID).itemCount(8, 16).defaultTrade().weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Item.dyePowder.itemID, Color.BLACK.colorID).itemCount(12, 18).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(NMItems.magicFeather.itemID).itemCount(1, 2).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(NMItems.bloodMilk.itemID).buySellSingle().weight(0.2f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Item.enderPearl.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(NMItems.fireRod.itemID).itemCount(1, 3).weight(0.5f).addToTradeList();
-
-        // Level 2 Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).convert().input(TradeItem.fromIDAndMetadata(Item.potion.itemID, 8229, 1,2)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID)).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity"))).weight(0.7f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.decayedFlesh.itemID).itemCount(4, 6).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.silverLump.itemID).itemCount(2, 3).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).sell().item(NMItems.dungApple.itemID).buySellSingle().weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.shadowRod.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).sell().item(BTWItems.soulFlux.itemID).itemCount(4, 8).addToTradeList();
-
-
-        // Level 3 Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.blazeRod.itemID).emeraldCost(2, 4).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.nameTag.itemID).emeraldCost(2, 4).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.spiderFangs.itemID).itemCount(2, 4).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.ghastTentacle.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.sulfur.itemID).itemCount(3, 6).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.charredFlesh.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(Item.magmaCream.itemID).itemCount(6, 8).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.speedCoil.itemID).itemCount(1, 1).weight(0.5f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.darksunFragment.itemID,4,8)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("sharp"))).weight(0.55f).addToTradeList();
-
-        // Level 4 Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).sell().item(Item.ghastTear.itemID).itemCount(4, 6).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.waterRod.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.voidSack.itemID).itemCount(1,3).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.creeperChop.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.witheredBone.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.elementalRod.itemID).itemCount(1, 1).weight(0.6f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.voidMembrane.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.darksunFragment.itemID).itemCount(1, 1).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(Item.eyeOfEnder.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.creeperTear.itemID).itemCount(1, 1).weight(0.2f).addToTradeList();
+        convert("nmMerchant0", 5, 1, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID,16,24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power")));
+        buy("nmMerchant1", 5, 1, Item.rottenFlesh.itemID, 0, 8, 16, 0.3f);
+        buy("nmMerchant2", 5, 1, Item.dyePowder.itemID, Color.BLACK.colorID, 12, 18, 0.3f);
+        buy("nmMerchant3", 5, 1, NMItems.magicFeather.itemID, 0, 1, 2, 0.3f);
+        buy("nmMerchant4", 5, 1, NMItems.bloodMilk.itemID, 0, 1, 1, 0.2f);
+        buy("nmMerchant5", 5, 1, Item.enderPearl.itemID, 0);
+        buy("nmMerchant6", 5, 1, NMItems.fireRod.itemID, 0, 1, 3, 0.5f);
+        convert("nmMerchant7", 5, 2, TradeItem.fromIDAndMetadata(Item.potion.itemID, 8229, 1,2), TradeItem.EMPTY, TradeItem.fromID(Item.emerald.itemID));
+        convert("nmMerchant8", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity")), 0.7f);
+        buy("nmMerchant9", 5, 2, NMItems.decayedFlesh.itemID, 0, 4, 6);
+        buy("nmMerchant10", 5, 2, NMItems.silverLump.itemID, 0, 2, 3);
+        sell("nmMerchant11", 5, 2, NMItems.dungApple.itemID, 0, 1, 1, 0.3f);
+        buy("nmMerchant12", 5, 2, NMItems.creeperTear.itemID, 0, 1, 1);
+        buy("nmMerchant13", 5, 2, NMItems.shadowRod.itemID, 0, 1, 2);
+        sell("nmMerchant14", 5, 2, BTWItems.soulFlux.itemID, 0, 4, 8);
+        sell("nmMerchant15", 5, 3, Item.blazeRod.itemID, 0, 2, 4);
+        sell("nmMerchant16", 5, 3, Item.nameTag.itemID, 0, 2, 4);
+        buy("nmMerchant17", 5, 3, NMItems.spiderFangs.itemID, 0, 2, 4);
+        buy("nmMerchant18", 5, 3, NMItems.ghastTentacle.itemID, 0, 1, 2);
+        buy("nmMerchant19", 5, 3, NMItems.sulfur.itemID, 0, 3, 6);
+        buy("nmMerchant20", 5, 3, NMItems.charredFlesh.itemID, 0, 1, 2);
+        sell("nmMerchant20", 5, 3, Item.magmaCream.itemID, 0, 6, 8);
+        buy("nmMerchant20", 5, 3, NMItems.speedCoil.itemID, 0, 1, 1, 0.5f);
+        convert("nmMerchant20", 5, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("sharp")), 0.55f);
+        sell("nmMerchant21", 5, 4, Item.ghastTear.itemID, 0, 4, 6);
+        buy("nmMerchant22", 5, 4, NMItems.waterRod.itemID, 0, 1, 2);
+        buy("nmMerchant23", 5, 4, NMItems.voidSack.itemID, 0, 1, 3);
+        buy("nmMerchant24", 5, 4, NMItems.creeperChop.itemID, 0, 1, 1);
+        buy("nmMerchant25", 5, 3, NMItems.witheredBone.itemID, 0, 1, 2);
+        buy("nmMerchant26", 5, 4, NMItems.elementalRod.itemID, 0, 1, 1, 0.6f);
+        buy("nmMerchant27", 5, 4, NMItems.voidMembrane.itemID, 0, 1, 1);
+        buy("nmMerchant28", 5, 4, NMItems.darksunFragment.itemID, 0, 1, 1);
+        buy("nmMerchant29", 5, 4, Item.eyeOfEnder.itemID, 0);
+        buy("nmMerchant30", 5, 4, NMItems.creeperTear.itemID, 0, 1, 1, 0.2f);
 
         // Level 5 Trades
         TradeProvider.getBuilder()
-                .name("nmMerchant0")
+                .name("nmMerchant31")
                 .profession(5)
                 .level(5)
                 .variants()
                 .addTradeVariant(
                         TradeProvider.getBuilder()
-                                .name("nmMerchant0")
+                                .name("nmMerchant32")
                                 .profession(5)
                                 .level(5)
                                 .sell()
@@ -884,7 +876,7 @@ public abstract class NMInitializer implements AchievementExt {
                 )
                 .addTradeVariant(
                         TradeProvider.getBuilder()
-                                .name("nmMerchant0")
+                                .name("nmMerchant33")
                                 .profession(5)
                                 .level(5)
                                 .sell()
@@ -894,7 +886,7 @@ public abstract class NMInitializer implements AchievementExt {
                 )
                 .addTradeVariant(
                         TradeProvider.getBuilder()
-                                .name("nmMerchant0")
+                                .name("nmMerchant34")
                                 .profession(5)
                                 .level(5)
                                 .sell()
@@ -904,7 +896,7 @@ public abstract class NMInitializer implements AchievementExt {
                 )
                 .addTradeVariant(
                         TradeProvider.getBuilder()
-                                .name("nmMerchant0")
+                                .name("nmMerchant35")
                                 .profession(5)
                                 .level(5)
                                 .convert()
@@ -917,93 +909,37 @@ public abstract class NMInitializer implements AchievementExt {
                 .mandatory()
                 .addToTradeList();
 
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(NMPostItems.timeBottle.itemID).buySellSingle().mandatory().addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant36").profession(5).level(5).sell().item(NMPostItems.timeBottle.itemID).buySellSingle().mandatory().addToTradeList();
 
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.waterStill.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.lavaStill.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.fire.blockID).itemCount(1, 64).build())
+        TradeProvider.getBuilder().name("nmMerchant37").profession(5).level(5).variants()
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant38").profession(5).level(5).sell().item(Block.waterStill.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant39").profession(5).level(5).sell().item(Block.lavaStill.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant40").profession(5).level(5).sell().item(Block.fire.blockID).itemCount(1, 64).build())
                 .finishVariants().mandatory().addToTradeList();
 
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.bedrock.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.portal.blockID).itemCount(6, 6).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.endPortal.blockID).itemCount(9, 9).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.endPortalFrame.blockID).itemCount(12, 12).build())
+        TradeProvider.getBuilder().name("nmMerchant41").profession(5).level(5).variants()
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant42").profession(5).level(5).sell().item(Block.bedrock.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant43").profession(5).level(5).sell().item(Block.portal.blockID).itemCount(6, 6).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant44").profession(5).level(5).sell().item(Block.endPortal.blockID).itemCount(9, 9).build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant45").profession(5).level(5).sell().item(Block.endPortalFrame.blockID).itemCount(12, 12).build())
                 .finishVariants().mandatory().addToTradeList();
 
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.mobSpawner.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(Block.dragonEgg.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(BTWBlocks.workbench.blockID).buySellSingle().build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).sell().item(BTWBlocks.axlePowerSource.blockID).buySellSingle().build())
+        TradeProvider.getBuilder().name("nmMerchant46").profession(5).level(5).variants()
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant47").profession(5).level(5).sell().item(Block.mobSpawner.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant48").profession(5).level(5).sell().item(Block.dragonEgg.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant49").profession(5).level(5).sell().item(BTWBlocks.workbench.blockID).buySellSingle().build())
+                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant50").profession(5).level(5).sell().item(BTWBlocks.axlePowerSource.blockID).buySellSingle().build())
                 .finishVariants().mandatory().addToTradeList();
-
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).variants()
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 50, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 51, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 52, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 53, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 54, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 55, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 56, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 57, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 58, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 59, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 60, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 61, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 62, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 63, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 64, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 65, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 66, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 90, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 91, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 92, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 93, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 94, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 95, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 96, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 97, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 98, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 99, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 100, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 238, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 240, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 600, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 601, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 602, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 603, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 604, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2301, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2302, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2303, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2306, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2307, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2308, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2309, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2310, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2311, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2312, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2313, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2314, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2315, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2316, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2321, 3, 6)).build())
-                .addTradeVariant(TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(5).convert().input(TradeItem.fromID(Item.emerald.itemID)).secondInput(TradeItem.EMPTY).output(TradeItem.fromIDAndMetadata(Item.monsterPlacer.itemID, 2322, 3, 6)).build())
-                .finishVariants().mandatory().addToTradeList();
-
-
 
         // Level up Trades
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(1).buy().item(Block.dragonEgg.blockID).itemCount(1,1).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(2).buy().item(NMItems.voidMembrane.itemID).itemCount(3,3).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).buy().item(NMItems.darksunFragment.itemID).itemCount(16,16).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).buy().item(NMItems.starOfTheBloodGod.itemID).itemCount(1,1).addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmMerchant103").profession(5).level(1).buy().item(Block.dragonEgg.blockID).itemCount(1,1).addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmMerchant104").profession(5).level(2).buy().item(NMItems.voidMembrane.itemID).itemCount(3,3).addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmMerchant105").profession(5).level(3).buy().item(NMItems.darksunFragment.itemID).itemCount(16,16).addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmMerchant106").profession(5).level(4).buy().item(NMItems.starOfTheBloodGod.itemID).itemCount(1,1).addAsLevelUpTrade();
 
 
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.02f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant0").profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(1.2f).addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant107").profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.02f).addToTradeList();
+        TradeProvider.getBuilder().name("nmMerchant108").profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(1.2f).addToTradeList();
         finishRecipes("Nightmare Merchant Trades");
 
     }
