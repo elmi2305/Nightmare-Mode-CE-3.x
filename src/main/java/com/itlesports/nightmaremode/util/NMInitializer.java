@@ -594,8 +594,11 @@ public abstract class NMInitializer implements AchievementExt {
 
         step.addToTradeList();
     }
-    private static void sell(String name, int profession, int level, int id1, int meta, int c1, int c2, float w, boolean levelUp){
+    private static void sell(String name, int profession, int level, int id1, int meta, int c1, int c2, float w, boolean levelUp, int minCost, int maxCost){
         TradeProvider.FinalStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).sell().item(id1, meta).itemCount(c1, c2).weight(w);
+        if(minCost != 0 && maxCost != 0){
+            ((TradeProvider.BuySellCountStep)(step)).emeraldCost(minCost, maxCost);
+        }
         if (levelUp) {
             step.addAsLevelUpTrade();
             return;
@@ -624,19 +627,19 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void sell(String name, int profession, int level, int id, int meta) {
-        sell(name, profession, level, id, meta, 1, 1, 1.0f, false);
+        sell(name, profession, level, id, meta, 1, 1, 1.0f, false, 1, 1);
     }
 
     private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2) {
-        sell(name, profession, level, id, meta, count1, count2, 1.0f, false);
+        sell(name, profession, level, id, meta, count1, count2, 1.0f, false,1 , 1);
     }
 
     private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, float weight) {
-        sell(name, profession, level, id, meta, count1, count2, weight, false);
+        sell(name, profession, level, id, meta, count1, count2, weight, false, 0, 0);
     }
 
     private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, boolean levelUp) {
-        sell(name, profession, level, id, meta, count1, count2, 1.0f, levelUp);
+        sell(name, profession, level, id, meta, count1, count2, 1.0f, levelUp, 0,0 );
     }
 
     private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp, boolean mandatory) {
@@ -682,7 +685,7 @@ public abstract class NMInitializer implements AchievementExt {
         EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
         EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:buy_brown_mushrooms").profession(0).level(2).buy().item(BTWItems.brownMushroom.itemID).itemCount(10, 16).build());
 
-        sell("nmFarmer0", 0, 1,Block.grass.blockID, 0,2, 4, 0.3f, false);
+        sell("nmFarmer0", 0, 1,Block.grass.blockID, 0,2, 4, 0.3f, false, 0,0);
         convert("nmFarmer0", 0, 1,
                 TradeItem.fromIDAndMetadata(Block.tallGrass.blockID, 1, 2, 4),
                 TradeItem.fromID(Item.emerald.itemID, 1, 2),
@@ -715,14 +718,22 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmlibrarian0", 1, 2, Item.book.itemID, 0, 3, 6);
         buy("nmlibrarian0", 1, 2, Item.redstoneRepeater.itemID, 0, 1, 2);
         buy("nmlibrarian0", 1, 3, BTWItems.hellfireDust.itemID, 0, 16, 24);
-        convert("nmlibrarian0", 1, 3, TradeItem.fromIDAndMetadata(BTWItems.wool.itemID, 15, 2, 4), TradeItem.fromID(Item.emerald.itemID, 1, 2), TradeItem.fromID(NMItems.bandage.itemID, 1, 2));
+        convert("nmlibrarian0", 1, 3, TradeItem.fromIDAndMetadata(BTWItems.wool.itemID, 15, 2, 4),
+                TradeItem.fromID(Item.emerald.itemID, 1, 2),
+                TradeItem.fromID(NMItems.bandage.itemID, 1, 2));
         buy("nmlibrarian0", 1, 4, BTWBlocks.blockDispenser.blockID, 0, 1, 2);
         buy("nmlibrarian0", 1, 4, BTWBlocks.buddyBlock.blockID, 0, 1, 2);
         buy("nmlibrarian0", 1, 4, BTWBlocks.detectorBlock.blockID, 0, 1, 3);
-        convert("nmlibrarian0", 1, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("blast")), 1.2f);
+
+        convert("nmlibrarian0", 1, 4, TradeItem.fromID(Item.paper.itemID),
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("blast")), 1.2f);
         sell("nmlibrarian0", 1, 4, BTWItems.soulFlux.itemID, 0, 2, 4, 1.2f);
-        convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("power")));
-        convert("nmlibrarian0", 1, 5, TradeItem.fromID(BTWItems.corpseEye.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 4, 10), TradeItem.fromID(Item.eyeOfEnder.itemID), 1.0f, false, true);
+        convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID),
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32),
+                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("power")));
+        convert("nmlibrarian0", 1, 5, TradeItem.fromID(BTWItems.corpseEye.itemID),
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 4, 10),
+                TradeItem.fromID(Item.eyeOfEnder.itemID), 1.0f, false, true);
 
         finishRecipes("Librarian Trades");
     }
@@ -735,18 +746,16 @@ public abstract class NMInitializer implements AchievementExt {
         EntityVillager.removeLevelUpTrade(2,2);
 
 
-        TradeProvider.getBuilder().name("nmPriestWart").profession(2).level(2).buy().item(Item.netherStalkSeeds.itemID).itemCount(4,8).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestNitre").profession(2).level(3).buy().item(BTWItems.nitre.itemID).itemCount(8,16).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestEnch").profession(2).level(3).sell().item(Block.enchantmentTable.blockID).emeraldCost(6,10).weight(0.35f).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestPaper").profession(2).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,32,64)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("fortune"))).weight(0.1f).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestPotion").profession(2).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,16453,2)).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestGoldenApple").profession(2).level(4).convert().input(TradeItem.fromID(Item.appleGold.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,10,18)).output(TradeItem.fromIDAndMetadata(Item.appleGold.itemID,1)).mandatory().addToTradeList();
-
-        TradeProvider.getBuilder().name("nmPriestLevelUp").profession(2).level(4).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Block.enchantmentTable.blockID)).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmPriestPaperAgain").profession(2).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,16,24)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("prot"))).addToTradeList();
-        TradeProvider.getBuilder().name("nmPriestRifle").profession(2).level(5).convert().input(TradeItem.fromID(NMItems.rifle.itemID)).secondInput(TradeItem.fromID(NMItems.rpg.itemID)).output(TradeItem.fromID(Block.dragonEgg.blockID)).mandatory().addToTradeList();
-
-        TradeProvider.getBuilder().name("nmPriestOcular").profession(2).level(2).buy().item(BTWItems.ocularOfEnder.itemID).emeraldCost(2, 2).addAsLevelUpTrade();
+        buy("nmPriestWart", 2, 2, Item.netherStalkSeeds.itemID, 0, 4, 8);
+        buy("nmPriestNitre", 2, 3, BTWItems.nitre.itemID, 0, 8, 16);
+        sell("nmPriestEnch", 2, 3, Block.enchantmentTable.blockID, 0, 1, 1, 0.35f, false, 10, 6);
+        convert("nmPriestPaper", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 64), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("fortune")), 0.1f);
+        convert("nmPriestPotion", 2, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 16453, 2));
+        convert("nmPriestGoldenApple", 2, 4, TradeItem.fromID(Item.appleGold.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 10, 18), TradeItem.fromIDAndMetadata(Item.appleGold.itemID, 1), false, true);
+        convert("nmPriestLevelUp", 2, 4, TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3), TradeItem.EMPTY, TradeItem.fromID(Block.enchantmentTable.blockID), true);
+        convert("nmPriestPaperAgain", 2, 5, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 16, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("prot")));
+        convert("nmPriestRifle", 2, 5, TradeItem.fromID(NMItems.rifle.itemID), TradeItem.fromID(NMItems.rpg.itemID), TradeItem.fromID(Block.dragonEgg.blockID), false, true);
+        buy("nmPriestOcular", 2, 2, BTWItems.ocularOfEnder.itemID, 0, 1, 1, 1.0f, true, 2,2);
 
         finishRecipes("Priest Trades");
 
@@ -754,19 +763,18 @@ public abstract class NMInitializer implements AchievementExt {
 
 
     private static void addBlacksmithTrades(){
-        EntityVillager.removeCustomTrade(3, TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(5).arcaneScroll().scrollEnchant(Enchantment.unbreaking).secondaryEmeraldCost(16, 24).mandatory().build());
+        EntityVillager.removeCustomTrade(3, TradeProvider.getBuilder().name("btw:sell_unbreaking_scroll").profession(3).level(5).arcaneScroll().scrollEnchant(Enchantment.unbreaking).secondaryEmeraldCost(48, 64).mandatory().build());
 
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(1).buy().item(Item.pickaxeStone.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(2).sell().item(NMItems.bandage.itemID).itemCount(2,2).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(2).buy().item(Item.redstone.itemID).itemCount(32,64).weight(0.8f).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(2).buy().item(Item.flintAndSteel.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromIDAndMetadata(BTWBlocks.aestheticOpaque.blockID, 7,4,8)).secondInput(TradeItem.EMPTY).output(TradeItem.fromID(Item.emerald.itemID,1)).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).buy().item(BTWItems.diamondArmorPlate.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("looting"))).weight(0.9f).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).sell().item(Item.appleGold.itemID).emeraldCost(8,16).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(3).convert().input(TradeItem.fromID(Item.potion.itemID)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,3)).output(TradeItem.fromIDAndMetadata(Item.potion.itemID,8201)).addToTradeList();
-        TradeProvider.getBuilder().name("nmBlacksmith0").profession(3).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,12,18)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("unbreaking"))).weight(1.0f).addToTradeList();
-
+        buy("nmBlacksmith0", 3, 1, Item.pickaxeStone.itemID, 0);
+        sell("nmBlacksmith0", 3, 2, NMItems.bandage.itemID, 0, 2, 2);
+        buy("nmBlacksmith0", 3, 2, Item.redstone.itemID, 0, 32, 64, 0.8f);
+        buy("nmBlacksmith0", 3, 2, Item.flintAndSteel.itemID, 0);
+        convert("nmBlacksmith0", 3, 3, TradeItem.fromIDAndMetadata(BTWBlocks.aestheticOpaque.blockID, 7, 4, 8), TradeItem.EMPTY, TradeItem.fromID(Item.emerald.itemID, 1));
+        buy("nmBlacksmith0", 3, 3, BTWItems.diamondArmorPlate.itemID, 0);
+        convert("nmBlacksmith0", 3, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("looting")), 0.9f);
+        sell("nmBlacksmith0", 3, 3, Item.appleGold.itemID, 0, 8, 16);
+        convert("nmBlacksmith0", 3, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 8201));
+        convert("nmBlacksmith0", 3, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 18), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("unbreaking")));
         finishRecipes("Blacksmith Trades");
     }
 
