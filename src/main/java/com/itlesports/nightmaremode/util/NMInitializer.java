@@ -781,11 +781,12 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addButcherTrades(){
         EntityVillager.removeCustomTrade(4, TradeProvider.getBuilder().name("btw:sell_sharpness_scroll").profession(4).level(5).arcaneScroll().scrollEnchant(Enchantment.sharpness).secondaryEmeraldCost(48, 64).mandatory().build());
+        EntityVillager.removeCustomTrade(4, TradeProvider.getBuilder().name("btw:buy_leash").profession(4).level(4).buy().item(Item.leash.itemID).buySellSingle().weight(0.25f).build());
 
-        TradeProvider.getBuilder().name("nmButcher0").profession(4).level(1).buy().item(Item.leash.itemID).itemCount(6,10).addToTradeList();
-        TradeProvider.getBuilder().name("nmButcher0").profession(4).level(2).buy().item(Item.swordIron.itemID).buySellSingle().weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmButcher0").profession(4).level(3).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,6,12)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("thorns"))).addToTradeList();
-        TradeProvider.getBuilder().name("nmButcher0").profession(4).level(4).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,24,32)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("feather"))).weight(2.0f).addToTradeList();
+        buy("nmButcher0", 4, 1, Item.leash.itemID, 0, 2, 6);
+        buy("nmButcher0", 4, 2, Item.swordIron.itemID, 0, 1, 1, 0.3f);
+        convert("nmButcher0", 4, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 6, 12), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("thorns")));
+        convert("nmButcher0", 4, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("feather")), 2.0f);
 
         finishRecipes("Butcher Trades");
 
