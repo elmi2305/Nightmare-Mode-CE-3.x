@@ -381,7 +381,8 @@ public abstract class NMInitializer implements AchievementExt {
         TradeTweaks.setOutputCount("btw:buy_iron_hoe", 1,2);
         TradeTweaks.setInputCount("btw:buy_sugar", 6,12);
         TradeTweaks.setInputCount("btw:buy_cocoa_beans", 4,8);
-        TradeTweaks.setInputCount("btw:buy_brown_mushrooms", 3,6);
+//        TradeTweaks.setInputCount("btw:buy_brown_mushrooms", 3,6);
+//        TradeTweaks.dropTrade("btw:buy_brown_mushrooms");
         TradeTweaks.setInputCount("btw:buy_hemp_seeds", 4,8);
         TradeTweaks.setInputCount("btw:buy_eggs", 2,6);
         TradeTweaks.setInputCount("btw:buy_glass_panes", 16,16);
@@ -579,20 +580,120 @@ public abstract class NMInitializer implements AchievementExt {
         finishRecipes("Config");
 
     }
+    // trades begin here
 
+    private static void buy(String name, int profession, int level, int id1, int meta, int count1, int count2, float w, boolean levelUp, int cost1, int cost2){
+        TradeProvider.FinalStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).buy().item(id1, meta).itemCount(count1, count2).weight(w); // we have to add a variant that does emeraldCost. emeraldcost has to come after .item(), and takes 2 parameters (cost1, cost2) which are the min and max costs. additionally, .emeraldCost().itemCount() are not valid (cannot be used one after another)
+        if(cost1 != 0 && cost2 != 0){
+            ((TradeProvider.BuySellCountStep)(step)).emeraldCost(cost1, cost2);
+        }
+        if (levelUp) {
+            step.addAsLevelUpTrade();
+            return;
+        }
+
+        step.addToTradeList();
+    }
+    private static void sell(String name, int profession, int level, int id1, int meta, int c1, int c2, float w, boolean levelUp){
+        TradeProvider.FinalStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).sell().item(id1, meta).itemCount(c1, c2).weight(w);
+        if (levelUp) {
+            step.addAsLevelUpTrade();
+            return;
+        }
+        }
+
+    // Overloaded versions with defaults
+    private static void buy(String name, int profession, int level, int id, int meta) {
+        buy(name, profession, level, id, meta, 1, 1, 1.0f, false, 0, 0);
+    }
+
+    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2) {
+        buy(name, profession, level, id, meta, count1, count2, 1.0f, false, 0, 0);
+    }
+
+    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, float weight) {
+        buy(name, profession, level, id, meta, count1, count2, weight, false, 0, 0);
+    }
+
+    private static void buy(String name, int profession, int level, int id, int meta, int count1, int count2, boolean levelUp) {
+        buy(name, profession, level, id, meta, count1, count2, 1.0f, levelUp, 0, 0);
+    }
+
+    private static void sell(String name, int profession, int level, int id, int meta) {
+        sell(name, profession, level, id, meta, 1, 1, 1.0f, false);
+    }
+
+    private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2) {
+        sell(name, profession, level, id, meta, count1, count2, 1.0f, false);
+    }
+
+    private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, float weight) {
+        sell(name, profession, level, id, meta, count1, count2, weight, false);
+    }
+
+    private static void sell(String name, int profession, int level, int id, int meta, int count1, int count2, boolean levelUp) {
+        sell(name, profession, level, id, meta, count1, count2, 1.0f, levelUp);
+    }
+
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp, boolean mandatory) {
+        TradeProvider.ConvertSecondInputStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).convert().input(firstInput);
+        if (secondInput != null && secondInput != TradeItem.EMPTY) {
+            step = (TradeProvider.ConvertSecondInputStep) step.secondInput(secondInput);
+        }
+        ((TradeProvider.ConvertOutputStep) step).output(output).weight(weight);
+
+        if (mandatory) {
+            ((TradeProvider.FinalStep)step).mandatory();
+        }
+        if (levelUp) {
+            ((TradeProvider.FinalStep)step).addAsLevelUpTrade();
+        } else {
+            ((TradeProvider.FinalStep)step).addToTradeList();
+        }
+    }
+
+    // Overloaded versions with defaults
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output) {
+        convert(name, profession, level, firstInput, secondInput, output, 1.0f, false, false);
+    }
+
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight) {
+        convert(name, profession, level, firstInput, secondInput, output, weight, false, false);
+    }
+
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, boolean levelUp) {
+        convert(name, profession, level, firstInput, secondInput, output, 1.0f, levelUp, false);
+    }
+
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, boolean levelUp, boolean mandatory) {
+        convert(name, profession, level, firstInput, secondInput, output, 1.0f, levelUp, mandatory);
+    }
+
+    private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp) {
+        convert(name, profession, level, firstInput, secondInput, output, weight, levelUp, false);
+    }
 
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
-        EntityVillager.removeCustomTrade(0,TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:buy_brown_mushrooms").profession(0).level(2).buy().item(BTWItems.brownMushroom.itemID).itemCount(10, 16).build());
 
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).sell().item(Block.grass.blockID).itemCount(2,4).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1).convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID,1,2,4)).secondInput(TradeItem.fromID(Item.emerald.itemID,1,2)).output(TradeItem.fromID(BTWItems.hempSeeds.itemID,2,6)).weight(0.3f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(BTWBlocks.millstone.blockID).emeraldCost(2, 2).addAsLevelUpTrade();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2).buy().item(Item.shears.itemID).buySellSingle().weight(0.4f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(BTWItems.redMushroom.itemID).itemCount(2, 5).weight(1.2f).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3).buy().item(Item.bucketWater.itemID).buySellSingle().addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(4).buy().item(BTWItems.chowder.itemID).itemCount(1, 2).addToTradeList();
-        TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5).convert().input(TradeItem.fromID(Item.paper.itemID)).secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID,8,16)).output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("efficiency"))).mandatory().addToTradeList();
+        sell("nmFarmer0", 0, 1,Block.grass.blockID, 0,2, 4, 0.3f, false);
+        convert("nmFarmer0", 0, 1,
+                TradeItem.fromIDAndMetadata(Block.tallGrass.blockID, 1, 2, 4),
+                TradeItem.fromID(Item.emerald.itemID, 1, 2),
+                TradeItem.fromID(BTWItems.hempSeeds.itemID, 2, 6),
+                0.3f, false, false);
+        buy("nmFarmer0", 0, 2, BTWBlocks.millstone.blockID, 0, 2, 2, 0, true, 2, 2);
+        buy("nmFarmer0", 0, 2, Item.shears.itemID, 0, 1, 1, 0.4f);
+        buy("nmFarmer0", 0, 3, BTWItems.redMushroom.itemID, 0, 2, 5, 1.2f);
+        buy("nmFarmer0", 0, 3, Item.bucketWater.itemID, 0, 1, 1);
+        buy("nmFarmer0", 0, 4, BTWItems.chowder.itemID, 0, 1, 2);
+        convert("nmFarmer0", 0, 5,
+                TradeItem.fromID(Item.paper.itemID),
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 8, 16),
+                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("efficiency")),
+                false, true);
 
         finishRecipes("Farmer Trades");
 
