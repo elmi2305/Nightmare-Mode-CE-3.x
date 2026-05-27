@@ -143,7 +143,7 @@ public class EntityBloodWither extends EntityWither {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(100);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(12.0);
     }
 
@@ -267,22 +267,26 @@ public class EntityBloodWither extends EntityWither {
                         z++) {}
                 }
                 Iterator<Entity> it = this.trackedEntities.iterator();
-                while (it.hasNext()) {
-                    Entity e = it.next();
-                    if (e.isDead) { it.remove(); continue; }  // isDead covers world removal
-                    if (e.posY < 199 && !e.noClip) {
-                        e.setLocationAndAngles(this.origin[0], 200, this.origin[2], e.rotationYaw, e.rotationPitch);
-                    }
-                    if (e instanceof EntityDragon dragon) {
-                        if (this.witherPhase > 0 && this.rand.nextInt(6) == 0) dragon.heal(1);
-                        if (this.ticksExisted % 20 == 0 && dragon.getDistanceSqToEntity(this) > 1600) {
-                            dragon.targetX = this.origin[0];
-                            dragon.targetY = this.origin[1];
-                            dragon.targetZ = this.origin[2];
+                Iterator<Entity> iterator = this.trackedEntities.iterator();
+                while (iterator.hasNext()) {
+                    Entity trackedEntity = iterator.next();
+
+                    if (shouldClear) {
+                        if (trackedEntity.riddenByEntity != null) {
+                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
                         }
+                        trackedEntity.setDead();
+                        continue; // Skip further processing if clearing is needed
+                    }
+                    if (trackedEntity.posY <= 200 || trackedEntity.isDead) {
+                        if (trackedEntity.riddenByEntity == null) {
+                            trackedEntity.setDead();
+                        } else {
+                            trackedEntity.riddenByEntity.attackEntityFrom(DamageSource.generic, 10f);
+                        }
+                        iterator.remove(); // Remove entity safely
                     }
                 }
-
                 if (shouldClear) {
                     this.trackedEntities.clear();
                     this.isDoingCrystalStorm = false;
