@@ -347,7 +347,6 @@ public class GuiIngameMixin extends Gui{
                 period = NMUtils.getIsDayFromWorldTime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
             }
 
-            int dawnOffset = this.isDawnOrDusk(this.mc.theWorld.getWorldTime());
             FontRenderer fontRenderer = this.mc.fontRenderer;
             String textToShow = secToTime((int)(this.mc.theWorld.getTotalWorldTime() / 20));
             int stringWidth = fontRenderer.getStringWidth(textToShow);
@@ -357,7 +356,7 @@ public class GuiIngameMixin extends Gui{
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
 
-            textToShow = String.format(period, ((int)Math.ceil((double) this.mc.theWorld.getWorldTime() / 24000)) + dawnOffset);
+            textToShow = String.format(period, NMUtils.getDayCountFromWorld(this.mc.theWorld));
             stringWidth = fontRenderer.getStringWidth(textToShow);
             if(NightmareMode.shouldShowDateTimer){
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
@@ -378,6 +377,7 @@ public class GuiIngameMixin extends Gui{
 
         }
     }
+
     @Unique private String getBloodMoonText(World world){
         if(this.shouldShowBloodMoonCountdown(world)){
             long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
@@ -415,15 +415,6 @@ public class GuiIngameMixin extends Gui{
         return false;
     }
 
-
-
-    @Unique
-    private int isDawnOrDusk(long time){
-        if(time % 24000 >= 23459) {
-            return 1;
-        }
-        return 0;
-    }
     @Unique int heightField = 13;
     @Unique int widthField = 6;
 

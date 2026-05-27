@@ -353,9 +353,14 @@ public class NMUtils {
         }
     }
 
-    public static boolean getIsDayFromWorldTime(World world){
-        long time = world.getWorldTime() % 24000;
+    public static boolean getIsDayFromWorldTime(World w){
+        long time = w.getWorldTime() % 24000;
         return time <= 12541 || time >= 23459;
+    }
+
+    public static int getDayCountFromWorld(World w) {
+        long time = w.getWorldTime();
+        return ((int) Math.ceil((double) time / 24000)) + (time % 24000 >= 23459 ? 1 : 0);
     }
 
     // Villager metadata codec
