@@ -51,6 +51,7 @@ public class NightmareMode extends BTWAddon {
     // events
     public static boolean isBloodMoon;
     public static boolean isEclipse;
+    public int activeEventsInt;
 
     // misc
     public boolean canAccessMenu = true;
@@ -308,6 +309,15 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+
+        AddonHandler.registerPacketHandler("nm|events", (packet, player) -> {
+            DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+            try {
+                getInstance().activeEventsInt = dataStream.readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
@@ -325,6 +335,20 @@ public class NightmareMode extends BTWAddon {
         return new Packet250CustomPayload("nm|HorseProg", byteStream.toByteArray());
     }
 
+    private static Packet250CustomPayload createEventPacket(int eventID) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            System.out.println("wrote eventid " + eventID);
+            dataStream.writeInt(eventID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new Packet250CustomPayload("nm|events", byteStream.toByteArray());
+    }
+
     public static void sendHorseProgressToAll(EntityHorse horse, int progress) {
         Packet250CustomPayload packet = createHorseProgressPacket(horse.entityId, progress);
         for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
@@ -332,6 +356,16 @@ public class NightmareMode extends BTWAddon {
                 if (player.getDistanceSqToEntity(horse) < 8 * 8) {
                     player.playerNetServerHandler.sendPacketToPlayer(packet);
                 }
+            }
+        }
+    }
+
+    public static void sendEventsPacketToAll(int eventID) {
+        System.out.println("sending events packet " + eventID);
+        Packet250CustomPayload packet = createEventPacket(eventID);
+        for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (playerObj instanceof EntityPlayerMP player) {
+                player.playerNetServerHandler.sendPacketToPlayer(packet);
             }
         }
     }
