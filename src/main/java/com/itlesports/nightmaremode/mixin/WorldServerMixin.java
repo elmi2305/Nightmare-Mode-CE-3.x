@@ -4,6 +4,7 @@ import api.world.WorldUtils;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NMRandomEventManager;
 import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -56,6 +57,10 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 //            System.out.println("calculated blue moon: " + this.isBlueMoonWorld);
         } else{
             this.setBlueMoonWorld(false);
+        }
+
+        if ((time & 511) == 0) {
+            NMRandomEventManager.onServerTick((WorldServer)(Object)this);
         }
     }
     @Unique private void setBlueMoonWorld(boolean b){

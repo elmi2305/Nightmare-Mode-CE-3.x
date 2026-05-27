@@ -663,7 +663,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, boolean levelUp, boolean mandatory) {
         convert(name, profession, level, firstInput, secondInput, output, 1.0f, levelUp, mandatory);
     }
-    
+
     private static void addFarmerTrades(){
         EntityVillager.removeLevelUpTrade(0,2);
         EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5).arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(48, 64).mandatory().build());
