@@ -143,7 +143,7 @@ public class EntityBloodWither extends EntityWither {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(500);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(100);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(12.0);
     }
 
@@ -261,9 +261,9 @@ public class EntityBloodWither extends EntityWither {
                 if(!shouldClear && this.passivityDuration % 120 == 0){
                     for(int z = 0;
                         z < 2 && this.summonCrystalHeadAtPos(
-                            this.origin[0] + this.rand.nextInt(20) + 10,
-                            this.origin[1] + 1,
-                            this.origin[2] + this.rand.nextInt(20) + 10);
+                                this.origin[0] + this.rand.nextInt(20) + 10,
+                                this.origin[1] + 1,
+                                this.origin[2] + this.rand.nextInt(20) + 10);
                         z++) {}
                 }
                 Iterator<Entity> it = this.trackedEntities.iterator();
@@ -689,7 +689,7 @@ public class EntityBloodWither extends EntityWither {
         if(this.playerTarget == null){
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
-        setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive());
+        setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive() && this.isEntityAlive());
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
             int i;
             do {
