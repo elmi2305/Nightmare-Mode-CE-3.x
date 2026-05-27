@@ -344,7 +344,7 @@ public class GuiIngameMixin extends Gui{
             String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
 
             if(this.mc.thePlayer.dimension == -1){
-                period = this.getIsActuallyDaytime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
+                period = NMUtils.getIsDayFromWorldTime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
             }
 
             int dawnOffset = this.isDawnOrDusk(this.mc.theWorld.getWorldTime());
@@ -671,9 +671,4 @@ public class GuiIngameMixin extends Gui{
         return String.format("0:%02d", seconds);
     }
 
-    @Unique
-    boolean getIsActuallyDaytime(World world){
-        long time = world.getWorldTime() % 24000;
-        return time <= 12541 || time >= 23459;
-    }
 }

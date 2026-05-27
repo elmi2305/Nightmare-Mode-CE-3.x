@@ -353,6 +353,11 @@ public class NMUtils {
         }
     }
 
+    public static boolean getIsDayFromWorldTime(World world){
+        long time = world.getWorldTime() % 24000;
+        return time <= 12541 || time >= 23459;
+    }
+
     // Villager metadata codec
     public static final class VillagerMetaCodec {
         private static final int FACING_BITS = 2;
