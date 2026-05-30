@@ -2,7 +2,9 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.achievement.AchievementEventDispatcher;
 import api.item.items.PickaxeItem;
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
+import com.itlesports.nightmaremode.util.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -28,7 +30,27 @@ public class ItemInWorldManagerMixin {
         if(this.shouldActivate(id, i, j, k)){
             AchievementEventDispatcher.triggerEvent(NMAchievementEvents.LustEvent.class, this.thisPlayerMP);
         }
+        if(NightmareMode.getInstance().isGriefLogging()){
+            LogSettings ls = NightmareMode.getInstance().getLogSettings();
 
+            TileEntity te = this.theWorld.getBlockTileEntity(i,j,k);
+            if(te == null) return;
+
+            String text = this.thisPlayerMP.username + " broke [" + Block.blocksList[id].getLocalizedName() + "] at " + i + " " + j + " " + k;
+
+            if(ls.logAllTileEntities){
+                NightmareMode.appendLogLine(text);
+                return;
+            }
+            if(ls.logContainers && Block.blocksList[id] instanceof BlockContainer){
+                NightmareMode.appendLogLine(text);
+                return;
+            }
+            if(ls.logChests && te instanceof TileEntityChest){
+                NightmareMode.appendLogLine(text);
+                return;
+            }
+        }
     }
 
     @Unique
