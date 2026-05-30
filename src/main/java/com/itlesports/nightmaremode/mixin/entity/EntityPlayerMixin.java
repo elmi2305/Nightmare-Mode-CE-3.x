@@ -200,6 +200,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         EntityPlayer player = (EntityPlayer)(Object)this;
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.PlayerAttackEvent.class, player, new NMAchievementEvents.PlayerAttackEvent.PlayerAttackEventData(player, entityHit, dmg));
     }
+    @Inject(method = "onKillEntity", at = @At("TAIL"))
+    private void setBloodWitherDataEntry(EntityLivingBase elb, CallbackInfo ci){
+        if(elb instanceof EntityBloodWither){
+            this.setData(DEFEATED_BLOODWITHER, true);
+        }
+    }
 
 
     @Override
@@ -317,7 +323,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique private void invalidateConfig(){
-        if(this.worldObj.isRemote) return;
+        if(this.worldObj.isRemote || devMode) return;
         int[] zeroConfigs = new int[NMConfUtils.CONFIG_COUNT];
         Arrays.fill(zeroConfigs, 0);
 
@@ -350,7 +356,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
 
             invalidateConfig();
-            return;
+            if (!devMode) {
+                return;
+            };
         }
 
 
@@ -491,17 +499,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             default -> 0xFFFFFF;
         };
     }
-    
-    @Unique private boolean shouldActivate(NMConfUtils.CONFIG conf){
+
+    @Unique
+    private boolean shouldActivate(NMConfUtils.CONFIG conf) {
         EntityPlayer p = (EntityPlayer)(Object)this;
 
         return switch (conf.getClearCondition()) {
-            case CLEAR_BLOODMOON -> (AchievementHandler.hasUnlocked(p, NMAchievements.FIRST_BLOODMOON) && NMUtils.getWorldProgress() > 0);
-            case CLEAR_DRAGON -> (NMUtils.getWorldProgress() > 2);
-            case CLEAR_BW -> (NMUtils.getWorldProgress() > 2 && AchievementHandler.hasUnlocked(p, NMAchievements.KILL_BLOODWITHER));
-            case CLEAR_GLOOM -> (this.worldObj.getWorldTime() > 120000);
-            case CLEAR_HARDMODE -> (NMUtils.getWorldProgress() > 0);
-            case CLEAR_WEEK -> (this.worldObj.getWorldTime() > 140000);
+            case CLEAR_BLOODMOON -> NMUtils.getWorldProgress() > 0
+                    && this.getData(DEFEATED_BM);
+            case CLEAR_DRAGON -> NMUtils.getWorldProgress() > 2;
+            case CLEAR_BW -> NMUtils.getWorldProgress() > 2
+                    && this.getData(DEFEATED_BLOODWITHER);
+            case CLEAR_GLOOM -> this.worldObj.getWorldTime() > 120000;
+            case CLEAR_HARDMODE -> NMUtils.getWorldProgress() > 0;
+            case CLEAR_WEEK -> this.worldObj.getWorldTime() > 140000;
             default -> false;
         };
     }
@@ -562,7 +573,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 }
 
                 invalidateConfig();
-                return;
+                if (!devMode) {
+                    return;
+                }
 
             } else if (NMConfUtils.isClientUsingHelpConfig()) {
                 //                System.out.println("X player is using helpful configs");
@@ -581,8 +594,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 }
 
                 invalidateConfig();
-                return;
-
+                if (!devMode) {
+                    return;
+                }
             } else if (!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (!client) {
                     ChatMessageComponent text1 = new ChatMessageComponent();
@@ -597,7 +611,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 }
 
                 invalidateConfig();
-                return;
+                if (!devMode) {
+                    return;
+                }
             }
 
             this.checkAndValidateConfig();
