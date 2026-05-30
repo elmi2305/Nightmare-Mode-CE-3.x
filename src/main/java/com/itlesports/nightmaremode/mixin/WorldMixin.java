@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import com.itlesports.nightmaremode.util.LogSettings;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -34,6 +35,12 @@ public abstract class WorldMixin {
 
 
     @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> worldDataEntry, T t);
+
+    @Shadow
+    public abstract TileEntity getBlockTileEntity(int par1, int par2, int par3);
+
+    @Shadow
+    public abstract EntityPlayer getClosestPlayer(double par1, double par3, double par5, double par7);
 
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
     private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir){
@@ -183,6 +190,31 @@ public abstract class WorldMixin {
             cir.setReturnValue(getRainbowSkyColorFromWorldTime(this.getWorldTime()));
         } else if (NMUtils.getIsEclipse()) {
             cir.setReturnValue(thisObj.getWorldVec3Pool().getVecFromPool(0.0, 0.0, 0.0));
+        }
+    }
+
+    @Unique
+    private static String simpleClassName(String name) {
+        int index = name.lastIndexOf('.');
+        return index >= 0 ? name.substring(index + 1) : name;
+    }
+    @Inject(method = "removeBlockTileEntity", at = @At("HEAD"))
+    private void logTileEntityDestruction(int x, int y, int z, CallbackInfo ci){
+        if(NightmareMode.getInstance().isGriefLogging() && !this.isRemote){
+            TileEntity te = this.getBlockTileEntity(x, y, z);
+            LogSettings ls = NightmareMode.getInstance().getLogSettings();
+            if(!ls.logIndirectBreaks) return;
+
+            String text = simpleClassName(te.getClass().getName()) + " destroyed at " + x + " " + y + " " + z + ". Nearest Player: " + this.getClosestPlayer(x,y,z, 32).username;
+
+            if(ls.logAllTileEntities){
+                NightmareMode.appendLogLine(text);
+                return;
+            }
+            if(ls.logChests && !ls.logContainers && te instanceof TileEntityChest){
+                NightmareMode.appendLogLine(text);
+                return;
+            }
         }
     }
 }
