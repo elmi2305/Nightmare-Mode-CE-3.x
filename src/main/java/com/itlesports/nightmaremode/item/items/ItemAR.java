@@ -2,9 +2,10 @@ package com.itlesports.nightmaremode.item.items;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
 
-public class ItemAR extends Item {
+public class ItemAR extends NMItem {
 
     public ItemAR(int par1) {
         super(par1);
@@ -19,11 +20,7 @@ public class ItemAR extends Item {
         return false;
     }
 
-    public String getModId() {
-        return "nightmare";
-    }
-
-
+    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!NightmareMode.noHit) {
             world.playSoundAtEntity(player, "random.bow", 0.5F, 2.1F / (itemRand.nextFloat() * 0.4F + 0.8F));
