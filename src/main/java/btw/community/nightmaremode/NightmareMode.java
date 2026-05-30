@@ -150,8 +150,10 @@ public class NightmareMode extends BTWAddon {
     public void initialize() {
         AddonHandler.logMessage(this.getName() + " Version " + this.getVersionString() + " Initializing...");
         if (!MinecraftServer.getIsServer()) {
+            // client to server
             initClientPacketInfo();
         } else{
+            // server to client
             initServerPacketInfo();
             AddonHandler.registerCommand(new TPACommand(), false);
         }
@@ -547,6 +549,27 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.PlayerDataEntry<Boolean> DEFEATED_BM =
+            DataProvider.getBuilder(Boolean.class)
+                    .name("BloodMoonDefeated")
+                    .defaultSupplier(() -> false)
+                    .readNBT(nbt -> nbt.getBoolean("BloodMoonDefeated"))
+                    .writeNBT((nbt, v) -> nbt.setBoolean("BloodMoonDefeated", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
+
+    public static final DataEntry.PlayerDataEntry<Boolean> DEFEATED_BLOODWITHER =
+            DataProvider.getBuilder(Boolean.class)
+                    .name("BloodWitherDefeated")
+                    .defaultSupplier(() -> false)
+                    .readNBT(nbt -> nbt.getBoolean("BloodWitherDefeated"))
+                    .writeNBT((nbt, v) -> nbt.setBoolean("BloodWitherDefeated", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
     public static final DataEntry.WorldDataEntry<int[]> CONFIGS_CREATED =
             DataProvider.getBuilder(int[].class)
                     .name("ConfigsInit")
@@ -584,11 +607,15 @@ public class NightmareMode extends BTWAddon {
     }
     @Override
     public void preInitialize() {
+        super.preInitialize();
+
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
         APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
         SANITY.register();
+        DEFEATED_BM.register();
+        DEFEATED_BLOODWITHER.register();
     }
 
     @Override
