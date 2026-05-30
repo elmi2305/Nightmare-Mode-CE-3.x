@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static btw.community.nightmaremode.NightmareMode.DEFEATED_BM;
+
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Mutable @Shadow public WorldServer[] worldServers;
@@ -111,6 +113,9 @@ public abstract class MinecraftServerMixin {
 
                 if (shouldChangeBloodMoon) {
                     AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BloodMoonEvent.class, player, NightmareMode.isBloodMoon);
+                    if(!NightmareMode.isBloodMoon){
+                        player.setData(DEFEATED_BM, true);
+                    }
                 }
 
                 if (shouldChangeEclipse) {
