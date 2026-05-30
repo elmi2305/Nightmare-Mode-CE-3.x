@@ -68,7 +68,7 @@ public class EntityAILunge extends EntityAITarget {
                 // 1 second with a variance of 1s
             }
             if(this.taskOwner instanceof EntityZombieExt ezx){
-                ezx.nightmareMode$setLungedAgo((byte) 15);
+                ezx.nightmareMode$setLungedAgo(15);
             }
         }
 
