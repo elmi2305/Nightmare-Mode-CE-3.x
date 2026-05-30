@@ -30,6 +30,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.io.*;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class NightmareMode extends BTWAddon {
@@ -86,6 +88,8 @@ public class NightmareMode extends BTWAddon {
     public static Boolean fastVillagers;
     public static Boolean bloodMoonHelper;
     public static Boolean realTime;
+    private boolean griefLogging;
+    private LogSettings logSettings;
 
 
     public NightmareMode(){
@@ -145,6 +149,43 @@ public class NightmareMode extends BTWAddon {
             }
         }
     }
+    private void setLogging(boolean b, int level){
+        this.griefLogging = b;
+        this.logSettings = new LogSettings(level);
+    }
+    public LogSettings getLogSettings(){
+        return this.logSettings;
+    }
+    public boolean isGriefLogging(){
+        return this.griefLogging;
+    }
+
+    private static final File griefLogFile = new File("nmGriefLog.txt");
+
+    public static void appendLogLine(String text) {
+        try {
+            if (!griefLogFile.exists()) {
+                File parent = griefLogFile.getParentFile();
+                if (parent != null && !parent.exists()) {
+                    parent.mkdirs();
+                }
+                griefLogFile.createNewFile();
+            }
+
+            ZonedDateTime now = ZonedDateTime.now();
+
+            String timestamp = now.format(
+                    DateTimeFormatter.ofPattern("d.M.yyyy | HH:mm:ss z")
+            );
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(griefLogFile, true))) {
+                writer.write("[" + timestamp + "] " + text);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void initialize() {
@@ -195,12 +236,13 @@ public class NightmareMode extends BTWAddon {
 
 
 //        System.out.println("DEBUGGING IN NIGTHMAREMODE.JAVA");
+//        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.flowerFields;
+
         BiomeGenBase.biomeList[24] = BiomeGenUnderworld.blightlands;
         BiomeGenBase.biomeList[25] = BiomeGenUnderworld.highlands;
         BiomeGenBase.biomeList[26] = BiomeGenUnderworld.flowerFields;
         BiomeGenBase.biomeList[27] = BiomeGenUnderworld.shadowRealm;
         BiomeGenBase.biomeList[28] = BiomeGenUnderworld.underHell;
-//        BiomeGenBase.biomeList[24] = BiomeGenUnderworld.flowerFields;
         MapGenStructureIO.func_143034_b(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }
 
@@ -342,7 +384,6 @@ public class NightmareMode extends BTWAddon {
         DataOutputStream dataStream = new DataOutputStream(byteStream);
 
         try {
-            System.out.println("wrote eventid " + eventID);
             dataStream.writeInt(eventID);
         } catch (IOException e) {
             e.printStackTrace();
@@ -363,7 +404,6 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static void sendEventsPacketToAll(int eventID) {
-        System.out.println("sending events packet " + eventID);
         Packet250CustomPayload packet = createEventPacket(eventID);
         for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             if (playerObj instanceof EntityPlayerMP player) {
@@ -649,6 +689,8 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("BloodMoonHelper", false);
         config.registerBoolean("RealTime", false);
         config.registerString("WorldInfoString", "STDHF");
+        config.registerBoolean("GriefLogging", false, "Enables logging of Tile Entity destruction and signs, including who placed them & where they were placed.", "Useful for detecting griefers.", "Logs signs placed, TNT placed", "MULTIPLAYER ONLY!");
+        config.registerInt("GriefLoggingLevel", 1, "First two bits decide logging level", "1 = only log Chests.", "2 = only log Container tile entities", "3 = log ALL tile entity destruction", "Add 4 to any of those values = whether to log items being taken out of chests", "Add 8 to any of those values = whether to log items being destroyed indirectly (not by players mining them)");
         getInstance().addonConfig = config;
     }
 
@@ -683,6 +725,9 @@ public class NightmareMode extends BTWAddon {
         fastVillagers = config.getBoolean("FastVillagers");
         bloodMoonHelper = config.getBoolean("BloodMoonHelper");
         realTime = config.getBoolean("RealTime");
+//        if (MinecraftServer.getIsServer()) {
+            getInstance().setLogging(config.getBoolean("GriefLogging"), config.getInt("GriefLoggingLevel"));
+//        }
     }
 
 
