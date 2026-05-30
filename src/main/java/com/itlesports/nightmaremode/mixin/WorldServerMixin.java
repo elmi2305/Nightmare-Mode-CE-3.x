@@ -3,8 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.WorldUtils;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.NMRandomEventManager;
 import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,9 +59,9 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
             this.setBlueMoonWorld(false);
         }
 
-        if ((time & 511) == 0 && this.provider.dimensionId == 0) {
+        if ((time & 255) == 0 && this.provider.dimensionId == 0) {
             System.out.println("sent");
-            NMRandomEventManager.onServerTick((WorldServer)(Object)this);
+            NMEvents.onServerTick((WorldServer)(Object)this);
         }
     }
     @Unique private void setBlueMoonWorld(boolean b){
@@ -81,6 +81,11 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
         // works as expected
         return this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
     }
+
+    /**
+     * Approximation!! It is more correct than the usual daylight check, especially if an event such as the eclipse forces the skylight level low but counts as daytime.
+     * This method is used when we are drawing the day counter or running events that function based on it
+     */
     @Unique private boolean getIsNightFromWorldTime(World world){
         return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
     }
