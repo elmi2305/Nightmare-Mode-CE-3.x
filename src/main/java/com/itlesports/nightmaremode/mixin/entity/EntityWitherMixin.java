@@ -38,8 +38,10 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void increaseXPYield(World par1World, CallbackInfo ci){
-        this.experienceValue = 250;
+    private void increaseXPYield(World w, CallbackInfo ci){
+        if (NMUtils.getWorldProgress() < 2) {
+            this.experienceValue = 15000;
+        }
         this.setSize(1.2f, 4.3f);
         this.hasRevived = false;
         this.isImmuneToFire = true;
