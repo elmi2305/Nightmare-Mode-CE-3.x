@@ -19,6 +19,10 @@ public class EntitySilverfishMixin extends EntityMob{
         super(par1World);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void setXPDropped(World par1World, CallbackInfo ci){
+        this.experienceValue = 1;
+    }
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySilverfish;attackEntityAsMob(Lnet/minecraft/src/Entity;)Z"))
     private void infectPlayer(Entity par1Entity, float par2, CallbackInfo ci){
         if(par1Entity instanceof EntityPlayer target && this.worldObj != null){
