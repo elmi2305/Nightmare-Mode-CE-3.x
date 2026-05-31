@@ -116,7 +116,7 @@ public class EntityBloodWither extends EntityWither {
 
     public EntityBloodWither(World world) {
         super(world);
-        this.experienceValue = 4954;
+        this.experienceValue = 4954 * 7;
         this.witherPhase = 0;
     }
 
