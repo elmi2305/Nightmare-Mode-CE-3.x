@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.AddonHandler;
 import api.achievement.AchievementEventDispatcher;
-import api.achievement.AchievementHandler;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;

@@ -60,7 +60,6 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
         }
 
         if ((time & 255) == 0 && this.provider.dimensionId == 0) {
-            System.out.println("sent");
             NMEvents.onServerTick((WorldServer)(Object)this);
         }
     }
