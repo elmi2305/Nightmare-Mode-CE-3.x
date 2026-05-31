@@ -72,6 +72,11 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         super.onDeath(dmgSource);
     }
 
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void editXPDropped(World w, CallbackInfo ci){
+        this.experienceValue = (int) Math.max(Math.min(this.experienceValue, 10) * (NMUtils.getWorldProgress() + 1) / 1.5f, this.experienceValue);
+        System.out.println(this.experienceValue);
+    }
     @Unique private @Nullable EntityBloodAltar getNearestAltar(List<EntityBloodAltar> altars) {
         EntityBloodAltar nearest = null;
         double nearestDistSq = Double.MAX_VALUE;
