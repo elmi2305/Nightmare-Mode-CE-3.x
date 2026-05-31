@@ -437,7 +437,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
         int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
         for (int i = 0; i < (lootingModifier * 2) + 1; i++) {
-            if (this.rand.nextInt(2 + worldProgress) == 0) {
+            if (this.rand.nextInt(4 + worldProgress) == 0) {
                 this.dropItem(NMItems.calamari.itemID, 1);
             }
         }
