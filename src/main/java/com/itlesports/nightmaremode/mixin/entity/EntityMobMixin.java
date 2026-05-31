@@ -7,6 +7,7 @@ import btw.entity.LocatorPileEntity;
 import btw.entity.RottenArrowEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
 import com.itlesports.nightmaremode.entity.EntityBloodAltar;
+import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import com.itlesports.nightmaremode.util.interfaces.LocatorPileEntityExt;
@@ -75,7 +76,10 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Inject(method = "<init>", at = @At("TAIL"))
     private void editXPDropped(World w, CallbackInfo ci){
         this.experienceValue = (int) Math.max(Math.min(this.experienceValue, 10) * (NMUtils.getWorldProgress() + 1) / 1.5f, this.experienceValue);
-        System.out.println(this.experienceValue);
+        EntityMob mObject = (EntityMob)(Object)this;
+        if(mObject instanceof EntityCreeperVariant){
+            this.experienceValue += 5;
+        }
     }
     @Unique private @Nullable EntityBloodAltar getNearestAltar(List<EntityBloodAltar> altars) {
         EntityBloodAltar nearest = null;
