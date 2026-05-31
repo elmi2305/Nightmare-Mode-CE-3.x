@@ -6,7 +6,7 @@ import net.minecraft.src.*;
 public class NMEvents {
 
     public enum SimpleEvent {
-        SLIME_RAIN("nmSlimeRain", ConditionType.DAY_ENDS_WITH, 33, 1) {
+        SLIME_RAIN("nmSlimeRain", ConditionType.DAY_ENDS_WITH, 33, 1, NMFields.HARDMODE) {
             @Override protected void doCustomEventLogic(World w) {
                 w.setRainStrength(1.0f);
                 w.getWorldInfo().setRaining(true);
@@ -20,12 +20,14 @@ public class NMEvents {
         private final ConditionType condition;
         private boolean wasChosen;
         public final int id;
+        public final int worldStateRequirement;
 
-        SimpleEvent(String name1, ConditionType conditionType, int constant, int id){
+        SimpleEvent(String name1, ConditionType conditionType, int constant, int id, int worldStateRequirement){
             this.string = name1;
             this.condition = conditionType;
             this.condition.setConstantNumber(constant);
             this.id = id;
+            this.worldStateRequirement = worldStateRequirement;
         }
 
         public boolean isActive(){
@@ -67,6 +69,7 @@ public class NMEvents {
 
         public void displayEventAndStart(World w){
             if(this.wasChosen) return;
+            // this helps it only run initialization logic once!
             this.doCustomEventLogic(w);
 
             ChatMessageComponent text = new ChatMessageComponent();
@@ -83,10 +86,10 @@ public class NMEvents {
         SimpleEvent chosen = null;
 
         for (SimpleEvent event : SimpleEvent.values()) {
-            if (chosen == null && event.condition.checkActivation(w)) {
+            if (chosen == null && event.condition.checkActivation(w) && NMUtils.getWorldProgress() >= event.worldStateRequirement) {
                 chosen = event;
-                event.wasChosen = true;
                 event.displayEventAndStart(w);
+                event.wasChosen = true;
             } else {
                 event.wasChosen = false;
             }

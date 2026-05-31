@@ -48,5 +48,11 @@ public class NMFields {
     // portal ritual duration
     public static final int UW_PORTAL_DURATION = 20 * 65;
 
+    // world state ints for readability
+    public static final int PREHARDMODE = 0;
+    public static final int HARDMODE = 1;
+    public static final int POSTWITHER = 2;
+    public static final int POSTDRAGON = 3;
+
 
 }
