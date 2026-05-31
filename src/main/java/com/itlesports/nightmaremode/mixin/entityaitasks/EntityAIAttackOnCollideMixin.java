@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
@@ -28,6 +29,16 @@ public abstract class EntityAIAttackOnCollideMixin {
         EntityLivingBase target = ai.attacker.getAttackTarget();
 
         if (target == null) return;
+
+        // do not attack headcrabbed squids
+        // BTW will probably fix this bug
+        if(target instanceof BTWSquidEntity && target.ridingEntity != null){
+            if(target.ridingEntity instanceof EntityPlayer){
+                ai.attacker.setAttackTarget((EntityLivingBase) target.ridingEntity);
+            } else {
+                ai.attacker.setAttackTarget(null);
+            }
+        }
 
         if(target instanceof EntityPlayer && target.ridingEntity instanceof EntityHorse){
             target = (EntityLivingBase) target.ridingEntity;
