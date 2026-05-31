@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
@@ -116,6 +118,13 @@ public abstract class EntitySlimeMixin extends EntityLiving{
             return 0;
         }
         return world.getCurrentMoonPhaseFactor();
+    }
+    @Inject(method = "getCanSpawnHere", at = @At("RETURN"), cancellable = true)
+    private void allowCustomSpawningDuringSlimeRain(CallbackInfoReturnable<Boolean> cir)
+    {
+        if(NMEvents.SimpleEvent.SLIME_RAIN.isActive() && this.worldObj.isPrecipitatingAtPos((int) this.posX, (int) this.posY, (int) this.posZ)){
+            cir.setReturnValue(super.getCanSpawnHere() && this.worldObj.getBlockMaterial((int) this.posX, (int) (this.posY-1), (int) this.posZ).getMobsCanSpawnOn(0));
+        }
     }
 
     @Inject(method = "jump", at = @At("TAIL"))
