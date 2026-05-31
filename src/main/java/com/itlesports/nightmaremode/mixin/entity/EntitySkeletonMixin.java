@@ -6,7 +6,6 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
-import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -22,14 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
     @Unique int jumpCooldown = 0;
 
 
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
-    @Shadow private EntityAIAttackOnCollide aiMeleeAttack;
-    @Shadow private SkeletonArrowAttackBehavior aiRangedAttack;
     @Shadow public abstract boolean setSkeletonType(int id);
     @Shadow public abstract VariantComponent.EntityVariant getSkeletonType();
 
@@ -101,7 +100,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);

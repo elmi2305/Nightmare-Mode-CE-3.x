@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(EntitySilverfish.class)
 public class EntitySilverfishMixin extends EntityMob{
     public EntitySilverfishMixin(World par1World) {
@@ -53,7 +55,7 @@ public class EntitySilverfishMixin extends EntityMob{
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int looting) {
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (looting * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

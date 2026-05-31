@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.*;
 
 import static btw.community.nightmaremode.NightmareMode.*;
+import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
@@ -209,8 +210,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public int getMaxInPortalTime() {
-        if(NMUtils.getWorldProgress() > 1) {return 25;}
-        if(NMUtils.getWorldProgress() > 0) {return 40;}
+        if(NMUtils.getWorldProgress() > HARDMODE) {return 25;}
+        if(NMUtils.getWorldProgress() > PREHARDMODE) {return 40;}
         return 60;
     }
 
@@ -504,13 +505,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         EntityPlayer p = (EntityPlayer)(Object)this;
 
         return switch (conf.getClearCondition()) {
-            case CLEAR_BLOODMOON -> NMUtils.getWorldProgress() > 0
+            case CLEAR_BLOODMOON -> NMUtils.getWorldProgress() > PREHARDMODE
                     && this.getData(DEFEATED_BM);
-            case CLEAR_DRAGON -> NMUtils.getWorldProgress() > 2;
-            case CLEAR_BW -> NMUtils.getWorldProgress() > 2
+            case CLEAR_DRAGON -> NMUtils.getWorldProgress() > POSTWITHER;
+            case CLEAR_BW -> NMUtils.getWorldProgress() > POSTWITHER
                     && this.getData(DEFEATED_BLOODWITHER);
             case CLEAR_GLOOM -> this.worldObj.getWorldTime() > 120000;
-            case CLEAR_HARDMODE -> NMUtils.getWorldProgress() > 0;
+            case CLEAR_HARDMODE -> NMUtils.getWorldProgress() > PREHARDMODE;
             case CLEAR_WEEK -> this.worldObj.getWorldTime() > 140000;
             default -> false;
         };

@@ -22,6 +22,8 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(World.class)
 public abstract class WorldMixin {
 
@@ -140,7 +142,7 @@ public abstract class WorldMixin {
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("RETURN"),remap = false, cancellable = true)
     private void manageGloomPostWither(CallbackInfoReturnable<Float> cir){
         World thisObj = (World)(Object)this;
-        if(NMUtils.getWorldProgress() == 2 && !thisObj.isDaytime() && !NMUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
+        if(NMUtils.getWorldProgress() == POSTWITHER && !thisObj.isDaytime() && !NMUtils.getIsBloodMoon()){cir.setReturnValue(0f);}
     }
 
     @Inject(method = "computeOverworldSunBrightnessWithMoonPhases", at = @At("TAIL"),cancellable = true)

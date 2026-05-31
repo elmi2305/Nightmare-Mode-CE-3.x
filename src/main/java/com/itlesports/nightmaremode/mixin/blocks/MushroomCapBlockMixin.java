@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 import static btw.block.BTWBlockIDs.MUSHROOM_CAP_RED_BLOCK_ID;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(MushroomCapBlock.class)
 public class MushroomCapBlockMixin extends BlockMushroomCap {
@@ -32,7 +33,7 @@ public class MushroomCapBlockMixin extends BlockMushroomCap {
             cir.setReturnValue(BTWItems.redMushroom.itemID);
             return;
         }
-        if(NMUtils.getWorldProgress() > 0){
+        if(NMUtils.getWorldProgress() > PREHARDMODE){
             cir.setReturnValue(BTWItems.brownMushroom.itemID);
         }
         cir.setReturnValue(0);

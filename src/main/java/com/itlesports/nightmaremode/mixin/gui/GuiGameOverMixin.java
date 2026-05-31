@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
+
 @Mixin(GuiGameOver.class)
 public class GuiGameOverMixin extends GuiScreen {
     @Unique private boolean createClicked;
@@ -96,7 +98,7 @@ public class GuiGameOverMixin extends GuiScreen {
 
         String rawTip;
 
-        if (NMUtils.getWorldProgress() < 1) {
+        if (NMUtils.getWorldProgress() < HARDMODE) {
             rawTip = tips[random.nextInt(tips.length)];
         } else {
             rawTip = lategameTips[random.nextInt(lategameTips.length)];

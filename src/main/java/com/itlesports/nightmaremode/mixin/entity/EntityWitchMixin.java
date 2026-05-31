@@ -21,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 
 @Mixin(EntityWitch.class)
 public abstract class EntityWitchMixin extends EntityMob {
@@ -151,7 +153,6 @@ public abstract class EntityWitchMixin extends EntityMob {
         boolean eclipsed = NMUtils.getIsMobEclipsed(this);
         boolean validLoot = isValidForEventLoot;
 
-        // 🔮 MAGIC DROPS
         if (NightmareMode.magicMonsters) {
             for (int i = 0; i < 3; i++) {
                 Item drop;
@@ -168,7 +169,7 @@ public abstract class EntityWitchMixin extends EntityMob {
             }
         }
 
-        // 🌕 BLOOD MOON ORBS
+        // BLOOD MOON ORBS
         if (validLoot && NMUtils.getIsBloodMoon()) {
             int count = 6 + rand.nextInt(9); // 6–14
             if (looting > 0) count += rand.nextInt(looting + 1);
@@ -178,8 +179,8 @@ public abstract class EntityWitchMixin extends EntityMob {
             }
         }
 
-        // 🌑 ECLIPSE BONUS DROPS
-        if (eclipsed && validLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        // ECLIPSE BONUS DROPS
+        if (eclipsed && validLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
 
             // Darksun fragments (improved chance logic)
             int attempts = looting * 2 + 1;
@@ -195,7 +196,7 @@ public abstract class EntityWitchMixin extends EntityMob {
             if (looting > 0) count += rand.nextInt(looting + 1);
 
             for (int i = 0; i < count; i++) {
-                if (rand.nextInt(3) != 0) { // cleaner than continue
+                if (rand.nextInt(3) != 0) {
                     this.dropItem(NMItems.voidMembrane.itemID, 1);
                 }
             }

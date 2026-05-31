@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+
 @Mixin(BlockLog.class)
 public abstract class BlockLogMixin extends BlockRotatedPillar {
     @Shadow public abstract boolean getIsStump(int iMetadata);
@@ -57,6 +59,6 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
 
     @Override
     public boolean isBreakableBarricade(World world, int i, int j, int k, boolean adv) {
-        return NMUtils.getWorldProgress() > 0;
+        return NMUtils.getWorldProgress() > PREHARDMODE;
     }
 }

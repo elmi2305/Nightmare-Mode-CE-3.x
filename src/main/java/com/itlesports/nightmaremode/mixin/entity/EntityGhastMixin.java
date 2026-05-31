@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.itlesports.nightmaremode.util.NMFields.*;
+
 @Mixin(EntityGhast.class)
 public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow public abstract boolean getCanSpawnHereNoPlayerDistanceRestrictions();
@@ -40,7 +42,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(NMUtils.getIsBloodMoon()){
             return constant + 2;
         }
-        return constant + NMUtils.getWorldProgress() > 0 ? 1 : 0;
+        return constant + NMUtils.getWorldProgress() > PREHARDMODE ? 1 : 0;
     }
 
     @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
@@ -108,7 +110,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
                     this.dropItem(itemID, 1);
                 }
             }
-            else if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+            else if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -216,7 +218,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(g.dimension != -1) return constant;
 
         // nether
-        boolean postWither = NMUtils.getWorldProgress() > 1;
+        boolean postWither = NMUtils.getWorldProgress() > HARDMODE;
         boolean belowHalfHealth = this.getHealth() <= this.getMaxHealth() * 0.5f;
 
         if(belowHalfHealth || postWither){
@@ -293,7 +295,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         if(thisObj.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
             return constant * 2;
         }
-        if(thisObj.worldObj != null && NMUtils.getWorldProgress()>0){
+        if(thisObj.worldObj != null && NMUtils.getWorldProgress() > PREHARDMODE){
             return constant - NMUtils.getWorldProgress() * 2 -1;
             // 9 -> 7 -> 4 -> 2
         }
@@ -333,7 +335,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
         if(thisObj.dimension != -1) return baseCooldown;
 
-        boolean postWither = NMUtils.getWorldProgress() > 1;
+        boolean postWither = NMUtils.getWorldProgress() > HARDMODE;
         boolean belowHalfHealth = this.getHealth() <= this.getMaxHealth() * 0.5f;
 
         if(postWither){

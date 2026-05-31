@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import static btw.achievement.BTWAchievements.*;
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 public class NMAchievements {
 
@@ -297,7 +299,7 @@ public class NMAchievements {
                     .name(loc("hardmode"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_HARDMODE)
                     .displayLocation(10, 7)
-                    .triggerCondition(p -> WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || NMUtils.getWorldProgress() > 0)
+                    .triggerCondition(p -> WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || NMUtils.getWorldProgress() > PREHARDMODE)
                     .parents(ENTER_NETHER)
                     .build()
                     .setSpecial()
@@ -307,7 +309,7 @@ public class NMAchievements {
                     .name(loc("bloodMoon"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODMOON)
                     .displayLocation(11, 6)
-                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > 0)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > PREHARDMODE)
                     .parents(HARDMODE)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
@@ -573,7 +575,7 @@ public class NMAchievements {
                     .name(loc("bloodMoonWither"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER)
                     .displayLocation(10, 0)
-                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > 2)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > POSTWITHER)
                     .parents(KILLED_WITHER)
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
@@ -748,7 +750,7 @@ public class NMAchievements {
                     .name(loc("eclipse"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_ECLIPSE)
                     .displayLocation(3, 0)
-                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > 2)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > POSTWITHER)
                     .parents(KILLED_DRAGON)
                     .build()
                     .setSpecial()

@@ -7,6 +7,7 @@ import btw.entity.mob.DireWolfEntity;
 import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
@@ -21,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityWither.class)
 public abstract class EntityWitherMixin extends EntityMob {
@@ -39,7 +42,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void increaseXPYield(World w, CallbackInfo ci){
-        if (NMUtils.getWorldProgress() < 2) {
+        if (NMUtils.getWorldProgress() < NMFields.POSTWITHER) {
             this.experienceValue = 15000;
         }
         this.setSize(1.2f, 4.3f);
@@ -122,7 +125,7 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
     @Inject(method = "modSpecificOnLivingUpdate", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;gameProgressSetWitherHasBeenSummonedServerOnly()V"),cancellable = true, remap = false)
     private void manageAprilFoolsWitherSetter(CallbackInfo ci){
-        if(NMUtils.getWorldProgress() == 0 && NightmareMode.isAprilFools){
+        if(NMUtils.getWorldProgress() == PREHARDMODE && NightmareMode.isAprilFools){
             ci.cancel();
         }
     }

@@ -4,6 +4,7 @@ import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.JungleSpiderEntity;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
@@ -17,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(EntitySpider.class)
 public abstract class EntitySpiderMixin extends EntityMob{
@@ -81,7 +84,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -158,7 +161,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress()*0.2){
             double niteMultiplier = NMUtils.getNiteMultiplier();
             if (!(thisObj instanceof EntityFireSpider)) {
-                if (NMUtils.getWorldProgress() <= 1) {
+                if (NMUtils.getWorldProgress() <= NMFields.HARDMODE) {
                     target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * niteMultiplier),0));
                 } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
                     target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * niteMultiplier),1));

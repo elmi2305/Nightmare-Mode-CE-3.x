@@ -10,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
+
 @Mixin(JungleSpiderEntity.class)
 public class JungleSpiderEntityMixin extends EntitySpider{
     public JungleSpiderEntityMixin(World par1World) {
@@ -19,7 +21,7 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     @Inject(method = "attackEntityAsMob", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",ordinal = 0))
     private void addAdditionalEffects(Entity targetEntity, CallbackInfoReturnable<Boolean> cir){
         if(targetEntity instanceof EntityPlayer targetPlayer && targetPlayer.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            if(NMUtils.getWorldProgress() >=1){
+            if(NMUtils.getWorldProgress() >= HARDMODE){
                 targetPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100,1));
                 targetPlayer.addPotionEffect(new PotionEffect(Potion.poison.id,100,1));
             }
@@ -39,7 +41,7 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     }
 
     @Inject(method = "isAlwaysNeutral", at = @At("HEAD"),cancellable = true)
-    private void BugFixNeutralSpiders(CallbackInfoReturnable<Boolean> cir){
+    private void bugFixNeutralSpiders(CallbackInfoReturnable<Boolean> cir){
         cir.setReturnValue(false);
     }
 }

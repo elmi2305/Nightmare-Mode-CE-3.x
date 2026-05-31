@@ -28,6 +28,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(EntityZombie.class)
 public abstract class EntityZombieMixin extends EntityMob implements EntityZombieExt {
 
@@ -263,7 +266,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Override
     protected void entityLivingDropFewItems(boolean par1, int par2) {
-        if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (par2 * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -365,7 +368,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
 
 
-                if (progress == 1 || NightmareMode.evolvedMobs) {
+                if (progress == HARDMODE || NightmareMode.evolvedMobs) {
                     if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 68) * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0) {
                         this.setCurrentItemOrArmor(0, new ItemStack(Item.axeGold));
                         this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetGold));

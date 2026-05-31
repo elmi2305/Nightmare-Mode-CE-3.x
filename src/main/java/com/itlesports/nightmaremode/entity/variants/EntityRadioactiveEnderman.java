@@ -4,6 +4,8 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+
 public class EntityRadioactiveEnderman extends EntityEnderman {
     public EntityRadioactiveEnderman(World par1World) {
         super(par1World);
@@ -24,7 +26,7 @@ public class EntityRadioactiveEnderman extends EntityEnderman {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
-        if (bKilledByPlayer && NMUtils.getWorldProgress() > 0) {
+        if (bKilledByPlayer && NMUtils.getWorldProgress() > PREHARDMODE) {
             int dropCount = this.rand.nextInt(2 + iLootingModifier) + 1; // 0 - 1
 
             for (int i = 0; i < dropCount; ++i) {

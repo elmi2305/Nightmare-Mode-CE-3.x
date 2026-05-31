@@ -23,6 +23,7 @@ import java.util.Random;
 
 import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 import static btw.community.nightmaremode.NightmareMode.SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 
@@ -405,7 +406,7 @@ public class GuiIngameMixin extends Gui{
     }
 
     @Unique private boolean shouldShowBloodMoonCountdown(World world){
-        if(NMUtils.getWorldProgress() > 0) return true;
+        if(NMUtils.getWorldProgress() > PREHARDMODE) return true;
 
         long portalTime = world.worldInfo.getData(NightmareMode.PORTAL_TIME);
         if(portalTime > world.getWorldTime()){

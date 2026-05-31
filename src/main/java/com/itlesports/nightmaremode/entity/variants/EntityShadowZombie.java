@@ -13,6 +13,8 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 public class EntityShadowZombie extends EntityZombie {
     public EntityShadowZombie(World par1World) {
         super(par1World);
@@ -67,7 +69,7 @@ public class EntityShadowZombie extends EntityZombie {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

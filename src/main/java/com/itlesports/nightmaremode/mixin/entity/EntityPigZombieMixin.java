@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(EntityPigZombie.class)
 public class EntityPigZombieMixin extends EntityZombie {
     @Shadow private int angerLevel;
@@ -86,7 +88,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.dropItem(bloodOrbID, 1);
                 }
             }
-            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+            if (NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
                 for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                     if (this.rand.nextInt(8) == 0) {
                         this.dropItem(NMItems.darksunFragment.itemID, 1);

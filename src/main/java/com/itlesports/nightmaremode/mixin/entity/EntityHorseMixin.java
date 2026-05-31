@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+
 @Mixin(EntityHorse.class)
 public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTamingClient, IPlayerDirectionTracker {
 
@@ -120,7 +122,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

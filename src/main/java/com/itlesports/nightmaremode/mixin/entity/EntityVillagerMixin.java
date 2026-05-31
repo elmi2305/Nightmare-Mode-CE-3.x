@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
+import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
+
 
 @Mixin(EntityVillager.class)
 public abstract class EntityVillagerMixin extends EntityAgeable implements IMerchant, INpc {
@@ -56,7 +58,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Inject(method = "updateAITick", at = @At("HEAD"))
     private void resetVillagerTrades(CallbackInfo ci) {
         int switchingConstant = 48000;
-        if(NMUtils.getWorldProgress() > 1){
+        if(NMUtils.getWorldProgress() > HARDMODE){
             switchingConstant = 24000;
         }
         if(NightmareMode.fastVillagers){

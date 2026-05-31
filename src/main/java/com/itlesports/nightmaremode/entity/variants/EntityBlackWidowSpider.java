@@ -5,6 +5,8 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+
 public class EntityBlackWidowSpider extends EntitySpider {
 
     public EntityBlackWidowSpider(World par1World) {
@@ -23,7 +25,7 @@ public class EntityBlackWidowSpider extends EntitySpider {
             int dropCount = this.rand.nextInt(2 + iLootingModifier); // 0 - 1
 
             for (int i = 0; i < dropCount; ++i) {
-                if (this.rand.nextInt(16) == 0 && NMUtils.getWorldProgress() > 0) {
+                if (this.rand.nextInt(16) == 0 && NMUtils.getWorldProgress() > PREHARDMODE) {
                     this.dropItem(NMItems.spiderFangs.itemID, 1);
                 }
                 if(this.rand.nextInt(4) == 0){

@@ -24,6 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
+import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+
 
 @Mixin(EntityMob.class)
 public abstract class EntityMobMixin extends EntityCreature implements EntityLivingAccessor{
@@ -37,7 +40,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     public void onDeath(DamageSource dmgSource) {
 //        System.out.println(this.worldObj.isRemote + " " + this.getEntityName());
         boolean client = this.worldObj.isRemote;
-        boolean shouldActivate = NMUtils.getIsBloodMoon() && NMUtils.getWorldProgress() > 0;
+        boolean shouldActivate = NMUtils.getIsBloodMoon() && NMUtils.getWorldProgress() > PREHARDMODE;
         if (shouldActivate) {
 
             AxisAlignedBB aabb = this.boundingBox.expand(16, 8, 16);
@@ -405,7 +408,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
 
-        if (NMUtils.getWorldProgress() > 1 && this.ticksExisted % 40 == 0) {
+        if (NMUtils.getWorldProgress() > HARDMODE && this.ticksExisted % 40 == 0) {
             if(this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID){
                 int i = MathHelper.floor_double(this.posX);
                 int j = MathHelper.floor_double(this.posY - 1);

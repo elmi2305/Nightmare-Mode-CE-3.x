@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static btw.community.nightmaremode.NightmareMode.DEFEATED_BM;
+import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
@@ -201,7 +203,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NMUtils.getWorldProgress() == 0){return false;}
+        if(NMUtils.getWorldProgress() == PREHARDMODE){return false;}
         if(world.provider.dimensionId == NMFields.UNDERWORLD_DIMENSION){return false;}
         return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
     }
@@ -211,7 +213,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsEclipse(World world, int dayCount){
-        if(NMUtils.getWorldProgress() <= 2){return false;}
+        if(NMUtils.getWorldProgress() <= POSTWITHER){return false;}
         return !this.getIsNightFromWorldTime(world) && dayCount % 2 == 0;
     }
 }

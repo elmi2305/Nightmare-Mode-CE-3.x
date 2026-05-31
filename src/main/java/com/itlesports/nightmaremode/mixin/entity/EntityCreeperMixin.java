@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
+import static com.itlesports.nightmaremode.util.NMFields.*;
+
 @Mixin(EntityCreeper.class)
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
 
@@ -36,7 +38,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -280,9 +282,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return (3f + bloodmoonModifier) * niteModifier * 1f * aprilFoolsExplosionModifier;
         }
-        if(NMUtils.getWorldProgress() >= 2){
+        if(NMUtils.getWorldProgress() >= POSTWITHER){
             return (4.2f + bloodmoonModifier + eclipseModifier) * niteModifier * 1f * aprilFoolsExplosionModifier;
-        } else if(NMUtils.getWorldProgress() == 1){
+        } else if(NMUtils.getWorldProgress() == HARDMODE){
             return (3.6f + bloodmoonModifier + eclipseModifier) * niteModifier * 1f * aprilFoolsExplosionModifier;
         }
         return (3.375f + bloodmoonModifier + eclipseModifier) * niteModifier * 1f * aprilFoolsExplosionModifier;
@@ -343,7 +345,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private int shouldSpawnCharged() {
         EntityCreeper self = (EntityCreeper) (Object) this;
         int progress = NMUtils.getWorldProgress();
-        boolean canSpawnCharged = progress > 0 || NightmareMode.evolvedMobs;
+        boolean canSpawnCharged = progress > PREHARDMODE || NightmareMode.evolvedMobs;
         boolean isHostile = self.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
         if (canSpawnCharged) {

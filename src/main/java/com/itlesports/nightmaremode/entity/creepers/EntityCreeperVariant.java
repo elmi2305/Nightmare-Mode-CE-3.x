@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Random;
 
-import static com.itlesports.nightmaremode.util.NMFields.PACKET_CREEPER_FIRE;
+import static com.itlesports.nightmaremode.util.NMFields.*;
 
 public class EntityCreeperVariant extends EntityMob implements EntityWithCustomPacket {
     // this is an extension of the creeper class that has all the functionality implemented from the EntityCreeperMixin, though this corresponds to the variants
@@ -363,7 +363,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
     }
     protected void doEclipseDrops(boolean bKilledByPlayer, int iLootingModifier) {
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > 2)) {
+        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (iLootingModifier * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -600,12 +600,12 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         boolean isBloodMoon = NMUtils.getIsBloodMoon();
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-        if((progress > 0 || NightmareMode.evolvedMobs) && (this.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
+        if((progress > PREHARDMODE || NightmareMode.evolvedMobs) && (this.rand.nextFloat() * NMUtils.getNiteMultiplier()) < 0.15 + (progress - 1) * 0.03){
             if(this.rand.nextInt(10) == 0 && this.dimension == 0) {
                 this.setCustomNameTag("Terrence");
             }
             return 1;
-        } else if((this.dimension == -1 && !(this.variantType == PACKET_CREEPER_FIRE)) && (progress > 0 || NightmareMode.evolvedMobs)){
+        } else if((this.dimension == -1 && !(this.variantType == PACKET_CREEPER_FIRE)) && (progress > PREHARDMODE || NightmareMode.evolvedMobs)){
             return 1;
         } else if(this.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 1;
