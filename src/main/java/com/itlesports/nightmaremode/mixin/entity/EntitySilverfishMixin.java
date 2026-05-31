@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.entity.EntityMushWorm;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +35,7 @@ public class EntitySilverfishMixin extends EntityMob{
             }
         }
     }
-    @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntitySilverfish;worldObj:Lnet/minecraft/src/World;", ordinal = 0), cancellable = true)
+    @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntitySilverfish;worldObj:Lnet/minecraft/src/World;", ordinal = 0, opcode = Opcodes.GETFIELD), cancellable = true)
     private void returnIfMushWorm(CallbackInfo ci){
         EntitySilverfish sf = (EntitySilverfish) (Object)this;
         if(sf instanceof EntityMushWorm) {ci.cancel();}
