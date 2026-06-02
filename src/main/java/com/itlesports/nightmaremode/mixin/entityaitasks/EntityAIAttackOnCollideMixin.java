@@ -59,7 +59,7 @@ public abstract class EntityAIAttackOnCollideMixin {
         double dy = target.posY -  attacker.posY;
         if((attacker.ticksExisted & 31) == 0 && dy > (attacker.getEyeHeight()) && dy < (attacker.height + Math.sqrt(computedRangeSq))){
             double dx = target.posX - attacker.posX;
-            double dy2 = (target.posY - target.height / 2) - attacker.posY - 0.5;
+            double dy2 = (target.posY - target.height / 2) - attacker.posY - 0.3;
             double dz = target.posZ - attacker.posZ;
             double dJumpedDistSq = dx * dx + dy2 * dy2 + dz * dz;
 
