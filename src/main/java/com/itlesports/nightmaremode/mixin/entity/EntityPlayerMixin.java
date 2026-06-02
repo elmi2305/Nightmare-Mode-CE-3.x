@@ -513,6 +513,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             case CLEAR_GLOOM -> this.worldObj.getWorldTime() > 120000;
             case CLEAR_HARDMODE -> NMUtils.getWorldProgress() > PREHARDMODE;
             case CLEAR_WEEK -> this.worldObj.getWorldTime() > 140000;
+            case CLEAR_GET_ITEM -> p.inventory.hasItemStack(conf.getItemStack());
             default -> false;
         };
     }

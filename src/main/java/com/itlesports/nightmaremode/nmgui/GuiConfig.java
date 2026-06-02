@@ -471,7 +471,14 @@ public class GuiConfig extends GuiScreen {
                 int starY = y + 2;
                 int hitboxSize = 20;
 
-                String clearCondition = I18n.getString(option.getConfigEnum().getClearCondition().getNameUnlocalized());
+                NMConfUtils.CONFIG.ClearCondition clearCondition = option.getConfigEnum().getClearCondition();
+
+                String clearConditionText;
+                if(clearCondition == NMConfUtils.CONFIG.ClearCondition.CLEAR_GET_ITEM){
+                    clearConditionText = I18n.getString(clearCondition.getNameUnlocalized()) + ": " + I18n.getString(option.configEnum.getItemStack().getDisplayName());
+                } else {
+                    clearConditionText = I18n.getString(clearCondition.getNameUnlocalized());
+                }
 
                 GuiInvisibleTooltipArea starTooltipArea = new GuiInvisibleTooltipArea(
                         200 + option.getId(),
@@ -479,7 +486,7 @@ public class GuiConfig extends GuiScreen {
                         starY - 2,
                         hitboxSize + 4,
                         hitboxSize + 4,
-                        clearCondition
+                        clearConditionText
                 );
                 this.buttonList.add(starTooltipArea);
             }
