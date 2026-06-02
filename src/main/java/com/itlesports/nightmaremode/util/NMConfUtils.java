@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.util;
 
+import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.nmgui.GuiConfig;
+import btw.item.BTWItems;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 
 import javax.crypto.BadPaddingException;
@@ -57,7 +59,7 @@ public class NMConfUtils {
         MAGIC_MONSTERS(6, "magicMonsters", ClearCondition.CLEAR_HARDMODE){
             @Override public boolean isActive() {return NightmareMode.magicMonsters;}
         },
-        NO_HIT(7, "noHit", ClearCondition.CLEAR_DRAGON){
+        NO_HIT(7, "noHit", ClearCondition.CLEAR_GET_ITEM, new ItemStack(BTWBlocks.aestheticVegetation, 1, 2)){
             @Override public boolean isActive() {return NightmareMode.noHit;}
         },
         NITE(8, "nite", ClearCondition.CLEAR_DRAGON){
@@ -82,19 +84,29 @@ public class NMConfUtils {
         private final int id;
         private final String fieldName;
         private final ClearCondition clearCondition;
+        private ItemStack itemStack;
 
         CONFIG(int id, String fieldName, ClearCondition clearCondition) {
             this.id = id;
             this.fieldName = fieldName;
             this.clearCondition = clearCondition;
+            this.itemStack = null;
+        }
+        CONFIG(int id, String fieldName, ClearCondition clearCondition, int itemID) {
+            this(id, fieldName, clearCondition);
+            this.itemStack = new ItemStack(itemID, 1, 0);
+        }
+        CONFIG(int id, String fieldName, ClearCondition clearCondition, ItemStack stack) {
+            this(id, fieldName, clearCondition);
+            this.itemStack = stack;
         }
 
         public int getId() {
-            return id;
+            return this.id;
         }
-
+        public ItemStack getItemStack() {return this.itemStack;}
         public String getFieldName() {
-            return fieldName;
+            return this.fieldName;
         }
         public ClearCondition getClearCondition(){
             return this.clearCondition;
@@ -106,10 +118,14 @@ public class NMConfUtils {
             CLEAR_DRAGON("gui.config.clear.dragon"),
             CLEAR_BW("gui.config.clear.bw"),
             CLEAR_WEEK("gui.config.clear.week"),
-            CLEAR_GLOOM("gui.config.clear.gloom");
+            CLEAR_GLOOM("gui.config.clear.gloom"),
+            CLEAR_GET_ITEM("gui.config.clear.item");
 
             ClearCondition(String unlocalizedName){
                 this.unlocalizedName = unlocalizedName;
+            }
+            ClearCondition(String unlocalizedName, int itemID){
+                this(unlocalizedName);
             }
 
             private final String unlocalizedName;
