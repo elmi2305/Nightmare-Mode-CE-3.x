@@ -197,7 +197,9 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.motionZ = vector.zCoord * 0.2;
                 this.timeSinceIgnited = 0;
                 this.fuseTime = 20;
-                this.motionY = 0.5f;
+                if (this.posY - 1 < target.posY) {
+                    this.motionY = 0.5f;
+                }
             } else{
                 this.setDead();
             }
