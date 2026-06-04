@@ -30,30 +30,36 @@ public class RenderSkeletonMixin {
 
     @Inject(method = "func_110860_a", at = @At("HEAD"), cancellable = true)
     private void manageVariantTextures(EntitySkeleton skeleton, CallbackInfoReturnable<ResourceLocation> cir) {
-        if(skeleton.getSkeletonType().id() == NMFields.SKELETON_JUNGLE){
+        int id = skeleton.getSkeletonType().id();
+
+        if(id == NMFields.SKELETON_JUNGLE){
             cir.setReturnValue(JUNGLE);
-        } else if(skeleton.getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL) {
+        } else if(id == NMFields.SKELETON_SUPERCRITICAL) {
             cir.setReturnValue(NITRO);
+        } else if(id == NMFields.SKELETON_LIGHTNING) {
+            cir.setReturnValue(LIGHTNING);
         }
-        if (!NMUtils.getIsMobEclipsed(skeleton)) {
-             if(skeleton.getSkeletonType().id() == 4){
-                cir.setReturnValue(ENDER);
-            }else if(skeleton.getSkeletonType().id() == 3){
-                cir.setReturnValue(FIRE);
-            } else if(skeleton.getSkeletonType().id() == 2){
-                cir.setReturnValue(ICE);
-            }
-        } else{
-            if(skeleton.getSkeletonType().id() == 4) {
+
+
+        if (NMUtils.getIsMobEclipsed(skeleton)) {
+            if(id == NMFields.SKELETON_ENDER) {
                 cir.setReturnValue(ENDER_ECLIPSE);
-            }else if(skeleton.getSkeletonType().id() == 3){
+            }else if(id == NMFields.SKELETON_FIRE) {
                 cir.setReturnValue(FIRE_ECLIPSE);
-            } else if(skeleton.getSkeletonType().id() == 2){
+            } else if(id == NMFields.SKELETON_ICE){
                 cir.setReturnValue(ICE_ECLIPSE);
-            } else if(skeleton.getSkeletonType().id() == 1){
+            } else if(id == NMFields.SKELETON_WITHER) {
                 cir.setReturnValue(WITHER_ECLIPSE);
-            } else if(skeleton.getSkeletonType().id() == 0){
+            } else if(id == 0){
                 cir.setReturnValue(NORMAL_ECLIPSE);
+            }
+        } else {
+             if(id == NMFields.SKELETON_ENDER){
+                cir.setReturnValue(ENDER);
+            }else if(id == NMFields.SKELETON_FIRE){
+                cir.setReturnValue(FIRE);
+            } else if(id == NMFields.SKELETON_ICE){
+                cir.setReturnValue(ICE);
             }
         }
     }
