@@ -136,15 +136,15 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     public void onUpdate() {
         if (this.isEntityAlive()) {
             if (NightmareMode.isAprilFools && this.getAttackTarget() instanceof EntityPlayer player && this.getDistanceSqToEntity(player) < 81) {
-                Vec3 lookVec = player.getLookVec(); // Player's look direction
+                Vec3 lookVec = player.getLookVec();
 
                 Vec3 directionToSquid = Vec3.createVectorHelper(
                         this.posX - player.posX,
-                        this.posY - (player.posY + player.getEyeHeight()), // From eye level
+                        this.posY - (player.posY + player.getEyeHeight()),
                         this.posZ - player.posZ
-                ).normalize(); // Normalize to get direction
+                ).normalize();
 
-                double dotProduct = lookVec.dotProduct(directionToSquid); // How aligned the vectors are
+                double dotProduct = lookVec.dotProduct(directionToSquid);
 
                 if (dotProduct < -0.2) {
                     this.copyLocationAndAnglesFrom(player);
@@ -450,14 +450,6 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     @Override
     public void onKickedByAnimal(KickingAnimal kickingAnimal) {
         this.determinedToExplode = true;
-    }
-
-    @Override
-    public void checkForScrollDrop() {
-        if (this.rand.nextInt(1000) == 0) {
-            ItemStack itemstack = new ItemStack(BTWItems.arcaneScroll, 1, Enchantment.blastProtection.effectId);
-            this.entityDropItem(itemstack, 0.0f);
-        }
     }
 
     @Override
