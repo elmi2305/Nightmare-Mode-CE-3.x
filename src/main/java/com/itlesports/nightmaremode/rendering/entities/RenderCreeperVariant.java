@@ -21,20 +21,22 @@ public class RenderCreeperVariant extends RenderLiving {
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private static final ResourceLocation creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
 
-    private static final ResourceLocation FIRE_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/firecreeper.png");
-    private static final ResourceLocation FIRE_CREEPER_TEXTURE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/firecreeperEclipseHigh.png");
-    private static final ResourceLocation FIRE_CREEPER_TEXTURE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
+    private static final ResourceLocation FIRE = new ResourceLocation("nightmare:textures/entity/firecreeper.png");
+    private static final ResourceLocation FIRE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/firecreeperEclipseHigh.png");
+    private static final ResourceLocation FIRE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
 
-    private static final ResourceLocation DUNG_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
-    private static final ResourceLocation DUNG_CREEPER_TEXTURE_OLD = new ResourceLocation("nightmare:textures/entity/creeperDungOld.png");
+    private static final ResourceLocation DUNG = new ResourceLocation("nightmare:textures/entity/creeperDung.png");
+    private static final ResourceLocation DUNG_OLD = new ResourceLocation("nightmare:textures/entity/creeperDungOld.png");
 
-    private static final ResourceLocation LIGHTNING_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/lightningCreeper.png");
+    private static final ResourceLocation LIGHTNING = new ResourceLocation("nightmare:textures/entity/lightningCreeper.png");
 
-    public static final ResourceLocation SUPER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/creeperSupercritical.png");
+    public static final ResourceLocation NITRO = new ResourceLocation("nightmare:textures/entity/creeperSupercritical.png");
 
-    private static final ResourceLocation OBSIDIAN_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmObsidianCreeper.png");
+    private static final ResourceLocation OBSIDIAN = new ResourceLocation("nightmare:textures/entity/nmObsidianCreeper.png");
 
-    private static final ResourceLocation FLOWER_CREEPER_TEXTURE = new ResourceLocation("nightmare:textures/entity/nmFlowerCreeper.png");
+    private static final ResourceLocation FLOWER = new ResourceLocation("nightmare:textures/entity/nmFlowerCreeper.png");
+
+    private static final ResourceLocation VOID = new ResourceLocation("nightmare:textures/entity/creeperVoid.png");
 
     private final ModelBase[] creeperModel = {new ModelCreeper(0), new ModelCreeper(2)};
     private final ModelDungCreeper[] creeperDungModel = {new ModelDungCreeper(0), new ModelDungCreeper(2)};
@@ -122,26 +124,29 @@ public class RenderCreeperVariant extends RenderLiving {
 
         if(entity.variantType == PACKET_CREEPER_FIRE){
             if(NMUtils.getIsMobEclipsed(entity)){
-                return FIRE_CREEPER_TEXTURE_ECLIPSE;
+                return FIRE_ECLIPSE;
             } else if(entity.isCharged()){
-                return FIRE_CREEPER_TEXTURE_CHARGED;
+                return FIRE_CHARGED;
             }
-            return FIRE_CREEPER_TEXTURE;
+            return FIRE;
         }
         else if(entity.variantType == PACKET_CREEPER_DUNG){
-            return usingLegacy ? DUNG_CREEPER_TEXTURE_OLD : DUNG_CREEPER_TEXTURE;
+            return usingLegacy ? DUNG_OLD : DUNG;
         }
         else if(entity.variantType == PACKET_CREEPER_LIGHTNING){
-            return LIGHTNING_CREEPER_TEXTURE;
+            return LIGHTNING;
         }
         else if(entity.variantType == PACKET_CREEPER_OBSIDIAN){
-            return OBSIDIAN_CREEPER_TEXTURE;
+            return OBSIDIAN;
         }
         else if(entity.variantType == PACKET_CREEPER_SUPERCRITICAL){
-            return SUPER_CREEPER_TEXTURE;
+            return NITRO;
         }
         else if(entity.variantType == PACKET_CREEPER_FLOWER){
-            return FLOWER_CREEPER_TEXTURE;
+            return FLOWER;
+        }
+        else if(entity.variantType == PACKET_CREEPER_VOID){
+            return VOID;
         }
         return creeperTextures;
     }
