@@ -34,6 +34,8 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
     private void skeletonArrowImpactEffects(CallbackInfo ci, int var16, Vec3 var17, Vec3 var3, MovingObjectPosition mop) {
         if (this.shootingEntity instanceof EntitySkeleton skeleton && mop.entityHit instanceof EntityLivingBase hitEntity) {
             int id = skeleton.getSkeletonType().id();
+            World w = this.worldObj;
+
 
             if (id == NMFields.SKELETON_ICE) {
                 hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 0));
@@ -58,9 +60,14 @@ public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
                     }
                 }
 
-            } else if (id == NMFields.SKELETON_SUPERCRITICAL) {
-                this.worldObj.newExplosion(skeleton, this.posX, this.posY, this.posZ, 1.2f, this.isBurning() && !this.isBeingRainedOn(), true);
+            } else {
+                if (id == NMFields.SKELETON_SUPERCRITICAL) {
+                    w.newExplosion(skeleton, this.posX, this.posY, this.posZ, 1.2f, this.isBurning() && !this.isBeingRainedOn(), true);
+                } else if (id == NMFields.SKELETON_LIGHTNING) {
+                    w.addWeatherEffect(new EntityLightningBolt(w, hitEntity.posX, hitEntity.posY, hitEntity.posZ));
+                }
             }
+
         }
     }
 

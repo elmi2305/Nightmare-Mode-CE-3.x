@@ -2,10 +2,12 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.component.VariantComponent;
 import api.world.WorldUtils;
+import api.world.difficulty.DifficultyParam;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.InfiniteArrowEntity;
 import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
+import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
+import static com.itlesports.nightmaremode.util.NMFields.SKELETON_ENDER;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
@@ -32,9 +35,20 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @Shadow public abstract boolean setSkeletonType(int id);
     @Shadow public abstract VariantComponent.EntityVariant getSkeletonType();
 
+    @Shadow public abstract void initComponents();
+
+    @Shadow
+    private SkeletonArrowAttackBehavior aiRangedAttack;
+
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
     }
+
+//    @Inject(method = "<init>", at = @At("TAIL"))
+//    private void doComponents(CallbackInfo ci){
+//        this.initComponents();
+//        System.out.println(this.getSkeletonType().id());
+//    }
 
 
     @Override
@@ -187,16 +201,21 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             }
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            if(this.getSkeletonType().id() == NMFields.SKELETON_WITHER){
+            int id = this.getSkeletonType().id();
+
+            if(id == NMFields.SKELETON_WITHER){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * niteMultiplier);
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * niteMultiplier)));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
-            if(this.getSkeletonType().id() == NMFields.SKELETON_ENDER){
+            if(id == NMFields.SKELETON_ENDER){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * niteMultiplier);
-                // 24.0 -> 30.0 -> 36.0 -> 40.0
+            }
+
+            if(id == NMFields.SKELETON_LIGHTNING){
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
             }
 
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 + (progress + 1) + (isEclipse ? 1 : 0)) * niteMultiplier);
@@ -301,8 +320,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
 
-    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
-    private void manageSkeletonVariants(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
+    @Inject(method = "addRandomArmor", at = @At("HEAD"))
+    private void manageSkeletonVariants(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
@@ -326,19 +345,24 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     setJungleSkeleton();
                 } else if (shouldSpawnSuperCriticalSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
                     setSuperCriticalSkeleton();
+                } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier)){
+                    setLightningSkeleton();
                 }
             }
         }
         // overall chances to be a variant (non eclipse): 2% -> 13% -> 30% -> 41%
-
-        // skeleton types:
-        // 0: regular
-        // 1: wither
-        // 2: ice
-        // 3: fire
-        // 4: ender
-        // 5: jungle
-        // 6: supercritical
+    }
+    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
+    private void giveItemsForVariant(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
+        int id = this.getSkeletonType().id();
+        if(id == NMFields.SKELETON_ICE){
+            this.setHelmet(13260, BTWItems.woolHelmet);
+        } else if (id == NMFields.SKELETON_FIRE){
+            this.clearArmor();
+            this.setFire(10000);
+        } else if(id == SKELETON_ENDER){
+            this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
+        }
     }
     @Unique
     private void assignEclipseSkeletonVariant() {
@@ -421,7 +445,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"))
     private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if (this.worldObj != null) {
-            if(this.getSkeletonType().id() == NMFields.SKELETON_WITHER){
+            if(this.getSkeletonType().id() == NMFields.SKELETON_FIRE){
                 if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                     for(int i = -2; i<=2; i+=2) {
                         double var3 = target.posX - this.posX + i;
@@ -454,13 +478,17 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && (this.rand.nextInt(NMUtils.divByNiteMultiplier(60, 20)) < 3 + (NMUtils.getWorldProgress()*2) && this.getSkeletonType().id() != NMFields.SKELETON_ENDER && this.getSkeletonType().id() != NMFields.SKELETON_ICE)){
+            Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+            int progress = NMUtils.getWorldProgress();
+            int skeletonType = this.getSkeletonType().id();
+
+            if(isHostile && (this.rand.nextInt(NMUtils.divByNiteMultiplier(60, 20)) < 3 + (progress *2) && skeletonType != NMFields.SKELETON_ENDER && skeletonType != NMFields.SKELETON_ICE)){
                 EntityBurningArrow newArrow = new EntityBurningArrow(this.worldObj, arrow);
                 this.worldObj.spawnEntityInWorld(newArrow);
                 arrow.setDead();
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double((2.0 + (NMUtils.getWorldProgress() * 2 - (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 0 : 1)))) * NMUtils.getNiteMultiplier());
+                arrow.setDamage(MathHelper.floor_double((2.0 + (progress * 2 - (isHostile ? 0 : 1)))) * NMUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
             }
         }
@@ -486,7 +514,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     @ModifyConstant(method = "<init>", constant = @Constant(intValue = 60))
     private int modifyAttackInterval(int constant){
         if (this.worldObj != null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-
+            // cannot read variants here
             return switch (NMUtils.getWorldProgress()) {
                 case 0 -> NMUtils.divByNiteMultiplier(60, 20);
                 case 1 -> NMUtils.divByNiteMultiplier(50, 20);
@@ -526,7 +554,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         }
 
         int iFlameLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, this.getHeldItem());
-        if (iFlameLevel > 0 || this.getSkeletonType().id() == NMFields.SKELETON_WITHER || this.isBurning() && this.rand.nextFloat() < 0.3F) {
+        if (iFlameLevel > 0 || this.getSkeletonType().id() == NMFields.SKELETON_WITHER || this.isBurning() && this.rand.nextFloat() < 0.3F && this.getSkeletonType().id() != NMFields.SKELETON_LIGHTNING) {
             arrow.setFire(100);
         }
 
@@ -547,9 +575,35 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
     }
     @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0, remap = false)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
-        return 7;
+        return 8;
     }
 
+    @Inject(method = "lambda$initComponents$0", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent$EntityVariant;id()I"))
+    private void setVariantAttributes(VariantComponent.EntityVariant variant, CallbackInfoReturnable<Boolean> cir){
+        int id = variant.id();
+        int progress = NMUtils.getWorldProgress();
+        float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.4f : 1;
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+        double niteMultiplier = NMUtils.getNiteMultiplier();
+
+
+        if(id == NMFields.SKELETON_WITHER){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * niteMultiplier);
+            // 24.0 -> 28.0 -> 32.0 -> 36.0
+        } else{
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * niteMultiplier)));
+            // 16.0 -> 23.0 -> 30.0 -> 37.0
+        }
+        if(id == NMFields.SKELETON_ENDER){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * niteMultiplier);
+        }
+
+        if(id == NMFields.SKELETON_LIGHTNING){
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(16 * niteMultiplier);
+        }
+    }
     @Unique
     private boolean shouldSpawnIceSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
         double chance = (0.04 + progress * 0.02) * bloodMoonModifier * niteMultiplier;
@@ -577,26 +631,35 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         double chance = (0.04 + progress * 0.06 + desertBonus) * bloodMoonModifier * niteMultiplier;
         return rand.nextFloat() < chance;
     }
+    @Unique
+    private boolean shouldSpawnLightningSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
+        if(!NightmareMode.moreVariants){
+            return false;
+        }
+        if(!this.worldObj.isRaining()) return false;
+
+        double thunderBonus = 0.02 + (this.worldObj.isThundering() ? 0.4 : 0);
+        double chance = (0.04 + progress * 0.06 + thunderBonus) * bloodMoonModifier * niteMultiplier;
+        return rand.nextFloat() < chance;
+    }
+
 
     @Unique
     private void setEnderSkeleton() {
         this.setSkeletonType(NMFields.SKELETON_ENDER);
-        this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(8.0d);
     }
 
     @Unique
     private void setFireSkeleton() {
         this.setSkeletonType(NMFields.SKELETON_FIRE);
-        this.clearArmor();
-        this.setFire(10000);
+
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0d);
     }
 
     @Unique
     private void setIceSkeleton() {
         this.setSkeletonType(NMFields.SKELETON_ICE);
-        this.setHelmet(13260, BTWItems.woolHelmet);
     }
 
     @Unique
@@ -609,6 +672,20 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
         this.setSkeletonType(NMFields.SKELETON_SUPERCRITICAL);
+    }
+
+    @Unique
+    private void setLightningSkeleton() {
+        this.setSkeletonType(NMFields.SKELETON_LIGHTNING);
+        this.aiRangedAttack = this.worldObj != null ? new SkeletonArrowAttackBehavior(
+                (EntitySkeleton)(Object)this,
+                0.8f,
+                200,
+                12f * (Float) this.worldObj.getDifficultyParameter(DifficultyParam.SkeletonTargetDistanceMultiplier.class),
+                (Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.AreSkeletonsPyromaniacs.class))
+
+                : new SkeletonArrowAttackBehavior((EntitySkeleton)(Object)this, 1.0f, 60, 15.0f);
+
     }
 
     @Unique

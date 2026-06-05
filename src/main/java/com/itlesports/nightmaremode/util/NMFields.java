@@ -37,6 +37,7 @@ public class NMFields {
     public static final int SKELETON_ENDER = 4;
     public static final int SKELETON_JUNGLE = 5;
     public static final int SKELETON_SUPERCRITICAL = 6;
+    public static final int SKELETON_LIGHTNING = 7;
 
     // blaze types
     public static final int BLAZE_SHADOW = 1;
