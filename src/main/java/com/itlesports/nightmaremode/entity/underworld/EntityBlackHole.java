@@ -131,10 +131,10 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
             falloff *= falloff;
 
             boolean isPlayer = living instanceof EntityPlayer;
-            double maxPull = isPlayer ? 0.42D : 0.75D;
+            double maxPull = isPlayer ? 0.42D : 1.75D;
 
             // weak pull even at the edge of the radius
-            double minPull = maxPull * 0.08D;
+            double minPull = maxPull * 0.04D;
 
             double pull = minPull + (maxPull - minPull) * falloff;
 
@@ -154,6 +154,10 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
                         dz * pull
                 );
             } else {
+                living.isAirBorne = true;
+                living.onGround = false;
+                living.velocityChanged = true;
+
                 living.motionX += dx * pull;
                 living.motionY += dy * pull * 0.75D + pull * 0.15D;
                 living.motionZ += dz * pull;
