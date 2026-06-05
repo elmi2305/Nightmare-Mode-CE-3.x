@@ -104,7 +104,11 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
     }
 
     private void pullNearbyEntities() {
-        AxisAlignedBB box = this.boundingBox.expand(this.radius, this.radius * 0.9D, this.radius);
+        AxisAlignedBB box = this.boundingBox.expand(
+                this.radius * 3.5D,
+                this.radius * 3.35D,
+                this.radius * 3.5D
+        );
         List<EntityLivingBase> entities = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
 
         for (EntityLivingBase living : entities) {
@@ -118,35 +122,60 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
 
             double dist = Math.sqrt(distSq);
 
-            // Stronger pull for players (fixes the "players not affected" issue)
-            boolean isPlayer = living instanceof EntityPlayer;
-            double pullStrength = isPlayer ? 0.285D : 0.225D;
+            double normalizedDist = dist / this.radius;
+            normalizedDist = Math.min(1.0D, Math.max(0.0D, normalizedDist));
 
-            double pull = pullStrength / (dist + 0.8D);
+            double falloff = 1.0D - normalizedDist;
+
+
+            falloff *= falloff;
+
+            boolean isPlayer = living instanceof EntityPlayer;
+            double maxPull = isPlayer ? 0.42D : 0.75D;
+
+            // weak pull even at the edge of the radius
+            double minPull = maxPull * 0.08D;
+
+            double pull = minPull + (maxPull - minPull) * falloff;
+
+            dx /= dist;
+            dy /= dist;
+            dz /= dist;
+
 //            System.out.println((this.worldObj.isRemote ? "CLIENT" : "SERVER") + " " + (living.worldObj.isRemote ? "CLIENT" : "SERVER"));
-            if(isPlayer){
+            if (isPlayer) {
                 living.isAirBorne = true;
                 living.onGround = false;
-//                living.setJumping(true);
                 living.velocityChanged = true;
-                living.addVelocity((float) (dx*pull), (float) (dy * pull * 0.75D + 0.035D), (float) (dz*pull));
+
+                living.addVelocity(
+                        dx * pull,
+                        dy * pull * 0.75D + pull * 0.15D,
+                        dz * pull
+                );
             } else {
                 living.motionX += dx * pull;
-                living.motionY += dy * pull * 0.75D + 0.035D; // upward bias
+                living.motionY += dy * pull * 0.75D + pull * 0.15D;
                 living.motionZ += dz * pull;
             }
-            // Close range: spin + violent flinging (orbital chaos until explosion)
-            if (dist < 2.7D) {
-                // Perpendicular spin force
-                double spin = 0.195D;
+
+
+            double chaosRadius = this.radius * 0.35D;
+
+            if (dist < chaosRadius) {
+                double proximity = 1.0D - (dist / chaosRadius);
+
+                double spin = 0.08D + proximity * 0.22D;
+
                 living.motionX += -dz * spin;
                 living.motionZ +=  dx * spin;
 
-                // Occasional big random flings
                 if (this.rand.nextInt(5) == 0) {
-                    living.motionX += (this.rand.nextDouble() - 0.5D) * 0.85D;
-                    living.motionY += this.rand.nextDouble() * 0.6D + 0.2D;
-                    living.motionZ += (this.rand.nextDouble() - 0.5D) * 0.85D;
+                    double fling = proximity * 0.85D;
+
+                    living.motionX += (this.rand.nextDouble() - 0.5D) * fling;
+                    living.motionY += this.rand.nextDouble() * fling;
+                    living.motionZ += (this.rand.nextDouble() - 0.5D) * fling;
                 }
             }
         }
