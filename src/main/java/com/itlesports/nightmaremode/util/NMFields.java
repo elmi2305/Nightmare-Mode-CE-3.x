@@ -20,6 +20,7 @@ public class NMFields {
     public static final int PACKET_CREEPER_LIGHTNING = 22;
     public static final int PACKET_CREEPER_FLOWER = 23;
     public static final int PACKET_CREEPER_VOID = 24;
+    public static final int PACKET_CREEPER_GEL = 25;
 
     // other entities
     public static final int PACKET_SPORE = 40; // EntityPollenCloud
