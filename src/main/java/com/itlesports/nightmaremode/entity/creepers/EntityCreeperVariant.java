@@ -413,6 +413,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                         }
                         this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
                     }
+                    this.onDeathEffect();
                     this.setDead();
 
                     return true;
