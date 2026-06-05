@@ -320,8 +320,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         return skelly.worldObj.rayTraceBlocks_do_do(skelly.worldObj.getWorldVec3Pool().getVecFromPool(skelly.posX, skelly.posY + (double) skelly.getEyeHeight(), skelly.posZ), skelly.worldObj.getWorldVec3Pool().getVecFromPool(targetPlayer.posX, targetPlayer.posY + (double) targetPlayer.getEyeHeight(), targetPlayer.posZ), false, true) != null;
     }
 
-    @Inject(method = "addRandomArmor", at = @At("HEAD"))
-    private void manageSkeletonVariants(CallbackInfo ci){
+    @Inject(method = "onSpawnWithEgg", at = @At("HEAD"))
+    private void manageSkeletonVariants(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
@@ -345,7 +345,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     setJungleSkeleton();
                 } else if (shouldSpawnSuperCriticalSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
                     setSuperCriticalSkeleton();
-                } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier)){
+                } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier) || true){
                     setLightningSkeleton();
                 }
             }
@@ -603,6 +603,8 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(16 * niteMultiplier);
         }
+
+        this.setHealth((float) this.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue());
     }
     @Unique
     private boolean shouldSpawnIceSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
