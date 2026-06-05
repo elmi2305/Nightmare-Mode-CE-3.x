@@ -26,6 +26,8 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityNitroCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityDungCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityLightningCreeper.class, new RenderCreeperVariant());
+        RenderManager.addEntityRenderer(EntityVoidCreeper.class, new RenderCreeperVariant());
+
         RenderManager.addEntityRenderer(EntityFauxVillager.class, new RenderFauxVillager());
         RenderManager.addEntityRenderer(EntityZombieImposter.class, new RenderZombieVariant());
         RenderManager.addEntityRenderer(EntityBloodMoonSkeleton.class, new RenderSkeleton());
