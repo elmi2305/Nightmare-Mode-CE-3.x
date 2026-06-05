@@ -29,6 +29,7 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
     private void checkHeightDifference(CallbackInfoReturnable<Boolean> cir){
         if(this.swellingCreeper.getAttackTarget() != null){
             EntityLivingBase target = this.swellingCreeper.getAttackTarget();
+            if(target == null) return;
             // if the original return value failed
             double dx = this.swellingCreeper.posX - target.posX;
             double dz = this.swellingCreeper.posZ - target.posZ;
