@@ -19,12 +19,13 @@ public class NMFields {
     public static final int PACKET_CREEPER_DUNG = 21;
     public static final int PACKET_CREEPER_LIGHTNING = 22;
     public static final int PACKET_CREEPER_FLOWER = 23;
+    public static final int PACKET_CREEPER_VOID = 24;
 
     // other entities
-    public static final int PACKET_SPORE = 24; // EntityPollenCloud
-    public static final int PACKET_BLACKHOLE = 25; // EntityBlackHole
-    public static final int PACKET_BLOOD_ALTAR = 26; // EntityBloodAltar
-    public static final int PACKET_RITUAL_ENTITY = 27; // EntityRitualPortal
+    public static final int PACKET_SPORE = 40; // EntityPollenCloud
+    public static final int PACKET_BLACKHOLE = 41; // EntityBlackHole
+    public static final int PACKET_BLOOD_ALTAR = 42; // EntityBloodAltar
+    public static final int PACKET_RITUAL_ENTITY = 43; // EntityRitualPortal
 
     // vehicle types
     public static final int VEHICLE_SPORE = 2300;
