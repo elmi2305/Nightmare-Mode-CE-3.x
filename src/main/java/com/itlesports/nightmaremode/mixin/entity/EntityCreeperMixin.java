@@ -230,10 +230,11 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         // 8 ticks before it explodes
         if (this.timeSinceIgnited == (this.getFuseTime() - 8) && creeper.getCreeperState() == 1 && creeper.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             EntityPlayer target = creeper.worldObj.getClosestVulnerablePlayerToEntity(creeper,6);
-            if (this.posY - 2.5 < target.posY) {
-                creeper.motionY = 0.38;
-            }
+
             if(target != null) {
+                if (this.posY - 2.5 < target.posY) {
+                    creeper.motionY = 0.38;
+                }
                 double var1 = target.posX - creeper.posX;
                 double var2 = target.posZ - creeper.posZ;
                 Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
