@@ -822,6 +822,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmMerchant12", 5, 2, NMItems.creeperTear.itemID, 0, 1, 1);
         buy("nmMerchant13", 5, 2, NMItems.shadowRod.itemID, 0, 1, 2);
         sell("nmMerchant14", 5, 2, BTWItems.soulFlux.itemID, 0, 4, 8);
+        convert("nmMerchant20", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,1,2), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("blast")), 0.55f);
         sell("nmMerchant15", 5, 3, Item.blazeRod.itemID, 0, 2, 4);
         sell("nmMerchant16", 5, 3, Item.nameTag.itemID, 0, 2, 4);
         buy("nmMerchant17", 5, 3, NMItems.spiderFangs.itemID, 0, 2, 4);
