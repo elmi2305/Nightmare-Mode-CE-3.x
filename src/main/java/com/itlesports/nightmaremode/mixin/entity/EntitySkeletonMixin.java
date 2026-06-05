@@ -345,7 +345,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
                     setJungleSkeleton();
                 } else if (shouldSpawnSuperCriticalSkeleton(progress, bloodMoonModifier, niteMultiplier)) {
                     setSuperCriticalSkeleton();
-                } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier) || true){
+                } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier)){
                     setLightningSkeleton();
                 }
             }
