@@ -21,7 +21,6 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
         this.noClip = true;
         this.isImmuneToFire = true;
         this.renderDistanceWeight = 20.0D;
-        this.radius = 10.0D;
     }
 
     public EntityBlackHole(World world, double rad) {
@@ -93,9 +92,10 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
 
     private void spawnBlackHoleParticles() {
         for (int i = 0; i < 18; i++) {
-            double ox = (this.rand.nextDouble() - 0.5D) * this.radius * 2.0D;
-            double oy = (this.rand.nextDouble() - 0.5D) * this.radius * 1.6D;
-            double oz = (this.rand.nextDouble() - 0.5D) * this.radius * 2.0D;
+            System.out.println(this.radius);
+            double ox = (this.rand.nextDouble() - 0.5D) * this.radius * 5.0D;
+            double oy = (this.rand.nextDouble() - 0.5D) * this.radius * 3.6D;
+            double oz = (this.rand.nextDouble() - 0.5D) * this.radius * 5.0D;
             this.worldObj.spawnParticle("largesmoke", this.posX + ox, this.posY + oy, this.posZ + oz, -ox * 0.1D, -oy * 0.1D, -oz * 0.1D);
             if (this.rand.nextInt(4) == 0) {
                 this.worldObj.spawnParticle("portal", this.posX + ox, this.posY + oy, this.posZ + oz, -ox * 0.3D, -oy * 0.3D, -oz * 0.3D);
@@ -201,11 +201,15 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         nbt.setInteger("Life", this.lifeTimer);
+        nbt.setDouble("radius", this.radius);
+        super.writeEntityToNBT(nbt);
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         this.lifeTimer = nbt.getInteger("Life");
+        this.radius = nbt.getDouble(("radius"));
+        super.readEntityFromNBT(nbt);
     }
 
     @Override
@@ -234,6 +238,7 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
             dataStream.writeInt(NMFields.PACKET_BLACKHOLE);
             dataStream.writeInt(this.entityId);
             dataStream.writeDouble(this.radius);
+            System.out.println("Sending radius = " + this.radius);
             new Packet24MobSpawn(this).writePacketData(dataStream);
         } catch (Exception exception) {
             exception.printStackTrace();
