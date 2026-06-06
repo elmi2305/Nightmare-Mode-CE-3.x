@@ -985,8 +985,14 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 1), new ItemStack[]{new ItemStack(Block.music)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 30), new ItemStack[]{new ItemStack(BTWBlocks.dormandSoulforge)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 4), new ItemStack[]{new ItemStack(BTWBlocks.lightningRod)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotGold, 2), new ItemStack[]{new ItemStack(Item.horseArmorGold)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotGold, 2), new ItemStack[]{new ItemStack(Item.horseArmorGold, 1, Short.MAX_VALUE)});
         // done adding
+
+        // make other horse armors smeltable regardless of durability
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotIron, 4), (TagOrStack[])new ItemStack[]{new ItemStack(Item.horseArmorIron, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 6), (TagOrStack[])new ItemStack[]{new ItemStack(Item.horseArmorDiamond, 1, Short.MAX_VALUE)});
+
+        // done horsing
 
         // add gold recipes for golden apples and carrots
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 3), new ItemStack[]{new ItemStack(Item.appleGold)});
