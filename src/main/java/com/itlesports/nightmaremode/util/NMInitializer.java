@@ -16,6 +16,7 @@ import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
+import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -29,6 +30,7 @@ import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.interfaces.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
+import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
@@ -568,6 +570,16 @@ public abstract class NMInitializer implements AchievementExt {
         BTWItems.plateLeggings.setMaxDamage(729);
         BTWItems.plateBreastplate.setMaxDamage(729);
         BTWItems.plateHelmet.setMaxDamage(729);
+
+        ((DamageSourceExt)(BTWDamageSources.damageSourceGloom)).nightmareMode$setHungerDrain(0.3f);
+        ((DamageSourceExt)(BTWDamageSources.damageSourceSaw)).nightmareMode$setHungerDrain(0.5f);
+        ((DamageSourceExt)(BTWDamageSources.damageSourceSaw)).nightmareMode$setUnblockable(true);
+
+        ((DamageSourceExt)(DamageSource.fall)).nightmareMode$setHungerDrain(0.1f);
+        ((DamageSourceExt)(DamageSource.generic)).nightmareMode$setHungerDrain(0.2f);
+        ((DamageSourceExt)(DamageSource.onFire)).nightmareMode$setHungerDrain(0.02f);
+
+
 
         WorldGenReed.addBiomeToGenerator(BiomeGenBase.river);
 
