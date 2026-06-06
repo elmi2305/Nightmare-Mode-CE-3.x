@@ -38,6 +38,7 @@ public abstract class EntityAIAttackOnCollideMixin {
             } else {
                 ai.attacker.setAttackTarget(null);
             }
+            return;
         }
 
         if(target instanceof EntityPlayer && target.ridingEntity instanceof EntityHorse){
