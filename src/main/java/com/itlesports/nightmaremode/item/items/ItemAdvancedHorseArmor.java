@@ -69,7 +69,7 @@ public class ItemAdvancedHorseArmor extends NMItem {
 
         // pick unused window type ID
         int windowType = 60;
-        String windowTitle = I18n.getString("gui.nm.horseMenu");
+        String windowTitle = "gui.nm.horseMenu";
 
         int slotCount = (armorStack.getItem() instanceof ItemAdvancedHorseArmor)
                 ? ((ItemAdvancedHorseArmor) armorStack.getItem()).getFuelSlotCount()
