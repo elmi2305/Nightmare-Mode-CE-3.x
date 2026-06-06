@@ -1,11 +1,14 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.inventory.container.WorkbenchContainer;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemPotion;
 import net.minecraft.src.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemPotion.class)
@@ -18,4 +21,9 @@ public class ItemPotionMixin extends Item {
     private void makePotionsDrinkQuicker(ItemStack par1ItemStack, CallbackInfoReturnable<Integer> cir){
         cir.setReturnValue(20);
     }
+    @Inject(method = "onUsedInCrafting", at = @At("HEAD"), cancellable = true)
+    private void doNotGivePlayerItemWhenUsedInCrafting(EntityPlayer player, ItemStack outputStack, CallbackInfo ci){
+        ci.cancel();
+    }
+
 }

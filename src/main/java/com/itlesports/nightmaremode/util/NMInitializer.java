@@ -1107,9 +1107,7 @@ public abstract class NMInitializer implements AchievementExt {
 //        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.refinedElement), new TagOrStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.redstone, 3), new ItemStack(BTWItems.steelNugget, 4)});
 //        RecipeManager.addCauldronRecipe(new ItemStack(NMItems.refinedElement), new TagOrStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.redstone, 3), new ItemStack(NMItems.steelBunch)});
 
-        // potion recycling
-        RecipeManager.addCauldronRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
-        // done recycling
+
         finishRecipes("Cauldron Recipes");
 
     }
@@ -1520,7 +1518,9 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.planter), new Object[]{new ItemStack(BTWBlocks.planter, 1, 8)}).hideFromEMI();
         // done planter-ing
 
-
+        // potion recycling
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
+        // done recycling
 
         finishRecipes("Crafting Recipes");
 
