@@ -94,6 +94,9 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityBlackWidowSpider.class, 2, 1, 2);
         addMobToAllBiomes(EntityRadioactiveEnderman.class, 1, 1, 1);
         addMobToAllBiomes(EntityDungCreeper.class, 3, 1, 1);
+        addMobToAllBiomes(EntityVoidCreeper.class, 2, 1, 1);
+        addMobToAllBiomes(EntityGelCreeper.class, 3, 1, 1);
+        addMobToAllBiomes(EntityGlitchCreeper.class, 1, 1, 1);
         addMobToAllBiomes(EntityLightningCreeper.class, 1, 1, 1);
         addMobToAllBiomes(EntityBloodZombie.class, 2, 1, 1);
         addMobToAllBiomes(EntityFauxVillager.class, 1, 1, 1);
