@@ -12,10 +12,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -53,7 +50,15 @@ public class GuiMainMenuMixin extends GuiScreen {
     @Unique private final ResourceLocation GEAR = new ResourceLocation("nightmare:textures/gui/gear.png");
 
     @Unique private boolean createClicked; // used to make sure the Jump In dev mode button isn't activated twice
+    @Unique private int heightMod;
 
+    @ModifyConstant(method = "initGui",constant = @Constant(intValue = 72))
+    private int changeHeight(int constant){
+        if(heightMod != 0){
+            return constant + 12;
+        }
+        return constant;
+    }
     @Inject(method = "initGui", at = @At("TAIL"))
     private void manageSplashText(CallbackInfo ci){
         this.splashText = getLocalizedSplash();
@@ -68,8 +73,13 @@ public class GuiMainMenuMixin extends GuiScreen {
     private void addJumpInButtonDevMode(int par1, int par2, CallbackInfo ci){
         int w = 178;
         int h = 20;
-        this.buttonList.add(new GuiButton(25, this.width / 2 - 100, par1 + par2 * 2, w, h, I18n.getString("selectWorld.create")));
-        this.buttonList.add(new GuiTexturedButton(26, this.width / 2 - 100 + w + 1, par1 + par2 * 2, 20, 20, GEAR));
+        this.heightMod = 0;
+        if(AddonHandler.modList.keySet().toString().toLowerCase().contains("modmenu")) {
+            heightMod = 24;
+        }
+
+        this.buttonList.add(new GuiButton(33, this.width / 2 - 100, par1 + par2 * 2 + heightMod, w, h, I18n.getString("selectWorld.create")));
+        this.buttonList.add(new GuiTexturedButton(34, this.width / 2 - 100 + w + 1, par1 + par2 * 2 + heightMod, 20, 20, GEAR));
     }
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void disableOptionsIfXray(CallbackInfo ci){
@@ -85,7 +95,7 @@ public class GuiMainMenuMixin extends GuiScreen {
 
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
     private void doCustomButton(GuiButton par1GuiButton, CallbackInfo ci){
-        if(par1GuiButton.id == 25){
+        if(par1GuiButton.id == 33){
             if (this.createClicked) {
                 return;
             }
@@ -118,7 +128,7 @@ public class GuiMainMenuMixin extends GuiScreen {
                 ci.cancel();
                 return;
             }
-        } else if(par1GuiButton.id == 26){
+        } else if(par1GuiButton.id == 34){
             this.mc.displayGuiScreen(new GuiWorldInfoConfig(this, NightmareMode.getInstance().addonConfig.getString("WorldInfoString")));
         }
     }
