@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
@@ -197,11 +198,22 @@ public class NMItems {
         ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nightmare:nmAchievementBloodZombie").hideFromEMI();
 
 
-
     }
 
     public static void hideItems(){
         lightningBolt.hideFromEMI().setCreativeTab(null);
+        refinedElement.hideFromEMI().setCreativeTab(null);
+    }
+
+    public static void addItemsToTags(){
+        // adds all the NM items to their respective tag. mostly food
+
+        BTWTags.foods.add(calamari);
+        BTWTags.foods.add(calamariRoast);
+        BTWTags.foods.add(friedCalamari);
+        BTWTags.foods.add(creeperChop);
+        BTWTags.foods.add(dungApple);
+        BTWTags.foods.add(creeperBallSoup);
     }
 
 }

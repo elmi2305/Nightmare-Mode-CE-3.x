@@ -25,6 +25,7 @@ import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.NMPostItems;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.interfaces.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
@@ -57,6 +58,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void runItemPostInit(){
         NMPostItems.runPostInit();
+        NMItems.addItemsToTags();
         finishRecipes("Item Post-Initialization");
 
     }
