@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +45,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         NMUtils.manageEclipseChance(this,24);
     }
 
+    @Redirect(method = "updateHeadCrab", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/DamageSource;setDamageBypassesArmor()Lnet/minecraft/src/DamageSource;"))
+    private DamageSource squidMakesPlayerHungry(DamageSource src){
+        ((DamageSourceExt) src).nightmareMode$setUnblockable(true);
+        ((DamageSourceExt) src).nightmareMode$setHungerDrain(0.1f);
+        return src;
+    }
     @Inject(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V",
