@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.entity.underworld;
 import api.entity.EntityWithCustomPacket;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore;
+import com.itlesports.nightmaremode.entity.EntityBloodAltar;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -46,8 +47,26 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         this.altar = altar;
     }
 
+    private void tryRelinkAltar() {
+        if (worldObj.blockExists(cachedAltarX, cachedAltarY, cachedAltarZ)) {
+            TileEntity te = worldObj.getBlockTileEntity(cachedAltarX, cachedAltarY, cachedAltarZ);
+            if (te instanceof TileEntityPortalCore) {
+                altar = (TileEntityPortalCore) te;
+                System.out.println("[RitualPortal] Deferred altar relink successful");
+            } else {
+                System.out.println("[RitualPortal] No portal core at cached position — dying");
+                setDead();
+            }
+        }
+    }
+
     @Override
     public void onEntityUpdate() {
+        if (needsAltarLookup && !worldObj.isRemote) {
+            needsAltarLookup = false;
+            tryRelinkAltar();
+        }
+
         super.onEntityUpdate();
 
         // update entity size based on ritual progress
@@ -178,30 +197,43 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         tag.setInteger("AnimTick", animationTimer);
     }
 
+//    @Override
+//    public void readFromNBT(NBTTagCompound tag) {
+//        super.readFromNBT(tag);
+//
+//        int x = tag.getInteger("AltarX");
+//        int y = tag.getInteger("AltarY");
+//        int z = tag.getInteger("AltarZ");
+//        animationTimer = tag.getInteger("AnimTick");
+//
+//        // cache altar position for client side fallback
+//        cachedAltarX = x;
+//        cachedAltarY = y;
+//        cachedAltarZ = z;
+//
+//
+//        // UNTESTED, it tries to find the altar nearby TODO: test this
+//        if (worldObj != null && worldObj.blockExists(x, y, z)) {
+//            TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+//            if (te instanceof TileEntityPortalCore) {
+//                altar = (TileEntityPortalCore) te;
+//                System.out.println("[RitualPortal] found altar tile entity by coordinates");
+//            } else {
+//                System.out.println("[RitualPortal] could not find altar tile entity at stored coordinates using cached position");
+//            }
+//        }
+//    }
+
+    private boolean needsAltarLookup = false;
+
     @Override
     public void readEntityFromNBT(NBTTagCompound tag) {
         super.readEntityFromNBT(tag);
-
-        int x = tag.getInteger("AltarX");
-        int y = tag.getInteger("AltarY");
-        int z = tag.getInteger("AltarZ");
+        cachedAltarX = tag.getInteger("AltarX");
+        cachedAltarY = tag.getInteger("AltarY");
+        cachedAltarZ = tag.getInteger("AltarZ");
         animationTimer = tag.getInteger("AnimTick");
-
-        // cache altar position for client side fallback
-        cachedAltarX = x;
-        cachedAltarY = y;
-        cachedAltarZ = z;
-
-        // UNTESTED, it tries to find the altar nearby TODO: test this
-        if (worldObj != null && worldObj.blockExists(x, y, z)) {
-            TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-            if (te instanceof TileEntityPortalCore) {
-                altar = (TileEntityPortalCore) te;
-                System.out.println("[RitualPortal] found altar tile entity by coordinates");
-            } else {
-                System.out.println("[RitualPortal] could not find altar tile entity at stored coordinates using cached position");
-            }
-        }
+        needsAltarLookup = true; // defer - world is not fully ready yet
     }
 
 
@@ -278,8 +310,8 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
             return 1.0f; // completed ritual
         }
         float progress = (float) ticksExisted / UW_PORTAL_DURATION;
-        return progress;
-//        return math.min(progress, 1.0f);
+//        return progress;
+        return Math.min(progress, 1.0f);
     }
 
     /** returns the anger from 0.0f to 1.331f */

@@ -92,10 +92,15 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 }
 
                 if (worldTime % 20 == 0) {
-                    if (findPortalEntity() == null) {
-                        System.out.println("[PortalCore] Blob entity died during ACTIVE ritual - failing");
+                    EntityRitualPortal blob = findPortalEntity();
+                    if (blob == null) {
+                        System.out.println("[PortalCore] Blob entity gone — failing ritual");
                         failRitual();
                         return;
+                    }
+                    if (blob.getAltar() == null) {
+                        blob.bindToAltar(this); // restore lost reference after relog
+                        System.out.println("[PortalCore] Rebound blob entity after relog");
                     }
                 }
 
@@ -231,8 +236,9 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         if (!info.isRaining()) {
             info.setRaining(true);
             info.setRainTime(UW_PORTAL_DURATION * 2);
-
+            this.worldObj.setRainStrength(0f);
         }
+//        info.setRaining(false);
     }
 
     private void spawnAltarLightning() {
@@ -305,8 +311,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         // positional fallback search within the column above the altar
         if (foundEntities.isEmpty()) {
             AxisAlignedBB searchBox = AxisAlignedBB.getAABBPool().getAABB(
-                    xCoord - 2, yCoord,      zCoord - 2,
-                    xCoord + 3, yCoord + 12, zCoord + 3);
+                    xCoord - 2, yCoord,                       zCoord - 2,
+                    xCoord + 3, yCoord + BLOB_SPAWN_HEIGHT + 3, zCoord + 3);
 
             List<EntityRitualPortal> positionalFound =
                     worldObj.getEntitiesWithinAABB(EntityRitualPortal.class, searchBox);
@@ -355,8 +361,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     @Override
     public void invalidate() {
         super.invalidate();
-        System.out.println("[PortalCore] Tile entity invalidated - cleaning up blob entities");
-        killBlobEntity();
     }
 
     @Override
