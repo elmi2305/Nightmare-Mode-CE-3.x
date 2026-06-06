@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.rendering.entities;
 import btw.client.render.util.RenderUtils;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.rendering.entities.models.ModelDungCreeper;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -47,17 +48,65 @@ public class RenderCreeperVariant extends RenderLiving {
 
     protected void updateCreeperScale(EntityCreeperVariant mob, float par2) {
         float flashIntensity = mob.getCreeperFlashIntensity(par2);
+
+        if (mob.variantType == PACKET_CREEPER_GLITCH) {
+            flashIntensity *= (float)(1 + Math.sin(mob.worldObj.getWorldTime() * 0.2) * 0.5);
+        }
+
         float var4 = 1.0f + MathHelper.sin(flashIntensity * 100.0f) * flashIntensity * 0.01f;
+
         if (flashIntensity < 0.0f) {
             flashIntensity = 0.0f;
         }
+
         if (flashIntensity > 1.0f) {
             flashIntensity = 1.0f;
         }
+
         flashIntensity *= flashIntensity;
         flashIntensity *= flashIntensity;
+
         float var5 = (1.0f + flashIntensity * 0.4f) * var4;
         float var6 = (1.0f + flashIntensity * 0.1f) / var4;
+
+        if (mob.variantType == PACKET_CREEPER_GLITCH) {
+            long time = mob.worldObj.getWorldTime() + mob.entityId * 31L;
+
+            var5 *= (float)(1 + Math.sin(time * 0.2) * 0.02);
+            var6 *= (float)(1 + Math.sin(time * 0.17) * 0.02);
+
+            float squashX = (float)(1.0 + Math.sin(time * 0.13) * 0.05);
+            float squashY = (float)(1.0 + Math.cos(time * 0.11) * 0.05);
+            float squashZ = (float)(1.0 + Math.sin(time * 0.19) * 0.05);
+
+            GL11.glScalef(squashX, squashY, squashZ);
+
+            if ((time / 3) % 7 == 0) {
+                GL11.glRotatef((time * 37) % 360, 0.0F, 1.0F, 0.0F);
+            }
+
+            if ((time / 5) % 13 == 0) {
+                GL11.glRotatef((time * 61) % 360, 1.0F, 0.0F, 0.0F);
+            }
+
+            if ((time / 7) % 11 == 0) {
+                GL11.glRotatef((time * 89) % 360, 0.0F, 0.0F, 1.0F);
+            }
+
+            if ((time / 2) % 13 == 0) {
+                GL11.glTranslatef(
+                        (float)Math.sin(time * 1.7) * 0.3F,
+                        (float)Math.cos(time * 2.1) * 0.3F,
+                        (float)Math.sin(time * 1.3) * 0.3F
+                );
+            }
+
+            if ((time / 11) % 31 == 0) {
+                float mirror = ((time / 11) & 1) == 0 ? -1.0F : 1.0F;
+                GL11.glScalef(mirror, 1.0F, 1.0F);
+            }
+        }
+
         GL11.glScalef(var5, var6, var5);
     }
 

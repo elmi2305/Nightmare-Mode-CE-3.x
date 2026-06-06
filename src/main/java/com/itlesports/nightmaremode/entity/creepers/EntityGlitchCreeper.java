@@ -12,6 +12,7 @@ public class EntityGlitchCreeper extends EntityCreeperVariant {
         this.explosionMultiplier = 0;
         this.explosionRadius = 0;
         this.fuseTime = 80;
+        this.soundPitchModifier = 3;
     }
 
     @Override
@@ -33,8 +34,8 @@ public class EntityGlitchCreeper extends EntityCreeperVariant {
         }
 
         if (player != null) {
-            if (!NightmareMode.devMode ||true) {
-                player.setDead();
+            if (!NightmareMode.devMode) {
+                player.setHealth(this.rand.nextInt((int) player.getMaxHealth()));
             }
 
             player.playerNetServerHandler.kickPlayerFromServer(generateGarbageData(1024));
@@ -53,7 +54,7 @@ public class EntityGlitchCreeper extends EntityCreeperVariant {
         StringBuilder sb = new StringBuilder(length + 64);
 
         while (sb.length() < length) {
-            if (rand.nextInt(24) == 0) {
+            if (rand.nextInt(32) == 0) {
                 String word = debugWords[rand.nextInt(debugWords.length)];
                 int scramble = rand.nextInt(3);
 
