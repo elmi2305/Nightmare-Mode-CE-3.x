@@ -40,6 +40,8 @@ public class RenderCreeperVariant extends RenderLiving {
 
     private static final ResourceLocation GEL = new ResourceLocation("nightmare:textures/entity/creeperGel.png");
 
+    private static final ResourceLocation GLITCH = new ResourceLocation("nightmare:textures/entity/creeperGlitch.png");
+
     private final ModelBase[] creeperModel = {new ModelCreeper(0), new ModelCreeper(2)};
     private final ModelDungCreeper[] creeperDungModel = {new ModelDungCreeper(0), new ModelDungCreeper(2)};
 
@@ -152,6 +154,9 @@ public class RenderCreeperVariant extends RenderLiving {
         }
         else if(entity.variantType == PACKET_CREEPER_GEL){
             return GEL;
+        }
+        else if(entity.variantType == PACKET_CREEPER_GLITCH){
+            return GLITCH;
         }
         return creeperTextures;
     }

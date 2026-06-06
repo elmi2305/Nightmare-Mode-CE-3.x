@@ -266,6 +266,32 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
             entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
             return entityToSpawn;
         });
+        CustomEntityPacketHandler.entryMap.put(PACKET_CREEPER_GLITCH, (world, dataStream, packet) -> {
+            EntityGlitchCreeper entityToSpawn = new EntityGlitchCreeper(world);
+            Packet24MobSpawn mobSpawnPacket = new Packet24MobSpawn();
+            mobSpawnPacket.readPacketData(dataStream);
+            double var2 = (double) mobSpawnPacket.xPosition / 32.0;
+            double var4 = (double) mobSpawnPacket.yPosition / 32.0;
+            double var6 = (double) mobSpawnPacket.zPosition / 32.0;
+            float var8 = (float) (mobSpawnPacket.yaw * 360) / 256.0f;
+            float var9 = (float) (mobSpawnPacket.pitch * 360) / 256.0f;
+            entityToSpawn.serverPosX = mobSpawnPacket.xPosition;
+            entityToSpawn.serverPosY = mobSpawnPacket.yPosition;
+            entityToSpawn.serverPosZ = mobSpawnPacket.zPosition;
+            entityToSpawn.rotationYawHead = (float) (mobSpawnPacket.headYaw * 360) / 256.0f;
+            entityToSpawn.entityId = mobSpawnPacket.entityId;
+            entityToSpawn.setPositionAndRotation(var2, var4, var6, var8, var9);
+            entityToSpawn.motionX = (float) mobSpawnPacket.velocityX / 8000.0f;
+            entityToSpawn.motionY = (float) mobSpawnPacket.velocityY / 8000.0f;
+            entityToSpawn.motionZ = (float) mobSpawnPacket.velocityZ / 8000.0f;
+            List var14 = mobSpawnPacket.getMetadata();
+            if (var14 != null) {
+                entityToSpawn.getDataWatcher().updateWatchedObjectsFromList(var14);
+            }
+            int timeSinceIgnited = dataStream.readInt();
+            entityToSpawn.setTimeSinceIgnited(timeSinceIgnited);
+            return entityToSpawn;
+        });
         CustomEntityPacketHandler.entryMap.put(PACKET_SPORE, (world, dataStream, packet) -> {
             double radius = dataStream.readDouble();
             EntityPollenCloud entityToSpawn = new EntityPollenCloud(world, radius);

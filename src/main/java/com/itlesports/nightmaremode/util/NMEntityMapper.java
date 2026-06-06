@@ -46,6 +46,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityRitualPortal.class, "NmEntityRitualPortal", 2332);
         EntityList.addMapping(EntityVoidCreeper.class, "NmEntityVoidCreeper", 2333, 0,0x4F4F4F);
         EntityList.addMapping(EntityGelCreeper.class, "NmEntityGelCreeper", 2334, 0xf071eb,0xeddfed);
+        EntityList.addMapping(EntityGlitchCreeper.class, "NmEntityGlitchCreeper", 2335, 0x27ba40,0xff00dd);
     }
 
     public static void createTileEntityMappings(){
