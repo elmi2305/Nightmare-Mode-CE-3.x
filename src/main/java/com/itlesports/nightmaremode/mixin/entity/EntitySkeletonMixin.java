@@ -578,7 +578,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements EntityAcc
         return 8;
     }
 
-    @Inject(method = "lambda$initComponents$0", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent$EntityVariant;id()I"))
+    @Inject(method = "lambda$initComponents$0", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent$EntityVariant;id()I"), remap = false)
     private void setVariantAttributes(VariantComponent.EntityVariant variant, CallbackInfoReturnable<Boolean> cir){
         int id = variant.id();
         int progress = NMUtils.getWorldProgress();
