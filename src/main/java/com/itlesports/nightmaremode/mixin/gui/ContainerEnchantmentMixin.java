@@ -21,6 +21,10 @@ public class ContainerEnchantmentMixin {
         if(stack != null && stack.getItem() instanceof IBloodTool){
             return Math.min(-1, (int)Math.floor(par1 * 0.4));
         }
+
+        if(stack != null){
+            return Math.min(-1, (int)Math.floor(par1 * 0.7));
+        }
         return par1;
     }
 }
