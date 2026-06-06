@@ -12,6 +12,7 @@
     "BTWItemsMixin",
     "BucketItemWaterMixin",
     "ChunkMixin",
+    "DamageSourceMixin",
     "DifficultiesMixin",
     "EmiConfigMixin",
     "EnchantmentDurabilityMixin",
