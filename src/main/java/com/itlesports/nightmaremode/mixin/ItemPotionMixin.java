@@ -23,6 +23,7 @@ public class ItemPotionMixin extends Item {
     }
     @Inject(method = "onUsedInCrafting", at = @At("HEAD"), cancellable = true)
     private void doNotGivePlayerItemWhenUsedInCrafting(EntityPlayer player, ItemStack outputStack, CallbackInfo ci){
+        // used so that emptying potions through the crafting grid doesn't give you duplicated glass bottles
         ci.cancel();
     }
 
