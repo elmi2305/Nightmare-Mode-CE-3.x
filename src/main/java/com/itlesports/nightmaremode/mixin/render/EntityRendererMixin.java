@@ -13,6 +13,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -564,12 +565,19 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         // b = 0.195104557f
     }
 
-    @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isPotionActive(Lnet/minecraft/src/Potion;)Z"))
+    @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isPotionActive(Lnet/minecraft/src/Potion;)Z",ordinal = 1))
     private boolean noNightvisionRedFog(EntityLivingBase instance, Potion par1Potion){
-        return false;
+        return NMUtils.getIsBloodMoon();
+    }
+    @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityRenderer;getNightVisionBrightness(Lnet/minecraft/src/EntityPlayer;F)F"))
+    private float nightVisBloodMoonStuff(EntityRenderer instance, EntityPlayer par1EntityPlayer, float par2){
+        if(NMUtils.getIsBloodMoon()){
+            return 500;
+        }
+        return instance.getNightVisionBrightness(par1EntityPlayer,par2);
     }
 
-    @Redirect(method = "updateLightmap", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F"))
+    @Redirect(method = "updateLightmap", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F", opcode = Opcodes.GETFIELD))
     private float activateFullbright(GameSettings instance){
         return NightmareMode.fullBright ? 16f : instance.gammaSetting;
     }
