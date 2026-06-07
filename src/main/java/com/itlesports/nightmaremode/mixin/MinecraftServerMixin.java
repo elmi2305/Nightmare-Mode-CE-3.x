@@ -143,7 +143,7 @@ public abstract class MinecraftServerMixin {
 
         NightmareMode.sendWorldStateToAllPlayers();
 
-        if(oldBloodMoon != NightmareMode.isBloodMoon){
+        if(oldBloodMoon != NightmareMode.isBloodMoon && NightmareMode.isBloodMoon){
             // this means the blood moon has started
             NMUtils.forcePlayMusic(NightmareModeAddon.NM_BLOODMOON.sound(), false);
         }
