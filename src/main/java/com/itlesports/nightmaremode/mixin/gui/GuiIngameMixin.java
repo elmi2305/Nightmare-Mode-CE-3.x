@@ -339,9 +339,6 @@ public class GuiIngameMixin extends Gui{
     private void drawTimer(int iScreenX, int iScreenY, CallbackInfo cbi){
         if(!mc.thePlayer.isDead){
             amountRendered = 0;
-            if(this.mc.thePlayer.isInsideOfMaterial(Material.water) || mc.thePlayer.getAir() < 300){
-                amountRendered++;
-            }
             String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
 
             if(this.mc.thePlayer.dimension == -1){
@@ -362,19 +359,18 @@ public class GuiIngameMixin extends Gui{
             if(NightmareMode.shouldShowDateTimer){
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
-            if(NightmareMode.configOnHud){
-
-                textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
-                stringWidth = fontRenderer.getStringWidth(textToShow);
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
 
             if(NightmareMode.bloodMoonHelper){
                 textToShow = this.getBloodMoonText(this.mc.theWorld);
                 stringWidth = fontRenderer.getStringWidth(textToShow);
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
+            if(NightmareMode.configOnHud){
 
+                textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
+                stringWidth = fontRenderer.getStringWidth(textToShow);
+                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
+            }
 
 
         }
