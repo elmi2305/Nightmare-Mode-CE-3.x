@@ -371,7 +371,6 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerPacketHandler("nm|vig", (packet, player) -> {
             try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
                 float vignette = data.readFloat();
-                System.out.println("vignette: " + vignette);
                 if (player instanceof EntityPlayerExt) {
                     ((EntityPlayerExt) player).nightmareMode$setTargetVignette(vignette);
                 }
@@ -539,8 +538,6 @@ public class NightmareMode extends BTWAddon {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("sent vignette: " + target);
-
 
         Packet250CustomPayload packet = new Packet250CustomPayload("nm|vig", byteStream.toByteArray());
         player.playerNetServerHandler.sendPacketToPlayer(packet);

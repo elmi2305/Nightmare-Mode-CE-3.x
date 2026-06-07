@@ -3,6 +3,9 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWWorldData;
+import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +34,7 @@ public class BlockPortalMixin{
     private void runPortalEffects(World world, int x, int y, int z){
         long targetTime = world.getData(NightmareMode.PORTAL_TIME);
 
-        if (!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() && (targetTime == 0)) {
+        if (!(NMUtils.getWorldProgress() == NMFields.HARDMODE) && (targetTime == 0)) {
             if (MinecraftServer.getServer() != null) {
                 MinecraftServer.getServer().worldServers[0].setData(BTWWorldData.NETHER_ACCESSED, false);
             }
@@ -46,6 +49,11 @@ public class BlockPortalMixin{
 
                     if (player.dimension == -1){
                         return;
+                    }
+
+                    if(player instanceof EntityPlayerExt epe){
+                        NightmareMode.sendTargetVignetteToClient((EntityPlayerMP) player, 1.8f);
+
                     }
 
                     if (distanceSq <= radius * radius) {
@@ -66,5 +74,8 @@ public class BlockPortalMixin{
             world.playSoundEffect(x,y,z,"mob.wither.death",1f,0.905F);
             // the rest is handled in EntityPlayerMPMixin
         }
+    }
+    @Unique private void runClientEffects(){
+
     }
 }
