@@ -81,7 +81,7 @@ public class BlockObsidianMixin extends Block {
             this.shouldDropBlock = true;
         }
 
-        if (meta == 0 && !this.shouldDropBlock) {
+        if (meta == 0 && !this.shouldDropBlock && !player.capabilities.isCreativeMode) {
             if(world.rand.nextInt(8) == 0){
                 EntityObsidianFish fish = new EntityObsidianFish(world);
                 fish.setPositionAndUpdate(x + 0.5, y + 0.1, z + 0.5);
