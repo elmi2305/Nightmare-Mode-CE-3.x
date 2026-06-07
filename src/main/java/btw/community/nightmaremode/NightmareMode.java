@@ -725,9 +725,9 @@ public class NightmareMode extends BTWAddon {
         fastVillagers = config.getBoolean("FastVillagers");
         bloodMoonHelper = config.getBoolean("BloodMoonHelper");
         realTime = config.getBoolean("RealTime");
-//        if (MinecraftServer.getIsServer()) {
+        if (MinecraftServer.getIsServer()) {
             getInstance().setLogging(config.getBoolean("GriefLogging"), config.getInt("GriefLoggingLevel"));
-//        }
+        }
     }
 
 
