@@ -137,6 +137,14 @@ public class NMConfUtils {
     }
 
 
+    public static boolean isConfigCompleted(CONFIG config){
+        int[] confList = getCompletedConfigs();
+        if(confList.length < config.getId() - 1){
+            return false;
+        }
+        return confList[config.getId() - 1] == 1;
+    }
+
 
 
     public static int[] getWorldConfigData(World w){
