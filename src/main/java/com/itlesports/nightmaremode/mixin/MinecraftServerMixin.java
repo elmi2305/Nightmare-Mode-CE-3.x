@@ -5,12 +5,14 @@ import api.world.WorldUtils;
 import api.world.difficulty.Difficulty;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWDifficulties;
+import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.tpa.TeleportScheduler;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -141,6 +143,11 @@ public abstract class MinecraftServerMixin {
 
         NightmareMode.sendWorldStateToAllPlayers();
 
+        if(oldBloodMoon != NightmareMode.isBloodMoon){
+            // this means the blood moon has started
+            NMUtils.forcePlayMusic(NightmareModeAddon.NM_BLOODMOON.sound(), false);
+        }
+
         oldBloodMoon = NightmareMode.isBloodMoon;
         oldEclipse   = NightmareMode.isEclipse;
     }
@@ -152,7 +159,7 @@ public abstract class MinecraftServerMixin {
         }
     }
 
-    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;worldServers:[Lnet/minecraft/src/WorldServer;",ordinal = 0,shift = At.Shift.AFTER))
+    @Inject(method = "loadAllWorlds", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;worldServers:[Lnet/minecraft/src/WorldServer;", ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
     private void setWorldServerSize(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci){
         this.worldServers = new WorldServer[4];
     }

@@ -24,6 +24,7 @@ public class NightmareModeAddon extends BTWAddon implements ModInitializer {
     private static NightmareModeAddon instance;
 
     public static final AddonSoundRegistryEntry NM_BOSS_MUSIC = new AddonSoundRegistryEntry("nightmare:nmBoss");
+    public static final AddonSoundRegistryEntry NM_BLOODMOON = new AddonSoundRegistryEntry("nightmare:nmBloodmoon");
 
     public NightmareModeAddon() {
         super();
