@@ -298,8 +298,8 @@ public class NMBlocks {
         bloodBonesUpgraded = new BloodBoneBlock(2347).setHardness(4f).setTextureName("nightmare:nmBloodBone").setUnlocalizedName("nmBloodBone").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
         Item.itemsList[bloodBonesUpgraded.blockID] = new NMItemBlock(NMBlocks.bloodBonesUpgraded.blockID - 256);
 
-//        portalCore = new BlockPortalCore(2348).setHardness(4f).setTextureName("nightmare:nmPortalCoreSide").setUnlocalizedName("nmPortalCore").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
-//        Item.itemsList[portalCore.blockID] = new NMItemBlock(NMBlocks.portalCore.blockID - 256);
+        portalCore = new BlockPortalCore(2348).setHardness(4f).setTextureName("nightmare:nmPortalCoreSide").setUnlocalizedName("nmPortalCore").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
+        Item.itemsList[portalCore.blockID] = new NMItemBlock(NMBlocks.portalCore.blockID - 256);
 
 
     }
