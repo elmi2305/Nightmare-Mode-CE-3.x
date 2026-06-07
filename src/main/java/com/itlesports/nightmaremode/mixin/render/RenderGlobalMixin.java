@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
@@ -32,6 +33,7 @@ public abstract class RenderGlobalMixin {
     @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/moon/crack.png");
     @Unique private static final ResourceLocation BLUE_MOON = new ResourceLocation("nightmare:textures/moon/bluemoon.png");
     @Unique private static final ResourceLocation SKYBOX_RED = new ResourceLocation("nightmare:textures/effects/red.png");
+    @Unique private static final ResourceLocation SKYBOX_WHITE = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private static final ResourceLocation STARE = new ResourceLocation("nightmare:textures/effects/stare.png");
     /*
 
@@ -612,20 +614,20 @@ public abstract class RenderGlobalMixin {
         }
 
         // skip rendering if too low
-        if (this.horrorSkyIntensity < 0.01f) {
+        if (this.horrorSkyIntensity > 0.01f) {
+
+            // animation state
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - horrorSkyLastUpdate > 50) {
+                horrorSkyRotation += 0.5f * this.horrorSkyIntensity;
+                horrorSkyLastUpdate = currentTime;
+            }
+
+            // Render horror sky effects
+            renderRitualSkybox();
+            renderSkyboxObjects();
             return;
         }
-
-        // animation state
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - horrorSkyLastUpdate > 50) {
-            horrorSkyRotation += 0.5f * this.horrorSkyIntensity;
-            horrorSkyLastUpdate = currentTime;
-        }
-
-        // Render horror sky effects
-        renderRitualSkybox();
-        renderSkyboxObjects();
     }
 
     @Unique
@@ -709,7 +711,85 @@ public abstract class RenderGlobalMixin {
         GL11.glPopMatrix();
         GL11.glPopAttrib();
     }
+    @Unique
+    private void renderBasicSkybox(ResourceLocation location) {
+        final float radius = 120;
+        final int latSteps = 12;
+        final int lonSteps = 48;
 
+        if (this.mc.renderEngine == null) return;
+
+        try {
+            this.mc.renderEngine.bindTexture(location);
+        } catch (Exception e) {
+            return;
+        }
+
+        GL11.glPushAttrib(
+                GL11.GL_ENABLE_BIT
+                        | GL11.GL_COLOR_BUFFER_BIT
+                        | GL11.GL_DEPTH_BUFFER_BIT
+                        | GL11.GL_CURRENT_BIT
+                        | GL11.GL_TEXTURE_BIT
+        );
+
+        GL11.glPushMatrix();
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glDepthMask(false);
+
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+        Tessellator tess = Tessellator.instance;
+
+        for (int lat = 0; lat < latSteps; lat++) {
+            double minTheta = -Math.PI / 6.0;
+            double maxTheta = Math.PI / 2.0;
+            double theta0 = minTheta + (maxTheta - minTheta) * ((double) lat / latSteps);
+            double theta1 = minTheta + (maxTheta - minTheta) * ((double) (lat + 1) / latSteps);
+
+            double y0 = Math.sin(theta0) * radius;
+            double y1 = Math.sin(theta1) * radius;
+
+            double r0 = Math.cos(theta0) * radius;
+            double r1 = Math.cos(theta1) * radius;
+
+            tess.startDrawingQuads();
+            for (int lon = 0; lon < lonSteps; lon++) {
+                double phi0 = 2.0 * Math.PI * ((double) lon / lonSteps);
+                double phi1 = 2.0 * Math.PI * ((double) (lon + 1) / lonSteps);
+
+                double x00 = r0 * Math.cos(phi0);
+                double z00 = r0 * Math.sin(phi0);
+
+                double x01 = r0 * Math.cos(phi1);
+                double z01 = r0 * Math.sin(phi1);
+
+                double x10 = r1 * Math.cos(phi0);
+                double z10 = r1 * Math.sin(phi0);
+
+                double x11 = r1 * Math.cos(phi1);
+                double z11 = r1 * Math.sin(phi1);
+
+                float u0 = (float) lon / lonSteps;
+                float u1 = (float) (lon + 1) / lonSteps;
+                float v0 = (float) lat / latSteps;
+                float v1 = (float) (lat + 1) / latSteps;
+
+                tess.addVertexWithUV(x10, y1, z10, u0, v1);
+                tess.addVertexWithUV(x11, y1, z11, u1, v1);
+                tess.addVertexWithUV(x01, y0, z01, u1, v0);
+                tess.addVertexWithUV(x00, y0, z00, u0, v0);
+            }
+            tess.draw();
+        }
+
+        GL11.glPopMatrix();
+        GL11.glPopAttrib();
+    }
 
     @Unique
     private static final SkyboxObject[] EYES = {
