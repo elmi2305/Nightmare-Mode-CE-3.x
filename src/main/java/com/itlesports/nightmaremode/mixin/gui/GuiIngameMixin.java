@@ -362,18 +362,19 @@ public class GuiIngameMixin extends Gui{
             if(NightmareMode.shouldShowDateTimer){
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
+            if(NightmareMode.configOnHud){
+
+                textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
+                stringWidth = fontRenderer.getStringWidth(textToShow);
+                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
+            }
 
             if(NightmareMode.bloodMoonHelper){
                 textToShow = this.getBloodMoonText(this.mc.theWorld);
                 stringWidth = fontRenderer.getStringWidth(textToShow);
                 renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
             }
-            if(NightmareMode.configOnHud){
 
-                textToShow = NMConfUtils.getTextForActiveConfig(this.mc.theWorld.worldInfo.getData(CONFIGS_CREATED));
-                stringWidth = fontRenderer.getStringWidth(textToShow);
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
 
 
         }
