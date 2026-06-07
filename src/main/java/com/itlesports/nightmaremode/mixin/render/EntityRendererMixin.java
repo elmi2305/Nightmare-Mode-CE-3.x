@@ -58,7 +58,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
 
     @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
     private ResourceLocation bloodMoonCustomRain(ResourceLocation par1ResourceLocation){
-        if(NMUtils.getIsBloodMoon()){
+        if(NMUtils.getIsBloodMoon() || NMUtils.isNearActiveRitual(this.mc.thePlayer, 128)){
             return BLOOD_RAIN;
         }
         return par1ResourceLocation;
@@ -157,7 +157,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         }
 
         // UW RITUAL FOG STUFF
-        if (entity instanceof EntityPlayer) {
+        if (entity instanceof EntityPlayer && false) {
             EntityPlayer player = (EntityPlayer) entity;
             double ritualRange = 128.0;
             float ritualIntensity = NMUtils.getRitualIntensity(player, ritualRange);
