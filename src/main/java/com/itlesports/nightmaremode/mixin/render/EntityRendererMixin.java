@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
@@ -54,14 +55,18 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     @Shadow protected abstract FloatBuffer setFogColorBuffer(float par1, float par2, float par3, float par4);
 
     @Shadow private boolean cloudFog;
-    private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/entity/nmBloodRain.png");
+    @Unique private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/effects/nmBloodRain.png");
+    @Unique private static final ResourceLocation SLIME_RAIN = new ResourceLocation("nightmare:textures/effects/nmSlimeRain.png");
 
     @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
-    private ResourceLocation bloodMoonCustomRain(ResourceLocation par1ResourceLocation){
+    private ResourceLocation bloodMoonCustomRain(ResourceLocation resource){
         if(NMUtils.getIsBloodMoon() || NMUtils.isNearActiveRitual(this.mc.thePlayer, 128)){
             return BLOOD_RAIN;
         }
-        return par1ResourceLocation;
+        if(NMEvents.SimpleEvent.SLIME_RAIN.isActive()){
+            return SLIME_RAIN;
+        }
+        return resource;
     }
     @Override
     public boolean nightmareMode$isToggleZoomActive() {

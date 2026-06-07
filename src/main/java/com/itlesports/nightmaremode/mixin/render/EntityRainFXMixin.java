@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,10 @@ public class EntityRainFXMixin extends EntityFX {
         if (NMUtils.getIsBloodMoon() || NMUtils.isNearActiveRitual(p, 128)) {
             this.particleRed = 1.0f;
             this.particleGreen = 0.05f;
+            this.particleBlue = 0.05f;
+        } else if(NMEvents.SimpleEvent.SLIME_RAIN.isActive()){
+            this.particleRed = 0.05f;
+            this.particleGreen = 0.95f;
             this.particleBlue = 0.05f;
         }
     }
