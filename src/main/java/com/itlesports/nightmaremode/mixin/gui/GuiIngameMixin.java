@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import api.util.MathUtils;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -12,24 +14,21 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 import static btw.community.nightmaremode.NightmareMode.SANITY;
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 
 @Mixin(GuiIngame.class)
-public class GuiIngameMixin extends Gui{
+public class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
+    private static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private int amountRendered = 0;
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
@@ -374,6 +373,87 @@ public class GuiIngameMixin extends Gui{
 
 
         }
+    }
+    @Unique private float vignetteTarget = 0.5f;
+    @Unique private float vignetteCurrent = 0.0F;
+    @Unique private float vignetteFadeSpeed = 3.0F;
+    @Unique private long vignetteLastUpdate = System.nanoTime();
+
+    @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
+    private void modifyBrightness2(GuiIngame instance, float par1, int par2, int par3){
+        this.renderVignetteNightmare(par1,par2,par3);
+
+    }
+    @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
+    private void modifyBrightness(GuiIngame instance, float par1, int par2, int par3){
+        this.renderVignetteNightmare(par1,par2,par3);
+    }
+
+    @Unique
+    private float lerp(float d, float e, float f) {
+        return e + d * (f - e);
+    }
+
+    @Unique
+    private void renderVignetteNightmare(float brightness, int width, int height) {
+        float vanillaTarget = 1.0F - brightness;
+        this.vignetteTarget = ((EntityPlayerExt)(this.mc.thePlayer)).nightmareMode$getTargetVignette();
+
+        if (Math.abs(this.vignetteTarget - 0.5f) > 0.001f) {
+            this.vignetteTarget = lerp(0.0015f, this.vignetteTarget, 0.5f);
+            ((EntityPlayerExt)(this.mc.thePlayer)).nightmareMode$setTargetVignette(this.vignetteTarget);
+        } else {
+            this.vignetteTarget = 0.5f;
+        }
+
+        if (vanillaTarget < 0.0F) {
+            vanillaTarget = 0.0F;
+        } else if (vanillaTarget > 1.0F) {
+            vanillaTarget = 1.0F;
+        }
+
+        float target = vanillaTarget + this.vignetteTarget;
+
+        if (target < 0.0F) {
+            target = 0.0F;
+        } else if (target > 1.0F) {
+            target = 1.0F;
+        }
+
+        long now = System.nanoTime();
+        float dt = (now - this.vignetteLastUpdate) * 1.0E-9F;
+        this.vignetteLastUpdate = now;
+
+        float blend = 1.0F - (float)Math.exp(-this.vignetteFadeSpeed * dt);
+
+        this.vignetteCurrent += (target - this.vignetteCurrent) * blend;
+
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_ZERO, GL11.GL_ONE_MINUS_SRC_COLOR);
+
+        GL11.glColor4f(
+                this.vignetteCurrent,
+                this.vignetteCurrent,
+                this.vignetteCurrent,
+                1.0F
+        );
+
+        this.mc.getTextureManager().bindTexture(vignette);
+
+        Tessellator tess = Tessellator.instance;
+
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(0.0D, height, -90.0D, 0.0D, 1.0D);
+        tess.addVertexWithUV(width, height, -90.0D, 1.0D, 1.0D);
+        tess.addVertexWithUV(width, 0.0D, -90.0D, 1.0D, 0.0D);
+        tess.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+        tess.draw();
+
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     @Unique private String getBloodMoonText(World world){

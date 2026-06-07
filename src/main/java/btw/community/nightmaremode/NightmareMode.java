@@ -22,6 +22,7 @@ import com.itlesports.nightmaremode.util.command.RevertEventTimeCommand;
 import com.itlesports.nightmaremode.util.command.WarpCommand;
 import com.itlesports.nightmaremode.util.command.WorldStateCommand;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.fabricmc.api.EnvType;
@@ -261,7 +262,10 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+
+
     }
+
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
         // world state packet handler
@@ -354,10 +358,23 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
+        // server sending active events to client
         AddonHandler.registerPacketHandler("nm|events", (packet, player) -> {
             DataInputStream dataStream = new DataInputStream(new ByteArrayInputStream(packet.data));
             try {
                 getInstance().activeEventsInt = dataStream.readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        AddonHandler.registerPacketHandler("nm|vig", (packet, player) -> {
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                float vignette = data.readFloat();
+                System.out.println("vignette: " + vignette);
+                if (player instanceof EntityPlayerExt) {
+                    ((EntityPlayerExt) player).nightmareMode$setTargetVignette(vignette);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -512,6 +529,21 @@ public class NightmareMode extends BTWAddon {
         // DEBUG: packet does successfully get sent, and interpreted properly here. whether it arrives at the destination is unknown
         Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(packet);
 //        Minecraft.getMinecraft().getNetHandler().addToSendQueue(packet);
+    }
+
+    public static void sendTargetVignetteToClient(EntityPlayerMP player, float target){
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        try {
+            dataStream.writeFloat(target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("sent vignette: " + target);
+
+
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|vig", byteStream.toByteArray());
+        player.playerNetServerHandler.sendPacketToPlayer(packet);
     }
 
 

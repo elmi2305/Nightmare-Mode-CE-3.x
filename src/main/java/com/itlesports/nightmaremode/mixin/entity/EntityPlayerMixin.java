@@ -17,6 +17,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityFireworkRocketAccessor;
 import net.minecraft.server.MinecraftServer;
@@ -35,7 +36,7 @@ import static btw.community.nightmaremode.NightmareMode.*;
 import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker, EntityPlayerExt {
 
 
     @Shadow public abstract ItemStack getHeldItem();
@@ -52,19 +53,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
     @Shadow public abstract <T> T getData(DataEntry.PlayerDataEntry<T> var1);
-
-    @Shadow
-    protected abstract void detonateCarriedBlastingOil();
-
-    @Shadow
-    public abstract void addStat(StatBase par1StatBase, int par2);
-
-    @Shadow
-    protected abstract boolean isCarryingBlastingOil();
+    @Shadow protected abstract void detonateCarriedBlastingOil();
+    @Shadow public abstract void addStat(StatBase par1StatBase, int par2);
+    @Shadow protected abstract boolean isCarryingBlastingOil();
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
+    @Unique private float targetVignette = 0.5f;
+
+    public void nightmareMode$setTargetVignette(float target) {
+        this.targetVignette = target;
+
+    }
+    public float nightmareMode$getTargetVignette() {
+        return this.targetVignette;
+    }
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
