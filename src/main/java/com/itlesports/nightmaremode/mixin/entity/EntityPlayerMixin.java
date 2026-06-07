@@ -504,6 +504,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private boolean shouldActivate(NMConfUtils.CONFIG conf) {
         EntityPlayer p = (EntityPlayer)(Object)this;
 
+        if(NMConfUtils.isConfigCompleted(conf)) return false;
+
         return switch (conf.getClearCondition()) {
             case CLEAR_BLOODMOON -> NMUtils.getWorldProgress() > PREHARDMODE
                     && this.getData(DEFEATED_BM);
