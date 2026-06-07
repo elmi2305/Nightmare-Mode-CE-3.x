@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
@@ -628,6 +627,11 @@ public abstract class RenderGlobalMixin {
             renderSkyboxObjects();
             return;
         }
+
+        if(NMUtils.getWorldProgress() > 1){
+            setSkyboxTint(0xFF0000, 0.5f);
+            renderBasicSkybox(SKYBOX_WHITE);
+        }
     }
 
     @Unique
@@ -711,9 +715,21 @@ public abstract class RenderGlobalMixin {
         GL11.glPopMatrix();
         GL11.glPopAttrib();
     }
+
+    @Unique private int skyboxTargetColor = 0xFFFFFF;
+    @Unique private float skyboxAlpha = 0xFF;
+    @Unique private float skyboxCurrentR = 1.0F;
+    @Unique private float skyboxCurrentG = 1.0F;
+    @Unique private float skyboxCurrentB = 1.0F;
+    @Unique private long skyboxLastUpdateTime = System.nanoTime();
+    @Unique
+    public void setSkyboxTint(int rgb, float alpha) {
+        this.skyboxTargetColor = rgb & 0xFFFFFF;
+        this.skyboxAlpha = alpha;
+    }
     @Unique
     private void renderBasicSkybox(ResourceLocation location) {
-        final float radius = 120;
+        final float radius = 60;
         final int latSteps = 12;
         final int lonSteps = 48;
 
@@ -724,6 +740,21 @@ public abstract class RenderGlobalMixin {
         } catch (Exception e) {
             return;
         }
+
+        long now = System.nanoTime();
+        float deltaSeconds = (now - this.skyboxLastUpdateTime) * 1.0E-9F;
+        this.skyboxLastUpdateTime = now;
+
+        float targetR = ((this.skyboxTargetColor >> 16) & 255) / 255.0F;
+        float targetG = ((this.skyboxTargetColor >> 8) & 255) / 255.0F;
+        float targetB = (this.skyboxTargetColor & 255) / 255.0F;
+
+        float fadeSpeed = 5.0F;
+        float blend = 1.0F - (float)Math.exp(-fadeSpeed * deltaSeconds);
+
+        this.skyboxCurrentR += (targetR - this.skyboxCurrentR) * blend;
+        this.skyboxCurrentG += (targetG - this.skyboxCurrentG) * blend;
+        this.skyboxCurrentB += (targetB - this.skyboxCurrentB) * blend;
 
         GL11.glPushAttrib(
                 GL11.GL_ENABLE_BIT
@@ -741,15 +772,21 @@ public abstract class RenderGlobalMixin {
         GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glDepthMask(false);
 
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        GL11.glColor4f(
+                this.skyboxCurrentR,
+                this.skyboxCurrentG,
+                this.skyboxCurrentB,
+                this.skyboxAlpha
+        );
 
         Tessellator tess = Tessellator.instance;
 
         for (int lat = 0; lat < latSteps; lat++) {
             double minTheta = -Math.PI / 6.0;
             double maxTheta = Math.PI / 2.0;
-            double theta0 = minTheta + (maxTheta - minTheta) * ((double) lat / latSteps);
-            double theta1 = minTheta + (maxTheta - minTheta) * ((double) (lat + 1) / latSteps);
+
+            double theta0 = minTheta + (maxTheta - minTheta) * ((double)lat / latSteps);
+            double theta1 = minTheta + (maxTheta - minTheta) * ((double)(lat + 1) / latSteps);
 
             double y0 = Math.sin(theta0) * radius;
             double y1 = Math.sin(theta1) * radius;
@@ -758,9 +795,10 @@ public abstract class RenderGlobalMixin {
             double r1 = Math.cos(theta1) * radius;
 
             tess.startDrawingQuads();
+
             for (int lon = 0; lon < lonSteps; lon++) {
-                double phi0 = 2.0 * Math.PI * ((double) lon / lonSteps);
-                double phi1 = 2.0 * Math.PI * ((double) (lon + 1) / lonSteps);
+                double phi0 = 2.0 * Math.PI * ((double)lon / lonSteps);
+                double phi1 = 2.0 * Math.PI * ((double)(lon + 1) / lonSteps);
 
                 double x00 = r0 * Math.cos(phi0);
                 double z00 = r0 * Math.sin(phi0);
@@ -774,16 +812,17 @@ public abstract class RenderGlobalMixin {
                 double x11 = r1 * Math.cos(phi1);
                 double z11 = r1 * Math.sin(phi1);
 
-                float u0 = (float) lon / lonSteps;
-                float u1 = (float) (lon + 1) / lonSteps;
-                float v0 = (float) lat / latSteps;
-                float v1 = (float) (lat + 1) / latSteps;
+                float u0 = (float)lon / lonSteps;
+                float u1 = (float)(lon + 1) / lonSteps;
+                float v0 = (float)lat / latSteps;
+                float v1 = (float)(lat + 1) / latSteps;
 
                 tess.addVertexWithUV(x10, y1, z10, u0, v1);
                 tess.addVertexWithUV(x11, y1, z11, u1, v1);
                 tess.addVertexWithUV(x01, y0, z01, u1, v0);
                 tess.addVertexWithUV(x00, y0, z00, u0, v0);
             }
+
             tess.draw();
         }
 
