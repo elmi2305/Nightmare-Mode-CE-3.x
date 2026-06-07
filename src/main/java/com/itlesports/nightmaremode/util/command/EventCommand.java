@@ -78,16 +78,17 @@ public class EventCommand extends CommandBase {
         reference = world.getWorldTime();
 
         if (eventArg.equals("bloodmoon") || eventArg.equals("bm")) {
-            NightmareMode.setBloodmoon(value);
 
             if (value) {
                 world.setWorldTime(NMUtils.getNextBloodMoonTime(world.getWorldTime()) - 5000);
                 NightmareMode.worldState = Math.max(NightmareMode.worldState, 1);
             } else{
                 if (NMUtils.getIsBloodMoon()) {
-                    world.setWorldTime(NMUtils.getNextBloodMoonTime(world.getWorldTime()) + 5000);
+                    world.setWorldTime(NMUtils.getNextBloodMoonTime(world.getWorldTime()) + 6000);
                 }
             }
+            NightmareMode.setBloodmoon(value);
+
         }
         else if (eventArg.equals("eclipse") || eventArg.equals("ec")) {
             NightmareMode.setEclipse(value);
