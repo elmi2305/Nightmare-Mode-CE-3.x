@@ -61,11 +61,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
     @Unique private float targetVignette = 0.5f;
+    @Unique private float fear = 0f;
 
     public void nightmareMode$setTargetVignette(float target) {
         this.targetVignette = target;
-
     }
+
+    @Override
+    public void nightmareMode$setFear(float targetFear) {
+        this.fear = targetFear;
+    }
+
+    @Override
+    public float nightmareMode$getFear() {
+        return this.fear;
+    }
+
     public float nightmareMode$getTargetVignette() {
         return this.targetVignette;
     }
