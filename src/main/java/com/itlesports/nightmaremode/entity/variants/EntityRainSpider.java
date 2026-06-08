@@ -1,9 +1,10 @@
 package com.itlesports.nightmaremode.entity.variants;
 
 import com.itlesports.nightmaremode.util.NMEvents;
-import net.minecraft.src.EntitySpider;
-import net.minecraft.src.SharedMonsterAttributes;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class EntityRainSpider extends EntitySpider {
     // used exclusively so it can spawn a ton during the spider rain event
@@ -22,6 +23,29 @@ public class EntityRainSpider extends EntitySpider {
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32);
     }
 
+    @Override
+    protected Entity findPlayerToAttack() {
+        EntityLivingBase targetEntity = null;
+        if (!(this.doesLightAffectAggessiveness() && !(this.getBrightness(1.0f) < 0.5f) || this.isAlwaysNeutral())) {
+            targetEntity = this.worldObj.getClosestVulnerablePlayerToEntity(this, 32);
+        }
+        if (targetEntity == null) {
+            List chickenList = this.worldObj.getEntitiesWithinAABB(EntityChicken.class, this.boundingBox.expand(16.0, 4.0, 16.0));
+            Iterator chickenIterator = chickenList.iterator();
+            double dClosestChickenDistSq = 257.0;
+            while (chickenIterator.hasNext()) {
+                double dDeltaZ;
+                double dDeltaY;
+                double dDeltaX;
+                double dDistSq;
+                EntityChicken chicken = (EntityChicken)chickenIterator.next();
+                if (chicken.isLivingDead || !((dDistSq = (dDeltaX = this.posX - chicken.posX) * dDeltaX + (dDeltaY = this.posY - chicken.posY) * dDeltaY + (dDeltaZ = this.posZ - chicken.posZ) * dDeltaZ) < dClosestChickenDistSq)) continue;
+                targetEntity = chicken;
+                dClosestChickenDistSq = dDistSq;
+            }
+        }
+        return targetEntity;
+    }
 
     @Override
     protected boolean isValidLightLevel() {
