@@ -30,7 +30,6 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
             if (iBlockID != 0) {
                 Block block = Block.blocksList[iBlockID];
                 if (getAvoidedBlocks().contains(iBlockID)) {
-                    System.out.println("Encountered avoided block: " + block.getLocalizedName());
                     cir.setReturnValue(null);
                     return;
                 }
