@@ -571,7 +571,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void onUpdateHookTail(CallbackInfo ci){
         this.addonStuff();
 
-        if(this.worldObj.isRemote && this.ticksExisted % 4 == 0){
+        if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
             float fear = this.nightmareMode$getFear();
             float brightness = this.worldObj.getLightBrightness((int) ( this.posX + 0.5f), (int) this.posY, (int) (this.posZ + 0.5f));
             float lightModifier = Math.max(1 - Math.min(brightness * 2, 1), 0.5f); // 0 - 1 float clamped to 0.5f - 1.0f
@@ -590,6 +590,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
             if(this.getGloomLevel() > 0){
                 this.nightmareMode$setFear(Math.min(fear + 0.05f, 0.8f));
+            }
+            if(!this.worldObj.isDaytime()){
+                this.nightmareMode$setFear(Math.min(fear + 0.01f, 0.1f));
             }
 
             float h;
