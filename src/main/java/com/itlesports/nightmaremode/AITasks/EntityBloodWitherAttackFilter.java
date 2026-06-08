@@ -1,9 +1,6 @@
 package com.itlesports.nightmaremode.AITasks;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.EnumCreatureAttribute;
-import net.minecraft.src.IEntitySelector;
+import net.minecraft.src.*;
 
 public class EntityBloodWitherAttackFilter implements IEntitySelector {
     public EntityBloodWitherAttackFilter() {}
@@ -11,7 +8,7 @@ public class EntityBloodWitherAttackFilter implements IEntitySelector {
 
     @Override
     public boolean isEntityApplicable(Entity entity) {
-        return entity instanceof EntityLivingBase && ((EntityLivingBase)entity).getCreatureAttribute() != EnumCreatureAttribute.UNDEAD;
+        return entity instanceof EntityPlayer;
     }
 }
 
