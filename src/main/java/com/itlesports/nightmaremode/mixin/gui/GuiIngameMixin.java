@@ -375,7 +375,7 @@ public class GuiIngameMixin extends Gui {
     }
     @Unique private float vignetteTarget = 0.5f;
     @Unique private float vignetteCurrent = 0.0F;
-    @Unique private float vignetteFadeSpeed = 12.0F;
+    @Unique private float vignetteFadeSpeed = 8.0F;
     @Unique private long vignetteLastUpdate = System.nanoTime();
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
@@ -428,6 +428,9 @@ public class GuiIngameMixin extends Gui {
 
         float target = 0.4F + vanillaContribution + fear * 0.5F + blinkDarkness;
 
+        if(brightness >= 1.0f) {
+            target = Math.max(target / 2, 0.2f );
+        }
         if (target < 0.0F) {
             target = 0.0F;
         } else if (target > 1.0F) {
