@@ -573,15 +573,29 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         if(this.worldObj.isRemote && this.ticksExisted % 4 == 0){
             float fear = this.nightmareMode$getFear();
+            float brightness = this.worldObj.getLightBrightness((int) ( this.posX + 0.5f), (int) this.posY, (int) (this.posZ + 0.5f));
+            float lightModifier = Math.max(1 - Math.min(brightness * 2, 1), 0.5f); // 0 - 1 float clamped to 0.5f - 1.0f
+
             if(NMUtils.getIsBloodMoon()){
                 this.nightmareMode$setFear(Math.max(0.5f, fear));
             }
-            else if(this.posY < 24 && this.dimension == 0){
-                this.nightmareMode$setFear(Math.max(0.3f, fear));
+            else if(this.dimension == 0){
+                if(this.posY < 24){
+                    this.nightmareMode$setFear(Math.max(0.25f * lightModifier, fear));
+                } else if (this.posY < 48){
+                    this.nightmareMode$setFear(Math.max(0.2f * lightModifier, fear));
+                } else if(this.posY < 60){
+                    this.nightmareMode$setFear(Math.max(0.1f * lightModifier, fear));
+                }
             }
             if(this.getGloomLevel() > 0){
                 this.nightmareMode$setFear(Math.min(fear + 0.05f, 0.8f));
+            }
 
+            float h;
+            float m;
+            if((h = this.getHealth()) < (m = this.getMaxHealth() / 2)){
+                this.nightmareMode$setFear(Math.max(0.07f * (m - h), fear));
             }
         }
 
