@@ -10,6 +10,7 @@
     "ArmorItemSpecialMixin",
     "BonusBasketGeneratorMixin",
     "BTWItemsMixin",
+    "BTWPluginMixin",
     "BucketItemWaterMixin",
     "ChunkMixin",
     "DamageSourceMixin",
