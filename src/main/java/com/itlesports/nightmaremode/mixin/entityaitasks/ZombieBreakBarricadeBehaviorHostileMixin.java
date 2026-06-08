@@ -6,6 +6,7 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
     @Inject(method = "updateTask", at = @At("HEAD"))
     private void toolZombieBreaksFaster(CallbackInfo ci){
-        if(this.associatedEntity instanceof EntityBloodZombie){
+        if(this.associatedEntity instanceof EntityBloodZombie || NMUtils.getIsBloodMoon()){
             this.breakingTime += 8;
         }
         int timeSpentBreaking = this.associatedEntity instanceof EntityZombieExt ext ? ext.nightmareMode$getTimeSpentBreaking() : 0;
