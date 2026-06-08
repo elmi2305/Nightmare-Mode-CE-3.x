@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import api.util.MathUtils;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.util.NMConfUtils;
@@ -376,7 +375,7 @@ public class GuiIngameMixin extends Gui {
     }
     @Unique private float vignetteTarget = 0.5f;
     @Unique private float vignetteCurrent = 0.0F;
-    @Unique private float vignetteFadeSpeed = 3.0F;
+    @Unique private float vignetteFadeSpeed = 12.0F;
     @Unique private long vignetteLastUpdate = System.nanoTime();
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
@@ -397,14 +396,6 @@ public class GuiIngameMixin extends Gui {
     @Unique
     private void renderVignetteNightmare(float brightness, int width, int height) {
         float vanillaTarget = 1.0F - brightness;
-        this.vignetteTarget = ((EntityPlayerExt)(this.mc.thePlayer)).nightmareMode$getTargetVignette();
-
-        if (Math.abs(this.vignetteTarget - 0.5f) > 0.001f) {
-            this.vignetteTarget = lerp(0.0015f, this.vignetteTarget, 0.5f);
-            ((EntityPlayerExt)(this.mc.thePlayer)).nightmareMode$setTargetVignette(this.vignetteTarget);
-        } else {
-            this.vignetteTarget = 0.5f;
-        }
 
         if (vanillaTarget < 0.0F) {
             vanillaTarget = 0.0F;
@@ -412,7 +403,27 @@ public class GuiIngameMixin extends Gui {
             vanillaTarget = 1.0F;
         }
 
-        float target = vanillaTarget + this.vignetteTarget;
+        float fear = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getFear();
+
+        if (Math.abs(fear) > 0.001f) {
+            float lc = fear > 0.5f ? 0.0015f : 0.005f;
+            fear = lerp(lc, fear, 0f);
+            ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$setFear(fear);
+//            System.out.println(fear);
+        } else {
+            fear = 0f;
+        }
+        float vanillaContribution = vanillaTarget * 0.20F;
+
+        long worldTime = this.mc.theWorld != null
+                ? this.mc.theWorld.getTotalWorldTime()
+                : 0L;
+
+        float blink = (float)((Math.sin(worldTime * 0.08D) + 1.0D) * 0.1D);
+
+        float blinkDarkness = blink * (fear > 0.2 ? 1 : 0);
+
+        float target = 0.4F + vanillaContribution + fear * 0.5F + blinkDarkness;
 
         if (target < 0.0F) {
             target = 0.0F;
