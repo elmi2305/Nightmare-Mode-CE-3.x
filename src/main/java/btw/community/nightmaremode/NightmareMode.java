@@ -17,10 +17,7 @@ import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import com.itlesports.nightmaremode.util.*;
-import com.itlesports.nightmaremode.util.command.EventCommand;
-import com.itlesports.nightmaremode.util.command.RevertEventTimeCommand;
-import com.itlesports.nightmaremode.util.command.WarpCommand;
-import com.itlesports.nightmaremode.util.command.WorldStateCommand;
+import com.itlesports.nightmaremode.util.command.*;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
@@ -202,6 +199,8 @@ public class NightmareMode extends BTWAddon {
         }
         AddonHandler.registerCommand(new WorldStateCommand(), false);
         AddonHandler.registerCommand(new EventCommand(), false);
+        AddonHandler.registerCommand(new DayCommand(), false);
+        AddonHandler.registerCommand(new NightCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
         AddonHandler.registerCommand(new WarpCommand(), false);
 
