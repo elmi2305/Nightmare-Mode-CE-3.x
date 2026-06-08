@@ -57,6 +57,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract void addStat(StatBase par1StatBase, int par2);
     @Shadow protected abstract boolean isCarryingBlastingOil();
 
+    @Shadow public abstract int getGloomLevel();
+
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
@@ -569,7 +571,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void onUpdateHookTail(CallbackInfo ci){
         this.addonStuff();
 
-        if ((this.ticksExisted % 100 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !MinecraftServer.getIsServer()) {
+        if(this.worldObj.isRemote && this.ticksExisted % 4 == 0){
+            float fear = this.nightmareMode$getFear();
+            if(NMUtils.getIsBloodMoon()){
+                this.nightmareMode$setFear(Math.max(0.5f, fear));
+            }
+            else if(this.posY < 24 && this.dimension == 0){
+                this.nightmareMode$setFear(Math.max(0.3f, fear));
+            }
+            if(this.getGloomLevel() > 0){
+                this.nightmareMode$setFear(Math.min(fear + 0.05f, 0.8f));
+
+            }
+        }
+
+        if ((this.ticksExisted % 128 == 5 || NMConfUtils.isClientUsingHelpConfig()) && !MinecraftServer.getIsServer()) {
             EntityPlayer self = (EntityPlayer)(Object)this;
 
             boolean client = this.worldObj.isRemote;
