@@ -628,10 +628,10 @@ public abstract class RenderGlobalMixin {
             return;
         }
 
-        if(NMUtils.getWorldProgress() > 1){
-            setSkyboxTint(0xFF0000, 0.5f);
-            renderBasicSkybox(SKYBOX_WHITE);
-        }
+//        if(NMUtils.getWorldProgress() > 1){
+//            setSkyboxTint(0xFF0000, 0.5f);
+//            renderBasicSkybox(SKYBOX_WHITE);
+//        }
     }
 
     @Unique
