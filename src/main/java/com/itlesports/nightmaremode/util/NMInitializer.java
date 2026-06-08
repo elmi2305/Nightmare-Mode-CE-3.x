@@ -88,6 +88,7 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         addMobToAllBiomes(EntityFireCreeper.class, 4, 1, 2);
+        addMobToAllBiomes(EntityRainSpider.class, 40, 1, 4);
         addMobToAllBiomes(EntityGhast.class, 1, 1, 1);
         addMobToAllBiomes(EntityFireSpider.class, 1, 1, 2);
         addMobToAllBiomes(EntityStoneZombie.class, 1, 1, 2);

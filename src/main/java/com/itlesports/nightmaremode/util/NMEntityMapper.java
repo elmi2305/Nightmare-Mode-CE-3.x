@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.entity.variants.*;
 import net.minecraft.src.EntityList;
+import net.minecraft.src.EntitySpider;
 import net.minecraft.src.TileEntity;
 
 public class NMEntityMapper {
@@ -47,6 +48,8 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityVoidCreeper.class, "NmEntityVoidCreeper", 2333, 0,0x4F4F4F);
         EntityList.addMapping(EntityGelCreeper.class, "NmEntityGelCreeper", 2334, 0xf071eb,0xeddfed);
         EntityList.addMapping(EntityGlitchCreeper.class, "NmEntityGlitchCreeper", 2335, 0x27ba40,0xff00dd);
+        EntityList.addMapping(EntityRainSpider.class, "Spider", 52);
+
     }
 
     public static void createTileEntityMappings(){
