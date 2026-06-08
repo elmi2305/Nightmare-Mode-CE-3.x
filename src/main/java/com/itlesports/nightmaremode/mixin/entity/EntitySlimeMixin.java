@@ -156,7 +156,7 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseSlimeSize(World par1World, CallbackInfo ci){
-        if(NMUtils.getIsEclipse() || (NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0)){
+        if(NMUtils.getIsEclipse() || (NightmareMode.evolvedMobs && this.rand.nextInt(8) == 0) || NMEvents.SimpleEvent.JELLY_SLIMES.isActive()){
             this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, 1000000,0));
             this.setSlimeSize(this.getSlimeSize() + this.rand.nextInt(5));
         }
