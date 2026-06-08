@@ -213,6 +213,7 @@
     "interfaces.TradeBuilderAccessor",
     "interfaces.WorldInfoAccessor",
     "render.RenderBipedMixin",
+    "render.RenderLightningBoltMixin",
     "render.RenderLivingEntityMixin",
     "render.RenderManagerMixin",
     "render.TileEntityRendererMixin"
