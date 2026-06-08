@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWWorldData;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -52,7 +51,7 @@ public class BlockPortalMixin{
                     }
 
                     if(player instanceof EntityPlayerExt epe){
-                        NightmareMode.sendTargetVignetteToClient((EntityPlayerMP) player, 1.8f);
+                        epe.nightmareMode$setFear(1.0f);
 
                     }
 

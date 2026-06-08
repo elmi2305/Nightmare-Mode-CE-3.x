@@ -69,6 +69,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public void nightmareMode$setFear(float targetFear) {
+        if(!this.worldObj.isRemote){
+            NightmareMode.sendTargetFearToClient((EntityPlayerMP) (Object) this, 1.0f);
+        }
         this.fear = targetFear;
     }
 

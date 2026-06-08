@@ -60,6 +60,7 @@ public class NightmareMode extends BTWAddon {
     public boolean canAccessMenu = true;
     public double NITE_MULTIPLIER = 1;
     public static int worldState;
+    public static float[] skyColors;
 
     // configs
     public static Boolean shouldShowDateTimer;
@@ -368,11 +369,11 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
-        AddonHandler.registerPacketHandler("nm|vig", (packet, player) -> {
+        AddonHandler.registerPacketHandler("nm|fear", (packet, player) -> {
             try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
-                float vignette = data.readFloat();
+                float fear = data.readFloat();
                 if (player instanceof EntityPlayerExt) {
-                    ((EntityPlayerExt) player).nightmareMode$setTargetVignette(vignette);
+                    ((EntityPlayerExt) player).nightmareMode$setFear(fear);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -530,7 +531,7 @@ public class NightmareMode extends BTWAddon {
 //        Minecraft.getMinecraft().getNetHandler().addToSendQueue(packet);
     }
 
-    public static void sendTargetVignetteToClient(EntityPlayerMP player, float target){
+    public static void sendTargetFearToClient(EntityPlayerMP player, float target){
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
         try {
@@ -539,7 +540,7 @@ public class NightmareMode extends BTWAddon {
             e.printStackTrace();
         }
 
-        Packet250CustomPayload packet = new Packet250CustomPayload("nm|vig", byteStream.toByteArray());
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|fear", byteStream.toByteArray());
         player.playerNetServerHandler.sendPacketToPlayer(packet);
     }
 
