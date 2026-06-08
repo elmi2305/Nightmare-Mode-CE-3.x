@@ -7,6 +7,7 @@ import btw.entity.mob.BTWCaveSpiderEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityBloodWitherAttackFilter;
+import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
 import com.itlesports.nightmaremode.entity.creepers.EntityLightningCreeper;
 import com.itlesports.nightmaremode.entity.creepers.EntityNitroCreeper;
@@ -694,6 +695,9 @@ public class EntityBloodWither extends EntityWither {
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
         setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive() && this.isEntityAlive());
+        if((this.playerTarget == null || !this.playerTarget.isEntityAlive()) && this.getInvulnerabilityTime() == 0 || !this.isEntityAlive()){
+            NMUtils.shushMusic();
+        }
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
             int i;
             do {
@@ -993,6 +997,60 @@ public class EntityBloodWither extends EntityWither {
 
         }
     }
+    private int[] getArenaBuildOrder() {
+        if (this.arenaBuildOrder != null) {
+            return this.arenaBuildOrder;
+        }
+
+        int[] order = new int[60 * 60];
+        int count = 0;
+
+        int x = 30;
+        int z = 30;
+
+        if (x >= 0 && x < 60 && z >= 0 && z < 60) {
+            order[count++] = x + z * 60;
+        }
+
+        int step = 1;
+        while (count < order.length) {
+            for (int i = 0; i < step && count < order.length; i++) {
+                x++;
+                if (x >= 0 && x < 60 && z >= 0 && z < 60) {
+                    order[count++] = x + z * 60;
+                }
+            }
+
+            for (int i = 0; i < step && count < order.length; i++) {
+                z--;
+                if (x >= 0 && x < 60 && z >= 0 && z < 60) {
+                    order[count++] = x + z * 60;
+                }
+            }
+
+            step++;
+
+            for (int i = 0; i < step && count < order.length; i++) {
+                x--;
+                if (x >= 0 && x < 60 && z >= 0 && z < 60) {
+                    order[count++] = x + z * 60;
+                }
+            }
+
+            for (int i = 0; i < step && count < order.length; i++) {
+                z++;
+                if (x >= 0 && x < 60 && z >= 0 && z < 60) {
+                    order[count++] = x + z * 60;
+                }
+            }
+
+            step++;
+        }
+
+        this.arenaBuildOrder = order;
+        return order;
+    }
+    private int[] arenaBuildOrder;
 
     @Override
     protected void updateAITasks() {
@@ -1000,15 +1058,22 @@ public class EntityBloodWither extends EntityWither {
 
             int healthTimer = this.getHealthTimer() - 1;
 
-            if (healthTimer == 399) bakeArenaPattern(this.rand);
+            if (healthTimer == 239) bakeArenaPattern(this.rand);
 
-            if (isWithin(healthTimer, 140, 320)) {
-                int tick  = healthTimer - 140;           // 180..0
-                int start = (180 - tick) * 20;         // 0..3580, 20 blocks/tick
+            if (isWithin(healthTimer, 51, 230)) {
+                int tick = healthTimer;                 // 180..1
+                int start = (230 - tick) * 20;          // 0..3580
+                int end = Math.min(start + 20, arenaPattern.length);
+
                 int bx = this.origin[0] - 30;
                 int bz = this.origin[2] + 30;
-                for (int b = start; b < Math.min(start + 20, arenaPattern.length); b++) {
-                    this.worldObj.setBlock(bx + (b % 60), 199, bz - (b / 60), arenaPattern[b], 0, 2);
+                int[] order = getArenaBuildOrder();
+
+                for (int b = start; b < end; b++) {
+                    int local = order[b];
+                    int x = local % 60;
+                    int z = local / 60;
+                    this.worldObj.setBlock(bx + x, 199, bz - z, arenaPattern[b], 0, 2);
                 }
             }
             if(healthTimer == 30){
@@ -1031,8 +1096,8 @@ public class EntityBloodWither extends EntityWither {
                 this.activity = true;
             }
             this.setHealthTimer(healthTimer);
-            if (this.ticksExisted % 10 == 0) {
-                this.heal(15f);
+            if (this.ticksExisted % 8 == 0) {
+                this.heal(20f);
             }
         } else {
             int targetId;
@@ -1142,6 +1207,7 @@ public class EntityBloodWither extends EntityWither {
         } else{
             amount = Math.min(amount * 1.5f, 30);
         }
+        amount = 1000f;
         if (this.witherPhase < 2 && this.getHealth() <= (amount + 1)) {
             this.witherPhase += 1;
             this.reviveTimer = 600;
@@ -1163,7 +1229,8 @@ public class EntityBloodWither extends EntityWither {
 
     @Override
     public void func_82206_m() {
-        this.setHealthTimer(400);
+        NMUtils.forcePlayMusic(NightmareModeAddon.NM_BLOODWITHER.sound(), true);
+        this.setHealthTimer(240);
         this.setHealth(this.getMaxHealth() / 16.0F);
     }
 
