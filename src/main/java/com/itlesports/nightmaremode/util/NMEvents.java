@@ -30,6 +30,15 @@ public class NMEvents {
                     w.getWorldInfo().setRaining(false);
                 }
             }
+        },
+        SPIDER_RAIN("nmSpiderRain", ConditionType.NIGHT_ENDS_WITH, 42, 4, NMFields.HARDMODE, EnumChatFormatting.GRAY) {
+            @Override
+            protected void doCustomEventLogic(World w) {
+                if (!w.isRaining()) {
+                    w.getWorldInfo().setRaining(true);
+                    w.getWorldInfo().setRainTime(12000);
+                }
+            }
         };
 
         private final String string;
