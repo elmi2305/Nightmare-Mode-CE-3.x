@@ -34,13 +34,12 @@ public class NMEvents {
 
         private final String string;
         private final ConditionType condition;
-        private final int constant;                    // ← moved here
+        private final int constant;
         private boolean wasChosen;
         public final int id;
         public final int worldStateRequirement;
-        public EnumChatFormatting color = EnumChatFormatting.WHITE;
+        public final EnumChatFormatting color;
 
-        // Main constructor
         SimpleEvent(String name1, ConditionType conditionType, int constant, int id,
                     int worldStateRequirement, EnumChatFormatting color) {
             this.string = name1;
