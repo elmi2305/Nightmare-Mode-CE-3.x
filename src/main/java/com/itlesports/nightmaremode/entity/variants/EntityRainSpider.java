@@ -24,6 +24,11 @@ public class EntityRainSpider extends EntitySpider {
 
 
     @Override
+    protected boolean isValidLightLevel() {
+        return true;
+    }
+
+    @Override
     protected boolean canDespawn() {
         return super.canDespawn() && !NMEvents.SimpleEvent.SPIDER_RAIN.isActive() && this.posY > 60;
     }
