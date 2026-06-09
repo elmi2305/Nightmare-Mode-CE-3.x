@@ -2,11 +2,9 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
-import net.minecraft.src.EntityMagmaCube;
-import net.minecraft.src.EntitySlime;
-import net.minecraft.src.SharedMonsterAttributes;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,6 +27,20 @@ public class EntityMagmaCubeMixin extends EntitySlime {
     {
         if(this.dimension == 0 && !NMEvents.SimpleEvent.HELL.isActive()){
             cir.setReturnValue(false);
+        }
+    }
+
+    @Unique private boolean isValidForEventLoot = false;
+
+    @Override
+    public boolean attackEntityFrom(DamageSource src, float par2) {
+        this.isValidForEventLoot = src.getEntity() instanceof EntityPlayer;
+        return super.attackEntityFrom(src, par2);
+    }
+    @Inject(method = "dropFewItems", at = @At("HEAD"),cancellable = true)
+    private void doNotDropCreamOnHellSawKill(boolean par1, int par2, CallbackInfo ci){
+        if(NMEvents.SimpleEvent.HELL.isActive() && !this.isValidForEventLoot){
+            ci.cancel();
         }
     }
 

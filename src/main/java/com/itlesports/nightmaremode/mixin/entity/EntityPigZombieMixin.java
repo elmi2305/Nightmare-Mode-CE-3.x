@@ -89,8 +89,13 @@ public class EntityPigZombieMixin extends EntityZombie {
         this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
     }
 
-    @Inject(method = "dropFewItems", at = @At("TAIL"))
+
+    @Inject(method = "dropFewItems", at = @At("HEAD"), cancellable = true)
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        if(NMEvents.SimpleEvent.HELL.isActive() && !this.isValidForEventLoot) {
+            ci.cancel();
+            return;
+        }
         if (bKilledByPlayer && this.isValidForEventLoot) {
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
@@ -130,6 +135,7 @@ public class EntityPigZombieMixin extends EntityZombie {
     @Override
     protected void dropEquipment(boolean par1, int par2) {
         if(this.rand.nextInt(8) == 0) {
+            if(!this.isValidForEventLoot && NMEvents.SimpleEvent.HELL.isActive()) return;
             super.dropEquipment(par1, par2);
         }
     }
