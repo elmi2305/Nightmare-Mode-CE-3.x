@@ -404,7 +404,7 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
     private void setFogDistance(int par1, float par2, CallbackInfo ci)
     {
         if(NMEvents.SimpleEvent.HELL.isActive()){
-            this.farPlaneDistance = 100f;
+            this.farPlaneDistance = 80f;
         }
     }
     @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isPotionActive(Lnet/minecraft/src/Potion;)Z",ordinal = 1))
