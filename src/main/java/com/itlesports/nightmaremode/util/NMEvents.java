@@ -23,7 +23,7 @@ public class NMEvents {
             protected void doCustomEventLogic(World w) {}
         },
 
-        GREAT_HARVEST("nmGreatHarvest", ConditionType.DAY_MULTIPLE, 44, 3, NMFields.HARDMODE, EnumChatFormatting.GOLD) {
+        GREAT_HARVEST("nmGreatHarvest", ConditionType.DAY_MULTIPLE, 60, 3, NMFields.HARDMODE, EnumChatFormatting.GOLD) {
             @Override
             protected void doCustomEventLogic(World w) {
                 if (w.isRaining()) {
@@ -39,7 +39,11 @@ public class NMEvents {
                 }
             }
         },
-        SPIDER_RAIN("nmSpiderRain", ConditionType.NIGHT_ENDS_WITH, 42, 5, NMFields.HARDMODE, EnumChatFormatting.GRAY) {
+        TREE_HARVEST(ConditionType.DAY_MULTIPLE, 50, 5, NMFields.PREHARDMODE) {
+            @Override
+            protected void doCustomEventLogic(World w) {}
+        },
+        SPIDER_RAIN("nmSpiderRain", ConditionType.NIGHT_ENDS_WITH, 42, 6, NMFields.HARDMODE, EnumChatFormatting.GRAY) {
             @Override
             protected void doCustomEventLogic(World w) {
                 if (!w.isRaining()) {

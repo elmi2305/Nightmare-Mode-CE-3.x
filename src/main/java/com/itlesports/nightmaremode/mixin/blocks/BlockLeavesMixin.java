@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -57,7 +58,10 @@ public class BlockLeavesMixin extends BlockLeavesBase {
     }
 
     @Override
-    public int tickRate(World par1World) {
+    public int tickRate(World w) {
+        if(NMEvents.SimpleEvent.TREE_HARVEST.isActive()){
+            return 1;
+        }
         return 4;
     }
 }
