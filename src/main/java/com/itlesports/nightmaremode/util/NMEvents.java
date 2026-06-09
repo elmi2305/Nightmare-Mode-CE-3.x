@@ -31,7 +31,15 @@ public class NMEvents {
                 }
             }
         },
-        SPIDER_RAIN("nmSpiderRain", ConditionType.NIGHT_ENDS_WITH, 42, 4, NMFields.HARDMODE, EnumChatFormatting.GRAY) {
+        HELL("nmHell", ConditionType.NIGHT_MULTIPLE, 100, 4, NMFields.HARDMODE, EnumChatFormatting.RED) {
+            @Override
+            protected void doCustomEventLogic(World w) {
+                if (w.isRaining()) {
+                    w.getWorldInfo().setRaining(false);
+                }
+            }
+        },
+        SPIDER_RAIN("nmSpiderRain", ConditionType.NIGHT_ENDS_WITH, 42, 5, NMFields.HARDMODE, EnumChatFormatting.GRAY) {
             @Override
             protected void doCustomEventLogic(World w) {
                 if (!w.isRaining()) {
@@ -157,6 +165,9 @@ public class NMEvents {
 
         // these packets get sent to players in ONLY the overworld, as events only run on that world server
         NightmareMode.sendEventsPacketToAll(chosen != null ? chosen.id : 0);
+    }
+    public static boolean noEventsActive(){
+        return NightmareMode.getInstance().activeEventsInt == 0;
     }
 
 
