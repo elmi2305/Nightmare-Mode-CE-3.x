@@ -1,11 +1,18 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.block.BTWBlocks;
+import btw.block.blocks.MushroomBlockBrown;
+import btw.block.blocks.MushroomCapBlock;
+import btw.block.blocks.legacy.LegacyMushroomCapBlock;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import net.minecraft.src.Block;
+import net.minecraft.src.BlockMushroom;
+import net.minecraft.src.BlockMushroomCap;
 import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -90,6 +97,7 @@ public abstract class BTWPluginMixin {
         this.info(registry, Item.horseArmorIron, 0, "nm.horseArmor.info");
         this.info(registry, Item.appleGold, 0, "nm.goldenApple.info");
         this.info(registry, Item.appleGold, 1, "nm.goldenAppleEnchanted.info");
+        this.info(registry, BTWItems.brownMushroom, 0, "nm.brownMushroom.info");
 
     }
 }
