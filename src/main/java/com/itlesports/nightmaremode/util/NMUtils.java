@@ -60,6 +60,11 @@ public class NMUtils {
             Item.axeGold.itemID
     ));
 
+    // float lerp helper
+    public static float lerp(float d, float e, float f) {
+        return e + d * (f - e);
+    }
+
     // World state and time methods
     public static int getWorldProgress() {
         return NightmareMode.worldState;

@@ -388,11 +388,6 @@ public class GuiIngameMixin extends Gui {
     }
 
     @Unique
-    private float lerp(float d, float e, float f) {
-        return e + d * (f - e);
-    }
-
-    @Unique
     private void renderVignetteNightmare(float brightness, int width, int height) {
         float vanillaTarget = 1.0F - brightness;
         boolean paused = this.mc.getIsGamePaused();
@@ -408,7 +403,7 @@ public class GuiIngameMixin extends Gui {
         if (Math.abs(fear) > 0.001f) {
             float lc = fear > 0.5f ? 0.0015f : 0.005f;
             if (!paused) {
-                fear = lerp(lc, fear, 0f);
+                fear = NMUtils.lerp(lc, fear, 0f);
             }
             ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$setFear(fear);
 //            System.out.println(fear);
