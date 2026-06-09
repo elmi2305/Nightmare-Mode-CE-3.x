@@ -83,10 +83,15 @@ public class EntityPigZombieMixin extends EntityZombie {
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
     }
 
+    @Unique private boolean isValidForEventLoot = false;
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
+    }
 
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (bKilledByPlayer) {
+        if (bKilledByPlayer && this.isValidForEventLoot) {
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
                 int var4 = this.rand.nextInt(2);
