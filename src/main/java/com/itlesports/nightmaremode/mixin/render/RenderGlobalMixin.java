@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
@@ -627,11 +628,15 @@ public abstract class RenderGlobalMixin {
             renderSkyboxObjects();
             return;
         }
+        if(NMEvents.noEventsActive()){
+            this.skyboxTargetAlpha = 0f;
+        }
 
-//        if(NMUtils.getWorldProgress() > 1){
-//            setSkyboxTint(0xFF0000, 0.5f);
-//            renderBasicSkybox(SKYBOX_WHITE);
-//        }
+
+        if(NMEvents.SimpleEvent.HELL.isActive()){
+            setSkyboxTint(0xAA2020, 0.5f);
+            renderBasicSkybox(SKYBOX_WHITE);
+        }
     }
 
     @Unique
@@ -717,16 +722,22 @@ public abstract class RenderGlobalMixin {
     }
 
     @Unique private int skyboxTargetColor = 0xFFFFFF;
-    @Unique private float skyboxAlpha = 0xFF;
+    @Unique private float skyboxTargetAlpha = 1.0f;
     @Unique private float skyboxCurrentR = 1.0F;
     @Unique private float skyboxCurrentG = 1.0F;
     @Unique private float skyboxCurrentB = 1.0F;
+    @Unique private float skyboxCurrentAlpha = 0f;
     @Unique private long skyboxLastUpdateTime = System.nanoTime();
     @Unique
     public void setSkyboxTint(int rgb, float alpha) {
         this.skyboxTargetColor = rgb & 0xFFFFFF;
-        this.skyboxAlpha = alpha;
+        this.skyboxTargetAlpha = alpha;
     }
+    @Unique
+    private float lerp(float d, float e, float f) {
+        return e + d * (f - e);
+    }
+
     @Unique
     private void renderBasicSkybox(ResourceLocation location) {
         final float radius = 60;
@@ -751,6 +762,11 @@ public abstract class RenderGlobalMixin {
 
         float fadeSpeed = 5.0F;
         float blend = 1.0F - (float)Math.exp(-fadeSpeed * deltaSeconds);
+        if (Math.abs(this.skyboxCurrentAlpha - this.skyboxTargetAlpha) > 0.01f) {
+            this.skyboxCurrentAlpha = lerp(0.005f, this.skyboxCurrentAlpha, this.skyboxTargetAlpha);
+        }
+
+
 
         this.skyboxCurrentR += (targetR - this.skyboxCurrentR) * blend;
         this.skyboxCurrentG += (targetG - this.skyboxCurrentG) * blend;
@@ -776,7 +792,7 @@ public abstract class RenderGlobalMixin {
                 this.skyboxCurrentR,
                 this.skyboxCurrentG,
                 this.skyboxCurrentB,
-                this.skyboxAlpha
+                this.skyboxCurrentAlpha
         );
 
         Tessellator tess = Tessellator.instance;
