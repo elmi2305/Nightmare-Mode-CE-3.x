@@ -378,8 +378,10 @@ public abstract class RenderGlobalMixin {
     }
     @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldClient;getHorizon()D"))
     private double patchHorizon(WorldClient wcl) {
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
-            return -99;
+        // magic "disable the stupid horizon lines because they're ugly" method
+        // love it
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
+            return 200;
         }
         return wcl.getHorizon();
     }
@@ -636,7 +638,42 @@ public abstract class RenderGlobalMixin {
         if(NMEvents.SimpleEvent.HELL.isActive()){
             setSkyboxTint(0xAA2020, 0.5f);
             renderBasicSkybox(SKYBOX_WHITE);
+
+//            renderColoredSky(0xAA2020, 0.5f);
+
         }
+    }
+    private void renderColoredSky(int skyColor, float alpha) {
+        // changes sky color, has weird horizon effects
+        float red = (float)(skyColor >> 16 & 255) / 255.0F;
+        float green = (float)(skyColor >> 8 & 255) / 255.0F;
+        float blue = (float)(skyColor & 255) / 255.0F;
+
+        if (this.mc.gameSettings.anaglyph) {
+            float gray = (red * 30.0F + green * 59.0F + blue * 11.0F) / 100.0F;
+            float adjustedGreen = (red * 30.0F + green * 70.0F) / 100.0F;
+            float adjustedBlue = (red * 30.0F + blue * 70.0F) / 100.0F;
+
+            red = gray;
+            green = adjustedGreen;
+            blue = adjustedBlue;
+        }
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(false);
+
+        // upper sky dome
+        GL11.glColor4f(red, green, blue, alpha);
+        GL11.glEnable(GL11.GL_FOG);
+        GL11.glCallList(this.glSkyList);
+        GL11.glDisable(GL11.GL_FOG);
+
+        // lower sky dome
+        GL11.glColor4f(red, green, blue, alpha);
+        GL11.glCallList(this.glSkyList2);
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(true);
     }
 
     @Unique
@@ -733,10 +770,7 @@ public abstract class RenderGlobalMixin {
         this.skyboxTargetColor = rgb & 0xFFFFFF;
         this.skyboxTargetAlpha = alpha;
     }
-    @Unique
-    private float lerp(float d, float e, float f) {
-        return e + d * (f - e);
-    }
+
 
     @Unique
     private void renderBasicSkybox(ResourceLocation location) {
@@ -763,7 +797,7 @@ public abstract class RenderGlobalMixin {
         float fadeSpeed = 5.0F;
         float blend = 1.0F - (float)Math.exp(-fadeSpeed * deltaSeconds);
         if (Math.abs(this.skyboxCurrentAlpha - this.skyboxTargetAlpha) > 0.01f) {
-            this.skyboxCurrentAlpha = lerp(0.005f, this.skyboxCurrentAlpha, this.skyboxTargetAlpha);
+            this.skyboxCurrentAlpha = NMUtils.lerp(0.005f, this.skyboxCurrentAlpha, this.skyboxTargetAlpha);
         }
 
 
