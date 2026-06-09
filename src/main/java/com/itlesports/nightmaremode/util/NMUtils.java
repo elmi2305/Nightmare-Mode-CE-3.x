@@ -61,8 +61,8 @@ public class NMUtils {
     ));
 
     // float lerp helper
-    public static float lerp(float d, float e, float f) {
-        return e + d * (f - e);
+    public static float lerp(float scaleFactor, float original, float target) {
+        return original + scaleFactor * (target - original);
     }
 
     // World state and time methods
