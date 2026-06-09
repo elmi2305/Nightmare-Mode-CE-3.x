@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +25,8 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(EntityPigZombie.class)
 public class EntityPigZombieMixin extends EntityZombie {
-    @Shadow private int angerLevel;
+    @Shadow
+    private int angerLevel;
 
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
@@ -42,6 +45,13 @@ public class EntityPigZombieMixin extends EntityZombie {
         return this.angerLevel == 0 ? null : this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
     }
 
+    @Inject(method = "getCanSpawnHere", at = @At("RETURN"), cancellable = true)
+    private void spawnInOverworld(CallbackInfoReturnable<Boolean> cir)
+    {
+        if(this.dimension == 0 && !NMEvents.SimpleEvent.HELL.isActive()){
+            cir.setReturnValue(false);
+        }
+    }
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
         if (this.entityToAttack == null && (this.ticksExisted + this.entityId) % 20 == 0) { // using entityID to throttle the checks so all pigmen don't check on the same tick

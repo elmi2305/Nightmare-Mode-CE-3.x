@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -267,7 +268,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
         if(this.dimension == 0){
-            if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this)) {
+            if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) || NMEvents.SimpleEvent.HELL.isActive()) {
                 if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63) {
                     cir.setReturnValue(true);
                 }

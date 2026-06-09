@@ -33,6 +33,16 @@ public class BiomeGenBaseMixin implements BiomeGenBaseAccessor {
                 List temp = this.spawnableMonsterList;
                 temp.add(new SpawnListEntry(EntityRainSpider.class, 100, 1, 4));
                 cir.setReturnValue(temp);
+                return;
+            }
+
+            if(NMEvents.SimpleEvent.HELL.isActive()){
+                List temp = this.spawnableMonsterList;
+                temp.add(new SpawnListEntry(EntityPigZombie.class, 3, 1, 1));
+                temp.add(new SpawnListEntry(EntityGhast.class, 1, 1, 1));
+                temp.add(new SpawnListEntry(EntityMagmaCube.class, 2, 1, 1));
+                cir.setReturnValue(temp);
+                return;
             }
         }
     }

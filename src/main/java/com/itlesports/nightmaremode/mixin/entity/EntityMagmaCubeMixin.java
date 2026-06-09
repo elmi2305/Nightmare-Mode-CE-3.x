@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntityMagmaCube;
 import net.minecraft.src.EntitySlime;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityMagmaCube.class)
 public class EntityMagmaCubeMixin extends EntitySlime {
@@ -19,6 +21,15 @@ public class EntityMagmaCubeMixin extends EntitySlime {
 
     public EntityMagmaCubeMixin(World par1World) {
         super(par1World);
+    }
+
+
+    @Inject(method = "getCanSpawnHere", at = @At("RETURN"), cancellable = true)
+    private void spawnInOverworld(CallbackInfoReturnable<Boolean> cir)
+    {
+        if(this.dimension == 0 && !NMEvents.SimpleEvent.HELL.isActive()){
+            cir.setReturnValue(false);
+        }
     }
 
     @Inject(method = "jump", at = @At("TAIL"))
