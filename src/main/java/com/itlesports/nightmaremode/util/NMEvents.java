@@ -23,7 +23,7 @@ public class NMEvents {
             protected void doCustomEventLogic(World w) {}
         },
 
-        GREAT_HARVEST("nmGreatHarvest", ConditionType.DAY_MULTIPLE, 33, 3, NMFields.HARDMODE, EnumChatFormatting.GOLD) {
+        GREAT_HARVEST("nmGreatHarvest", ConditionType.DAY_MULTIPLE, 37, 3, NMFields.HARDMODE, EnumChatFormatting.GOLD) {
             @Override
             protected void doCustomEventLogic(World w) {
                 if (w.isRaining()) {
