@@ -1,9 +1,12 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import btw.block.tileentity.beacon.BTWBeaconEffects;
 import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
+import com.prupe.mcpatcher.cc.ColorizeWorld;
+import com.prupe.mcpatcher.sky.SkyRenderer;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -28,6 +31,15 @@ public abstract class RenderGlobalMixin {
     @Shadow private int glSkyList2;
     @Shadow private int starGLCallList;
 
+    @Shadow
+    @Final
+    private static ResourceLocation locationMoonMoonPhasesPng;
+    @Shadow
+    @Final
+    private static ResourceLocation locationMoonPhasesPng;
+    @Shadow
+    @Final
+    private static ResourceLocation locationEndSkyPng;
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/moon/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/moon/eclipse.png");
     @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/moon/crack.png");
@@ -35,6 +47,8 @@ public abstract class RenderGlobalMixin {
     @Unique private static final ResourceLocation SKYBOX_RED = new ResourceLocation("nightmare:textures/effects/red.png");
     @Unique private static final ResourceLocation SKYBOX_WHITE = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private static final ResourceLocation STARE = new ResourceLocation("nightmare:textures/effects/stare.png");
+    @Unique private static final ResourceLocation SUN_HELL = new ResourceLocation("nightmare:textures/effects/sunHellEvent.png");
+    @Unique private static final ResourceLocation MOON_HELL = new ResourceLocation("nightmare:textures/effects/moonHellTransparent.png");
     /*
 
     CUSTOM MOON
@@ -381,11 +395,94 @@ public abstract class RenderGlobalMixin {
         // magic "disable the stupid horizon lines because they're ugly" method
         // love it
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
-            return 200;
+            return 250;
         }
         return wcl.getHorizon();
     }
+    @ModifyConstant(method = "renderSky", constant = @Constant(doubleValue = 0, ordinal = 10))
+    private double renderEverythingDespiteHorizon(double constant){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
+            return 251;
+        }
+        return constant;
+    }
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V", ordinal = 2))
+//    private void doNotTranslate(float x, float y, float z){
+//        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
+//            GL11.glTranslatef(x, -250f, z);
+//            return;
+//        }
+//        GL11.glTranslatef(x, y, z);
+//    }
+    @Inject(method = "renderSky", at = @At("TAIL"))
+    private void reDrawSun(float partialTicks, CallbackInfo ci) {
+        // this is so hacky. I'm so tired of dealing with this.
+        // this basically redraws the sun and moon after the horizon nonsense above makes it invisible.
+        // there is definitely a better way to do this. I will look into it when I'm less tired
+        if (this.mc.thePlayer.dimension != NMFields.UNDERWORLD_DIMENSION && !NMEvents.SimpleEvent.HELL.isActive()) {
+            return;
+        }
+        Tessellator tessellator = Tessellator.instance;
 
+        GL11.glPushMatrix();
+
+        // draw on top of everything
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+        float rainAlpha = 1.0F - this.theWorld.getRainStrength(partialTicks);
+
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, rainAlpha);
+
+        GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(this.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+
+        // sun
+
+        float sunSize = 30.0F;
+
+        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(SUN_HELL));
+
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
+        tessellator.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
+        tessellator.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
+        tessellator.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
+        tessellator.draw();
+
+        // moon
+
+        float moonSize = 20.0F;
+        int moonPhase = this.theWorld.getMoonPhase();
+
+
+        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(MOON_HELL));
+
+
+        int phaseX = moonPhase % 4;
+        int phaseY = moonPhase / 4 % 2;
+
+        float u0 = (float)phaseX / 4.0F;
+        float v0 = (float)phaseY / 2.0F;
+        float u1 = (float)(phaseX + 1) / 4.0F;
+        float v1 = (float)(phaseY + 1) / 2.0F;
+
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(-moonSize, -100.0D,  moonSize, u1, v1);
+        tessellator.addVertexWithUV( moonSize, -100.0D,  moonSize, u0, v1);
+        tessellator.addVertexWithUV( moonSize, -100.0D, -moonSize, u0, v0);
+        tessellator.addVertexWithUV(-moonSize, -100.0D, -moonSize, u1, v0);
+        tessellator.draw();
+
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+
+        GL11.glPopMatrix();
+    }
     @Inject(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderGlobal;renderCloudsFancy(F)V"), cancellable = true)
     private void manageCloudSpikyUnderworld(float par1, CallbackInfo ci){
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
@@ -632,6 +729,7 @@ public abstract class RenderGlobalMixin {
         }
         if(NMEvents.noEventsActive()){
             this.skyboxTargetAlpha = 0f;
+            this.skyboxCurrentAlpha = 0f;
         }
 
 
