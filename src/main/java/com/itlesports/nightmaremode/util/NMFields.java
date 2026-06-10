@@ -28,6 +28,7 @@ public class NMFields {
     public static final int PACKET_BLACKHOLE = 41; // EntityBlackHole
     public static final int PACKET_BLOOD_ALTAR = 42; // EntityBloodAltar
     public static final int PACKET_RITUAL_ENTITY = 43; // EntityRitualPortal
+    public static final int PACKET_RIFT = 44; // EntityRift
 
     // vehicle types
     public static final int VEHICLE_SPORE = 2300;

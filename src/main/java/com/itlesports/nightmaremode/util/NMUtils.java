@@ -372,6 +372,35 @@ public class NMUtils {
         return ((int) Math.ceil((double) time / 24000)) + (time % 24000 >= 23459 ? 1 : 0);
     }
 
+    @Unique
+    public static int getScrollMetadata(String input){
+        HashMap<String, Integer> dictionary = new HashMap<>();
+        dictionary.put("prot",0);
+        dictionary.put("fire prot",1);
+        dictionary.put("feather",2);
+        dictionary.put("blast",3);
+        dictionary.put("proj prot",4);
+        dictionary.put("resp",5);
+        dictionary.put("aqua",6);
+        dictionary.put("thorns",7);
+        dictionary.put("sharp",16);
+        dictionary.put("smite",17);
+        dictionary.put("bane",18);
+        dictionary.put("knockback",19);
+        dictionary.put("fire aspect",20);
+        dictionary.put("looting",21);
+        dictionary.put("efficiency",32);
+        dictionary.put("silk",33);
+        dictionary.put("unbreaking",34);
+        dictionary.put("fortune",35);
+        dictionary.put("power",48);
+        dictionary.put("punch",49);
+        dictionary.put("flame",50);
+        dictionary.put("infinity",51);
+
+        return dictionary.get(input);
+    }
+
     // Villager metadata codec
     public static final class VillagerMetaCodec {
         private static final int FACING_BITS = 2;

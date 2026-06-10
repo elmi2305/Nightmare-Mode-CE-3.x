@@ -26,16 +26,13 @@ import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.NMPostItems;
-import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.interfaces.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -700,7 +697,7 @@ public abstract class NMInitializer implements AchievementExt {
         convert("nmFarmer0", 0, 5,
                 TradeItem.fromID(Item.paper.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 8, 16),
-                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("efficiency")),
+                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("efficiency")),
                 false, true);
 
         finishRecipes("Farmer Trades");
@@ -727,11 +724,11 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmlibrarian0", 1, 4, BTWBlocks.detectorBlock.blockID, 0, 1, 3);
 
         convert("nmlibrarian0", 1, 4, TradeItem.fromID(Item.paper.itemID),
-                TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("blast")), 1.2f);
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("blast")), 1.2f);
         sell("nmlibrarian0", 1, 4, BTWItems.soulFlux.itemID, 0, 2, 4, 1.2f);
         convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32),
-                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("power")));
+                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("power")));
         convert("nmlibrarian0", 1, 5, TradeItem.fromID(BTWItems.corpseEye.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 4, 10),
                 TradeItem.fromID(Item.eyeOfEnder.itemID), 1.0f, false, true);
@@ -750,11 +747,11 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmPriestWart", 2, 2, Item.netherStalkSeeds.itemID, 0, 4, 8);
         buy("nmPriestNitre", 2, 3, BTWItems.nitre.itemID, 0, 8, 16);
         sell("nmPriestEnch", 2, 3, Block.enchantmentTable.blockID, 0, 1, 1, 0.35f, false, 10, 6);
-        convert("nmPriestPaper", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 64), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("fortune")), 0.1f);
+        convert("nmPriestPaper", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 64), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("fortune")), 0.1f);
         convert("nmPriestPotion", 2, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 16453, 2));
         convert("nmPriestGoldenApple", 2, 4, TradeItem.fromID(Item.appleGold.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 10, 18), TradeItem.fromIDAndMetadata(Item.appleGold.itemID, 1), false, true);
         convert("nmPriestLevelUp", 2, 4, TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3), TradeItem.EMPTY, TradeItem.fromID(Block.enchantmentTable.blockID), true);
-        convert("nmPriestPaperAgain", 2, 5, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 16, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("prot")));
+        convert("nmPriestPaperAgain", 2, 5, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 16, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("prot")));
         convert("nmPriestRifle", 2, 5, TradeItem.fromID(NMItems.rifle.itemID), TradeItem.fromID(NMItems.rpg.itemID), TradeItem.fromID(Block.dragonEgg.blockID), false, true);
         buy("nmPriestOcular", 2, 2, BTWItems.ocularOfEnder.itemID, 0, 1, 1, 1.0f, true, 2,2);
 
@@ -772,10 +769,10 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmBlacksmith0", 3, 2, Item.flintAndSteel.itemID, 0);
         convert("nmBlacksmith0", 3, 3, TradeItem.fromIDAndMetadata(BTWBlocks.aestheticOpaque.blockID, 7, 4, 8), TradeItem.EMPTY, TradeItem.fromID(Item.emerald.itemID, 1));
         buy("nmBlacksmith0", 3, 3, BTWItems.diamondArmorPlate.itemID, 0);
-        convert("nmBlacksmith0", 3, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("looting")), 0.9f);
+        convert("nmBlacksmith0", 3, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("looting")), 0.9f);
         sell("nmBlacksmith0", 3, 3, Item.appleGold.itemID, 0, 8, 16);
         convert("nmBlacksmith0", 3, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 8201));
-        convert("nmBlacksmith0", 3, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 18), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("unbreaking")));
+        convert("nmBlacksmith0", 3, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 18), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("unbreaking")));
         finishRecipes("Blacksmith Trades");
     }
 
@@ -786,45 +783,16 @@ public abstract class NMInitializer implements AchievementExt {
 
         buy("nmButcher0", 4, 1, Item.leash.itemID, 0, 2, 6);
         buy("nmButcher0", 4, 2, Item.swordIron.itemID, 0, 1, 1, 0.3f);
-        convert("nmButcher0", 4, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 6, 12), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("thorns")));
-        convert("nmButcher0", 4, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, getScrollMetadata("feather")), 2.0f);
+        convert("nmButcher0", 4, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 6, 12), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("thorns")));
+        convert("nmButcher0", 4, 4, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("feather")), 2.0f);
 
         finishRecipes("Butcher Trades");
 
     }
 
 
-    @Unique
-    private static int getScrollMetadata(String input){
-        HashMap<String, Integer> dictionary = new HashMap<>();
-        dictionary.put("prot",0);
-        dictionary.put("fire prot",1);
-        dictionary.put("feather",2);
-        dictionary.put("blast",3);
-        dictionary.put("proj prot",4);
-        dictionary.put("resp",5);
-        dictionary.put("aqua",6);
-        dictionary.put("thorns",7);
-        dictionary.put("sharp",16);
-        dictionary.put("smite",17);
-        dictionary.put("bane",18);
-        dictionary.put("knockback",19);
-        dictionary.put("fire aspect",20);
-        dictionary.put("looting",21);
-        dictionary.put("efficiency",32);
-        dictionary.put("silk",33);
-        dictionary.put("unbreaking",34);
-        dictionary.put("fortune",35);
-        dictionary.put("power",48);
-        dictionary.put("punch",49);
-        dictionary.put("flame",50);
-        dictionary.put("infinity",51);
-
-        return dictionary.get(input);
-    }
-
     private static void addNightmareVillagerTrades(){
-        convert("nmMerchant0", 5, 1, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID,16,24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("power")));
+        convert("nmMerchant0", 5, 1, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID,16,24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("power")));
         buy("nmMerchant1", 5, 1, Item.rottenFlesh.itemID, 0, 8, 16, 0.3f);
         buy("nmMerchant2", 5, 1, Item.dyePowder.itemID, Color.BLACK.colorID, 12, 18, 0.3f);
         buy("nmMerchant3", 5, 1, NMItems.magicFeather.itemID, 0, 1, 2, 0.3f);
@@ -832,14 +800,14 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmMerchant5", 5, 1, Item.enderPearl.itemID, 0);
         buy("nmMerchant6", 5, 1, NMItems.fireRod.itemID, 0, 1, 3, 0.5f);
         convert("nmMerchant7", 5, 2, TradeItem.fromIDAndMetadata(Item.potion.itemID, 8229, 1,2), TradeItem.EMPTY, TradeItem.fromID(Item.emerald.itemID));
-        convert("nmMerchant8", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("infinity")), 0.7f);
+        convert("nmMerchant8", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("infinity")), 0.7f);
         buy("nmMerchant9", 5, 2, NMItems.decayedFlesh.itemID, 0, 4, 6);
         buy("nmMerchant10", 5, 2, NMItems.silverLump.itemID, 0, 2, 3);
         sell("nmMerchant11", 5, 2, NMItems.dungApple.itemID, 0, 1, 1, 0.3f);
         buy("nmMerchant12", 5, 2, NMItems.creeperTear.itemID, 0, 1, 1);
         buy("nmMerchant13", 5, 2, NMItems.shadowRod.itemID, 0, 1, 2);
         sell("nmMerchant14", 5, 2, BTWItems.soulFlux.itemID, 0, 4, 8);
-        convert("nmMerchant20", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,1,2), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("blast")), 0.55f);
+        convert("nmMerchant20", 5, 2, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,1,2), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("blast")), 0.55f);
         sell("nmMerchant15", 5, 3, Item.blazeRod.itemID, 0, 2, 4);
         sell("nmMerchant16", 5, 3, Item.nameTag.itemID, 0, 2, 4);
         buy("nmMerchant17", 5, 3, NMItems.spiderFangs.itemID, 0, 2, 4);
@@ -848,7 +816,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmMerchant20", 5, 3, NMItems.charredFlesh.itemID, 0, 1, 2);
         sell("nmMerchant20", 5, 3, Item.magmaCream.itemID, 0, 6, 8);
         buy("nmMerchant20", 5, 3, NMItems.speedCoil.itemID, 0, 1, 1, 0.5f);
-        convert("nmMerchant20", 5, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID,getScrollMetadata("sharp")), 0.55f);
+        convert("nmMerchant20", 5, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.darksunFragment.itemID,4,8), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("sharp")), 0.55f);
         sell("nmMerchant21", 5, 4, Item.ghastTear.itemID, 0, 4, 6);
         buy("nmMerchant22", 5, 4, NMItems.waterRod.itemID, 0, 1, 2);
         buy("nmMerchant23", 5, 4, NMItems.voidSack.itemID, 0, 1, 3);
