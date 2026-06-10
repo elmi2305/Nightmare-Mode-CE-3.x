@@ -22,7 +22,6 @@ public class RenderUnderworldPortal extends RendererLivingEntity {
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDepthMask(false);
 
 
         // face camera
@@ -49,10 +48,8 @@ public class RenderUnderworldPortal extends RendererLivingEntity {
 
         GL11.glEnable(GL11.GL_LIGHTING);
 
-        GL11.glDepthMask(true);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-//        super.doRender(entity, x, y, z, yaw, partialTicks);
     }
     @Override
     protected ResourceLocation getEntityTexture(Entity entity) {
