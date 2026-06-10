@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.underworld.WorldProviderUnderworld;
+import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.WorldProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,4 +17,11 @@ public class WorldProviderMixin {
             cir.setReturnValue(new WorldProviderUnderworld());
         }
     }
+//    @Inject(method = "isSurfaceWorld", at = @At("HEAD"),cancellable = true)
+//    private void hellEvent(CallbackInfoReturnable<Boolean> cir)
+//    {
+//        if(NMEvents.SimpleEvent.HELL.isActive()){
+//            cir.setReturnValue(false);
+//        }
+//    }
 }

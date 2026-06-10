@@ -117,6 +117,17 @@ public class NMUtils {
         return false;
     }
 
+//    private static float[] skyBrightness = new float[4];
+//
+//    public static void setSkyBrightness(float[] sky) {
+//        skyBrightness = sky;
+//    }
+//
+//
+//    public static float[] getSkyBrightness() {
+//        return skyBrightness;
+//    }
+
     public static float getRitualIntensity(EntityPlayer player, double range) {
         if (player == null || player.worldObj == null) {
             return 0f;
