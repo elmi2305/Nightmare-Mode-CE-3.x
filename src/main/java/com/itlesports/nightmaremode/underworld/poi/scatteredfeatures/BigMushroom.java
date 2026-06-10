@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.underworld.poi.LootEntry;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 import java.io.InputStream;
@@ -206,6 +207,18 @@ public class BigMushroom extends ComponentScatteredFeature {
             lootPool.add(new LootEntry(new ItemStack(NMPostItems.bloodMoonBottle), 2, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(NMItems.bloodBoots), 1, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(NMItems.bloodShovel), 2, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.steelNugget), 10, 1, 4));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.soulforgedSteelIngot), 2, 0, 2));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("looting")), 1, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("sharp")), 1, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("smite")), 1, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("efficiency")), 3, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("unbreaking")), 3, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("fortune")), 1, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("infinity")), 1, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(BTWItems.soulFlux), 5, 1, 4));
+            lootPool.add(new LootEntry(new ItemStack(Item.enderPearl), 8, 1, 2));
+
 
             // calculate total weight once (for efficiency)
             int totalWeight = 0;
@@ -293,7 +306,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                         toAdd.stackSize = selected.minCount + structureRand.nextInt(selected.maxCount - selected.minCount + 1);
 
                         // clamp stack size to item's max stack size
-                        int maxStackSize = toAdd.getItem().getItemStackLimit();
+                        int maxStackSize = toAdd.getMaxStackSize();
                         if (toAdd.stackSize > maxStackSize) {
                             toAdd.stackSize = maxStackSize;
                         }
