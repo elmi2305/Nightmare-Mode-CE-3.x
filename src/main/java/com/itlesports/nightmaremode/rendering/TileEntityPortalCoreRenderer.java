@@ -26,7 +26,7 @@ public class TileEntityPortalCoreRenderer extends TileEntitySpecialRenderer {
 
         renderBlock(core, x, y, z);
 
-        if (core.getState() != RitualState.ACTIVE) {
+        if (core.getState() != RitualState.ACTIVE && core.getState() != RitualState.COMPLETE) {
             if (core.beamHeight <= 0f) return;
         } else {
             renderBeam(core, x, y, z);
@@ -115,6 +115,7 @@ public class TileEntityPortalCoreRenderer extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5, y + 1.0, z + 0.5);
 
+
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE); // additive glows
         GL11.glDepthMask(false);
@@ -130,16 +131,18 @@ public class TileEntityPortalCoreRenderer extends TileEntitySpecialRenderer {
         renderBeamPass(worldTime, height, scrollV + 0.25f, 0.20f, 0.40f, 0.70f, 0.75f, -1.2f);
 
         // pass 3 outer soft glow wide very transparent amplified
-        GL11.glColor4f(0.45f, 0.15f, 0.85f, 0.25f);
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        drawBeamPlane(t, 0.85f, 0f, height, scrollV, 0.8f);
-        t.draw();
-        GL11.glRotatef(90f, 0f, 1f, 0f);
-        t.startDrawingQuads();
-        drawBeamPlane(t, 0.85f, 0f, height, scrollV, 0.8f);
-        t.draw();
-
+        if (core.getState() != RitualState.COMPLETE) {
+            GL11.glColor4f(0.45f, 0.15f, 0.85f, 0.25f);
+            Tessellator t = Tessellator.instance;
+            t.startDrawingQuads();
+            drawBeamPlane(t, 0.85f, 0f, height, scrollV, 0.8f);
+            t.draw();
+            GL11.glRotatef(90f, 0f, 1f, 0f);
+            t.startDrawingQuads();
+            drawBeamPlane(t, 0.85f, 0f, height, scrollV, 0.8f);
+            t.draw();
+        }
+        // reset gl state
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDepthMask(true);
