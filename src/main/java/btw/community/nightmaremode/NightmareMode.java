@@ -378,6 +378,16 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+        AddonHandler.registerPacketHandler("nm|blink", (packet, player) -> {
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                int blink = data.readInt();
+                if (player instanceof EntityPlayerExt) {
+                    ((EntityPlayerExt) player).nightmareMode$setBlinkLength(blink);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
@@ -540,6 +550,19 @@ public class NightmareMode extends BTWAddon {
         }
 
         Packet250CustomPayload packet = new Packet250CustomPayload("nm|fear", byteStream.toByteArray());
+        player.playerNetServerHandler.sendPacketToPlayer(packet);
+    }
+
+    public static void sendBlinkDurationToClient(EntityPlayerMP player, int target){
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        try {
+            dataStream.writeInt(target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|blink", byteStream.toByteArray());
         player.playerNetServerHandler.sendPacketToPlayer(packet);
     }
 

@@ -27,7 +27,8 @@ import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
-    private static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
+    @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
+    @Unique private final static ResourceLocation blinkTexture = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private int amountRendered = 0;
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
@@ -380,11 +381,12 @@ public class GuiIngameMixin extends Gui {
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness2(GuiIngame instance, float par1, int par2, int par3){
         this.renderVignetteNightmare(par1,par2,par3);
-
+        this.renderBlink(par2,par3);
     }
     @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness(GuiIngame instance, float par1, int par2, int par3){
         this.renderVignetteNightmare(par1,par2,par3);
+        this.renderBlink(par2,par3);
     }
 
     @Unique
@@ -399,6 +401,11 @@ public class GuiIngameMixin extends Gui {
         }
 
         float fear = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getFear();
+
+        float vignetteFadeSpeed = fear > 0.2f ? 8.0F : 2.0f;
+
+        ResourceLocation texture = vignette;
+
 
         if (Math.abs(fear) > 0.001f) {
             float lc = fear > 0.5f ? 0.0015f : 0.005f;
@@ -435,7 +442,6 @@ public class GuiIngameMixin extends Gui {
         float dt = (now - this.vignetteLastUpdate) * 1.0E-9F;
         this.vignetteLastUpdate = now;
 
-        float vignetteFadeSpeed = fear > 0.2f ? 8.0F : 2.0f;
         float blend = 1.0F - (float)Math.exp(-vignetteFadeSpeed * dt);
 
         this.vignetteCurrent += (target - this.vignetteCurrent) * blend;
@@ -451,7 +457,7 @@ public class GuiIngameMixin extends Gui {
                 1.0F
         );
 
-        this.mc.getTextureManager().bindTexture(vignette);
+        this.mc.getTextureManager().bindTexture(texture);
 
         Tessellator tess = Tessellator.instance;
 
@@ -466,6 +472,78 @@ public class GuiIngameMixin extends Gui {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    }
+    private long blinkStartNano = -1L;
+
+    // Tune these to taste — real blinks close faster than they open
+    private static final float BLINK_CLOSE_SECS = 0.85f;
+    private static final float BLINK_HOLD_SECS  = 1.0f;
+    private static final float BLINK_OPEN_SECS  = 0.9f;
+    private static final float BLINK_TOTAL_SECS = BLINK_CLOSE_SECS + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
+    private void renderBlink(int width, int height) {
+        if (this.mc.getIsGamePaused()) return;
+
+        int blinkLength = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getBlinkLength();
+
+        // A new blink was requested and no animation is running yet — arm it
+        if (blinkLength > 0 && blinkStartNano < 0) {
+            blinkStartNano = System.nanoTime();
+        }
+
+        if (blinkStartNano < 0) return;
+
+        float elapsed = (System.nanoTime() - blinkStartNano) * 1.0E-9F;
+        float blinkAlpha;
+
+        if (elapsed < BLINK_CLOSE_SECS) {
+            // Eyelids closing: 0 → 1
+            blinkAlpha = smootherstep(elapsed / BLINK_CLOSE_SECS);
+
+        } else if (elapsed < BLINK_CLOSE_SECS + BLINK_HOLD_SECS) {
+            // Held shut
+            blinkAlpha = 1.0f;
+
+        } else if (elapsed < BLINK_TOTAL_SECS) {
+            // Eyelids opening: 1 → 0
+            float t = (elapsed - BLINK_CLOSE_SECS - BLINK_HOLD_SECS) / BLINK_OPEN_SECS;
+            blinkAlpha = 1.0f - smootherstep(t);
+
+        } else {
+            // Animation finished — reset everything
+            blinkStartNano = -1L;
+            ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$setBlinkLength(0);
+            return;
+        }
+
+        if (blinkAlpha < 0.001f) return;
+
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);   // solid color — no texture needed
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        GL11.glColor4f(0.0f, 0.0f, 0.0f, blinkAlpha);
+
+        Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(0.0D, height, -90.0D, 0.0D, 1.0D);
+        tess.addVertexWithUV(width,  height, -90.0D, 1.0D, 1.0D);
+        tess.addVertexWithUV(width,  0.0D,   -90.0D, 1.0D, 0.0D);
+        tess.addVertexWithUV(0.0D,   0.0D,   -90.0D, 0.0D, 0.0D);
+        tess.draw();
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /** Ken Perlin's smootherstep — C2 continuous, no velocity pop at endpoints */
+    private float smootherstep(float t) {
+        t = Math.max(0.0f, Math.min(1.0f, t));
+        return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
     }
 
     @Unique private String getBloodMoonText(World world){

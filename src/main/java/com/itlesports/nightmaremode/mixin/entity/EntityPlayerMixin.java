@@ -62,17 +62,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
-    @Unique private float targetVignette = 0.5f;
+    @Unique private int blinkLength = 0;
     @Unique private float fear = 0f;
 
-    public void nightmareMode$setTargetVignette(float target) {
-        this.targetVignette = target;
+    public void nightmareMode$setBlinkLength(int target) {
+        if(!this.worldObj.isRemote){
+            NightmareMode.sendBlinkDurationToClient((EntityPlayerMP) (Object) this, target);
+        }
+        this.blinkLength = target;
     }
 
     @Override
     public void nightmareMode$setFear(float targetFear) {
         if(!this.worldObj.isRemote){
-            NightmareMode.sendTargetFearToClient((EntityPlayerMP) (Object) this, 1.0f);
+            NightmareMode.sendTargetFearToClient((EntityPlayerMP) (Object) this, targetFear);
         }
         this.fear = targetFear;
     }
@@ -82,8 +85,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return this.fear;
     }
 
-    public float nightmareMode$getTargetVignette() {
-        return this.targetVignette;
+    public int nightmareMode$getBlinkLength() {
+        return this.blinkLength;
     }
 
     public EntityPlayerMixin(World par1World) {
@@ -175,6 +178,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
+        this.nightmareMode$setBlinkLength(20);
+        this.playSound("mob.wither.death",0.5F,0.405F);
+
         if(NightmareMode.isAprilFools){
             if (this.rand.nextInt(6) == 0) {
                 this.motionY += this.rand.nextFloat() * 0.2f * (this.rand.nextBoolean() ? 1 : -1);

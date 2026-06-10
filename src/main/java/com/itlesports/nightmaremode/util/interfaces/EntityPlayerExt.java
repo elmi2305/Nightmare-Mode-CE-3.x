@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.util.interfaces;
 
 public interface EntityPlayerExt {
-    void nightmareMode$setTargetVignette(float targetVignette);
-    float nightmareMode$getTargetVignette();
+    void nightmareMode$setBlinkLength(int length);
+    int nightmareMode$getBlinkLength();
 
     void nightmareMode$setFear(float targetFear);
     float nightmareMode$getFear();
