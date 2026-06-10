@@ -198,7 +198,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             lootPool.add(new LootEntry(new ItemStack(BTWItems.redMushroom), 25, 10, 12));
             lootPool.add(new LootEntry(new ItemStack(Item.potion, 1, 8197), 15, 1, 3)); // healing 1
             lootPool.add(new LootEntry(new ItemStack(Item.potion, 1, 16421), 3, 0, 2)); // splash healing 2
-            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodIngot), 30, 0, 1));
+            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodIngot), 18, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(NMItems.refinedDiamondIngot), 24, 1, 2));
             lootPool.add(new LootEntry(new ItemStack(Item.diamond), 5, 1, 2));
             lootPool.add(new LootEntry(new ItemStack(NMItems.friedCalamari), 15, 1, 4));
@@ -250,6 +250,7 @@ public class BigMushroom extends ComponentScatteredFeature {
             }
 
             for(BlockPos bp : lootLocations){
+                if(world.isRemote) continue;
                 TileEntity chest = world.getBlockTileEntity(bp.x, bp.y, bp.z);
                 if(chest == null){
                     continue;
@@ -263,6 +264,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                 // clear the chest first if needed (vanilla dungeons start empty)
                 for (int slot = 0; slot < chestTE.getSizeInventory(); slot++) {
                     chestTE.setInventorySlotContents(slot, null);
+                    chestTE.onInventoryChanged();
                 }
 
                 int numItems = structureRand.nextInt(7) + 4;
@@ -295,6 +297,11 @@ public class BigMushroom extends ComponentScatteredFeature {
                         if (toAdd.stackSize > maxStackSize) {
                             toAdd.stackSize = maxStackSize;
                         }
+                        toAdd.stackSize = selected.minCount + structureRand.nextInt(selected.maxCount - selected.minCount + 1);
+
+                        if (toAdd.stackSize <= 0) {
+                            continue;
+                        }
 
                         // find a random empty slot (like vanilla randomization)
                         int attempts = 0;
@@ -308,6 +315,7 @@ public class BigMushroom extends ComponentScatteredFeature {
                         }
                     }
                 }
+                chestTE.onInventoryChanged();
             }
 
         } catch (Exception e) {
