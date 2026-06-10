@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.block;
 
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
+import btw.entity.mob.BTWSquidEntity;
+import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTextured;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
@@ -183,6 +185,7 @@ public class NMBlocks {
                 .name("nmFlowerDirt")
                 .build()
         );
+        underFlowerDirts.setStepSound(BTWBlocks.dirtStepSound);
         Item.itemsList[underFlowerDirts.blockID] = new NMItemBlockMeta(underFlowerDirts.blockID - 256, underFlowerDirts);
 
         yellowFlowerRoots = new BlockTallFlower(2328);
