@@ -49,6 +49,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityGelCreeper.class, "NmEntityGelCreeper", 2334, 0xf071eb,0xeddfed);
         EntityList.addMapping(EntityGlitchCreeper.class, "NmEntityGlitchCreeper", 2335, 0x27ba40,0xff00dd);
         EntityList.addMapping(EntityRainSpider.class, "Spider", 2336);
+        EntityList.addMapping(EntityRift.class, "NmRiftEntity", 2337);
 
     }
 

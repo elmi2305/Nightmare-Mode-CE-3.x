@@ -150,19 +150,19 @@ public class RenderRitualPortalEntity extends net.minecraft.src.RenderLiving {
 
         // core inner counter spin relative to core parent tilt wobble
         m.coreInner.rotateAngleY = -coreRotY * 0.60f;
-        m.coreInner.rotateAngleX = MathHelper.sin(t * 0.060f * volatility) * (0.08f + anger * 0.12f);
+        m.coreInner.rotateAngleX = MathHelper.sin(t * 0.060f * volatility) * (0.08f + anger * 0.06f);
 
         // bulges are children of core and inherit the overall growth scale from prerendercallback
         // they pulse slightly with the cores bob animation
 
         // crown ring independent counter spin own tilt phase
         m.crownRing.rotateAngleY = -coreRotY * 0.40f;
-        m.crownRing.rotateAngleX = MathHelper.sin(t * 0.050f * volatility + (float) Math.PI) * (0.05f + anger * 0.08f);
+        m.crownRing.rotateAngleX = MathHelper.sin(t * 0.050f * volatility + (float) Math.PI) * (0.05f + anger * 0.04f);
 
         // spikes phase offset breathing flare children of core spin with it
         // n s 0 1 flare on rotx e w 2 3 flare on rotz up down 4 5 flare on rotz diagonals 6 7 mixed
         for (int i = 0; i < 8; i++) {
-            float wave = MathHelper.sin(t * 0.080f * volatility + i * 1.5708f) * (0.28f + anger * 0.35f);
+            float wave = MathHelper.sin(t * 0.080f * volatility + i * 1.5708f) * (0.28f + anger * 0.05f);
             if (i < 2) m.spikes[i].rotateAngleX = wave;
             else if (i < 4) m.spikes[i].rotateAngleZ = wave;
             else if (i < 6) m.spikes[i].rotateAngleZ = wave;
@@ -175,9 +175,9 @@ public class RenderRitualPortalEntity extends net.minecraft.src.RenderLiving {
         // shards lean wobble slow y drift on top of baked rest pose
         for (int i = 0; i < 4; i++) {
             m.shards[i].rotateAngleX = SHARD_BASE_X[i]
-                    + MathHelper.sin(t * 0.050f * volatility + i * 1.30f) * (0.06f + anger * 0.10f);
+                    + MathHelper.sin(t * 0.050f * volatility + i * 1.30f) * (0.06f + anger * 0.06f);
             m.shards[i].rotateAngleY = SHARD_BASE_Y[i]
-                    + MathHelper.sin(t * 0.030f * volatility + i * 0.90f) * (0.04f + anger * 0.08f);
+                    + MathHelper.sin(t * 0.030f * volatility + i * 0.90f) * (0.04f + anger * 0.04f);
             m.shards[i].rotateAngleZ = SHARD_BASE_Z[i];
         }
 
@@ -185,8 +185,8 @@ public class RenderRitualPortalEntity extends net.minecraft.src.RenderLiving {
         // extend further and move more erratically as ritual progresses
         // note tendril speed stays constant throughout ritual no volatility multiplier
         for (int i = 0; i < 6; i++) {
-            float swayX = MathHelper.sin(t * 0.100f + i * 1.20f) * (0.20f + anger * 0.40f) * tendrilExt;
-            float swayZ = MathHelper.cos(t * 0.070f + i * 0.90f) * (0.10f + anger * 0.25f) * tendrilExt;
+            float swayX = MathHelper.sin(t * 0.100f + i * 1.20f) * (0.20f + anger * 0.06f) * tendrilExt;
+            float swayZ = MathHelper.cos(t * 0.070f + i * 0.90f) * (0.10f + anger * 0.06f) * tendrilExt;
 
             m.tendrils[i].rotateAngleX = TENDRIL_BASE_X[i] + swayX;
             m.tendrils[i].rotateAngleZ = TENDRIL_BASE_Z[i] + swayZ;

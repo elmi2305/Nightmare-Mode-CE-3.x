@@ -178,9 +178,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
-        this.nightmareMode$setBlinkLength(20);
-        this.playSound("mob.wither.death",0.5F,0.405F);
-
         if(NightmareMode.isAprilFools){
             if (this.rand.nextInt(6) == 0) {
                 this.motionY += this.rand.nextFloat() * 0.2f * (this.rand.nextBoolean() ? 1 : -1);

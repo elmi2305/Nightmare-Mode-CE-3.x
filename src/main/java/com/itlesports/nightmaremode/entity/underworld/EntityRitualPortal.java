@@ -47,6 +47,18 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         this.altar = altar;
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        return false;
+    }
+    @Override protected void damageEntity(DamageSource par1DamageSource, float par2) {}
+    @Override public void moveEntity(double dMoveX, double dMoveY, double dMoveZ) {}
+    @Override public void moveEntityWithHeading(float par1, float par2) {}
+    @Override public void moveFlying(float par1, float par2, float par3) {}
+    @Override public boolean isPushedByWater() {return false;}
+    @Override protected boolean pushOutOfBlocks(double par1, double par3, double par5) {return false;}
+
+
     private void tryRelinkAltar() {
         if (worldObj.blockExists(cachedAltarX, cachedAltarY, cachedAltarZ)) {
             TileEntity te = worldObj.getBlockTileEntity(cachedAltarX, cachedAltarY, cachedAltarZ);
@@ -197,32 +209,6 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         tag.setInteger("AnimTick", animationTimer);
     }
 
-//    @Override
-//    public void readFromNBT(NBTTagCompound tag) {
-//        super.readFromNBT(tag);
-//
-//        int x = tag.getInteger("AltarX");
-//        int y = tag.getInteger("AltarY");
-//        int z = tag.getInteger("AltarZ");
-//        animationTimer = tag.getInteger("AnimTick");
-//
-//        // cache altar position for client side fallback
-//        cachedAltarX = x;
-//        cachedAltarY = y;
-//        cachedAltarZ = z;
-//
-//
-//        // UNTESTED, it tries to find the altar nearby TODO: test this
-//        if (worldObj != null && worldObj.blockExists(x, y, z)) {
-//            TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-//            if (te instanceof TileEntityPortalCore) {
-//                altar = (TileEntityPortalCore) te;
-//                System.out.println("[RitualPortal] found altar tile entity by coordinates");
-//            } else {
-//                System.out.println("[RitualPortal] could not find altar tile entity at stored coordinates using cached position");
-//            }
-//        }
-//    }
 
     private boolean needsAltarLookup = false;
 

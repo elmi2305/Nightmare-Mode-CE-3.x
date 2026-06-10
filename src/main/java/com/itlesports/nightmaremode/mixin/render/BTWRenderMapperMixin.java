@@ -48,6 +48,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityBloodAltar.class, new RenderBloodAltar());
         RenderManager.addEntityRenderer(EntityRitualPortal.class, new RenderRitualPortalEntity());
         RenderManager.addEntityRenderer(EntityRainSpider.class, new RenderSpider());
+        RenderManager.addEntityRenderer(EntityRift.class, new RenderUnderworldPortal());
 
 
 

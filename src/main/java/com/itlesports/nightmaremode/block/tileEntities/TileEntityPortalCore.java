@@ -2,8 +2,10 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 
 import api.block.TileEntityDataPacketHandler;
+import com.itlesports.nightmaremode.entity.underworld.EntityRift;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.underworld.RitualState;
 import com.itlesports.nightmaremode.util.underworld.RitualStructureValidator;
 import net.minecraft.src.*;
@@ -83,7 +85,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 break;
 
             case ACTIVE:
-                    if (worldTime % VALIDATION_INTERVAL == 0) {
+                if (worldTime % VALIDATION_INTERVAL == 0) {
                     if (!RitualStructureValidator.isIntact(worldObj, xCoord, yCoord, zCoord)) {
                         System.out.println("[PortalCore] Structure broken during ACTIVE ritual - failing");
                         failRitual();
@@ -117,6 +119,18 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 }
 
                 ritualTicks++;
+                if (ritualTicks + 20 >= UW_PORTAL_DURATION) {
+                    // a bit before it dies. sends blink effect to all players
+                    int distance = 32;
+                    List<EntityPlayer> players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.xCoord - distance, this.yCoord - distance, this.zCoord - distance, this.xCoord + distance, this.yCoord + distance, this.zCoord + distance));
+
+                    for(EntityPlayer p : players){
+                        if(p instanceof EntityPlayerExt ep){
+                            ep.nightmareMode$setBlinkLength(20);
+                        }
+                        p.playSound("mob.wither.death",0.5F,0.405F);
+                    }
+                }
 
                 if (ritualTicks >= UW_PORTAL_DURATION) {
                     completeRitual();
@@ -134,10 +148,14 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 break;
 
             case COMPLETE:
-                // todo portal open
+                if (!this.hasSpawnedRift) {
+                    this.worldObj.spawnEntityInWorld(new EntityRift(this.worldObj, this.xCoord + 0.5f, this.yCoord + BLOB_SPAWN_HEIGHT, this.zCoord + 0.5f));
+                    this.hasSpawnedRift = true;
+                }
                 break;
         }
     }
+    private boolean hasSpawnedRift = false;
 
 
     private void tickClientEffects() {
@@ -206,6 +224,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     private void completeRitual() {
         killBlobEntity();
         transitionTo(RitualState.COMPLETE);
+
 
         System.out.println("we have completed");
 
@@ -382,6 +401,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         tag.setInteger("RitualState",  state.ordinal());
         tag.setInteger("RitualTicks",  ritualTicks);
         tag.setInteger("FailedTicks",  failedTicks);
+        tag.setBoolean("Completed",  this.hasSpawnedRift);
 
         if (blobEntityUUIDs != null) {
             NBTTagList list = new NBTTagList();
@@ -401,6 +421,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         state = RitualState.values()[Math.max(0, Math.min(ord, RitualState.values().length - 1))];
         ritualTicks = tag.getInteger("RitualTicks");
         failedTicks = tag.getInteger("FailedTicks");
+        this.hasSpawnedRift = tag.getBoolean("Completed");
+
 
         if (blobEntityUUIDs == null) {
             blobEntityUUIDs = new HashSet<>();
