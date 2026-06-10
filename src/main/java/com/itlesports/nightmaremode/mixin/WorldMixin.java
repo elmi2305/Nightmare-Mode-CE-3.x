@@ -45,8 +45,8 @@ public abstract class WorldMixin {
     public abstract EntityPlayer getClosestPlayer(double par1, double par3, double par5, double par7);
 
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
-    private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir){
-        if(NMUtils.getIsBloodMoon() && (!this.isThundering())){
+    private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir) {
+        if (NMUtils.getIsBloodMoon() && (!this.isThundering())) {
             this.setRainStrength(1.0f);
             this.thunderingStrength = 1.0f;
             cir.setReturnValue(true);

@@ -1,12 +1,9 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import btw.block.tileentity.beacon.BTWBeaconEffects;
 import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
-import com.prupe.mcpatcher.cc.ColorizeWorld;
-import com.prupe.mcpatcher.sky.SkyRenderer;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -15,6 +12,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(RenderGlobal.class)
 public abstract class RenderGlobalMixin {
@@ -40,6 +39,10 @@ public abstract class RenderGlobalMixin {
     @Shadow
     @Final
     private static ResourceLocation locationEndSkyPng;
+
+    @Shadow
+    public abstract void renderClouds(float par1);
+
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/moon/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/moon/eclipse.png");
     @Unique private static final ResourceLocation CRACK = new ResourceLocation("nightmare:textures/moon/crack.png");
@@ -308,7 +311,7 @@ public abstract class RenderGlobalMixin {
         // attempt to bind the texture (best-effort for 1.6.4)
         if (this.mc != null && this.mc.renderEngine != null) {
             try {
-                this.mc.renderEngine.bindTexture(SKYBOX_RED);
+                this.mc.renderEngine.bindTexture(SKYBOX);
             } catch (Exception e) {
                 System.out.println("ERROR: Failed to bind texture");
                 // ignore binding failure (falls back to plain color)
@@ -394,95 +397,135 @@ public abstract class RenderGlobalMixin {
     private double patchHorizon(WorldClient wcl) {
         // magic "disable the stupid horizon lines because they're ugly" method
         // love it
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
-            return 250;
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+            return -200;
         }
+//        if(NMEvents.SimpleEvent.HELL.isActive()){
+//            return 200;
+//        }
         return wcl.getHorizon();
     }
     @ModifyConstant(method = "renderSky", constant = @Constant(doubleValue = 0, ordinal = 10))
     private double renderEverythingDespiteHorizon(double constant){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
-            return 251;
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+            return -199;
         }
+//        if(NMEvents.SimpleEvent.HELL.isActive()){
+//            return 199;
+//        }
         return constant;
     }
-//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V", ordinal = 2))
-//    private void doNotTranslate(float x, float y, float z){
-//        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION || NMEvents.SimpleEvent.HELL.isActive()){
-//            GL11.glTranslatef(x, -250f, z);
+
+//    @Redirect(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
+//    private boolean renderCloudsInHellEvent(WorldProvider instance)
+//    {
+//        if(NMEvents.SimpleEvent.HELL.isActive() && instance.dimensionId == 0){
+//            return true;
+//        }
+//        return instance.isSurfaceWorld();
+//    }
+//
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
+//    private boolean renderCloudsInHellEvent1(WorldProvider instance)
+//    {
+//        if(NMEvents.SimpleEvent.HELL.isActive() && instance.dimensionId == 0){
+//            return true;
+//        }
+//        return instance.isSurfaceWorld();
+//    }
+
+    // code stops here
+//    @ModifyArgs(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor3f(FFF)V",ordinal = 2))
+//    private void noDrawingBlackSky(Args args){
+//        if (NMEvents.SimpleEvent.HELL.isActive()) {
+//            args.set(0, this.skyboxCurrentR);
+//            args.set(1, this.skyboxCurrentG);
+//            args.set(2, this.skyboxCurrentB);
+//        }
+//    }
+//
+//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorRGBA_I(II)V"))
+//    private void helpRenderHorizonThingProperly(Tessellator instance, int j, int i){
+//        if(NMEvents.SimpleEvent.HELL.isActive()){
+//            instance.setColorRGBA_F(this.skyboxCurrentR, this.skyboxCurrentG, this.skyboxCurrentB, this.skyboxCurrentAlpha);
 //            return;
 //        }
-//        GL11.glTranslatef(x, y, z);
+//        instance.setColorRGBA_I(j,i);
 //    }
-    @Inject(method = "renderSky", at = @At("TAIL"))
-    private void reDrawSun(float partialTicks, CallbackInfo ci) {
-        // this is so hacky. I'm so tired of dealing with this.
-        // this basically redraws the sun and moon after the horizon nonsense above makes it invisible.
-        // there is definitely a better way to do this. I will look into it when I'm less tired
-        if (this.mc.thePlayer.dimension != NMFields.UNDERWORLD_DIMENSION && !NMEvents.SimpleEvent.HELL.isActive()) {
-            return;
-        }
-        Tessellator tessellator = Tessellator.instance;
-
-        GL11.glPushMatrix();
-
-        // draw on top of everything
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-        float rainAlpha = 1.0F - this.theWorld.getRainStrength(partialTicks);
-
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, rainAlpha);
-
-        GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(this.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-
-        // sun
-
-        float sunSize = 30.0F;
-
-        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(SUN_HELL));
-
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
-        tessellator.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
-        tessellator.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
-        tessellator.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
-        tessellator.draw();
-
-        // moon
-
-        float moonSize = 20.0F;
-        int moonPhase = this.theWorld.getMoonPhase();
 
 
-        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(MOON_HELL));
 
-
-        int phaseX = moonPhase % 4;
-        int phaseY = moonPhase / 4 % 2;
-
-        float u0 = (float)phaseX / 4.0F;
-        float v0 = (float)phaseY / 2.0F;
-        float u1 = (float)(phaseX + 1) / 4.0F;
-        float v1 = (float)(phaseY + 1) / 2.0F;
-
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(-moonSize, -100.0D,  moonSize, u1, v1);
-        tessellator.addVertexWithUV( moonSize, -100.0D,  moonSize, u0, v1);
-        tessellator.addVertexWithUV( moonSize, -100.0D, -moonSize, u0, v0);
-        tessellator.addVertexWithUV(-moonSize, -100.0D, -moonSize, u1, v0);
-        tessellator.draw();
-
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-        GL11.glPopMatrix();
-    }
+//    @Inject(method = "renderSky", at = @At("TAIL"))
+//    private void reDrawSun(float partialTicks, CallbackInfo ci) {
+//        // this is so hacky. I'm so tired of dealing with this.
+//        // this basically redraws the sun and moon after the horizon nonsense above makes it invisible.
+//        // there is definitely a better way to do this. I will look into it when I'm less tired
+//        if (!NMEvents.SimpleEvent.HELL.isActive()) {
+//            return;
+//        }
+//
+////        this.renderClouds(partialTicks);
+//        Tessellator tessellator = Tessellator.instance;
+//
+//        GL11.glPushMatrix();
+//
+//        // draw on top of everything
+//        GL11.glDisable(GL11.GL_DEPTH_TEST);
+//        GL11.glDepthMask(false);
+//
+//        GL11.glEnable(GL11.GL_BLEND);
+//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+//        GL11.glEnable(GL11.GL_TEXTURE_2D);
+//
+//        float rainAlpha = 1.0F - this.theWorld.getRainStrength(partialTicks);
+//
+//        GL11.glColor4f(1.0F, 1.0F, 1.0F, rainAlpha);
+//
+//        GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+//        GL11.glRotatef(this.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+//
+//        // sun
+//
+//        float sunSize = 30.0F;
+//
+//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(SUN_HELL));
+//
+//        tessellator.startDrawingQuads();
+//        tessellator.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
+//        tessellator.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
+//        tessellator.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
+//        tessellator.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
+//        tessellator.draw();
+//
+//        // moon
+//
+//        float moonSize = 20.0F;
+//        int moonPhase = this.theWorld.getMoonPhase();
+//
+//
+//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(MOON_HELL));
+//
+//
+//        int phaseX = moonPhase % 4;
+//        int phaseY = moonPhase / 4 % 2;
+//
+//        float u0 = (float)phaseX / 4.0F;
+//        float v0 = (float)phaseY / 2.0F;
+//        float u1 = (float)(phaseX + 1) / 4.0F;
+//        float v1 = (float)(phaseY + 1) / 2.0F;
+//
+//        tessellator.startDrawingQuads();
+//        tessellator.addVertexWithUV(-moonSize, -100.0D,  moonSize, u1, v1);
+//        tessellator.addVertexWithUV( moonSize, -100.0D,  moonSize, u0, v1);
+//        tessellator.addVertexWithUV( moonSize, -100.0D, -moonSize, u0, v0);
+//        tessellator.addVertexWithUV(-moonSize, -100.0D, -moonSize, u1, v0);
+//        tessellator.draw();
+//
+//        GL11.glDepthMask(true);
+//        GL11.glEnable(GL11.GL_DEPTH_TEST);
+//
+//        GL11.glPopMatrix();
+//    }
     @Inject(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderGlobal;renderCloudsFancy(F)V"), cancellable = true)
     private void manageCloudSpikyUnderworld(float par1, CallbackInfo ci){
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
@@ -734,7 +777,7 @@ public abstract class RenderGlobalMixin {
 
 
         if(NMEvents.SimpleEvent.HELL.isActive()){
-            setSkyboxTint(0xAA2020, 0.5f);
+            setSkyboxTint(0xAA2020, 1.0f);
             renderBasicSkybox(SKYBOX_WHITE);
 
 //            renderColoredSky(0xAA2020, 0.5f);
@@ -863,9 +906,13 @@ public abstract class RenderGlobalMixin {
     @Unique private float skyboxCurrentB = 1.0F;
     @Unique private float skyboxCurrentAlpha = 0f;
     @Unique private long skyboxLastUpdateTime = System.nanoTime();
+
+
     @Unique
     public void setSkyboxTint(int rgb, float alpha) {
         this.skyboxTargetColor = rgb & 0xFFFFFF;
+
+//        NMUtils.setSkyBrightness(new float[]{this.skyboxCurrentR, this.skyboxCurrentG, this.skyboxCurrentB, this.skyboxCurrentAlpha});
         this.skyboxTargetAlpha = alpha;
     }
 
