@@ -28,7 +28,6 @@ import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 public class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
-    @Unique private final static ResourceLocation blinkTexture = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private int amountRendered = 0;
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
@@ -473,19 +472,17 @@ public class GuiIngameMixin extends Gui {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
-    private long blinkStartNano = -1L;
+    @Unique private long blinkStartNano = -1L;
 
-    // Tune these to taste — real blinks close faster than they open
-    private static final float BLINK_CLOSE_SECS = 0.85f;
-    private static final float BLINK_HOLD_SECS  = 1.0f;
-    private static final float BLINK_OPEN_SECS  = 0.9f;
-    private static final float BLINK_TOTAL_SECS = BLINK_CLOSE_SECS + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
-    private void renderBlink(int width, int height) {
+    @Unique private static final float BLINK_CLOSE_SECS = 0.85f;
+    @Unique private static final float BLINK_HOLD_SECS  = 1.0f;
+    @Unique private static final float BLINK_OPEN_SECS  = 0.9f;
+    @Unique private static final float BLINK_TOTAL_SECS = BLINK_CLOSE_SECS + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
+    @Unique private void renderBlink(int width, int height) {
         if (this.mc.getIsGamePaused()) return;
 
         int blinkLength = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getBlinkLength();
 
-        // A new blink was requested and no animation is running yet — arm it
         if (blinkLength > 0 && blinkStartNano < 0) {
             blinkStartNano = System.nanoTime();
         }
@@ -496,20 +493,16 @@ public class GuiIngameMixin extends Gui {
         float blinkAlpha;
 
         if (elapsed < BLINK_CLOSE_SECS) {
-            // Eyelids closing: 0 → 1
             blinkAlpha = smootherstep(elapsed / BLINK_CLOSE_SECS);
 
         } else if (elapsed < BLINK_CLOSE_SECS + BLINK_HOLD_SECS) {
-            // Held shut
             blinkAlpha = 1.0f;
 
         } else if (elapsed < BLINK_TOTAL_SECS) {
-            // Eyelids opening: 1 → 0
             float t = (elapsed - BLINK_CLOSE_SECS - BLINK_HOLD_SECS) / BLINK_OPEN_SECS;
             blinkAlpha = 1.0f - smootherstep(t);
 
         } else {
-            // Animation finished — reset everything
             blinkStartNano = -1L;
             ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$setBlinkLength(0);
             return;
@@ -519,7 +512,7 @@ public class GuiIngameMixin extends Gui {
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);   // solid color — no texture needed
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
