@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.entity.underworld.EntityHoneySlime;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -137,6 +138,9 @@ public abstract class EntitySlimeMixin extends EntityLiving{
         if (thisObj.getSlimeSize() >= 2 && this.splitCounter < maxSplits){
             if(thisObj.rand.nextInt((int) (baseChance * this.streakModifier)) == 0){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
+                if(thisObj instanceof EntityHoneySlime){
+                    baby = new EntityHoneySlime(thisObj.worldObj);
+                }
                 if (isEclipsed) {
                     baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize() - 1)); // makes the newly spawned slime half the size of the current one
                 } else{
