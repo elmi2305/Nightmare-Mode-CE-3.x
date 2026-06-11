@@ -8,8 +8,8 @@ public class EntityAIShadowTeleport extends EntityAITarget {
     private EntityLivingBase targetEntity;
     private int cooldown;
 
-    public EntityAIShadowTeleport(EntityCreature par1EntityCreature, boolean par2, boolean par3) {
-        super(par1EntityCreature, par2, par3);
+    public EntityAIShadowTeleport(EntityCreature par1EntityCreature, boolean shouldCheckSight, boolean par3) {
+        super(par1EntityCreature, shouldCheckSight, par3);
         this.setMutexBits(0);
     }
 
