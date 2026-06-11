@@ -55,3 +55,4 @@ accessible method net/minecraft/src/GuiSelectWorld func_82314_j (Lnet/minecraft/
 accessible method net/minecraft/src/GuiSelectWorld func_82311_i (Lnet/minecraft/src/GuiSelectWorld;)Ljava/lang/String;
 accessible class net/minecraft/src/SlotEnchantment
 accessible class net/minecraft/src/SlotEnchantmentTable
+accessible field net/minecraft/src/RenderSlime scaleAmount Lnet/minecraft/src/ModelBase;

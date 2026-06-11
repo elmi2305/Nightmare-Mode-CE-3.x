@@ -50,6 +50,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityGlitchCreeper.class, "NmEntityGlitchCreeper", 2335, 0x27ba40,0xff00dd);
         EntityList.addMapping(EntityRainSpider.class, "Spider", 2336);
         EntityList.addMapping(EntityRift.class, "NmRiftEntity", 2337);
+        EntityList.addMapping(EntityHoneySlime.class, "NmHoneySlime", 2338, 0xE6B402, 0xF2F7A8);
 
     }
 

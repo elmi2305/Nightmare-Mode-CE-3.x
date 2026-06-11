@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import com.itlesports.nightmaremode.entity.underworld.EntityHoneySlime;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntitySlime;
 import net.minecraft.src.RenderSlime;
