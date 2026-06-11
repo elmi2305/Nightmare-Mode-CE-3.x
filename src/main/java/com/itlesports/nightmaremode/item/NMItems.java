@@ -89,6 +89,7 @@ public class NMItems {
 
 
     public static final Item obsidianShard;
+    public static final Item honeyBall;
 
 
 
@@ -168,6 +169,8 @@ public class NMItems {
         refinedElement = new NMItem(2363).setTextureName("nightmare:refinedElement").setUnlocalizedName("nmRefinedElement").setCreativeTab(CreativeTabs.tabMaterials).hideFromEMI();
 
         witherSoul = new NMItem(2364).setIndestructible().setTextureName("nightmare:nmWitherSoul").setUnlocalizedName("nmWitherSoul").setCreativeTab(CreativeTabs.tabMaterials);
+
+        honeyBall = new NMItem(2365).setTextureName("nightmare:nmHoneyBall").setUnlocalizedName("nmHoneyBall").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
