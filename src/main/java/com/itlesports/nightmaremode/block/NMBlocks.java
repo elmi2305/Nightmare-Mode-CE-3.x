@@ -306,7 +306,7 @@ public class NMBlocks {
         portalCore = new BlockPortalCore(2348).setHardness(4f).setTextureName("nightmare:nmPortalCoreSide").setUnlocalizedName("nmPortalCore").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
         Item.itemsList[portalCore.blockID] = new NMItemBlock(NMBlocks.portalCore.blockID - 256);
 
-        honeyCover = new NMBlockGroundLayer(2349, Material.grass).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.clayStepSound).setUnlocalizedName("nmHoneyCover").setTextureName("nightmare:honey");
+        honeyCover = new NMBlockGroundLayer(2349, Material.grass).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.clayStepSound).setUnlocalizedName("nmHoneyCover").setTextureName("nightmare:honey_meta_0");
 
         Item.itemsList[honeyCover.blockID] = new NMItemBlock(NMBlocks.honeyCover.blockID - 256);
 
