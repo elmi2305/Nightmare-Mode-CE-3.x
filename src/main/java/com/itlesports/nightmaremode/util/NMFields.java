@@ -59,5 +59,9 @@ public class NMFields {
     public static final int POSTWITHER = 2;
     public static final int POSTDRAGON = 3;
 
+    // slime types
+    public static final int SLIME_HONEY = 0;
+    public static final int SLIME_VOID = 1;
+
 
 }
