@@ -7,6 +7,7 @@ import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.*;
 import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTextured;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
@@ -44,6 +45,7 @@ public class NMBlocks {
     public static Block plantMatter;
     public static Block disenchantmentTable;
     public static Block portalCore;
+    public static Block honeyCover;
 
     // -------------------------------------------------------------------------
     // Underworld grass / dirt  (Material.grass)
@@ -303,6 +305,9 @@ public class NMBlocks {
 
         portalCore = new BlockPortalCore(2348).setHardness(4f).setTextureName("nightmare:nmPortalCoreSide").setUnlocalizedName("nmPortalCore").setCreativeTab(CreativeTabs.tabBlock).setResistance(200f);
         Item.itemsList[portalCore.blockID] = new NMItemBlock(NMBlocks.portalCore.blockID - 256);
+
+        honeyCover = new NMBlockGroundLayer(2349, Material.grass).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.clayStepSound);
+        Item.itemsList[honeyCover.blockID] = new NMItemBlock(NMBlocks.honeyCover.blockID - 256);
 
 
     }
