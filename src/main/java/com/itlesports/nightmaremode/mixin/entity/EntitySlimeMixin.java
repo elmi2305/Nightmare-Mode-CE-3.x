@@ -138,9 +138,6 @@ public abstract class EntitySlimeMixin extends EntityLiving{
         if (thisObj.getSlimeSize() >= 2 && this.splitCounter < maxSplits){
             if(thisObj.rand.nextInt((int) (baseChance * this.streakModifier)) == 0){
                 EntitySlime baby = new EntitySlime(thisObj.worldObj);
-                if(thisObj instanceof EntityHoneySlime){
-                    baby = new EntityHoneySlime(thisObj.worldObj);
-                }
                 if (isEclipsed) {
                     baby.getDataWatcher().updateObject(16, (byte)(thisObj.getSlimeSize() - 1)); // makes the newly spawned slime half the size of the current one
                 } else{
