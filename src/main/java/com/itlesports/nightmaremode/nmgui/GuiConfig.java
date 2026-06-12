@@ -72,7 +72,8 @@ public class GuiConfig extends GuiScreen {
         EXTRA_ARMOR(24, "extraArmor", "ExtraArmor", "gui.config.extra_armor", "gui.config.tooltip.extra_armor", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         FULL_BRIGHT(26, "fullBright", "FullBright", "gui.config.full_bright", "gui.config.tooltip.full_bright", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         FAST_VILLAGERS(27, "fastVillagers", "FastVillagers", "gui.config.fast_villagers", "gui.config.tooltip.fast_villagers", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null);
+        BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
+        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null);
 
         private final int id;
         private final String fieldName;
@@ -176,7 +177,8 @@ public class GuiConfig extends GuiScreen {
             ConfigOption.EXTRA_ARMOR,
             ConfigOption.FULL_BRIGHT,
             ConfigOption.FAST_VILLAGERS,
-            ConfigOption.BLOOD_MOON_HELPER
+            ConfigOption.BLOOD_MOON_HELPER,
+            ConfigOption.DRAW_FANCY_CLOUDS
     );
 
     private final Map<ConfigOption, GuiColoredButton> buttons = new HashMap<ConfigOption, GuiColoredButton>();

@@ -89,6 +89,8 @@ public class NightmareMode extends BTWAddon {
     public static Boolean bloodMoonHelper;
     public static Boolean realTime;
     private boolean griefLogging;
+    public static boolean renderFancyClouds;
+
     private LogSettings logSettings;
 
 
@@ -744,6 +746,7 @@ public class NightmareMode extends BTWAddon {
         config.registerString("WorldInfoString", "STDHF");
         config.registerBoolean("GriefLogging", false, "Enables logging of Tile Entity destruction and signs, including who placed them & where they were placed.", "Useful for detecting griefers.", "Logs signs placed, TNT placed", "MULTIPLAYER ONLY!");
         config.registerInt("GriefLoggingLevel", 1, "First two bits decide logging level", "1 = only log Chests.", "2 = only log Container tile entities", "3 = log ALL tile entity destruction", "Add 4 to any of those values = whether to log items being taken out of chests", "Add 8 to any of those values = whether to log items being destroyed indirectly (not by players mining them)");
+        config.registerBoolean("RenderFancyClouds", false, "Enables computationally expensive but cool-looking experimental cloud rendering for the overworld!", "Only use if you have a powerful graphics card.");
         getInstance().addonConfig = config;
     }
 
@@ -778,6 +781,7 @@ public class NightmareMode extends BTWAddon {
         fastVillagers = config.getBoolean("FastVillagers");
         bloodMoonHelper = config.getBoolean("BloodMoonHelper");
         realTime = config.getBoolean("RealTime");
+        renderFancyClouds = config.getBoolean("RenderFancyClouds");
         if (MinecraftServer.getIsServer()) {
             getInstance().setLogging(config.getBoolean("GriefLogging"), config.getInt("GriefLoggingLevel"));
         }
