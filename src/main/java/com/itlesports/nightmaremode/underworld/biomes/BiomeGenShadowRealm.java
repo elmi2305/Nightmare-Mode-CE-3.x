@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.underworld.biomes;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
+import com.itlesports.nightmaremode.mixin.interfaces.BiomeDecoratorAccess;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.*;
 
@@ -17,11 +18,22 @@ public class BiomeGenShadowRealm extends BiomeGenUnderworld {
         this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 5, 1, 4));
 
 
-        this.topBlock = (short) NMBlocks.hellStones.blockID;
-        this.fillerBlock = (short)NMBlocks.hellStones.blockID;
+        this.topBlock = (short) NMBlocks.underStones.blockID;
+        this.fillerBlock = (short)NMBlocks.underStones.blockID;
 
-        this.topBlockMetadata = (short) NMBlocks.META_HELLSTONE;
-        this.fillerBlockMetadata = (short) NMBlocks.META_HELLSTONE;
+        this.topBlockMetadata = (short) NMBlocks.META_VOID_STONE;
+        this.fillerBlockMetadata = (short) NMBlocks.META_VOID_STONE;
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setTreesPerChunk(2);
 
+    }
+
+    @Override
+    public int getBiomeFoliageColor() {
+        return 0xFFFFFF;
+    }
+
+    @Override
+    public int getBiomeGrassColor() {
+        return 0xFFFFFF;
     }
 }

@@ -12,8 +12,8 @@ public class BiomeGenFlowerFields extends BiomeGenUnderworld {
         super(par1);
         this.theBiomeDecorator.generateLakes = false;
         ((BiomeDecoratorAccess)this.theBiomeDecorator).setFlowersPerChunk(8);
-        ((BiomeDecoratorAccess)this.theBiomeDecorator).setGrassPerChunk(2);
-        ((BiomeDecoratorAccess)this.theBiomeDecorator).setTreesPerChunk(0);
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setGrassPerChunk(4);
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setTreesPerChunk(1);
         this.topBlock = (short) NMBlocks.underFlowerDirts.blockID;
         this.fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
 
