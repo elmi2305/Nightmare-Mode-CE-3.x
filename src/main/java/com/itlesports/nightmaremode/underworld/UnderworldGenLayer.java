@@ -28,7 +28,7 @@ public abstract class UnderworldGenLayer {
         // directly use the land mask
         GenLayer var17 = GenLayerZoom.magnify(1000L, var10, 0);
 
-        byte var4 = 4;
+        byte var4 = 2;
         if (worldType == WorldType.LARGE_BIOMES) {
             var4 = 6;
         }

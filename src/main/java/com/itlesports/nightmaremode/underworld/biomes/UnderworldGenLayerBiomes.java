@@ -12,6 +12,8 @@ public class UnderworldGenLayerBiomes extends GenLayer {
 
     public UnderworldGenLayerBiomes(long par1, GenLayer par3GenLayer, WorldType par4WorldType) {
         super(par1);
+        // TODO: check if this calls the right layer
+//        System.out.println(par3GenLayer.getClass().getName());
         this.parent = par3GenLayer;
     }
 
@@ -28,13 +30,14 @@ public class UnderworldGenLayerBiomes extends GenLayer {
 //                    intCache[y + x * areaWidth] = 0;
                 }
                 else if (currentBiomeId == 1) {
-                    if (this.nextInt(4) == 0) {
+                    if (this.nextInt(32) == 0) {
                         intCache[y + x * areaWidth] = underworldBiomes[2].biomeID; // shadow realm
                     }
                     else {
                         intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID; // everything other than flower fields
                     }
-                    intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
+                    // forces flower fields as the only biome if uncommented
+//                    intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
 
                 }
                 else {
