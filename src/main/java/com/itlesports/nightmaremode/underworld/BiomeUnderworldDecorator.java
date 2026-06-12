@@ -4,10 +4,9 @@ import api.AddonHandler;
 import api.util.ForkableRandom;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenUnderHell;
-import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTulip;
-import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallBulbFlower;
-import com.itlesports.nightmaremode.underworld.worldgen.WorldGenTallFlowers;
+import com.itlesports.nightmaremode.underworld.worldgen.*;
 import net.minecraft.src.*;
 
 public class BiomeUnderworldDecorator extends BiomeDecorator {
@@ -16,6 +15,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
     protected WorldGenerator tallFlowerTulipGen;
     protected WorldGenerator tallFlowerBulbGen;
     protected WorldGenerator tallFlowerDroopingGen;
+    protected WorldGenerator simpleTreeGen;
+    protected WorldGenerator hellTreeGen;
+    protected WorldGenerator voidTreeGen;
 
     private final WorldGenerator deadBushGen;
     private final WorldGenerator waterLiquidGen;
@@ -26,8 +28,12 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         super(par1BiomeGenBase);
         this.tallPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, false);
         this.lavaPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, true);
-        this.tallFlowerTulipGen = new WorldGenTulip();
+        this.tallFlowerTulipGen = new WorldGenTulip(false);
         this.tallFlowerBulbGen  = new WorldGenTallBulbFlower();
+        this.simpleTreeGen = new WorldGenSimpleTree(false);
+        this.hellTreeGen = new WorldGenHellTree();
+        this.voidTreeGen = new WorldGenVoidTree();
+
 //        this.tallFlowerDroopingGen = new WorldGenDroopingFlower();
 
         this.deadBushGen    = new WorldGenDeadBush(Block.deadBush.blockID);
@@ -61,10 +67,10 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         }
 
         // toggle if I don't want
-        if (false) {
-//            numPerChunk = this.treesPerChunk + (this.randomGenerator.nextInt(3) == 0 ? 1 : 0);
-            numPerChunk = this.randomGenerator.nextInt(3) == 0 ? 0 : 1;
+        if (true) {
+            numPerChunk = this.treesPerChunk + (this.randomGenerator.nextInt(3) == 0 ? 1 : 0);
             WorldGenerator treeGen = this.getTreeGenForBiome();
+//            treeGen = this.hellTreeGen;
 
             if (treeGen != null) {
                 for (var2 = 0; var2 < numPerChunk; ++var2) {
@@ -84,6 +90,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
         boolean isFlowerFields = this.biome instanceof BiomeGenFlowerFields;
         for (var2 = 0; var2 < this.flowersPerChunk; ++var2) {
+//            if(true) continue;
             var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var4 = this.randomGenerator.nextInt(128) + 40;
             int var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
@@ -201,10 +208,17 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
     private WorldGenerator getTreeGenForBiome(){
         if(this.biome instanceof BiomeGenFlowerFields){
-            if(this.randomGenerator.nextFloat() < 0.25){
+            if(this.randomGenerator.nextFloat() < 0.75){
                 return tallFlowerTulipGen;
             }
             return tallFlowerBulbGen;
+        }
+
+        if(this.biome instanceof BiomeGenUnderHell){
+            return this.hellTreeGen;
+        }
+        if(this.biome instanceof BiomeGenShadowRealm){
+            return this.voidTreeGen;
         }
         return null;
     }
