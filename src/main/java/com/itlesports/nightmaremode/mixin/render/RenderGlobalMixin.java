@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -416,7 +417,7 @@ public abstract class RenderGlobalMixin {
 
     @Inject(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderGlobal;renderCloudsFancy(F)V"), cancellable = true)
     private void manageCloudSpikyUnderworld(float par1, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION && false){
+        if(NightmareMode.renderFancyClouds){
             this.renderFancyUnderworldClouds(par1);
         } else{
             this.renderCloudsFancy(par1);
