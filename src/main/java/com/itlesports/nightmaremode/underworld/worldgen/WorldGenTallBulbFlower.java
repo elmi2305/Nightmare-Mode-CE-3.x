@@ -30,6 +30,8 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
 
     @Override
     public boolean generate(World world, Random rand, int baseX, int baseY, int baseZ) {
+        long nanoTime = System.nanoTime();
+
         int stemHeight = 12 + rand.nextInt(3);
         if (baseY < 1 || baseY + stemHeight + 5 > 255) return false;
 
@@ -58,8 +60,11 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
         }
 
         for (int[] o : bulb) {
-            setBlockAndMetadata(world, baseX + o[0], bulbCY + o[1], baseZ + o[2], Block.leaves.blockID, leafMeta);
+            setBlockAndMetadata(world, baseX + o[0], bulbCY + o[1], baseZ + o[2], NMBlocks.cryingObsidian.blockID, leafMeta);
         }
+
+//        System.out.println(System.nanoTime() - nanoTime + " to generate one flower");
+
 
         return true;
     }

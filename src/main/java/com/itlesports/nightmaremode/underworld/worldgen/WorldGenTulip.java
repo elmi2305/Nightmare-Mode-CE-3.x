@@ -16,6 +16,11 @@ public class WorldGenTulip extends WorldGenerator {
     private static final int[][] HEAD_OFFSETS;
     private static final int[][] LIP_OFFSETS;
 
+
+    public WorldGenTulip(boolean doNotify){
+        super(doNotify);
+    }
+
     static {
         ArrayList<int[]> head = new ArrayList<>(), lip = new ArrayList<>();
         int topRadius = 3, headHeight = 3;
@@ -44,7 +49,14 @@ public class WorldGenTulip extends WorldGenerator {
     public boolean generate(World world, Random rand, int baseX, int baseY, int baseZ) {
         int offsetX = baseX + rand.nextInt(8) - 6;
         int offsetZ = baseZ + rand.nextInt(8) - 6;
-        return generateFlowerAt(world, rand, offsetX, baseY, offsetZ);
+        long nanoTime = System.nanoTime();
+        boolean generated = generateFlowerAt(world, rand, offsetX, baseY, offsetZ);
+//        if (generated) {
+//            System.out.println(System.nanoTime() - nanoTime + " to generate one flower");
+//        } else{
+//            System.out.println(System.nanoTime() - nanoTime + " to FAIL one flower");
+//        }
+        return generated;
     }
 
     private boolean generateFlowerAt(World world, Random rand, int baseX, int baseY, int baseZ) {
@@ -110,7 +122,7 @@ public class WorldGenTulip extends WorldGenerator {
     private void placeLeaf(World world, int x, int y, int z) {
         if (y < 0 || y >= 256) return;
         if (isReplaceable(world, x, y, z))
-            setBlockAndMetadata(world, x, y, z, Block.leaves.blockID, leafMeta);
+            setBlockAndMetadata(world, x, y, z, NMBlocks.cryingObsidian.blockID, leafMeta);
     }
 
     private void generateMiniBranch(World world, Random rand, int x, int y, int z) {

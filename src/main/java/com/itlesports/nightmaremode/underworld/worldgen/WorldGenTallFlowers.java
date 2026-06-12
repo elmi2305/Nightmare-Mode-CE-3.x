@@ -14,6 +14,7 @@ public class WorldGenTallFlowers extends WorldGenerator {
     private final boolean exactType; // if true, we only want the metadata provided by this.types. otherwise, roll a random number between 0 and this.types
 
     public WorldGenTallFlowers(int id, int types, boolean exactType) {
+        super(false);
         this.plantBlockId = id;
         this.types = types;
         this.exactType = exactType;
