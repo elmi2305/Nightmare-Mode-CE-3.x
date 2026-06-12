@@ -756,16 +756,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHook(CallbackInfo ci){
 
-        // makes potions tick slower with full blood armor
-        Collection activePotions = this.getActivePotionEffects();
-        if (NMUtils.isWearingFullBloodArmorWithoutSword(this)) {
-            for(Object activePotion : activePotions){
-                if(activePotion == null) continue;
-                PotionEffect tempPotion = (PotionEffect) activePotion;
-                tempPotion.duration = Math.max(tempPotion.duration - 1, 0);
-            }
-        }
-
         // tracks achievements
         if(this.isPlayerFullyAsleep()){
             this.ticksSleeping ++;
