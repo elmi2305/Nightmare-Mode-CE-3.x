@@ -400,9 +400,6 @@ public abstract class RenderGlobalMixin {
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             return -200;
         }
-//        if(NMEvents.SimpleEvent.HELL.isActive()){
-//            return 200;
-//        }
         return wcl.getHorizon();
     }
     @ModifyConstant(method = "renderSky", constant = @Constant(doubleValue = 0, ordinal = 10))
@@ -410,261 +407,175 @@ public abstract class RenderGlobalMixin {
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             return -199;
         }
-//        if(NMEvents.SimpleEvent.HELL.isActive()){
-//            return 199;
-//        }
         return constant;
     }
 
-//    @Redirect(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
-//    private boolean renderCloudsInHellEvent(WorldProvider instance)
-//    {
-//        if(NMEvents.SimpleEvent.HELL.isActive() && instance.dimensionId == 0){
-//            return true;
-//        }
-//        return instance.isSurfaceWorld();
-//    }
-//
-//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
-//    private boolean renderCloudsInHellEvent1(WorldProvider instance)
-//    {
-//        if(NMEvents.SimpleEvent.HELL.isActive() && instance.dimensionId == 0){
-//            return true;
-//        }
-//        return instance.isSurfaceWorld();
-//    }
-
     // code stops here
-//    @ModifyArgs(method = "renderSky", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor3f(FFF)V",ordinal = 2))
-//    private void noDrawingBlackSky(Args args){
-//        if (NMEvents.SimpleEvent.HELL.isActive()) {
-//            args.set(0, this.skyboxCurrentR);
-//            args.set(1, this.skyboxCurrentG);
-//            args.set(2, this.skyboxCurrentB);
-//        }
-//    }
-//
-//    @Redirect(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorRGBA_I(II)V"))
-//    private void helpRenderHorizonThingProperly(Tessellator instance, int j, int i){
-//        if(NMEvents.SimpleEvent.HELL.isActive()){
-//            instance.setColorRGBA_F(this.skyboxCurrentR, this.skyboxCurrentG, this.skyboxCurrentB, this.skyboxCurrentAlpha);
-//            return;
-//        }
-//        instance.setColorRGBA_I(j,i);
-//    }
 
 
 
-//    @Inject(method = "renderSky", at = @At("TAIL"))
-//    private void reDrawSun(float partialTicks, CallbackInfo ci) {
-//        // this is so hacky. I'm so tired of dealing with this.
-//        // this basically redraws the sun and moon after the horizon nonsense above makes it invisible.
-//        // there is definitely a better way to do this. I will look into it when I'm less tired
-//        if (!NMEvents.SimpleEvent.HELL.isActive()) {
-//            return;
-//        }
-//
-////        this.renderClouds(partialTicks);
-//        Tessellator tessellator = Tessellator.instance;
-//
-//        GL11.glPushMatrix();
-//
-//        // draw on top of everything
-//        GL11.glDisable(GL11.GL_DEPTH_TEST);
-//        GL11.glDepthMask(false);
-//
-//        GL11.glEnable(GL11.GL_BLEND);
-//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-//        GL11.glEnable(GL11.GL_TEXTURE_2D);
-//
-//        float rainAlpha = 1.0F - this.theWorld.getRainStrength(partialTicks);
-//
-//        GL11.glColor4f(1.0F, 1.0F, 1.0F, rainAlpha);
-//
-//        GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-//        GL11.glRotatef(this.theWorld.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-//
-//        // sun
-//
-//        float sunSize = 30.0F;
-//
-//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(SUN_HELL));
-//
-//        tessellator.startDrawingQuads();
-//        tessellator.addVertexWithUV(-sunSize, 100.0D, -sunSize, 0.0D, 0.0D);
-//        tessellator.addVertexWithUV( sunSize, 100.0D, -sunSize, 1.0D, 0.0D);
-//        tessellator.addVertexWithUV( sunSize, 100.0D,  sunSize, 1.0D, 1.0D);
-//        tessellator.addVertexWithUV(-sunSize, 100.0D,  sunSize, 0.0D, 1.0D);
-//        tessellator.draw();
-//
-//        // moon
-//
-//        float moonSize = 20.0F;
-//        int moonPhase = this.theWorld.getMoonPhase();
-//
-//
-//        this.renderEngine.bindTexture(SkyRenderer.setupCelestialObject(MOON_HELL));
-//
-//
-//        int phaseX = moonPhase % 4;
-//        int phaseY = moonPhase / 4 % 2;
-//
-//        float u0 = (float)phaseX / 4.0F;
-//        float v0 = (float)phaseY / 2.0F;
-//        float u1 = (float)(phaseX + 1) / 4.0F;
-//        float v1 = (float)(phaseY + 1) / 2.0F;
-//
-//        tessellator.startDrawingQuads();
-//        tessellator.addVertexWithUV(-moonSize, -100.0D,  moonSize, u1, v1);
-//        tessellator.addVertexWithUV( moonSize, -100.0D,  moonSize, u0, v1);
-//        tessellator.addVertexWithUV( moonSize, -100.0D, -moonSize, u0, v0);
-//        tessellator.addVertexWithUV(-moonSize, -100.0D, -moonSize, u1, v0);
-//        tessellator.draw();
-//
-//        GL11.glDepthMask(true);
-//        GL11.glEnable(GL11.GL_DEPTH_TEST);
-//
-//        GL11.glPopMatrix();
-//    }
     @Inject(method = "renderClouds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderGlobal;renderCloudsFancy(F)V"), cancellable = true)
     private void manageCloudSpikyUnderworld(float par1, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION && false){
             this.renderFancyUnderworldClouds(par1);
         } else{
             this.renderCloudsFancy(par1);
         }
         ci.cancel();
     }
-
     @Unique
     public void renderFancyUnderworldClouds(float par1) {
-        float var21;
-        float var20;
-        float var19;
         GL11.glDisable(2884);
-        float var2 = (float)(this.mc.renderViewEntity.lastTickPosY + (this.mc.renderViewEntity.posY - this.mc.renderViewEntity.lastTickPosY) * (double)par1);
-        Tessellator var3 = Tessellator.instance;
-        float var4 = 12.0f;
-        float var5 = 4.0f;
-        double var6 = (float)this.cloudTickCounter + par1;
-        float var12 = this.theWorld.provider.getCloudHeight() - var2 + 0.33f;
+
+        Tessellator tess = Tessellator.instance;
+
+        // Interpolated player position
+        float  playerY = (float)(this.mc.renderViewEntity.lastTickPosY +
+                (this.mc.renderViewEntity.posY - this.mc.renderViewEntity.lastTickPosY) * (double)par1);
+        double playerX = this.mc.renderViewEntity.prevPosX +
+                (this.mc.renderViewEntity.posX - this.mc.renderViewEntity.prevPosX) * (double)par1;
+        double playerZ = this.mc.renderViewEntity.prevPosZ +
+                (this.mc.renderViewEntity.posZ - this.mc.renderViewEntity.prevPosZ) * (double)par1;
+
+        double tick      = (float)this.cloudTickCounter + par1;
+        float  cloudBase = this.theWorld.provider.getCloudHeight() - playerY + 0.33f;
+        float  timePhase = (float)tick * 0.01f;
+
         this.renderEngine.bindTexture(locationCloudsPng);
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 771);
 
-        // use white clouds for underworld instead of time-based color
-        Vec3 var15;
-        if (this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
-            var15 = Vec3.createVectorHelper(1.0, 1.0, 1.0); // white clouds
-        } else {
-            var15 = this.theWorld.getCloudColour(par1);
-        }
+        // Cloud base color
+        Vec3 col = (this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION)
+                ? Vec3.createVectorHelper(1.0, 1.0, 1.0)
+                : this.theWorld.getCloudColour(par1);
 
+        float cr = (float)col.xCoord;
+        float cg = (float)col.yCoord;
+        float cb = (float)col.zCoord;
 
-        float var16 = (float)var15.xCoord;
-        float var17 = (float)var15.yCoord;
-        float var18 = (float)var15.zCoord;
         if (this.mc.gameSettings.anaglyph) {
-            var19 = (var16 * 30.0f + var17 * 59.0f + var18 * 11.0f) / 100.0f;
-            var20 = (var16 * 30.0f + var17 * 70.0f) / 100.0f;
-            var21 = (var16 * 30.0f + var18 * 70.0f) / 100.0f;
-            var16 = var19;
-            var17 = var20;
-            var18 = var21;
+            float mono = (cr * 30.0f + cg * 59.0f + cb * 11.0f) / 100.0f;
+            float cyan = (cr * 30.0f + cg * 70.0f)               / 100.0f;
+            float red  = (cr * 30.0f + cb * 70.0f)               / 100.0f;
+            cr = mono; cg = cyan; cb = red;
         }
-        var21 = 0.00390625f;
-        int numLayers = 3;
-        float layerSpacing = 11.0f;
-        float baseAlpha = 0.9f;
-        int var24 = 4;
-        int var25 = 8;
-        float freq = 0.2f;
-        float amp = 7.0f;
-        GL11.glScalef(var4, 1.0f, var4);
-        for (int layer = 0; layer < numLayers; ++layer) {
-            float layerAlpha = baseAlpha / (float)numLayers * 1.5f;
-            float layerBrightness = 0.7f + 0.1f * (float)layer;
-            double layerSpeed = 0.03 - 0.005 * layer;
-            double layerVar8 = (this.mc.renderViewEntity.prevPosX + (this.mc.renderViewEntity.posX - this.mc.renderViewEntity.prevPosX) * (double)par1 + var6 * layerSpeed) / (double)var4;
-            double layerVar10 = (this.mc.renderViewEntity.prevPosZ + (this.mc.renderViewEntity.posZ - this.mc.renderViewEntity.prevPosZ) * (double)par1) / (double)var4 + 0.33;
-            layerVar8 += layer * 48.0;
-            layerVar10 += layer * 37.0;
-            int var13 = MathHelper.floor_double(layerVar8 / 2048.0);
-            int var14 = MathHelper.floor_double(layerVar10 / 2048.0);
-            layerVar8 -= (double)(var13 * 2048);
-            layerVar10 -= (double)(var14 * 2048);
-            var19 = (float)MathHelper.floor_double(layerVar8) * var21;
-            var20 = (float)MathHelper.floor_double(layerVar10) * var21;
-            float var22 = (float)(layerVar8 - (double)MathHelper.floor_double(layerVar8));
-            float var23 = (float)(layerVar10 - (double)MathHelper.floor_double(layerVar10));
-            float layerVar12 = var12 + layer * layerSpacing;
-            for (int var27 = 0; var27 < 2; ++var27) {
-                if (var27 == 0) {
+
+
+        final boolean cmR, cmG, cmB;
+        if (this.mc.gameSettings.anaglyph) {
+            cmR = EntityRenderer.anaglyphField != 0;
+            cmG = EntityRenderer.anaglyphField == 0;
+            cmB = EntityRenderer.anaglyphField == 0;
+        } else {
+            cmR = true;
+            cmG = true;
+            cmB = true;
+        }
+
+        final float CLOUD_SCALE = 12.0f;
+        final float CLOUD_THICKNESS = 4.0f;
+        final float UV_STEP = 0.00390625f;
+        final int NUM_LAYERS = 3;
+        final float LAYER_SPACING = 11.0f;
+        final float BASE_ALPHA = 0.9f;
+        final int TILE_SIZE = 4;
+        final int GRID_HALF = 8;
+        final float WAVE_FREQ = 0.2f;
+        final float WAVE_AMP = 7.0f;
+
+        // pre-allocated once
+        float[][] pts = new float[8][3];
+
+        GL11.glScalef(CLOUD_SCALE, 1.0f, CLOUD_SCALE);
+
+        for (int layer = 0; layer < NUM_LAYERS; ++layer) {
+            float alpha = BASE_ALPHA / NUM_LAYERS * 1.5f;
+            float brightness = 0.7f + 0.1f * layer;
+            double speed = 0.03 - 0.005 * layer;
+
+            // bake brightness into color once per layer
+            float lr = cr * brightness;
+            float lg = cg * brightness;
+            float lb = cb * brightness;
+
+            // UV scroll
+            double lVar8  = (playerX + tick * speed) / CLOUD_SCALE + layer * 48.0;
+            double lVar10 = playerZ / CLOUD_SCALE + 0.33 + layer * 37.0;
+
+            lVar8  -= (double)(MathHelper.floor_double(lVar8  / 2048.0) * 2048);
+            lVar10 -= (double)(MathHelper.floor_double(lVar10 / 2048.0) * 2048);
+
+            // cache floor results
+            double fVar8  = MathHelper.floor_double(lVar8);
+            double fVar10 = MathHelper.floor_double(lVar10);
+
+            float uvOffU = (float)fVar8  * UV_STEP;
+            float uvOffV = (float)fVar10 * UV_STEP;
+            float fracU  = (float)(lVar8  - fVar8);
+            float fracV  = (float)(lVar10 - fVar10);
+            float layerY = cloudBase + layer * LAYER_SPACING;
+
+            for (int pass = 0; pass < 2; ++pass) {
+                if (pass == 0) {
                     GL11.glColorMask(false, false, false, false);
-                } else if (this.mc.gameSettings.anaglyph) {
-                    if (EntityRenderer.anaglyphField == 0) {
-                        GL11.glColorMask(false, true, true, true);
-                    } else {
-                        GL11.glColorMask(true, false, false, true);
-                    }
                 } else {
-                    GL11.glColorMask(true, true, true, true);
+                    GL11.glColorMask(cmR, cmG, cmB, true);
                 }
-                for (int var28 = -var25 + 1; var28 <= var25; ++var28) {
-                    for (int var29 = -var25 + 1; var29 <= var25; ++var29) {
-                        var3.startDrawingQuads();
-                        float var30 = var28 * var24;
-                        float var31 = var29 * var24;
-                        float var32 = var30 - var22;
-                        float var33 = var31 - var23;
 
-                        float timePhase = (float)var6 * 0.01f; // Adjust speed for waving
+                // single draw call per layer per pass
+                tess.startDrawingQuads();
 
-                        // For each sub-cuboid (e.g., per subX/subZ)
-                        for (int subX = 0; subX < var24; ++subX) {
-                            for (int subZ = 0; subZ < var24; ++subZ) {
-                                float x0 = var32 + subX;
-                                float x1 = var32 + subX + 1;
-                                float z0 = var33 + subZ;
-                                float z1 = var33 + subZ + 1;
+                for (int tx = -GRID_HALF + 1; tx <= GRID_HALF; ++tx) {
+                    float tileX   = tx * TILE_SIZE;
+                    float originX = tileX - fracU;
+                    float baseU   = tileX * UV_STEP + uvOffU; // hoisted from sx loop
 
-                                // Compute offsets for corners (bottom and top share x/z, differ in y-offset)
-                                float offBottom00 = computeOffset(x0, z0, amp, freq, timePhase);
-                                float offBottom10 = computeOffset(x1, z0, amp, freq, timePhase);
-                                float offBottom11 = computeOffset(x1, z1, amp, freq, timePhase);
-                                float offBottom01 = computeOffset(x0, z1, amp, freq, timePhase);
+                    for (int tz = -GRID_HALF + 1; tz <= GRID_HALF; ++tz) {
+                        float tileZ   = tz * TILE_SIZE;
+                        float originZ = tileZ - fracV;
+                        float baseV   = tileZ * UV_STEP + uvOffV; // hoisted from sz loop
 
-                                // Top offsets could differ for varying height; here assume uniform thickness, but mutate if desired
-                                float offTop00 = offBottom00; // Or add noise: + (float)Math.sin(var6 * 0.05 + subX) * 0.5f;
-                                float offTop10 = offBottom10;
-                                float offTop11 = offBottom11;
-                                float offTop01 = offBottom01;
+                        for (int sx = 0; sx < TILE_SIZE; ++sx) {
+                            float x0   = originX + sx;
+                            float x1   = x0 + 1.0f;
+                            float subU = baseU + sx * UV_STEP;
 
-                                // 8 points
-                                float[][] points = new float[8][3];
-                                points[0] = new float[]{x0, layerVar12 + offBottom00, z0}; // Bottom front left
-                                points[1] = new float[]{x1, layerVar12 + offBottom10, z0}; // Bottom front right
-                                points[2] = new float[]{x1, layerVar12 + offBottom11, z1}; // Bottom back right
-                                points[3] = new float[]{x0, layerVar12 + offBottom01, z1}; // Bottom back left
-                                points[4] = new float[]{x0, layerVar12 + var5 + offTop00, z0}; // Top front left
-                                points[5] = new float[]{x1, layerVar12 + var5 + offTop10, z0}; // Top front right
-                                points[6] = new float[]{x1, layerVar12 + var5 + offTop11, z1}; // Top back right
-                                points[7] = new float[]{x0, layerVar12 + var5 + offTop01, z1}; // Top back left
+                            for (int sz = 0; sz < TILE_SIZE; ++sz) {
+                                float z0   = originZ + sz;
+                                float z1   = z0 + 1.0f;
+                                float subV = baseV + sz * UV_STEP;
 
-                                // UV for this sub-cuboid
-                                float subU = (var30 + subX) * var21 + var19;
-                                float subV = (var31 + subZ) * var21 + var20;
-                                float subScale = var21; // Per-unit scale
+                                // offTop == offBottom always in original
+                                float off00 = computeOffset(x0, z0, WAVE_AMP, WAVE_FREQ, timePhase);
+                                float off10 = computeOffset(x1, z0, WAVE_AMP, WAVE_FREQ, timePhase);
+                                float off11 = computeOffset(x1, z1, WAVE_AMP, WAVE_FREQ, timePhase);
+                                float off01 = computeOffset(x0, z1, WAVE_AMP, WAVE_FREQ, timePhase);
 
-                                // Draw!
-                                drawCuboid(var3, points, var16 * layerBrightness, var17 * layerBrightness, var18 * layerBrightness, layerAlpha, subU, subV, subScale);
+                                float yb00 = layerY + off00,  yt00 = yb00 + CLOUD_THICKNESS;
+                                float yb10 = layerY + off10,  yt10 = yb10 + CLOUD_THICKNESS;
+                                float yb11 = layerY + off11,  yt11 = yb11 + CLOUD_THICKNESS;
+                                float yb01 = layerY + off01,  yt01 = yb01 + CLOUD_THICKNESS;
+
+                                pts[0][0]=x0; pts[0][1]=yb00; pts[0][2]=z0;
+                                pts[1][0]=x1; pts[1][1]=yb10; pts[1][2]=z0;
+                                pts[2][0]=x1; pts[2][1]=yb11; pts[2][2]=z1;
+                                pts[3][0]=x0; pts[3][1]=yb01; pts[3][2]=z1;
+                                pts[4][0]=x0; pts[4][1]=yt00; pts[4][2]=z0;
+                                pts[5][0]=x1; pts[5][1]=yt10; pts[5][2]=z0;
+                                pts[6][0]=x1; pts[6][1]=yt11; pts[6][2]=z1;
+                                pts[7][0]=x0; pts[7][1]=yt01; pts[7][2]=z1;
+
+                                drawCuboid(tess, pts, lr, lg, lb, alpha, subU, subV, UV_STEP);
                             }
                         }
-                        var3.draw();
                     }
                 }
+
+                tess.draw();
             }
         }
+
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glDisable(3042);
         GL11.glEnable(2884);
@@ -703,8 +614,8 @@ public abstract class RenderGlobalMixin {
         tess.addVertexWithUV(points[7][0], points[7][1], points[7][2], uBase, vBase + uvScale);
 
         // Side faces (with adjusted brightness)
-//        tess.setColorRGBA_F(r * 0.9f, g * 0.9f, b * 0.9f, a); // Front/back example; adjust per side if needed
-        tess.setColorRGBA_F(r * 0.3f, g * 0.3f, b * 0.3f, a); // Front/back example; adjust per side if needed
+//        tess.setColorRGBA_F(r * 0.9f, g * 0.9f, b * 0.9f, a);
+        tess.setColorRGBA_F(r * 0.3f, g * 0.3f, b * 0.3f, a);
         // Front
         tess.setNormal(0.0f, 0.0f, -1.0f);
         tess.addVertexWithUV(points[0][0], points[0][1], points[0][2], uBase, vBase);
