@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin extends Entity implements EntityAccessor {
+public abstract class EntityLivingBaseMixin extends Entity {
     @Unique private int lastTimeWasSnowballed;
     @Unique private EntityPlayer lastSnowBaller;
 

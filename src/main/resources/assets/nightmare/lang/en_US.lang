@@ -109,6 +109,9 @@ entity.NmObsidianFish.name=Obsidian Fish
 entity.NmCreeperGhast.name=Creeper Ghast
 entity.entityBloodAltar.name=Progress
 entity.NmMushWorm.name=Mush Worm
+entity.NmEntityVoidCreeper.name=Void Creeper
+entity.NmEntityGelCreeper.name=Sticky Creeper
+entity.NmEntityGlitchCreeper.name=Glitch Creeper
 
 key.nightmaremode.zoomhold=Hold to zoom
 key.nightmaremode.zoomtoggle=Toggle zoom
@@ -165,6 +168,19 @@ gui.bloodmoon.in=Blood Moon in
 gui.bloodmoon.days=Days
 gui.bloodmoon.tonight=Tonight
 gui.bloodmoon.tomorrow=Tomorrow
+
+nm.events.nmSlimeRain=The air feels thick with Slime...
+nm.events.nmSlimeRain.info=Slimes will spawn naturally
+
+nm.events.nmGreatHarvest=The soil feels richer...
+nm.events.nmGreatHarvest.info=Crops will grow faster today
+
+nm.events.nmSpiderRain=The Spiders awaken...
+nm.events.nmSpiderRain.info=More Spiders will spawn tonight
+
+nm.events.nmHell=The air feels warmer...
+nm.events.nmHell.info=Hell will break loose tonight
+
 
 difficulty.baddream.name=Bad Dream
 difficulty.nightmare.name=Nightmare
@@ -273,6 +289,7 @@ gui.config.clear.bloodmoon=Clear Condition: Defeat a Blood Moon
 gui.config.clear.eclipse=Clear Condition: Defeat an Eclipse
 gui.config.clear.week=Clear Condition: Survive 7 days
 gui.config.clear.gloom=Clear Condition: Survive the First Gloom Night
+gui.config.clear.item=Clear Condition: Get Item
 
 gui.warning.line1=bro
 gui.warning.line2=you are about to join a world with cancer mode enabled
@@ -722,7 +739,77 @@ achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are g
 
 
 tag.nightmare.sandwich_meats=Sandwich Meats
+tag.nightmare.eclipse_drops=Eclipse Items
 
+# BTW info overrides
+btw.anvil.info=The Anvil can be used to repair items using their materials & experience levels. Note that Anvils cannot be picked back up, and instead will drop Metal Scrap, which is useless except to melt down in a Crucible to reclaim the iron.
+btw.fishing_rod.info=Fishing requires bait, enough space, and the right time of day. Right click while holding the fishing rod with any bait item (such as Rotten Flesh, Creeper Oysters, Spider Eyes, or Bat Wings) on the hotbar to apply bait. A suitable fishing spot must be able to see the sky, and must be at least 3 blocks deep. Bubbles will appear around the bobber if it is valid. Full moons, or dawn and dusk while raining, are the most efficient times to fish. Attempting to hook hostile mobs will cause you to drop your fishing rod.
+btw.netherrack.info=Netherrack is too tough and cannot be broken with a Diamond Pickaxe, requiring Blood or Steel tools to harvest. It can be exploded with Powder Kegs to get large amounts of Ground Netherrack quickly. Netherrack blocks can alternatively be ground into 8 Ground Netherrack using a millstone. Netherrack can be lit on fire indefinitely, but doing so requires a campfire or a fire charge.
+btw.oven.info=Ovens can be used to cook food much more efficiently than campfires, and to smelt ores. They can hold a single item in the top section, and the bottom holds fuel. Right click with fuel to insert it, and the overlay will update to display the amount of fuel currently present. A firestarter such as a Fire Plough, or a lit Torch, can be used to light the Oven. Active ovens will burn cooked food if the food is not taken out.
+btw.screw_pump.info=Screw Pumps can be used to raise the level of water by one block. When powered with redstone or mechanically powered, Screw Pumps will move water flowing into the front face up a block by ejecting it out the top.
+btw.hopper.info=Hoppers collect items which pass above them, and when mechanically powered will eject items out the bottom. Hoppers cannot, however, pull items from inventories, only from the world. Items which are picked up can be filtered by placing things in the filter slot. Valid filters are: Ladders, Iron Bars, Trap Doors, Grates, Slats, Wicker Panes, and Soul Sand. Some filters can be used to separate or convert items which pass through them. More information can be found on each respective filter's entry. Hoppers can hold 1000 XP.
+btw.arcane_scroll.info=Arcane Scrolls may be used with the Infernal Enchanter in order to apply specific enchantments to items. Most Arcane Scrolls are sold by Villagers or dropped by bosses.
+btw.enchanter.info=The Enchanting Table is limited in the enchants it can apply, and can only apply enchantments up to level 15. The maximum level increases as you progress: 20 (Hardmode), 30 (after defeating the Wither). To reach maximum power, there must be 30 bookshelves nearby. The Enchanting Table can only be found within Desert Temples.
 
+btw.beacon.info=Beacons provide a different effect depending on the material which the pyramid is built from. Beacons can function in the nether if they are able to see the bedrock ceiling. Valid blocks for beacons are Concentrated Hellfire, Diamond, Dung, Emerald, Ender Block, Glass, Glowstone, Gold, Iron, Lapis Lazuli, Spider Eye, and Soulforged Steel. Information on each individual effect can be found on the info page for each block. Tier 4 Beacons have global range, meaning their affects are granted to every player in the dimension.
+btw.ender_chest.info=Ender Chests allow players to have a private inventory which functions across all dimensions.
+btw.steel_block.info=When used as the material for a Beacon, Soulforged Steel Blocks act as an anchor to allow the player to set their spawn, and respawn at the beacon if they die close enough to it. Range is limited for the first two tiers, while tier 3 is unlimited within the same dimension, and tier 4 is unlimited across dimensions.
+btw.portal.info=Nether Portals must be lit using a Campfire or a Fire Charge. When activating the Nether Portal, the world will enter a 3-day countdown until Hardmode begins. Hardmode increases the stats of all mobs, introduces new threats and variants. Portals will actively spread souls within a range of 16 blocks, adversely affecting nearby passive mobs, as well as squids. It is highly recommended that you know what you are doing before activating the portal.
 
+# NM custom info items
+nm.rpg.info=The Rocket Launcher is obtained by trading with the Nightmare Merchant after finishing Nightmare Mode. It shoots live Powder Kegs, ready to explode. Misuse may result in missing body parts.
+nm.rifle.info=The Assault Rifle is obtained by trading with the Nightmare Merchant after finishing Nightmare Mode. It shoots high-speed bullets. May be illegal in Villages.
+nm.bandage.info=Bandages heal 2 hearts when fully applied. They have a 10 second cooldown before another one can be used.
+nm.alchemydust.info=Alchemy Powder is used to locate Witch Huts. After throwing it, it will show particles that point towards all of the nearest Witch Huts. If there are no particles, that means a Witch Hut was not detected in your area.
+nm.ironneedles.info=Iron Knitting Needles allow instant crafting of knitting, weaving and extracting items. Examples include: Wicker, Wool, Tangled Web.
+nm.bloodorb.info=Blood Orbs are dropped by hostile mobs killed by the player during a Blood Moon. They are used to craft various items, most notably Blood Ingots, which can be used to make tools and armor. Blood Orbs cannot be destroyed by fire. Each hostile mob drops a varying amount of Blood Orbs, depending on how threatening the mob is.
+nm.bloodpickaxe.info=Blood Tools have increased durability and digging speed. They are crafted with Blood Ingots and Blaze Rods. They are recycled into Refined Diamond Ingots, meaning the Blood Orbs are lost. They have a very high enchantability, giving a small Experience refund when enchanting. The Blood Pickaxe can break Netherrack at a slow speed.
+nm.bloodtool.info=Blood Tools have increased durability and digging speed. They are crafted with Blood Ingots and Blaze Rods and. They are recycled into Refined Diamond Ingots, meaning the Blood Orbs are lost. They have a very high enchantability, giving a small Experience refund when enchanting.
+nm.bloodsword.info=Blood Tools have increased durability and digging speed. They are crafted with Blood Ingots and Blaze Rods. They are recycled into Refined Diamond Ingots, meaning the Blood Orbs are lost. They have a very high enchantability, giving a small Experience refund when enchanting. The Blood Sword grants a chance for life-steal on every hit. This chance increases the more Blood Armor the player wears. The Blood Sword additionally repairs all armor the player is wearing, and all blood tools in the player's inventory (including the sword itself).
+nm.bloodarmor.info=Wearing the full Blood Armor combined with the Blood Sword gives the player various buffs: higher chance of life-steal, higher netherrack mining speed, chance to get strength or regeneration after killing a mob. Blood Armor has a protection level between Iron and Diamond. It recycles into Refined Diamond Ingots, meaning the Blood Orbs are lost. Wearing the full set of Blood Armor comes with the major drawback of potions running out twice as fast. Blood Armor has a very high enchantability.
+nm.bloodingot.info=Blood Ingots are made from Refined Diamond Ingots and Blood Orbs. They are the main ingredient in Blood Armor and Blood Tools.
+nm.eclipseshard.info=Eclipse Shards are used for trading and crafting eclipse equipment.
+nm.bloodMilk.info=Dropped by Cows during the Solar Eclipse.
+nm.creeperChop.info=Dropped by Creeper Pigs during the Solar Eclipse.
+nm.voidSack.info=Dropped by Squids during the Solar Eclipse.
+nm.charredFlesh.info=Dropped by Shadow Zombies during the Solar Eclipse.
+nm.spiderFangs.info=Dropped by Spiders during the Solar Eclipse.
+nm.fireRod.info=Dropped by Hellfire Blazes during the Solar Eclipse.
+nm.waterRod.info=Dropped by Aqua Blazes during the Solar Eclipse.
+nm.sulfur.info=Dropped by Creepers during the Solar Eclipse.
+nm.creeperTear.info=Dropped by Creeper Ghasts during the Solar Eclipse.
+nm.silverLump.info=Dropped by Silverfish during the Solar Eclipse.
+nm.witheredBone.info=Dropped by Wither Skeletons during the Solar Eclipse.
+nm.voidMembrane.info=Dropped by Witches during the Solar Eclipse.
+nm.decayedFlesh.info=Dropped by Zombies and Pig Zombies during the Solar Eclipse.
+nm.ghastTentacle.info=Dropped by Ghasts during the Solar Eclipse.
+nm.shadowRod.info=Dropped by Shadow Blazes during the Solar Eclipse.
+nm.speedCoil.info=Dropped by Horses during the Solar Eclipse.
+nm.bloodstar.info=Dropped by the Blood God. The ultimate triumph. Cannot be burned.
+nm.calamari.info=Dropped by Squids. It can be cooked (oven / campfire), or fried in a cauldron. As the world progresses, Squids have a lower chance of dropping Calamari.
+nm.eclipsebow.info=The Eclipse Bow is capable of shooting Magic Arrows in a volley of three. Magic Arrows pierce unlimited enemies and do mediocre damage. It can also shoot broadhead arrows. It has a significantly faster fire rate than the Composite or regular Bow.
+nm.magicarrow.info=Magic Arrows can only be used with the Eclipse Bow. They pierce unlimited enemies and do mediocre damage. When used with the Eclipse Bow, they can be fired in volleys of three.
+nm.ironfishingrod.info=The Iron Fishing Rod is an upgrade to the regular fishing rod. It does not require bait, and can fish up a large variety of other items.
+nm.ancientsand.info=Ancient Sand can be used to locate nearby Desert Temples. After throwing it, it will show particles that point towards all of the nearest Desert Temples. If there are no particles, that means a Desert Temples was not detected in your area.
+nm.refineddiamond.info=Refined Diamond Ingots are made by refining Diamond Ingots with Nether Quartz in a Crucible. They are sturdy enough to be turned into valuable armor and alloyed with Blood Orbs.
+nm.withersoul.info=A Wither Soul drops from the Wither every time it is killed.
+nm.obsidianshard.info=Obsidian Shards are gotten by mining Obsidian with a Diamond or Blood Pickaxe. Steel Pickaxes can be used to mine the full block. Obsidian Shards can be turned into Crude Obsidian, which can be built into a Nether Portal.
 
+# NM BLOCK info
+nm.steelOre.info=Steel Ore spawns in Strata 2 & 3, above Diamond level. It can only be mined after defeating the Wither or using a Steel Pickaxe.
+nm.bloodChest.info=The Blood Chest is a non-flammable storage unit with twice the space of a regular chest and increased blast resistance. It has 54 slots of space.
+nm.steelLocker.info=The Steel Locker is a tough storage unit with 133 slots of space. It is resistant to most explosions and cannot burn.
+nm.blockRoad.info=Road increases mob and player movement speed when walked on.
+nm.blockAsphalt.info=Asphalt increases mob and player movement speed a lot when walked on.
+nm.upgradedLadder.info=Upgraded ladders increase player and entity climbing speed.
+nm.hellforge.info=The Hellforge is a fully-automatable Brick Oven. It never runs out of fuel by default, but can be significantly sped up with fuel. It accepts Netherrack as the most efficient fuel. It will automatically extract netherrack from the chest below it. It automatically extracts cookable items from the chest above it, and outputs them to the chests on its left / right side. No hoppers necessary.
+nm.bloodSaw.info=The Blood Saw does not require mechanical power to run. It does increased damage and processes blocks much faster.
+nm.disenchantmentTable.info=The Disenchantment Table allows easy removal of enchantments in the form of Enchantment Scrolls.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info=Obsidian can be dropped by Obsidian Creepers in Strata 3, or crafted with Steel after the Wither has been defeated. It has significantly less blast resistance. Mining Obsidian without a Steel Pickaxe drops Obsidian Shards and has a chance to spawn an Obsidian Fish.
+nm.crudeObsidian.info=Crude Obsidian is crafted with Obsidian Shards. It has significantly less blast resistance. It can be used to build a Nether Portal, which will start the 3 day countdown to Hardmode.
+nm.horseArmor.info=Right clicking with Horse Armor opens a storage where you may deposit Wheat & Straw. Horse armor functions like a 'battery', keeping the horse fed while you are riding it. Food cannot be taken out of horse armor after it has been deposited. Horse armor has higher capacity and weight depending on the material it is crafted with.
+nm.goldenApple.info=Golden Apples apply Regeneration I for 4 seconds and Absorption IV for 12 minutes, effectively giving an extra health bar. They have a cooldown of 30 seconds.
+nm.goldenAppleEnchanted.info=Enchanted Golden Apples apply Regeneration IV + Fire Resistance + Strength II + Speed II + Haste II for 30 seconds, Resistance I for 40 seconds, Night Vision and Absorption II for 2 minutes. They have a 90 second cooldown.
+nm.brownMushroom.info=Brown Mushrooms naturally grow in the Nether. Brown Mushroom trees on Mushroom Islands can only be harvested after the Nether has been accessed.

@@ -30,7 +30,7 @@ import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 
 @Mixin(EntityRenderer.class)
-public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAccessor {
+public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Shadow private Minecraft mc;
     @Shadow private double cameraZoom;
     @Shadow private float farPlaneDistance;
@@ -59,6 +59,9 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
 
     @Shadow
     protected abstract void setupFog(int par1, float par2);
+
+    @Shadow
+    protected abstract float getNightVisionBrightness(EntityPlayer par1EntityPlayer, float par2);
 
     @Unique private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/effects/nmBloodRain.png");
     @Unique private static final ResourceLocation SLIME_RAIN = new ResourceLocation("nightmare:textures/effects/nmSlimeRain.png");
@@ -415,11 +418,11 @@ public abstract class EntityRendererMixin implements EntityAccessor, ZoomStateAc
         return NMUtils.getIsBloodMoon();
     }
     @Redirect(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityRenderer;getNightVisionBrightness(Lnet/minecraft/src/EntityPlayer;F)F"))
-    private float nightVisBloodMoonStuff(EntityRenderer instance, EntityPlayer par1EntityPlayer, float par2){
+    private float nightVisBloodMoonStuff(EntityRenderer instance, EntityPlayer p, float partial){
         if(NMUtils.getIsBloodMoon()){
             return 500;
         }
-        return instance.getNightVisionBrightness(par1EntityPlayer,par2);
+        return this.getNightVisionBrightness(p,partial);
     }
 
     @Redirect(method = "updateLightmap", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F", opcode = Opcodes.GETFIELD))

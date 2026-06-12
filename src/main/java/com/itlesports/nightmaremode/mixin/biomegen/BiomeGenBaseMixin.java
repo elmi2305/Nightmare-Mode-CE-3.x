@@ -12,19 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(BiomeGenBase.class)
-public class BiomeGenBaseMixin implements BiomeGenBaseAccessor {
+public class BiomeGenBaseMixin {
     @Shadow protected List spawnableMonsterList;
     @Shadow protected List spawnableWaterCreatureList;
 
-    @Override
-    public List nightmareMode$getSpawnableMonsterList() {
-        return this.spawnableMonsterList;
-    }
-
-    @Override
-    public List nightmareMode$getSpawnableWaterCreatureList() {
-        return this.spawnableWaterCreatureList;
-    }
 
     @Inject(method = "getSpawnableList", at = @At("HEAD"), cancellable = true)
     private void spiders(EnumCreatureType type, CallbackInfoReturnable<List> cir){

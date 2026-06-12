@@ -51,13 +51,13 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 //            oldBlueMoon   = NightmareMode.isBlueMoon;
 //        }
         long time = this.getWorldTime();
-        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION &&time % 20 == 1 && !this.isRemote) {
-            // only server logic for now
-            this.setBlueMoonWorld(this.calculateIsBlueMoon(this));
+//        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && time % 20 == 1 && !this.isRemote) {
+//            this.setBlueMoonWorld(this.calculateIsBlueMoon(this));             // only server logic for now
+//
 //            System.out.println("calculated blue moon: " + this.isBlueMoonWorld);
-        } else{
-            this.setBlueMoonWorld(false);
-        }
+//        } else{
+//            this.setBlueMoonWorld(false);
+//        }
 
         if ((time & 15) == 0 && this.provider.dimensionId == 0) {
             NMEvents.onServerTick((WorldServer)(Object)this);
@@ -68,18 +68,18 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
     }
 
 
-    @Unique private boolean calculateIsBlueMoon(World world){
-//        if(NMUtils.getWorldProgress() <= 1){return false;}
-        // TODO include the upper condition. it's off for debugging
-
-//        System.out.println(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION ? "UNDERWORLD" : "SOMETHING ELSE");
-//        System.out.println("Night: " + getIsNightFromWorldTime(world));
-//        System.out.println("Moon Phase: " + world.getMoonPhase());
-//        System.out.println("OUTPUT: " + (this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0));
-//        System.out.println(" ");
-        // works as expected
-        return this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
-    }
+//    @Unique private boolean calculateIsBlueMoon(World world){
+////        if(NMUtils.getWorldProgress() <= 1){return false;}
+//        // TODO include the upper condition. it's off for debugging
+//
+////        System.out.println(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION ? "UNDERWORLD" : "SOMETHING ELSE");
+////        System.out.println("Night: " + getIsNightFromWorldTime(world));
+////        System.out.println("Moon Phase: " + world.getMoonPhase());
+////        System.out.println("OUTPUT: " + (this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0));
+////        System.out.println(" ");
+//        // works as expected
+//        return this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
+//    }
 
     /**
      * Approximation!! It is more correct than the usual daylight check, especially if an event such as the eclipse forces the skylight level low but counts as daytime.

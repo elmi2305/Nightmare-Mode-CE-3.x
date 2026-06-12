@@ -19,13 +19,13 @@ public class ItemEventController extends ItemAchievementGranter {
 
 
     @Override
-    public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+    public ItemStack onEaten(ItemStack stack, World w, EntityPlayer player) {
         if(this.eventType != 0){
-            performEvent(eventType,par2World);
+            performEvent(eventType, w);
         }
 
 
-        return super.onEaten(par1ItemStack, par2World, par3EntityPlayer);
+        return super.onEaten(stack, w, player);
     }
     private void performEvent(int type, World world){
         if(type == EVENT_BLOODMOON){

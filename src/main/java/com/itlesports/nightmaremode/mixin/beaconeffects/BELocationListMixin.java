@@ -22,7 +22,7 @@ public class BELocationListMixin {
         for (Object effectLocation : this.effectLocations) {
             BeaconEffectLocation point = (BeaconEffectLocation) effectLocation;
 
-            if (!Objects.equals(point.effectID, effectID)) continue;
+            if (!Objects.equals(point.getEffectID(), effectID)) continue;
             if (point.effectLevel <= maxLevel) continue;
 
             maxLevel = point.effectLevel;

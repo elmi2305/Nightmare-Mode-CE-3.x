@@ -15,7 +15,7 @@ public abstract class PotionEffectMixin {
 
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/PotionEffect;deincrementDuration()I"))
     private void decrementDurationOnBloodArmor(EntityLivingBase entity, CallbackInfoReturnable<Boolean> cir) {
-        if (entity.rand.nextInt(5 - NMUtils.getBloodArmorWornCount(entity)) == 0)
+        if (entity.rand.nextInt(10 - NMUtils.getBloodArmorWornCount(entity) * 2) == 0)
         {
             this.deincrementDuration();
         }

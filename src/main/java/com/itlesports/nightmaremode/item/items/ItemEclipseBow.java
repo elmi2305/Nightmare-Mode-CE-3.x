@@ -5,6 +5,7 @@ import btw.item.BTWItems;
 import btw.item.items.CompositeBowItem;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
 import net.minecraft.src.*;
 
 public class ItemEclipseBow extends CompositeBowItem {
@@ -93,7 +94,7 @@ public class ItemEclipseBow extends CompositeBowItem {
         float motionZ = MathHelper.cos(yaw * (float)Math.PI / 180.0F) * MathHelper.cos(pitch * (float)Math.PI / 180.0F);
 
         arrow.setThrowableHeading(motionX, motionY, motionZ, velocity, 1.0F);
-        arrow.setSize(1f, 1f);
+        ((EntityAccessor)arrow).invokeSetSize(1f, 1f);
         if (fPullStrength == 1.0) {
             arrow.setIsCritical(true);
         }

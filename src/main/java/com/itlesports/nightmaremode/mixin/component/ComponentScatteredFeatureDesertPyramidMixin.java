@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 @Mixin(ComponentScatteredFeatureDesertPyramid.class)
-public class ComponentScatteredFeatureDesertPyramidMixin {
+public abstract class ComponentScatteredFeatureDesertPyramidMixin extends ComponentScatteredFeature {
     @Inject(method = "addComponentParts",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/ComponentScatteredFeatureDesertPyramid;placeBlockAtCurrentPosition(Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V",
@@ -21,16 +21,16 @@ public class ComponentScatteredFeatureDesertPyramidMixin {
         // par6 default is 10. increasing par6 moves forward in +x
         // pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 10, boundingBox);
         if (world.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 10, boundingBox);
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 11, boundingBox);
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 9, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 10, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 11, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 11, -11, 9, boundingBox);
 
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 9, boundingBox);
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 11, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 9, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 10, -11, 11, boundingBox);
 
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 9, boundingBox);
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 10, boundingBox);
-            pyramid.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 11, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 9, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 10, boundingBox);
+            this.placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, 9, -11, 11, boundingBox);
         }
     }
 

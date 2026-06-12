@@ -75,7 +75,7 @@ public abstract class EntityWitchMixin extends EntityMob {
                     case 1:
                         minion = new EntitySlime(this.worldObj);
                         minion.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        ((EntitySlime)minion).setSlimeSize(this.rand.nextInt(4) * 2 + 2);
+                        ((EntitySlimeAccessor)minion).invokeSetSlimeSize(this.rand.nextInt(4) * 2 + 2);
                         this.worldObj.spawnEntityInWorld(minion);
                         break;
                     case 2:

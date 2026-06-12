@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(EntityArrow.class)
-public abstract class EntityArrowMixin extends Entity implements EntityAccessor{
+public abstract class EntityArrowMixin extends Entity{
     @Shadow public Entity shootingEntity;
 
     public EntityArrowMixin(World par1World) {

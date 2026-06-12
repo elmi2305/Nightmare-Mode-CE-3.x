@@ -7,4 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ItemInvoker {
     @Invoker("setMaxStackSize")
     Item invokeSetMaxStackSize(int par1);
+    @Invoker("setMaxDamage")
+    Item invokeSetMaxDamage(int par1);
 }

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.underworld.biomes;
 
 import btw.entity.mob.BTWCaveSpiderEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.mixin.interfaces.BiomeDecoratorAccess;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.*;
 
@@ -23,10 +24,11 @@ public class BiomeGenHighlands extends BiomeGenUnderworld {
 
         this.topBlock = (short) NMBlocks.understoneSmooth.blockID;
         this.fillerBlock = (short)NMBlocks.underCobble.blockID;
-        this.theBiomeDecorator.treesPerChunk = 1;
-        this.theBiomeDecorator.deadBushPerChunk = 2;
-        this.theBiomeDecorator.reedsPerChunk = 50;
-        this.theBiomeDecorator.cactiPerChunk = 10;
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setTreesPerChunk(1);
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setDeadBushPerChunk(2);
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setReedsPerChunk(50);
+        ((BiomeDecoratorAccess)this.theBiomeDecorator).setCactiPerChunk(10);
+
     }
 
     public void decorate(World par1World, Random par2Random, int par3, int par4) {

@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
@@ -244,7 +245,7 @@ public class NightmareMode extends BTWAddon {
         BiomeGenBase.biomeList[26] = BiomeGenUnderworld.flowerFields;
         BiomeGenBase.biomeList[27] = BiomeGenUnderworld.shadowRealm;
         BiomeGenBase.biomeList[28] = BiomeGenUnderworld.underHell;
-        MapGenStructureIO.func_143034_b(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
+        MapGenStructureIOAccess.invokeFunctionB(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }
 
     @Environment(EnvType.SERVER)

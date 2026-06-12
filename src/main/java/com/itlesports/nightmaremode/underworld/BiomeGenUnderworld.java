@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.underworld;
 
+import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.underworld.biomes.*;
 import net.minecraft.src.*;
 
@@ -40,11 +41,11 @@ public class BiomeGenUnderworld extends BiomeGenBase {
 //    private static final float VOID_MAX = 0.2501f;
 
 
-    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains").setMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
-    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert").setMinMaxHeight(HIGH_MIN, HIGH_MAX).setDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields").setMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
-    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) new BiomeGenShadowRealm(27).setDrainMultiplier(1.8f).setBiomeName("UnderworldVoid").setMinMaxHeight(VOID_MIN, VOID_MAX).setDisableRain();
-    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) new BiomeGenUnderHell(28).setDrainMultiplier(1.0f).setBiomeName("UnderworldHell").setMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
+    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains")).invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
+    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert")).invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields")).invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
+    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor) new BiomeGenShadowRealm(27).setDrainMultiplier(1.8f).setBiomeName("UnderworldVoid")).invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenUnderHell(28).setDrainMultiplier(1.0f).setBiomeName("UnderworldHell")).invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
 
     public static List biomelist = new ArrayList<>();
     static{

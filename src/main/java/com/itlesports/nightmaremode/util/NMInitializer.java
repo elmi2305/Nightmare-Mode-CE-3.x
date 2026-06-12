@@ -28,6 +28,8 @@ import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.mixin.interfaces.AchievementAccessor;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
+import com.itlesports.nightmaremode.mixin.interfaces.StatListAccess;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
@@ -563,10 +565,10 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     public static void miscInit(){
-        BTWItems.plateBoots.setMaxDamage(729);
-        BTWItems.plateLeggings.setMaxDamage(729);
-        BTWItems.plateBreastplate.setMaxDamage(729);
-        BTWItems.plateHelmet.setMaxDamage(729);
+        ((ItemInvoker)BTWItems.plateBoots).invokeSetMaxDamage(729);
+        ((ItemInvoker)BTWItems.plateLeggings).invokeSetMaxDamage(729);
+        ((ItemInvoker)BTWItems.plateBreastplate).invokeSetMaxDamage(729);
+        ((ItemInvoker)BTWItems.plateHelmet).invokeSetMaxDamage(729);
 
         ((DamageSourceExt)(BTWDamageSources.damageSourceGloom)).nightmareMode$setHungerDrain(0.3f);
         ((DamageSourceExt)(BTWDamageSources.damageSourceSaw)).nightmareMode$setHungerDrain(0.5f);
@@ -1541,7 +1543,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void kill(Achievement acObj) {
         StatList.allStats.remove(acObj);
-        StatList.oneShotStats.remove(acObj.statId);
+        StatListAccess.getOneShotStats().remove(acObj.statId);
 
         if (acObj.tab != null) {
             acObj.tab.achievementList.remove(acObj);

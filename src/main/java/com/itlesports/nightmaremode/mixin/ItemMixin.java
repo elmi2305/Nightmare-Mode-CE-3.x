@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.item.items.FireStarterItemPrimitive;
 import api.item.items.SeedFoodItem;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
+import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,6 +40,6 @@ public class ItemMixin {
         potato = new SeedFoodItem(136, 1, 0.0f, Block.potato.blockID).setAsBasicPigFood().setUnlocalizedName("potato").setTextureName("potato");
         bakedPotato = new ItemFood(137, 1, 0.0f, false).setAsBasicPigFood().setUnlocalizedName("potatoBaked").setTextureName("potato_baked");
 
-        netherStar = netherStar.setMaxDamage(4);
+        netherStar = ((ItemInvoker)netherStar).invokeSetMaxDamage(4);
     }
 }

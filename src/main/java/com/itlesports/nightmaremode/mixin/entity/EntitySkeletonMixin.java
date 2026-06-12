@@ -27,7 +27,7 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 import static com.itlesports.nightmaremode.util.NMFields.SKELETON_ENDER;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob implements EntityAccessor{
+public abstract class EntitySkeletonMixin extends EntityMob{
     @Unique int jumpCooldown = 0;
 
 

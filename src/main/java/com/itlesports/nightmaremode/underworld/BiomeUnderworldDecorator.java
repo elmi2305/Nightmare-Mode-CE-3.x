@@ -105,7 +105,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
                 var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
                 var4 = this.randomGenerator.nextInt(128);
                 int var7 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
-                this.tallPlantGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
+                this.lavaPlantGen.generate(this.currentWorld, this.randomGenerator, var3, var4, var7);
             }
         }
 

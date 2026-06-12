@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import com.itlesports.nightmaremode.mixin.interfaces.GuiScreenAccess;
+import com.itlesports.nightmaremode.mixin.interfaces.GuiSelectWorldAccess;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.interfaces.GuiSelectWorldExt;
 import com.itlesports.nightmaremode.util.interfaces.GuiWorldSlotExt;
@@ -78,9 +80,9 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         // build the existing game-mode text (var9) exactly like vanilla so spacing matches
         String var9 = "";
         if (sfc.requiresConversion()) {
-            var9 = GuiSelectWorld.func_82311_i(this.parentWorldGui) + " " + var9;
+            var9 = GuiSelectWorldAccess.functionI(this.parentWorldGui) + " " + var9;
         } else {
-            var9 = GuiSelectWorld.func_82314_j(this.parentWorldGui)[sfc.getEnumGameType().getID()];
+            var9 = GuiSelectWorldAccess.functionJ(this.parentWorldGui)[sfc.getEnumGameType().getID()];
             if (sfc.isHardcoreModeEnabled()) {
                 var9 = EnumChatFormatting.DARK_RED + I18n.getString("gameMode.hardcore") + EnumChatFormatting.RESET;
             }
@@ -92,7 +94,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         // config string to render (e.g. BM+TE+BS)
         String confString = NMConfUtils.getTextForActiveConfig(confArray);
-        FontRenderer font = this.parentWorldGui.fontRenderer;
+        FontRenderer font = ((GuiScreenAccess)(this.parentWorldGui)).getFontRenderer();
 
         // draw the comma after the existing text (same position as before)
         int baseTextX = xPos + 2 + font.getStringWidth(var9);

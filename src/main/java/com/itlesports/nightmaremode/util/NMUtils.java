@@ -5,7 +5,9 @@ import btw.item.BTWItems;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.interfaces.EntityLivingBaseAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
+import com.itlesports.nightmaremode.mixin.interfaces.SoundManagerAccess;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -86,7 +88,7 @@ public class NMUtils {
         if (mob.dimension == 1) {
             return false;
         }
-        if (mob.activePotionsMap != null) {
+        if (((EntityLivingBaseAccess)mob).getActivePotionEffects() != null) {
             if (mob.isPotionActive(Potion.field_76443_y)) {
                 return true;
             }
@@ -253,23 +255,28 @@ public class NMUtils {
     // Audio and music methods
     public static void shushMusic() {
         SoundManager sndManager = Minecraft.getMinecraft().sndManager;
-        if (sndManager.sndSystem.playing("BgMusic")) {
-            sndManager.sndSystem.stop("BgMusic");
+
+        SoundManagerAccess soundManageAccess = (SoundManagerAccess) sndManager;
+
+        if (soundManageAccess.getSoundSystem().playing("BgMusic")) {
+            soundManageAccess.getSoundSystem().stop("BgMusic");
         }
-        if (sndManager.sndSystem.playing("streaming")) {
-            sndManager.sndSystem.stop("streaming");
+        if (soundManageAccess.getSoundSystem().playing("streaming")) {
+            soundManageAccess.getSoundSystem().stop("streaming");
         }
     }
 
     public static void forcePlayMusic(String soundID, boolean toLoop) {
         SoundManager sndManager = Minecraft.getMinecraft().sndManager;
         shushMusic();
+        SoundManagerAccess soundManageAccess = (SoundManagerAccess) sndManager;
+
         if (Minecraft.getMinecraft().gameSettings.musicVolume != 0.0F) {
-            SoundPoolEntry sound = sndManager.soundPoolSounds.getRandomSoundFromSoundPool(soundID);
+            SoundPoolEntry sound = soundManageAccess.getSoundPoolSounds().getRandomSoundFromSoundPool(soundID);
             if (sound != null) {
-                sndManager.sndSystem.backgroundMusic("BgMusic", sound.getSoundUrl(), sound.getSoundName(), toLoop);
-                sndManager.sndSystem.setVolume("BgMusic", Minecraft.getMinecraft().gameSettings.musicVolume);
-                sndManager.sndSystem.play("BgMusic");
+                soundManageAccess.getSoundSystem().backgroundMusic("BgMusic", sound.getSoundUrl(), sound.getSoundName(), toLoop);
+                soundManageAccess.getSoundSystem().setVolume("BgMusic", Minecraft.getMinecraft().gameSettings.musicVolume);
+                soundManageAccess.getSoundSystem().play("BgMusic");
             }
         }
     }

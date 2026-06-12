@@ -36,7 +36,7 @@ import static btw.community.nightmaremode.NightmareMode.*;
 import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityAccessor, IPlayerDirectionTracker, EntityPlayerExt {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements IPlayerDirectionTracker, EntityPlayerExt {
 
 
     @Shadow public abstract ItemStack getHeldItem();

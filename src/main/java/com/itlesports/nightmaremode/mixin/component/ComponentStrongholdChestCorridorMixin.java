@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.component;
 
+import net.minecraft.src.ComponentStronghold;
 import net.minecraft.src.ComponentStrongholdChestCorridor;
 import net.minecraft.src.StructureBoundingBox;
 import net.minecraft.src.World;
@@ -9,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ComponentStrongholdChestCorridor.class)
-public class ComponentStrongholdChestCorridorMixin {
+public abstract class ComponentStrongholdChestCorridorMixin extends ComponentStronghold {
     @Redirect(method = "addComponentParts", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ComponentStrongholdChestCorridor;placeBlockAtCurrentPosition(Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V"))
     private void manageBlackstoneBricks(ComponentStrongholdChestCorridor corridor, World world, int blockId, int metadata, int localX, int localY, int localZ, StructureBoundingBox boundingBox) {
-        corridor.placeBlockAtCurrentPosition(world,1125,2,localX,localY,localZ,boundingBox);
+        this.placeBlockAtCurrentPosition(world,1125,2,localX,localY,localZ,boundingBox);
         // slabs
     }
     @ModifyArg(method = "addComponentParts", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ComponentStrongholdChestCorridor;fillWithBlocks(Lnet/minecraft/src/World;Lnet/minecraft/src/StructureBoundingBox;IIIIIIIIZ)V"),index = 8)

@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items.template;
 
 import api.achievement.AchievementHandler;
+import com.itlesports.nightmaremode.mixin.interfaces.AchievementHandlerAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
@@ -23,12 +24,12 @@ public class ItemAchievementGranter extends ItemFood {
 
 
     @Override
-    public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+    public ItemStack onEaten(ItemStack stack, World w, EntityPlayer player) {
         for(Object ac : this.achievementList){
-            AchievementHandler.triggerAchievement(par3EntityPlayer, (Achievement) ac);
-            displayAchievement((Achievement) ac,par3EntityPlayer);
+            AchievementHandlerAccess.invokeAchievementTrigger(player, (Achievement) ac);
+            displayAchievement((Achievement) ac,player);
         }
-        return super.onEaten(par1ItemStack, par2World, par3EntityPlayer);
+        return super.onEaten(stack, w, player);
     }
 
     @Override
