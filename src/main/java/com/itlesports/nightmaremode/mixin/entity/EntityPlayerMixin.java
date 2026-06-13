@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.AddonHandler;
 import api.achievement.AchievementEventDispatcher;
+import api.item.items.ToolItem;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
@@ -101,6 +102,75 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
+    @Inject(method = "interactWith", at = @At("HEAD"))
+    private void manageCreativeInteractionRegardingMobEquipment(Entity entityInteractedWith, CallbackInfoReturnable<Boolean> cir)
+    {
+        if(entityInteractedWith instanceof EntityLivingBase living && this.capabilities.isCreativeMode && !this.worldObj.isRemote){
+            if (living instanceof EntityLiving) {
+                for(int i = 0; i < 4; i++){
+                    ((EntityLiving) living).setEquipmentDropChance(i,1.0f);
+                }
+            }
+            if(this.isSneaking()){
+                if(living.getHeldItem() != null){
+                    living.entityDropItem(living.getHeldItem(), 1);
+                    living.setCurrentItemOrArmor(0, null);
+
+                    if(living instanceof EntitySkeleton skeleton){
+                        skeleton.setCombatTask();
+                    }
+
+                    return;
+                }
+
+                for(int i = 1; i <= 4; i++){
+                    ItemStack stack = living.getCurrentItemOrArmor(i);
+
+                    if(stack != null){
+                        living.entityDropItem(stack, 1);
+                        living.setCurrentItemOrArmor(i, null);
+                    }
+                }
+
+                return;
+            }
+
+            ItemStack held = this.getHeldItem();
+
+            if(held == null){
+                return;
+            }
+
+            if(held.getItem() instanceof ItemArmor armor){
+                int slot = 4 - armor.armorType;
+
+                ItemStack existing = living.getCurrentItemOrArmor(slot);
+
+                if(existing != null){
+                    living.entityDropItem(existing, 1);
+                }
+
+                living.setCurrentItemOrArmor(slot, held.copy());
+                return;
+            }
+
+            if(held.getItem() instanceof ToolItem || held.getItem() instanceof ItemSword){
+                ItemStack existing = living.getHeldItem();
+
+                if(existing != null && existing.isItemEnchanted()){
+                    living.entityDropItem(existing, 1);
+                }
+
+                living.setCurrentItemOrArmor(0, held.copy());
+
+                if(living instanceof EntitySkeleton skeleton){
+                    skeleton.setCombatTask();
+                }
+
+                return;
+            }
+        }
+    }
     @Override
     public boolean attackEntityFrom(DamageSource src, float amount) {
         if (this.isEntityInvulnerable()) {
