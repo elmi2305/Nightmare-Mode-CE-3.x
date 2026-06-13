@@ -2,9 +2,8 @@ package com.itlesports.nightmaremode.block;
 
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.mob.BTWSquidEntity;
-import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.block.blocks.*;
+import com.itlesports.nightmaremode.block.blocks.templates.BlockCustomLog;
 import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTextured;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
@@ -96,8 +95,10 @@ public class NMBlocks {
     // Misc hell stones (Material.rock)
     // -------------------------------------------------------------------------
     public static BlockMetaMultiTextured hellStones;
-
     public static final int META_HELLSTONE = 0;
+
+    public static Block customLog;
+
 
 
 
@@ -309,6 +310,9 @@ public class NMBlocks {
 
         honeyCover = new NMBlockGroundLayer(2349, Material.grass).setDropItemID(NMItems.honeyBall.itemID).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.clayStepSound).setUnlocalizedName("nmHoneyCover").setTextureName("honey");
         Item.itemsList[honeyCover.blockID] = new NMItemBlock(NMBlocks.honeyCover.blockID - 256);
+
+        customLog = new BlockCustomLog(2350).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("nmUnderworldLog").setTextureName("nightmare:nmLog").setHardness(1000f).setResistance(1000f);
+        Item.itemsList[customLog.blockID] = new NMItemBlock(NMBlocks.customLog.blockID - 256);
 
 
     }
