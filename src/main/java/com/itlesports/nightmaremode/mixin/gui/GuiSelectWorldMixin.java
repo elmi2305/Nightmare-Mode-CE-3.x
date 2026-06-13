@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.mixin.interfaces.GuiWorldSlotAccessor;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.nmgui.GuiColoredButton;
 import com.itlesports.nightmaremode.nmgui.GuiConfig;
@@ -9,6 +8,7 @@ import com.itlesports.nightmaremode.nmgui.GuiWarning;
 import com.itlesports.nightmaremode.util.interfaces.GuiSelectWorldExt;
 import com.itlesports.nightmaremode.util.interfaces.GuiWorldSlotExt;
 import net.minecraft.src.*;
+import org.lwjgl.Sys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -166,10 +166,43 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
                 toggleFavorite(filename);
                 return;
             }
+
+
+            int folderClicked = ((GuiWorldSlotExt)(this.worldSlotContainer)).nightmareMode$getFolderClicked(mouseX, mouseY);
+            if(folderClicked >= 0 && folderClicked < this.saveList.size()) {
+                String filename = ((SaveFormatComparator)this.saveList.get(folderClicked)).getFileName();
+
+                openFolder(filename);
+
+            }
         }
+
         super.mouseClicked(mouseX, mouseY, button);
     }
-
+    @Unique
+    private void openFolder(String filename) {
+        File path = new File(Minecraft.getMinecraft().mcDataDir, "saves/" + filename);
+        String absolutePath = path.getAbsolutePath();
+        this.mc.getLogAgent().logInfo("Opening world folder");
+        if (Util.getOSType() == EnumOS.MACOS) {
+            try {
+                this.mc.getLogAgent().logInfo(absolutePath);
+                Runtime.getRuntime().exec(new String[]{"/usr/bin/open", absolutePath});
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (Util.getOSType() == EnumOS.WINDOWS) {
+            String var4 = String.format("cmd.exe /C start \"Open file\" \"%s\"", absolutePath);
+            try {
+                Runtime.getRuntime().exec(var4);
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Sys.openURL("file://" + absolutePath);
+    }
     @Override
     public int nightmareMode$getLastMouseX() {
         return this.lastMouseX;

@@ -256,6 +256,7 @@
     "gui.GuiSlotMixin",
     "gui.GuiWorldSlotMixin",
     "interfaces.GuiScreenAccess",
+    "interfaces.GuiSlotAccess",
     "interfaces.GuiWorldSlotAccessor",
     "interfaces.NetClientHandlerExt",
     "render.BTWRenderMapperMixin",

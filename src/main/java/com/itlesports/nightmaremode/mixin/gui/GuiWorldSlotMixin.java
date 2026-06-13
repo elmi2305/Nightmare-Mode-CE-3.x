@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import com.itlesports.nightmaremode.mixin.interfaces.GuiScreenAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.GuiSelectWorldAccess;
+import com.itlesports.nightmaremode.mixin.interfaces.GuiSlotAccess;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.interfaces.GuiSelectWorldExt;
 import com.itlesports.nightmaremode.util.interfaces.GuiWorldSlotExt;
@@ -23,10 +24,13 @@ import java.util.Map;
 
 @Mixin(GuiWorldSlot.class)
 public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotExt {
-    private Map<Integer, int[]> starHitboxes = new HashMap<>();  // Tracks star positions
+    @Unique private Map<Integer, int[]> starHitboxes = new HashMap<>();  // Tracks star positions
+    @Unique private Map<Integer, int[]> folderPositions = new HashMap<>();  // Tracks folder positions
 
     @Shadow @Final GuiSelectWorld parentWorldGui;
     @Unique private static final ResourceLocation WORLD_BASIC = new ResourceLocation("nightmare:textures/gui/world_basic.png");
+    @Unique private static final ResourceLocation FOLDER = new ResourceLocation("nightmare:textures/gui/folder.png");
+    @Unique private static final ResourceLocation FOLDER_OPEN = new ResourceLocation("nightmare:textures/gui/folder_open.png");
 
     public GuiWorldSlotMixin(Minecraft minecraft, int i, int j, int k, int l, int m) {
         super(minecraft, i, j, k, l, m);
@@ -44,13 +48,33 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         starHitboxes.put(worldTextIndex, new int[]{starX, starY, starSize, starSize});
 
         boolean isFavorited = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$isFavorited(sfc.getFileName());
-        boolean isHovered = isMouseOverStar(starX, starY, starSize);
+        boolean isHoveredStar = isMouseOverStar(starX, starY, starSize);
         boolean isSelected = this.isSelected(worldTextIndex);
         boolean isHoveredOverWorld = this.isMouseOverWorld(starX, starY, starSize);
 
         // when to draw it
-        if (isFavorited || isSelected || isHovered || isHoveredOverWorld) {
+        if (isFavorited || isSelected || isHoveredStar || isHoveredOverWorld) {
             drawStar(starX, starY, starSize, isFavorited);
+        }
+        int x1 = xPos - 80;
+        int y1 = starY - 2;
+
+        folderPositions.put(worldTextIndex, new int[]{x1, y1, 16, 16});
+
+        boolean isHoveredFolder = isMouseOverStar(x1,y1, 16);
+        if(isSelected){
+            if(isHoveredFolder){
+                ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER_OPEN);
+            }
+            else {
+                ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER);
+            }
+            tess.startDrawingQuads();
+            tess.addVertexWithUV(x1, y1 + 16, 0, 0, 1);
+            tess.addVertexWithUV(x1 + 16, y1 + 16, 0, 1, 1);
+            tess.addVertexWithUV(x1 + 16, y1,   0, 1, 0);
+            tess.addVertexWithUV(x1, y1, 0, 0, 0);
+            tess.draw();
         }
 
 
@@ -75,7 +99,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         tess.addVertexWithUV(x, yPos, 0, 0, 0);
         tess.draw();
 
-        if (!Arrays.stream(confArray).anyMatch(a -> a == 1)) return;
+        if (Arrays.stream(confArray).noneMatch(a -> a == 1)) return;
 
         // build the existing game-mode text (var9) exactly like vanilla so spacing matches
         String var9 = "";
@@ -301,6 +325,18 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
     public int nightmareMode$getStarClicked(double mouseX, double mouseY) {
         // Check each tracked hitbox to see if the mouse click is within it
         for (Map.Entry<Integer, int[]> entry : starHitboxes.entrySet()) {
+            int[] box = entry.getValue();
+            if (mouseX >= box[0] && mouseX <= box[0] + box[2] &&
+                    mouseY >= box[1] && mouseY <= box[1] + box[3]) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
+    @Override
+    public int nightmareMode$getFolderClicked(double mouseX, double mouseY) {
+        // Check each tracked hitbox to see if the mouse click is within it
+        for (Map.Entry<Integer, int[]> entry : folderPositions.entrySet()) {
             int[] box = entry.getValue();
             if (mouseX >= box[0] && mouseX <= box[0] + box[2] &&
                     mouseY >= box[1] && mouseY <= box[1] + box[3]) {
