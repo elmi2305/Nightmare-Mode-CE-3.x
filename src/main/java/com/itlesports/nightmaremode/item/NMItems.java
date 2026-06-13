@@ -10,6 +10,9 @@ import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
 
 public class NMItems {
+    public static final int BLOOD_MOON_DURABILITY = 1200;
+
+
     public static ItemRPG rpg;
     public static ItemAR rifle;
     public static ItemBandage bandage;
@@ -82,14 +85,10 @@ public class NMItems {
     public static Item refinedElement;
     public static Item witherSoul;
 
-
-
-
-    public static final int BLOOD_MOON_DURABILITY = 1200;
-
-
     public static final Item obsidianShard;
     public static final Item honeyBall;
+
+    public static final Item lifeFruit;
 
 
 
@@ -171,6 +170,8 @@ public class NMItems {
         witherSoul = new NMItem(2364).setIndestructible().setTextureName("nightmare:nmWitherSoul").setUnlocalizedName("nmWitherSoul").setCreativeTab(CreativeTabs.tabMaterials);
 
         honeyBall = new NMItem(2365).setTextureName("nightmare:nmHoneyBall").setUnlocalizedName("nmHoneyBall").setCreativeTab(CreativeTabs.tabMaterials);
+
+        lifeFruit = new ItemLifeFruit(2366, "nmLifeFruit").setTextureName("nightmare:nmLifeFruit").setCreativeTab(CreativeTabs.tabFood);
 
 
 
