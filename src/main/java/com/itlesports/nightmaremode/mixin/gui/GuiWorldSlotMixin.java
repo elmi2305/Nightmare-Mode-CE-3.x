@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.mixin.interfaces.GuiScreenAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.GuiSelectWorldAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.GuiSlotAccess;
@@ -53,28 +54,30 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         boolean isHoveredOverWorld = this.isMouseOverWorld(starX, starY, starSize);
 
         // when to draw it
-        if (isFavorited || isSelected || isHoveredStar || isHoveredOverWorld) {
-            drawStar(starX, starY, starSize, isFavorited);
-        }
-        int x1 = xPos - 80;
-        int y1 = starY - 2;
-
-        folderPositions.put(worldTextIndex, new int[]{x1, y1, 16, 16});
-
-        boolean isHoveredFolder = isMouseOverStar(x1,y1, 16);
-        if(isSelected){
-            if(isHoveredFolder){
-                ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER_OPEN);
+        if (NightmareMode.devMode) {
+            if (isFavorited || isSelected || isHoveredStar || isHoveredOverWorld) {
+                drawStar(starX, starY, starSize, isFavorited);
             }
-            else {
-                ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER);
+            int x1 = xPos - 80;
+            int y1 = starY - 2;
+
+            folderPositions.put(worldTextIndex, new int[]{x1, y1, 16, 16});
+
+            boolean isHoveredFolder = isMouseOverStar(x1,y1, 16);
+            if(isSelected){
+                if(isHoveredFolder){
+                    ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER_OPEN);
+                }
+                else {
+                    ((GuiSlotAccess)this).getMc().renderEngine.bindTexture(FOLDER);
+                }
+                tess.startDrawingQuads();
+                tess.addVertexWithUV(x1, y1 + 16, 0, 0, 1);
+                tess.addVertexWithUV(x1 + 16, y1 + 16, 0, 1, 1);
+                tess.addVertexWithUV(x1 + 16, y1,   0, 1, 0);
+                tess.addVertexWithUV(x1, y1, 0, 0, 0);
+                tess.draw();
             }
-            tess.startDrawingQuads();
-            tess.addVertexWithUV(x1, y1 + 16, 0, 0, 1);
-            tess.addVertexWithUV(x1 + 16, y1 + 16, 0, 1, 1);
-            tess.addVertexWithUV(x1 + 16, y1,   0, 1, 0);
-            tess.addVertexWithUV(x1, y1, 0, 0, 0);
-            tess.draw();
         }
 
 
