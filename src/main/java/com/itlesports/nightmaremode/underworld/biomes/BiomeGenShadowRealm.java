@@ -29,11 +29,11 @@ public class BiomeGenShadowRealm extends BiomeGenUnderworld {
 
     @Override
     public int getBiomeFoliageColor() {
-        return 0xFFFFFF;
+        return 0x202020;
     }
 
     @Override
     public int getBiomeGrassColor() {
-        return 0xFFFFFF;
+        return 0x202020;
     }
 }

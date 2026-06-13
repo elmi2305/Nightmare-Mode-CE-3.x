@@ -9,14 +9,15 @@ import java.util.Random;
 
 public class WorldGenVoidTree extends WorldGenerator {
 
+    @Override
     public boolean generate(World world, Random rand, int x, int y, int z) {
         int trunkHeight = 8 + rand.nextInt(4);
         if (y < 1 || y + trunkHeight + 2 >= 256) return false;
         int below = world.getBlockId(x, y - 1, z);
         if (below != Block.grass.blockID && below != Block.dirt.blockID && below != NMBlocks.underGrass.blockID && below != NMBlocks.underStones.blockID) return false;
-        this.setBlock(world, x, y - 1, z, Block.dirt.blockID);
+        this.setBlockAndMetadata(world, x, y - 1, z, NMBlocks.underStones.blockID, NMBlocks.META_VOID_STONE);
         for (int i = 0; i < trunkHeight; i++)
-            this.setBlockAndMetadata(world, x, y + i, z, Block.wood.blockID, 0);
+            this.setBlockAndMetadata(world, x, y + i, z, NMBlocks.customLog.blockID, 0);
         int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
         boolean[] used = new boolean[8];
         int branches = 3 + rand.nextInt(2);
@@ -32,7 +33,7 @@ public class WorldGenVoidTree extends WorldGenerator {
                 bx = x + d[0] * s;
                 bz = z + d[1] * s;
                 tipY = by + (s == len ? 1 : 0);
-                this.setBlockAndMetadata(world, bx, tipY, bz, Block.wood.blockID, 0);
+                this.setBlockAndMetadata(world, bx, tipY, bz, NMBlocks.customLog.blockID, 0);
             }
             for (int lx = -1; lx <= 1; lx++)
                 for (int ly = 0; ly <= 1; ly++)
