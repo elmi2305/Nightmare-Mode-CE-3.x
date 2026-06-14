@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import com.itlesports.nightmaremode.entity.underworld.EntityVoidSquid;
 import com.itlesports.nightmaremode.util.LogSettings;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -19,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
-import java.util.Objects;
 import java.util.Random;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
@@ -133,7 +133,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "handleMaterialAcceleration", at = @At("HEAD"),cancellable = true)
     private void manageSquidNoGravityWater(AxisAlignedBB par1AxisAlignedBB, Material par2Material, Entity entity, CallbackInfoReturnable<Boolean> cir){
-        if(entity instanceof BTWSquidEntity && (NMUtils.getIsMobEclipsed((BTWSquidEntity) entity) || NightmareMode.buffedSquids) && par2Material == Material.water){
+        if((entity instanceof BTWSquidEntity && (NMUtils.getIsMobEclipsed((BTWSquidEntity) entity) || NightmareMode.buffedSquids) || entity instanceof EntityVoidSquid) && par2Material == Material.water){
             entity.inWater = true;
             cir.setReturnValue(true);
         }
