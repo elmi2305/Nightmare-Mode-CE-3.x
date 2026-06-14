@@ -331,7 +331,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageEclipseSpawns(CallbackInfoReturnable<Boolean> cir){
         int targetY = EntityBloodWither.isBossActive() ? 205 : 63;
-        if(NMUtils.getIsEclipse() && this.rand.nextInt(12) == 0 && this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 16) == null && this.posY >= targetY){
+        if(NMUtils.getIsEclipse() && this.rand.nextInt(12) == 0 && this.noPlayerNearby() && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 16) == null && this.posY >= targetY){
             cir.setReturnValue(true);
         }
     }
@@ -449,7 +449,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             }
         }
     }
-    @Unique private boolean getCanSpawnHereNoPlayerDistanceRestrictions() {
+    @Unique private boolean noPlayerNearby() {
         return this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty();
     }
 }

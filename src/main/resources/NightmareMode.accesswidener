@@ -7,3 +7,4 @@ accessible class net/minecraft/src/ComponentScatteredFeature
 accessible class api/config/ConfigElementValidator
 accessible class net/minecraft/src/SlotEnchantment
 accessible class net/minecraft/src/SlotEnchantmentTable
+accessible method btw/crafting/manager/SawCraftingManager <init> ()V
