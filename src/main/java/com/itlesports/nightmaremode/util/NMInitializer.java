@@ -53,6 +53,7 @@ public abstract class NMInitializer implements AchievementExt {
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
+//        addBloodSawRecipes();
         finishRecipes("All Recipes");
     }
 
@@ -1460,8 +1461,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.sawDust});
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.soulDust});
 
-        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.sawDust});
-        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.soulDust});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWTags.sawdusts});
         // done with dynamite
 
         // book
@@ -1520,6 +1520,75 @@ public abstract class NMInitializer implements AchievementExt {
         PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.spiderEyeBlock, 0 , new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
         finishRecipes("Piston Packing Recipes");
+
+    }
+
+    private static void addBloodSawRecipes(){
+//        BloodSawCraftingManager.instance.addRecipe(new ItemStack[]{new ItemStack(Block.planks, 4, 0), new ItemStack(BTWItems.sawDust, 2), new ItemStack(BTWItems.bark, 1, 0)}, Block.wood, new int[]{0, 4, 8, 12}).setAsDefaultAfterAchievement(BTWAchievements.CRAFT_SAW);
+
+
+        // Wood (special case - already handled in your original)
+//        BloodSawCraftingManager.instance.addWoodSubBlockRecipes(); // keep if needed
+
+        // Stone variants
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stone, 0,
+                BTWBlocks.stoneSidingAndCorner,
+                BTWBlocks.stoneMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneSlab, 1, 0));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stone, 1,
+                BTWBlocks.midStrataStoneSidingAndCorner,
+                BTWBlocks.midStrataStoneMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneSlab, 1, 1));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stone, 2,
+                BTWBlocks.deepStrataStoneSidingAndCorner,
+                BTWBlocks.deepStrataStoneMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneSlab, 1, 2));
+
+        // Stone Brick variants
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stoneBrick, 0,
+                BTWBlocks.stoneBrickSidingAndCorner,
+                BTWBlocks.stoneBrickMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneBrickSlab, 1, 0));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stoneBrick, 4,
+                BTWBlocks.midStrataStoneBrickSidingAndCorner,
+                BTWBlocks.midStrataStoneBrickMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneBrickSlab, 1, 1));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stoneBrick, 8,
+                BTWBlocks.deepStrataStoneBrickSidingAndCorner,
+                BTWBlocks.deepStrataStoneBrickMouldingAndDecorative,
+                new ItemStack(BTWBlocks.stoneBrickSlab, 1, 2));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(BTWBlocks.aestheticOpaque, 9,
+                BTWBlocks.whiteStoneSidingAndCorner,
+                BTWBlocks.whiteStoneMouldingAndDecroative,
+                new ItemStack(BTWBlocks.aestheticNonOpaque, 1, 10));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.netherBrick, 0,
+                BTWBlocks.netherBrickSidingAndCorner,
+                BTWBlocks.netherBrickMouldingAndDecorative,
+                new ItemStack(Block.stoneSingleSlab.blockID, 1, 6));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.brick, 0,
+                BTWBlocks.brickSidingAndCorner,
+                BTWBlocks.brickMouldingAndDecorative,
+                new ItemStack(Block.stoneSingleSlab.blockID, 1, 4));
+
+        // Sandstone uses wildcard metadata
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.sandStone, Short.MAX_VALUE, 0,
+                BTWBlocks.sandstoneSidingAndCorner,
+                BTWBlocks.sandstoneMouldingAndDecorative,
+                new ItemStack(Block.stoneSingleSlab.blockID, 1, 1));
+
+        BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.blockNetherQuartz, 0,
+                BTWBlocks.quartzSidingAndCorner,
+                BTWBlocks.quartzMouldingAndDecorative,
+                new ItemStack(Block.stoneSingleSlab.blockID, 1, 7));
+
+        finishRecipes("Blood Saw Recipes");
 
     }
 
