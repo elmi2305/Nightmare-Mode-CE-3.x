@@ -1,9 +1,13 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.item.items.PickaxeItem;
+import api.item.util.ItemUtils;
 import btw.community.nightmaremode.NightmareMode;
+import btw.crafting.manager.SawCraftingManager;
+import btw.crafting.recipe.types.SawRecipe;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.util.BloodSawCraftingManager;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
@@ -17,14 +21,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
-public class BlockMixin {
+public abstract class BlockMixin {
     @Shadow public static Block obsidian;
     @Shadow @Final public int blockID;
+
+    @Shadow public abstract boolean doesBlockDropAsItemOnSaw(World world, int i, int j, int k);
+    @Shadow public abstract void dropBlockAsItem(World par1World, int par2, int par3, int par4, int par5, int par6);
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){
         Item.itemsList[obsidian.blockID] = new ObsidianItemBlock(obsidian.blockID - 256);
     }
+//    @Inject(method = "onBlockSawed(Lnet/minecraft/src/World;III)Z", at = @At("HEAD"), cancellable = true)
+//    private void addBloodSawRecipeHook(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
+//        int metadata = world.getBlockMetadata(i, j, k);
+//        SawRecipe recipe = BloodSawCraftingManager.instance.getRecipe((Block)(Object)(this), metadata);
+//        if (recipe != null) {
+//            for (ItemStack stack : recipe.getOutput()) {
+//                ItemUtils.ejectStackWithRandomOffset(world, i, j, k, stack.copy());
+//            }
+//            world.setBlockToAir(i, j, k);
+//            cir.setReturnValue(true);
+//            return;
+//
+//        } else {
+//            if (!this.doesBlockDropAsItemOnSaw(world, i, j, k)) {
+//                cir.setReturnValue(false);
+//                return;
+//            }
+//            this.dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
+//            world.setBlockToAir(i, j, k);
+//            cir.setReturnValue(true);
+//            return;
+//        }
+//    }
 
 
     @Inject(method = "harvestBlock", at = @At("HEAD"))
