@@ -19,6 +19,7 @@ import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
+import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityFireworkRocketAccessor;
 import net.minecraft.server.MinecraftServer;
@@ -79,6 +80,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             NightmareMode.sendTargetFearToClient((EntityPlayerMP) (Object) this, targetFear);
         }
         this.fear = targetFear;
+    }
+
+    @Override
+    public void nightmareMode$setFoodMax(int targetFood) {
+        if(!this.worldObj.isRemote){
+            NightmareMode.sendFoodToClient((EntityPlayerMP) (Object) this, targetFood);
+        }
+        ((FoodStatsExt)this.foodStats).nightmareMode$setMaxFoodLevel(targetFood);
     }
 
     @Override

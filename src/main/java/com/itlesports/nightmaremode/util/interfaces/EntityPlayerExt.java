@@ -6,4 +6,6 @@ public interface EntityPlayerExt {
 
     void nightmareMode$setFear(float targetFear);
     float nightmareMode$getFear();
+
+    void nightmareMode$setFoodMax(int targetFood);
 }
