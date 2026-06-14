@@ -9,12 +9,14 @@ import btw.entity.RottenArrowEntity;
 import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBurningArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,8 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
-import static com.itlesports.nightmaremode.util.NMFields.SKELETON_ENDER;
+import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntitySkeleton.class)
 public abstract class EntitySkeletonMixin extends EntityMob{
@@ -228,12 +229,13 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
             if((NMUtils.getIsBloodMoon() || NightmareMode.evolvedMobs) && this.rand.nextInt(16) == 0 && this.getSkeletonType().id() == 0){
-                this.setSkeletonType(1);
+                this.setSkeletonType(SKELETON_WITHER);
             } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || NightmareMode.evolvedMobs) && this.getSkeletonType().id() == 0){
-                this.setSkeletonType(1);
+                this.setSkeletonType(SKELETON_WITHER);
             }
         }
     }
+
 
     @Redirect(method = "onSpawnWithEgg", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
     private boolean alwaysWitherSkelliesUnderground(Boolean instance){
@@ -347,6 +349,11 @@ public abstract class EntitySkeletonMixin extends EntityMob{
                     setSuperCriticalSkeleton();
                 } else if(shouldSpawnLightningSkeleton(progress, bloodMoonModifier, niteMultiplier)){
                     setLightningSkeleton();
+                }
+            }
+            if(this.worldObj.provider.dimensionId == UNDERWORLD_DIMENSION){
+                if(this.worldObj.getBiomeGenForCoords((int) this.posX, (int) this.posZ) instanceof BiomeGenShadowRealm){
+                    this.setSkeletonType(SKELETON_WITHER);
                 }
             }
         }
