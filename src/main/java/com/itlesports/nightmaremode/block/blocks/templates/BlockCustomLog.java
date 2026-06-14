@@ -165,9 +165,7 @@ public class BlockCustomLog extends BlockRotatedPillar {
 
         for (int i = 0; i < this.sideIcons.length; ++i) {
             this.sideIcons[i] = iconRegister.registerIcon(this.getTextureName() + "_" + woodType[i]);
-            this.topIcons[i] = i == 0
-                    ? iconRegister.registerIcon(this.getTextureName() + "_" + woodType[i] + "_top")
-                    : iconRegister.registerIcon("nightmare:" + woodType[i] + "_log_top");
+            this.topIcons[i] = iconRegister.registerIcon(this.getTextureName() + "_" + woodType[i] + "_top");
         }
     }
 
