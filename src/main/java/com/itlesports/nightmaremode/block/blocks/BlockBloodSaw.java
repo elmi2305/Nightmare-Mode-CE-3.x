@@ -10,6 +10,7 @@ import btw.crafting.manager.SawCraftingManager;
 import btw.item.BTWItems;
 import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.BloodSawCraftingManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -261,7 +262,7 @@ public class BlockBloodSaw
             BlockPos targetPos = new BlockPos(i, j, k, iFacing);
             Block targetBlock = Block.blocksList[world.getBlockId(targetPos.x, targetPos.y, targetPos.z)];
             int targetMetadata = world.getBlockMetadata(targetPos.x, targetPos.y, targetPos.z);
-            if (targetBlock != null && (targetBlock.blockMaterial.isSolid() || SawCraftingManager.instance.getRecipe(targetBlock, targetMetadata) != null || targetBlock.doesBlockDropAsItemOnSaw(world, targetPos.x, targetPos.y, targetPos.z))) {
+            if (targetBlock != null && (targetBlock.blockMaterial.isSolid() || (BloodSawCraftingManager.instance.getRecipe(targetBlock, targetMetadata) != null) || SawCraftingManager.instance.getRecipe(targetBlock, targetMetadata) != null || targetBlock.doesBlockDropAsItemOnSaw(world, targetPos.x, targetPos.y, targetPos.z))) {
                 world.playSoundEffect((double) i + 0.5, (double) j + 0.5, (double) k + 0.5, "minecart.base", 0.2f + world.rand.nextFloat() * 0.1f, 1.9f + world.rand.nextFloat() * 0.1f);
                 world.scheduleBlockUpdate(i, j, k, this.blockID, 10);
             }
