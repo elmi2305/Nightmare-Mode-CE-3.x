@@ -1,12 +1,17 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
+import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.Teleporter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
@@ -16,5 +21,18 @@ public class ServerConfigurationManagerMixin {
         if(d.dimension == NMFields.UNDERWORLD_DIMENSION) return;
 
         instance.placeInPortal(d,e,f,g,v);
+    }
+
+    @Inject(method = "playerLoggedIn", at = @At("TAIL"))
+    private void sendFoodPacketToJoinedPlayer(EntityPlayerMP player, CallbackInfo ci){
+        if (player instanceof EntityPlayerExt ext){
+            ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
+        }
+    }
+    @Inject(method = "transferPlayerToDimension", at = @At("TAIL"))
+    private void sendFoodPacketToDimensionChangedPlayer(EntityPlayerMP player, int dimensionID, CallbackInfo ci){
+        if (player instanceof EntityPlayerExt ext){
+            ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
+        }
     }
 }
