@@ -13,12 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SquidRenderer.class)
 public class SquidRendererMixin {
-    @Unique
-    private static final ResourceLocation SQUID_ECLIPSE = new ResourceLocation("nightmare:textures/entity/squidEclipse.png");
+    @Unique private static final ResourceLocation SQUID_ECLIPSE = new ResourceLocation("nightmare:textures/entity/squidEclipse.png");
 
     @Inject(method = "getEntityTexture", at = @At("HEAD"),cancellable = true)
-    private void manageEclipseTexture(Entity var1, CallbackInfoReturnable<ResourceLocation> cir){
-        if (NMUtils.getIsMobEclipsed((EntityLivingBase) var1)) {
+    private void manageEclipseTexture(Entity squid, CallbackInfoReturnable<ResourceLocation> cir){
+        if (NMUtils.getIsMobEclipsed((EntityLivingBase) squid)) {
             cir.setReturnValue(SQUID_ECLIPSE);
         }
     }
