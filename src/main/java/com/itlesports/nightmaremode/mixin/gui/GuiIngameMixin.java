@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
+import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -332,47 +333,94 @@ public class GuiIngameMixin extends Gui {
 //    @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
 //    private void renderVignetteInUnderworld(float par1, boolean par2, int par3, int par4, CallbackInfo ci){}
 
+    @Redirect(method = "func_110327_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;getAir()I"))
+    private int doNot(EntityClientPlayerMP instance)
+    {
+        return 500;
+    }
 
-    @Inject(method = "drawPenaltyText(II)V", at = @At("TAIL"))
-    private void drawTimer(int iScreenX, int iScreenY, CallbackInfo cbi){
-        if(!mc.thePlayer.isDead){
-            amountRendered = 0;
-            String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
+    @Redirect(method = "func_110327_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;isInsideOfMaterial(Lnet/minecraft/src/Material;)Z"))
+    private boolean doNot(EntityClientPlayerMP instance, Material material)
+    {
+        return false;
+    }
 
-            if(this.mc.thePlayer.dimension == -1){
-                period = NMUtils.getIsDayFromWorldTime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
+    @Redirect(method = "func_110327_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;drawPenaltyText(II)V"))
+    private void drawCustomPenaltyText(GuiIngame instance, int screenX, int screenY) {
+        if (this.mc.thePlayer.isDead) {
+            return;
+        }
+        AttributeInstance maxHealthAttribute = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+        float maxHealth = (float)maxHealthAttribute.getAttributeValue();
+        float absorption = this.mc.thePlayer.getAbsorptionAmount();
+
+        int healthRows = MathHelper.ceiling_float_int((maxHealth + absorption) / 2.0F / 10.0F);
+        int healthRowHeight = Math.max(10 - (healthRows - 2), 3);
+        ArrayList<StatusEffect> activeStatuses = this.mc.thePlayer.getAllActiveStatusEffects();
+        FontRenderer fontRenderer = this.mc.fontRenderer;
+
+        amountRendered = 0;
+
+        if (((FoodStatsExt)this.mc.thePlayer.getFoodStats()).nightmareMode$getMaxFoodLevel() > 60) {
+            amountRendered++;
+        }
+        int airBarY = screenY - (healthRows - 1) * healthRowHeight - amountRendered * 10;
+
+        if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.thePlayer.getAir() < 300) {
+            int air = this.mc.thePlayer.getAir();
+
+            int fullBubbles = MathHelper.ceiling_double_int((double)(air - 2) * 10.0D / 300.0D);
+            int partialBubbles = MathHelper.ceiling_double_int((double)air * 10.0D / 300.0D) - fullBubbles;
+
+            for (int bubbleIndex = 0; bubbleIndex < fullBubbles + partialBubbles; ++bubbleIndex) {
+                if (bubbleIndex < fullBubbles) {
+                    this.drawTexturedModalRect(screenX - bubbleIndex * 8 - 9, airBarY, 16, 18, 9, 9);
+                } else {
+                    this.drawTexturedModalRect(screenX - bubbleIndex * 8 - 9, airBarY, 25, 18, 9, 9);
+                }
             }
 
-            FontRenderer fontRenderer = this.mc.fontRenderer;
-            String textToShow = secToTime((int)(this.mc.theWorld.getTotalWorldTime() / 20));
-            int stringWidth = fontRenderer.getStringWidth(textToShow);
-            ArrayList<StatusEffect> activeStatuses = mc.thePlayer.getAllActiveStatusEffects();
+            amountRendered++;
+        }
 
-            if(NightmareMode.shouldShowRealTimer){
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
+        for (int i = amountRendered; i < (activeStatuses.size() + amountRendered); ++i) {
+            String status = StringTranslate.getInstance().translateKey(activeStatuses.get(i - amountRendered).getUnlocalizedName());
+            int stringWidth = fontRenderer.getStringWidth(status);
+            fontRenderer.drawStringWithShadow(status, screenX - stringWidth, screenY - (i * 10), 0xFFFFFF);
+        }
 
-            textToShow = String.format(period, NMUtils.getDayCountFromWorld(this.mc.theWorld));
+
+
+        String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
+        if (this.mc.thePlayer.dimension == -1) {
+            period = NMUtils.getIsDayFromWorldTime(this.mc.theWorld) ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
+        }
+
+        String textToShow = secToTime((int)(this.mc.theWorld.getTotalWorldTime() / 20));
+        int stringWidth = fontRenderer.getStringWidth(textToShow);
+        if (NightmareMode.shouldShowRealTimer) {
+            renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
+        }
+
+        textToShow = String.format(period, NMUtils.getDayCountFromWorld(this.mc.theWorld));
+        stringWidth = fontRenderer.getStringWidth(textToShow);
+        if (NightmareMode.shouldShowDateTimer) {
+            renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
+        }
+
+        if (NightmareMode.bloodMoonHelper) {
+            textToShow = this.getBloodMoonText(this.mc.theWorld);
             stringWidth = fontRenderer.getStringWidth(textToShow);
-            if(NightmareMode.shouldShowDateTimer){
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
+            renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
+        }
 
-            if(NightmareMode.bloodMoonHelper){
-                textToShow = this.getBloodMoonText(this.mc.theWorld);
-                stringWidth = fontRenderer.getStringWidth(textToShow);
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
-            if(NightmareMode.configOnHud){
-
-                textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
-                stringWidth = fontRenderer.getStringWidth(textToShow);
-                renderText(textToShow, stringWidth, iScreenX, iScreenY, fontRenderer, activeStatuses);
-            }
-
-
+        if (NightmareMode.configOnHud) {
+            textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
+            stringWidth = fontRenderer.getStringWidth(textToShow);
+            renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
         }
     }
+
     @Unique private float vignetteTarget = 0.5f;
     @Unique private float vignetteCurrent = 0.0F;
     @Unique private long vignetteLastUpdate = System.nanoTime();
@@ -635,6 +683,41 @@ public class GuiIngameMixin extends Gui {
 //            heightField = 14;
 //        }
     }
+    @Unique
+    private int times_added = 0;
+
+    @ModifyVariable(method = "drawFoodOverlay", ordinal = 1,
+            at = @At(value = "LOAD", ordinal = 0), slice = @Slice(from = @At(value = "CONSTANT", args = "intValue=10", ordinal = 0)))
+    private int modifyFoodOverlay2(int original_y) {
+        return original_y - (times_added / 10) * 10;
+    }
+
+    @ModifyVariable(method = "drawFoodOverlay", ordinal = 0,
+            at = @At(value = "LOAD", ordinal = 0), slice = @Slice(from = @At(value = "CONSTANT", args = "intValue=10", ordinal = 0)))
+    private int modifyFoodOverlay3(int original_x) {
+        int ret = original_x + (times_added++ / 10) * 80;
+        times_added = ((times_added - 1) % 10) + 1;
+        return ret;
+    }
+
+    @Inject(method = "drawFoodOverlay", at = @At("RETURN"))
+    private void resetTimesAdded(CallbackInfo ci) {
+        times_added = 0;
+    }
+
+    @Inject(method = "func_110327_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;endStartSection(Ljava/lang/String;)V", ordinal = 1))
+    private void resetTimesAdded2(CallbackInfo ci) {
+        times_added = 0;
+    }
+    @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
+    private int modifyNiteFoodOverlay(int original) {
+        if(mc.thePlayer == null) return original;
+        if(!NightmareMode.nite){
+            return (int) (((FoodStatsExt)mc.thePlayer.getFoodStats()).nightmareMode$getMaxFoodLevel() / 6F);
+        }
+        return (int) (NMUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
+    }
+
     @Unique private void drawVerticalProgressBar(int x, int y, int width, int height, int progress, int max, float transparency) {
         Tessellator tess = Tessellator.instance;
 
@@ -792,11 +875,6 @@ public class GuiIngameMixin extends Gui {
 
 
 
-    @ModifyConstant(method = "drawFoodOverlay", constant = @Constant(intValue = 10, ordinal = 0))
-    private int modifyNiteFoodOverlay(int original) {
-        if(!NightmareMode.nite || mc.thePlayer == null){return original;}
-        return (int) (NMUtils.getFoodShanksFromLevel(mc.thePlayer) / 6F);
-    }
 
     @Unique
     private void renderText(String text, int stringWidth, int iScreenX, int iScreenY, FontRenderer fontRenderer, ArrayList<StatusEffect> activeStatuses){
