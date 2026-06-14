@@ -89,6 +89,7 @@ public class NMItems {
     public static final Item honeyBall;
 
     public static final Item lifeFruit;
+    public static final Item honeyMelon;
 
 
 
@@ -172,6 +173,8 @@ public class NMItems {
         honeyBall = new NMItem(2365).setTextureName("nightmare:nmHoneyBall").setUnlocalizedName("nmHoneyBall").setCreativeTab(CreativeTabs.tabMaterials);
 
         lifeFruit = new ItemLifeFruit(2366, "nmLifeFruit").setTextureName("nightmare:nmLifeFruit").setCreativeTab(CreativeTabs.tabFood);
+
+        honeyMelon = new ItemLifeFruit(2367, "nmHoneyMelon").setTextureName("nightmare:nmHoneyMelon").setCreativeTab(CreativeTabs.tabFood);
 
 
 
