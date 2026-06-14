@@ -63,5 +63,9 @@ public class NMFields {
     public static final int SLIME_HONEY = 0;
     public static final int SLIME_VOID = 1;
 
+    // food and hunger related
+    public static final int MAX_FOOD_FROM_FRUITS = 90;
+    public static final int MAX_HEALTH_FROM_FRUITS = 30;
+
 
 }
