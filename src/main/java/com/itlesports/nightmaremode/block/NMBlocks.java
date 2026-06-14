@@ -167,11 +167,11 @@ public class NMBlocks {
         underCobble = new NMBlock(2323, Material.rock).setTextureName("nightmare:nmUnderworldRockCobble").setUnlocalizedName("nmUnderworldRockCobble").setCreativeTab(CreativeTabs.tabBlock).setHardness(10f).setResistance(5f);
         Item.itemsList[underCobble.blockID] = new NMItemBlock(NMBlocks.underCobble.blockID - 256);
 
-        underGrass = new BlockUnderGrass(2324, Material.grass);
+        underGrass = new BlockUnderGrass(2324, Material.ground);
         Item.itemsList[underGrass.blockID] = new NMItemBlock(NMBlocks.underGrass.blockID - 256);
 
         // Underworld grass / dirt group
-        underFlowerDirts = new BlockMetaMultiTextured(2325, Material.grass,
+        underFlowerDirts = new BlockMetaMultiTextured(2325, Material.ground,
                 /* 0: underDirt      */ BlockMetaMultiTextured.Variant
                 .allSides("nightmare:blight_level_4_roots")
                 .name("nmUnderDirt")
@@ -312,7 +312,8 @@ public class NMBlocks {
         Item.itemsList[honeyCover.blockID] = new NMItemBlock(NMBlocks.honeyCover.blockID - 256);
 
         customLog = new BlockCustomLog(2350).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("nmUnderworldLog").setTextureName("nightmare:nmLog").setHardness(1000f).setResistance(1000f);
-        Item.itemsList[customLog.blockID] = new NMItemBlock(NMBlocks.customLog.blockID - 256);
+        Item.itemsList[customLog.blockID] = new ItemMultiTextureTile(customLog.blockID - 256, customLog, BlockCustomLog.woodType).setUnlocalizedName("nmLog");
+
 
 
     }
