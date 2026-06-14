@@ -41,6 +41,12 @@ public class BlockTallFlower extends BlockFlower {
     }
 
     @Override
+    public boolean canBlockStayDuringGenerate(World world, int i, int j, int k) {
+        // force return true to get floating flowers
+        return world.isAirBlock(i, j + 1, k) && !world.isAirBlock(i, j - 1, k);
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
         int type = stack.getItemDamage() & TYPE_MASK;
         world.setBlock(x, y, z, this.blockID, type, 2);  // Bottom half
