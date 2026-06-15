@@ -53,6 +53,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityHoneySlime.class, "NmHoneySlime", 2338, 0xE6B402, 0xF2F7A8);
         EntityList.addMapping(EntityVoidSlime.class, "NmVoidSlime", 2339, 0, 0xe3ffe3);
         EntityList.addMapping(EntityVoidSquid.class, "NmVoidSquid", 2340, 0x00446e, 0);
+        EntityList.addMapping(EntityAwakenedWither.class, "NmAwakenedWither", 2341, 0xFFFFFF, 0);
 
     }
 
