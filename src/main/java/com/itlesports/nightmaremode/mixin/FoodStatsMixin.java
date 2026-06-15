@@ -46,7 +46,6 @@ public class FoodStatsMixin implements FoodStatsExt {
     private void addCustomNBT(NBTTagCompound tag, CallbackInfo ci){
         this.foodCapChanged = tag.getInteger("nmFoodCapChanged");
         if(this.foodCapChanged < 60){
-            System.out.println("changed food cap was less than 60");
             this.foodCapChanged = 60;
         }
     }
@@ -54,7 +53,6 @@ public class FoodStatsMixin implements FoodStatsExt {
     @Inject(method = "writeNBT", at = @At("TAIL"))
     private void writeCustomNBT(NBTTagCompound tag, CallbackInfo ci){
         tag.setInteger("nmFoodCapChanged", this.foodCapChanged);
-        System.out.println("changed food cap: " + this.foodCapChanged);
     }
     @Override
     public int nightmareMode$getMaxFoodLevel() {
