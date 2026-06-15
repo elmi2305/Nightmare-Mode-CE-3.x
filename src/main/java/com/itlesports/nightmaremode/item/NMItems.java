@@ -90,6 +90,7 @@ public class NMItems {
 
     public static final Item lifeFruit;
     public static final Item honeyMelon;
+    public static final Item awakenedStar;
 
 
 
@@ -175,6 +176,8 @@ public class NMItems {
         lifeFruit = new ItemLifeFruit(2366, "nmLifeFruit").setTextureName("nightmare:nmLifeFruit").setCreativeTab(CreativeTabs.tabFood);
 
         honeyMelon = new ItemLifeFruit(2367, "nmHoneyMelon").setTextureName("nightmare:nmHoneyMelon").setCreativeTab(CreativeTabs.tabFood);
+
+        awakenedStar = new NMBloodStarItem(2368).setTextureName("nightmare:nmAwakenedStar").setUnlocalizedName("nmAwakenedStar").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

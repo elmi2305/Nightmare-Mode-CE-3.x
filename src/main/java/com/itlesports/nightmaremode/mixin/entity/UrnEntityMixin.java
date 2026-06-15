@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.entity.UrnEntity;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,11 +16,11 @@ public class UrnEntityMixin {
     @Inject(method = "attemptToCreateWither", at = @At("HEAD"),cancellable = true)
     private static void witherSummoningRestrictions(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
         if(j < 60){
-//            ChatMessageComponent text2 = new ChatMessageComponent();
-//            text2.addKey("bosses.wither_summon_sealevel");
-//            text2.setColor(EnumChatFormatting.YELLOW);
-//            world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
-//            cir.setReturnValue(false);
+            ChatMessageComponent text2 = new ChatMessageComponent();
+            text2.addKey("bosses.wither_summon_sealevel");
+            text2.setColor(EnumChatFormatting.YELLOW);
+            world.getClosestPlayer(i,j,k,-1).sendChatToPlayer(text2);
+            cir.setReturnValue(false);
         } else if(j > 200){
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addKey("bosses.wither_summon_too_high");
@@ -45,7 +46,7 @@ public class UrnEntityMixin {
                     world.setBlock(i, j - 1, k + iTempKOffset + 1, 0, 0, 2);
                     world.setBlock(i, j - 1, k + iTempKOffset + 2, 0, 0, 2);
                     world.setBlock(i, j - 2, k + iTempKOffset + 1, 0, 0, 2);
-                    EntityBloodWither.summonWitherAtLocation(world, i, k + iTempKOffset + 1);
+                    EntityAwakenedWither.summonWitherAtLocation(world, i, j, k + iTempKOffset + 1);
                     world.notifyBlockChange(i, j, k + iTempKOffset, 0);
                     world.notifyBlockChange(i, j, k + iTempKOffset + 1, 0);
                     world.notifyBlockChange(i, j, k + iTempKOffset + 2, 0);
@@ -70,7 +71,7 @@ public class UrnEntityMixin {
                     world.setBlock(i + iTempIOffset + 1, j - 1, k, 0, 0, 2);
                     world.setBlock(i + iTempIOffset + 2, j - 1, k, 0, 0, 2);
                     world.setBlock(i + iTempIOffset + 1, j - 2, k, 0, 0, 2);
-                    EntityBloodWither.summonWitherAtLocation(world, i + iTempIOffset + 1, k);
+                    EntityAwakenedWither.summonWitherAtLocation(world, i + iTempIOffset + 1,j, k);
                     world.notifyBlockChange(i + iTempIOffset, j, k, 0);
                     world.notifyBlockChange(i + iTempIOffset + 1, j, k, 0);
                     world.notifyBlockChange(i + iTempIOffset + 2, j, k, 0);
