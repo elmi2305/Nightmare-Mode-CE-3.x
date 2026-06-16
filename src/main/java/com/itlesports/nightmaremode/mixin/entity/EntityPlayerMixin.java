@@ -69,7 +69,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     public void nightmareMode$setBlinkLength(int target) {
         if(!this.worldObj.isRemote){
-            NightmareMode.sendBlinkDurationToClient((EntityPlayerMP) (Object) this, target);
+            sendBlinkDurationToClient((EntityPlayerMP) (Object) this, target);
         }
         this.blinkLength = target;
     }
@@ -77,7 +77,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public void nightmareMode$setFear(float targetFear) {
         if(!this.worldObj.isRemote){
-            NightmareMode.sendTargetFearToClient((EntityPlayerMP) (Object) this, targetFear);
+            sendTargetFearToClient((EntityPlayerMP) (Object) this, targetFear);
         }
         this.fear = targetFear;
     }
@@ -85,7 +85,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Override
     public void nightmareMode$setFoodMax(int targetFood) {
         if(!this.worldObj.isRemote){
-            NightmareMode.sendFoodToClient((EntityPlayerMP) (Object) this, targetFood);
+            sendFoodToClient((EntityPlayerMP) (Object) this, targetFood);
         }
         ((FoodStatsExt)this.foodStats).nightmareMode$setMaxFoodLevel(targetFood);
     }
@@ -228,10 +228,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void noHitAttributes(CallbackInfo ci){
-        if (NightmareMode.noHit) {
+        if (noHit) {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
             this.setHealth(1f);
-        } else if(NightmareMode.nite){
+        } else if(nite){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
             this.setHealth(this.getHealthForExperience());
         }
@@ -243,7 +243,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "doesStatusPreventSprinting", at = @At("HEAD"),cancellable = true)
     private void allowSprintingOnLowHealth(CallbackInfoReturnable<Boolean> cir){
-        if(NightmareMode.noHit || NightmareMode.nite){
+        if(noHit || nite){
             cir.setReturnValue(false);
         }
     }
@@ -257,7 +257,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
-        if(NightmareMode.isAprilFools){
+        if(isAprilFools){
             if (this.rand.nextInt(6) == 0) {
                 this.motionY += this.rand.nextFloat() * 0.2f * (this.rand.nextBoolean() ? 1 : -1);
             }
@@ -292,7 +292,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
     @ModifyArg(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float unkillableMobs(float par2){
-        if(NightmareMode.unkillableMobs){
+        if(unkillableMobs){
             return 0f;
         }
         return par2;
@@ -328,13 +328,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private float reduceExhaustion(float constant) {
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
-        if(NightmareMode.noHit){
+        if(noHit){
             return 0.09f;
         }
-        if(NightmareMode.nite){
+        if(nite){
             return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
-        if (NightmareMode.bloodmare) {
+        if (bloodmare) {
             return 0.15f;
         }
         return 0.17f; // jump
@@ -343,13 +343,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private float reduceExhaustion1(float constant){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
-        if(NightmareMode.noHit){
+        if(noHit){
             return 0.2f;
         }
-        if(NightmareMode.nite){
+        if(nite){
             return 0.75f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
-        if(NightmareMode.bloodmare){
+        if(bloodmare){
             return 0.5f;
         }
         return 0.75f; // sprint jump
@@ -358,13 +358,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     private float reduceExhaustion2(float constant){
         EntityPlayer thisObj = (EntityPlayer)(Object)this;
 
-        if(NightmareMode.noHit){
+        if(noHit){
             return 0.1f;
         }
-        if(NightmareMode.nite){
+        if(nite){
             return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
         }
-        if(NightmareMode.bloodmare){
+        if(bloodmare){
             return 0.15f;
         }
         return 0.2f; // punch
@@ -468,7 +468,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             if(!conf.isActive()) continue;
 
             // RT is handled explicitly because it directly modifies the world state and is separate from other configs
-            if(NightmareMode.realTime){
+            if(realTime){
                 if(this.shouldActivate(NMConfUtils.CONFIG.REAL_TIME)){
                     this.completeConfig(NMConfUtils.CONFIG.REAL_TIME);
                     this.spawnConfigCompletionEffects();
@@ -677,6 +677,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
                 this.nightmareMode$setFear(Math.min(fear + 0.01f, 0.1f));
             }
 
+            // unused. entity giving the player fear is more convenient, since there's very few entities that actually do this. until there are more, this will be unused
+//            if (this.ticksExisted % 6 == 0) {
+//                Entity closestFear = this.worldObj.findNearestEntityWithinAABB(FearSource.class, this.boundingBox.expand(8,6, 8), this);
+//                if(closestFear instanceof FearSource){
+//                    double maxFear = ((FearSource) closestFear).getFearForThisEntity(this.posX,this.posY,this.posZ);
+//                    System.out.println(maxFear);
+//                    if(maxFear > 0){
+//                        this.nightmareMode$setFear((float) Math.max(this.nightmareMode$getFear(), Math.min(maxFear,1.0f)));
+//                    }
+//                }
+//            }
+
             float h;
             float m;
             if((h = this.getHealth()) < (m = this.getMaxHealth() / 2)){
@@ -755,7 +767,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             this.checkAndValidateConfig();
         }
         // manage underworld events
-        if(this.dimension == NMFields.UNDERWORLD_DIMENSION && devMode){
+        if(this.dimension == UNDERWORLD_DIMENSION && devMode){
             if(this.ticksExisted % 10 == 0){
                 // recalculate drain amount every 10 ticks
                 drainAmount = this.getSanityDrain();
@@ -823,12 +835,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageLeavingGameDuringBloodWitherFight(CallbackInfo ci){
         if(this.ticksExisted % 100 == 0){
-            NightmareMode.getInstance().setCanLeaveGame(!EntityBloodWither.isBossActive());
+            getInstance().setCanLeaveGame(!EntityBloodWither.isBossActive());
         }
     }
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void manageBloodWitherDeath(DamageSource par1DamageSource, CallbackInfo ci){
-        NightmareMode.getInstance().setCanLeaveGame(true);
+        getInstance().setCanLeaveGame(true);
         EntityBloodWither.setBossActive(false);
     }
 
@@ -864,7 +876,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
 //        if(this.ticksInWater)
 //        if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
-        if(worldObj.worldInfo.getData(NightmareMode.DRAGON_DEFEATED)){
+        if(worldObj.worldInfo.getData(DRAGON_DEFEATED)){
             NMUtils.setItemStackSizes(32);
         }
     }
@@ -903,12 +915,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHealthOnNoHitAndNite(CallbackInfo ci){
-        if(NightmareMode.noHit){
+        if(noHit){
             if(this.getMaxHealth() > 1){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
                 this.getDataWatcher().updateObject(6, 0x1);
             }
-        } else if(NightmareMode.nite){
+        } else if(nite){
             if(this.getMaxHealth() != this.getHealthForExperience()){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
             }
@@ -939,7 +951,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageDarkStormyNight(CallbackInfo ci){
-        if (NightmareMode.darkStormyNightmare) {
+        if (darkStormyNightmare) {
             this.worldObj.worldInfo.setRaining(true);
             this.worldObj.worldInfo.setThundering(true);
             if (this.worldObj.worldInfo.getThunderTime() < 200) {
@@ -953,7 +965,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageAprilFools(CallbackInfo ci){
-        if (NightmareMode.isAprilFools) {
+        if (isAprilFools) {
             if(this.ticksExisted % soundInterval == (soundInterval - 1)){
                 this.playRandomMobOrItemSound();
             } else{
@@ -1078,7 +1090,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "getAllActiveStatusEffects", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void niteAndNoHitEffectManager(CallbackInfoReturnable<ArrayList<StatusEffect>> cir, ArrayList activeEffects){
-        if (NightmareMode.nite || NightmareMode.noHit) {
+        if (nite || noHit) {
             activeEffects.removeAll(collection);
         }
     }
@@ -1166,7 +1178,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageSeaOfDeath(CallbackInfo ci){
-        if(NightmareMode.bloodmare){
+        if(bloodmare){
             if (this.isInWater()) {
                 this.ticksInWater = Math.min(this.ticksInWater + 1, 30);
                 if(this.ticksInWater == 30){
