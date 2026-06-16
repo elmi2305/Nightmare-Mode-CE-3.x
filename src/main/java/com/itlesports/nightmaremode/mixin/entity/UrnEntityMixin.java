@@ -32,62 +32,143 @@ public class UrnEntityMixin {
     }
 
     @Inject(method = "attemptToCreateWither", at = @At("HEAD"),cancellable = true)
-    private static void summonBloodWither(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
-        if (j >= 2 && world.provider.dimensionId == 0) {
-            for(int iTempKOffset = -2; iTempKOffset <= 0; ++iTempKOffset) {
-                if (isWitherBodyBlock(world, i, j - 1, k + iTempKOffset) && isWitherBodyBlock(world, i, j - 1, k + iTempKOffset + 1) && isWitherBodyBlock(world, i, j - 2, k + iTempKOffset + 1) && isWitherBodyBlock(world, i, j - 1, k + iTempKOffset + 2) && isWitherHeadBlock(world, i, j, k + iTempKOffset) && isWitherHeadBlock(world, i, j, k + iTempKOffset + 1) && isWitherHeadBlock(world, i, j, k + iTempKOffset + 2)) {
-                    world.SetBlockMetadataWithNotify(i, j, k + iTempKOffset, 8, 2);
-                    world.SetBlockMetadataWithNotify(i, j, k + iTempKOffset + 1, 8, 2);
-                    world.SetBlockMetadataWithNotify(i, j, k + iTempKOffset + 2, 8, 2);
-                    world.setBlock(i, j, k + iTempKOffset, 0, 0, 2);
-                    world.setBlock(i, j, k + iTempKOffset + 1, 0, 0, 2);
-                    world.setBlock(i, j, k + iTempKOffset + 2, 0, 0, 2);
-                    world.setBlock(i, j - 1, k + iTempKOffset, 0, 0, 2);
-                    world.setBlock(i, j - 1, k + iTempKOffset + 1, 0, 0, 2);
-                    world.setBlock(i, j - 1, k + iTempKOffset + 2, 0, 0, 2);
-                    world.setBlock(i, j - 2, k + iTempKOffset + 1, 0, 0, 2);
-                    EntityAwakenedWither.summonWitherAtLocation(world, i, j, k + iTempKOffset + 1);
-                    world.notifyBlockChange(i, j, k + iTempKOffset, 0);
-                    world.notifyBlockChange(i, j, k + iTempKOffset + 1, 0);
-                    world.notifyBlockChange(i, j, k + iTempKOffset + 2, 0);
-                    world.notifyBlockChange(i, j - 1, k + iTempKOffset, 0);
-                    world.notifyBlockChange(i, j - 1, k + iTempKOffset + 1, 0);
-                    world.notifyBlockChange(i, j - 1, k + iTempKOffset + 2, 0);
-                    world.notifyBlockChange(i, j - 2, k + iTempKOffset + 1, 0);
-                    teleportPlayersAndMakeFirstPlatform(world,i,j,k);
+    private static void summonBloodWither(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
+        if (y >= 2 && world.provider.dimensionId == 0) {
+            for(int temp = -2; temp <= 0; ++temp) {
+                if (
+                        isBloodWitherBodyBlock(world, x, y - 1, z + temp)
+                        && isBloodWitherBodyBlock(world, x, y - 1, z + temp + 1)
+                        && isBloodWitherBodyBlock(world, x, y - 2, z + temp + 1)
+                        && isBloodWitherBodyBlock(world, x, y - 1, z + temp + 2)
+                        && isWitherHeadBlock(world, x, y, z + temp)
+                        && isWitherHeadBlock(world, x, y, z + temp + 1)
+                        && isWitherHeadBlock(world, x, y, z + temp + 2)) {
+
+                    world.SetBlockMetadataWithNotify(x, y, z + temp, 8, 2);
+                    world.SetBlockMetadataWithNotify(x, y, z + temp + 1, 8, 2);
+                    world.SetBlockMetadataWithNotify(x, y, z + temp + 2, 8, 2);
+                    world.setBlock(x, y, z + temp, 0, 0, 2);
+                    world.setBlock(x, y, z + temp + 1, 0, 0, 2);
+                    world.setBlock(x, y, z + temp + 2, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp + 1, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp + 2, 0, 0, 2);
+                    world.setBlock(x, y - 2, z + temp + 1, 0, 0, 2);
+                    EntityBloodWither.summonWitherAtLocation(world, x, z + temp + 1);
+                    world.notifyBlockChange(x, y, z + temp, 0);
+                    world.notifyBlockChange(x, y, z + temp + 1, 0);
+                    world.notifyBlockChange(x, y, z + temp + 2, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp + 1, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp + 2, 0);
+                    world.notifyBlockChange(x, y - 2, z + temp + 1, 0);
+                    teleportPlayersAndMakeFirstPlatform(world,x,y,z);
+                    cir.setReturnValue(true);
+                }
+            }
+
+            for(int temp = -2; temp <= 0; ++temp) {
+                if (
+                        isBloodWitherBodyBlock(world, x + temp, y - 1, z)
+                        && isBloodWitherBodyBlock(world, x + temp + 1, y - 1, z)
+                        && isBloodWitherBodyBlock(world, x + temp + 1, y - 2, z)
+                        && isBloodWitherBodyBlock(world, x + temp + 2, y - 1, z)
+                        && isWitherHeadBlock(world, x + temp, y, z)
+                        && isWitherHeadBlock(world, x + temp + 1, y, z)
+                        && isWitherHeadBlock(world, x + temp + 2, y, z)) {
+
+                    world.SetBlockMetadataWithNotify(x + temp, y, z, 8, 2);
+                    world.SetBlockMetadataWithNotify(x + temp + 1, y, z, 8, 2);
+                    world.SetBlockMetadataWithNotify(x + temp + 2, y, z, 8, 2);
+                    world.setBlock(x + temp, y, z, 0, 0, 2);
+                    world.setBlock(x + temp + 1, y, z, 0, 0, 2);
+                    world.setBlock(x + temp + 2, y, z, 0, 0, 2);
+                    world.setBlock(x + temp, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + temp + 1, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + temp + 2, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + temp + 1, y - 2, z, 0, 0, 2);
+                    EntityBloodWither.summonWitherAtLocation(world, x + temp + 1, z);
+                    world.notifyBlockChange(x + temp, y, z, 0);
+                    world.notifyBlockChange(x + temp + 1, y, z, 0);
+                    world.notifyBlockChange(x + temp + 2, y, z, 0);
+                    world.notifyBlockChange(x + temp, y - 1, z, 0);
+                    world.notifyBlockChange(x + temp + 1, y - 1, z, 0);
+                    world.notifyBlockChange(x + temp + 2, y - 1, z, 0);
+                    world.notifyBlockChange(x + temp + 1, y - 2, z, 0);
+                    teleportPlayersAndMakeFirstPlatform(world,x,y,z);
+                    cir.setReturnValue(true);
+                }
+            }
+
+
+            // === AWAKENED WITHER ===
+            // === AWAKENED WITHER ===
+            // === AWAKENED WITHER ===
+
+            for(int temp = -2; temp <= 0; ++temp) {
+                if (
+                        isAwakenedWitherBodyBlock(world, x, y - 1, z + temp)
+                        && isAwakenedWitherBodyBlock(world, x, y - 1, z + temp + 1)
+                        && isAwakenedWitherBodyBlock(world, x, y - 2, z + temp + 1)
+                        && isAwakenedWitherBodyBlock(world, x, y - 1, z + temp + 2)
+                        && isWitherHeadBlock(world, x, y, z + temp)
+                        && isWitherHeadBlock(world, x, y, z + temp + 1)
+                        && isWitherHeadBlock(world, x, y, z + temp + 2)) {
+
+                    world.SetBlockMetadataWithNotify(x, y, z + temp, 8, 2);
+                    world.SetBlockMetadataWithNotify(x, y, z + temp + 1, 8, 2);
+                    world.SetBlockMetadataWithNotify(x, y, z + temp + 2, 8, 2);
+                    world.setBlock(x, y, z + temp, 0, 0, 2);
+                    world.setBlock(x, y, z + temp + 1, 0, 0, 2);
+                    world.setBlock(x, y, z + temp + 2, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp + 1, 0, 0, 2);
+                    world.setBlock(x, y - 1, z + temp + 2, 0, 0, 2);
+                    world.setBlock(x, y - 2, z + temp + 1, 0, 0, 2);
+                    EntityAwakenedWither.summonWitherAtLocation(world, x,y, z + temp + 1);
+                    world.notifyBlockChange(x, y, z + temp, 0);
+                    world.notifyBlockChange(x, y, z + temp + 1, 0);
+                    world.notifyBlockChange(x, y, z + temp + 2, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp + 1, 0);
+                    world.notifyBlockChange(x, y - 1, z + temp + 2, 0);
+                    world.notifyBlockChange(x, y - 2, z + temp + 1, 0);
                     cir.setReturnValue(true);
                 }
             }
 
             for(int iTempIOffset = -2; iTempIOffset <= 0; ++iTempIOffset) {
-                if (isWitherBodyBlock(world, i + iTempIOffset, j - 1, k) && isWitherBodyBlock(world, i + iTempIOffset + 1, j - 1, k) && isWitherBodyBlock(world, i + iTempIOffset + 1, j - 2, k) && isWitherBodyBlock(world, i + iTempIOffset + 2, j - 1, k) && isWitherHeadBlock(world, i + iTempIOffset, j, k) && isWitherHeadBlock(world, i + iTempIOffset + 1, j, k) && isWitherHeadBlock(world, i + iTempIOffset + 2, j, k)) {
-                    world.SetBlockMetadataWithNotify(i + iTempIOffset, j, k, 8, 2);
-                    world.SetBlockMetadataWithNotify(i + iTempIOffset + 1, j, k, 8, 2);
-                    world.SetBlockMetadataWithNotify(i + iTempIOffset + 2, j, k, 8, 2);
-                    world.setBlock(i + iTempIOffset, j, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset + 1, j, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset + 2, j, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset, j - 1, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset + 1, j - 1, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset + 2, j - 1, k, 0, 0, 2);
-                    world.setBlock(i + iTempIOffset + 1, j - 2, k, 0, 0, 2);
-                    EntityAwakenedWither.summonWitherAtLocation(world, i + iTempIOffset + 1,j, k);
-                    world.notifyBlockChange(i + iTempIOffset, j, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset + 1, j, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset + 2, j, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset, j - 1, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset + 1, j - 1, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset + 2, j - 1, k, 0);
-                    world.notifyBlockChange(i + iTempIOffset + 1, j - 2, k, 0);
-                    teleportPlayersAndMakeFirstPlatform(world,i,j,k);
+                if (isAwakenedWitherBodyBlock(world, x + iTempIOffset, y - 1, z) && isAwakenedWitherBodyBlock(world, x + iTempIOffset + 1, y - 1, z) && isAwakenedWitherBodyBlock(world, x + iTempIOffset + 1, y - 2, z) && isAwakenedWitherBodyBlock(world, x + iTempIOffset + 2, y - 1, z) && isWitherHeadBlock(world, x + iTempIOffset, y, z) && isWitherHeadBlock(world, x + iTempIOffset + 1, y, z) && isWitherHeadBlock(world, x + iTempIOffset + 2, y, z)) {
+                    world.SetBlockMetadataWithNotify(x + iTempIOffset, y, z, 8, 2);
+                    world.SetBlockMetadataWithNotify(x + iTempIOffset + 1, y, z, 8, 2);
+                    world.SetBlockMetadataWithNotify(x + iTempIOffset + 2, y, z, 8, 2);
+                    world.setBlock(x + iTempIOffset, y, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset + 1, y, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset + 2, y, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset + 1, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset + 2, y - 1, z, 0, 0, 2);
+                    world.setBlock(x + iTempIOffset + 1, y - 2, z, 0, 0, 2);
+                    EntityAwakenedWither.summonWitherAtLocation(world, x + iTempIOffset + 1,y, z);
+                    world.notifyBlockChange(x + iTempIOffset, y, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset + 1, y, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset + 2, y, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset, y - 1, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset + 1, y - 1, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset + 2, y - 1, z, 0);
+                    world.notifyBlockChange(x + iTempIOffset + 1, y - 2, z, 0);
                     cir.setReturnValue(true);
                 }
             }
         }
     }
     @Unique
-    private static boolean isWitherBodyBlock(World world, int i, int j, int k) {
+    private static boolean isBloodWitherBodyBlock(World world, int i, int j, int k) {
         return world.getBlockId(i, j, k) == NMBlocks.bloodBones.blockID;
+    }
+    @Unique
+    private static boolean isAwakenedWitherBodyBlock(World world, int i, int j, int k) {
+        return world.getBlockId(i, j, k) == NMBlocks.underStones.blockID;
     }
 
     @Unique
