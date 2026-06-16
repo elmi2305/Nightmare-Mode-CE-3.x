@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
+import com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither;
 import com.itlesports.nightmaremode.util.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -9,6 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither.ATK_SKULL_RAIN;
 
 @Mixin(EntityWitherSkull.class)
 public abstract class EntityWitherSkullMixin extends EntityFireball{
@@ -35,7 +38,13 @@ public abstract class EntityWitherSkullMixin extends EntityFireball{
     }
     @ModifyConstant(method = "onImpact", constant = @Constant(floatValue = 8.0f))
     private float increaseDamage(float constant){
-        return this.shootingEntity instanceof EntityBloodWither bloodWither? (bloodWither.isDoingLaserAttack ? 50f : 15f) : 12f;
+        if(this.shootingEntity instanceof EntityAwakenedWither){
+            if(((EntityAwakenedWither) this.shootingEntity).getCurrentAttack() == ATK_SKULL_RAIN){
+                return 40f;
+            }
+            return 18f;
+        }
+        return this.shootingEntity instanceof EntityBloodWither bloodWither ? (bloodWither.isDoingLaserAttack ? 50f : 15f) : 12f;
     }
 
     @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"),cancellable = true)
