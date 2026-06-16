@@ -39,12 +39,13 @@ public class InventoryPlayerMixin {
         if (NightmareMode.devMode) {
             inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
             inv.addItemStackToInventory(new ItemStack(397, 64, 5));
-            inv.addItemStackToInventory(new ItemStack(NMBlocks.bloodBones.blockID, 64, 0));
+            inv.addItemStackToInventory(new ItemStack(NMBlocks.underStones.blockID, 64, 0));
             inv.addItemStackToInventory(new ItemStack(BTWItems.soulUrn, 16));
             inv.addItemStackToInventory(new ItemStack(BTWItems.plateBreastplate));
             inv.addItemStackToInventory(new ItemStack(BTWItems.plateLeggings));
             inv.addItemStackToInventory(new ItemStack(BTWItems.plateBoots));
             inv.addItemStackToInventory(new ItemStack(BTWItems.plateHelmet));
+            inv.addItemStackToInventory(new ItemStack(NMItems.rifle));
 //            inv.addItemStackToInventory(new ItemStack(NMBlocks.bloodBonesUpgraded));
 //            inv.addItemStackToInventory(new ItemStack(BTWItems.steelSword));
 //            inv.addItemStackToInventory(new ItemStack(BTWItems.plateBoots));

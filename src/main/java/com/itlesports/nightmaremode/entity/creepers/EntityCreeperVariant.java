@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.entity.creepers;
 import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
 import api.entity.mob.behavior.SimpleWanderBehavior;
-import api.util.color.Color;
 import api.world.difficulty.DifficultyParam;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
