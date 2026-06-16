@@ -283,6 +283,7 @@
     "render.RenderVillagerMixin",
     "render.RenderWitchMixin",
     "render.RenderWitherMixin",
+    "render.RenderWitherSkullMixin",
     "render.RenderZombieMixin",
     "render.SquidRendererMixin"
   ],
