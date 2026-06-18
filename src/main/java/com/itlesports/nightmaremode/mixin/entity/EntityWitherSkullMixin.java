@@ -36,10 +36,11 @@ public abstract class EntityWitherSkullMixin extends EntityFireball implements E
     @Inject(method = "onImpact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
     private void lowerPlayerLifeOnHit(MovingObjectPosition pos, CallbackInfo ci){
         if(pos.entityHit instanceof EntityPlayer p && (this.nightmareMode$getLifeStealing())){
-            p.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(p.getMaxHealth() - 1);
-            if(p.getHealth() > p.getMaxHealth()){
-                p.setHealth(p.getMaxHealth());
+
+            if (p instanceof EntityPlayerExt) {
+                ((EntityPlayerExt) p).nightmareMode$incrementHealth(-1);
             }
+
             if(p instanceof EntityPlayerExt && !p.isPotionActive(Potion.resistance)){
                 ((EntityPlayerExt) p).nightmareMode$setFear(Math.min(((EntityPlayerExt) p).nightmareMode$getFear() + 0.12f, 0.9f));
                 p.playSound("random.drink", 1.0f, 0.7f + (this.rand.nextFloat()  - 0.5f ) * 0.1f);
