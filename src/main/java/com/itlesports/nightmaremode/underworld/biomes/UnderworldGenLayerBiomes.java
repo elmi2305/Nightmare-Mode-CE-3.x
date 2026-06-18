@@ -36,13 +36,16 @@ public class UnderworldGenLayerBiomes extends GenLayer {
                     else {
                         intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID; // everything other than flower fields
                     }
-                    // forces flower fields as the only biome if uncommented
-//                    intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
+                    // forces only biome if uncommented
+//                    intCache[y + x * areaWidth] = BiomeGenUnderworld.shadowRealm.biomeID;
 
                 }
                 else {
                     intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
                 }
+                // override all biome logic and force this biome
+//                intCache[y + x * areaWidth] = BiomeGenUnderworld.shadowRealm.biomeID;
+
             }
         }
         return intCache;
