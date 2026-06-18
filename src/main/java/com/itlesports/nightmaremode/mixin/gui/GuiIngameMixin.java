@@ -38,7 +38,7 @@ public class GuiIngameMixin extends Gui {
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
     private void renderUnderworldSanity(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION && false){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             double sanity = this.mc.thePlayer.getData(SANITY);
 
             double sanityPercent = Math.min(sanity / MAX_SANITY, 1.0);

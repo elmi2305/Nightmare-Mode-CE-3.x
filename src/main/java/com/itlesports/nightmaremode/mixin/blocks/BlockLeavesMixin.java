@@ -21,7 +21,6 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         super(par1, par2Material, par3);
     }
 
-
     @Override
     public boolean isBreakableBarricade(World world, int i, int j, int k, boolean advancedBreaker) {
         return false;
