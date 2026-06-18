@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
+import com.itlesports.nightmaremode.util.underworld.postprocessing.*;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -320,9 +321,9 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 //
 //            // funny strobe effect
 ////            int strobeColor = getRainbowStrobeColor(0.008f);
-////            getCurrentColorFade(originalArray, strobeColor, 0.8f);
+////            setCurrentColorTarget(originalArray, strobeColor, 0.8f);
 //
-//            getCurrentColorFade(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
+//            setCurrentColorTarget(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
 ////            System.out.println("hi");
 //            return originalArray;
 //        }
@@ -333,7 +334,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                     fadeTracker++;
                 }
 
-                getCurrentColorFade(originalArray, 0x00505050, 0.9f);
+                setCurrentColorTarget(originalArray, 0x00505050, 0.9f);
 
                 return originalArray;
             }
@@ -345,7 +346,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     }
 
     @Unique
-    private void getCurrentColorFade(int[] originalArray, int targetColor, float intensity) {
+    private void setCurrentColorTarget(int[] originalArray, int targetColor, float intensity) {
         float t = Math.min(1f, fadeTracker / 800f);
         float tEffective = t * Math.max(0f, Math.min(1f, intensity));
 
@@ -383,6 +384,35 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         }
     }
 
+    @Inject(method = "updateCameraAndRender", at = @At("HEAD"))
+    private void nm$beginGrayscale(float partialTicks, CallbackInfo ci) {
+
+//        if (SepiaPostProcessor.INSTANCE.isEnabled()) {
+//            SepiaPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
+//        }
+//        if(CinematicPostProcessor.INSTANCE.isEnabled()){
+//            CinematicPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
+//        }
+//        if(MonoInvertPostProcessor.INSTANCE.isEnabled()){
+        MonoInvertPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
+
+//        }
+    }
+
+    @Inject(method = "updateCameraAndRender", at = @At("RETURN"))
+    private void nm$endGrayscale(float partialTicks, CallbackInfo ci) {
+//        if (CinematicPostProcessor.INSTANCE.isEnabled()) {
+//            CinematicPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
+//        }
+//        if (MonoInvertPostProcessor.INSTANCE.isEnabled()) {
+
+            MonoInvertPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
+//        }
+//        if (SepiaPostProcessor.INSTANCE.isEnabled()) {
+//            SepiaPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
+//        }
+
+    }
 
     // <===============================================================>
     //                           FOG STUFF
