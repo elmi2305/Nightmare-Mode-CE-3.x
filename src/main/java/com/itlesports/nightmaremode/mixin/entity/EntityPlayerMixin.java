@@ -1038,14 +1038,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
                 thisObj.worldObj.playSoundEffect(thisObj.posX, thisObj.posY, thisObj.posZ, "mob.endermen.portal", 1.0f, 1.0f);
             }
-            // runs once every 30 ticks
-            if(this.rand.nextInt(800) == 0){
+            if(this.rand.nextInt(40000) == 0){
                 EntityWither wither = new EntityWither(this.worldObj);
+                wither.setHealth((float) this.worldObj.getWorldTime() / 4000 + 1);
                 wither.setPositionAndUpdate(this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)), 150, this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)));
                 this.worldObj.spawnEntityInWorld(wither);
             }
 
-            if(this.rand.nextInt(10000) == 0){
+            if(this.rand.nextInt(40000) == 0 && this.worldObj.getWorldTime() > 240000){
                 EntityDragon dragon = new EntityDragon(this.worldObj);
                 dragon.setHealth(20 + this.rand.nextInt(80));
                 dragon.setPositionAndUpdate(this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)), 200, this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)));

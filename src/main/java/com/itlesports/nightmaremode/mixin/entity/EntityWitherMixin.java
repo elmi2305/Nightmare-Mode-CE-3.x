@@ -278,7 +278,7 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"))
     private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !NightmareMode.isAprilFools){
             this.setHealth(300);
             if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
