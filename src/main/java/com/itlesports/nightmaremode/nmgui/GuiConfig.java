@@ -36,8 +36,9 @@ public class GuiConfig extends GuiScreen {
 
 
     private boolean isOnSecondPage = false;
+    private int onPage = 1;
 
-    private enum Page { ONE, TWO }
+    private enum Page { ONE, TWO, THREE }
 
     private enum Column { LEFT, RIGHT }
 
@@ -73,7 +74,8 @@ public class GuiConfig extends GuiScreen {
         FULL_BRIGHT(26, "fullBright", "FullBright", "gui.config.full_bright", "gui.config.tooltip.full_bright", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         FAST_VILLAGERS(27, "fastVillagers", "FastVillagers", "gui.config.fast_villagers", "gui.config.tooltip.fast_villagers", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null);
+        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
+        RENDER_VIGNETTE(30, "renderVignette", "RenderVignette", "gui.config.render_vignette", "gui.config.tooltip.render_vignette", HELPFUL_BASE, HELPFUL_ACTIVE, Page.THREE, Column.LEFT, null);
 
         private final int id;
         private final String fieldName;
@@ -181,6 +183,10 @@ public class GuiConfig extends GuiScreen {
             ConfigOption.DRAW_FANCY_CLOUDS
     );
 
+    private static final List<ConfigOption> PAGE_THREE_LEFT = Arrays.asList(
+            ConfigOption.RENDER_VIGNETTE
+    );
+
     private final Map<ConfigOption, GuiColoredButton> buttons = new HashMap<ConfigOption, GuiColoredButton>();
 
     private final GuiScreen parentGuiScreen;
@@ -194,7 +200,7 @@ public class GuiConfig extends GuiScreen {
         this.drawDefaultBackground();
         super.drawScreen(par1, par2, par3);
 
-        Page currentPage = this.isOnSecondPage ? Page.TWO : Page.ONE;
+        Page currentPage = this.onPage == 1 ? Page.ONE : (this.onPage == 2 ? Page.TWO : Page.THREE);
         this.drawPageText(currentPage);
 
 
@@ -265,7 +271,7 @@ public class GuiConfig extends GuiScreen {
     private void drawPageText(Page page) {
         List<List<ConfigOption>> pageLists = (page == Page.ONE)
                 ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT)
-                : Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT);
+                : (page == Page.THREE ? List.of(PAGE_THREE_LEFT) :Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT));
 
         for (List<ConfigOption> list : pageLists) {
             for (ConfigOption option : list) {
@@ -387,9 +393,9 @@ public class GuiConfig extends GuiScreen {
     }
 
 
-    private void setButtonSettings(boolean showFirst) {
-        List<List<ConfigOption>> showLists = showFirst ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT) : Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT);
-        List<List<ConfigOption>> hideLists = showFirst ? Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT) : Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT);
+    private void setButtonSettings(int pageNumber) {
+        List<List<ConfigOption>> showLists = pageNumber == 1 ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT) : (pageNumber == 2 ? Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT) : Arrays.asList(PAGE_THREE_LEFT));
+        List<List<ConfigOption>> hideLists = pageNumber == 1 ? Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT, PAGE_THREE_LEFT) : (pageNumber == 2 ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT) : Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT,PAGE_TWO_LEFT, PAGE_TWO_RIGHT));
 
         for (List<ConfigOption> list : hideLists) {
             for (ConfigOption option : list) {
@@ -412,11 +418,13 @@ public class GuiConfig extends GuiScreen {
 
         for(Object button : this.buttonList){
             if(button instanceof GuiInvisibleTooltipArea b){
-                b.drawButton = showFirst;
+                b.drawButton = onPage == 1;
             }
         }
 
-        this.isOnSecondPage = !showFirst;
+        this.onPage = pageNumber;
+
+//        this.isOnSecondPage = !showFirst;
     }
 
     @Override
@@ -432,16 +440,17 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.add(new GuiButton(14, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 //        this.buttonList.add(new GuiButton(40, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 
-        this.createButtonsForList(PAGE_ONE_LEFT, baseX, heightMultiplier, true);
-        this.createButtonsForList(PAGE_ONE_RIGHT, rightColumnX, heightMultiplier, true);
-        this.createButtonsForList(PAGE_TWO_LEFT, baseX, heightMultiplier, false);
-        this.createButtonsForList(PAGE_TWO_RIGHT, rightColumnX, heightMultiplier, false);
+        this.createButtonsForList(PAGE_ONE_LEFT, baseX, heightMultiplier, 1);
+        this.createButtonsForList(PAGE_ONE_RIGHT, rightColumnX, heightMultiplier, 1);
+        this.createButtonsForList(PAGE_TWO_LEFT, baseX, heightMultiplier, 2);
+        this.createButtonsForList(PAGE_TWO_RIGHT, rightColumnX, heightMultiplier, 2);
+        this.createButtonsForList(PAGE_THREE_LEFT, baseX, heightMultiplier, 3);
 
         this.initializeButtonStates();
         this.setConfigValues();
     }
 
-    private void createButtonsForList(List<ConfigOption> list, int x, int heightMultiplier, boolean isFirstPage) {
+    private void createButtonsForList(List<ConfigOption> list, int x, int heightMultiplier, int page) {
         for (int i = 0; i < list.size(); i++) {
             ConfigOption option = list.get(i);
             int y = (i + 1) * heightMultiplier;
@@ -468,7 +477,7 @@ public class GuiConfig extends GuiScreen {
 
             // tooltip
 //            System.out.println(isFirstPage);
-            if (isFirstPage) {
+            if (page == 1) {
                 int starX = x + 130;
                 int starY = y + 2;
                 int hitboxSize = 20;
@@ -502,7 +511,7 @@ public class GuiConfig extends GuiScreen {
                 button.updateState(this.getValue(option));
             }
         }
-        this.setButtonSettings(true); // Start with first page visible
+        this.setButtonSettings(1); // Start with first page visible
     }
 
     private static String cap(String str) {
@@ -550,7 +559,9 @@ public class GuiConfig extends GuiScreen {
         if (par1GuiButton.id == 0) {
             this.mc.displayGuiScreen(this.parentGuiScreen);
         } else if (par1GuiButton.id == 14) {
-            this.setButtonSettings(this.isOnSecondPage);
+            int pageToSelect = this.onPage + 1;
+            if(pageToSelect > 3) pageToSelect = 1;
+            this.setButtonSettings(pageToSelect);
         } else {
             ConfigOption option = this.getOptionById(par1GuiButton.id);
             if (option != null) {
