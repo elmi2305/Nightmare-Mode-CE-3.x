@@ -47,18 +47,21 @@ public class GuiConfig extends GuiScreen {
 
     public enum ConfigOption {
         MORE_VARIANTS(1, "moreVariants", "MoreVariants", "gui.config.more_variants", "gui.config.tooltip.more_variants", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.MORE_VARIANTS),
-        EVOLVED_MOBS(2, "evolvedMobs", "EvolvedMobs", "gui.config.evolved_mobs", "gui.config.tooltip.evolved_mobs", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.EVOLVED_MOBS),
+        REAL_TIME(13, "realTime", "RealTime", "gui.config.real_time", "gui.config.tooltip.real_time", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.REAL_TIME),
         BUFFED_SQUIDS(3, "buffedSquids", "BuffedSquids", "gui.config.buffed_squids", "gui.config.tooltip.buffed_squids", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.BUFFED_SQUIDS),
-        NITE(4, "nite", "NITE", "gui.config.nite", "gui.config.tooltip.nite", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.NITE),
-        DARK_STORMY_NIGHTMARE(5, "darkStormyNightmare", "DarkStormyNightmare", "gui.config.dark_stormy_night", "gui.config.tooltip.dark_stormy_night", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.DARK_STORMY_NIGHTMARE),
+
         NO_SKYBASES(6, "noSkybases", "NoSkybases", "gui.config.no_skybases", "gui.config.tooltip.no_skybases", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.NO_SKYBASES),
-        CANCER_MODE(7, "isAprilFools", "AprilFoolsPatch", "gui.config.cancer_mode", "gui.config.tooltip.cancer_mode", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.CANCER_MODE),
+        UNKILLABLE_MOBS(11, "unkillableMobs", "UnkillableMobs", "gui.config.unkillable_mobs", "gui.config.tooltip.unkillable_mobs", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.UNKILLABLE_MOBS),
+        BLOODMARE(9, "bloodmare", "Bloodmare", "gui.config.bloodmare", "gui.config.tooltip.bloodmare", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.BLOODMARE),
+        MAGIC_MONSTERS(10, "magicMonsters", "MagicMonsters", "gui.config.magic_monsters", "gui.config.tooltip.magic_monsters", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.MAGIC_MONSTERS),
+
+        NITE(4, "nite", "NITE", "gui.config.nite", "gui.config.tooltip.nite", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.NITE),
         TOTAL_ECLIPSE(8, "totalEclipse", "TotalEclipse", "gui.config.total_eclipse", "gui.config.tooltip.total_eclipse", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.TOTAL_ECLIPSE),
-        BLOODMARE(9, "bloodmare", "Bloodmare", "gui.config.bloodmare", "gui.config.tooltip.bloodmare", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.BLOODMARE),
-        MAGIC_MONSTERS(10, "magicMonsters", "MagicMonsters", "gui.config.magic_monsters", "gui.config.tooltip.magic_monsters", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.MAGIC_MONSTERS),
-        UNKILLABLE_MOBS(11, "unkillableMobs", "UnkillableMobs", "gui.config.unkillable_mobs", "gui.config.tooltip.unkillable_mobs", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.UNKILLABLE_MOBS),
+        CANCER_MODE(7, "isAprilFools", "AprilFoolsPatch", "gui.config.cancer_mode", "gui.config.tooltip.cancer_mode", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.CANCER_MODE),
+        DARK_STORMY_NIGHTMARE(5, "darkStormyNightmare", "DarkStormyNightmare", "gui.config.dark_stormy_night", "gui.config.tooltip.dark_stormy_night", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.DARK_STORMY_NIGHTMARE),
+
+        EVOLVED_MOBS(2, "evolvedMobs", "EvolvedMobs", "gui.config.evolved_mobs", "gui.config.tooltip.evolved_mobs", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.EVOLVED_MOBS),
         NO_HIT(12, "noHit", "NoHit", "gui.config.no_hit", "gui.config.tooltip.no_hit", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.NO_HIT),
-        REAL_TIME(13, "realTime", "RealTime", "gui.config.real_time", "gui.config.tooltip.real_time", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.REAL_TIME),
 
 
         SHOULD_SHOW_DATE_TIMER(15, "shouldShowDateTimer", "NmMinecraftDayTimer", "gui.config.date_timer", "gui.config.tooltip.date_timer", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
@@ -74,8 +77,8 @@ public class GuiConfig extends GuiScreen {
         FULL_BRIGHT(26, "fullBright", "FullBright", "gui.config.full_bright", "gui.config.tooltip.full_bright", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         FAST_VILLAGERS(27, "fastVillagers", "FastVillagers", "gui.config.fast_villagers", "gui.config.tooltip.fast_villagers", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
         BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        RENDER_VIGNETTE(30, "renderVignette", "RenderVignette", "gui.config.render_vignette", "gui.config.tooltip.render_vignette", HELPFUL_BASE, HELPFUL_ACTIVE, Page.THREE, Column.LEFT, null);
+        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.RIGHT, null),
+        RENDER_VIGNETTE(30, "renderVignette", "RenderVignette", "gui.config.render_vignette", "gui.config.tooltip.render_vignette", AMBIENT_BASE, AMBIENT_ACTIVE, Page.THREE, Column.LEFT, null);
 
         private final int id;
         private final String fieldName;
@@ -146,20 +149,20 @@ public class GuiConfig extends GuiScreen {
 
     private static final List<ConfigOption> PAGE_ONE_LEFT = Arrays.asList(
             ConfigOption.MORE_VARIANTS,
-            ConfigOption.EVOLVED_MOBS,
+            ConfigOption.REAL_TIME,
             ConfigOption.BUFFED_SQUIDS,
-            ConfigOption.NITE,
-            ConfigOption.DARK_STORMY_NIGHTMARE,
             ConfigOption.NO_SKYBASES,
-            ConfigOption.CANCER_MODE
+            ConfigOption.UNKILLABLE_MOBS,
+            ConfigOption.BLOODMARE,
+            ConfigOption.MAGIC_MONSTERS
     );
 
     private static final List<ConfigOption> PAGE_ONE_RIGHT = Arrays.asList(
-            ConfigOption.REAL_TIME,
+            ConfigOption.NITE,
             ConfigOption.TOTAL_ECLIPSE,
-            ConfigOption.BLOODMARE,
-            ConfigOption.MAGIC_MONSTERS,
-            ConfigOption.UNKILLABLE_MOBS,
+            ConfigOption.CANCER_MODE,
+            ConfigOption.DARK_STORMY_NIGHTMARE,
+            ConfigOption.EVOLVED_MOBS,
             ConfigOption.NO_HIT
     );
 
@@ -418,7 +421,7 @@ public class GuiConfig extends GuiScreen {
 
         for(Object button : this.buttonList){
             if(button instanceof GuiInvisibleTooltipArea b){
-                b.drawButton = onPage == 1;
+                b.drawButton = pageNumber == 1;
             }
         }
 
