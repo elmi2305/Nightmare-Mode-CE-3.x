@@ -214,7 +214,8 @@ public class EntityAwakenedWither extends EntityWither implements FearSource {
     private void beginPhaseTransition() {
         this.awakenedPhase = 2;
         this.transitionTimer = 180;
-        this.heal(this.getMaxHealth() * 0.55f);
+        float healthPercentToHealTo = 1.0f;
+        this.heal(this.getMaxHealth() * healthPercentToHealTo);
         this.trackedEntities.forEach(Entity::setDead);
         this.trackedEntities.clear();
         this.passivityDuration = -1;
