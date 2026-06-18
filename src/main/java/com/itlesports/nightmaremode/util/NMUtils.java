@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.SoundManagerAccess;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
+import paulscode.sound.SoundSystemConfig;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -279,6 +280,42 @@ public class NMUtils {
                 soundManageAccess.getSoundSystem().play("BgMusic");
             }
         }
+    }
+    public static void forcePlaySound(String sourceId, String soundId) {
+        SoundManager sndManager = Minecraft.getMinecraft().sndManager;
+        SoundManagerAccess access = (SoundManagerAccess) sndManager;
+
+        if (Minecraft.getMinecraft().gameSettings.soundVolume != 0.0F) {
+            SoundPoolEntry sound = access.getSoundPoolSounds().getRandomSoundFromSoundPool(soundId);
+            if (sound != null) {
+                if (access.getSoundSystem().playing(sourceId)) {
+                    access.getSoundSystem().stop(sourceId);
+                }
+
+                // use the normal sound source path here, not backgroundMusic
+                // exact call signature may differ in your mappings
+                access.getSoundSystem().newSource(
+                        true,
+                        "NM_UI",
+                        sound.getSoundName(),
+                        false,
+                        0, 0, 0,
+                        SoundSystemConfig.ATTENUATION_NONE,
+                        0
+                );
+
+                access.getSoundSystem().setVolume("NM_UI", Minecraft.getMinecraft().gameSettings.soundVolume);
+
+                access.getSoundSystem().play("NM_UI");
+
+                access.getSoundSystem().setVolume(sourceId, Minecraft.getMinecraft().gameSettings.soundVolume);
+                access.getSoundSystem().play(sourceId);
+            }
+        }
+    }
+
+    public static void playUISound(String soundID, float volume, float pitch) {
+        Minecraft.getMinecraft().sndManager.playSoundFX(soundID, volume, pitch);
     }
 
     public static boolean isGracePeriodServer(World world) {

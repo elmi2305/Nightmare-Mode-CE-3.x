@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
+import com.itlesports.nightmaremode.util.underworld.CrackFragment;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -18,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
@@ -28,12 +31,14 @@ import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
+    @Shadow @Final private Random rand;
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
+    @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
     @Unique private int amountRendered = 0;
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
     private void renderUnderworldSanity(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION && false){
             double sanity = this.mc.thePlayer.getData(SANITY);
 
             double sanityPercent = Math.min(sanity / MAX_SANITY, 1.0);
@@ -142,7 +147,6 @@ public class GuiIngameMixin extends Gui {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
-
 
     /**
      * Calculate color based on sanity level with smooth transitions
@@ -426,14 +430,123 @@ public class GuiIngameMixin extends Gui {
     @Unique private long vignetteLastUpdate = System.nanoTime();
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
-    private void modifyBrightness2(GuiIngame instance, float par1, int par2, int par3){
-        this.renderVignetteNightmare(par1,par2,par3);
-        this.renderBlink(par2,par3);
+    private void modifyBrightness2(GuiIngame instance, float par1, int screenWidth, int screenHeight){
+        this.renderVignetteNightmare(par1,screenWidth,screenHeight);
+        this.renderBlink(screenWidth,screenHeight);
+//        this.renderHeartCrack(screenWidth, screenHeight);
+        renderHeartCrack(screenWidth,screenHeight);
     }
+
     @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
-    private void modifyBrightness(GuiIngame instance, float par1, int par2, int par3){
-        this.renderVignetteNightmare(par1,par2,par3);
-        this.renderBlink(par2,par3);
+    private void modifyBrightness(GuiIngame instance, float par1, int screenWidth, int screenHeight){
+        this.renderVignetteNightmare(par1,screenWidth,screenHeight);
+        this.renderBlink(screenWidth,screenHeight);
+    }
+
+
+    @Unique private final List<CrackFragment> heartCrackFragments = new ArrayList<CrackFragment>();
+    @Unique private long heartCrackLastNano = -1L;
+    @Unique private boolean heartCrackPrevTrigger = false; // placeholder edge-trigger, see note below
+
+    @Unique private void spawnHeartCrack(float originX, float originY) {
+        int fragmentCount = 5;
+        for (int i = 0; i < fragmentCount; i++) {
+            float angle = (float) (this.rand.nextFloat() * Math.PI * 2.0);
+            float speed = 18.0f + this.rand.nextFloat() * 14.0f;
+            float vx = (float) Math.cos(angle) * speed;
+            float vy = (float) Math.sin(angle) * speed - 10.0f; // slight upward pop
+            float rotation = this.rand.nextFloat() * 360.0f;
+            float rotationSpeed = (this.rand.nextFloat() - 0.5f) * 720.0f;
+            float size = 6.0f + this.rand.nextFloat() * 3.0f;
+            float maxLife = 0.65f + this.rand.nextFloat() * 0.25f;
+            this.heartCrackFragments.add(new CrackFragment(originX, originY, vx, vy, rotation, rotationSpeed, size, maxLife));
+        }
+    }
+
+    @Unique private void renderHeartCrack(int width, int height) {
+        int left = width / 2 - 91;
+        int top = height - 39;
+
+        float maxHealth = this.mc.thePlayer.getMaxHealth();
+        float absorption = this.mc.thePlayer.getAbsorptionAmount();
+
+        int rows = MathHelper.ceiling_float_int((maxHealth + absorption) / 2.0F / 10.0F);
+        int rowSpacing = Math.max(10 - (rows - 2), 3);
+
+        int hp = (int) this.mc.thePlayer.getHealth();
+        int heartIndex = (hp - 1) / 2;
+
+        int row = heartIndex / 10;
+        int heartX = left + (heartIndex % 10) * 8;
+        int heartY = top - row * rowSpacing;
+
+        if (this.mc.thePlayer.getHealth() <= 4.0F) {
+            heartY += this.rand.nextInt(2);
+        }
+
+        boolean triggerNow = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getHeartCrack();
+
+        if (triggerNow && !this.heartCrackPrevTrigger) {
+            spawnHeartCrack(heartX + 4.5f, heartY + 4.5f);
+        }
+        this.heartCrackPrevTrigger = triggerNow;
+
+        if (this.heartCrackFragments.isEmpty()) {
+            this.heartCrackLastNano = -1L;
+            return;
+        }
+
+        long now = System.nanoTime();
+        float delta = this.heartCrackLastNano < 0 ? 0.0f : (now - this.heartCrackLastNano) * 1.0E-9f;
+        this.heartCrackLastNano = now;
+        delta = Math.min(delta, 0.1f); // guard against lag spikes
+
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        this.mc.getTextureManager().bindTexture(crack);
+
+        Tessellator tess = Tessellator.instance;
+        Iterator<CrackFragment> it = this.heartCrackFragments.iterator();
+
+        while (it.hasNext()) {
+            CrackFragment frag = it.next();
+
+            frag.life -= delta;
+            if (frag.life <= 0.0f) {
+                it.remove();
+                continue;
+            }
+
+            frag.vy += 60.0f * delta; // gravity
+            frag.x += frag.vx * delta;
+            frag.y += frag.vy * delta;
+            frag.rotation += frag.rotationSpeed * delta;
+
+            float alpha = frag.life / frag.maxLife;
+            float half = frag.size * 0.5f;
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef(frag.x, frag.y, 0.0f);
+            GL11.glRotatef(frag.rotation, 0.0f, 0.0f, 1.0f);
+            GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
+
+            tess.startDrawingQuads();
+            tess.addVertexWithUV(-half, half, -90.0D, 0.0D, 1.0D);
+            tess.addVertexWithUV(half, half, -90.0D, 1.0D, 1.0D);
+            tess.addVertexWithUV(half, -half, -90.0D, 1.0D, 0.0D);
+            tess.addVertexWithUV(-half, -half, -90.0D, 0.0D, 0.0D);
+            tess.draw();
+
+            GL11.glPopMatrix();
+        }
+
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     @Unique
@@ -581,7 +694,8 @@ public class GuiIngameMixin extends Gui {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    /** Ken Perlin's smootherstep — C2 continuous, no velocity pop at endpoints */
+
+    /** Ken Perlin's smootherstep - C2 continuous, no velocity pop at endpoints */
     private float smootherstep(float t) {
         t = Math.max(0.0f, Math.min(1.0f, t));
         return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
