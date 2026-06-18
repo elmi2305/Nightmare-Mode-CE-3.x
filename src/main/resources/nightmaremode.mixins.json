@@ -115,6 +115,7 @@
     "blocks.TileEntityChestMixin",
     "blocks.TileEntityFurnaceMixin",
     "blocks.UnfiredBrickTileEntityMixin",
+    "blocks.WheatCropBlockMixin",
     "blocks.WoodMouldingAndDecorativeBlockMixin",
     "blocks.WoodSidingAndCornerAndDecorativeBlockMixin",
     "blocks.WoodSlabBlockMixin",
