@@ -13,6 +13,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityNightmareGolem;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -106,7 +107,7 @@ public abstract class EntityWitherMixin extends EntityMob {
         }
     }
 
-    @Inject(method = "updateAITasks", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityWither;field_82222_j:I",ordinal = 0))
+    @Inject(method = "updateAITasks", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityWither;field_82222_j:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private void manageWitherBlockBreaking(CallbackInfo ci){
         this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0,0.5d));
     }
@@ -131,30 +132,36 @@ public abstract class EntityWitherMixin extends EntityMob {
     }
 
     @Unique
-    private void destroyBlocksInAABB(AxisAlignedBB par1AxisAlignedBB) {
-        int var2 = MathHelper.floor_double(par1AxisAlignedBB.minX);
-        int var3 = MathHelper.floor_double(par1AxisAlignedBB.minY);
-        int var4 = MathHelper.floor_double(par1AxisAlignedBB.minZ);
-        int var5 = MathHelper.floor_double(par1AxisAlignedBB.maxX);
-        int var6 = MathHelper.floor_double(par1AxisAlignedBB.maxY);
-        int var7 = MathHelper.floor_double(par1AxisAlignedBB.maxZ);
-        boolean var9 = false;
-        for (int var10 = var2; var10 <= var5; ++var10) {
-            for (int var11 = var3; var11 <= var6; ++var11) {
-                for (int var12 = var4; var12 <= var7; ++var12) {
-                    int var13 = this.worldObj.getBlockId(var10, var11, var12);
-                    if (var13 == 0) continue;
-                    if (var13 != Block.obsidian.blockID && var13 != Block.whiteStone.blockID && var13 != Block.bedrock.blockID  && var13 != NMBlocks.cryingObsidian.blockID  && var13 != NMBlocks.specialObsidian.blockID && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-                        var9 = this.worldObj.setBlockToAir(var10, var11, var12) || var9;
+    private void destroyBlocksInAABB(AxisAlignedBB aabb) {
+        int minX = MathHelper.floor_double(aabb.minX);
+        int minY = MathHelper.floor_double(aabb.minY);
+        int minZ = MathHelper.floor_double(aabb.minZ);
+        int maxX = MathHelper.floor_double(aabb.maxX);
+        int maxY = MathHelper.floor_double(aabb.maxY);
+        int maxZ = MathHelper.floor_double(aabb.maxZ);
+        boolean setToAir = false;
+        for (int dx = minX; dx <= maxX; ++dx) {
+            for (int dy = minY; dy <= maxY; ++dy) {
+                for (int dz = minZ; dz <= maxZ; ++dz) {
+                    int blockID = this.worldObj.getBlockId(dx, dy, dz);
+                    if (blockID == 0) continue;
+                    if (
+                            blockID != Block.obsidian.blockID
+                            && blockID != Block.bedrock.blockID
+                            && blockID != NMBlocks.cryingObsidian.blockID
+                            && blockID != NMBlocks.specialObsidian.blockID
+                            && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+                    {
+                        setToAir = this.worldObj.setBlockToAir(dx, dy, dz);
                     }
                 }
             }
         }
-        if (var9) {
-            double var16 = par1AxisAlignedBB.minX + (par1AxisAlignedBB.maxX - par1AxisAlignedBB.minX) * (double)this.rand.nextFloat();
-            double var17 = par1AxisAlignedBB.minY + (par1AxisAlignedBB.maxY - par1AxisAlignedBB.minY) * (double)this.rand.nextFloat();
-            double var14 = par1AxisAlignedBB.minZ + (par1AxisAlignedBB.maxZ - par1AxisAlignedBB.minZ) * (double)this.rand.nextFloat();
-            this.worldObj.spawnParticle("largeexplode", var16, var17, var14, 0.0, 0.0, 0.0);
+        if (setToAir) {
+            double fxX = aabb.minX + (aabb.maxX - aabb.minX) * (double)this.rand.nextFloat();
+            double fxY = aabb.minY + (aabb.maxY - aabb.minY) * (double)this.rand.nextFloat();
+            double fxZ = aabb.minZ + (aabb.maxZ - aabb.minZ) * (double)this.rand.nextFloat();
+            this.worldObj.spawnParticle("largeexplode", fxX, fxY, fxZ, 0.0, 0.0, 0.0);
         }
     }
 
