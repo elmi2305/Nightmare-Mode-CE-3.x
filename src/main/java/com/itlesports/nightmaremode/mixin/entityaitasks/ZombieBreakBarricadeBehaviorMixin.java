@@ -26,7 +26,7 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "shouldBreakBarricadeAtPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I"),cancellable = true)
     private void manageBlockBreakingForHeldTool(World world, int i, int j, int k, boolean advancedBreaker, CallbackInfoReturnable<Block> cir){
-        if((this.associatedEntity.getHeldItem() != null && this.associatedEntity.getHeldItem().getItem() instanceof PickaxeItem ||this.associatedEntity.getHeldItem().getItem() instanceof ItemPickaxe ) || NMUtils.getIsBloodMoon()){
+        if((this.associatedEntity.getHeldItem() != null && (this.associatedEntity.getHeldItem().getItem() instanceof PickaxeItem || this.associatedEntity.getHeldItem().getItem() instanceof ItemPickaxe) ) || NMUtils.getIsBloodMoon()){
             int iBlockID = world.getBlockId(i, j, k);
             if (iBlockID != 0) {
                 Block block = Block.blocksList[iBlockID];
