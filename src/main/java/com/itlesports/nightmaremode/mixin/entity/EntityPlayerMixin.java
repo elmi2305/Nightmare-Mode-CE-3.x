@@ -7,10 +7,10 @@ import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
+import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -66,6 +66,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     @Unique private int noArmorTicks;
     @Unique private int blinkLength = 0;
     @Unique private float fear = 0f;
+    @Unique private int heartCrackLength = 0;
+    ;
 
     public void nightmareMode$setBlinkLength(int target) {
         if(!this.worldObj.isRemote){
@@ -651,6 +653,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHookTail(CallbackInfo ci){
+        if(this.heartCrackLength > 0){
+            this.heartCrackLength--;
+        }
         this.addonStuff();
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
@@ -846,6 +851,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void onUpdateHook(CallbackInfo ci){
+//        MonoInvertPostProcessor.INSTANCE.setEnabled(this.isSneaking());
 
         // tracks achievements
         if(this.isPlayerFullyAsleep()){
@@ -926,7 +932,34 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             }
         }
     }
-//    @Inject(method = "onUpdate", at = @At("TAIL"))
+
+    @Override
+    public void nightmareMode$incrementHealth(int amount) {
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getMaxHealth() - 1);
+        if(this.getHealth() > this.getMaxHealth()){
+            this.setHealth(this.getMaxHealth());
+        }
+        if (this.getMaxHealth() % 2 == 0) {
+            this.nightmareMode$setHeartCrack(2);
+            NMUtils.playUISound(NightmareModeAddon.NM_CRACK.sound(), 1.0f, 1.0f);
+        }
+
+    }
+
+    @Override
+    public boolean nightmareMode$getHeartCrack() {
+        return this.heartCrackLength >= 1;
+    }
+
+    @Override
+    public void nightmareMode$setHeartCrack(int heartCrackLength) {
+        if(!this.worldObj.isRemote){
+            sendHeartCrackingToPlayer((EntityPlayerMP) (Object) this, heartCrackLength);
+        }
+        this.heartCrackLength = heartCrackLength;
+    }
+
+    //    @Inject(method = "onUpdate", at = @At("TAIL"))
 //    private void manageChainArmor(CallbackInfo ci){
 //        if(isWearingFullChainArmor(this) && !areChainPotionsActive(this)){
 //            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 110,0));

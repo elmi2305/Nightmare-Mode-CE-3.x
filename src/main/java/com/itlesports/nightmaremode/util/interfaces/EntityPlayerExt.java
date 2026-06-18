@@ -8,4 +8,9 @@ public interface EntityPlayerExt {
     float nightmareMode$getFear();
 
     void nightmareMode$setFoodMax(int targetFood);
+
+    void nightmareMode$incrementHealth(int amount);
+
+    void nightmareMode$setHeartCrack(int length);
+    boolean nightmareMode$getHeartCrack();
 }
