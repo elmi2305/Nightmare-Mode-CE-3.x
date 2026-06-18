@@ -1,9 +1,13 @@
 package com.itlesports.nightmaremode.entity.underworld;
 
 import api.world.WorldUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
+import com.itlesports.nightmaremode.util.interfaces.EntityWitherSkullExt;
+import com.itlesports.nightmaremode.util.underworld.FearSource;
+import com.itlesports.nightmaremode.util.underworld.postprocessing.MonoInvertPostProcessor;
 import net.minecraft.src.EntityWither;
 import net.minecraft.src.World;
 import btw.entity.attribute.BTWAttributes;
@@ -12,7 +16,7 @@ import net.minecraft.src.*;
 
 import java.util.*;
 
-public class EntityAwakenedWither extends EntityWither {
+public class EntityAwakenedWither extends EntityWither implements FearSource {
 
     private final float[] sideHeadPitch = new float[2];
     private final float[] sideHeadYaw = new float[2];
@@ -31,7 +35,7 @@ public class EntityAwakenedWither extends EntityWither {
 
     // attackTimer increments in the else-branch and is broken by engageWither()
     private int attackTimer = 0;
-    private int baseAttackInterval = 580;
+    private int baseAttackInterval = 420; // USED TO BE 580
     private int currentAttackIndex = -1;
     private int currentFireRate = -1;
     private boolean isCurrentAttackSummoning = false;
@@ -59,45 +63,52 @@ public class EntityAwakenedWither extends EntityWither {
             Potion.field_76434_w.id, Potion.field_76444_x.id, Potion.field_76443_y.id
     ));
 
-    private static final int ATK_SKULL_RAIN = 0;
-    private static final int ATK_DIRECT_BARRAGE = 1;
-    private static final int ATK_TELEPORT_STRIKE = 2;
-    private static final int ATK_SUMMON_HORDE  = 3;
-    private static final int ATK_LAUNCH = 4;
-    private static final int ATK_SHADOW_BARRAGE = 5;
+    public static final int ATK_SKULL_RAIN = 1;
+    public static final int ATK_DIRECT_BARRAGE = 2;
+    public static final int ATK_TELEPORT_STRIKE = 3;
+    public static final int ATK_SUMMON_HORDE  = 4;
+    public static final int ATK_LAUNCH = 5;
+    public static final int ATK_SHADOW_BARRAGE = 6;
+    public static final int TICKS_DRAIN = 300;
 
+
+    public int getCurrentAttack(){
+        return this.currentAttackIndex;
+    }
     public EntityAwakenedWither(World world) {
         super(world);
         this.awakenedPhase = 0;
     }
 
-    public static void summonWitherAtLocation(World world, int i, int j, int k) {
+    public static void summonWitherAtLocation(World world, int x, int y, int z) {
         EntityAwakenedWither wither = new EntityAwakenedWither(world);
-        wither.setLocationAndAngles((double)i + 0.5, (double)j - 1.45, (double)k + 0.5, 0.0f, 0.0f);
+        wither.setLocationAndAngles((double)x + 0.5, (double)y - 1.45, (double)z + 0.5, 0.0f, 0.0f);
+        wither.spawnOrigin = new int[]{x, 64, z};
+
         wither.func_82206_m();
         world.spawnEntityInWorld(wither);
-        world.playAuxSFX(2279, i, j, k, 0);
+        world.playAuxSFX(2279, x, y, z, 0);
     }
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(300);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(400);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(10.0);
     }
 
-    public float getSideHeadPitch(int idx)    { return this.sideHeadPitch[idx]; }
-    public float getSideHeadYaw(int idx)      { return this.sideHeadYaw[idx]; }
+    public float getSideHeadPitch(int idx) { return this.sideHeadPitch[idx]; }
+    public float getSideHeadYaw(int idx) { return this.sideHeadYaw[idx]; }
     public float getPrevSideHeadPitch(int idx){ return this.prevSideHeadPitch[idx]; }
-    public float getPrevSideHeadYaw(int idx)  { return this.prevSideHeadYaw[idx]; }
-    public int   getAwakenedPhase()           { return this.awakenedPhase; }
+    public float getPrevSideHeadYaw(int idx) { return this.prevSideHeadYaw[idx]; }
+    public int getAwakenedPhase() { return this.awakenedPhase; }
 
-    public static boolean isBossActive()         { return bossActive; }
-    public static void    setBossActive(boolean v){ bossActive = v; }
+    public static boolean isBossActive() { return bossActive; }
+    public static void setBossActive(boolean v){ bossActive = v; }
 
-    public int  getHealthTimer()          { return this.dataWatcher.getWatchableObjectInt(20); }
-    public void setHealthTimer(int v)     { this.dataWatcher.updateObject(20, v); }
+    public int getHealthTimer() { return this.dataWatcher.getWatchableObjectInt(20); }
+    public void setHealthTimer(int v) { this.dataWatcher.updateObject(20, v); }
     public void setTargetId(int i, int id){ this.dataWatcher.updateObject(17 + i, id); }
-    public int  getInvulnerabilityTime()  { return this.dataWatcher.getWatchableObjectInt(20); }
+    public int getInvulnerabilityTime() { return this.dataWatcher.getWatchableObjectInt(20); }
 
     private void engageWither() {
         if (!this.activity) {
@@ -117,19 +128,10 @@ public class EntityAwakenedWither extends EntityWither {
 
     private void setWitherPassiveFor(int ticks) { this.passivityDuration = ticks; }
 
-    @Override protected boolean isAIEnabled()    { return this.activity || this.getHealthTimer() > 0; }
+    @Override protected boolean isAIEnabled() { return this.activity || this.getHealthTimer() > 0; }
     @Override public boolean canBeCollidedWith() { return this.activity && this.getHealthTimer() <= 0; }
-    @Override public boolean canBePushed()       { return false; }
-    @Override public boolean isArmored()         { return this.awakenedPhase == 3; }
-
-    public static void summonAtLocation(World world, int x, int z) {
-        EntityAwakenedWither w = new EntityAwakenedWither(world);
-        w.func_82206_m();
-        world.playAuxSFX(2279, x, 64, z, 0);
-        w.setLocationAndAngles(x + 0.5, 64, z + 0.5, 0.0f, 0.0f);
-        w.spawnOrigin = new int[]{x, 64, z};
-        world.spawnEntityInWorld(w);
-    }
+    @Override public boolean canBePushed() { return false; }
+    @Override public boolean isArmored() { return this.awakenedPhase == 3; }
 
     @Override
     public void func_82206_m() {
@@ -158,7 +160,7 @@ public class EntityAwakenedWither extends EntityWither {
     public void readEntityFromNBT(NBTTagCompound tag) {
         super.readEntityFromNBT(tag);
         if (tag.hasKey("spawnOrigin")) this.spawnOrigin = tag.getIntArray("spawnOrigin");
-        this.awakenedPhase   = tag.getInteger("awakenedPhase");
+        this.awakenedPhase = tag.getInteger("awakenedPhase");
         this.healthDrainStacks = tag.getInteger("drainStacks");
     }
 
@@ -178,6 +180,7 @@ public class EntityAwakenedWither extends EntityWither {
         setBossActive(false);
         if (this.playerTarget != null) this.playerTarget.capabilities.allowEdit = true;
         NMUtils.shushMusic();
+        MonoInvertPostProcessor.INSTANCE.setEnabled(false);
         super.onDeath(source);
     }
 
@@ -222,6 +225,8 @@ public class EntityAwakenedWither extends EntityWither {
                 MathHelper.floor_double(this.posY),
                 MathHelper.floor_double(this.posZ), 0);
 
+        MonoInvertPostProcessor.INSTANCE.setEnabled(true);
+
         sendChatKey("bosses.awakenedwither.phase_shift", EnumChatFormatting.DARK_PURPLE);
     }
 
@@ -243,7 +248,7 @@ public class EntityAwakenedWither extends EntityWither {
             this.worldObj.spawnParticle("largesmoke", this.posX, this.posY + 2, this.posZ, 0, 0.05, 0);
         }
 
-        if (this.transitionTimer == 140) sendChatKey("bosses.awakenedwither.evolving",      EnumChatFormatting.DARK_PURPLE);
+        if (this.transitionTimer == 140) sendChatKey("bosses.awakenedwither.evolving", EnumChatFormatting.DARK_PURPLE);
         if (this.transitionTimer == 90)  sendChatKey("bosses.awakenedwither.purge_warning", EnumChatFormatting.RED);
 
         if (this.transitionTimer == 60) {
@@ -256,10 +261,10 @@ public class EntityAwakenedWither extends EntityWither {
         }
 
         if (this.transitionTimer <= 0) {
-            this.awakenedPhase      = 3;
-            this.transitionTimer    = -1;
-            this.baseAttackInterval = 460;
-            this.attackTimer        = 0;
+            this.awakenedPhase = 3;
+            this.transitionTimer = -1;
+            this.baseAttackInterval = 300;
+            this.attackTimer = 0;
             this.currentAttackIndex = -1;
             this.activity = false;
             this.engageWither();
@@ -273,32 +278,29 @@ public class EntityAwakenedWither extends EntityWither {
 
 
         for(Object po : this.worldObj.playerEntities){
-            if(po instanceof EntityPlayer p){
-                p.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(p.getMaxHealth() - 1);
-                if(p.getHealth() >= p.getMaxHealth()){
-                    p.setHealth(p.getMaxHealth());
-                }
+            if(po instanceof EntityPlayerExt p){
+                p.nightmareMode$incrementHealth(-1);
             }
         }
 
-        sendChatRaw("§4\u26a0 The realm erodes your life force. [" + this.healthDrainStacks + " stacks]",
-                EnumChatFormatting.DARK_RED);
+        sendChatRaw("The realm erodes your life force. [-1 Max Health]", EnumChatFormatting.DARK_RED);
     }
 
     private void setAttackDetails(int index, boolean isInit) {
+        System.out.println("doing attack: " + index);
         switch (index) {
             case ATK_SKULL_RAIN:
-                this.currentFireRate = 6;
+                this.currentFireRate = 2;
                 this.isCurrentAttackSummoning = false;
                 this.currentPassivityLength  = this.awakenedPhase == 3 ? 320 : 400;
                 break;
             case ATK_DIRECT_BARRAGE:
-                this.currentFireRate = 12;
+                this.currentFireRate = 3;
                 this.isCurrentAttackSummoning = false;
-                this.currentPassivityLength  = this.awakenedPhase == 3 ? 280 : 360;
+                this.currentPassivityLength  = this.awakenedPhase == 3 ? 280 : 100;
                 break;
             case ATK_TELEPORT_STRIKE:
-                this.currentFireRate = 40;
+                this.currentFireRate = 6;
                 this.isCurrentAttackSummoning = false;
                 this.currentPassivityLength = 300;
                 break;
@@ -384,11 +386,11 @@ public class EntityAwakenedWither extends EntityWither {
             double invLen = 1.0 / Math.sqrt(dx * dx + dy * dy + dz * dz);
             dx *= invLen; dy *= invLen; dz *= invLen;
             EntityWitherSkull skull = new EntityWitherSkull(this.worldObj, this, dx, dy, dz);
+            if (this.awakenedPhase == 3 && this.rand.nextInt(4) == 0){ skull.setInvulnerable(true);}
+            else if(this.rand.nextInt(32) == 0){
+                ((EntityWitherSkullExt)skull).nightmareMode$setLifeStealing(true);
+            }
             skull.posX = spawnX; skull.posY = spawnY; skull.posZ = spawnZ;
-            skull.accelerationX = dx * 0.033;
-            skull.accelerationY = dy * 0.033;
-            skull.accelerationZ = dz * 0.033;
-            if (this.awakenedPhase == 3 && this.rand.nextInt(4) == 0) skull.setInvulnerable(true);
             this.worldObj.spawnEntityInWorld(skull);
         }
         this.worldObj.playAuxSFXAtEntity(null, 1014, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
@@ -414,13 +416,13 @@ public class EntityAwakenedWither extends EntityWither {
 
     private void doSummonHorde() {
         if (!this.trackedEntities.isEmpty()) return;
-        EntityPlayer p     = this.playerTarget;
-        int          count = this.awakenedPhase == 3 ? 5 : 3;
+        EntityPlayer p = this.playerTarget;
+        int count = this.awakenedPhase == 3 ? 5 : 3;
         for (int i = 0; i < count; i++) {
             EntityLiving mob = buildSummonMob();
             double ox = (this.rand.nextBoolean() ? 1 : -1) * (4 + this.rand.nextInt(10));
             double oz = (this.rand.nextBoolean() ? 1 : -1) * (4 + this.rand.nextInt(10));
-            mob.setPositionAndUpdate(p.posX + ox, p.posY, p.posZ + oz);
+            mob.setPositionAndUpdate(p.posX + ox, this.worldObj.getPrecipitationHeight((int) (p.posX + ox), (int) (p.posZ + oz)), p.posZ + oz);
             mob.setAttackTarget(p);
             this.trackedEntities.add(mob);
             this.worldObj.spawnEntityInWorld(mob);
@@ -430,7 +432,7 @@ public class EntityAwakenedWither extends EntityWither {
             blaze.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 100000, 1));
             double bx = (this.rand.nextBoolean() ? 1 : -1) * (5 + this.rand.nextInt(5));
             double bz = (this.rand.nextBoolean() ? 1 : -1) * (5 + this.rand.nextInt(5));
-            blaze.setPositionAndUpdate(p.posX + bx, p.posY + 1, p.posZ + bz);
+            blaze.setPositionAndUpdate(p.posX + bx, this.worldObj.getPrecipitationHeight((int) (p.posX + bx), (int) (p.posZ + bz)) + this.rand.nextInt(4) + 1, p.posZ + bz);
             blaze.entityToAttack = p;
             this.trackedEntities.add(blaze);
             this.worldObj.spawnEntityInWorld(blaze);
@@ -443,7 +445,7 @@ public class EntityAwakenedWither extends EntityWither {
         switch (roll) {
             case 0: case 1: {
                 EntitySkeleton skel = new EntitySkeleton(this.worldObj);
-                skel.setSkeletonType(1); // TODO: replace if setSkeletonType unavailable in this build
+                skel.setSkeletonType(1);
                 skel.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,  100000, 1));
                 skel.addPotionEffect(new PotionEffect(Potion.resistance.id, 100000, 0));
                 mob = skel;
@@ -493,7 +495,7 @@ public class EntityAwakenedWither extends EntityWither {
                             -rx * 0.07, 0.06, -rz * 0.07);
                 }
             }
-            if (this.launchWindupTimer == 30) sendChatRaw("\u00a7c\u26a0 Incoming!", EnumChatFormatting.RED);
+            if (this.launchWindupTimer == 30) sendChatRaw("(this attack may not work, it's in development!)", EnumChatFormatting.RED);
             if (this.launchWindupTimer <= 0) {
                 this.launchFired = true;
                 if (this.getDistanceSqToEntity(p) < 1024.0) {
@@ -501,6 +503,8 @@ public class EntityAwakenedWither extends EntityWither {
                     p.motionX *= 0.2;
                     p.motionZ *= 0.2;
                     p.fallDistance = 0;
+                    p.onGround= false;
+                    p.isAirBorne = true;
                     this.worldObj.playAuxSFX(2279, MathHelper.floor_double(p.posX), MathHelper.floor_double(p.posY), MathHelper.floor_double(p.posZ), 0);
 //                    sendChatRaw("\u00a7c[Think fast!]", EnumChatFormatting.RED);
                 }
@@ -526,6 +530,18 @@ public class EntityAwakenedWither extends EntityWither {
         skull.posX = ox; skull.posY = oy; skull.posZ = oz;
         this.worldObj.spawnEntityInWorld(skull);
     }
+
+    private void spawnSkullWithRandomOffset(int headIndex, double targetX, double targetY, double targetZ, boolean charged) {
+        this.worldObj.playAuxSFXAtEntity(null, 1014, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
+        double ox = getHeadX(headIndex), oy = getHeadY(headIndex), oz = getHeadZ(headIndex);
+        EntityWitherSkull skull = new EntityWitherSkull(
+                this.worldObj, this, targetX - ox, targetY - oy, targetZ - oz);
+        if (charged) skull.setInvulnerable(true);
+        skull.posX = ox; skull.posY = oy; skull.posZ = oz;
+        this.worldObj.spawnEntityInWorld(skull);
+    }
+
+
 
 
     private double getHeadX(int idx) {
@@ -658,6 +674,9 @@ public class EntityAwakenedWither extends EntityWither {
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this, 64);
         }
         setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive() && this.isEntityAlive());
+        if(!isBossActive() && this.getAwakenedPhase() == 3){
+            MonoInvertPostProcessor.INSTANCE.setEnabled(false);
+        }
 
         if ((this.playerTarget == null || !this.playerTarget.isEntityAlive()) && this.getInvulnerabilityTime() == 0) {
             NMUtils.shushMusic();
@@ -671,6 +690,20 @@ public class EntityAwakenedWither extends EntityWither {
         }
 
         if (!this.worldObj.isRemote && this.playerTarget != null) {
+
+            if(this.ticksExisted % 4 == 0){
+                this.destroyBlocksInAABB(this.boundingBox.expand(0.5d,0,0.5d));
+            }
+
+            if(this.playerTarget instanceof EntityPlayerExt pExt && this.ticksExisted % 6 == 0) {
+//                float t = (16 - this.getDistanceToEntity(this.playerTarget)) / 15;
+//                System.out.println(t + " | " + this.getDistanceToEntity(this.playerTarget) + " | " + pExt.nightmareMode$getFear());
+//                if (t > 0) {
+//                    pExt.nightmareMode$setFear(t);
+//                }
+                pExt.nightmareMode$setFear(Math.max(pExt.nightmareMode$getFear(), 0.6f));
+            }
+
             EntityPlayer p = this.playerTarget;
             p.capabilities.allowEdit = this.activity || this.isDead;
 
@@ -679,7 +712,7 @@ public class EntityAwakenedWither extends EntityWither {
                     && this.passivityDuration == -1
                     && this.trackedEntities.isEmpty()) {
 
-                int pool = this.awakenedPhase == 3 ? 6 : 4;
+                int pool = (this.awakenedPhase == 3 ? 6 : 4) + 1;
                 int next = 0;
                 int tries = 0;
                 do {
@@ -689,7 +722,7 @@ public class EntityAwakenedWither extends EntityWither {
                     if (next == ATK_LAUNCH && this.rand.nextInt(5) != 0) continue;
                     break;
                 } while (tries < 30);
-
+//                next = ATK_SKULL_RAIN;
                 this.currentAttackIndex = next;
                 this.setAttackDetails(this.currentAttackIndex, true);
             }
@@ -722,7 +755,7 @@ public class EntityAwakenedWither extends EntityWither {
 
             if (this.awakenedPhase == 3) {
                 this.healthDrainTimer++;
-                if (this.healthDrainTimer >= 400) {
+                if (this.healthDrainTimer >= TICKS_DRAIN) {
                     this.healthDrainTimer = 0;
                     this.tickHealthDrain();
                 }
@@ -791,6 +824,40 @@ public class EntityAwakenedWither extends EntityWither {
         spawnHeadParticles();
     }
 
+
+    private void destroyBlocksInAABB(AxisAlignedBB aabb) {
+        // copied from EntityWitherMixin
+        int minX = MathHelper.floor_double(aabb.minX);
+        int minY = MathHelper.floor_double(aabb.minY);
+        int minZ = MathHelper.floor_double(aabb.minZ);
+        int maxX = MathHelper.floor_double(aabb.maxX);
+        int maxY = MathHelper.floor_double(aabb.maxY);
+        int maxZ = MathHelper.floor_double(aabb.maxZ);
+        boolean setToAir = false;
+        for (int dx = minX; dx <= maxX; ++dx) {
+            for (int dy = minY; dy <= maxY; ++dy) {
+                for (int dz = minZ; dz <= maxZ; ++dz) {
+                    int blockID = this.worldObj.getBlockId(dx, dy, dz);
+                    if (blockID == 0) continue;
+                    if (
+                        blockID != Block.bedrock.blockID
+                        && blockID != NMBlocks.cryingObsidian.blockID
+                        && blockID != NMBlocks.specialObsidian.blockID
+                        && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+                    {
+                        setToAir = this.worldObj.setBlockToAir(dx, dy, dz);
+                    }
+                }
+            }
+        }
+        if (setToAir) {
+            double fxX = aabb.minX + (aabb.maxX - aabb.minX) * (double)this.rand.nextFloat();
+            double fxY = aabb.minY + (aabb.maxY - aabb.minY) * (double)this.rand.nextFloat();
+            double fxZ = aabb.minZ + (aabb.maxZ - aabb.minZ) * (double)this.rand.nextFloat();
+            this.worldObj.spawnParticle("largeexplode", fxX, fxY, fxZ, 0.0, 0.0, 0.0);
+        }
+    }
+
     private void spawnHeadParticles() {
         boolean armored = this.isArmored();
         for (int i = 0; i < 3; i++) {
@@ -814,5 +881,13 @@ public class EntityAwakenedWither extends EntityWither {
                         this.posZ + this.rand.nextGaussian(), 0.5, 0.0, 0.8);
             }
         }
+    }
+
+    @Override
+    public double getFearForThisEntity(double x, double y, double z) {
+        // dead code dw about it
+        double dist = this.getDistance(x,y,z);
+        if(dist > 8) return 0;
+        return 0.5f - 0.5f * (dist / 16);
     }
 }
