@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import api.item.items.PickaxeItem;
 import btw.block.BTWBlocks;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -25,7 +26,7 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "shouldBreakBarricadeAtPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I"),cancellable = true)
     private void manageBlockBreakingForHeldTool(World world, int i, int j, int k, boolean advancedBreaker, CallbackInfoReturnable<Block> cir){
-        if((this.associatedEntity.getHeldItem() != null && this.associatedEntity.getHeldItem().itemID == Item.pickaxeStone.itemID) || NMUtils.getIsBloodMoon()){
+        if((this.associatedEntity.getHeldItem() != null && this.associatedEntity.getHeldItem().getItem() instanceof PickaxeItem ||this.associatedEntity.getHeldItem().getItem() instanceof ItemPickaxe ) || NMUtils.getIsBloodMoon()){
             int iBlockID = world.getBlockId(i, j, k);
             if (iBlockID != 0) {
                 Block block = Block.blocksList[iBlockID];
@@ -48,6 +49,11 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
             AVOIDED_BLOCKS.add(Block.portal.blockID);
             AVOIDED_BLOCKS.add(Block.endPortal.blockID);
             AVOIDED_BLOCKS.add(Block.mobSpawner.blockID);
+            AVOIDED_BLOCKS.add(Block.waterStill.blockID);
+            AVOIDED_BLOCKS.add(Block.waterMoving.blockID);
+            AVOIDED_BLOCKS.add(Block.lavaMoving.blockID);
+            AVOIDED_BLOCKS.add(Block.lavaStill.blockID);
+            AVOIDED_BLOCKS.add(Block.endPortalFrame.blockID);
             AVOIDED_BLOCKS.add(BTWBlocks.lavaPillow.blockID);
         }
         return AVOIDED_BLOCKS;
