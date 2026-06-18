@@ -29,9 +29,11 @@ import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
 import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
 
 @Mixin(GuiIngame.class)
-public class GuiIngameMixin extends Gui {
+public abstract class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
     @Shadow @Final private Random rand;
+    @Shadow protected abstract void renderVignette(float par1, int par2, int par3);
+
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
     @Unique private int amountRendered = 0;
@@ -430,16 +432,27 @@ public class GuiIngameMixin extends Gui {
     @Unique private long vignetteLastUpdate = System.nanoTime();
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
-    private void modifyBrightness2(GuiIngame instance, float par1, int screenWidth, int screenHeight){
-        this.renderVignetteNightmare(par1,screenWidth,screenHeight);
+    private void modifyBrightness2(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
+        if (NightmareMode.renderVignette) {
+            this.renderVignetteNightmare(partialTicks,screenWidth,screenHeight);
+        } else{
+            this.renderVignette(partialTicks, screenWidth, screenHeight);
+        }
         this.renderBlink(screenWidth,screenHeight);
-//        this.renderHeartCrack(screenWidth, screenHeight);
-        renderHeartCrack(screenWidth,screenHeight);
+
+        if (!this.mc.thePlayer.capabilities.isCreativeMode) {
+            renderHeartCrack(screenWidth, screenHeight);
+        }
+
     }
 
     @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
-    private void modifyBrightness(GuiIngame instance, float par1, int screenWidth, int screenHeight){
-        this.renderVignetteNightmare(par1,screenWidth,screenHeight);
+    private void modifyBrightness(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
+        if (NightmareMode.renderVignette) {
+            this.renderVignetteNightmare(partialTicks, screenWidth, screenHeight);
+        } else{
+            this.renderVignette(partialTicks, screenWidth, screenHeight);
+        }
         this.renderBlink(screenWidth,screenHeight);
     }
 
