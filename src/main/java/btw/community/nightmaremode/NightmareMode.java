@@ -391,6 +391,16 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+        AddonHandler.registerPacketHandler("nm|heartC", (packet, player) -> {
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                int heartCrackingLength = data.readInt();
+                if (player instanceof EntityPlayerExt) {
+                    ((EntityPlayerExt) player).nightmareMode$setHeartCrack(heartCrackingLength);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         AddonHandler.registerPacketHandler("nm|foodstat", (packet, player) -> {
             try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
                 int foodMax = data.readInt();
@@ -576,6 +586,18 @@ public class NightmareMode extends BTWAddon {
         }
 
         Packet250CustomPayload packet = new Packet250CustomPayload("nm|blink", byteStream.toByteArray());
+        player.playerNetServerHandler.sendPacketToPlayer(packet);
+    }
+    public static void sendHeartCrackingToPlayer(EntityPlayerMP player, int target){
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+        try {
+            dataStream.writeInt(target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Packet250CustomPayload packet = new Packet250CustomPayload("nm|heartC", byteStream.toByteArray());
         player.playerNetServerHandler.sendPacketToPlayer(packet);
     }
     public static void sendFoodToClient(EntityPlayerMP player, int target){
