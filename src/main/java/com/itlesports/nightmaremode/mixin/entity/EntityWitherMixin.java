@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.EntityNightmareGolem;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -235,18 +236,28 @@ public abstract class EntityWitherMixin extends EntityMob {
                 this.witherAttackTimer += this.rand.nextInt(5)+1;
                 if(this.hasRevived){this.witherAttackTimer += 3;}
             }
-            if(this.entityToAttack instanceof EntityPlayer player && this.hasRevived){
-                if(this.witherAttackTimer % 160 == 10){
-                    int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
-                    int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
-                    int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
-                    player.setPositionAndUpdate(xValue,yValue,zValue);
-                    this.entityToAttack = player; // reassures the wither aggro in case it is lost
-                    player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
+            if(this.entityToAttack instanceof EntityPlayer player){
+                if (this.hasRevived) {
+                    if(this.witherAttackTimer % 160 == 10){
+                        int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-5,5);
+                        int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-5,5);
+                        int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
+                        player.setPositionAndUpdate(xValue,yValue,zValue);
+                        this.entityToAttack = player; // reassures the wither aggro in case it is lost
+                        player.worldObj.playSoundAtEntity(player,"mob.endermen.portal",2.0F,1.0F);
+                    }
+                    if (this.witherAttackTimer % 250 == 20){
+                        player.setFire(80);
+                    }
                 }
-                if (this.witherAttackTimer % 250 == 20){
-                    player.setFire(80);
+
+                if(player instanceof EntityPlayerExt){
+                    ((EntityPlayerExt) player).nightmareMode$setFear(Math.max(((EntityPlayerExt) player).nightmareMode$getFear(), 0.3f));
                 }
+            }
+        } else{
+            if(this.entityToAttack instanceof EntityPlayerExt player){
+                player.nightmareMode$setFear(Math.max(player.nightmareMode$getFear(), 0.15f));
             }
         }
     }
