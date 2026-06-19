@@ -269,7 +269,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
         if(this.dimension == 0){
             if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) || NMEvents.SimpleEvent.HELL.isActive()) {
-                if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63) {
+                if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63 && this.rand.nextInt(8) == 0) {
                     cir.setReturnValue(true);
                 }
             } else{
