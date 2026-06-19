@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +43,20 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
             List<Integer> leatherArmor = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                    if(rand.nextFloat() < (0.04f + NMUtils.getWorldProgress()*0.02) + streakModifier){
+                    if(rand.nextFloat() < (10.04f + NMUtils.getWorldProgress()*0.02) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
                         this.setCurrentItemOrArmor(i, new ItemStack(leatherArmor.get(i - 1), 1 ,rand.nextInt(EnumArmorMaterial.CLOTH.getDurability(i - 1))));
-                        this.equipmentDropChances[i] = 0f;
+                        this.equipmentDropChances[i] = -1f;
                     }
                 }
             }
+        }
+    }
+    @Inject(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void stopIfAttemptingToDropBadArmor(boolean par1, int par2, CallbackInfo ci, int var3, ItemStack itemToDrop){
+        if(itemToDrop != null && getItemsToAvoidDropping().contains(itemToDrop.itemID)){
+            ci.cancel();
         }
     }
 
@@ -87,5 +96,27 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
             leatherArmorList.add(Item.helmetLeather.itemID);
         }
         return leatherArmorList;
+    }
+
+    @Unique private static List<Integer> itemsNotDropped = new ArrayList<>();
+
+    @Unique private static @NotNull List<Integer> getItemsToAvoidDropping() {
+        if (itemsNotDropped.isEmpty()) {
+            itemsNotDropped.add(BTWItems.woolBoots.itemID);
+            itemsNotDropped.add(BTWItems.woolLeggings.itemID);
+            itemsNotDropped.add(BTWItems.woolChest.itemID);
+            itemsNotDropped.add(BTWItems.woolHelmet.itemID);
+            itemsNotDropped.add(Item.bootsLeather.itemID);
+            itemsNotDropped.add(Item.legsLeather.itemID);
+            itemsNotDropped.add(Item.plateLeather.itemID);
+            itemsNotDropped.add(Item.helmetLeather.itemID);
+            itemsNotDropped.add(Item.swordWood.itemID);
+            itemsNotDropped.add(Item.pickaxeStone.itemID);
+            itemsNotDropped.add(BTWItems.steelSword.itemID);
+            itemsNotDropped.add(BTWBlocks.carvedPumpkin.blockID);
+            itemsNotDropped.add(BTWItems.boneClub.itemID);
+            itemsNotDropped.add(Item.axeIron.itemID);
+        }
+        return itemsNotDropped;
     }
 }
