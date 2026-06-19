@@ -276,6 +276,10 @@ gui.config.blood_moon_helper=Blood Moon Helper
 gui.config.tooltip.blood_moon_helper=Shows you when the next Blood Moon will be
 gui.config.real_time=Real Time
 gui.config.tooltip.real_time=Day and Night last 12 real-life hours. Hardmode activates on Day 3. Endgame activates on Day 5. NOTE: If this config is active, no other configs can be completed
+gui.config.render_fancy_clouds=Fancy Clouds
+gui.config.tooltip.render_fancy_clouds=Enables computationally expensive but cool-looking experimental cloud rendering for the overworld! Only use if you have a powerful graphics card
+gui.config.render_vignette=Custom Vignette
+gui.config.tooltip.render_vignette=Enables the custom Nightmare Mode vignette. It gets particularly strong in stressful scenarios like caving, Blood Moons, taking damage, and boss fights. Recommended to keep this enabled"
 
 
 
