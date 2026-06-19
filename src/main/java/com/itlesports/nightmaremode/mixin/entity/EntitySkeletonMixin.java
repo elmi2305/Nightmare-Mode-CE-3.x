@@ -647,7 +647,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         }
         if(!this.worldObj.isRaining()) return false;
 
-        double thunderBonus = 0.02 + (this.worldObj.isThundering() ? 0.4 : 0);
+        double thunderBonus = 0.02 + (this.worldObj.isThundering() ? 0.2 : 0);
         double chance = (0.04 + progress * 0.06 + thunderBonus) * bloodMoonModifier * niteMultiplier;
         return rand.nextFloat() < chance;
     }
@@ -695,6 +695,11 @@ public abstract class EntitySkeletonMixin extends EntityMob{
 
                 : new SkeletonArrowAttackBehavior((EntitySkeleton)(Object)this, 1.0f, 60, 15.0f);
 
+        for(int i = 1; i < 5; i++){
+            this.setCurrentItemOrArmor(i,null);
+            this.equipmentDropChances[i] = -1f;
+        }
+
     }
 
     @Unique
@@ -715,6 +720,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     private void clearArmor() {
         for (int i = 1; i <= 4; i++) {
             this.setCurrentItemOrArmor(i, null);
+            this.equipmentDropChances[i] = -1f;
         }
     }
 
