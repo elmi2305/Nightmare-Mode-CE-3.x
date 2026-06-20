@@ -81,13 +81,6 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 //        return this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION && this.getIsNightFromWorldTime(world) && world.getMoonPhase() == 0;
 //    }
 
-    /**
-     * Approximation!! It is more correct than the usual daylight check, especially if an event such as the eclipse forces the skylight level low but counts as daytime.
-     * This method is used when we are drawing the day counter or running events that function based on it
-     */
-    @Unique private boolean getIsNightFromWorldTime(World world){
-        return world.getWorldTime() % 24000 >= 12541 && world.getWorldTime() % 24000 <= 23459;
-    }
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;setWorldTime(J)V"))
     private long realTime(long worldTime){
