@@ -32,7 +32,7 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
 
     @Redirect(method = "entityLivingAddRandomArmor", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F", ordinal = 0))
     private float returnRandomFloatButLower(Random rand){
-        return (rand.nextFloat()-0.008F);
+        return (rand.nextFloat() - 0.008F);
         // rand.nextFloat()   <  0.0033F ( original number: 0.0025F), from 1/400 to 1/303 chance
     }
 
@@ -43,10 +43,10 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
             List<Integer> leatherArmor = getLeatherArmor();
             for (int i = 1; i <= 4; i++) {
                 if(this.getCurrentItemOrArmor(i) == null){ // starts at index 1, index 0 is held item
-                    if(rand.nextFloat() < (10.04f + NMUtils.getWorldProgress()*0.02) + streakModifier){
+                    if(this.rand.nextFloat() < (0.04f + NMUtils.getWorldProgress() * 0.02f) + streakModifier){
                         // 0.04f -> 0.06f -> 0.08f -> 0.10f
                         streakModifier += 0.05f;
-                        this.setCurrentItemOrArmor(i, new ItemStack(leatherArmor.get(i - 1), 1 ,rand.nextInt(EnumArmorMaterial.CLOTH.getDurability(i - 1))));
+                        this.setCurrentItemOrArmor(i, new ItemStack(leatherArmor.get(i - 1), 1, this.rand.nextInt(EnumArmorMaterial.CLOTH.getDurability(i - 1))));
                         this.equipmentDropChances[i] = -1f;
                     }
                 }
