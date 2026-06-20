@@ -54,6 +54,7 @@ public abstract class NMInitializer implements AchievementExt {
         addSoulforgeRecipes();
         addPistonPackingRecipes();
 //        addBloodSawRecipes();
+        addMultiplayerRecipes();
         finishRecipes("All Recipes");
     }
 
@@ -1511,8 +1512,23 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
         // done recycling
 
+        // multiplayer sign
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
+        //
+
         finishRecipes("Crafting Recipes");
 
+    }
+    private static void addMultiplayerRecipes(){
+        if(MinecraftServer.getIsServer()){
+            // signs
+            RecipeManager.removeVanillaRecipe(new ItemStack(Item.sign, 3), new Object[]{"#", "X", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('X'), BTWTags.woodenMouldings});
+            RecipeManager.addRecipe(new ItemStack(Item.sign), new Object[]{"#", "X", Character.valueOf('#'), BTWTags.logs, Character.valueOf('X'), Item.stick}).setAsDefaultAfterAchievement(BTWAchievements.CRAFT_SAW);
+            // done with signs
+
+
+            finishRecipes("Multiplayer Exclusive Recipes");
+        }
     }
 
     private static void addPistonPackingRecipes() {
