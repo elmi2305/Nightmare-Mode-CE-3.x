@@ -369,6 +369,8 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             this.setFire(10000);
         } else if(id == SKELETON_ENDER){
             this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
+        } else if(id == SKELETON_LIGHTNING){
+            this.clearArmor();
         }
     }
     @Unique
@@ -694,12 +696,6 @@ public abstract class EntitySkeletonMixin extends EntityMob{
                 (Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.AreSkeletonsPyromaniacs.class))
 
                 : new SkeletonArrowAttackBehavior((EntitySkeleton)(Object)this, 1.0f, 60, 15.0f);
-
-        for(int i = 1; i < 5; i++){
-            this.setCurrentItemOrArmor(i,null);
-            this.equipmentDropChances[i] = -1f;
-        }
-
     }
 
     @Unique

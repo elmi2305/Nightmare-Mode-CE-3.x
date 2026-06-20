@@ -33,20 +33,20 @@ public class RenderSkeletonMixin extends RenderBiped {
     }
 
     @Override
-    protected int shouldRenderPass(EntityLivingBase entity, int par2, float par3) {
+    protected int shouldRenderPass(EntityLivingBase entity, int pass, float partialTicks) {
         if (((EntitySkeleton)entity).getSkeletonType().id() == NMFields.SKELETON_LIGHTNING) {
-            return this.renderSkeletonPassModel((EntitySkeleton) entity, par2, par3);
+            return this.renderSkeletonPassModel((EntitySkeleton) entity, pass, partialTicks);
         }
 
-        return super.shouldRenderPass(entity, par2, par3);
+        return super.shouldRenderPass(entity, pass, partialTicks);
     }
 
 
-    @Unique protected int renderSkeletonPassModel(EntitySkeleton c, int par2, float par3) {
+    @Unique protected int renderSkeletonPassModel(EntitySkeleton c, int par2, float partialTicks) {
         GL11.glDepthMask(!c.isInvisible());
 
         if (par2 == 1) {
-            float var4 = (float)c.ticksExisted + par3;
+            float var4 = (float)c.ticksExisted + partialTicks;
             this.bindTexture(armor);
             GL11.glMatrixMode(5890);
             GL11.glLoadIdentity();
