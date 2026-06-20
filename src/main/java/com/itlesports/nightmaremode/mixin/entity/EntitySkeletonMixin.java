@@ -617,7 +617,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     }
     @Unique
     private boolean shouldSpawnIceSkeleton(int progress, double bloodMoonModifier, double niteMultiplier) {
-        double chance = (0.04 + progress * 0.02) * bloodMoonModifier * niteMultiplier;
+        double chance = (0.07 + progress * 0.02) * bloodMoonModifier * niteMultiplier;
         return rand.nextFloat() < chance;
     }
 
