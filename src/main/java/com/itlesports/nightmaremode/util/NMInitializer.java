@@ -1065,6 +1065,10 @@ public abstract class NMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(Block.glass, 8), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Block.glass, 16), (TagOrStack[])new ItemStack[]{new ItemStack(Item.netherQuartz), new ItemStack(Block.sand, 16)});
         // glass
+        // fns
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 2), (TagOrStack[])new ItemStack[]{new ItemStack(Item.flintAndSteel, 1,Short.MAX_VALUE)});
+        // fns
+
         finishRecipes("Crucible Recipes");
 
     }
