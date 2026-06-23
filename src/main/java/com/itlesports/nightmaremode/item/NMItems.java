@@ -119,7 +119,7 @@ public class NMItems {
 
         darksunFragment = (new NMItem(2326)).setTextureName("nightmare:nmDarksunFragment").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmDarksunFragment");
 
-        magicFeather = (new NMItem(2327)).setTextureName("nightmare:nmMagicFeather").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmMagicFeather");
+        magicFeather = (new NMItem(2327)).setIndestructible().setTextureName("nightmare:nmMagicFeather").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmMagicFeather");
         bloodMilk = (NMItemBucketMilk) (new NMItemBucketMilk(2328)).setTextureName("nightmare:nmBloodMilk").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmBloodMilk");
         creeperChop = (NMFoodItem) (new NMFoodItem(2329,6,0.25f,false,"nmCreeperChop",false)).setTextureName("nightmare:nmCreeperChop").setCreativeTab(CreativeTabs.tabFood);
         voidSack = (new NMItem(2330)).setTextureName("nightmare:nmVoidSack").setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("nmVoidSack");
@@ -213,6 +213,10 @@ public class NMItems {
     public static void hideItems(){
         lightningBolt.hideFromEMI().setCreativeTab(null);
         refinedElement.hideFromEMI().setCreativeTab(null);
+        honeyBall.hideFromEMI().setCreativeTab(null);
+        honeyMelon.hideFromEMI().setCreativeTab(null);
+        lifeFruit.hideFromEMI().setCreativeTab(null);
+        awakenedStar.hideFromEMI().setCreativeTab(null);
     }
 
     public static void addItemsToTags(){
