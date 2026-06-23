@@ -97,6 +97,8 @@ public class NMBlocks {
     public static BlockMetaMultiTextured hellStones;
     public static final int META_HELLSTONE = 0;
 
+
+
     public static Block customLog;
 
 
@@ -343,5 +345,10 @@ public class NMBlocks {
         underrock        = underrock.hideFromEMI().setCreativeTab(null);
         understoneSmooth = understoneSmooth.hideFromEMI().setCreativeTab(null);
         underCobble      = underCobble.hideFromEMI().setCreativeTab(null);
+
+        portalCore = portalCore.hideFromEMI().setCreativeTab(null);
+        honeyCover = honeyCover.hideFromEMI().setCreativeTab(null);
+        customLog = customLog.hideFromEMI().setCreativeTab(null);
+        steelFrame = (BlockSteelFrame) steelFrame.hideFromEMI().setCreativeTab(null);
     }
 }

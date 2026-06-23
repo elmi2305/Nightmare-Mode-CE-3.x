@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.item.items.template.ItemAchievementGranter;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemEventController;
@@ -20,6 +21,10 @@ public class NMPostItems {
         timeBottle = (ItemAchievementGranter) new ItemAchievementGranter(2500, NMAchievements.GREED, NMAchievements.CRAFT_OVEN_FAST).setUnlocalizedName("nmTimeBottle").setTextureName("nightmare:nmTimeBottle").setCreativeTab(CreativeTabs.tabFood);
         bloodMoonBottle = (ItemEventController) new ItemEventController(2501, EVENT_BLOODMOON).setUnlocalizedName("nmBloodBottle").setTextureName("nightmare:nmBloodBottle").setCreativeTab(CreativeTabs.tabFood);
         eclipseBottle = (ItemEventController) new ItemEventController(2502, EVENT_ECLIPSE).setUnlocalizedName("nmEclipseBottle").setTextureName("nightmare:nmEclipseBottle").setCreativeTab(CreativeTabs.tabFood);
+
+        if(!NightmareMode.devMode){
+            eclipseBottle = (ItemEventController) eclipseBottle.hideFromEMI().setCreativeTab(null);
+        }
     }
     public static void runPostInit(){}
 }
