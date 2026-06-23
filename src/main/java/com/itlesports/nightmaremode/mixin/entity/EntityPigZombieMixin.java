@@ -134,7 +134,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     protected void dropEquipment(boolean par1, int par2) {
-        if(this.rand.nextInt(8) == 0) {
+        if(this.rand.nextInt(8) == 0 || NMUtils.getIsMobEclipsed(this)) {
             if(!this.isValidForEventLoot && NMEvents.SimpleEvent.HELL.isActive()) return;
             super.dropEquipment(par1, par2);
         }
