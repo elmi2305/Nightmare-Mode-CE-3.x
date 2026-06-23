@@ -48,7 +48,7 @@ public class NMFields {
     public static final int BLAZE_AQUA = 2;
 
     // custom flower names
-    public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "dandelion6", "dandelion7", "dandelion8"};
+    public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "hellFlower", "voidShrub", "dandelion8"};
 
     // portal ritual duration
     public static final int UW_PORTAL_DURATION = 20 * 65;

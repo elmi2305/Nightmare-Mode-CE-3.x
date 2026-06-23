@@ -18,12 +18,13 @@ public class BlockTallFlower extends BlockFlower {
     private static final int TYPE_MASK = 0x7;
     private static final int TOP_FLAG = 0x8;
 
-    public static int ROSEBUSH = 0;
+    public static int ROSE_BUSH = 0;
     public static int PEONY = 1;
     public static int LILAC = 2;
     public static int SUNFLOWER = 3;
-    public static int BERRYBUSH = 4;
-    public static int LAVAFLOWER = 5;
+    public static int BERRY_BUSH = 4;
+    public static int LAVA_FLOWER = 5;
+    public static int VOID_SHRUB = 6;
 
     public BlockTallFlower(int blockID) {
         super(blockID, Material.plants);
@@ -43,7 +44,17 @@ public class BlockTallFlower extends BlockFlower {
     @Override
     public boolean canBlockStayDuringGenerate(World world, int i, int j, int k) {
         // force return true to get floating flowers
-        return world.isAirBlock(i, j + 1, k) && !world.isAirBlock(i, j - 1, k);
+        if(world.isAirBlock(i, j + 1, k) && !world.isAirBlock(i, j - 1, k)){
+            if(world.getBlockMaterial(i,j - 1,k) == Material.ground){
+//                System.out.println(Block.blocksList[world.getBlockId(i,j-1,k)].getLocalizedName());
+                return true;
+            }
+            if(world.getBlockMetadata(i,j,k) == VOID_SHRUB){
+                return world.getBlockMaterial(i,j - 1,k) == Material.rock;
+            }
+        }
+        return false;
+
     }
 
     @Override
@@ -51,7 +62,7 @@ public class BlockTallFlower extends BlockFlower {
         int type = stack.getItemDamage() & TYPE_MASK;
         world.setBlock(x, y, z, this.blockID, type, 2);  // Bottom half
 
-        if (type != LAVAFLOWER && world.isAirBlock(x, y + 1, z)) {
+        if (type != LAVA_FLOWER && world.isAirBlock(x, y + 1, z)) {
             world.setBlock(x, y + 1, z, this.blockID, type | TOP_FLAG, 2);  // Top half
         }
     }
@@ -137,6 +148,15 @@ public class BlockTallFlower extends BlockFlower {
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         return null;
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+        int meta =  world.getBlockMetadata(x, y, z);
+        if (entity instanceof EntityLivingBase elb && (meta == VOID_SHRUB || meta == LAVA_FLOWER)) {
+            elb.attackEntityFrom(DamageSource.generic, 1.0f);
+        }
+        super.onEntityCollidedWithBlock(world, x, y, z, entity);
     }
 
     @Override
