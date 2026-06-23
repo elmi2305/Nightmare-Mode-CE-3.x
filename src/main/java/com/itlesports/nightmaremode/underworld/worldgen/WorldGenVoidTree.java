@@ -39,12 +39,12 @@ public class WorldGenVoidTree extends WorldGenerator {
                 for (int ly = 0; ly <= 1; ly++)
                     for (int lz = -1; lz <= 1; lz++)
                         if (rand.nextInt(2) == 0 && world.isAirBlock(bx + lx, tipY + 1 + ly, bz + lz))
-                            this.setBlockAndMetadata(world, bx + lx, tipY + 1 + ly, bz + lz, Block.leaves.blockID, 0);
+                            this.setBlockAndMetadata(world, bx + lx, tipY + 1 + ly, bz + lz, NMBlocks.cryingObsidian.blockID, 0);
         }
         for (int dx = -1; dx <= 1; dx++)
             for (int dz = -1; dz <= 1; dz++)
                 if (world.isAirBlock(x + dx, y + trunkHeight, z + dz))
-                    this.setBlockAndMetadata(world, x + dx, y + trunkHeight, z + dz, Block.leaves.blockID, 0);
+                    this.setBlockAndMetadata(world, x + dx, y + trunkHeight, z + dz, NMBlocks.cryingObsidian.blockID, 0);
         return true;
     }
 }

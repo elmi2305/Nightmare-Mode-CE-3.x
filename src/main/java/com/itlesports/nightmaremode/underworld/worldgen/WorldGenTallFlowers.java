@@ -25,7 +25,7 @@ public class WorldGenTallFlowers extends WorldGenerator {
     public boolean generate(World w, Random rand, int x, int y, int z) {
         for (int i = 0; i < 64; ++i) {
             int nx = x + rand.nextInt(8) - rand.nextInt(8);
-            int ny = y + rand.nextInt(3) - rand.nextInt(3);
+            int ny = y + rand.nextInt(6) - rand.nextInt(6);
             int nz = z + rand.nextInt(8) - rand.nextInt(8);
 
             if (!w.isAirBlock(nx, ny, nz)) continue;
@@ -37,7 +37,7 @@ public class WorldGenTallFlowers extends WorldGenerator {
             int type = this.exactType ? this.types : rand.nextInt(this.types);
             w.setBlock(nx, ny, nz, this.plantBlockId, type, 2);
             // sunflower often needs top half
-            if (type == BlockTallFlower.SUNFLOWER || rand.nextInt(6) != 0 && type != BlockTallFlower.LAVAFLOWER) {
+            if (type == BlockTallFlower.SUNFLOWER || rand.nextInt(6) != 0 && type != BlockTallFlower.LAVA_FLOWER && type != BlockTallFlower.VOID_SHRUB) {
                 w.setBlock(nx, ny + 1, nz, this.plantBlockId, type | 0x8, 2);
             }
         }
