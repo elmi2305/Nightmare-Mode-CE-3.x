@@ -141,7 +141,9 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyConstant(method = "attackEntityFrom", constant = @Constant(floatValue = 1000.0f))
     private float ghastEnrageOnSelfHit(float constant){
-        this.rageTimer = 1;
+        if (!this.isCreeperVariant()) {
+            this.rageTimer = 1;
+        }
         return 5f;
     }
     @Inject(method = "updateEntityActionState", at =@At("HEAD"))
@@ -176,34 +178,39 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I", ordinal = 2, opcode = Opcodes.GETFIELD),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
-        if(NMUtils.getIsMobEclipsed(this) && this.isCreeperVariant()){
-            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 40,0));
-            Entity target = this.entityTargeted;
-            if(this.firstAttack){
-                this.worldObj.playSoundEffect(target.posX,target.posY,target.posZ, "mob.ghast.scream",1f,0.8f);
-                this.firstAttack = false;
-            }
+        if(this.isCreeperVariant()){
 
-            Vec3 playerPos = Vec3.createVectorHelper(target.posX,target.posY,target.posZ);
-            Vec3 entityPos = Vec3.createVectorHelper(this.posX,this.posY,this.posZ);
-
-            // direction vector
-            Vec3 velocity = entityPos.subtract(playerPos);
-            velocity.normalize();
-
-            // velocity scale
-            velocity.scale(0.1d);
-            if (this.getDistanceSqToEntity(target) > 4) {
-                if (this.hurtResistantTime <= 8) {
-                    this.motionX = velocity.xCoord;
-                    this.motionY = velocity.yCoord;
-                    this.motionZ = velocity.zCoord;
+            if (NMUtils.getIsMobEclipsed(this)) {
+                this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 40,0));
+                Entity target = this.entityTargeted;
+                if(this.firstAttack){
+                    this.worldObj.playSoundEffect(target.posX,target.posY,target.posZ, "mob.ghast.scream",1f,0.8f);
+                    this.firstAttack = false;
                 }
+
+                Vec3 playerPos = Vec3.createVectorHelper(target.posX,target.posY,target.posZ);
+                Vec3 entityPos = Vec3.createVectorHelper(this.posX,this.posY,this.posZ);
+
+                // direction vector
+                Vec3 velocity = entityPos.subtract(playerPos);
+                velocity.normalize();
+
+                // velocity scale
+                velocity.scale(0.1d);
+                if (this.getDistanceSqToEntity(target) > 4) {
+                    if (this.hurtResistantTime <= 8) {
+                        this.motionX = velocity.xCoord;
+                        this.motionY = velocity.yCoord;
+                        this.motionZ = velocity.zCoord;
+                    }
+                } else{
+                    this.worldObj.newExplosion(this,this.posX,this.posY,this.posZ,6f, false, true);
+                    this.setDead();
+                }
+                ci.cancel();
             } else{
-                this.worldObj.newExplosion(this,this.posX,this.posY,this.posZ,6f, false, true);
                 this.setDead();
             }
-            ci.cancel();
         }
     }
 
@@ -328,6 +335,9 @@ public abstract class EntityGhastMixin extends EntityFlying{
             }
         }
     }
+
+    @Override
+    public void checkForScrollDrop() {}
 
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
     private int lowerAttackCooldownOnFire(int constant){

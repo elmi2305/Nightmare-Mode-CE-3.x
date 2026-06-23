@@ -750,7 +750,8 @@ public abstract class NMInitializer implements AchievementExt {
 
         buy("nmPriestWart", 2, 2, Item.netherStalkSeeds.itemID, 0, 4, 8);
         buy("nmPriestNitre", 2, 3, BTWItems.nitre.itemID, 0, 8, 16);
-        sell("nmPriestEnch", 2, 3, Block.enchantmentTable.blockID, 0, 1, 1, 0.35f, false, 10, 6);
+        sell("nmPriestEnchant", 2, 3, Block.enchantmentTable.blockID, 0, 1, 1, 0.35f, false, 10, 6);
+        convert("nmPriestPunchScroll", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 8, 12), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("punch")), 0.1f);
         convert("nmPriestPaper", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 64), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("fortune")), 0.1f);
         convert("nmPriestPotion", 2, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 16453, 2));
         convert("nmPriestGoldenApple", 2, 4, TradeItem.fromID(Item.appleGold.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 10, 18), TradeItem.fromIDAndMetadata(Item.appleGold.itemID, 1), false, true);
