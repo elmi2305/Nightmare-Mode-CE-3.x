@@ -110,6 +110,10 @@ entity.NmObsidianFish.name=Obsydianowa Ryba
 entity.NmCreeperGhast.name=Creeper-Ghast
 entity.entityBloodAltar.name=Postęp
 entity.NmMushWorm.name=Grzybowy Robak
+entity.NmEntityVoidCreeper.name=Creeper Pustki
+entity.NmEntityGelCreeper.name=Lepki Creeper
+entity.NmEntityGlitchCreeper.name=Glitch Creeper
+
 
 key.nightmaremode.zoomhold=Przytrzymaj, aby powiększyć
 key.nightmaremode.zoomtoggle=Przełącz powiększenie
@@ -167,6 +171,18 @@ gui.bloodmoon.in=Krwawy Księżyc w
 gui.bloodmoon.days=Dni
 gui.bloodmoon.tonight=Dziś wieczorem
 gui.bloodmoon.tomorrow=Jutro
+
+nm.events.nmSlimeRain=Powietrze wydaje się gęste od Szlamu...
+nm.events.nmSlimeRain.info=Szlamy będą pojawiać się naturalnie
+
+nm.events.nmGreatHarvest=Gleba wydaje się żyźniejsza...
+nm.events.nmGreatHarvest.info=Uprawy będą dziś rosły szybciej
+
+nm.events.nmSpiderRain=Pająki się budzą...
+nm.events.nmSpiderRain.info=Tej nocy pojawi się więcej pająków
+
+nm.events.nmHell=Powietrze wydaje się cieplejsze...
+nm.events.nmHell.info=Tej nocy rozpęta się piekło
 
 difficulty.baddream.name=Zły sen
 difficulty.nightmare.name=Koszmar
@@ -262,9 +278,10 @@ gui.config.blood_moon_helper=Pomocnik Krwawego Księżyca
 gui.config.tooltip.blood_moon_helper=Pokazuje, kiedy będzie następny Krwawy Księżyc
 gui.config.real_time=Czas rzeczywisty
 gui.config.tooltip.real_time=Dzień i noc trwają 12 prawdziwych godzin. Hardmode aktywuje się trzeciego dnia. Endgame aktywuje się piątego dnia. UWAGA: Jeśli ta konfiguracja jest aktywna, nie można ukończyć żadnych innych konfiguracji
-
-
-
+gui.config.render_fancy_clouds=Fantazyjne chmury
+gui.config.tooltip.render_fancy_clouds=Włącza eksperymentalne renderowanie chmur o wysokiej jakości, które wygląda świetnie, ale jest wymagające obliczeniowo. Używaj tylko, jeśli masz wydajną kartę graficzną
+gui.config.render_vignette=Niestandardowa winieta
+gui.config.tooltip.render_vignette=Włącza niestandardową winietę Nightmare Mode. Efekt staje się szczególnie silny w stresujących sytuacjach, takich jak eksploracja jaskiń, Krwawe Księżyce, otrzymywanie obrażeń oraz walki z bossami. Zaleca się pozostawienie tej opcji włączonej
 
 
 
@@ -275,6 +292,7 @@ gui.config.clear.bloodmoon=Wyczyść warunek: Pokonaj Krwawy Księżyc
 gui.config.clear.eclipse=Wyczyść warunek: Pokonaj zaćmienie
 gui.config.clear.week=Wyczyść warunek: Przeżyj 7 dni
 gui.config.clear.gloom=Wyczyść warunek: Przeżyj pierwszą noc mroku
+gui.config.clear.item=Warunek wyczyszczenia: zdobądź przedmiot
 
 
 gui.warning.line1=bracie
@@ -725,7 +743,81 @@ achievement.btw.craft_iron_shears.desc=Zdobądź parę żelaznych nożyc. Świet
 
 
 tag.nightmare.sandwich_meats=Mięsa Kanapkowe
+tag.nightmare.eclipse_drops=Przedmioty Zaćmienia
 
+# BTW info overrides
+btw.anvil.info=Kowadła można używać do naprawiania przedmiotów za pomocą ich materiałów i poziomów doświadczenia. Pamiętaj, że kowadeł nie da się podnieść z powrotem, a zamiast tego wypada z nich Złom Metalowy, który jest bezużyteczny poza przetopieniem w Tyglu w celu odzyskania żelaza.
+btw.fishing_rod.info=Łowienie wymaga przynęty, odpowiedniej ilości miejsca i właściwej pory dnia. Kliknij prawym przyciskiem, trzymając wędzisko i dowolny przedmiot pełniący rolę przynęty (np. Zgniłe Mięso, Ostrygi Creepera, Oczy Pająka lub Skrzydła Nietoperza) na pasku szybkiego dostępu, aby ją założyć. Odpowiednie miejsce do łowienia musi mieć widok na niebo i mieć co najmniej 3 bloki głębokości. Jeśli miejsce jest prawidłowe, wokół spławika pojawią się bąbelki. Najbardziej efektywne są pełnie księżyca oraz świt i zmierzch podczas deszczu. Próba zacięcia wrogiego moba spowoduje upuszczenie wędki.
+btw.netherrack.info=Netherack jest zbyt twardy i nie da się go rozbić Diamentową Kilofem, więc do wydobycia potrzebne są narzędzia z Krwi lub Stali. Można go wysadzić Beczkami Prochu, aby szybko zdobyć duże ilości Zmielonego Netheracku. Bloki Netheracku można też zmielić na 8 Zmielonego Netheracku za pomocą mielenia. Netherack można podpalić na czas nieokreślony, ale wymaga to ogniska albo ognistego ładunku.
+btw.oven.info=Piece można używać do gotowania jedzenia znacznie wydajniej niż ogniska oraz do wytapiania rud. Mogą przechowywać jeden przedmiot w górnej części, a dolna część przechowuje paliwo. Kliknij prawym przyciskiem z paliwem, aby je włożyć, a interfejs zaktualizuje się, pokazując aktualną ilość paliwa. Do rozpalenia Pieca można użyć rozpałki, takiej jak Ognisty Pług, albo zapalonej pochodni. Aktywne piece spalą przygotowane jedzenie, jeśli nie zostanie ono wyjęte.
+btw.screw_pump.info=Pompy śrubowe mogą podnosić poziom wody o jeden blok. Gdy są zasilane redstonem lub napędzane mechanicznie, pompy śrubowe przenoszą wodę wpływającą do przedniej strony o jeden blok wyżej, wyrzucając ją górą.
+btw.hopper.info=Lejki zbierają przedmioty przechodzące nad nimi, a gdy są napędzane mechanicznie, wyrzucają przedmioty dołem. Lejki nie mogą jednak pobierać przedmiotów z ekwipunków, tylko ze świata. Zbierane przedmioty można filtrować, umieszczając rzeczy w slocie filtra. Prawidłowe filtry to: Drabiny, Żelazne Kraty, Klapy, Kraty, Listwy, Wiklinowe Panele i Piasek Dusz. Niektóre filtry można wykorzystać do rozdzielania lub przekształcania przechodzących przez nie przedmiotów. Więcej informacji znajduje się w opisie każdego filtra. Lejki mogą przechowywać 1000 PD.
+btw.arcane_scroll.info=Zwoje Tajemnej Magii można używać z Piekielnym Zaklinaczem, aby nakładać na przedmioty konkretne zaklęcia. Większość Zwojów Tajemnej Magii jest sprzedawana przez Wieśniaków albo wypada z bossów.
+btw.enchanter.info=Stół Zaklęć ma ograniczenia dotyczące zaklęć, które może nakładać, i może nakładać tylko zaklęcia do poziomu 15. Maksymalny poziom wzrasta wraz z postępem: 20 (Hardmode), 30 (po pokonaniu Withera). Aby osiągnąć pełną moc, w pobliżu musi znajdować się 30 regałów z książkami. Stół Zaklęć można znaleźć wyłącznie w Świątyniach Pustynnych.
+
+btw.beacon.info=Latarniom można nadać różne efekty w zależności od materiału, z którego zbudowana jest piramida. Latarnie mogą działać w Netherze, jeśli mają widok na sufit z bedrocku. Dozwolone bloki dla latarni to: Skoncentrowany Piekielny Ogień, Diament, Obornik, Szmaragd, Blok Endera, Szkło, Świetlisty Kamień, Złoto, Żelazo, Lapis Lazuli, Oko Pająka i Stal z Duszy. Informacje o każdym efekcie znajdują się na stronie informacyjnej danego bloku. Latarnie poziomu 4 mają globalny zasięg, co oznacza, że ich efekty otrzymuje każdy gracz w wymiarze.
+btw.ender_chest.info=Skrzynie Endera pozwalają graczom posiadać prywatny ekwipunek działający we wszystkich wymiarach.
+btw.steel_block.info=Gdy bloki Stali z Duszy są użyte jako materiał dla Latarni, działają jak kotwica, pozwalając graczowi ustawić punkt odrodzenia i odradzać się przy latarni, jeśli umrze wystarczająco blisko niej. Zasięg jest ograniczony dla dwóch pierwszych poziomów, natomiast poziom 3 jest nieograniczony w obrębie tego samego wymiaru, a poziom 4 jest nieograniczony między wymiarami.
+btw.portal.info=Portale Netheru muszą być zapalane za pomocą Ogniska lub Ognistego Ładunku. Po aktywacji Portalu Netheru świat rozpocznie 3-dniowe odliczanie do rozpoczęcia Hardmode. Hardmode zwiększa statystyki wszystkich mobów i wprowadza nowe zagrożenia oraz warianty. Portale będą aktywnie szerzyć dusze w promieniu 16 bloków, negatywnie wpływając na pobliskie pasywne moby, a także kałamarnice. Zdecydowanie zaleca się wiedzieć, co się robi, zanim aktywuje się portal.
+
+# NM custom info items
+nm.rpg.info=Wyrzutnię Rakiet zdobywa się poprzez handel z Kupcem Koszmaru po ukończeniu Trybu Koszmaru. Wystrzeliwuje żywe Beczki Prochu, gotowe do wybuchu. Niewłaściwe użycie może skończyć się brakiem części ciała.
+nm.rifle.info=Karabin Szturmowy zdobywa się poprzez handel z Kupcem Koszmaru po ukończeniu Trybu Koszmaru. Wystrzeliwuje pociski o dużej prędkości. Może być nielegalny we wsiach.
+nm.bandage.info=Bandage leczą 2 serca po pełnym zastosowaniu. Mają 10-sekundowy czas odnowienia przed użyciem kolejnego.
+nm.alchemydust.info=Proch Alchemiczny służy do lokalizowania Chat Czarownic. Po rzuceniu pokaże cząsteczki wskazujące wszystkie najbliższe Chaty Czarownic. Jeśli nie ma cząsteczek, oznacza to, że w okolicy nie wykryto Chaty Czarownic.
+nm.ironneedles.info=Żelazne Igły Dziewiarskie pozwalają natychmiast wytwarzać przedmioty związane z dzierganiem, tkaniem i wyciąganiem. Przykłady: Wiklina, Wełna, Splątana Sieć.
+nm.bloodorb.info=Kule Krwi wypadają z wrogich mobów zabitych przez gracza podczas Krwawego Księżyca. Służą do wytwarzania różnych przedmiotów, przede wszystkim Sztabek Krwi, które można wykorzystać do tworzenia narzędzi i zbroi. Kuli Krwi nie da się zniszczyć ogniem. Każdy wrogi mob upuszcza różną liczbę Kul Krwi, zależnie od tego, jak groźny jest.
+nm.bloodpickaxe.info=Narzędzia Krwi mają zwiększoną trwałość i szybkość kopania. Wytwarza się je ze Sztabek Krwi i Kijów Blaze. Są przetwarzane na Rafinowane Diamentowe Sztabki, co oznacza utratę Kul Krwi. Mają bardzo wysoką podatność na zaklęcia, dając niewielki zwrot Doświadczenia przy zaklinaniu. Kilof Krwi może rozbijać Netherack z niewielką prędkością.
+nm.bloodtool.info=Narzędzia Krwi mają zwiększoną trwałość i szybkość kopania. Wytwarza się je ze Sztabek Krwi i Kijów Blaze. Są przetwarzane na Rafinowane Diamentowe Sztabki, co oznacza utratę Kul Krwi. Mają bardzo wysoką podatność na zaklęcia, dając niewielki zwrot Doświadczenia przy zaklinaniu.
+nm.bloodsword.info=Narzędzia Krwi mają zwiększoną trwałość i szybkość kopania. Wytwarza się je ze Sztabek Krwi i Kijów Blaze. Są przetwarzane na Rafinowane Diamentowe Sztabki, co oznacza utratę Kul Krwi. Mają bardzo wysoką podatność na zaklęcia, dając niewielki zwrot Doświadczenia przy zaklinaniu. Miecz Krwi daje szansę na wysysanie życia przy każdym trafieniu. Szansa ta rośnie wraz z ilością Zbroi Krwi noszonej przez gracza. Miecz Krwi dodatkowo naprawia całą zbroję, którą ma na sobie gracz, oraz wszystkie narzędzia krwi w ekwipunku gracza (w tym sam miecz).
+nm.bloodarmor.info=Noszenie pełnego kompletu Zbroi Krwi wraz z Mieczem Krwi daje graczowi różne bonusy: większą szansę na wysysanie życia, większą prędkość kopania Netheracku, szansę na siłę lub regenerację po zabiciu moba. Zbroja Krwi ma poziom ochrony pomiędzy żelazem a diamentem. Przetwarza się ją na Rafinowane Diamentowe Sztabki, co oznacza utratę Kul Krwi. Noszenie pełnego zestawu Zbroi Krwi ma poważną wadę: mikstury kończą się dwa razy szybciej. Zbroja Krwi ma bardzo wysoką podatność na zaklęcia.
+nm.bloodingot.info=Sztabki Krwi są wytwarzane z Rafinowanych Diamentowych Sztabek i Kul Krwi. Są głównym składnikiem Zbroi Krwi i Narzędzi Krwi.
+nm.eclipseshard.info=Odłamki Zaćmienia służą do handlu i wytwarzania ekwipunku zaćmienia.
+nm.bloodMilk.info=Wypadają z krów podczas Zaćmienia Słońca.
+nm.creeperChop.info=Wypadają z świń creeperów podczas Zaćmienia Słońca.
+nm.voidSack.info=Wypadają z kałamarnic podczas Zaćmienia Słońca.
+nm.charredFlesh.info=Wypadają z Zombich Cienia podczas Zaćmienia Słońca.
+nm.spiderFangs.info=Wypadają z pająków podczas Zaćmienia Słońca.
+nm.fireRod.info=Wypadają z Piekielnych Blaze’ów podczas Zaćmienia Słońca.
+nm.waterRod.info=Wypadają z Wodnych Blaze’ów podczas Zaćmienia Słońca.
+nm.sulfur.info=Wypadają z creeperów podczas Zaćmienia Słońca.
+nm.creeperTear.info=Wypadają z Ghastów Creeperów podczas Zaćmienia Słońca.
+nm.silverLump.info=Wypadają ze srebrników podczas Zaćmienia Słońca.
+nm.witheredBone.info=Wypadają z Szkieletów Withera podczas Zaćmienia Słońca.
+nm.voidMembrane.info=Wypadają z wiedźm podczas Zaćmienia Słońca.
+nm.decayedFlesh.info=Wypadają z zombie i świńskich zombie podczas Zaćmienia Słońca.
+nm.ghastTentacle.info=Wypadają z ghastów podczas Zaćmienia Słońca.
+nm.shadowRod.info=Wypadają z Blaze’ów Cienia podczas Zaćmienia Słońca.
+nm.speedCoil.info=Wypadają z koni podczas Zaćmienia Słońca.
+nm.bloodstar.info=Wypada z Boga Krwi. Ostateczny triumf. Nie da się spalić.
+nm.calamari.info=Wypada z kałamarnic. Można go gotować (piec / ognisko) albo smażyć w kociołku. W miarę postępu świata kałamarnice mają mniejszą szansę na upuszczenie Kalamara.
+nm.eclipsebow.info=Łuk Zaćmienia potrafi wystrzeliwać Magiczne Strzały w salwie po trzy. Magiczne Strzały przebijają nieograniczoną liczbę przeciwników i zadają przeciętne obrażenia. Może też strzelać strzałami broadhead. Ma znacznie szybszą szybkostrzelność niż łuk kompozytowy lub zwykły łuk.
+nm.magicarrow.info=Magiczne Strzały można używać wyłącznie z Łukiem Zaćmienia. Przebijają nieograniczoną liczbę przeciwników i zadają przeciętne obrażenia. Używane z Łukiem Zaćmienia mogą być wystrzeliwane w salwach po trzy.
+nm.ironfishingrod.info=Żelazna Wędka to ulepszenie zwykłej wędki. Nie wymaga przynęty i może wyławiać wiele różnych innych przedmiotów.
+nm.ancientsand.info=Starożytny Piasek służy do lokalizowania pobliskich Świątyń Pustynnych. Po rzuceniu pokaże cząsteczki wskazujące wszystkie najbliższe Świątynie Pustynne. Jeśli nie ma cząsteczek, oznacza to, że w okolicy nie wykryto Świątyni Pustynnej.
+nm.refineddiamond.info=Rafinowane Diamentowe Sztabki powstają przez rafinowanie Diamentowych Sztabek z Kwarcem Netheru w Tyglu. Są wystarczająco wytrzymałe, by tworzyć z nich cenną zbroję i stapiać je z Kulami Krwi.
+nm.withersoul.info=Dusza Withera wypada z Withera za każdym razem, gdy zostanie zabity.
+nm.obsidianshard.info=Odłamki Obsydianu zdobywa się przez wydobywanie Obsydianu Diamentowym lub Krwawym Kilofem. Stalowe Kilofy mogą wydobywać cały blok. Odłamki Obsydianu można przerobić na Surowy Obsydian, z którego można zbudować Portal Netheru.
+
+# NM BLOCK info
+nm.steelOre.info=Ruda Stali pojawia się w Warstwach 2 i 3, powyżej poziomu diamentu. Można ją wydobyć dopiero po pokonaniu Withera albo używając Stalowego Kilofa.
+nm.bloodChest.info=Krwawa Skrzynia to niepalny magazyn z dwukrotnie większą ilością miejsca niż zwykła skrzynia i zwiększoną odpornością na wybuchy. Ma 54 sloty.
+nm.steelLocker.info=Stalowa Szafka to wytrzymały magazyn z 133 slotami. Jest odporna na większość eksplozji i nie może spłonąć.
+nm.blockRoad.info=Droga zwiększa prędkość poruszania się mobów i gracza podczas chodzenia po niej.
+nm.blockAsphalt.info=Asfalt znacznie zwiększa prędkość poruszania się mobów i gracza podczas chodzenia po nim.
+nm.upgradedLadder.info=Ulepszone drabiny zwiększają szybkość wspinania się gracza i bytów.
+nm.hellforge.info=Piekielny Piec to w pełni automatyzowalny Piec Ceglany. Domyślnie nigdy nie kończy mu się paliwo, ale można go znacznie przyspieszyć paliwem. Akceptuje Netherack jako najwydajniejsze paliwo. Automatycznie pobiera Netherack ze skrzyni pod nim. Automatycznie pobiera przedmioty nadające się do gotowania ze skrzyni nad nim i wypluwa je do skrzyń po lewej/prawej stronie. Bez potrzeby lejków.
+nm.bloodSaw.info=Piła Krwi nie wymaga napędu mechanicznego do działania. Zadaje większe obrażenia i znacznie szybciej obrabia bloki.
+nm.disenchantmentTable.info=Stół Odczarowywania pozwala łatwo usuwać zaklęcia w formie Zwojów Zaklęć.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info=Obsydian może wypadać z Creeperów Obsydianowych w Warstwie 3 albo być wytwarzany ze Stali po pokonaniu Withera. Ma znacznie mniejszą odporność na wybuchy. Wydobywanie Obsydianu bez Stalowego Kilofa daje Odłamki Obsydianu i ma szansę na pojawienie się Ryby Obsydianowej.
+nm.crudeObsidian.info=Surowy Obsydian wytwarza się z Odłamków Obsydianu. Ma znacznie mniejszą odporność na wybuchy. Można go użyć do zbudowania Portalu Netheru, co rozpocznie 3-dniowe odliczanie do Hardmode.
+nm.horseArmor.info=Kliknięcie prawym przyciskiem z Zbroją dla Koni otwiera magazyn, do którego można wkładać Pszenicę i Słomę. Zbroja dla Koni działa jak „bateria”, karmiąc konia podczas jazdy. Po włożeniu jedzenia nie da się go już wyjąć. Zbroja dla Koni ma większą pojemność i wagę zależnie od materiału, z którego została wykonana.
+nm.goldenApple.info=Złote Jabłka nakładają Regenerację I na 4 sekundy i Absorpcję IV na 12 minut, dając w praktyce dodatkowy pasek zdrowia. Mają 30-sekundowy czas odnowienia.
+nm.goldenAppleEnchanted.info=Zaklęte Złote Jabłka nakładają Regenerację IV + Odporność na Ogień + Siłę II + Szybkość II + Pośpiech II na 30 sekund, Odporność I na 40 sekund, Noktowizję i Absorpcję II na 2 minuty. Mają 90-sekundowy czas odnowienia.
+nm.brownMushroom.info=Brązowe Grzyby naturalnie rosną w Netherze. Drzewka Brązowych Grzybów na Wyspach Grzybowych można ścinać dopiero po uzyskaniu dostępu do Netheru.
+nm.pumpkin.info=Noszenie Dyni powoduje, że Endermany i Ghasty automatycznie ścigają gracza niezależnie od pory dnia oraz przez ściany.
 
 
 

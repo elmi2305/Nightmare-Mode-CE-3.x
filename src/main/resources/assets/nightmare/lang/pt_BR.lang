@@ -110,6 +110,9 @@ entity.NmObsidianFish.name=Peixe Obsidiana
 entity.NmCreeperGhast.name=Rastejante Fantasmagórico
 entity.entityBloodAltar.name=Progresso
 entity.NmMushWorm.name=Verme Fúngico
+entity.NmEntityVoidCreeper.name=Creeper do Vazio
+entity.NmEntityGelCreeper.name=Creeper Pegajoso
+entity.NmEntityGlitchCreeper.name=Creeper de Glitch
 
 key.nightmaremode.zoomhold=Segure para ampliar
 key.nightmaremode.zoomtoggle=Alternar zoom
@@ -166,6 +169,18 @@ gui.bloodmoon.in=Lua de Sangue em
 gui.bloodmoon.days=Dias
 gui.bloodmoon.tonight=Essa noite
 gui.bloodmoon.tomorrow=Amanhã
+
+nm.events.nmSlimeRain=O ar parece denso de Gosma...
+nm.events.nmSlimeRain.info=Gosmas irão aparecer naturalmente
+
+nm.events.nmGreatHarvest=O solo parece mais fértil...
+nm.events.nmGreatHarvest.info=As plantações crescerão mais rápido hoje
+
+nm.events.nmSpiderRain=As Aranhas despertam...
+nm.events.nmSpiderRain.info=Mais Aranhas irão aparecer esta noite
+
+nm.events.nmHell=O ar parece mais quente...
+nm.events.nmHell.info=O inferno vai se soltar esta noite
 
 difficulty.baddream.name=Sonho ruim
 difficulty.nightmare.name=Pesadelo
@@ -261,6 +276,10 @@ gui.config.blood_moon_helper=Ajudante da Lua de Sangue
 gui.config.tooltip.blood_moon_helper=Mostra quando será a próxima Lua de Sangue
 gui.config.real_time=Tempo real
 gui.config.tooltip.real_time=Dia e Noite duram 12 horas na vida real. Hardmode é ativado no Dia 3. Endgame é ativado no Dia 5. NOTA: Se esta configuração estiver ativa, nenhuma outra configuração poderá ser concluída
+gui.config.render_fancy_clouds=Nuvens Avançadas
+gui.config.tooltip.render_fancy_clouds=Ativa uma renderização experimental de nuvens com visual impressionante, porém computacionalmente exigente, para o mundo superior! Use apenas se você tiver uma placa de vídeo potente
+gui.config.render_vignette=Vinheta Personalizada
+gui.config.tooltip.render_vignette=Ativa a vinheta personalizada do Nightmare Mode. O efeito fica especialmente intenso em situações estressantes, como explorar cavernas, Luas de Sangue, sofrer dano e lutas contra chefes. Recomendamos manter esta opção ativada
 
 
 
@@ -274,6 +293,7 @@ gui.config.clear.bloodmoon=Condição clara: Derrote uma Lua de Sangue
 gui.config.clear.eclipse=Condição clara: Derrota a un eclipse
 gui.config.clear.week=Condição clara: Sobrevive 7 días
 gui.config.clear.gloom=Condição clara: sobreviva à primeira noite sombria
+gui.config.clear.item=Condição de limpeza: Obter item
 
 gui.warning.line1=irmão
 gui.warning.line2=você está prestes a ingressar em um mundo com o modo câncer ativado
@@ -723,7 +743,80 @@ achievement.btw.craft_iron_shears.desc=Obtenha uma tesoura de ferro. Estes são 
 
 
 tag.nightmare.sandwich_meats=Sanduíche de Carnes
+tag.nightmare.eclipse_drops=Itens do Eclipse
 
+# BTW info overrides
+btw.anvil.info=A Bigorna pode ser usada para consertar itens usando seus materiais e níveis de experiência. Observe que as Bigornas não podem ser recolhidas novamente e, em vez disso, derrubarão Sucata de Metal, que é inútil exceto para ser derretida em um Cadinho para recuperar o ferro.
+btw.fishing_rod.info=Pescar exige isca, espaço suficiente e o horário correto do dia. Clique com o botão direito segurando a vara de pesca com qualquer item de isca (como Carne Podre, Ostras de Creeper, Olhos de Aranha ou Asas de Morcego) na barra de atalhos para aplicá-la. Um local adequado para pesca deve conseguir ver o céu e ter pelo menos 3 blocos de profundidade. Bolhas aparecerão ao redor do anzol se o local for válido. Luas cheias, ou amanhecer e anoitecer enquanto chove, são os momentos mais eficientes para pescar. Tentar fisgar mobs hostis fará você derrubar sua vara de pesca.
+btw.netherrack.info=Netherrack é resistente demais e não pode ser quebrada com uma Picareta de Diamante, exigindo ferramentas de Sangue ou Aço para ser minerada. Ela pode ser explodida com Barris de Pólvora para obter grandes quantidades de Netherrack Triturado rapidamente. Blocos de Netherrack também podem ser moídos em 8 Netherrack Triturado usando uma mó. Netherrack pode ser incendiada indefinidamente, mas isso requer uma fogueira ou uma carga de fogo.
+btw.oven.info=Fornos podem ser usados para cozinhar comida de forma muito mais eficiente do que fogueiras, e para fundir minérios. Eles podem armazenar um único item na seção superior, e a parte inferior armazena combustível. Clique com o botão direito com combustível para inseri-lo, e a interface será atualizada para mostrar a quantidade de combustível atualmente presente. Um acendedor, como um Arado de Fogo, ou uma Tocha acesa, pode ser usado para acender o Forno. Fornos ativos irão queimar comida cozida se a comida não for retirada.
+btw.screw_pump.info=Bombas de Rosca podem ser usadas para elevar o nível da água em um bloco. Quando alimentadas com redstone ou mecanicamente, Bombas de Rosca moverão a água que flui para a face frontal um bloco para cima, expelindo-a pela parte superior.
+btw.hopper.info=Funis coletam itens que passam sobre eles e, quando alimentados mecanicamente, ejetam itens pela parte inferior. Funis não podem, entretanto, puxar itens de inventários, apenas do mundo. Itens coletados podem ser filtrados colocando-se coisas no slot de filtro. Filtros válidos são: Escadas, Barras de Ferro, Alçapões, Grades, Ripas, Painéis de Palha, e Areia das Almas. Alguns filtros podem ser usados para separar ou converter itens que passam por eles. Mais informações podem ser encontradas na entrada de cada filtro. Funis podem armazenar 1000 XP.
+btw.arcane_scroll.info=Pergaminhos Arcanos podem ser usados com o Encantador Infernal para aplicar encantamentos específicos aos itens. A maioria dos Pergaminhos Arcanos é vendida por Vilões ou dropada por bosses.
+btw.enchanter.info=A Mesa de Encantamentos é limitada nos encantamentos que pode aplicar, e só pode aplicar encantamentos até o nível 15. O nível máximo aumenta conforme você progride: 20 (Hardmode), 30 (após derrotar o Wither). Para atingir o poder máximo, deve haver 30 estantes por perto. A Mesa de Encantamentos só pode ser encontrada em Templos do Deserto.
 
+btw.beacon.info=Faróis fornecem um efeito diferente dependendo do material do qual a pirâmide é construída. Faróis podem funcionar no nether se conseguirem ver o teto de bedrock. Os blocos válidos para faróis são Fogo Infernal Concentrado, Diamante, Esterco, Esmeralda, Bloco de Ender, Vidro, Pedra Brilhante, Ouro, Ferro, Lápis-Lazúli, Olho de Aranha e Aço Forjado com Alma. Informações sobre cada efeito individual podem ser encontradas na página de informações de cada bloco. Faróis de nível 4 têm alcance global, o que significa que seus efeitos são concedidos a todos os jogadores no dimensão.
+btw.ender_chest.info=Baús de Ender permitem que os jogadores tenham um inventário privado que funciona em todas as dimensões.
+btw.steel_block.info=Quando usados como material para um Farol, Blocos de Aço Forjado com Alma atuam como uma âncora, permitindo que o jogador defina seu ponto de respawn e reapareça no farol se morrer perto o suficiente dele. O alcance é limitado para os dois primeiros níveis, enquanto o nível 3 é ilimitado dentro da mesma dimensão, e o nível 4 é ilimitado entre dimensões.
+btw.portal.info=Portais do Nether devem ser acesos usando uma Fogueira ou uma Carga de Fogo. Ao ativar o Portal do Nether, o mundo entrará em uma contagem regressiva de 3 dias até o início do Hardmode. O Hardmode aumenta os atributos de todos os mobs, introduz novas ameaças e variantes. Os portais espalharão almas ativamente em um raio de 16 blocos, afetando negativamente mobs passivos próximos, bem como lulas. É altamente recomendado que você saiba o que está fazendo antes de ativar o portal.
+
+# NM custom info items
+nm.rpg.info=O Lançador de Foguetes é obtido negociando com o Mercador do Pesadelo após terminar o Modo Pesadelo. Ele dispara Barris de Pólvora vivos, prontos para explodir. O uso indevido pode resultar em falta de partes do corpo.
+nm.rifle.info=O Rifle de Assalto é obtido negociando com o Mercador do Pesadelo após terminar o Modo Pesadelo. Ele dispara balas de alta velocidade. Pode ser ilegal em Vilas.
+nm.bandage.info=Bandagens curam 2 corações quando totalmente aplicadas. Elas têm um tempo de recarga de 10 segundos antes que outra possa ser usada.
+nm.alchemydust.info=O Pó de Alquimia é usado para localizar Cabanas de Bruxa. Depois de jogá-lo, ele mostrará partículas que apontam para todas as Cabanas de Bruxa mais próximas. Se não houver partículas, isso significa que nenhuma Cabana de Bruxa foi detectada na sua área.
+nm.ironneedles.info=Agulhas de Tricô de Ferro permitem craft instantâneo de itens de tricô, tecelagem e extração. Exemplos incluem: Vime, Lã, Teia Emaranhada.
+nm.bloodorb.info=Orbes de Sangue são dropados por mobs hostis mortos pelo jogador durante uma Lua de Sangue. Eles são usados para craftar vários itens, principalmente Lingotes de Sangue, que podem ser usados para fazer ferramentas e armaduras. Orbes de Sangue não podem ser destruídos pelo fogo. Cada mob hostil dropa uma quantidade variável de Orbes de Sangue, dependendo de quão ameaçador o mob é.
+nm.bloodpickaxe.info=Ferramentas de Sangue têm maior durabilidade e velocidade de escavação. Elas são craftadas com Lingotes de Sangue e Bastões de Blaze. Elas são recicladas em Lingotes de Diamante Refinado, o que significa que os Orbes de Sangue são perdidos. Elas têm encantabilidade muito alta, dando um pequeno reembolso de Experiência ao encantar. A Picareta de Sangue pode quebrar Netherrack lentamente.
+nm.bloodtool.info=Ferramentas de Sangue têm maior durabilidade e velocidade de escavação. Elas são craftadas com Lingotes de Sangue e Bastões de Blaze. Elas são recicladas em Lingotes de Diamante Refinado, o que significa que os Orbes de Sangue são perdidos. Elas têm encantabilidade muito alta, dando um pequeno reembolso de Experiência ao encantar.
+nm.bloodsword.info=Ferramentas de Sangue têm maior durabilidade e velocidade de escavação. Elas são craftadas com Lingotes de Sangue e Bastões de Blaze. Elas são recicladas em Lingotes de Diamante Refinado, o que significa que os Orbes de Sangue são perdidos. Elas têm encantabilidade muito alta, dando um pequeno reembolso de Experiência ao encantar. A Espada de Sangue concede uma chance de roubo de vida a cada golpe. Essa chance aumenta quanto mais Armadura de Sangue o jogador estiver usando. A Espada de Sangue também repara toda a armadura que o jogador estiver vestindo, e todas as ferramentas de sangue no inventário do jogador (incluindo a própria espada).
+nm.bloodarmor.info=Usar o conjunto completo de Armadura de Sangue combinado com a Espada de Sangue dá ao jogador vários bônus: maior chance de roubo de vida, maior velocidade de mineração de netherrack, chance de obter força ou regeneração após matar um mob. A Armadura de Sangue tem um nível de proteção entre Ferro e Diamante. Ela é reciclada em Lingotes de Diamante Refinado, o que significa que os Orbes de Sangue são perdidos. Usar o conjunto completo de Armadura de Sangue traz a grande desvantagem de poções acabarem duas vezes mais rápido. A Armadura de Sangue tem encantabilidade muito alta.
+nm.bloodingot.info=Lingotes de Sangue são feitos de Lingotes de Diamante Refinado e Orbes de Sangue. Eles são o principal ingrediente da Armadura de Sangue e das Ferramentas de Sangue.
+nm.eclipseshard.info=Fragmentos do Eclipse são usados para comércio e craft de equipamentos do eclipse.
+nm.bloodMilk.info=Dropado por Vacas durante o Eclipse Solar.
+nm.creeperChop.info=Dropado por Porcos Creeper durante o Eclipse Solar.
+nm.voidSack.info=Dropado por Lulas durante o Eclipse Solar.
+nm.charredFlesh.info=Dropado por Zumbis Sombrios durante o Eclipse Solar.
+nm.spiderFangs.info=Dropado por Aranhas durante o Eclipse Solar.
+nm.fireRod.info=Dropado por Blazes do Fogo Infernal durante o Eclipse Solar.
+nm.waterRod.info=Dropado por Blazes Aquáticos durante o Eclipse Solar.
+nm.sulfur.info=Dropado por Creepers durante o Eclipse Solar.
+nm.creeperTear.info=Dropado por Ghasts Creeper durante o Eclipse Solar.
+nm.silverLump.info=Dropado por Peixes-Prata durante o Eclipse Solar.
+nm.witheredBone.info=Dropado por Esqueletos Wither durante o Eclipse Solar.
+nm.voidMembrane.info=Dropado por Bruxas durante o Eclipse Solar.
+nm.decayedFlesh.info=Dropado por Zumbis e Zumbis-Porco durante o Eclipse Solar.
+nm.ghastTentacle.info=Dropado por Ghasts durante o Eclipse Solar.
+nm.shadowRod.info=Dropado por Blazes Sombrios durante o Eclipse Solar.
+nm.speedCoil.info=Dropado por Cavalos durante o Eclipse Solar.
+nm.bloodstar.info=Dropado pelo Deus do Sangue. O triunfo final. Não pode ser queimado.
+nm.calamari.info=Dropado por Lulas. Pode ser cozido (forno / fogueira) ou frito em um caldeirão. Conforme o mundo progride, as Lulas têm uma chance menor de dropar Calamari.
+nm.eclipsebow.info=O Arco do Eclipse é capaz de disparar Flechas Mágicas em uma salva de três. Flechas Mágicas atravessam inimigos ilimitados e causam dano mediano. Ele também pode disparar flechas broadhead. Tem uma taxa de disparo significativamente mais rápida que o Arco Composto ou o arco normal.
+nm.magicarrow.info=Flechas Mágicas só podem ser usadas com o Arco do Eclipse. Elas atravessam inimigos ilimitados e causam dano mediano. Quando usadas com o Arco do Eclipse, podem ser disparadas em salvas de três.
+nm.ironfishingrod.info=A Vara de Pesca de Ferro é uma melhoria da vara de pesca comum. Ela não requer isca e pode pescar uma grande variedade de outros itens.
+nm.ancientsand.info=A Areia Antiga pode ser usada para localizar Templos do Deserto próximos. Depois de jogá-la, ela mostrará partículas que apontam para todos os Templos do Deserto mais próximos. Se não houver partículas, isso significa que nenhum Templo do Deserto foi detectado na sua área.
+nm.refineddiamond.info=Lingotes de Diamante Refinado são feitos refinando Lingotes de Diamante com Quartzo do Nether em um Cadinho. Eles são resistentes o suficiente para serem transformados em armaduras valiosas e combinados com Orbes de Sangue.
+nm.withersoul.info=Uma Alma de Wither cai do Wither toda vez que ele é morto.
+nm.obsidianshard.info=Fragmentos de Obsidiana são obtidos minerando Obsidiana com uma Picareta de Diamante ou de Sangue. Picaretas de Aço podem ser usadas para minerar o bloco inteiro. Fragmentos de Obsidiana podem ser transformados em Obsidiana Bruta, que pode ser usada para construir um Portal do Nether.
+
+# NM BLOCK info
+nm.steelOre.info=Minério de Aço aparece nas Camadas 2 e 3, acima do nível do Diamante. Só pode ser minerado após derrotar o Wither ou usando uma Picareta de Aço.
+nm.bloodChest.info=O Baú de Sangue é uma unidade de armazenamento não inflamável com o dobro do espaço de um baú comum e resistência a explosões aumentada. Ele tem 54 slots de espaço.
+nm.steelLocker.info=O Armário de Aço é uma unidade de armazenamento resistente com 133 slots de espaço. É resistente à maioria das explosões e não pode queimar.
+nm.blockRoad.info=Estrada aumenta a velocidade de movimento de mobs e jogadores ao andar sobre ela.
+nm.blockAsphalt.info=Asfalto aumenta bastante a velocidade de movimento de mobs e jogadores ao andar sobre ele.
+nm.upgradedLadder.info=Escadas aprimoradas aumentam a velocidade de escalada de jogadores e entidades.
+nm.hellforge.info=A Forja Infernal é um Forno de Tijolos totalmente automatizável. Ela nunca fica sem combustível por padrão, mas pode ser significativamente acelerada com combustível. Aceita Netherrack como o combustível mais eficiente. Ela extrai automaticamente netherrack do baú abaixo dela. Ela extrai automaticamente itens que podem ser cozidos do baú acima dela e os envia para os baús à esquerda / direita. Não são necessários funis.
+nm.bloodSaw.info=A Serra de Sangue não requer energia mecânica para funcionar. Ela causa mais dano e processa blocos muito mais rápido.
+nm.disenchantmentTable.info=A Mesa de Desencantamento permite remover encantamentos facilmente na forma de Pergaminhos de Encantamento.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info=Obsidiana pode ser dropada por Creepers de Obsidiana nas Camadas 3, ou craftada com Aço após o Wither ter sido derrotado. Ela tem resistência a explosões significativamente menor. Minerar Obsidiana sem uma Picareta de Aço dropa Fragmentos de Obsidiana e tem chance de gerar um Peixe de Obsidiana.
+nm.crudeObsidian.info=Obsidiana Bruta é craftada com Fragmentos de Obsidiana. Ela tem resistência a explosões significativamente menor. Pode ser usada para construir um Portal do Nether, que iniciará a contagem regressiva de 3 dias para o Hardmode.
+nm.horseArmor.info=Clicar com o botão direito com Armadura de Cavalo abre um armazenamento onde você pode depositar Trigo e Palha. A armadura de cavalo funciona como uma "bateria", mantendo o cavalo alimentado enquanto você o monta. A comida não pode ser retirada da armadura de cavalo depois de ser depositada. A armadura de cavalo tem maior capacidade e peso dependendo do material com que é feita.
+nm.goldenApple.info=Maçãs Douradas aplicam Regeneração I por 4 segundos e Absorção IV por 12 minutos, efetivamente dando uma barra extra de vida. Elas têm um tempo de recarga de 30 segundos.
+nm.goldenAppleEnchanted.info=Maçãs Douradas Encantadas aplicam Regeneração IV + Resistência ao Fogo + Força II + Velocidade II + Pressa II por 30 segundos, Resistência I por 40 segundos, Visão Noturna e Absorção II por 2 minutos. Elas têm um tempo de recarga de 90 segundos.
+nm.brownMushroom.info=Cogumelos Marrons crescem naturalmente no Nether. Árvores de Cogumelo Marrom em Ilhas de Cogumelos só podem ser colhidas depois que o Nether tiver sido acessado.
+nm.pumpkin.info=Usar Abóboras faz com que Endermen e Ghasts persigam automaticamente o jogador independentemente da hora do dia e através de paredes.
 
 

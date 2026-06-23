@@ -168,6 +168,15 @@ gui.bloodmoon.days=Tagen
 gui.bloodmoon.tonight=Heute Nacht
 gui.bloodmoon.tomorrow=Morgen
 
+nm.events.nmGreatHarvest=Der Boden fühlt sich fruchtbarer an...
+nm.events.nmGreatHarvest.info=Pflanzen wachsen heute schneller
+
+nm.events.nmSpiderRain=Die Spinnen erwachen...
+nm.events.nmSpiderRain.info=Heute Nacht werden mehr Spinnen erscheinen
+
+nm.events.nmHell=Die Luft fühlt sich wärmer an...
+nm.events.nmHell.info=Heute Nacht wird die Hölle losbrechen
+
 difficulty.baddream.name=Schlechter Schlaf
 difficulty.nightmare.name=Alptraum
 difficulty.bloodmare.name=Bluttraum
@@ -262,6 +271,10 @@ gui.config.blood_moon_helper=Blutmond-Helfer
 gui.config.tooltip.blood_moon_helper=Zeigt dir wann der nächste Blutmond sein wird
 gui.config.real_time=Echtzeit
 gui.config.tooltip.real_time=Tag und Nacht dauern 12 Echte Stunden. Der Hardmode wird am 3. Tag aktiviert. Das Endgame wird am 5. Tag aktiviert. HINWEIS: Wenn diese Konfigoption aktiv ist, sind andere Konfigoptionen nicht gewinnbar
+gui.config.render_fancy_clouds=Schöne Wolken
+gui.config.tooltip.render_fancy_clouds=Aktiviert die rechenintensive, aber beeindruckend aussehende experimentelle Wolkendarstellung für die Oberwelt! Nur verwenden, wenn du eine leistungsstarke Grafikkarte hast
+gui.config.render_vignette=Benutzerdefinierte Vignette
+gui.config.tooltip.render_vignette=Aktiviert die benutzerdefinierte Nightmare-Mode-Vignette. Sie wird besonders stark in stressigen Situationen wie beim Höhlenerkunden, während Blutmonden, beim Erleiden von Schaden und in Bosskämpfen. Es wird empfohlen, diese Option aktiviert zu lassen
 
 
 
@@ -275,6 +288,7 @@ gui.config.clear.bloodmoon=Ziel: Überlebe einen Blutmond
 gui.config.clear.eclipse=Ziel: Besiege eine Sonnenfinsternis
 gui.config.clear.week=Ziel: Überlebe 7 Tage
 gui.config.clear.gloom=Ziel: Überlebe die erste Neumondnacht
+gui.config.clear.item=Abschlussbedingung: Gegenstand erhalten
 
 
 gui.warning.line1=bro
@@ -725,6 +739,82 @@ achievement.btw.craft_iron_shears.desc=Schmiede eine Eisenschere. Diese eignen s
 
 
 tag.nightmare.sandwich_meats=Sandwichfleisch
+tag.nightmare.eclipse_drops=Sonnenfinsternis Gegenstände
+
+
+# BTW info overrides
+btw.anvil.info=Der Amboss kann verwendet werden, um Gegenstände mithilfe ihrer Materialien und Erfahrungs Leveln zu reparieren. Beachte, dass Ambosse nicht wieder aufgehoben werden können. Stattdessen lassen sie Metallschrott fallen, der nur im Schmelztiegel eingeschmolzen werden kann, um das Eisen zurückzugewinnen.
+btw.fishing_rod.info=Zum Angeln bennötigt man Köder, ausreichend Platz und die richtige Tageszeit. Rechtsklicke mit der Angelrute und einem Ködergegenstand (z. B. Verrottetes Fleisch, Creeperaustern, Spinnenaugen oder Fledermausflügel) in der Hotbar mit der rechten Maustaste, um den Köder anzubringen. Ein geeigneter Angelplatz muss freien Blick zum Himmel haben und mindestens 3 Blöcke tief sein. Erscheinen Blasen um den Schwimmer, ist der Platz geeignet. Vollmonde oder Morgen- und Abenddämmerung bei Regen sind die effizientesten Angelzeiten. Der Versuch, feindliche Kreaturen einzuhaken, führt dazu, dass deine Angelrute aus der Hand fällt.
+btw.netherrack.info=Netherrack ist zu hart und kann nicht mit einer Diamantspitzhacke abgebaut werden. Zum abbauen werden Blut- oder Stahlwerkzeuge benötigt. Es kann mit Pulverfässern gesprengt werden, um schnell große Mengen gemahlenen Netherrack zu erhalten. Netherrack-Blöcke können alternativ mit einem Mühlstein zu 8 gemahlenem Netherrack verarbeitet werden. Netherrack kann unendlich lang brennen, benötigt zum Entzünden jedoch ein Lagerfeuer oder eine Feuerladung.
+btw.oven.info=Ziegelstein-backöfen können Nahrung deutlich effizienter als Lagerfeuer kochen und außerdem Erze schmelzen. Sie können einen Gegenstand im oberen Bereich aufnehmen, während sich unten der Brennstoff befindet. Rechstklicke mit Brennstoff, um ihn einzulegen, die Anzeige zeigt anschließend die aktuell verfügbare Brennstoffmenge an. Ein Feuerstarter wie ein Feuerpflug oder eine brennende Fackel kann verwendet werden, um den Ofen anzuzünden. Aktive Öfen verbrennen fertige Nahrung, wenn es nicht rechtzeitig raußgenommen wird.
+btw.screw_pump.info=Schraubenpumpen können den Wasserstand um einen Block anheben. Werden sie mit Redstone oder mechanischer Energie betrieben, bewegen sie Wasser, das in die Vorderseite fließt, einen Block nach oben und geben es oben wieder aus.
+btw.hopper.info=Trichter sammeln Gegenstände ein, die über ihnen vorbeigelangen, und werfen sie bei mechanischem Antrieb nach unten aus. Trichter können jedoch keine Gegenstände aus Inventaren ziehen, sondern nur aus der Welt aufnehmen. Aufgesammelte Gegenstände können durch Einsetzen eines Filters gefiltert werden. Gültige Filter sind: Leitern, Eisengitter, Falltüren, Gittern, Leisten, Weidengeflecht und Seelensand. Einige Filter können Gegenstände trennen oder umwandeln. Weitere Informationen finden sich bei den jeweiligen Filtereinträgen. Trichter können 1000 EP speichern.
+btw.arcane_scroll.info=Geheimnisvolle Schriftrollen können mit dem Höllischen Zeubertisch verwendet werden, um bestimmte Verzauberungen auf Gegenstände anzuwenden. Die meisten Geheimnisvollen Schriftrollen werden von Dorfbewohnern verkauft oder von Bossen fallen gelassen.
+btw.enchanter.info=Der Zaubertisch ist in den Verzauberungen, die er anwenden kann, eingeschränkt und kann nur Verzauberungen bis Level 15 vergeben. Die maximale Stufe steigt mit dem Spielfortschritt: 20 (Hardmode), 30 (nach dem Besiegen des Withers). Für maximale Stärke müssen sich 30 Bücherregale in der Nähe befinden. Der Verzauberungstisch kann nur in Wüstentempeln gefunden werden.
+
+btw.beacon.info=Leuchtfeuer gewähren unterschiedliche Effekte abhängig vom Material der Pyramide. Leuchtfeuer funktionieren auch im Nether, wenn sie die Bedrock-Decke sehen können. Gültige Blöcke sind: Konzentriertes Höllenfeuer, Diamant, Kot, Smaragd, Enderblock, Glas, Glowstone, Gold, Eisen, Lapislazuli, Spinnenauge und Seelenstahlbarren. Informationen zu jedem Effekt findest du auf der Infoseite des jeweiligen Blocks. Leuchtfeuer der Stufe 4 haben globale Reichweite und gewähren ihren Effekt allen Spielern in der Dimension.
+btw.ender_chest.info=Endertruhen ermöglichen Spielern ein privates Inventar, das interdimensional funktioniert.
+btw.steel_block.info=Werden Seelenstahlblöcke als Material für ein Leuchtfeuer verwendet, dienen sie als Ankerpunkt, an dem Spieler ihren Spawnpunkt setzen und in dessen Nähe wiedererscheinen können. Die Reichweite ist für die ersten beiden Stufen begrenzt, Stufe 3 gilt unbegrenzt innerhalb derselben Dimension und Stufe 4 interdimensional.
+btw.portal.info=Netherportale müssen mit einem Lagerfeuer oder einer Feuerladung entzündet werden. Nach der Aktivierung beginnt ein 3-Tage-Countdown bis zum Hardmode. Hardmode erhöht die Werte aller Kreaturen und führt neue Bedrohungen und Varianten ein. Portale verbreiten aktiv Seelen in einem Radius von 16 Blöcken und beeinflussen passive Kreaturen sowie Tintenfische negativ. Es wird dringend empfohlen zu wissen, was man tut, bevor man das Portal aktiviert.
+
+# NM custom info items
+nm.rpg.info=Der Raketenwerfer wird durch Handel mit dem Nightmare-Händler nach Abschluss des Nightmare-Modus erhalten. Er verschießt scharfe Pulverfässer, die sofort explosionsbereit sind. Unsachgemäße Verwendung kann zum Verlust von Körperteilen führen.
+nm.rifle.info=Das Sturmgewehr wird durch Handel mit dem Nightmare-Händler nach Abschluss des Nightmare-Modus erhalten. Es verschießt Hochgeschwindigkeitsgeschosse. Möglicherweise illegal in Dörfern.
+nm.bandage.info=Bandagen heilen bei vollständiger Anwendung 2 Herzen. Danach besteht eine Abklingzeit von 10 Sekunden.
+nm.alchemydust.info=Alchemiepulver wird verwendet, um Hexenhütten aufzuspüren. Nach dem Werfen erscheinen Partikel, die auf die nächstgelegenen Hexenhütten zeigen. Erscheinen keine Partikel, wurde keine Hexenhütte in der Nähe gefunden.
+nm.ironneedles.info=Eiserne Stricknadeln ermöglichen das sofortige Herstellen von Strick-, Flecht- und Extraktionsgegenständen. Beispiele: Weidengeflecht, Wolle, Verhedderte Spinnenwebe.
+nm.bloodorb.info=Blutkugeln werden von feindlichen Kreaturen fallen gelassen, die während eines Blutmonds vom Spieler getötet werden. Sie werden zur Herstellung verschiedener Gegenstände verwendet, insbesondere von Blutbarren, aus denen Werkzeuge und Rüstungen gefertigt werden können. Blutkugeln können nicht durch Feuer oder Explosionen zerstört werden. Jede feindliche Kreatur lässt eine unterschiedliche Menge an Blutkugeln fallen, abhängig davon, wie gefährlich bzw. bedrohlich die Kreatur ist.
+nm.bloodpickaxe.info=Blutwerkzeuge besitzen erhöhte Haltbarkeit und Abbaugeschwindigkeit. Sie werden aus Blutbarren und Lohenruten hergestellt. Beim Recyceln entstehen Veredelte Diamantbarren, wobei die Blutkugeln verloren gehen. Sie besitzen eine sehr hohe Verzauberbarkeit und gewähren beim Verzaubern eine kleine Rückerstattung von Erfahrungspunkten. Die Blutspitzhacke kann Netherrack langsam abbauen.
+nm.bloodtool.info=Blutwerkzeuge besitzen erhöhte Haltbarkeit und Abbaugeschwindigkeit. Sie werden aus Blutbarren und Lohenruten hergestellt. Beim Recyceln entstehen Veredelte Diamantbarren, wobei die Blutkugeln verloren gehen. Sie besitzen eine sehr hohe Verzauberbarkeit und gewähren beim Verzaubern eine kleine Rückerstattung von Erfahrungspunkten.
+nm.bloodsword.info=Blutwerkzeuge besitzen erhöhte Haltbarkeit und Abbaugeschwindigkeit. Sie werden aus Blutbarren und Lohenruten hergestellt. Beim Recyceln entstehen Veredelte Diamantbarren, wobei die Blutkugeln verloren gehen. Sie besitzen eine sehr hohe Verzauberbarkeit und gewähren beim Verzaubern eine kleine Rückerstattung von Erfahrungspunkten. Das Blutschwert gewährt bei jedem Treffer eine Chance auf Lebensraub. Diese Chance erhöht sich, je mehr Blutrüstung der Spieler trägt. Zusätzlich repariert das Blutschwert bei jedem Treffer die gesamte vom Spieler getragene Rüstung sowie alle Blutwerkzeuge im Inventar des Spielers (einschließlich des Schwerts selbst).
+nm.bloodarmor.info=Das Tragen der vollständigen Blutrüstung zusammen mit dem Blutschwert gewährt verschiedene Boni: erhöhte Lebensraubchance, höhere Netherrack-Abbaugeschwindigkeit sowie eine Chance auf Stärke oder Regeneration nach dem Töten einer Kreatur. Die Schutzwirkung liegt zwischen Eisen und Diamant. Tränke laufen jedoch doppelt so schnell ab.
+nm.bloodingot.info=Blutbarren werden aus Veredelten Diamantbarren und Blutkugeln hergestellt. Sie sind die Hauptzutat für Blutrüstung und Blutwerkzeuge.
+nm.eclipseshard.info=Finsternisscherben werden für Handel und die Herstellung von Finsternis-Ausrüstung verwendet.
+nm.bloodMilk.info=Kann während einer Sonnenfinsternis durch das Melken von Kühen erhalten werden.
+nm.creeperChop.info=Fällt von Creeper-Schweinen während der Sonnenfinsternis.
+nm.voidSack.info=Fällt von Tintenfischen während der Sonnenfinsternis.
+nm.charredFlesh.info=Fällt von Schattenzombies während der Sonnenfinsternis.
+nm.spiderFangs.info=Fällt von Spinnen während der Sonnenfinsternis.
+nm.fireRod.info=Fällt von Höllenfeuer-Lohen während der Sonnenfinsternis.
+nm.waterRod.info=Fällt von Aqua-Lohen während der Sonnenfinsternis.
+nm.sulfur.info=Fällt von Creepern während der Sonnenfinsternis.
+nm.creeperTear.info=Fällt von Creeperghasts während der Sonnenfinsternis.
+nm.silverLump.info=Fällt von Silberfischen während der Sonnenfinsternis.
+nm.witheredBone.info=Fällt von Witherskeletten während der Sonnenfinsternis.
+nm.voidMembrane.info=Fällt von Hexen während der Sonnenfinsternis.
+nm.decayedFlesh.info=Fällt von Zombies und Zombie Pigman während der Sonnenfinsternis.
+nm.ghastTentacle.info=Fällt von Ghasts während der Sonnenfinsternis.
+nm.shadowRod.info=Fällt von Schatten-Lohen während der Sonnenfinsternis.
+nm.speedCoil.info=Fällt von Pferden während der Sonnenfinsternis.
+nm.bloodstar.info=Fällt vom Blutgott. Der ultimative Triumph. Kann nicht verbrannt oder gesprengt werden.
+nm.calamari.info=Fällt von Tintenfischen. Kann gekocht (Ziegelstein-Backofen/Lagerfeuer) oder in einem Kessel frittiert werden.
+nm.eclipsebow.info=Der Finsternisscherbenbogen kann magische Pfeile in Salven von drei verschießen. Diese durchdringen unbegrenzt viele Kreaturen und verursachen mäßigen Schaden.
+nm.magicarrow.info=Magische Pfeile können nur mit dem Finsternisscherbenbogen verwendet werden. Sie durchdringen unbegrenzt viele Gegner und verursachen mäßigen Schaden.
+nm.ironfishingrod.info=Die eiserne Angel ist eine verbesserte Version der normalen Angel. Sie benötigt keinen Köder und kann viele zusätzliche Gegenstände angeln.
+nm.ancientsand.info=Antiker Sand kann verwendet werden, um nahegelegene Wüstentempel aufzuspüren.
+nm.refineddiamond.info=Veredelte Diamantbarren werden hergestellt, indem Diamantbarren mit Netherquarz in einem Schmelztiegel veredelt werden.
+nm.withersoul.info=Eine Witherseele wird jedes Mal vom Wither fallen gelassen, wenn er besiegt wird.
+nm.obsidianshard.info=Obsidianscherben erhält man durch den Abbau von Obsidian mit einer Diamant- oder Blutspitzhacke.
+
+# NM BLOCK info
+nm.steelOre.info=Stahlerz erscheint in Schicht 2 und 3 oberhalb der Diamanthöhe. Es kann erst nach dem Besiegen des Withers oder mit einer Stahlspitzhacke abgebaut werden.
+nm.bloodChest.info=Die Bluttruhe ist eine nicht brennbare Lagereinheit mit doppelt so viel Platz wie eine normale Truhe und erhöhter Explosionsresistenz. Sie besitzt 54 Plätze.
+nm.steelLocker.info=Der Stahlschrank ist eine robuste Lagereinheit mit 133 Plätzen. Er ist gegen die meisten Explosionen resistent und kann nicht brennen.
+nm.blockRoad.info=Straßen erhöhen die Bewegungsgeschwindigkeit von Spielern und Kreaturen.
+nm.blockAsphalt.info=Asphalt erhöht die Bewegungsgeschwindigkeit von Spielern und Kreaturen erheblich.
+nm.upgradedLadder.info=Verbesserte Leitern erhöhen die Klettergeschwindigkeit von Spielern und Kreaturen.
+nm.hellforge.info=Die Höllenschmiede ist ein vollständig automatisierbarer Ziegelofen. Standardmäßig benötigt sie keinen Brennstoff, kann jedoch mit Brennstoff stark beschleunigt werden.
+nm.bloodSaw.info=Die Blutsäge benötigt keine mechanische Energie. Sie verursacht mehr Schaden und verarbeitet Blöcke deutlich schneller.
+nm.disenchantmentTable.info=Der Entzauberungstisch ermöglicht das einfache Entfernen von Verzauberungen in Form von Verzauberungsschriftrollen.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info=Obsidian kann von Obsidian-Creepern in Schicht 3 fallen gelassen oder nach dem Besiegen des Withers mit Stahl hergestellt werden. Es besitzt eine deutlich geringere Explosionsresistenz. Beim Abbau von Obsidian ohne eine Stahlspitzhacke erhält man Obsidiansplitter, und es besteht die Chance, dass ein Obsidianfisch erscheint.
+nm.crudeObsidian.info=Rohobsidian wird aus Obsidianscherben hergestellt. Es besitzt eine deutlich geringere Explosionsresistenz und kann zum Bau eines Netherportals verwendet werden.
+nm.horseArmor.info=Ein Rechtsklick mit Pferderüstung öffnet ein Lager, in dem Weizen und Stroh eingelagert werden können.
+nm.goldenApple.info=Goldene Äpfel verleihen 4 Sekunden Regeneration I und 12 Minuten Absorption IV.
+nm.goldenAppleEnchanted.info=Verzauberte Goldene Äpfel verleihen Regeneration IV, Feuerresistenz, Stärke II, Geschwindigkeit II, Eile II, Resistenz I, Nachtsicht und Absorption II.
+nm.brownMushroom.info=Braune Pilze wachsen natürlicherweise im Nether. Braune Pilzbäume auf Pilzinseln können erst geerntet werden, nachdem der Nether betreten wurde.
+nm.pumpkin.info=Das Tragen von Kürbissen bewirkt, dass Endermen und Ghasts den Spieler automatisch verfolgen, unabhängig von der Tageszeit und sogar durch Wände hindurch.
 
 
 

@@ -109,6 +109,9 @@ entity.NmObsidianFish.name=Cá Obsidian
 entity.NmCreeperGhast.name=Ghast Creeper
 entity.entityBloodAltar.name=Tiến triển
 entity.NmMushWorm.name=Sâu Nấm
+entity.NmEntityVoidCreeper.name=Creeper Hư Không
+entity.NmEntityGelCreeper.name=Creeper Dính
+entity.NmEntityGlitchCreeper.name=Creeper Lỗi
 
 key.nightmaremode.zoomhold=Giữ để phóng to
 key.nightmaremode.zoomtoggle=Chuyển đổi mode phóng to
@@ -165,6 +168,19 @@ gui.bloodmoon.in=Trăng Máu trong
 gui.bloodmoon.days=Ngày
 gui.bloodmoon.tonight=Tối Nay
 gui.bloodmoon.tomorrow=Ngày Mai
+
+nm.events.nmSlimeRain=Không khí trở nên đặc sệt bởi Slime...
+nm.events.nmSlimeRain.info=Slime sẽ xuất hiện tự nhiên
+
+nm.events.nmGreatHarvest=Đất đai cảm giác màu mỡ hơn...
+nm.events.nmGreatHarvest.info=Hôm nay cây trồng sẽ lớn nhanh hơn
+
+nm.events.nmSpiderRain=Những con Nhện thức giấc...
+nm.events.nmSpiderRain.info=Nhiều Nhện hơn sẽ xuất hiện vào đêm nay
+
+nm.events.nmHell=Không khí cảm giác ấm hơn...
+nm.events.nmHell.info=Địa Ngục sẽ bùng nổ đêm nay
+
 
 difficulty.baddream.name=Điềm xấu
 difficulty.nightmare.name=Ác mộng
@@ -260,7 +276,10 @@ gui.config.blood_moon_helper=Trợ Lý Trăng Máu
 gui.config.tooltip.blood_moon_helper=Hiển thị khi nào Trăng Máu tiếp theo sẽ xuất hiện
 gui.config.real_time=Thời Gian Thực
 gui.config.tooltip.real_time=Ngày và Đêm kéo dài 12 giờ ngoài đời thực. Chế độ Khó kích hoạt vào Ngày 3. Hậu Kỳ kích hoạt vào Ngày 5. LƯU Ý: Nếu cấu hình này được bật, không cấu hình nào khác có thể được hoàn thành
-
+gui.config.render_fancy_clouds=Mây Chất Lượng Cao
+gui.config.tooltip.render_fancy_clouds=Bật chế độ kết xuất mây thử nghiệm với hình ảnh đẹp mắt nhưng tiêu tốn nhiều tài nguyên cho Thế Giới Thường! Chỉ nên sử dụng nếu bạn có card đồ họa mạnh
+gui.config.render_vignette=Hiệu Ứng Viền Tối Tùy Chỉnh
+gui.config.tooltip.render_vignette=Bật hiệu ứng viền tối tùy chỉnh của Nightmare Mode. Hiệu ứng sẽ mạnh hơn đáng kể trong các tình huống căng thẳng như thám hiểm hang động, Trăng Máu, khi nhận sát thương và trong các trận đánh trùm. Khuyến nghị giữ tùy chọn này được bật
 
 
 
@@ -273,6 +292,8 @@ gui.config.clear.bloodmoon=Điều kiện hoàn thành: Đánh bại một Trăn
 gui.config.clear.eclipse=Điều kiện rõ ràng: Đánh bại nhật thực
 gui.config.clear.week=Điều kiện sống sót: Sống sót 7 ngày
 gui.config.clear.gloom=Điều kiện hoàn thành: Sống sót qua Đêm U Ám đầu tiên
+gui.config.clear.item=Xóa điều kiện: Lấy vật phẩm
+
 
 gui.warning.line1=bro
 gui.warning.line2=Bạn sắp vào một thế giới có bật chế độ Cancer.
@@ -722,6 +743,82 @@ achievement.btw.craft_iron_shears.desc=Nhận một đôi kéo sắt. Rất tố
 
 
 tag.nightmare.sandwich_meats=Thịt Làm Bánh Mì Kẹp
+
+tag.nightmare.eclipse_drops=Vật phẩm Nhật thực
+
+# BTW info overrides
+btw.anvil.info=Đe rèn có thể dùng để sửa vật phẩm bằng nguyên liệu và cấp kinh nghiệm của chúng. Lưu ý rằng Đe rèn không thể nhặt lại, mà sẽ rơi ra Phế liệu kim loại, thứ vô dụng ngoại trừ việc nấu chảy trong Crucible để thu hồi sắt.
+btw.fishing_rod.info=Câu cá cần mồi câu, đủ không gian và đúng thời điểm trong ngày. Nhấp chuột phải khi cầm cần câu với bất kỳ vật phẩm mồi nào (như Thịt thối, Hàu Creeper, Mắt nhện hoặc Cánh dơi) trên thanh công cụ để gắn mồi. Một chỗ câu phù hợp phải nhìn thấy bầu trời và sâu ít nhất 3 khối. Bong bóng sẽ xuất hiện quanh phao nếu vị trí hợp lệ. Trăng tròn, hoặc bình minh và hoàng hôn khi trời mưa, là thời điểm câu cá hiệu quả nhất. Cố móc các mob thù địch sẽ làm bạn làm rơi cần câu.
+btw.netherrack.info=Netherrack quá cứng và không thể phá bằng Cuốc kim cương, cần công cụ Máu hoặc Thép để khai thác. Có thể cho nổ bằng Thuốc nổ để nhanh chóng lấy được nhiều Netherrack nghiền. Các khối Netherrack cũng có thể được nghiền thành 8 Netherrack nghiền bằng cối xay. Netherrack có thể được đốt cháy vô thời hạn, nhưng việc đó cần lửa trại hoặc hỏa cầu.
+btw.oven.info=Lò có thể được dùng để nấu thức ăn hiệu quả hơn nhiều so với lửa trại, và để nấu quặng. Chúng có thể chứa một vật phẩm ở ô trên, còn ô dưới chứa nhiên liệu. Nhấp chuột phải với nhiên liệu để nạp vào, và lớp phủ sẽ cập nhật để hiển thị lượng nhiên liệu hiện có. Một dụng cụ mồi lửa như Cày lửa, hoặc một Đuốc đang cháy, có thể dùng để nhóm Lò. Lò đang hoạt động sẽ đốt cháy thức ăn đã nấu nếu không lấy ra.
+btw.screw_pump.info=Bơm vít có thể dùng để nâng mực nước lên một khối. Khi được cấp redstone hoặc được cấp lực cơ học, Bơm vít sẽ đẩy nước chảy vào mặt trước lên một khối bằng cách phun nó ra ở phía trên.
+btw.hopper.info=Phễu nhặt các vật phẩm đi qua phía trên nó, và khi được cấp lực cơ học sẽ đẩy vật phẩm ra phía dưới. Tuy nhiên, phễu không thể kéo vật phẩm từ kho chứa, mà chỉ từ thế giới. Vật phẩm được nhặt có thể được lọc bằng cách đặt đồ vào ô lọc. Các bộ lọc hợp lệ là: Thang, Thanh sắt, Cửa sập, Lưới, Thanh nan, Tấm tre đan, và Cát linh hồn. Một số bộ lọc có thể dùng để tách hoặc chuyển đổi các vật phẩm đi qua chúng. Thông tin thêm có thể tìm trong mục của từng bộ lọc tương ứng. Phễu có thể chứa 1000 XP.
+btw.arcane_scroll.info=Cuộn phép Arcane có thể dùng với Infernal Enchanter để áp các phù phép cụ thể lên vật phẩm. Hầu hết Cuộn phép Arcane được bán bởi Dân làng hoặc rơi từ boss.
+btw.enchanter.info=Bàn phù phép bị giới hạn ở các phù phép nó có thể áp dụng, và chỉ có thể áp dụng phù phép đến cấp 15. Cấp tối đa tăng dần theo tiến trình: 20 (Hardmode), 30 (sau khi đánh bại Wither). Để đạt sức mạnh tối đa, cần có 30 giá sách ở gần. Bàn phù phép chỉ có thể tìm thấy trong các Đền sa mạc.
+
+btw.beacon.info=Beacon tạo ra hiệu ứng khác nhau tùy theo vật liệu dùng để xây kim tự tháp. Beacon có thể hoạt động ở Nether nếu nó nhìn thấy trần bedrock. Các khối hợp lệ cho Beacon là Lửa địa ngục cô đặc, Kim cương, Phân, Ngọc lục bảo, Khối Ender, Kính, Đá phát sáng, Vàng, Sắt, Lapis Lazuli, Mắt nhện, và Thép soulforged. Thông tin về từng hiệu ứng riêng lẻ có thể tìm ở trang thông tin của mỗi khối. Beacon cấp 4 có phạm vi toàn cục, nghĩa là hiệu ứng của chúng được áp dụng cho mọi người chơi trong chiều không gian đó.
+btw.ender_chest.info=Rương Ender cho phép người chơi có một kho riêng hoạt động xuyên suốt mọi chiều không gian.
+btw.steel_block.info=Khi dùng làm vật liệu cho Beacon, Khối Thép soulforged đóng vai trò như một mốc neo cho phép người chơi đặt điểm sinh sản, và hồi sinh tại beacon nếu chết đủ gần nó. Phạm vi bị giới hạn ở hai cấp đầu, trong khi cấp 3 không giới hạn trong cùng chiều không gian, và cấp 4 không giới hạn giữa các chiều không gian.
+btw.portal.info=Cổng Nether phải được thắp bằng Lửa trại hoặc Hỏa cầu. Khi kích hoạt Cổng Nether, thế giới sẽ bước vào đếm ngược 3 ngày cho đến khi Hardmode bắt đầu. Hardmode tăng chỉ số của mọi mob, giới thiệu các mối đe dọa và biến thể mới. Cổng sẽ chủ động phát tán linh hồn trong phạm vi 16 khối, gây ảnh hưởng xấu đến các mob thụ động gần đó, cũng như mực. Rất khuyến nghị rằng bạn phải biết mình đang làm gì trước khi kích hoạt cổng.
+
+# NM custom info items
+nm.rpg.info=Súng phóng tên lửa được nhận bằng cách giao dịch với Thương nhân Ác mộng sau khi hoàn thành Nightmare Mode. Nó bắn ra các Thuốc nổ còn sống, sẵn sàng phát nổ. Dùng sai có thể khiến bạn mất bộ phận cơ thể.
+nm.rifle.info=Súng trường tấn công được nhận bằng cách giao dịch với Thương nhân Ác mộng sau khi hoàn thành Nightmare Mode. Nó bắn ra đạn tốc độ cao. Có thể là bất hợp pháp trong Làng.
+nm.bandage.info=Băng vải hồi 2 tim khi được băng đầy đủ. Nó có thời gian hồi 10 giây trước khi dùng được cái khác.
+nm.alchemydust.info=Bột Giả kim được dùng để tìm Túp lều Phù thủy. Sau khi ném, nó sẽ hiện các hạt chỉ về tất cả những Túp lều Phù thủy gần nhất. Nếu không có hạt nào, điều đó có nghĩa là không phát hiện thấy Túp lều Phù thủy nào trong khu vực của bạn.
+nm.ironneedles.info=Kim đan sắt cho phép chế tạo tức thì các vật phẩm đan, dệt và tách. Ví dụ gồm: Tre đan, Len, Mạng nhện rối.
+nm.bloodorb.info=Quả cầu Máu rơi ra từ các mob thù địch bị người chơi giết trong Trăng Máu. Chúng được dùng để chế tạo nhiều vật phẩm, đáng chú ý nhất là Thỏi Máu, có thể dùng để làm công cụ và giáp. Quả cầu Máu không thể bị lửa phá hủy. Mỗi mob thù địch sẽ rơi ra số lượng Quả cầu Máu khác nhau, tùy mức độ nguy hiểm của mob đó.
+nm.bloodpickaxe.info=Dụng cụ Máu có độ bền và tốc độ đào tăng. Chúng được chế tạo từ Thỏi Máu và Gậy Blaze. Khi tái chế, chúng biến thành Thỏi Kim cương Tinh luyện, nghĩa là Quả cầu Máu bị mất. Chúng có khả năng phù phép rất cao, nên khi phù phép sẽ hoàn lại một ít kinh nghiệm. Cuốc Máu có thể phá Netherrack với tốc độ chậm.
+nm.bloodtool.info=Dụng cụ Máu có độ bền và tốc độ đào tăng. Chúng được chế tạo từ Thỏi Máu và Gậy Blaze. Khi tái chế, chúng biến thành Thỏi Kim cương Tinh luyện, nghĩa là Quả cầu Máu bị mất. Chúng có khả năng phù phép rất cao, nên khi phù phép sẽ hoàn lại một ít kinh nghiệm.
+nm.bloodsword.info=Dụng cụ Máu có độ bền và tốc độ đào tăng. Chúng được chế tạo từ Thỏi Máu và Gậy Blaze. Khi tái chế, chúng biến thành Thỏi Kim cương Tinh luyện, nghĩa là Quả cầu Máu bị mất. Chúng có khả năng phù phép rất cao, nên khi phù phép sẽ hoàn lại một ít kinh nghiệm. Kiếm Máu cho một cơ hội hút máu mỗi lần đánh. Cơ hội này tăng lên khi người chơi mặc càng nhiều Giáp Máu. Kiếm Máu còn sửa chữa toàn bộ giáp người chơi đang mặc, và tất cả dụng cụ máu trong túi đồ của người chơi (bao gồm cả chính thanh kiếm).
+nm.bloodarmor.info=Mặc trọn bộ Giáp Máu kết hợp với Kiếm Máu sẽ cho người chơi nhiều hiệu ứng cường hóa: cơ hội hút máu cao hơn, tốc độ khai thác netherrack cao hơn, có cơ hội nhận sức mạnh hoặc hồi phục sau khi giết mob. Giáp Máu có mức bảo vệ nằm giữa Sắt và Kim cương. Nó tái chế thành Thỏi Kim cương Tinh luyện, nghĩa là Quả cầu Máu bị mất. Mặc trọn bộ Giáp Máu có nhược điểm lớn là thuốc sẽ hết tác dụng nhanh gấp đôi. Giáp Máu có khả năng phù phép rất cao.
+nm.bloodingot.info=Thỏi Máu được tạo từ Thỏi Kim cương Tinh luyện và Quả cầu Máu. Chúng là thành phần chính của Giáp Máu và Dụng cụ Máu.
+nm.eclipseshard.info=Mảnh Nhật thực được dùng để trao đổi và chế tạo trang bị nhật thực.
+nm.bloodMilk.info=Rơi từ Bò trong Nhật thực Mặt trời.
+nm.creeperChop.info=Rơi từ Lợn Creeper trong Nhật thực Mặt trời.
+nm.voidSack.info=Rơi từ Mực trong Nhật thực Mặt trời.
+nm.charredFlesh.info=Rơi từ Zombie Bóng trong Nhật thực Mặt trời.
+nm.spiderFangs.info=Rơi từ Nhện trong Nhật thực Mặt trời.
+nm.fireRod.info=Rơi từ Blaze Lửa địa ngục trong Nhật thực Mặt trời.
+nm.waterRod.info=Rơi từ Blaze Nước trong Nhật thực Mặt trời.
+nm.sulfur.info=Rơi từ Creeper trong Nhật thực Mặt trời.
+nm.creeperTear.info=Rơi từ Ghast Creeper trong Nhật thực Mặt trời.
+nm.silverLump.info=Rơi từ Silverfish trong Nhật thực Mặt trời.
+nm.witheredBone.info=Rơi từ Skeleton Wither trong Nhật thực Mặt trời.
+nm.voidMembrane.info=Rơi từ Phù thủy trong Nhật thực Mặt trời.
+nm.decayedFlesh.info=Rơi từ Zombie và Zombie Lợn trong Nhật thực Mặt trời.
+nm.ghastTentacle.info=Rơi từ Ghast trong Nhật thực Mặt trời.
+nm.shadowRod.info=Rơi từ Blaze Bóng trong Nhật thực Mặt trời.
+nm.speedCoil.info=Rơi từ Ngựa trong Nhật thực Mặt trời.
+nm.bloodstar.info=Rơi từ Thần Máu. Chiến thắng tối thượng. Không thể bị đốt cháy.
+nm.calamari.info=Rơi từ Mực. Có thể nấu chín (lò / lửa trại), hoặc chiên trong vạc. Khi thế giới tiến triển, Mực có tỉ lệ rơi Calamari thấp hơn.
+nm.eclipsebow.info=Cung Nhật thực có thể bắn Mũi tên Phép theo loạt ba phát. Mũi tên Phép xuyên qua vô hạn kẻ địch và gây sát thương trung bình. Nó cũng có thể bắn mũi tên broadhead. Tốc độ bắn của nó nhanh hơn đáng kể so với Cung Hợp kim hoặc cung thường.
+nm.magicarrow.info=Mũi tên Phép chỉ có thể dùng với Cung Nhật thực. Chúng xuyên qua vô hạn kẻ địch và gây sát thương trung bình. Khi dùng với Cung Nhật thực, chúng có thể bắn theo loạt ba phát.
+nm.ironfishingrod.info=Cần câu Sắt là bản nâng cấp của cần câu thường. Nó không cần mồi câu, và có thể câu được rất nhiều loại vật phẩm khác.
+nm.ancientsand.info=Cát Cổ xưa có thể dùng để tìm các Đền sa mạc gần đó. Sau khi ném, nó sẽ hiện các hạt chỉ về tất cả các Đền sa mạc gần nhất. Nếu không có hạt nào, điều đó có nghĩa là không phát hiện thấy Đền sa mạc nào trong khu vực của bạn.
+nm.refineddiamond.info=Thỏi Kim cương Tinh luyện được tạo bằng cách tinh luyện Thỏi Kim cương với Thạch anh Nether trong Crucible. Chúng đủ bền để biến thành giáp giá trị và hợp kim với Quả cầu Máu.
+nm.withersoul.info=Một Linh hồn Wither rơi ra từ Wither mỗi lần nó bị giết.
+nm.obsidianshard.info=Mảnh Obsidian có được khi khai thác Obsidian bằng Cuốc kim cương hoặc Cuốc Máu. Cuốc Thép có thể dùng để khai thác cả khối hoàn chỉnh. Mảnh Obsidian có thể được biến thành Obsidian thô, rồi dùng để xây Cổng Nether.
+
+# NM BLOCK info
+nm.steelOre.info=Quặng Thép xuất hiện ở Tầng 2 và 3, phía trên mức Kim cương. Nó chỉ có thể được khai thác sau khi đánh bại Wither hoặc dùng Cuốc Thép.
+nm.bloodChest.info=Rương Máu là một kho chứa không cháy, có dung lượng gấp đôi rương thường và khả năng chống nổ cao hơn. Nó có 54 ô chứa.
+nm.steelLocker.info=Tủ Thép là một kho chứa cứng cáp với 133 ô chứa. Nó chống được phần lớn vụ nổ và không thể cháy.
+nm.blockRoad.info=Đường làm tăng tốc độ di chuyển của mob và người chơi khi đi trên nó.
+nm.blockAsphalt.info=Nhựa đường làm tăng tốc độ di chuyển của mob và người chơi rất nhiều khi đi trên nó.
+nm.upgradedLadder.info=Thang nâng cấp tăng tốc độ leo trèo của người chơi và thực thể.
+nm.hellforge.info=Lò Địa ngục là một Lò gạch có thể tự động hóa hoàn toàn. Mặc định nó không bao giờ hết nhiên liệu, nhưng có thể tăng tốc đáng kể bằng nhiên liệu. Nó chấp nhận Netherrack là nhiên liệu hiệu quả nhất. Nó sẽ tự động hút Netherrack từ rương bên dưới. Nó tự động lấy các vật phẩm có thể nấu từ rương phía trên, và xuất chúng sang các rương bên trái / bên phải. Không cần phễu.
+nm.bloodSaw.info=Cưa Máu không cần lực cơ học để hoạt động. Nó gây sát thương cao hơn và xử lý khối nhanh hơn nhiều.
+nm.disenchantmentTable.info=Bàn gỡ phù phép cho phép loại bỏ phù phép dễ dàng dưới dạng Cuộn phép Phù phép.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info=Obsidian có thể rơi ra từ Creeper Obsidian ở Tầng 3, hoặc được chế tạo bằng Thép sau khi Wither bị đánh bại. Nó có khả năng chống nổ thấp hơn đáng kể. Khai thác Obsidian mà không có Cuốc Thép sẽ rơi ra Mảnh Obsidian và có cơ hội sinh ra Cá Obsidian.
+nm.crudeObsidian.info=Obsidian thô được chế tạo từ Mảnh Obsidian. Nó có khả năng chống nổ thấp hơn đáng kể. Có thể dùng để xây Cổng Nether, thứ sẽ bắt đầu đếm ngược 3 ngày đến Hardmode.
+nm.horseArmor.info=Nhấp chuột phải với Giáp ngựa sẽ mở kho chứa nơi bạn có thể bỏ Lúa mì và Rơm vào. Giáp ngựa hoạt động như một “pin”, giữ cho ngựa được no trong lúc bạn cưỡi nó. Thức ăn không thể lấy ra khỏi giáp ngựa sau khi đã được bỏ vào. Giáp ngựa có sức chứa và trọng lượng cao hơn tùy theo vật liệu dùng để chế tạo.
+nm.goldenApple.info=Táo Vàng áp dụng Hồi phục I trong 4 giây và Hấp thụ IV trong 12 phút, thực tế cho thêm một thanh máu. Chúng có thời gian hồi 30 giây.
+nm.goldenAppleEnchanted.info=Táo Vàng Phù phép áp dụng Hồi phục IV + Kháng lửa + Sức mạnh II + Tốc độ II trong 30 giây, Kháng chịu I trong 40 giây, Tầm nhìn ban đêm và Hấp thụ II trong 2 phút. Chúng có thời gian hồi 90 giây.
+nm.brownMushroom.info=Nấm Nâu mọc tự nhiên trong Nether. Cây Nấm Nâu trên Đảo Nấm chỉ có thể thu hoạch sau khi đã tiếp cận Nether.
+nm.pumpkin.info=Đội Bí Ngô sẽ khiến Enderman và Ghast tự động truy đuổi người chơi bất kể ngày hay đêm, kể cả xuyên tường.
 
 
 

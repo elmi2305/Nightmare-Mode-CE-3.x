@@ -279,7 +279,7 @@ gui.config.tooltip.real_time=Day and Night last 12 real-life hours. Hardmode act
 gui.config.render_fancy_clouds=Fancy Clouds
 gui.config.tooltip.render_fancy_clouds=Enables computationally expensive but cool-looking experimental cloud rendering for the overworld! Only use if you have a powerful graphics card
 gui.config.render_vignette=Custom Vignette
-gui.config.tooltip.render_vignette=Enables the custom Nightmare Mode vignette. It gets particularly strong in stressful scenarios like caving, Blood Moons, taking damage, and boss fights. Recommended to keep this enabled"
+gui.config.tooltip.render_vignette=Enables the custom Nightmare Mode vignette. It gets particularly strong in stressful scenarios like caving, Blood Moons, taking damage, and boss fights. Recommended to keep this enabled
 
 
 
@@ -817,3 +817,4 @@ nm.horseArmor.info=Right clicking with Horse Armor opens a storage where you may
 nm.goldenApple.info=Golden Apples apply Regeneration I for 4 seconds and Absorption IV for 12 minutes, effectively giving an extra health bar. They have a cooldown of 30 seconds.
 nm.goldenAppleEnchanted.info=Enchanted Golden Apples apply Regeneration IV + Fire Resistance + Strength II + Speed II + Haste II for 30 seconds, Resistance I for 40 seconds, Night Vision and Absorption II for 2 minutes. They have a 90 second cooldown.
 nm.brownMushroom.info=Brown Mushrooms naturally grow in the Nether. Brown Mushroom trees on Mushroom Islands can only be harvested after the Nether has been accessed.
+nm.pumpkin.info=Wearing Pumpkins causes Endermen and Ghasts to automatically pursue the player regardless of daytime and through walls.
