@@ -59,7 +59,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 //            this.setBlueMoonWorld(false);
 //        }
 
-        if ((time & 15) == 0 && this.provider.dimensionId == 0) {
+        if ((time & 15) == 0) {
             NMEvents.onServerTick((WorldServer)(Object)this);
         }
     }
