@@ -179,7 +179,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                 if (shouldBurn) {
                     this.onKilledBySun();
                 }
-            } else if(NMUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote){
+            } else if(NMUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote && this.isValidForEventLoot){
                 summonSilverfish(this);
             } else if(par1DamageSource == DamageSource.drown || par1DamageSource == DamageSource.lava){
                 this.transformToVariant(par1DamageSource == DamageSource.lava);
