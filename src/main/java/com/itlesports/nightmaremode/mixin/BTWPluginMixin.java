@@ -90,6 +90,7 @@ public abstract class BTWPluginMixin {
         // vanilla blocks
         this.info(registry, Block.obsidian, 0, "nm.obsidian.info");
         this.info(registry, Block.obsidian, 1, "nm.crudeObsidian.info");
+        this.info(registry, BTWBlocks.carvedPumpkin, 1, "nm.pumpkin.info");
 
         // vanilla items
         this.info(registry, Item.horseArmorDiamond, 0, "nm.horseArmor.info");
