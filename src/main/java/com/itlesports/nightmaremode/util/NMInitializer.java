@@ -1515,10 +1515,6 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
         // done recycling
 
-        // multiplayer sign
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
-        //
-
         finishRecipes("Crafting Recipes");
 
     }
