@@ -90,7 +90,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
     static {
         FUEL_MAP.put(BTWItems.groundNetherrack.itemID, 400);
         FUEL_MAP.put(Block.netherrack.blockID, 3200);
-        FUEL_MAP.put(BTWItems.nethercoal.itemID, 65000);
+        FUEL_MAP.put(BTWItems.nethercoal.itemID, 10000);
     }
 
     public static int getFuelValue(int id) {
