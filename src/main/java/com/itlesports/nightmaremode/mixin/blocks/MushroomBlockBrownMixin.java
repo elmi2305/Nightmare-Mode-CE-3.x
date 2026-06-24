@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.MushroomBlockBrown;
 import net.minecraft.src.Block;
+import net.minecraft.src.Material;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldProvider;
 import org.objectweb.asm.Opcodes;
@@ -36,8 +37,10 @@ public class MushroomBlockBrownMixin {
 //    }
     @Inject(method = "canBlockStayDuringGenerate", at = @At("HEAD"),cancellable = true)
     private void netherGrowth(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
-        if(world.provider.dimensionId == -1 && j > 24 && j < 127 && (world.getBlockId(i, j - 1, k)) != 0){
-            cir.setReturnValue(true);
+        if(world.provider.dimensionId == -1 && j > 24 && j < 127){
+            // is in a valid height of the nether
+            boolean can = (world.getBlockMaterial(i, j - 1, k)) == Material.rock;
+            cir.setReturnValue(can);
         }
     }
 }

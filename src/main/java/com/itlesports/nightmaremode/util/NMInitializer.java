@@ -22,6 +22,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
+import com.itlesports.nightmaremode.entity.underworld.EntityWalker;
 import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
@@ -104,6 +105,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityBloodZombie.class, 2, 1, 1);
         addMobToAllBiomes(EntityFauxVillager.class, 1, 1, 1);
         addMobToAllBiomes(EntityCreeperGhast.class, 1, 1, 2);
+        addMobToAllBiomes(EntityWalker.class, 1, 1, 1);
 
         if (NightmareMode.magicMonsters != null && NightmareMode.magicMonsters) {
             clearAllLandBiomes();

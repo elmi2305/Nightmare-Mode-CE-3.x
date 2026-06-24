@@ -47,8 +47,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         this.altar = altar;
     }
 
-    @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+    @Override public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         return false;
     }
     @Override protected void damageEntity(DamageSource par1DamageSource, float par2) {}
@@ -57,7 +56,23 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
     @Override public void moveFlying(float par1, float par2, float par3) {}
     @Override public boolean isPushedByWater() {return false;}
     @Override protected boolean pushOutOfBlocks(double par1, double par3, double par5) {return false;}
-
+    @Override protected boolean canDespawn() { return false; }
+    @Override public boolean isEntityInvulnerable() {
+        return true;
+    }
+    @Override public boolean doesEntityNotTriggerPressurePlate() {
+        return true;
+    }
+    @Override public float getShadowSize() {
+        return 0.0F;
+    }
+    @Override protected void fall(float par1) {}
+    @Override public boolean canBeCollidedWith() {
+        return false;
+    }
+    @Override public boolean canBePushed() {
+        return false;
+    }
 
     private void tryRelinkAltar() {
         if (worldObj.blockExists(cachedAltarX, cachedAltarY, cachedAltarZ)) {
@@ -144,26 +159,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         }
     }
 
-    @Override
-    protected boolean canDespawn() { return false; }
 
-    @Override
-    public boolean isEntityInvulnerable() {
-        return true;
-    }
-
-    @Override
-    public boolean doesEntityNotTriggerPressurePlate() {
-        return true;
-    }
-
-    @Override
-    public float getShadowSize() {
-        return 0.0F;
-    }
-
-    @Override
-    protected void fall(float par1) {}
 
     private boolean altarCoreExists() {
         if (altar == null || altar.isInvalid()) {
@@ -182,14 +178,6 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
     }
 
 
-    @Override
-    public boolean canBeCollidedWith() {
-        return false;
-    }
-    @Override
-    public boolean canBePushed() {
-        return false;
-    }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound tag) {
@@ -262,17 +250,13 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         return new Packet250CustomPayload("btw|SE", byteStream.toByteArray());
     }
 
-    @Override
-    public int getTrackerViewDistance() {
+    @Override public int getTrackerViewDistance() {
         return 80;
     }
-
-    @Override
-    public int getTrackerUpdateFrequency() {
+    @Override public int getTrackerUpdateFrequency() {
         return 3;
     }
-    @Override
-    public boolean getTrackMotion() {
+    @Override public boolean getTrackMotion() {
         return false;
     }
 

@@ -53,6 +53,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityVoidSlime.class, new RenderSlimeVariant(new ModelSlime(16), new ModelSlime(0), 0.25f));
         RenderManager.addEntityRenderer(EntityVoidSquid.class, new VoidSquidRender());
         RenderManager.addEntityRenderer(EntityAwakenedWither.class, new RenderWither());
+        RenderManager.addEntityRenderer(EntityWalker.class, new RenderWalker());
 
 
 

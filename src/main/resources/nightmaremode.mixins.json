@@ -220,6 +220,7 @@
     "interfaces.ItemInvoker",
     "interfaces.MapGenStructureIOAccess",
     "interfaces.PathFinderInvoker",
+    "interfaces.RendererLivingEntityAccess",
     "interfaces.SoundManagerAccess",
     "interfaces.StatListAccess",
     "interfaces.TradeBuilderAccessor",
