@@ -39,6 +39,10 @@ public class WorldStateCommand extends CommandBase {
         } catch (NumberFormatException e) {
             throw new WrongUsageException("/ws <0|1|2|3>");
         }
+        if(choice < 0 || choice > 3) {
+            throw new WrongUsageException("/ws <0|1|2|3>");
+        }
+
         NightmareMode.worldState = choice;
 
         boolean netherAccessed = choice >= 1;
