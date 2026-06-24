@@ -806,7 +806,7 @@ nm.steelLocker.info=The Steel Locker is a tough storage unit with 133 slots of s
 nm.blockRoad.info=Road increases mob and player movement speed when walked on.
 nm.blockAsphalt.info=Asphalt increases mob and player movement speed a lot when walked on.
 nm.upgradedLadder.info=Upgraded ladders increase player and entity climbing speed.
-nm.hellforge.info=The Hellforge is a fully-automatable Brick Oven. It never runs out of fuel by default, but can be significantly sped up with fuel. It accepts Netherrack as the most efficient fuel. It will automatically extract netherrack from the chest below it. It automatically extracts cookable items from the chest above it, and outputs them to the chests on its left / right side. No hoppers necessary.
+nm.hellforge.info=The Hellforge is a fully-automatable Brick Oven. It never runs out of fuel by default, but can be significantly sped up with fuel. It accepts Netherrack as the most efficient fuel. It will automatically extract netherrack from the chest below it. Cookable items can be put inside of it using a powered Hopper. Cooked items are automatically outputted to chests on the left / right side.
 nm.bloodSaw.info=The Blood Saw does not require mechanical power to run. It does increased damage and processes blocks much faster.
 nm.disenchantmentTable.info=The Disenchantment Table allows easy removal of enchantments in the form of Enchantment Scrolls.
 

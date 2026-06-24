@@ -806,7 +806,7 @@ nm.steelLocker.info=Stalowa Szafka to wytrzymały magazyn z 133 slotami. Jest od
 nm.blockRoad.info=Droga zwiększa prędkość poruszania się mobów i gracza podczas chodzenia po niej.
 nm.blockAsphalt.info=Asfalt znacznie zwiększa prędkość poruszania się mobów i gracza podczas chodzenia po nim.
 nm.upgradedLadder.info=Ulepszone drabiny zwiększają szybkość wspinania się gracza i bytów.
-nm.hellforge.info=Piekielny Piec to w pełni automatyzowalny Piec Ceglany. Domyślnie nigdy nie kończy mu się paliwo, ale można go znacznie przyspieszyć paliwem. Akceptuje Netherack jako najwydajniejsze paliwo. Automatycznie pobiera Netherack ze skrzyni pod nim. Automatycznie pobiera przedmioty nadające się do gotowania ze skrzyni nad nim i wypluwa je do skrzyń po lewej/prawej stronie. Bez potrzeby lejków.
+nm.hellforge.info=Piekielna Kuźnia to w pełni zautomatyzowany Piec Ceglany. Domyślnie nigdy nie wyczerpuje paliwa, ale można ją znacznie przyspieszyć za pomocą paliwa. Netherrack jest najwydajniejszym akceptowanym paliwem. Automatycznie pobiera Netherrack ze skrzyni znajdującej się pod nią. Przedmioty nadające się do przetapiania można umieszczać w środku za pomocą zasilanego Leja. Gotowe przedmioty są automatycznie przesyłane do skrzyń po lewej lub prawej stronie.
 nm.bloodSaw.info=Piła Krwi nie wymaga napędu mechanicznego do działania. Zadaje większe obrażenia i znacznie szybciej obrabia bloki.
 nm.disenchantmentTable.info=Stół Odczarowywania pozwala łatwo usuwać zaklęcia w formie Zwojów Zaklęć.
 

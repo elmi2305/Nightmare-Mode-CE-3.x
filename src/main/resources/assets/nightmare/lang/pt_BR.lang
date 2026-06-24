@@ -806,7 +806,7 @@ nm.steelLocker.info=O Armário de Aço é uma unidade de armazenamento resistent
 nm.blockRoad.info=Estrada aumenta a velocidade de movimento de mobs e jogadores ao andar sobre ela.
 nm.blockAsphalt.info=Asfalto aumenta bastante a velocidade de movimento de mobs e jogadores ao andar sobre ele.
 nm.upgradedLadder.info=Escadas aprimoradas aumentam a velocidade de escalada de jogadores e entidades.
-nm.hellforge.info=A Forja Infernal é um Forno de Tijolos totalmente automatizável. Ela nunca fica sem combustível por padrão, mas pode ser significativamente acelerada com combustível. Aceita Netherrack como o combustível mais eficiente. Ela extrai automaticamente netherrack do baú abaixo dela. Ela extrai automaticamente itens que podem ser cozidos do baú acima dela e os envia para os baús à esquerda / direita. Não são necessários funis.
+nm.hellforge.info=A Forja Infernal é um Forno de Tijolos totalmente automatizável. Por padrão, ela nunca fica sem combustível, mas pode ser acelerada significativamente com combustível. Ela aceita Netherrack como o combustível mais eficiente. A Netherrack é extraída automaticamente do baú abaixo dela. Itens que podem ser cozidos podem ser inseridos usando um Funil energizado. Os itens prontos são enviados automaticamente para os baús à esquerda ou à direita.
 nm.bloodSaw.info=A Serra de Sangue não requer energia mecânica para funcionar. Ela causa mais dano e processa blocos muito mais rápido.
 nm.disenchantmentTable.info=A Mesa de Desencantamento permite remover encantamentos facilmente na forma de Pergaminhos de Encantamento.
 

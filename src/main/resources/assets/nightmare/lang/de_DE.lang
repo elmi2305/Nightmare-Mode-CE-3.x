@@ -803,7 +803,7 @@ nm.steelLocker.info=Der Stahlschrank ist eine robuste Lagereinheit mit 133 Plät
 nm.blockRoad.info=Straßen erhöhen die Bewegungsgeschwindigkeit von Spielern und Kreaturen.
 nm.blockAsphalt.info=Asphalt erhöht die Bewegungsgeschwindigkeit von Spielern und Kreaturen erheblich.
 nm.upgradedLadder.info=Verbesserte Leitern erhöhen die Klettergeschwindigkeit von Spielern und Kreaturen.
-nm.hellforge.info=Die Höllenschmiede ist ein vollständig automatisierbarer Ziegelofen. Standardmäßig benötigt sie keinen Brennstoff, kann jedoch mit Brennstoff stark beschleunigt werden.
+nm.hellforge.info=Die Höllenschmiede ist ein vollständig automatisierbarer Ziegelofen. Standardmäßig geht ihr niemals der Brennstoff aus, kann jedoch mit Brennstoff erheblich beschleunigt werden. Sie akzeptiert Netherrack als effizientesten Brennstoff. Netherrack wird automatisch aus der Truhe darunter entnommen. Kochbare Gegenstände können mithilfe eines angetriebenen Trichters eingeführt werden. Fertige Gegenstände werden automatisch in Truhen auf der linken bzw. rechten Seite ausgegeben.
 nm.bloodSaw.info=Die Blutsäge benötigt keine mechanische Energie. Sie verursacht mehr Schaden und verarbeitet Blöcke deutlich schneller.
 nm.disenchantmentTable.info=Der Entzauberungstisch ermöglicht das einfache Entfernen von Verzauberungen in Form von Verzauberungsschriftrollen.
 
