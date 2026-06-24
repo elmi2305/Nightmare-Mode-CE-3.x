@@ -51,8 +51,7 @@ public abstract class RenderGlobalMixin {
     @Unique private static final ResourceLocation SKYBOX_RED = new ResourceLocation("nightmare:textures/effects/red.png");
     @Unique private static final ResourceLocation SKYBOX_WHITE = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private static final ResourceLocation STARE = new ResourceLocation("nightmare:textures/effects/stare.png");
-    @Unique private static final ResourceLocation SUN_HELL = new ResourceLocation("nightmare:textures/effects/sunHellEvent.png");
-    @Unique private static final ResourceLocation MOON_HELL = new ResourceLocation("nightmare:textures/effects/moonHellTransparent.png");
+
     /*
 
     CUSTOM MOON

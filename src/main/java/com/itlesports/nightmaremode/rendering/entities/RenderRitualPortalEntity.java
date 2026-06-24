@@ -28,7 +28,6 @@ public class RenderRitualPortalEntity extends net.minecraft.src.RenderLiving {
         super(new ModelRitualPortalEntity(), 0.5f);
     }
 
-    // ── Entry point ────────────────────────────────────────────────────────
 
     public void renderPortalEntity(EntityRitualPortal entity, double x, double y, double z,
                                    float yaw, float partial) {
