@@ -54,7 +54,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityVoidSlime.class, "NmVoidSlime", 2339 /*, 0, 0xe3ffe3 */);
         EntityList.addMapping(EntityVoidSquid.class, "NmVoidSquid", 2340 /*, 0x00446e, 0 */);
         EntityList.addMapping(EntityAwakenedWither.class, "NmAwakenedWither", 2341 /*, 0xFFFFFF, 0 */);
-        EntityList.addMapping(EntityWalker.class, "NmWalker", 2342 , 0xFFFFFF, 0);
+        EntityList.addMapping(EntityWalker.class, "NmWalker", 2342 /* , 0xFFFFFF, 0 */);
 
     }
 

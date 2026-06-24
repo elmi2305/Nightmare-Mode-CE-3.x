@@ -19,7 +19,7 @@ public class BlockContainerMixin extends Block {
         if(NightmareMode.getInstance().isGriefLogging() && !w.isRemote){
             LogSettings ls = NightmareMode.getInstance().getLogSettings();
             if(!ls.logIndirectBreaks) return;
-            String text = this.getLocalizedName() + " destroyed at " + x + " " + y + " " + z + ". Nearest Player: " + w.getClosestPlayer(x,y,z, 32).username;
+            String text = this.getLocalizedName() + " destroyed at " + x + " " + y + " " + z + ". Nearest: " + w.getClosestPlayer(x,y,z, 32).username;
 
             if(ls.logContainers){
                 NightmareMode.appendLogLine(text);

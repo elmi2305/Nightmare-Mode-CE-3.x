@@ -790,7 +790,7 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("BloodMoonHelper", false);
         config.registerBoolean("RealTime", false);
         config.registerString("WorldInfoString", "STDHF");
-        config.registerBoolean("GriefLogging", false, "Enables logging of Tile Entity destruction and signs, including who placed them & where they were placed.", "Useful for detecting griefers.", "Logs signs placed, TNT placed", "MULTIPLAYER ONLY!");
+        config.registerBoolean("GriefLogging", false, "Enables logging of Tile Entity destruction and signs, including who placed them & where they were placed.", "Useful for detecting griefers.", "Also logs TNT ignited", "MULTIPLAYER ONLY!");
         config.registerInt("GriefLoggingLevel", 1, "First two bits decide logging level", "1 = only log Chests.", "2 = only log Container tile entities", "3 = log ALL tile entity destruction", "Add 4 to any of those values = whether to log items being taken out of chests", "Add 8 to any of those values = whether to log items being destroyed indirectly (not by players mining them)");
         config.registerBoolean("RenderFancyClouds", false, "Enables computationally expensive but cool-looking experimental cloud rendering for the overworld!", "Only use if you have a powerful graphics card.");
         config.registerBoolean("RenderVignette", true, "Enables custom NM Vignette around the screen borders. It gets particularly intense around the edges of the screen or in stressful scenarios, such as caving, Blood Moons, taking damage and similar", "Recommended to keep this enabled");
