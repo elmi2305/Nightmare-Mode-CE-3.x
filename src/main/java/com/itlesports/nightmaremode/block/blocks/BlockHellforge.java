@@ -64,6 +64,9 @@ public class BlockHellforge
                     tileEntity.addCookStack(new ItemStack(heldStack.itemID, 1, heldStack.getItemDamage()));
                 }
                 --heldStack.stackSize;
+                if(!world.isRemote){
+                    tileEntity.tryConsumeNetherrackBelow();
+                }
                 return true;
             }
         } else if (fYClick < 0.375f && heldStack != null && (heldStack.getItem().getCanBeFedDirectlyIntoBrickOven(heldStack.getItemDamage()) || FUEL_MAP.containsKey(heldStack.itemID))) {

@@ -45,6 +45,7 @@ public abstract class HopperTileEntityMixin extends TileEntity {
                 hellforge.setInventorySlotContents(0, ejectStack.copy());
                 this.decrStackSize(iStackIndex, 1);
                 this.worldObj.playAuxSFX(2231, this.xCoord, this.yCoord, this.zCoord, 0);
+                hellforge.tryConsumeNetherrackBelow();
                 hellforge.onInventoryChanged();
             }
             ci.cancel();

@@ -29,6 +29,9 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
             this.furnaceBurnTime += this.unlitFuelBurnTime;
             this.unlitFuelBurnTime = 0;
+//            if(this.furnaceItemStacks[0] != null){
+//                this.tryConsumeNetherrackBelow();
+//            }
 
             if (this.canSmelt()) {
                 ++this.furnaceCookTime;
@@ -160,7 +163,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
         }
     }
 
-    private void tryConsumeNetherrackBelow() {
+    public void tryConsumeNetherrackBelow() {
         TileEntity te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
         if (!(te instanceof IInventory inv)) return;
 
