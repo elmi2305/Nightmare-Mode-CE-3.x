@@ -349,6 +349,7 @@ public class NMBlocks {
         portalCore = portalCore.hideFromEMI().setCreativeTab(null);
         honeyCover = honeyCover.hideFromEMI().setCreativeTab(null);
         customLog = customLog.hideFromEMI().setCreativeTab(null);
+        bloodBonesUpgraded = bloodBonesUpgraded.hideFromEMI().setCreativeTab(null);
         steelFrame = (BlockSteelFrame) steelFrame.hideFromEMI().setCreativeTab(null);
     }
 }
