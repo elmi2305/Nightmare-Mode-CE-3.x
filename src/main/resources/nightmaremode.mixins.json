@@ -38,6 +38,7 @@
     "PathFinderMixin",
     "PathNavigateMixin",
     "PlayerCapabilitiesMixin",
+    "PlayerControllerMPMixin",
     "PotionEffectMixin",
     "PotionMixin",
     "ServerConfigurationManagerMixin",
