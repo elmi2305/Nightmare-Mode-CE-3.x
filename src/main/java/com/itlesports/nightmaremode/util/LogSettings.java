@@ -8,11 +8,10 @@ public class LogSettings {
     public final boolean logIndirectBreaks;
 
     public LogSettings(int flags) {
-        int loggingLevel = flags & 0b11;
 
-        this.logChests = loggingLevel == 1;
-        this.logContainers = loggingLevel == 2;
-        this.logAllTileEntities = loggingLevel == 3;
+        this.logChests = (flags & 0b1) == 1;
+        this.logContainers = (flags & 0b10) >> 1 == 1;
+        this.logAllTileEntities = (flags & 0b11) == 0b11;
 
         this.logItemRemoval = (flags & 0b100) != 0;
         this.logIndirectBreaks = (flags & 0b1000) != 0;
