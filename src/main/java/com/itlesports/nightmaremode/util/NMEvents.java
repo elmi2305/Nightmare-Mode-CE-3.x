@@ -156,6 +156,10 @@ public class NMEvents {
 
     public static void onServerTick(WorldServer w){
         SimpleEvent chosen = null;
+        if(w.playerEntities.isEmpty()){
+            NightmareMode.sendEventsPacketToAll(0);
+            return;
+        }
 
         for (SimpleEvent event : SimpleEvent.values()) {
             if (chosen == null && event.condition.checkActivation(w, event.constant) && NMUtils.getWorldProgress() >= event.worldStateRequirement) {
