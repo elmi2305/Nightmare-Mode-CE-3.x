@@ -156,7 +156,8 @@ public class NMEvents {
 
     public static void onServerTick(WorldServer w){
         SimpleEvent chosen = null;
-        if(w.playerEntities.isEmpty()){
+
+        if(w.getMinecraftServer().getCurrentPlayerCount() == 0){
             NightmareMode.sendEventsPacketToAll(0);
             return;
         }
