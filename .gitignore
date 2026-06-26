@@ -26,3 +26,6 @@ run/
 
 # macos
 *.DS_Store
+
+# NM dev util
+/src/main/java/com/itlesports/nightmaremode/util/dev/

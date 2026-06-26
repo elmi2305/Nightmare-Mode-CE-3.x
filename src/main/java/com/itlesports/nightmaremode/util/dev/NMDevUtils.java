@@ -1,6 +1,5 @@
-package com.itlesports.nightmaremode.util;
+package com.itlesports.nightmaremode.util.dev;
 
-import btw.community.nightmaremode.NightmareMode;
 
 public class NMDevUtils {
     public static boolean getDevMode(){
