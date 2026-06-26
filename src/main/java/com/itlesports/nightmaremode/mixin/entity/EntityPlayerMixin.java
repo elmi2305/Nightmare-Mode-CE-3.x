@@ -273,11 +273,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
                 entity.hurtResistantTime == 0 &&
                 !this.isPotionActive(Potion.weakness) &&
                 !(entity instanceof EntityWither)){
-            int chance = 10 - NMUtils.getBloodArmorWornCount(this) * 2;
-            // 10, 8, 6, 4, 2
+            int chance = 12 - NMUtils.getBloodArmorWornCount(this) * 2;
+            // 12, 10, 8, 6, 4
 
             if(rand.nextInt(chance) == 0){
-                this.heal(rand.nextInt(chance) == 0 ? 2 : 1);
+                this.heal(rand.nextInt(chance + 2) == 0 ? 2 : 1);
             }
 
             if(rand.nextInt((int) (chance / 1.5)) == 0 && this.foodStats.getFoodLevel() < 57){
