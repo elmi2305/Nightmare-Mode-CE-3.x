@@ -35,7 +35,7 @@ public class NMFields {
     public static final int VEHICLE_MAGIC = 2301;
 
     // skeleton types
-    public static final int SKELETON_WITHER = 1; // vanilla wither skeleton type
+    public static final int SKELETON_WITHER = 1;
     public static final int SKELETON_ICE = 2;
     public static final int SKELETON_FIRE = 3;
     public static final int SKELETON_ENDER = 4;
@@ -67,5 +67,13 @@ public class NMFields {
     public static final int MAX_FOOD_FROM_FRUITS = 90;
     public static final int MAX_HEALTH_FROM_FRUITS = 30;
 
+    // sanity
+    public static final double MAX_SANITY = 2000.0;
+    public static final double CRITICAL_SANITY = 1500.0;
 
+    // sanity drain
+    public static final double LIGHT_DRAIN_MULTIPLIER = 0.02;
+    public static final double HEIGHT_DRAIN_MULTIPLIER = 0.012;
+    public static final double BIOME_DRAIN_MULTIPLIER = 0.02;
+    public static final double ENEMY_DRAIN_MULTIPLIER = 0.015;
 }

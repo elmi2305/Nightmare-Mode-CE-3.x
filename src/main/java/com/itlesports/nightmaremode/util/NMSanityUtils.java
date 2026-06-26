@@ -12,20 +12,10 @@ import static btw.community.nightmaremode.NightmareMode.SANITY;
 public final class NMSanityUtils {
     private NMSanityUtils() {}
 
-    public static final double LIGHT_DRAIN_MULTIPLIER   = 0.02;
-    public static final double HEIGHT_DRAIN_MULTIPLIER  = 0.012;
-    public static final double BIOME_DRAIN_MULTIPLIER   = 0.02;
-    public static final double ENEMY_DRAIN_MULTIPLIER   = 0.015;
+    public static final double HEIGHT_REFERENCE_Y = 100;
 
-    public static final double HEIGHT_REFERENCE_Y       = 100;
-
-    public static final double ENEMY_DETECTION_RADIUS   = 16.0;
-    public static final double ENEMY_HEALTH_WEIGHT      = 0.20;
-
-
-
-    public static final double MAX_SANITY = 2000.0;
-    public static final double CRITICAL_SANITY = 1500.0;
+    public static final double ENEMY_DETECTION_RADIUS = 16.0;
+    public static final double ENEMY_HEALTH_WEIGHT = 0.20;
 
     public static double getSanityDrainPerTick(EntityPlayer player) {
         if (player == null) return 0.0;
@@ -37,6 +27,7 @@ public final class NMSanityUtils {
         drain += getHeightDrain(player);
         drain += getBiomeDrain(player);
         drain += getNearbyEnemyDrain(player);
+
         if(Keyboard.isKeyDown(Keyboard.KEY_O)){
             drain += 10;
         }
@@ -50,12 +41,12 @@ public final class NMSanityUtils {
 
 
         if (player.ticksExisted % 40 == 0 && player.isSneaking()) {
-            //// DEBUG
-//            System.out.println("sanity drain from LIGHT: " + getLightDrain(player));
-//            System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
-//            System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
-//            System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
-//            System.out.println(" ");
+            // DEBUG
+            System.out.println("sanity drain from LIGHT:  " + getLightDrain(player));
+            System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
+            System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
+            System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
+            System.out.println(" ");
         }
 
         return Math.max(0.0, drain);
@@ -73,12 +64,12 @@ public final class NMSanityUtils {
         float brightness = world.getLightBrightness(x, y, z); // think this is only skylight
         double darkness = 1.0 - brightness; // 0.0 to 1.0
 
-        return darkness * LIGHT_DRAIN_MULTIPLIER;
+        return darkness * NMFields.LIGHT_DRAIN_MULTIPLIER;
     }
 
     public static double getHeightDrain(EntityPlayer player) {
         double below = Math.max(0.0, (HEIGHT_REFERENCE_Y - player.posY) / HEIGHT_REFERENCE_Y); // 0..1
-        return below * HEIGHT_DRAIN_MULTIPLIER;
+        return below * NMFields.HEIGHT_DRAIN_MULTIPLIER;
     }
 
     public static double getBiomeDrain(EntityPlayer player) {
@@ -94,7 +85,7 @@ public final class NMSanityUtils {
             if(!(tempBiome instanceof BiomeGenUnderworld biome)) return 0.0;
 
             double factor = biome.getDrainMultiplier();
-            return (factor - 1.0) * BIOME_DRAIN_MULTIPLIER;
+            return (factor - 1.0) * NMFields.BIOME_DRAIN_MULTIPLIER;
         }
         return 0d;
     }
@@ -129,7 +120,7 @@ public final class NMSanityUtils {
             sum += mobContribution;
         }
 
-        return sum * ENEMY_DRAIN_MULTIPLIER;
+        return sum * NMFields.ENEMY_DRAIN_MULTIPLIER;
     }
 
     private static double getMobContribution(double radius, double dist, EntityLivingBase mob) {
