@@ -52,12 +52,12 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         boolean isHoveredStar = isMouseOverStar(starX, starY, starSize);
         boolean isSelected = this.isSelected(worldTextIndex);
         boolean isHoveredOverWorld = this.isMouseOverWorld(starX, starY, starSize);
+        if (isFavorited || isSelected || isHoveredStar || isHoveredOverWorld) {
+            drawStar(starX, starY, starSize, isFavorited);
+        }
 
         // when to draw it
         if (NightmareMode.devMode) {
-            if (isFavorited || isSelected || isHoveredStar || isHoveredOverWorld) {
-                drawStar(starX, starY, starSize, isFavorited);
-            }
             int x1 = xPos - 80;
             int y1 = starY - 2;
 

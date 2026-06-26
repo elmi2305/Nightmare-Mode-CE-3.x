@@ -19,7 +19,6 @@ import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.util.command.*;
-import com.itlesports.nightmaremode.util.dev.NMDevUtils;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
@@ -38,7 +37,7 @@ public class NightmareMode extends BTWAddon {
 
     private static NightmareMode instance;
 
-    public static boolean devMode = NMDevUtils.getDevMode();
+    public static boolean devMode = false;
 
 
     // world gen
