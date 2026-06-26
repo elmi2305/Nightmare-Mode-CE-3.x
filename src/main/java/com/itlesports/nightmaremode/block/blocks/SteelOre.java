@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.block.blocks;
 import api.block.blocks.OreBlockStaged;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlockOre;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -10,20 +12,18 @@ import net.minecraft.src.*;
 import java.util.List;
 import java.util.Random;
 
-public class SteelOre extends OreBlockStaged {
+public class SteelOre extends NMBlockOre {
     public SteelOre(int iBlockID) {
         super(iBlockID);
-        this.setCreativeTab(CreativeTabs.tabBlock);
         this.setChiselsEffectiveOn(false);
         this.setChiselsCanHarvest(false);
         this.setResistance(100000f);
     }
 
     @Override
-    public float getExplosionResistance(Entity entity, World world, int i, int j, int k) {
-        return this.getExplosionResistance(entity);
+    public boolean canBeMined(IBlockAccess world, int i, int j, int k) {
+        return NightmareMode.worldState >= NMFields.POSTWITHER;
     }
-
 
     @Override
     public void onRemovedByBlockDispenser(World world, int i, int j, int k) {
@@ -41,7 +41,7 @@ public class SteelOre extends OreBlockStaged {
 
     @Override
     public int getRequiredToolLevelForOre(IBlockAccess blockAccess, int i, int j, int k) {
-        if (NightmareMode.worldState > 1) {
+        if (this.canBeMined(blockAccess,i,j,k)) {
             return 3;
         }
         return 4;
