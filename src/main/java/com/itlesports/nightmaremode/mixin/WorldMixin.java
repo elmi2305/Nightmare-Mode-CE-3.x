@@ -4,7 +4,7 @@ import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.entity.underworld.EntityVoidSquid;
-import com.itlesports.nightmaremode.util.LogSettings;
+import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;

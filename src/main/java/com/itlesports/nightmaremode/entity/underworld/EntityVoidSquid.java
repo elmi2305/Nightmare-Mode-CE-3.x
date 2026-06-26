@@ -1,30 +1,22 @@
 package com.itlesports.nightmaremode.entity.underworld;
 
 import api.achievement.AchievementEventDispatcher;
-import api.entity.ClosestEntitySelectionCriteria;
 import api.entity.mob.possession.PossessionSource;
-import api.inventory.InventoryUtils;
 import api.world.BlockPos;
 import api.world.WorldUtils;
-import api.world.difficulty.DifficultyParam;
 import btw.achievement.BTWAchievementEvents;
 import btw.entity.mob.BTWSquidEntity;
-import btw.item.BTWItems;
 import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;

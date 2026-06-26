@@ -4,7 +4,7 @@ import api.achievement.AchievementEventDispatcher;
 import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
-import com.itlesports.nightmaremode.util.LogSettings;
+import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;

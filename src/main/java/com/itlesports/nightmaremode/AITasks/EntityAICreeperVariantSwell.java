@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.EntityAIBase;
 import net.minecraft.src.EntityLivingBase;

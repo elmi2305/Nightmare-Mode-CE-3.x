@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.JungleSpiderEntity;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;

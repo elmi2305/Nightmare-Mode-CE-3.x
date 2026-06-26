@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.block.TileEntityDataPacketHandler;
 import btw.block.tileentity.OvenTileEntity;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntityFurnace;
 import org.spongepowered.asm.mixin.Mixin;

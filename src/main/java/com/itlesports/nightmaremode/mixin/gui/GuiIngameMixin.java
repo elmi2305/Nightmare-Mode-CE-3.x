@@ -25,8 +25,8 @@ import java.util.Random;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
-import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
-import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.CRITICAL_SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.MAX_SANITY;
 
 @Mixin(GuiIngame.class)
 public abstract class GuiIngameMixin extends Gui {

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;

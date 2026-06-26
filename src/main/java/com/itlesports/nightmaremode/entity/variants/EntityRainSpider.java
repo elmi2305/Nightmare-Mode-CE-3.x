@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.entity.variants;
 
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 
 import java.util.Iterator;

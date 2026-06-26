@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.block.blocks.CropsBlock;
 import api.block.blocks.DailyGrowthCropsBlock;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldInfo;

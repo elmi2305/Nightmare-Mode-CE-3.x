@@ -10,7 +10,7 @@ import btw.crafting.manager.SawCraftingManager;
 import btw.item.BTWItems;
 import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.util.BloodSawCraftingManager;
+import com.itlesports.nightmaremode.util.elements.BloodSawCraftingManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;

@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.biomegen;
 
 import com.itlesports.nightmaremode.entity.variants.EntityRainSpider;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

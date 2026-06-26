@@ -1,9 +1,8 @@
 package com.itlesports.nightmaremode.entity.underworld;
 
 import btw.block.BTWBlocks;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 public class EntityVoidSlime extends EntitySlimeVariant{

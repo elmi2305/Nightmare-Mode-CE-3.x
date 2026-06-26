@@ -6,7 +6,7 @@ import btw.entity.mob.BTWSquidEntity;
 import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;

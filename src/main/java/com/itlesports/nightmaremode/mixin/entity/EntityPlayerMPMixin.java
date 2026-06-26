@@ -4,7 +4,7 @@ import api.world.WorldUtils;
 
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMConfUtils;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;

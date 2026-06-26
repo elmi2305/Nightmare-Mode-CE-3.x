@@ -19,6 +19,7 @@ import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.util.command.*;
+import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.interfaces.AddonConfigExtender;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;

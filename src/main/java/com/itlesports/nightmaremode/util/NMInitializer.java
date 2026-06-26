@@ -32,6 +32,7 @@ import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.mixin.interfaces.StatListAccess;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
+import com.itlesports.nightmaremode.util.elements.BloodSawCraftingManager;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;

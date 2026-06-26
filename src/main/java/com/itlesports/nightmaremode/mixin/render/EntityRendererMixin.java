@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
@@ -27,8 +27,8 @@ import java.nio.FloatBuffer;
 import java.util.Arrays;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
-import static com.itlesports.nightmaremode.util.NMSanityUtils.CRITICAL_SANITY;
-import static com.itlesports.nightmaremode.util.NMSanityUtils.MAX_SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.CRITICAL_SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.MAX_SANITY;
 
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin implements ZoomStateAccessor {
@@ -487,11 +487,11 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Unique private float underworldFogAlpha = 0.0f;
     @Unique private float horrorFogAlpha = 0.0f;
     @Inject(method = "setupFog", at = @At("HEAD"),cancellable = true)
-    private void doUnderworldFog(int par1, float par2, CallbackInfo ci){
+    private void doUnderworldFog(int par1, float partialTicks, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
 //        if(NightmareMode.devMode) return;
 
-        if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p && NMUtils.getIsSolarFlare()) {
+        if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p) {
             //// DEBUG: returning because getIsSolarFlare just returns false
             long worldTime = this.mc.theWorld.getWorldTime();
             long timeOfDay = worldTime % 24000L;
@@ -517,9 +517,9 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             float pulse = 0.008f * (float) Math.sin(worldTime * 0.015f);
             float warp = 0.004f * (float) Math.cos(entity.posY * 0.08f + worldTime * 0.012f);
 
-            float red   = 0.07f + 0.015f * (float) Math.sin(worldTime * 0.022f + par2 * 0.8f) + warp;
-            float green = 0.015f + 0.008f * (float) Math.cos(worldTime * 0.018f + par2);
-            float blue  = 0.04f  + 0.012f * (float) Math.sin(worldTime * 0.025f + par2) - warp;
+            float red   = 0.07f + 0.015f * (float) Math.sin(worldTime * 0.022f + partialTicks * 0.8f) + warp;
+            float green = 0.015f + 0.008f * (float) Math.cos(worldTime * 0.018f + partialTicks);
+            float blue  = 0.04f  + 0.012f * (float) Math.sin(worldTime * 0.025f + partialTicks) - warp;
 
             red   = MathHelper.clamp_float(red,   0.04f, 0.14f);
             green = MathHelper.clamp_float(green, 0.005f, 0.06f);
@@ -535,7 +535,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
             GL11.glFogf(GL11.GL_FOG_DENSITY, density);
 
-            int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, par2);
+            int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
 
             if (entity.isPotionActive(Potion.blindness)) {
                 GL11.glFogf(GL11.GL_FOG_DENSITY, (0.14f + pulse * 1.5f) * this.underworldFogAlpha);
@@ -584,9 +584,9 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 long worldTime = this.mc.theWorld.getWorldTime();
                 float pulse = 0.003f * (float) Math.sin(worldTime * 0.02f);
 
-                float red   = 0.12f + 0.03f * (float) Math.sin(worldTime * 0.015f + par2 * 0.5f);
-                float green = 0.04f + 0.02f * (float) Math.cos(worldTime * 0.018f + par2);
-                float blue  = 0.06f + 0.02f * (float) Math.sin(worldTime * 0.022f + par2);
+                float red   = 0.12f + 0.03f * (float) Math.sin(worldTime * 0.015f + partialTicks * 0.5f);
+                float green = 0.04f + 0.02f * (float) Math.cos(worldTime * 0.018f + partialTicks);
+                float blue  = 0.06f + 0.02f * (float) Math.sin(worldTime * 0.022f + partialTicks);
 
                 red   = MathHelper.clamp_float(red,   0.08f, 0.18f);
                 green = MathHelper.clamp_float(green, 0.02f, 0.08f);
@@ -600,7 +600,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
                 GL11.glFogf(GL11.GL_FOG_DENSITY, density);
 
-                int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, par2);
+                int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
 
                 if (entity.isPotionActive(Potion.blindness)) {
                     GL11.glFogf(GL11.GL_FOG_DENSITY, (0.12f + pulse * 1.2f) * this.horrorFogAlpha);
@@ -647,9 +647,9 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 long worldTime = this.mc.theWorld.getWorldTime();
                 float pulse = 0.003f * (float) Math.sin(worldTime * 0.02f) * 0;
 
-                float red   = 0.12f + 0.03f * (float) Math.sin(worldTime * 0.005f + par2 * 0.5f);
-                float green = 0.04f + 0.02f * (float) Math.cos(worldTime * 0.008f + par2);
-                float blue  = 0.06f + 0.02f * (float) Math.sin(worldTime * 0.008f + par2);
+                float red   = 0.12f + 0.03f * (float) Math.sin(worldTime * 0.005f + partialTicks * 0.5f);
+                float green = 0.04f + 0.02f * (float) Math.cos(worldTime * 0.008f + partialTicks);
+                float blue  = 0.06f + 0.02f * (float) Math.sin(worldTime * 0.008f + partialTicks);
 
                 red   = MathHelper.clamp_float(red,   0.08f, 0.18f);
                 green = MathHelper.clamp_float(green, 0.02f, 0.08f);
@@ -663,7 +663,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0f));
                 GL11.glFogf(GL11.GL_FOG_DENSITY, density);
 
-                int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, par2);
+                int blockId = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
 
                 if (entity.isPotionActive(Potion.blindness)) {
                     GL11.glFogf(GL11.GL_FOG_DENSITY, (0.12f + pulse * 1.2f) * this.horrorFogAlpha);

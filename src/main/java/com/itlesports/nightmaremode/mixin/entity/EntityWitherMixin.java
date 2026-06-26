@@ -6,7 +6,7 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.DireWolfEntity;
 import com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;

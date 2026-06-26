@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;

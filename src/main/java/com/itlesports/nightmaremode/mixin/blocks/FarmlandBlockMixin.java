@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.FarmlandBlock;
 import btw.block.blocks.FarmlandBlockBase;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

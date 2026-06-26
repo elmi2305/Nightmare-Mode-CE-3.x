@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.AITasks;
 
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;

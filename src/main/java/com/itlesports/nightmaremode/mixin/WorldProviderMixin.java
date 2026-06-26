@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.underworld.WorldProviderUnderworld;
-import com.itlesports.nightmaremode.util.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.WorldProvider;
 import org.spongepowered.asm.mixin.Mixin;

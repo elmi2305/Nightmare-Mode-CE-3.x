@@ -18,6 +18,8 @@ import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
+import com.itlesports.nightmaremode.util.elements.NMDamageSource;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
@@ -783,22 +785,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
                 System.out.println("current sanity is: " + this.getData(SANITY));
             }
         }
-//        if(this.ticksExisted % 10 == 0 && this.isSneaking()){
-//            WorldServer ws = this.getWorldServer();
-//            if(ws != null) {
-//                System.out.println(ws.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION ? "UNDERWORLD" : "SOMETHING ELSE");
-//                System.out.println("Moon Phase: " + ws.getMoonPhase());
-//                System.out.println("OUTPUT: " + (this.dimension == NMFields.UNDERWORLD_DIMENSION  && ws.getMoonPhase() == 0));
-//                System.out.println(" ");
-//                System.out.println("blue moon: " + ((WorldServerExt)this.getWorldServer()).nightmareMode$getIsBlueMoon() + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER"));
-//            }
-//            System.out.println(this.worldObj.getDifficultyParameter(DifficultyParam.CreeperFollowDistanceMultiplier.class) + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER")); // returns false for some reason
-//            System.out.println(this.worldObj.worldInfo.getDifficulty().getLocalizedName() + " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER"));
-//            System.out.println(this.worldObj.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION ? "UNDERWORLD" : "OVERWORLD" +  " " + (this.worldObj.isRemote ? "CLIENT" : "SERVER") );
-//        }
+
+        if(this.getSanity() > CRITICAL_SANITY * 1.1d && this.ticksExisted % 20 == 0){
+            this.damageEntity(NMDamageSource.insanity, 1);
+            if(this.getSanity() >= MAX_SANITY){
+                this.damageEntity(NMDamageSource.insanity, 1);
+            }
+        }
+
+
 
         // manage blight effects
-        if(this.ticksExisted % 20 == 0) {
+        if((this.ticksExisted & 16) == 0) {
             if (!this.capabilities.isCreativeMode && this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID) {
                 EntityPlayer thisObj = (EntityPlayer) (Object) this;
 
@@ -823,6 +821,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
         }
     }
 
+    @Unique private int getSanity(){
+        return this.getData(SANITY).intValue();
+    }
     @Unique private WorldServer getWorldServer(){
         return this.worldObj instanceof WorldServer ? (WorldServer) this.worldObj : null;
         // gets the WorldServer instance for this entity, used for blue moon / dimension checking

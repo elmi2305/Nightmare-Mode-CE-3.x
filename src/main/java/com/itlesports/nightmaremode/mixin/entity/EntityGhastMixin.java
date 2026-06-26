@@ -2,8 +2,8 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMDifficultyParam;
-import com.itlesports.nightmaremode.util.NMEvents;
+import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
