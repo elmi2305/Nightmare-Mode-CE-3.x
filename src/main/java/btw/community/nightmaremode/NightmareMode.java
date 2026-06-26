@@ -37,7 +37,7 @@ public class NightmareMode extends BTWAddon {
 
     private static NightmareMode instance;
 
-    public static boolean devMode = false;
+    public static boolean devMode = true;
 
 
     // world gen
@@ -609,7 +609,6 @@ public class NightmareMode extends BTWAddon {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("sent food: " + target);
 
         Packet250CustomPayload packet = new Packet250CustomPayload("nm|foodstat", byteStream.toByteArray());
         player.playerNetServerHandler.sendPacketToPlayer(packet);
