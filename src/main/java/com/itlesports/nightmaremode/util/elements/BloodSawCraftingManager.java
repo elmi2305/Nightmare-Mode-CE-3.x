@@ -1,6 +1,5 @@
-package com.itlesports.nightmaremode.util;
+package com.itlesports.nightmaremode.util.elements;
 
-import btw.crafting.manager.SawCraftingManager;
 import btw.crafting.recipe.types.SawRecipe;
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemStack;

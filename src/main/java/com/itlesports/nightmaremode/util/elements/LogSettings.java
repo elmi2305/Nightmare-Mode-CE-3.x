@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.util;
+package com.itlesports.nightmaremode.util.elements;
 
 public class LogSettings {
     public final boolean logChests;

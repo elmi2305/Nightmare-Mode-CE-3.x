@@ -1,6 +1,8 @@
-package com.itlesports.nightmaremode.util;
+package com.itlesports.nightmaremode.util.elements;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 public class NMEvents {
