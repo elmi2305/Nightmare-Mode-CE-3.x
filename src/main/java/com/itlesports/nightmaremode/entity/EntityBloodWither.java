@@ -695,7 +695,7 @@ public class EntityBloodWither extends EntityWither {
             this.playerTarget = this.worldObj.getClosestVulnerablePlayerToEntity(this,40);
         }
         setBossActive(this.playerTarget != null && this.playerTarget.isEntityAlive() && this.isEntityAlive());
-        if((this.playerTarget == null || !this.playerTarget.isEntityAlive()) && this.getInvulnerabilityTime() == 0 || !this.isEntityAlive()){
+        if(((this.playerTarget == null || !this.playerTarget.isEntityAlive()) && this.getInvulnerabilityTime() == 0 || !this.isEntityAlive()) && this.worldObj.isRemote){
             NMUtils.shushMusic();
         }
         if(!this.worldObj.isRemote && this.playerTarget != null && this.ticksExisted % this.baseAttackInterval == this.baseAttackInterval - 1 && this.passivityDuration == -1 && this.trackedEntities.isEmpty() && this.reviveTimer == 0){
