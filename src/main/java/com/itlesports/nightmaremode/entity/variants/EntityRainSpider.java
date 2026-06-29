@@ -54,6 +54,9 @@ public class EntityRainSpider extends EntitySpider {
 
     @Override
     protected boolean canDespawn() {
-        return super.canDespawn() && !NMEvents.SimpleEvent.SPIDER_RAIN.isActive() && this.posY > 60;
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            return this.posY < 60;
+        }
+        return super.canDespawn();
     }
 }
