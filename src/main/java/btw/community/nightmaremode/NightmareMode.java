@@ -38,7 +38,7 @@ public class NightmareMode extends BTWAddon {
 
     private static NightmareMode instance;
 
-    public static boolean devMode = false;
+    public static boolean devMode = true;
 
 
     // world gen
@@ -413,6 +413,16 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+        // song
+        AddonHandler.registerPacketHandler("nm|music", (packet, player) -> {
+
+            try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
+                String soundID = data.readUTF();
+                NMUtils.forcePlayMusic(soundID, true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
@@ -476,6 +486,34 @@ public class NightmareMode extends BTWAddon {
 
         return new Packet250CustomPayload("nm|stat", byteStream.toByteArray());
     }
+
+    private static Packet250CustomPayload createSongPacket(String soundId) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+        try {
+            dataStream.writeUTF(soundId);
+        } catch (Exception var4) {
+            var4.printStackTrace();
+        }
+
+        return new Packet250CustomPayload("nm|music", byteStream.toByteArray());
+    }
+    public static void sendSongToAll(String sourceId) {
+        Packet250CustomPayload packet = createSongPacket(sourceId);
+        for (Object playerObj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (playerObj instanceof EntityPlayerMP player) {
+                player.playerNetServerHandler.sendPacketToPlayer(packet);
+            }
+        }
+    }
+
+    public static void sendSongToPlayer(String sourceId, EntityPlayerMP player) {
+        Packet250CustomPayload packet = createSongPacket(sourceId);
+
+        player.playerNetServerHandler.sendPacketToPlayer(packet);
+    }
+
 
 
     private static Packet250CustomPayload createMoonAndSunEventPacket(){

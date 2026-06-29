@@ -35,7 +35,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 
     @Unique private boolean isBlueMoonWorld;
     @Inject(method = "tick", at = @At("TAIL"))
-    private void manageBlueMoons(CallbackInfo ci){
+    private void onTickTail(CallbackInfo ci){
 //        if(this.worldInfo.dimension == NMFields.UNDERWORLD_DIMENSION){
 //            if(time % 100 != 1) return;
 //            NightmareMode.setBlueMoon(
@@ -57,6 +57,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 //        } else{
 //            this.setBlueMoonWorld(false);
 //        }
+
 
         if ((time & 15) == 0) {
             NMEvents.onServerTick((WorldServer)(Object)this);

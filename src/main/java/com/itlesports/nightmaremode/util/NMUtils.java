@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static btw.community.nightmaremode.NightmareMode.sendSongToPlayer;
+
 public class NMUtils {
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
@@ -281,6 +283,9 @@ public class NMUtils {
             }
         }
     }
+    public static void forceMusicFromServer(String soundID, boolean toLoop, EntityPlayerMP p) {
+        sendSongToPlayer(soundID, p);
+    }
     public static void forcePlaySound(String sourceId, String soundId) {
         SoundManager sndManager = Minecraft.getMinecraft().sndManager;
         SoundManagerAccess access = (SoundManagerAccess) sndManager;
@@ -419,7 +424,7 @@ public class NMUtils {
 
     public static boolean getIsDayFromWorldTime(World w){
         long time = w.getWorldTime() % 24000;
-        return time <= 12541 || time >= 23459;
+        return time < 12541 || time > 23459;
     }
 
     public static int getDayCountFromWorld(World w) {
