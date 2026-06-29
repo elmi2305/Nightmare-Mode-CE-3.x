@@ -130,8 +130,13 @@ public abstract class MinecraftServerMixin {
 
             NightmareMode.sendMoonAndSunEventsToAllPlayers();
         }
+        boolean isPostDragon = false;
+        for(WorldServer server : this.worldServers) {
+            if(isPostDragon) break;
+            isPostDragon = server.worldInfo.getData(NightmareMode.DRAGON_DEFEATED);
+        }
 
-        if (this.worldServers[0].worldInfo.getData(NightmareMode.DRAGON_DEFEATED)) {
+        if (isPostDragon) {
             NightmareMode.worldState = 3;
         } else if (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly()) {
             NightmareMode.worldState = 2;
