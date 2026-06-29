@@ -97,7 +97,7 @@ public class NMEvents {
                 @Override
                 protected boolean checkActivation(World w, int constant) {
                     return (w.isDaytime() || NMUtils.getIsDayFromWorldTime(w))
-                            && NMUtils.getDayCountFromWorld(w) % constant == 0;
+                            && NMUtils.getDayCountFromWorld(w) % constant == 0 && w.getWorldTime() % 24000 != 0;
                 }
             },
             DAY_ENDS_WITH {
@@ -106,14 +106,14 @@ public class NMEvents {
                     // first day check goes off of the skylight...
                     String dayCount = Integer.toString(NMUtils.getDayCountFromWorld(w));
                     return (w.isDaytime() || NMUtils.getIsDayFromWorldTime(w))
-                            && dayCount.endsWith(Integer.toString(constant));
+                            && dayCount.endsWith(Integer.toString(constant)) && w.getWorldTime() % 24000 != 0;
                 }
             },
             NIGHT_MULTIPLE {
                 @Override
                 protected boolean checkActivation(World w, int constant) {
                     return !(w.isDaytime() || NMUtils.getIsDayFromWorldTime(w))
-                            && NMUtils.getDayCountFromWorld(w) % constant == 0;
+                            && NMUtils.getDayCountFromWorld(w) % constant == 0 && w.getWorldTime() % 24000 != 0;
                 }
             },
             NIGHT_ENDS_WITH {
@@ -121,7 +121,7 @@ public class NMEvents {
                 protected boolean checkActivation(World w, int constant) {
                     String dayCount = Integer.toString(NMUtils.getDayCountFromWorld(w));
                     return !(w.isDaytime() || NMUtils.getIsDayFromWorldTime(w))
-                            && dayCount.endsWith(Integer.toString(constant));
+                            && dayCount.endsWith(Integer.toString(constant)) && w.getWorldTime() % 24000 != 0;
                 }
             };
 
