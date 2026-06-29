@@ -142,11 +142,11 @@ public class NMEvents {
 
             ChatMessageComponent text = new ChatMessageComponent();
             ChatMessageComponent text1 = new ChatMessageComponent();
-            text.addText(I18n.getString("nm.events." + this.string));
+            text = ChatMessageComponent.createFromTranslationKey("nm.events." + this.string);
             text.setColor(this.color);
             text.setBold(true);
 
-            text1.addText(I18n.getString("nm.events." + this.string + ".info"));
+            text1 = ChatMessageComponent.createFromTranslationKey("nm.events." + this.string + ".info");
             text1.setColor(EnumChatFormatting.WHITE);
             for(Object p : w.playerEntities){
 
