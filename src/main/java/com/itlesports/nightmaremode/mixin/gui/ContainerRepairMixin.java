@@ -104,7 +104,7 @@ public class ContainerRepairMixin {
             return stack2.getItem().itemID == Item.ingotGold.itemID;
         }
         if(diamondSet.contains(repairItem.itemID)){
-            return stack2.getItem().itemID == Item.diamond.itemID || stack2.getItem().itemID == BTWItems.diamondIngot.itemID;
+            return stack2.getItem().itemID == Item.diamond.itemID || stack2.getItem().itemID == BTWItems.diamondIngot.itemID || stack2.getItem().itemID == NMItems.refinedDiamondIngot.itemID;
         }
         return Item.itemsList[repairItem.itemID].getIsRepairable(stack1,stack2);
     }
