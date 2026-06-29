@@ -27,8 +27,7 @@ import java.nio.FloatBuffer;
 import java.util.Arrays;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
-import static com.itlesports.nightmaremode.util.NMFields.CRITICAL_SANITY;
-import static com.itlesports.nightmaremode.util.NMFields.MAX_SANITY;
+import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin implements ZoomStateAccessor {
@@ -52,17 +51,15 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Shadow protected abstract float getFOVModifier(float partialTicks, boolean useFOVSetting);
 
 
-    @Shadow @Final private int[] lightmapColors;
-
+    @Mutable @Shadow @Final private int[] lightmapColors;
     @Shadow protected abstract FloatBuffer setFogColorBuffer(float par1, float par2, float par3, float par4);
-
     @Shadow private boolean cloudFog;
 
     @Shadow
     protected abstract void setupFog(int par1, float par2);
 
-    @Shadow
-    protected abstract float getNightVisionBrightness(EntityPlayer par1EntityPlayer, float par2);
+    @Shadow protected abstract float getNightVisionBrightness(EntityPlayer par1EntityPlayer, float par2);
+    @Shadow protected abstract void updateLightmap(float par1);
 
     @Unique private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/effects/nmBloodRain.png");
     @Unique private static final ResourceLocation SLIME_RAIN = new ResourceLocation("nightmare:textures/effects/nmSlimeRain.png");
@@ -302,8 +299,8 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         return (0xAA << 24) | (r << 16) | (g << 8) | b;
     }
 
-
-    @Unique private int fadeTracker = 1;
+    @Unique private static final int C_BM = 0;
+    @Unique private int[] fadeTracker = new int[]{1};
     @ModifyArg(method = "modUpdateLightmapOverworld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureUtil;uploadTexture(I[III)V"),index = 1)
     private int[] manageCustomColorEvents(int[] originalArray){
         if (this.mc.thePlayer.isPotionActive(Potion.nightVision)) {
@@ -330,24 +327,24 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 //        else // cannot run concurrently, blood moons and blue moons are mutually exclusive
         if(NMUtils.getIsBloodMoon()){
             if(NightmareMode.bloodmoonColors){
-                if(fadeTracker < 800){
-                    fadeTracker++;
+                if(fadeTracker[C_BM] < 800){
+                    fadeTracker[C_BM]++;
                 }
 
-                setCurrentColorTarget(originalArray, 0x00505050, 0.9f);
+                setCurrentColorTarget(originalArray, 0x00505050, 0.9f, C_BM);
 
                 return originalArray;
             }
         } else{
-            fadeTracker = 1;
+            fadeTracker[C_BM] = 1;
         }
 
         return originalArray;
     }
 
     @Unique
-    private void setCurrentColorTarget(int[] originalArray, int targetColor, float intensity) {
-        float t = Math.min(1f, fadeTracker / 800f);
+    private void setCurrentColorTarget(int[] originalArray, int targetColor, float intensity, int channel) {
+        float t = Math.min(1f, fadeTracker[channel] / 800f);
         float tEffective = t * Math.max(0f, Math.min(1f, intensity));
 
         int aTarget = (targetColor >> 24) & 0xFF;
@@ -430,6 +427,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             this.fogColorRed = 0.7f;
             this.fogColorBlue = 0.15f;
             this.fogColorGreen= 0.1f;
+            return;
         }
     }
     @Inject(method = "setupFog", at = @At("HEAD"))
