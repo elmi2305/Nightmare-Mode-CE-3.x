@@ -1228,7 +1228,11 @@ public class EntityBloodWither extends EntityWither {
 
     @Override
     public void func_82206_m() {
-        NMUtils.forcePlayMusic(NightmareModeAddon.NM_BLOODWITHER.sound(), true);
+        for(Object p : this.worldObj.playerEntities){
+            if(p instanceof EntityPlayerMP) {
+                NMUtils.forceMusicFromServer(NightmareModeAddon.NM_BLOODWITHER.sound(), true, (EntityPlayerMP) p);
+            }
+        }
         this.setHealthTimer(240);
         this.setHealth(this.getMaxHealth() / 16.0F);
     }
