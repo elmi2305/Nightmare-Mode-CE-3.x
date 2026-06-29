@@ -423,6 +423,12 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
+        // server telling the client that the nether needs an update
+        AddonHandler.registerPacketHandler("nm|nUpd8", (packet, player) -> {
+            if (player.dimension == -1) {
+                player.worldObj.provider.generateLightBrightnessTable();
+            }
+        });
     }
 
 
@@ -487,6 +493,11 @@ public class NightmareMode extends BTWAddon {
         return new Packet250CustomPayload("nm|stat", byteStream.toByteArray());
     }
 
+    private static Packet250CustomPayload createNetherChangePacket() {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+        return new Packet250CustomPayload("nm|nUpd8", byteStream.toByteArray());
+    }
     private static Packet250CustomPayload createSongPacket(String soundId) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);
@@ -548,6 +559,15 @@ public class NightmareMode extends BTWAddon {
     }
     public static void sendMoonAndSunEventsToAllPlayers() {
         Packet250CustomPayload packet = createMoonAndSunEventPacket();
+        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
+            }
+        }
+    }
+
+    public static void sendNetherLightmapUpdateToClients() {
+        Packet250CustomPayload packet = createNetherChangePacket();
         for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);

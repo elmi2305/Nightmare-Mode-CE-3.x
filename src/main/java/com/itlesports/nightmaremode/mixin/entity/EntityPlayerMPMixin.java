@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.world.WorldUtils;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -127,6 +128,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             this.sendChatToPlayer(text2);
             this.playSound("mob.wither.death", 0.9f, 0.905f);
             WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
+            NightmareMode.sendNetherLightmapUpdateToClients();
+            ((WorldProviderHell)this.worldObj.provider).generateLightBrightnessTable();
+
         }
     }
 
