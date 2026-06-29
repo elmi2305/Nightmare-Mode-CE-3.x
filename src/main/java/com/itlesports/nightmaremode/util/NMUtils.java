@@ -424,7 +424,7 @@ public class NMUtils {
 
     public static boolean getIsDayFromWorldTime(World w){
         long time = w.getWorldTime() % 24000;
-        return time < 12541 || time > 23459;
+        return time <= 12541 || time >= 23459;
     }
 
     public static int getDayCountFromWorld(World w) {
