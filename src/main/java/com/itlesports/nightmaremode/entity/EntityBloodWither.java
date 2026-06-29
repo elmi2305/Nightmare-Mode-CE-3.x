@@ -1207,7 +1207,6 @@ public class EntityBloodWither extends EntityWither {
         } else{
             amount = Math.min(amount * 1.5f, 30);
         }
-        amount = 1000f;
         if (this.witherPhase < 2 && this.getHealth() <= (amount + 1)) {
             this.witherPhase += 1;
             this.reviveTimer = 600;
