@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,19 +14,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class EntityPlayerSPMixin extends EntityPlayer implements IPlayerDirectionTracker {
+    @Unique private boolean oldBloodMoon = false;
+
     public EntityPlayerSPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void playMusicInTheEnd(Minecraft par1Minecraft, World par2World, Session par3Session, int par4, CallbackInfo ci) {
-        if (par2World.provider.dimensionId == 1) {
+    private void playMusicInTheEnd(Minecraft mc, World w, Session session, int par4, CallbackInfo ci) {
+        if (w.provider.dimensionId == 1) {
             NMUtils.forcePlayMusic(NightmareModeAddon.NM_BOSS_MUSIC.sound(), true);
         }
         else {
             NMUtils.shushMusic();
         }
     }
+
+
 
     private EnumFacing currentDirection = null;
 
@@ -42,6 +47,13 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer implements IPlaye
             // gets sent from the client which makes sense
             NightmareMode.sendDirectionUpdate(currentDirection);
         }
+
+        if(this.ticksExisted % 20 != 0) return;
+        // do bm sounds
+        if(!this.oldBloodMoon && NMUtils.getIsBloodMoon()){
+            NMUtils.forcePlayMusic(NightmareModeAddon.NM_BLOODMOON.sound(), false);
+        }
+        this.oldBloodMoon = NMUtils.getIsBloodMoon();
     }
 
     @Override
