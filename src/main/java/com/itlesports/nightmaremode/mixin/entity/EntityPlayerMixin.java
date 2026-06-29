@@ -781,17 +781,19 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
             }
             this.setData(SANITY, this.getData(SANITY) + drainAmount);
 
+            // sanity damage
+            if(this.getSanity() > CRITICAL_SANITY * 1.1d && this.ticksExisted % 20 == 0){
+                this.damageEntity(NMDamageSource.insanity, 1);
+                if(this.getSanity() >= MAX_SANITY){
+                    this.damageEntity(NMDamageSource.insanity, 1);
+                }
+            }
+
             if(this.ticksExisted % 20 == 0 && this.isSneaking()){
                 System.out.println("current sanity is: " + this.getData(SANITY));
             }
         }
 
-        if(this.getSanity() > CRITICAL_SANITY * 1.1d && this.ticksExisted % 20 == 0){
-            this.damageEntity(NMDamageSource.insanity, 1);
-            if(this.getSanity() >= MAX_SANITY){
-                this.damageEntity(NMDamageSource.insanity, 1);
-            }
-        }
 
 
 
