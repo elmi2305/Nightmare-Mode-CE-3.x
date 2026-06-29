@@ -48,8 +48,8 @@ public final class NMSanityUtils {
             System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
             System.out.println(" ");
         }
-
-        return Math.max(0.0, drain);
+        // can be positive or negative
+        return drain;
     }
 
 

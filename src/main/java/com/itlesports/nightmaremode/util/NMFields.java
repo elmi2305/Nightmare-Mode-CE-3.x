@@ -74,6 +74,6 @@ public class NMFields {
     // sanity drain
     public static final double LIGHT_DRAIN_MULTIPLIER = 0.02;
     public static final double HEIGHT_DRAIN_MULTIPLIER = 0.012;
-    public static final double BIOME_DRAIN_MULTIPLIER = 0.02;
+    public static final double BIOME_DRAIN_MULTIPLIER = 0.04;
     public static final double ENEMY_DRAIN_MULTIPLIER = 0.015;
 }
