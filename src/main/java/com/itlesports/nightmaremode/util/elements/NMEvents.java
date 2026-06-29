@@ -160,7 +160,7 @@ public class NMEvents {
         SimpleEvent chosen = null;
 
         if(w.getMinecraftServer().getCurrentPlayerCount() == 0){
-            NightmareMode.sendEventsPacketToAll(0);
+            NightmareMode.getInstance().activeEventsInt = 0;
             return;
         }
 
