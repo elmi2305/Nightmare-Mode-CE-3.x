@@ -74,7 +74,4 @@ public class BlockPortalMixin{
             // the rest is handled in EntityPlayerMPMixin
         }
     }
-    @Unique private void runClientEffects(){
-
-    }
 }
