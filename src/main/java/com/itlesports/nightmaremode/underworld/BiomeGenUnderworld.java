@@ -8,9 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BiomeGenUnderworld extends BiomeGenBase {
+public abstract class BiomeGenUnderworld extends BiomeGenBase {
     // biome specific information
-    private float drainMultiplier = 1.0f; // 1.0f means no biome penalty. higher means you lose sanity and lower means you gain it
+    /** Default: 1.0f
+     * <br>
+     * Higher than 1.0 means the player loses sanity in this biome
+     * <br>
+     * Less than 1.0 means the player becomes enlightened in this biome
+     **/
+    private float drainMultiplier = 1.0f;
 
     // the min/max
     private static final float BLIGHT_MIN = 0.5f;
@@ -41,11 +47,11 @@ public class BiomeGenUnderworld extends BiomeGenBase {
 //    private static final float VOID_MAX = 0.2501f;
 
 
-    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenBlightlands(24).setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains")).invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
-    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor) new BiomeGenHighlands(25).setDrainMultiplier(0.9f).setBiomeName("UnderworldDesert")).invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields")).invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
-    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor) new BiomeGenShadowRealm(27).setDrainMultiplier(1.8f).setBiomeName("UnderworldVoid")).invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
-    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor) new BiomeGenUnderHell(28).setDrainMultiplier(1.0f).setBiomeName("UnderworldHell")).invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
+    public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                           new BiomeGenBlightlands(24) .setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains"))         .invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
+    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)      new BiomeGenHighlands(25)   .setDrainMultiplier(1.1f).setBiomeName("UnderworldDesert"))         .invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                          new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields"))   .invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
+    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)    new BiomeGenShadowRealm(27) .setDrainMultiplier(2.3f).setBiomeName("UnderworldVoid"))           .invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                             new BiomeGenUnderHell(28)   .setDrainMultiplier(1.5f).setBiomeName("UnderworldHell"))           .invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
 
     public static List biomelist = new ArrayList<>();
     static{
@@ -87,6 +93,11 @@ public class BiomeGenUnderworld extends BiomeGenBase {
         return drainMultiplier;
     }
 
+    /**
+     * Higher than 1.0 means the player loses sanity in this biome
+     * <br>
+     * Less than 1.0 means the player becomes enlightened in this biome
+     **/
     public BiomeGenUnderworld setDrainMultiplier(float drainMultiplier) {
         this.drainMultiplier = drainMultiplier;
         return this;
