@@ -30,7 +30,11 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer implements IPlaye
         }
     }
 
-
+    @Override
+    public void onDeath(DamageSource src) {
+        NMUtils.shushMusic();
+        super.onDeath(src);
+    }
 
     private EnumFacing currentDirection = null;
 
