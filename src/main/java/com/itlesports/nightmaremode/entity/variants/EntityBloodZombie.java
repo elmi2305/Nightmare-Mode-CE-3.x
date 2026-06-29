@@ -23,6 +23,10 @@ public class EntityBloodZombie extends EntityZombie {
 
     private boolean canBreakBlocks;
 
+    @Override
+    public boolean doesEntityApplyToSpawnCap() {
+        return false;
+    }
 
     @Override
     public boolean getCanSpawnHere() {
@@ -47,10 +51,10 @@ public class EntityBloodZombie extends EntityZombie {
         }
 
         double chance = 0;
-        if (moonPhase == 4) {
+        if (moonPhase == 4 || NMUtils.getIsBloodMoon()) {
             chance = 0.7 + worldProgress * 0.1;
         }
-        boolean lowYRange = y >= 40 && y <= 60;
+        boolean lowYRange = y <= 50 || y >= 70;
         if (lowYRange) {
             chance *= 0.15; // 85% reduction
         }
