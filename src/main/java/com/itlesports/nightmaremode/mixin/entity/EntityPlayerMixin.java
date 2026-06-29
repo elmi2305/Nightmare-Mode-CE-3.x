@@ -316,6 +316,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
 
     @Override
     public int getMaxInPortalTime() {
+        if(this.capabilities.isCreativeMode){return 0;}
         if(NMUtils.getWorldProgress() > HARDMODE) {return 25;}
         if(NMUtils.getWorldProgress() > PREHARDMODE) {return 40;}
         return 60;
