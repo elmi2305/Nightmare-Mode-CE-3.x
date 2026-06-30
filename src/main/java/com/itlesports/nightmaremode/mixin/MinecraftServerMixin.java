@@ -77,15 +77,21 @@ public abstract class MinecraftServerMixin {
 
         WorldServer world = this.worldServers[0];
 
-        if (world.getTotalWorldTime() % 30 != 0) return;
+        if (world.getTotalWorldTime() % 32 != 0) return;
 
         long worldTime = world.getWorldTime();
 
-        for (Object o : world.playerEntities) {
-            EntityPlayer player = (EntityPlayer)o;
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeEvent.class, player, world.getWorldTime());
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeItemEvent.class, player, new NMAchievementEvents.TimeItemEvent.Context(player, worldTime));
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MiscPlayerEvent.class, player, player);
+        for (WorldServer ws : this.worldServers) {
+            WorldServer tempWorld;
+            if (ws instanceof WorldServer) {
+                tempWorld = ws;
+                for (Object o : tempWorld.playerEntities) {
+                    EntityPlayer player = (EntityPlayer) o;
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeEvent.class, player, tempWorld.getWorldTime());
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.TimeItemEvent.class, player, new NMAchievementEvents.TimeItemEvent.Context(player, worldTime));
+                    AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MiscPlayerEvent.class, player, player);
+                }
+            }
         }
 
         int dayCount = (int) Math.ceil((double) worldTime / 24000) + this.isDawnOrDusk(worldTime);
