@@ -55,6 +55,7 @@
     "WorldProviderHellMixin",
     "WorldProviderMixin",
     "WorldServerMixin",
+    "WorldUtilsMixin",
     "beaconeffects.BELocationListMixin",
     "biomegen.BiomeDecoratorMixin",
     "biomegen.BiomeEndDecoratorMixin",
