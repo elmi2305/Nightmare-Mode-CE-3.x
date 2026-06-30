@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
@@ -80,7 +81,12 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
             this.heal(20f);
         }
     }
-
+    @Inject(method = "isTemptingItem", at = @At("HEAD"),cancellable = true)
+    private void addTemptingItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if(stack.itemID == NMItems.refinedDiamondIngot.itemID){
+            cir.setReturnValue(true);
+        }
+    }
     @Inject(method = "<clinit>", at = @At("TAIL"),remap = false)
     private static void addNightmareVillagerProfession(CallbackInfo ci){
         professionMap.put(5, NightmareVillager.class);
