@@ -218,9 +218,9 @@ public class NMAchievements {
     public static final Achievement<ItemStack> CRAFT_LADDER =
             AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("ladderWood"))
-                    .icon(Block.ladder)
+                    .icon(BTWBlocks.ladder)
                     .displayLocation(5, -1)
-                    .triggerCondition(data -> data.itemID == Block.ladder.blockID)
+                    .triggerCondition(data -> data.itemID == BTWBlocks.ladder.blockID)
                     .parents(FIND_STRING)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
@@ -575,7 +575,7 @@ public class NMAchievements {
                     .name(loc("bloodMoonWither"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_BLOODMOON_WITHER)
                     .displayLocation(10, 0)
-                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() > POSTWITHER)
+                    .triggerCondition(started -> !started && NMUtils.getWorldProgress() >= POSTWITHER)
                     .parents(KILLED_WITHER)
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
