@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.underworld.WorldProviderUnderworld;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,5 +24,13 @@ public class AnvilSaveHandlerMixin extends SaveHandler {
             file2.mkdirs();
             cir.setReturnValue(new AnvilChunkLoader(file2));
         }
+    }
+
+    @Override
+    protected File getDimensionDirectory(WorldServer world) {
+        if (world.provider.dimensionId == NMFields.UNDERWORLD_DIMENSION) {
+            return new File(this.worldDirectory, "DIM_UNDERWORLD");
+        }
+        return super.getDimensionDirectory(world);
     }
 }
