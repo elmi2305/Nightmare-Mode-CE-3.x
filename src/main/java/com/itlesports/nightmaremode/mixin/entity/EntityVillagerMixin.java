@@ -4,6 +4,7 @@ import api.inventory.InventoryUtils;
 import btw.block.blocks.BlockDispenserBlock;
 import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
 import btw.community.nightmaremode.NightmareMode;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -32,6 +34,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Shadow public abstract int getCurrentTradeMaxXP();
     @Shadow public abstract int getCurrentTradeXP();
 
+
+    @Shadow public abstract void setInLove(int iInLove);
+    @Shadow public abstract int getInLove();
 
     public EntityVillagerMixin(World par1World) {
         super(par1World);
@@ -86,6 +91,23 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         if(stack.itemID == NMItems.refinedDiamondIngot.itemID){
             cir.setReturnValue(true);
         }
+    }
+    @Redirect(method = "interact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityVillager;customInteract(Lnet/minecraft/src/EntityPlayer;)Z"))
+    private boolean breedWithRefinedDiamond(EntityVillager instance, EntityPlayer player){
+        ItemStack heldStack = player.inventory.getCurrentItem();
+        if (!(heldStack == null || heldStack.getItem().itemID != Item.diamond.itemID && heldStack.getItem().itemID != BTWItems.diamondIngot.itemID || this.getGrowingAge() != 0 || this.getInLove() != 0 || this.isPossessed())) {
+            if (!player.capabilities.isCreativeMode) {
+                --heldStack.stackSize;
+                if (heldStack.stackSize <= 0) {
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
+            }
+            this.worldObj.playSoundAtEntity(this, "mob.villager.hurt", 1.0f, this.getSoundPitch() * 2.0f);
+            this.setInLove(1);
+            this.entityToAttack = null;
+            return true;
+        }
+        return false;
     }
     @Inject(method = "<clinit>", at = @At("TAIL"),remap = false)
     private static void addNightmareVillagerProfession(CallbackInfo ci){
