@@ -46,7 +46,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
                 par2Str,
                 NMFields.UNDERWORLD_DIMENSION,
                 this.theWorldSettings,
-                this.worldServers[3],
+                this.worldServers[0], // parent world server is the overworld
                 this.theProfiler,
                 this.getLogAgent());
         this.getConfigurationManager().setPlayerManager(this.worldServers);

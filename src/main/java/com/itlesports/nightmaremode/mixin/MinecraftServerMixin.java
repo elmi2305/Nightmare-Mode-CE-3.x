@@ -171,15 +171,14 @@ public abstract class MinecraftServerMixin {
                 serv,
                 var7,
                 par2Str,
-                2,
+                NMFields.UNDERWORLD_DIMENSION,
                 var8,
-                this.worldServers[3],
+                this.worldServers[0], // parent world server is the overworld
                 this.theProfiler,
                 this.getLogAgent());
         this.serverConfigManager.setPlayerManager(this.worldServers);
         this.worldServers[3].addWorldAccess(new WorldManager(serv, this.worldServers[3]));
         this.setDifficultyForAllWorlds(var8.getDifficulty());
-
     }
 //    @Inject(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initialWorldChunkLoad()V"), locals = LocalCapture.CAPTURE_FAILHARD)
 //    private void customWorldDimensionCode(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str, CallbackInfo ci, ISaveHandler var7, WorldInfo var9, WorldSettings var8){
