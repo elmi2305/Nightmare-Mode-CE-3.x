@@ -1547,8 +1547,7 @@ public abstract class NMInitializer implements AchievementExt {
 //        BloodSawCraftingManager.instance.addRecipe(new ItemStack[]{new ItemStack(Block.planks, 4, 0), new ItemStack(BTWItems.sawDust, 2), new ItemStack(BTWItems.bark, 1, 0)}, Block.wood, new int[]{0, 4, 8, 12}).setAsDefaultAfterAchievement(BTWAchievements.CRAFT_SAW);
 
 
-        // Wood (special case - already handled in your original)
-//        BloodSawCraftingManager.instance.addWoodSubBlockRecipes(); // keep if needed
+//        BloodSawCraftingManager.instance.addWoodSubBlockRecipes();
 
         // Stone variants
         BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.stone, 0,
