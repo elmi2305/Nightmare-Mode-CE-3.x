@@ -104,9 +104,9 @@ public class EntityBlackHole extends EntityLiving implements EntityWithCustomPac
 
     private void pullNearbyEntities() {
         AxisAlignedBB box = this.boundingBox.expand(
-                this.radius * 3.5D,
-                this.radius * 3.35D,
-                this.radius * 3.5D
+                this.radius * 5.5D,
+                this.radius * 5.35D,
+                this.radius * 5.5D
         );
         List<EntityLivingBase> entities = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
 
