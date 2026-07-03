@@ -770,6 +770,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements IPla
                 if (!devMode) {
                     return;
                 }
+            } else if(this.worldObj.getWorldInfo().getTerrainType() != WorldType.DEFAULT){
+                if (!client) {
+                    ChatMessageComponent text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.world_type");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+
+                    text1 = new ChatMessageComponent();
+                    text1.addKey("world.config.progress_wiped");
+                    text1.setColor(EnumChatFormatting.DARK_RED);
+                    self.sendChatToPlayer(text1);
+                }
+
+                invalidateConfig();
+                if (!devMode) {
+                    return;
+                }
             }
 
             this.checkAndValidateConfig();
