@@ -360,17 +360,24 @@ public abstract class GuiIngameMixin extends Gui {
         float maxHealth = (float)maxHealthAttribute.getAttributeValue();
         float absorption = this.mc.thePlayer.getAbsorptionAmount();
 
-        int healthRows = MathHelper.ceiling_float_int((maxHealth + absorption) / 2.0F / 10.0F);
-        int healthRowHeight = Math.max(10 - (healthRows - 2), 3);
+
+//        int healthRows = MathHelper.ceiling_float_int((maxHealth + absorption) / 2.0F / 10.0F);
+//        int healthRowHeight = Math.max(10 - (healthRows - 2), 3);
         ArrayList<StatusEffect> activeStatuses = this.mc.thePlayer.getAllActiveStatusEffects();
         FontRenderer fontRenderer = this.mc.fontRenderer;
 
         amountRendered = 0;
+        if((maxHealth + absorption) > 20){
+            amountRendered--;
+        }
 
         if (((FoodStatsExt)this.mc.thePlayer.getFoodStats()).nightmareMode$getMaxFoodLevel() > 60) {
             amountRendered++;
         }
-        int airBarY = screenY - (healthRows - 1) * healthRowHeight - amountRendered * 10;
+
+//        int airBarY = screenY - (healthRows - 1) * healthRowHeight - amountRendered * 10;
+
+        int airBarY = screenY - amountRendered * 10;
 
         if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.thePlayer.getAir() < 300) {
             int air = this.mc.thePlayer.getAir();
@@ -414,7 +421,7 @@ public abstract class GuiIngameMixin extends Gui {
             renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
         }
 
-        if (NightmareMode.bloodMoonHelper) {
+        if (NightmareMode.bloodMoonHelper && this.shouldShowBloodMoonCountdown(this.mc.theWorld)) {
             textToShow = this.getBloodMoonText(this.mc.theWorld);
             stringWidth = fontRenderer.getStringWidth(textToShow);
             renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
@@ -715,29 +722,26 @@ public abstract class GuiIngameMixin extends Gui {
     }
 
     @Unique private String getBloodMoonText(World world){
-        if(this.shouldShowBloodMoonCountdown(world)){
-            long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
-            deltaToNextBM /= 24000;
-            deltaToNextBM = (long) Math.floor(deltaToNextBM);
+        long deltaToNextBM = NMUtils.getNextBloodMoonTime(world.getWorldTime()) - world.getWorldTime();
+        deltaToNextBM /= 24000;
+        deltaToNextBM = (long) Math.floor(deltaToNextBM);
 
-            String when = null;
-            if(deltaToNextBM == 16){
-                when = I18n.getString("gui.bloodmoon.tonight");
-            }
-
-            if(deltaToNextBM == 1 || deltaToNextBM == 0){
-                when = I18n.getString("gui.bloodmoon.tomorrow");
-            }
-            String text;
-
-            if(when == null){
-                text = "\247c" + I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
-            } else{
-                text = "\247c" + I18n.getString("gui.bloodmoon") +" " + I18n.getString(when);
-            }
-            return text;
+        String when = null;
+        if(deltaToNextBM == 16){
+            when = I18n.getString("gui.bloodmoon.tonight");
         }
-        return "";
+
+        if(deltaToNextBM == 1 || deltaToNextBM == 0){
+            when = I18n.getString("gui.bloodmoon.tomorrow");
+        }
+        String text;
+
+        if(when == null){
+            text = "\247c" + I18n.getString("gui.bloodmoon.in") +" "+ deltaToNextBM + " " + I18n.getString("gui.bloodmoon.days");
+        } else{
+            text = "\247c" + I18n.getString("gui.bloodmoon") +" " + I18n.getString(when);
+        }
+        return text;
     }
 
     @Unique private boolean shouldShowBloodMoonCountdown(World world){
