@@ -36,6 +36,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Shadow public abstract boolean isVillager();
     @Shadow public abstract boolean isChild();
+    @Shadow public abstract void setChild(boolean par1);
 
     public EntityZombieMixin(World par1World) {
         super(par1World);
@@ -67,23 +68,11 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         this.timeSpentBreaking = timeSpentBreaking;
     }
 
-    @ModifyArg(method = "entityInit", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/DataWatcher;addObject(ILjava/lang/Object;)V", ordinal = 0), index = 1)
-    private Object addBabyZombies(Object par2Obj){
-        if(NightmareMode.moreVariants){
-
-            boolean willBeBaby = this.rand.nextInt(32) == 0;
-            if(willBeBaby){
-                this.setSize(this.width, 0.4f);
-                return (byte)1;
-            }
-            return par2Obj;
-        }
-        return par2Obj;
-    }
-    @Inject(method = "setChild", at = @At("TAIL"))
-    private void setChildHeight(boolean par1, CallbackInfo ci){
-        if(par1){
-            this.setSize(this.width, 0.4f);
+    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
+    private void setBaby(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
+        boolean willBeBaby = this.rand.nextInt(4) == 0;
+        if(willBeBaby && !this.worldObj.isRemote){
+            this.setChild(true);
         }
     }
 
@@ -593,6 +582,14 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         }
         if((this.ticksExisted & 3) == 0 && this.timeSpentBreaking > 0){
             this.timeSpentBreaking--;
+        }
+    }
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"))
+    private void updateBabyZombies(CallbackInfo ci){
+        if(this.worldObj.isRemote){
+            if(this.isChild()){
+                this.setSize(this.width, 0.4f);
+            }
         }
     }
     @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onUpdate()V"))
