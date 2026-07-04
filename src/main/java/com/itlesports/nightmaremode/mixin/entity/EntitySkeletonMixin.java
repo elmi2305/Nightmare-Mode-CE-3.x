@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBurningArrow;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -252,6 +253,21 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         return 30d;
     }
 
+    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
+    private void spiderRain(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            if(this.rand.nextInt(3) != 0){
+                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
+                this.setDead();
+                this.worldObj.spawnEntityInWorld(spider);
+            }
+        }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
+        }
+    }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNotCatchFireInSun(EntitySkeleton instance){}
 

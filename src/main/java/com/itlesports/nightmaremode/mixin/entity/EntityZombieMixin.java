@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.entity.variants.EntitySkeletonDrowned;
 import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.entity.variants.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
@@ -517,7 +518,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         if(thisObj instanceof EntityBloodZombie) {ci.cancel();}
     }
 
-    @Inject(method = "addRandomArmor", // summons crystalhead zombie on a 1% chance
+    @Inject(method = "addRandomArmor",
             at = @At("TAIL"))
     private void chanceToSpawnShadowOrCrystal(CallbackInfo ci){
         if (this.worldObj != null) {
@@ -537,6 +538,22 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                 summonShadowZombieAtPos((EntityZombie)(Object)this);
             }
         }
+    }
+    @Override
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            if(this.rand.nextInt(3) != 0){
+                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
+                this.setDead();
+                this.worldObj.spawnEntityInWorld(spider);
+            }
+        }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
+        }
+        return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

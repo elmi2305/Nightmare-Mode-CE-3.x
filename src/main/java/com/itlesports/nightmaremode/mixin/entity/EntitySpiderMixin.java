@@ -124,6 +124,11 @@ public abstract class EntitySpiderMixin extends EntityMob{
             this.setDead();
             this.worldObj.spawnEntityInWorld(caveSpider);
         }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
+        }
     }
     @ModifyConstant(method = "spawnerInitCreature", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown(int constant){

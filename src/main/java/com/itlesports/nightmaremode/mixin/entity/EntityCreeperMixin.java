@@ -6,6 +6,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +23,7 @@ import static com.itlesports.nightmaremode.util.NMFields.*;
 public abstract class EntityCreeperMixin extends EntityMob implements EntityCreeperAccessor{
 
     @Shadow private int timeSinceIgnited;
-    @Shadow public int fuseTime;
+    @Shadow private int fuseTime;
     @Shadow public abstract void onKickedByAnimal(KickingAnimal kickingAnimal);
     @Shadow public abstract boolean getPowered();
 
@@ -120,7 +121,22 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
-
+    @Override
+    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            if(this.rand.nextInt(3) != 0){
+                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
+                this.setDead();
+                this.worldObj.spawnEntityInWorld(spider);
+            }
+        }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
+        }
+        return super.onSpawnWithEgg(par1EntityLivingData);
+    }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 36.0))
     private double increaseCreeperBreachRange(double constant){

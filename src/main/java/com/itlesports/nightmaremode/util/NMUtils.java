@@ -4,6 +4,8 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
+import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
+import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityLivingBaseAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
@@ -19,6 +21,7 @@ import java.util.regex.Pattern;
 import static btw.community.nightmaremode.NightmareMode.sendSongToPlayer;
 
 public class NMUtils {
+    private static Random utilRandom = new Random();
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
 
@@ -120,6 +123,51 @@ public class NMUtils {
         }
 
         return false;
+    }
+    private static final Class<? extends EntitySpider>[] spiderVariants =  (Class<? extends EntitySpider>[]) new Class[]{
+            EntitySpider.class,
+            EntityBlackWidowSpider.class,
+            EntityFireSpider.class
+    };
+    private static final Class<? extends EntityLivingBase>[] hellMobs =  (Class<? extends EntityLivingBase>[]) new Class[]{
+            EntityPigZombie.class,
+            EntityMagmaCube.class,
+            EntityGhast.class
+    };
+    public static EntitySpider getSpiderToInitialize(World w, EntityLivingBase ref){
+        Class chosen = spiderVariants[0];
+        if(NightmareMode.moreVariants){
+            chosen = spiderVariants[utilRandom.nextInt(spiderVariants.length)];
+        }
+        try {
+            EntitySpider spider = (EntitySpider) chosen.getConstructor(World.class).newInstance(w);
+            spider.setPositionAndUpdate(ref.posX, ref.posY, ref.posZ);
+            return spider;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static boolean initializeAndSummonHellMob(World w, EntityLivingBase ref){
+        int index = 0;
+        if(utilRandom.nextInt(8) == 0){index++;}
+        if(utilRandom.nextInt(16) == 0){index++;}
+        try {
+            EntityLivingBase mob = hellMobs[index].getConstructor(World.class).newInstance(w);
+            mob.setPositionAndUpdate(ref.posX, ref.posY, ref.posZ);
+
+            if(mob instanceof EntityGhast){
+                mob.setPositionAndUpdate(ref.posX,ref.posY + 60, ref.posZ);
+                if(w.isAnyLiquid(mob.boundingBox.expand(8,8,8)) || w.getClosestVulnerablePlayerToEntity(mob, 16) != null){
+                    return false;
+                }
+            }
+            w.spawnEntityInWorld(mob);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 //    private static float[] skyBrightness = new float[4];
