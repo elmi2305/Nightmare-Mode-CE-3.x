@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,6 +52,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
         }
         return instance.getBrightness(v);
     }
+
 
 
 
@@ -109,7 +111,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void manageHardmodeSpiderSpawns(EntityLivingData entityData, CallbackInfoReturnable<EntityLivingData> cir){
-        if(NMUtils.getWorldProgress() >= 1 && this.rand.nextInt(6) == 0 && this.worldObj.getAmbientBeaconEffectAtLocation(BTWBeaconEffects.JUNGLE_SPIDER_REPELLENT.effectName, (int)this.posX, (int)this.posY, (int)this.posZ) <= 0){
+        if(NMUtils.getWorldProgress() >= NMFields.HARDMODE && this.rand.nextInt(6) == 0 && this.worldObj.getAmbientBeaconEffectAtLocation(BTWBeaconEffects.JUNGLE_SPIDER_REPELLENT.effectName, (int)this.posX, (int)this.posY, (int)this.posZ) <= 0){
             JungleSpiderEntity caveSpider = new JungleSpiderEntity(this.worldObj);
             caveSpider.copyLocationAndAnglesFrom(this);
             this.setDead();
@@ -131,12 +133,12 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @ModifyConstant(method = "spitWeb", constant = @Constant(intValue = 24000))
     private int lowerSpiderWebCooldown1(int constant){
         if (this.worldObj != null) {
-            if(this.rand.nextFloat() < 0.1){
+            if(this.rand.nextFloat() < 0.1f){
                 return 10;
             } else if(NMUtils.getIsMobEclipsed(this)){
                 return 200;
             }
-            return 16000 - NMUtils.getWorldProgress()*3000;
+            return 16000 - NMUtils.getWorldProgress() * 3000;
         }
         return constant;
     }
@@ -151,14 +153,22 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
     @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int increaseSpiderEyeRates(int bound){
-        return 4;
+        return bound + 4;
     }
 
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))
     private void injectVenom(Entity targetEntity, float fDistanceToTarget, CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
 
-        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress()*0.2){
+        if(targetEntity instanceof EntityLivingBase target && target.rand.nextFloat() < 0.4 + NMUtils.getWorldProgress() * 0.2){
+            if(target instanceof EntityPlayer p && p.capabilities.isCreativeMode) {
+                return;
+            }
+
+            if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && target instanceof EntityPlayer player) {
+                this.alertNearbySpiders(thisObj,player);
+            }
+
             double niteMultiplier = NMUtils.getNiteMultiplier();
             if (!(thisObj instanceof EntityFireSpider)) {
                 if (NMUtils.getWorldProgress() <= NMFields.HARDMODE) {
@@ -167,10 +177,6 @@ public abstract class EntitySpiderMixin extends EntityMob{
                     target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (40 * niteMultiplier),1));
                     target.addPotionEffect(new PotionEffect(Potion.hunger.id, (int) (80 * niteMultiplier),0));
                 }
-            }
-
-            if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && target instanceof EntityPlayer player) {
-                this.alertNearbySpiders(thisObj,player);
             }
         }
     }
@@ -251,16 +257,17 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if (this.worldObj != null) {
             EntitySpider thisObj = (EntitySpider)(Object)this;
 
+
             int progress = NMUtils.getWorldProgress();
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
-            boolean isEclipse = eclipseModifier > 1;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            boolean isEclipse = eclipseModifier > 1;
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            if(progress==0) {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier)* niteMultiplier);
+            if(progress == NMFields.PREHARDMODE) {
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier) * niteMultiplier);
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (niteMultiplier - 1) / 20));
             } else {
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
@@ -274,7 +281,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress*6) * (isBloodMoon ? 1.25 : 1)) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress * 6) * (isBloodMoon ? 1.25 : 1)) * niteMultiplier);
                 // 12 -> 18 -> 24 -> 30
             }
         }
