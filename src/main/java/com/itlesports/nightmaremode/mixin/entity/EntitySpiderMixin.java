@@ -25,7 +25,6 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 @Mixin(EntitySpider.class)
 public abstract class EntitySpiderMixin extends EntityMob{
     @Shadow protected abstract void entityInit();
-
     @Shadow protected int timeToNextWeb;
 
     public EntitySpiderMixin(World par1World) {
@@ -38,7 +37,15 @@ public abstract class EntitySpiderMixin extends EntityMob{
             cir.setReturnValue(false);
         }
     }
-
+    @Redirect(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"))
+    private EntityPlayer increaseRange(World instance, Entity entity, double range){
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            range = 32;
+            return instance.getClosestVulnerablePlayerToEntity(entity,range);
+        }
+        range += NMUtils.getWorldProgress() * 4;
+        return instance.getClosestVulnerablePlayerToEntity(entity,range);
+    }
     @Redirect(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;getBrightness(F)F"))
     private float alwaysAggressiveOnEclipse(EntitySpider instance, float v){
         if(NMUtils.getIsMobEclipsed(this)){
@@ -251,13 +258,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             ci.cancel();
         }
     }
-    @ModifyArg(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
-    private double increaseSpiderRange(double range){
-        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
-            return range * 2;
-        }
-        return range + NMUtils.getWorldProgress() * 4;
-    }
+
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -267,13 +268,15 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
             int progress = NMUtils.getWorldProgress();
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
+            int spiderRainModifier = NMEvents.SimpleEvent.SPIDER_RAIN.isActive() ? 16 : 0;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
-            double spiderRainModifier = NMEvents.SimpleEvent.SPIDER_RAIN.isActive() ? 10 : 0;
             boolean isEclipse = eclipseModifier > 1;
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
-
+            if(spiderRainModifier > 0){
+                this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32d);
+            }
             double niteMultiplier = NMUtils.getNiteMultiplier();
             if(progress == NMFields.PREHARDMODE) {
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier) * niteMultiplier);
