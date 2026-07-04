@@ -59,4 +59,9 @@ public class EntityRainSpider extends EntitySpider {
         }
         return super.canDespawn();
     }
+
+    @Override
+    public boolean doesEntityApplyToSpawnCap() {
+        return false;
+    }
 }
