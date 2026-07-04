@@ -1,0 +1,820 @@
+item.nmRPG.name=Базука
+item.nmRifle.name=Автомат
+item.nmBandage.name=Бинт
+item.nmNeedles.name=Железные иглы для шитья
+item.nmItemWitchLocator.name=Алхимический порошок
+item.nmBloodOrb.name=Сфера Крови
+item.nmBloodIngot.name=Слиток Крови
+item.nmBloodSword.name=Меч Крови
+item.nmBloodShovel.name=Лопата Крови
+item.nmBloodPickaxe.name=Кирка Крови
+item.nmBloodAxe.name=Топор Крови
+item.nmBloodHoe.name=Мотыга Крови
+item.nmBloodHelmet.name=Шлем Крови
+item.nmBloodChestplate.name=Нагрудник Крови
+item.nmBloodLeggings.name=Штаны Крови
+item.nmBloodBoots.name=Ботинки Крови
+item.nmDarksunFragment.name=Осколок Затмения
+item.nmCalamari.name=Кальмар
+item.nmCalamariRoast.name=Жаркое из кальмара
+item.nmFriedCalamari.name=Жареный кальмар
+item.nmIronFishingPole.name=Железная удочка
+item.nmMagicFeather.name=Волшебное перо
+item.nmBloodMilk.name=Кровяное молоко
+item.nmCreeperChop.name=Обрубок крипера
+item.nmCharredFlesh.name=Плоть Края
+item.nmSpiderFangs.name=Клыки паука
+item.nmHellFireRod.name=Жезл Адского Огня
+item.nmWaterRod.name=Жезл Воды
+item.nmSulfur.name=Сера
+item.nmCreeperTear.name=Слеза крипера
+item.nmSilverLump.name=Кусок серебра
+item.nmWitheredBone.name=Иссохшая кость
+item.nmDecayedFlesh.name=Разложившаяся плоть
+item.nmGhastTentacle.name=Щупальце гаста
+item.nmElementalRod.name=Жезл элементов
+item.nmShadowRod.name=Жезл Тьмы
+item.nmStarOfTheBloodGod.name=Звезда Бога Крови
+item.nmSpeedCoil.name=Катушка скорости
+item.nmSteelBunch.name=Стальной пучок
+item.nmEclipseBow.name=Лук Затмения
+item.nmMagicArrow.name=Волшебная стрела
+item.nmVoidSack.name=Мешок Пустоты
+item.nmVoidMembrane.name=Мембрана Пустоты
+item.nmDungApple.name=Навозное яблоко
+item.nmOysterSoup.name=Суп из ракушек крипера
+item.nmTempleDust.name=Древний песок
+item.nmObsidianShard.name=Осколок обсидиана
+item.nmTimeBottle.name=Бутыль Времени
+item.nmRefinedDiamondIngot.name=Улучшенный алмазный слиток
+item.nmBloodBottle.name=Бутыль Багрянца
+item.nmVillagerOrb.name=Сфера жителя
+item.nmVillagerOrb.farmer.name=Сфера жителя-фермера
+item.nmVillagerOrb.librarian.name=Сфера жителя-библиотекаря
+item.nmVillagerOrb.blacksmith.name=Сфера жителя-кузнеца
+item.nmVillagerOrb.butcher.name=Сфера жителя-мясника
+item.nmVillagerOrb.priest.name=Сфера жителя-священника
+item.nmVillagerOrb.nightmare.name=Сфера жителя-торговца кошмаров
+item.nmWitherSoul.name=Душа Иссушителя
+
+tile.nmSteelOre.name=Руда стали душ
+tile.nmSpecialObsidian.name=Камень арены
+tile.nmCryingObsidian.name=Плачущий камень арены
+tile.nmBloodBone.name=Кровавая кость
+tile.nmBloodChest.name=Сундук Крови
+tile.nmSteelLocker.name=Стальной шкаф
+tile.nmRoad.name=Дорога
+tile.nmAsphalt.name=Асфальт
+tile.nmStoneLadder.name=Каменная лестница
+tile.nmIronLadder.name=Железная лестница
+tile.nmHellforgeBlock.name=Кузня Ада
+tile.nmCrudeObsidian.name=Сырой обсидиан
+tile.nmAsphaltLayer.name=Слой асфальта
+tile.nmBloodSawBlock.name=Пила Крови
+tile.nmVillagerBlock.name=Сосуд жителя
+tile.nmUnderworldRock.name=Камень Подмирья
+tile.nmUnderworldRockSmooth.name=Обработанный камень Подмирья
+tile.nmUnderworldRockCobble.name=Булыжник Подмирья
+tile.nmUnderGrass.name=Трава Подмирья
+tile.nmUnderDirt.name=Почва Подмирья
+tile.nmDisenchantmentTable.name=Стол раззачарования
+
+container.steelLocker=Стальной шкаф
+container.inventory=Инвентарь
+
+villager.profession=Профессия
+villager.level=Уровень
+entity.addonVillagerNightmare.name=Торговец Кошмаров
+
+
+entity.NmFireCreeper.name=Инферно Крипер
+entity.NmLightningCreeper.name=Крипер-Громобой
+entity.NmShadowZombie.name=Теневой Мародёр
+entity.NmVillager.name=Торговец Кошмаров
+entity.NmGolem.name=Слуга Иссушения
+entity.NmBloodWither.name=???
+entity.NmFireSpider.name=Пылающий Паук
+entity.NmStoneZombie.name=Окаменевший
+entity.NmObsidianCreeper.name=Обсидиановый Крипер
+entity.NmSupercriticalCreeper.name=Крипер-Палач
+entity.NmBlackWidowSpider.name=Чёрная Вдова
+entity.NmRadioactiveEnderman.name=Радиоактивный Странник
+entity.NmDungCreeper.name=Навозник
+entity.NmBloodZombie.name=Слуга Крови
+entity.NmFauxVillager.name=Странствующий торговец
+entity.NmImposterZombie.name=Странствующий торговец
+entity.NmDrownedSkeleton.name=Утопленник
+entity.NmMeltedSkeleton.name=Инферно
+entity.NmObsidianFish.name=Обсидиановая рыба
+entity.NmCreeperGhast.name=Гаст-Крипер
+entity.entityBloodAltar.name=Прогресс
+entity.NmMushWorm.name=Грибной червь
+entity.NmEntityVoidCreeper.name=Поборник Пустоты
+entity.NmEntityGelCreeper.name=Гелевый Крипер
+entity.NmEntityGlitchCreeper.name=Глитч
+
+key.nightmaremode.zoomhold=Удерживайте для приближения
+key.nightmaremode.zoomtoggle=Переключить приближение
+
+commands.tpa.usage=/tpa <username>
+commands.tpa.not_enough_xp=Недостаточно опыта для использования команды.
+commands.tpa.cannot_self=Нельзя отправить запрос телепортации самому себе.
+commands.tpa.different_dimension=Невозможно отправить запрос. Оба игрока должны быть в одном измерении.
+commands.tpa.sent=Запрос на телепорт отправлен игроку %s.
+commands.tpa.request_message=%s хочет к вам телепортироваться. Отправьте /tpa accept для подтверждения.
+commands.tpa.no_request_to_accept=Нет запросов для телепортации.
+commands.tpa.sender_offline=Игрок отправивший запрос больше не в сети.
+commands.tpa.accepted=Запрос на телепортацию игрока %s принят. Телепортация через 10 секунд...
+commands.tpa.accepted_sender=%s принял ваш запрос телепорта! Телепортация через 10 секунд...
+commands.tpa.teleport_success=Телепорт к %s.
+commands.tpa.teleport_cancelled=Телепорт отменён: игрок сменил измерение.
+commands.tpa.no_request_to_deny=Нет отменяемых запросов телепортации.
+commands.tpa.denied_sender=%s отказал в вашем запросе.
+commands.tpa.denied=Запрос отклонён.
+
+commands.state.usage=/ws <0|1|2|3>
+
+emi.trade.NightmareVillager=Торговец Кошмаров
+
+status.health.NoHit=Неприкасаемый
+
+gui.nmTimer.day=День %d
+gui.nmTimer.night=Ночь %d
+gui.menu.noEscape=Выхода нет...
+gui.nm.horseTaming=Придерживайтесь верного направления и соответствуйте углу лошади
+gui.nm.horseMenu=Хранилище брони для лошадей
+
+gui.nm.worldinfoconfig=Настройки мировых сведений
+gui.nm.restoredefaults=Вернуть к исходным
+gui.nm.structures=Сгенерировать структуры
+
+
+gui.container_disenchantment=Стол раззачарования
+
+gui.selectworld.buff_squids=Крутые спруты
+gui.selectworld.toggle_cancer_worldgen=Включить тупой режим
+gui.selectworld.nm_config=Конфиг NM
+gui.selectworld.squid_buffed_times=Вы баффнули спрутов {0} раз.
+gui.selectworld.squid_buffed_times_plural=Вы баффнули спрутов {0} раз.
+gui.selectworld.squid_strength=Мощь спрутов: {0}x
+gui.selectworld.warning_title=Внимание:
+gui.selectworld.warning_recommend_restart=Рекомендуется перезапуск игры
+gui.selectworld.warning_config_crash=Загружена новая конфигурация, возможен краш игры или повреждение файла мира
+gui.selectworld.warning_continue=Вы точно хотите продолжить?
+gui.selectworld.warning_final=Последнее предупреждение, я серьёзно.
+
+gui.bloodmoon=Кровавая Луна
+gui.bloodmoon.in=Кровавая Луна через
+gui.bloodmoon.days=Дней
+gui.bloodmoon.tonight=Вечером
+gui.bloodmoon.tomorrow=Завтра
+
+nm.events.nmSlimeRain=Воздух наполнен слизью...
+nm.events.nmSlimeRain.info=Слизни будут спавниться везде
+
+nm.events.nmGreatHarvest=Почва обогатилась...
+nm.events.nmGreatHarvest.info=Посевы будут расти быстрее
+
+nm.events.nmSpiderRain=Паучий бог пробудился...
+nm.events.nmSpiderRain.info=Этой ночью будет спавниться больше пауков
+
+nm.events.nmHell=Воздух пылает...
+nm.events.nmHell.info=Ты познаешь Преисподнюю...
+
+
+difficulty.baddream.name=Страшный сон
+difficulty.nightmare.name=Кошмар
+difficulty.bloodmare.name=Кровавый кошмар
+difficulty.baddream.description1=Упрощённый режим. Упрощает
+difficulty.baddream.description2=большое количество аспектов
+difficulty.baddream.description3=Nightmare Mode.
+difficulty.nightmare.description1=Истинное испытание.
+difficulty.nightmare.description2=
+difficulty.nightmare.description3=
+
+gui.mainmenu.splash1=Nightmare Mode!
+gui.mainmenu.splash2=Также попробуйте MEA!
+gui.mainmenu.splash3=Попробуй без брони!
+gui.mainmenu.splash4=Я во сне?
+gui.mainmenu.splash5=Просыпайся!
+gui.mainmenu.splash6=Апельсиновые криперы?!
+gui.mainmenu.splash7=Лучше MEA?
+gui.mainmenu.splash8=Это просто плохой сон!
+gui.mainmenu.splash9=Только не в душ!
+gui.mainmenu.splash10=Как в это играть?!
+gui.mainmenu.splash11=Проснись!
+gui.mainmenu.splash12=Только для гигачад-гройперов!
+gui.mainmenu.splash13=В 2 раза больше крови!
+gui.mainmenu.splash14=Эта игра для детей!
+gui.mainmenu.splash15=Поплавай в лаве!
+gui.mainmenu.splash16=Попробуй Кровяной Кошмар!
+gui.mainmenu.splash17=Топор не меч!
+gui.mainmenu.splash18=НЕ НАДО ДЯДЯ!
+gui.mainmenu.splash19=Печеньки каждому!
+gui.mainmenu.splash20=MEA сложнее!
+gui.mainmenu.splash21=Богу не страшно небытие!
+gui.mainmenu.splash22=Жадность!
+gui.mainmenu.splash23=Павшее Солнце!
+gui.mainmenu.splash24=Теперь ничего не видно!
+gui.mainmenu.skibidiplayer=Сигма сигма бой
+gui.mainmenu.rizzfriends=Продай друга на Авито
+
+gui.config.go_back=Назад
+gui.config.switch_pages=Сменить страницу
+gui.config.more_variants=Мультивселенная мобов
+gui.config.tooltip.more_variants=Больше вариаций мобов.
+gui.config.evolved_mobs=Эволюция мобов
+gui.config.tooltip.evolved_mobs=Все вариации могут спавниться вне зависимости от прогресса.
+gui.config.buffed_squids=Крутые спруты
+gui.config.tooltip.buffed_squids=У спрутов удвоенные характеристики и они могут преследовать игроков на суше.
+gui.config.nite=NITE
+gui.config.tooltip.nite=Nightmare Is Too Easy. Начните игру с 3 сердечками и 3 единицами голода. Получайте больше, повышая уровень. Мобы становятся сложнее с каждой минутой. Сырая еда не накладывает отрицательные эффекты. Меньше штрафов к голоду за движение. Вдохновлено MITE.
+gui.config.dark_stormy_night=Эпицентр Бури
+gui.config.tooltip.dark_stormy_night=Мир в постоянном шторме, что уменьшает освещённость и увеличивает скорость спавна мобов. Гром звучит тише.
+gui.config.no_skybases=Без скайбаз
+gui.config.tooltip.no_skybases=На деревянные блоки действует гравитация.
+gui.config.cancer_mode=Тупой режим
+gui.config.tooltip.cancer_mode=Ломает алгоритм генерации мира и рендерер, добавляет глупые функции и мигающие огни. Настоящий первоапрельский опыт.
+gui.config.horde_mode=Режим орды
+gui.config.tooltip.horde_mode=Все мобы всегда знают где находятся игроки. Они будут преследовать везде. Раньше они поддавались...
+gui.config.total_eclipse=Вечное Затмение
+gui.config.tooltip.total_eclipse=Каждый день заменён Затмением.
+gui.config.bloodmare=Кровавый Кошмар
+gui.config.tooltip.bloodmare=Каждая ночь заменена Кровавой Луной.
+gui.config.magic_monsters=Волшебные твари
+gui.config.tooltip.magic_monsters=Все мобы заменены на ведьм.
+gui.config.unkillable_mobs=Неубиваемые мобы
+gui.config.tooltip.unkillable_mobs=Мобы не получают урона в ближнем бою.
+gui.config.no_hit=Неприкасаемый
+gui.config.tooltip.no_hit=Один удар и ты в пролёте.
+gui.config.birthday_bash=С днём рождения!
+gui.config.date_timer=Таймер даты
+gui.config.tooltip.date_timer=Показывает цикл дня и ночи и количество прошедших дней.
+gui.config.real_timer=Реальное время
+gui.config.tooltip.real_timer=Показывает время проведённое в игре.
+gui.config.bloodmoon_colors=Цвета Кровавой Луны
+gui.config.tooltip.bloodmoon_colors=Добавляет красный фильтр при Кровавой Луне. Рекомендуется отключить если вы записываете видео.
+gui.config.crimson=Алый Мир
+gui.config.tooltip.crimson=Добавляет постоянный красный фильтр.
+gui.config.config_on_hud=Конфиги на интерфейсе
+gui.config.tooltip.config_on_hud=Показывает активные конфиги на интерфейсе.
+gui.config.potion_particles=Частицы зелий
+gui.config.tooltip.potion_particles=Включает отображение частиц от зелий.
+gui.config.fishing_alerts=Рыболовные оповещения
+gui.config.tooltip.fishing_alerts=Включает оповещения о редких уловах.
+gui.config.cm_rendering=CM рендеринг
+gui.config.tooltip.cm_rendering=Переключает эффекты рендеринга первоапрельского патча. Рекомендуется при записи видео или если у вас чувствительные глаза.
+gui.config.perfect_start=Идеальный старт
+gui.config.tooltip.perfect_start=Устал умирать в первую ночь? Начни со второго дня с кирпичной печкой и топором, но только с 6 единицами голода.
+gui.config.extra_armor=Дополнительная броня
+gui.config.tooltip.extra_armor=Начните игру со слабым доспехом.
+gui.config.full_bright=Полная яркость
+gui.config.tooltip.full_bright=Рендерит мир с максимальной яркостью. Не спасает от Мрака.
+gui.config.fast_villagers=Быстрые обмены
+gui.config.tooltip.fast_villagers=Жители обновляют предложения 4 раза в день.
+gui.config.blood_moon_helper=Индикатор Кровавой Луны
+gui.config.tooltip.blood_moon_helper=Показывает время до следующей Кровавой Луны.
+gui.config.real_time=В реальном времени
+gui.config.tooltip.real_time=День и ночь занимают 12 часов. Сложный режим начинается с 3 дня. Эндшпиль начинается с 5 дня. Если активирован этот конфиг то нельзя выполнить все остальные.
+gui.config.render_fancy_clouds=Красивые облака
+gui.config.tooltip.render_fancy_clouds=Включает красивые но затратные облака. Только для современных сборок.
+gui.config.render_vignette=Кастомная виньетка
+gui.config.tooltip.render_vignette=Включает кастомную виньетку NM которая усиливается в пещерах или при битвах с боссом. Рекомендуется держать включённым.
+
+
+
+
+
+
+gui.config.clear.dragon=Условие выполнения: Победа над Драконом Края
+gui.config.clear.hardmode=Условие выполнения: Войти в сложный режим
+gui.config.clear.bw=Условие выполнения: Победить ???
+gui.config.clear.bloodmoon=Условие выполнения: Победить Кровавую Луну
+gui.config.clear.eclipse=Условие выполнения: Победить Затмение
+gui.config.clear.week=Условие выполнения: Выжить 7 дней
+gui.config.clear.gloom=Условие выполнения: Пережить первую ночь Мрака
+gui.config.clear.item=Условие выполнения: Получить предмет
+
+gui.warning.line1=бро
+gui.warning.line2=ты пытаешься войти в мир с режимом для тупых
+gui.warning.line3=если это не бекап или одноразовый мир беги
+gui.warning.line4=потому что ему жопа
+gui.warning.line5=ты точно хочешь туда?
+gui.warning.iknow=Я знаю что делаю
+gui.warning.goback=Назад
+
+gui.gameover.tip_prefix=Совет:
+gui.gameover.tip1=Избегайте океанов!
+gui.gameover.tip2=Спруты становятся враждебными в сложном режиме.
+gui.gameover.tip3=Спрутов можно убивать ради их мяса: лучшей еды в моде.
+gui.gameover.tip4=Сбрасывайте мобов с высоты для лёгких убийств.
+gui.gameover.tip5=Используйте спринт + удар для дополнительного отталкивания.
+gui.gameover.tip6=Снежные шарики хороши для охоты.
+gui.gameover.tip7=Бонусный сундук даёт каменный меч. Иногда большего и не надо.
+gui.gameover.tip8=У мобов с железными инструментами большая дальность атаки, чем у игрока.
+gui.gameover.tip9=Криперы взрываются если их поджечь! Остерегайтесь цепных реакций!
+gui.gameover.tip10=Работающие кирпичные печи поджигают горючие блоки перед собой.
+gui.gameover.tip11=Эффект медлительности не даст вам бегать, прыгать и взбираться по лестницам.
+gui.gameover.tip12=Мобы становятся сильнее с ходом игры. Не недооценивайте их!
+gui.gameover.tip13=Горы и высокие места отлично подходят для баз.
+gui.gameover.tip14=На деревья в джунглях можно взбираться для лёгкого убежища ночью.
+gui.gameover.tip15=Мобы не спавнятся первые 90 секунд... Удачи!
+gui.gameover.tip16=Щупальца спрутов можно парировать если сделать блок мечом!
+gui.gameover.tip17=Железные и алмазные кирки дают больше руды из залежей.
+gui.gameover.tip18=Не используйте инструменты как оружие - это тратит прочность вдвое быстрее!
+gui.gameover.tip19=Подожжённые костры могут поджечь другие костры или печи рядом! Используйте голод экономно!
+gui.gameover.tip20=Тильтанул? Поной разрабу в дискорд сервере NM. Ссылка на гитхабе.
+gui.gameover.tip21=Вариации мобов очень опасны! Избегайте сражения с ними если не знаете что делаете.
+gui.gameover.tip22=Используйте взрывы криперов чтобы копать землю и камень!
+gui.gameover.tip23=Рыболовля во время Кровавой Луны это отличный источник еды.
+gui.gameover.tip24=Всегда носите с собой факелы на случай если окажетесь в темноте!
+gui.gameover.tip25=Берите с собой побольше блоков когда идёте в пещеры. Ими можно закрыть опасные места.
+gui.gameover.tip26=Подумайте прежде чем использовать железную броню! Тяжёлые доспехи увеличивают расход голода.
+gui.gameover.tip27=Иногда лучше развернуться и сбежать домой. Тише едешь - дальше будешь.
+gui.gameover.tip28=Мелководные озёра это отличное место для базы! Мобы не могут спавниться в воде.
+gui.gameover.tip29=Вы можете получить кирпичную печь в первый день если быстро найдёте глину! Кто не рискует...
+gui.gameover.tip30=Ставьте костры на башнях из 2 блоков! Так они не подожгут пол на котором стоят.
+gui.gameover.tip31=За алмазами лучше идти в пещеру чем стрип-майнить.
+gui.gameover.tip32=Бинты крафтятся из ниток и шерсти. Они могут спасти вашу жизнь!
+gui.gameover.lategame1=Не забывайте брать перерывы. Нет смысла в спешке.
+gui.gameover.lategame2=Вы забрались высоко. Гордитесь этим.
+gui.gameover.lategame3=Прогресс никогда не зря. Мы все учимся на ошибках.
+gui.gameover.lategame4=Вы зашли далеко. Но это ещё не конец.
+gui.gameover.lategame5=Не оплакивай смерть, она не последняя.
+gui.gameover.lategame6=Каждая смерть делает вас сильнее.
+gui.gameover.lategame7=Вы вспомните свои ошибки и выживите.
+gui.gameover.lategame8=Не сдавайся.
+gui.gameover.lategame9=Не отказывайтесь от небольшой передышки.
+
+player.stopSleeping=Проснуться
+player.attemptEscapeBloodmoon=<???> Убегаешь от своей судьбы? Ничтожество.
+
+world.hardmodeBegin=<???> Сложный режим начался.
+world.endgameBegin=<???> Поздняя игра началась.
+world.portal_warning=Осталось 3 дня.
+world.config.using_help=Обнаружены конфиги облегчающие игру.
+world.config.progress_wiped=Весь прогресс конфигов стёрт из этого мира.
+world.config.no_match=Вы используете конфиги которые не были включены при создании мира.
+world.config.relaxed=Достижения конфигов доступны только на сложности Кошмар.
+world.config.cheating=Достижения конфигов недоступны в мирах с читами.
+
+bosses.wither_summon_sealevel=<???> Иссушитель должен быть призван над уровнем моря.
+bosses.wither_summon_too_high=<???> Иссушителя нельзя призвать так высоко. Y координата должна быть ниже 200.
+bosses.wither_revive_message=<Иссушитель> Богу не страшна смерть.
+bosses.dragons.journeyEnd=<Близнецы> Твоё приключение заканчивается здесь.
+bosses.bloodwither.potion_warning=Пришлось использовать зелье? Ничтожество.
+bosses.bloodwither.learn_fight=Неужели ты не умеешь драться?
+bosses.bloodwither.gapple_notice=Вижу ты подготовил золотые яблоки...
+bosses.bloodwither.gapple_plan=Приемлемое подношение для меня.
+
+deathScreen.nextAttempt=Следующая попытка
+deathScreen.deathTauntMessage1=<???> Ничтожество.
+deathScreen.deathTauntMessage2=<???> Ты серьёзно?
+deathScreen.deathTauntMessage3=<???> Бро, тебе надо тренироваться.
+deathScreen.deathTauntMessage4=<???> Где твой скилл?
+deathScreen.deathTauntMessage5=<???> Даже моя бабушка лучше играет.
+deathScreen.deathTauntMessage6=<???> До скорой встречи!
+deathScreen.deathTauntMessage7=<???> Изи мид.
+deathScreen.deathTauntMessage8=<???> Даже не близко.
+deathScreen.deathTauntMessage9=<???> Чел, ливни.
+deathScreen.deathTauntMessage10=<???> Отправляйся в таверну.
+deathScreen.deathTauntMessage11=<???> Рейдж байбек будет?
+deathScreen.deathTauntMessage12=<???> Играть научись.
+deathScreen.deathTauntMessage13=<???> Твой свет угасает, а я вечное воплощение Тьмы.
+deathScreen.deathTauntMessage14=<???> Сдайся. Это не твоё.
+deathScreen.deathTauntMessage15=<???> И это всё?
+deathScreen.deathTauntMessage16=<???> Репорт за фид.
+deathScreen.deathTauntMessage17=<???> Может на мирный режим переключи?
+deathScreen.deathTauntMessage18=<???> Давай в следующий раз ты пропишешь /kill.
+deathScreen.deathTauntMessage19=<???> Это шутка такая?
+
+item.desc.bloodmoon0=Пропускает текущую Кровавую Луну если она активна
+item.desc.bloodmoon1=Иначе вызывает следующую Кровавую Луну
+
+achievementtab.nightmaremode=Nightmare Mode
+achievement.nm.grants=Выдаёт достижения:
+
+achievement.nm.morningSecondDay=Первому игроку приготовиться
+achievement.nm.morningSecondDay.desc=Переживите первую ночь
+
+achievement.nm.sludge=Лучшая сталь в Скайриме!
+achievement.nm.sludge.desc=Скрафтите кирпичную печь в первый день
+
+achievement.nm.hitBurningSkeleton=Огоньку?
+achievement.nm.hitBurningSkeleton.desc=Попадите под стрелу горящего скелета
+
+achievement.nm.killRunningAnimal=Беги Форест! Беги!
+achievement.nm.killRunningAnimal.desc=Убейте убегающее животное дубиной
+
+achievement.btw.craft_hamper=Мама сказала взять
+achievement.btw.craft_hamper.desc=Скрафтите корзину
+
+achievement.nm.ironNeedles=Бабуська
+achievement.nm.ironNeedles.desc=Скрафтите улучшенные иглы для шитья
+
+achievement.nm.bandage=I NEED A MEDIC BAG!
+achievement.nm.bandage.desc=Скрафтите бинт
+
+achievement.nm.skyBase=А зачем мне скилл...
+achievement.nm.skyBase.desc=Сделайте скайбазу высотой 8+ блоков над землёй
+
+achievement.nm.eatRawFood=Ели мясо мужики
+achievement.nm.eatRawFood.desc=Съешьте сырую пищу и не отравитесь
+
+achievement.nm.snowballMob=Провокатор
+achievement.nm.snowballMob.desc=Попадите в моба снежком
+
+achievement.nm.snowballMobKill=Всё по плану!
+achievement.nm.snowballMobKill.desc=Убейте моба уроном от падения с помощью снежка
+
+achievement.nm.calamariCook=Запеку тебя с яблоком во рту...
+achievement.nm.calamariCook.desc=Приготовьте жаркое из кальмара
+
+achievement.nm.calamariGet=Морпех
+achievement.nm.calamariGet.desc=Убейте спрута ради его мяса
+
+achievement.nm.bloodZombieKill=УЙДИ ОТ МЕНЯ НЕЧИСТЬ!!!
+achievement.nm.bloodZombieKill.desc=Убейте кровавого зомби
+
+achievement.nm.witherSkeletonKillOverworld=Шпион из ада
+achievement.nm.witherSkeletonKillOverworld.desc=Убейте скелета-иссушителя в глубинах 3 слоя
+
+achievement.nm.breakLavaPillow=Тёпленько
+achievement.nm.breakLavaPillow.desc=Вскопайте подушку из лавы в глубинах 3 слоя
+
+achievement.nm.craftPlanter=Фанат КиШа
+achievement.nm.craftPlanter.desc=Скрафтите горшок
+
+achievement.nm.calamariFried=Гордон Рамзи
+achievement.nm.calamariFried.desc=Приготовьте жареного кальмара - лучшую еду в моде
+
+achievement.nm.greed=Жадность
+achievement.nm.greed.desc=Жадность нашептала тебе в ухо, а ты поддался
+
+achievement.btw.find_creeper_oysters=Высокая кулинария
+achievement.btw.find_creeper_oysters.desc=Убейте крипера ради его ракушек
+
+achievement.nm.ironSword=Палка-щекоталка
+achievement.nm.ironSword.desc=Получите железный меч
+
+achievement.nm.ironZombie=Железный человек
+achievement.nm.ironZombie.desc=Убейте монстра в железном доспехе
+
+achievement.nm.ladderWood=Вертикальная логистика
+achievement.nm.ladderWood.desc=Скрафтите лестницу
+
+achievement.nm.roadStandard=Транссибирская магистраль
+achievement.nm.roadStandard.desc=Скрафтите дорогу (предмет)
+
+achievement.nm.ladderStone=Каменщик
+achievement.nm.ladderStone.desc=Скрафтите каменную лестницу
+
+achievement.nm.ladderIron=Турникет
+achievement.nm.ladderIron.desc=Скрафтите железную лестницу
+
+achievement.nm.hardmode=Я тут самый крутой!
+achievement.nm.hardmode.desc=Войдите в сложный режим
+
+achievement.nm.bloodOrb=Страшная тёмная магия
+achievement.nm.bloodOrb.desc=Получите сферу Крови
+
+achievement.nm.bloodMoon=Море крови
+achievement.nm.bloodMoon.desc=Переживите первую Кровавую Луну
+
+achievement.nm.bloodIngot=Кузнец из Ада
+achievement.nm.bloodIngot.desc=Скрафтите слиток Крови
+
+achievement.nm.bloodSword=РЕЗНЯ!
+achievement.nm.bloodSword.desc=Скрафтите меч Крови
+
+achievement.nm.bloodPickaxe=Сквозь кровь и пот
+achievement.nm.bloodPickaxe.desc=Скрафтите кирку Крови
+
+achievement.nm.bloodShovel=Могильщик
+achievement.nm.bloodShovel.desc=Скрафтите лопату Крови
+
+achievement.nm.bloodAxe=Берсерк
+achievement.nm.bloodAxe.desc=Скрафтите топор Крови
+
+achievement.nm.bloodHoe=Гигачад
+achievement.nm.bloodHoe.desc=Скрафтите мотыгу Крови
+
+achievement.nm.shadowJumpScare=ХАХАХАХА! А Я ТУТ ПРИТАИЛСЯ!
+achievement.nm.shadowJumpScare.desc=Повстречайте Теневого Мародёра
+
+achievement.nm.killTerrence=Здарова Терренс!
+achievement.nm.killTerrence.desc=Найдите и убейте Терренса
+
+achievement.nm.netherSleep=Бесстрашный
+achievement.nm.netherSleep.desc=Поспите в аду
+
+achievement.btw.redneck_fishing=Слушай парень, я ведь инженер...
+achievement.btw.redneck_fishing.desc=Киньте динамит в озеро чтобы поймать рыбу
+
+achievement.nm.equipBloodArmor=Гемофилия
+achievement.nm.equipBloodArmor.desc=Экипируйте полный набор брони Крови
+
+achievement.nm.bloodChest=Спартанский склад
+achievement.nm.bloodChest.desc=Скрафтите сундук Крови
+
+achievement.nm.wanderingTraderKill=Сначала стреляй а потом спрашивай
+achievement.nm.wanderingTraderKill.desc=Убейте "Странствующего торговца"
+
+achievement.nm.mineSteelOre=Сплав душ
+achievement.nm.mineSteelOre.desc=Добудьте руду стали душ после победы над Иссушителем
+
+achievement.nm.bloodMoonWither=Да я ваш бог слабаки!
+achievement.nm.bloodMoonWither.desc=Переживите Кровавую Луну после победы над Иссушителем
+
+achievement.nm.corpseEye=Я тебя вижу!
+achievement.nm.corpseEye.desc=Скрафтите Глаз Мертвеца
+
+achievement.nm.roadAsphalt=Коммунальный рабочий
+achievement.nm.roadAsphalt.desc=Скрафтите асфальт
+
+achievement.nm.steelLocker=Квартирмейстр
+achievement.nm.steelLocker.desc=Скрафтите стальной ящик - лучшее хранилище мода
+
+achievement.nm.wrath=Гнев
+achievement.nm.wrath.desc=Голоса требовали крови и ты её пролил
+
+achievement.nm.envy=Зависть
+achievement.nm.envy.desc=Ты хотел то что не твоё, и ты отобрал это
+
+achievement.nm.sloth=Лень
+achievement.nm.sloth.desc=Мир горел, а ты смотрел на это
+
+achievement.nm.fabric=Ткач
+achievement.nm.fabric.desc=Скрафтите ткань
+
+achievement.nm.bed=Вторая не понадобится...
+achievement.nm.bed.desc=Скрафтите кровать
+
+achievement.nm.gluttony=Обжорство
+achievement.nm.gluttony.desc=Пустота требовала больше, и ты её накормил
+
+achievement.nm.lust=Похоть
+achievement.nm.lust.desc=Желание поглотило тебя, а ты не сопротивлялся
+
+achievement.nm.steelSword=Экскалибур
+achievement.nm.steelSword.desc=Скрафтите меч из стали душ
+
+achievement.nm.steelIngot=Мастер кузнечного дела
+achievement.nm.steelIngot.desc=Скрафтите слиток стали душ
+
+achievement.nm.steelPickaxe=Двигатель экономики
+achievement.nm.steelPickaxe.desc=Скрафтите кирку из стали душ
+
+achievement.nm.steelShovel=Пионер
+achievement.nm.steelShovel.desc=Скрафтите лопату из стали душ
+
+achievement.nm.steelAxe=Лесничий
+achievement.nm.steelAxe.desc=Скрафтите топор из стали душ
+
+achievement.nm.steelHoe=Зачем...?
+achievement.nm.steelHoe.desc=Скрафтите мотыгу из стали душ и докажите своё превосходство
+
+achievement.nm.steelMattock=Инструмент для крутых парней
+achievement.nm.steelMattock.desc=Скрафтите кирколопату из стали душ
+
+achievement.nm.steelBattleAxe=ЗА ОДИНА!
+achievement.nm.steelBattleAxe.desc=Скрафтите боевой топор
+
+achievement.nm.pride=Гордыня
+achievement.nm.pride.desc=Глубины тебя провоцировали, а ты заглотил наживку
+
+achievement.nm.eclipse=Солнцебой
+achievement.nm.eclipse.desc=Переживите первое затмение
+
+achievement.nm.eclipseShard=Фрагмент темного солнца
+achievement.nm.eclipseShard.desc=Получите осколок Затмения
+
+achievement.nm.beaconGold=Золотой трон
+achievement.nm.beaconGold.desc=Постройте золотой маяк 4-го тира
+
+achievement.nm.beaconHellfire=Вечный Огонь
+achievement.nm.beaconHellfire.desc=Постройте маяк адского огня 4-го тира
+
+achievement.nm.beaconDiamond=Шейх
+achievement.nm.beaconDiamond.desc=Постройте алмазный маяк 4-го тира
+
+achievement.nm.beaconDung=Дерь...
+achievement.nm.beaconDung.desc=Постройте навозный маяк 4-го тира
+
+achievement.nm.beaconEmerald=Клуб миллиардеров
+achievement.nm.beaconEmerald.desc=Постройте изумрудный маяк 4-го тира
+
+achievement.nm.beaconGlass=Стеклянная пушка
+achievement.nm.beaconGlass.desc=Постройте стеклянный маяк 4-го тира
+
+achievement.nm.beaconGlowstone=Икар
+achievement.nm.beaconGlowstone.desc=Постройте светокаменный маяк 4-го тира
+
+achievement.nm.beaconLapis=Зачарователь
+achievement.nm.beaconLapis.desc=Постройте лазуритовый маяк 4-го тира
+
+achievement.nm.beaconIron=Тони Старк
+achievement.nm.beaconIron.desc=Постройте железный маяк 4-го тира
+
+achievement.nm.beaconEnderBlock=Врата Небес
+achievement.nm.beaconEnderBlock.desc=Постройте маяк Края 4-го тира
+
+achievement.nm.beaconAll=Коллекционер
+achievement.nm.beaconAll.desc=Постройте все маяки 4-го тира
+
+achievement.nm.magicArrow=Гонка вооружений
+achievement.nm.magicArrow.desc=Получите волшебную стрелу
+
+achievement.nm.nightmareMerchant=Прозревший слуга
+achievement.nm.nightmareMerchant.desc=Превратите библиотекаря в торговца кошмаров во время затмения
+
+achievement.nm.killEclipseAnimal=Подношение Древним Богам
+achievement.nm.killEclipseAnimal.desc=Убейте животное во время Затмения
+
+achievement.nm.magicFeather=Волшебный фермер
+achievement.nm.magicFeather.desc=Получите волшебное перо убив курицу во время Затмения
+
+achievement.nm.rideEclipseChicken=Гагарин
+achievement.nm.rideEclipseChicken.desc=Взлетите на курице затмения
+
+achievement.nm.eclipseCowKick=Мастер дзюдо
+achievement.nm.eclipseCowKick.desc=Получите в лицо от коровы Затмения
+
+achievement.nm.eclipseCowMilk=Ну и ужас
+achievement.nm.eclipseCowMilk.desc=Получите кровавое молоко от коровы Затмения
+
+achievement.nm.nightmareMerchantLevel2=Чёрный рынок
+achievement.nm.nightmareMerchantLevel2.desc=Поднимите уровень торговца кошмаров
+
+achievement.nm.nightmareMerchantLevel3=Древняя тайная магия
+achievement.nm.nightmareMerchantLevel3.desc=Поднимите уровень торговца кошмаров
+
+achievement.nm.nightmareMerchantLevel4=Кровь богу крови!
+achievement.nm.nightmareMerchantLevel4.desc=Поднимите уровень торговца кошмаров
+
+achievement.nm.nightmareMerchantLevel5=Черепа трону черепов!
+achievement.nm.nightmareMerchantLevel5.desc=
+
+achievement.nm.eclipseShadowZombie=Переигран
+achievement.nm.eclipseShadowZombie.desc=Убейте Мародёра Затмения
+
+achievement.nm.eclipseSquid=Ужасы Лавкрафта
+achievement.nm.eclipseSquid.desc=Убейте Спрута Затмения
+
+achievement.nm.eclipseGhast=Охотник на призраков
+achievement.nm.eclipseGhast.desc=Убейте Призрака Затмения
+
+achievement.nm.eclipseEnderman=Тамплиер
+achievement.nm.eclipseEnderman.desc=Убейте Ассасина Затмения
+
+achievement.nm.eclipseWitch=Баба Яга
+achievement.nm.eclipseWitch.desc=Убейте Заклинателя Затмения
+
+achievement.nm.killBloodWither=Ну и кто тут нуб?
+achievement.nm.killBloodWither.desc=Победите ???
+
+achievement.nm.arrowDamage=Выпала 20!
+achievement.nm.arrowDamage.desc=Нанесите больше 50 урона волшебной стрелой
+
+achievement.nm.arrowPierce=Снайпер элит
+achievement.nm.arrowPierce.desc=Пробейте 5+ мобов одной волшебной стрелой
+
+achievement.nm.eclipseBow=Лук Ауриэля
+achievement.nm.eclipseBow.desc=Скрафтите лук Затмения
+
+achievement.nm.rifleRpg=У меня ствол побольше!
+achievement.nm.rifleRpg.desc=Заполучите базуку
+
+achievement.nm.brimstone=Это Calamity?
+achievement.nm.brimstone.desc=Профильтруйте светокамень в серу с помощью воронки с песком душ
+
+achievement.nm.gunpowder=Индустриальная эра
+achievement.nm.gunpowder.desc=Скрафтите порох в котле
+
+achievement.nm.tnt=Бог войны
+achievement.nm.tnt.desc=Скрафтите бочку с порохом
+
+achievement.nm.groundNetherrack=Адский шахтёр
+achievement.nm.groundNetherrack.desc=Взорвите адский камень с помощью бочки с порохом
+
+achievement.nm.craftHellforge=Кузня Кхорна
+achievement.nm.craftHellforge.desc=Скрафтите Адскую Печь
+
+achievement.nm.sinner=Богу стыдно за тебя...
+achievement.nm.sinner.desc=Совершите все 7 грехов
+
+achievement.nm.dungApple=Братишка! Я тебе покушать принёс!
+achievement.nm.dungApple.desc=Скушайте навозное яблоко. Мммм, вкуснятина
+
+achievement.nm.craftRefinedDiamond=Химик
+achievement.nm.craftRefinedDiamond.desc=Скрафтите улучшенный алмазный слиток
+
+achievement.nm.craftIronFishingRod=Забайчен
+achievement.nm.craftIronFishingRod.desc=Скрафтите железную удочку
+
+achievement.nm.makeVillagerVessel=Современное рабство
+achievement.nm.makeVillagerVessel.desc=Превратите жителя в сосуд
+
+achievement.nm.beaconSpider=Человек паук
+achievement.nm.beaconSpider.desc=Постройте паучий маяк 4 тира
+
+achievement.nm.chainArmor=Ополченец
+achievement.nm.chainArmor.desc=Наденьте кольчугу
+
+achievement.nm.alchemyDust=Ведьмак
+achievement.nm.alchemyDust.desc=Используйте алхимический порошок чтобы найти дом Ведьмы
+
+achievement.nm.ancientSand=Проклятье Осириса
+achievement.nm.ancientSand.desc=Используйте древний песок чтобы найти пустынный храм
+
+
+
+achievement.btw.equip_steel_armor=Машина войны.
+achievement.btw.find_shaft=Дом Херобрина.
+achievement.btw.craft_fire_plough=Пожарник.
+achievement.btw.craft_hopper=Мусорка.
+achievement.btw.find_bones=Бесплатный кальций.
+achievement.btw.place_tool=Декоратор.
+
+
+achievement.btw.craft_iron_shears.desc=Получите железные ножницы.
+
+
+
+tag.nightmare.sandwich_meats=Нарезка для бутерброда
+tag.nightmare.eclipse_drops=Предметы Затмения
+
+# BTW info overrides
+
+btw.anvil.info=Наковальня может быть использована для ремонта предметов с помощью опыта и материалов. Их нельзя переместить, если их сломать выпадет металлолом который можно расплавить в Тигеле чтобы вернуть железо.
+btw.fishing_rod.info=Для рыболовли требуется наживка, достаточный размер водоёма и правильное время дня. Нажмите ПКМ когда держите удочку с любой наживкой (например гнилая плоть) на хотбаре чтобы её добавить. Правильное место для рыболовли должно быть под открытым небом и с глубиной в минимум 3 блока. Вокруг поплавка появятся пузырьки если место верное. Полнолуние или закат/рассвет во время дождя это лучшее время для рыбалки. Если попробовать притянуть вражеских мобов удочкой, она выпадет из ваших рук.
+btw.netherrack.info=Адский камень ломается только кровавыми или стальными инструментами. Его можно взорвать пороховой бочкой чтобы быстро получить большое количество молотого адского камня. Также 1 блок адского камня можно перемолоть в 8 молотых адских камней с помощью жернова. Адский камень вечно горит, но это требует костра или огненного снаряда.
+btw.oven.info=Печки готовят еду намного эффективнее костров и могут плавить руду. Они держат один предмет сверху а снизу топливо. ПКМ с топливом чтобы положить его в печьку, оверлей обновится и покажет текущее количество топлива. Печь можно поджечь факелом или любой другой зажигалкой. Еда сгорит если её не достать после приготовления.
+btw.screw_pump.info=Винтовой насос может поднять уровень воды на 1 блок. Когда на него подан редстоун или механическая сила он будет перемещать воду текущую спереди блока путём вывода её вверх блока.
+btw.hopper.info=Воронки собирают предметы над собой и в случае подачи механической энергии выбрасывают их снизу. При этом они не могут доставать предметы из сундуков. Подбор можно отфильтровать положив предмет в слот фильтра. Рабочие фильтры: лестницы, железные прутья, люки, решётки, защитные решётки и песок душ. Некоторые фильтры можно использовать чтобы разделять или конвертировать вещи проходящие через них. Воронки могут удерживать 1000 опыта.
+btw.arcane_scroll.info=Волшебные Свитки можно использовать с Зачарователем Ада чтобы добавлять определённые зачарования к предметам. Большинство Волшебных Свитков продаются жителями или падают с боссов.
+btw.enchanter.info=Стол Зачарования может добавлять только определённые зачарования и только до 15 уровня. Максимальный уровень повышается с прогрессом: 20 в сложном режиме, 30 после победы над Иссушителем. Для максимального уровня необходимо 30 книжных полок. Стол Зачарования можно найти в пустынных храмах.
+
+btw.beacon.info=Маяки дают разные эффекты в зависимости от материала использованного для пирамиды. Маяки могут работать в аду, если над ними потолок из бедрока. Подходящие блоки для маяка: концентрированный адский огонь, алмаз, навоз, изумруд, эндерняк, стекло, светокамень, золото, железо, лазурит, паучие глаза и душекованная сталь. Большинство маяков 4-го тира имеют неограниченную дальность в пределах одного измерения.
+btw.ender_chest.info=Эндер-сундуки позволяют игрокам иметь приватный инвентарь который работает во всех измерениях.
+btw.steel_block.info=Маяк из блоков стали душ работает как якорь для респавна игроков если они умрут достаточно близко. Расстояние зависит от уровня для первых 2 уровней, безлимитно в одном измерении на 3 уровне и безлимитно во всём мире на 4 уровне.
+btw.portal.info=Порталы в ад нужно поджечь костром или огненным зарядом. При активации портала в ад начинается таймер на 3 дня до входа в сложный режим. Сложный режим поднимает статы всех мобов и добавляет новые угрозы и вариации. Порталы проклинают пассивных мобов и кальмаров в радиусе 16 блоков. Рекомендуется активировать портал только если вы знаете что делаете.
+
+# NM custom info items
+nm.rpg.info=Базуку можно купить у Торговца Кошмаров после победы над ???. Она стреляет подожжёнными бочками с порохом. Знаешь почему я хороший подрывник?
+nm.rifle.info=Автомат можно купить у Торговца Кошмаров после победы над ???. Он стреляет высокоскоростными пулями.
+nm.bandage.info=Бинты излечивают 2 сердца при полном наложении. У них 10 секунд КД между применениями.
+nm.alchemydust.info=Алхимический порошок можно использовать чтобы найти дома ведьм. После активации частицы покажут направление ко всем ближайшим домам ведьм. Если их нет, то рядом не было обнаружено домов.
+nm.ironneedles.info=Железные иглы для шитья позволяют мгновенно шить, плести и извлекать предметы. Например: шерсть, запутанная паутина, лозы.
+nm.bloodorb.info=Сферы Крови падают с враждебных мобов во время Кровавой Луны. Они используются для различных рецептов, в особенности Слитков Крови, которые используются для брони и инструментов Крови. С каждого моба падают различные количества сфер, в зависимости от их уровня угрозы.
+nm.bloodpickaxe.info=Инструменты Крови имеют повышенную прочность и скорость. Они создаются из Слитков Крови и Стержней Ифрита. Их можно переработать в Улучшенные Алмазные Слитки с потерей Сфер Крови. У них большой показатель зачаровываемости с небольшим откатом опыта. Кирка Крови может ломать Адский Камень.
+nm.bloodtool.info=Инструменты Крови имеют повышенную прочность и скорость. Они создаются из Слитков Крови и Стержней Ифрита. Их можно переработать в Улучшенные Алмазные Слитки с потерей Сфер Крови. У них большой показатель зачаровываемости с небольшим откатом опыта.
+nm.bloodsword.info=Инструменты Крови имеют повышенную прочность и скорость. Они создаются из Слитков Крови и Стержней Ифрита. Их можно переработать в Улучшенные Алмазные Слитки. У них большой показатель зачаровываемости с небольшим откатом опыта. Меч Крови имеет шанс вампиризма при каждом ударе, этот шанс увеличивается за каждый надетый кусок доспеха Крови. Дополнительно, вампиризм меча восстанавливает прочность доспехов и инструментов Крови в инвентаре, включая сам меч.
+nm.bloodarmor.info=При полностью надетом доспехе крови и экипированном Мече Крови игрок получает баффы: больший шанс вампиризма, большая скорость копания Адского Камня, шанс получить силу или регенерацию при убийстве моба. Броня Крови имеет уровень защиты между железной и алмазной бронёй. Её можно переработать в Улучшенные Алмазные Слитки. Полный сет брони срезает длительность зелий вдвое. У брони большой показатель зачаровываемости.
+nm.bloodingot.info=Слитки Крови создаются из Улучшенных Алмазных Слитков и Сфер Крови. Они являются основным компонентом доспехов и инструментов Крови.
+nm.eclipseshard.info=Осколки Затмения используются для торговли и создания экипировки Затмения.
+nm.bloodMilk.info=Падает с коров во время Затмения.
+nm.creeperChop.info=Падает с свиней-криперов во время Затмения.
+nm.voidSack.info=Падает со спрутов во время Затмения.
+nm.charredFlesh.info=Падает с Мародёров Теней во время Затмения.
+nm.spiderFangs.info=Падает с пауков во время Затмения.
+nm.fireRod.info=Падает с Ифритов Адского Огня во время Затмения.
+nm.waterRod.info=Падает с Аква-Ифритов во время Затмения.
+nm.sulfur.info=Падает с криперов во время Затмения.
+nm.creeperTear.info=Падает с Криперов-Гастов во время Затмения.
+nm.silverLump.info=Падает с чешуйниц во время Затмения.
+nm.witheredBone.info=Падает со скелетов-иссушителей во время Затмения.
+nm.voidMembrane.info=Падает с Заклинателей во время Затмения.
+nm.decayedFlesh.info=Падает с зомби и зомби-свиней во время Затмения.
+nm.ghastTentacle.info=Падает с Призраков во время Затмения.
+nm.shadowRod.info=Падает с Ифритов-Теней во время Затмения.
+nm.speedCoil.info=Падает с лошадей во время Затмения.
+nm.bloodstar.info=Падает с ???. Ваш высший триумф. Не сгорает.
+nm.calamari.info=Падает с спрутов. Готовится на костре или печи в жаркое или жариться в котле. С прогрессом мира шанс на выпадение уменьшается.
+nm.eclipsebow.info=Лук Затмения способен стрелять Волшебными Стрелами очередью из 3 стрел. Волшебные Стрелы пробивают неограниченное количество мобов но наносят средний урон. Также лук может стрелять бродхедами. У него намного большая скорострельность в сравнении с другими луками.
+nm.magicarrow.info=Волшебные Стрелы можно использовать только с Луком Затмения. Волшебные Стрелы пробивают неограниченное количество мобов но наносят средний урон. Лук Затмения способен стрелять Волшебными Стрелами очередью из 3 стрел.
+nm.ironfishingrod.info=Железная удочка это улучшение стандартной удочки. Ей не требуется наживка и она позволяет выловить большее разнообразие вещей.
+nm.ancientsand.info=Древний Песок позволяет найти ближайшие Храмы Пустыни. После активации частицы покажут направление ко всем ближайшим храмам.Если их нет, то рядом не было обнаружено храмов.
+nm.refineddiamond.info=Улучшенные Алмазные Слитки создаются путём переработки Алмазных Слитков с Кварцем в Тигеле. Они достаточно прочные для создания сильной брони или создания сплава с Сферами Крови.
+nm.withersoul.info=Душа иссушителя падает при каждом убийстве Иссушителя.
+nm.obsidianshard.info=Осколки Обсидиана получаются путём вскопки обсидиана алмазной киркой или киркой Крови. Стальная/Улучшенная кирка позволяет получить полный блок. Осколки Обсидиана можно переработать в грубый обсидиан, из которого строится портал в Ад.
+
+# NM BLOCK info
+nm.steelOre.info=Руда стали душ спавнится во 2 и 3 слоях выше уровня алмазов. Её можно вскопать только после победы над Иссушителем или при использовании кирки из стали душ.
+nm.bloodChest.info=Сундук Крови это негорящее хранилище с удвоенным объёмом инвентаря и повышенной сопротивляемости к взрывам. Он имеет 54 слота инвентаря.
+nm.steelLocker.info=Стальной Шкаф это прочное хранилище с 133 слотами. Он имеет сопротивление к большинству взрывов и не горит.
+nm.blockRoad.info=Дорога увеличивает скорость передвижения игроков и мобов.
+nm.blockAsphalt.info=Асфальт сильно увеличивает скорость передвижения игроков и мобов.
+nm.upgradedLadder.info=Улучшенные лестницы позволяют быстрее взбираться по ним.
+nm.hellforge.info=Кузня Ада это полностью автономная печь. Она работает без топлива, но её можно сильно ускорить с его помощью: адский камень это самое эффективное топливо. Кузня автоматически забирает адский камень из сундука под ней. Она автоматически извлекает сырую материалы из сундука над ней и выбрасывает обработанные предметы в сундуки слева или справа от неё.
+nm.bloodSaw.info=Пила Крови не требует механической энергии. Она наносит повышенный урон и перерабатывает блоки намного быстрее.
+nm.disenchantmentTable.info=Стол раззачарования позволяет легко снимать зачарования в виде Свитков Зачарования.
+
+# VANILLA BLOCKS / ITEMS
+nm.obsidian.info= Обсидиан падает с Обсидиановых Криперов на 3-м слое или крафтится со сталью после победы над Иссушителем. У него в разы меньше сопротивляемости ко взрывам. Вскопка обсидиана без кирки из стали душ даёт осколки обсидиана и имеет шанс заспавнить обсидиановую рыбу.
+nm.crudeObsidian.info=Грубый Обсидиан создаётся из Осколков Обсидиана. У него в разы меньше сопротивляемости к взрывам. Его можно использовать для постройки портала в Ад, который начнёт таймер в 3 дня до сложного режима.
+nm.horseArmor.info=ПКМ с лошадиной бронёй открывает инвентарь в который можно положить пшеницу и солому. Броня для лошадей работает как батарейка которая восполняет голод лошади пока вы на ней ездите. Еду не достать после того как её положили в инвентарь. Защита и размер инвентаря брони зависит от её материала.
+nm.goldenApple.info=Золотые Яблоки накладывают регенерацию 1 на 4 секунды и поглощение 4 на 12 минут. У них есть перезарядка в 30 секунд.
+nm.goldenAppleEnchanted.info=Зачарованные Золотые Яблоки накладывают регенерацию 4, сопротивление к огню, силу 2, скорость 2 и спешку 2 на 30 секунд, сопротивление 1 на 40 секунд, ночное зрение и поглощение 2 на 2 минуты. У них перезарядка в 90 секунд.
+nm.brownMushroom.info=Коричневые грибы растут в Аду. Коричневые грибы на Грибном Острове можно собрать только после постройки портала в Ад.
+nm.pumpkin.info=Надев тыкву вы заставите всех гастов и странников Края преследовать вас через стены вне зависимости от цикла дня/ночи.
