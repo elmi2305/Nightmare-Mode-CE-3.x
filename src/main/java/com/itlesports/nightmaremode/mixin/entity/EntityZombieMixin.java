@@ -70,9 +70,10 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void setBaby(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
-        boolean willBeBaby = this.rand.nextInt(4) == 0;
+        boolean willBeBaby = this.rand.nextInt(32) == 0 && NightmareMode.moreVariants;
         if(willBeBaby && !this.worldObj.isRemote){
             this.setChild(true);
+            this.setSize(this.width, 1.0f);
         }
     }
 
@@ -588,7 +589,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     private void updateBabyZombies(CallbackInfo ci){
         if(this.worldObj.isRemote){
             if(this.isChild()){
-                this.setSize(this.width, 0.4f);
+                this.setSize(this.width, 1.0f);
             }
         }
     }
