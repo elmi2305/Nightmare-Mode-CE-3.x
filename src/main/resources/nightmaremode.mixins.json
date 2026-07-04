@@ -60,7 +60,6 @@
     "biomegen.BiomeDecoratorMixin",
     "biomegen.BiomeEndDecoratorMixin",
     "biomegen.BiomeGenBaseAccessor",
-    "biomegen.BiomeGenBaseMixin",
     "biomegen.ChunkProviderGenerateMixin",
     "biomegen.NoiseGeneratorOctavesMixin",
     "blocks.AestheticOpaqueEarthBlockMixin",
