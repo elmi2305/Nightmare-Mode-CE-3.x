@@ -281,6 +281,8 @@ gui.config.tooltip.render_fancy_clouds=Ativa uma renderização experimental de 
 gui.config.render_vignette=Vinheta Personalizada
 gui.config.tooltip.render_vignette=Ativa a vinheta personalizada do Nightmare Mode. O efeito fica especialmente intenso em situações estressantes, como explorar cavernas, Luas de Sangue, sofrer dano e lutas contra chefes. Recomendamos manter esta opção ativada
 
+# NM death messages
+death.attack.nmInsanity=%1$s perdeu a sanidade
 
 
 
@@ -357,6 +359,7 @@ world.config.progress_wiped=Todo o progresso da configuração deste mundo foi a
 world.config.no_match=Você está usando configurações que não estavam ativas quando este mundo foi criado.
 world.config.relaxed=As conquistas de configuração estão disponíveis apenas na dificuldade Nightmare.
 world.config.cheating=As conquistas de configuração não estão disponíveis em mundos trapaceados.
+world.config.world_type=As conquistas de configuração estão disponíveis apenas em mundos padrão.
 
 bosses.wither_summon_sealevel=<???> O Wither deve ser invocado acima do nível do mar.
 bosses.wither_summon_too_high=<???> O Wither não pode ser convocado tão alto. A coordenada Y deve ser inferior a 200.

@@ -282,7 +282,8 @@ gui.config.render_vignette=Custom Vignette
 gui.config.tooltip.render_vignette=Enables the custom Nightmare Mode vignette. It gets particularly strong in stressful scenarios like caving, Blood Moons, taking damage, and boss fights. Recommended to keep this enabled
 
 
-
+# NM death messages
+death.attack.nmInsanity=%1$s lost their mind
 
 
 
@@ -357,6 +358,7 @@ world.config.progress_wiped=All config progress has been wiped for this World.
 world.config.no_match=You are using configs which were not active when this World was created.
 world.config.relaxed=Config achievements are only available on Nightmare Difficulty.
 world.config.cheating=Config achievements aren't available on cheated Worlds.
+world.config.world_type=Config achievements are only available on default Worlds.
 
 bosses.wither_summon_sealevel=<???> The Wither must be summoned above sea level.
 bosses.wither_summon_too_high=<???> The Wither cannot be summoned this high. Y coordinate must be under 200.

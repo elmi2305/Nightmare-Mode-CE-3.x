@@ -278,6 +278,8 @@ gui.config.tooltip.render_fancy_clouds=Włącza eksperymentalne renderowanie chm
 gui.config.render_vignette=Niestandardowa winieta
 gui.config.tooltip.render_vignette=Włącza niestandardową winietę Nightmare Mode. Efekt staje się szczególnie silny w stresujących sytuacjach, takich jak eksploracja jaskiń, Krwawe Księżyce, otrzymywanie obrażeń oraz walki z bossami. Zaleca się pozostawienie tej opcji włączonej
 
+# NM death messages
+death.attack.nmInsanity=%1$s postradał(a) zmysły
 
 
 gui.config.clear.dragon=Wyczyść warunek: Pokonaj Ender Dragona
@@ -352,6 +354,7 @@ world.config.progress_wiped=Cały postęp konfiguracji dla tego świata został 
 world.config.no_match=Używasz konfiguracji, które nie były aktywne w momencie tworzenia tego świata.
 world.config.relaxed=Osiągnięcia konfiguracyjne są dostępne wyłącznie na poziomie trudności Koszmar.
 world.config.cheating=Osiągnięcia konfiguracyjne nie są dostępne na oszukanych światach.
+world.config.world_type=Osiągnięcia konfiguracji są dostępne tylko w domyślnych światach.
 
 bosses.wither_summon_sealevel=<???> Wither musi zostać przyzwany nad poziomem morza.
 bosses.wither_summon_too_high=<???> Wither nie może zostać przyzwany tak wysoko. Współrzędna Y musi być mniejsza niż 200.

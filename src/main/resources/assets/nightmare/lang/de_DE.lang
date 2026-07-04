@@ -276,6 +276,8 @@ gui.config.tooltip.render_fancy_clouds=Aktiviert die rechenintensive, aber beein
 gui.config.render_vignette=Benutzerdefinierte Vignette
 gui.config.tooltip.render_vignette=Aktiviert die benutzerdefinierte Nightmare-Mode-Vignette. Sie wird besonders stark in stressigen Situationen wie beim Höhlenerkunden, während Blutmonden, beim Erleiden von Schaden und in Bosskämpfen. Es wird empfohlen, diese Option aktiviert zu lassen
 
+# NM death messages
+death.attack.nmInsanity=%1$s hat den Verstand verloren
 
 
 
@@ -353,6 +355,7 @@ world.config.progress_wiped=Der gesamte Konfigfortschritt für diese Welt wurde 
 world.config.no_match=Du verwendest Konfigs die nicht aktiv waren wenn diese Welt erstellt wurde.
 world.config.relaxed=Konfig-Erfolge sind nur verfügbar auf der Albtraum-Schwierigkeit.
 world.config.cheating=Konfig-Erfolge sind auf Cheatwelten nicht verfügbar.
+world.config.world_type=Konfig-Erfolge sind nur in Standardwelten verfügbar.
 
 bosses.wither_summon_sealevel=<???> Der Wither muss über dem Meeresspiegel beschworen werden.
 bosses.wither_summon_too_high=<???> Der Wither kann nicht so hoch beschworen werden. Die Y-Koordinate muss unter 200 liegen.

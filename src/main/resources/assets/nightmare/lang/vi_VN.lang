@@ -281,6 +281,8 @@ gui.config.tooltip.render_fancy_clouds=Bật chế độ kết xuất mây thử
 gui.config.render_vignette=Hiệu Ứng Viền Tối Tùy Chỉnh
 gui.config.tooltip.render_vignette=Bật hiệu ứng viền tối tùy chỉnh của Nightmare Mode. Hiệu ứng sẽ mạnh hơn đáng kể trong các tình huống căng thẳng như thám hiểm hang động, Trăng Máu, khi nhận sát thương và trong các trận đánh trùm. Khuyến nghị giữ tùy chọn này được bật
 
+# NM death messages
+death.attack.nmInsanity=%1$s đã mất trí
 
 
 
@@ -357,6 +359,7 @@ world.config.progress_wiped=Toàn bộ tiến trình cấu hình đã bị xóa 
 world.config.no_match=Bạn đang sử dụng các cấu hình không được bật khi Thế Giới này được tạo.
 world.config.relaxed=Các thành tựu cấu hình chỉ khả dụng ở Độ Khó Nightmare.
 world.config.cheating=Thành tựu cấu hình không khả dụng trong các Thế Giới có gian lận.
+world.config.world_type=Thành tựu cấu hình chỉ khả dụng trong Thế Giới mặc định.
 
 bosses.wither_summon_sealevel=Wither phải được triệu hồi trên mực nước biển.
 bosses.wither_summon_too_high=Không thể triệu hồi Wither ở độ cao này. Tọa độ Y phải dưới 200.
