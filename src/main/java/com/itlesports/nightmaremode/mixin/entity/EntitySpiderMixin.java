@@ -251,6 +251,13 @@ public abstract class EntitySpiderMixin extends EntityMob{
             ci.cancel();
         }
     }
+    @ModifyArg(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
+    private double increaseSpiderRange(double range){
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            return range * 2;
+        }
+        return range + NMUtils.getWorldProgress() * 4;
+    }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
@@ -261,16 +268,18 @@ public abstract class EntitySpiderMixin extends EntityMob{
             int progress = NMUtils.getWorldProgress();
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            double spiderRainModifier = NMEvents.SimpleEvent.SPIDER_RAIN.isActive() ? 10 : 0;
             boolean isEclipse = eclipseModifier > 1;
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
+
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
             if(progress == NMFields.PREHARDMODE) {
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier) * niteMultiplier);
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (niteMultiplier - 1) / 20));
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier + spiderRainModifier) * niteMultiplier);
                 // 13 -> 20 -> 27 -> 34
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double(((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0)) * niteMultiplier);
                 // 4 -> 6 -> 8 -> 10
