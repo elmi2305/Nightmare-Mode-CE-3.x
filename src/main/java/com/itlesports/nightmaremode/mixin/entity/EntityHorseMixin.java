@@ -526,9 +526,9 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             tamingProgress = Math.max(0, tamingProgress - 5);
         }
 
-        // packet spam. syncs progress to players for the GUI
+        // packet spam. syncs progress to riding player for the GUI
         if (horseHost.ticksExisted % 2 == 0) {
-            NightmareMode.sendHorseProgressToAll(horseHost, tamingProgress);
+            NightmareMode.sendHorseProgressToPlayer(horseHost, tamingProgress, player);
         }
     }
 

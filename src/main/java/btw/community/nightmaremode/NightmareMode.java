@@ -469,6 +469,12 @@ public class NightmareMode extends BTWAddon {
             }
         }
     }
+    public static void sendHorseProgressToPlayer(EntityHorse horse, int progress, EntityPlayer p) {
+        Packet250CustomPayload packet = createHorseProgressPacket(horse.entityId, progress);
+        if (p instanceof EntityPlayerMP player && player.ridingEntity instanceof EntityHorse) {
+            player.playerNetServerHandler.sendPacketToPlayer(packet);
+        }
+    }
 
     public static void sendEventsPacketToAll(int eventID) {
         Packet250CustomPayload packet = createEventPacket(eventID);

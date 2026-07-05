@@ -253,21 +253,6 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         return 30d;
     }
 
-    @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
-    private void spiderRain(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
-        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
-            if(this.rand.nextInt(3) != 0){
-                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
-                this.setDead();
-                this.worldObj.spawnEntityInWorld(spider);
-            }
-        }
-        else if(NMEvents.SimpleEvent.HELL.isActive()){
-            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
-                this.setDead();
-            }
-        }
-    }
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;checkForCatchFireInSun()V"))
     private void doNotCatchFireInSun(EntitySkeleton instance){}
 
@@ -386,6 +371,20 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
         } else if(id == SKELETON_LIGHTNING){
             this.clearArmor();
+        }
+
+
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            if(this.rand.nextInt(3) != 0){
+                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
+                this.setDead();
+                this.worldObj.spawnEntityInWorld(spider);
+            }
+        }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
         }
     }
     @Unique
