@@ -164,11 +164,6 @@ public abstract class WorldMixin {
         }
     }
 
-    @ModifyConstant(method = "updateWeather", constant = @Constant(intValue = 12000))
-    private int increaseDurationBetweenRain(int constant){
-        return 24000;
-    }
-
     @Unique
     private double calculateNiteMultiplier(){
         int progress = NMUtils.getWorldProgress();
