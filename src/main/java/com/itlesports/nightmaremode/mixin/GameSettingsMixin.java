@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.KeyBinding;
 import org.lwjgl.input.Keyboard;
@@ -20,11 +22,13 @@ import java.util.Arrays;
  * - This allows the vanilla key binding screen and options.txt persistence to work automatically
  *   for custom keys, without manual parsing or restoring keyCodes.
  */
+@Environment(EnvType.CLIENT)
 @Mixin(GameSettings.class)
 public abstract class GameSettingsMixin {
-
+    @Environment(EnvType.CLIENT)
     @Shadow public KeyBinding[] keyBindings;
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "<init>*", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GameSettings;loadOptions()V"))
     private void nightmaremode$injectCustomKeys(CallbackInfo ci) {
         if (!NightmareKeyBindings.markRegistered()) return;

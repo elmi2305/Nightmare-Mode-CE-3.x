@@ -1,11 +1,14 @@
 package com.itlesports.nightmaremode.util;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.KeyBinding;
 
 /**
  * Holds custom Nightmare Mode key bindings.
  * Appended once to GameSettings via GameSettingsMixin.
  */
+@Environment(EnvType.CLIENT)
 public final class NightmareKeyBindings {
 
     public static KeyBinding nmZoomHold;
