@@ -595,6 +595,12 @@ public class NightmareMode extends BTWAddon {
             }
         }
     }
+    public static void sendHorseDirectionToPlayer(EntityHorse horse, EnumFacing direction, EntityPlayer p) {
+        Packet250CustomPayload packet = createHorseDirectionPacket(horse.entityId, (byte) direction.ordinal());
+        if (p instanceof EntityPlayerMP player && player.ridingEntity instanceof EntityHorse) {
+            player.playerNetServerHandler.sendPacketToPlayer(packet);
+        }
+    }
     private static Packet250CustomPayload createHorseDirectionPacket(int horseId, byte directionOrdinal) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         DataOutputStream dataStream = new DataOutputStream(byteStream);

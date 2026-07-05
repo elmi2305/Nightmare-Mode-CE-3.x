@@ -395,7 +395,9 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         EntityHorse horseHost = (EntityHorse)(Object)this;
         if (!this.worldObj.isRemote) {
 //            System.out.println("ran first direction send");
-            NightmareMode.sendHorseDirectionToAll(horseHost, dir);
+            if (this.riddenByEntity instanceof EntityPlayer p) {
+                NightmareMode.sendHorseDirectionToPlayer(horseHost, dir, p);
+            }
         }
     }
 
@@ -463,7 +465,12 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 //        if(this.worldObj.isRemote) return;
 
         // server side packet-synced direction tracker
-        EnumFacing held = ((IPlayerDirectionTracker) player).nm$getHeldDirection();
+        EnumFacing held = null;
+
+        if(player instanceof IPlayerDirectionTracker playerDirectionTracker){
+            held = playerDirectionTracker.nm$getHeldDirection();
+        }
+        if (held == null) return;
 
         // held is null on server, but accurate on client
 
@@ -505,7 +512,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
                 EnumFacing dir = EnumFacing.values()[requiredDirection];
                 // send new direction to the client
-                NightmareMode.sendHorseDirectionToAll(horseHost, dir);
+                NightmareMode.sendHorseDirectionToPlayer(horseHost, dir, player);
                 horseHost.worldObj.setEntityState(horseHost, (byte)8);
             }
 
