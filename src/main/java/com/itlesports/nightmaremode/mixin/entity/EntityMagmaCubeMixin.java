@@ -46,12 +46,15 @@ public class EntityMagmaCubeMixin extends EntitySlime {
     @Inject(method = "jump", at = @At("TAIL"))
     private void chanceToSpawnSlimeOnJump(CallbackInfo ci){
         if (this.getSlimeSize() >= 2 && this.splitCounter < 5){
-            if(this.rand.nextFloat() < 0.3 / this.streakModifier){
+            int hellModifier = NMEvents.SimpleEvent.HELL.isActive() ? 2 : 1;
+
+            if(this.rand.nextFloat() < 0.3d / this.streakModifier * hellModifier){
                 EntityMagmaCube baby = new EntityMagmaCube(this.worldObj);
-                int size = this.getSlimeSize();
-                baby.getDataWatcher().updateObject(16, (byte)(size/2));
+
+                baby.getDataWatcher().updateObject(16, (byte)(this.getSlimeSize() / 2));
                 baby.setHealth((int) (baby.getSlimeSize() * NMUtils.getNiteMultiplier()));
                 baby.setPositionAndUpdate(this.posX,this.posY,this.posZ);
+
                 this.worldObj.spawnEntityInWorld(baby);
                 this.streakModifier += 2 + (float) this.getSlimeSize();
                 this.splitCounter += 1;

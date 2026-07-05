@@ -59,9 +59,8 @@ public abstract class EntitySlimeMixin extends EntityLiving{
         super(par1World);
     }
 
-    @Shadow public abstract void setSlimeSize(int iSize);
+    @Shadow protected abstract void setSlimeSize(int iSize);
     @Shadow public abstract int getSlimeSize();
-
     @Shadow public abstract void setDead();
 
     @Unique private int timeSpentTargeting = 60;
@@ -82,19 +81,19 @@ public abstract class EntitySlimeMixin extends EntityLiving{
         EntitySlime thisObj = (EntitySlime)(Object)this;
         if (thisObj.ridingEntity == null) {
             if(this.timeSpentTargeting >= 110){
-                if (!thisObj.worldObj.isRemote && thisObj.getSlimeSize()>=2) {
-                    if(thisObj instanceof EntityMagmaCube && thisObj.dimension != 0){
+                if (!thisObj.worldObj.isRemote && thisObj.getSlimeSize() >= 2) {
+                    if(thisObj instanceof EntityMagmaCube){
                         EntityLivingBase target = thisObj.getAITarget();
                         if (target != null) {
-                            double var3 = target.posX - thisObj.posX;
-                            double var5 = target.boundingBox.minY + (double) (target.height / 2.0F) - (thisObj.posY + (double) (thisObj.height / 2.0F));
-                            double var7 = target.posZ - thisObj.posZ;
+                            double dx = target.posX - thisObj.posX;
+                            double dy = target.boundingBox.minY + (double) (target.height / 2.0F) - (thisObj.posY + (double) (thisObj.height / 2.0F));
+                            double dz = target.posZ - thisObj.posZ;
 
-                            EntitySmallFireball var11 = new EntitySmallFireball(thisObj.worldObj, thisObj, var3, var5, var7);
+                            EntitySmallFireball fireball = new EntitySmallFireball(thisObj.worldObj, thisObj, dx, dy, dz);
                             thisObj.worldObj.playAuxSFXAtEntity(null, 1009, (int)thisObj.posX, (int)thisObj.posY, (int)thisObj.posZ, 0);
-                            var11.posY = thisObj.posY + (double) (thisObj.height / 2.0f) + 0.5;
+                            fireball.posY = thisObj.posY + (double) (thisObj.height / 2.0f) + 0.5;
 
-                            thisObj.worldObj.spawnEntityInWorld(var11);
+                            thisObj.worldObj.spawnEntityInWorld(fireball);
                         }
                     } else {
                         thisObj.worldObj.spawnEntityInWorld(new SpiderWebEntity(thisObj.worldObj, thisObj, targetPlayer));
