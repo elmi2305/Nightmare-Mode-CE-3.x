@@ -29,6 +29,10 @@ public class NMTags {
             NMItems.shadowRod,
             NMItems.speedCoil
     );
+    public static final Tag bookLeather = Tag.of(loc("book_leather"),
+            BTWItems.cutTannedLeather,
+            BTWItems.cutScouredLeather
+    );
 
     private static ResourceLocation loc(String name) {
         return new ResourceLocation("nightmare", name);
