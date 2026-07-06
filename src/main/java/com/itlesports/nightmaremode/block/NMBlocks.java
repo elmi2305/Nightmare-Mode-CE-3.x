@@ -100,6 +100,8 @@ public class NMBlocks {
 
 
     public static Block customLog;
+    public static Block blockBloodIngot;
+    public static Block blockRefinedDiamondIngot;
 
 
 
@@ -313,9 +315,14 @@ public class NMBlocks {
         honeyCover = new NMBlockGroundLayer(2349, Material.grass).setDropItemID(NMItems.honeyBall.itemID).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.clayStepSound).setUnlocalizedName("nmHoneyCover").setTextureName("honey");
         Item.itemsList[honeyCover.blockID] = new NMItemBlock(NMBlocks.honeyCover.blockID - 256);
 
-        customLog = new BlockCustomLog(2350).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("nmUnderworldLog").setTextureName("nightmare:nmLog").setHardness(1000f).setResistance(1000f);
+        customLog = new BlockCustomLog(2350).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("nmUnderworldLog").setTextureName("nightmare:nmLog").setHardness(1000f).setResistance(1000f);
         Item.itemsList[customLog.blockID] = new ItemMultiTextureTile(customLog.blockID - 256, customLog, BlockCustomLog.woodType).setUnlocalizedName("nmLog");
 
+        blockBloodIngot = new NMBlock(2351, BTWBlocks.soulforgedSteelMaterial).setHardness(20f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmBloodIngotBlock").setTextureName("nightmare:nmBloodIngotBlock");
+        Item.itemsList[blockBloodIngot.blockID] = new NMItemBlock(blockBloodIngot.blockID - 256);
+
+        blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
+        Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
 
 
     }
