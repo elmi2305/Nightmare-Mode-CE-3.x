@@ -233,6 +233,9 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || NightmareMode.evolvedMobs) && this.getSkeletonType().id() == 0){
                 this.setSkeletonType(SKELETON_WITHER);
             }
+            if(this.getSkeletonType().id() == 0 && NMEvents.SimpleEvent.HELL.isActive() && this.rand.nextInt(3) == 0){
+                this.setSkeletonType(SKELETON_WITHER);
+            }
         }
     }
 

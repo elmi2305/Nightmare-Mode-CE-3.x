@@ -150,6 +150,7 @@ public class NMUtils {
     }
     public static boolean initializeAndSummonHellMob(World w, EntityLivingBase ref){
         int index = 0;
+        if(utilRandom.nextInt(4) == 0) return false; // natural mobs also spawn
         if(utilRandom.nextInt(8) == 0){index++;}
         if(utilRandom.nextInt(16) == 0){index++;}
         try {
