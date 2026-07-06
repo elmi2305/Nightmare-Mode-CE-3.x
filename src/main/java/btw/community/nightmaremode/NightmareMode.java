@@ -211,6 +211,7 @@ public class NightmareMode extends BTWAddon {
 
 
         NMBlocks.initNightmareBlocks();
+        NMInitializer.initBeaconEffects();
         NMEntityMapper.createModEntityMappings();
         NMEntityMapper.createTileEntityMappings();
         NMInitializer.initNightmareRecipes();

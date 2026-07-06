@@ -33,6 +33,7 @@ import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.mixin.interfaces.StatListAccess;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import com.itlesports.nightmaremode.util.elements.BloodSawCraftingManager;
+import com.itlesports.nightmaremode.util.elements.NMBeaconEffects;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -60,6 +61,9 @@ public abstract class NMInitializer implements AchievementExt {
         finishRecipes("All Recipes");
     }
 
+    public static void initBeaconEffects(){
+        NMBeaconEffects.initializeEffectsByBlockID();
+    }
 
     public static void runItemPostInit(){
         NMPostItems.runPostInit();
