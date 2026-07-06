@@ -61,6 +61,12 @@ public class EntityMagmaCubeMixin extends EntitySlime {
             }
         }
     }
+
+    @Override
+    public boolean doesEntityApplyToSpawnCap() {
+        return super.doesEntityApplyToSpawnCap() || (this.dimension == 0 && NMEvents.SimpleEvent.HELL.isActive() && this.getSlimeSize() == 1);
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NMUtils.manageEclipseChance(this,4);

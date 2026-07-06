@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.entity.EntityBloodAltar;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.LocatorPileEntityExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.Nullable;
@@ -208,7 +209,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     private void allowBloodMoonSpawnsInLight(CallbackInfoReturnable<Boolean> cir){
         EntityMob thisObj = (EntityMob)(Object)this;
         if (thisObj.worldObj != null) {
-            if(NMUtils.getIsBloodMoon()){
+            if(NMUtils.getIsBloodMoon() || NMEvents.SimpleEvent.HELL.isActive()){
                 cir.setReturnValue(true);
             }
         }
@@ -255,7 +256,7 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Override
     protected void despawnEntity() {
         if (!this.getPersistence() && this.canDespawn()) {
-            if(this.ticksExisted % 300 == 299 && NMUtils.getIsBloodMoon()){
+            if(this.ticksExisted % 300 == 299 && (NMUtils.getIsBloodMoon() || NMEvents.SimpleEvent.HELL.isActive())){
                 EntityPlayer nearestPlayer = this.worldObj.getClosestVulnerablePlayer(this.posX, this.posY, this.posZ, 128);
 
                 if (nearestPlayer != null) {
