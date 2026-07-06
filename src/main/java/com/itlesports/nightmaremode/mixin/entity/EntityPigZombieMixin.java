@@ -38,6 +38,10 @@ public class EntityPigZombieMixin extends EntityZombie {
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(50);
         }
     }
+    @Override
+    public float getAIMoveSpeed() {
+        return NMEvents.SimpleEvent.HELL.isActive() ? 0.22f + this.rand.nextFloat() * 0.1f : super.getAIMoveSpeed();
+    }
 
     @Override
     public Entity findPlayerToAttack() {
@@ -93,7 +97,7 @@ public class EntityPigZombieMixin extends EntityZombie {
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NMUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
         if(NMEvents.SimpleEvent.HELL.isActive()){
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2d + this.rand.nextDouble() * 0.1d);
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.1d + this.rand.nextDouble() * 0.1d);
         }
     }
 
