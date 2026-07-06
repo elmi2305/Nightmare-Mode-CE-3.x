@@ -22,8 +22,7 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(EntityPigZombie.class)
 public class EntityPigZombieMixin extends EntityZombie {
-    @Shadow
-    private int angerLevel;
+    @Shadow private int angerLevel;
 
     public EntityPigZombieMixin(World par1World) {
         super(par1World);
@@ -35,10 +34,22 @@ public class EntityPigZombieMixin extends EntityZombie {
         if (NMUtils.getIsBloodMoon()) {
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
         }
+        if(NMEvents.SimpleEvent.HELL.isActive()){
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(50);
+        }
     }
 
     @Override
     public Entity findPlayerToAttack() {
+        if(NMEvents.SimpleEvent.HELL.isActive()){
+            this.angerLevel = 1200;
+            EntityPlayer p = this.worldObj.getClosestVulnerablePlayerToEntity(this, 50);
+            if (p != null) {
+                this.entityToAttack = p;
+                return p;
+            }
+            return null;
+        }
         return this.angerLevel == 0 ? null : this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
     }
 
@@ -59,6 +70,9 @@ public class EntityPigZombieMixin extends EntityZombie {
                 }
             } else {
                 double baseRange = (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 8.0 : 5.0) + (NMUtils.getIsMobEclipsed(this) ? 3 : 0);
+                if(NMEvents.SimpleEvent.HELL.isActive()){
+                    baseRange = 50;
+                }
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, baseRange);
                 if(player != null){
                     int goldArmorCount = this.countGoldArmor(player);
@@ -78,6 +92,9 @@ public class EntityPigZombieMixin extends EntityZombie {
 
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NMUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
+        if(NMEvents.SimpleEvent.HELL.isActive()){
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2d + this.rand.nextDouble() * 0.1d);
+        }
     }
 
     @Unique private boolean isValidForEventLoot = false;
@@ -137,6 +154,10 @@ public class EntityPigZombieMixin extends EntityZombie {
         }
     }
 
+    @Override
+    public boolean isAIEnabled() {
+        return NMEvents.SimpleEvent.HELL.isActive();
+    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
