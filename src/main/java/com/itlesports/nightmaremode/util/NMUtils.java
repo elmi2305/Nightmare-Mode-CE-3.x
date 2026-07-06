@@ -151,8 +151,8 @@ public class NMUtils {
     public static boolean initializeAndSummonHellMob(World w, EntityLivingBase ref){
         int index = 0;
         if(utilRandom.nextInt(4) == 0) return false; // natural mobs also spawn
-        if(utilRandom.nextInt(8) == 0){index++;}
-        if(utilRandom.nextInt(16) == 0){index++;}
+        else if(utilRandom.nextInt(64) == 0){index = 1;}
+        else if(utilRandom.nextInt(256) == 0){index = 2;}
         try {
             EntityLivingBase mob = hellMobs[index].getConstructor(World.class).newInstance(w);
             mob.setPositionAndUpdate(ref.posX, ref.posY, ref.posZ);
