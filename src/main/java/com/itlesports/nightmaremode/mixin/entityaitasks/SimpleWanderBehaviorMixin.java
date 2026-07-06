@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entityaitasks;
 import api.entity.mob.behavior.SimpleWanderBehavior;
 import api.world.BlockPos;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -62,8 +63,7 @@ public class SimpleWanderBehaviorMixin {
         int tempChance = baseChance / (progress + 1);    //     36,  18,  12,  9
         if(NMUtils.getIsBloodMoon()) {tempChance /= 2;}  //     18,   9,   6,  4
         if(NMUtils.getIsEclipse()) {tempChance /= 4;}    //     9,   4,   3,   2
-
+        if(NMEvents.SimpleEvent.HELL.isActive()){tempChance = 3;}
         return tempChance;
-
     }
 }
