@@ -1152,7 +1152,7 @@ public class NMAchievements {
                     .name(loc("surviveHell"))
                     .icon(NMItems.hellGem)
                     .displayLocation(-2,0)
-                    .triggerCondition(ctx -> ctx.player().inventory.hasItem(NMItems.hellGem.itemID) && ctx.worldTime() > 2412500)
+                    .triggerCondition(ctx -> ctx.player().inventory.hasItem(NMItems.hellGem.itemID) && ctx.worldTime() > 2400000)
                     .parents()
                     .build()
                     .registerAchievement(TAB_EXTRAS);
