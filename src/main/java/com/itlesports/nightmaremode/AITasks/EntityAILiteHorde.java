@@ -173,7 +173,6 @@ public class EntityAILiteHorde extends EntityAIBase {
         return NightmareMode.isAprilFools ? 7 : 2;
     }
 
-    // You should define or import these as needed
     private Set<Integer> getLongRangeItems() {
         return NMUtils.LONG_RANGE_ITEMS;
     }

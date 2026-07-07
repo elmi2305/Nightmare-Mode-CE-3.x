@@ -26,11 +26,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
     }
 
     @Override
-    public void checkForScrollDrop() {}
-
-    @Override
-    public void onUpdate() {
-        super.onUpdate();
+    protected void onVariantUpdate() {
         if (NMUtils.getIsBloodMoon() && this.rangedAttackCooldown == 0) {
             EntityLivingBase target = this.getAttackTarget();
             if(target != null && this.getDistanceSqToEntity(target) > 64.0 && this.getEntitySenses().canSee(target)){

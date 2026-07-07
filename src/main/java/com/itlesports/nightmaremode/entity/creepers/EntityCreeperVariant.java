@@ -150,6 +150,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     @Override
     public void onUpdate() {
+        this.onVariantUpdate();
         if (this.isEntityAlive()) {
             if (NightmareMode.isAprilFools && this.getAttackTarget() instanceof EntityPlayer player && this.getDistanceSqToEntity(player) < 81) {
                 Vec3 lookVec = player.getLookVec();
@@ -261,6 +262,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
         super.onUpdate();
     }
+    protected void onVariantUpdate(){};
     protected void onDeathEffect(){};
     protected void onServerAndClientDeathEffect(){};
     @Override
