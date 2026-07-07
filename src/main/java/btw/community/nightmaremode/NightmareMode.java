@@ -41,7 +41,7 @@ public class NightmareMode extends BTWAddon {
 
     // dev
     public static boolean devMode = false;
-    public static boolean benchmarkPerformance = true;
+    public static boolean benchmarkPerformance = false;
     public static volatile double MSPT = 0.0;
 
 

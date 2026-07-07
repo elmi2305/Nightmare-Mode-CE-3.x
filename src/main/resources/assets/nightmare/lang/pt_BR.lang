@@ -56,7 +56,10 @@ item.nmVillagerOrb.butcher.name=Orbe do Açougueiro
 item.nmVillagerOrb.priest.name=Orbe do Sacerdote
 item.nmVillagerOrb.nightmare.name=Orbe do Pesadelo
 item.nmWitherSoul.name=Alma do Wither
-
+item.nmAwakenedStar.name=Estrela Desperta
+item.nmHoneyMelon.name=Melão de Mel
+item.nmLifeFruit.name=Fruto da Vida
+item.nmHellGem.name=Gema Infernal
 
 tile.nmSteelOre.name=Minério de aço
 tile.nmSpecialObsidian.name=Pedra da Arena
@@ -731,6 +734,8 @@ achievement.nm.alchemyDust.desc=Use Alchemy Powder para localizar Witch Huts
 achievement.nm.ancientSand=Como um verdadeiro alquimista
 achievement.nm.ancientSand.desc=Use Areia Antiga para localizar o Templo do Deserto
 
+achievement.nm.surviveHell=Dia do Acerto de Contas
+achievement.nm.surviveHell.desc=Sobreviva ao Inferno e obtenha uma Gema Infernal
 
 
 achievement.btw.equip_steel_armor=Intocável
@@ -747,6 +752,7 @@ achievement.btw.craft_iron_shears.desc=Obtenha uma tesoura de ferro. Estes são 
 
 tag.nightmare.sandwich_meats=Sanduíche de Carnes
 tag.nightmare.eclipse_drops=Itens do Eclipse
+tag.nightmare.book_leather=Capas de Livros
 
 # BTW info overrides
 btw.anvil.info=A Bigorna pode ser usada para consertar itens usando seus materiais e níveis de experiência. Observe que as Bigornas não podem ser recolhidas novamente e, em vez disso, derrubarão Sucata de Metal, que é inútil exceto para ser derretida em um Cadinho para recuperar o ferro.

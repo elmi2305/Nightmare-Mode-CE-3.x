@@ -56,6 +56,11 @@ item.nmVillagerOrb.butcher.name=Quả cầu Đồ tể
 item.nmVillagerOrb.priest.name=Quả cầu Linh mục
 item.nmVillagerOrb.nightmare.name=Quả cầu Ác mộng
 item.nmWitherSoul.name=Linh hồn Wither
+item.nmAwakenedStar.name=Ngôi Sao Thức Tỉnh
+item.nmHoneyMelon.name=Dưa Mật Ong
+item.nmLifeFruit.name=Trái Cây Sự Sống
+item.nmHellGem.name=Ngọc Địa Ngục
+
 
 tile.nmSteelOre.name=Quặng thép
 tile.nmSpecialObsidian.name=Đá đấu trường
@@ -731,6 +736,8 @@ achievement.nm.alchemyDust.desc=Sử dụng Bột giả kim để xác định v
 achievement.nm.ancientSand=Giống như một nhà giả kim thực sự
 achievement.nm.ancientSand.desc=Sử dụng Ancient Sand để xác định vị trí Desert Temple
 
+achievement.nm.surviveHell=Ngày Phán Xét
+achievement.nm.surviveHell.desc=Sống sót qua Địa Ngục và nhận một Viên Ngọc Địa Ngục
 
 
 achievement.btw.equip_steel_armor=Bất khả xâm phạm
@@ -746,8 +753,8 @@ achievement.btw.craft_iron_shears.desc=Nhận một đôi kéo sắt. Rất tố
 
 
 tag.nightmare.sandwich_meats=Thịt Làm Bánh Mì Kẹp
-
 tag.nightmare.eclipse_drops=Vật phẩm Nhật thực
+tag.nightmare.book_leather=Bìa Sách
 
 # BTW info overrides
 btw.anvil.info=Đe rèn có thể dùng để sửa vật phẩm bằng nguyên liệu và cấp kinh nghiệm của chúng. Lưu ý rằng Đe rèn không thể nhặt lại, mà sẽ rơi ra Phế liệu kim loại, thứ vô dụng ngoại trừ việc nấu chảy trong Crucible để thu hồi sắt.

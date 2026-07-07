@@ -56,7 +56,10 @@ item.nmVillagerOrb.butcher.name=Metzgerkugel
 item.nmVillagerOrb.priest.name=Priesterkugel
 item.nmVillagerOrb.nightmare.name=Albtraumkugel
 item.nmWitherSoul.name=Witherseele
-
+item.nmAwakenedStar.name=Erweckter Stern
+item.nmHoneyMelon.name=Honigmelone
+item.nmLifeFruit.name=Frucht des Lebens
+item.nmHellGem.name=Höllenedelstein
 
 tile.nmSteelOre.name=Stahlerz
 tile.nmSpecialObsidian.name=Arenastein
@@ -727,6 +730,8 @@ achievement.nm.alchemyDust.desc=Verwende Alchemiepulver, um Hexenhütten zu find
 achievement.nm.ancientSand=Wie ein wahrer Alchemist
 achievement.nm.ancientSand.desc=Benutze Antiken Sand um einen Wüstentempel zu finden
 
+achievement.nm.surviveHell=Tag der Abrechnung
+achievement.nm.surviveHell.desc=Überlebe die Hölle und erhalte einen Höllenedelstein
 
 
 achievement.btw.equip_steel_armor=Unantastbar
@@ -743,6 +748,7 @@ achievement.btw.craft_iron_shears.desc=Schmiede eine Eisenschere. Diese eignen s
 
 tag.nightmare.sandwich_meats=Sandwichfleisch
 tag.nightmare.eclipse_drops=Sonnenfinsternis Gegenstände
+tag.nightmare.book_leather=Buchumschläge
 
 
 # BTW info overrides

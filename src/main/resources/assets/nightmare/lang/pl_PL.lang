@@ -56,6 +56,11 @@ item.nmVillagerOrb.butcher.name=Kula rzeźnika
 item.nmVillagerOrb.priest.name=Kula kapłana
 item.nmVillagerOrb.nightmare.name=Kula koszmaru
 item.nmWitherSoul.name=Dusza Withera
+item.nmAwakenedStar.name=Przebudzona Gwiazda
+item.nmHoneyMelon.name=Miodowy Melon
+item.nmLifeFruit.name=Owoc Życia
+item.nmHellGem.name=Klejnot Piekła
+
 
 tile.nmSteelOre.name=Ruda stali
 tile.nmSpecialObsidian.name=Kamień areny
@@ -726,6 +731,8 @@ achievement.nm.alchemyDust.desc=Użyj proszku alchemicznego, aby zlokalizować c
 achievement.nm.ancientSand=Jak prawdziwy alchemik
 achievement.nm.ancientSand.desc=Użyj Starożytnego Piasku, aby zlokalizować Pustynną Świątynię
 
+achievement.nm.surviveHell=Dzień Sądu
+achievement.nm.surviveHell.desc=Przetrwaj Piekło i zdobądź Klejnot Piekła
 
 
 achievement.btw.equip_steel_armor=Niedotykalny
@@ -742,6 +749,7 @@ achievement.btw.craft_iron_shears.desc=Zdobądź parę żelaznych nożyc. Świet
 
 tag.nightmare.sandwich_meats=Mięsa Kanapkowe
 tag.nightmare.eclipse_drops=Przedmioty Zaćmienia
+tag.nightmare.book_leather=Okładki Książek
 
 # BTW info overrides
 btw.anvil.info=Kowadła można używać do naprawiania przedmiotów za pomocą ich materiałów i poziomów doświadczenia. Pamiętaj, że kowadeł nie da się podnieść z powrotem, a zamiast tego wypada z nich Złom Metalowy, który jest bezużyteczny poza przetopieniem w Tyglu w celu odzyskania żelaza.
@@ -757,7 +765,7 @@ btw.beacon.info=Latarniom można nadać różne efekty w zależności od materia
 btw.ender_chest.info=Skrzynie Endera pozwalają graczom posiadać prywatny ekwipunek działający we wszystkich wymiarach.
 btw.steel_block.info=Gdy bloki Stali z Duszy są użyte jako materiał dla Latarni, działają jak kotwica, pozwalając graczowi ustawić punkt odrodzenia i odradzać się przy latarni, jeśli umrze wystarczająco blisko niej. Zasięg jest ograniczony dla dwóch pierwszych poziomów, natomiast poziom 3 jest nieograniczony w obrębie tego samego wymiaru, a poziom 4 jest nieograniczony między wymiarami.
 btw.portal.info=Portale Netheru muszą być zapalane za pomocą Ogniska lub Ognistego Ładunku. Po aktywacji Portalu Netheru świat rozpocznie 3-dniowe odliczanie do rozpoczęcia Hardmode. Hardmode zwiększa statystyki wszystkich mobów i wprowadza nowe zagrożenia oraz warianty. Portale będą aktywnie szerzyć dusze w promieniu 16 bloków, negatywnie wpływając na pobliskie pasywne moby, a także kałamarnice. Zdecydowanie zaleca się wiedzieć, co się robi, zanim aktywuje się portal.
- 
+
 # NM custom info items
 nm.rpg.info=Wyrzutnię Rakiet zdobywa się poprzez handel z Kupcem Koszmaru po ukończeniu Trybu Koszmaru. Wystrzeliwuje żywe Beczki Prochu, gotowe do wybuchu. Niewłaściwe użycie może skończyć się brakiem części ciała.
 nm.rifle.info=Karabin Szturmowy zdobywa się poprzez handel z Kupcem Koszmaru po ukończeniu Trybu Koszmaru. Wystrzeliwuje pociski o dużej prędkości. Może być nielegalny we wsiach.

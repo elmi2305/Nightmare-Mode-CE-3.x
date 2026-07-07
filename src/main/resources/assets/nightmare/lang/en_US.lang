@@ -56,6 +56,10 @@ item.nmVillagerOrb.butcher.name=Butcher Orb
 item.nmVillagerOrb.priest.name=Priest Orb
 item.nmVillagerOrb.nightmare.name=Nightmare Orb
 item.nmWitherSoul.name=Wither Soul
+item.nmAwakenedStar.name=Awakened Star
+item.nmHoneyMelon.name=Honey Melon
+item.nmLifeFruit.name=Life Fruit
+item.nmHellGem.name=Hell Gem
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
@@ -730,6 +734,9 @@ achievement.nm.alchemyDust.desc=Use Alchemy Powder to locate Witch Huts
 achievement.nm.ancientSand=Like a True Alchemist
 achievement.nm.ancientSand.desc=Use Ancient Sand to locate Desert Temple
 
+achievement.nm.surviveHell=Day of Reckoning
+achievement.nm.surviveHell.desc=Survive Hell and earn a Hell Gem
+
 
 
 achievement.btw.equip_steel_armor=Untouchable
@@ -746,6 +753,7 @@ achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are g
 
 tag.nightmare.sandwich_meats=Sandwich Meats
 tag.nightmare.eclipse_drops=Eclipse Items
+tag.nightmare.book_leather=Book Covers
 
 # BTW info overrides
 btw.anvil.info=The Anvil can be used to repair items using their materials & experience levels. Note that Anvils cannot be picked back up, and instead will drop Metal Scrap, which is useless except to melt down in a Crucible to reclaim the iron.
