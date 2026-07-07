@@ -1146,6 +1146,16 @@ public class NMAchievements {
                     .setSpecial()
                     .registerAchievement(TAB_END_GAME);
 
+    // TAB_EXTRAS
+    public static final Achievement<NMAchievementEvents.TimeItemEvent.Context> SURVIVE_HELL  =
+            AchievementProvider.getBuilder(NMAchievementEvents.TimeItemEvent.class)
+                    .name(loc("surviveHell"))
+                    .icon(NMItems.hellGem)
+                    .displayLocation(-2,0)
+                    .triggerCondition(ctx -> ctx.player().inventory.hasItem(NMItems.hellGem.itemID) && ctx.worldTime() > 2412500)
+                    .parents()
+                    .build()
+                    .registerAchievement(TAB_EXTRAS);
 
 
 

@@ -110,9 +110,17 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "dropFewItems", at = @At("HEAD"), cancellable = true)
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if(NMEvents.SimpleEvent.HELL.isActive() && !this.isValidForEventLoot) {
-            ci.cancel();
-            return;
+        if(NMEvents.SimpleEvent.HELL.isActive()) {
+            if (!this.isValidForEventLoot) {
+                ci.cancel();
+                return;
+            }
+
+            if(this.rand.nextInt(32) == 0){
+                this.dropItem(NMItems.hellGem.itemID, 1);
+                ci.cancel();
+                return;
+            }
         }
         if (bKilledByPlayer && this.isValidForEventLoot) {
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;

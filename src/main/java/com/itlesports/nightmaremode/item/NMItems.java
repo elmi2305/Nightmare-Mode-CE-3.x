@@ -91,6 +91,7 @@ public class NMItems {
     public static final Item lifeFruit;
     public static final Item honeyMelon;
     public static final Item awakenedStar;
+    public static final Item hellGem;
 
 
 
@@ -179,6 +180,7 @@ public class NMItems {
 
         awakenedStar = new NMBloodStarItem(2368).setTextureName("nightmare:nmAwakenedStar").setUnlocalizedName("nmAwakenedStar").setCreativeTab(CreativeTabs.tabMaterials);
 
+        hellGem = new NMItem(2369).setIndestructible().setTextureName("nightmare:nmHellGem").setUnlocalizedName("nmHellGem").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
