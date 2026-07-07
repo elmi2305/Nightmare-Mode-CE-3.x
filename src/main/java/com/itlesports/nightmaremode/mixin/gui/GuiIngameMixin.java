@@ -366,6 +366,7 @@ public abstract class GuiIngameMixin extends Gui {
         ArrayList<StatusEffect> activeStatuses = this.mc.thePlayer.getAllActiveStatusEffects();
         FontRenderer fontRenderer = this.mc.fontRenderer;
 
+
         amountRendered = 0;
         if((maxHealth + absorption) > 20){
             amountRendered--;
@@ -440,6 +441,18 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness2(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
+        // draw mspt
+        FontRenderer fontRenderer = this.mc.fontRenderer;
+
+        if (NightmareMode.benchmarkPerformance) {
+            fontRenderer.drawStringWithShadow(
+                    String.format("MSPT: %.2f", NightmareMode.MSPT),
+                    2,
+                    2,
+                    0xFFFFFF
+            );
+        }
+
         if (NightmareMode.renderVignette) {
             this.renderVignetteNightmare(partialTicks,screenWidth,screenHeight);
         } else{

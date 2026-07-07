@@ -42,6 +42,38 @@ public abstract class MinecraftServerMixin {
             var3.worldInfo.setDifficulty(difficulty);
         }
     }
+    @Unique private long tickStart;
+    @Unique private long averagingStart = System.nanoTime();
+    @Unique private double accumulatedMs = 0.0;
+    @Unique private int tickCount = 0;
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void startTimer(CallbackInfo ci) {
+        if (NightmareMode.benchmarkPerformance) {
+            tickStart = System.nanoTime();
+        }
+    }
+
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void endTimer(CallbackInfo ci) {
+        if (NightmareMode.benchmarkPerformance) {
+            long now = System.nanoTime();
+
+            double currentMs = (now - tickStart) / 1_000_000.0;
+
+            accumulatedMs += currentMs;
+            tickCount++;
+
+            if (now - averagingStart >= 1_000_000_000L) {
+                NightmareMode.MSPT = accumulatedMs / tickCount;
+
+                averagingStart = now;
+                accumulatedMs = 0.0;
+                tickCount = 0;
+            }
+        }
+    }
+
     @Inject(method = "initialWorldChunkLoad", at = @At("RETURN"))
     private void initialWorldChunkLoadMixin(CallbackInfo ci) {
         boolean shouldStackSizesIncrease = this.worldServers[0].worldInfo.getData(NightmareMode.DRAGON_DEFEATED);
