@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.AITasks.EntityAIAttackOnCollidePigman;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -45,7 +46,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     public Entity findPlayerToAttack() {
-        if(NMEvents.SimpleEvent.HELL.isActive()){
+        if(NMEvents.SimpleEvent.HELL.isActive() && this.entityToAttack == null){
             this.angerLevel = 1200;
             EntityPlayer p = this.worldObj.getClosestVulnerablePlayerToEntity(this, 50);
             if (p != null) {
@@ -116,7 +117,7 @@ public class EntityPigZombieMixin extends EntityZombie {
                 return;
             }
 
-            if(this.rand.nextInt(32) == 0){
+            if(this.rand.nextInt(50) == 0){
                 this.dropItem(NMItems.hellGem.itemID, 1);
                 ci.cancel();
                 return;
@@ -174,6 +175,11 @@ public class EntityPigZombieMixin extends EntityZombie {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NMUtils.manageEclipseChance(this,6);
+
+        if (NMEvents.SimpleEvent.HELL.isActive()) {
+            this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
+            this.tasks.addTask(2, new EntityAIAttackOnCollidePigman(this, EntityPlayer.class, 1.0, false));
+        }
     }
 
     @Override
