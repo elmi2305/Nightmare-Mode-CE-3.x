@@ -271,22 +271,28 @@ public abstract class EntityWitherMixin extends EntityMob {
 
     @ModifyArg(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float witherDamageCap(float par2) {
-        if(par2 > 200){return 400;} // if you want to instakill it with creative
-        if(par2 > 20 && (!WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly() && this.getHealth() < 40)){return 20;}
-        return par2;
+        return scaleDamage(par2);
+    }
+    @Unique private float scaleDamage(float original){
+        if(original > 200){return 400;} // if you want to instakill it with creative
+        if(original > 20 && (!WorldUtils.gameProgressHasEndDimensionBeenAccessedServerOnly())){return 20;}
+        return original;
     }
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"))
-    private void manageRevive(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(!(((EntityWither)(Object)this) instanceof EntityBloodWither) && this.getHealth() < 21 && !this.hasRevived && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !NightmareMode.isAprilFools){
+    @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"), cancellable = true)
+    private void manageRevive(DamageSource par1DamageSource, float damage, CallbackInfoReturnable<Boolean> cir){
+        EntityWither thisObj = (EntityWither) (Object) this;
+        damage = scaleDamage(damage);
+        if(!(thisObj instanceof EntityBloodWither) && damage > this.getHealth() - 5 && !this.hasRevived && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !NightmareMode.isAprilFools){
             this.setHealth(300);
-            if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null) {
+            if (this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20) != null && !this.worldObj.isRemote) {
                 ChatMessageComponent text2 = new ChatMessageComponent();
                 text2.addKey("bosses.wither_revive_message");
                 text2.setColor(EnumChatFormatting.BLACK);
                 this.worldObj.getClosestPlayer(this.posX,this.posY,this.posZ,20).sendChatToPlayer(text2);
             }
             this.hasRevived = true;
+            cir.setReturnValue(false);
         }
     }
 
