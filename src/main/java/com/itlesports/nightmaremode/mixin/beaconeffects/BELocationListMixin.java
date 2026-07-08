@@ -28,6 +28,8 @@ public class BELocationListMixin {
             maxLevel = point.effectLevel;
         }
 
-        cir.setReturnValue(maxLevel);
+        if (maxLevel == 4) {
+            cir.setReturnValue(maxLevel);
+        }
     }
 }
