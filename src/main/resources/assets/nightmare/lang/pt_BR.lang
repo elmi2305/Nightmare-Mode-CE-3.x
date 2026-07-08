@@ -82,6 +82,8 @@ tile.nmUnderworldRockCobble.name=Pedregulho Subterrâneo
 tile.nmUnderGrass.name=Grama Subterrânea
 tile.nmUnderDirt.name=Terra Subterrânea
 tile.nmDisenchantmentTable.name=Mesa do Desencanto
+tile.nmBloodIngotBlock.name=Bloco de Lingote de Sangue
+tile.nmRefinedDiamondBlock.name=Bloco de Diamante Refinado
 
 container.steelLocker=Armário de aço
 container.inventory=Inventário

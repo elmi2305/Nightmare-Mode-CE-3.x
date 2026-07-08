@@ -83,6 +83,8 @@ tile.nmUnderworldRockCobble.name=Đá cuội
 tile.nmUnderGrass.name=Thảm cỏ
 tile.nmUnderDirt.name=Đất ngầm
 tile.nmDisenchantmentTable.name=Bàn Giải Phép
+tile.nmBloodIngotBlock.name=Khối Thỏi Máu
+tile.nmRefinedDiamondBlock.name=Khối Kim Cương Tinh Luyện
 
 container.steelLocker=Tủ thép
 container.inventory=Túi đồ

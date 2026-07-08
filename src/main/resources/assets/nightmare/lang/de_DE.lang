@@ -82,6 +82,8 @@ tile.nmUnderworldRockCobble.name=Unterbruchgestein
 tile.nmUnderGrass.name=Untergras
 tile.nmUnderDirt.name=Untererde
 tile.nmDisenchantmentTable.name=Entzaubertisch
+tile.nmBloodIngotBlock.name=Blutbarrenblock
+tile.nmRefinedDiamondBlock.name=Block aus Veredeltem Diamant
 
 container.steelLocker=Stahlschrank
 container.inventory=Inventar

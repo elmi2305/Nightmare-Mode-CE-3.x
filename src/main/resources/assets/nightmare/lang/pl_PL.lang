@@ -83,6 +83,10 @@ tile.nmUnderworldRockCobble.name=Podziemny bruk
 tile.nmUnderGrass.name=Podziemna trawa
 tile.nmUnderDirt.name=Podziemna ziemia
 tile.nmDisenchantmentTable.name=Stół odczarowywania
+tile.nmBloodIngotBlock.name=Blok Krwawych Sztabek
+tile.nmRefinedDiamondBlock.name=Blok Udoskonalonego Diamentu
+
+
 container.steelLocker=Stalowa szafka
 container.inventory=Ekwipunek
 
@@ -732,7 +736,7 @@ achievement.nm.ancientSand=Jak prawdziwy alchemik
 achievement.nm.ancientSand.desc=Użyj Starożytnego Piasku, aby zlokalizować Pustynną Świątynię
 
 achievement.nm.surviveHell=Dzień Sądu
-achievement.nm.surviveHell.desc=Przetrwaj Piekło i zdobądź Klejnot Piekła
+achievement.nm.surviveHell.desc=Przetrwaj Dzień Sądu i zdobądź Klejnot Piekła
 
 
 achievement.btw.equip_steel_armor=Niedotykalny
@@ -749,7 +753,7 @@ achievement.btw.craft_iron_shears.desc=Zdobądź parę żelaznych nożyc. Świet
 
 tag.nightmare.sandwich_meats=Mięsa Kanapkowe
 tag.nightmare.eclipse_drops=Przedmioty Zaćmienia
-tag.nightmare.book_leather=Okładki Książek
+tag.nightmare.book_leather=Okładka Książki
 
 # BTW info overrides
 btw.anvil.info=Kowadła można używać do naprawiania przedmiotów za pomocą ich materiałów i poziomów doświadczenia. Pamiętaj, że kowadeł nie da się podnieść z powrotem, a zamiast tego wypada z nich Złom Metalowy, który jest bezużyteczny poza przetopieniem w Tyglu w celu odzyskania żelaza.

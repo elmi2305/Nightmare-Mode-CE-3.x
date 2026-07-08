@@ -82,6 +82,8 @@ tile.nmUnderworldRockCobble.name=Undercobble
 tile.nmUnderGrass.name=Undergrass
 tile.nmUnderDirt.name=Underdirt
 tile.nmDisenchantmentTable.name=Disenchantment Table
+tile.nmBloodIngotBlock.name=Blood Ingot Block
+tile.nmRefinedDiamondBlock.name=Refined Diamond Block
 
 container.steelLocker=Steel Locker
 container.inventory=Inventory

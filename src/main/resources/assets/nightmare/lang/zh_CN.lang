@@ -83,6 +83,8 @@ tile.nmUnderworldRockCobble.name=地下圆石
 tile.nmUnderGrass.name=地下草方块
 tile.nmUnderDirt.name=地下泥土
 tile.nmDisenchantmentTable.name=祛魔台
+tile.nmBloodIngotBlock.name=血锭块
+tile.nmRefinedDiamondBlock.name=精炼钻石块
 
 container.steelLocker=钢储物柜
 container.inventory=物品栏
