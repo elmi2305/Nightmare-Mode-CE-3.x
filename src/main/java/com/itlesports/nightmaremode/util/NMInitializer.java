@@ -1519,6 +1519,26 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
         // done recycling
 
+        // add blood ingot and refined diamond block recipe
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockRefinedDiamondIngot), new Object[]{
+                "DDD",
+                "DDD",
+                "DDD",
+                Character.valueOf('D'), NMItems.refinedDiamondIngot
+        });
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.refinedDiamondIngot, 9), new ItemStack[]{new ItemStack(NMBlocks.blockRefinedDiamondIngot)});
+
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockBloodIngot), new Object[]{
+                "BBB",
+                "BBB",
+                "BBB",
+                Character.valueOf('B'), NMItems.bloodIngot
+        });
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.bloodIngot, 9), new ItemStack[]{new ItemStack(NMBlocks.blockBloodIngot)});
+
+
+        // done adding
+
         finishRecipes("Crafting Recipes");
 
     }
