@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.tpa;
+package com.itlesports.nightmaremode.util.tpa;
 
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.EnumChatFormatting;
@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.itlesports.nightmaremode.tpa.TPACommand.createMessage;
-import static com.itlesports.nightmaremode.tpa.TPACommand.createFormattedMessage;
+import static com.itlesports.nightmaremode.util.tpa.TPACommand.createMessage;
+import static com.itlesports.nightmaremode.util.tpa.TPACommand.createFormattedMessage;
 
 public class TeleportScheduler {
     private static final List<PendingTeleport> pendingTeleports = new ArrayList<>();

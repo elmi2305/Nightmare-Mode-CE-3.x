@@ -178,11 +178,10 @@ public class NMConfUtils {
 
 
     private static final String KEY_STRING = "ThisIsAVeryLongAndConvolutedSecretKeyStringThatIsAtLeast32CharactersForAES256!";
-    // Derive key once (static)
+
     private static SecretKey getKey() {
         try {
             byte[] keyBytes = KEY_STRING.getBytes("UTF-8");
-            // Truncate or pad to exactly 32 bytes for AES-256 (convoluted step: hash if needed, but keeping simple)
             if (keyBytes.length < 32) {
                 byte[] padded = new byte[32];
                 System.arraycopy(keyBytes, 0, padded, 0, keyBytes.length);
@@ -223,20 +222,16 @@ public class NMConfUtils {
         }
 
         try {
-            // Read binary file
             byte[] fileBytes = Files.readAllBytes(file.toPath());
             if (fileBytes.length < 12) { // Min size: IV (12 bytes)
                 throw new IllegalStateException("Invalid config file");
             }
 
-            // Extract IV (first 12 bytes)
             byte[] iv = Arrays.copyOfRange(fileBytes, 0, 12);
             byte[] ciphertext = Arrays.copyOfRange(fileBytes, 12, fileBytes.length);
 
-            // Decrypt
             byte[] plaintext = decrypt(ciphertext, iv);
 
-            // Parse back to int[]
             String[] parts = new String(plaintext, "UTF-8").split(",");
             if (parts.length != CONFIG_COUNT) {
                 throw new IllegalStateException("Invalid config data");
@@ -245,14 +240,14 @@ public class NMConfUtils {
             int[] configs = new int[CONFIG_COUNT];
             for (int i = 0; i < CONFIG_COUNT; i++) {
                 configs[i] = Integer.parseInt(parts[i].trim());
-                if (configs[i] != 0 && configs[i] != 1) { // Enforce 0/1
+                if (configs[i] != 0 && configs[i] != 1) {
                     throw new IllegalStateException("Invalid config value");
                 }
             }
 
             return configs;
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            // Tampering detected
+            // tampering detected
             throw new RuntimeException("Config file tampered or corrupt", e);
         } catch (Exception e) {
             throw new RuntimeException("Error reading config", e);
@@ -272,7 +267,6 @@ public class NMConfUtils {
     }
 
     private static void writeConfigs(int[] values) {
-        // Serialize to comma-separated string
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < CONFIG_COUNT; i++) {
             if (values[i] != 0 && values[i] != 1) {
@@ -280,17 +274,16 @@ public class NMConfUtils {
             }
             sb.append(values[i]).append(",");
         }
-        sb.deleteCharAt(sb.length() - 1); // Remove last comma
+        sb.deleteCharAt(sb.length() - 1); // remove last comma
 
         try {
             byte[] plaintext = sb.toString().getBytes("UTF-8");
 
-            // Encrypt
+            // encrypt
             byte[] iv = new byte[12];
             new SecureRandom().nextBytes(iv);
             byte[] ciphertext = encrypt(plaintext, iv);
 
-            // Write binary: IV + ciphertext
             try (FileOutputStream fos = new FileOutputStream(FILE_NAME)) {
                 fos.write(iv);
                 fos.write(ciphertext);

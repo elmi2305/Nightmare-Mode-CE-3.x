@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.tradetweaks;
+package com.itlesports.nightmaremode.util.tradetweaks;
 
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;

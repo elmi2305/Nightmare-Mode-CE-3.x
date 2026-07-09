@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
-import com.itlesports.nightmaremode.network.SteelLockerNet;
+import com.itlesports.nightmaremode.util.network.SteelLockerNet;
 import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

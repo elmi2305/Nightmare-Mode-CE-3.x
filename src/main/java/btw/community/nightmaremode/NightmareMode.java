@@ -13,8 +13,8 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
-import com.itlesports.nightmaremode.network.SteelLockerNet;
-import com.itlesports.nightmaremode.tpa.TPACommand;
+import com.itlesports.nightmaremode.util.network.SteelLockerNet;
+import com.itlesports.nightmaremode.util.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import com.itlesports.nightmaremode.util.*;
@@ -257,6 +257,7 @@ public class NightmareMode extends BTWAddon {
         MapGenStructureIOAccess.invokeFunctionB(StructureScatteredFeatureStartUnderworld.class, "nmTemple");
     }
 
+    // client to server
     @Environment(EnvType.SERVER)
     private void initServerPacketInfo(){
         AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
@@ -272,10 +273,9 @@ public class NightmareMode extends BTWAddon {
                 e.printStackTrace();
             }
         });
-
-
     }
 
+    // server to client
     @Environment(EnvType.CLIENT)
     private void initClientPacketInfo() {
         // world state packet handler

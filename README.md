@@ -25,6 +25,8 @@ The idea of Nightmare Mode was inspired by a few things:
 - Various other difficulty mods, including but not limited to PvZ mods, Terraria mods, Kaizo mods, self-imposed challenge runs, etc.
 Massive thanks to all of these sources of inspiration. Without them, Nightmare Mode would not have the breadth of features it currently has.
 
+## Want to contribute?
+Please read CONTRIBUTORS.md for a guide on how the codebase is structured
 
 ## License
 

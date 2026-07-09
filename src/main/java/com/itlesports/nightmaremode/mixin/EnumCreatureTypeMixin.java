@@ -13,8 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EnumCreatureType.class)
 public class EnumCreatureTypeMixin {
-    @Mutable
-    @Shadow @Final private int maxNumberOfCreature;
+    @Mutable @Shadow @Final private int maxNumberOfCreature;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void changeMobCap(CallbackInfo ci){

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 import static btw.community.nightmaremode.NightmareMode.sendSongToPlayer;
 
 public class NMUtils {
-    private static Random utilRandom = new Random();
+    private static final Random utilRandom = new Random();
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
 

@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.network;
+package com.itlesports.nightmaremode.util.network;
 
 import api.BTWAddon;
 import api.network.CustomPacketHandler;

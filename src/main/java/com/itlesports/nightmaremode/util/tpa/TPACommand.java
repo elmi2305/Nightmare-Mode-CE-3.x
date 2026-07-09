@@ -1,4 +1,4 @@
-package com.itlesports.nightmaremode.tpa;
+package com.itlesports.nightmaremode.util.tpa;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
