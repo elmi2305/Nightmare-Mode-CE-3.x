@@ -1171,7 +1171,6 @@ public abstract class NMInitializer implements AchievementExt {
 
         // add misc recipes
         RecipeManager.addRecipe(new ItemStack(NMItems.eclipseBow,1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.darksunFragment, 1), Character.valueOf('X'), new ItemStack(BTWItems.compositeBow)});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 8), new Object[]{new ItemStack(BTWBlocks.hamper)});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironKnittingNeedles,1), new Object[]{"# #", "# #", "#X#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('X'), Item.silk});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),Item.reed,Item.reed,Item.reed,Item.reed});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.silk,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),BTWItems.tangledWeb});
@@ -1267,11 +1266,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.jungleBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk, 1, 0)});
 
 
+        NMUtils.logTodo(); // every mob should drop its scrolls, or something else should be thought of
 
-        // new wicker basket
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.customWickerBasket), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.wickerPane});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 4), new Object[]{NMBlocks.customWickerBasket});
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.wickerBasket), new Object[]{"SS", "##", "##", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('S'), BTWItems.hempFibers});
         // hide all baskets from EMI
         BTWBlocks.wickerBasket.hideFromEMI();
         BTWBlocks.oakBarkBox.hideFromEMI();
@@ -1279,10 +1275,6 @@ public abstract class NMInitializer implements AchievementExt {
         BTWBlocks.birchBarkBox.hideFromEMI();
         BTWBlocks.jungleBarkBox.hideFromEMI();
         // done hiding
-
-        // hamper stuff
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"S#S", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), BTWTags.planks, Character.valueOf('S'), BTWItems.rope});
-        RecipeManager.addRecipe(new ItemStack(BTWBlocks.hamper), new Object[]{"###", "#P#", "###", Character.valueOf('#'), BTWItems.wickerPane, Character.valueOf('P'), Block.planks});
 
         // add compressed block recipes
         RecipeManager.addShapelessRecipe(new ItemStack(BTWBlocks.creeperOysterBlock, 1), new Object[]{new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters), new ItemStack(BTWItems.creeperOysters)});
