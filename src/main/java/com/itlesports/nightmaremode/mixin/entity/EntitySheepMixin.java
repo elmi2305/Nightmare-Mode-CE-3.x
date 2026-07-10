@@ -27,17 +27,6 @@ public abstract class EntitySheepMixin extends EntityAnimal {
         this.targetTasks.addTask(12, new EntityAIChasePlayer(this, 1.35f));
     }
 
-    @Inject(method = "dropFewItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySheep;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"))
-    private void chanceToDropMoreWool(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if(bKilledByPlayer){
-            if(this.rand.nextInt(4) == 0){
-                this.entityDropItem(new ItemStack(BTWItems.wool.itemID, 1, BlockColored.getDyeFromBlock(this.getFleeceColor())), 0.0F);
-                if(this.rand.nextInt(4) == 0){
-                    this.entityDropItem(new ItemStack(BTWItems.wool.itemID, 1, BlockColored.getDyeFromBlock(this.getFleeceColor())), 0.0F);
-                }
-            }
-        }
-    }
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageJumpAttackAtPlayer(CallbackInfo ci){
         if (NMUtils.getIsMobEclipsed(this)) {
