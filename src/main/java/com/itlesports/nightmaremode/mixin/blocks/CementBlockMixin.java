@@ -13,6 +13,6 @@ public class CementBlockMixin {
     @Inject(method = "tickRate", at = @At("HEAD"),cancellable = true)
     private void makeCementFaster(World world, CallbackInfoReturnable<Integer> cir){
         if(NightmareMode.devMode){cir.setReturnValue(4);}
-        cir.setReturnValue(10);
+        cir.setReturnValue(40);
     }
 }
