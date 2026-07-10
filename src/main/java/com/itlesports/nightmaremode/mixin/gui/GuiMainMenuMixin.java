@@ -78,8 +78,8 @@ public class GuiMainMenuMixin extends GuiScreen {
             heightMod = 24;
         }
 
-        this.buttonList.add(new GuiButton(33, this.width / 2 - 100, par1 + par2 * 2 + heightMod, w, h, I18n.getString("selectWorld.create")));
-        this.buttonList.add(new GuiTexturedButton(34, this.width / 2 - 100 + w + 1, par1 + par2 * 2 + heightMod, 20, 20, GEAR));
+//        this.buttonList.add(new GuiButton(33, this.width / 2 - 100, par1 + par2 * 2 + heightMod, w, h, I18n.getString("selectWorld.create")));
+//        this.buttonList.add(new GuiTexturedButton(34, this.width / 2 - 100 + w + 1, par1 + par2 * 2 + heightMod, 20, 20, GEAR));
     }
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void disableOptionsIfXray(CallbackInfo ci){

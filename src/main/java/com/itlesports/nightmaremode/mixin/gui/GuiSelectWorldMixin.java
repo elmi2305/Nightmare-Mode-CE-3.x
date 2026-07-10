@@ -42,34 +42,6 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
     @Unique private static int num = 0;
     @Unique private static boolean chaos = false;
 
-    @Inject(method = "initButtons", at = @At("TAIL"))
-    private void addBuffSquidsButton(CallbackInfo ci){
-        if (NightmareMode.isAprilFools) {
-            this.buttonList.add(new GuiButton(10, this.width / 12, this.height / 2 - 40, 98, 20, I18n.getString("gui.selectworld.buff_squids")));
-            GuiButton chaosButton = new GuiButton(11, this.width / 12, this.height / 2 - 70, 130, 20, I18n.getString("gui.selectworld.toggle_cancer_worldgen"));
-            this.buttonList.add(chaosButton);
-        }
-        this.buttonList.add(new GuiColoredButton(2305, 5, 5, 110, 20, I18n.getString("gui.selectworld.nm_config"), 0xFFFFFF, 0xd4d4d4, 0xFF0000));
-    }
-
-    @Inject(method = "drawScreen", at = @At("TAIL"))
-    private void drawSquidText(int par1, int par2, float par3, CallbackInfo ci){
-        if (NightmareMode.isAprilFools) {
-            String timesText = "gui.selectworld.squid_buffed_times_plural";
-            if(num == 1) {
-                timesText = "gui.selectworld.squid_buffed_times";
-            }
-            timesText = I18n.getString(timesText).replace("{0}", Integer.toString(num));
-            this.drawCenteredString(this.fontRenderer, timesText, this.width / 16 + this.fontRenderer.getStringWidth(timesText) / 2 - 20, this.height / 2 + 25, 0xFFFFFF);
-
-            String strengthText = I18n.getString("gui.selectworld.squid_strength")
-                    .replace("{0}", Double.toString(roundIfNeeded(1 + num * 0.013)));
-            this.drawCenteredString(this.fontRenderer, strengthText, this.width / 16 + this.fontRenderer.getStringWidth(strengthText) / 2 - 20, this.height / 2 + 35, 0xFFFFFF);
-
-            String chaosText = Boolean.toString(chaos);
-            this.drawCenteredString(this.fontRenderer, chaosText, this.width / 12 + this.fontRenderer.getStringWidth(chaosText) / 2 - 30, this.height / 2 - 25, 0xFFFFFF);
-        }
-    }
 
     @Inject(method = "actionPerformed", at = @At("TAIL"))
     private void squidButton(GuiButton par1GuiButton, CallbackInfo ci) {
