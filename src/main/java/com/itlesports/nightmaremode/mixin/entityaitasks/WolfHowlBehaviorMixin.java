@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
 import btw.entity.mob.behavior.WolfHowlBehavior;
+import com.itlesports.nightmaremode.util.NMUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,10 +19,12 @@ public class WolfHowlBehaviorMixin {
     }
     @ModifyArg(method = "shouldExecute", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0),index = 0)
     private int increaseChance(int bound){
+        if(NMUtils.getWorldProgress() > 0){return 4;}
         return 120;
     }
     @ModifyArg(method = "shouldExecute", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 1),index = 0)
     private int increaseChance0(int bound){
+        if(NMUtils.getWorldProgress() > 0){return 4;}
         return 120;
     }
 }
