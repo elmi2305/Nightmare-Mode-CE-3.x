@@ -11,26 +11,11 @@ import org.spongepowered.asm.mixin.injection.*;
 @Mixin(UnfiredBrickTileEntity.class)
 public class UnfiredBrickTileEntityMixin extends TileEntity {
 
-    @ModifyConstant(method = "updateCooking", constant = @Constant(intValue = 11900),remap = false)
+    @ModifyConstant(method = "updateCooking",
+            constant = @Constant(
+    intValue = 11900),remap = false)
     private int reduceClayCookTime(int constant){
-        if(this.worldObj.provider.dimensionId == -1){
-            return constant / 2;
-        }
-        return 11400;
+        return 36000;
     }
 
-
-    @Redirect(method = "updateCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockNaturalLightValueMaximum(III)I"))
-    private int enableCookingOnEclipse(World w, int i, int j, int k){
-        if(NMUtils.getIsEclipse() || this.worldObj.provider.dimensionId == -1){
-            return 31;
-        }
-        if(NightmareMode.darkStormyNightmare){
-            long time = w.getWorldTime() % 24000;
-            if(time > 0 && time < 13000){
-                return 31;
-            }
-        }
-        return w.getBlockNaturalLightValueMaximum(i,j,k);
-    }
 }
