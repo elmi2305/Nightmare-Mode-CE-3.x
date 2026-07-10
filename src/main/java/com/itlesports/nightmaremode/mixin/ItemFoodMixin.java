@@ -13,19 +13,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemFood.class)
 public class ItemFoodMixin {
     @Shadow private int potionId;
-
     @Shadow private float potionEffectProbability;
-
     @Shadow private int potionDuration;
-
     @Shadow private int potionAmplifier;
 
-    @Inject(method = "onEaten", at = @At("TAIL"))
-    private void goldenCarrotFunctionality(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, CallbackInfoReturnable<ItemStack> cir){
-        if(par1ItemStack.itemID == Item.goldenCarrot.itemID){
-            par3EntityPlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 2400,0)); // 2 minutes of night vision
-        }
-    }
+//    @Inject(method = "onEaten", at = @At("TAIL"))
+//    private void goldenCarrotFunctionality(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, CallbackInfoReturnable<ItemStack> cir){
+//        if(par1ItemStack.itemID == Item.goldenCarrot.itemID){
+//            par3EntityPlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 2400,0)); // 2 minutes of night vision
+//        }
+//    }
     @Inject(method = "onFoodEaten", at = @At(value = "HEAD"), cancellable = true)
     private void manageFoodPoisoningAchievement(ItemStack stack, World world, EntityPlayer player, CallbackInfo ci){
         boolean wasPoisoned = false;
