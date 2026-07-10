@@ -64,7 +64,6 @@
     "biomegen.NoiseGeneratorOctavesMixin",
     "blocks.AestheticOpaqueEarthBlockMixin",
     "blocks.AnvilBlockMixin",
-    "blocks.BedBlockBaseMixin",
     "blocks.BlockClayMixin",
     "blocks.BlockContainerMixin",
     "blocks.BlockEndPortalMixin",
