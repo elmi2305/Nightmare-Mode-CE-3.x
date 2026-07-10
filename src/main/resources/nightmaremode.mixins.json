@@ -152,7 +152,6 @@
     "entity.EntityFishHookMixin",
     "entity.EntityGhastMixin",
     "entity.EntityHorseMixin",
-    "entity.EntityItemMixin",
     "entity.EntityLivingAccessor",
     "entity.EntityLivingBaseMixin",
     "entity.EntityLivingMixin",
