@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class MillstoneBlockMixin {
     @ModifyArg(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSound(DDDLjava/lang/String;FF)V"),index = 4)
     private float lowerMillstoneVolume(float par8){
-        return 0.07f;
+        return 10;
     }
     @ModifyArg(method = "clientNotificationOfMetadataChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSound(DDDLjava/lang/String;FF)V"),index = 4)
     private float lowerMillstoneVolume1(float par8){
-        return 0.07f;
+        return 10;
     }
 }
