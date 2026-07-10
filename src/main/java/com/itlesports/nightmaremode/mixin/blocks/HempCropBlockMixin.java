@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class HempCropBlockMixin {
     @Inject(method = "getBaseGrowthChance", at = @At("HEAD"),cancellable = true)
     private void makeHempGrowFaster(World world, int i, int j, int k, CallbackInfoReturnable<Float> cir){
-        cir.setReturnValue(0.2f);
+        cir.setReturnValue(0.01f);
     }
 }
