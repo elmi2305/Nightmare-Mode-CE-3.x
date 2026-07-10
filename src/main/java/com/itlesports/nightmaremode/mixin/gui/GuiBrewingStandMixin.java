@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class GuiBrewingStandMixin {
     @ModifyConstant(method = "drawGuiContainerBackgroundLayer", constant = @Constant(floatValue = 400.0F))
     private float reduceBrewTimeVisual(float constant){
-        return 20f;
+        return 12000;
     }
 }

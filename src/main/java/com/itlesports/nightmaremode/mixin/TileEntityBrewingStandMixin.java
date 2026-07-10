@@ -12,10 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TileEntityBrewingStandMixin {
     @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 400))
     private int reduceBrewTime(int constant){
-        return 20;
+        return 12000;
     }
-//    @Inject(method = "getBrewTime", at = @At("HEAD"),cancellable = true)
-//    private void reduceBrewTime0(CallbackInfoReturnable<Integer> cir){
-//        cir.setReturnValue(100);
-//    }
+
 }
