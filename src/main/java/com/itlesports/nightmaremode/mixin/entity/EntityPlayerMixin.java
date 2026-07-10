@@ -870,11 +870,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         } else{
             skybaseTicks = Math.max(0,--skybaseTicks);
         }
-//        if(this.ticksInWater)
-//        if(NMUtils.getIsEclipse() && !NightmareMode.getInstance().shouldStackSizesIncrease){
-        if(worldObj.worldInfo.getData(DRAGON_DEFEATED)){
-            NMUtils.setItemStackSizes(32);
-        }
     }
 
     @Unique private int skybaseTicks = 0;
@@ -909,20 +904,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique
     private static int randOffset(Random r){return r.nextInt(3) - 1;}
 
-    @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void manageHealthOnNoHitAndNite(CallbackInfo ci){
-        if(noHit){
-            if(this.getMaxHealth() > 1){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(1);
-                this.getDataWatcher().updateObject(6, 0x1);
-            }
-        } else if(nite){
-            if(this.getMaxHealth() != this.getHealthForExperience()){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getHealthForExperience());
-            }
-        }
-    }
-
     @Override
     public void nightmareMode$incrementHealth(int amount) {
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(this.getMaxHealth() - 1);
@@ -933,7 +914,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.nightmareMode$setHeartCrack(2);
             NMUtils.playUISound(NightmareModeAddon.NM_CRACK.sound(), 1.0f, 1.0f);
         }
-
     }
 
     @Override
@@ -949,147 +929,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         this.heartCrackLength = heartCrackLength;
     }
 
-    //    @Inject(method = "onUpdate", at = @At("TAIL"))
-//    private void manageChainArmor(CallbackInfo ci){
-//        if(isWearingFullChainArmor(this) && !areChainPotionsActive(this)){
-//            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 110,0));
-//            if(this.rand.nextInt(16) == 0){
-//                this.addPotionEffect(new PotionEffect(BTWMod.potionFortune.id, 600, 0));
-//            }
-//            if(this.rand.nextInt(16) == 0){
-//                this.addPotionEffect(new PotionEffect(BTWMod.potionLooting.id, 600, 0));
-//            }
-//            if(this.rand.nextInt(16) == 0){
-//                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,1));
-//            } else{
-//                this.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 110,0));
-//            }
-//        }
-//    }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageHighPoisonInvincibilityFrames(CallbackInfo ci){
         if(this.isPotionActive(Potion.poison) && this.getActivePotionEffect(Potion.poison).getAmplifier() >= 128){
             this.hurtResistantTime = 0;
         }
     }
-    @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void manageDarkStormyNight(CallbackInfo ci){
-        if (darkStormyNightmare) {
-            this.worldObj.worldInfo.setRaining(true);
-            this.worldObj.worldInfo.setThundering(true);
-            if (this.worldObj.worldInfo.getThunderTime() < 200) {
-                this.worldObj.worldInfo.setThunderTime(2000);
-                this.worldObj.worldInfo.setRainTime(2000);
-            }
-        }
-    }
 
-    @Unique private int soundInterval = 30;
 
-    @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void manageAprilFools(CallbackInfo ci){
-        if (isAprilFools) {
-            if(this.ticksExisted % soundInterval == (soundInterval - 1)){
-                this.playRandomMobOrItemSound();
-            } else{
-                return;
-            }
-
-            if(this.isPlayerFullyAsleep()){
-                int xPos = (int) (this.posX + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(300));
-                int zPos = (int) (this.posZ + (this.rand.nextBoolean() ? 1 : -1) * this.rand.nextInt(300));
-                this.wakeUpPlayer(true, true, true);
-                this.setPositionAndUpdate(xPos, 250, zPos);
-                this.addPotionEffect(new PotionEffect(Potion.resistance.id,300,100));
-            }
-
-            if(this.rand.nextInt(32) == 0){
-                soundInterval = Math.max(
-                        Math.min(
-                                soundInterval + (this.rand.nextBoolean() ? 1 : -1),
-                                40
-                        ),
-                        10
-                );
-            }
-
-            if(this.rand.nextInt(600) == 0){
-                EntityPlayer thisObj = (EntityPlayer)(Object)this;
-
-                ItemStack[] hotbar = new ItemStack[9];
-                System.arraycopy(thisObj.inventory.mainInventory, 0, hotbar, 0, 9);
-                for(int i = 0; i < 9; i++){
-                    int j = this.rand.nextInt(i + 1);
-                    ItemStack temp = hotbar[i];
-                    hotbar[i] = hotbar[j];
-                    hotbar[j] = temp;
-                }
-                System.arraycopy(hotbar, 0, (thisObj).inventory.mainInventory, 0, 9);
-
-                thisObj.worldObj.playSoundEffect(thisObj.posX, thisObj.posY, thisObj.posZ, "mob.endermen.portal", 1.0f, 1.0f);
-            }
-            if(this.rand.nextInt(40000) == 0){
-                EntityWither wither = new EntityWither(this.worldObj);
-                wither.setHealth((float) this.worldObj.getWorldTime() / 4000 + 1);
-                wither.setPositionAndUpdate(this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)), 150, this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)));
-                this.worldObj.spawnEntityInWorld(wither);
-            }
-
-            if(this.rand.nextInt(40000) == 0 && this.worldObj.getWorldTime() > 240000){
-                EntityDragon dragon = new EntityDragon(this.worldObj);
-                dragon.setHealth(20 + this.rand.nextInt(80));
-                dragon.setPositionAndUpdate(this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)), 200, this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(30)));
-                this.worldObj.spawnEntityInWorld(dragon);
-            }
-        }
-    }
-    @Unique private static final List<String> sounds = new ArrayList<>(Arrays.asList(
-            "mob.zombie.say",
-            "mob.zombie.hurt",
-            "mob.zombie.death",
-            "mob.creeper.say",
-            "mob.creeper.hurt",
-            "mob.creeper.death",
-            "mob.spider.say",
-            "mob.spider.hurt",
-            "mob.spider.death",
-            "mob.skeleton.say",
-            "mob.skeleton.hurt",
-            "mob.skeleton.death",
-            "mob.ghast.moan",
-            "mob.ghast.scream",
-            "mob.ghast.death",
-            "mob.enderman.death",
-            "mob.enderman.hit",
-            "random.break",
-            "random.drink",
-            "random.eat",
-            "random.levelup",
-            "random.classic_hurt",
-            "liquid.splash",
-            "mob.slime.big",
-            "random.anvil.land",
-            "random.anvil.use",
-            "random.anvil.break",
-            "mob.ghast.fireball",
-            "mob.zombie.wood",
-            "mob.zombie.woodbreak",
-            "random.fizz",
-            "fire.ignite",
-            "ambient.cave.cave4",
-            "mob.pig.say",
-            "mob.pig.death",
-            "mob.cow.say",
-            "mob.cow.hurt",
-            "mob.cow.death",
-            "mob.chicken.say",
-            "mob.chicken.hurt",
-            "random.break"
-    ));
-
-    @Unique private void playRandomMobOrItemSound(){
-        this.playSound(sounds.get(this.rand.nextInt(sounds.size())), 0.1f + this.rand.nextFloat() * 0.2f, 0.6f + this.rand.nextFloat() * 0.4f);
-    }
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
         if(!player.isPotionActive(potionID) || potionID == Potion.blindness.id){
