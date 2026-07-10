@@ -751,7 +751,6 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addPriestTrades(){
         EntityVillager.removeCustomTrade(2, TradeProvider.getBuilder().name("btw:sell_fortune_scroll").profession(2).level(5).arcaneScroll().scrollEnchant(Enchantment.fortune).secondaryEmeraldCost(48, 64).mandatory().build());
-        EntityVillager.removeLevelUpTrade(2,4);
         EntityVillager.removeLevelUpTrade(2,2);
 
 
@@ -762,7 +761,6 @@ public abstract class NMInitializer implements AchievementExt {
         convert("nmPriestPaper", 2, 3, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 64), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("fortune")), 0.1f);
         convert("nmPriestPotion", 2, 3, TradeItem.fromID(Item.potion.itemID), TradeItem.fromID(Item.emerald.itemID, 1, 3), TradeItem.fromIDAndMetadata(Item.potion.itemID, 16453, 2));
         convert("nmPriestGoldenApple", 2, 4, TradeItem.fromID(Item.appleGold.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 10, 18), TradeItem.fromIDAndMetadata(Item.appleGold.itemID, 1), false, true);
-        convert("nmPriestLevelUp", 2, 4, TradeItem.fromIDAndMetadata(BTWBlocks.aestheticVegetation.blockID, 2, 3), TradeItem.EMPTY, TradeItem.fromID(Block.enchantmentTable.blockID), true);
         convert("nmPriestPaperAgain", 2, 5, TradeItem.fromID(Item.paper.itemID), TradeItem.fromID(NMItems.bloodOrb.itemID, 16, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("prot")));
         convert("nmPriestRifle", 2, 5, TradeItem.fromID(NMItems.rifle.itemID), TradeItem.fromID(NMItems.rpg.itemID), TradeItem.fromID(Block.dragonEgg.blockID), false, true);
         buy("nmPriestOcular", 2, 2, BTWItems.ocularOfEnder.itemID, 0, 1, 1, 1.0f, true, 2,2);
