@@ -18,15 +18,15 @@ import java.util.Random;
 public class MushroomBlockBrownMixin {
     @ModifyArg(method = "checkForSpread", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0))
     private int increaseChanceOfMushroomSpreading(int bound){
-        return 7;
+        return 140;
     }
     @ModifyConstant(method = "checkForSpread", constant = @Constant(intValue = 4,ordinal = 0))
     private int decreaseMushroomDetectionRange(int constant){
-        return 2;
+        return 8;
     }
     @ModifyConstant(method = "checkForSpread", constant = @Constant(intValue = 4,ordinal = 1))
     private int increaseAttemptsToSpread(int constant){
-        return 6;
+        return 2;
     }
 //    @Inject(method = "updateTick", at = @At("HEAD"))
 //    private  void  a(World world, int x, int y, int z, Random rand, CallbackInfo ci){
