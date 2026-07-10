@@ -71,10 +71,24 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void setBaby(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
-        boolean willBeBaby = this.rand.nextInt(32) == 0 && NightmareMode.moreVariants;
+        boolean willBeBaby = this.rand.nextInt(32) == 0;
         if(willBeBaby && !this.worldObj.isRemote){
             this.setChild(true);
             this.setSize(this.width, 1.0f);
+            return;
+        }
+
+        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
+            if(this.rand.nextInt(3) != 0){
+                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
+                this.setDead();
+                this.worldObj.spawnEntityInWorld(spider);
+            }
+        }
+        else if(NMEvents.SimpleEvent.HELL.isActive()){
+            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
+                this.setDead();
+            }
         }
     }
 
@@ -538,22 +552,6 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                 summonShadowZombieAtPos((EntityZombie)(Object)this);
             }
         }
-    }
-    @Override
-    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-        if(NMEvents.SimpleEvent.SPIDER_RAIN.isActive()){
-            if(this.rand.nextInt(3) != 0){
-                EntitySpider spider = NMUtils.getSpiderToInitialize(this.worldObj,this);
-                this.setDead();
-                this.worldObj.spawnEntityInWorld(spider);
-            }
-        }
-        else if(NMEvents.SimpleEvent.HELL.isActive()){
-            if(NMUtils.initializeAndSummonHellMob(this.worldObj,this)){
-                this.setDead();
-            }
-        }
-        return super.onSpawnWithEgg(par1EntityLivingData);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
