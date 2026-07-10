@@ -76,7 +76,6 @@
     "blocks.BlockMixin",
     "blocks.BlockMushroomMixin",
     "blocks.BlockMyceliumMixin",
-    "blocks.BlockNetherStalkMixin",
     "blocks.BlockObsidianMixin",
     "blocks.BlockPortalMixin",
     "blocks.BlockSandStoneMixin",
