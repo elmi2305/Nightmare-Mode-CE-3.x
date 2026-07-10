@@ -79,6 +79,6 @@ public abstract class EntityCowMixin extends KickingAnimal {
     }
     @ModifyConstant(method = "updateHungerState", constant = @Constant(intValue = 24000))
     private int getMilkFaster(int constant){
-        return 4000 + this.rand.nextInt(2000);
+        return 160000;
     }
 }
