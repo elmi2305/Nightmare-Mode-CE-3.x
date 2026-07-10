@@ -32,12 +32,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
 
     @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiCreateWorld;updateButtonText()V", ordinal = 8))
     private void manageDifficulty2(GuiButton par1GuiButton, CallbackInfo ci){
-        if(this.difficultyID == 3){// if it's hostile (can't switch if bloodmare)
-            this.difficultyID = 0; // sets it to standard
-        } else if (this.difficultyID == 1){ // if it's standard
-            this.difficultyID = 2; // sets it to hostile
-        }
-        if(NightmareMode.bloodmare){this.difficultyID = 2;}
+        this.difficultyID = 2; // always hostile
     }
     @Inject(method = "actionPerformed", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiCreateWorld;updateButtonText()V", ordinal = 9))
     private void alwaysLockedDifficulty(CallbackInfo ci){
@@ -46,15 +41,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
 
     @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lapi/world/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
     private String customDifficultyName(Difficulty difficulty){
-        if(difficulty.index == 2){
-            if(NightmareMode.bloodmare){
-                return I18n.getString("difficulty.bloodmare.name");
-            }
-            return I18n.getString("difficulty.nightmare.name");
-        } else if (difficulty.index == 0){
-            return I18n.getString("difficulty.baddream.name");
-        }
-        return difficulty.getLocalizedName();
+        return I18n.getString("difficulty.nightmare.name");
     }
     @Inject(method = "updateButtonText", at = @At("TAIL"))
     private void lockButtonCannotBeClicked(CallbackInfo ci){
@@ -65,9 +52,6 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 10))
     private String customText(String string){
         if (this.difficultyID == 2) {
-            if(NightmareMode.bloodmare){
-                return "";
-            }
             return I18n.getString("difficulty.nightmare.description1");
         }
         return I18n.getString("difficulty.baddream.description1");
@@ -75,9 +59,6 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 11))
     private String customText1(String string){
         if (this.difficultyID == 2) {
-            if(NightmareMode.bloodmare){
-                return "";
-            }
             return I18n.getString("difficulty.nightmare.description2");
         }
         return I18n.getString("difficulty.baddream.description2");
@@ -85,9 +66,6 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 12))
     private String customText2(String string){
         if (this.difficultyID == 2) {
-            if(NightmareMode.bloodmare){
-                return "";
-            }
             return I18n.getString("difficulty.nightmare.description3");
         }
         return I18n.getString("difficulty.baddream.description3");

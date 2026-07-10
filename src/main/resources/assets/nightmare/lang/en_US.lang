@@ -187,13 +187,13 @@ nm.events.nmHell.info=Hell will break loose tonight
 
 
 difficulty.baddream.name=Bad Dream
-difficulty.nightmare.name=Nightmare
+difficulty.nightmare.name=IFHY
 difficulty.bloodmare.name=Bloodmare
 difficulty.baddream.description1=A more relaxed experience. Makes
 difficulty.baddream.description2=many aspects of Nightmare Mode
 difficulty.baddream.description3=easier and more forgiving.
-difficulty.nightmare.description1=The ultimate challenge.
-difficulty.nightmare.description2=
+difficulty.nightmare.description1=It's finally hard!
+difficulty.nightmare.description2=Yay!
 difficulty.nightmare.description3=
 
 gui.mainmenu.splash1=Nightmare Mode!
