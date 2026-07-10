@@ -1166,7 +1166,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCraftingRecipes(){
 //        RecipeManager.addRecipe(new ItemStack(BTWBlocks.planter, 1), new Object[]{"# #", "# #", "###", Character.valueOf('#'), Item.brick});
-        RecipeManager.addRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XXX", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodSidingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.book,1,Short.MAX_VALUE)});
+//        RecipeManager.addRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XXX", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodSidingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.book,1,Short.MAX_VALUE)});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.steelBunch), Character.valueOf('X'), new ItemStack(NMBlocks.bloodChest)});
         // add gapple and carrot recipes
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.appleGold, 1, 0), new Object[]{"###", "#X#", "###", '#', Item.ingotGold, 'X', Item.appleRed});
@@ -1256,7 +1256,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.elementalRod, 1), new Object[]{NMItems.shadowRod, Item.blazeRod, NMItems.fireRod, NMItems.waterRod});
         // done adding blaze rod recipes
 
-        RecipeManager.addRecipe(new ItemStack(Item.book), new Object[]{"###", "XXX", Character.valueOf('#'), NMTags.bookLeather, Character.valueOf('X'), new ItemStack(Item.paper, 1, Short.MAX_VALUE)});
+        NMUtils.logTodo(); // make books expensive
+//        RecipeManager.addRecipe(new ItemStack(Item.book), new Object[]{"###", "XXX", Character.valueOf('#'), NMTags.bookLeather, Character.valueOf('X'), new ItemStack(Item.paper, 1, Short.MAX_VALUE)});
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.gunpowder), new Object[]{new ItemStack(BTWItems.nitre), new ItemStack(BTWItems.brimstone), new ItemStack(BTWItems.coalDust)});
 
@@ -1477,8 +1478,8 @@ public abstract class NMInitializer implements AchievementExt {
         // done with dynamite
 
         // book
-        RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
+//        RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
+//        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
         // done with book
 
 
@@ -1490,17 +1491,6 @@ public abstract class NMInitializer implements AchievementExt {
         // calamari with nitre
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.curedMeat, 1), new Object[]{NMItems.calamari, BTWItems.nitre});
         // done with calamari
-        // remove loom
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.loom), new Object[]{"SSW", "SBG", "WGW", 'W', TagInstance.of(BTWTags.woodenSidings), 'S', BTWBlocks.slatsPane, 'G', BTWItems.gear, 'B', BTWItems.belt});
-//        RecipeManager.addRecipe(new ItemStack(BTWBlocks.loom), new Object[]{
-//                "SSS",
-//                "WBW",
-//                "WGW",
-//                'W', TagInstance.of(BTWTags.stoneBrickItems),
-//                'S', BTWItems.soulforgedSteelIngot,
-//                'G', BTWItems.screw,
-//                'B', NMItems.refinedElement});
-        // done loom
 
         // firestarters
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.flintAndSteel, 1), new Object[]{new ItemStack(BTWItems.ironNugget), new ItemStack(Item.flint)});
