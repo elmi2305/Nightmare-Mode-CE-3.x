@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class KilnBlockMixin {
     @ModifyConstant(method = "updateTick", constant = @Constant(intValue = 15))
     private int reduceCookTime(int constant){
-        return 6;
+        return 30;
     }
 }
