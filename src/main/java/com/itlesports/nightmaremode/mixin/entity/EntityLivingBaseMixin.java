@@ -134,22 +134,4 @@ public abstract class EntityLivingBaseMixin extends Entity {
 
 
 
-    @Inject(method = "attackEntityFrom", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityLivingBase;limbSwingAmount:F", opcode = Opcodes.PUTFIELD))
-    private void enemyHitByPlayerAchievements(DamageSource src, float damage, CallbackInfoReturnable<Boolean> cir){
-        if (src.getSourceOfDamage() instanceof EntitySnowball sb) {
-            EntityPlayer player = sb.getThrower() instanceof EntityPlayer ? (EntityPlayer) sb.getThrower() : null;
-            EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
-            // only players can get achievements, and the player cannot get it by hitting themselves
-            if (player == null || player == thisObj) return;
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, player, false);
-            this.lastTimeWasSnowballed = this.ticksExisted;
-            this.lastSnowBaller = player;
-        }
-    }
-    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;onDeath(Lnet/minecraft/src/DamageSource;)V"))
-    private void manageSnowballFallDamageDeath(DamageSource src, float dmg, CallbackInfoReturnable<Boolean> cir){
-        if(src == DamageSource.fall && this.lastTimeWasSnowballed + 60 > this.ticksExisted && this.lastSnowBaller != null){
-            AchievementEventDispatcher.triggerEvent(NMAchievementEvents.MobSnowballedByPlayerEvent.class, this.lastSnowBaller, true);
-        }
-    }
 }

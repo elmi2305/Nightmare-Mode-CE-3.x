@@ -129,26 +129,6 @@ public class NMAchievements {
                     .setHidden()
                     .registerAchievement(TAB_GETTING_STARTED);
 
-    public static final Achievement<Boolean> SNOWBALL_MOB =
-            AchievementProvider.getBuilder(NMAchievementEvents.MobSnowballedByPlayerEvent.class)
-                    .name(loc("snowballMob"))
-                    .icon(Item.snowball)
-                    .displayLocation(-1, -2)
-                    .triggerCondition(b -> !b)
-                    .parents(MORNING_SECOND_DAY)
-                    .build()
-                    .registerAchievement(TAB_GETTING_STARTED);
-    public static final Achievement<Boolean> SNOWBALL_MOB_KILL =
-            AchievementProvider.getBuilder(NMAchievementEvents.MobSnowballedByPlayerEvent.class)
-                    .name(loc("snowballMobKill"))
-                    .icon(NMItems.ACHIEVEMENT_SPECIAL_SNOWBALL)
-                    .displayLocation(0, -2)
-                    .triggerCondition(Boolean::booleanValue)
-                    .parents(SNOWBALL_MOB)
-                    .build()
-                    .setHidden()
-                    .setSpecial()
-                    .registerAchievement(TAB_GETTING_STARTED);
     public static final Achievement<ItemStack> KILL_SQUID =
             AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("calamariGet"))

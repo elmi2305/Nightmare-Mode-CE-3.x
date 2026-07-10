@@ -63,11 +63,7 @@ public class NMAchievementEvents {
             super();
         }
     }
-    public static class MobSnowballedByPlayerEvent extends AchievementEventDispatcher.AchievementEvent<Boolean> {
-        public MobSnowballedByPlayerEvent() {
-            super();
-        }
-    }
+
     public static class BlockBrokenEvent extends AchievementEventDispatcher.AchievementEvent<BlockBrokenEvent.BlockBrokenData> {
         public record BlockBrokenData(int blockID, int metadata) {
         }
