@@ -58,34 +58,14 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         return true;
     }
 
-    @Unique private static long lastCheckedTime = -1;
-    @Unique private static boolean shouldResetTrades = false;
 
     @Inject(method = "updateAITick", at = @At("HEAD"))
     private void resetVillagerTrades(CallbackInfo ci) {
-        int switchingConstant = 48000;
-        if(NMUtils.getWorldProgress() > HARDMODE){
-            switchingConstant = 24000;
-        }
-        if(NightmareMode.fastVillagers){
-            switchingConstant = 6000;
-        }
-
-        long time = this.worldObj.getTotalWorldTime();
-
-        if (time != lastCheckedTime) {
-            shouldResetTrades = (time % switchingConstant == 0);
-            lastCheckedTime = time;
-        }
-
-        if (shouldResetTrades) {
-            this.buyingList = null;
-        }
-
         if(this.ticksExisted % 20 == 0 && NMUtils.getIsBloodMoon()){
             this.heal(20f);
         }
     }
+
     @Inject(method = "isTemptingItem", at = @At("HEAD"),cancellable = true)
     private void addTemptingItem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if(stack.itemID == NMItems.refinedDiamondIngot.itemID){
