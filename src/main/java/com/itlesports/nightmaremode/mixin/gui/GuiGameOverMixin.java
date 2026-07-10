@@ -23,28 +23,13 @@ public class GuiGameOverMixin extends GuiScreen {
     @Unique private static int TIP_CHAR_LIMIT = 60;
     @Unique private String tip = "";
     @Unique private String subTip = "";
-    @Unique private String deathMessage = "";
 
     // Get tips from lang file
     @Unique private static String[] tips = new String[32];
-    @Unique private static String[] lategameTips = new String[9];
-
-    @Inject(method = "initGui", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GuiGameOver;buttonList:Ljava/util/List;",ordinal = 4,shift = At.Shift.AFTER))
-    private void addNewButton(CallbackInfo ci){
-        if (!MinecraftServer.getIsServer()) {
-	        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 120, I18n.getString("deathScreen.nextAttempt")));
-        }
-    }
-
-    @ModifyConstant(method = "initGui", constant = @Constant(longValue = 10800L))
-    private long reduceTimeBeforeRerollingSpawnPoint(long constant){
-        return 600L;
-    }
 
     @Inject(method = "initGui", at = @At("HEAD"))
     private void declareChosenTipAndDeathMessage(CallbackInfo ci){
         this.selectRandomTip();
-        this.deathMessage = I18n.getString(getDeathMessages().get(this.random.nextInt(getDeathMessages().size())));
     }
 
     @ModifyArg(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiGameOver;drawCenteredString(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V", ordinal = 0), index = 3)
@@ -63,46 +48,19 @@ public class GuiGameOverMixin extends GuiScreen {
         if (!this.subTip.isEmpty()) {
             this.drawCenteredString(this.fontRenderer, this.subTip, centerX, initialY + 20, 0xFFFFFF);
         }
-
-
-        if (this.deathMessage != null) {
-            float textSizeMod = 1.25f;
-            GL11.glPushMatrix();
-            GL11.glScalef(textSizeMod, textSizeMod, textSizeMod);
-            int scaledCenterX = (int)(centerX / textSizeMod);
-            int scaledCenterY = (int) (70 / textSizeMod);
-            this.drawCenteredString(this.fontRenderer, this.deathMessage, scaledCenterX, scaledCenterY, 0xFF0000);
-            GL11.glPopMatrix();
-
-        }
     }
 
-    @Unique
-    private static @NotNull List<String> getDeathMessages() {
-        List<String> messageList = new ArrayList<>();
-        for (int i = 1; i <= 19; i++){
-            messageList.add("deathScreen.deathTauntMessage"+i);
-        }
-        return messageList;
-    }
 
     @Unique private void selectRandomTip() {
         if (tips[0] == null) {
             for (int i = 0; i < tips.length; ++i) {
                 tips[i] = I18n.getString("gui.gameover.tip" + (i+1));
             }
-            for (int i = 0; i < lategameTips.length; ++i) {
-                lategameTips[i] = I18n.getString("gui.gameover.lategame" + (i+1));
-            }
         }
 
         String rawTip;
 
-        if (NMUtils.getWorldProgress() < HARDMODE) {
-            rawTip = tips[random.nextInt(tips.length)];
-        } else {
-            rawTip = lategameTips[random.nextInt(lategameTips.length)];
-        }
+        rawTip = tips[random.nextInt(tips.length)];
 
         if (rawTip.length() > TIP_CHAR_LIMIT) {
             int breakPoint = rawTip.lastIndexOf(' ', TIP_CHAR_LIMIT);
