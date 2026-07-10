@@ -1174,8 +1174,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(Item.appleGold,1,1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(Item.ingotGold, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.appleRed,1,Short.MAX_VALUE)});
         RecipeManager.addRecipe(new ItemStack(Item.appleGold), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(Item.goldNugget, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.appleRed,1,Short.MAX_VALUE)});
         RecipeManager.addRecipe(new ItemStack(NMItems.dungApple), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(BTWItems.dung, 1), Character.valueOf('X'), new ItemStack(Item.appleRed,1,Short.MAX_VALUE)});
-//        RecipeManager.removeVanillaRecipe(new ItemStack(Item.goldenCarrot, 1, 0), new Object[]{"###", "#X#", "###", Character.valueOf('#'), Item.goldNugget, Character.valueOf('X'), BTWItems.carrot});
-//        RecipeManager.addRecipe(new ItemStack(Item.goldenCarrot, 1, 0), new Object[]{" # ", "#X#", " # ", Character.valueOf('#'), Item.goldNugget, Character.valueOf('X'), BTWItems.carrot});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.goldenCarrot, 1, 0), new Object[]{"###", "#X#", "###", Character.valueOf('#'), Item.goldNugget, Character.valueOf('X'), BTWItems.carrot});
+        RecipeManager.addRecipe(new ItemStack(Item.goldenCarrot, 1, 0), new Object[]{"###", "#X#", "###", Character.valueOf('#'), Item.ingotGold, Character.valueOf('X'), BTWItems.carrot});
         // done with gapples and carrots
 
         // fishing recipes
