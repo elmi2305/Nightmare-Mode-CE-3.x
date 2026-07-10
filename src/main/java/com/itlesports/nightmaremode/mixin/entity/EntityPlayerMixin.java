@@ -331,48 +331,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-
-        if(noHit){
-            return 0.09f;
-        }
-        if(nite){
-            return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
-        }
-        if (bloodmare) {
-            return 0.15f;
-        }
-        return 0.17f; // jump
+        float prog = NMUtils.getWorldProgress() * 0.08f;
+        return constant + prog + 0.1f;
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-
-        if(noHit){
-            return 0.2f;
-        }
-        if(nite){
-            return 0.75f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
-        }
-        if(bloodmare){
-            return 0.5f;
-        }
-        return 0.75f; // sprint jump
+        float prog = NMUtils.getWorldProgress() * 0.2f;
+        return constant + prog + 0.5f;
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-
-        if(noHit){
-            return 0.1f;
-        }
-        if(nite){
-            return 0.2f * NMUtils.getFoodShanksFromLevel(thisObj) / 60f;
-        }
-        if(bloodmare){
-            return 0.15f;
-        }
-        return 0.2f; // punch
+        float prog = NMUtils.getWorldProgress() * 0.05f;
+        return constant + prog + 0.2f;
     }
 
 
