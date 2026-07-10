@@ -61,6 +61,9 @@ item.nmHoneyMelon.name=Honey Melon
 item.nmLifeFruit.name=Life Fruit
 item.nmHellGem.name=Hell Gem
 
+# IFHY
+item.bonusChestLoot.name=Garbage
+
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
 tile.nmCryingObsidian.name=Crying Arena Stone
