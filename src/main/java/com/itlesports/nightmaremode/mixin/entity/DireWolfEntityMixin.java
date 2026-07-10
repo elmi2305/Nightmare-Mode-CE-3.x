@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class DireWolfEntityMixin {
     @Inject(method = "getSoundVolume", at = @At("HEAD"),cancellable = true)
     private void lowerSoundVolume(CallbackInfoReturnable<Float> cir){
-        cir.setReturnValue(0.5f);
+        cir.setReturnValue(2.0f);
     }
 }
