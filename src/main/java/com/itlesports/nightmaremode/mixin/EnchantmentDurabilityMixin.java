@@ -14,8 +14,5 @@ public class EnchantmentDurabilityMixin extends Enchantment {
         super(par1, par2, par3EnumEnchantmentType);
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void setApplicableToAll(int j, int par2, CallbackInfo ci){
-        this.type = EnumEnchantmentType.all;
-    }
+
 }
