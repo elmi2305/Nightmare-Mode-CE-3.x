@@ -58,9 +58,6 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Override
     public int tickRate(World w) {
-        if(NMEvents.SimpleEvent.TREE_HARVEST.isActive()){
-            return 1;
-        }
         return 4;
     }
 }

@@ -9,11 +9,5 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(PlantsBlock.class)
 public class PlantsBlockMixin {
-    @ModifyConstant(method = "isInBrightLight", constant = @Constant(intValue = 15))
-    private int lowerLightRequirementToGrow(int constant){
-        if(NMEvents.SimpleEvent.GREAT_HARVEST.isActive() || NightmareMode.darkStormyNightmare){
-            return 1;
-        }
-        return constant - 4;
-    }
+
 }

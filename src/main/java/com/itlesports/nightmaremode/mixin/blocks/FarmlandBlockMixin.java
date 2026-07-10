@@ -21,11 +21,4 @@ public abstract class FarmlandBlockMixin extends FarmlandBlockBase {
         super(iBlockID);
     }
 
-    @Inject(method = "updateWeedGrowth", at = @At("HEAD"))
-    private void a(World world, int i, int j, int k, Random rand, CallbackInfo ci)
-    {
-        if(NMEvents.SimpleEvent.GREAT_HARVEST.isActive() && world.getBlockId(i, j, k) == this.blockID){
-            this.setWeedsGrowthLevel(world,i,j,k, 0);
-        }
-    }
 }

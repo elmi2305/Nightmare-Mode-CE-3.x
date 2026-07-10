@@ -1309,15 +1309,6 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodenMouldings});
         RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
 
-        // hellforge
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{
-                "NNN",
-                "NBN",
-                "NHN",
-                Character.valueOf('H'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 3),
-                Character.valueOf('B'), Item.blazePowder,
-                Character.valueOf('N'), BTWBlocks.looseNetherBrick
-        });
 
         // change powder keg recipe for sealed nether
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt, 1), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse});
@@ -1339,24 +1330,6 @@ public abstract class NMInitializer implements AchievementExt {
 
         // add obsidian recipes
         RecipeManager.addShapelessRecipe(new ItemStack(Block.obsidian, 1, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
-
-
-        // make ender chest not stupid
-        RecipeManager.removeVanillaRecipe(new ItemStack(Block.enderChest), new Object[]{
-                "OOO",
-                "OEO",
-                "OOO",
-                Character.valueOf('O'), Block.obsidian,
-                Character.valueOf('E'), Item.eyeOfEnder
-        });
-        RecipeManager.addRecipe(new ItemStack(Block.enderChest), new Object[]{
-                "OEO",
-                "OBO",
-                "OOO",
-                Character.valueOf('O'), Block.obsidian,
-                Character.valueOf('B'), NMBlocks.bloodChest,
-                Character.valueOf('E'), Item.enderPearl
-        });
 
         // asphalt layer
         RecipeManager.addRecipe(new ItemStack(NMBlocks.asphaltLayer, 6), new Object[]{
