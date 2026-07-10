@@ -7,17 +7,9 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(SawBlock.class)
 public class SawBlockMixin {
-    @ModifyArg(method = "updateTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSoundEffect(DDDLjava/lang/String;FF)V"),index = 4)
-    private float lowerSawVolume(float par8){
-        return 0.25f;
-    }
-    @ModifyArg(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playSoundEffect(DDDLjava/lang/String;FF)V"),index = 4)
-    private float lowerSawVolumeAgain(float par8){
-        return 0.25f;
-    }
 
     @ModifyArg(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;scheduleBlockUpdate(IIIII)V", ordinal = 1), index = 4)
     private int lowerSawCuttingTime(int par1){
-        return 14;
+        return 120;
     }
 }
