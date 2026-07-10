@@ -107,25 +107,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 8))
     private int increaseBiteOdds(int constant){
-        if (NMUtils.getIsBloodMoon()) {
-            return 16;
-        }
-        return this.isIron ? 8 : 10;
+        return 2;
     }
-    @Inject(method = "onUpdate", at = @At("HEAD"))
-    private void ensureBaitingTrue(CallbackInfo ci){
-        if(this.getAngler() != null && this.getAngler().getHeldItem() != null && this.getAngler().getHeldItem().itemID == NMItems.ironFishingPole.itemID){
-            this.isIron = true;
-            this.isBaited = true;
-        }
-    }
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;",ordinal = 1))
-    private Item ironFishingRod1(ItemStack instance){
-        if(instance.itemID == NMItems.ironFishingPole.itemID){
-            return BTWItems.baitedFishingRod;
-        }
-        return instance.getItem();
-    }
+
     @Redirect(method = "catchFish", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityFishHook;bobber:Lnet/minecraft/src/Entity;", ordinal = 0))
     private Entity cannotHookEnemies(EntityFishHook instance){
         return null;
@@ -145,7 +129,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 //    }
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
     private int biteChanceMultiplierDay(int constant){
-        return this.isIron ? 2 : constant;
+        return 20;
     }
 //    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 2))
 //    private int dawnDuskRain(int constant){
@@ -155,20 +139,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private int decreaseWaterDepthRequirement(int constant){
         return this.isIron ? 1 : constant;
     }
-    @Inject(method = "loseBait", at = @At("HEAD"),cancellable = true)
-    private void cannotLoseBait(CallbackInfo ci){
-        if(this.isIron){
-            ci.cancel();
-        }
-    }
-    @ModifyConstant(method = "onUpdate", constant = @Constant(intValue = 10,ordinal = 1))
-    private int increaseCatchableTime(int constant){
-        return this.isIron ? 40 : constant;
-    }
-    @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0))
-    private int increaseChanceToCatchSpecialItem(int bound){
-        return this.isIron ? 1 : 2 + this.getWorldProgressBonus();
-    }
+
 
     @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V",ordinal = 1))
     private Item randomFishingLoot(Item item){
@@ -207,7 +178,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private ItemStack getRandomItemForRod(){
         int worldProgress = this.worldObj != null ? NMUtils.getWorldProgress() : 0;
-        this.cap = 800;
+        this.cap = 1600;
         int iMoonPhase = this.worldObj.getMoonPhase();
         int phaseMultiplier = 1;
         if (iMoonPhase == 0) {
@@ -218,131 +189,63 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         Item itemToDrop;
         if (worldProgress == 0) {
             itemToDrop = switch (j) {
-                case  0,  1,  2                              -> Item.reed;                // 3 occurrences (paper)
+                case  0,  1,  2                              -> NMItems.bonusChestLoot;                // 3 occurrences (paper)
                 case  3,  4,  5,  6,  7,  8,  9, 10, 11      -> BTWItems.tangledWeb;      // 9 occurrences (silk)
-                case 12, 13, 14                              -> BTWItems.ironOreChunk;    // 3 occurrences (iron ore chunk)
-                case 15                                      -> Item.melonSeeds;          // 1 occurrence (melon seeds)
-                case 16, 17, 18, 19, 20, 21, 22, 23, 24, 25  -> Item.bone;                // 10 occurrences (bone)
+                case 12, 13, 14                              -> NMItems.bonusChestLoot;    // 3 occurrences (iron ore chunk)
+                case 15                                      -> NMItems.bonusChestLoot;          // 1 occurrence (melon seeds)
+                case 16, 17, 18, 19, 20, 21, 22, 23, 24, 25  -> NMItems.bonusChestLoot;                // 10 occurrences (bone)
                 case 26, 27, 28                              -> NMItems.calamari;         // 3 occurrences (calamari)
-                case 29, 30                                  -> BTWItems.hempSeeds;       // 2 occurrences (hemp seeds)
+                case 29, 30                                  -> NMItems.bonusChestLoot;       // 2 occurrences (hemp seeds)
                 case 31, 32, 33, 34, 35, 36, 37, 38, 39, 40  -> Item.dyePowder;           // 10 occurrences (dye powder)
                 case 41, 42, 43, 44, 45, 46, 47, 48,
                      49, 50, 51, 52                          -> Item.clay;                // 12 occurrences (clay)
-                case 53, 54, 55                              -> BTWItems.sugarCaneRoots;  // 3 occurrence (sugar cane)
-                case 56                                      -> Item.goldenCarrot;        // 1 occurrence (golden carrot)
+                case 53, 54, 55                              -> NMItems.bonusChestLoot;  // 3 occurrence (sugar cane)
+                case 56                                      -> NMItems.bonusChestLoot;        // 1 occurrence (golden carrot)
                 case 57, 58, 59, 60, 61, 62, 63              -> BTWItems.mysteriousGland; // 7 occurrences (mysterious gland)
-                default -> Item.fishRaw;  // Fallback in case of unexpected input
+                default -> NMItems.bonusChestLoot;  // Fallback in case of unexpected input
             };
         } else if(worldProgress == 1){
-            this.cap = 905;
+            this.cap = 905 * 2;
             j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
-                case  0,  1,  2,  3,  4,  5,  6                     -> BTWItems.ironNugget;       // 7 occurrences (iron nugget)
+                case  0,  1,  2,  3,  4,  5,  6                     -> NMItems.bonusChestLoot;       // 7 occurrences (iron nugget)
                 case  7,  8,  9, 10                                 -> BTWItems.goldOreChunk;     // 4 occurrences (gold chunk)
-                case 11, 12                                         -> Item.goldNugget;           // 2 occurrences (gold nugget)
-                case 13, 14, 15, 16, 17                             -> Item.melonSeeds;           // 5 occurrences (melon seeds)
+                case 11, 12                                         -> NMItems.bonusChestLoot;           // 2 occurrences (gold nugget)
+                case 13, 14, 15, 16, 17                             -> NMItems.bonusChestLoot;           // 5 occurrences (melon seeds)
                 case 18, 19, 20, 21, 22, 23, 24, 25, 26, 27         -> Item.arrow;                // 10 occurrences (arrow)
-                case 28, 29, 30, 31, 32, 33, 34, 35                 -> BTWItems.tannedLeather;    // 8 occurrences (glue)
-                case 36, 37                                         -> Item.enchantedBook;        // 2 occurrences (enchanted book)
-                case 38, 39                                         -> BTWItems.witchWart;        // 2 occurrences (witch wart)
-                case 40, 41, 42, 43, 44, 45                         -> BTWItems.emeraldPile;      // 6 occurrences (emerald pile)
+                case 28, 29, 30, 31, 32, 33, 34, 35                 -> NMItems.bonusChestLoot;    // 8 occurrences (glue)
+                case 36, 37                                         -> NMItems.bonusChestLoot;        // 2 occurrences (enchanted book)
+                case 38, 39                                         -> NMItems.bonusChestLoot;        // 2 occurrences (witch wart)
+                case 40, 41, 42, 43, 44, 45                         -> NMItems.bonusChestLoot;      // 6 occurrences (emerald pile)
                 case 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 -> BTWItems.gear;             // 12 occurrences (gear)
                 case 58, 59, 60, 61, 62, 63, 64, 65                 -> BTWItems.mysteriousGland;  // 8 occurrences (mysterious gland)
                 case 66, 67, 68, 69, 70, 71, 72, 73                 -> NMItems.calamari;          // 8 occurrences (calamari)
-                case 74, 75, 76                                     -> BTWItems.nethercoal;       // 3 occurrences (nethercoal)
-                case 77, 78, 79                                     -> Item.glowstone;            // 3 occurrences (glowstone dust)
+                case 74, 75, 76                                     -> NMItems.bonusChestLoot;       // 3 occurrences (nethercoal)
+                case 77, 78, 79                                     -> NMItems.bonusChestLoot;            // 3 occurrences (glowstone dust)
                 case 80, 81, 82, 83                                 -> Item.book;                 // 4 occurrences (book)
-                case 84                                             -> Item.diamond;              // 1 occurrence (diamond)
-                case 85, 86                                         -> NMItems.bloodOrb;          // 2 occurrences (blood orb)
-                default -> Item.fishRaw;  // Fallback in case of unexpected input
+                case 84                                             -> NMItems.bonusChestLoot;              // 1 occurrence (diamond)
+                case 85, 86                                         -> NMItems.bonusChestLoot;          // 2 occurrences (blood orb)
+                default -> NMItems.bonusChestLoot;  // Fallback in case of unexpected input
             };
-        } else if(worldProgress == 2){
-            this.cap = 600;
+        } else{
+            this.cap = 600 * 2;
             j = this.rand.nextInt((int) (this.cap * capModifier));
             itemToDrop = switch (j) {
                 case  0,  1,  2,  3,  4,  5             -> Item.goldNugget;             // 6 occurrences (gold nugget)
-                case  6,  7,  8,  9                     -> BTWItems.steelNugget;        // 4 occurrences (steel nugget)
-                case 10, 11                             -> BTWItems.broadheadArrowHead; // 2 occurrences (broad-head arrowhead)
+                case  6,  7,  8,  9                     -> NMItems.bonusChestLoot;        // 4 occurrences (steel nugget)
+                case 10, 11                             -> NMItems.bonusChestLoot; // 2 occurrences (broad-head arrowhead)
                 case 12, 13, 14, 15, 16, 17             -> BTWItems.rope;               // 6 occurrences (rope)
                 case 18, 19, 20, 21, 22, 23, 24, 25     -> NMItems.calamari;            // 8 occurrences (calamari)
-                case 26                                 -> Item.diamond;                // 1 occurrence (diamond)
-                case 27, 28, 29, 30                     -> BTWItems.soulFlux;           // 4 occurrences (soul flux)
-                case 31, 32, 33, 34, 35, 36, 37         -> Item.expBottle;              // 7 occurrences (exp bottle)
+                case 26                                 -> NMItems.bonusChestLoot;                // 1 occurrence (diamond)
+                case 27, 28, 29, 30                     -> NMItems.bonusChestLoot;           // 4 occurrences (soul flux)
+                case 31, 32, 33, 34, 35, 36, 37         -> NMItems.bonusChestLoot;              // 7 occurrences (exp bottle)
                 case 38, 39, 40, 41, 42, 43, 44, 45     -> Item.book;                   // 8 occurrences (book)
-                case 46, 47, 48, 49, 50, 51, 52, 53, 54 -> Item.emerald;                // 9 occurrences (emerald)
-                default -> Item.fishRaw;  // Fallback in case of unexpected input
-            };
-        } else{
-            this.cap = 740;
-            j = this.rand.nextInt((int) (this.cap * capModifier));
-            itemToDrop = switch (j) {
-                case  0,  1,  2,  3                     -> NMItems.magicFeather;       // 4 occurrences (magic feather)
-                case  4,  5,  6                         -> NMItems.creeperChop;        // 3 occurrences (creeper chop)
-                case  7,  8,  9, 10, 11                 -> NMItems.magicArrow;         // 5 occurrences (magic arrow)
-                case 12, 13                             -> NMItems.bloodMilk;          // 2 occurrences (blood-milk)
-                case 14, 15, 16, 17, 18, 19, 20, 21, 22 -> NMItems.calamari;           // 9 occurrences (calamari)
-                case 23, 24, 25, 26, 27, 28, 29         -> NMItems.silverLump;         // 7 occurrences (silver lump)
-                case 30, 31, 32, 33, 34, 35, 36, 37, 38 -> BTWItems.soulFlux;          // 9 occurrences (soul flux)
-                case 39                                 -> NMItems.voidMembrane;       // 1 occurrence (void membrane)
-                case 40, 41, 42, 43, 44, 45, 46, 47     -> NMItems.voidSack;           // 8 occurrences (void sack)
-                case 48, 49, 50                         -> NMItems.charredFlesh;       // 3 occurrences (charred flesh)
-                case 51, 52, 53, 54                     -> NMItems.ghastTentacle;      // 4 occurrences (ghast tentacle)
-                case 55                                 -> NMItems.creeperTear;        // 1 occurrence (creeper tear)
-                case 56, 57, 58, 59, 60, 61             -> NMItems.spiderFangs;        // 6 occurrences (spider fangs)
-                case 62, 63, 64                         -> NMItems.speedCoil;               // 3 occurrences (greg)
-                case 65, 66, 67, 68, 69, 70, 71, 72, 73 -> NMItems.waterRod;           // 9 occurrences (water rod)
-                case 74                                 -> NMItems.elementalRod;       // 1 occurrence (elemental rod)
-                default -> Item.fishRaw;  // Fallback in case of unexpected input
+                case 46, 47, 48, 49, 50, 51, 52, 53, 54 -> NMItems.bonusChestLoot;                // 9 occurrences (emerald)
+                default -> NMItems.bonusChestLoot;  // Fallback in case of unexpected input
             };
         }
         return new ItemStack(itemToDrop,1,0);
     }
-    //6 / 540 = 0.0111
-    //4 / 540 = 0.0074
-    //2 / 540 = 0.0037
-    //6 / 540 = 0.0111
-    //8 / 540 = 0.0148
-    //1 / 540 = 0.0019
-    //4 / 540 = 0.0074
-    //7 / 540 = 0.0130
-    //8 / 540 = 0.0148
-    //9 / 540 = 0.0167
-    //```
-    //4 / 365 = 0.01095890
-    //3 / 365 = 0.00821918
-    //5 / 365 = 0.01369863
-    //2 / 365 = 0.00547945
-    //9 / 365 = 0.02465753
-    //7 / 365 = 0.01917808
-    //9 / 365 = 0.02465753
-    //1 / 365 = 0.00273973
-    //8 / 365 = 0.02191781
-    //3 / 365 = 0.00821918
-    //4 / 365 = 0.01095890
-    //1 / 365 = 0.00273973
-    //6 / 365 = 0.01643836
-    //3 / 365 = 0.00821918
-    //9 / 365 = 0.02465753
-    //1 / 365 = 0.00273973
-    //```
-    //7 / 905 = 0.0077
-    //4 / 905 = 0.0044
-    //2 / 905 = 0.0022
-    //5 / 905 = 0.0055
-    //10 /905 = 0.0110
-    //8 / 905 = 0.0088
-    //2 / 905 = 0.0022
-    //2 / 905 = 0.0022
-    //6 / 905 = 0.0066
-    //12 /905 = 0.0133
-    //8 / 905 = 0.0088
-    //8 / 905 = 0.0088
-    //3 / 905 = 0.0033
-    //3 / 905 = 0.0033
-    //4 / 905 = 0.0044
-    //1 / 905 = 0.0011
-    //2 / 905 = 0.0022
-    //```
 
 
     @Unique
