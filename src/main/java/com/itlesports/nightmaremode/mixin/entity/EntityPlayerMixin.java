@@ -22,7 +22,6 @@ import com.itlesports.nightmaremode.util.elements.NMDamageSource;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
-import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityFireworkRocketAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -1237,57 +1236,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
-    }
-
-
-    // removes the check for daytime and kicking the player out of the bed if it turns day. this enables infinite sleeping
-    @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
-    private boolean doNotCareIfDay(World instance){
-        if (!(Block.blocksList[this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))] instanceof BedrollBlock)) {
-            return false;
-        } else {
-            return this.worldObj.skylightSubtracted < 4;
-        }
-    }
-
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
-    private boolean doNotCareIfDay1(World instance) {
-        if (!(Block.blocksList[this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))] instanceof BedrollBlock)) {
-            return false;
-        } else {
-            return this.worldObj.skylightSubtracted < 4;
-        }
-    }
-
-    @Redirect(method = "sleepInBedAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldProvider;isSurfaceWorld()Z"))
-    private boolean canSleepInNether(WorldProvider instance){
-        return true;
-    }
-
-    @ModifyConstant(method = "movementModifierWhenRidingBoat", constant = @Constant(doubleValue = 0.35))
-    private double windmillSpeedBoat(double constant){
-        EntityPlayer thisObj = (EntityPlayer)(Object)this;
-        if(isPlayerHoldingWindmill(thisObj)){
-            return 5.0;
-        }
-        return constant;
-    }
-
-
-//    @Inject(method = "canHarvestBlock", at = @At("HEAD"),cancellable = true)
-//    private void hardCodeSpecificBlocksToBeMinableBySpecificTools(Block block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
-//        ItemStack held = this.getHeldItem();
-//        if (held != null && held.getItem() instanceof ItemBloodPickaxe && block == Block.netherrack) {
-//            cir.setReturnValue(true);
-//        }
-//    }
-
-    @Unique private boolean isPlayerHoldingWindmill(EntityPlayer player) {
-        ItemStack currentItemStack = player.inventory.mainInventory[player.inventory.currentItem];
-        if (currentItemStack != null) {
-            return currentItemStack.itemID == BTWItems.windMill.itemID;
-        }
-        return false;
     }
 
     @Unique
