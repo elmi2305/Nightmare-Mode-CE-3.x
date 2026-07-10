@@ -1117,32 +1117,9 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
     private static void addSoulforgeRecipes(){
-        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.canvas), new Object[]{"MMMM", "MFFM", "MFFM", "MMMM", Character.valueOf('F'), BTWItems.fabric, Character.valueOf('M'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE)});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(Block.cobblestoneMossy, 4),new Object[]{"####", "#XX#", "#XX#", "####", Character.valueOf('#'), Block.vine, Character.valueOf('X'), BTWBlocks.looseCobblestone});
         // packed blocks
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.aestheticEarth.blockID, 4, 6),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), BTWBlocks.looseDirt});
         RecipeManager.addSoulforgeRecipe(new ItemStack(Block.sandStone, 4),new Object[]{"####", "####", "####", "####", Character.valueOf('#'), Block.sand});
-
-        // block dispenser
-//        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{"####", "#ZZ#", "YTTY", "YXXY", Character.valueOf('#'), TagInstance.of(BTWTags.mossyCobblestones), Character.valueOf('X'), Item.redstone, Character.valueOf('Y'), TagInstance.of(BTWTags.stoneBrickItems), Character.valueOf('Z'), BTWItems.soulUrn, Character.valueOf('T'), Block.torchRedstoneActive});
-//        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{"####", "#ZZ#", "YTTY", "YXXY", Character.valueOf('#'), TagInstance.of(BTWTags.mossyCobblestones), Character.valueOf('X'), Item.redstone, Character.valueOf('Y'), TagInstance.of(BTWTags.stoneBrickItems), Character.valueOf('Z'), BTWItems.soulUrn, Character.valueOf('T'), Block.torchRedstoneActive});
-
-        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{"# # ", " # #", "# # ", " # #", Character.valueOf('#'), BTWItems.ironNugget});
-        RecipeManager.removeSoulforgeRecipe(new ItemStack(BTWItems.mail, 2), new Object[]{" # #", "# # ", " # #", "# # ", Character.valueOf('#'), BTWItems.ironNugget});
-
-        // make soulforge craftable with soulforge
-        RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.soulforge, 1), new Object[]{"#BB#", " #  ", " #  ", "####", Character.valueOf('#'), BTWItems.soulforgedSteelIngot,Character.valueOf('B'), BTWBlocks.soulforgedSteelBlock});
-//        // add loom
-//        RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.loom, 1), new Object[]{
-//                "AAAA",
-//                "AAAA",
-//                "AAAA",
-//                "AAAA",
-//                Character.valueOf('A'), BTWItems.soulforgedSteelIngot,
-//                Character.valueOf('B'), BTWItems.soulforgedSteelIngot,
-//                Character.valueOf('C'), BTWItems.soulforgedSteelIngot,
-//                Character.valueOf('D'), BTWBlocks.soulforgedSteelBlock});
-
 
         finishRecipes("Soulforge Recipes");
 
@@ -1197,7 +1174,6 @@ public abstract class NMInitializer implements AchievementExt {
         // add misc recipes
         RecipeManager.addRecipe(new ItemStack(NMItems.eclipseBow,1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.darksunFragment, 1), Character.valueOf('X'), new ItemStack(BTWItems.compositeBow)});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane, 8), new Object[]{new ItemStack(BTWBlocks.hamper)});
-        RecipeManager.addRecipe(new ItemStack(BTWItems.canvas,1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(BTWItems.fabric)});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironKnittingNeedles,1), new Object[]{"# #", "# #", "#X#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('X'), Item.silk});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),Item.reed,Item.reed,Item.reed,Item.reed});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.silk,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),BTWItems.tangledWeb});
@@ -1429,6 +1405,7 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         // crimson bottle
+        NMUtils.logTodo(); // recipe for bm bottle
         RecipeManager.addRecipe(new ItemStack(NMPostItems.bloodMoonBottle), new Object[]{
                 "HSH",
                 "BEB",
@@ -1439,23 +1416,6 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('H'), BTWItems.hellfireDust
         });
 
-        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 6), new Object[]{
-                "SNS",
-                "NIN",
-                "SNS",
-                Character.valueOf('I'), Item.ingotIron,
-                Character.valueOf('S'), BTWTags.strings,
-                Character.valueOf('N'), BTWItems.ironNugget
-        });
-
-        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 6), new Object[]{
-                "SNS",
-                "NIN",
-                "SNS",
-                Character.valueOf('I'), Item.ingotIron,
-                Character.valueOf('N'), BTWTags.strings,
-                Character.valueOf('S'), BTWItems.ironNugget
-        });
 
         // new BD recipe:
 //        RecipeManager.addRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{
