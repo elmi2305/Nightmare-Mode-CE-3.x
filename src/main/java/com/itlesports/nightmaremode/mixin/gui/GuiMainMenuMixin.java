@@ -105,12 +105,12 @@ public class GuiMainMenuMixin extends GuiScreen {
 
             WorldSettings settings = NMUtils.decodeSettings(NightmareMode.getInstance().addonConfig.getString("WorldInfoString"), seed);
 
-            ISaveFormat var1 = this.mc.getSaveLoader();
+            ISaveFormat saveLoader = this.mc.getSaveLoader();
 
 
             List saveList = null;
             try {
-                saveList = var1.getSaveList();
+                saveList = saveLoader.getSaveList();
             } catch (AnvilConverterException ignored) {}
 
             saveList.sort(null);
