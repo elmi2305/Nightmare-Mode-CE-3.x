@@ -1153,13 +1153,13 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
     private static void addMillstoneRecipes(){
-        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
-        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
-        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.witchLocator,4), new ItemStack(BTWItems.witchWart));
+//        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
+//        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
+//        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.witchLocator,4), new ItemStack(BTWItems.witchWart));
 
         // improve netherrack grinding rates
-        MillStoneCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.groundNetherrack), new ItemStack(Block.netherrack));
-        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.groundNetherrack, 8), new ItemStack(Block.netherrack));
+//        MillStoneCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.groundNetherrack), new ItemStack(Block.netherrack));
+//        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.groundNetherrack, 8), new ItemStack(Block.netherrack));
         finishRecipes("Millstone Recipes");
 
     }
