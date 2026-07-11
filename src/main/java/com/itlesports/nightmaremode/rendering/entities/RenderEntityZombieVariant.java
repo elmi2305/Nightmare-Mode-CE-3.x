@@ -27,6 +27,20 @@ public class RenderEntityZombieVariant
     protected ModelBiped field_82437_k;
     protected ModelBiped field_82435_l;
 
+
+    private static final ResourceLocation bz0 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame00.png");
+    private static final ResourceLocation bz1 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame11.png");
+    private static final ResourceLocation bz2 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame22.png");
+    private static final ResourceLocation bz3 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame33.png");
+    private static final ResourceLocation bz4 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame44.png");
+
+    private static final ResourceLocation IMPOSTER = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
+    private static final ResourceLocation FLOWER = new ResourceLocation("nightmare:textures/entity/flowerZombie.png");
+    private static final ResourceLocation STONE = new ResourceLocation("nightmare:textures/entity/zombieStone.png");
+    private static final ResourceLocation SHADOW = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
+    private static final ResourceLocation SHADOW_ECLIPSE = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
+
+
     public RenderEntityZombieVariant() {
         super(new ModelZombie(), 0.5f, 1.0f);
     }
@@ -47,11 +61,6 @@ public class RenderEntityZombieVariant
         super.doRenderLiving(par1EntityZombie, par2, par4, par6, par8, par9);
     }
 
-    private static final ResourceLocation bz0 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame00.png");
-    private static final ResourceLocation bz1 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame11.png");
-    private static final ResourceLocation bz2 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame22.png");
-    private static final ResourceLocation bz3 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame33.png");
-    private static final ResourceLocation bz4 = new ResourceLocation("nightmare:textures/entity/zombieFleshFrame44.png");
 
     @Unique
     private ResourceLocation getTextureForTicksExisted(int ticks){
@@ -73,34 +82,24 @@ public class RenderEntityZombieVariant
         }
     }
 
-    private static final ResourceLocation izTextures = new ResourceLocation("nightmare:textures/entity/zombieImposter.png");
-
-    private static final ResourceLocation fzTextures = new ResourceLocation("nightmare:textures/entity/flowerZombie.png");
-
-    @Unique private static final ResourceLocation ZOMBIE_STONE = new ResourceLocation("nightmare:textures/entity/zombieStone.png");
-
-
-
-    private static final ResourceLocation szTextures = new ResourceLocation("nightmare:textures/entity/shadowzombie.png");
-    private static final ResourceLocation szTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
 
     protected ResourceLocation func_110863_a(EntityZombieVariant zombie) {
         if(zombie instanceof EntityBloodZombie){
             return this.getTextureForTicksExisted(zombie.ticksExisted);
         }
         if(zombie instanceof EntityShadowZombie){
-            return szTextures;
+            return NMUtils.getIsMobEclipsed(zombie) ? SHADOW_ECLIPSE : SHADOW;
         }
         if(zombie instanceof EntityStoneZombie) {
-            return ZOMBIE_STONE;
+            return STONE;
         }
         if(zombie instanceof EntityZombieImposter){
-            return izTextures;
+            return IMPOSTER;
         }
         if(zombie instanceof FlowerZombie){
-            return fzTextures;
+            return FLOWER;
         }
-        return NMUtils.getIsMobEclipsed(zombie) ? szTexturesEclipse : szTextures;
+        return null;
     }
 
     protected void func_82428_a(EntityZombieVariant par1EntityZombie, float par2) {

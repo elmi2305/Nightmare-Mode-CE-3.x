@@ -254,7 +254,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     @Inject(method = "attackEntityAsMob", at = @At("HEAD"))
     private void manageEclipseAttack(Entity attackedEntity, CallbackInfoReturnable<Boolean> cir){
         if(NMUtils.getIsMobEclipsed(this)){
-            if(rand.nextInt(3) == 0 && attackedEntity instanceof EntityLivingBase){`
+            if(rand.nextInt(3) == 0 && attackedEntity instanceof EntityLivingBase){
                 ((EntityLivingBase) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 40,0));
             }
         }
