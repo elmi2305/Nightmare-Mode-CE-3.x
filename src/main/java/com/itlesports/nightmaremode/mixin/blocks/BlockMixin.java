@@ -1,9 +1,9 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.item.items.PickaxeItem;
-import btw.community.nightmaremode.NightmareMode;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
+import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
@@ -33,11 +33,18 @@ public abstract class BlockMixin {
 
     // IFHY disabled, but could be reimplemented later
 
-    @Inject(method = "harvestBlock", at = @At("HEAD"))
-    private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int par6, CallbackInfo ci){
-//        ItemStack item = player.getHeldItem();
+    @Inject(method = "harvestBlock", at = @At("HEAD"), cancellable = true)
+    private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int meta, CallbackInfo ci){
+        player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+        player.addHarvestBlockExhaustion(this.blockID, x, y, z, meta);
+
+        ItemStack item = player.getHeldItem();
+        if(item == null) return;
+        int blockID = this.blockID;
+
+
+
 //        if (item != null && item.getItem() instanceof PickaxeItem pi) {
-//            int blockID = this.blockID;
 //
 //            if(EnchantmentHelper.getSilkTouchModifier(player)){return;}
 //
@@ -57,6 +64,8 @@ public abstract class BlockMixin {
 //                }
 //            }
 //        }
+
+
         logTodo();
         // here is where we add additional drops for when a block gets broken by aspecific tool
     }
@@ -68,6 +77,10 @@ public abstract class BlockMixin {
     }
 
     @Unique private static void summonEntity(World world, int x, int y, int z, Item item){
-        world.spawnEntityInWorld(new FloatingItemEntity(world, x, y, z, new ItemStack(item)));
+        int meta = 0;
+        if(item.itemID == BTWItems.sharpStone.itemID){
+            meta = world.rand.nextInt(3) + 1;
+        }
+        world.spawnEntityInWorld(new FloatingItemEntity(world, x, y, z, new ItemStack(item, 1, meta)));
     }
 }
