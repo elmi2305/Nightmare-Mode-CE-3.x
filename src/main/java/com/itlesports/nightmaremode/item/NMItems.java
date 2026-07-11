@@ -101,6 +101,7 @@ public class NMItems {
     public static final Item sharpTwig;
     public static final Item sharkBarkTwig;
     public static final Item woodClump;
+    public static final Item leaf;
     static {
         doNightmareModeItems();
 
@@ -109,6 +110,7 @@ public class NMItems {
         sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("twigSharp");
         sharkBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("twigSharpBark");
         woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setDuration(24000).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("woodClump").setCreativeTab(CreativeTabs.tabMaterials);
+        leaf = new NMItem(2605).setTextureName("nightmare:ifhyLeaf").setUnlocalizedName("leaf").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

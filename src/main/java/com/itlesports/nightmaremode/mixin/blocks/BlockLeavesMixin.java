@@ -40,7 +40,7 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         if(rand.nextInt(8) == 0){
             cir.setReturnValue(NMItems.twig.itemID);
         }
-        cir.setReturnValue(0);
+        cir.setReturnValue(NMItems.leaf.itemID);
     }
 
     @Environment(value= EnvType.CLIENT)
