@@ -22,10 +22,7 @@ public class RenderZombieMixin {
 
     @Inject(method = "func_110863_a", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityZombie zomb, CallbackInfoReturnable<ResourceLocation> cir){
-        if(zomb instanceof EntityStoneZombie){
-            cir.setReturnValue(ZOMBIE_STONE);
-            return;
-        } else if(NMUtils.getIsMobEclipsed(zomb)){
+        if(NMUtils.getIsMobEclipsed(zomb)){
             if (zomb instanceof EntityPigZombie) {
                 cir.setReturnValue(PIG_ECLIPSE);
             } else{

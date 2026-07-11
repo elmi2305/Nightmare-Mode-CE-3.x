@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.entity.variants.*;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
 import net.minecraft.src.*;
@@ -19,8 +20,8 @@ public class BTWRenderMapperMixin {
     @Inject(method = "initEntityRenderers", at = @At("TAIL"),remap = false)
     private static void doNightmareEntityRenderMapping(CallbackInfo ci){
         RenderManager.addEntityRenderer(EntityFireCreeper.class, new RenderCreeperVariant());
-        RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderZombieVariant());
-        RenderManager.addEntityRenderer(EntityBloodZombie.class, new RenderZombieVariant());
+        RenderManager.addEntityRenderer(EntityShadowZombie.class, new RenderEntityZombieVariant());
+        RenderManager.addEntityRenderer(EntityBloodZombie.class, new RenderEntityZombieVariant());
         RenderManager.addEntityRenderer(EntityNightmareGolem.class, new RenderNightmareGolem());
         RenderManager.addEntityRenderer(EntityObsidianCreeper.class, new RenderCreeperVariant());
         RenderManager.addEntityRenderer(EntityNitroCreeper.class, new RenderCreeperVariant());
@@ -31,7 +32,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityGlitchCreeper.class, new RenderCreeperVariant());
 
         RenderManager.addEntityRenderer(EntityFauxVillager.class, new RenderFauxVillager());
-        RenderManager.addEntityRenderer(EntityZombieImposter.class, new RenderZombieVariant());
+        RenderManager.addEntityRenderer(EntityZombieImposter.class, new RenderEntityZombieVariant());
         RenderManager.addEntityRenderer(EntityBloodMoonSkeleton.class, new RenderSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonDrowned.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
@@ -54,6 +55,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityVoidSquid.class, new VoidSquidRender());
         RenderManager.addEntityRenderer(EntityAwakenedWither.class, new RenderWither());
         RenderManager.addEntityRenderer(EntityWalker.class, new RenderWalker());
+        RenderManager.addEntityRenderer(EntityZombieVariant.class, new RenderEntityZombieVariant());
 
 
 

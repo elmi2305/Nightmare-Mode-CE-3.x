@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.rendering.entities;
 
 import com.itlesports.nightmaremode.entity.underworld.FlowerZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityStoneZombie;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
 import com.itlesports.nightmaremode.entity.EntityZombieImposter;
@@ -27,15 +28,8 @@ public class RenderZombieVariant extends RenderZombie {
     private static final ResourceLocation szTexturesEclipse = new ResourceLocation("nightmare:textures/entity/shadowzombieEclipse.png");
 
     @Override protected ResourceLocation func_110863_a(EntityZombie zombie) {
-        if(zombie instanceof EntityBloodZombie){
-            return this.getTextureForTicksExisted(zombie.ticksExisted);
-        }
-        if(zombie instanceof EntityZombieImposter){
-            return izTextures;
-        }
-        if(zombie instanceof FlowerZombie){
-            return fzTextures;
-        }
+
+
         return NMUtils.getIsMobEclipsed(zombie) ? szTexturesEclipse : szTextures;
     }
 

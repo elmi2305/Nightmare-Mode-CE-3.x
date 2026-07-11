@@ -8,6 +8,7 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.AITasks.EntityAIShadowTeleport;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -15,7 +16,7 @@ import net.minecraft.src.*;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
-public class EntityShadowZombie extends EntityZombie {
+public class EntityShadowZombie extends EntityZombieVariant {
     public EntityShadowZombie(World par1World) {
         super(par1World);
         this.isImmuneToFire = true;

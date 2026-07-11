@@ -112,6 +112,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityCreeperGhast.class, 1, 1, 2);
         addMobToAllBiomes(EntityWalker.class, 1, 1, 1);
 
+
         if (NightmareMode.magicMonsters != null && NightmareMode.magicMonsters) {
             clearAllLandBiomes();
             addMobToAllLandBiomes(EntityWitch.class, 3, 1, 2);

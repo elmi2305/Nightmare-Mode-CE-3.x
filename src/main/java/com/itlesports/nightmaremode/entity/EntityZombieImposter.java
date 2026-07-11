@@ -2,11 +2,12 @@ package com.itlesports.nightmaremode.entity;
 
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
-public class EntityZombieImposter extends EntityZombie {
+public class EntityZombieImposter extends EntityZombieVariant {
     public EntityZombieImposter(World par1World) {
         super(par1World);
         this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehaviorHostile.class);
