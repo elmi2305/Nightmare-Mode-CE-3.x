@@ -6,11 +6,11 @@ import api.item.items.ToolItem;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
-import btw.block.blocks.BedrollBlock;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -111,6 +111,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
         if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             cir.setReturnValue(false);
+        }
+    }
+    @Inject(method = "fall", at = @At("HEAD"))
+    private void crushBlocksBelow(float fallDistance, CallbackInfo ci){
+        int xPos = (int)this.posX;
+        int yBelow = (int)(this.posY - 0.75f);
+        int zPos = (int)this.posZ;
+        if(this.worldObj.getBlockId(xPos, yBelow, zPos) == BTWBlocks.ironOreChunk.blockID && this.rand.nextInt(8) == 0 && fallDistance > 0.9f){
+            this.worldObj.playSound(xPos, yBelow, zPos, "random.break", 0.5f, 0.9f);
+            this.worldObj.setBlockWithNotify(xPos, yBelow, zPos, NMBlocks.blockCrushedIronLayer.blockID);
         }
     }
 
