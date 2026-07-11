@@ -8,10 +8,12 @@ import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTexture
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMBlocks {
@@ -102,6 +104,8 @@ public class NMBlocks {
     public static Block customLog;
     public static Block blockBloodIngot;
     public static Block blockRefinedDiamondIngot;
+    public static Block blockCrushedIronLayer;
+    public static Block blockWashedIronLayer;
 
 
 
@@ -111,6 +115,27 @@ public class NMBlocks {
     // -------------------------------------------------------------------------
 
     public static void initNightmareBlocks(){
+
+
+        blockCrushedIronLayer = new NMBlockGroundLayer(2400, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_STOMPED_CRUSHED_IRON + 256).setHardness(6f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyCrushedIron").setTextureName("ifhyCrushedIron");
+        Item.itemsList[blockCrushedIronLayer.blockID] = new NMItemBlock(NMBlocks.blockCrushedIronLayer.blockID - 256);
+//
+        blockWashedIronLayer = new NMBlockGroundLayer(2401, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_WASHED_IRON + 256).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(1f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyCrushedIron").setTextureName("ifhyCrushedIron");
+        Item.itemsList[blockWashedIronLayer.blockID] = new NMItemBlock(NMBlocks.blockWashedIronLayer.blockID - 256);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         steelOre = (new SteelOre(2305)).setHardness(13.0F).setResistance(200.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmSteelOre").setTextureName("nightmare:steel_ore");
         Item.itemsList[steelOre.blockID] = new NMItemBlock(NMBlocks.steelOre.blockID - 256);
 
@@ -323,6 +348,7 @@ public class NMBlocks {
 
         blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
         Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
+
 
 
     }

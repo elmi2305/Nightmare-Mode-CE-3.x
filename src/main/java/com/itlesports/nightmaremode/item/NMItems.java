@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.item;
 
 import btw.item.BTWTags;
 import btw.item.items.*;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
@@ -218,6 +220,8 @@ public class NMItems {
         ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new NMItem(2418).setTextureName("nightmare:nmAchievementTripleTear").hideFromEMI();
         ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nightmare:nmAchievementBloodZombie").hideFromEMI();
     }
+
+    public static void runItemInit(){}
 
 
 

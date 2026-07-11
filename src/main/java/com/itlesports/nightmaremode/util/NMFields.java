@@ -76,4 +76,8 @@ public class NMFields {
     public static final double HEIGHT_DRAIN_MULTIPLIER = 0.012;
     public static final double BIOME_DRAIN_MULTIPLIER = 0.04;
     public static final double ENEMY_DRAIN_MULTIPLIER = 0.015;
+
+    // cached item IDs
+    public static final int ITEM_WASHED_IRON = 2608;
+    public static final int ITEM_STOMPED_CRUSHED_IRON = 2609;
 }
