@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.entity.variants;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityStoneZombie extends EntityZombie {
+public class EntityStoneZombie extends EntityZombieVariant {
     private double layer = 0;
 
     public EntityStoneZombie(World par1World) {

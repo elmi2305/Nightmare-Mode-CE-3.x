@@ -6,7 +6,6 @@ import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.entity.variants.*;
 import net.minecraft.src.EntityList;
-import net.minecraft.src.EntitySpider;
 import net.minecraft.src.TileEntity;
 
 public class NMEntityMapper {

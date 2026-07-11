@@ -3,13 +3,14 @@ package com.itlesports.nightmaremode.entity.variants;
 import api.entity.mob.behavior.SimpleWanderBehavior;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
-public class EntityBloodZombie extends EntityZombie {
+public class EntityBloodZombie extends EntityZombieVariant {
     public EntityBloodZombie(World par1World) {
         super(par1World);
         this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);

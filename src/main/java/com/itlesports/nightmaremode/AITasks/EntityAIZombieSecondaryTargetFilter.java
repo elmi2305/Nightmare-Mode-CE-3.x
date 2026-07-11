@@ -18,6 +18,7 @@ public class EntityAIZombieSecondaryTargetFilter
 
     public boolean isValidTargetOverrideHelper(Entity var1)
     {
+        if(!this.zombie.attacksAnimals) return false;
         return var1 instanceof EntityCow || var1 instanceof EntityPig || var1 instanceof EntityHorse || var1 instanceof EntitySheep || var1 instanceof EntityVillager;
     }
 }

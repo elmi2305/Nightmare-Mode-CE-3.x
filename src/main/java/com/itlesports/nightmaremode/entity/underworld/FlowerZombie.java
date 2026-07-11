@@ -4,9 +4,10 @@ import btw.entity.attribute.BTWAttributes;
 import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAIBurrow;
 import com.itlesports.nightmaremode.AITasks.EntityAISummonBabies;
+import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
 import net.minecraft.src.*;
 
-public class FlowerZombie extends EntityZombie implements IFlowerMob{
+public class FlowerZombie extends EntityZombieVariant implements IFlowerMob{
     public FlowerZombie(World par1World) {
         super(par1World);
         this.isImmuneToFire = true;

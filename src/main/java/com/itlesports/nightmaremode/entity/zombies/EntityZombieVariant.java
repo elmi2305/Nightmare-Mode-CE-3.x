@@ -47,6 +47,7 @@ public class EntityZombieVariant
     private int conversionTime;
     public int villagerClass = -1;
     private IEntitySelector targetEntitySelector;
+    public boolean attacksAnimals = false;
 
 
     public EntityZombieVariant(World par1World) {
@@ -440,12 +441,6 @@ public class EntityZombieVariant
         if((this.ticksExisted & 3) == 0 && this.timeSpentBreaking > 0){
             this.timeSpentBreaking--;
         }
-        if (!this.worldObj.isRemote && this.isConverting()) {
-            --this.conversionTime;
-            if (this.conversionTime <= 0) {
-                this.convertToVillager();
-            }
-        }
         EntityLivingBase target = this.getAttackTarget();
         if(target != null && !(target instanceof EntityPlayer)){
             // specifically if they're targetting an animal or something else that isn't the player
@@ -592,7 +587,7 @@ public class EntityZombieVariant
 
     private float modifyChanceToHaveIronTool(){
         if (this.worldObj != null) {
-            if((EntityZombie)(Object)this instanceof EntityShadowZombie){
+            if((EntityZombieVariant)(Object)this instanceof EntityShadowZombie){
                 return 0;
             }
             int worldProgress = NMUtils.getWorldProgress();
@@ -609,7 +604,7 @@ public class EntityZombieVariant
     @Override
     protected void addRandomArmor() {
         this.entityLivingAddRandomArmor();
-        EntityZombie thisObj =(EntityZombie)(Object)this;
+        EntityZombieVariant thisObj =(EntityZombieVariant) (Object)this;
         if(thisObj instanceof EntityBloodZombie) {return;}
         if (this.rand.nextFloat() < modifyChanceToHaveIronTool()) {
             int iHeldType = this.rand.nextInt(3);
@@ -836,23 +831,6 @@ public class EntityZombieVariant
         return false;
     }
 
-    protected void convertToVillager() {
-        EntityVillager newVillager = EntityVillager.createVillagerFromProfession(this.worldObj, this.villagerClass);
-        newVillager.copyLocationAndAnglesFrom(this);
-        newVillager.onSpawnWithEgg(null);
-        if (this.villagerClass == 0) {
-            newVillager.setDirtyPeasant(1);
-        }
-        newVillager.func_82187_q();
-        if (this.isChild()) {
-            newVillager.setGrowingAge(-newVillager.getTicksForChildToGrow());
-        }
-        this.worldObj.removeEntity(this);
-        this.worldObj.spawnEntityInWorld(newVillager);
-        newVillager.addPotionEffect(new PotionEffect(Potion.confusion.id, 200, 0));
-        this.worldObj.playAuxSFXAtEntity(null, 1017, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-    }
-
     @Override
     protected void modSpecificOnLivingUpdate() {
         super.modSpecificOnLivingUpdate();
@@ -1010,7 +988,7 @@ public class EntityZombieVariant
     }
 
     private void checkForLooseFood() {
-        EntityZombie thisObj =(EntityZombie)(Object)this;
+        EntityZombieVariant thisObj =(EntityZombieVariant) (Object)this;
         if(thisObj instanceof EntityBloodZombie) return;
         if (!this.worldObj.isRemote && !this.isLivingDead) {
             boolean bAte = false;
