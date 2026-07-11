@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import api.item.items.AxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -20,10 +21,15 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
         super(i, material);
     }
 
-//    @Override
-//    public boolean canConvertBlock(ItemStack stack, World world, int i, int j, int k) {
-//        return stack != null && (stack.itemID == NMItems.sharpTwig.itemID || stack.getItem() instanceof ChiselItem);
-//    }
+    @Override
+    public boolean canConvertBlock(ItemStack stack, World world, int i, int j, int k) {
+        return stack != null && (stack.itemID == NMItems.sharpTwig.itemID || stack.getItem() instanceof ChiselItem || stack.getItem() instanceof AxeItem);
+    }
+
+
+
+
+
 
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();
@@ -65,6 +71,6 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
 
     @Override
     public boolean isBreakableBarricade(World world, int i, int j, int k, boolean adv) {
-        return NMUtils.getWorldProgress() > PREHARDMODE;
+        return true;
     }
 }

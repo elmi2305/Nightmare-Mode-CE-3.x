@@ -27,35 +27,12 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         return false;
     }
 
-    @Environment(value= EnvType.CLIENT)
-    @Inject(method = "getBlockColor", at = @At(value = "RETURN"), cancellable = true)
-    private void redLeaves0(CallbackInfoReturnable<Integer> cir){
-        if(NightmareMode.crimson){
-            cir.setReturnValue(CRIMSON_COLOR);
-        }
-    }
-
     @Inject(method = "idDropped", at= @At("RETURN"),cancellable = true)
     private void allowAppleDrops(int metadata, Random rand, int fortuneModifier, CallbackInfoReturnable<Integer> cir){
         if(rand.nextInt(8) == 0){
             cir.setReturnValue(NMItems.twig.itemID);
         }
         cir.setReturnValue(NMItems.leaf.itemID);
-    }
-
-    @Environment(value= EnvType.CLIENT)
-    @Inject(method = "getRenderColor", at = @At(value = "RETURN"), cancellable = true)
-    private void redLeaves1(CallbackInfoReturnable<Integer> cir){
-        if(NightmareMode.crimson){
-            cir.setReturnValue(CRIMSON_COLOR);
-        }
-    }
-    @Environment(value= EnvType.CLIENT)
-    @Inject(method = "colorMultiplier", at = @At(value = "RETURN"), cancellable = true)
-    private void redLeaves2(CallbackInfoReturnable<Integer> cir){
-        if(NightmareMode.crimson){
-            cir.setReturnValue(CRIMSON_COLOR);
-        }
     }
 
     @Override
