@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.item.items.AxeItem;
+import api.item.items.ToolItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -23,13 +24,22 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
 
     @Override
     public boolean canConvertBlock(ItemStack stack, World world, int i, int j, int k) {
-        return stack != null && (stack.itemID == NMItems.sharpTwig.itemID || stack.getItem() instanceof ChiselItem || stack.getItem() instanceof AxeItem);
+        return stack != null && (stack.itemID == NMItems.sharpTwig.itemID || stack.itemID == NMItems.sharpBarkTwig.itemID || stack.getItem() instanceof ChiselItem || stack.getItem() instanceof AxeItem);
     }
 
+    @Override
+    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
+        if(player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof ItemTool || player.getHeldItem().getItem() instanceof ToolItem)){
+            return 0.0F;
+        }
+        return super.getPlayerRelativeBlockHardness(player, world, i, j, k);
+    }
 
-
-
-
+    @Override
+    public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
+        // drops nothing
+        return true;
+    }
 
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();

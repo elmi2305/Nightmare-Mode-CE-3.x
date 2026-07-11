@@ -3,10 +3,12 @@ package btw.community.nightmaremode;
 import api.AddonHandler;
 import api.BTWAddon;
 import api.config.AddonConfig;
+import api.item.items.ToolItem;
 import api.world.BiomeDecoratorBase;
 import api.world.data.DataEntry;
 import api.world.data.DataProvider;
 import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -135,6 +137,8 @@ public class NightmareMode extends BTWAddon {
         NMItems.bloodAxe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodHoe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodShovel.addCustomEfficiencyMultiplier(multiplier);
+        ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
+
 
         super.postSetup();
     }

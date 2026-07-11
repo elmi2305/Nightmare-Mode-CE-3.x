@@ -1,7 +1,5 @@
 package com.itlesports.nightmaremode.item;
 
-import api.item.items.ProgressiveCraftingItem;
-import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
@@ -99,18 +97,22 @@ public class NMItems {
     public static final Item bonusChestLoot;
     public static final Item twig;
     public static final Item sharpTwig;
-    public static final Item sharkBarkTwig;
+    public static final Item sharpBarkTwig;
     public static final Item woodClump;
     public static final Item leaf;
+    public static final Item twigSharpening;
+    public static final Item sharpTwigBarkWrapping;
     static {
         doNightmareModeItems();
 
-        bonusChestLoot = new NMItem(2600).setTextureName("nightmare:ifhyGarbage").setUnlocalizedName("bonusChestLoot");
-        twig = new NMItem(2601).setTextureName("nightmare:ifhyTwig").setUnlocalizedName("twig").setCreativeTab(CreativeTabs.tabMaterials);
-        sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("twigSharp");
-        sharkBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("twigSharpBark");
-        woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setDuration(24000).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("woodClump").setCreativeTab(CreativeTabs.tabMaterials);
-        leaf = new NMItem(2605).setTextureName("nightmare:ifhyLeaf").setUnlocalizedName("leaf").setCreativeTab(CreativeTabs.tabMaterials);
+        bonusChestLoot = new NMItem(2600).setTextureName("nightmare:ifhyGarbage").setUnlocalizedName("ifhyGarbage");
+        twig = new NMItem(2601).setTextureName("nightmare:ifhyTwig").setUnlocalizedName("ifhyTwig").setCreativeTab(CreativeTabs.tabMaterials);
+        sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("ifhyTwigSharp");
+        sharpBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("ifhyTwigSharpBark");
+        woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("ifhyWoodClump").setCreativeTab(CreativeTabs.tabMaterials);
+        leaf = new NMItem(2605).setTextureName("nightmare:ifhyLeaf").setUnlocalizedName("ifhyLeaf").setCreativeTab(CreativeTabs.tabMaterials);
+        twigSharpening = new NMProgressiveItem(2606, NMItems.sharpTwig.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyTwigSharpen").setUnlocalizedName("ifhyTwigSharpen").setCreativeTab(CreativeTabs.tabMaterials);
+        sharpTwigBarkWrapping = new NMProgressiveItem(2607, NMItems.sharpBarkTwig.itemID).setTargetDurability(50).setTextureName("nightmare:ifhyTwigWrap").setUnlocalizedName("ifhyTwigWrap").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

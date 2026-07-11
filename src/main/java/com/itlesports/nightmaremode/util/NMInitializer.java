@@ -1200,10 +1200,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.sinewExtractingWolf, 1, 600), new Object[]{new ItemStack(BTWItems.cookedWolfChop), new ItemStack(BTWItems.cookedWolfChop), new ItemStack(BTWItems.sharpStone)});
 
         NMUtils.logTodo(); // add sinew recipes
-//        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.sinewExtractingBeef, 1, 600), new Object[]{new ItemStack(Item.beefCooked), new ItemStack(BTWItems.sharpStone)});
-//        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.sinewExtractingBeef, 1, 600), new Object[]{new ItemStack(Item.porkCooked), new ItemStack(BTWItems.sharpStone)});
-//        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.sinewExtractingWolf, 1, 600), new Object[]{new ItemStack(BTWItems.cookedMutton), new ItemStack(BTWItems.sharpStone)});
-//        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.sinewExtractingWolf, 1, 600), new Object[]{new ItemStack(BTWItems.cookedWolfChop), new ItemStack(BTWItems.sharpStone)});
+
         // done with sinew
 
         // add blood recipes
@@ -1381,33 +1378,6 @@ public abstract class NMInitializer implements AchievementExt {
         });
 
 
-        // new BD recipe:
-//        RecipeManager.addRecipe(new ItemStack(BTWBlocks.blockDispenser), new Object[]{
-//                "MVM",
-//                "SLS",
-//                "MRM",
-//                Character.valueOf('M'), BTWTags.mossyCobblestones,
-//                Character.valueOf('L'), BTWItems.redstoneLatch,
-//                Character.valueOf('R'), Block.blockRedstone,
-//                Character.valueOf('D'), Block.vine,
-//                Character.valueOf('S'), BTWItems.soulUrn
-//        });
-
-
-
-        // dynamite
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.sawDust});
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWItems.soulDust});
-
-        RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite, 4), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWTags.sawdusts});
-        // done with dynamite
-
-        // book
-//        RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
-//        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
-        // done with book
-
-
 
         // calamari with nitre
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.curedMeat, 1), new Object[]{NMItems.calamari, BTWItems.nitre});
@@ -1429,6 +1399,10 @@ public abstract class NMInitializer implements AchievementExt {
         // potion recycling
         RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
         // done recycling
+
+
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.twigSharpening, 1, 199), new ItemStack[]{new ItemStack(NMItems.twig), new ItemStack(NMItems.twig), new ItemStack(NMItems.twig), new ItemStack(NMItems.twig)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.sharpTwigBarkWrapping, 1, 49), new Object[]{new ItemStack(NMItems.sharpTwig), BTWTags.barks, BTWTags.barks, BTWTags.barks});
 
         finishRecipes("Crafting Recipes");
 

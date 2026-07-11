@@ -87,6 +87,7 @@
     "blocks.BlockWoodMixin",
     "blocks.CampfireTileEntityMixin",
     "blocks.CementBlockMixin",
+    "blocks.ChewedLogBlockMixin",
     "blocks.CobblestoneBlockMixin",
     "blocks.CobblestoneStairsBlockMixin",
     "blocks.CookingVesselTileEntityMixin",

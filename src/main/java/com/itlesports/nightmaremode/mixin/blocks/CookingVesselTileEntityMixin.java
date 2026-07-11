@@ -8,8 +8,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(CookingVesselTileEntity.class)
 public class CookingVesselTileEntityMixin {
-    @Shadow
-    protected int stokedCooldownCounter;
+    @Shadow(remap = false) protected int stokedCooldownCounter;
 
     @ModifyConstant(method = "performNormalFireUpdate", constant = @Constant(intValue = 4350),remap = false)
     private int lowerCookTimeNormal(int constant){
