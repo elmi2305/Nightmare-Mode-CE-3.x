@@ -29,6 +29,7 @@ public class BTWItemsMixin {
         boiledPotato = new FoodItem(22242, 1, 0.0f, false, "fcItemPotatoBoiled").setAsBasicPigFood().setTextureName("btw:boiled_potato");
 
         ((ItemAccessor)pointyStick).invSetMaxDamage(1);
-
+        ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
+        ((ItemAccessor)Item.shovelWood).invSetMaxDamage(3);
     }
 }
