@@ -1,8 +1,8 @@
 package com.itlesports.nightmaremode.block.blocks.templates;
 
 import api.block.blocks.GroundCoverBlock;
-import btw.BTWMod;
 import btw.client.render.util.RenderUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class NMBlockGroundLayer extends GroundCoverBlock {
     private int ticksExisted;
+    private boolean driesOut;
+
     public NMBlockGroundLayer(int iBlockID, Material material) {
         super(iBlockID, material);
         this.setTickRandomly(true);
@@ -20,6 +22,11 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
         this.dropItemID = iDropItemID;
         return this;
     }
+    public NMBlockGroundLayer setDriesOut(boolean b) {
+        this.driesOut = b;
+        return this;
+    }
+
 
     @Environment(EnvType.CLIENT)
     private static Icon[] icons;
@@ -60,7 +67,21 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     @Override
     public void updateTick(World w, int x, int y, int z, Random rand) {
         this.ticksExisted += 20;
+
         int meta = w.getBlockMetadata(x,y,z);
+
+        if(this.ticksExisted > 10){
+            System.out.println(w.isRaining());
+            System.out.println(w.canBlockSeeTheSky(x,y+1,z));
+            System.out.println((y+1));
+            System.out.println(w.getPrecipitationHeight(x,z));
+            if(w.isRainingAtPos(x,y + 1,z)){
+                // why does it not set the block correctly
+                w.setBlockWithNotify(x,y,z, NMBlocks.blockWashedIronLayer.blockID);
+            }
+        }
+
+        if(!this.driesOut) return;
         // 100 * 4 = 400 ticks, which is 20 seconds
         w.scheduleBlockUpdate(x, x, y, z, this.tickRate(w) * 2);
 
@@ -74,6 +95,7 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
         }
         super.updateTick(w, x, y, z, rand);
     }
+
 
     @Override
     public int tickRate(World par1World) {
@@ -109,6 +131,11 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     public int idDropped(int meta, Random par2Random, int par3) {
         if(meta != 0) return 0;
         return this.dropItemID;
+    }
+
+    @Override
+    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
+        return super.getPlayerRelativeBlockHardness(player, world, i, j, k);
     }
 
     @Override
