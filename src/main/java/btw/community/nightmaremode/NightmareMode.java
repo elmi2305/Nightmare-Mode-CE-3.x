@@ -137,7 +137,6 @@ public class NightmareMode extends BTWAddon {
         NMItems.bloodAxe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodHoe.addCustomEfficiencyMultiplier(multiplier);
         NMItems.bloodShovel.addCustomEfficiencyMultiplier(multiplier);
-        ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
 
 
         super.postSetup();
@@ -217,8 +216,8 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
         AddonHandler.registerCommand(new WarpCommand(), false);
 
-
         NMBlocks.initNightmareBlocks();
+        NMItems.runItemInit();
         NMInitializer.initBeaconEffects();
         NMEntityMapper.createModEntityMappings();
         NMEntityMapper.createTileEntityMappings();
