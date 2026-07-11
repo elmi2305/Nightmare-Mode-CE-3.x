@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import btw.item.items.ChiselItem;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +20,10 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
         super(i, material);
     }
 
+//    @Override
+//    public boolean canConvertBlock(ItemStack stack, World world, int i, int j, int k) {
+//        return stack != null && (stack.itemID == NMItems.sharpTwig.itemID || stack.getItem() instanceof ChiselItem);
+//    }
 
     public boolean isFallingBlock() {
         return NightmareMode.noSkybases || super.isFallingBlock();

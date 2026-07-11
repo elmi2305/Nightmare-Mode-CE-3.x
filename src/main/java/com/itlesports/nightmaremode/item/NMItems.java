@@ -1,12 +1,12 @@
 package com.itlesports.nightmaremode.item;
 
+import api.item.items.ProgressiveCraftingItem;
+import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
-import com.itlesports.nightmaremode.item.items.template.ItemStructureLocator;
-import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
-import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.item.items.template.*;
 import net.minecraft.src.*;
 
 public class NMItems {
@@ -97,7 +97,25 @@ public class NMItems {
     // IFHY
 
     public static final Item bonusChestLoot;
+    public static final Item twig;
+    public static final Item sharpTwig;
+    public static final Item sharkBarkTwig;
+    public static final Item woodClump;
+    static {
+        doNightmareModeItems();
 
+        bonusChestLoot = new NMItem(2600).setTextureName("nightmare:ifhyGarbage").setUnlocalizedName("bonusChestLoot");
+        twig = new NMItem(2601).setTextureName("nightmare:ifhyTwig").setUnlocalizedName("twig").setCreativeTab(CreativeTabs.tabMaterials);
+        sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("twigSharp");
+        sharkBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("twigSharpBark");
+        woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setDuration(24000).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("woodClump").setCreativeTab(CreativeTabs.tabMaterials);
+
+
+
+
+
+
+    }
     private static void doNightmareModeItems() {
         rpg = (ItemRPG) (new ItemRPG(2309)).setTextureName("nightmare:nmRPG");
         rifle = (ItemAR) (new ItemAR(2310)).setTextureName("nightmare:nmRifle");
@@ -199,17 +217,7 @@ public class NMItems {
 
 
 
-    static {
-        doNightmareModeItems();
 
-        bonusChestLoot = new NMItem(2600).setTextureName("nightmare:ifhyGarbage").setUnlocalizedName("bonusChestLoot");
-
-
-
-
-
-
-    }
 
     public static void hideItems(){
         lightningBolt.hideFromEMI().setCreativeTab(null);

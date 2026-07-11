@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,9 +37,10 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Inject(method = "idDropped", at= @At("RETURN"),cancellable = true)
     private void allowAppleDrops(int metadata, Random rand, int fortuneModifier, CallbackInfoReturnable<Integer> cir){
-        if(rand.nextInt(100000) == 0){
-            cir.setReturnValue(Item.appleRed.itemID);
+        if(rand.nextInt(8) == 0){
+            cir.setReturnValue(NMItems.twig.itemID);
         }
+        cir.setReturnValue(0);
     }
 
     @Environment(value= EnvType.CLIENT)

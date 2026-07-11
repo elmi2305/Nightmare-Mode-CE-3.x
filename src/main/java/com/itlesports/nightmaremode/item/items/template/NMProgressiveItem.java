@@ -37,6 +37,7 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
     }
     public NMProgressiveItem setDamage(int damage) {
         this.damage = damage;
+        this.setMaxDamage(damage);
         return this;
     }
     public NMProgressiveItem setSoundID(String soundID) {
