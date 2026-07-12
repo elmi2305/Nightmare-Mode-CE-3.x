@@ -13,17 +13,17 @@ public class ItemHammer extends ToolItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k) ? this.efficiencyOnProperMaterial : 0.0F;
+        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k) ? this.efficiencyOnProperMaterial : 0.0F;
     }
 
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k);
+        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k);
     }
 
     @Override
     public boolean isEfficientVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k);
+        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k);
     }
 
     @Override
