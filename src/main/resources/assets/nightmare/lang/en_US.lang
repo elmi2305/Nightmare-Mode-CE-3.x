@@ -63,6 +63,31 @@ item.nmHellGem.name=Hell Gem
 
 # IFHY
 item.bonusChestLoot.name=Garbage
+item.ifhyGarbage.name=Garbage
+item.ifhyTwig.name=Twig
+item.ifhyTwigSharp.name=Sharp Twig
+item.ifhyTwigSharpBark.name=Bark-Wrapped Sharp Twig
+item.ifhyWoodClump.name=Wood Clump
+item.ifhyLeaf.name=Leaf
+item.ifhyTwigSharpen.name=Twig Sharpening
+item.ifhyTwigWrap.name=Twig Wrapping
+item.ifhyWashedIronMix.name=Washed Iron Mix
+item.ifhyDriedCrushedIron.name=Dried Crushed Iron Mix
+item.ifhyDiamondHammer.name=Diamond Hammer
+item.ifhyGoldHammer.name=Gold Hammer
+item.ifhyIronHammer.name=Iron Hammer
+item.ifhySteelHammer.name=Steel Hammer
+item.ifhyWoodHammer.name=Wood Hammer
+item.ifhyStoneHammer.name=Stone Hammer
+item.ifhyIronBloom.name=Iron Bloom
+item.ifhyScrapedBark.name=Scraped Bark
+item.ifhyWoodCup.name=Wood Cup
+item.ifhyCupOfSap.name=Cup of Sap
+item.ifhyThickenedSap.name=Thickened Sap
+item.ifhyOvenPart.name=Oven Part
+tile.ifhyCrushedIron.name=Crushed Iron Mix
+tile.ifhyWashedCrushedIron.name=Washed Crushed Iron Mix
+tile.ifhySapTap.name=Sap Tap
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
