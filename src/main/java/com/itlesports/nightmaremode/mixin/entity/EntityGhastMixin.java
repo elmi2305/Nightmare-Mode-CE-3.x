@@ -34,6 +34,9 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         int progress = NMUtils.getWorldProgress();
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        boolean isBloodMoon = NMUtils.getIsBloodMoon();
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 8 * progress) * NMUtils.getNiteMultiplier());
         // 20 -> 28 -> 36 -> 44
     }

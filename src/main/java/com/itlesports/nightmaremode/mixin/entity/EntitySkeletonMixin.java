@@ -192,6 +192,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             if (isHostile) {
                 if(isBloodMoon || isEclipse){
                     this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24d);

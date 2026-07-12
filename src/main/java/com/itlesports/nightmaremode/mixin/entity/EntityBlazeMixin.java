@@ -31,6 +31,9 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
             int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic() ? 20 : 10) : 0;
             Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            boolean isBloodMoon = NMUtils.getIsBloodMoon();
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (isHostile ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
