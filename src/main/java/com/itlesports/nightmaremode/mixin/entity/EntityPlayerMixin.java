@@ -116,10 +116,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "fall", at = @At("HEAD"))
     private void crushBlocksBelow(float fallDistance, CallbackInfo ci){
         int xPos = (int)this.posX;
-        int yBelow = (int)(this.posY - 0.75f);
+        int yBelow = (int)(this.posY);
         int zPos = (int)this.posZ;
-        if(this.worldObj.getBlockId(xPos, yBelow, zPos) == BTWBlocks.ironOreChunk.blockID && this.rand.nextInt(8) == 0 && fallDistance > 0.9f){
+        if(this.worldObj.isRemote) return;
+        if(this.worldObj.getBlockId(xPos, yBelow, zPos) == BTWBlocks.ironOreChunk.blockID
+                && this.rand.nextInt(8) == 0
+                && fallDistance > 0.9f
+                && !this.worldObj.isRemote){
             this.worldObj.playSound(xPos, yBelow, zPos, "random.break", 0.5f, 0.9f);
+
             this.worldObj.setBlockWithNotify(xPos, yBelow, zPos, NMBlocks.blockCrushedIronLayer.blockID);
         }
     }
