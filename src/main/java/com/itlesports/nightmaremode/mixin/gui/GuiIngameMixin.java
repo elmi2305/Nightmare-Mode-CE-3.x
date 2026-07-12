@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
@@ -33,6 +34,7 @@ public abstract class GuiIngameMixin extends Gui {
     @Final @Shadow private Minecraft mc;
     @Shadow @Final private Random rand;
     @Shadow protected abstract void renderVignette(float par1, int par2, int par3);
+    @Shadow private void renderInventorySlot(int slot, int x, int y, float partialTicks) {}
 
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
@@ -770,6 +772,68 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Unique int heightField = 13;
     @Unique int widthField = 6;
+
+    @Redirect(
+            method = "renderGameOverlay",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V",
+                    ordinal = 0
+            )
+    )
+    private void drawCenteredUnlockedHotbar(GuiIngame instance, int x, int y, int u, int v, int width, int height) {
+        if (this.mc.thePlayer == null || this.mc.playerController.enableEverythingIsScrewedUpMode()) {
+            return;
+        }
+
+        int unlockedSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.mc.thePlayer);
+        int unlockedWidth = unlockedSlots * 20 + 2;
+        instance.drawTexturedModalRect(this.nightmareMode$getHotbarLeft(unlockedSlots), y, u, v, unlockedWidth, height);
+    }
+
+    @Redirect(
+            method = "renderGameOverlay",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V",
+                    ordinal = 1
+            )
+    )
+    private void drawCenteredUnlockedHotbarSelection(GuiIngame instance, int x, int y, int u, int v, int width, int height) {
+        if (this.mc.thePlayer == null) {
+            return;
+        }
+
+        int unlockedSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.mc.thePlayer);
+        int currentItem = Math.min(this.mc.thePlayer.inventory.currentItem, unlockedSlots - 1);
+        instance.drawTexturedModalRect(this.nightmareMode$getHotbarLeft(unlockedSlots) - 1 + currentItem * 20, y, u, v, width, height);
+    }
+
+    @Redirect(
+            method = "renderGameOverlay",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/GuiIngame;renderInventorySlot(IIIF)V"
+            )
+    )
+    private void renderOnlyUnlockedHotbarItems(GuiIngame instance, int slot, int x, int y, float partialTicks) {
+        if (this.mc.thePlayer == null) {
+            return;
+        }
+
+        int unlockedSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.mc.thePlayer);
+        if (slot >= unlockedSlots) {
+            return;
+        }
+
+        this.renderInventorySlot(slot, this.nightmareMode$getHotbarLeft(unlockedSlots) + slot * 20 + 2, y, partialTicks);
+    }
+
+    @Unique
+    private int nightmareMode$getHotbarLeft(int unlockedSlots) {
+        ScaledResolution scaledResolution = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
+        return scaledResolution.getScaledWidth() / 2 - (unlockedSlots * 20 + 2) / 2;
+    }
 
     @Inject(method = "renderGameOverlay", at = @At("TAIL"))
     private void drawTamingArrow(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
