@@ -3,7 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.entity.mob.villager.TradeProvider;
 import api.entity.mob.villager.VillagerTrade;
 import com.itlesports.nightmaremode.tradetweaks.ApplyAction;
-import com.itlesports.nightmaremode.util.NMInitializer;
+import com.itlesports.nightmaremode.util.OldNMInitializer;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TradeProvider.TradeBuilder.class)
 public class TradeBuilderMixin {
     static{
-        NMInitializer.editExistingTrades();
+        OldNMInitializer.editExistingTrades();
     }
 
     @Inject(method = "build", at = @At("HEAD"), cancellable = true, remap = false)

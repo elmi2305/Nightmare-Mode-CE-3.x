@@ -104,8 +104,14 @@ public class NMBlocks {
     public static Block customLog;
     public static Block blockBloodIngot;
     public static Block blockRefinedDiamondIngot;
+
+
+
+    // ifhy blocks
     public static Block blockCrushedIronLayer;
     public static Block blockWashedIronLayer;
+    public static Block ironBloom;
+    public static Block sapTap;
 
 
 
@@ -122,6 +128,9 @@ public class NMBlocks {
 //
         blockWashedIronLayer = new NMBlockGroundLayer(2401, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_WASHED_IRON + 256).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(1f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyWashedCrushedIron").setTextureName("ifhyWashedCrushedIron");
         Item.itemsList[blockWashedIronLayer.blockID] = new NMItemBlock(NMBlocks.blockWashedIronLayer.blockID - 256);
+
+        sapTap = new BlockSapTap(2402);
+        Item.itemsList[sapTap.blockID] = new NMItemBlock(NMBlocks.sapTap.blockID - 256);
 
 
 

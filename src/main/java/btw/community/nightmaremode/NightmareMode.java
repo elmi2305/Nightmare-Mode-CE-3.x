@@ -3,15 +3,12 @@ package btw.community.nightmaremode;
 import api.AddonHandler;
 import api.BTWAddon;
 import api.config.AddonConfig;
-import api.item.items.ToolItem;
 import api.world.BiomeDecoratorBase;
 import api.world.data.DataEntry;
 import api.world.data.DataProvider;
 import btw.block.BTWBlocks;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
@@ -219,21 +216,30 @@ public class NightmareMode extends BTWAddon {
 
         NMBlocks.initNightmareBlocks();
         NMItems.runItemInit();
-        NMInitializer.initBeaconEffects();
+        OldNMInitializer.initBeaconEffects();
         NMEntityMapper.createModEntityMappings();
         NMEntityMapper.createTileEntityMappings();
-        NMInitializer.initNightmareRecipes();
+        OldNMInitializer.initNightmareRecipes();
 
         NMTags.initTags();
-        NMInitializer.miscInit();
+        OldNMInitializer.miscInit();
         NMAchievements.initialize();
+        OldNMInitializer.manipulateAchievements();
+
+        OldNMInitializer.runItemPostInit();
+        OldNMInitializer.runDevModePostInit();
+        OldNMInitializer.initNightmareTrades();
+        OldNMInitializer.initMobSpawning();
+
+
+        NMInitializer.initIFHYRecipes();
+
+        NMInitializer.miscInit();
         NMInitializer.manipulateAchievements();
 
-        NMInitializer.runItemPostInit();
-        NMInitializer.runDevModePostInit();
+
         NMInitializer.initNightmareTrades();
         NMInitializer.initMobSpawning();
-        HammerRecipeList.addRecipes();
 
 
 
