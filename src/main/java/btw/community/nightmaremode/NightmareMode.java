@@ -11,6 +11,7 @@ import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
@@ -232,6 +233,8 @@ public class NightmareMode extends BTWAddon {
         NMInitializer.runDevModePostInit();
         NMInitializer.initNightmareTrades();
         NMInitializer.initMobSpawning();
+        HammerRecipeList.addRecipes();
+
 
 
         SteelLockerNet.register(this);
