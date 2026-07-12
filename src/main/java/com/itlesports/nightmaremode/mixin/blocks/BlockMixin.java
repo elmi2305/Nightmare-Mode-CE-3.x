@@ -4,6 +4,7 @@ import api.item.items.PickaxeItem;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
@@ -25,6 +26,7 @@ public abstract class BlockMixin {
 
     @Shadow public abstract boolean doesBlockDropAsItemOnSaw(World world, int i, int j, int k);
     @Shadow public abstract void dropBlockAsItem(World par1World, int par2, int par3, int par4, int par5, int par6);
+    @Shadow protected abstract void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack);
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){
@@ -74,6 +76,32 @@ public abstract class BlockMixin {
         if(NMUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "onBlockActivated", at = @At("HEAD"), cancellable = true)
+    private void convertMortaredBrickSlabToOvenPart(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ, CallbackInfoReturnable<Boolean> cir) {
+        if (this.blockID != Block.stoneSingleSlab.blockID || (world.getBlockMetadata(x, y, z) & 7) != 4) {
+            return;
+        }
+
+        ItemStack heldStack = player.getHeldItem();
+        if (heldStack == null || heldStack.itemID != NMItems.woodHammer.itemID) {
+            return;
+        }
+
+        if (!world.isRemote) {
+            int metadata = world.getBlockMetadata(x, y, z);
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.ovenPart));
+            world.playAuxSFX(2001, x, y, z, this.blockID + (metadata << 12));
+            world.setBlockToAir(x, y, z);
+
+            heldStack.damageItem(1, player);
+            if (heldStack.stackSize <= 0) {
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            }
+        }
+
+        cir.setReturnValue(true);
     }
 
     @Unique private static void summonEntity(World world, int x, int y, int z, Item item){
