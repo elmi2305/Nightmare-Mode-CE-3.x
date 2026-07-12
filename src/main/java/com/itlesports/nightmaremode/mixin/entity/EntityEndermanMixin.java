@@ -92,6 +92,8 @@ public abstract class EntityEndermanMixin extends EntityMob {
         double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
         boolean isBloodMoon = bloodMoonModifier > 1;
 
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NMUtils.getIsMobEclipsed(this) ? 0.07 : 0)) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((6.0 + progress * 2 + bloodMoonModifier) * NMUtils.getNiteMultiplier());
         // 7 -> 9 -> 11 -> 13

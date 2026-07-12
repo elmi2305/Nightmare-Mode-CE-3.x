@@ -36,6 +36,9 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void scaleHealth(CallbackInfo ci){
         if (this.worldObj != null) {
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            boolean isBloodMoon = NMUtils.getIsBloodMoon();
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + NMUtils.getWorldProgress() * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)11.0F + NMUtils.getWorldProgress() * 4);
         }
     }

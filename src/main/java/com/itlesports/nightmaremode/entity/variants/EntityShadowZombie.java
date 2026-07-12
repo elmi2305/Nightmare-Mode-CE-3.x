@@ -112,40 +112,6 @@ public class EntityShadowZombie extends EntityZombie {
         }
     }
 
-    private void seekSkybases() {
-        double foundPosX = this.posX;
-        double foundPosY = this.posY;  // actual surface Y for teleport
-        double foundPosZ = this.posZ;
-        double bestScore = this.posY;  // comparison score (Y+4 for wood, Y otherwise)
-        boolean found = false;
-
-        for (int i = 0; i < 6; i++) {
-            double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-            double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
-
-            boolean isWood = this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood;
-            int verticalRange = isWood ? 24 : 20;
-
-            if (Math.abs(targetY - this.posY) >= verticalRange) continue;
-
-            double score = isWood ? targetY + 6 : targetY;
-            if (score > bestScore) {
-                bestScore = score;
-                foundPosX = targetX;
-                foundPosY = targetY;
-                foundPosZ = targetZ;
-                found = true;
-                if (isWood) break; // wood is the highest-priority target; no need to keep searching
-            }
-        }
-
-        if (found) {
-            this.setPositionAndUpdate(foundPosX, foundPosY, foundPosZ);
-            this.getNavigator().clearPathEntity();
-        }
-    }
-
     @Override
     public boolean getCanSpawnHere() {
         if(this.dimension == -1){
@@ -158,26 +124,8 @@ public class EntityShadowZombie extends EntityZombie {
         return super.getCanSpawnHere();
     }
 
-    private static int getChanceOfTeleporting(int input) {
-        return switch (input) {
-            case 0 -> 12;
-            case 1 -> 6;
-            case 2 -> 4;
-            case 3 -> 3;
-            default -> 2;
-        };
-    }
-
     public void onLivingUpdate() {
-        if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
-            int chance = getChanceOfTeleporting(NMUtils.getWorldProgress());
-
-            if (this.rand.nextInt(chance) == 0) {
-                this.seekSkybases();
-            } else{
-                this.explore();
-            }
-        }
+        explore();
         super.onLivingUpdate();
     }
 
@@ -231,7 +179,14 @@ public class EntityShadowZombie extends EntityZombie {
     }
     private void teleportBehindTarget(EntityPlayer targetPlayer) {
         // get player's facing direction (yaw) and calculate the opposite direction
-        float yaw = targetPlayer.rotationYaw + 180;
+        boolean coin = this.rand.nextBoolean();
+        float yaw;
+        if(coin) {
+            yaw = targetPlayer.rotationYaw;
+        }
+        else {
+            yaw = targetPlayer.rotationYaw + 180;
+        }
         double radians = Math.toRadians(yaw);
 
         // random distance between 5 and 10 blocks
@@ -255,8 +210,9 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void teleportToTarget(EntityPlayer targetPlayer){
-        int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);
-        int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1);
+        int distance = 3 + this.rand.nextInt(2);
+        int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;
+        int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;
 
         int targetX = MathHelper.floor_double(targetPlayer.posX + xOffset);
         int targetY = MathHelper.floor_double(targetPlayer.posY);

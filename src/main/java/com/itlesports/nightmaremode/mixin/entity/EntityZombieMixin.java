@@ -494,6 +494,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * niteMultiplier);
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 24 : 20) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
             // 40 -> 46 -> 52 -> 58 eclipse
@@ -578,7 +579,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addLungeAI(World par1World, CallbackInfo ci){
-        this.targetTasks.addTask(3, new EntityAILunge(this, true));
+        //this.targetTasks.addTask(3, new EntityAILunge(this, true));
 //                this.tasks.removeAllTasksOfClass(EntityAIAttackOnCollide.class);
 //        EntityZombie thisObj =(EntityZombie)(Object)this;
 //

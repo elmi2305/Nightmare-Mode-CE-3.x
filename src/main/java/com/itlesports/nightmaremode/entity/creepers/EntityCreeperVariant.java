@@ -34,7 +34,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     public int variantType; // must be overridden by children. this is responsible for the spawn packet, so it must match in the packet register too. corresponds to the CREEPER_[TYPE] fields in NMFields
     protected float soundPitchModifier; // different for every creeper variant
     private boolean isValidForEventLoot; // used for every mob
-    protected boolean canLunge = true; // whether it should lunge. false for a few variants
+    protected boolean canLunge = false; // whether it should lunge. false for a few variants
 
     public EntityCreeperVariant(World w) {
         super(w);
@@ -84,6 +84,9 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        boolean isBloodMoon = NMUtils.getIsBloodMoon();
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }

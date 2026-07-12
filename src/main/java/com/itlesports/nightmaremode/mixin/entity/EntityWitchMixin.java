@@ -281,6 +281,9 @@ public abstract class EntityWitchMixin extends EntityMob {
             double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 30 : 0;
 
+            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+            boolean isBloodMoon = NMUtils.getIsBloodMoon();
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             double niteMultiplier = NMUtils.getNiteMultiplier();
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
             // 20 -> 24 -> 28 -> 32

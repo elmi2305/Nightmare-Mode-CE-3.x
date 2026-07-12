@@ -32,9 +32,10 @@ public class EntityPigZombieMixin extends EntityZombie {
     @Override
     public void applyEntityAttributes() {
         super.applyEntityAttributes();
-        if (NMUtils.getIsBloodMoon()) {
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
-        }
+        int progress = NMUtils.getWorldProgress();
+        boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        boolean isBloodMoon = NMUtils.getIsBloodMoon();
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
         if(NMEvents.SimpleEvent.HELL.isActive()){
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(50);
         }

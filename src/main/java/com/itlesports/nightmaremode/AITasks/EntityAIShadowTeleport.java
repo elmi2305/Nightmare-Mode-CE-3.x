@@ -4,9 +4,12 @@ import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
+import java.util.Random;
+
 public class EntityAIShadowTeleport extends EntityAITarget {
     private EntityLivingBase targetEntity;
     private int cooldown;
+    private Random rand;
 
     public EntityAIShadowTeleport(EntityCreature par1EntityCreature, boolean shouldCheckSight, boolean par3) {
         super(par1EntityCreature, shouldCheckSight, par3);
@@ -28,7 +31,8 @@ public class EntityAIShadowTeleport extends EntityAITarget {
     public boolean continueExecuting() {
         if (this.cooldown == 0) {
             boolean bIsBloodmoon = NMUtils.getIsBloodMoon();
-            int minimumOffset = bIsBloodmoon ? 0 : 1;
+            int distance = 3 + this.rand.nextInt(2);
+            int minimumOffset = bIsBloodmoon ? 0 : 1 + distance;
             int xOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
             int zOffset = (this.taskOwner.rand.nextBoolean() ? -1 : 1) * (this.taskOwner.rand.nextInt(3) + minimumOffset);
 

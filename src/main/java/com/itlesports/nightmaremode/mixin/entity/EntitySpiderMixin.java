@@ -279,6 +279,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             if(spiderRainModifier > 0){
                 this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32d);
             }
