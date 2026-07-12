@@ -1111,6 +1111,10 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addOvenRecipes(){
         FurnaceRecipes.smelting().addSmelting(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast), 0.0f);
+
+        FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
+        FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
+
         finishRecipes("Oven Recipes");
 
     }
@@ -1127,6 +1131,7 @@ public abstract class NMInitializer implements AchievementExt {
         finishRecipes("Campfire Recipes");
 
     }
+
     private static void addMillstoneRecipes(){
 //        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.carrotSeeds), new ItemStack(BTWItems.hempSeeds));
 //        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.wheatSeeds), new ItemStack(BTWItems.carrotSeeds));
