@@ -5,7 +5,7 @@ import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.util.NMFields;
 
 public class NMPlaceAsBlockItem extends PlaceAsBlockItem {
-    private int washedItemID;
+    private int washedItemID = -1;
 
     public NMPlaceAsBlockItem(int iItemID, int iBlockID) {
         super(iItemID, iBlockID);
