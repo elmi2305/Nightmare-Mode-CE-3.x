@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.block.blocks.templates;
 
 import api.block.blocks.GroundCoverBlock;
 import btw.client.render.util.RenderUtils;
-import com.itlesports.nightmaremode.block.NMBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -10,7 +9,7 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class NMBlockGroundLayer extends GroundCoverBlock {
-    private int ticksExisted;
+    protected int ticksExisted;
     private boolean driesOut;
 
     public NMBlockGroundLayer(int iBlockID, Material material) {
@@ -29,7 +28,7 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
 
 
     @Environment(EnvType.CLIENT)
-    private static Icon[] icons;
+    protected Icon[] icons;
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -46,11 +45,7 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     @Environment(EnvType.CLIENT)
     public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side) {
         int meta = access.getBlockMetadata(x, y, z);
-        return icons[meta];
-    }
-
-    public int quantityDropped(Random rand) {
-        return 1;
+        return icons[Math.min(meta, icons.length - 1)];
     }
 
     public boolean canDropFromExplosion(Explosion explosion) {
@@ -61,7 +56,7 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     @Override
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int side, int meta) {
-        return icons[meta];
+        return icons[Math.min(meta, icons.length - 1)];
     }
 
     @Override
@@ -70,16 +65,6 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
 
         int meta = w.getBlockMetadata(x,y,z);
 
-        if(this.ticksExisted > 10){
-            System.out.println(w.isRaining());
-            System.out.println(w.canBlockSeeTheSky(x,y+1,z));
-            System.out.println((y+1));
-            System.out.println(w.getPrecipitationHeight(x,z));
-            if(w.isRainingAtPos(x,y + 1,z)){
-                // why does it not set the block correctly
-                w.setBlockWithNotify(x,y,z, NMBlocks.blockWashedIronLayer.blockID);
-            }
-        }
 
         if(!this.driesOut) return;
         // 100 * 4 = 400 ticks, which is 20 seconds

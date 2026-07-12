@@ -117,10 +117,10 @@ public class NMBlocks {
     public static void initNightmareBlocks(){
 
 
-        blockCrushedIronLayer = new NMBlockGroundLayer(2400, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_STOMPED_CRUSHED_IRON + 256).setHardness(6f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyCrushedIron").setTextureName("ifhyCrushedIron");
+        blockCrushedIronLayer = new NMCrushedIronLayer(2400, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_STOMPED_CRUSHED_IRON + 256).setHardness(6f).setCreativeTab(CreativeTabs.tabBlock).setResistance(2f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyCrushedIron").setTextureName("ifhyCrushedIron");
         Item.itemsList[blockCrushedIronLayer.blockID] = new NMItemBlock(NMBlocks.blockCrushedIronLayer.blockID - 256);
 //
-        blockWashedIronLayer = new NMBlockGroundLayer(2401, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_WASHED_IRON + 256).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(1f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyCrushedIron").setTextureName("ifhyCrushedIron");
+        blockWashedIronLayer = new NMBlockGroundLayer(2401, Material.grass).setDriesOut(false).setDropItemID(NMFields.ITEM_WASHED_IRON + 256).setHardness(1f).setCreativeTab(CreativeTabs.tabBlock).setResistance(1f).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyWashedCrushedIron").setTextureName("ifhyWashedCrushedIron");
         Item.itemsList[blockWashedIronLayer.blockID] = new NMItemBlock(NMBlocks.blockWashedIronLayer.blockID - 256);
 
 
