@@ -4,10 +4,13 @@ import api.achievement.AchievementTab;
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;
 import btw.crafting.recipe.RecipeManager;
+import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -297,6 +300,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addOvenRecipes(){
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
+        FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 3);
 
         finishRecipes("Oven Recipes");
 
@@ -323,6 +327,17 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addCraftingRecipes(){
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.twigSharpening, 1, 199), new ItemStack[]{new ItemStack(NMItems.twig), new ItemStack(NMItems.twig), new ItemStack(NMItems.twig), new ItemStack(NMItems.twig)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.sharpTwigBarkWrapping, 1, 49), new Object[]{new ItemStack(NMItems.sharpTwig), BTWTags.barks, BTWTags.barks, BTWTags.barks});
+
+        // IFHY progression templates. These are intentionally simple so they can be copied/tuned as the tree settles.
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"XX", "XX", Character.valueOf('X'), BTWBlocks.looseBrickSlab});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.scrapedBark), new Object[]{BTWTags.barks, new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.woodCup), new Object[]{"BB", "BT", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{"ST", "SD", Character.valueOf('S'), Item.stick, Character.valueOf('T'), BTWTags.strings, Character.valueOf('D'), NMItems.drill});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.sapTap), new Object[]{"BT", "DS", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig, Character.valueOf('D'), NMItems.drill, Character.valueOf('S'), NMItems.thickenedSap});
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.ovenPart});
 
         finishRecipes("Crafting Recipes");
 

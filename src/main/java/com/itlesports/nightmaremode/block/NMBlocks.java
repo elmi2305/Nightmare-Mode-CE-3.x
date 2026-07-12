@@ -132,6 +132,9 @@ public class NMBlocks {
         sapTap = new BlockSapTap(2402);
         Item.itemsList[sapTap.blockID] = new NMItemBlock(NMBlocks.sapTap.blockID - 256);
 
+        ironBloom = new BlockIronBloom(2403);
+        Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256);
+
 
 
 
