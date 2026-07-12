@@ -2,8 +2,6 @@ package com.itlesports.nightmaremode.item;
 
 import btw.item.BTWTags;
 import btw.item.items.*;
-import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
@@ -94,6 +92,7 @@ public class NMItems {
     public static Item hellGem;
 
 
+
     // IFHY
 
     public static final Item bonusChestLoot;
@@ -104,6 +103,13 @@ public class NMItems {
     public static final Item leaf;
     public static final Item twigSharpening;
     public static final Item sharpTwigBarkWrapping;
+
+    public static Item woodHammer;
+    public static Item stoneHammer;
+    public static Item ironHammer;
+    public static Item diamondHammer;
+    public static Item goldHammer;
+    public static Item steelHammer;
     static {
         doNightmareModeItems();
 
@@ -116,7 +122,13 @@ public class NMItems {
         twigSharpening = new NMProgressiveItem(2606, NMItems.sharpTwig.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyTwigSharpen").setUnlocalizedName("ifhyTwigSharpen").setCreativeTab(CreativeTabs.tabMaterials);
         sharpTwigBarkWrapping = new NMProgressiveItem(2607, NMItems.sharpBarkTwig.itemID).setTargetDurability(50).setTextureName("nightmare:ifhyTwigWrap").setUnlocalizedName("ifhyTwigWrap").setCreativeTab(CreativeTabs.tabMaterials);
 
-
+        // NMPostItems takes 2608 2609
+        diamondHammer = new ItemHammer(2610, EnumToolMaterial.EMERALD).setUnlocalizedName("ifhyDiamondHammer").setTextureName("nightmare:ifhyDiamondHammer").setCreativeTab(CreativeTabs.tabTools);
+        goldHammer = new ItemHammer(2611, EnumToolMaterial.GOLD).setUnlocalizedName("ifhyGoldHammer").setTextureName("nightmare:ifhyGoldHammer").setCreativeTab(CreativeTabs.tabTools);
+        ironHammer = new ItemHammer(2612, EnumToolMaterial.IRON).setUnlocalizedName("ifhyIronHammer").setTextureName("nightmare:ifhyIronHammer").setCreativeTab(CreativeTabs.tabTools);
+        steelHammer = new ItemHammer(2613, EnumToolMaterial.SOULFORGED_STEEL).setUnlocalizedName("ifhySteelHammer").setTextureName("nightmare:ifhySteelHammer").setCreativeTab(CreativeTabs.tabTools);
+        woodHammer = new ItemHammer(2614, EnumToolMaterial.WOOD).setUnlocalizedName("ifhyWoodHammer").setTextureName("nightmare:ifhyWoodHammer").setCreativeTab(CreativeTabs.tabTools);
+        stoneHammer = new ItemHammer(2615, EnumToolMaterial.STONE).setUnlocalizedName("ifhyStoneHammer").setTextureName("nightmare:ifhyStoneHammer").setCreativeTab(CreativeTabs.tabTools);
 
 
 
@@ -206,6 +218,11 @@ public class NMItems {
         awakenedStar = new NMBloodStarItem(2368).setTextureName("nightmare:nmAwakenedStar").setUnlocalizedName("nmAwakenedStar").setCreativeTab(CreativeTabs.tabMaterials);
 
         hellGem = new NMItem(2369).setIndestructible().setTextureName("nightmare:nmHellGem").setUnlocalizedName("nmHellGem").setCreativeTab(CreativeTabs.tabMaterials);
+
+
+
+
+
         ACHIEVEMENT_SPECIAL_SNOWBALL = new NMItem(2400).setTextureName("nightmare:nmAchievementSpecialSnowball").hideFromEMI();
         ACHIEVEMENT_SPECIAL_HARDMODE = new NMItem(2405).setTextureName("nightmare:nmAchievementHardmode").hideFromEMI();
         ACHIEVEMENT_SPECIAL_BLOODMOON = new NMItem(2406).setTextureName("nightmare:nmAchievementBloodMoon").hideFromEMI();
