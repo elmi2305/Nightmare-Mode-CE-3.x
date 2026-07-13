@@ -8,7 +8,10 @@ import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
+import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
+import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
@@ -25,6 +28,7 @@ public abstract class NMInitializer implements AchievementExt {
         addCampfireRecipes();
         addCrucibleRecipes();
         addCauldronRecipes();
+        addCisternRecipes();
         addMillstoneRecipes();
         addOvenRecipes();
         addSoulforgeRecipes();
@@ -155,6 +159,7 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     public static void miscInit(){
+        NMFoodSpoilage.init();
 
         finishRecipes("Miscellaneous");
 
@@ -297,10 +302,72 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
 
+    private static void addCisternRecipes(){
+        CisternRecipeManager manager = CisternRecipeManager.instance;
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.uncleanedCrystalShard)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 120,
+                new ItemStack[]{new ItemStack(NMItems.cleanCrystalShard, 1, 79)}));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.crushedNickelRock)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 180,
+                new ItemStack[]{new ItemStack(NMItems.washedNickelConcentrate)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F)
+                .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.rawLithium)},
+                CisternTileEntity.FLUID_WATER, 0, 2, 160,
+                new ItemStack[0])
+                .setResultingFluid(CisternTileEntity.FLUID_BRINE));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.hammeredLithium)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 140,
+                new ItemStack[]{new ItemStack(NMItems.washedLithium)}));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.crackedDiamondBearingRock)},
+                CisternTileEntity.FLUID_WATER, 0, 2, 240,
+                new ItemStack[]{new ItemStack(NMItems.washedDiamondGrit)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.35F)
+                .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.washedDiamondGrit), new ItemStack(NMItems.lithiumStabilizer)},
+                CisternTileEntity.FLUID_BRINE, 1, 3, 300,
+                new ItemStack[]{new ItemStack(NMItems.stabilizedDiamondSlurry)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.stabilizedDiamondSlurry), new ItemStack(NMItems.polishedCrystalShard)},
+                CisternTileEntity.FLUID_SLURRY, 2, 6, 420,
+                new ItemStack[]{new ItemStack(NMItems.seededDiamondMatrix)})
+                .addRandomOutput(new ItemStack(NMItems.failedDiamondRefinement), 0.12F)
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.nickelBoundDiamondMatrix), new ItemStack(NMItems.lithiumHeatCompound)},
+                CisternTileEntity.FLUID_BRINE, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.diamondBearingMaterial)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.35F)
+                .addRandomOutput(new ItemStack(NMItems.failedDiamondRefinement), 0.08F)
+                .setConsumesFluid());
+
+        finishRecipes("Cistern Recipes");
+    }
+
     private static void addOvenRecipes(){
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
+        FurnaceRecipes.smelting().getSmeltingList().remove(Block.oreDiamond.blockID);
         FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 3);
+        FurnaceRecipes.smelting().addSmelting(NMItems.washedNickelConcentrate.itemID, new ItemStack(NMItems.roastedNickelConcentrate), 0.0f, 2);
+        FurnaceRecipes.smelting().addSmelting(NMItems.roastedNickelConcentrate.itemID, new ItemStack(NMItems.nickelIngot), 0.4f, 3);
+        FurnaceRecipes.smelting().addSmelting(NMItems.washedLithium.itemID, new ItemStack(NMItems.refinedLithium), 0.2f, 1);
+        FurnaceRecipes.smelting().addSmelting(NMItems.diamondBearingMaterial.itemID, new ItemStack(Item.diamond), 1.0f, 4);
 
         finishRecipes("Oven Recipes");
 
@@ -338,9 +405,42 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{"ST", "SD", Character.valueOf('S'), Item.stick, Character.valueOf('T'), BTWTags.strings, Character.valueOf('D'), NMItems.drill});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.sapTap), new Object[]{"BT", "DS", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig, Character.valueOf('D'), NMItems.drill, Character.valueOf('S'), NMItems.thickenedSap});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.ovenPart});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron});
+        NMFoodSpoilage.addSnowRefreshRecipes();
+
+        addHammerRecipe(new ItemStack(NMItems.crushedNickelRock), new ItemStack(NMItems.rawNickelRock));
+        addHammerRecipe(new ItemStack(NMItems.hammeredLithium), new ItemStack(NMItems.rawLithium));
+        addHammerRecipe(new ItemStack(NMItems.polishedCrystalShard), new ItemStack(NMItems.cleanCrystalShard, 1, Short.MAX_VALUE));
+        addHammerRecipe(new ItemStack(NMItems.crackedDiamondBearingRock), new ItemStack(NMItems.diamondBearingRock));
+        addHammerRecipe(new ItemStack(NMItems.nickelPlate), new ItemStack(NMItems.nickelIngot));
+
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.refinedLithium), new ItemStack(Item.sugar)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.lithiumStabilizer), new Object[]{" C ", "LCL", " C ", Character.valueOf('L'), NMItems.lithiumSalt, Character.valueOf('C'), Item.clay});
+        RecipeManager.addRecipe(new ItemStack(NMItems.lithiumHeatCompound), new Object[]{"NLN", "LCL", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.refinedLithium, Character.valueOf('C'), Block.sand});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.nickelBinding, 2), new Object[]{"NN", " S", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('S'), Item.silk});
+        RecipeManager.addRecipe(new ItemStack(NMItems.nickelMachinePart), new Object[]{" N ", "NIN", " R ", Character.valueOf('N'), NMItems.nickelIngot, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone});
+        RecipeManager.addRecipe(new ItemStack(NMItems.nickelHeatComponent), new Object[]{" N ", "NLN", " N ", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumHeatCompound});
+        RecipeManager.addRecipe(new ItemStack(NMItems.oxygenMask), new Object[]{"NGN", "L L", Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('G'), Block.glass, Character.valueOf('L'), Item.leather});
+        RecipeManager.addRecipe(new ItemStack(NMItems.oxygenTank), new Object[]{" N ", "NIN", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('I'), Item.ingotIron, Character.valueOf('L'), Item.leather});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.crystalLens), new Object[]{" G ", "GCG", " G ", Character.valueOf('G'), Block.glass, Character.valueOf('C'), NMItems.polishedCrystalShard});
+        RecipeManager.addRecipe(new ItemStack(NMItems.precisionCrystalGear), new Object[]{" C ", "CNC", " C ", Character.valueOf('C'), NMItems.polishedCrystalShard, Character.valueOf('N'), NMItems.nickelMachinePart});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.seededDiamondMatrix), new Object[]{" C ", "CDC", " C ", Character.valueOf('C'), NMItems.polishedCrystalShard, Character.valueOf('D'), NMItems.stabilizedDiamondSlurry});
+        RecipeManager.addRecipe(new ItemStack(NMItems.nickelBoundDiamondMatrix), new Object[]{" N ", "NDN", " S ", Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('D'), NMItems.seededDiamondMatrix, Character.valueOf('S'), NMItems.lithiumStabilizer});
 
         finishRecipes("Crafting Recipes");
 
+    }
+
+    private static void addHammerRecipe(ItemStack output, ItemStack input) {
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.woodHammer, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.stoneHammer, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.ironHammer, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.goldHammer, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.diamondHammer, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.steelHammer, 1, Short.MAX_VALUE)});
     }
     private static void addMultiplayerRecipes(){
         if(MinecraftServer.getIsServer()){
