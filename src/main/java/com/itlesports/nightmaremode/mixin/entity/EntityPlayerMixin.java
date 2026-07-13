@@ -17,6 +17,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.util.elements.NMDamageSource;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -59,6 +60,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow protected abstract void detonateCarriedBlastingOil();
     @Shadow public abstract void addStat(StatBase par1StatBase, int par2);
     @Shadow protected abstract boolean isCarryingBlastingOil();
+    @Shadow public abstract ItemStack getCurrentArmor(int par1);
 
     @Shadow public abstract int getGloomLevel();
 
@@ -68,6 +70,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int blinkLength = 0;
     @Unique private float fear = 0f;
     @Unique private int heartCrackLength = 0;
+    @Unique private int drowningUnconsciousTicks = -1;
+    @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
+    @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
     ;
 
     public void nightmareMode$setBlinkLength(int target) {
@@ -215,6 +220,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourceEvent.class, self, src);
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourcePlayerEvent.class, self, new NMAchievementEvents.DamageSourcePlayerEvent.DamageSourceData(self, src));
 
+        if (this.manageDrowningUnconsciousDamage(src, amount)) {
+            return false;
+        }
+
         if (this.isPlayerSleeping() && !this.worldObj.isRemote) {
             this.wakeUpPlayer(true, true, false);
         }
@@ -242,6 +251,40 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return false;
         }
         return super.attackEntityFrom(src, amount);
+    }
+
+    @Unique
+    private boolean manageDrowningUnconsciousDamage(DamageSource src, float amount) {
+        if (src != DamageSource.drown || amount <= 0.0F || this.capabilities.disableDamage) {
+            return false;
+        }
+
+        if (!this.worldObj.isRemote && this.drowningUnconsciousTicks < 0) {
+            this.drowningUnconsciousTicks = 0;
+            this.nightmareMode$setBlinkLength(DROWNING_UNCONSCIOUS_BLINK_LENGTH);
+            this.setAir(0);
+        }
+
+        return this.drowningUnconsciousTicks >= 0;
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDrowningUnconsciousDeath(CallbackInfo ci) {
+        if (this.drowningUnconsciousTicks < 0 || this.worldObj.isRemote) {
+            return;
+        }
+
+        if (!this.isEntityAlive() || this.capabilities.disableDamage) {
+            this.drowningUnconsciousTicks = -1;
+            return;
+        }
+
+        this.setAir(0);
+        if (++this.drowningUnconsciousTicks >= DROWNING_UNCONSCIOUS_DEATH_DELAY) {
+            this.drowningUnconsciousTicks = -1;
+            this.setHealth(0.0F);
+            this.onDeath(DamageSource.drown);
+        }
     }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
@@ -1038,19 +1081,62 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.addPotionEffect(new PotionEffect(potion.id,10,amplifier));
         }
     }
-//    @Inject(method = "onUpdate", at = @At("TAIL"))
-//    private void oxygenLossOnTooHigh(CallbackInfo ci){
-//        if(this.posY > 120) {
-//            this.setAir(Math.max(this.getAir() - 1, 0));
-//        }
-//    }
-//
-//    @Inject(method = "recoverAirSupply", at = @At(value = "HEAD"),cancellable = true)
-//    private void oxygenLossOnTooHigh0(CallbackInfo ci){
-//        if (this.posY > 120) {
-//            ci.cancel();
-//        }
-//    }
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDeepCaveOxygenLoss(CallbackInfo ci) {
+        if (!this.shouldLoseOxygenInDeepCave()) {
+            return;
+        }
+
+        int drainInterval = this.getDeepCaveOxygenDrainInterval();
+        if (drainInterval <= 0 || this.ticksExisted % drainInterval != 0) {
+            return;
+        }
+
+        this.setAir(this.getAir() - 1);
+        if (this.getAir() <= -20) {
+            this.setAir(0);
+            this.attackEntityFrom(DamageSource.drown, 2.0F);
+        }
+    }
+
+    @Inject(method = "recoverAirSupply", at = @At(value = "HEAD"), cancellable = true)
+    private void preventAirRecoveryInDeepCaves(CallbackInfo ci) {
+        if (this.shouldLoseOxygenInDeepCave()) {
+            ci.cancel();
+        }
+    }
+
+    @Unique
+    private boolean shouldLoseOxygenInDeepCave() {
+        return this.dimension == 0
+                && this.posY < 54.0D
+                && !this.capabilities.disableDamage
+                && this.isEntityAlive()
+                && !this.isInsideOfMaterial(Material.water);
+    }
+
+    @Unique
+    private int getDeepCaveOxygenDrainInterval() {
+        double y = Math.max(24.0D, this.posY);
+        double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
+        int baseInterval = Math.max(1, (int)Math.round(8.0D - depthRatio * 7.0D));
+        float reduction = Math.min(this.getOxygenGearReduction(), 0.8F);
+        return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction)));
+    }
+
+    @Unique
+    private float getOxygenGearReduction() {
+        float reduction = 0.0F;
+        ItemStack mask = this.getCurrentArmor(3);
+        if (mask != null && mask.getItem() instanceof ItemOxygenGear) {
+            reduction += ((ItemOxygenGear)mask.getItem()).getOxygenDrainReduction();
+        }
+        ItemStack tank = this.getCurrentArmor(2);
+        if (tank != null && tank.getItem() instanceof ItemOxygenGear) {
+            reduction += ((ItemOxygenGear)tank.getItem()).getOxygenDrainReduction();
+        }
+        return reduction;
+    }
 
 
     @Override

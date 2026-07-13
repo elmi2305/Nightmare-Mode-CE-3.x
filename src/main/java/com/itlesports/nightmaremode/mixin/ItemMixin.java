@@ -4,6 +4,7 @@ import api.item.items.FireStarterItemPrimitive;
 import api.item.items.SeedFoodItem;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
+import com.itlesports.nightmaremode.util.NMFoodSpoilage;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,5 +42,10 @@ public class ItemMixin {
         bakedPotato = new ItemFood(137, 1, 0.0f, false).setAsBasicPigFood().setUnlocalizedName("potatoBaked").setTextureName("potato_baked");
 
         netherStar = ((ItemInvoker)netherStar).invokeSetMaxDamage(4);
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void updateFoodSpoilage(ItemStack stack, World world, EntityPlayer player, int inventorySlot, boolean isHeldItem, CallbackInfo ci) {
+        NMFoodSpoilage.updateFoodSpoilage(stack, world, player, inventorySlot);
     }
 }

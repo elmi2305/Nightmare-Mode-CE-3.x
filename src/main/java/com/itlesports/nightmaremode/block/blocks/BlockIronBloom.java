@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,10 +18,11 @@ import net.minecraft.src.Material;
 import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.World;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class BlockIronBloom extends Block {
-    private static final int HITS_TO_FINISH = 3;
+    private static final int HITS_TO_FINISH = 8;
 
     @Environment(EnvType.CLIENT)
     private Icon[] icons;
@@ -130,7 +132,7 @@ public class BlockIronBloom extends Block {
 
     @Override
     public int idDropped(int metadata, Random random, int fortuneModifier) {
-        return com.itlesports.nightmaremode.item.NMItems.ironBloom.itemID;
+        return NMItems.ironBloom.itemID;
     }
 
     @Override
@@ -144,9 +146,7 @@ public class BlockIronBloom extends Block {
     public void registerIcons(IconRegister register) {
         this.icons = new Icon[HITS_TO_FINISH];
         Icon bloomIcon = register.registerIcon("nightmare:ifhyIronBloom");
-        for (int i = 0; i < this.icons.length; ++i) {
-            this.icons[i] = bloomIcon;
-        }
+        Arrays.fill(this.icons, bloomIcon);
         this.blockIcon = this.icons[0];
     }
 }

@@ -80,4 +80,7 @@ public class NMFields {
     // cached item IDs
     public static final int ITEM_WASHED_IRON = 2608;
     public static final int ITEM_STOMPED_CRUSHED_IRON = 2609;
+
+    // cached block IDs
+    public static final int BLOCK_IRON_BLOOM = 2403;
 }

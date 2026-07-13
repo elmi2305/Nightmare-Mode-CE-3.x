@@ -12,7 +12,7 @@ public final class NMInventoryLocks {
     }
 
     public static int getUnlockedHotbarSlots(EntityPlayer player) {
-        if (player == null || player.capabilities.isCreativeMode) {
+        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode) {
             return 9;
         }
 
@@ -26,7 +26,7 @@ public final class NMInventoryLocks {
     }
 
     public static int getUnlockedBackpackSlots(EntityPlayer player) {
-        if (player == null || player.capabilities.isCreativeMode) {
+        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode) {
             return 27;
         }
 

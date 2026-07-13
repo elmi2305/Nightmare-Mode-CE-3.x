@@ -40,7 +40,7 @@ public class NightmareMode extends BTWAddon {
 
 
     // dev
-    public static boolean devMode = false;
+    public static boolean devMode = true;
     public static boolean benchmarkPerformance = false;
     public static volatile double MSPT = 0.0;
 
@@ -53,6 +53,9 @@ public class NightmareMode extends BTWAddon {
 
     public WorldGenerator steelOreGenExposedToAir;
     public WorldGenerator steelOreGen;
+    public WorldGenerator nickelOreGen;
+    public WorldGenerator lithiumOreGen;
+    public WorldGenerator crystalPocketGen;
 
     // events
     public static boolean isBloodMoon;
@@ -252,6 +255,9 @@ public class NightmareMode extends BTWAddon {
         this.silverfishGenThirdStrata = new WorldGenMinable(BTWBlocks.infestedDeepStrataStone.blockID, 16);
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
+        this.nickelOreGen = new WorldGenMinable(NMBlocks.nickelOre.blockID, 7);
+        this.lithiumOreGen = new WorldGenMinable(NMBlocks.lithiumOre.blockID, 6);
+        this.crystalPocketGen = new WorldGenMinable(NMBlocks.crystalPocket.blockID, 5);
 
 //        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
 //        BiomeGenBase.biomeList[25] = new BiomeGenHighlands(25).setBiomeName("UnderworldDesert").setMinMaxHeight(1.9F, 2.1F).setDisableRain();
@@ -961,5 +967,41 @@ public class NightmareMode extends BTWAddon {
             int var8 = z + rand.nextInt(16);
             this.steelOreGen.generate(world, rand, var6, var7, var8);
         }
+        if (isHillBiome(biome)) {
+            for(int var5 = 0; var5 < 6; ++var5) {
+                int var6 = x + rand.nextInt(16);
+                int var7 = rand.nextInt(36) + 24;
+                int var8 = z + rand.nextInt(16);
+                this.nickelOreGen.generate(world, rand, var6, var7, var8);
+            }
+        }
+        if (isDesertBiome(biome)) {
+            for(int var5 = 0; var5 < 5; ++var5) {
+                int var6 = x + rand.nextInt(16);
+                int var7 = rand.nextInt(32) + 12;
+                int var8 = z + rand.nextInt(16);
+                this.lithiumOreGen.generate(world, rand, var6, var7, var8);
+            }
+        }
+        if (biome == BiomeGenBase.swampland) {
+            for(int var5 = 0; var5 < 4; ++var5) {
+                int var6 = x + rand.nextInt(16);
+                int var7 = rand.nextInt(32) + 16;
+                int var8 = z + rand.nextInt(16);
+                this.crystalPocketGen.generate(world, rand, var6, var7, var8);
+            }
+        }
+    }
+
+    private static boolean isHillBiome(BiomeGenBase biome) {
+        return biome == BiomeGenBase.extremeHills
+                || biome == BiomeGenBase.extremeHillsEdge
+                || biome == BiomeGenBase.forestHills
+                || biome == BiomeGenBase.taigaHills
+                || biome == BiomeGenBase.jungleHills;
+    }
+
+    private static boolean isDesertBiome(BiomeGenBase biome) {
+        return biome == BiomeGenBase.desert || biome == BiomeGenBase.desertHills;
     }
 }

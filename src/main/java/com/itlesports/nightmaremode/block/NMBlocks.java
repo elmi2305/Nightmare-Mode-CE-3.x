@@ -104,6 +104,10 @@ public class NMBlocks {
     public static Block customLog;
     public static Block blockBloodIngot;
     public static Block blockRefinedDiamondIngot;
+    public static CisternBlock cistern;
+    public static Block nickelOre;
+    public static Block lithiumOre;
+    public static Block crystalPocket;
 
 
 
@@ -360,6 +364,18 @@ public class NMBlocks {
 
         blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
         Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
+
+        cistern = (CisternBlock) new CisternBlock(2353).setUnlocalizedName("nmCistern").setTextureName("cauldron");
+        Item.itemsList[cistern.blockID] = new NMItemBlock(cistern.blockID - 256);
+
+        nickelOre = new ProcessingOreBlock(2354, NMItems.rawNickelRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmNickelOre").setTextureName("nightmare:nickel_ore");
+        Item.itemsList[nickelOre.blockID] = new NMItemBlock(nickelOre.blockID - 256);
+
+        lithiumOre = new ProcessingOreBlock(2356, NMItems.rawLithium.itemID, 1).setHardness(2.5F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmLithiumOre").setTextureName("nightmare:lithium_ore");
+        Item.itemsList[lithiumOre.blockID] = new NMItemBlock(lithiumOre.blockID - 256);
+
+        crystalPocket = new CrystalPocketBlock(2357).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("nmCrystalPocket").setTextureName("nightmare:crystal_pocket");
+        Item.itemsList[crystalPocket.blockID] = new NMItemBlock(crystalPocket.blockID - 256);
 
 
 
