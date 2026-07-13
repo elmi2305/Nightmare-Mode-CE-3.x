@@ -70,6 +70,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int blinkLength = 0;
     @Unique private float fear = 0f;
     @Unique private int heartCrackLength = 0;
+    @Unique private int drowningUnconsciousTicks = -1;
+    @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
+    @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
     ;
 
     public void nightmareMode$setBlinkLength(int target) {
@@ -217,6 +220,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourceEvent.class, self, src);
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.DamageSourcePlayerEvent.class, self, new NMAchievementEvents.DamageSourcePlayerEvent.DamageSourceData(self, src));
 
+        if (this.manageDrowningUnconsciousDamage(src, amount)) {
+            return false;
+        }
+
         if (this.isPlayerSleeping() && !this.worldObj.isRemote) {
             this.wakeUpPlayer(true, true, false);
         }
@@ -244,6 +251,40 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return false;
         }
         return super.attackEntityFrom(src, amount);
+    }
+
+    @Unique
+    private boolean manageDrowningUnconsciousDamage(DamageSource src, float amount) {
+        if (src != DamageSource.drown || amount <= 0.0F || this.capabilities.disableDamage) {
+            return false;
+        }
+
+        if (!this.worldObj.isRemote && this.drowningUnconsciousTicks < 0) {
+            this.drowningUnconsciousTicks = 0;
+            this.nightmareMode$setBlinkLength(DROWNING_UNCONSCIOUS_BLINK_LENGTH);
+            this.setAir(0);
+        }
+
+        return this.drowningUnconsciousTicks >= 0;
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDrowningUnconsciousDeath(CallbackInfo ci) {
+        if (this.drowningUnconsciousTicks < 0 || this.worldObj.isRemote) {
+            return;
+        }
+
+        if (!this.isEntityAlive() || this.capabilities.disableDamage) {
+            this.drowningUnconsciousTicks = -1;
+            return;
+        }
+
+        this.setAir(0);
+        if (++this.drowningUnconsciousTicks >= DROWNING_UNCONSCIOUS_DEATH_DELAY) {
+            this.drowningUnconsciousTicks = -1;
+            this.setHealth(0.0F);
+            this.onDeath(DamageSource.drown);
+        }
     }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
