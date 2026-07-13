@@ -140,7 +140,7 @@ public class NMItems {
         woodHammer = new ItemHammer(2614, EnumToolMaterial.WOOD).setUnlocalizedName("ifhyWoodHammer").setTextureName("nightmare:ifhyWoodHammer").setCreativeTab(CreativeTabs.tabTools);
         stoneHammer = new ItemHammer(2615, EnumToolMaterial.STONE).setUnlocalizedName("ifhyStoneHammer").setTextureName("nightmare:ifhyStoneHammer").setCreativeTab(CreativeTabs.tabTools);
 
-        ironBloom = new NMPlaceAsBlockItem(2616, NMBlocks.ironBloom.blockID).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
+        ironBloom = new NMPlaceAsBlockItem(2616, 2403).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
         scrapedBark = new NMItem(2617).setUnlocalizedName("ifhyScrapedBark").setTextureName("nightmare:ifhyScrapedBark").setCreativeTab(CreativeTabs.tabMaterials);
         woodCup = new NMItem(2618).setUnlocalizedName("ifhyWoodCup").setTextureName("nightmare:ifhyWoodCup").setCreativeTab(CreativeTabs.tabMaterials);
         cupOfSap = new NMItem(2619).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
