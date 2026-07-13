@@ -7,6 +7,7 @@ import btw.block.blocks.RoughStoneBlock;
 import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,6 +26,7 @@ public class OreBlockStagedMixin extends OreBlock {
     private void convertBlock(ItemStack stack, World world, int x, int y, int z, int side, CallbackInfoReturnable<Boolean> cir){
 
         if(stack == null) return;
+
         int blockID = this.blockID;
         int iOldMetadata = world.getBlockMetadata(x, y, z);
         int iStrata = this.getStrata(iOldMetadata);
@@ -58,6 +60,16 @@ public class OreBlockStagedMixin extends OreBlock {
             world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
             cir.setReturnValue(true);
             return;
+        }
+        if (this.blockID == Block.oreDiamond.blockID) {
+
+            if (!world.isRemote && world.rand.nextFloat() <= 0.9f) {
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));
+            }
+            world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+            cir.setReturnValue(true);
+            return;
+
         }
     }
 
