@@ -134,6 +134,49 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         return this.stirProgress;
     }
 
+    public int getCurrentRecipeDuration() {
+        return this.currentRecipe == null ? 0 : this.currentRecipe.getDuration();
+    }
+
+    public boolean hasOutputs() {
+        for (int i = FIRST_OUTPUT_SLOT; i <= LAST_OUTPUT_SLOT; ++i) {
+            if (this.contents[i] != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String getFluidDisplayName(int fluid) {
+        switch (fluid) {
+            case FLUID_WATER:
+                return "Water";
+            case FLUID_BRINE:
+                return "Brine";
+            case FLUID_SLURRY:
+                return "Slurry";
+            case FLUID_ACIDIC_WASH:
+                return "Acidic Wash";
+            case FLUID_EMPTY:
+            default:
+                return "Empty";
+        }
+    }
+
+    public static int getFluidTint(int fluid) {
+        switch (fluid) {
+            case FLUID_BRINE:
+                return 0x9DBD9A;
+            case FLUID_SLURRY:
+                return 0x7D7564;
+            case FLUID_ACIDIC_WASH:
+                return 0x96D66B;
+            case FLUID_WATER:
+            default:
+                return 0x3F76E4;
+        }
+    }
+
     private void finishRecipe(CisternRecipe recipe) {
         recipe.consumeInputs(this.contents);
         this.insertOutputs(recipe.getOutputs(this.worldObj.rand));
@@ -206,7 +249,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
 
     private int getHeatForBlock(int x, int y, int z) {
         int blockID = this.worldObj.getBlockId(x, y, z);
-        if (blockID == BTWBlocks.stokedFire.blockID || blockID == BTWBlocks.hibachi.blockID) {
+        if (blockID == BTWBlocks.stokedFire.blockID) {
             return 3;
         }
         if (blockID == Block.lavaStill.blockID || blockID == Block.lavaMoving.blockID) {
@@ -315,6 +358,10 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.heatLevel = tag.getInteger("Heat");
         this.processingTime = tag.getInteger("Process");
         this.stirProgress = tag.getInteger("Stir");
+        this.currentRecipe = null;
+        for (int i = 0; i < this.contents.length; ++i) {
+            this.contents[i] = null;
+        }
         NBTTagList list = tag.getTagList("Items");
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound itemTag = (NBTTagCompound) list.tagAt(i);
@@ -347,7 +394,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
+        this.writePacketNBT(tag);
         return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, tag);
     }
 
@@ -359,6 +406,16 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
 
     @Override
     public void readNBTFromPacket(NBTTagCompound tag) {
-        this.readFromNBT(tag);
+        this.fluid = tag.getInteger("Fluid");
+        this.heatLevel = tag.getInteger("Heat");
+        this.processingTime = tag.getInteger("Process");
+        this.stirProgress = tag.getInteger("Stir");
+    }
+
+    private void writePacketNBT(NBTTagCompound tag) {
+        tag.setInteger("Fluid", this.fluid);
+        tag.setInteger("Heat", this.heatLevel);
+        tag.setInteger("Process", this.processingTime);
+        tag.setInteger("Stir", this.stirProgress);
     }
 }

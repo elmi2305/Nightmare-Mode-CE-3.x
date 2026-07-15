@@ -29,6 +29,11 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
     }
 
     @Override
+    public boolean hasTileEntity() {
+        return true;
+    }
+
+    @Override
     public int idDropped(int meta, Random random, int fortune) {
         return this.blockID;
     }
@@ -60,7 +65,14 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             ItemStack output = cistern.removeFirstOutput();
             if (output != null) {
                 givePlayerStackOrDrop(world, player, output);
+            } else {
+                this.sendCisternStatus(player, cistern);
             }
+            return true;
+        }
+
+        if (held.itemID == Item.paper.itemID) {
+            this.sendCisternStatus(player, cistern);
             return true;
         }
 
@@ -119,6 +131,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             world.func_96440_m(x, y, z, blockID);
         }
         super.breakBlock(world, x, y, z, blockID, meta);
+        world.removeBlockTileEntity(x, y, z);
     }
 
     private void dropInventoryStack(World world, int x, int y, int z, ItemStack stack) {
@@ -150,6 +163,41 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         } else if (player instanceof EntityPlayerMP) {
             ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
         }
+    }
+
+    private void sendCisternStatus(EntityPlayer player, CisternTileEntity cistern) {
+        player.sendChatToPlayer(new ChatMessageComponent().addText("Cistern: " + CisternTileEntity.getFluidDisplayName(cistern.getFluid())
+                + " | Heat " + cistern.getHeatLevel()
+                + " | Stir " + cistern.getStirProgress()));
+
+        this.sendSlotRange(player, cistern, "Inputs", CisternTileEntity.FIRST_INPUT_SLOT, CisternTileEntity.LAST_INPUT_SLOT);
+        this.sendSlotRange(player, cistern, "Outputs", CisternTileEntity.FIRST_OUTPUT_SLOT, CisternTileEntity.LAST_OUTPUT_SLOT);
+
+        if (cistern.hasOutputs()) {
+            player.sendChatToPlayer(new ChatMessageComponent().addText("Recipe finished. Empty-hand interact to collect outputs."));
+            return;
+        }
+
+        int duration = cistern.getCurrentRecipeDuration();
+        if (duration > 0) {
+            player.sendChatToPlayer(new ChatMessageComponent().addText("Processing: " + cistern.getProcessingTime() + " / " + duration + " ticks"));
+        } else {
+            player.sendChatToPlayer(new ChatMessageComponent().addText("No valid recipe is currently running."));
+        }
+    }
+
+    private void sendSlotRange(EntityPlayer player, CisternTileEntity cistern, String label, int firstSlot, int lastSlot) {
+        String contents = "";
+        for (int i = firstSlot; i <= lastSlot; ++i) {
+            ItemStack stack = cistern.getStackInSlot(i);
+            if (stack != null) {
+                if (contents.length() > 0) {
+                    contents += ", ";
+                }
+                contents += stack.stackSize + "x " + stack.getDisplayName();
+            }
+        }
+        player.sendChatToPlayer(new ChatMessageComponent().addText(label + ": " + (contents.length() == 0 ? "empty" : contents)));
     }
 
     @Override
