@@ -187,41 +187,41 @@ public class NMItems {
         ovenPart = new NMItem(2621).setMaxStackSize(4).setUnlocalizedName("ifhyOvenPart").setTextureName("nightmare:ifhyOvenPart").setCreativeTab(CreativeTabs.tabMaterials);
         drill = new NMItem(2622).setUnlocalizedName("ifhyDrill").setTextureName("nightmare:ifhyDrill").setCreativeTab(CreativeTabs.tabMaterials);
 
-        rawNickelRock = new NMItem(2623).setUnlocalizedName("nmRawNickelRock").setTextureName("nightmare:rawNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
-        crushedNickelRock = new NMItem(2624).setUnlocalizedName("nmCrushedNickelRock").setTextureName("nightmare:crushedNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
-        washedNickelConcentrate = new NMItem(2625).setUnlocalizedName("nmWashedNickelConcentrate").setTextureName("nightmare:washedNickelConcentrate").setCreativeTab(CreativeTabs.tabMaterials);
-        roastedNickelConcentrate = new NMItem(2626).setUnlocalizedName("nmRoastedNickelConcentrate").setTextureName("nightmare:roastedNickelConcentrate").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelIngot = new NMItem(2627).setUnlocalizedName("nmNickelIngot").setTextureName("nightmare:nickelIngot").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelPlate = new NMItem(2628).setUnlocalizedName("nmNickelPlate").setTextureName("nightmare:nickelPlate").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelBinding = new NMItem(2629).setUnlocalizedName("nmNickelBinding").setTextureName("nightmare:nickelBinding").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelMachinePart = new NMItem(2630).setUnlocalizedName("nmNickelMachinePart").setTextureName("nightmare:nickelMachinePart").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelHeatComponent = new NMItem(2631).setUnlocalizedName("nmNickelHeatComponent").setTextureName("nightmare:nickelHeatComponent").setCreativeTab(CreativeTabs.tabMaterials);
+        rawNickelRock = new NMItem(2623).setUnlocalizedName("ifhyRawNickelRock").setTextureName("nightmare:ifhyRawNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
+        crushedNickelRock = new NMItem(2624).setUnlocalizedName("ifhyCrushedNickelRock").setTextureName("nightmare:ifhyCrushedNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
+        washedNickelConcentrate = new NMItem(2625).setUnlocalizedName("ifhyWashedNickelConcentrate").setTextureName("nightmare:ifhyWashedNickelConcentrate").setCreativeTab(CreativeTabs.tabMaterials);
+        roastedNickelConcentrate = new NMItem(2626).setUnlocalizedName("ifhyRoastedNickelConcentrate").setTextureName("nightmare:ifhyRoastedNickelConcentrate").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelIngot = new NMItem(2627).setUnlocalizedName("ifhyNickelIngot").setTextureName("nightmare:ifhyNickelIngot").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelPlate = new NMItem(2628).setUnlocalizedName("ifhyNickelPlate").setTextureName("nightmare:ifhyNickelPlate").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelBinding = new NMItem(2629).setUnlocalizedName("ifhyNickelBinding").setTextureName("nightmare:ifhyNickelBinding").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelMachinePart = new NMItem(2630).setUnlocalizedName("ifhyNickelMachinePart").setTextureName("nightmare:ifhyNickelMachinePart").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelHeatComponent = new NMItem(2631).setUnlocalizedName("ifhyNickelHeatComponent").setTextureName("nightmare:ifhyNickelHeatComponent").setCreativeTab(CreativeTabs.tabMaterials);
 
-        rawLithium = new NMItem(2632).setUnlocalizedName("nmRawLithium").setTextureName("nightmare:rawLithium").setCreativeTab(CreativeTabs.tabMaterials);
-        hammeredLithium = new NMItem(2633).setUnlocalizedName("nmHammeredLithium").setTextureName("nightmare:hammeredLithium").setCreativeTab(CreativeTabs.tabMaterials);
-        washedLithium = new NMItem(2634).setUnlocalizedName("nmWashedLithium").setTextureName("nightmare:washedLithium").setCreativeTab(CreativeTabs.tabMaterials);
-        refinedLithium = new NMItem(2635).setUnlocalizedName("nmRefinedLithium").setTextureName("nightmare:refinedLithium").setCreativeTab(CreativeTabs.tabMaterials);
-        lithiumSalt = new NMItem(2636).setUnlocalizedName("nmLithiumSalt").setTextureName("nightmare:lithiumSalt").setCreativeTab(CreativeTabs.tabMaterials);
-        lithiumStabilizer = new NMItem(2637).setUnlocalizedName("nmLithiumStabilizer").setTextureName("nightmare:lithiumStabilizer").setCreativeTab(CreativeTabs.tabMaterials);
-        lithiumHeatCompound = new NMItem(2638).setUnlocalizedName("nmLithiumHeatCompound").setTextureName("nightmare:lithiumHeatCompound").setCreativeTab(CreativeTabs.tabMaterials);
+        rawLithium = new NMItem(2632).setUnlocalizedName("ifhyRawLithium").setTextureName("nightmare:ifhyRawLithium").setCreativeTab(CreativeTabs.tabMaterials);
+        hammeredLithium = new NMItem(2633).setUnlocalizedName("ifhyHammeredLithium").setTextureName("nightmare:ifhyHammeredLithium").setCreativeTab(CreativeTabs.tabMaterials);
+        washedLithium = new NMItem(2634).setUnlocalizedName("ifhyWashedLithium").setTextureName("nightmare:ifhyWashedLithium").setCreativeTab(CreativeTabs.tabMaterials);
+        refinedLithium = new NMItem(2635).setUnlocalizedName("ifhyRefinedLithium").setTextureName("nightmare:ifhyRefinedLithium").setCreativeTab(CreativeTabs.tabMaterials);
+        lithiumSalt = new NMItem(2636).setUnlocalizedName("ifhyLithiumSalt").setTextureName("nightmare:ifhyLithiumSalt").setCreativeTab(CreativeTabs.tabMaterials);
+        lithiumStabilizer = new NMItem(2637).setUnlocalizedName("ifhyLithiumStabilizer").setTextureName("nightmare:ifhyLithiumStabilizer").setCreativeTab(CreativeTabs.tabMaterials);
+        lithiumHeatCompound = new NMItem(2638).setUnlocalizedName("ifhyLithiumHeatCompound").setTextureName("nightmare:ifhyLithiumHeatCompound").setCreativeTab(CreativeTabs.tabMaterials);
 
-        uncleanedCrystalShard = new NMItem(2639).setUnlocalizedName("nmUncleanedCrystalShard").setTextureName("nightmare:uncleanedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
-        cleanCrystalShard = new NMProgressiveItem(2640, 2641).setTargetDurability(80).setUnlocalizedName("nmCleanCrystalShard").setTextureName("nightmare:cleanCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
-        polishedCrystalShard = new NMItem(2641).setUnlocalizedName("nmPolishedCrystalShard").setTextureName("nightmare:polishedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
-        crystalLens = new NMItem(2642).setUnlocalizedName("nmCrystalLens").setTextureName("nightmare:crystalLens").setCreativeTab(CreativeTabs.tabMaterials);
-        precisionCrystalGear = new NMItem(2643).setUnlocalizedName("nmPrecisionCrystalGear").setTextureName("nightmare:precisionCrystalGear").setCreativeTab(CreativeTabs.tabMaterials);
+        uncleanedCrystalShard = new NMItem(2639).setUnlocalizedName("ifhyUncleanedCrystalShard").setTextureName("nightmare:ifhyUncleanedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
+        cleanCrystalShard = new NMProgressiveItem(2640, 2641).setTargetDurability(80).setUnlocalizedName("ifhyCleanCrystalShard").setTextureName("nightmare:ifhyCleanCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
+        polishedCrystalShard = new NMItem(2641).setUnlocalizedName("ifhyPolishedCrystalShard").setTextureName("nightmare:ifhyPolishedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
+        crystalLens = new NMItem(2642).setUnlocalizedName("ifhyCrystalLens").setTextureName("nightmare:ifhyCrystalLens").setCreativeTab(CreativeTabs.tabMaterials);
+        precisionCrystalGear = new NMItem(2643).setUnlocalizedName("ifhyPrecisionCrystalGear").setTextureName("nightmare:ifhyPrecisionCrystalGear").setCreativeTab(CreativeTabs.tabMaterials);
 
-        diamondBearingRock = new NMItem(2644).setUnlocalizedName("nmDiamondBearingRock").setTextureName("nightmare:diamondBearingRock").setCreativeTab(CreativeTabs.tabMaterials);
-        crackedDiamondBearingRock = new NMItem(2645).setUnlocalizedName("nmCrackedDiamondBearingRock").setTextureName("nightmare:crackedDiamondBearingRock").setCreativeTab(CreativeTabs.tabMaterials);
-        washedDiamondGrit = new NMItem(2646).setUnlocalizedName("nmWashedDiamondGrit").setTextureName("nightmare:washedDiamondGrit").setCreativeTab(CreativeTabs.tabMaterials);
-        stabilizedDiamondSlurry = new NMItem(2647).setUnlocalizedName("nmStabilizedDiamondSlurry").setTextureName("nightmare:stabilizedDiamondSlurry").setCreativeTab(CreativeTabs.tabMaterials);
-        seededDiamondMatrix = new NMItem(2648).setUnlocalizedName("nmSeededDiamondMatrix").setTextureName("nightmare:seededDiamondMatrix").setCreativeTab(CreativeTabs.tabMaterials);
-        nickelBoundDiamondMatrix = new NMItem(2649).setUnlocalizedName("nmNickelBoundDiamondMatrix").setTextureName("nightmare:nickelBoundDiamondMatrix").setCreativeTab(CreativeTabs.tabMaterials);
-        diamondBearingMaterial = new NMItem(2650).setUnlocalizedName("nmDiamondBearingMaterial").setTextureName("nightmare:diamondBearingMaterial").setCreativeTab(CreativeTabs.tabMaterials);
-        failedDiamondRefinement = new NMItem(2651).setUnlocalizedName("nmFailedDiamondRefinement").setTextureName("nightmare:failedDiamondRefinement").setCreativeTab(CreativeTabs.tabMaterials);
-        refinementWaste = new NMItem(2652).setUnlocalizedName("nmRefinementWaste").setTextureName("nightmare:refinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
-        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F).setUnlocalizedName("nmOxygenMask").setTextureName("nightmare:oxygenMask");
-        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("nmOxygenTank").setTextureName("nightmare:oxygenTank");
+        diamondBearingRock = new NMItem(2644).setUnlocalizedName("ifhyDiamondBearingRock").setTextureName("nightmare:ifhyDiamondBearingRock").setCreativeTab(CreativeTabs.tabMaterials);
+        crackedDiamondBearingRock = new NMItem(2645).setUnlocalizedName("ifhyCrackedDiamondBearingRock").setTextureName("nightmare:ifhyCrackedDiamondBearingRock").setCreativeTab(CreativeTabs.tabMaterials);
+        washedDiamondGrit = new NMItem(2646).setUnlocalizedName("ifhyWashedDiamondGrit").setTextureName("nightmare:ifhyWashedDiamondGrit").setCreativeTab(CreativeTabs.tabMaterials);
+        stabilizedDiamondSlurry = new NMItem(2647).setUnlocalizedName("ifhyStabilizedDiamondSlurry").setTextureName("nightmare:ifhyStabilizedDiamondSlurry").setCreativeTab(CreativeTabs.tabMaterials);
+        seededDiamondMatrix = new NMItem(2648).setUnlocalizedName("ifhySeededDiamondMatrix").setTextureName("nightmare:ifhySeededDiamondMatrix").setCreativeTab(CreativeTabs.tabMaterials);
+        nickelBoundDiamondMatrix = new NMItem(2649).setUnlocalizedName("ifhyNickelBoundDiamondMatrix").setTextureName("nightmare:ifhyNickelBoundDiamondMatrix").setCreativeTab(CreativeTabs.tabMaterials);
+        diamondBearingMaterial = new NMItem(2650).setUnlocalizedName("ifhyDiamondBearingMaterial").setTextureName("nightmare:ifhyDiamondBearingMaterial").setCreativeTab(CreativeTabs.tabMaterials);
+        failedDiamondRefinement = new NMItem(2651).setUnlocalizedName("ifhyFailedDiamondRefinement").setTextureName("nightmare:ifhyFailedDiamondRefinement").setCreativeTab(CreativeTabs.tabMaterials);
+        refinementWaste = new NMItem(2652).setUnlocalizedName("ifhyRefinementWaste").setTextureName("nightmare:ifhyRefinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
+        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F).setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
+        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
 
 
     }
