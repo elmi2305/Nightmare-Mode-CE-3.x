@@ -10,7 +10,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(OvenTileEntity.class)
@@ -35,5 +37,10 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
         } else{
             this.burnCounter = 0;
         }
+    }
+
+    @ModifyConstant(method = "updateEntity", constant = @Constant(floatValue = 0.01f, ordinal = 0))
+    private float modifyChanceOfFireSpread(float constant) {
+        return 10000f;
     }
 }

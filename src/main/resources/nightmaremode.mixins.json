@@ -119,6 +119,7 @@
     "blocks.WoodMouldingAndDecorativeBlockMixin",
     "blocks.WoodSidingAndCornerAndDecorativeBlockMixin",
     "blocks.WoodSlabBlockMixin",
+    "blocks.BlockFiniteTorchTileEntityMixin",
     "component.ComponentMineshaftCorridorMixin",
     "component.ComponentScatteredFeatureDesertPyramidMixin",
     "component.ComponentScatteredFeaturePiecesMixin",
