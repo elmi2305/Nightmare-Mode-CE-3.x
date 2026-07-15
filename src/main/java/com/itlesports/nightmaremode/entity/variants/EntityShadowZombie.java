@@ -58,9 +58,6 @@ public class EntityShadowZombie extends EntityZombie {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int lootingLevel) {
-        if(this.rand.nextInt(12) == 0 && WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()){
-            this.dropItem(Item.enderPearl.itemID,1);
-        }
 
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
         if (bloodOrbID > 0 && bKilledByPlayer) {

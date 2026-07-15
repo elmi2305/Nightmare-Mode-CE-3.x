@@ -146,7 +146,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropGhastTearsIfCharged(boolean bKilledByPlayer, int iFortuneModifier, CallbackInfo ci){
         if(getPowered()) {
-            this.dropItem(Item.ghastTear.itemID, 1);
+            //this.dropItem(Item.ghastTear.itemID, 1);
             if (rand.nextInt(3) == 0) {
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
             }
@@ -239,7 +239,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         return shouldSpawnCharged();
     }
 
-    @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
+    /*@Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCreeper;timeSinceIgnited:I",ordinal = 3, shift = At.Shift.AFTER))
     private void jumpBeforeExploding(CallbackInfo ci){
         EntityCreeper creeper = (EntityCreeper) (Object)this;
         // 8 ticks before it explodes
@@ -259,7 +259,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.faceEntity(target,100f,100f);
             }
         }
-    }
+    }*/
 
     @Override
     public boolean isImmuneToHeadCrabDamage() {
