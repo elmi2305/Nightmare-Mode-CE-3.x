@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.util;
 
+import net.minecraft.src.Icon;
+
 // a collection of static fields used around the codebase
 public class NMFields {
 
@@ -83,4 +85,10 @@ public class NMFields {
 
     // cached block IDs
     public static final int BLOCK_IRON_BLOOM = 2403;
+
+    // icons - registered in TextureMapMixin
+    public static Icon ICON_SLURRY;
+    public static Icon ICON_BRINE;
+    public static Icon ICON_ACID;
+
 }
