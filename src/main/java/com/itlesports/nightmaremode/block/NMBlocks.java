@@ -136,8 +136,8 @@ public class NMBlocks {
         sapTap = new BlockSapTap(2402);
         Item.itemsList[sapTap.blockID] = new NMItemBlock(NMBlocks.sapTap.blockID - 256);
 
-        ironBloom = new BlockIronBloom(2403);
-        Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256);
+        ironBloom = new BlockIronBloom(NMFields.BLOCK_IRON_BLOOM);
+        Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256).hideFromEMI();
 
         cistern = (CisternBlock) new CisternBlock(2353).setUnlocalizedName("ifhyCistern").setTextureName("cauldron");
         Item.itemsList[cistern.blockID] = new NMItemBlock(cistern.blockID - 256);

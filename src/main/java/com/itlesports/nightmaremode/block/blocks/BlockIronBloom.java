@@ -32,7 +32,6 @@ public class BlockIronBloom extends Block {
         this.setHardness(0.6f);
         this.setResistance(2.0f);
         this.setStepSound(Block.soundStoneFootstep);
-        this.setCreativeTab(CreativeTabs.tabMaterials);
         this.setUnlocalizedName("ifhyIronBloom");
     }
 
