@@ -19,8 +19,8 @@ public class DifficultiesMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void editHostile(CallbackInfo ci){
         NMDifficultyParam.init();
-        HOSTILE.modifyParam(DifficultyParam.ShouldStructuresBeAbandoned.class, false);
-        HOSTILE.modifyParam(DifficultyParam.AbandonedStructureRangeMultiplier.class, Float.valueOf(0f));
+        HOSTILE.modifyParam(DifficultyParam.ShouldStructuresBeAbandoned.class, true);
+        HOSTILE.modifyParam(DifficultyParam.AbandonedStructureRangeMultiplier.class, Float.valueOf(2f));
 
         // make my own difficulty? no, thanks
     }

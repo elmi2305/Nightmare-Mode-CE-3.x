@@ -8,8 +8,7 @@ import net.minecraft.src.BlockFire;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockFire.class)
@@ -26,6 +25,11 @@ public class BlockFireMixin {
                 ci.cancel();
             }
         }
+    }
+
+    @ModifyVariable(method = "checkForFireSpreadToOneBlockLocation", at = @At(value = "STORE"), name = "spreadChance")
+    private static int modifyFireSpreadChance(int spreadChance) {
+        return 10000;
     }
 
     @Unique

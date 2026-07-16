@@ -356,7 +356,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
         // ghast tear for charged
         if(isCharged()) {
-            this.dropItem(Item.ghastTear.itemID, 1);
+            //this.dropItem(Item.ghastTear.itemID, 1);
             if (rand.nextInt(3) == 0) {
                 this.dropItem(BTWItems.creeperOysters.itemID, 1);
             }

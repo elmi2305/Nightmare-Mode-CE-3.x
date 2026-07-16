@@ -158,6 +158,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void dropVenomSacks(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         EntitySpider thisObj = (EntitySpider)(Object)this;
+        if (thisObj.getClass() == EntitySpider.class) { return; }
 
         if(thisObj.hasWeb() || thisObj.rand.nextInt(10) <= NMUtils.getWorldProgress() * 2){
             thisObj.dropItem(Item.fermentedSpiderEye.itemID,1);
