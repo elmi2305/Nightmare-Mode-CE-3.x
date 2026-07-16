@@ -68,5 +68,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityBloodBone.class, "TileEntityBloodBone");
         TileEntity.addMapping(TileEntityPortalCore.class, "TileEntityPortalCore");
         TileEntity.addMapping(CisternTileEntity.class, "NmCistern");
+        TileEntity.addMapping(TileEntityHammerAnvil.class, "NmHammerAnvil");
+        TileEntity.addMapping(TileEntityStoneAnvil.class, "NmStoneAnvil");
     }
 }

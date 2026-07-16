@@ -22,9 +22,6 @@ public class GuiContainerMixin {
     @Redirect(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;isKeyDown(I)Z", remap = false))
     private boolean disallowShiftClickingWithinAnvilGUI(int key){
         GuiContainer self = (GuiContainer)(Object)this;
-        if(self instanceof GuiRepair){
-            return false;
-        }
         if(self instanceof GuiAdvancedHorseArmor){
             return false;
         }

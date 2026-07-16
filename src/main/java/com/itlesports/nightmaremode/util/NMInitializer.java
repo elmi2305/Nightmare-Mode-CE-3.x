@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
+import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
@@ -25,6 +26,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void initIFHYRecipes(){
         addCraftingRecipes();
+        addHammerWorldInteractionRecipes();
         addCampfireRecipes();
         addCrucibleRecipes();
         addCauldronRecipes();
@@ -406,13 +408,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.sapTap), new Object[]{"BT", "DS", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig, Character.valueOf('D'), NMItems.drill, Character.valueOf('S'), NMItems.thickenedSap});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.ovenPart});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SS", "S ", Character.valueOf('S'), Block.cobblestone});
         NMFoodSpoilage.addSnowRefreshRecipes();
-
-        addHammerRecipe(new ItemStack(NMItems.crushedNickelRock), new ItemStack(NMItems.rawNickelRock));
-        addHammerRecipe(new ItemStack(NMItems.hammeredLithium), new ItemStack(NMItems.rawLithium));
-        addHammerRecipe(new ItemStack(NMItems.polishedCrystalShard), new ItemStack(NMItems.cleanCrystalShard, 1, Short.MAX_VALUE));
-        addHammerRecipe(new ItemStack(NMItems.crackedDiamondBearingRock), new ItemStack(NMItems.diamondBearingRock));
-        addHammerRecipe(new ItemStack(NMItems.nickelPlate), new ItemStack(NMItems.nickelIngot));
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.refinedLithium), new ItemStack(Item.sugar)});
         RecipeManager.addRecipe(new ItemStack(NMItems.lithiumStabilizer), new Object[]{" C ", "LCL", " C ", Character.valueOf('L'), NMItems.lithiumSalt, Character.valueOf('C'), Item.clay});
@@ -434,13 +431,8 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
 
-    private static void addHammerRecipe(ItemStack output, ItemStack input) {
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.woodHammer, 1, Short.MAX_VALUE)});
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.stoneHammer, 1, Short.MAX_VALUE)});
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.ironHammer, 1, Short.MAX_VALUE)});
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.goldHammer, 1, Short.MAX_VALUE)});
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.diamondHammer, 1, Short.MAX_VALUE)});
-        RecipeManager.addShapelessRecipe(output.copy(), new Object[]{input.copy(), new ItemStack(NMItems.steelHammer, 1, Short.MAX_VALUE)});
+    private static void addHammerWorldInteractionRecipes(){
+        HammerRecipeList.addRecipes();
     }
     private static void addMultiplayerRecipes(){
         if(MinecraftServer.getIsServer()){
