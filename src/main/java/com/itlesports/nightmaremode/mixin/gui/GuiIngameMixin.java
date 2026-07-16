@@ -787,7 +787,11 @@ public abstract class GuiIngameMixin extends Gui {
         }
 
         int unlockedSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.mc.thePlayer);
-        int unlockedWidth = unlockedSlots * 20 + 2;
+        int offset = 1;
+        if(unlockedSlots >= 9){
+            offset = 3;
+        }
+        int unlockedWidth = unlockedSlots * 20 + offset;
         instance.drawTexturedModalRect(this.nightmareMode$getHotbarLeft(unlockedSlots), y, u, v, unlockedWidth, height);
     }
 
@@ -825,14 +829,19 @@ public abstract class GuiIngameMixin extends Gui {
         if (slot >= unlockedSlots) {
             return;
         }
+        int offset = 3;
 
-        this.renderInventorySlot(slot, this.nightmareMode$getHotbarLeft(unlockedSlots) + slot * 20 + 2, y, partialTicks);
+        this.renderInventorySlot(slot, this.nightmareMode$getHotbarLeft(unlockedSlots) + slot * 20 + offset, y, partialTicks);
     }
 
     @Unique
     private int nightmareMode$getHotbarLeft(int unlockedSlots) {
         ScaledResolution scaledResolution = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
-        return scaledResolution.getScaledWidth() / 2 - (unlockedSlots * 20 + 2) / 2;
+        int offset = 1;
+        if(unlockedSlots >= 9){
+            offset = 3;
+        }
+        return scaledResolution.getScaledWidth() / 2 - (unlockedSlots * 20 + offset) / 2;
     }
 
     @Inject(method = "renderGameOverlay", at = @At("TAIL"))
