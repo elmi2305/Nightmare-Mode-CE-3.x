@@ -56,7 +56,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
 
         ItemStack held = player.inventory.getCurrentItem();
         if (player.isSneaking()) {
-            cistern.stir();
+            cistern.stir(player);
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.splash", 0.2F, 1.2F + world.rand.nextFloat() * 0.2F);
             return true;
         }

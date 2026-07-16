@@ -26,6 +26,8 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     private int heatLevel;
     private int processingTime;
     private int stirProgress;
+    private int ticksExisted;
+
     private CisternRecipe currentRecipe;
 
     @Override
@@ -33,7 +35,10 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         if (this.worldObj == null || this.worldObj.isRemote) {
             return;
         }
-
+        this.ticksExisted++;
+        if(this.stirProgress > 0 && this.ticksExisted % 64 == 0){
+            this.stirProgress--;
+        }
         this.heatLevel = this.calculateHeatLevel();
         CisternRecipe recipe = CisternRecipeManager.instance.getMatchingRecipe(this.contents, this.fluid, this.heatLevel, this.stirProgress);
         if (recipe == null || !this.canAcceptOutputs(recipe)) {
@@ -49,6 +54,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         }
 
         ++this.processingTime;
+
         if (this.processingTime >= recipe.getDuration()) {
             this.finishRecipe(recipe);
         }
@@ -76,8 +82,9 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         return drained;
     }
 
-    public void stir() {
+    public void stir(EntityPlayer p) {
         this.stirProgress = Math.min(this.stirProgress + 1, 64);
+        p.addExhaustion(0.3f);
         this.syncState();
     }
 
@@ -183,7 +190,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.fluid = recipe.consumesFluid() ? FLUID_EMPTY : recipe.getResultingFluid(this.fluid);
         this.processingTime = 0;
         if (this.stirProgress > 0) {
-            --this.stirProgress;
+            this.stirProgress /= 4;
         }
         this.currentRecipe = null;
         this.onInventoryChanged();
