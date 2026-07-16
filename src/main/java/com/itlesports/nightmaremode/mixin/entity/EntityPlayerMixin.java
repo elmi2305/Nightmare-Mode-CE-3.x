@@ -120,18 +120,31 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @Inject(method = "fall", at = @At("HEAD"))
     private void crushBlocksBelow(float fallDistance, CallbackInfo ci){
-        int xPos = (int)this.posX;
-        int yBelow = (int)(this.posY);
-        int zPos = (int)this.posZ;
-        if(this.worldObj.isRemote) return;
-        if(this.worldObj.getBlockId(xPos, yBelow, zPos) == BTWBlocks.ironOreChunk.blockID
-                && this.rand.nextInt(8) == 0
-                && fallDistance > 0.9f
-                && !this.worldObj.isRemote){
-            this.worldObj.playSound(xPos, yBelow, zPos, "random.break", 0.5f, 0.9f);
-
-            this.worldObj.setBlockWithNotify(xPos, yBelow, zPos, NMBlocks.blockCrushedIronLayer.blockID);
+        if (this.worldObj.isRemote || fallDistance <= 0.9F) {
+            return;
         }
+
+        int yBelow = MathHelper.floor_double(this.boundingBox.minY + 0.01D);
+        int minX = MathHelper.floor_double(this.posX - 0.5D);
+        int maxX = MathHelper.floor_double(this.posX + 0.5D);
+        int minZ = MathHelper.floor_double(this.posZ - 0.5D);
+        int maxZ = MathHelper.floor_double(this.posZ + 0.5D);
+
+        for (int x = minX; x <= maxX; ++x) {
+            for (int z = minZ; z <= maxZ; ++z) {
+                if (!this.canCrushIronAt(x, yBelow, z) && fallDistance > 0.9f && this.rand.nextInt(8) == 0) {
+                    continue;
+                }
+
+                this.worldObj.playSound(x + 0.5D, yBelow + 0.5D, z + 0.5D, "random.break", 0.5F, 0.9F);
+                this.worldObj.setBlockWithNotify(x, yBelow, z, NMBlocks.blockCrushedIronLayer.blockID);
+                return;
+            }
+        }
+    }
+
+    @Unique private boolean canCrushIronAt(int x, int y, int z) {
+        return this.worldObj.getBlockId(x, y, z) == BTWBlocks.ironOreChunk.blockID;
     }
 
     @Inject(method = "interactWith", at = @At("HEAD"))
