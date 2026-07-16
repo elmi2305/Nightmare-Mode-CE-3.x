@@ -36,6 +36,16 @@ public class HammerCraftingManager {
         return recipe;
     }
 
+    public HammerRecipe addItemRecipe(ItemStack output, ItemStack input) {
+        return this.addItemRecipe(new ItemStack[]{output}, input);
+    }
+
+    public HammerRecipe addItemRecipe(ItemStack[] output, ItemStack input) {
+        HammerRecipe recipe = new HammerRecipe(output, input);
+        this.recipes.add(recipe);
+        return recipe;
+    }
+
     public boolean removeRecipe(ItemStack[] output, Block block, int[] metadatas) {
         HammerRecipe recipeToRemove = new HammerRecipe(output, block, metadatas);
         for (HammerRecipe recipe : this.recipes) {
@@ -60,8 +70,26 @@ public class HammerCraftingManager {
         return null;
     }
 
+    public HammerRecipe getRecipe(ItemStack stack) {
+        if (stack == null) {
+            return null;
+        }
+
+        for (HammerRecipe recipe : this.recipes) {
+            if (recipe.matchesInputs(stack)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
     public ItemStack[] getRecipeResult(Block block, int metadata) {
         HammerRecipe recipe = this.getRecipe(block, metadata);
+        return recipe == null ? null : recipe.getOutput();
+    }
+
+    public ItemStack[] getRecipeResult(ItemStack stack) {
+        HammerRecipe recipe = this.getRecipe(stack);
         return recipe == null ? null : recipe.getOutput();
     }
 

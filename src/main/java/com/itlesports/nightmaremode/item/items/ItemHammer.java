@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.item.items;
 
 import api.item.items.ToolItem;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
+import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -13,17 +14,17 @@ public class ItemHammer extends ToolItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k) ? this.efficiencyOnProperMaterial : 0.0F;
+        return this.canUseHammerRecipe(stack, world, block, i, j, k) ? this.efficiencyOnProperMaterial : 0.0F;
     }
 
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k);
+        return this.canUseHammerRecipe(stack, world, block, i, j, k);
     }
 
     @Override
     public boolean isEfficientVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
-        return this.hasHammerRecipe(world, block, i, j, k) && this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world,i,j,k);
+        return this.canUseHammerRecipe(stack, world, block, i, j, k);
     }
 
     @Override
@@ -36,11 +37,14 @@ public class ItemHammer extends ToolItem {
         return NMFields.modID;
     }
 
-    private boolean hasHammerRecipe(World world, Block block, int i, int j, int k) {
+    private boolean canUseHammerRecipe(ItemStack stack, World world, Block block, int i, int j, int k) {
         if (world == null || block == null) {
             return false;
         }
 
-        return HammerCraftingManager.instance.getRecipe(block, world.getBlockMetadata(i, j, k)) != null;
+        HammerRecipe recipe = HammerCraftingManager.instance.getRecipe(block, world.getBlockMetadata(i, j, k));
+        return recipe != null
+                && recipe.hammerMeetsEnchantmentRequirements(stack)
+                && (recipe.canBeMinedByAnyHammer() || this.toolMaterial.getHarvestLevel() >= block.getHarvestToolLevel(world, i, j, k));
     }
 }

@@ -1,31 +1,24 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import api.item.items.PickaxeItem;
-import btw.entity.item.FloatingItemEntity;
-import btw.item.BTWItems;
-import btw.item.items.ChiselItem;
-import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
+import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
+import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static com.itlesports.nightmaremode.util.NMUtils.logTodo;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
     @Shadow public static Block obsidian;
     @Shadow @Final public int blockID;
 
-    @Shadow public abstract boolean doesBlockDropAsItemOnSaw(World world, int i, int j, int k);
-    @Shadow public abstract void dropBlockAsItem(World par1World, int par2, int par3, int par4, int par5, int par6);
     @Shadow protected abstract void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack);
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
@@ -33,82 +26,43 @@ public abstract class BlockMixin {
         Item.itemsList[obsidian.blockID] = new ObsidianItemBlock(obsidian.blockID - 256);
     }
 
-    // IFHY disabled, but could be reimplemented later
-
     @Inject(method = "harvestBlock", at = @At("HEAD"), cancellable = true)
-    private void additionalDropsForToolHarvested(World world, EntityPlayer player, int x, int y, int z, int meta, CallbackInfo ci){
+    private void applyHammerRecipeDrops(World world, EntityPlayer player, int x, int y, int z, int meta, CallbackInfo ci){
+        ItemStack heldStack = player.getHeldItem();
+        if (heldStack == null || !(heldStack.getItem() instanceof ItemHammer)) {
+            return;
+        }
+
+        HammerRecipe recipe = HammerCraftingManager.instance.getRecipe((Block)(Object)this, meta);
+        if (recipe == null) {
+            return;
+        }
+        if (!recipe.canPlayerUseHammer(heldStack, player)) {
+            world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, meta);
+            ci.cancel();
+            return;
+        }
+
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, meta);
 
-        ItemStack item = player.getHeldItem();
-        if(item == null) return;
-        int blockID = this.blockID;
+        if (recipe.isFinalHit(meta)) {
+            recipe.chargePlayerExperience(player);
+            for (ItemStack output : recipe.getOutput()) {
+                if (output != null) {
+                    this.dropBlockAsItem_do(world, x, y, z, output.copy());
+                }
+            }
+        } else {
+            world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, recipe.getNextHitMetadata(meta));
+        }
 
-
-
-//        if (item != null && item.getItem() instanceof PickaxeItem pi) {
-//
-//            if(EnchantmentHelper.getSilkTouchModifier(player)){return;}
-//
-//            if(pi.toolMaterial.getHarvestLevel() == 2 && world.rand.nextInt(7) < 4){
-//                if (blockID == Block.oreIron.blockID) {
-//                    // 4/7 chance (57%)
-//                    summonEntity(world,x,y,z,BTWItems.ironOreChunk);
-//                } else if(blockID == Block.oreGold.blockID){
-//                    summonEntity(world,x,y,z,BTWItems.goldOreChunk);
-//                }
-//            } else if((pi.toolMaterial.getHarvestLevel() >= 3) && world.rand.nextInt(4) != 0) {
-//                // 3/4 chance (75%)
-//                if (blockID == Block.oreIron.blockID) {
-//                    summonEntity(world, x, y, z, BTWItems.ironOreChunk);
-//                } else if (blockID == Block.oreGold.blockID) {
-//                    summonEntity(world, x, y, z, BTWItems.goldOreChunk);
-//                }
-//            }
-//        }
-
-
-        logTodo();
-        // here is where we add additional drops for when a block gets broken by aspecific tool
+        ci.cancel();
     }
     @Inject(method = "canMobsSpawnOn", at = @At("HEAD"),cancellable = true)
     private void mobSpawnOnWood(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
         if(NMUtils.getIsBloodMoon()){
             cir.setReturnValue(true);
         }
-    }
-
-    @Inject(method = "onBlockActivated", at = @At("HEAD"), cancellable = true)
-    private void convertMortaredBrickSlabToOvenPart(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ, CallbackInfoReturnable<Boolean> cir) {
-        if (this.blockID != Block.stoneSingleSlab.blockID || (world.getBlockMetadata(x, y, z) & 7) != 4) {
-            return;
-        }
-
-        ItemStack heldStack = player.getHeldItem();
-        if (heldStack == null || heldStack.itemID != NMItems.woodHammer.itemID) {
-            return;
-        }
-
-        if (!world.isRemote) {
-            int metadata = world.getBlockMetadata(x, y, z);
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.ovenPart));
-            world.playAuxSFX(2001, x, y, z, this.blockID + (metadata << 12));
-            world.setBlockToAir(x, y, z);
-
-            heldStack.damageItem(1, player);
-            if (heldStack.stackSize <= 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            }
-        }
-
-        cir.setReturnValue(true);
-    }
-
-    @Unique private static void summonEntity(World world, int x, int y, int z, Item item){
-        int meta = 0;
-        if(item.itemID == BTWItems.sharpStone.itemID){
-            meta = world.rand.nextInt(3) + 1;
-        }
-        world.spawnEntityInWorld(new FloatingItemEntity(world, x, y, z, new ItemStack(item, 1, meta)));
     }
 }
