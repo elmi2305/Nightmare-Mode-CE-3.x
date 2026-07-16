@@ -27,10 +27,11 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         return false;
     }
 
-    @Inject(method = "idDropped", at= @At("RETURN"),cancellable = true)
+    @Inject(method = "idDropped", at= @At("HEAD"),cancellable = true)
     private void allowAppleDrops(int metadata, Random rand, int fortuneModifier, CallbackInfoReturnable<Integer> cir){
         if(rand.nextInt(8) == 0){
             cir.setReturnValue(NMItems.twig.itemID);
+            return;
         }
         cir.setReturnValue(NMItems.leaf.itemID);
     }
