@@ -126,6 +126,7 @@ tile.ifhyCrushedIron.name=Crushed Iron Mix
 tile.ifhyWashedCrushedIron.name=Washed Crushed Iron Mix
 tile.ifhySapTap.name=Sap Tap
 tile.ifhyStoneAnvil.name=Stone Anvil
+tile.ifhyDiamondAnvil.name=Diamond Anvil
 
 tile.nmSteelOre.name=Steel Ore
 tile.nmSpecialObsidian.name=Arena Stone
