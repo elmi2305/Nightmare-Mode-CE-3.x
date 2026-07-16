@@ -200,7 +200,6 @@
     "entityaitasks.WolfHowlBehaviorMixin",
     "entityaitasks.ZombieBreakBarricadeBehaviorHostileMixin",
     "entityaitasks.ZombieBreakBarricadeBehaviorMixin",
-    "gui.ContainerRepairMixin",
     "gui.InfernalEnchanterContainerMixin",
     "gui.InventoryBasicMixin",
     "gui.InventoryEnderChestMixin",

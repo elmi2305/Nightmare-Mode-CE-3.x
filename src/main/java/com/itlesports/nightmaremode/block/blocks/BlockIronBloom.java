@@ -1,19 +1,13 @@
 package com.itlesports.nightmaremode.block.blocks;
 
-import btw.entity.item.FloatingItemEntity;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.ItemHammer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Block;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Icon;
 import net.minecraft.src.IconRegister;
-import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.World;
@@ -56,41 +50,6 @@ public class BlockIronBloom extends Block {
             this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
         }
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
-        return this.tryHammerBloom(world, x, y, z, player);
-    }
-
-    @Override
-    public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
-        this.tryHammerBloom(world, x, y, z, player);
-    }
-
-    private boolean tryHammerBloom(World world, int x, int y, int z, EntityPlayer player) {
-        ItemStack heldStack = player.getHeldItem();
-        if (heldStack == null || !(heldStack.getItem() instanceof ItemHammer)) {
-            return false;
-        }
-
-        if (!world.isRemote) {
-            int metadata = world.getBlockMetadata(x, y, z);
-            heldStack.damageItem(1, player);
-            if (heldStack.stackSize <= 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            }
-
-            world.playAuxSFX(2001, x, y, z, this.blockID + (metadata << 12));
-            if (metadata >= HITS_TO_FINISH - 1) {
-                world.setBlockToAir(x, y, z);
-                world.spawnEntityInWorld(new FloatingItemEntity(world, x + 0.5, y + 0.25, z + 0.5, new ItemStack(BTWItems.ironNugget)));
-            } else {
-                world.setBlockMetadataWithNotify(x, y, z, metadata + 1);
-            }
-        }
-
-        return true;
     }
 
     @Override
