@@ -828,7 +828,7 @@ public class NightmareMode extends BTWAddon {
 
     public static final DataEntry.PlayerDataEntry<SkillTreeData> SKILL_TREE =
             DataProvider.getBuilder(SkillTreeData.class)
-                    .name("NightmareSkillTree")
+                    .name("NmSkillTree")
                     .defaultSupplier(SkillTreeData::new)
                     .readNBT(SkillTreeData::readFromNBT)
                     .writeNBT(SkillTreeData::writeToNBT)
@@ -838,7 +838,7 @@ public class NightmareMode extends BTWAddon {
 
     public static final DataEntry.WorldDataEntry<WorldSkillData> WORLD_SKILL_TREE =
             DataProvider.getBuilder(WorldSkillData.class)
-                    .name("NightmareWorldSkillTree")
+                    .name("NmWorldSkillTree")
                     .defaultSupplier(WorldSkillData::new)
                     .readNBT(WorldSkillData::readFromNBT)
                     .writeNBT(WorldSkillData::writeToNBT)
