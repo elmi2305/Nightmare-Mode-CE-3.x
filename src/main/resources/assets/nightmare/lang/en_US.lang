@@ -895,3 +895,9 @@ nm.goldenApple.info=Golden Apples apply Regeneration I for 4 seconds and Absorpt
 nm.goldenAppleEnchanted.info=Enchanted Golden Apples apply Regeneration IV + Fire Resistance + Strength II + Speed II + Haste II for 30 seconds, Resistance I for 40 seconds, Night Vision and Absorption II for 2 minutes. They have a 90 second cooldown.
 nm.brownMushroom.info=Brown Mushrooms naturally grow in the Nether. Brown Mushroom trees on Mushroom Islands can only be harvested after the Nether has been accessed.
 nm.pumpkin.info=Wearing Pumpkins causes Endermen and Ghasts to automatically pursue the player regardless of daytime and through walls.
+
+
+# CUSTOM EMI TABS
+
+emi.category.nightmare.hammering=Hammering
+emi.category.nightmare.cistern=Cistern
