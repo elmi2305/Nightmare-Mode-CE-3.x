@@ -14,6 +14,10 @@ import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
+import com.itlesports.nightmaremode.skill.NMSkillNodes;
+import com.itlesports.nightmaremode.skill.SkillNet;
+import com.itlesports.nightmaremode.skill.SkillTreeData;
+import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
@@ -225,6 +229,7 @@ public class NightmareMode extends BTWAddon {
         OldNMInitializer.initNightmareRecipes();
 
         NMTags.initTags();
+        NMSkillNodes.initialize();
         OldNMInitializer.miscInit();
         NMAchievements.initialize();
         OldNMInitializer.manipulateAchievements();
@@ -277,6 +282,7 @@ public class NightmareMode extends BTWAddon {
 
     @Environment(EnvType.SERVER)
     private void initServerPacketInfo(){
+        // client sending player's held direction to the server
         AddonHandler.registerPacketHandler("nm|Dir", (packet, player) -> {
             try (DataInputStream data = new DataInputStream(new ByteArrayInputStream(packet.data))) {
                 byte dirOrdinal = data.readByte();
@@ -291,7 +297,23 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
+        // client skill GUI sending click packet to player
+        AddonHandler.registerPacketHandler(SkillNet.UNLOCK_CHANNEL, (packet, player) -> {
+            if (player instanceof EntityPlayerMP playerMP) {
+                SkillNet.handleUnlockRequest(packet.data, playerMP);
+            }
+        });
 
+
+    }
+
+    @Override
+    public boolean serverCustomPacketReceived(NetServerHandler handler, Packet250CustomPayload packet) {
+        if (SkillNet.UNLOCK_CHANNEL.equals(packet.channel) && handler != null && handler.playerEntity != null) {
+            SkillNet.handleUnlockRequest(packet.data, handler.playerEntity);
+            return true;
+        }
+        return super.serverCustomPacketReceived(handler, packet);
     }
 
     @Environment(EnvType.CLIENT)
@@ -804,6 +826,26 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.PlayerDataEntry<SkillTreeData> SKILL_TREE =
+            DataProvider.getBuilder(SkillTreeData.class)
+                    .name("NightmareSkillTree")
+                    .defaultSupplier(SkillTreeData::new)
+                    .readNBT(SkillTreeData::readFromNBT)
+                    .writeNBT(SkillTreeData::writeToNBT)
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
+    public static final DataEntry.WorldDataEntry<WorldSkillData> WORLD_SKILL_TREE =
+            DataProvider.getBuilder(WorldSkillData.class)
+                    .name("NightmareWorldSkillTree")
+                    .defaultSupplier(WorldSkillData::new)
+                    .readNBT(WorldSkillData::readFromNBT)
+                    .writeNBT(WorldSkillData::writeToNBT)
+                    .global()
+                    .sync()
+                    .build();
+
     public static final DataEntry.WorldDataEntry<int[]> CONFIGS_CREATED =
             DataProvider.getBuilder(int[].class)
                     .name("ConfigsInit")
@@ -850,6 +892,8 @@ public class NightmareMode extends BTWAddon {
         SANITY.register();
         DEFEATED_BM.register();
         DEFEATED_BLOODWITHER.register();
+        SKILL_TREE.register();
+        WORLD_SKILL_TREE.register();
     }
 
     @Override
