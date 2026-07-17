@@ -4,6 +4,7 @@ import api.item.items.AxeItem;
 import btw.block.blocks.ChewedLogBlock;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.NMUtils;
 import org.spongepowered.asm.mixin.Mixin;
 
 
@@ -46,7 +47,7 @@ public abstract class ChewedLogBlockMixin extends Block {
 
     @Override
     public int tickRate(World par1World) {
-        if (NightmareMode.noSkybases) {
+        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(par1World)) {
             return 4;
         }
         return super.tickRate(par1World);
