@@ -12,6 +12,7 @@ public class SkillTreeData {
     public int coalOreMined;
     public int ironOreMined;
     public int diamondOreMined;
+    public int tallGrassMined;
     public int animalsTamed;
     public int animalsBred;
     public int mobsKilled;
@@ -22,11 +23,14 @@ public class SkillTreeData {
     public int foodCooked;
     public int booksCrafted;
     public int potionsBrewed;
+
     public float blockBreakSpeedBonus;
     public float mobLootChanceBonus;
+
     public boolean canHarvestDiamondOre;
     public boolean canCureVillagers;
     public boolean foodSpoilsSlower;
+    public boolean grassBreaksInstantly;
     private final Set<String> unlockedNodes = new HashSet<>();
 
     public boolean isUnlocked(SkillNode node) {
@@ -53,6 +57,7 @@ public class SkillTreeData {
         data.coalOreMined = tag.getInteger("CoalOreMined");
         data.ironOreMined = tag.getInteger("IronOreMined");
         data.diamondOreMined = tag.getInteger("DiamondOreMined");
+        data.tallGrassMined = tag.getInteger("TallGrassMined");
         data.animalsTamed = tag.getInteger("AnimalsTamed");
         data.animalsBred = tag.getInteger("AnimalsBred");
         data.mobsKilled = tag.getInteger("MobsKilled");
@@ -68,6 +73,7 @@ public class SkillTreeData {
         data.canHarvestDiamondOre = tag.getBoolean("CanHarvestDiamondOre");
         data.canCureVillagers = tag.getBoolean("CanCureVillagers");
         data.foodSpoilsSlower = tag.getBoolean("FoodSpoilsSlower");
+        data.grassBreaksInstantly = tag.getBoolean("GrassBreaksInstantly");
         NBTTagList unlocked = tag.getTagList("UnlockedNodes");
         for (int i = 0; i < unlocked.tagCount(); ++i) {
             data.unlockedNodes.add(((NBTTagString)unlocked.tagAt(i)).data);
@@ -80,6 +86,7 @@ public class SkillTreeData {
         tag.setInteger("CoalOreMined", data.coalOreMined);
         tag.setInteger("IronOreMined", data.ironOreMined);
         tag.setInteger("DiamondOreMined", data.diamondOreMined);
+        tag.setInteger("TallGrassMined", data.tallGrassMined);
         tag.setInteger("AnimalsTamed", data.animalsTamed);
         tag.setInteger("AnimalsBred", data.animalsBred);
         tag.setInteger("MobsKilled", data.mobsKilled);
@@ -95,6 +102,7 @@ public class SkillTreeData {
         tag.setBoolean("CanHarvestDiamondOre", data.canHarvestDiamondOre);
         tag.setBoolean("CanCureVillagers", data.canCureVillagers);
         tag.setBoolean("FoodSpoilsSlower", data.foodSpoilsSlower);
+        tag.setBoolean("GrassBreaksInstantly", data.grassBreaksInstantly);
         NBTTagList unlocked = new NBTTagList("UnlockedNodes");
         for (String id : data.unlockedNodes) {
             unlocked.appendTag(new NBTTagString("", id));

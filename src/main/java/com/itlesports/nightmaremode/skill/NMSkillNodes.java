@@ -20,14 +20,27 @@ public class NMSkillNodes {
     public static final SkillBranch KNOWLEDGE = new SkillBranch("Knowledge", Item.book);
     public static final SkillBranch COMBAT = new SkillBranch("Combat", Item.swordIron);
 
+    // x -> right
+    // y -> down
     public static final SkillNode MINING_INITIATE = getBuilder()
             .id(loc("mining_initiate"))
             .name("Mining Initiate")
             .icon(Block.stone)
             .displayLocation(0, 0)
-            .requirementText("Mine 100 blocks.")
-            .triggerCondition((player, world) -> SkillHandler.getPlayerData(player).blocksMined >= 100)
+            .requirementText("Mine 1000 blocks.")
+            .triggerCondition((player, world) -> SkillHandler.getPlayerData(player).blocksMined >= 1000)
             .reward("+5% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.05F))
+            .build()
+            .register(MINING);
+
+    public static final SkillNode MINE_GRASS = getBuilder()
+            .id(loc("mine_grass"))
+            .name("Weed Inspector")
+            .icon(Block.tallGrass)
+            .displayLocation(0, -1)
+            .requirementText("Mine 250 Tall Grass.")
+            .triggerCondition((player, world) -> SkillHandler.getPlayerData(player).tallGrassMined >= 250)
+            .reward("Tall Grass breaks instantly.", SkillRewardActions.setTallGrassBreaksInstantly())
             .build()
             .register(MINING);
 

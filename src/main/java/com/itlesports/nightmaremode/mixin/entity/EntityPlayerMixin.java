@@ -136,6 +136,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return this.nightmareMode$getSkillData().foodSpoilsSlower;
     }
 
+    @Override
+    public boolean nightmareMode$doesGrassBreakInstantly() {
+        return this.nightmareMode$getSkillData().grassBreaksInstantly;
+    }
+
     @Unique
     private SkillTreeData nightmareMode$getSkillData() {
         return this.getData(SKILL_TREE);

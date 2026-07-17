@@ -19,4 +19,5 @@ public interface EntityPlayerExt {
     boolean nightmareMode$canSkillHarvestDiamondOre();
     boolean nightmareMode$canSkillCureVillagers();
     boolean nightmareMode$doesSkillSlowFoodSpoilage();
+    boolean nightmareMode$doesGrassBreakInstantly();
 }

@@ -2,12 +2,7 @@ package com.itlesports.nightmaremode.skill;
 
 import api.world.data.DataSyncManager;
 import btw.community.nightmaremode.NightmareMode;
-import net.minecraft.src.ChatMessageComponent;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerMP;
-import net.minecraft.src.EnumChatFormatting;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldServer;
+import net.minecraft.src.*;
 
 public class SkillHandler {
     public static SkillTreeData getPlayerData(EntityPlayer player) {
@@ -82,13 +77,16 @@ public class SkillHandler {
         }
         SkillTreeData data = getPlayerData(player);
         data.blocksMined++;
-        if (blockId == net.minecraft.src.Block.oreCoal.blockID) {
+        if (blockId == Block.oreCoal.blockID) {
             data.coalOreMined++;
-        } else if (blockId == net.minecraft.src.Block.oreIron.blockID) {
+        } else if (blockId == Block.oreIron.blockID) {
             data.ironOreMined++;
-        } else if (blockId == net.minecraft.src.Block.oreDiamond.blockID) {
+        } else if (blockId == Block.oreDiamond.blockID) {
             data.diamondOreMined++;
+        } else if (blockId == Block.tallGrass.blockID) {
+            data.tallGrassMined++;
         }
+
         player.setData(NightmareMode.SKILL_TREE, data);
     }
 

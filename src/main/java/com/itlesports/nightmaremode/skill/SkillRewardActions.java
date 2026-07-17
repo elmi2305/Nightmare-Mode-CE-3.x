@@ -19,6 +19,14 @@ public class SkillRewardActions {
         };
     }
 
+    public static SkillUnlockAction setTallGrassBreaksInstantly() {
+        return (player, world) -> {
+            SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
+            data.grassBreaksInstantly = true;
+            player.setData(NightmareMode.SKILL_TREE, data);
+        };
+    }
+
     public static SkillUnlockAction unlockDiamondHarvest() {
         return (player, world) -> {
             SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);

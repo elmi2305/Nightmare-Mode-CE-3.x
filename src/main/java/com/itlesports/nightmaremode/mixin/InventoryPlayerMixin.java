@@ -120,7 +120,8 @@ public class InventoryPlayerMixin {
     @Inject(method = "getStrVsBlock", at = @At("RETURN"), cancellable = true)
     private void applySkillBlockBreakSpeed(World world, Block block, int x, int y, int z, CallbackInfoReturnable<Float> cir) {
         if (this.player instanceof EntityPlayerExt ext) {
-            cir.setReturnValue(cir.getReturnValueF() * (1.0F + ext.nightmareMode$getSkillBlockBreakSpeedBonus()));
+            float adjustedBlockBreakSpeed = cir.getReturnValueF() * (1.0F + ext.nightmareMode$getSkillBlockBreakSpeedBonus());
+            cir.setReturnValue(adjustedBlockBreakSpeed);
         }
     }
 
