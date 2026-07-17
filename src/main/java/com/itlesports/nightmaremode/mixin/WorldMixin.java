@@ -4,10 +4,12 @@ import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.entity.underworld.EntityVoidSquid;
+import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.WorldSkillExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +27,7 @@ import java.util.Random;
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(World.class)
-public abstract class WorldMixin {
+public abstract class WorldMixin implements WorldSkillExt {
 
     @Shadow public Random rand;
     @Shadow public WorldInfo worldInfo;
@@ -37,12 +39,33 @@ public abstract class WorldMixin {
 
 
     @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> worldDataEntry, T t);
+    @Shadow public abstract <T> T getData(DataEntry.WorldDataEntry<T> worldDataEntry);
 
     @Shadow
     public abstract TileEntity getBlockTileEntity(int par1, int par2, int par3);
 
     @Shadow
     public abstract EntityPlayer getClosestPlayer(double par1, double par3, double par5, double par7);
+
+    @Override
+    public boolean nightmareMode$woodBlocksIgnoreSkybaseGravity() {
+        return this.nightmareMode$getSkillData().woodBlocksIgnoreSkybaseGravity;
+    }
+
+    @Override
+    public boolean nightmareMode$isNetherAccessUnlocked() {
+        return this.nightmareMode$getSkillData().netherAccessUnlocked;
+    }
+
+    @Override
+    public boolean nightmareMode$doesFireSpreadSlower() {
+        return this.nightmareMode$getSkillData().fireSpreadsSlower;
+    }
+
+    @Unique
+    private WorldSkillData nightmareMode$getSkillData() {
+        return this.getData(NightmareMode.WORLD_SKILL_TREE);
+    }
 
     @Inject(method = "isRaining", at = @At("HEAD"),cancellable = true)
     private void bloodMoonRain(CallbackInfoReturnable<Boolean> cir) {

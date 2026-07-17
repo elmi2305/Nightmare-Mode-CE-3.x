@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityAgeable;
 import net.minecraft.src.EntityAnimal;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,5 +51,15 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
         if(this.dimension == NMFields.UNDERWORLD_DIMENSION){
             cir.setReturnValue(false);
         }
+    }
+
+    @Inject(method = "procreate", at = @At("TAIL"))
+    private void trackSkillAnimalBreeding(EntityAnimal targetMate, CallbackInfo ci) {
+        if (this.worldObj == null || this.worldObj.isRemote) {
+            return;
+        }
+
+        EntityPlayer player = this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 16.0D);
+        SkillHandler.incrementAnimalsBred(player);
     }
 }

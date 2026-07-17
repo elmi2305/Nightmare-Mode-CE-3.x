@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityLivingBaseAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.SoundManagerAccess;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 import paulscode.sound.SoundSystemConfig;
@@ -26,6 +27,10 @@ public class NMUtils {
     private static boolean intenseCorruption = false;
 
     public static void logTodo(){}
+
+    public static boolean shouldWoodBlocksHaveSkybaseGravity(World world) {
+        return NightmareMode.noSkybases && !SkillHandler.woodBlocksIgnoreSkybaseGravity(world);
+    }
 
     // Constants and collections
     public static final List<Integer> bloodArmor = new ArrayList<>(Arrays.asList(

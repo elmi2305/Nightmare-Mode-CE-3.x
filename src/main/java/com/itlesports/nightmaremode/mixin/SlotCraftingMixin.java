@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,6 +15,7 @@ import java.util.Random;
 @Mixin(SlotCrafting.class)
 public class SlotCraftingMixin extends Slot {
     @Shadow private EntityPlayer thePlayer;
+    @Shadow private int amountCrafted;
 
     public SlotCraftingMixin(IInventory par1IInventory, int par2, int par3, int par4) {
         super(par1IInventory, par2, par3, par4);
@@ -21,6 +23,9 @@ public class SlotCraftingMixin extends Slot {
 
     @Inject(method = "onCrafting(Lnet/minecraft/src/ItemStack;)V", at = @At("HEAD"))
     private void craft(ItemStack par1ItemStack, CallbackInfo ci){
+        if (par1ItemStack != null && par1ItemStack.itemID == Item.book.itemID) {
+            SkillHandler.incrementBooksCrafted(this.thePlayer, Math.max(1, this.amountCrafted));
+        }
         if (NightmareMode.isAprilFools) {
             par1ItemStack.attemptDamageItem( (int) (Math.abs(this.thePlayer.rand.nextGaussian() * 0.5f) * par1ItemStack.getMaxDamage() - 1), this.thePlayer.rand);
         }

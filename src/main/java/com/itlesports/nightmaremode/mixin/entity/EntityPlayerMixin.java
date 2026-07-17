@@ -19,6 +19,8 @@ import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
+import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.elements.NMDamageSource;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
@@ -107,6 +109,36 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return this.blinkLength;
     }
 
+    @Override
+    public float nightmareMode$getSkillBlockBreakSpeedBonus() {
+        return this.nightmareMode$getSkillData().blockBreakSpeedBonus;
+    }
+
+    @Override
+    public float nightmareMode$getSkillMobLootChanceBonus() {
+        return this.nightmareMode$getSkillData().mobLootChanceBonus;
+    }
+
+    @Override
+    public boolean nightmareMode$canSkillHarvestDiamondOre() {
+        return this.nightmareMode$getSkillData().canHarvestDiamondOre;
+    }
+
+    @Override
+    public boolean nightmareMode$canSkillCureVillagers() {
+        return this.nightmareMode$getSkillData().canCureVillagers;
+    }
+
+    @Override
+    public boolean nightmareMode$doesSkillSlowFoodSpoilage() {
+        return this.nightmareMode$getSkillData().foodSpoilsSlower;
+    }
+
+    @Unique
+    private SkillTreeData nightmareMode$getSkillData() {
+        return this.getData(SKILL_TREE);
+    }
+
     public EntityPlayerMixin(World par1World) {
         super(par1World);
     }
@@ -132,7 +164,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
-                if (!this.canCrushIronAt(x, yBelow, z) && fallDistance > 0.9f && this.rand.nextInt(8) == 0) {
+                if (!this.canCrushIronAt(x, yBelow, z) || this.rand.nextInt(8) != 0) {
                     continue;
                 }
 
@@ -378,6 +410,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @Inject(method = "onKillEntity", at = @At("TAIL"))
     private void setBloodWitherDataEntry(EntityLivingBase elb, CallbackInfo ci){
+        SkillHandler.incrementMobKill((EntityPlayer)(Object)this, elb);
         if(elb instanceof EntityBloodWither){
             this.setData(DEFEATED_BLOODWITHER, true);
         }
@@ -1196,6 +1229,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;
+        SkillHandler.incrementBlocksMined(self, iBlockID);
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
     }
 

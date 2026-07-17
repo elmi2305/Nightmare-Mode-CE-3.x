@@ -4,6 +4,7 @@ import api.world.WorldUtils;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -29,6 +30,17 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
+    }
+
+    @Inject(method = "travelToDimension", at = @At("HEAD"), cancellable = true)
+    private void gateNetherAccessBehindSkill(int par1, CallbackInfo ci) {
+        if (par1 == -1 && !SkillHandler.hasNetherAccess((EntityPlayer)(Object)this)) {
+            ChatMessageComponent text = new ChatMessageComponent();
+            text.addText("Requires skill: Alchemical Apparatus - Bring a brewing stand.");
+            text.setColor(EnumChatFormatting.DARK_RED);
+            this.sendChatToPlayer(text);
+            ci.cancel();
+        }
     }
 
 

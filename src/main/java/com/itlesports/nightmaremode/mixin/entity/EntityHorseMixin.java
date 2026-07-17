@@ -4,6 +4,7 @@ import api.entity.mob.KickingAnimal;
 import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.blocks.BlockRoad;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -117,6 +118,13 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     private void manageEclipseHunger(CallbackInfoReturnable<Boolean> cir){
         if(NMUtils.getIsMobEclipsed(this)){
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "setTamedBy", at = @At("HEAD"))
+    private void trackSkillHorseTaming(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if (!this.isTame()) {
+            SkillHandler.incrementAnimalsTamed(player);
         }
     }
 

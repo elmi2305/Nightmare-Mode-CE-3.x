@@ -6,6 +6,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
+import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -114,6 +115,13 @@ public class InventoryPlayerMixin {
     @Inject(method = "getStrVsBlock", at = @At("HEAD"))
     private void clampBeforeCalculatingBlockStrength(World world, Block block, int x, int y, int z, CallbackInfoReturnable<Float> cir) {
         this.nightmareMode$clampCurrentItem();
+    }
+
+    @Inject(method = "getStrVsBlock", at = @At("RETURN"), cancellable = true)
+    private void applySkillBlockBreakSpeed(World world, Block block, int x, int y, int z, CallbackInfoReturnable<Float> cir) {
+        if (this.player instanceof EntityPlayerExt ext) {
+            cir.setReturnValue(cir.getReturnValueF() * (1.0F + ext.nightmareMode$getSkillBlockBreakSpeedBonus()));
+        }
     }
 
     @Inject(method = "canHarvestBlock", at = @At("HEAD"))

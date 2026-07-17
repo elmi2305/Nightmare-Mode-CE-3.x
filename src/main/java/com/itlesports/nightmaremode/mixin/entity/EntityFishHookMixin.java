@@ -5,12 +5,14 @@ import btw.item.BTWItems;
 import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -158,6 +160,13 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.angler.sendChatToPlayer(text2);
         }
         return this.fishItem.getItem();
+    }
+
+    @Inject(method = "catchFish", at = @At("TAIL"))
+    private void trackSkillFishing(CallbackInfoReturnable<Integer> cir) {
+        if (this.angler != null && cir.getReturnValueI() > 0) {
+            SkillHandler.incrementFishCaught(this.angler, this.fishItem.getItem() != Item.fishRaw);
+        }
     }
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFishHook;playSound(Ljava/lang/String;FF)V"))
     private void playCatchSoundAtPlayer(EntityFishHook instance, String s, float v, float p){

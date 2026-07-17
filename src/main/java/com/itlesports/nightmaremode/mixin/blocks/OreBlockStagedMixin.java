@@ -8,6 +8,7 @@ import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -62,6 +63,14 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
         }
         if (this.blockID == Block.oreDiamond.blockID) {
+            EntityPlayer closestPlayer = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
+            if (closestPlayer != null && !SkillHandler.canHarvestDiamondOre(closestPlayer)) {
+                if (!world.isRemote) {
+                    SkillHandler.sendStatus(closestPlayer, "Requires skill: Diamond Extraction - Bring 4 polished crystal shards.");
+                }
+                cir.setReturnValue(false);
+                return;
+            }
 
             if (!world.isRemote && world.rand.nextFloat() <= 0.9f) {
                 this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));

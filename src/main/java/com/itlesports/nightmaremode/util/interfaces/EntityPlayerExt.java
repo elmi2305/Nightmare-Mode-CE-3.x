@@ -13,4 +13,10 @@ public interface EntityPlayerExt {
 
     void nightmareMode$setHeartCrack(int length);
     boolean nightmareMode$getHeartCrack();
+
+    float nightmareMode$getSkillBlockBreakSpeedBonus();
+    float nightmareMode$getSkillMobLootChanceBonus();
+    boolean nightmareMode$canSkillHarvestDiamondOre();
+    boolean nightmareMode$canSkillCureVillagers();
+    boolean nightmareMode$doesSkillSlowFoodSpoilage();
 }
