@@ -383,7 +383,14 @@ public abstract class NMInitializer implements AchievementExt {
         MiscRecipeManager.instance.addRecipe(
                 new ItemStack(NMPostItems.stompedCrushedIronStoneMix),
                 new ItemStack(BTWItems.ironOreChunk),
+                "When jumped on");    // visual for EMI
+        MiscRecipeManager.instance.addBlockRecipe(
+                NMBlocks.blockCrushedIronLayer,
+                BTWBlocks.ironOreChunk,
                 "When jumped on");
+
+
+
         finishRecipes("Miscellaneous Recipes");
     }
 
