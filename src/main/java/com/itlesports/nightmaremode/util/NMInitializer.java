@@ -11,6 +11,8 @@ import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -26,6 +28,8 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void initIFHYRecipes(){
         addCraftingRecipes();
+        addWashingRecipes();
+        addMiscRecipes();
         addHammerWorldInteractionRecipes();
         addCampfireRecipes();
         addCrucibleRecipes();
@@ -359,6 +363,28 @@ public abstract class NMInitializer implements AchievementExt {
                 .setConsumesFluid());
 
         finishRecipes("Cistern Recipes");
+    }
+
+    private static void addWashingRecipes() {
+        WashingRecipeManager manager = WashingRecipeManager.instance;
+        manager.addWaterRecipe(
+                new ItemStack(NMPostItems.washedIronMix),
+                new ItemStack(NMPostItems.stompedCrushedIronStoneMix),
+                4000);
+        manager.addRainRecipe(
+                NMBlocks.blockWashedIronLayer,
+                NMBlocks.blockCrushedIronLayer,
+                40,
+                4);
+        finishRecipes("Washing Recipes");
+    }
+
+    private static void addMiscRecipes() {
+        MiscRecipeManager.instance.addRecipe(
+                new ItemStack(NMPostItems.stompedCrushedIronStoneMix),
+                new ItemStack(BTWItems.ironOreChunk),
+                "When jumped on");
+        finishRecipes("Miscellaneous Recipes");
     }
 
     private static void addOvenRecipes(){

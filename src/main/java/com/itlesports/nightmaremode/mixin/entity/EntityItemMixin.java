@@ -1,10 +1,8 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.entity.item.FloatingItemEntity;
-import btw.item.BTWItems;
-import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
-import com.itlesports.nightmaremode.item.NMPostItems;
-import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
+import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,46 +21,38 @@ public abstract class EntityItemMixin extends Entity {
     }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
-    private void doWaterCheck(CallbackInfo ci){
-        if(this.getEntityItem() != null){
-            if (this.getEntityItem().getItem() instanceof NMPlaceAsBlockItem item && item.getWashResult() != -1) {
-                int id = item.itemID;
-                if(id == NMPostItems.stompedCrushedIronStoneMix.itemID && this.isInsideOfMaterial(Material.water)){
-                    this.ticksInDesiredFluid++;
-                }
-
-
-                if(this.ticksInDesiredFluid >= 480){
-                    summonEntity(item);
-                    this.worldObj.playAuxSFX(2222, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
-
-                    this.setDead();
-                }
-            }
-            else if (this.getEntityItem().getItem() instanceof NMItem item && item.getWashResult() != -1){
-                int id = item.itemID;
-                if(id == NMPostItems.stompedCrushedIronStoneMix.itemID && this.isInsideOfMaterial(Material.water)){
-                    this.ticksInDesiredFluid++;
-                }
-
-
-                if(this.ticksInDesiredFluid >= 4800){
-                    summonEntity(item);
-                    this.worldObj.playAuxSFX(2222, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
-
-                    this.setDead();
-                }
-            }
+    private void doWaterCheck(CallbackInfo ci) {
+        if (this.worldObj.isRemote) {
+            return;
         }
-    }
-    @Unique
-    private void summonEntity(Item item){
-        int meta = 0;
-        this.worldObj.spawnEntityInWorld(new FloatingItemEntity(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(item, 1, meta)));
-    }
-    @Unique
-    private void summonEntity(Item item, int m){
-        int meta = m;
-        this.worldObj.spawnEntityInWorld(new FloatingItemEntity(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(item, 1, meta)));
+
+        ItemStack input = this.getEntityItem();
+        WashingRecipe recipe = WashingRecipeManager.instance.getWaterRecipe(input);
+        if (recipe == null || !this.isInsideOfMaterial(Material.water)) {
+            this.ticksInDesiredFluid = 0;
+            return;
+        }
+
+        if (++this.ticksInDesiredFluid < recipe.getDuration()) {
+            return;
+        }
+
+        ItemStack required = recipe.getInput();
+        int batches = input.stackSize / required.stackSize;
+        ItemStack output = recipe.getOutput();
+        output.stackSize *= batches;
+        this.worldObj.spawnEntityInWorld(
+                new FloatingItemEntity(this.worldObj, this.posX, this.posY, this.posZ, output));
+        this.worldObj.playAuxSFX(2222,
+                MathHelper.floor_double(this.posX),
+                MathHelper.floor_double(this.posY),
+                MathHelper.floor_double(this.posZ),
+                0);
+
+        input.stackSize -= required.stackSize * batches;
+        this.ticksInDesiredFluid = 0;
+        if (input.stackSize <= 0) {
+            this.setDead();
+        }
     }
 }

@@ -11,6 +11,8 @@ import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
+import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -164,19 +166,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
-                if (!this.canCrushIronAt(x, yBelow, z) || this.rand.nextInt(8) != 0) {
+                int blockID = this.worldObj.getBlockId(x, yBelow, z);
+                Block inputBlock = blockID <= 0 ? null : Block.blocksList[blockID];
+                MiscRecipe recipe = MiscRecipeManager.instance.getBlockRecipe(
+                        inputBlock, this.worldObj.getBlockMetadata(x, yBelow, z));
+                if (recipe == null || this.rand.nextInt(8) != 0) {
                     continue;
                 }
 
                 this.worldObj.playSound(x + 0.5D, yBelow + 0.5D, z + 0.5D, "random.break", 0.5F, 0.9F);
-                this.worldObj.setBlockWithNotify(x, yBelow, z, NMBlocks.blockCrushedIronLayer.blockID);
+                this.worldObj.setBlockAndMetadataWithNotify(
+                        x, yBelow, z, recipe.getOutputBlock().blockID, recipe.getOutputMetadata());
                 return;
             }
         }
-    }
-
-    @Unique private boolean canCrushIronAt(int x, int y, int z) {
-        return this.worldObj.getBlockId(x, y, z) == BTWBlocks.ironOreChunk.blockID;
     }
 
     @Inject(method = "interactWith", at = @At("HEAD"))
