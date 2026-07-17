@@ -158,6 +158,8 @@ public class NMItems {
     public static Item refinementWaste;
     public static ItemOxygenGear oxygenMask;
     public static ItemOxygenGear oxygenTank;
+    public static Item plantFiber;
+    public static Item driedPlantFiber;
     public static Item skillBook;
     static {
         doNightmareModeItems();
@@ -224,6 +226,8 @@ public class NMItems {
         refinementWaste = new NMItem(2652).setUnlocalizedName("ifhyRefinementWaste").setTextureName("nightmare:ifhyRefinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
         oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F).setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
         oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
+        plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
+        driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         skillBook = new ItemSkillBook(2655).setUnlocalizedName("nmSkillBook").setTextureName("nightmare:nmSkillBook");
 
 

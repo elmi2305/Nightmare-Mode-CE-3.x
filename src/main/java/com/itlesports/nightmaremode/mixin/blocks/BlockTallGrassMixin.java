@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,6 +29,13 @@ public class BlockTallGrassMixin extends BlockFlower {
             }
         }
         return 0.1f;
+    }
+
+    @Inject(method = "dropBlockAsItemWithChance", at = @At("HEAD"))
+    private void dropPlantFiber(World world, int x, int y, int z, int metadata, float chance, int fortuneModifier, CallbackInfo ci) {
+        if (!world.isRemote && world.rand.nextFloat() <= 0.08f) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
+        }
     }
 
     @Environment(value= EnvType.CLIENT)

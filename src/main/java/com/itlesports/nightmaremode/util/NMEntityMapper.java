@@ -71,5 +71,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityHammerAnvil.class, "NmHammerAnvil");
         TileEntity.addMapping(TileEntityStoneAnvil.class, "NmStoneAnvil");
         TileEntity.addMapping(TileEntityDiamondAnvil.class, "NmDiamondAnvil");
+        TileEntity.addMapping(DryingGrassTileEntity.class, "NmDryingGrass");
     }
 }

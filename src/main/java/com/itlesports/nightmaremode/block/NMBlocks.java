@@ -118,6 +118,7 @@ public class NMBlocks {
     public static Block sapTap;
     public static Block stoneAnvil;
     public static Block diamondAnvil;
+    public static Block dryingGrass;
 
 
 
@@ -147,6 +148,9 @@ public class NMBlocks {
 
         diamondAnvil = new BlockDiamondAnvil(NMFields.BLOCK_DIAMOND_ANVIL);
         Item.itemsList[diamondAnvil.blockID] = new NMItemBlock(NMBlocks.diamondAnvil.blockID - 256);
+
+        dryingGrass = new BlockDryingGrass(NMFields.BLOCK_DRYING_GRASS);
+        Item.itemsList[dryingGrass.blockID] = new NMItemBlock(NMBlocks.dryingGrass.blockID - 256).hideFromEMI();
 
 
 

@@ -87,6 +87,7 @@ public class NMFields {
     public static final int BLOCK_IRON_BLOOM = 2403;
     public static final int BLOCK_STONE_ANVIL = 2404;
     public static final int BLOCK_DIAMOND_ANVIL = 2405;
+    public static final int BLOCK_DRYING_GRASS = 2410;
 
     // icons - registered in TextureMapMixin
     public static Icon ICON_SLURRY;
