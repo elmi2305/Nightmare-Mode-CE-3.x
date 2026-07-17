@@ -93,6 +93,42 @@ public class CisternRecipe {
         return results.toArray(new ItemStack[results.size()]);
     }
 
+    public ItemStack[] getInputs() {
+        ItemStack[] result = new ItemStack[this.inputs.length];
+        for (int i = 0; i < this.inputs.length; ++i) {
+            result[i] = this.inputs[i].copy();
+        }
+        return result;
+    }
+
+    public ItemStack[] getOutputs() {
+        ItemStack[] result = new ItemStack[this.outputs.length];
+        for (int i = 0; i < this.outputs.length; ++i) {
+            result[i] = this.outputs[i].copy();
+        }
+        return result;
+    }
+
+    public List<RandomOutput> getRandomOutputs() {
+        return new ArrayList<>(this.randomOutputs);
+    }
+
+    public int getRequiredFluid() {
+        return this.requiredFluid;
+    }
+
+    public int getRequiredHeat() {
+        return this.requiredHeat;
+    }
+
+    public int getRequiredStir() {
+        return this.requiredStir;
+    }
+
+    public int getResultingFluid() {
+        return this.resultingFluid;
+    }
+
     public CisternRecipe addRandomOutput(ItemStack stack, float chance) {
         this.randomOutputs.add(new RandomOutput(stack, chance));
         return this;
@@ -120,13 +156,21 @@ public class CisternRecipe {
         return this.consumesFluid;
     }
 
-    private static class RandomOutput {
+    public static class RandomOutput {
         private final ItemStack stack;
         private final float chance;
 
         private RandomOutput(ItemStack stack, float chance) {
-            this.stack = stack;
+            this.stack = stack.copy();
             this.chance = chance;
+        }
+
+        public ItemStack getStack() {
+            return this.stack.copy();
+        }
+
+        public float getChance() {
+            return this.chance;
         }
     }
 }

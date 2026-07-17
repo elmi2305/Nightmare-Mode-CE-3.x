@@ -8,6 +8,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.integration.emi.NightmareEmiRegistry;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import net.minecraft.src.Block;
@@ -26,6 +27,11 @@ public abstract class BTWPluginMixin {
     @Shadow protected abstract void info(EmiRegistry registry, Block block, String info);
     @Shadow protected abstract void info(EmiRegistry registry, Item item, int metadata, String info);
     @Shadow protected abstract void info(EmiRegistry registry, Block block, int metadata, String info);
+
+    @Inject(method = "register", at = @At("TAIL"), remap = false)
+    private void registerNightmareRecipes(EmiRegistry registry, CallbackInfo ci) {
+        NightmareEmiRegistry.register(registry);
+    }
 
     @Inject(method = "addInfoRecipes", at = @At("TAIL"),remap = false)
     private void addNightmareInfo(EmiRegistry registry, CallbackInfo ci){
