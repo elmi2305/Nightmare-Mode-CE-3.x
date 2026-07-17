@@ -198,7 +198,7 @@ public class GuiSkillTree extends GuiScreen {
             int top = (this.height - PANE_HEIGHT) / 2;
             for (SkillBranch branch : SkillRegistry.getBranches()) {
                 int x = left + 12 + branch.getIndex() * 30;
-                int y = top - 18;
+                int y = top - 18 + 11;
                 if (mouseX >= x && mouseX <= x + 26 && mouseY >= y && mouseY <= y + 26) {
                     this.branchIndex = branch.getIndex();
                     this.mapX = -80.0D;
