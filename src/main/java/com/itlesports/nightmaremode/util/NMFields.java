@@ -92,5 +92,9 @@ public class NMFields {
     public static Icon ICON_SLURRY;
     public static Icon ICON_BRINE;
     public static Icon ICON_ACID;
+    public static Icon ICON_HEAT_1;
+    public static Icon ICON_HEAT_2;
+    public static Icon ICON_HEAT_3;
+    public static Icon ICON_STIRRING;
 
 }

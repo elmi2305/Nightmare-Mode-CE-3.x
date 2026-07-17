@@ -23,6 +23,10 @@ public abstract class TextureMapMixin {
             NMFields.ICON_SLURRY = this.registerIcon("nightmare:slurry");
             NMFields.ICON_BRINE = this.registerIcon("nightmare:brine");
             NMFields.ICON_ACID = this.registerIcon("nightmare:acid");
+            NMFields.ICON_HEAT_1 = this.registerIcon("nightmare:heat_1");
+            NMFields.ICON_HEAT_2 = this.registerIcon("nightmare:heat_2");
+            NMFields.ICON_HEAT_3 = this.registerIcon("nightmare:heat_3");
+            NMFields.ICON_STIRRING = this.registerIcon("nightmare:stirring");
         }
     }
 }
