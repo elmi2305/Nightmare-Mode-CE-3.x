@@ -12,6 +12,7 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
     public NMProgressiveItem(int iItemID, int returnID) {
         super(iItemID);
         this.returnID = returnID;
+        this.setMaxDamage(damage);
     }
 
     @Override
@@ -28,6 +29,7 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
 
     public NMProgressiveItem setTargetDurability(int damage) {
         this.damage = damage;
+        this.setMaxDamage(damage);
         return this;
     }
 
