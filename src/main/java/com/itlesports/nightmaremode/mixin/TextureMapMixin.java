@@ -27,6 +27,7 @@ public abstract class TextureMapMixin {
             NMFields.ICON_HEAT_2 = this.registerIcon("nightmare:heat_2");
             NMFields.ICON_HEAT_3 = this.registerIcon("nightmare:heat_3");
             NMFields.ICON_STIRRING = this.registerIcon("nightmare:stirring");
+            NMFields.ICON_SKILL_REQUIREMENT_BACKGROUND = this.registerIcon("nightmare:skill_requirement");
         }
     }
 }

@@ -236,6 +236,7 @@
   "client": [
     "AnvilSaveConverterMixin",
     "GameSettingsMixin",
+    "EmiCraftingRecipeMixin",
     "MinecraftMixin",
     "MixinNetClientHandler",
     "SaveFormatComparatorMixin",

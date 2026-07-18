@@ -97,5 +97,6 @@ public class NMFields {
     public static Icon ICON_HEAT_2;
     public static Icon ICON_HEAT_3;
     public static Icon ICON_STIRRING;
+    public static Icon ICON_SKILL_REQUIREMENT_BACKGROUND;
 
 }
