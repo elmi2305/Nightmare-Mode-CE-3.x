@@ -1,11 +1,16 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import net.minecraft.src.Container;
+import net.minecraft.src.CraftingManager;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.InventoryCrafting;
+import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
+import net.minecraft.src.SlotCrafting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,6 +26,17 @@ public class ContainerMixin {
 
     @Inject(method = "slotClick", at = @At("HEAD"), cancellable = true)
     private void blockNumberKeySwapToLockedHotbar(int slotId, int mouseButton, int modifier, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir) {
+        if (slotId >= 0 && slotId < this.inventorySlots.size()) {
+            Slot slot = (Slot)this.inventorySlots.get(slotId);
+            if (slot instanceof SlotCrafting craftingSlot) {
+                IRecipe recipe = CraftingManager.getInstance().findMatchingIRecipe((InventoryCrafting)craftingSlot.getCraftMatrix(), player.worldObj);
+                if (SkillLockedCrafting.isLocked(player, recipe)) {
+                    SkillLockedCrafting.notifyLocked(player, recipe);
+                    cir.setReturnValue(null);
+                    return;
+                }
+            }
+        }
         if (modifier == 2 && mouseButton >= 0 && mouseButton < 9
                 && !NMInventoryLocks.isMainInventorySlotUnlocked(player, mouseButton)) {
             cir.setReturnValue(null);

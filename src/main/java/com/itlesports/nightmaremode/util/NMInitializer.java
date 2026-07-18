@@ -18,6 +18,8 @@ import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
+import com.itlesports.nightmaremode.skill.NMSkillNodes;
+import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
@@ -445,7 +447,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.sapTap), new Object[]{"BT", "DS", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig, Character.valueOf('D'), NMItems.drill, Character.valueOf('S'), NMItems.thickenedSap});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.ovenPart});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SS", "S ", Character.valueOf('S'), Block.cobblestone});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SS", "S ", Character.valueOf('S'), Block.cobblestone}), NMSkillNodes.MINING_INITIATE);
         NMFoodSpoilage.addSnowRefreshRecipes();
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.refinedLithium), new ItemStack(Item.sugar)});
