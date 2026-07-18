@@ -404,6 +404,8 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().addSmelting(NMItems.washedLithium.itemID, new ItemStack(NMItems.refinedLithium), 0.2f, 1);
         FurnaceRecipes.smelting().addSmelting(NMItems.diamondBearingMaterial.itemID, new ItemStack(Item.diamond), 1.0f, 4);
 
+        FurnaceRecipes.smelting().addSmelting(NMItems.debonedRawFish.itemID, new ItemStack(Item.fishCooked), 0.0f);
+
         finishRecipes("Oven Recipes");
 
     }
@@ -415,6 +417,8 @@ public abstract class NMInitializer implements AchievementExt {
     }
     private static void addCampfireRecipes(){
         RecipeManager.addCampfireRecipe(NMItems.cupOfSap.itemID, new ItemStack(NMItems.thickenedSap));
+        RecipeManager.addCampfireRecipe(NMItems.debonedRawFish.itemID, new ItemStack(Item.fishCooked));
+
         finishRecipes("Campfire Recipes");
 
     }
@@ -459,6 +463,13 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addRecipe(new ItemStack(NMItems.seededDiamondMatrix), new Object[]{" C ", "CDC", " C ", Character.valueOf('C'), NMItems.polishedCrystalShard, Character.valueOf('D'), NMItems.stabilizedDiamondSlurry});
         RecipeManager.addRecipe(new ItemStack(NMItems.nickelBoundDiamondMatrix), new Object[]{" N ", "NDN", " S ", Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('D'), NMItems.seededDiamondMatrix, Character.valueOf('S'), NMItems.lithiumStabilizer});
+
+
+        for (Item rawFish : NMItems.getRawFish()) {
+            if (rawFish != NMItems.debonedRawFish) {
+                RecipeManager.addShapelessRecipe(new ItemStack(NMItems.fishFlesh, 1, 99), new Object[]{new ItemStack(rawFish, 1, Short.MAX_VALUE)});
+            }
+        }
 
         finishRecipes("Crafting Recipes");
 
