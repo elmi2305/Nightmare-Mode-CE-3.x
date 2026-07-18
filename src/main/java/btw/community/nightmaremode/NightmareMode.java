@@ -44,7 +44,7 @@ public class NightmareMode extends BTWAddon {
 
 
     // dev
-    public static boolean devMode = true;
+    public static boolean devMode = false;
     public static boolean benchmarkPerformance = true;
     public static volatile double MSPT = 0.0;
 
@@ -830,8 +830,13 @@ public class NightmareMode extends BTWAddon {
             DataProvider.getBuilder(SkillTreeData.class)
                     .name("NmSkillTree")
                     .defaultSupplier(SkillTreeData::new)
-                    .readNBT(SkillTreeData::readFromNBT)
-                    .writeNBT(SkillTreeData::writeToNBT)
+                    .ignorePresenceCheck()
+                    .readNBT((nbt, name) -> SkillTreeData.readFromNBT(nbt.hasKey(name) ? nbt.getCompoundTag(name) : nbt))
+                    .writeNBT((nbt, name, data) -> {
+                        NBTTagCompound skillData = new NBTTagCompound(name);
+                        SkillTreeData.writeToNBT(skillData, data);
+                        nbt.setTag(name, skillData);
+                    })
                     .player()
                     .syncPlayer()
                     .buildPlayer();
