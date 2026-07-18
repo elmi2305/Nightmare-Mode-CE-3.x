@@ -95,6 +95,34 @@ public class NMItems {
     public static Item awakenedStar;
     public static Item hellGem;
 
+    public static FoodItem mackerel;
+    public static FoodItem cod;
+    public static FoodItem tuna;
+    public static FoodItem swordfish;
+    public static FoodItem bass;
+    public static FoodItem trout;
+    public static FoodItem carp;
+    public static FoodItem goldenCarp;
+    public static FoodItem mudfish;
+    public static FoodItem catfish;
+    public static FoodItem swampEel;
+    public static FoodItem alligatorGar;
+    public static FoodItem piranha;
+    public static FoodItem neonTetra;
+    public static FoodItem jungleCatfish;
+    public static FoodItem arapaima;
+    public static FoodItem salmon;
+    public static FoodItem perch;
+    public static FoodItem icefish;
+    public static FoodItem frostfish;
+    public static FoodItem desertMinnow;
+    public static FoodItem sandfish;
+    public static FoodItem tilapia;
+    public static FoodItem duneKoi;
+    public static NMProgressiveItem fishFlesh;
+    public static FoodItem debonedRawFish;
+    private static Item[] rawFish;
+
 
 
     // IFHY
@@ -230,7 +258,47 @@ public class NMItems {
         driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         skillBook = new ItemSkillBook(2655).setUnlocalizedName("nmSkillBook").setTextureName("nightmare:nmSkillBook");
 
+        mackerel = createRawFish(2658, "nmMackerel");
+        cod = createRawFish(2659, "nmCod");
+        tuna = createRawFish(2660, "nmTuna");
+        swordfish = createRawFish(2661, "nmSwordfish");
+        bass = createRawFish(2662, "nmBass");
+        trout = createRawFish(2663, "nmTrout");
+        carp = createRawFish(2664, "nmCarp");
+        goldenCarp = createRawFish(2665, "nmGoldenCarp");
+        mudfish = createRawFish(2666, "nmMudfish");
+        catfish = createRawFish(2667, "nmCatfish");
+        swampEel = createRawFish(2668, "nmSwampEel");
+        alligatorGar = createRawFish(2669, "nmAlligatorGar");
+        piranha = createRawFish(2670, "nmPiranha");
+        neonTetra = createRawFish(2671, "nmNeonTetra");
+        jungleCatfish = createRawFish(2672, "nmJungleCatfish");
+        arapaima = createRawFish(2673, "nmArapaima");
+        salmon = createRawFish(2674, "nmSalmon");
+        perch = createRawFish(2675, "nmPerch");
+        icefish = createRawFish(2676, "nmIcefish");
+        frostfish = createRawFish(2677, "nmFrostfish");
+        desertMinnow = createRawFish(2678, "nmDesertMinnow");
+        sandfish = createRawFish(2679, "nmSandfish");
+        tilapia = createRawFish(2680, "nmTilapia");
+        duneKoi = createRawFish(2681, "nmDuneKoi");
+        debonedRawFish = createRawFish(2682, "nmDebonedRawFish");
+        fishFlesh = (NMProgressiveItem) new NMProgressiveItem(2683, debonedRawFish.itemID).setTargetDurability(100).setSoundID("mob.chicken.hurt").setTextureName("fish_raw").setUnlocalizedName("nmFishFlesh").setCreativeTab(CreativeTabs.tabFood);
 
+        rawFish = new Item[]{mackerel, cod, tuna, swordfish, bass, trout, carp, goldenCarp, mudfish, catfish, swampEel, alligatorGar, piranha, neonTetra, jungleCatfish, arapaima, salmon, perch, icefish, frostfish, desertMinnow, sandfish, tilapia, duneKoi, debonedRawFish};
+
+
+    }
+
+    private static FoodItem createRawFish(int id, String name) {
+        return (FoodItem) new NMFoodItem(id, 1, 0.1f, false, name, true)
+                .setStandardFoodPoisoningEffect()
+                .setIconName("fish_raw")
+                .setCreativeTab(CreativeTabs.tabFood);
+    }
+
+    public static Item[] getRawFish() {
+        return rawFish.clone();
     }
     private static void doNightmareModeItems() {
         rpg = (ItemRPG) (new ItemRPG(2309)).setTextureName("nightmare:nmRPG");

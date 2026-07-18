@@ -18,9 +18,11 @@ public final class NMFoodSpoilage {
     public static final int COOKED_MEAT_MAX_DRYING_DAMAGE = 12;
 
     private static final int RAW_SPOIL_INTERVAL = 12000;
+    private static final int FISH_SPOIL_INTERVAL = 1200;
     private static final int COOKED_DRY_INTERVAL = 24000;
 
     private static final Set<Integer> RAW_FOODS = new HashSet<>();
+    private static final Set<Integer> FAST_SPOILING_FISH = new HashSet<>();
     private static final Set<Integer> COOKED_MEATS = new HashSet<>();
 
     private NMFoodSpoilage() {
@@ -29,7 +31,7 @@ public final class NMFoodSpoilage {
     public static void init() {
         registerRawFood(Item.beefRaw);
         registerRawFood(Item.chickenRaw);
-        registerRawFood(Item.fishRaw);
+        registerFastSpoilingFish(Item.fishRaw);
         registerRawFood(Item.porkRaw);
         registerRawFood(BTWItems.rawMutton);
         registerRawFood(BTWItems.rawCheval);
@@ -38,6 +40,9 @@ public final class NMFoodSpoilage {
         registerRawFood(BTWItems.rawMysteryMeat);
         registerRawFood(NMItems.creeperChop);
         registerRawFood(NMItems.calamari);
+        for (Item fish : NMItems.getRawFish()) {
+            registerFastSpoilingFish(fish);
+        }
 
         registerCookedMeat(Item.beefCooked);
         registerCookedMeat(Item.chickenCooked);
@@ -63,6 +68,9 @@ public final class NMFoodSpoilage {
         addSnowRefreshRecipe(BTWItems.rawMysteryMeat);
         addSnowRefreshRecipe(NMItems.creeperChop);
         addSnowRefreshRecipe(NMItems.calamari);
+        for (Item fish : NMItems.getRawFish()) {
+            addSnowRefreshRecipe(fish);
+        }
     }
 
     public static void updateFoodSpoilage(ItemStack stack, World world, EntityPlayer player, int inventorySlot) {
@@ -70,7 +78,9 @@ public final class NMFoodSpoilage {
             return;
         }
 
-        if (RAW_FOODS.contains(stack.itemID)) {
+        if (FAST_SPOILING_FISH.contains(stack.itemID)) {
+            damageFoodStack(stack, world, player, inventorySlot, FISH_SPOIL_INTERVAL, new ItemStack(BTWItems.foulFood, stack.stackSize));
+        } else if (RAW_FOODS.contains(stack.itemID)) {
             damageFoodStack(stack, world, player, inventorySlot, RAW_SPOIL_INTERVAL, new ItemStack(BTWItems.foulFood, stack.stackSize));
         } else if (COOKED_MEATS.contains(stack.itemID)) {
             damageFoodStack(stack, world, player, inventorySlot, COOKED_DRY_INTERVAL, new ItemStack(BTWItems.curedMeat, stack.stackSize));
@@ -98,6 +108,15 @@ public final class NMFoodSpoilage {
 
         RAW_FOODS.add(item.itemID);
         ((ItemInvoker)item).invokeSetMaxDamage(RAW_FOOD_MAX_FRESHNESS_DAMAGE);
+    }
+
+    private static void registerFastSpoilingFish(Item item) {
+        if (item == null) {
+            return;
+        }
+
+        FAST_SPOILING_FISH.add(item.itemID);
+        ((ItemInvoker)item).invokeSetMaxDamage(4);
     }
 
     private static void registerCookedMeat(Item item) {
