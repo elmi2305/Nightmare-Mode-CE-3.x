@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.inventory.container.InfernalEnchanterContainer;
 import com.itlesports.nightmaremode.item.items.bloodItems.IBloodTool;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,13 +24,15 @@ public class InfernalEnchanterContainerMixin {
         }
         return 20;
     }
-    @ModifyArg(method = "enchantItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;addExperienceLevel(I)V"))
-    private int reduceXPLossOnBloodArmor(int par1){
+    @Redirect(method = "enchantItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;addExperienceLevel(I)V"))
+    private void reduceXPLossOnBloodArmor(EntityPlayer player, int par1){
         ItemStack stack = this.tableInventory.getStackInSlot(0);
+        int adjustedCost = par1;
         if(stack != null && stack.getItem() instanceof IBloodTool){
-            return Math.min(-1, (int)Math.floor(par1 * 0.4));
+            adjustedCost = Math.min(-1, (int)Math.floor(par1 * 0.4));
         }
-        return par1;
+        float skillMultiplier = Math.max(0.0F, 1.0F - SkillHandler.getPlayerData(player).enchantCostReduction);
+        player.addExperienceLevel(Math.min(-1, (int)Math.ceil(adjustedCost * skillMultiplier)));
     }
     @Inject(method = "setCurrentEnchantingLevels", at = @At(value = "CONSTANT", args = "intValue=30",ordinal = 5), remap = false)
     private void beforeICostIncrementStore(int iMaxPowerLevel, int iCostMultiplier, int iMaxBaseCostForItem, CallbackInfo ci) {
