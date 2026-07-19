@@ -8,6 +8,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +34,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Shadow public abstract int getProfession();
     @Shadow public abstract int getCurrentTradeMaxXP();
     @Shadow public abstract int getCurrentTradeXP();
+    @Shadow public abstract EntityPlayer getCustomer();
+    @Shadow public abstract void setProfession(int profession);
+
+    @Unique private int nightmareMode$levelBeforeTrade;
+    @Unique private EntityPlayer nightmareMode$tradingPlayer;
 
 
     @Shadow public abstract void setInLove(int iInLove);
@@ -40,6 +46,29 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     public EntityVillagerMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "useRecipe", at = @At("HEAD"))
+    private void rememberTradeState(MerchantRecipe recipe, CallbackInfo ci) {
+        this.nightmareMode$levelBeforeTrade = this.getCurrentTradeLevel();
+        this.nightmareMode$tradingPlayer = this.getCustomer();
+    }
+
+    @Inject(method = "useRecipe", at = @At("TAIL"))
+    private void applySkillTradeProgress(MerchantRecipe recipe, CallbackInfo ci) {
+        EntityPlayer player = this.nightmareMode$tradingPlayer;
+        SkillHandler.incrementTradesCompleted(player);
+        if (player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
+                && this.rand.nextFloat() < SkillHandler.getPlayerData(player).villagerProfessionChangeChance) {
+            int oldProfession = this.getProfession();
+            int newProfession = this.rand.nextInt(4);
+            if (newProfession >= oldProfession && oldProfession < 5) {
+                newProfession++;
+            }
+            this.setProfession(newProfession);
+            this.buyingList = null;
+        }
+        this.nightmareMode$tradingPlayer = null;
     }
 
     @Override
