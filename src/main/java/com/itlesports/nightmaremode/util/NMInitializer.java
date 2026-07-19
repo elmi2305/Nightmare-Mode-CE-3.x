@@ -43,6 +43,7 @@ public abstract class NMInitializer implements AchievementExt {
         addPistonPackingRecipes();
 //        addBloodSawRecipes();
         addMultiplayerRecipes();
+        addSkillLockedRecipes();
         finishRecipes("All Recipes");
     }
 
@@ -440,27 +441,44 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"XX", "XX", Character.valueOf('X'), BTWBlocks.looseBrickSlab});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.sharpStone), new Object[]{BTWTags.looseRocks});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.clay), new Object[]{BTWItems.clayPile, BTWItems.clayPile});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.unfiredCrudeBrick), new Object[]{Item.clay});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", "S# ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks, Character.valueOf('S'), BTWTags.strings});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.axeStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks, BTWTags.looseRocks, BTWTags.strings});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.axeStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks, BTWTags.looseRocks});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.shovelStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks, BTWTags.strings});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.shovelStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks});
+
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.scrapedBark), new Object[]{BTWTags.barks, new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.woodCup), new Object[]{"BB", "BT", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.crudeStringCrafting, 1, NMItems.crudeStringCrafting.getMaxDamage() - 1), new Object[]{NMItems.driedPlantFiber, BTWTags.flowers});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stringCrafting, 1, NMItems.stringCrafting.getMaxDamage() - 1), new Object[]{NMItems.crudeString, NMItems.spiderSilk, NMItems.primitiveGlue});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodCupCrafting, 1, NMItems.woodCupCrafting.getMaxDamage() - 1), new Object[]{new ItemStack(NMItems.woodClump, 1, Short.MAX_VALUE), new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), Item.stick, NMItems.primitiveGlue, BTWItems.sawDust});
         RecipeManager.addRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{"ST", "SD", Character.valueOf('S'), Item.stick, Character.valueOf('T'), BTWTags.strings, Character.valueOf('D'), NMItems.drill});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.sapTap), new Object[]{"BT", "DS", Character.valueOf('B'), NMItems.scrapedBark, Character.valueOf('T'), NMItems.twig, Character.valueOf('D'), NMItems.drill, Character.valueOf('S'), NMItems.thickenedSap});
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.shovelWood), new Object[]{BTWTags.logs, Item.stick, NMItems.primitiveGlue});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodHammer), new Object[]{BTWTags.logs, BTWTags.logs, Item.stick, NMItems.primitiveGlue});
+
+        RecipeManager.addRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"CCC", "TSG", " S ", Character.valueOf('C'), BTWTags.cobblestones, Character.valueOf('T'), Item.silk, Character.valueOf('S'), Item.stick, Character.valueOf('G'), NMItems.primitiveGlue});
+        RecipeManager.addRecipe(new ItemStack(Item.axeStone), new Object[]{"CCG", "CTS", " S ", Character.valueOf('C'), BTWTags.cobblestones, Character.valueOf('T'), Item.silk, Character.valueOf('S'), Item.stick, Character.valueOf('G'), NMItems.primitiveGlue});
+        RecipeManager.addRecipe(new ItemStack(Item.shovelStone), new Object[]{" C ", "TGS", " S ", Character.valueOf('C'), BTWTags.cobblestones, Character.valueOf('T'), Item.silk, Character.valueOf('S'), Item.stick, Character.valueOf('G'), NMItems.primitiveGlue});
+
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.clay), new Object[]{BTWItems.clayPile, BTWItems.clayPile, BTWItems.clayPile, BTWItems.clayPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unshapedWetClayBrick, 1, NMItems.unshapedWetClayBrick.getMaxDamage() - 1), new Object[]{Item.clay, BTWItems.gravelPile, BTWItems.dirtPile, BTWItems.sandPile});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.idleLooseOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.ovenPart});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron});
-        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SSS", " S ", "SSS", Character.valueOf('S'), BTWTags.cobblestones}), NMSkillNodes.MINING_INITIATE);
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SSS", " S ", "SSS", Character.valueOf('S'), BTWTags.cobblestones});
         NMFoodSpoilage.addSnowRefreshRecipes();
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.refinedLithium), new ItemStack(Item.sugar)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.lithiumStabilizer), new Object[]{" C ", "LCL", " C ", Character.valueOf('L'), NMItems.lithiumSalt, Character.valueOf('C'), Item.clay});
         RecipeManager.addRecipe(new ItemStack(NMItems.lithiumHeatCompound), new Object[]{"NLN", "LCL", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.refinedLithium, Character.valueOf('C'), Block.sand});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.nickelBinding, 2), new Object[]{"NN", " S", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('S'), Item.silk});
-        RecipeManager.addRecipe(new ItemStack(NMItems.nickelMachinePart), new Object[]{" N ", "NIN", " R ", Character.valueOf('N'), NMItems.nickelIngot, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone});
-        RecipeManager.addRecipe(new ItemStack(NMItems.nickelHeatComponent), new Object[]{" N ", "NLN", " N ", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumHeatCompound});
-        RecipeManager.addRecipe(new ItemStack(NMItems.oxygenMask), new Object[]{"NGN", "L L", Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('G'), Block.glass, Character.valueOf('L'), Item.leather});
         RecipeManager.addRecipe(new ItemStack(NMItems.oxygenTank), new Object[]{" N ", "NIN", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('I'), Item.ingotIron, Character.valueOf('L'), Item.leather});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.crystalLens), new Object[]{" G ", "GCG", " G ", Character.valueOf('G'), Block.glass, Character.valueOf('C'), NMItems.polishedCrystalShard});
         RecipeManager.addRecipe(new ItemStack(NMItems.precisionCrystalGear), new Object[]{" C ", "CNC", " C ", Character.valueOf('C'), NMItems.polishedCrystalShard, Character.valueOf('N'), NMItems.nickelMachinePart});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.seededDiamondMatrix), new Object[]{" C ", "CDC", " C ", Character.valueOf('C'), NMItems.polishedCrystalShard, Character.valueOf('D'), NMItems.stabilizedDiamondSlurry});
@@ -474,6 +492,85 @@ public abstract class NMInitializer implements AchievementExt {
         }
 
         finishRecipes("Crafting Recipes");
+
+    }
+
+    private static void addSkillLockedRecipes(){
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(
+                        new ItemStack(NMItems.flintAxeCrafting, 1, NMItems.flintAxeCrafting.getMaxDamage() - 1),
+                        new Object[]{Item.flint, Item.flint, Item.stick, Item.silk}),
+                NMSkillNodes.FLINT_TOOLMAKING);
+
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.nickelHeatComponent), new Object[]{
+                " N ", "NLN", " N ", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumHeatCompound}),
+                NMSkillNodes.NICKEL_HEAT_RECIPE);
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.coal), new Object[]{new ItemStack(BTWItems.coalDust), new ItemStack(BTWItems.coalDust)});
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(Item.coal), new Object[]{new ItemStack(BTWItems.coalDust), new ItemStack(BTWItems.coalDust)}),
+                NMSkillNodes.COAL_RECIPE);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.ingotIron), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.ironNugget)});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.ingotIron), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.ironNugget)}),
+                NMSkillNodes.IRON_BLOOM_RECIPE, NMSkillNodes.IRON_HELMET_PROGRESS, NMSkillNodes.IRON_CHEST_PROGRESS,
+                NMSkillNodes.IRON_LEGS_PROGRESS, NMSkillNodes.IRON_BOOTS_PROGRESS);
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings});
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings}),
+                NMSkillNodes.BEDROLL_RECIPE);
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.chickenFeed), new Object[]{new ItemStack(Item.dyePowder, 1, 15), BTWTags.seeds});
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.chickenFeed), new Object[]{new ItemStack(Item.dyePowder, 1, 15), BTWTags.seeds}),
+                NMSkillNodes.CHICKEN_FEED_RECIPE);
+
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 3), new Object[]{new ItemStack(NMItems.refinedLithium), new ItemStack(Item.reed)}),
+                NMSkillNodes.BETTER_LITHIUM_SALT);
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(Item.cake), new Object[]{"AAA", "BEB", "CCC", Character.valueOf('A'), Item.bucketMilk, Character.valueOf('B'), Item.sugar, Character.valueOf('C'), Item.wheat, Character.valueOf('E'), Item.egg}),
+                NMSkillNodes.CAKE_RECIPE);
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.straw), new Object[]{new ItemStack(NMItems.plantFiber)}),
+                NMSkillNodes.FIBER_TO_STRAW);
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.oxygenMask), new Object[]{"NGN", "L L", Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('G'), Block.glass, Character.valueOf('L'), Item.leather}),
+                NMSkillNodes.OXYGEN_MASK_RECIPE);
+
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.nickelMachinePart), new Object[]{
+                " N ", "NIN", " R ", Character.valueOf('N'), NMItems.nickelIngot, Character.valueOf('I'), Item.ingotIron, Character.valueOf('R'), Item.redstone}),
+                NMSkillNodes.NICKEL_MACHINE_RECIPE);
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.crystalLens), new Object[]{" G ", "GCG", " G ", Character.valueOf('G'), Block.glass, Character.valueOf('C'), NMItems.polishedCrystalShard}),
+                NMSkillNodes.CRYSTAL_LENS_RECIPE);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), Item.ingotIron});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), Item.ingotIron}),
+                NMSkillNodes.CHEST_RECIPE);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XYX", "###", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), Item.book, Character.valueOf('Y'), Item.enchantedBook}),
+                NMSkillNodes.BOOKSHELF_RECIPE);
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.writableBook), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers, new ItemStack(Item.dyePowder, 1, 0), Item.feather});
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(Item.writableBook), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers, new ItemStack(Item.dyePowder, 1, 0), Item.feather}),
+                NMSkillNodes.BOOK_QUILL_RECIPE);
+
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.lithiumStabilizer), new Object[]{" C ", "LCL", " C ", Character.valueOf('L'), NMItems.lithiumSalt, Character.valueOf('C'), Item.clay}),
+                NMSkillNodes.LITHIUM_STABILIZER_RECIPE);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(Block.tnt), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse}),
+                NMSkillNodes.POWDER_KEG_RECIPE);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetLeather), new Object[]{"###", "# #", Character.valueOf('#'), BTWTags.rawLeathers});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.plateLeather), new Object[]{"# #", "###", "###", Character.valueOf('#'), BTWTags.rawLeathers});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsLeather), new Object[]{"###", "# #", "# #", Character.valueOf('#'), BTWTags.rawLeathers});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsLeather), new Object[]{"# #", "# #", Character.valueOf('#'), BTWTags.rawLeathers});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.helmetLeather), new Object[]{"###", "# #", Character.valueOf('#'), BTWTags.rawLeathers}), NMSkillNodes.LEATHER_BREEDING, NMSkillNodes.LEATHER_HANDIN);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.plateLeather), new Object[]{"# #", "###", "###", Character.valueOf('#'), BTWTags.rawLeathers}), NMSkillNodes.LEATHER_BREEDING, NMSkillNodes.LEATHER_HANDIN);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.legsLeather), new Object[]{"###", "# #", "# #", Character.valueOf('#'), BTWTags.rawLeathers}), NMSkillNodes.LEATHER_BREEDING, NMSkillNodes.LEATHER_HANDIN);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.bootsLeather), new Object[]{"# #", "# #", Character.valueOf('#'), BTWTags.rawLeathers}), NMSkillNodes.LEATHER_BREEDING, NMSkillNodes.LEATHER_HANDIN);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.shovelIron), new Object[]{"X", "#", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(Item.shovelIron), new Object[]{"X", "#", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron}), NMSkillNodes.IRON_SHOVEL_RECIPE);
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.swordIron), new Object[]{"X", "X", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron});
+        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(Item.swordIron), new Object[]{"X", "X", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron}), NMSkillNodes.IRON_SWORD_RECIPE);
+
+        finishRecipes("Skill Locked Recipes");
 
     }
 
