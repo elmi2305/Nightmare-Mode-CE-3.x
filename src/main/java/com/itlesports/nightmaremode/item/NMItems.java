@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
+import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -95,34 +96,6 @@ public class NMItems {
     public static Item awakenedStar;
     public static Item hellGem;
 
-    public static FoodItem mackerel;
-    public static FoodItem cod;
-    public static FoodItem tuna;
-    public static FoodItem swordfish;
-    public static FoodItem bass;
-    public static FoodItem trout;
-    public static FoodItem carp;
-    public static FoodItem goldenCarp;
-    public static FoodItem mudfish;
-    public static FoodItem catfish;
-    public static FoodItem swampEel;
-    public static FoodItem alligatorGar;
-    public static FoodItem piranha;
-    public static FoodItem neonTetra;
-    public static FoodItem jungleCatfish;
-    public static FoodItem arapaima;
-    public static FoodItem salmon;
-    public static FoodItem perch;
-    public static FoodItem icefish;
-    public static FoodItem frostfish;
-    public static FoodItem desertMinnow;
-    public static FoodItem sandfish;
-    public static FoodItem tilapia;
-    public static FoodItem duneKoi;
-    public static NMProgressiveItem fishFlesh;
-    public static FoodItem debonedRawFish;
-    private static Item[] rawFish;
-
 
 
     // IFHY
@@ -189,6 +162,44 @@ public class NMItems {
     public static Item plantFiber;
     public static Item driedPlantFiber;
     public static Item skillBook;
+    public static Item flintAxe;
+    public static NMProgressiveItem flintAxeCrafting;
+    public static Item crudeString;
+    public static NMProgressiveItem crudeStringCrafting;
+    public static Item primitiveGlue;
+    public static Item spiderSilk;
+    public static NMProgressiveItem stringCrafting;
+    public static NMProgressiveItem woodCupCrafting;
+    public static NMProgressiveItem unshapedWetClayBrick;
+
+    public static FoodItem mackerel;
+    public static FoodItem cod;
+    public static FoodItem tuna;
+    public static FoodItem swordfish;
+    public static FoodItem bass;
+    public static FoodItem trout;
+    public static FoodItem carp;
+    public static FoodItem goldenCarp;
+    public static FoodItem mudfish;
+    public static FoodItem catfish;
+    public static FoodItem swampEel;
+    public static FoodItem alligatorGar;
+    public static FoodItem piranha;
+    public static FoodItem neonTetra;
+    public static FoodItem jungleCatfish;
+    public static FoodItem arapaima;
+    public static FoodItem salmon;
+    public static FoodItem perch;
+    public static FoodItem icefish;
+    public static FoodItem frostfish;
+    public static FoodItem desertMinnow;
+    public static FoodItem sandfish;
+    public static FoodItem tilapia;
+    public static FoodItem duneKoi;
+    public static NMProgressiveItem fishFlesh;
+    public static FoodItem debonedRawFish;
+    private static Item[] rawFish;
+
     static {
         doNightmareModeItems();
         // info: due to the order of initialization, NMBlocks fields are null at this time, so NMPlaceAsBlockItem or other initializers that require NMBlocks must be passed a copy of the block ID int registered in NMFields
@@ -217,7 +228,7 @@ public class NMItems {
         cupOfSap = new NMItem(2619).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
         thickenedSap = new NMItem(2620).setUnlocalizedName("ifhyThickenedSap").setTextureName("nightmare:ifhyThickenedSap").setCreativeTab(CreativeTabs.tabMaterials);
         ovenPart = new NMItem(2621).setMaxStackSize(4).setUnlocalizedName("ifhyOvenPart").setTextureName("nightmare:ifhyOvenPart").setCreativeTab(CreativeTabs.tabMaterials);
-        drill = new NMItem(2622).setUnlocalizedName("ifhyDrill").setTextureName("nightmare:ifhyDrill").setCreativeTab(CreativeTabs.tabMaterials);
+        drill = new ItemDrill(2622).setUnlocalizedName("ifhyDrill").setTextureName("nightmare:ifhyDrill").setCreativeTab(CreativeTabs.tabTools);
 
         rawNickelRock = new NMItem(2623).setUnlocalizedName("ifhyRawNickelRock").setTextureName("nightmare:ifhyRawNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
         crushedNickelRock = new NMItem(2624).setUnlocalizedName("ifhyCrushedNickelRock").setTextureName("nightmare:ifhyCrushedNickelRock").setCreativeTab(CreativeTabs.tabMaterials);
@@ -284,8 +295,19 @@ public class NMItems {
         duneKoi = createRawFish(2681, "nmDuneKoi");
         debonedRawFish = createRawFish(2682, "nmDebonedRawFish");
         fishFlesh = (NMProgressiveItem) new NMProgressiveItem(2683, debonedRawFish.itemID).setTargetDurability(100).setSoundID("mob.chicken.hurt").setTextureName("fish_raw").setUnlocalizedName("nmFishFlesh").setCreativeTab(CreativeTabs.tabFood);
-
         rawFish = new Item[]{mackerel, cod, tuna, swordfish, bass, trout, carp, goldenCarp, mudfish, catfish, swampEel, alligatorGar, piranha, neonTetra, jungleCatfish, arapaima, salmon, perch, icefish, frostfish, desertMinnow, sandfish, tilapia, duneKoi, debonedRawFish};
+
+
+        flintAxe = new ItemFlintAxe(2684).setTextureName("nightmare:ifhyFlintAxe").setUnlocalizedName("ifhyFlintAxe").setCreativeTab(CreativeTabs.tabTools);
+        flintAxeCrafting = (NMProgressiveItem) new NMProgressiveItem(2685, flintAxe.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyFlintAxeCrafting").setUnlocalizedName("ifhyFlintAxeCrafting").setCreativeTab(CreativeTabs.tabMaterials);
+        crudeString = new NMItem(2686).setTextureName("nightmare:ifhyCrudeString").setUnlocalizedName("ifhyCrudeString").setCreativeTab(CreativeTabs.tabMaterials);
+        crudeStringCrafting = (NMProgressiveItem) new NMProgressiveItem(2687, crudeString.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyCrudeStringCrafting").setUnlocalizedName("ifhyCrudeStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
+        primitiveGlue = new NMItem(2688).setTextureName("nightmare:ifhyPrimitiveGlue").setUnlocalizedName("ifhyPrimitiveGlue").setCreativeTab(CreativeTabs.tabMaterials);
+        spiderSilk = new NMItem(2689).setTextureName("nightmare:ifhySpiderSilk").setUnlocalizedName("ifhySpiderSilk").setCreativeTab(CreativeTabs.tabMaterials);
+        stringCrafting = (NMProgressiveItem) new NMProgressiveItem(2690, Item.silk.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyStringCrafting").setUnlocalizedName("ifhyStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
+        woodCupCrafting = (NMProgressiveItem) new NMProgressiveItem(2691, woodCup.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyWoodCup").setUnlocalizedName("ifhyWoodCupCrafting").setCreativeTab(CreativeTabs.tabMaterials);
+        unshapedWetClayBrick = (NMProgressiveItem) new NMProgressiveItem(2692, 22355 /* the ID of the crude brick block */).setTargetDurability(100).setTextureName("nightmare:ifhyUnshapedWetClayBrick").setUnlocalizedName("ifhyUnshapedWetClayBrick").setCreativeTab(CreativeTabs.tabMaterials);
+
 
 
     }
