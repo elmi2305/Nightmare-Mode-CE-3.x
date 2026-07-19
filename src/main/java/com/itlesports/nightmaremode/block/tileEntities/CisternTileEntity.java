@@ -5,6 +5,7 @@ import btw.block.blocks.CampfireBlock;
 import api.block.TileEntityDataPacketHandler;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 
 public class CisternTileEntity extends TileEntity implements IInventory, TileEntityDataPacketHandler {
@@ -54,6 +55,11 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         }
 
         ++this.processingTime;
+        EntityPlayer nearbyPlayer = this.worldObj.getClosestPlayer(
+                this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, 8.0D);
+        if (nearbyPlayer != null && this.worldObj.rand.nextFloat() < SkillHandler.getPlayerData(nearbyPlayer).cisternSpeedBonus) {
+            ++this.processingTime;
+        }
 
         if (this.processingTime >= recipe.getDuration()) {
             this.finishRecipe(recipe);
