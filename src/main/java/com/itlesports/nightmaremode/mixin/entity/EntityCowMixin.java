@@ -4,6 +4,7 @@ import api.entity.mob.KickingAnimal;
 import api.world.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityCow.class)
 public abstract class EntityCowMixin extends KickingAnimal {
+    private boolean nightmareMode$successfulMilk;
     public EntityCowMixin(World par1World) {
         super(par1World);
     }
@@ -51,6 +53,21 @@ public abstract class EntityCowMixin extends KickingAnimal {
                 cir.setReturnValue(this.entityAnimalInteract(player));
             }
         }
+    }
+
+    @Inject(method = "interact", at = @At("HEAD"))
+    private void rememberSuccessfulMilking(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        ItemStack stack = player.inventory.getCurrentItem();
+        this.nightmareMode$successfulMilk = stack != null && stack.itemID == Item.bucketEmpty.itemID
+                && ((EntityCow)(Object)this).gotMilk();
+    }
+
+    @Inject(method = "interact", at = @At("RETURN"))
+    private void trackSuccessfulMilking(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if (this.nightmareMode$successfulMilk && cir.getReturnValueZ()) {
+            SkillHandler.incrementCowsMilked(player);
+        }
+        this.nightmareMode$successfulMilk = false;
     }
 
     @Inject(method = "dropFewItems", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityCow;rand:Ljava/util/Random;", ordinal = 0))
