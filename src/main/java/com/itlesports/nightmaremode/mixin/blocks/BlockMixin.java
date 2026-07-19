@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
@@ -9,6 +11,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,6 +32,17 @@ public abstract class BlockMixin {
     @Inject(method = "harvestBlock", at = @At("HEAD"), cancellable = true)
     private void applyHammerRecipeDrops(World world, EntityPlayer player, int x, int y, int z, int meta, CallbackInfo ci){
         ItemStack heldStack = player.getHeldItem();
+        if (this.blockID == Block.blockClay.blockID && !this.canHarvestClayBall(heldStack)) {
+            player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+            player.addHarvestBlockExhaustion(this.blockID, x, y, z, meta);
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(BTWItems.clayPile));
+            for (int i = 0; i < 6; ++i) {
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(BTWItems.dirtPile));
+            }
+            ci.cancel();
+            return;
+        }
+
         if (heldStack == null || !(heldStack.getItem() instanceof ItemHammer)) {
             return;
         }
@@ -59,6 +73,14 @@ public abstract class BlockMixin {
 
         ci.cancel();
     }
+
+    @Unique
+    private boolean canHarvestClayBall(ItemStack heldStack) {
+        return heldStack != null && (heldStack.itemID == Item.shovelDiamond.itemID
+                || heldStack.itemID == NMItems.bloodShovel.itemID
+                || heldStack.itemID == BTWItems.steelShovel.itemID);
+    }
+
     @Inject(method = "canMobsSpawnOn", at = @At("HEAD"),cancellable = true)
     private void mobSpawnOnWood(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
         if(NMUtils.getIsBloodMoon()){
