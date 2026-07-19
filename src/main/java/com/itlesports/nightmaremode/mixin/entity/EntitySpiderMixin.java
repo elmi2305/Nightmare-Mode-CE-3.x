@@ -31,6 +31,11 @@ public abstract class EntitySpiderMixin extends EntityMob{
         super(par1World);
     }
 
+    @Inject(method = "getDropItemId", at = @At("HEAD"), cancellable = true)
+    private void dropSpiderSilk(CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(NMItems.spiderSilk.itemID);
+    }
+
     @Inject(method = "shouldContinueAttacking", at = @At("RETURN"), cancellable = true)
     private void doNotAttackWitches(float fDistanceToTarget, CallbackInfoReturnable<Boolean> cir){
         if(this.entityToAttack instanceof EntityWitch){
