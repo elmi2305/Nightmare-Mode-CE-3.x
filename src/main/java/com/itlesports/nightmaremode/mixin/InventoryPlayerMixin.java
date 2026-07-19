@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import api.item.items.ShovelItem;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
@@ -121,6 +123,10 @@ public class InventoryPlayerMixin {
     private void applySkillBlockBreakSpeed(World world, Block block, int x, int y, int z, CallbackInfoReturnable<Float> cir) {
         if (this.player instanceof EntityPlayerExt ext) {
             float adjustedBlockBreakSpeed = cir.getReturnValueF() * (1.0F + ext.nightmareMode$getSkillBlockBreakSpeedBonus());
+            ItemStack held = this.mainInventory[this.currentItem];
+            if (held != null && held.getItem() instanceof ShovelItem) {
+                adjustedBlockBreakSpeed *= 1.0F + SkillHandler.getPlayerData(this.player).shovelSpeedBonus;
+            }
             cir.setReturnValue(adjustedBlockBreakSpeed);
         }
     }
