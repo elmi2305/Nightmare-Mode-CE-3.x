@@ -11,12 +11,16 @@ import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.mixin.EmiDataAccessor;
 import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
+import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
+import emi.dev.emi.emi.data.EmiRemoveFromIndex;
 import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
+import emi.dev.emi.emi.runtime.EmiHidden;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -36,6 +40,8 @@ public final class NightmareEmiRegistry {
     }
 
     public static void register(EmiRegistry registry) {
+        unhideWoodenTools();
+
         registry.addCategory(HAMMERING);
         registry.addCategory(CISTERN);
         registry.addCategory(WASHING);
@@ -80,6 +86,26 @@ public final class NightmareEmiRegistry {
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "sharp_twig_bark_wrapping"), new ItemStack(NMItems.sharpTwigBarkWrapping), new ItemStack(NMItems.sharpBarkTwig)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "clean_crystal_shard"), new ItemStack(NMItems.cleanCrystalShard), new ItemStack(NMItems.polishedCrystalShard)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "fish_flesh"), new ItemStack(NMItems.fishFlesh), new ItemStack(NMItems.debonedRawFish)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "flint_axe_crafting"), new ItemStack(NMItems.flintAxeCrafting), new ItemStack(NMItems.flintAxe)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "crude_string_crafting"), new ItemStack(NMItems.crudeStringCrafting), new ItemStack(NMItems.crudeString)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "string_crafting"), new ItemStack(NMItems.stringCrafting), new ItemStack(Item.silk)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "wood_cup_crafting"), new ItemStack(NMItems.woodCupCrafting), new ItemStack(NMItems.woodCup)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "unshaped_wet_clay_brick"), new ItemStack(NMItems.unshapedWetClayBrick), new ItemStack(BTWItems.unfiredCrudeBrick)));
 
+    }
+
+    private static void unhideWoodenTools() {
+        unhideItem(Item.swordWood);
+        unhideItem(Item.shovelWood);
+        unhideItem(Item.pickaxeWood);
+        unhideItem(Item.axeWood);
+        unhideItem(Item.hoeWood);
+    }
+
+    private static void unhideItem(Item item) {
+        EmiStack stack = EmiStack.of(item);
+        EmiRemoveFromIndex.removed.removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
+        EmiDataAccessor.getHiddenStacks().removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
+        EmiHidden.disabledStacks.removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
     }
 }
