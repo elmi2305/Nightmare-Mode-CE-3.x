@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,6 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class UrnEntityMixin {
     @Inject(method = "attemptToCreateWither", at = @At("HEAD"),cancellable = true)
     private static void witherSummoningRestrictions(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
+        if (!SkillHandler.getWorldData(world).witherSummoningUnlocked) {
+            EntityPlayer player = world.getClosestPlayer(i, j, k, -1);
+            if (player != null) {
+                SkillHandler.sendStatus(player, "Wither summoning requires all five ritual contributions.");
+            }
+            cir.setReturnValue(false);
+            return;
+        }
         if(j < 60){
             ChatMessageComponent text2 = new ChatMessageComponent();
             text2.addKey("bosses.wither_summon_sealevel");
