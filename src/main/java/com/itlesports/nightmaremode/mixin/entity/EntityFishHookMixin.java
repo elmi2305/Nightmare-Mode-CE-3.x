@@ -110,6 +110,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private FishingCatch selectCatch() {
         FishingCatch[] biomeCatches = this.getBiomeCatches();
+        if (this.angler != null
+                && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus) {
+            return biomeCatches[biomeCatches.length - 1];
+        }
         int totalWeight = totalWeight(JUNK_CATCHES) + totalWeight(biomeCatches);
         int roll = this.rand.nextInt(totalWeight);
 
