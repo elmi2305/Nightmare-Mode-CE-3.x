@@ -4,6 +4,9 @@ import api.achievement.AchievementEventDispatcher;
 import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
+import btw.item.BTWItems;
+import api.item.util.ItemUtils;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -14,6 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
@@ -76,6 +80,17 @@ public class ItemInWorldManagerMixin {
         }
 
         return !(item instanceof ChiselItem);
+    }
+
+    @Redirect(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Block;convertBlock(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;IIII)Z"))
+    private boolean applySkillHempSeedChance(Block block, ItemStack stack, World world, int x, int y, int z, int side) {
+        boolean converted = block.convertBlock(stack, world, x, y, z, side);
+        if (converted && block.blockID == Block.grass.blockID && !world.isRemote
+                && world.rand.nextFloat() < SkillHandler.getPlayerData(this.thisPlayerMP).hempSeedChanceBonus) {
+            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.hempSeeds), side);
+        }
+        return converted;
     }
 
 }
