@@ -33,6 +33,48 @@ public class SkillInventory {
         player.inventory.onInventoryChanged();
     }
 
+    public static boolean hasAny(EntityPlayer player, int count, Item... items) {
+        int total = 0;
+        for (ItemStack stack : player.inventory.mainInventory) {
+            if (stack == null) {
+                continue;
+            }
+            for (Item item : items) {
+                if (item != null && stack.itemID == item.itemID) {
+                    total += stack.stackSize;
+                    break;
+                }
+            }
+        }
+        return total >= count;
+    }
+
+    public static void consumeAny(EntityPlayer player, int count, Item... items) {
+        for (int slot = 0; slot < player.inventory.mainInventory.length && count > 0; ++slot) {
+            ItemStack stack = player.inventory.mainInventory[slot];
+            if (stack == null) {
+                continue;
+            }
+            boolean matches = false;
+            for (Item item : items) {
+                if (item != null && stack.itemID == item.itemID) {
+                    matches = true;
+                    break;
+                }
+            }
+            if (!matches) {
+                continue;
+            }
+            int removed = Math.min(stack.stackSize, count);
+            stack.stackSize -= removed;
+            count -= removed;
+            if (stack.stackSize <= 0) {
+                player.inventory.mainInventory[slot] = null;
+            }
+        }
+        player.inventory.onInventoryChanged();
+    }
+
     private static int count(EntityPlayer player, int itemId, int damage, boolean matchDamage) {
         int count = 0;
         for (ItemStack stack : player.inventory.mainInventory) {

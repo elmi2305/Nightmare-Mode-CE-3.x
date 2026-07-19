@@ -18,6 +18,6 @@ public interface EntityPlayerExt {
     float nightmareMode$getSkillMobLootChanceBonus();
     boolean nightmareMode$canSkillHarvestDiamondOre();
     boolean nightmareMode$canSkillCureVillagers();
-    boolean nightmareMode$doesSkillSlowFoodSpoilage();
+    float nightmareMode$getSkillFoodSpoilageRateMultiplier();
     boolean nightmareMode$doesGrassBreakInstantly();
 }
