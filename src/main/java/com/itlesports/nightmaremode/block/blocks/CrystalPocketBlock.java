@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.blocks;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 
 import java.util.Random;
@@ -26,9 +27,16 @@ public class CrystalPocketBlock extends NMBlock {
         if (held == null || !(held.getItem() instanceof ChiselItem)) {
             return false;
         }
+        if (!SkillHandler.getPlayerData(player).canMineCrystals) {
+            if (!world.isRemote) {
+                SkillHandler.sendStatus(player, "Requires skill: Witch Hunter - Kill 4 witches.");
+            }
+            return true;
+        }
         if (!world.isRemote) {
             int attempts = world.getBlockMetadata(x, y, z);
-            if (world.rand.nextBoolean()) {
+            float chance = Math.min(1.0F, 0.5F + SkillHandler.getPlayerData(player).crystalDropChanceBonus);
+            if (world.rand.nextFloat() < chance) {
                 this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.uncleanedCrystalShard));
             }
             held.damageItem(1, player);
