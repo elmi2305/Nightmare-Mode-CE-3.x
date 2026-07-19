@@ -27,10 +27,10 @@ public class BlockFireMixin {
         }
     }
 
-    @ModifyVariable(method = "checkForFireSpreadToOneBlockLocation", at = @At(value = "STORE"), name = "spreadChance")
-    private static int modifyFireSpreadChance(int spreadChance) {
-        return 10000;
-    }
+//    @ModifyVariable(method = "checkForFireSpreadToOneBlockLocation", at = @At(value = "STORE"), name = "spreadChance")
+//    private static int modifyFireSpreadChance(int spreadChance) {
+//        return 10000;
+//    }
 
     @Unique
     private boolean tryCreatePortalFromFire(World world, BlockSteelFrame steelFrame, int fireX, int fireY, int fireZ) {
