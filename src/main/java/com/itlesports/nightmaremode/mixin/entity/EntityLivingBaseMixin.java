@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,9 +26,21 @@ public abstract class EntityLivingBaseMixin extends Entity {
     @Shadow public abstract boolean isEntityAlive();
 
     @Shadow public abstract void addPotionEffect(PotionEffect par1PotionEffect);
+    @Shadow protected EntityPlayer attackingPlayer;
 
     public EntityLivingBaseMixin(World par1World) {
         super(par1World);
+    }
+
+    @ModifyArg(method = "entityLivingOnDeath", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityLivingBase;dropFewItems(ZI)V"), index = 1)
+    private int applySkillMobLootChance(int lootingModifier) {
+        if (this.attackingPlayer != null
+                && this.rand.nextFloat() < SkillHandler.getPlayerData(this.attackingPlayer).mobLootChanceBonus
+                        + SkillHandler.getWorldData(this.worldObj).globalMobLootChanceBonus) {
+            return lootingModifier + 1;
+        }
+        return lootingModifier;
     }
 
     @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;isChild()Z"))

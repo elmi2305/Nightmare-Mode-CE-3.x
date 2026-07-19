@@ -20,7 +20,11 @@ public class TileEntityBrewingStandMixin {
 
     @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 400))
     private int reduceBrewTime(int constant){
-        return 12000;
+        TileEntity tile = (TileEntity)(Object)this;
+        EntityPlayer player = tile.worldObj == null ? null : tile.worldObj.getClosestPlayer(
+                tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D, 8.0D);
+        float speedBonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).brewingSpeedBonus;
+        return Math.max(1, Math.round(12000.0F / (1.0F + speedBonus)));
     }
 
     @Inject(method = "brewPotions", at = @At("TAIL"))

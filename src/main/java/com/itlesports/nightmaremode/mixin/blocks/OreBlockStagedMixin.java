@@ -31,6 +31,14 @@ public class OreBlockStagedMixin extends OreBlock {
         int blockID = this.blockID;
         int iOldMetadata = world.getBlockMetadata(x, y, z);
         int iStrata = this.getStrata(iOldMetadata);
+        EntityPlayer closestPlayer = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
+        if (iStrata == 2 && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
+            if (!world.isRemote) {
+                SkillHandler.sendStatus(closestPlayer, "Requires skill: Blackstone Authority - Bring 64 blackstone.");
+            }
+            cir.setReturnValue(false);
+            return;
+        }
         if(blockID == Block.oreCoal.blockID){
             if(stack.getItem() instanceof PickaxeItem pi){
                 int dropCount = pi.toolMaterial.getHarvestLevel();
@@ -50,8 +58,10 @@ public class OreBlockStagedMixin extends OreBlock {
                     summonEntity(world,x,y,z, BTWItems.ironOrePile);
                 }
             } else if(stack.getItem() instanceof ChiselItem ch){
+                float pileChance = 0.10F + SkillHandler.getWorldData(world).globalIronPileChanceBonus
+                        + (closestPlayer == null ? 0.0F : SkillHandler.getPlayerData(closestPlayer).ironPileChanceBonus);
                 summonEntity(world,x,y,z,
-                        world.rand.nextInt(10) == 0
+                        world.rand.nextFloat() < pileChance
                                 ? BTWItems.ironOrePile : (world.rand.nextBoolean()
                                                           ? BTWItems.gravelPile : (world.rand.nextInt(3) == 0
                                                                                    ? BTWItems.sharpStone
@@ -63,16 +73,16 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
         }
         if (this.blockID == Block.oreDiamond.blockID) {
-            EntityPlayer closestPlayer = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
             if (closestPlayer != null && !SkillHandler.canHarvestDiamondOre(closestPlayer)) {
                 if (!world.isRemote) {
-                    SkillHandler.sendStatus(closestPlayer, "Requires skill: Diamond Extraction - Bring 4 polished crystal shards.");
+                    SkillHandler.sendStatus(closestPlayer, "Requires all five Diamond Extraction contributions.");
                 }
                 cir.setReturnValue(false);
                 return;
             }
 
-            if (!world.isRemote && world.rand.nextFloat() <= 0.9f) {
+            float rockChance = 0.90F + (closestPlayer == null ? 0.0F : SkillHandler.getPlayerData(closestPlayer).diamondRockDropChanceBonus);
+            if (!world.isRemote && world.rand.nextFloat() <= Math.min(1.0F, rockChance)) {
                 this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));
             }
             world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);

@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockOre;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -34,6 +36,24 @@ public class ProcessingOreBlock extends NMBlockOre {
     @Override
     public int quantityDropped(Random random) {
         return 1;
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {
+        super.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+        if (world.isRemote) {
+            return;
+        }
+        EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
+        if (player == null) {
+            return;
+        }
+        if (this == NMBlocks.lithiumOre && SkillHandler.getPlayerData(player).doubleLithiumDrops) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.dropItemID, 1, 0));
+        } else if (this == NMBlocks.nickelOre
+                && world.rand.nextFloat() < SkillHandler.getPlayerData(player).doubleNickelRockChance) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.dropItemID, 1, 0));
+        }
     }
 
     @Override

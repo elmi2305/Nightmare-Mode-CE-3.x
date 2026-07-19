@@ -9,6 +9,7 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -88,6 +89,9 @@ public final class NMFoodSpoilage {
     }
 
     private static void damageFoodStack(ItemStack stack, World world, EntityPlayer player, int inventorySlot, int interval, ItemStack expiredStack) {
+        float spoilageRate = Math.max(0.05F, SkillHandler.getPlayerData(player).foodSpoilageRateMultiplier
+                * SkillHandler.getWorldData(world).globalFoodSpoilageRateMultiplier);
+        interval = Math.max(1, Math.round(interval / spoilageRate));
         long staggeredTime = world.getTotalWorldTime() + (long)inventorySlot * 37L + stack.itemID;
         if (staggeredTime % interval != 0L) {
             return;

@@ -6,6 +6,7 @@ import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -44,6 +45,9 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
+        if (!SkillHandler.getPlayerData(player).canMineNetherrack) {
+            return 0.0F;
+        }
         ItemStack held = player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemBloodPickaxe) {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;

@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.skill;
 
 import api.world.data.DataSyncManager;
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 
 public class SkillHandler {
@@ -71,7 +72,7 @@ public class SkillHandler {
         return true;
     }
 
-    public static void incrementBlocksMined(EntityPlayer player, int blockId) {
+    public static void incrementBlocksMined(EntityPlayer player, int blockId, int metadata) {
         if (player == null || player.worldObj == null || player.worldObj.isRemote) {
             return;
         }
@@ -85,6 +86,27 @@ public class SkillHandler {
             data.diamondOreMined++;
         } else if (blockId == Block.tallGrass.blockID) {
             data.tallGrassMined++;
+        }
+        if (blockId == Block.blockClay.blockID) {
+            data.clayMined++;
+        }
+        if (blockId == Block.stone.blockID) {
+            data.stoneMined++;
+        }
+        if (NMBlocks.nickelOre != null && blockId == NMBlocks.nickelOre.blockID) {
+            data.nickelOreMined++;
+        }
+        if (blockId == Block.cobblestone.blockID && metadata == 0) {
+            data.strataOneCobblestoneMined++;
+        }
+        if (blockId == Block.dirt.blockID) {
+            data.dirtMined++;
+        }
+        if (blockId == Block.leaves.blockID) {
+            data.leavesMined++;
+        }
+        if (Block.blocksList[blockId] instanceof BlockCrops && (metadata & 7) >= 7) {
+            data.fullyGrownCropsHarvested++;
         }
 
         player.setData(NightmareMode.SKILL_TREE, data);
@@ -100,6 +122,21 @@ public class SkillHandler {
             data.zombiesKilled++;
         } else if (killed instanceof net.minecraft.src.EntitySkeleton) {
             data.skeletonsKilled++;
+        }
+        if (killed instanceof EntityWitch) {
+            data.witchesKilled++;
+        }
+        if (killed instanceof EntityEnderman) {
+            data.endermenKilled++;
+        }
+        if (killed instanceof EntitySpider) {
+            data.spidersKilled++;
+        }
+        if (killed instanceof EntitySlime) {
+            data.slimesKilled++;
+        }
+        if (killed instanceof EntityWither) {
+            data.withersKilled++;
         }
         player.setData(NightmareMode.SKILL_TREE, data);
     }
@@ -158,6 +195,39 @@ public class SkillHandler {
         }
         SkillTreeData data = getPlayerData(player);
         data.booksCrafted += count;
+        player.setData(NightmareMode.SKILL_TREE, data);
+    }
+
+    public static void incrementBookshelvesCrafted(EntityPlayer player, int count) {
+        increment(player, count, data -> data.bookshelvesCrafted += count);
+    }
+
+    public static void incrementSaplingsPlanted(EntityPlayer player) {
+        increment(player, 1, data -> data.saplingsPlanted++);
+    }
+
+    public static void incrementCropsPlanted(EntityPlayer player) {
+        increment(player, 1, data -> data.cropsPlanted++);
+    }
+
+    public static void incrementWeedsRemoved(EntityPlayer player) {
+        increment(player, 1, data -> data.weedsRemoved++);
+    }
+
+    public static void incrementCowsMilked(EntityPlayer player) {
+        increment(player, 1, data -> data.cowsMilked++);
+    }
+
+    public static void incrementTradesCompleted(EntityPlayer player) {
+        increment(player, 1, data -> data.tradesCompleted++);
+    }
+
+    private static void increment(EntityPlayer player, int amount, java.util.function.Consumer<SkillTreeData> increment) {
+        if (player == null || player.worldObj == null || player.worldObj.isRemote || amount <= 0) {
+            return;
+        }
+        SkillTreeData data = getPlayerData(player);
+        increment.accept(data);
         player.setData(NightmareMode.SKILL_TREE, data);
     }
 
