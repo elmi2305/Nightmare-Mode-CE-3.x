@@ -41,6 +41,26 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             this.sendChatToPlayer(text);
             ci.cancel();
         }
+        if (par1 == 1 && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
+            SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the Beacon Offering skill.");
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "displayGUIEnchantment", at = @At("HEAD"), cancellable = true)
+    private void gateEnchantmentTable(int x, int y, int z, String name, CallbackInfo ci) {
+        if (!SkillHandler.getPlayerData((EntityPlayer)(Object)this).canUseEnchantmentTable) {
+            SkillHandler.sendStatus((EntityPlayer)(Object)this, "Requires skill: Ancient Enchanting - Bring an ancient manuscript.");
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "displayGUIBrewingStand", at = @At("HEAD"), cancellable = true)
+    private void gateBrewingStand(TileEntityBrewingStand brewingStand, CallbackInfo ci) {
+        if (!SkillHandler.getPlayerData((EntityPlayer)(Object)this).canUseBrewingStand) {
+            SkillHandler.sendStatus((EntityPlayer)(Object)this, "Requires skill: Witch Wart Alchemy - Bring 64 witch warts.");
+            ci.cancel();
+        }
     }
 
 

@@ -53,6 +53,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public FoodStats foodStats;
     @Shadow public abstract void playSound(String par1Str, float par2, float par3);
     @Shadow public int experienceLevel;
+    @Shadow public int experienceTotal;
+    @Shadow public float experience;
     @Shadow protected abstract int decreaseAirSupply(int iAirSupply);
     @Shadow public abstract boolean isPlayerSleeping();
     @Shadow public abstract void wakeUpPlayer(boolean par1, boolean par2, boolean par3);
@@ -118,7 +120,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     public float nightmareMode$getSkillMobLootChanceBonus() {
-        return this.nightmareMode$getSkillData().mobLootChanceBonus;
+        return this.nightmareMode$getSkillData().mobLootChanceBonus
+                + SkillHandler.getWorldData(this.worldObj).globalMobLootChanceBonus;
     }
 
     @Override
@@ -132,8 +135,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Override
-    public boolean nightmareMode$doesSkillSlowFoodSpoilage() {
-        return this.nightmareMode$getSkillData().foodSpoilsSlower;
+    public float nightmareMode$getSkillFoodSpoilageRateMultiplier() {
+        return this.nightmareMode$getSkillData().foodSpoilageRateMultiplier
+                * SkillHandler.getWorldData(this.worldObj).globalFoodSpoilageRateMultiplier;
     }
 
     @Override
@@ -144,6 +148,40 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique
     private SkillTreeData nightmareMode$getSkillData() {
         return this.getData(SKILL_TREE);
+    }
+
+    @Inject(method = "addExperience", at = @At("HEAD"), cancellable = true)
+    private void gateExperienceGain(int amount, CallbackInfo ci) {
+        if (amount > 0 && !this.nightmareMode$getSkillData().canGainExperience) {
+            ci.cancel();
+        }
+    }
+
+    @ModifyVariable(method = "addExperience", at = @At("HEAD"), argsOnly = true)
+    private int applySkillExperienceBonus(int amount) {
+        return amount <= 0 ? amount : Math.round(amount * (1.0F + this.nightmareMode$getSkillData().xpGainBonus
+                + SkillHandler.getWorldData(this.worldObj).globalXpGainBonus));
+    }
+
+    @Inject(method = "addExperience", at = @At("TAIL"))
+    private void capExperienceAtThirty(int amount, CallbackInfo ci) {
+        if (amount > 0 && !this.nightmareMode$getSkillData().canExceedXpLevelThirty && this.experienceLevel > 30) {
+            this.experienceLevel = 30;
+            this.experience = 0.0F;
+        }
+    }
+
+    @Inject(method = "addExperienceLevel", at = @At("HEAD"), cancellable = true)
+    private void gatePositiveExperienceLevels(int amount, CallbackInfo ci) {
+        SkillTreeData data = this.nightmareMode$getSkillData();
+        if (amount > 0 && (!data.canGainExperience || this.experienceLevel >= 30 && !data.canExceedXpLevelThirty)) {
+            ci.cancel();
+        }
+    }
+
+    @ModifyVariable(method = "attackTargetEntityWithCurrentItem", at = @At(value = "STORE"), ordinal = 0)
+    private float applySkillMeleeDamage(float damage) {
+        return damage * (1.0F + this.nightmareMode$getSkillData().meleeDamageBonus);
     }
 
     public EntityPlayerMixin(World par1World) {
@@ -1180,7 +1218,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique
     private float getOxygenGearReduction() {
-        float reduction = 0.0F;
+        float reduction = this.nightmareMode$getSkillData().oxygenLossReduction;
         ItemStack mask = this.getCurrentArmor(3);
         if (mask != null && mask.getItem() instanceof ItemOxygenGear) {
             reduction += ((ItemOxygenGear)mask.getItem()).getOxygenDrainReduction();
@@ -1237,7 +1275,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;
-        SkillHandler.incrementBlocksMined(self, iBlockID);
+        SkillHandler.incrementBlocksMined(self, iBlockID, iBlockMetadata);
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
     }
 
