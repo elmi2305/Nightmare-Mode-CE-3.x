@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -45,6 +46,12 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        if (!SkillHandler.getPlayerData(player).canUseCistern) {
+            if (!world.isRemote) {
+                SkillHandler.sendStatus(player, "Requires skill: Redstone Hydraulics - Bring 16 redstone.");
+            }
+            return true;
+        }
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if (!(tile instanceof CisternTileEntity)) {
             return false;
