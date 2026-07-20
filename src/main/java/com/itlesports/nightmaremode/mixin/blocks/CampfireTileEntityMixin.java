@@ -21,4 +21,9 @@ public class CampfireTileEntityMixin {
     private float modifyChanceOfFireSpread(float constant) {
         return 10000f;
     }
+
+    @ModifyConstant(method = "updateCookState", constant = @Constant(intValue = 4800), remap = false)
+    private int increaseCookTime(int constant) {
+        return 7000;
+    }
 }
