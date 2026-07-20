@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,20 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
     @Shadow protected abstract boolean canDespawn();
     @Shadow private boolean persistenceRequired;
     @Shadow protected float[] equipmentDropChances;
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
+    private void stopCarcassLivingUpdate(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "playLivingSound", at = @At("HEAD"), cancellable = true)
+    private void stopCarcassAmbientSound(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
+    }
 
     @Redirect(method = "entityLivingAddRandomArmor", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextFloat()F", ordinal = 0))
     private float returnRandomFloatButLower(Random rand){

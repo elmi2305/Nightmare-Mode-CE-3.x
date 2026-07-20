@@ -1,13 +1,16 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.mob.KickingAnimal;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityHorse;
 import net.minecraft.src.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KickingAnimal.class)
 public abstract class KickingAnimalMixin {
@@ -21,5 +24,13 @@ public abstract class KickingAnimalMixin {
             return AxisAlignedBB.getAABBPool().getAABB(kickCenter.xCoord - 1.45, kickCenter.yCoord - 1.2, kickCenter.zCoord - 1.45, kickCenter.xCoord + 1.45, kickCenter.yCoord + 1.2, kickCenter.zCoord + 1.45);
         }
         return providedAABB;
+    }
+    @Inject(method = "updateKickAttack", at = @At("HEAD"),cancellable = true, remap = false)
+    private void corpsesDoNotKick(CallbackInfo ci) {
+        KickingAnimal self = (KickingAnimal) (Object)this;
+
+        if(self instanceof CarcassAnimal carcassAnimal && carcassAnimal.nm$isCarcass()){
+            ci.cancel();
+        }
     }
 }

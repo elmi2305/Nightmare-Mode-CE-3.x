@@ -16,6 +16,7 @@ import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillNet;
+import com.itlesports.nightmaremode.util.CarcassHarvestNet;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.tpa.TPACommand;
@@ -304,6 +305,12 @@ public class NightmareMode extends BTWAddon {
             }
         });
 
+        AddonHandler.registerPacketHandler(CarcassHarvestNet.CHANNEL, (packet, player) -> {
+            if (player instanceof EntityPlayerMP playerMP) {
+                CarcassHarvestNet.handle(packet.data, playerMP);
+            }
+        });
+
 
     }
 
@@ -311,6 +318,10 @@ public class NightmareMode extends BTWAddon {
     public boolean serverCustomPacketReceived(NetServerHandler handler, Packet250CustomPayload packet) {
         if (SkillNet.UNLOCK_CHANNEL.equals(packet.channel) && handler != null && handler.playerEntity != null) {
             SkillNet.handleUnlockRequest(packet.data, handler.playerEntity);
+            return true;
+        }
+        if (CarcassHarvestNet.CHANNEL.equals(packet.channel) && handler != null && handler.playerEntity != null) {
+            CarcassHarvestNet.handle(packet.data, handler.playerEntity);
             return true;
         }
         return super.serverCustomPacketReceived(handler, packet);

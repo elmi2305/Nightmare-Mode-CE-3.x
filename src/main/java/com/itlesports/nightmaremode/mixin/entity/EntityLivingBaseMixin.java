@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -85,7 +86,7 @@ public abstract class EntityLivingBaseMixin extends Entity {
         }
     }
 
-    @Inject(method = "onDeath", at = @At("HEAD"))
+    @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
         if(source.getEntity() instanceof EntityPlayer player && Objects.equals(source.damageType, "player")){
             if(NMUtils.isWearingFullBloodArmor(player)){
@@ -113,6 +114,59 @@ public abstract class EntityLivingBaseMixin extends Entity {
                 }
                 this.increaseArmorDurabilityRandomly(player);
             }
+        }
+        EntityLivingBase thisObj = (EntityLivingBase)(Object) this;
+        if (thisObj instanceof EntityAnimal && thisObj instanceof CarcassAnimal carcass) {
+            carcass.nm$becomeCarcass(source);
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "entityInit", at = @At("TAIL"))
+    private void addCarcassWatchers(CallbackInfo ci) {
+        if ((Object)this instanceof EntityAnimal) {
+            this.dataWatcher.addObject(27, (byte)0);
+            this.dataWatcher.addObject(28, -1);
+            this.dataWatcher.addObject(29, 0);
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void tickAnimalCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass) {
+            carcass.nm$tickCarcass();
+        }
+    }
+
+    @Inject(method = "moveEntityWithHeading", at = @At("HEAD"), cancellable = true)
+    private void preventCarcassMovement(float strafe, float forward, CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            this.motionX = 0.0D;
+            this.motionY = 0.0D;
+            this.motionZ = 0.0D;
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void writeCarcassData(NBTTagCompound tag, CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass) {
+            carcass.nm$writeCarcassToNBT(tag);
+        }
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void readCarcassData(NBTTagCompound tag, CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass) {
+            carcass.nm$readCarcassFromNBT(tag);
+        }
+    }
+
+    @Inject(method = "handleHealthUpdate", at = @At("HEAD"), cancellable = true)
+    private void handleCarcassPoof(byte state, CallbackInfo ci) {
+        if (state == 30 && (Object)this instanceof CarcassAnimal carcass) {
+            carcass.nm$spawnCarcassPoof();
+            ci.cancel();
         }
     }
 

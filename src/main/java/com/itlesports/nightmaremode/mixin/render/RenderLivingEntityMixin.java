@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.entity.EntityPhantomZombie;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.RendererLivingEntity;
 import org.lwjgl.opengl.GL11;
@@ -17,6 +18,9 @@ public class RenderLivingEntityMixin {
             at = @At("HEAD")
     )
     private void nm$startTransparency(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo ci) {
+        if (entity instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            GL11.glColor4f(0.72F, 0.16F, 0.16F, 1.0F);
+        }
         if (entity instanceof EntityPhantomZombie) {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -31,6 +35,9 @@ public class RenderLivingEntityMixin {
     private void nm$endTransparency(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo ci) {
         if (entity instanceof EntityPhantomZombie) {
             GL11.glDisable(GL11.GL_BLEND);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+        if (entity instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }

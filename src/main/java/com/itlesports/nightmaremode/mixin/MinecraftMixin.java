@@ -4,6 +4,7 @@ import api.AddonHandler;
 import btw.BTWMod;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
+import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -51,5 +52,17 @@ public class MinecraftMixin {
             this.gameSettings.fovSetting = originalFov;
             this.wasZooming = false;
         }
+    }
+
+    @Inject(method = "clickMouse", at = @At("HEAD"), cancellable = true)
+    private void startOrBlockCarcassHarvest(int mouseButton, CallbackInfo ci) {
+        if (mouseButton == 1 && CarcassHarvestClient.consumeCarcassRightClick((Minecraft)(Object)this)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "runTick", at = @At("TAIL"))
+    private void tickCarcassHarvest(CallbackInfo ci) {
+        CarcassHarvestClient.tick((Minecraft)(Object)this);
     }
 }

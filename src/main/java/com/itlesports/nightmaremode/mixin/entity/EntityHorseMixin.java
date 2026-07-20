@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,6 +40,13 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Shadow
     protected abstract void func_110237_h(EntityPlayer par1EntityPlayer);
+
+    @Redirect(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityHorse;dropChestItems()V"))
+    private void deferHorseInventoryDrops(EntityHorse horse) {
+        if (!(horse instanceof CarcassAnimal carcass) || !carcass.nm$isCarcass()) {
+            horse.dropChestItems();
+        }
+    }
 
     @Unique private int swimmingTicks;
     @Unique private int kickCooldown = 20;

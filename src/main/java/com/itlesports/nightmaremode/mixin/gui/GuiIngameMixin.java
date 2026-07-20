@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
+import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
@@ -39,6 +40,11 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
     @Unique private int amountRendered = 0;
+
+    @Inject(method = "renderGameOverlay", at = @At("RETURN"))
+    private void renderCarcassHarvestProgress(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
+        CarcassHarvestClient.renderProgress(this.mc);
+    }
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
     private void renderUnderworldSanity(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci){
