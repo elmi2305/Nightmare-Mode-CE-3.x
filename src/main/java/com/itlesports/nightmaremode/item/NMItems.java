@@ -178,6 +178,10 @@ public class NMItems {
     public static Item plantSheet;
     public static Item washedSugarCane;
     public static Item pileOfSticks;
+    public static Item boneShard;
+    public static ItemKnife stoneKnife;
+    public static ItemKnife ironKnife;
+    public static ItemKnife diamondKnife;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -321,6 +325,10 @@ public class NMItems {
         plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
         washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
         pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
+        boneShard = new NMItem(2700).setTextureName("bone").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
+        stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
+        ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
+        diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
 
 
 
