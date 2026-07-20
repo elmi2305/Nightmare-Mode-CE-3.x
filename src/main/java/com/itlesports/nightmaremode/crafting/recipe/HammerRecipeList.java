@@ -23,6 +23,7 @@ public abstract class HammerRecipeList {
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.polishedCrystalShard), new ItemStack(NMItems.cleanCrystalShard, 1, Short.MAX_VALUE)).setHitsRequired(4);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crackedDiamondBearingRock), new ItemStack(NMItems.diamondBearingRock)).setHitsRequired(3);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.nickelPlate), new ItemStack(NMItems.nickelIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.wetFusedPlantSheet), new ItemStack(NMItems.washedPith));
 
     }
 }

@@ -171,6 +171,13 @@ public class NMItems {
     public static NMProgressiveItem stringCrafting;
     public static NMProgressiveItem woodCupCrafting;
     public static NMProgressiveItem unshapedWetClayBrick;
+    public static Item reedStem;
+    public static NMProgressiveItem reedPeeling;
+    public static Item washedPith;
+    public static Item wetFusedPlantSheet;
+    public static Item plantSheet;
+    public static Item washedSugarCane;
+    public static Item pileOfSticks;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -307,6 +314,13 @@ public class NMItems {
         stringCrafting = (NMProgressiveItem) new NMProgressiveItem(2690, Item.silk.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyStringCrafting").setUnlocalizedName("ifhyStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
         woodCupCrafting = (NMProgressiveItem) new NMProgressiveItem(2691, woodCup.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyWoodCup").setUnlocalizedName("ifhyWoodCupCrafting").setCreativeTab(CreativeTabs.tabMaterials);
         unshapedWetClayBrick = (NMProgressiveItem) new NMProgressiveItem(2692, 22355 /* the ID of the crude brick block */).setTargetDurability(100).setTextureName("nightmare:ifhyUnshapedWetClayBrick").setUnlocalizedName("ifhyUnshapedWetClayBrick").setCreativeTab(CreativeTabs.tabMaterials);
+        reedStem = new NMItem(2693).setTextureName("nightmare:ifhyReedStem").setUnlocalizedName("ifhyReedStem").setCreativeTab(CreativeTabs.tabMaterials);
+        reedPeeling = (NMProgressiveItem) new NMProgressiveItem(2694, reedStem.itemID).setTargetDurability(100).setTextureName("reeds").setUnlocalizedName("ifhyReedPeeling").setCreativeTab(CreativeTabs.tabMaterials);
+        washedPith = new NMItem(2695).setTextureName("nightmare:ifhyWashedPith").setUnlocalizedName("ifhyWashedPith").setCreativeTab(CreativeTabs.tabMaterials);
+        wetFusedPlantSheet = new NMItem(2696).setTextureName("nightmare:ifhyWetFusedPlantSheet").setUnlocalizedName("ifhyWetFusedPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
+        plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
+        washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
+        pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

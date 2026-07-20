@@ -91,6 +91,7 @@ public final class NightmareEmiRegistry {
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "string_crafting"), new ItemStack(NMItems.stringCrafting), new ItemStack(Item.silk)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "wood_cup_crafting"), new ItemStack(NMItems.woodCupCrafting), new ItemStack(NMItems.woodCup)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "unshaped_wet_clay_brick"), new ItemStack(NMItems.unshapedWetClayBrick), new ItemStack(BTWItems.unfiredCrudeBrick)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "reed_peeling"), new ItemStack(NMItems.reedPeeling), new ItemStack(NMItems.reedStem)));
 
     }
 
