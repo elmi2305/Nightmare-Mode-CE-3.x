@@ -95,6 +95,7 @@
     "blocks.BlockTNTMixin",
     "blocks.BlockTrapDoorMixin",
     "blocks.BlockVineMixin",
+    "blocks.BlockWebMixin",
     "blocks.BlockWoodMixin",
     "blocks.CampfireTileEntityMixin",
     "blocks.CementBlockMixin",
