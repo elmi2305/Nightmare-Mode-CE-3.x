@@ -4,6 +4,7 @@ import btw.item.BTWItems;
 import btw.util.BTWSounds;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.elements.FishingCatch;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -154,15 +155,4 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         return new FishingCatch(item, weight, rare);
     }
 
-    private static final class FishingCatch {
-        private final Item item;
-        private final int weight;
-        private final boolean rare;
-
-        private FishingCatch(Item item, int weight, boolean rare) {
-            this.item = item;
-            this.weight = weight;
-            this.rare = rare;
-        }
-    }
 }
