@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.mob.KickingAnimal;
 import api.world.difficulty.DifficultyParam;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -28,6 +29,8 @@ public class EntityMooshroomMixin extends EntityCow {
 
     @Override
     protected void updateKickAttack() {
+        EntityMooshroom self =  (EntityMooshroom)(Object)this;
+        if(self instanceof CarcassAnimal carcassAnimal && carcassAnimal.nm$isCarcass()) return;
         if(this.kickAttackCooldownTimer > 10){
             this.kickAttackCooldownTimer = 10;
             // crude way of maxing out the cooldown timer
