@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,14 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     public EntityGhastMixin(World world) {
         super(world);
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void tickGhastCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            ci.cancel();
+        }
     }
 
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
