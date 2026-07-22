@@ -48,6 +48,13 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         super(par1World);
     }
 
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
+    private void stopVillagerCarcassUpdate(CallbackInfo ci) {
+        if ((Object)this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "useRecipe", at = @At("HEAD"))
     private void rememberTradeState(MerchantRecipe recipe, CallbackInfo ci) {
         this.nightmareMode$levelBeforeTrade = this.getCurrentTradeLevel();
