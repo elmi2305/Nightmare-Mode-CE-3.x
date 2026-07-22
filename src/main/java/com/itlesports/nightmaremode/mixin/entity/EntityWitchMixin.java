@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,6 +32,13 @@ public abstract class EntityWitchMixin extends EntityMob {
     @Unique private int minionCountdown = 0;
     public EntityWitchMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
+    private void stopWitchCarcassUpdate(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
     }
 
     @Override
