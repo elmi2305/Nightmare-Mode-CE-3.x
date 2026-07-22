@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -94,6 +95,13 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
         if (this.ticksExisted % 160 == 0) {
             this.recentParryCount = Math.max(recentParryCount - 1, 0);
+        }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
+    private void stopSquidCarcassUpdate(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
         }
     }
     @ModifyConstant(method = "dropFewItems", constant = @Constant(intValue = 8))
