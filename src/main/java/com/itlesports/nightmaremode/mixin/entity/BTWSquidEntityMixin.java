@@ -52,6 +52,22 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         ((DamageSourceExt) src).nightmareMode$setHungerDrain(0.1f);
         return src;
     }
+
+    @Inject(
+            method = "updateHeadCrab",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z",
+                    shift = At.Shift.AFTER
+            ),
+            cancellable = true
+    )
+    private void stopHeadCrabUpdateAfterHostDismount(CallbackInfo ci) {
+        if (this.ridingEntity == null) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V",
@@ -188,10 +204,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "updateHeadCrab",
             at = @At("HEAD"),remap = false, cancellable = true)
     private void doScaryThingsOnHead(CallbackInfo ci) {
-        if(this.ridingEntity == null) {
-            ci.cancel();
-            return;
-        }
+
         this.squidOnHeadTimer++;
         if (rand.nextInt(60) == 0) {
             this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);

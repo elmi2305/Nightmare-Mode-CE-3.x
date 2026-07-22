@@ -228,6 +228,15 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             return;
         }
 
+        // Dismount before changing any carcass state. In particular, a headcrab
+        // may cause this transition from inside its own damage update.
+        if (this.riddenByEntity != null) {
+            this.riddenByEntity.mountEntity(null);
+        }
+        if (this.ridingEntity != null) {
+            this.mountEntity(null);
+        }
+
         self.setHealth(1.0F);
         this.dataWatcher.updateObject(CARCASS_WATCHER_ID, (byte)1);
         this.dataWatcher.updateObject(HARVESTER_WATCHER_ID, -1);
@@ -245,13 +254,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         self.limbSwing = 0.0F;
         self.limbSwingAmount = 0.0F;
         self.prevLimbSwingAmount = 0.0F;
-
-        if (this.riddenByEntity != null) {
-            this.riddenByEntity.mountEntity(null);
-        }
-        if (this.ridingEntity != null) {
-            this.mountEntity(null);
-        }
 
         if (!this.worldObj.isRemote) {
             String deathSound = this.getDeathSound();

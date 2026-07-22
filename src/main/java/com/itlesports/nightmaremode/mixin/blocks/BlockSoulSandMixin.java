@@ -8,6 +8,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockSoulSand.class)
 public abstract class BlockSoulSandMixin extends Block {
@@ -27,6 +28,7 @@ public abstract class BlockSoulSandMixin extends Block {
         this.tryDropSoulChip(world, x, y, z);
     }
 
+    @Unique
     private void tryDropSoulChip(World world, int x, int y, int z) {
         if (!world.isRemote && world.rand.nextFloat() < 0.08F) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.soulChip));

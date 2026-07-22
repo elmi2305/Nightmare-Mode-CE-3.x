@@ -356,7 +356,7 @@ public class NMItems {
         plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
         washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
         pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
-        boneShard = new NetherItem(2700).setTextureName("bone").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
+        boneShard = new NetherItem(2700).setTextureName("nightmare:ifhyBoneShard").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
         stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
         diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
@@ -400,7 +400,7 @@ public class NMItems {
     private static FoodItem createRawFish(int id, String name) {
         return (FoodItem) new NMFoodItem(id, 1, 0.1f, false, name, true)
                 .setStandardFoodPoisoningEffect()
-                .setIconName("fish_raw")
+                .setIconName(("nightmare:" + name))
                 .setCreativeTab(CreativeTabs.tabFood);
     }
 
