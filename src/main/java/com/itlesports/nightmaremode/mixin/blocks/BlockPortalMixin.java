@@ -62,14 +62,18 @@ public class BlockPortalMixin{
                         text1.setColor(EnumChatFormatting.DARK_RED);
                         player.sendChatToPlayer(text1);
 
+                        text1 = new ChatMessageComponent();
+                        text1.addText("I should probably store all my items before entering, and wear a heat-resistant armor...");
+                        player.sendChatToPlayer(text1);
+
                         player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
                     }
                 }
             }
 
-            world.setData(NightmareMode.PORTAL_TIME, world.getWorldTime() + 72000);
+            world.setData(NightmareMode.PORTAL_TIME, world.getWorldTime() + 2880000);
 
-            world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + 72000);
+            world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + 2880000);
             world.playSoundEffect(x,y,z,"mob.wither.death",1f,0.905F);
             // the rest is handled in EntityPlayerMPMixin
         }
