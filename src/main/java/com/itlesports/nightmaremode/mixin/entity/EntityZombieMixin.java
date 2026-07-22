@@ -43,6 +43,14 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         super(par1World);
     }
 
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void tickZombieCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            ci.cancel();
+        }
+    }
+
 
 
     @Unique private int lungedAgo;
