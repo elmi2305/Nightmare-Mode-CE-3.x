@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.util;
 
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityAnimal;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Packet250CustomPayload;
@@ -46,7 +46,7 @@ public final class CarcassHarvestNet {
             byte action = data.readByte();
             int entityId = data.readInt();
             Entity entity = player.worldObj.getEntityByID(entityId);
-            if (!(entity instanceof EntityAnimal) || !(entity instanceof CarcassAnimal carcass)) {
+            if (!(entity instanceof EntityLivingBase) || !(entity instanceof CarcassAnimal carcass)) {
                 return;
             }
             if (action == ACTION_CONTINUE) {

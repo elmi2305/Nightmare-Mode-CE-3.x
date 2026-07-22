@@ -3,14 +3,19 @@ package com.itlesports.nightmaremode.util;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.ItemKnife;
+import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import net.minecraft.src.BlockColored;
+import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityAnimal;
 import net.minecraft.src.EntityChicken;
 import net.minecraft.src.EntityCow;
+import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.EntityHorse;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPig;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntitySheep;
+import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.EntityWolf;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -35,7 +40,14 @@ public final class CarcassHarvesting {
         return stack == null || ItemKnife.fromStack(stack) != null;
     }
 
-    public static void completeHarvest(EntityAnimal animal, EntityPlayer player, int harvestTier) {
+    public static void completeHarvest(EntityLivingBase entity, EntityPlayer player, int harvestTier, DamageSource source) {
+        if (!(entity instanceof EntityAnimal animal)) {
+            entity.entityLivingOnDeath(source);
+            dropCreeperRecord(entity, source);
+            damageKnife(player, harvestTier);
+            return;
+        }
+
         ItemStack meat = getMeat(animal);
         ItemStack secondary = getSecondary(animal);
         int randomPrimaryDrops = 1 + animal.getRNG().nextInt(2);
@@ -66,12 +78,7 @@ public final class CarcassHarvesting {
             horse.dropChestItems();
         }
 
-        ItemStack held = player.getHeldItem();
-        if (harvestTier > ItemKnife.TIER_FISTS && ItemKnife.fromStack(held) != null) {
-            held.damageItem(1, player);
-        }
-
-        player.addExperience(1 + animal.getRNG().nextInt(3));
+        damageKnife(player, harvestTier);
     }
 
     private static ItemStack getMeat(EntityAnimal animal) {
@@ -123,5 +130,25 @@ public final class CarcassHarvesting {
 
     private static void drop(EntityAnimal animal, ItemStack stack) {
         animal.entityDropItem(stack, 0.3F);
+    }
+
+    private static void damageKnife(EntityPlayer player, int harvestTier) {
+        ItemStack held = player.getHeldItem();
+        if (harvestTier > ItemKnife.TIER_FISTS && ItemKnife.fromStack(held) != null) {
+            held.damageItem(1, player);
+        }
+    }
+
+    private static void dropCreeperRecord(EntityLivingBase entity, DamageSource source) {
+        if (!(source.getEntity() instanceof EntitySkeleton)) {
+            return;
+        }
+
+        boolean eligibleCreeper = entity instanceof EntityCreeper creeper && creeper.getNeuteredState() == 0;
+        eligibleCreeper |= entity instanceof EntityCreeperVariant creeper && creeper.getNeuteredState() == 0;
+        if (eligibleCreeper) {
+            int recordId = Item.record13.itemID + entity.getRNG().nextInt(Item.recordWait.itemID - Item.record13.itemID + 1);
+            entity.dropItem(recordId, 1);
+        }
     }
 }

@@ -6,7 +6,7 @@ import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityAnimal;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EnumMovingObjectType;
 import net.minecraft.src.Gui;
@@ -31,7 +31,7 @@ public final class CarcassHarvestClient {
         }
 
         Entity target = mc.objectMouseOver.entityHit;
-        if (!(target instanceof EntityAnimal) || !(target instanceof CarcassAnimal carcass) || !carcass.nm$isCarcass()) {
+        if (!(target instanceof EntityLivingBase) || !(target instanceof CarcassAnimal carcass) || !carcass.nm$isCarcass()) {
             return false;
         }
 
@@ -49,7 +49,7 @@ public final class CarcassHarvestClient {
         }
 
         Entity entity = mc.theWorld.getEntityByID(activeEntityId);
-        if (!(entity instanceof EntityAnimal) || !(entity instanceof CarcassAnimal carcass)
+        if (!(entity instanceof EntityLivingBase) || !(entity instanceof CarcassAnimal carcass)
                 || entity.isDead || !carcass.nm$isCarcass()) {
             clear(false);
             return;
