@@ -31,6 +31,15 @@ public abstract class EntitySpiderMixin extends EntityMob{
         super(par1World);
     }
 
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void tickSpiderCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+
+            carcass.nm$tickCarcass();
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "getDropItemId", at = @At("HEAD"), cancellable = true)
     private void dropSpiderSilk(CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(NMItems.spiderSilk.itemID);
