@@ -52,6 +52,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     @Shadow protected abstract String getDeathSound();
     @Shadow protected abstract float getSoundVolume();
     @Shadow protected abstract int getExperiencePoints(EntityPlayer player);
+    @Shadow protected abstract String getHurtSound();
 
     public EntityLivingBaseMixin(World par1World) {
         super(par1World);
@@ -329,8 +330,8 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         }
 
         ++this.carcassAge;
-        if (this.carcassAge % 40 == 0) {
-            String deathSound = this.getDeathSound();
+        if (this.carcassAge % 40 == 0 && !(self instanceof EntityGhast)) {
+            String deathSound = this.getHurtSound();
             if (deathSound != null) {
                 this.worldObj.playSoundAtEntity(this, deathSound, this.getSoundVolume(), 1.6F + this.rand.nextFloat() * 0.2F);
             }
