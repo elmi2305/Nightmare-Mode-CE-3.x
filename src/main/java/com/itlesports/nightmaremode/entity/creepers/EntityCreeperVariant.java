@@ -153,6 +153,10 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     @Override
     public void onUpdate() {
+        if (this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            return;
+        }
         this.onVariantUpdate();
         if (this.isEntityAlive()) {
             if (NightmareMode.isAprilFools && this.getAttackTarget() instanceof EntityPlayer player && this.getDistanceSqToEntity(player) < 81) {
@@ -296,6 +300,9 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     @Override
     public void onDeath(DamageSource par1DamageSource) {
         super.onDeath(par1DamageSource);
+        if (this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            return;
+        }
         if (par1DamageSource.getEntity() instanceof EntitySkeleton && this.getNeuteredState() == 0) {
             int var2 = Item.record13.itemID + this.rand.nextInt(Item.recordWait.itemID - Item.record13.itemID + 1);
             this.dropItem(var2, 1);
