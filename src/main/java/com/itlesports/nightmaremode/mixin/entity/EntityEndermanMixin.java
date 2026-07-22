@@ -28,6 +28,12 @@ public abstract class EntityEndermanMixin extends EntityMob {
     public EntityEndermanMixin(World par1World) {
         super(par1World);
     }
+    @Inject(method = "onLivingUpdate", at = @At("HEAD"), cancellable = true)
+    private void stopEndermanCarcassUpdate(CallbackInfo ci) {
+        if ((Object)this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
+    }
     @Shadow protected abstract void angerNearbyEndermen(EntityPlayer targetPlayer);
     @Shadow protected abstract boolean teleportToEntity(Entity par1Entity);
     @Shadow public abstract int getCarried();
