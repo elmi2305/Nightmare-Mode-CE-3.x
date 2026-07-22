@@ -856,8 +856,13 @@ public class NightmareMode extends BTWAddon {
             DataProvider.getBuilder(WorldSkillData.class)
                     .name("NmWorldSkillTree")
                     .defaultSupplier(WorldSkillData::new)
-                    .readNBT(WorldSkillData::readFromNBT)
-                    .writeNBT(WorldSkillData::writeToNBT)
+                    .ignorePresenceCheck()
+                    .readNBT((nbt, name) -> WorldSkillData.readFromNBT(nbt.hasKey(name) ? nbt.getCompoundTag(name) : nbt))
+                    .writeNBT((nbt, name, data) -> {
+                        NBTTagCompound skillData = new NBTTagCompound(name);
+                        WorldSkillData.writeToNBT(skillData, data);
+                        nbt.setTag(name, skillData);
+                    })
                     .global()
                     .sync()
                     .build();
