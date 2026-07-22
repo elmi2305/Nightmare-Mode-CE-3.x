@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,6 +30,21 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void tickCreeperCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMob;onDeath(Lnet/minecraft/src/DamageSource;)V", shift = At.Shift.AFTER), cancellable = true)
+    private void deferSkeletonRecordUntilHarvest(DamageSource source, CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
