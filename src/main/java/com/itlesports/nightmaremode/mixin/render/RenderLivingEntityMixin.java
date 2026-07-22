@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.render;
 import com.itlesports.nightmaremode.entity.EntityPhantomZombie;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.EntitySpider;
 import net.minecraft.src.RendererLivingEntity;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,6 +40,15 @@ public class RenderLivingEntityMixin {
         }
         if (entity instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
+    }
+
+    @Inject(method = "renderLivingAt", at = @At("TAIL"))
+    private void nm$offsetSpiderCarcass(EntityLivingBase entity, double x, double y, double z, CallbackInfo ci) {
+        if (entity instanceof EntitySpider
+                && entity instanceof CarcassAnimal carcass
+                && carcass.nm$isCarcass()) {
+            GL11.glTranslatef(0.0F, 1.0F, 0.0F);
         }
     }
 }
