@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTexture
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.itemblock.NMNetherItemBlock;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
@@ -159,7 +160,7 @@ public class NMBlocks {
 
         tungstenOre = new BlockTungstenOre(NMFields.BLOCK_TUNGSTEN_ORE);
         Item.itemsList[tungstenOre.blockID] = new NMNetherItemBlock(tungstenOre.blockID - 256);
-
+        
         netherWorkbench = new BlockNetherWorkbench(NMFields.BLOCK_NETHER_WORKBENCH);
         Item.itemsList[netherWorkbench.blockID] = new NMNetherItemBlock(netherWorkbench.blockID - 256);
 
