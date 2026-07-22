@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -89,6 +90,16 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
                     player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketEmpty));
                 }
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.splash", 0.4F, 1.0F);
+            }
+            return true;
+        }
+
+        if (held.itemID == NMItems.tungstenLavaBucket.itemID) {
+            if (cistern.addFluid(CisternTileEntity.FLUID_LAVA)) {
+                if (!player.capabilities.isCreativeMode) {
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(NMItems.tungstenBucket));
+                }
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "liquid.lavapop", 0.4F, 1.0F);
             }
             return true;
         }

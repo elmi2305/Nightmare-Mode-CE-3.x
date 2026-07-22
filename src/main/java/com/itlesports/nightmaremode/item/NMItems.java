@@ -182,6 +182,37 @@ public class NMItems {
     public static ItemKnife stoneKnife;
     public static ItemKnife ironKnife;
     public static ItemKnife diamondKnife;
+    public static Item ash;
+    public static Item ashClump;
+    public static Item soulChip;
+    public static Item soulFlint;
+    public static Item pigHide;
+    public static Item pighideString;
+    public static NMProgressiveItem pighideStringCrafting;
+    public static Item quartzDust;
+    public static Item tungstenDust;
+    public static Item netherrackChunk;
+    public static Item netherWorkbenchPart;
+    public static Item netherStick;
+    public static Item netherrackPickaxe;
+    public static Item netherFishingRod;
+    public static Item netherFishingRodBaited;
+    public static Item lavafish;
+    public static Item netherOvenPart;
+    public static Item netherrackHammer;
+    public static Item tungstenChunk;
+    public static Item crushedTungsten;
+    public static Item tungstenConcentrate;
+    public static Item brittleTungstenCake;
+    public static Item tungstenPowder;
+    public static Item pureTungstenChunk;
+    public static Item tungstenNugget;
+    public static Item tungstenIngot;
+    public static Item tungstenBucket;
+    public static Item tungstenLavaBucket;
+    public static Item obsidianPowder;
+    public static Item obsidianPaste;
+    public static Item obsidianBrick;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -325,10 +356,42 @@ public class NMItems {
         plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
         washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
         pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
-        boneShard = new NMItem(2700).setTextureName("bone").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
+        boneShard = new NetherItem(2700).setTextureName("bone").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
         stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
         diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
+
+        ash = new NetherItem(2704).setTextureName("gunpowder").setUnlocalizedName("ifhyAsh").setCreativeTab(CreativeTabs.tabMaterials);
+        ashClump = new NetherItem(2705).setTextureName("clay").setUnlocalizedName("ifhyAshClump").setCreativeTab(CreativeTabs.tabMaterials);
+        soulChip = new NetherItem(2706).setTextureName("flint").setUnlocalizedName("ifhySoulChip").setCreativeTab(CreativeTabs.tabMaterials);
+        soulFlint = new ItemSoulFlint(2707).setTextureName("flint").setUnlocalizedName("ifhySoulFlint");
+        pigHide = new NetherItem(2708).setTextureName("leather").setUnlocalizedName("ifhyPigHide").setCreativeTab(CreativeTabs.tabMaterials);
+        pighideString = new NetherItem(2709).setTextureName("string").setUnlocalizedName("ifhyPighideString").setCreativeTab(CreativeTabs.tabMaterials);
+        pighideStringCrafting = (NMProgressiveItem)new NetherProgressiveItem(2710, pighideString.itemID).setTargetDurability(100).setTextureName("string").setUnlocalizedName("ifhyPighideStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
+        quartzDust = new NetherItem(2711).setTextureName("netherquartz").setUnlocalizedName("ifhyQuartzDust").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenDust = new NetherItem(2712).setTextureName("gunpowder").setUnlocalizedName("ifhyTungstenDust").setCreativeTab(CreativeTabs.tabMaterials);
+        netherrackChunk = new NetherItem(2713).setTextureName("netherrack").setUnlocalizedName("ifhyNetherrackChunk").setCreativeTab(CreativeTabs.tabMaterials);
+        netherWorkbenchPart = new NetherItem(2714).setTextureName("netherbrick").setUnlocalizedName("ifhyNetherWorkbenchPart").setCreativeTab(CreativeTabs.tabMaterials);
+        netherStick = new NetherItem(2715).setTextureName("stick").setUnlocalizedName("ifhyNetherStick").setCreativeTab(CreativeTabs.tabMaterials);
+        netherrackPickaxe = new ItemNetherrackPickaxe(2716).setTextureName("stone_pickaxe").setUnlocalizedName("ifhyNetherrackPickaxe").setCreativeTab(CreativeTabs.tabTools);
+        netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("fishing_rod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
+        netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("btw:baited_fishing_rod").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
+        lavafish = new ItemLavafish(2719).setTextureName("fish_raw").setCreativeTab(CreativeTabs.tabFood);
+        netherOvenPart = new NetherItem(2720).setTextureName("netherbrick").setUnlocalizedName("ifhyNetherOvenPart").setCreativeTab(CreativeTabs.tabMaterials);
+        netherrackHammer = new ItemNetherrackHammer(2721).setTextureName("nightmare:ifhyStoneHammer").setUnlocalizedName("ifhyNetherrackHammer").setCreativeTab(CreativeTabs.tabTools);
+        tungstenChunk = new NetherItem(2722).setTextureName("iron_ingot").setUnlocalizedName("ifhyTungstenChunk").setCreativeTab(CreativeTabs.tabMaterials);
+        crushedTungsten = new NetherItem(2723).setTextureName("gunpowder").setUnlocalizedName("ifhyCrushedTungsten").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenConcentrate = new NetherItem(2724).setTextureName("gunpowder").setUnlocalizedName("ifhyTungstenConcentrate").setCreativeTab(CreativeTabs.tabMaterials);
+        brittleTungstenCake = new NetherItem(2725).setTextureName("clay").setUnlocalizedName("ifhyBrittleTungstenCake").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenPowder = new NetherItem(2726).setTextureName("sugar").setUnlocalizedName("ifhyTungstenPowder").setCreativeTab(CreativeTabs.tabMaterials);
+        pureTungstenChunk = new NetherItem(2727).setTextureName("iron_ingot").setUnlocalizedName("ifhyPureTungstenChunk").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenNugget = new NetherItem(2728).setTextureName("gold_nugget").setUnlocalizedName("ifhyTungstenNugget").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenIngot = new NetherItem(2729).setTextureName("iron_ingot").setUnlocalizedName("ifhyTungstenIngot").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenBucket = new ItemTungstenBucket(2730, false).setTextureName("bucket_empty").setUnlocalizedName("ifhyTungstenBucket");
+        tungstenLavaBucket = new ItemTungstenBucket(2731, true).setTextureName("bucket_lava").setUnlocalizedName("ifhyTungstenLavaBucket");
+        obsidianPowder = new NetherItem(2732).setTextureName("gunpowder").setUnlocalizedName("ifhyObsidianPowder").setCreativeTab(CreativeTabs.tabMaterials);
+        obsidianPaste = new NetherItem(2733).setTextureName("slimeball").setUnlocalizedName("ifhyObsidianPaste").setCreativeTab(CreativeTabs.tabMaterials);
+        obsidianBrick = new NetherItem(2734).setTextureName("brick").setUnlocalizedName("ifhyObsidianBrick").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
@@ -402,7 +465,7 @@ public class NMItems {
         templeLocator = (ItemStructureLocator) (new ItemStructureLocator(2355, false, 0xFFFF00)).setTextureName("nightmare:nmTempleDust").setUnlocalizedName("nmTempleDust");
 
 
-        obsidianShard = new NMItem(2356).setTextureName("nightmare:nmObsidianShard").setUnlocalizedName("nmObsidianShard").setCreativeTab(CreativeTabs.tabMaterials);
+        obsidianShard = new NetherItem(2356).setTextureName("nightmare:nmObsidianShard").setUnlocalizedName("nmObsidianShard").setCreativeTab(CreativeTabs.tabMaterials);
 
         // this code is done in ItemMixin to replace horse armor
     //        ironHorseArmorAdvanced      = new ItemAdvancedHorseArmor(2357, ItemAdvancedHorseArmor.ArmorTier.IRON).setUnlocalizedName("nmHorseArmorIron").setTextureName("nmHorseArmorIron");

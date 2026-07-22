@@ -157,6 +157,7 @@ public class EmiCisternRecipe implements EmiRecipe {
             case CisternTileEntity.FLUID_BRINE -> NMFields.ICON_BRINE;
             case CisternTileEntity.FLUID_SLURRY -> NMFields.ICON_SLURRY;
             case CisternTileEntity.FLUID_ACIDIC_WASH -> NMFields.ICON_ACID;
+            case CisternTileEntity.FLUID_LAVA -> Block.lavaStill.getIcon(0, 0);
             default -> Block.waterStill.getIcon(0, 0);
         };
     }

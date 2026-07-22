@@ -6,6 +6,8 @@ import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,6 +32,22 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6) {
+        ItemStack held = par2EntityPlayer.getCurrentEquippedItem();
+        if (held != null && held.getItem() instanceof ItemSoulFlint) {
+            if (!par1World.isRemote) {
+                this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(BTWItems.groundNetherrack));
+                held.damageItem(1, par2EntityPlayer);
+                par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+            }
+            return;
+        }
+        if (held != null && held.getItem() instanceof ItemNetherrackPickaxe) {
+            if (!par1World.isRemote) {
+                this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.netherrack));
+                par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+            }
+            return;
+        }
         super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
     }
 
@@ -45,10 +63,13 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
+        ItemStack held = player.getCurrentEquippedItem();
+        if (held != null && (held.getItem() instanceof ItemSoulFlint || held.getItem() instanceof ItemNetherrackPickaxe)) {
+            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F;
+        }
         if (!SkillHandler.getPlayerData(player).canMineNetherrack) {
             return 0.0F;
         }
-        ItemStack held = player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemBloodPickaxe) {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;
             int count = NMUtils.getBloodArmorWornCount(player);

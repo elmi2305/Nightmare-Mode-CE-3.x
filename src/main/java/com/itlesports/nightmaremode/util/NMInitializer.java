@@ -365,6 +365,12 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.failedDiamondRefinement), 0.08F)
                 .setConsumesFluid());
 
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.obsidianPowder), new ItemStack(Item.magmaCream)},
+                CisternTileEntity.FLUID_LAVA, 0, 0, 200,
+                new ItemStack[]{new ItemStack(NMItems.obsidianPaste)})
+                .setConsumesFluid());
+
         finishRecipes("Cistern Recipes");
     }
 
@@ -399,6 +405,10 @@ public abstract class NMInitializer implements AchievementExt {
                 NMBlocks.blockCrushedIronLayer,
                 BTWBlocks.ironOreChunk,
                 "When jumped on");
+        MiscRecipeManager.instance.addRecipe(
+                new ItemStack(BTWItems.netherBrick),
+                new ItemStack(BTWItems.unfiredNetherBrick),
+                "After 10 seconds beside lava");
 
 
 
@@ -417,6 +427,9 @@ public abstract class NMInitializer implements AchievementExt {
 
         FurnaceRecipes.smelting().addSmelting(NMItems.debonedRawFish.itemID, new ItemStack(Item.fishCooked), 0.0f);
         FurnaceRecipes.smelting().addSmelting(NMItems.wetFusedPlantSheet.itemID, new ItemStack(NMItems.plantSheet), 0.0f);
+        FurnaceRecipes.smelting().addSmelting(NMItems.tungstenConcentrate.itemID, new ItemStack(NMItems.brittleTungstenCake), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(NMItems.pureTungstenChunk.itemID, new ItemStack(NMItems.tungstenNugget), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(NMItems.obsidianPaste.itemID, new ItemStack(NMItems.obsidianBrick), 0.0F);
 
         finishRecipes("Oven Recipes");
 
@@ -473,6 +486,29 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(BTWItems.wickerWeaving, 1, 299), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.washedSugarCane});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pileOfSticks), new Object[]{Item.stick, Item.stick, Item.stick, Item.stick});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.unlitCampfire), new Object[]{"##", "##", Character.valueOf('#'), NMItems.pileOfSticks});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulFlint), new Object[]{NMItems.soulChip, NMItems.soulChip, NMItems.soulChip, NMItems.soulChip});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulFlint), new Object[]{NMItems.netherrackChunk});
+        RecipeManager.addShapelessRecipe(
+                new ItemStack(NMItems.pighideStringCrafting, 1, NMItems.pighideStringCrafting.getMaxDamage() - 1),
+                new Object[]{NMItems.pigHide, new ItemStack(NMItems.soulFlint, 1, 0)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherWorkbenchPart), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.tungstenDust, NMItems.quartzDust});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.netherWorkbench), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherWorkbenchPart});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherrackPickaxe), new Object[]{"CCC", "TST", " S ", Character.valueOf('C'), NMItems.netherrackChunk, Character.valueOf('T'), NMItems.pighideString, Character.valueOf('S'), NMItems.netherStick});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMItems.netherStick, Character.valueOf('B'), NMItems.boneShard, Character.valueOf('T'), NMItems.pighideString});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherOvenPart), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.netherBrick});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.netherOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherOvenPart});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.netherrackAnvil), new Object[]{"###", " # ", "###", Character.valueOf('#'), Block.netherrack});
+        RecipeManager.addRecipe(new ItemStack(Block.netherrack), new Object[]{"###", "# #", "###", Character.valueOf('#'), NMItems.netherrackChunk});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{Block.netherrack, NMItems.netherStick, NMItems.pighideString});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenChunk), new Object[]{NMItems.tungstenDust, NMItems.tungstenDust});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenConcentrate), new Object[]{NMItems.crushedTungsten, Item.netherQuartz});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pureTungstenChunk), new Object[]{NMItems.tungstenPowder, NMItems.tungstenPowder});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.tungstenNugget});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenBucket), new Object[]{"# #", " # ", Character.valueOf('#'), NMItems.tungstenIngot});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"ISI", "ISI", "III", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), BTWItems.netherSludge});
+        RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1, 0), new Object[]{"BBB", "BSB", "BBB", Character.valueOf('B'), NMItems.obsidianBrick, Character.valueOf('S'), BTWItems.netherSludge});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneKnife), new Object[]{new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE), Item.stick, NMItems.crudeString});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironKnife), new Object[]{Item.ingotIron, Item.stick, Item.silk});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondKnife), new Object[]{BTWItems.diamondIngot, Item.stick, Item.silk});

@@ -8,7 +8,6 @@ import com.itlesports.nightmaremode.block.blocks.templates.BlockMetaMultiTexture
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
@@ -119,6 +118,12 @@ public class NMBlocks {
     public static Block stoneAnvil;
     public static Block diamondAnvil;
     public static Block dryingGrass;
+    public static Block tungstenOre;
+    public static Block netherWorkbench;
+    public static Block netherShrub;
+    public static Block netherrackAnvil;
+    public static Block netherOven;
+    public static Block burningNetherOven;
 
 
 
@@ -151,6 +156,23 @@ public class NMBlocks {
 
         dryingGrass = new BlockDryingGrass(NMFields.BLOCK_DRYING_GRASS);
         Item.itemsList[dryingGrass.blockID] = new NMItemBlock(NMBlocks.dryingGrass.blockID - 256).hideFromEMI();
+
+        tungstenOre = new BlockTungstenOre(NMFields.BLOCK_TUNGSTEN_ORE);
+        Item.itemsList[tungstenOre.blockID] = new NMNetherItemBlock(tungstenOre.blockID - 256);
+
+        netherWorkbench = new BlockNetherWorkbench(NMFields.BLOCK_NETHER_WORKBENCH);
+        Item.itemsList[netherWorkbench.blockID] = new NMNetherItemBlock(netherWorkbench.blockID - 256);
+
+        netherShrub = new BlockNetherShrub(NMFields.BLOCK_NETHER_SHRUB);
+        Item.itemsList[netherShrub.blockID] = new NMNetherItemBlock(netherShrub.blockID - 256);
+
+        netherrackAnvil = new BlockNetherrackAnvil(NMFields.BLOCK_NETHERRACK_ANVIL);
+        Item.itemsList[netherrackAnvil.blockID] = new NMNetherItemBlock(netherrackAnvil.blockID - 256);
+
+        netherOven = new BlockNetherOven(NMFields.BLOCK_NETHER_OVEN, false);
+        Item.itemsList[netherOven.blockID] = new NMNetherItemBlock(netherOven.blockID - 256);
+
+        burningNetherOven = new BlockNetherOven(NMFields.BLOCK_BURNING_NETHER_OVEN, true);
 
 
 

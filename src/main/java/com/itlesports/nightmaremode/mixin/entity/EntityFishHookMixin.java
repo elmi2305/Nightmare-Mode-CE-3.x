@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.item.BTWItems;
 import btw.util.BTWSounds;
+import api.world.WorldUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.FishingCatch;
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Locale;
 
@@ -52,9 +54,21 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             catchOf(NMItems.desertMinnow, 26, false), catchOf(NMItems.sandfish, 22, false),
             catchOf(NMItems.tilapia, 14, false), catchOf(NMItems.duneKoi, 2, true)
     };
+    @Unique private static final FishingCatch[] NETHER_CATCHES = {
+            catchOf(NMItems.obsidianShard, 2, false),
+            catchOf(NMItems.ashClump, 8, false),
+            catchOf(NMItems.netherrackChunk, 12, false)
+    };
+    @Unique private static final FishingCatch[] BAITED_NETHER_CATCHES = {
+            catchOf(NMItems.obsidianShard, 2, false),
+            catchOf(NMItems.ashClump, 8, false),
+            catchOf(NMItems.lavafish, 5, false),
+            catchOf(NMItems.netherrackChunk, 12, false)
+    };
 
     @Shadow public EntityPlayer angler;
     @Shadow public Entity bobber;
+    @Shadow private boolean isBaited;
 
     @Unique private FishingCatch selectedCatch = catchOf(Item.fishRaw, 1, false);
 
@@ -70,6 +84,51 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
     private int biteChanceMultiplierDay(int constant) {
         return 20;
+    }
+
+    @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
+    private int increaseLavaFishingBiteChance(int odds) {
+        return this.isNetherFishing() ? Math.max(1, odds / 6) : odds;
+    }
+
+    @Redirect(method = "checkForBite", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;canBlockSeeTheSky(III)Z"))
+    private boolean allowLavaFishingUnderNetherCeiling(World world, int x, int y, int z) {
+        return this.isNetherFishing() || world.canBlockSeeTheSky(x, y, z);
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isAABBInMaterial(Lnet/minecraft/src/AxisAlignedBB;Lnet/minecraft/src/Material;)Z"))
+    private boolean treatLavaAsFishingFluid(World world, AxisAlignedBB box, Material material) {
+        return world.isAABBInMaterial(box, this.isNetherFishing() ? Material.lava : material);
+    }
+
+    @Redirect(method = "isBodyOfWaterLargeEnoughForFishing", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;isWaterSourceBlock(Lnet/minecraft/src/World;III)Z"))
+    private boolean requireLargeLavaPool(World world, int x, int y, int z) {
+        if (!this.isNetherFishing()) {
+            return WorldUtils.isWaterSourceBlock(world, x, y, z);
+        }
+        return world.getBlockMaterial(x, y, z) == Material.lava && world.getBlockMetadata(x, y, z) == 0;
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;", ordinal = 0))
+    private Item recognizeUnbaitedNetherRod(ItemStack stack) {
+        return stack.getItem() == NMItems.netherFishingRod ? Item.fishingRod : stack.getItem();
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;", ordinal = 1))
+    private Item recognizeBaitedNetherRod(ItemStack stack) {
+        return stack.getItem() == NMItems.netherFishingRodBaited ? BTWItems.baitedFishingRod : stack.getItem();
+    }
+
+    @Redirect(method = "loseBait", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;"))
+    private Item recognizeBaitedNetherRodWhenLosingBait(ItemStack stack) {
+        return stack.getItem() == NMItems.netherFishingRodBaited ? BTWItems.baitedFishingRod : stack.getItem();
+    }
+
+    @Redirect(method = "loseBait", at = @At(value = "FIELD", target = "Lnet/minecraft/src/ItemStack;itemID:I", opcode = Opcodes.PUTFIELD))
+    private void restoreUnbaitedNetherRod(ItemStack stack, int itemID) {
+        stack.itemID = stack.getItem() == NMItems.netherFishingRodBaited
+                ? NMItems.netherFishingRod.itemID
+                : itemID;
     }
 
     @Redirect(method = "catchFish", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityFishHook;bobber:Lnet/minecraft/src/Entity;", ordinal = 0))
@@ -110,6 +169,16 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @Unique
     private FishingCatch selectCatch() {
+        if (this.isNetherFishing()) {
+            FishingCatch[] catches = this.isBaited ? BAITED_NETHER_CATCHES : NETHER_CATCHES;
+            int roll = this.rand.nextInt(totalWeight(catches));
+            for (FishingCatch catchEntry : catches) {
+                if ((roll -= catchEntry.weight) < 0) {
+                    return catchEntry;
+                }
+            }
+            return catches[0];
+        }
         FishingCatch[] biomeCatches = this.getBiomeCatches();
         if (this.angler != null
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus) {
@@ -153,6 +222,16 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private static FishingCatch catchOf(Item item, int weight, boolean rare) {
         return new FishingCatch(item, weight, rare);
+    }
+
+    @Unique
+    private boolean isNetherFishing() {
+        if (this.angler == null) {
+            return false;
+        }
+        ItemStack held = this.angler.getCurrentEquippedItem();
+        return held != null && (held.getItem() == NMItems.netherFishingRod
+                || held.getItem() == NMItems.netherFishingRodBaited);
     }
 
 }

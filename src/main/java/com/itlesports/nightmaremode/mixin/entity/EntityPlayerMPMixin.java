@@ -166,6 +166,21 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         }
     }
 
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void keepUnprotectedPlayerBurningInNether(CallbackInfo ci) {
+        if (this.dimension == -1 && !this.isWearingFullDiamondArmor()) {
+            this.setFire(2);
+        }
+    }
+
+    @Unique
+    private boolean isWearingFullDiamondArmor() {
+        return this.getCurrentItemOrArmor(1) != null && this.getCurrentItemOrArmor(1).itemID == Item.bootsDiamond.itemID
+                && this.getCurrentItemOrArmor(2) != null && this.getCurrentItemOrArmor(2).itemID == Item.legsDiamond.itemID
+                && this.getCurrentItemOrArmor(3) != null && this.getCurrentItemOrArmor(3).itemID == Item.plateDiamond.itemID
+                && this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == Item.helmetDiamond.itemID;
+    }
+
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
         if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !MinecraftServer.getIsServer()) {

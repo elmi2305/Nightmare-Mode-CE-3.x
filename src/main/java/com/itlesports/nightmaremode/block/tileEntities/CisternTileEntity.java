@@ -15,6 +15,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     public static final int FLUID_BRINE = 2;
     public static final int FLUID_SLURRY = 3;
     public static final int FLUID_ACIDIC_WASH = 4;
+    public static final int FLUID_LAVA = 5;
 
     public static final int FIRST_INPUT_SLOT = 0;
     public static final int LAST_INPUT_SLOT = 1;
@@ -170,6 +171,8 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
                 return "Slurry";
             case FLUID_ACIDIC_WASH:
                 return "Acidic Wash";
+            case FLUID_LAVA:
+                return "Lava";
             case FLUID_EMPTY:
             default:
                 return "Empty";
@@ -184,6 +187,8 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
                 return 0x7D7564;
             case FLUID_ACIDIC_WASH:
                 return 0x96D66B;
+            case FLUID_LAVA:
+                return 0xFF6600;
             case FLUID_WATER:
             default:
                 return 0x3F76E4;
