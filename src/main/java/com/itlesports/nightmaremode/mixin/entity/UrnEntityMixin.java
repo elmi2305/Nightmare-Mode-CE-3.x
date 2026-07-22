@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class UrnEntityMixin {
     @Inject(method = "attemptToCreateWither", at = @At("HEAD"),cancellable = true)
     private static void witherSummoningRestrictions(World world, int i, int j, int k, CallbackInfoReturnable<Boolean> cir){
-        if (!SkillHandler.getWorldData(world).witherSummoningUnlocked) {
+        if (!NightmareMode.allSkillsUnlocked && !SkillHandler.getWorldData(world).witherSummoningUnlocked) {
             EntityPlayer player = world.getClosestPlayer(i, j, k, -1);
             if (player != null) {
                 SkillHandler.sendStatus(player, "Wither summoning requires all five ritual contributions.");

@@ -6,8 +6,14 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 
 public class SkillHandler {
+    private static final ThreadLocal<Boolean> APPLYING_ALL_SKILLS = new ThreadLocal<>();
+
     public static SkillTreeData getPlayerData(EntityPlayer player) {
-        return player.getData(NightmareMode.SKILL_TREE);
+        SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
+        if (NightmareMode.allSkillsUnlocked && !Boolean.TRUE.equals(APPLYING_ALL_SKILLS.get())) {
+            unlockAllSkills(player, data);
+        }
+        return data;
     }
 
     public static WorldSkillData getWorldData(World world) {
@@ -29,7 +35,34 @@ public class SkillHandler {
     }
 
     public static boolean isWorldUnlocked(World world, SkillNode node) {
-        return world != null && getWorldData(world).isUnlocked(node);
+        return world != null && (NightmareMode.allSkillsUnlocked || getWorldData(world).isUnlocked(node));
+    }
+
+    private static void unlockAllSkills(EntityPlayer player, SkillTreeData playerData) {
+        if (player.worldObj == null) {
+            return;
+        }
+
+        APPLYING_ALL_SKILLS.set(true);
+        try {
+            WorldSkillData worldData = getWorldData(player.worldObj);
+            for (SkillNode node : SkillRegistry.getNodes()) {
+                if (node.worldReward) {
+                    playerData.unlock(node);
+                    if (!worldData.isUnlocked(node)) {
+                        worldData.unlock(node);
+                        node.reward.getAction().apply(player, player.worldObj);
+                    }
+                } else if (!playerData.isUnlocked(node)) {
+                    playerData.unlock(node);
+                    node.reward.getAction().apply(player, player.worldObj);
+                }
+            }
+            player.setData(NightmareMode.SKILL_TREE, playerData);
+            player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+        } finally {
+            APPLYING_ALL_SKILLS.remove();
+        }
     }
 
     public static boolean hasUnlockedAllParents(EntityPlayer player, SkillNode node) {
@@ -236,11 +269,11 @@ public class SkillHandler {
     }
 
     public static boolean hasNetherAccess(EntityPlayer player) {
-        return player != null && getWorldData(player.worldObj).netherAccessUnlocked;
+        return player != null && (NightmareMode.allSkillsUnlocked || getWorldData(player.worldObj).netherAccessUnlocked);
     }
 
     public static boolean woodBlocksIgnoreSkybaseGravity(World world) {
-        return world != null && getWorldData(world).woodBlocksIgnoreSkybaseGravity;
+        return world != null && (NightmareMode.allSkillsUnlocked || getWorldData(world).woodBlocksIgnoreSkybaseGravity);
     }
 
     public static void sync(EntityPlayerMP player) {

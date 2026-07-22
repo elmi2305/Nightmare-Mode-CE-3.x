@@ -48,6 +48,7 @@ public class NightmareMode extends BTWAddon {
     public static boolean devMode = true;
     public static boolean benchmarkPerformance = true;
     public static volatile double MSPT = 0.0;
+    public static boolean allSkillsUnlocked = true;
 
 
     // world gen

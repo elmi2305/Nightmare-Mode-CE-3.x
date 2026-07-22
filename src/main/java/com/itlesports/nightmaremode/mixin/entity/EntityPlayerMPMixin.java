@@ -41,7 +41,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             this.sendChatToPlayer(text);
             ci.cancel();
         }
-        if (par1 == 1 && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
+        if (par1 == 1 && !NightmareMode.allSkillsUnlocked && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the Beacon Offering skill.");
             ci.cancel();
         }

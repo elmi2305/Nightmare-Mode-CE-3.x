@@ -49,12 +49,12 @@ public abstract class WorldMixin implements WorldSkillExt {
 
     @Override
     public boolean nightmareMode$woodBlocksIgnoreSkybaseGravity() {
-        return this.nightmareMode$getSkillData().woodBlocksIgnoreSkybaseGravity;
+        return NightmareMode.allSkillsUnlocked || this.nightmareMode$getSkillData().woodBlocksIgnoreSkybaseGravity;
     }
 
     @Override
     public boolean nightmareMode$isNetherAccessUnlocked() {
-        return this.nightmareMode$getSkillData().netherAccessUnlocked;
+        return NightmareMode.allSkillsUnlocked || this.nightmareMode$getSkillData().netherAccessUnlocked;
     }
 
     @Override
