@@ -2,7 +2,12 @@ package com.itlesports.nightmaremode.util;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import btw.entity.mob.BTWSquidEntity;
+import btw.entity.mob.DireWolfEntity;
+import btw.util.BTWDamageSources;
 import btw.world.BTWDifficulties;
+import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
+import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
@@ -27,6 +32,37 @@ public class NMUtils {
     private static boolean intenseCorruption = false;
 
     public static void logTodo(){}
+
+    public static boolean isDamageSourceAllowedToCreateCarcass(EntityLivingBase victim, DamageSource source) {
+        if (source == null || source == DamageSource.inWall || source == BTWDamageSources.damageSourceSaw || "inWall".equals(source.damageType) || "fcSaw".equals(source.damageType)) {
+            return false;
+        }
+
+        Entity attacker = source.getEntity() != null ? source.getEntity() : source.getSourceOfDamage();
+        return !(victim instanceof EntityVillager && attacker instanceof EntityZombie);
+    }
+
+    public static boolean canBecomeCarcass(EntityLivingBase entity) {
+        if (entity instanceof EntityPlayer || entity instanceof IBossDisplayData
+                || entity instanceof EntitySkeleton || entity instanceof EntityBlaze
+                || entity instanceof EntitySlime) {
+            return false;
+        }
+
+        return entity instanceof EntityAnimal
+                || entity instanceof EntitySquid
+                || entity instanceof BTWSquidEntity
+                || entity instanceof DireWolfEntity
+                || entity instanceof EntityBat
+                || entity instanceof EntityZombie
+                || entity instanceof EntityVillager
+                || entity instanceof EntityCreeper
+                || entity instanceof EntityCreeperVariant
+                || entity instanceof EntityGhast
+                || entity instanceof EntityWitch
+                || entity instanceof EntityEnderman
+                || entity instanceof EntitySpider;
+    }
 
     public static boolean shouldWoodBlocksHaveSkybaseGravity(World world) {
         return NightmareMode.noSkybases && !SkillHandler.woodBlocksIgnoreSkybaseGravity(world);
