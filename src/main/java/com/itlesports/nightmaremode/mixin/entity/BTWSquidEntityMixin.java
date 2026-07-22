@@ -186,8 +186,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
 
     @Inject(method = "updateHeadCrab",
-            at = @At("HEAD"),remap = false)
+            at = @At("HEAD"),remap = false, cancellable = true)
     private void doScaryThingsOnHead(CallbackInfo ci) {
+        if(this.ridingEntity == null) {
+            ci.cancel();
+            return;
+        }
         this.squidOnHeadTimer++;
         if (rand.nextInt(60) == 0) {
             this.playSound("mob.ghast.scream",0.3F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
