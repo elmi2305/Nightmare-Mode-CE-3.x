@@ -8,7 +8,7 @@ import com.itlesports.nightmaremode.block.tileEntities.TileEntityNetherrackAnvil
 public class BlockNetherrackAnvil extends BlockHammerAnvil {
     public BlockNetherrackAnvil(int id) {
         super(id, BTWBlocks.netherRockMaterial, BTWBlocks.oreStepSound,
-                "ifhyNetherrackAnvil", "netherrack");
+                "ifhyNetherrackAnvil", "nightmare:ifhyNetherrackAnvil");
     }
 
     @Override
