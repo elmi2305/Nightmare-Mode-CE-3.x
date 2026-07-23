@@ -216,6 +216,8 @@ public class NMItems {
     public static Item rettedHemp;
     public static Item washedHemp;
     public static Item driedHemp;
+    public static Item washedScouredLeather;
+    public static Item workedScouredLeather;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -398,6 +400,8 @@ public class NMItems {
         rettedHemp = new NMItem(2735).setTextureName("nightmare:ifhyRettedHemp").setUnlocalizedName("ifhyRettedHemp").setCreativeTab(CreativeTabs.tabMaterials);
         washedHemp = new NMItem(2736).setTextureName("nightmare:ifhyWashedHemp").setUnlocalizedName("ifhyWashedHemp").setCreativeTab(CreativeTabs.tabMaterials);
         driedHemp = new NMItem(2737).setTextureName("nightmare:ifhyDriedHemp").setUnlocalizedName("ifhyDriedHemp").setCreativeTab(CreativeTabs.tabMaterials);
+        washedScouredLeather = new NMItem(2738).setTextureName("nightmare:ifhyWashedScouredLeather").setUnlocalizedName("ifhyWashedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
+        workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

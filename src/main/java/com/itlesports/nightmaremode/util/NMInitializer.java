@@ -309,9 +309,9 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
     private static void addCauldronRecipes(){
-        // keep leather as a proper processing chain: hide -> scoured hide -> tanned hide.
-        // btw has separate tannin-strength variants (and a pre-cut shortcut). ifhy uses one
-        // predictable tanning batch: one piece of wolf dung and one piece of tree bark.
+        // BTW has separate tannin-strength variants (and a pre-cut shortcut). IFHY instead
+        // requires the hide to be washed and worked after scouring before its final bark and
+        // dung tanning bath.
         CauldronCraftingManager cauldron = CauldronCraftingManager.getInstance();
         for (TagOrStack bark : new TagOrStack[]{
                 TagInstance.of(BTWTags.lowTanninBarks, 8),
@@ -325,7 +325,7 @@ public abstract class NMInitializer implements AchievementExt {
         }
         RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.tannedLeather), new TagOrStack[]{
                 new ItemStack(BTWItems.dung),
-                new ItemStack(BTWItems.scouredLeather),
+                new ItemStack(NMItems.workedScouredLeather),
                 TagInstance.of(BTWTags.barks)});
 
 
@@ -393,6 +393,16 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(BTWItems.hemp)},
                 CisternTileEntity.FLUID_BRINE, 0, 2, 240,
                 new ItemStack[]{new ItemStack(NMItems.rettedHemp)})
+                .setConsumesFluid());
+
+        // A scoured hide still holds mill grit and loose hair.  Fresh water is deliberately
+        // consumed here, so leather production remains a repeatable wet-processing job rather
+        // than a one-time cistern unlock.  Working the wet hide on an anvil prepares it for the
+        // final, still-required dung-and-bark cauldron tanning bath.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(BTWItems.scouredLeather)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 180,
+                new ItemStack[]{new ItemStack(NMItems.washedScouredLeather)})
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
@@ -484,8 +494,7 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addMillstoneRecipes(){
-        // remove the cut-hide bypass so every leather product starts with the same single
-        // scouring operation, then must be tanned in a cauldron before it can be cut into straps.
+        // Remove the cut-hide bypass: every leather product begins with this one scouring pass.
         MillStoneCraftingManager millstone = MillStoneCraftingManager.getInstance();
         millstone.removeRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
         millstone.removeRecipe(new ItemStack(BTWItems.cutScouredLeather), new ItemStack(BTWItems.cutLeather));
