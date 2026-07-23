@@ -71,6 +71,10 @@ public final class SkillRewardActions {
         return worldReward(data -> data.globalFoodSpoilageRateMultiplier *= 0.95F);
     }
 
+    public static SkillUnlockAction slowVillagerStarvationGlobally(float multiplier) {
+        return worldReward(data -> data.globalVillagerHungerDrainRateMultiplier *= multiplier);
+    }
+
     public static SkillUnlockAction multiplyFoodSpoilageRate(float multiplier) {
         return playerReward(data -> data.foodSpoilageRateMultiplier *= multiplier);
     }

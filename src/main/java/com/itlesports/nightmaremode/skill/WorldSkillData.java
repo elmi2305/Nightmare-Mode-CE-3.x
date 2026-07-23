@@ -19,6 +19,7 @@ public class WorldSkillData {
     public int endAccessUnlockProgress;
     public float globalIronPileChanceBonus;
     public float globalFoodSpoilageRateMultiplier = 1.0F;
+    public float globalVillagerHungerDrainRateMultiplier = 1.0F;
     public float globalMobLootChanceBonus;
     public float globalXpGainBonus;
     private final Set<String> unlockedWorldNodes = new HashSet<>();
@@ -50,6 +51,7 @@ public class WorldSkillData {
         data.endAccessUnlockProgress = tag.getInteger("EndAccessUnlockProgress");
         data.globalIronPileChanceBonus = tag.getFloat("GlobalIronPileChanceBonus");
         data.globalFoodSpoilageRateMultiplier = tag.hasKey("GlobalFoodSpoilageRateMultiplier") ? tag.getFloat("GlobalFoodSpoilageRateMultiplier") : 1.0F;
+        data.globalVillagerHungerDrainRateMultiplier = tag.hasKey("GlobalVillagerHungerDrainRateMultiplier") ? tag.getFloat("GlobalVillagerHungerDrainRateMultiplier") : 1.0F;
         data.globalMobLootChanceBonus = tag.getFloat("GlobalMobLootChanceBonus");
         data.globalXpGainBonus = tag.getFloat("GlobalXpGainBonus");
         NBTTagList unlocked = tag.getTagList("UnlockedWorldNodes");
@@ -71,6 +73,7 @@ public class WorldSkillData {
         tag.setInteger("EndAccessUnlockProgress", data.endAccessUnlockProgress);
         tag.setFloat("GlobalIronPileChanceBonus", data.globalIronPileChanceBonus);
         tag.setFloat("GlobalFoodSpoilageRateMultiplier", data.globalFoodSpoilageRateMultiplier);
+        tag.setFloat("GlobalVillagerHungerDrainRateMultiplier", data.globalVillagerHungerDrainRateMultiplier);
         tag.setFloat("GlobalMobLootChanceBonus", data.globalMobLootChanceBonus);
         tag.setFloat("GlobalXpGainBonus", data.globalXpGainBonus);
         NBTTagList unlocked = new NBTTagList("UnlockedWorldNodes");
