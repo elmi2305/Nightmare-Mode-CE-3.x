@@ -108,6 +108,7 @@ public class NMItems {
     public static final Item leaf;
     public static final Item twigSharpening;
     public static final Item sharpTwigBarkWrapping;
+    public static final Item flintChip;
 
     public static Item woodHammer;
     public static Item stoneHammer;
@@ -402,6 +403,7 @@ public class NMItems {
         driedHemp = new NMItem(2737).setTextureName("nightmare:ifhyDriedHemp").setUnlocalizedName("ifhyDriedHemp").setCreativeTab(CreativeTabs.tabMaterials);
         washedScouredLeather = new NMItem(2738).setTextureName("nightmare:ifhyWashedScouredLeather").setUnlocalizedName("ifhyWashedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
+        flintChip = new NMItem(2740).setTextureName("nightmare:ifhyFlintChip").setUnlocalizedName("ifhyFlintChip").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
