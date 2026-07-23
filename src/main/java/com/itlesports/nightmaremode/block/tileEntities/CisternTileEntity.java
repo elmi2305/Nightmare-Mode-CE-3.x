@@ -8,6 +8,8 @@ import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 
+import java.util.List;
+
 public class CisternTileEntity extends TileEntity implements IInventory, TileEntityDataPacketHandler {
     public static final int FLUID_ANY = -1;
     public static final int FLUID_EMPTY = 0;
@@ -38,6 +40,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
             return;
         }
         this.ticksExisted++;
+        this.absorbItemEntitiesAbove();
         if(this.stirProgress > 0 && this.ticksExisted % 64 == 0){
             this.stirProgress--;
         }
@@ -101,23 +104,86 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         }
         ItemStack one = stack.copy();
         one.stackSize = 1;
+
+        return this.insertInputStack(one) > 0;
+    }
+
+    /**
+     * Inserts as much of the supplied stack as the two input slots can hold.
+     * The source stack is never mutated; callers can use the returned amount to
+     * preserve a partially accepted EntityItem stack.
+     */
+    private int insertInputStack(ItemStack stack) {
+        if (stack == null || stack.stackSize <= 0) {
+            return 0;
+        }
+
+        ItemStack remaining = stack.copy();
+        int inserted = 0;
+
         for (int i = FIRST_INPUT_SLOT; i <= LAST_INPUT_SLOT; ++i) {
-            if (this.contents[i] == null) {
-                this.contents[i] = one;
-                this.processingTime = 0;
-                this.onInventoryChanged();
-                return true;
-            }
-            if (this.contents[i].isItemEqual(one) && ItemStack.areItemStackTagsEqual(this.contents[i], one)
-                    && this.contents[i].stackSize < this.getInventoryStackLimit()
-                    && this.contents[i].stackSize < this.contents[i].getMaxStackSize()) {
-                ++this.contents[i].stackSize;
-                this.processingTime = 0;
-                this.onInventoryChanged();
-                return true;
+            ItemStack input = this.contents[i];
+            if (input != null && input.isItemEqual(remaining) && ItemStack.areItemStackTagsEqual(input, remaining)) {
+                int maxStackSize = Math.min(this.getInventoryStackLimit(), input.getMaxStackSize());
+                int amount = Math.min(remaining.stackSize, maxStackSize - input.stackSize);
+                if (amount > 0) {
+                    input.stackSize += amount;
+                    remaining.stackSize -= amount;
+                    inserted += amount;
+                }
             }
         }
-        return false;
+
+        for (int i = FIRST_INPUT_SLOT; i <= LAST_INPUT_SLOT && remaining.stackSize > 0; ++i) {
+            if (this.contents[i] == null) {
+                int amount = Math.min(remaining.stackSize, Math.min(this.getInventoryStackLimit(), remaining.getMaxStackSize()));
+                ItemStack input = remaining.copy();
+                input.stackSize = amount;
+                this.contents[i] = input;
+                remaining.stackSize -= amount;
+                inserted += amount;
+            }
+        }
+
+        if (inserted > 0) {
+            this.processingTime = 0;
+            this.onInventoryChanged();
+        }
+        return inserted;
+    }
+
+    /**
+     * Matches a hopper's collection zone: items crossing the cistern opening
+     * are accepted into input slots only. Full or incompatible stacks remain
+     * in the world, allowing dispensers to retry once space becomes available.
+     */
+    private void absorbItemEntitiesAbove() {
+        AxisAlignedBB collectionZone = AxisAlignedBB.getAABBPool().getAABB(
+                this.xCoord, this.yCoord + 1.0D, this.zCoord,
+                this.xCoord + 1.0D, this.yCoord + 1.05D, this.zCoord + 1.0D);
+        List entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, collectionZone);
+
+        for (Object object : entities) {
+            EntityItem itemEntity = (EntityItem) object;
+            if (itemEntity.isDead) {
+                continue;
+            }
+
+            ItemStack entityStack = itemEntity.getEntityItem();
+            int inserted = this.insertInputStack(entityStack);
+            if (inserted <= 0) {
+                continue;
+            }
+
+            entityStack.stackSize -= inserted;
+            if (entityStack.stackSize <= 0) {
+                itemEntity.setDead();
+            } else {
+                itemEntity.setEntityItemStack(entityStack);
+            }
+            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D,
+                    "random.pop", 0.2F, 1.0F);
+        }
     }
 
     public ItemStack removeFirstOutput() {

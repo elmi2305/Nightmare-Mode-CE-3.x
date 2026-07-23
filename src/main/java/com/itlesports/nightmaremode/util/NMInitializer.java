@@ -3,7 +3,11 @@ package com.itlesports.nightmaremode.util;
 import api.achievement.AchievementTab;
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;
+import api.item.tag.TagInstance;
+import api.item.tag.TagOrStack;
 import btw.crafting.recipe.RecipeManager;
+import btw.crafting.manager.CauldronCraftingManager;
+import btw.crafting.manager.MillStoneCraftingManager;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
@@ -305,6 +309,24 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
     private static void addCauldronRecipes(){
+        // keep leather as a proper processing chain: hide -> scoured hide -> tanned hide.
+        // btw has separate tannin-strength variants (and a pre-cut shortcut). ifhy uses one
+        // predictable tanning batch: one piece of wolf dung and one piece of tree bark.
+        CauldronCraftingManager cauldron = CauldronCraftingManager.getInstance();
+        for (TagOrStack bark : new TagOrStack[]{
+                TagInstance.of(BTWTags.lowTanninBarks, 8),
+                TagInstance.of(BTWTags.mediumTanninBarks, 5),
+                TagInstance.of(BTWTags.highTanninBarks, 3),
+                TagInstance.of(BTWTags.veryHighTanninBarks, 2)}) {
+            cauldron.removeRecipe(new ItemStack(BTWItems.tannedLeather), new TagOrStack[]{
+                    new ItemStack(BTWItems.dung), new ItemStack(BTWItems.scouredLeather), bark});
+            cauldron.removeRecipe(new ItemStack(BTWItems.cutTannedLeather, 2), new TagOrStack[]{
+                    new ItemStack(BTWItems.dung), new ItemStack(BTWItems.cutScouredLeather, 2), bark});
+        }
+        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.tannedLeather), new TagOrStack[]{
+                new ItemStack(BTWItems.dung),
+                new ItemStack(BTWItems.scouredLeather),
+                TagInstance.of(BTWTags.barks)});
 
 
         finishRecipes("Cauldron Recipes");
@@ -365,6 +387,14 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.failedDiamondRefinement), 0.08F)
                 .setConsumesFluid());
 
+        // Retting breaks down the woody material around hemp fibers.  Brine is consumed
+        // deliberately: each batch needs a fresh curing solution before it can be washed.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(BTWItems.hemp)},
+                CisternTileEntity.FLUID_BRINE, 0, 2, 240,
+                new ItemStack[]{new ItemStack(NMItems.rettedHemp)})
+                .setConsumesFluid());
+
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.obsidianPowder), new ItemStack(Item.magmaCream)},
                 CisternTileEntity.FLUID_LAVA, 0, 0, 200,
@@ -387,6 +417,10 @@ public abstract class NMInitializer implements AchievementExt {
         manager.addWaterRecipe(
                 new ItemStack(NMItems.washedSugarCane),
                 new ItemStack(Item.reed),
+                4000);
+        manager.addWaterRecipe(
+                new ItemStack(NMItems.washedHemp),
+                new ItemStack(NMItems.rettedHemp),
                 4000);
         manager.addRainRecipe(
                 NMBlocks.blockWashedIronLayer,
@@ -430,6 +464,7 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().addSmelting(NMItems.tungstenConcentrate.itemID, new ItemStack(NMItems.brittleTungstenCake), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.pureTungstenChunk.itemID, new ItemStack(NMItems.tungstenNugget), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.obsidianPaste.itemID, new ItemStack(NMItems.obsidianBrick), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(NMItems.washedHemp.itemID, new ItemStack(NMItems.driedHemp), 0.0F);
 
         finishRecipes("Oven Recipes");
 
@@ -449,6 +484,13 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addMillstoneRecipes(){
+        // remove the cut-hide bypass so every leather product starts with the same single
+        // scouring operation, then must be tanned in a cauldron before it can be cut into straps.
+        MillStoneCraftingManager millstone = MillStoneCraftingManager.getInstance();
+        millstone.removeRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
+        millstone.removeRecipe(new ItemStack(BTWItems.cutScouredLeather), new ItemStack(BTWItems.cutLeather));
+        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
+        millstone.removeRecipe(new ItemStack(BTWItems.hempFibers, 4), new ItemStack(BTWItems.hemp));
 
 
         finishRecipes("Millstone Recipes");

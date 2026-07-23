@@ -213,6 +213,9 @@ public class NMItems {
     public static Item obsidianPowder;
     public static Item obsidianPaste;
     public static Item obsidianBrick;
+    public static Item rettedHemp;
+    public static Item washedHemp;
+    public static Item driedHemp;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -392,6 +395,9 @@ public class NMItems {
         obsidianPowder = new NetherItem(2732).setTextureName("nightmare:ifhyObsidianPowder").setUnlocalizedName("ifhyObsidianPowder").setCreativeTab(CreativeTabs.tabMaterials);
         obsidianPaste = new NetherItem(2733).setTextureName("nightmare:ifhyObsidianPaste").setUnlocalizedName("ifhyObsidianPaste").setCreativeTab(CreativeTabs.tabMaterials);
         obsidianBrick = new NetherItem(2734).setTextureName("nightmare:ifhyObsidianBrick").setUnlocalizedName("ifhyObsidianBrick").setCreativeTab(CreativeTabs.tabMaterials);
+        rettedHemp = new NMItem(2735).setTextureName("nightmare:ifhyRettedHemp").setUnlocalizedName("ifhyRettedHemp").setCreativeTab(CreativeTabs.tabMaterials);
+        washedHemp = new NMItem(2736).setTextureName("nightmare:ifhyWashedHemp").setUnlocalizedName("ifhyWashedHemp").setCreativeTab(CreativeTabs.tabMaterials);
+        driedHemp = new NMItem(2737).setTextureName("nightmare:ifhyDriedHemp").setUnlocalizedName("ifhyDriedHemp").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
