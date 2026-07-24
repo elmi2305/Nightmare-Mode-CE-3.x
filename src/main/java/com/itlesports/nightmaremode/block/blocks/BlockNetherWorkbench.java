@@ -19,7 +19,7 @@ public class BlockNetherWorkbench extends BlockWorkbench {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("netherrack");
+        this.blockIcon = register.registerIcon("ifhyNetherWorkbench");
     }
 
     @Override

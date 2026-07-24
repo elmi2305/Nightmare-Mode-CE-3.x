@@ -2,8 +2,12 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.item.BTWItems;
 import btw.entity.item.FloatingItemEntity;
+import btw.item.items.ArcaneScrollItem;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
+import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,6 +15,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(EntityItem.class)
 public abstract class EntityItemMixin extends Entity {
@@ -90,5 +99,43 @@ public abstract class EntityItemMixin extends Entity {
     private boolean isLava(int x, int y, int z) {
         int id = this.worldObj.getBlockId(x, y, z);
         return id == Block.lavaStill.blockID || id == Block.lavaMoving.blockID;
+    }
+
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
+    private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
+        if(this.getEntityItem() != null && !this.isItemIndestructible(this.getEntityItem())){
+            cir.setReturnValue(false);
+        }
+    }
+    @Unique private static Set<Integer> nonFlammableItems = null;
+
+    @Unique private Set<Integer> getNonFlammableItems() {
+        if(nonFlammableItems != null) return nonFlammableItems;
+        nonFlammableItems = new HashSet<>(Arrays.asList(
+                NMItems.bloodOrb.itemID,
+                Item.netherStar.itemID,
+                NMItems.starOfTheBloodGod.itemID,
+                Item.blazeRod.itemID,
+                Item.blazePowder.itemID,
+                Block.obsidian.blockID,
+                NMItems.obsidianShard.itemID
+        ));
+        return nonFlammableItems;
+    }
+
+    @Unique
+    private boolean isItemIndestructible(ItemStack item){
+        if(item == null) return false;
+
+        if(getNonFlammableItems().contains(item.itemID)) return false;
+
+        if(item.getItem() instanceof ArcaneScrollItem) return false;
+
+        if(item.getItem() instanceof INetherItem) return false;
+
+        if(item.getItem() instanceof NMItem && ((NMItem) item.getItem()).isIndestructible()) return false;
+
+        return true;
     }
 }
