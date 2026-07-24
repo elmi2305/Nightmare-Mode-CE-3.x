@@ -14,6 +14,7 @@ import btw.item.BTWTags;
 import com.itlesports.nightmaremode.achievements.AchievementExt;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
@@ -41,6 +42,7 @@ public abstract class NMInitializer implements AchievementExt {
         addCrucibleRecipes();
         addCauldronRecipes();
         addCisternRecipes();
+        addBrewingStandRecipes();
         addMillstoneRecipes();
         addOvenRecipes();
         addSoulforgeRecipes();
@@ -412,6 +414,14 @@ public abstract class NMInitializer implements AchievementExt {
                 .setConsumesFluid());
 
         finishRecipes("Cistern Recipes");
+    }
+
+    private static void addBrewingStandRecipes(){
+        // brewing stand recipes are registered here as they are added
+        BrewingStandRecipeManager manager = BrewingStandRecipeManager.instance;
+
+        manager.addRecipe(new ItemStack(Item.beefCooked), new ItemStack(Item.magmaCream), new ItemStack(Item.stick));
+        finishRecipes("Brewing Stand Recipes");
     }
 
     private static void addWashingRecipes() {

@@ -2,11 +2,13 @@ package com.itlesports.nightmaremode.integration.emi;
 
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.BrewingStandRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
@@ -19,8 +21,10 @@ import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.data.EmiRemoveFromIndex;
+import emi.dev.emi.emi.recipe.EmiBrewingRecipe;
 import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
 import emi.dev.emi.emi.runtime.EmiHidden;
+import emi.shims.java.com.unascribed.retroemi.RetroEMI;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -81,6 +85,16 @@ public final class NightmareEmiRegistry {
             for (MiscRecipe recipe : MiscRecipeManager.instance.getRecipes()) {
                 addRecipe.accept(new EmiMiscRecipe(recipe, index++));
             }
+
+            index = 0;
+            for (BrewingStandRecipe recipe : BrewingStandRecipeManager.instance.getRecipes()) {
+                addRecipe.accept(new EmiBrewingRecipe(
+                        EmiStack.of(recipe.getBottleInput()),
+                        createBrewingIngredient(recipe.getIngredient()),
+                        EmiStack.of(recipe.getOutput()),
+                        new ResourceLocation(NMFields.modID, "brewing_stand/" + index++)));
+            }
+
         });
         // progressive crafting
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "wood_clump"), new ItemStack(NMItems.woodClump), new ItemStack(Item.stick)));
@@ -104,6 +118,12 @@ public final class NightmareEmiRegistry {
         unhideItem(Item.pickaxeWood);
         unhideItem(Item.axeWood);
         unhideItem(Item.hoeWood);
+    }
+
+    private static EmiIngredient createBrewingIngredient(ItemStack stack) {
+        return stack.getItemDamage() == BrewingStandRecipe.ANY_METADATA
+                ? RetroEMI.wildcardIngredient(stack)
+                : EmiStack.of(stack);
     }
 
     private static void unhideItem(Item item) {
