@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.component;
 
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
+import com.itlesports.nightmaremode.util.KnowledgeBookLoot;
+import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +13,19 @@ import java.util.Random;
 
 @Mixin(ComponentScatteredFeatureDesertPyramid.class)
 public abstract class ComponentScatteredFeatureDesertPyramidMixin extends ComponentScatteredFeature {
+    @Inject(method = "addComponentParts", at = @At("TAIL"))
+    private void addKnowledgeBooksToTempleHampers(World world, Random random, StructureBoundingBox boundingBox, CallbackInfoReturnable<Boolean> cir) {
+        for (int direction = 0; direction < 4; ++direction) {
+            int x = this.getXWithOffset(10 + Direction.offsetX[direction] * 2, 10 + Direction.offsetZ[direction] * 2);
+            int y = this.getYWithOffset(-11);
+            int z = this.getZWithOffset(10 + Direction.offsetX[direction] * 2, 10 + Direction.offsetZ[direction] * 2);
+            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+            if (tileEntity instanceof IInventory inventory) {
+                KnowledgeBookLoot.addBookIfRolled(inventory, random, NMFields.KNOWLEDGE_BOOKS_DESERT_TEMPLE, 3);
+            }
+        }
+    }
+
     @Inject(method = "addComponentParts",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/ComponentScatteredFeatureDesertPyramid;placeBlockAtCurrentPosition(Lnet/minecraft/src/World;IIIIILnet/minecraft/src/StructureBoundingBox;)V",

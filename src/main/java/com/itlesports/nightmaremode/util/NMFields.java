@@ -83,6 +83,13 @@ public class NMFields {
     public static final int ITEM_WASHED_IRON = 2608;
     public static final int ITEM_STOMPED_CRUSHED_IRON = 2609;
 
+    // Knowledge books use one item ID; these zero-based metadata pools control structure loot.
+    public static final int KNOWLEDGE_BOOK_COUNT = 8;
+    public static final int[] KNOWLEDGE_BOOKS_DESERT_TEMPLE = {0, 1, 2};
+    public static final int[] KNOWLEDGE_BOOKS_MINESHAFT = {1, 2, 3, 4};
+    public static final int[] KNOWLEDGE_BOOKS_DUNGEON = {0, 1, 2, 3, 4, 5};
+    public static final int[] KNOWLEDGE_BOOKS_NETHER_FORTRESS = {4, 5, 6, 7};
+
     // cached block IDs
     public static final int BLOCK_IRON_BLOOM = 2403;
     public static final int BLOCK_STONE_ANVIL = 2404;

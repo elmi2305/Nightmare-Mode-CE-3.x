@@ -109,6 +109,7 @@ public class NMItems {
     public static final Item twigSharpening;
     public static final Item sharpTwigBarkWrapping;
     public static final Item flintChip;
+    public static final ItemKnowledgeBook knowledgeBook;
 
     public static Item woodHammer;
     public static Item stoneHammer;
@@ -261,6 +262,7 @@ public class NMItems {
         leaf = new NMItem(2605).setTextureName("nightmare:ifhyLeaf").setUnlocalizedName("ifhyLeaf").setCreativeTab(CreativeTabs.tabMaterials);
         twigSharpening = new NMProgressiveItem(2606, NMItems.sharpTwig.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyTwigSharpen").setUnlocalizedName("ifhyTwigSharpen").setCreativeTab(CreativeTabs.tabMaterials);
         sharpTwigBarkWrapping = new NMProgressiveItem(2607, NMItems.sharpBarkTwig.itemID).setTargetDurability(50).setTextureName("nightmare:ifhyTwigWrap").setUnlocalizedName("ifhyTwigWrap").setCreativeTab(CreativeTabs.tabMaterials);
+        knowledgeBook = new ItemKnowledgeBook(2741);
 
         // NMPostItems takes 2608 2609
         diamondHammer = new ItemHammer(2610, EnumToolMaterial.EMERALD).setUnlocalizedName("ifhyDiamondHammer").setTextureName("nightmare:ifhyDiamondHammer").setCreativeTab(CreativeTabs.tabTools);
