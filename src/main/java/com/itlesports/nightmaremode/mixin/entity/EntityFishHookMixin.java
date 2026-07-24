@@ -145,7 +145,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         }
     }
 
-    @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V", ordinal = 1))
+    @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V", ordinal = 0))
     private Item useSelectedCatch(Item item) {
         return this.selectedCatch.item;
     }
