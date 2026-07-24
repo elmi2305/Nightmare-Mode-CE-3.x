@@ -230,8 +230,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             return false;
         }
         ItemStack held = this.angler.getCurrentEquippedItem();
-        return held != null && (held.getItem() == NMItems.netherFishingRod
-                || held.getItem() == NMItems.netherFishingRodBaited);
+        return held != null && (held.itemID == NMItems.netherFishingRod.itemID || held.itemID == NMItems.netherFishingRodBaited.itemID);
     }
 
 }
