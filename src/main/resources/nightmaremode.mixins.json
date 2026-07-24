@@ -59,6 +59,7 @@
     "TileEntityBrewingStandMixin",
     "TradeBuilderMixin",
     "TradeListMixin",
+    "VanillaPluginMixin",
     "WickerWeavingItemMixin",
     "WorkbenchContainerMixin",
     "WorldInfoMixin",
