@@ -364,7 +364,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         }
         Block block = Block.blocksList[blockID];
         if (block instanceof CampfireBlock) {
-            return ((CampfireBlock) block).fireLevel;
+            return ((CampfireBlock) block).fireLevel > 0 ? 1 : 0;
         }
         return 0;
     }
