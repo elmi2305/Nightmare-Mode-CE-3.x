@@ -1,6 +1,9 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.block.blocks.FullBlock;
+import api.item.items.PickaxeItem;
+import api.item.util.ItemUtils;
+import api.util.MiscUtils;
 import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
@@ -9,6 +12,8 @@ import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,10 +21,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
+
 
 @Mixin(NetherrackBlock.class)
 public class NetherrackBlockMixin extends FullBlock {
     @Unique private boolean shouldDropDust = true;
+    @Unique private Icon nightmareMode$chippedIcon;
 
     protected NetherrackBlockMixin(int par1, Material par2Material) {
         super(par1, par2Material);
@@ -31,24 +39,66 @@ public class NetherrackBlockMixin extends FullBlock {
     }
 
     @Override
-    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6) {
-        ItemStack held = par2EntityPlayer.getCurrentEquippedItem();
-        if (held != null && held.getItem() instanceof ItemSoulFlint) {
-            if (!par1World.isRemote) {
-                this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(BTWItems.groundNetherrack));
-                held.damageItem(1, par2EntityPlayer);
-                par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+        ItemStack held = player.getCurrentEquippedItem();
+        if (meta == 1) {
+            if (!world.isRemote) {
+                player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
             }
+            return;
+        }
+        if (held != null && held.getItem() instanceof ItemSoulFlint) {
+            if (!world.isRemote) {
+                ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
+                        new ItemStack(BTWItems.groundNetherrack),
+                        MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+                held.damageItem(1, player);
+                player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+            }
+//
+            onBlockDestroyedWithImproperTool(world,player,x,y,z,meta);
             return;
         }
         if (held != null && held.getItem() instanceof ItemNetherrackPickaxe) {
-            if (!par1World.isRemote) {
-                this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.netherrack));
-                par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+            if (!world.isRemote) {
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(Block.netherrack));
+                player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
             }
             return;
         }
-        super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
+        super.harvestBlock(world, player, x, y, z, meta);
+    }
+
+    @Override
+    public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int x, int y, int z, int metadata) {
+        ItemStack held = player.getCurrentEquippedItem();
+        if (!world.isRemote && metadata == 0
+                && (held == null || !(held.getItem() instanceof PickaxeItem))
+//                && (held == null || !(held.getItem() instanceof ItemSoulFlint))
+        ) {
+            world.setBlock(x, y, z, Block.netherrack.blockID, 1, 3);
+            player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+        }
+    }
+
+    @Override
+    public int idDropped(int metadata, Random random, int fortune) {
+        return metadata == 1 ? -1 : super.idDropped(metadata, random, fortune);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        super.registerIcons(register);
+        this.nightmareMode$chippedIcon = register.registerIcon("nightmare:ifhyChippedNetherrack");
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Icon getIcon(int side, int metadata) {
+        return metadata == 1 && this.nightmareMode$chippedIcon != null
+                ? this.nightmareMode$chippedIcon
+                : super.getIcon(side, metadata);
     }
 
     @Override
