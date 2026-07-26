@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks;
 
+import btw.item.items.BucketItem;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -104,12 +105,32 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             return true;
         }
 
+        if (held.itemID == NMItems.tungstenBucket.itemID
+                && cistern.getFluid() == CisternTileEntity.FLUID_LAVA) {
+            cistern.ejectInputsAbove();
+            cistern.drainFluid();
+            if (!player.capabilities.isCreativeMode) {
+                player.inventory.setInventorySlotContents(
+                        player.inventory.currentItem, new ItemStack(NMItems.tungstenLavaBucket));
+            }
+            world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D,
+                    "liquid.lavapop", 0.4F, 0.8F);
+            return true;
+        }
+
         if (held.itemID == Item.bucketEmpty.itemID && cistern.getFluid() == CisternTileEntity.FLUID_WATER) {
             cistern.drainFluid();
             if (!player.capabilities.isCreativeMode) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketWater));
             }
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.splash", 0.4F, 0.8F);
+            return true;
+        }
+
+        if (held.getItem() instanceof BucketItem
+                || held.getItem() instanceof ItemBucket
+                || held.getItem() instanceof ItemBucketMilk
+                || held.itemID == NMItems.tungstenBucket.itemID) {
             return true;
         }
 

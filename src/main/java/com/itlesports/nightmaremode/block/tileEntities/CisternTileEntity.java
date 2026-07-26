@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import btw.block.BTWBlocks;
 import btw.block.blocks.CampfireBlock;
 import api.block.TileEntityDataPacketHandler;
+import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -109,12 +110,12 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     }
 
     /**
-     * Inserts as much of the supplied stack as the two input slots can hold.
-     * The source stack is never mutated; callers can use the returned amount to
+     * inserts as much of the supplied stack as the two input slots can hold.
+     * the source stack is never mutated; callers can use the returned amount to
      * preserve a partially accepted EntityItem stack.
      */
     private int insertInputStack(ItemStack stack) {
-        if (stack == null || stack.stackSize <= 0) {
+        if (this.fluid == FLUID_EMPTY || stack == null || stack.stackSize <= 0) {
             return 0;
         }
 
@@ -152,8 +153,27 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         return inserted;
     }
 
+    public void ejectInputsAbove() {
+        boolean changed = false;
+        for (int slot = FIRST_INPUT_SLOT; slot <= LAST_INPUT_SLOT; ++slot) {
+            ItemStack stack = this.contents[slot];
+            if (stack == null) {
+                continue;
+            }
+            ItemUtils.ejectStackFromBlockTowardsFacing(
+                    this.worldObj, this.xCoord, this.yCoord, this.zCoord, stack.copy(), 1);
+            this.contents[slot] = null;
+            changed = true;
+        }
+        if (changed) {
+            this.currentRecipe = null;
+            this.processingTime = 0;
+            this.onInventoryChanged();
+        }
+    }
+
     /**
-     * Matches a hopper's collection zone: items crossing the cistern opening
+     * matches a hopper's collection zone: items crossing the cistern opening
      * are accepted into input slots only. Full or incompatible stacks remain
      * in the world, allowing dispensers to retry once space becomes available.
      */
@@ -494,6 +514,9 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.heatLevel = tag.getInteger("Heat");
         this.processingTime = tag.getInteger("Process");
         this.stirProgress = tag.getInteger("Stir");
+        this.worldObj.markBlockRangeForRenderUpdate(
+                this.xCoord, this.yCoord, this.zCoord,
+                this.xCoord, this.yCoord, this.zCoord);
     }
 
     private void writePacketNBT(NBTTagCompound tag) {
