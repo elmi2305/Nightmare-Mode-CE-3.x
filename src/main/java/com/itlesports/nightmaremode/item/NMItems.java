@@ -184,6 +184,8 @@ public class NMItems {
     public static ItemKnife stoneKnife;
     public static ItemKnife ironKnife;
     public static ItemKnife diamondKnife;
+    public static ItemKnife goldKnife;
+    public static ItemKnife tungstenKnife;
     public static Item ash;
     public static Item ashClump;
     public static Item soulChip;
@@ -197,6 +199,7 @@ public class NMItems {
     public static Item netherWorkbenchPart;
     public static Item netherStick;
     public static Item netherrackPickaxe;
+    public static Item tungstenPickaxe;
     public static Item netherFishingRod;
     public static Item netherFishingRodBaited;
     public static Item lavafish;
@@ -367,6 +370,8 @@ public class NMItems {
         stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
         diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
+        goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 32).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
+        tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
 
         ash = new NetherItem(2704).setTextureName("nightmare:ifhyAsh").setUnlocalizedName("ifhyAsh").setCreativeTab(CreativeTabs.tabMaterials);
         ashClump = new NetherItem(2705).setTextureName("nightmare:ifhyAshClump").setUnlocalizedName("ifhyAshClump").setCreativeTab(CreativeTabs.tabMaterials);
@@ -384,6 +389,7 @@ public class NMItems {
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("nightmare:ifhyNetherFishingRodBaited").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
         lavafish = new ItemLavafish(2719).setTextureName("nightmare:ifhyLavafish").setCreativeTab(CreativeTabs.tabFood);
+        tungstenPickaxe = new ItemTungstenPickaxe(2720).setTextureName("nightmare:ifhyTungstenPickaxe").setUnlocalizedName("ifhyTungstenPickaxe").setCreativeTab(CreativeTabs.tabTools);
         netherrackHammer = new ItemNetherrackHammer(2721).setTextureName("nightmare:ifhyNetherrackHammer").setUnlocalizedName("ifhyNetherrackHammer").setCreativeTab(CreativeTabs.tabTools);
         tungstenChunk = new NetherItem(2722).setTextureName("nightmare:ifhyTungstenChunk").setUnlocalizedName("ifhyTungstenChunk").setCreativeTab(CreativeTabs.tabMaterials);
         crushedTungsten = new NetherItem(2723).setTextureName("nightmare:ifhyCrushedTungsten").setUnlocalizedName("ifhyCrushedTungsten").setCreativeTab(CreativeTabs.tabMaterials);
