@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import api.item.items.PickaxeItem;
+import api.item.util.ItemUtils;
+import api.util.MiscUtils;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
@@ -44,11 +46,15 @@ public class BlockTungstenOre extends Block {
         }
         ItemStack held = player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.tungstenDust));
+            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
+                    new ItemStack(NMItems.tungstenDust),
+                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
             held.damageItem(1, player);
             world.setBlock(x, y, z, Block.netherrack.blockID, 0, 3);
         } else if (held != null && held.getItem() instanceof PickaxeItem) {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.tungstenChunk));
+            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
+                    new ItemStack(NMItems.tungstenChunk),
+                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
         }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
     }
