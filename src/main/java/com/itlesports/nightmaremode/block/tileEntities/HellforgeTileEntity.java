@@ -21,7 +21,8 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
         }
 
         if (!this.worldObj.isRemote) {
-            if (!bWasBurning && this.unlitFuelBurnTime > 0 && this.hasHorizontalLavaNeighbor()) {
+            boolean hasLavaAccess = this.hasHorizontalFlowingLavaNeighbor();
+            if (!bWasBurning && this.unlitFuelBurnTime > 0 && hasLavaAccess) {
                 this.lightOnNextUpdate = true;
             }
             if (bWasBurning || this.lightOnNextUpdate) {
@@ -29,7 +30,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
                 this.unlitFuelBurnTime = 0;
                 this.lightOnNextUpdate = false;
             }
-            if (this.isBurning() && this.canSmelt()) {
+            if (this.isBurning() && hasLavaAccess && this.canSmelt()) {
                 ++this.furnaceCookTime;
                 if (this.furnaceCookTime >= this.getCookTimeForCurrentItem()) {
                     this.furnaceCookTime = 0;
@@ -56,16 +57,16 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
     }
 
-    private boolean hasHorizontalLavaNeighbor() {
-        return this.isLava(this.xCoord - 1, this.yCoord, this.zCoord)
-                || this.isLava(this.xCoord + 1, this.yCoord, this.zCoord)
-                || this.isLava(this.xCoord, this.yCoord, this.zCoord - 1)
-                || this.isLava(this.xCoord, this.yCoord, this.zCoord + 1);
+    private boolean hasHorizontalFlowingLavaNeighbor() {
+        return this.isFlowingLava(this.xCoord - 1, this.yCoord, this.zCoord)
+                || this.isFlowingLava(this.xCoord + 1, this.yCoord, this.zCoord)
+                || this.isFlowingLava(this.xCoord, this.yCoord, this.zCoord - 1)
+                || this.isFlowingLava(this.xCoord, this.yCoord, this.zCoord + 1);
     }
 
-    private boolean isLava(int x, int y, int z) {
-        int blockID = this.worldObj.getBlockId(x, y, z);
-        return blockID == Block.lavaMoving.blockID || blockID == Block.lavaStill.blockID;
+    private boolean isFlowingLava(int x, int y, int z) {
+        int blockId = this.worldObj.getBlockId(x, y, z);
+        return blockId == Block.lavaMoving.blockID || blockId == Block.lavaStill.blockID;
     }
 
     public String getInvName() {

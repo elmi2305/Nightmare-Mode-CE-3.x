@@ -23,6 +23,10 @@ public class BlockHellforge
     @Environment(value = EnvType.CLIENT)
     private Icon blankOverlay;
     @Environment(value = EnvType.CLIENT)
+    private Icon lavaTopIcon;
+    @Environment(value = EnvType.CLIENT)
+    private boolean renderingWithLavaAccess;
+    @Environment(value = EnvType.CLIENT)
     protected boolean isRenderingInterior;
     @Environment(value = EnvType.CLIENT)
     private int interiorBrightness;
@@ -183,6 +187,7 @@ public class BlockHellforge
     public void registerIcons(IconRegister register) {
         this.blockIcon = register.registerIcon("nightmare:hellforge");
         this.furnaceIconTop = register.registerIcon("nightmare:hellforge_top");
+        this.lavaTopIcon = register.registerIcon("nightmare:hellforge_top_lava");
         this.furnaceIconFront = register.registerIcon("nightmare:hellforge_front_lit");
         this.fuelOverlays = new Icon[9];
         for (int iTempIndex = 0; iTempIndex < 9; ++iTempIndex) {
@@ -209,7 +214,9 @@ public class BlockHellforge
                 return this.furnaceIconFront;
             }
             if (iSide < 2) {
-                return this.furnaceIconTop;
+                return iSide == 1 && this.renderingWithLavaAccess
+                        ? this.lavaTopIcon
+                        : this.furnaceIconTop;
             }
             return this.blockIcon;
         }
@@ -233,8 +240,11 @@ public class BlockHellforge
     @Override
     @Environment(value = EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int i, int j, int k) {
+        this.renderingWithLavaAccess = this.hasHorizontalFlowingLava(
+                renderer.blockAccess, i, j, k);
         renderer.setRenderBounds(this.getBlockBoundsFromPoolBasedOnState(renderer.blockAccess, i, j, k));
         renderer.renderStandardBlock(this, i, j, k);
+        this.renderingWithLavaAccess = false;
         int iFacing = renderer.blockAccess.getBlockMetadata(i, j, k) & 7;
         BlockModel transformedModel = this.modelBlockInterior.makeTemporaryCopy();
         transformedModel.rotateAroundYToFacing(iFacing);
@@ -246,6 +256,18 @@ public class BlockHellforge
         this.isRenderingInterior = false;
         renderer.clearOverrideBlockTexture();
         return bReturnValue;
+    }
+
+    @Environment(value = EnvType.CLIENT)
+    private boolean hasHorizontalFlowingLava(IBlockAccess blockAccess, int x, int y, int z) {
+        return     isFlowingLava(blockAccess.getBlockId(x - 1, y, z))
+                || isFlowingLava(blockAccess.getBlockId(x + 1, y, z))
+                || isFlowingLava(blockAccess.getBlockId(x, y, z - 1))
+                || isFlowingLava(blockAccess.getBlockId(x, y, z + 1));
+    }
+
+    private boolean isFlowingLava(int blockId) {
+        return blockId == Block.lavaMoving.blockID || blockId == Block.lavaStill.blockID;
     }
 
     @Override
