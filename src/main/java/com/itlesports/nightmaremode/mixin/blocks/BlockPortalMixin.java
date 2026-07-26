@@ -22,6 +22,17 @@ public class BlockPortalMixin{
     @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lapi/world/WorldUtils;gameProgressSetNetherBeenAccessedServerOnly()V", remap = false))
     private void doNothing1(){} // makes sure the nether flag isn't set as soon as the portal is created
 
+    @Redirect(method = "tryToCreatePortal", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I"))
+    private int rejectCrudeObsidianInNetherFrames(World world, int x, int y, int z) {
+        int blockID = world.getBlockId(x, y, z);
+        if (world.provider.dimensionId == -1
+                && blockID == Block.obsidian.blockID
+                && world.getBlockMetadata(x, y, z) == 1) {
+            return -1;
+        }
+        return blockID;
+    }
+
     @Inject(method = "tryToCreatePortal", at = @At("TAIL"))
     private void applyPlayerEffects(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir){
         this.runPortalEffects(world,x,y,z);
