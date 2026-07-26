@@ -75,6 +75,9 @@ public class RenderBlocksMixin {
         else if (fluid == CisternTileEntity.FLUID_ACIDIC_WASH){
             return NMFields.ICON_ACID != null ? NMFields.ICON_ACID : originalIcon;
         }
+        else if (fluid == CisternTileEntity.FLUID_LAVA){
+            return BlockFluid.getFluidIcon("lava_still");
+        }
         return originalIcon;
     }
 }
