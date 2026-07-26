@@ -200,7 +200,6 @@ public class NMItems {
     public static Item netherFishingRod;
     public static Item netherFishingRodBaited;
     public static Item lavafish;
-    public static Item netherOvenPart;
     public static Item netherrackHammer;
     public static Item tungstenChunk;
     public static Item crushedTungsten;
@@ -385,7 +384,6 @@ public class NMItems {
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("nightmare:ifhyNetherFishingRodBaited").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
         lavafish = new ItemLavafish(2719).setTextureName("nightmare:ifhyLavafish").setCreativeTab(CreativeTabs.tabFood);
-        netherOvenPart = new NetherItem(2720).setTextureName("nightmare:ifhyNetherOvenPart").setUnlocalizedName("ifhyNetherOvenPart").setCreativeTab(CreativeTabs.tabMaterials);
         netherrackHammer = new ItemNetherrackHammer(2721).setTextureName("nightmare:ifhyNetherrackHammer").setUnlocalizedName("ifhyNetherrackHammer").setCreativeTab(CreativeTabs.tabTools);
         tungstenChunk = new NetherItem(2722).setTextureName("nightmare:ifhyTungstenChunk").setUnlocalizedName("ifhyTungstenChunk").setCreativeTab(CreativeTabs.tabMaterials);
         crushedTungsten = new NetherItem(2723).setTextureName("nightmare:ifhyCrushedTungsten").setUnlocalizedName("ifhyCrushedTungsten").setCreativeTab(CreativeTabs.tabMaterials);
