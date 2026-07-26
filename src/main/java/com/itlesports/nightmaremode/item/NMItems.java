@@ -200,6 +200,7 @@ public class NMItems {
     public static Item netherStick;
     public static Item netherrackPickaxe;
     public static Item tungstenPickaxe;
+    public static Item tungstenShovel;
     public static Item netherFishingRod;
     public static Item netherFishingRodBaited;
     public static Item lavafish;
@@ -410,6 +411,8 @@ public class NMItems {
         washedScouredLeather = new NMItem(2738).setTextureName("nightmare:ifhyWashedScouredLeather").setUnlocalizedName("ifhyWashedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         flintChip = new NMItem(2740).setTextureName("nightmare:ifhyFlintChip").setUnlocalizedName("ifhyFlintChip").setCreativeTab(CreativeTabs.tabMaterials);
+        tungstenShovel = new NMShovelItem(2741, EnumToolMaterial.IRON, 500, 0.7f).setTextureName("nightmare:ifhyTungstenShovel").setUnlocalizedName("ifhyTungstenShovel").setCreativeTab(CreativeTabs.tabTools);
+
 
 
 
