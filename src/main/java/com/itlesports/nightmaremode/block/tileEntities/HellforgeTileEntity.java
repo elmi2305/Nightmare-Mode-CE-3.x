@@ -2,51 +2,43 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 import api.block.TileEntityDataPacketHandler;
 import api.item.util.ItemUtils;
-import btw.item.BTWItems;
 import net.minecraft.src.*;
-
-import java.util.*;
 
 public class HellforgeTileEntity extends TileEntityFurnace implements TileEntityDataPacketHandler {
 
-    public static final int FUEL_LIMIT = 132000;
+    public static final int FUEL_LIMIT = 14200;
     private ItemStack cookStack = null;
     private int unlitFuelBurnTime = 0;
     private int visualFuelLevel = 0;
+    private boolean lightOnNextUpdate = false;
 
 
     public void updateEntity() {
-        boolean bWasBurning = true;
+        boolean bWasBurning = this.furnaceBurnTime > 0;
         boolean bInventoryChanged = false;
         if (this.furnaceBurnTime > 0) {
             --this.furnaceBurnTime;
         }
 
-
-
         if (!this.worldObj.isRemote) {
-
-
-            this.furnaceBurnTime += this.unlitFuelBurnTime;
-            this.unlitFuelBurnTime = 0;
-//            if(this.furnaceItemStacks[0] != null){
-//                this.tryConsumeNetherrackBelow();
-//            }
-
-            if (this.canSmelt()) {
+            if (!bWasBurning && this.unlitFuelBurnTime > 0 && this.hasHorizontalLavaNeighbor()) {
+                this.lightOnNextUpdate = true;
+            }
+            if (bWasBurning || this.lightOnNextUpdate) {
+                this.furnaceBurnTime += this.unlitFuelBurnTime;
+                this.unlitFuelBurnTime = 0;
+                this.lightOnNextUpdate = false;
+            }
+            if (this.isBurning() && this.canSmelt()) {
                 ++this.furnaceCookTime;
                 if (this.furnaceCookTime >= this.getCookTimeForCurrentItem()) {
                     this.furnaceCookTime = 0;
                     this.smeltItem();
-                    this.tryEjectToSideChests();
-                    this.tryConsumeNetherrackBelow();
-//                    this.tryPullFromTopHopper();
                     bInventoryChanged = true;
                 }
             } else {
                 this.furnaceCookTime = 0;
             }
-
 
             BlockFurnace furnaceBlock = (BlockFurnace) Block.blocksList[this.worldObj.getBlockId(this.xCoord, this.yCoord, this.zCoord)];
             if (bWasBurning != this.isBurning()) {
@@ -62,6 +54,18 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
             this.onInventoryChanged();
         }
 
+    }
+
+    private boolean hasHorizontalLavaNeighbor() {
+        return this.isLava(this.xCoord - 1, this.yCoord, this.zCoord)
+                || this.isLava(this.xCoord + 1, this.yCoord, this.zCoord)
+                || this.isLava(this.xCoord, this.yCoord, this.zCoord - 1)
+                || this.isLava(this.xCoord, this.yCoord, this.zCoord + 1);
+    }
+
+    private boolean isLava(int x, int y, int z) {
+        int blockID = this.worldObj.getBlockId(x, y, z);
+        return blockID == Block.lavaMoving.blockID || blockID == Block.lavaStill.blockID;
     }
 
     public String getInvName() {
@@ -85,125 +89,13 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
         tag.setInteger("fcUnlitFuel", this.unlitFuelBurnTime);
         tag.setByte("fcVisualFuel", (byte)this.visualFuelLevel);
     }
-    public static final Map<Integer, Integer> FUEL_MAP = new HashMap<>();
-
-    static {
-        FUEL_MAP.put(BTWItems.groundNetherrack.itemID, 400);
-        FUEL_MAP.put(Block.netherrack.blockID, 3200);
-        FUEL_MAP.put(BTWItems.nethercoal.itemID, 10000);
-    }
-
-    public static int getFuelValue(int id) {
-        Integer value = FUEL_MAP.get(id);
-        return value == null ? 0 : value;
-    }
-    private int[] getForwardFromMeta(int meta) {
-        return switch (meta) {
-            case 2 -> new int[]{0, -1}; // north
-            case 3 -> new int[]{0, 1}; // south
-            case 4 -> new int[]{-1, 0}; // west
-            case 5 -> new int[]{1, 0}; // east
-            default -> new int[]{0, -1}; // fallback (north)
-        };
-    }
-
-    private void tryEjectToSideChests() {
-        ItemStack output = this.getStackInSlot(2);
-        if (output == null) return;
-
-        int meta = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-        int[] f = getForwardFromMeta(meta);
-        // left = rotate forward 90deg CCW: (-dz, dx)
-        int leftX = -f[1], leftZ = f[0];
-        // right = rotate forward 90deg CW: (dz, -dx)
-        int rightX = f[1], rightZ = -f[0];
-
-        int[][] sides = { {leftX, leftZ}, {rightX, rightZ} };
-
-        for (int[] s : sides) {
-            int tx = this.xCoord + s[0];
-            int ty = this.yCoord;
-            int tz = this.zCoord + s[1];
-
-            TileEntity te = this.worldObj.getBlockTileEntity(tx, ty, tz);
-            // Only chests (not all IInventory)
-            if (te instanceof TileEntityChest inv) {
-                ItemStack remaining = output.copy();
-
-                for (int slot = 0; slot < inv.getSizeInventory() && remaining.stackSize > 0; slot++) {
-                    ItemStack slotStack = inv.getStackInSlot(slot);
-
-                    if (slotStack == null) {
-                        // can insert whole remaining stack
-                        inv.setInventorySlotContents(slot, remaining);
-                        remaining = null;
-                        break;
-                    } else if (slotStack.isItemEqual(remaining) &&
-                            ItemStack.areItemStackTagsEqual(slotStack, remaining) &&
-                            slotStack.stackSize < slotStack.getMaxStackSize()) {
-                        int transferable = Math.min(
-                                remaining.stackSize,
-                                slotStack.getMaxStackSize() - slotStack.stackSize
-                        );
-                        slotStack.stackSize += transferable;
-                        remaining.stackSize -= transferable;
-                    }
-                }
-
-                if (remaining == null || remaining.stackSize <= 0) {
-                    this.setInventorySlotContents(2, null);
-                } else {
-                    this.setInventorySlotContents(2, remaining);
-                }
-
-                inv.onInventoryChanged();
-                this.onInventoryChanged();
-                break; // only insert into the first valid chest found (left preferred)
-            }
-        }
-    }
-
-    public void tryConsumeNetherrackBelow() {
-        TileEntity te = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-        if (!(te instanceof IInventory inv)) return;
-
-        for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
-            ItemStack s = inv.getStackInSlot(slot);
-            if (s == null) continue;
-
-            boolean isValidFuel = (s.itemID == Block.netherrack.blockID || s.itemID == BTWItems.nethercoal.itemID) || s.itemID == BTWItems.groundNetherrack.itemID;
-
-            if (isValidFuel) {
-                if (this.attemptToAddFuel(s) > 0) {
-                    s.stackSize -= 1;
-                    if (s.stackSize <= 0) inv.setInventorySlotContents(slot, null);
-                    else inv.setInventorySlotContents(slot, s);
-                }
-                inv.onInventoryChanged();
-
-                this.onInventoryChanged();
-                break;
-            }
-        }
-    }
-
-
     public int getItemBurnTime(ItemStack stack) {
-        if(stack != null && FUEL_MAP.containsKey(stack.itemID)){
-            return getFuelValue(stack.itemID);
-        }
-        return super.getItemBurnTime(stack);
+        return super.getItemBurnTime(stack) * 4;
     }
 
 
     protected int getCookTimeForCurrentItem() {
-        float multiplier;
-        if(this.furnaceBurnTime == 0){
-            multiplier = 0.5f;
-        } else{
-            multiplier = (float) Math.min((((float) this.furnaceBurnTime / FUEL_LIMIT) * 6f), 6f);
-        }
-        return (int)(super.getCookTimeForCurrentItem() / multiplier);
+        return super.getCookTimeForCurrentItem() * 4;
     }
 
     public Packet getDescriptionPacket() {
@@ -230,6 +122,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
     public boolean attemptToLight() {
         if (this.unlitFuelBurnTime > 0) {
+            this.lightOnNextUpdate = true;
             return true;
         } else {
             return false;
@@ -308,7 +201,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
 
     public int attemptToAddFuel(ItemStack stack) {
         int iTotalBurnTime = this.unlitFuelBurnTime + this.furnaceBurnTime;
-        int iDeltaBurnTime = FUEL_LIMIT - 1400 - iTotalBurnTime;
+        int iDeltaBurnTime = FUEL_LIMIT - iTotalBurnTime;
         int iNumItemsBurned = 0;
         if (iDeltaBurnTime > 0) {
             iNumItemsBurned = iDeltaBurnTime / this.getItemBurnTime(stack);
@@ -336,7 +229,7 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
             if (iTotalBurnTime < 400) {
                 iNewFuelLevel = 1;
             } else {
-                iNewFuelLevel = iTotalBurnTime / 16000 + 2;
+                iNewFuelLevel = iTotalBurnTime / 1600 + 2;
             }
         }
 

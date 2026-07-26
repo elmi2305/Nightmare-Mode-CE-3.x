@@ -13,8 +13,6 @@ import net.minecraft.src.*;
 
 import java.util.Random;
 
-import static com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity.FUEL_MAP;
-
 public class BlockHellforge
         extends BlockFurnace {
     protected final BlockModel modelBlockInterior = new OvenModel();
@@ -64,12 +62,10 @@ public class BlockHellforge
                     tileEntity.addCookStack(new ItemStack(heldStack.itemID, 1, heldStack.getItemDamage()));
                 }
                 --heldStack.stackSize;
-                if(!world.isRemote){
-                    tileEntity.tryConsumeNetherrackBelow();
-                }
                 return true;
             }
-        } else if (fYClick < 0.375f && heldStack != null && (heldStack.getItem().getCanBeFedDirectlyIntoBrickOven(heldStack.getItemDamage()) || FUEL_MAP.containsKey(heldStack.itemID))) {
+        } else if (fYClick < 0.375f && heldStack != null
+                && heldStack.getItem().getCanBeFedDirectlyIntoBrickOven(heldStack.getItemDamage())) {
             int iItemsConsumed;
             if (!world.isRemote && (iItemsConsumed = tileEntity.attemptToAddFuel(heldStack)) > 0) {
                 if (this.isActive) {

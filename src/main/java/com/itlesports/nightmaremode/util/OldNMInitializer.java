@@ -1308,9 +1308,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.aestheticOpaque, 2, 11), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), BTWItems.glue});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), new Object[]{"###", "# #", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, Short.MAX_VALUE)});
 
-        // add ground netherrack -> netherrack 1:1 conversion
-        RecipeManager.addShapelessRecipe(new ItemStack(Block.netherrack, 1), new Object[]{new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack), new ItemStack(BTWItems.groundNetherrack)});
-
         // add obsidian recipes
         RecipeManager.addShapelessRecipe(new ItemStack(Block.obsidian, 1, 1), new Object[]{new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard), new ItemStack(NMItems.obsidianShard)});
 

@@ -3,8 +3,6 @@ package com.itlesports.nightmaremode.util;
 import api.achievement.AchievementTab;
 import api.entity.mob.villager.TradeItem;
 import api.entity.mob.villager.TradeProvider;
-import api.item.tag.TagInstance;
-import api.item.tag.TagOrStack;
 import btw.crafting.recipe.RecipeManager;
 import btw.crafting.manager.CauldronCraftingManager;
 import btw.crafting.manager.MillStoneCraftingManager;
@@ -22,6 +20,10 @@ import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
+import com.itlesports.nightmaremode.item.NMTags;
+import api.item.tag.TagInstance;
+import api.item.tag.TagOrStack;
+import api.item.tag.Tag;
 import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
@@ -37,7 +39,7 @@ public abstract class NMInitializer implements AchievementExt {
         addCraftingRecipes();
         addWashingRecipes();
         addMiscRecipes();
-        addHammerWorldInteractionRecipes();
+        addHammerRecipes();
         addCampfireRecipes();
         addCrucibleRecipes();
         addCauldronRecipes();
@@ -315,22 +317,35 @@ public abstract class NMInitializer implements AchievementExt {
         // requires the hide to be washed and worked after scouring before its final bark and
         // dung tanning bath.
         CauldronCraftingManager cauldron = CauldronCraftingManager.getInstance();
-        for (TagOrStack bark : new TagOrStack[]{
-                TagInstance.of(BTWTags.lowTanninBarks, 8),
-                TagInstance.of(BTWTags.mediumTanninBarks, 5),
-                TagInstance.of(BTWTags.highTanninBarks, 3),
-                TagInstance.of(BTWTags.veryHighTanninBarks, 2)}) {
-            cauldron.removeRecipe(new ItemStack(BTWItems.tannedLeather), new TagOrStack[]{
-                    new ItemStack(BTWItems.dung), new ItemStack(BTWItems.scouredLeather), bark});
-            cauldron.removeRecipe(new ItemStack(BTWItems.cutTannedLeather, 2), new TagOrStack[]{
-                    new ItemStack(BTWItems.dung), new ItemStack(BTWItems.cutScouredLeather, 2), bark});
+        int[] barkCounts = {8, 5, 3, 2};
+        Tag[] barkTags = {
+                BTWTags.lowTanninBarks,
+                BTWTags.mediumTanninBarks,
+                BTWTags.highTanninBarks,
+                BTWTags.veryHighTanninBarks
+        };
+        for (int index = 0; index < barkCounts.length; ++index) {
+            TagOrStack[] regularInputs = {
+                    new ItemStack(BTWItems.dung),
+                    new ItemStack(BTWItems.scouredLeather),
+                    TagInstance.of(barkTags[index], barkCounts[index])
+            };
+            cauldron.removeRecipe(new ItemStack(BTWItems.tannedLeather), regularInputs);
+
+            TagOrStack[] oldCutInputs = {
+                    new ItemStack(BTWItems.dung),
+                    new ItemStack(BTWItems.cutScouredLeather, 2),
+                    TagInstance.of(barkTags[index], barkCounts[index])
+            };
+            cauldron.removeRecipe(new ItemStack(BTWItems.cutTannedLeather, 2), oldCutInputs);
+
+            TagOrStack[] workedCutInputs = {
+                    new ItemStack(BTWItems.dung),
+                    new ItemStack(NMItems.workedScouredLeather),
+                    TagInstance.of(barkTags[index], barkCounts[index])
+            };
+            cauldron.addRecipe(new ItemStack(BTWItems.cutTannedLeather, 2), workedCutInputs);
         }
-        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.tannedLeather), new TagOrStack[]{
-                new ItemStack(BTWItems.dung),
-                new ItemStack(NMItems.workedScouredLeather),
-                TagInstance.of(BTWTags.barks)});
-
-
         finishRecipes("Cauldron Recipes");
 
     }
@@ -557,11 +572,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackPickaxe), new Object[]{"CCC", "TST", " S ", Character.valueOf('C'), NMItems.netherrackChunk, Character.valueOf('T'), NMItems.pighideString, Character.valueOf('S'), NMItems.netherStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMItems.netherStick, Character.valueOf('B'), NMItems.boneShard, Character.valueOf('T'), NMItems.pighideString});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump});
-        RecipeManager.addRecipe(new ItemStack(NMItems.netherOvenPart), new Object[]{"##", "##", Character.valueOf('#'), BTWItems.netherBrick});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.netherOven), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherOvenPart});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump, BTWItems.gravelPile});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{"##", "##", Character.valueOf('#'), BTWBlocks.looseNetherBrickSlab});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherrackAnvil), new Object[]{"###", " # ", "###", Character.valueOf('#'), Block.netherrack});
-        RecipeManager.addRecipe(new ItemStack(Block.netherrack), new Object[]{"###", "# #", "###", Character.valueOf('#'), NMItems.netherrackChunk});
+        RecipeManager.addRecipe(new ItemStack(Block.netherrack), new Object[]{"###", "#S#", "###", Character.valueOf('#'), NMItems.netherrackChunk, Character.valueOf('S'), BTWItems.netherSludge});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackChunk, 4), new Object[]{new ItemStack(Block.netherrack, 1, 0)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{Block.netherrack, NMItems.netherStick, NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenChunk), new Object[]{NMItems.tungstenDust, NMItems.tungstenDust});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenConcentrate), new Object[]{NMItems.crushedTungsten, Item.netherQuartz});
@@ -570,9 +585,12 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenBucket), new Object[]{"# #", " # ", Character.valueOf('#'), NMItems.tungstenIngot});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"ISI", "ISI", "III", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), BTWItems.netherSludge});
         RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1, 0), new Object[]{"BBB", "BSB", "BBB", Character.valueOf('B'), NMItems.obsidianBrick, Character.valueOf('S'), BTWItems.netherSludge});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneKnife), new Object[]{new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE), Item.stick, NMItems.crudeString});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironKnife), new Object[]{Item.ingotIron, Item.stick, Item.silk});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondKnife), new Object[]{BTWItems.diamondIngot, Item.stick, Item.silk});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneKnife), new Object[]{new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE), Item.stick, NMTags.knifeStrings});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironKnife), new Object[]{Item.ingotIron, Item.stick, NMTags.knifeStrings});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondKnife), new Object[]{BTWItems.diamondIngot, Item.stick, NMTags.knifeStrings});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.goldKnife), new Object[]{Item.ingotGold, Item.stick, NMTags.knifeStrings});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenKnife), new Object[]{NMItems.tungstenIngot, Item.stick, NMTags.knifeStrings});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenPickaxe), new Object[]{"III", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), Item.stick, NMItems.primitiveGlue, BTWItems.sawDust});
         RecipeManager.addRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{"ST", "SD", Character.valueOf('S'), Item.stick, Character.valueOf('T'), BTWTags.strings, Character.valueOf('D'), NMItems.drill});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.shovelWood), new Object[]{BTWTags.logs, Item.stick, NMItems.primitiveGlue});
@@ -695,7 +713,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
 
-    private static void addHammerWorldInteractionRecipes(){
+    private static void addHammerRecipes(){
         HammerRecipeList.addRecipes();
     }
     private static void addMultiplayerRecipes(){

@@ -99,8 +99,6 @@ public class NMFields {
     public static final int BLOCK_NETHER_WORKBENCH = 2412;
     public static final int BLOCK_NETHER_SHRUB = 2413;
     public static final int BLOCK_NETHERRACK_ANVIL = 2414;
-    public static final int BLOCK_NETHER_OVEN = 2415;
-    public static final int BLOCK_BURNING_NETHER_OVEN = 2416;
 
     // icons - registered in TextureMapMixin
     public static Icon ICON_SLURRY;
