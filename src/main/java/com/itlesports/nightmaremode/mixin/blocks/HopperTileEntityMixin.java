@@ -20,20 +20,9 @@ import java.util.Optional;
 
 @Mixin(HopperTileEntity.class)
 public abstract class HopperTileEntityMixin extends TileEntity {
-    @Shadow
-    public abstract ItemStack decrStackSize(int iSlot, int iAmount);
-
+    @Shadow public abstract ItemStack decrStackSize(int iSlot, int iAmount);
     @Shadow public abstract ItemStack getStackInSlot(int iSlot);
 
-    @ModifyConstant(method = "attemptToEjectXPIntoHopper", constant = @Constant(intValue = 100), remap = false)
-    private int increaseExperienceCapacity(int xp) {
-        return xp * 10;
-    }
-
-    @ModifyConstant(method = "attemptToSwallowXPOrb", constant = @Constant(intValue = 100), remap = false)
-    private int increaseExperienceCapacity1(int xp) {
-        return xp * 10;
-    }
 
     @Inject(method = "attemptToEjectStackFromInv", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockTileEntity(III)Lnet/minecraft/src/TileEntity;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void governHellforge(CallbackInfo ci, int iStackIndex, ItemStack invStack, int iEjectStackSize, ItemStack ejectStack, int iTargetI, int iTargetJ, int iTargetK, boolean bEjectIntoWorld, int iTargetBlockID, Block targetBlock) {
