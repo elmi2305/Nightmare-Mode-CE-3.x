@@ -477,7 +477,7 @@ public abstract class NMInitializer implements AchievementExt {
         MiscRecipeManager.instance.addRecipe(
                 new ItemStack(BTWItems.netherBrick),
                 new ItemStack(BTWItems.unfiredNetherBrick),
-                "After 10 seconds beside lava");
+                "Next to Lava");
 
 
 
