@@ -885,6 +885,7 @@ achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are g
 tag.nightmare.sandwich_meats=Sandwich Meats
 tag.nightmare.eclipse_drops=Eclipse Items
 tag.nightmare.book_leather=Book Covers
+tag.nightmare.knife_strings=Knife Strings
 
 # BTW info overrides
 btw.anvil.info=The Anvil can be used to repair items using their materials & experience levels. Note that Anvils cannot be picked back up, and instead will drop Metal Scrap, which is useless except to melt down in a Crucible to reclaim the iron.
@@ -899,7 +900,7 @@ btw.enchanter.info=The Enchanting Table is limited in the enchants it can apply,
 btw.beacon.info=Beacons provide a different effect depending on the material which the pyramid is built from. Beacons can function in the nether if they are able to see the bedrock ceiling. Valid blocks for beacons are Concentrated Hellfire, Diamond, Dung, Emerald, Ender Block, Glass, Glowstone, Gold, Iron, Lapis Lazuli, Spider Eye, and Soulforged Steel. Information on each individual effect can be found on the info page for each block. Tier 4 Beacons have global range, meaning their affects are granted to every player in the dimension.
 btw.ender_chest.info=Ender Chests allow players to have a private inventory which functions across all dimensions.
 btw.steel_block.info=When used as the material for a Beacon, Soulforged Steel Blocks act as an anchor to allow the player to set their spawn, and respawn at the beacon if they die close enough to it. Range is limited for the first two tiers, while tier 3 is unlimited within the same dimension, and tier 4 is unlimited across dimensions.
-btw.portal.info=Nether Portals must be lit using a Campfire or a Fire Charge. When activating the Nether Portal, the world will enter a 3-day countdown until Hardmode begins. Hardmode increases the stats of all mobs, introduces new threats and variants. Portals will actively spread souls within a range of 16 blocks, adversely affecting nearby passive mobs, as well as squids. It is highly recommended that you know what you are doing before activating the portal.
+btw.portal.info=Nether Portals must be lit using a Campfire or a Fire Charge. When activating the Nether Portal, the world will enter a 120-day countdown until Hardmode begins. Hardmode increases the stats of all mobs, introduces new threats and variants. Portals will actively spread souls within a range of 16 blocks, adversely affecting nearby passive mobs, as well as squids. It is highly recommended that you know what you are doing before activating the portal.
 
 # NM custom info items
 nm.rpg.info=The Rocket Launcher is obtained by trading with the Nightmare Merchant after finishing Nightmare Mode. It shoots live Powder Kegs, ready to explode. Misuse may result in missing body parts.
