@@ -20,6 +20,6 @@ public class ItemTungstenPickaxe extends PickaxeItem implements INetherItem {
 
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
-        return block == Block.netherBrick || super.canHarvestBlock(stack, world, block, x, y, z);
+        return block.blockID == Block.netherBrick.blockID || block.blockID == Block.netherrack.blockID || super.canHarvestBlock(stack, world, block, x, y, z);
     }
 }

@@ -7,6 +7,7 @@ import api.util.MiscUtils;
 import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
@@ -114,13 +115,18 @@ public class NetherrackBlockMixin extends FullBlock {
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
         ItemStack held = player.getCurrentEquippedItem();
-        if (held != null && (held.getItem() instanceof ItemSoulFlint || held.getItem() instanceof ItemNetherrackPickaxe)) {
-            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F;
-        }
-        if (!SkillHandler.getPlayerData(player).canMineNetherrack) {
+
+        if (!SkillHandler.getPlayerData(player).canMineNetherrack || held == null) {
             return 0.0F;
         }
-        if (held != null && held.getItem() instanceof ItemBloodPickaxe) {
+
+        if (held.getItem() instanceof ItemSoulFlint || held.getItem() instanceof ItemNetherrackPickaxe) {
+            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F;
+        }
+        if (held.getItem() instanceof ItemTungstenPickaxe) {
+            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 15.0F;
+        }
+        if (held.getItem() instanceof ItemBloodPickaxe) {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;
             int count = NMUtils.getBloodArmorWornCount(player);
             float armorMult = count > 0 ? ((float) count / 4 + 1): 1.0f;
