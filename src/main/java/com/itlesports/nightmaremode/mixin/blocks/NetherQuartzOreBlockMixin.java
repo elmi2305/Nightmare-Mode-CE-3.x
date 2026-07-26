@@ -5,6 +5,7 @@ import api.item.util.ItemUtils;
 import api.util.MiscUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
+import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -20,6 +21,9 @@ public abstract class NetherQuartzOreBlockMixin extends BlockOre {
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
             return player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 30.0F;
         }
+//        if (held != null && held.getItem() instanceof ItemTungstenPickaxe) {
+//            return player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 10.0F;
+//        }
         return super.getPlayerRelativeBlockHardness(player, world, x, y, z);
     }
 

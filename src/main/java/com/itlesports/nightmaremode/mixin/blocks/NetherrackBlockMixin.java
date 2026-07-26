@@ -124,7 +124,7 @@ public class NetherrackBlockMixin extends FullBlock {
             return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F;
         }
         if (held.getItem() instanceof ItemTungstenPickaxe) {
-            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 15.0F;
+            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 10.0F;
         }
         if (held.getItem() instanceof ItemBloodPickaxe) {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;

@@ -5,7 +5,9 @@ import api.item.util.ItemUtils;
 import api.util.MiscUtils;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
+import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import net.minecraft.src.*;
 
 public class BlockTungstenOre extends Block {
@@ -17,17 +19,17 @@ public class BlockTungstenOre extends Block {
         this.setStepSound(BTWBlocks.oreStepSound);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName("ifhyTungstenOre");
-        this.setTextureName("iron_ore");
+        this.setTextureName("nightmare:ifhyTungstenOre");
     }
 
     @Override
     public int getHarvestToolLevel(IBlockAccess world, int x, int y, int z) {
-        return 0;
+        return 1;
     }
 
     @Override
     public int getEfficientToolLevel(IBlockAccess world, int x, int y, int z) {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -36,6 +38,12 @@ public class BlockTungstenOre extends Block {
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
             return player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 30.0F;
         }
+//        if (held != null && held.getItem() instanceof ItemNetherrackPickaxe) {
+//            return player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 25.0F;
+//        }
+//        if (held != null && held.getItem() instanceof ItemTungstenPickaxe) {
+//            return player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 10.0F;
+//        }
         return super.getPlayerRelativeBlockHardness(player, world, x, y, z);
     }
 
