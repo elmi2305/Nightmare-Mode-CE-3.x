@@ -65,7 +65,7 @@ public class ItemTungstenBucket extends NetherItem {
         if (!world.isRemote && !material.isLiquid() && !world.isAirBlock(x, y, z)) {
             world.destroyBlock(x, y, z, true);
         }
-        world.setBlock(x, y, z, Block.lavaMoving.blockID, 0, 3);
+        world.setBlock(x, y, z, Block.lavaMoving.blockID, 1, 3);
         return true;
     }
 }
