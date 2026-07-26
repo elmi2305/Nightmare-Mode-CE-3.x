@@ -123,8 +123,6 @@ public class NMBlocks {
     public static Block netherWorkbench;
     public static Block netherShrub;
     public static Block netherrackAnvil;
-    public static Block netherOven;
-    public static Block burningNetherOven;
 
 
 
@@ -169,14 +167,6 @@ public class NMBlocks {
 
         netherrackAnvil = new BlockNetherrackAnvil(NMFields.BLOCK_NETHERRACK_ANVIL);
         Item.itemsList[netherrackAnvil.blockID] = new NMNetherItemBlock(netherrackAnvil.blockID - 256);
-
-        netherOven = new BlockNetherOven(NMFields.BLOCK_NETHER_OVEN, false);
-        Item.itemsList[netherOven.blockID] = new NMNetherItemBlock(netherOven.blockID - 256);
-
-        burningNetherOven = new BlockNetherOven(NMFields.BLOCK_BURNING_NETHER_OVEN, true);
-
-
-
 
         nickelOre = new ProcessingOreBlock(2406, NMItems.rawNickelRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyNickelOre").setTextureName("nightmare:ifhyNickelOre");
         Item.itemsList[nickelOre.blockID] = new NMItemBlock(nickelOre.blockID - 256);
@@ -236,7 +226,7 @@ public class NMBlocks {
         Item.itemsList[ironLadder.blockID] = new NMItemBlock(NMBlocks.ironLadder.blockID - 256);
 
         hellforge = new BlockHellforge(2315, true);
-        Item.itemsList[hellforge.blockID] = new NMItemBlock(NMBlocks.hellforge.blockID - 256);
+        Item.itemsList[hellforge.blockID] = new NMNetherItemBlock(NMBlocks.hellforge.blockID - 256);
 
         customWickerBasket = new CustomBasketBlock(2316);
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);
