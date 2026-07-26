@@ -41,17 +41,6 @@ public abstract class HopperTileEntityMixin extends TileEntity {
         }
     }
 
-    @ModifyArg(method = "updateEntity", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILapi/entity/mob/possession/PossessionSource;)I"), index = 5)
-    private int lowerPossessionHopperRadius0(int i) {
-        return i - 8;
-    }
-
-    @ModifyArg(method = "hopperSoulOverload", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/EntityCreature;attemptToPossessCreaturesAroundBlock(Lnet/minecraft/src/World;IIIIILapi/entity/mob/possession/PossessionSource;)I"), index = 5)
-    private int lowerPossessionHopperRadius1(int i) {
-        return i - 8;
-    }
 
     @Unique
     protected boolean isItemValidForSmelting(ItemStack stack) {
