@@ -33,6 +33,10 @@ public class NMTags {
             BTWItems.cutTannedLeather,
             BTWItems.cutScouredLeather
     );
+    public static final Tag knifeStrings = Tag.of(loc("knife_strings"),
+            Item.silk,
+            NMItems.pighideString
+    );
 
     private static ResourceLocation loc(String name) {
         return new ResourceLocation("nightmare", name);
