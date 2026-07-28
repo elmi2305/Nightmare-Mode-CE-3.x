@@ -2,10 +2,10 @@ package com.itlesports.nightmaremode.agriculture;
 
 public enum ChunkAttribute {
     MOISTURE("Moisture"),
-    NITROGEN("Nitrogen reserves"),
-    POTASSIUM("Potassium richness"),
-    ACIDITY("Soil acidity"),
-    POROSITY("Land porosity");
+    NITROGEN("Nitrogen"),
+    POTASSIUM("Potassium"),
+    ACIDITY("Acidity"),
+    POROSITY("Porosity");
 
     private final String displayName;
 

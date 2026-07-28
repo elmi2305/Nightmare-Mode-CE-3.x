@@ -20,18 +20,7 @@ public class ItemChunkFertilizer extends NMItem {
     }
 
     @Override
-    public boolean onItemUse(
-            ItemStack stack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float clickX,
-            float clickY,
-            float clickZ
-    ) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float clickX, float clickY, float clickZ) {
         if (!ChunkAttributeManager.applyFertilizer(world, x, y, z, this.attribute)) {
             return false;
         }
