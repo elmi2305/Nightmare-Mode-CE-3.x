@@ -276,6 +276,7 @@
     "SaveFormatComparatorMixin",
     "WorldClientMixin",
     "blocks.MillstoneBlockMixin",
+    "blocks.MillstoneBlockAccessor",
     "blocks.OreBlockMixin",
     "entity.EntityPlayerSPMixin",
     "gui.BTWContainersMixin",

@@ -123,6 +123,7 @@ public class NMBlocks {
     public static Block netherWorkbench;
     public static Block netherShrub;
     public static Block netherrackAnvil;
+    public static Block obsidianMillstone;
 
 
 
@@ -167,6 +168,9 @@ public class NMBlocks {
 
         netherrackAnvil = new BlockNetherrackAnvil(NMFields.BLOCK_NETHERRACK_ANVIL);
         Item.itemsList[netherrackAnvil.blockID] = new NMNetherItemBlock(netherrackAnvil.blockID - 256);
+
+        obsidianMillstone = new BlockObsidianMillstone(2415);
+        Item.itemsList[obsidianMillstone.blockID] = new NMItemBlock(obsidianMillstone.blockID - 256);
 
         nickelOre = new ProcessingOreBlock(2406, NMItems.rawNickelRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyNickelOre").setTextureName("nightmare:ifhyNickelOre");
         Item.itemsList[nickelOre.blockID] = new NMItemBlock(nickelOre.blockID - 256);
