@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.item;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.item.items.*;
+import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
@@ -223,6 +224,10 @@ public class NMItems {
     public static Item driedHemp;
     public static Item washedScouredLeather;
     public static Item workedScouredLeather;
+    public static ItemChunkFertilizer moistureFertilizer;
+    public static ItemChunkFertilizer potassiumFertilizer;
+    public static ItemChunkFertilizer acidityFertilizer;
+    public static ItemChunkFertilizer porosityFertilizer;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -412,6 +417,18 @@ public class NMItems {
         workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         flintChip = new NMItem(2740).setTextureName("nightmare:ifhyFlintChip").setUnlocalizedName("ifhyFlintChip").setCreativeTab(CreativeTabs.tabMaterials);
         tungstenShovel = new NMShovelItem(2741, EnumToolMaterial.IRON, 500, 0.7f).setTextureName("nightmare:ifhyTungstenShovel").setUnlocalizedName("ifhyTungstenShovel").setCreativeTab(CreativeTabs.tabTools);
+        moistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2744, ChunkAttribute.MOISTURE)
+                .setUnlocalizedName("nmMoistureFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        potassiumFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2745, ChunkAttribute.POTASSIUM)
+                .setUnlocalizedName("nmPotassiumFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        acidityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2746, ChunkAttribute.ACIDITY)
+                .setUnlocalizedName("nmAcidityFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        porosityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2747, ChunkAttribute.POROSITY)
+                .setUnlocalizedName("nmPorosityFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

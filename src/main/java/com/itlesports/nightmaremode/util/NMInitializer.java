@@ -628,6 +628,10 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.skillBook), new Object[]{new ItemStack(Item.leather), new ItemStack(Item.dyePowder, 1, 0),new ItemStack(Item.stick),new ItemStack(Item.silk)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.moistureFertilizer, 4), new Object[]{Item.bucketWater, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.potassiumFertilizer, 4), new Object[]{NMItems.ash, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.acidityFertilizer, 4), new Object[]{Item.fermentedSpiderEye, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.porosityFertilizer, 4), new Object[]{BTWItems.sandPile, BTWItems.gravelPile});
 
 
         finishRecipes("Crafting Recipes");
