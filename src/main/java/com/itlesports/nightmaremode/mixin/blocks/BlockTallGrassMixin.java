@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -8,15 +9,25 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.itlesports.nightmaremode.util.NMFields.CRIMSON_COLOR;
 
+import java.util.Random;
+
 @Mixin(BlockTallGrass.class)
 public class BlockTallGrassMixin extends BlockFlower {
+    @Unique private World worldObj;
+    @Unique private int yPos;
+    @Unique private int xPos;
+    @Unique private int zPos;
+
     protected BlockTallGrassMixin(int par1, Material par2Material) {
         super(par1, par2Material);
     }
@@ -40,6 +51,47 @@ public class BlockTallGrassMixin extends BlockFlower {
         if (!world.isRemote && (guaranteed || world.rand.nextFloat() <= 0.08F + bonus)) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
         }
+    }
+    @Inject(method = "updateTick", at = @At("HEAD"))
+    private void declareVariables(World world, int i, int j, int k, Random rand, CallbackInfo ci){
+        this.xPos = i;
+        this.yPos = j;
+        this.zPos = k;
+        this.worldObj = world;
+    }
+    @ModifyArg(method = "updateTick", at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Random;nextInt(I)I",
+            ordinal = 0
+    ), index = 0
+    )
+    private int boostGrassSpreadWithCorrectFertilizer(int bound) {
+        if(this.worldObj == null || (this.xPos == 0 && this.yPos == 0 && this.zPos == 0)) return bound;
+        return ChunkAttributeManager.hasEffectiveFertilizer(this.worldObj, this.xPos,this.yPos,this.zPos, (Block)(Object)this)
+                ? 1
+                : bound;
+    }
+
+    @Redirect(method = "updateTick", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/src/World;setBlockAndMetadataWithNotify(IIIII)Z")
+    )
+    private boolean consumeResourcesForGrassSpread(
+            World world,
+            int x,
+            int y,
+            int z,
+            int blockId,
+            int metadata
+    ) {
+        if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
+            return false;
+        }
+        boolean changed = world.setBlockAndMetadataWithNotify(x, y, z, blockId, metadata);
+        if (changed) {
+            ChunkAttributeManager.consumeForGrowth(world, x, z, (Block)(Object)this);
+        }
+        return changed;
     }
 
     @Environment(value= EnvType.CLIENT)
