@@ -10,6 +10,7 @@ import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
+import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
@@ -779,6 +780,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.heartCrackLength--;
         }
         this.addonStuff();
+
+        if (devMode && !this.worldObj.isRemote && this.ticksExisted % 20 == 0 && this.isSneaking()) {
+            ((EntityPlayer)(Object)this).addChatMessage(
+                    ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this)
+            );
+        }
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
             float fear = this.nightmareMode$getFear();

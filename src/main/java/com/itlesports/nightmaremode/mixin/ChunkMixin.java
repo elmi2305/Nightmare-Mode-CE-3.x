@@ -1,18 +1,30 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ExtendedBlockStorage;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Chunk.class)
-public class ChunkMixin {
+public class ChunkMixin implements ChunkAttributesAccess {
     @Shadow private ExtendedBlockStorage[] storageArrays;
+    @Unique private ChunkAttributes nightmareMode$chunkAttributes;
+
+    @Override
+    public ChunkAttributes nightmareMode$getChunkAttributes() {
+        if (this.nightmareMode$chunkAttributes == null) {
+            this.nightmareMode$chunkAttributes = new ChunkAttributes();
+        }
+        return this.nightmareMode$chunkAttributes;
+    }
 
     @Inject(method = "<init>(Lnet/minecraft/src/World;[S[BII)V", at = @At("TAIL"))
     private void fix256HeightConstructor(
@@ -23,9 +35,9 @@ public class ChunkMixin {
             int par4,
             CallbackInfo ci
     ) {
-        // ONLY run for your custom dimension
+        // only run for the custom dimension
         if (par1World.provider.dimensionId != NMFields.UNDERWORLD_DIMENSION) {
-            return; // let vanilla 128-height code handle Overworld, Nether, End, etc.
+            return;
         }
 
 //        System.out.println("[Underworld] Applying 256-height chunk fix | blockIDs.length = " + blockIDs.length);

@@ -2,7 +2,9 @@ package com.itlesports.nightmaremode.mixin.biomegen;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.villager.PriestVillagerEntity;
+import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import net.minecraft.src.Block;
+import net.minecraft.src.Chunk;
 import net.minecraft.src.ChunkProviderGenerate;
 import net.minecraft.src.World;
 import org.objectweb.asm.Opcodes;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
@@ -29,5 +32,10 @@ public class ChunkProviderGenerateMixin {
         if(worldObj.provider.dimensionId == 0) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "provideChunk", at = @At("RETURN"))
+    private void initializeChunkAttributes(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
+        ChunkAttributeManager.initialize(cir.getReturnValue());
     }
 }
