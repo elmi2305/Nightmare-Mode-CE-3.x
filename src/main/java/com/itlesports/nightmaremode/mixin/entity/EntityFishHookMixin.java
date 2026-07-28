@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.item.BTWItems;
 import btw.util.BTWSounds;
 import api.world.WorldUtils;
+import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.FishingCatch;
@@ -71,6 +72,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Shadow private boolean isBaited;
 
     @Unique private FishingCatch selectedCatch = catchOf(Item.fishRaw, 1, false);
+    @Unique private boolean selectedCatchIsFish;
+    @Unique private boolean caughtFishThisCast;
 
     public EntityFishHookMixin(World world) {
         super(world);
@@ -88,7 +91,26 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
     private int increaseLavaFishingBiteChance(int odds) {
-        return this.isNetherFishing() ? Math.max(1, odds / 6) : odds;
+        if (this.isNetherFishing()) {
+            return Math.max(1, odds / 6);
+        }
+        float availability = ChunkAttributeManager.getFishAvailability(
+                this.worldObj,
+                MathHelper.floor_double(this.posX),
+                MathHelper.floor_double(this.posZ)
+        );
+        return Math.max(1, Math.round(odds * (1.0F + (1.0F - availability) * 7.0F)));
+    }
+
+    @Inject(method = "checkForBite", at = @At("HEAD"), cancellable = true)
+    private void preventBitesInDepletedChunks(CallbackInfoReturnable<Boolean> cir) {
+        if (!this.isNetherFishing() && !ChunkAttributeManager.hasFish(
+                this.worldObj,
+                MathHelper.floor_double(this.posX),
+                MathHelper.floor_double(this.posZ)
+        )) {
+            cir.setReturnValue(false);
+        }
     }
 
     @Redirect(method = "checkForBite", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;canBlockSeeTheSky(III)Z"))
@@ -150,10 +172,33 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         return this.selectedCatch.item;
     }
 
+    @Inject(method = "catchFish", at = @At("HEAD"))
+    private void resetCaughtFishState(CallbackInfoReturnable<Integer> cir) {
+        this.caughtFishThisCast = false;
+    }
+
+    @Redirect(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
+    private boolean identifyCaughtFish(World world, Entity entity) {
+        if (entity instanceof EntityItem) {
+            ItemStack caughtStack = ((EntityItem)entity).getEntityItem();
+            this.caughtFishThisCast = this.selectedCatchIsFish
+                    && caughtStack != null
+                    && caughtStack.itemID == this.selectedCatch.item.itemID;
+        }
+        return world.spawnEntityInWorld(entity);
+    }
+
     @Inject(method = "catchFish", at = @At("TAIL"))
     private void trackSkillFishing(CallbackInfoReturnable<Integer> cir) {
         if (this.angler != null && cir.getReturnValueI() > 0) {
             SkillHandler.incrementFishCaught(this.angler, this.selectedCatch.rare);
+            if (this.caughtFishThisCast) {
+                ChunkAttributeManager.takeFish(
+                        this.worldObj,
+                        MathHelper.floor_double(this.posX),
+                        MathHelper.floor_double(this.posZ)
+                );
+            }
         }
     }
 
@@ -170,6 +215,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     @Unique
     private FishingCatch selectCatch() {
         if (this.isNetherFishing()) {
+            this.selectedCatchIsFish = false;
             FishingCatch[] catches = this.isBaited ? BAITED_NETHER_CATCHES : NETHER_CATCHES;
             int roll = this.rand.nextInt(totalWeight(catches));
             for (FishingCatch catchEntry : catches) {
@@ -180,23 +226,32 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             return catches[0];
         }
         FishingCatch[] biomeCatches = this.getBiomeCatches();
+        int localCapacity = ChunkAttributeManager.getLocalMaxFish(
+                this.worldObj,
+                MathHelper.floor_double(this.posX),
+                MathHelper.floor_double(this.posZ)
+        );
         if (this.angler != null
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus) {
+            this.selectedCatchIsFish = true;
             return biomeCatches[biomeCatches.length - 1];
         }
-        int totalWeight = totalWeight(JUNK_CATCHES) + totalWeight(biomeCatches);
+        int totalWeight = totalWeight(JUNK_CATCHES) + totalFishWeight(biomeCatches, localCapacity);
         int roll = this.rand.nextInt(totalWeight);
 
         for (FishingCatch catchEntry : JUNK_CATCHES) {
             if ((roll -= catchEntry.weight) < 0) {
+                this.selectedCatchIsFish = false;
                 return catchEntry;
             }
         }
         for (FishingCatch catchEntry : biomeCatches) {
-            if ((roll -= catchEntry.weight) < 0) {
+            if ((roll -= adjustedFishWeight(catchEntry, localCapacity)) < 0) {
+                this.selectedCatchIsFish = true;
                 return catchEntry;
             }
         }
+        this.selectedCatchIsFish = true;
         return biomeCatches[0];
     }
 
@@ -217,6 +272,25 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         int total = 0;
         for (FishingCatch catchEntry : catches) total += catchEntry.weight;
         return total;
+    }
+
+    @Unique
+    private static int totalFishWeight(FishingCatch[] catches, int capacity) {
+        int total = 0;
+        for (FishingCatch catchEntry : catches) {
+            total += adjustedFishWeight(catchEntry, capacity);
+        }
+        return total;
+    }
+
+    @Unique
+    private static int adjustedFishWeight(FishingCatch catchEntry, int capacity) {
+        if (!catchEntry.rare) {
+            return catchEntry.weight;
+        }
+        return Math.max(1, Math.min(5, Math.round(
+                catchEntry.weight * (float)Math.sqrt(30.0D / Math.max(1, capacity))
+        )));
     }
 
     @Unique
