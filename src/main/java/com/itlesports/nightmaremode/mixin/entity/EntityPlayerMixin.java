@@ -782,9 +782,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         this.addonStuff();
 
         if (devMode && !this.worldObj.isRemote && this.ticksExisted % 20 == 0 && this.isSneaking()) {
-            ((EntityPlayer)(Object)this).addChatMessage(
-                    ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this)
-            );
+            System.out.println(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
         }
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
