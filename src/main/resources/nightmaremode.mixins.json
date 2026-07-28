@@ -57,6 +57,7 @@
     "SlotMixin",
     "SpawnerAnimalsMixin",
     "StructureStrongholdStonesMixin",
+    "SwordItemMixin",
     "TextureMapMixin",
     "TileEntityBrewingStandMixin",
     "TradeBuilderMixin",
