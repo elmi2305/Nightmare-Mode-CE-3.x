@@ -40,7 +40,8 @@ public class AnvilChunkLoaderMixin {
                 tag,
                 chunk.xPosition,
                 chunk.zPosition,
-                world.provider.dimensionId
+                world.provider.dimensionId,
+                world.getTotalWorldTime()
         )) {
             ChunkAttributeManager.initialize(chunk);
         }

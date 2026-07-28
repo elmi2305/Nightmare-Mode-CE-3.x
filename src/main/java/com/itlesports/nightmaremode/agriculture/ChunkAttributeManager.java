@@ -21,9 +21,12 @@ import java.util.Locale;
 import java.util.Random;
 
 public final class ChunkAttributeManager {
-    public static final float GROWTH_COST = 1.5F;
+    public static final float GENERAL_GROWTH_COST = 0.05F;
+    public static final float PREFERRED_GROWTH_COST = 0.45F;
+    public static final float MIN_PREFERRED_RESOURCE_TO_GROW = 2.5F;
     public static final float FERTILIZER_GAIN = 0.25F;
-    public static final float FERTILIZER_PENALTY = 0.05F;
+    public static final float FERTILIZER_PENALTY = 0.35F;
+    public static final long FERTILIZER_DURATION = 24000L;
 
     private ChunkAttributeManager() {
     }
@@ -40,6 +43,8 @@ public final class ChunkAttributeManager {
                 chunk.worldObj.provider.dimensionId
         )) {
             initialize(chunk, attributes);
+        } else if (!attributes.hasFishData()) {
+            initializeFish(chunk, attributes);
         }
         return attributes;
     }
@@ -62,7 +67,7 @@ public final class ChunkAttributeManager {
             return true;
         }
         for (ChunkAttribute requirement : requirements) {
-            if (attributes.get(requirement) < GROWTH_COST) {
+            if (attributes.get(requirement) < MIN_PREFERRED_RESOURCE_TO_GROW) {
                 return false;
             }
         }
@@ -74,8 +79,13 @@ public final class ChunkAttributeManager {
             return;
         }
         ChunkAttributes attributes = get(world, x, z);
-        for (ChunkAttribute requirement : getRequirements(crop)) {
-            attributes.consume(requirement, GROWTH_COST);
+        ChunkAttribute[] requirements = getRequirements(crop);
+        for (ChunkAttribute attribute : ChunkAttribute.values()) {
+            float amount = GENERAL_GROWTH_COST;
+            if (contains(requirements, attribute)) {
+                amount += PREFERRED_GROWTH_COST;
+            }
+            attributes.consume(attribute, amount);
         }
         world.getChunkFromChunkCoords(x >> 4, z >> 4).setChunkModified();
     }
@@ -100,38 +110,93 @@ public final class ChunkAttributeManager {
     }
 
     public static boolean applyFertilizer(World world, int x, int y, int z, ChunkAttribute fertilizer) {
-        FarmlandPosition farmland = findFarmland(world, x, y, z);
+        FarmlandPosition farmland = findFarmlandForApplication(world, x, y, z);
         if (farmland == null) {
             return false;
         }
         if (world.isRemote) {
-            return true;
+            return world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.fertilizedFarmland.blockID;
+        }
+
+        expireFertilizer(world, farmland.x, farmland.y, farmland.z);
+        if (hasActiveFertilizer(world, farmland.x, farmland.y, farmland.z)) {
+            return false;
         }
 
         int metadata = world.getBlockMetadata(farmland.x, farmland.y, farmland.z);
-        if (world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.fertilizedFarmland.blockID) {
-            world.setBlockAndMetadataWithNotify(
-                    farmland.x,
-                    farmland.y,
-                    farmland.z,
-                    BTWBlocks.fertilizedFarmland.blockID,
-                    metadata
-            );
+        if (world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.farmland.blockID) {
+            return false;
         }
+        world.setBlockAndMetadataWithNotify(
+                farmland.x,
+                farmland.y,
+                farmland.z,
+                BTWBlocks.fertilizedFarmland.blockID,
+                metadata
+        );
 
         Chunk chunk = world.getChunkFromChunkCoords(farmland.x >> 4, farmland.z >> 4);
         ChunkAttributes attributes = get(chunk);
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
+            float before = attributes.get(attribute);
             attributes.add(attribute, attribute == fertilizer ? FERTILIZER_GAIN : -FERTILIZER_PENALTY);
+            System.out.printf(
+                    Locale.ROOT,
+                    "%s: %.2f%% -> %.2f%%%n",
+                    attribute.getDisplayName(),
+                    before,
+                    attributes.get(attribute)
+            );
         }
-        attributes.setFarmlandFertilizer(farmland.x & 15, farmland.y, farmland.z & 15, fertilizer);
+        attributes.setFarmlandFertilizer(
+                farmland.x & 15,
+                farmland.y,
+                farmland.z & 15,
+                fertilizer,
+                world.getTotalWorldTime() + FERTILIZER_DURATION
+        );
         chunk.setChunkModified();
         world.playAuxSFX(2005, farmland.x, farmland.y + 1, farmland.z, 0);
         return true;
     }
 
     public static ChunkAttribute getFertilizer(World world, int x, int y, int z) {
-        return get(world, x, z).getFarmlandFertilizer(x & 15, y, z & 15);
+        expireFertilizer(world, x, y, z);
+        ChunkAttributes.FertilizerData data = get(world, x, z)
+                .getFarmlandFertilizer(x & 15, y, z & 15);
+        return data == null ? null : data.getAttribute();
+    }
+
+    public static boolean hasActiveFertilizer(World world, int x, int y, int z) {
+        if (world.getBlockId(x, y, z) != BTWBlocks.fertilizedFarmland.blockID) {
+            return false;
+        }
+        ChunkAttributes.FertilizerData data = get(world, x, z)
+                .getFarmlandFertilizer(x & 15, y, z & 15);
+        return data != null && !data.isExpired(world.getTotalWorldTime());
+    }
+
+    public static void expireFertilizer(World world, int x, int y, int z) {
+        if (world.isRemote) {
+            return;
+        }
+        Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+        ChunkAttributes attributes = get(chunk);
+        ChunkAttributes.FertilizerData data = attributes.getFarmlandFertilizer(x & 15, y, z & 15);
+        boolean isFertilizedFarmland = world.getBlockId(x, y, z) == BTWBlocks.fertilizedFarmland.blockID;
+        if (!isFertilizedFarmland) {
+            if (data != null) {
+                attributes.clearFarmlandFertilizer(x & 15, y, z & 15);
+                chunk.setChunkModified();
+            }
+            return;
+        }
+        if (data == null || data.isExpired(world.getTotalWorldTime())) {
+            int metadata = world.getBlockMetadata(x, y, z);
+            attributes.clearFarmlandFertilizer(x & 15, y, z & 15);
+            world.setBlockAndMetadataWithNotify(x, y, z, BTWBlocks.farmland.blockID, metadata);
+            chunk.setChunkModified();
+        }
     }
 
     public static void clearFertilizer(World world, int x, int y, int z) {
@@ -165,7 +230,59 @@ public final class ChunkAttributeManager {
             text.append(attribute.getDisplayName()).append(' ')
                     .append(String.format(Locale.ROOT, "%.2f", attributes.get(attribute)));
         }
+        text.append(" | Fish ").append(attributes.getFish()).append('/').append(attributes.getMaxFish());
         return text.toString();
+    }
+
+    public static float getFishAvailability(World world, int blockX, int blockZ) {
+        FishTotals totals = getFishTotals(world, blockX, blockZ);
+        if (totals.contributingChunks <= 0) {
+            return 0.0F;
+        }
+        return Math.min(1.0F, (float)totals.fish / (float)(totals.contributingChunks * 100));
+    }
+
+    public static boolean hasFish(World world, int blockX, int blockZ) {
+        return getFishTotals(world, blockX, blockZ).fish > 0;
+    }
+
+    public static int getLocalMaxFish(World world, int blockX, int blockZ) {
+        return get(world, blockX, blockZ).getMaxFish();
+    }
+
+    public static boolean isFarmlandApplicationTarget(World world, int x, int y, int z) {
+        return findFarmlandForApplication(world, x, y, z) != null;
+    }
+
+    public static boolean takeFish(World world, int blockX, int blockZ) {
+        int centerChunkX = blockX >> 4;
+        int centerChunkZ = blockZ >> 4;
+        FishTotals totals = getFishTotals(world, blockX, blockZ);
+        if (totals.fish <= 0) {
+            return false;
+        }
+
+        int roll = world.rand.nextInt(totals.fish);
+        for (int offsetX = -1; offsetX <= 1; ++offsetX) {
+            for (int offsetZ = -1; offsetZ <= 1; ++offsetZ) {
+                int chunkX = centerChunkX + offsetX;
+                int chunkZ = centerChunkZ + offsetZ;
+                if (!isContributingChunk(world, chunkX, chunkZ, centerChunkX, centerChunkZ)) {
+                    continue;
+                }
+                Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+                ChunkAttributes attributes = get(chunk);
+                if (roll < attributes.getFish()) {
+                    if (attributes.takeFish()) {
+                        chunk.setChunkModified();
+                        return true;
+                    }
+                    return false;
+                }
+                roll -= attributes.getFish();
+            }
+        }
+        return false;
     }
 
     private static void initialize(Chunk chunk, ChunkAttributes attributes) {
@@ -178,13 +295,22 @@ public final class ChunkAttributeManager {
             Range range = getRange(attribute, biome, height);
             values.put(attribute, range.min + random.nextFloat() * (range.max - range.min));
         }
+        int fishCapacity = getFishCapacityRange(biome).next(random);
         attributes.initialize(
                 values,
                 chunk.xPosition,
                 chunk.zPosition,
                 chunk.worldObj.provider.dimensionId,
-                rollSeed
+                rollSeed,
+                fishCapacity
         );
+        chunk.setChunkModified();
+    }
+
+    private static void initializeFish(Chunk chunk, ChunkAttributes attributes) {
+        BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(8, 8, chunk.worldObj.getWorldChunkManager());
+        Random random = new Random(attributes.getRollSeed() ^ 0x6a09e667f3bcc909L);
+        attributes.initializeFish(getFishCapacityRange(biome).next(random));
         chunk.setChunkModified();
     }
 
@@ -279,6 +405,15 @@ public final class ChunkAttributeManager {
         return new ChunkAttribute[0];
     }
 
+    private static boolean contains(ChunkAttribute[] attributes, ChunkAttribute target) {
+        for (ChunkAttribute attribute : attributes) {
+            if (attribute == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean fertilizerFeedsCrop(ChunkAttribute fertilizer, Block crop) {
         if (fertilizer == null) {
             return false;
@@ -310,29 +445,102 @@ public final class ChunkAttributeManager {
         return null;
     }
 
-    private static final class FarmlandPosition {
-        private final int x;
-        private final int y;
-        private final int z;
+    private static FarmlandPosition findFarmlandForApplication(World world, int x, int y, int z) {
+        int blockId = world.getBlockId(x, y, z);
+        if (blockId == BTWBlocks.farmland.blockID || blockId == BTWBlocks.fertilizedFarmland.blockID) {
+            return new FarmlandPosition(x, y, z);
+        }
+        int belowId = world.getBlockId(x, y - 1, z);
+        if (belowId == BTWBlocks.farmland.blockID || belowId == BTWBlocks.fertilizedFarmland.blockID) {
+            return new FarmlandPosition(x, y - 1, z);
+        }
+        return null;
+    }
 
-        private FarmlandPosition(int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+    private static FishTotals getFishTotals(World world, int blockX, int blockZ) {
+        int centerChunkX = blockX >> 4;
+        int centerChunkZ = blockZ >> 4;
+        int fish = 0;
+        int maxFish = 0;
+        int contributingChunks = 0;
+        for (int offsetX = -1; offsetX <= 1; ++offsetX) {
+            for (int offsetZ = -1; offsetZ <= 1; ++offsetZ) {
+                int chunkX = centerChunkX + offsetX;
+                int chunkZ = centerChunkZ + offsetZ;
+                if (!isContributingChunk(world, chunkX, chunkZ, centerChunkX, centerChunkZ)) {
+                    continue;
+                }
+                ChunkAttributes attributes = get(world.getChunkFromChunkCoords(chunkX, chunkZ));
+                fish += attributes.getFish();
+                maxFish += attributes.getMaxFish();
+                ++contributingChunks;
+            }
+        }
+        return new FishTotals(fish, maxFish, contributingChunks);
+    }
+
+    private static boolean isContributingChunk(
+            World world,
+            int chunkX,
+            int chunkZ,
+            int centerChunkX,
+            int centerChunkZ
+    ) {
+        return chunkX == centerChunkX && chunkZ == centerChunkZ || world.isChunkActive(chunkX, chunkZ);
+    }
+
+    private static IntRange getFishCapacityRange(BiomeGenBase biome) {
+        String name = biome.biomeName == null ? "" : biome.biomeName.toLowerCase(Locale.ROOT);
+        if (name.contains("ocean")) {
+            return new IntRange(90, 140);
+        }
+        if (name.contains("river")) {
+            return new IntRange(45, 75);
+        }
+        if (name.contains("swamp")) {
+            return new IntRange(38, 65);
+        }
+        if (name.contains("beach")) {
+            return new IntRange(25, 45);
+        }
+        if (name.contains("desert")) {
+            return new IntRange(6, 12);
+        }
+        if (name.contains("jungle")) {
+            return new IntRange(18, 32);
+        }
+        if (name.contains("taiga") || name.contains("ice") || name.contains("frozen")) {
+            return new IntRange(12, 25);
+        }
+        return new IntRange(10, 20);
+    }
+
+    private record FarmlandPosition(int x, int y, int z) {}
+
+    private record Range(float min, float max) {
+            private Range(float min, float max) {
+                this.min = Math.max(0, Math.min(ChunkAttributes.MAX_VALUE, min));
+                this.max = Math.max(this.min, Math.min(ChunkAttributes.MAX_VALUE, max));
+            }
+
+            private static Range around(float center, float radius) {
+                return new Range(center - radius, center + radius);
+            }
+        }
+
+    private static final class IntRange {
+        private final int min;
+        private final int max;
+
+        private IntRange(int min, int max) {
+            this.min = min;
+            this.max = Math.max(min, max);
+        }
+
+        private int next(Random random) {
+            return this.min + random.nextInt(this.max - this.min + 1);
         }
     }
 
-    private static final class Range {
-        private final float min;
-        private final float max;
-
-        private Range(float min, float max) {
-            this.min = Math.max(0, Math.min(ChunkAttributes.MAX_VALUE, min));
-            this.max = Math.max(this.min, Math.min(ChunkAttributes.MAX_VALUE, max));
-        }
-
-        private static Range around(float center, float radius) {
-            return new Range(center - radius, center + radius);
-        }
-    }
+    private record FishTotals(int fish, int maxFish, int contributingChunks) {}
 }

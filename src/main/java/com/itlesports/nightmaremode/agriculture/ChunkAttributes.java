@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.agriculture;
 
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagList;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -9,15 +10,19 @@ import java.util.Map;
 public final class ChunkAttributes {
     public static final float MAX_VALUE = 100.0F;
     private static final String NBT_KEY = "NMChunkAttributes";
-    private static final int DATA_VERSION = 2;
+    private static final int DATA_VERSION = 3;
+    private static final long MIGRATED_FERTILIZER_DURATION = 24000L;
 
     private final EnumMap<ChunkAttribute, Float> values = new EnumMap<>(ChunkAttribute.class);
-    private final Map<Integer, ChunkAttribute> farmlandFertilizers = new HashMap<>();
+    private final Map<Integer, FertilizerData> farmlandFertilizers = new HashMap<>();
     private boolean initialized;
     private int ownerChunkX;
     private int ownerChunkZ;
     private int ownerDimension;
     private long rollSeed;
+    private int fish;
+    private int maxFish;
+    private boolean fishInitialized;
 
     public boolean isInitialized() {
         return this.initialized;
@@ -39,7 +44,8 @@ public final class ChunkAttributes {
             int chunkX,
             int chunkZ,
             int dimension,
-            long rollSeed
+            long rollSeed,
+            int fishCapacity
     ) {
         this.values.clear();
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
@@ -50,6 +56,7 @@ public final class ChunkAttributes {
         this.ownerChunkZ = chunkZ;
         this.ownerDimension = dimension;
         this.rollSeed = rollSeed;
+        this.initializeFish(fishCapacity);
         this.initialized = true;
     }
 
@@ -66,16 +73,51 @@ public final class ChunkAttributes {
         this.add(attribute, -amount);
     }
 
-    public void setFarmlandFertilizer(int localX, int y, int localZ, ChunkAttribute attribute) {
-        this.farmlandFertilizers.put(positionKey(localX, y, localZ), attribute);
+    public void setFarmlandFertilizer(
+            int localX,
+            int y,
+            int localZ,
+            ChunkAttribute attribute,
+            long expiresAt
+    ) {
+        this.farmlandFertilizers.put(
+                positionKey(localX, y, localZ),
+                new FertilizerData(attribute, expiresAt)
+        );
     }
 
-    public ChunkAttribute getFarmlandFertilizer(int localX, int y, int localZ) {
+    public FertilizerData getFarmlandFertilizer(int localX, int y, int localZ) {
         return this.farmlandFertilizers.get(positionKey(localX, y, localZ));
     }
 
     public void clearFarmlandFertilizer(int localX, int y, int localZ) {
         this.farmlandFertilizers.remove(positionKey(localX, y, localZ));
+    }
+
+    public boolean hasFishData() {
+        return this.fishInitialized;
+    }
+
+    public void initializeFish(int capacity) {
+        this.maxFish = Math.max(0, capacity);
+        this.fish = this.maxFish;
+        this.fishInitialized = true;
+    }
+
+    public int getFish() {
+        return this.fish;
+    }
+
+    public int getMaxFish() {
+        return this.maxFish;
+    }
+
+    public boolean takeFish() {
+        if (this.fish <= 0) {
+            return false;
+        }
+        --this.fish;
+        return true;
     }
 
     public void writeToNBT(NBTTagCompound chunkTag) {
@@ -92,23 +134,34 @@ public final class ChunkAttributes {
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
             tag.setFloat(attribute.name(), this.get(attribute));
         }
+        tag.setInteger("Fish", this.fish);
+        tag.setInteger("MaxFish", this.maxFish);
 
-        int[] fertilizers = new int[this.farmlandFertilizers.size()];
-        int index = 0;
-        for (Map.Entry<Integer, ChunkAttribute> entry : this.farmlandFertilizers.entrySet()) {
-            fertilizers[index++] = entry.getKey() << 3 | entry.getValue().ordinal();
+        NBTTagList fertilizers = new NBTTagList("FarmlandFertilizers");
+        for (Map.Entry<Integer, FertilizerData> entry : this.farmlandFertilizers.entrySet()) {
+            NBTTagCompound fertilizerTag = new NBTTagCompound();
+            fertilizerTag.setInteger("Position", entry.getKey());
+            fertilizerTag.setInteger("Attribute", entry.getValue().attribute.ordinal());
+            fertilizerTag.setLong("ExpiresAt", entry.getValue().expiresAt);
+            fertilizers.appendTag(fertilizerTag);
         }
-        tag.setIntArray("FarmlandFertilizers", fertilizers);
+        tag.setTag("FarmlandFertilizerData", fertilizers);
         chunkTag.setTag(NBT_KEY, tag);
     }
 
-    public boolean readFromNBT(NBTTagCompound chunkTag, int chunkX, int chunkZ, int dimension) {
+    public boolean readFromNBT(
+            NBTTagCompound chunkTag,
+            int chunkX,
+            int chunkZ,
+            int dimension,
+            long worldTime
+    ) {
         if (!chunkTag.hasKey(NBT_KEY)) {
             return false;
         }
 
         NBTTagCompound tag = chunkTag.getCompoundTag(NBT_KEY);
-        if (tag.getInteger("Version") < DATA_VERSION
+        if (tag.getInteger("Version") < 2
                 || tag.getInteger("OwnerChunkX") != chunkX
                 || tag.getInteger("OwnerChunkZ") != chunkZ
                 || tag.getInteger("OwnerDimension") != dimension) {
@@ -124,15 +177,66 @@ public final class ChunkAttributes {
         this.ownerChunkZ = chunkZ;
         this.ownerDimension = dimension;
         this.rollSeed = tag.getLong("RollSeed");
+        if (tag.hasKey("MaxFish")) {
+            this.maxFish = Math.max(0, tag.getInteger("MaxFish"));
+            this.fish = Math.max(0, Math.min(this.maxFish, tag.getInteger("Fish")));
+            this.fishInitialized = true;
+        } else {
+            this.fish = 0;
+            this.maxFish = 0;
+            this.fishInitialized = false;
+        }
+
         this.farmlandFertilizers.clear();
-        for (int packed : tag.getIntArray("FarmlandFertilizers")) {
-            int ordinal = packed & 7;
-            if (ordinal < ChunkAttribute.values().length) {
-                this.farmlandFertilizers.put(packed >>> 3, ChunkAttribute.values()[ordinal]);
+        if (tag.hasKey("FarmlandFertilizerData")) {
+            NBTTagList fertilizerTags = tag.getTagList("FarmlandFertilizerData");
+            for (int index = 0; index < fertilizerTags.tagCount(); ++index) {
+                NBTTagCompound fertilizerTag = (NBTTagCompound)fertilizerTags.tagAt(index);
+                int ordinal = fertilizerTag.getInteger("Attribute");
+                if (ordinal >= 0 && ordinal < ChunkAttribute.values().length) {
+                    this.farmlandFertilizers.put(
+                            fertilizerTag.getInteger("Position"),
+                            new FertilizerData(
+                                    ChunkAttribute.values()[ordinal],
+                                    fertilizerTag.getLong("ExpiresAt")
+                            )
+                    );
+                }
+            }
+        } else {
+            for (int packed : tag.getIntArray("FarmlandFertilizers")) {
+                int ordinal = packed & 7;
+                if (ordinal < ChunkAttribute.values().length) {
+                    this.farmlandFertilizers.put(
+                            packed >>> 3,
+                            new FertilizerData(
+                                    ChunkAttribute.values()[ordinal],
+                                    worldTime + MIGRATED_FERTILIZER_DURATION
+                            )
+                    );
+                }
             }
         }
         this.initialized = true;
         return true;
+    }
+
+    public static final class FertilizerData {
+        private final ChunkAttribute attribute;
+        private final long expiresAt;
+
+        private FertilizerData(ChunkAttribute attribute, long expiresAt) {
+            this.attribute = attribute;
+            this.expiresAt = expiresAt;
+        }
+
+        public ChunkAttribute getAttribute() {
+            return this.attribute;
+        }
+
+        public boolean isExpired(long worldTime) {
+            return worldTime >= this.expiresAt;
+        }
     }
 
     private static int positionKey(int localX, int y, int localZ) {
