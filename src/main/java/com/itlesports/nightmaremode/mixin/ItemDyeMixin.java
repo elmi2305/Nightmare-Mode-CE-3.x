@@ -29,12 +29,19 @@ public class ItemDyeMixin {
             CallbackInfoReturnable<Boolean> cir
     ) {
         if (stack.getItemDamage() != Color.WHITE.colorID
-                || !ChunkAttributeManager.applyFertilizer(world, x, y, z, ChunkAttribute.NITROGEN)) {
+                || !ChunkAttributeManager.isFarmlandApplicationTarget(world, x, y, z)) {
             return;
         }
-        if (player.capabilities == null || !player.capabilities.isCreativeMode) {
+        boolean applied = ChunkAttributeManager.applyFertilizer(
+                world,
+                x,
+                y,
+                z,
+                ChunkAttribute.NITROGEN
+        );
+        if (applied && (player.capabilities == null || !player.capabilities.isCreativeMode)) {
             --stack.stackSize;
         }
-        cir.setReturnValue(true);
+        cir.setReturnValue(applied);
     }
 }
