@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemScythe;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityLivingBaseAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.SoundManagerAccess;
@@ -39,6 +40,11 @@ public class NMUtils {
         }
 
         Entity attacker = source.getEntity() != null ? source.getEntity() : source.getSourceOfDamage();
+        if (attacker instanceof EntityPlayer
+                && ((EntityPlayer)attacker).getCurrentEquippedItem() != null
+                && ((EntityPlayer)attacker).getCurrentEquippedItem().getItem() instanceof ItemScythe) {
+            return false;
+        }
         return !(victim instanceof EntityVillager && attacker instanceof EntityZombie);
     }
 
