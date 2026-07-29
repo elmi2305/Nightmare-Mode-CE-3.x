@@ -23,7 +23,7 @@ public class WorldGenAquamarineOre extends WorldGenerator {
             return false;
         }
 
-        int radius = random.nextInt(this.maxRadius - 2) + 2;
+        int radius = random.nextInt(this.maxRadius - 1) + 1;
         for (int candidateX = x - radius; candidateX <= x + radius; ++candidateX) {
             for (int candidateZ = z - radius; candidateZ <= z + radius; ++candidateZ) {
                 int offsetX = candidateX - x;
