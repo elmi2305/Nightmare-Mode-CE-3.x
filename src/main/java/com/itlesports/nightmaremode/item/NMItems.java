@@ -205,6 +205,7 @@ public class NMItems {
     public static Item ironScythe;
     public static Item diamondScythe;
     public static Item tungstenScythe;
+    public static Item aquamarine;
     public static Item netherFishingRod;
     public static Item netherFishingRodBaited;
     public static Item lavafish;
@@ -423,6 +424,7 @@ public class NMItems {
         ironScythe = new ItemScythe(2748, EnumToolMaterial.IRON, 4.0F).setTextureName("nightmare:ifhyIronScythe").setUnlocalizedName("ifhyIronScythe").setCreativeTab(CreativeTabs.tabCombat);
         diamondScythe = new ItemScythe(2749, EnumToolMaterial.EMERALD, 5.0F).setTextureName("nightmare:ifhyDiamondScythe").setUnlocalizedName("ifhyDiamondScythe").setCreativeTab(CreativeTabs.tabCombat);
         tungstenScythe = new ItemTungstenScythe(2750).setTextureName("nightmare:ifhyTungstenScythe").setUnlocalizedName("ifhyTungstenScythe").setCreativeTab(CreativeTabs.tabCombat);
+        aquamarine = new NMItem(2751).setTextureName("nightmare:ifhyAquamarine").setUnlocalizedName("ifhyAquamarine").setCreativeTab(CreativeTabs.tabMaterials);
         moistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2744, ChunkAttribute.MOISTURE)
                 .setUnlocalizedName("nmMoistureFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);

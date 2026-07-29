@@ -126,6 +126,7 @@ public class NMBlocks {
     public static Block obsidianMillstone;
     public static Block prismarine;
     public static Block prismarineStairs;
+    public static Block aquamarineOre;
 
 
 
@@ -190,6 +191,9 @@ public class NMBlocks {
 
         prismarineStairs = new BlockPrismarineStairs(2417, prismarine).setTextureName("nightmare:ifhyPrismarine");
         Item.itemsList[prismarineStairs.blockID] = new NMItemBlock(prismarineStairs.blockID - 256);
+
+        aquamarineOre = new ProcessingOreBlock(2418, NMItems.aquamarine.itemID, 2).setHardness(3.0F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyAquamarineOre").setTextureName("nightmare:ifhyAquamarineOre");
+        Item.itemsList[aquamarineOre.blockID] = new NMItemBlock(aquamarineOre.blockID - 256);
 
 
 
