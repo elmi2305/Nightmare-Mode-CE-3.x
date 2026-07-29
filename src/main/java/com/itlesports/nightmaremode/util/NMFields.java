@@ -89,6 +89,8 @@ public class NMFields {
     public static final int[] KNOWLEDGE_BOOKS_MINESHAFT = {1, 2, 3, 4};
     public static final int[] KNOWLEDGE_BOOKS_DUNGEON = {0, 1, 2, 3, 4, 5};
     public static final int[] KNOWLEDGE_BOOKS_NETHER_FORTRESS = {4, 5, 6, 7};
+    public static final int[] KNOWLEDGE_BOOKS_OCEAN_TEMPLE = {0, 1, 2}; // TODO: initialize
+    public static final int[] KNOWLEDGE_BOOKS_NETHER_TEMPLE = {0, 1, 2}; // TODO: initialize
 
     // cached block IDs
     public static final int BLOCK_IRON_BLOOM = 2403;

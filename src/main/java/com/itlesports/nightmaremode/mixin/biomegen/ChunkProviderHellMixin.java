@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.biomegen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.structure.MapGenNetherDesertTemple;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
 
@@ -18,6 +20,7 @@ public class ChunkProviderHellMixin {
 
     @Unique private static WorldGenFlowers worldGenShrubs = new WorldGenFlowers(NMBlocks.netherShrub.blockID);
     @Unique private static WorldGenMinable tungsten = new WorldGenMinable(NMBlocks.tungstenOre.blockID, 6, Block.netherrack.blockID);
+    @Unique private final MapGenNetherDesertTemple netherDesertTempleGenerator = new MapGenNetherDesertTemple();
 
 
 
@@ -36,5 +39,12 @@ public class ChunkProviderHellMixin {
                 baseX + this.hellRNG.nextInt(16) + 8,
                 this.hellRNG.nextInt(128),
                 baseZ + this.hellRNG.nextInt(16) + 8);
+
+        netherDesertTempleGenerator.generateStructuresInChunk(this.worldObj, this.hellRNG, chunkX, chunkZ);
+    }
+
+    @Inject(method = "provideChunk", at = @At("TAIL"))
+    private void prepareNetherDesertTemples(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
+        netherDesertTempleGenerator.generate((ChunkProviderHell) (Object) this, this.worldObj, chunkX, chunkZ, null, null);
     }
 }

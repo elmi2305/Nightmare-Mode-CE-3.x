@@ -4,6 +4,10 @@ import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageClosed;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageOpen;
+import com.itlesports.nightmaremode.structure.ComponentNetherDesertTemple;
+import com.itlesports.nightmaremode.structure.ComponentOceanDesertTemple;
+import com.itlesports.nightmaremode.structure.StructureNetherDesertTempleStart;
+import com.itlesports.nightmaremode.structure.StructureOceanDesertTempleStart;
 import net.minecraft.src.ComponentScatteredFeaturePieces;
 import net.minecraft.src.MapGenStructureIO;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,5 +22,9 @@ public class ComponentScatteredFeaturePiecesMixin {
         MapGenStructureIOAccess.invokeFunction(BigMushroom.class, "TeBM");
         MapGenStructureIOAccess.invokeFunction(RibcageClosed.class, "TeRCC");
         MapGenStructureIOAccess.invokeFunction(RibcageOpen.class, "TeRCO");
+        MapGenStructureIOAccess.invokeFunction(ComponentNetherDesertTemple.class, "TeNDP");
+        MapGenStructureIOAccess.invokeFunction(ComponentOceanDesertTemple.class, "TeODP");
+        MapGenStructureIOAccess.invokeFunctionB(StructureNetherDesertTempleStart.class, "NMNetherTemple");
+        MapGenStructureIOAccess.invokeFunctionB(StructureOceanDesertTempleStart.class, "NMOceanTemple");
     }
 }

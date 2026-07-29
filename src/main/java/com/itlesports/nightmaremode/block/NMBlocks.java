@@ -185,10 +185,10 @@ public class NMBlocks {
         obsidianMillstone = new BlockObsidianMillstone(2415);
         Item.itemsList[obsidianMillstone.blockID] = new NMItemBlock(obsidianMillstone.blockID - 256);
 
-        prismarine = new NMBlock(2416, Material.rock).setHardness(1.5F).setResistance(10.0F).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("nmPrismarine").setTextureName("nightmare:prismarine").setCreativeTab(CreativeTabs.tabBlock);
+        prismarine = new NMBlock(2416, Material.rock).setHardness(1.5F).setResistance(10.0F).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("nmPrismarine").setTextureName("nightmare:ifhyPrismarine").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[prismarine.blockID] = new NMItemBlock(prismarine.blockID - 256);
 
-        prismarineStairs = new BlockPrismarineStairs(2417, prismarine).setTextureName("nightmare:prismarine");
+        prismarineStairs = new BlockPrismarineStairs(2417, prismarine).setTextureName("nightmare:ifhyPrismarine");
         Item.itemsList[prismarineStairs.blockID] = new NMItemBlock(prismarineStairs.blockID - 256);
 
 
