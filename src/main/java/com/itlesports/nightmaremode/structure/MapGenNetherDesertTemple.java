@@ -1,14 +1,24 @@
 package com.itlesports.nightmaremode.structure;
 
 import net.minecraft.src.ChunkPosition;
+import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.MapGenStructure;
+import net.minecraft.src.SpawnListEntry;
 import net.minecraft.src.StructureStart;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MapGenNetherDesertTemple extends MapGenStructure {
     private static final int MAX_DISTANCE = 32;
     private static final int MIN_DISTANCE = 8;
+    private final List spawnList = new ArrayList();
+
+    public MapGenNetherDesertTemple() {
+
+        this.spawnList.add(new SpawnListEntry(EntitySkeleton.class, 100, 8, 12));
+    }
 
     @Override
     public String func_143025_a() {
@@ -44,5 +54,13 @@ public class MapGenNetherDesertTemple extends MapGenStructure {
     @Override
     public int getCheckRange() {
         return MAX_DISTANCE;
+    }
+
+    public boolean hasTempleAt(int x, int y, int z) {
+        return this.hasStructureAt(x, y, z);
+    }
+
+    public List getSpawnList() {
+        return spawnList;
     }
 }
