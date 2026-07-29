@@ -35,6 +35,16 @@ public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
 
     public ComponentOceanDesertTemple(Random random, int x, int z) {
         super(random, x, 45, z, 21, 15, 21);
+        this.expandSpawnBounds();
+    }
+
+    private void expandSpawnBounds() {
+        this.boundingBox.minX -= 64;
+        this.boundingBox.maxX += 64;
+        this.boundingBox.minY -= 48;
+        this.boundingBox.maxY += 48;
+        this.boundingBox.minZ -= 64;
+        this.boundingBox.maxZ += 64;
     }
 
     @Override
@@ -55,7 +65,7 @@ public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
 
     @Override
     public boolean addComponentParts(World world, Random generatorRand, StructureBoundingBox boundingBox) {
-        System.out.println("generating");
+//        System.out.println("generating");
         int var10;
         int var5;
         int var4;

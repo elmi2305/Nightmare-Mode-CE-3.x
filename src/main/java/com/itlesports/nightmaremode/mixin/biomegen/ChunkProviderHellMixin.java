@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Random;
 
 @Mixin(ChunkProviderHell.class)
@@ -46,5 +47,12 @@ public class ChunkProviderHellMixin {
     @Inject(method = "provideChunk", at = @At("TAIL"))
     private void prepareNetherDesertTemples(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
         netherDesertTempleGenerator.generate((ChunkProviderHell) (Object) this, this.worldObj, chunkX, chunkZ, null, null);
+    }
+
+    @Inject(method = "getPossibleCreatures", at = @At("HEAD"), cancellable = true)
+    private void useNetherTempleSpawnTable(EnumCreatureType creatureType, int x, int y, int z, CallbackInfoReturnable<List> cir) {
+        if (creatureType == EnumCreatureType.monster && netherDesertTempleGenerator.hasTempleAt(x, y, z)) {
+            cir.setReturnValue(netherDesertTempleGenerator.getSpawnList());
+        }
     }
 }
