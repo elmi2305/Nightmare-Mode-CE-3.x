@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.item.BTWItems;
+import btw.block.BTWBlocks;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -17,12 +19,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Random;
+
 @Mixin(Block.class)
 public abstract class BlockMixin {
     @Shadow public static Block obsidian;
     @Shadow @Final public int blockID;
 
     @Shadow protected abstract void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack);
+    @Shadow protected abstract boolean checkForFall(World world, int x, int y, int z);
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){
@@ -79,6 +84,52 @@ public abstract class BlockMixin {
         return heldStack != null && (heldStack.itemID == Item.shovelDiamond.itemID
                 || heldStack.itemID == NMItems.bloodShovel.itemID
                 || heldStack.itemID == BTWItems.steelShovel.itemID);
+    }
+
+    @Inject(method = "isFallingBlock", at = @At("HEAD"), cancellable = true)
+    private void makeCompressionBlocksFall(CallbackInfoReturnable<Boolean> cir) {
+        if (this.isCompressionBlock()) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "onBlockAdded", at = @At("TAIL"))
+    private void scheduleCompressionBlockFall(World world, int x, int y, int z, CallbackInfo ci) {
+        if (this.isCompressionBlock()) {
+            world.scheduleBlockUpdate(x, y, z, this.blockID, 2);
+        }
+    }
+
+    @Inject(method = "onNeighborBlockChange", at = @At("TAIL"))
+    private void scheduleCompressionBlockFallAfterNeighborChange(World world, int x, int y, int z, int neighborId, CallbackInfo ci) {
+        if (this.isCompressionBlock() && !world.isUpdatePendingThisTickForBlock(x, y, z, this.blockID)) {
+            world.scheduleBlockUpdate(x, y, z, this.blockID, 2);
+        }
+    }
+
+    @Inject(method = "updateTick", at = @At("HEAD"))
+    private void checkCompressionBlockFall(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (this.isCompressionBlock()) {
+            this.checkForFall(world, x, y, z);
+        }
+    }
+
+    @Unique
+    private boolean isCompressionBlock() {
+        int id = this.blockID;
+        return id == Block.blockGold.blockID
+                || id == Block.blockIron.blockID
+                || id == Block.blockDiamond.blockID
+                || id == Block.blockEmerald.blockID
+                || id == Block.blockLapis.blockID
+                || id == Block.coalBlock.blockID
+                || id == Block.blockRedstone.blockID
+                || id == Block.blockNetherQuartz.blockID
+                || id == BTWBlocks.diamondIngot.blockID
+                || id == BTWBlocks.charcoalBlock.blockID
+                || id == BTWBlocks.nethercoalBlock.blockID
+                || NMBlocks.blockBloodIngot != null && id == NMBlocks.blockBloodIngot.blockID
+                || NMBlocks.blockRefinedDiamondIngot != null && id == NMBlocks.blockRefinedDiamondIngot.blockID;
     }
 
     @Inject(method = "canMobsSpawnOn", at = @At("HEAD"),cancellable = true)
