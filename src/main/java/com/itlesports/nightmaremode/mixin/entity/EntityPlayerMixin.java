@@ -965,6 +965,42 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageFatigue(CallbackInfo ci) {
+        if (this.worldObj.isRemote || !this.isEntityAlive()) {
+            return;
+        }
+
+        int fatigue = this.getData(FATIGUE);
+        if (this.isPlayerSleeping()) {
+            if (this.ticksExisted % 10 == 0 && fatigue > 0) {
+                this.setData(FATIGUE, --fatigue);
+            }
+        } else if (this.ticksExisted % 600 == 0 && fatigue < 100) {
+            int previousFatigue = fatigue;
+            this.setData(FATIGUE, ++fatigue);
+            if (previousFatigue < 60 && fatigue >= 60) {
+                ((EntityPlayer)(Object)this).sendChatToPlayer(ChatMessageComponent.createFromText("I feel tired"));
+            }
+        }
+
+        if (devMode && this.ticksExisted % 100 == 0) {
+            System.out.println("Fatigue: " + fatigue);
+        }
+
+        if (this.ticksExisted % 20 == 0) {
+            if (fatigue >= 100) {
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 2));
+                this.addPotionEffect(new PotionEffect(Potion.blindness.id, 40, 0));
+            } else if (fatigue >= 80) {
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 1));
+                this.addPotionEffect(new PotionEffect(Potion.weakness.id, 40, 0));
+            } else if (fatigue >= 60) {
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 0));
+            }
+        }
+    }
+
     @Unique private int getSanity(){
         return this.getData(SANITY).intValue();
     }

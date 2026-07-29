@@ -817,6 +817,16 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.PlayerDataEntry<Integer> FATIGUE =
+            DataProvider.getBuilder(Integer.class)
+                    .name("Fatigue")
+                    .defaultSupplier(() -> 0)
+                    .readNBT(nbt -> nbt.getInteger("Fatigue"))
+                    .writeNBT((nbt, v) -> nbt.setInteger("Fatigue", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
     public static final DataEntry.PlayerDataEntry<Boolean> DEFEATED_BM =
             DataProvider.getBuilder(Boolean.class)
                     .name("BloodMoonDefeated")
