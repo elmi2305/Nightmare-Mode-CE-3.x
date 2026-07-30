@@ -6,6 +6,7 @@ import api.item.items.ToolItem;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
@@ -967,7 +968,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageFatigue(CallbackInfo ci) {
-        if (this.worldObj.isRemote || !this.isEntityAlive()) {
+        if (this.worldObj.isRemote || !this.isEntityAlive() || disableFatigue) {
             return;
         }
 
