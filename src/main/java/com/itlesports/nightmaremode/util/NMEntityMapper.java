@@ -75,5 +75,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(UnfiredNetherBrickTileEntity.class, "NmUnfiredNetherBrick");
         TileEntity.addMapping(DryingGrassTileEntity.class, "NmDryingGrass");
         TileEntity.addMapping(ObsidianMillstoneTileEntity.class, "NmObsidianMillstone");
+        TileEntity.addMapping(ChuteHopperTileEntity.class, "NmChuteHopper");
+        TileEntity.addMapping(OreNodeTileEntity.class, "NmOreNode");
     }
 }

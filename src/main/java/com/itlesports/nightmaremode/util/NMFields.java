@@ -92,7 +92,7 @@ public class NMFields {
     public static final int[] KNOWLEDGE_BOOKS_OCEAN_TEMPLE = {0, 1, 2}; // TODO: initialize
     public static final int[] KNOWLEDGE_BOOKS_NETHER_TEMPLE = {0, 1, 2}; // TODO: initialize
 
-    // cached block IDs
+    // cached block IDs - only add here if a NMProgressiveCraftItem needs to reference a block ID
     public static final int BLOCK_IRON_BLOOM = 2403;
     public static final int BLOCK_STONE_ANVIL = 2404;
     public static final int BLOCK_DIAMOND_ANVIL = 2405;

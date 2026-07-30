@@ -232,6 +232,8 @@ public class NMItems {
     public static ItemChunkFertilizer potassiumFertilizer;
     public static ItemChunkFertilizer acidityFertilizer;
     public static ItemChunkFertilizer porosityFertilizer;
+    public static Item highSpeedMinecart;
+    public static Item highSpeedChestMinecart;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -425,6 +427,8 @@ public class NMItems {
         diamondScythe = new ItemScythe(2749, EnumToolMaterial.EMERALD, 5.0F).setTextureName("nightmare:ifhyDiamondScythe").setUnlocalizedName("ifhyDiamondScythe").setCreativeTab(CreativeTabs.tabCombat);
         tungstenScythe = new ItemTungstenScythe(2750).setTextureName("nightmare:ifhyTungstenScythe").setUnlocalizedName("ifhyTungstenScythe").setCreativeTab(CreativeTabs.tabCombat);
         aquamarine = new NMItem(2751).setTextureName("nightmare:ifhyAquamarine").setUnlocalizedName("ifhyAquamarine").setCreativeTab(CreativeTabs.tabMaterials);
+        highSpeedMinecart = new ItemHighSpeedMinecart(2752, 0).setTextureName("nightmare:ifhyHighSpeedMinecart").setUnlocalizedName("ifhyHighSpeedMinecart");
+        highSpeedChestMinecart = new ItemHighSpeedMinecart(2753, 1).setTextureName("nightmare:ifhyHighSpeedChestMinecart").setUnlocalizedName("ifhyHighSpeedChestMinecart");
         moistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2744, ChunkAttribute.MOISTURE)
                 .setUnlocalizedName("nmMoistureFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);

@@ -128,6 +128,8 @@ public class NMBlocks {
     public static Block prismarineStairs;
     public static Block aquamarineOre;
     public static Block chunkLoader;
+    public static Block chuteHopper;
+    public static Block tungstenOreNode;
 
 
 
@@ -198,6 +200,12 @@ public class NMBlocks {
 
         chunkLoader = new BlockChunkLoader(2419);
         Item.itemsList[chunkLoader.blockID] = new NMItemBlock(chunkLoader.blockID - 256);
+
+        chuteHopper = new BlockChuteHopper(2420);
+        Item.itemsList[chuteHopper.blockID] = new NMNetherItemBlock(chuteHopper.blockID - 256);
+
+        tungstenOreNode = new BlockOreNode(2421, NMItems.tungstenChunk.itemID);
+        Item.itemsList[tungstenOreNode.blockID] = new NMNetherItemBlock(tungstenOreNode.blockID - 256);
 
 
 
