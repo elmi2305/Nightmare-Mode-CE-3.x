@@ -127,6 +127,7 @@ public class NMBlocks {
     public static Block prismarine;
     public static Block prismarineStairs;
     public static Block aquamarineOre;
+    public static Block chunkLoader;
 
 
 
@@ -195,6 +196,8 @@ public class NMBlocks {
         aquamarineOre = new ProcessingOreBlock(2418, NMItems.aquamarine.itemID, 2).setHardness(3.0F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyAquamarineOre").setTextureName("nightmare:ifhyAquamarineOre");
         Item.itemsList[aquamarineOre.blockID] = new NMItemBlock(aquamarineOre.blockID - 256);
 
+        chunkLoader = new BlockChunkLoader(2419);
+        Item.itemsList[chunkLoader.blockID] = new NMItemBlock(chunkLoader.blockID - 256);
 
 
 

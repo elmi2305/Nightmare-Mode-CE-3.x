@@ -19,6 +19,7 @@ import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.util.CarcassHarvestNet;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
+import com.itlesports.nightmaremode.world.ChunkLoaderData;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
@@ -797,6 +798,15 @@ public class NightmareMode extends BTWAddon {
                     .global()
                     .build();
 
+    public static final DataEntry.WorldDataEntry<ChunkLoaderData> CHUNK_LOADERS =
+            DataProvider.getBuilder(ChunkLoaderData.class)
+                    .name("ChunkLoaders")
+                    .defaultSupplier(ChunkLoaderData::new)
+                    .readNBT(ChunkLoaderData::readFromNBT)
+                    .writeNBT(ChunkLoaderData::writeToNBT)
+                    .global()
+                    .build();
+
     public static final DataEntry.PlayerDataEntry<Long> APPLE_COOLDOWN =
             DataProvider.getBuilder(Long.class)
                     .name("AppleCooldown")
@@ -919,9 +929,11 @@ public class NightmareMode extends BTWAddon {
 
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
+        CHUNK_LOADERS.register();
         APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
         SANITY.register();
+        FATIGUE.register();
         DEFEATED_BM.register();
         DEFEATED_BLOODWITHER.register();
         SKILL_TREE.register();

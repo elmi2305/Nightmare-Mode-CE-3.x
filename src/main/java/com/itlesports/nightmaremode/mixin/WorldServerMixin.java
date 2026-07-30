@@ -5,6 +5,7 @@ import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
+import com.itlesports.nightmaremode.world.ChunkLoaderManager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -61,6 +62,9 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 
         if ((time & 15) == 0) {
             NMEvents.onServerTick((WorldServer)(Object)this);
+        }
+        if (time % 20 == 0) {
+            ChunkLoaderManager.loadChargedChunks((WorldServer)(Object)this);
         }
     }
     @Unique private void setBlueMoonWorld(boolean b){

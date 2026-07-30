@@ -103,6 +103,14 @@ public abstract class MinecraftServerMixin {
         NightmareMode.isBloodMoon = false;
     }
 
+    @Redirect(
+            method = "initialWorldChunkLoad",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ChunkProviderServer;loadChunk(II)Lnet/minecraft/src/Chunk;")
+    )
+    private Chunk skipDefaultSpawnChunkLoading(ChunkProviderServer chunkProvider, int chunkX, int chunkZ) {
+        return null;
+    }
+
     @Inject(method = "tick", at = @At("RETURN"))
     private void nmOnServerTick(CallbackInfo ci) {
         TeleportScheduler.onServerTick();
