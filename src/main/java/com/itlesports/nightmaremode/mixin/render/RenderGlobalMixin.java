@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -29,18 +30,11 @@ public abstract class RenderGlobalMixin {
     @Shadow private int glSkyList2;
     @Shadow private int starGLCallList;
 
-    @Shadow
-    @Final
-    private static ResourceLocation locationMoonMoonPhasesPng;
-    @Shadow
-    @Final
-    private static ResourceLocation locationMoonPhasesPng;
-    @Shadow
-    @Final
-    private static ResourceLocation locationEndSkyPng;
+    @Shadow @Final private static ResourceLocation locationMoonMoonPhasesPng;
+    @Shadow @Final private static ResourceLocation locationMoonPhasesPng;
+    @Shadow @Final private static ResourceLocation locationEndSkyPng;
 
-    @Shadow
-    public abstract void renderClouds(float par1);
+    @Shadow public abstract void renderClouds(float par1);
 
     @Unique private static final ResourceLocation BLOODMOON = new ResourceLocation("nightmare:textures/moon/bloodmoon.png");
     @Unique private static final ResourceLocation ECLIPSE = new ResourceLocation("nightmare:textures/moon/eclipse.png");
@@ -49,6 +43,55 @@ public abstract class RenderGlobalMixin {
     @Unique private static final ResourceLocation SKYBOX_RED = new ResourceLocation("nightmare:textures/effects/red.png");
     @Unique private static final ResourceLocation SKYBOX_WHITE = new ResourceLocation("nightmare:textures/effects/white.png");
     @Unique private static final ResourceLocation STARE = new ResourceLocation("nightmare:textures/effects/stare.png");
+
+    @Inject(method = "renderEntities", at = @At("TAIL"))
+    private void renderChunkLoaderChunkBorders(Vec3 cameraPosition, ICamera camera, float partialTicks, CallbackInfo ci) {
+        EntityPlayer player = this.mc.thePlayer;
+        ItemStack heldStack = player == null ? null : player.getCurrentEquippedItem();
+        if (player == null || !player.isSneaking() || heldStack == null || heldStack.itemID != NMBlocks.chunkLoader.blockID) {
+            return;
+        }
+
+        int playerChunkX = MathHelper.floor_double(player.posX) >> 4;
+        int playerChunkZ = MathHelper.floor_double(player.posZ) >> 4;
+        this.drawChunkGrid(playerChunkX, playerChunkZ);
+    }
+
+    @Unique
+    private void drawChunkGrid(int centerChunkX, int centerChunkZ) {
+        final int radius = 3;
+        final double minX = (centerChunkX - radius) * 16.0D - RenderManager.renderPosX;
+        final double maxX = (centerChunkX + radius + 1) * 16.0D - RenderManager.renderPosX;
+        final double minZ = (centerChunkZ - radius) * 16.0D - RenderManager.renderPosZ;
+        final double maxZ = (centerChunkZ + radius + 1) * 16.0D - RenderManager.renderPosZ;
+
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LINE_BIT);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_FOG);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glLineWidth(1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.72F);
+
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawing(GL11.GL_LINES);
+        double gridY = -1;
+        for (int chunkX = centerChunkX - radius; chunkX <= centerChunkX + radius + 1; ++chunkX) {
+            double x = chunkX * 16.0D - RenderManager.renderPosX - 1;
+            tessellator.addVertex(x, gridY, minZ);
+            tessellator.addVertex(x, gridY, maxZ);
+        }
+        for (int chunkZ = centerChunkZ - radius; chunkZ <= centerChunkZ + radius + 1; ++chunkZ) {
+            double z = chunkZ * 16.0D - RenderManager.renderPosZ - 1;
+            tessellator.addVertex(minX, gridY, z);
+            tessellator.addVertex(maxX, gridY, z);
+        }
+        tessellator.draw();
+        GL11.glPopAttrib();
+    }
+
 
     /*
 
