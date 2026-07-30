@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,6 +30,29 @@ public class ItemInWorldManagerMixin {
 
     @Shadow
     public EntityPlayerMP thisPlayerMP;
+
+    @Inject(method = "survivalTryHarvestBlock", at = @At("HEAD"), cancellable = true)
+    private void minePersistentOreNode(int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
+        Block block = Block.blocksList[this.theWorld.getBlockId(x, y, z)];
+        if (!(block instanceof BlockOreNode oreNode)) {
+            return;
+        }
+
+        ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
+        if (!oreNode.isValidMiningTool(held, this.theWorld, x, y, z)) {
+            cir.setReturnValue(false);
+            return;
+        }
+
+        this.theWorld.playAuxSFXAtEntity(this.thisPlayerMP, 2001, x, y, z,
+                block.blockID + (this.theWorld.getBlockMetadata(x, y, z) << 12));
+        oreNode.mineNode(this.theWorld, this.thisPlayerMP, x, y, z);
+        held.onBlockDestroyed(this.theWorld, block.blockID, x, y, z, this.thisPlayerMP);
+        if (held.stackSize <= 0) {
+            this.thisPlayerMP.destroyCurrentEquippedItem();
+        }
+        cir.setReturnValue(true);
+    }
 
     @Inject(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playAuxSFXAtEntity(Lnet/minecraft/src/EntityPlayer;IIIII)V"))
     private void sendNightmareAchievementData(int i, int j, int k, int iFromSide, CallbackInfoReturnable<Boolean> cir) {

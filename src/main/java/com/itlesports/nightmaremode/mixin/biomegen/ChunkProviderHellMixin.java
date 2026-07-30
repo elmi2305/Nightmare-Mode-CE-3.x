@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.biomegen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.structure.MapGenNetherDesertTemple;
+import com.itlesports.nightmaremode.worldgen.WorldGenOreNode;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,6 +22,8 @@ public class ChunkProviderHellMixin {
 
     @Unique private static WorldGenFlowers worldGenShrubs = new WorldGenFlowers(NMBlocks.netherShrub.blockID);
     @Unique private static WorldGenMinable tungsten = new WorldGenMinable(NMBlocks.tungstenOre.blockID, 6, Block.netherrack.blockID);
+    @Unique private static WorldGenOreNode tungstenNodes = new WorldGenOreNode(
+            NMBlocks.tungstenOreNode.blockID, Block.netherrack.blockID, 1, 4);
     @Unique private final MapGenNetherDesertTemple netherDesertTempleGenerator = new MapGenNetherDesertTemple();
 
 
@@ -34,6 +37,19 @@ public class ChunkProviderHellMixin {
                     baseX + this.hellRNG.nextInt(16),
                     this.hellRNG.nextInt(60) + 3,
                     baseZ + this.hellRNG.nextInt(16));
+        }
+
+        ChunkCoordinates spawn = this.worldObj.getSpawnPoint();
+        for (int attempt = 0; attempt < 12; ++attempt) {
+            int nodeX = baseX + this.hellRNG.nextInt(16);
+            int nodeZ = baseZ + this.hellRNG.nextInt(16);
+            long distanceX = nodeX - spawn.posX;
+            long distanceZ = nodeZ - spawn.posZ;
+            if (distanceX * distanceX + distanceZ * distanceZ <= 200L * 200L
+                    && tungstenNodes.generate(this.worldObj, this.hellRNG, nodeX,
+                    this.hellRNG.nextInt(56) + 4, nodeZ)) {
+                break;
+            }
         }
 
         worldGenShrubs.generate(this.worldObj, this.hellRNG,
