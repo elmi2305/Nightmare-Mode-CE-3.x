@@ -58,6 +58,9 @@ public class MapGenOceanDesertTemple extends MapGenStructure {
     }
 
     public boolean hasTempleAt(int x, int y, int z) {
+        if(this.worldObj == null){
+            return false;
+        }
         return this.hasStructureAt(x, y, z);
     }
 
