@@ -104,7 +104,9 @@ public abstract class EntityItemMixin extends Entity {
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
     private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
-        if(this.getEntityItem() != null && !this.isItemIndestructible(this.getEntityItem())){
+        if (this.getEntityItem() != null
+                && this.isItemIndestructible(this.getEntityItem())
+                && par1DamageSource != DamageSource.lava) {
             cir.setReturnValue(false);
         }
     }
@@ -128,14 +130,14 @@ public abstract class EntityItemMixin extends Entity {
     private boolean isItemIndestructible(ItemStack item){
         if(item == null) return false;
 
-        if(getNonFlammableItems().contains(item.itemID)) return false;
+        if(getNonFlammableItems().contains(item.itemID)) return true;
 
-        if(item.getItem() instanceof ArcaneScrollItem) return false;
+        if(item.getItem() instanceof ArcaneScrollItem) return true;
 
-        if(item.getItem() instanceof INetherItem) return false;
+        if(item.getItem() instanceof INetherItem) return true;
 
-        if(item.getItem() instanceof NMItem && ((NMItem) item.getItem()).isIndestructible()) return false;
+        if(item.getItem() instanceof NMItem && ((NMItem) item.getItem()).isIndestructible()) return true;
 
-        return true;
+        return false;
     }
 }

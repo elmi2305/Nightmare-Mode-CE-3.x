@@ -154,7 +154,8 @@ public final class NMSkillNodes {
             -2, 1,
             "Bring 16 crude obsidian.",
             Block.obsidian.blockID, 1, true, 16,
-            "+1/7 Nether access progress.", SkillRewardActions.addNetherAccessProgress(),
+            "+1/7 Nether access progress. Diamond tools and food can survive Nether entry.",
+            SkillRewardActions.addNetherAccessProgress(),
             MINING, true);
 
     public static final SkillNode DIAMOND_CRYSTALS = bring(

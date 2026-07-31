@@ -6,12 +6,15 @@ import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.util.NMFoodSpoilage;
+import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(Item.class)
 public class ItemMixin {
@@ -53,5 +56,13 @@ public class ItemMixin {
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void updateFoodSpoilage(ItemStack stack, World world, EntityPlayer player, int inventorySlot, boolean isHeldItem, CallbackInfo ci) {
         NMFoodSpoilage.updateFoodSpoilage(stack, world, player, inventorySlot);
+    }
+
+    @Inject(method = "addInformation", at = @At("TAIL"))
+    private void addNetherItemTooltip(ItemStack stack, EntityPlayer player, List tooltip,
+                                      boolean advanced, CallbackInfo ci) {
+        if ((Object) this instanceof INetherItem) {
+            tooltip.add(EnumChatFormatting.DARK_AQUA + "Fireproof");
+        }
     }
 }

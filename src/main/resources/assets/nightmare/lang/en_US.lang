@@ -244,6 +244,7 @@ entity.NmObsidianFish.name=Obsidian Fish
 entity.NmCreeperGhast.name=Creeper Ghast
 entity.entityBloodAltar.name=Progress
 entity.NmMushWorm.name=Mush Worm
+entity.NmNetherFish.name=Nether Fish
 entity.NmEntityVoidCreeper.name=Void Creeper
 entity.NmEntityGelCreeper.name=Sticky Creeper
 entity.NmEntityGlitchCreeper.name=Glitch Creeper

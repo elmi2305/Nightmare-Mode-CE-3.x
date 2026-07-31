@@ -62,7 +62,7 @@ public class ServerConfigurationManagerMixin {
         }
         for (int slot = 0; slot < player.inventory.mainInventory.length; ++slot) {
             ItemStack stack = player.inventory.mainInventory[slot];
-            if (stack != null && !NetherItemHelper.survivesNetherEntry(stack)) {
+            if (stack != null && !NetherItemHelper.survivesNetherEntry(stack, player)) {
                 player.inventory.mainInventory[slot] = new ItemStack(NMItems.ash);
             }
         }
