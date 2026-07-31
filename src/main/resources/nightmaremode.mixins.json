@@ -126,7 +126,6 @@
     "blocks.HandCrankBlockMixin",
     "blocks.HempCropBlockMixin",
     "blocks.HopperTileEntityMixin",
-    "blocks.KilnBlockAccessor",
     "blocks.KilnBlockMixin",
     "blocks.MillstoneTileEntityMixin",
     "blocks.MushroomBlockBrownMixin",
@@ -264,6 +263,7 @@
     "render.RenderBipedMixin",
     "render.RenderBlocksMixin",
     "render.RenderLightningBoltMixin",
+    "render.RenderMinecartMixin",
     "render.RenderLivingEntityMixin",
     "render.RenderManagerMixin",
     "render.TileEntityRendererMixin"
@@ -272,6 +272,7 @@
     "AnvilSaveConverterMixin",
     "EmiCraftingRecipeMixin",
     "GameSettingsMixin",
+    "blocks.KilnBlockAccessor",
     "MinecraftMixin",
     "MixinNetClientHandler",
     "MouseHelperMixin",
