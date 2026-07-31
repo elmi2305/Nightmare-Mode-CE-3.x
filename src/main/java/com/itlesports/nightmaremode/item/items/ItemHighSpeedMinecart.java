@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.util.interfaces.IHighSpeedMinecart;
@@ -17,6 +18,9 @@ import java.util.List;
 public class ItemHighSpeedMinecart extends ItemMinecart implements INetherItem {
     public ItemHighSpeedMinecart(int id, int minecartType) {
         super(id, minecartType);
+        if (NightmareMode.devMode) {
+            this.setMaxStackSize(64);
+        }
     }
 
     @Override
