@@ -54,6 +54,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityVoidSquid.class, new VoidSquidRender());
         RenderManager.addEntityRenderer(EntityAwakenedWither.class, new RenderWither());
         RenderManager.addEntityRenderer(EntityWalker.class, new RenderWalker());
+        RenderManager.addEntityRenderer(EntityNetherFish.class, new RenderSilverfish());
 
 
 

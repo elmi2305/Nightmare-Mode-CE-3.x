@@ -55,6 +55,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityVoidSquid.class, "NmVoidSquid", 2340 /*, 0x00446e, 0 */);
         EntityList.addMapping(EntityAwakenedWither.class, "NmAwakenedWither", 2341 /*, 0xFFFFFF, 0 */);
         EntityList.addMapping(EntityWalker.class, "NmWalker", 2342 /* , 0xFFFFFF, 0 */);
+        EntityList.addMapping(EntityNetherFish.class, "NmNetherFish", 2343, 0x5A1A12, 0xFF6A00);
 
     }
 
