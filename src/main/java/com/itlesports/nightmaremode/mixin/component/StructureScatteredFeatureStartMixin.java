@@ -18,12 +18,18 @@ public class StructureScatteredFeatureStartMixin extends StructureStart {
     @Inject(method = "<init>(Lnet/minecraft/src/World;Ljava/util/Random;II)V", at = @At("TAIL"))
     private void addCustomFeatures(World world, Random rand, int chunkX, int chunkZ, CallbackInfo ci) {
         BiomeGenBase biome = world.getBiomeGenForCoords(chunkX * 16 + 8, chunkZ * 16 + 8);
+        boolean addedComponent = false;
         if (biome == BiomeGenUnderworld.flowerFields) {
             this.components.add(new BigMushroom(rand, chunkX * 16, chunkZ * 16));
+            addedComponent = true;
         }
         if(biome == BiomeGenUnderworld.highlands){
             this.components.add(new RibcageClosed(rand, chunkX * 16, chunkZ * 16));
             this.components.add(new RibcageOpen(rand, chunkX * 16, chunkZ * 16));
+            addedComponent = true;
+        }
+        if (addedComponent) {
+            this.updateBoundingBox();
         }
     }
 }
