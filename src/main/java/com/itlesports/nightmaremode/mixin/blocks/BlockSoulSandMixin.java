@@ -10,10 +10,40 @@ import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.Random;
+
 @Mixin(BlockSoulSand.class)
 public abstract class BlockSoulSandMixin extends Block {
     protected BlockSoulSandMixin(int id, Material material) {
         super(id, material);
+    }
+
+    @Override
+    public boolean isFallingBlock() {
+        return true;
+    }
+
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z) {
+        super.onBlockAdded(world, x, y, z);
+        this.scheduleCheckForFall(world, x, y, z);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId) {
+        super.onNeighborBlockChange(world, x, y, z, neighborId);
+        this.scheduleCheckForFall(world, x, y, z);
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        super.updateTick(world, x, y, z, random);
+        this.checkForFall(world, x, y, z);
+    }
+
+    @Override
+    public int tickRate(World world) {
+        return 2;
     }
 
     @Override
