@@ -8,6 +8,7 @@ import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
+import com.itlesports.nightmaremode.entity.EntityNetherFish;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
@@ -29,6 +30,9 @@ import java.util.Random;
 public class NetherrackBlockMixin extends FullBlock {
     @Unique private boolean shouldDropDust = true;
     @Unique private Icon nightmareMode$chippedIcon;
+    @Unique private Icon nightmareMode$tierOneIcon;
+    @Unique private Icon nightmareMode$tierTwoIcon;
+    @Unique private Icon nightmareMode$deadzoneIcon;
 
     protected NetherrackBlockMixin(int par1, Material par2Material) {
         super(par1, par2Material);
@@ -41,6 +45,7 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int meta) {
+        this.nightmareMode$trySpawnNetherFish(world, x, y, z, meta);
         ItemStack held = player.getCurrentEquippedItem();
         if (meta == 1) {
             if (!world.isRemote) {
@@ -73,6 +78,9 @@ public class NetherrackBlockMixin extends FullBlock {
     @Override
     public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int x, int y, int z, int metadata) {
         ItemStack held = player.getCurrentEquippedItem();
+        if (held == null || !(held.getItem() instanceof ItemSoulFlint)) {
+            this.nightmareMode$trySpawnNetherFish(world, x, y, z, metadata);
+        }
         if (!world.isRemote && metadata == 0
                 && (held == null || !(held.getItem() instanceof PickaxeItem))
 //                && (held == null || !(held.getItem() instanceof ItemSoulFlint))
@@ -92,14 +100,27 @@ public class NetherrackBlockMixin extends FullBlock {
     public void registerIcons(IconRegister register) {
         super.registerIcons(register);
         this.nightmareMode$chippedIcon = register.registerIcon("nightmare:ifhyChippedNetherrack");
+        this.nightmareMode$tierOneIcon = register.registerIcon("nightmare:ifhyToughNetherrack");
+        this.nightmareMode$tierTwoIcon = register.registerIcon("nightmare:ifhyDenserNetherrack");
+        this.nightmareMode$deadzoneIcon = register.registerIcon("nightmare:ifhyDeadzoneNetherrack");
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int side, int metadata) {
-        return metadata == 1 && this.nightmareMode$chippedIcon != null
-                ? this.nightmareMode$chippedIcon
-                : super.getIcon(side, metadata);
+        if (metadata == 1 && this.nightmareMode$chippedIcon != null) {
+            return this.nightmareMode$chippedIcon;
+        }
+        if (metadata == 2 && this.nightmareMode$tierOneIcon != null) {
+            return this.nightmareMode$tierOneIcon;
+        }
+        if (metadata == 3 && this.nightmareMode$tierTwoIcon != null) {
+            return this.nightmareMode$tierTwoIcon;
+        }
+        if (metadata == 4 && this.nightmareMode$deadzoneIcon != null) {
+            return this.nightmareMode$deadzoneIcon;
+        }
+        return super.getIcon(side, metadata);
     }
 
     @Override
@@ -114,6 +135,10 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
+        int metadata = world.getBlockMetadata(i, j, k);
+        if (metadata == 4) {
+            return 0.0F;
+        }
         ItemStack held = player.getCurrentEquippedItem();
 
         if (!SkillHandler.getPlayerData(player).canMineNetherrack || held == null) {
@@ -121,19 +146,56 @@ public class NetherrackBlockMixin extends FullBlock {
         }
 
         if (held.getItem() instanceof ItemSoulFlint || held.getItem() instanceof ItemNetherrackPickaxe) {
-            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F;
+            return this.nightmareMode$applyTierHardness(
+                    player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 30.0F,
+                    metadata);
         }
         if (held.getItem() instanceof ItemTungstenPickaxe) {
-            return player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 10.0F;
+            return this.nightmareMode$applyTierHardness(
+                    player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 10.0F,
+                    metadata);
         }
         if (held.getItem() instanceof ItemBloodPickaxe) {
             float fRelativeHardness = player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness;
             int count = NMUtils.getBloodArmorWornCount(player);
             float armorMult = count > 0 ? ((float) count / 4 + 1): 1.0f;
-            return fRelativeHardness / (200.0f * world.getDifficultyParameter(DifficultyParam.NoToolBlockHardnessMultiplier.class) * armorMult);
+            return this.nightmareMode$applyTierHardness(
+                    fRelativeHardness / (200.0f * world.getDifficultyParameter(DifficultyParam.NoToolBlockHardnessMultiplier.class) * armorMult),
+                    metadata);
         }
 
-        return super.getPlayerRelativeBlockHardness(player, world, i, j, k);
+        return this.nightmareMode$applyTierHardness(
+                super.getPlayerRelativeBlockHardness(player, world, i, j, k), metadata);
+    }
+
+    @Override
+    public float getExplosionResistance(Entity entity, World world, int x, int y, int z) {
+        return world.getBlockMetadata(x, y, z) == 4
+                ? 6000000.0F
+                : super.getExplosionResistance(entity, world, x, y, z);
+    }
+
+    @Unique
+    private float nightmareMode$applyTierHardness(float hardness, int metadata) {
+        if (metadata == 2) {
+            return hardness / 2.0F;
+        }
+        if (metadata == 3) {
+            return hardness / 4.0F;
+        }
+        return hardness;
+    }
+
+    @Unique
+    private void nightmareMode$trySpawnNetherFish(World world, int x, int y, int z, int metadata) {
+        if (world.isRemote || (metadata != 2 && metadata != 3) || world.rand.nextInt(5) != 0) {
+            return;
+        }
+        EntityNetherFish fish = new EntityNetherFish(world);
+        fish.setLocationAndAngles(x + 0.5D, y + 0.1D, z + 0.5D,
+                world.rand.nextFloat() * 360.0F, 0.0F);
+        world.spawnEntityInWorld(fish);
+        fish.spawnExplosionParticle();
     }
 
     @Override

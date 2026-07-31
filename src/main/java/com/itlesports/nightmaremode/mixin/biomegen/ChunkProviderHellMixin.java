@@ -63,6 +63,32 @@ public class ChunkProviderHellMixin {
     @Inject(method = "provideChunk", at = @At("TAIL"))
     private void prepareNetherDesertTemples(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
         netherDesertTempleGenerator.generate((ChunkProviderHell) (Object) this, this.worldObj, chunkX, chunkZ, null, null);
+        this.applyDistanceBasedNetherrack(cir.getReturnValue(), chunkX, chunkZ);
+    }
+
+    @Unique
+    private void applyDistanceBasedNetherrack(Chunk chunk, int chunkX, int chunkZ) {
+        ChunkCoordinates spawn = this.worldObj.getSpawnPoint();
+        for (int localX = 0; localX < 16; ++localX) {
+            int worldX = chunkX * 16 + localX;
+            for (int localZ = 0; localZ < 16; ++localZ) {
+                int worldZ = chunkZ * 16 + localZ;
+                double distance = Math.sqrt((double) (worldX - spawn.posX) * (worldX - spawn.posX)
+                        + (double) (worldZ - spawn.posZ) * (worldZ - spawn.posZ));
+                int metadata = distance >= 3000.0D ? 4
+                        : distance >= 2000.0D ? 3
+                        : distance >= 1000.0D ? 2
+                        : 0;
+                if (metadata == 0) {
+                    continue;
+                }
+                for (int y = 0; y < 128; ++y) {
+                    if (chunk.getBlockID(localX, y, localZ) == Block.netherrack.blockID) {
+                        chunk.setBlockMetadata(localX, y, localZ, metadata);
+                    }
+                }
+            }
+        }
     }
 
     @Inject(method = "getPossibleCreatures", at = @At("HEAD"), cancellable = true)
