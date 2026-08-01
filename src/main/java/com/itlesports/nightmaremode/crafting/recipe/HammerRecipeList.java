@@ -33,6 +33,8 @@ public abstract class HammerRecipeList {
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(BTWItems.tannedLeather), new ItemStack(BTWItems.cutTannedLeather, 4)).setHitsRequired(3);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(Item.redstone), new ItemStack(NMItems.redstoneCrystal));
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(Item.redstone, 4), new ItemStack(NMItems.refinedRedstone));
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crushedAzureStone, 2), new ItemStack(NMItems.rawAzureStone)).setHitsRequired(2);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(Item.dyePowder, 4, 4), new ItemStack(NMItems.brittleAzureCake)).setHitsRequired(3);
 
     }
 }

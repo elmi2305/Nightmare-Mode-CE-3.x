@@ -17,17 +17,19 @@ import java.util.Random;
 
 public class BlockOreNode extends BlockContainer {
     private final int droppedItemId;
+    private final Block requiredToolBlock;
 
-    public BlockOreNode(int id, int droppedItemId) {
+    public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, String name, String texture) {
         super(id, BTWBlocks.netherRockMaterial);
         this.droppedItemId = droppedItemId;
+        this.requiredToolBlock = requiredToolBlock;
         this.setHardness(3.0F);
         this.setResistance(20.0F);
         this.setPicksEffectiveOn();
         this.setStepSound(BTWBlocks.oreStepSound);
         this.setCreativeTab(CreativeTabs.tabBlock);
-        this.setUnlocalizedName("ifhyTungstenOreNode");
-        this.setTextureName("nightmare:ifhyTungstenOreNode");
+        this.setUnlocalizedName(name);
+        this.setTextureName(texture);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class BlockOreNode extends BlockContainer {
             return true;
         }
         return held.getItem() instanceof PickaxeItem pickaxe
-                && pickaxe.canHarvestBlock(held, world, Block.obsidian, x, y, z);
+                && pickaxe.canHarvestBlock(held, world, this.requiredToolBlock, x, y, z);
     }
 
     public void mineNode(World world, EntityPlayer player, int x, int y, int z) {
@@ -89,6 +91,20 @@ public class BlockOreNode extends BlockContainer {
         } else {
             world.markBlockForUpdate(x, y, z);
         }
+    }
+
+    public ItemStack mineNodeByMachine(World world, int x, int y, int z) {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        if (!(tileEntity instanceof OreNodeTileEntity node)) {
+            return null;
+        }
+        ItemStack result = new ItemStack(this.droppedItemId, 1, 0);
+        if (node.consumeOne() <= 0) {
+            world.setBlockToAir(x, y, z);
+        } else {
+            world.markBlockForUpdate(x, y, z);
+        }
+        return result;
     }
 
     @Override

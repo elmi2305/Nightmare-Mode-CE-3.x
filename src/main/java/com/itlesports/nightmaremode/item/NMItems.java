@@ -266,6 +266,19 @@ public class NMItems {
 
     public static Item redstoneCrystal;
     public static Item refinedRedstone;
+    public static Item azureSalt;
+    public static Item azureSlag;
+    public static Item brittleAzureCake;
+    public static Item rawAzureStone;
+    public static Item crushedAzureStone;
+    public static Item washedAzureSediment;
+    public static Item lapisPrecipitate;
+    public static Item hydraulicLens;
+    public static Item fluidGauge;
+    public static Item searingSilverScale;
+    public static Item denseNetherrackCore;
+    public static Item deadzoneShard;
+    public static Item netherTradePlaceholder;
 
 
     static {
@@ -449,6 +462,19 @@ public class NMItems {
 
         redstoneCrystal = new NMItem(2754).setTextureName("nightmare:ifhyRedstoneCrystal").setUnlocalizedName("ifhyRedstoneCrystal").setCreativeTab(CreativeTabs.tabMaterials);
         refinedRedstone = new NMItem(2755).setTextureName("nightmare:ifhyRefinedRedstone").setUnlocalizedName("ifhyRefinedRedstone").setCreativeTab(CreativeTabs.tabMaterials);
+        azureSalt = new NetherItem(2756).setTextureName("nightmare:ifhyAzureSalt").setUnlocalizedName("ifhyAzureSalt").setCreativeTab(CreativeTabs.tabMaterials);
+        azureSlag = new NetherItem(2757).setTextureName("nightmare:ifhyAzureSlag").setUnlocalizedName("ifhyAzureSlag").setCreativeTab(CreativeTabs.tabMaterials);
+        brittleAzureCake = new NetherItem(2758).setTextureName("nightmare:ifhyBrittleAzureCake").setUnlocalizedName("ifhyBrittleAzureCake").setCreativeTab(CreativeTabs.tabMaterials);
+        rawAzureStone = new NMItem(2759).setTextureName("nightmare:ifhyRawAzureStone").setUnlocalizedName("ifhyRawAzureStone").setCreativeTab(CreativeTabs.tabMaterials);
+        crushedAzureStone = new NMItem(2760).setTextureName("nightmare:ifhyCrushedAzureStone").setUnlocalizedName("ifhyCrushedAzureStone").setCreativeTab(CreativeTabs.tabMaterials);
+        washedAzureSediment = new NMItem(2761).setTextureName("nightmare:ifhyWashedAzureSediment").setUnlocalizedName("ifhyWashedAzureSediment").setCreativeTab(CreativeTabs.tabMaterials);
+        lapisPrecipitate = new NMItem(2762).setTextureName("nightmare:ifhyLapisPrecipitate").setUnlocalizedName("ifhyLapisPrecipitate").setCreativeTab(CreativeTabs.tabMaterials);
+        hydraulicLens = new NMItem(2763).setTextureName("nightmare:ifhyHydraulicLens").setUnlocalizedName("ifhyHydraulicLens").setCreativeTab(CreativeTabs.tabMaterials);
+        fluidGauge = new NMItem(2764).setTextureName("nightmare:ifhyFluidGauge").setUnlocalizedName("ifhyFluidGauge").setCreativeTab(CreativeTabs.tabMaterials);
+        searingSilverScale = new NetherItem(2765).setTextureName("nightmare:ifhySearingSilverScale").setUnlocalizedName("ifhySearingSilverScale").setCreativeTab(CreativeTabs.tabMaterials);
+        denseNetherrackCore = new NetherItem(2766).setTextureName("nightmare:ifhyDenseNetherrackCore").setUnlocalizedName("ifhyDenseNetherrackCore").setCreativeTab(CreativeTabs.tabMaterials);
+        deadzoneShard = new NetherItem(2767).setTextureName("nightmare:ifhyDeadzoneShard").setUnlocalizedName("ifhyDeadzoneShard").setCreativeTab(CreativeTabs.tabMaterials);
+        netherTradePlaceholder = new NetherItem(2768).setTextureName("nightmare:ifhyNetherTradePlaceholder").setUnlocalizedName("ifhyNetherTradePlaceholder").setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

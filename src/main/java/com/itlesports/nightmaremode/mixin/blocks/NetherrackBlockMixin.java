@@ -67,7 +67,7 @@ public class NetherrackBlockMixin extends FullBlock {
         }
         if (held != null && held.getItem() instanceof ItemNetherrackPickaxe) {
             if (!world.isRemote) {
-                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(Block.netherrack));
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(Block.netherrack, 1, meta));
                 player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
             }
             return;
@@ -93,6 +93,17 @@ public class NetherrackBlockMixin extends FullBlock {
     @Override
     public int idDropped(int metadata, Random random, int fortune) {
         return metadata == 1 ? -1 : super.idDropped(metadata, random, fortune);
+    }
+
+    @Override
+    public int damageDropped(int metadata) {
+        return metadata >= 2 && metadata <= 3 ? metadata : super.damageDropped(metadata);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public int getDamageValue(World world, int x, int y, int z) {
+        return world.getBlockMetadata(x, y, z);
     }
 
     @Override

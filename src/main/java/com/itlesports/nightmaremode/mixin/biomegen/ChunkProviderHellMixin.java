@@ -17,6 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.ArrayList;
+import com.itlesports.nightmaremode.entity.variants.EntityAshGhast;
+import com.itlesports.nightmaremode.entity.variants.EntityCinderBlaze;
+import com.itlesports.nightmaremode.entity.variants.EntityCinderPigman;
+import com.itlesports.nightmaremode.entity.variants.EntityDeadzonePigman;
+import com.itlesports.nightmaremode.entity.variants.EntityHellfireBlaze;
+import com.itlesports.nightmaremode.entity.variants.EntitySiegeGhast;
 import java.util.Random;
 
 @Mixin(ChunkProviderHell.class)
@@ -28,6 +35,16 @@ public class ChunkProviderHellMixin {
     @Unique private static WorldGenMinable tungsten = new WorldGenMinable(NMBlocks.tungstenOre.blockID, 6, Block.netherrack.blockID);
     @Unique private static WorldGenOreNode tungstenNodes = new WorldGenOreNode(
             NMBlocks.tungstenOreNode.blockID, Block.netherrack.blockID, 1, 4);
+    @Unique private static WorldGenOreNode coalNodes = new WorldGenOreNode(
+            NMBlocks.coalOreNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenMinable denseCoreOre = new WorldGenMinable(
+            NMBlocks.denseNetherrackCoreOre.blockID, 3, Block.netherrack.blockID);
+    @Unique private static WorldGenOreNode denseCoreNodes = new WorldGenOreNode(
+            NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenMinable deadzoneShardOre = new WorldGenMinable(
+            NMBlocks.deadzoneShardOre.blockID, 2, Block.netherrack.blockID);
+    @Unique private static WorldGenOreNode deadzoneShardNodes = new WorldGenOreNode(
+            NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private final MapGenNetherDesertTemple netherDesertTempleGenerator = new MapGenNetherDesertTemple();
     @Unique private final MapGenNetherVillagerPost netherVillagerPostGenerator = new MapGenNetherVillagerPost();
 
@@ -41,6 +58,28 @@ public class ChunkProviderHellMixin {
                         baseX + this.hellRNG.nextInt(16),
                         this.hellRNG.nextInt(60) + 3,
                         baseZ + this.hellRNG.nextInt(16));
+            }
+        }
+
+        int tier = NetherTierHelper.getTier(this.worldObj, baseX + 8, baseZ + 8);
+        if (tier >= 1) {
+            this.generateNodeInChunk(coalNodes, baseX, baseZ, 12);
+        }
+        if (tier == 2) {
+            for (int attempt = 0; attempt < 3; ++attempt) {
+                denseCoreOre.generate(this.worldObj, this.hellRNG,
+                        baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
+                        baseZ + this.hellRNG.nextInt(16));
+            }
+            if (this.hellRNG.nextInt(24) == 0) {
+                this.generateNodeInChunk(denseCoreNodes, baseX, baseZ, 12);
+            }
+        } else if (tier == 3) {
+            deadzoneShardOre.generate(this.worldObj, this.hellRNG,
+                    baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
+                    baseZ + this.hellRNG.nextInt(16));
+            if (this.hellRNG.nextInt(64) == 0) {
+                this.generateNodeInChunk(deadzoneShardNodes, baseX, baseZ, 12);
             }
         }
 
@@ -66,6 +105,17 @@ public class ChunkProviderHellMixin {
             netherDesertTempleGenerator.generateStructuresInChunk(this.worldObj, this.hellRNG, chunkX, chunkZ);
         }
         netherVillagerPostGenerator.generateStructuresInChunk(this.worldObj, this.hellRNG, chunkX, chunkZ);
+    }
+
+    @Unique
+    private void generateNodeInChunk(WorldGenOreNode generator, int baseX, int baseZ, int attempts) {
+        for (int attempt = 0; attempt < attempts; ++attempt) {
+            if (generator.generate(this.worldObj, this.hellRNG,
+                    baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
+                    baseZ + this.hellRNG.nextInt(16))) {
+                return;
+            }
+        }
     }
 
     @Inject(method = "provideChunk", at = @At("TAIL"))
@@ -125,5 +175,27 @@ public class ChunkProviderHellMixin {
         if (creatureType == EnumCreatureType.monster && netherDesertTempleGenerator.hasTempleAt(x, y, z)) {
             cir.setReturnValue(netherDesertTempleGenerator.getSpawnList());
         }
+    }
+
+    @Inject(method = "getPossibleCreatures", at = @At("RETURN"), cancellable = true)
+    private void addTieredNetherAmbientSpawns(EnumCreatureType creatureType, int x, int y, int z,
+                                              CallbackInfoReturnable<List> cir) {
+        if (creatureType != EnumCreatureType.monster || netherDesertTempleGenerator.hasTempleAt(x, y, z)) {
+            return;
+        }
+        int tier = NetherTierHelper.getTier(this.worldObj, x, z);
+        if (tier < 2) {
+            return;
+        }
+        List result = new ArrayList(cir.getReturnValue());
+        result.add(new SpawnListEntry(EntityCinderPigman.class, 30, 2, 4));
+        result.add(new SpawnListEntry(EntityCinderBlaze.class, 10, 1, 2));
+        result.add(new SpawnListEntry(EntityAshGhast.class, 5, 1, 1));
+        if (tier >= 3) {
+            result.add(new SpawnListEntry(EntityDeadzonePigman.class, 20, 1, 3));
+            result.add(new SpawnListEntry(EntityHellfireBlaze.class, 8, 1, 2));
+            result.add(new SpawnListEntry(EntitySiegeGhast.class, 3, 1, 1));
+        }
+        cir.setReturnValue(result);
     }
 }

@@ -129,6 +129,7 @@
     "blocks.HempCropBlockMixin",
     "blocks.HopperTileEntityMixin",
     "blocks.KilnBlockMixin",
+    "blocks.LapisOreBlockMixin",
     "blocks.MillstoneTileEntityMixin",
     "blocks.MushroomBlockBrownMixin",
     "blocks.MushroomCapBlockMixin",

@@ -130,6 +130,12 @@ public class NMBlocks {
     public static Block chunkLoader;
     public static Block chuteHopper;
     public static Block tungstenOreNode;
+    public static Block minerDrill;
+    public static Block coalOreNode;
+    public static Block denseNetherrackCoreOre;
+    public static Block denseNetherrackCoreNode;
+    public static Block deadzoneShardOre;
+    public static Block deadzoneShardNode;
 
 
 
@@ -204,8 +210,32 @@ public class NMBlocks {
         chuteHopper = new BlockChuteHopper(2420);
         Item.itemsList[chuteHopper.blockID] = new NMNetherItemBlock(chuteHopper.blockID - 256);
 
-        tungstenOreNode = new BlockOreNode(2421, NMItems.tungstenChunk.itemID);
+        tungstenOreNode = new BlockOreNode(2421, NMItems.tungstenChunk.itemID, Block.obsidian,
+                "ifhyTungstenOreNode", "nightmare:ifhyTungstenOreNode");
         Item.itemsList[tungstenOreNode.blockID] = new NMNetherItemBlock(tungstenOreNode.blockID - 256);
+
+        minerDrill = new BlockMinerDrill(2422);
+        Item.itemsList[minerDrill.blockID] = new NMNetherItemBlock(minerDrill.blockID - 256);
+
+        coalOreNode = new BlockOreNode(2423, Item.coal.itemID, Block.oreCoal,
+                "ifhyCoalOreNode", "nightmare:ifhyCoalOreNode");
+        Item.itemsList[coalOreNode.blockID] = new NMNetherItemBlock(coalOreNode.blockID - 256);
+
+        denseNetherrackCoreOre = new BlockNetherResourceOre(2424, NMItems.denseNetherrackCore.itemID, 8.0F,
+                "ifhyDenseNetherrackCoreOre", "nightmare:ifhyDenseNetherrackCoreOre");
+        Item.itemsList[denseNetherrackCoreOre.blockID] = new NMNetherItemBlock(denseNetherrackCoreOre.blockID - 256);
+
+        denseNetherrackCoreNode = new BlockOreNode(2425, NMItems.denseNetherrackCore.itemID, Block.obsidian,
+                "ifhyDenseNetherrackCoreNode", "nightmare:ifhyDenseNetherrackCoreNode");
+        Item.itemsList[denseNetherrackCoreNode.blockID] = new NMNetherItemBlock(denseNetherrackCoreNode.blockID - 256);
+
+        deadzoneShardOre = new BlockNetherResourceOre(2426, NMItems.deadzoneShard.itemID, 16.0F,
+                "ifhyDeadzoneShardOre", "nightmare:ifhyDeadzoneShardOre");
+        Item.itemsList[deadzoneShardOre.blockID] = new NMNetherItemBlock(deadzoneShardOre.blockID - 256);
+
+        deadzoneShardNode = new BlockOreNode(2427, NMItems.deadzoneShard.itemID, Block.obsidian,
+                "ifhyDeadzoneShardNode", "nightmare:ifhyDeadzoneShardNode");
+        Item.itemsList[deadzoneShardNode.blockID] = new NMNetherItemBlock(deadzoneShardNode.blockID - 256);
 
 
 

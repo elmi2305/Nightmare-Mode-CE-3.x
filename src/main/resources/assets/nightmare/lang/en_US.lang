@@ -245,6 +245,15 @@ entity.NmCreeperGhast.name=Creeper Ghast
 entity.entityBloodAltar.name=Progress
 entity.NmMushWorm.name=Mush Worm
 entity.NmNetherFish.name=Nether Fish
+entity.NmTier1NetherVillager.name=Tier 1 Nether Merchant
+entity.NmTier2NetherVillager.name=Tier 2 Nether Merchant
+entity.NmTier3NetherVillager.name=Tier 3 Nether Merchant
+entity.NmCinderPigman.name=Cinder Pigman
+entity.NmDeadzonePigman.name=Deadzone Pigman
+entity.NmCinderBlaze.name=Cinder Blaze
+entity.NmHellfireBlaze.name=Hellfire Blaze
+entity.NmAshGhast.name=Ash Ghast
+entity.NmSiegeGhast.name=Siege Ghast
 entity.NmEntityVoidCreeper.name=Void Creeper
 entity.NmEntityGelCreeper.name=Sticky Creeper
 entity.NmEntityGlitchCreeper.name=Glitch Creeper
@@ -270,7 +279,10 @@ commands.tpa.denied=Denied the TPA request.
 
 commands.state.usage=/ws <0|1|2|3>
 
-emi.trade.NightmareVillager=Nightmare Merchant
+emi.trade.NightmareVillager=Requires rank %s Nightmare Merchant
+emi.trade.EntityTier1NetherVillager=Requires rank %s Tier 1 Nether Merchant
+emi.trade.EntityTier2NetherVillager=Requires rank %s Tier 2 Nether Merchant
+emi.trade.EntityTier3NetherVillager=Requires rank %s Tier 3 Nether Merchant
 
 status.health.NoHit=No Hit
 
@@ -881,12 +893,15 @@ achievement.btw.place_tool=Leaving Your Mark
 
 achievement.btw.craft_iron_shears.desc=Obtain a pair of Iron Shears. These are great for cutting Hemp
 
-
+# emi tags
 
 tag.nightmare.sandwich_meats=Sandwich Meats
 tag.nightmare.eclipse_drops=Eclipse Items
 tag.nightmare.book_leather=Book Covers
 tag.nightmare.knife_strings=Knife Strings
+tag.nightmare.iron_tungsten_ingots=Iron or Tungsten Ingots
+tag.nightmare.iron_tungsten_nuggets=Iron or Tungsten Nuggets
+tag.nightmare.nether_signal_binders=Nether Signal Binders
 
 # BTW info overrides
 btw.anvil.info=The Anvil can be used to repair items using their materials & experience levels. Note that Anvils cannot be picked back up, and instead will drop Metal Scrap, which is useless except to melt down in a Crucible to reclaim the iron.
@@ -1016,8 +1031,28 @@ item.ifhyObsidianBrick.name=Obsidian Brick
 item.ifhyAquamarine.name=Aquamarine
 item.ifhyRedstoneCrystal.name=Redstone Crystal
 item.ifhyRefinedRedstone.name=Refined Redstone
+item.ifhyAzureSalt.name=Azure Salt
+item.ifhyAzureSlag.name=Azure Slag
+item.ifhyBrittleAzureCake.name=Brittle Azure Cake
+item.ifhyRawAzureStone.name=Raw Azure Stone
+item.ifhyCrushedAzureStone.name=Crushed Azure Stone
+item.ifhyWashedAzureSediment.name=Washed Azure Sediment
+item.ifhyLapisPrecipitate.name=Lapis Precipitate
+item.ifhyHydraulicLens.name=Hydraulic Lens
+item.ifhyFluidGauge.name=Fluid Gauge
+item.ifhySearingSilverScale.name=Searing Silver Scale
+item.ifhyDenseNetherrackCore.name=Dense Netherrack Core
+item.ifhyDeadzoneShard.name=Deadzone Shard
+item.ifhyNetherTradePlaceholder.name=Unfinished Nether Trade Component
 tile.ifhyTungstenOre.name=Tungsten Ore
 tile.ifhyTungstenOreNode.name=Tungsten Ore Node
+tile.ifhyMinerDrill.name=Miner Drill
+container.ifhyMinerDrill=Miner Drill
+tile.ifhyCoalOreNode.name=Coal Ore Node
+tile.ifhyDenseNetherrackCoreOre.name=Dense Netherrack Core Ore
+tile.ifhyDenseNetherrackCoreNode.name=Dense Netherrack Core Node
+tile.ifhyDeadzoneShardOre.name=Deadzone Shard Ore
+tile.ifhyDeadzoneShardNode.name=Deadzone Shard Node
 tile.ifhyChuteHopper.name=Chute Hopper
 tile.ifhyNetherWorkbench.name=Nether Crafting Table
 tile.ifhyNetherShrub.name=Netherrack Shrub

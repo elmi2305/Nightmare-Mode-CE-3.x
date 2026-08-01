@@ -56,6 +56,15 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityAwakenedWither.class, "NmAwakenedWither", 2341 /*, 0xFFFFFF, 0 */);
         EntityList.addMapping(EntityWalker.class, "NmWalker", 2342 /* , 0xFFFFFF, 0 */);
         EntityList.addMapping(EntityNetherFish.class, "NmNetherFish", 2343, 0x5A1A12, 0xFF6A00);
+        EntityList.addMapping(EntityTier1NetherVillager.class, "NmTier1NetherVillager", 2344, 0x6F3122, 0xE08B31);
+        EntityList.addMapping(EntityTier2NetherVillager.class, "NmTier2NetherVillager", 2345, 0x4B2520, 0x8E5CB5);
+        EntityList.addMapping(EntityTier3NetherVillager.class, "NmTier3NetherVillager", 2346, 0x24191D, 0x4789C7);
+        EntityList.addMapping(EntityCinderPigman.class, "NmCinderPigman", 2347, 0x8C3C28, 0xF06B24);
+        EntityList.addMapping(EntityDeadzonePigman.class, "NmDeadzonePigman", 2348, 0x29171D, 0x731C34);
+        EntityList.addMapping(EntityCinderBlaze.class, "NmCinderBlaze", 2349, 0x9A3519, 0xFFD05A);
+        EntityList.addMapping(EntityHellfireBlaze.class, "NmHellfireBlaze", 2350, 0x4A0D0D, 0xFF2D00);
+        EntityList.addMapping(EntityAshGhast.class, "NmAshGhast", 2351, 0x77706C, 0x322B29);
+        EntityList.addMapping(EntitySiegeGhast.class, "NmSiegeGhast", 2352, 0x3A2623, 0x9C271B);
 
     }
 
@@ -78,5 +87,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(ObsidianMillstoneTileEntity.class, "NmObsidianMillstone");
         TileEntity.addMapping(ChuteHopperTileEntity.class, "NmChuteHopper");
         TileEntity.addMapping(OreNodeTileEntity.class, "NmOreNode");
+        TileEntity.addMapping(MinerDrillTileEntity.class, "NmMinerDrill");
     }
 }

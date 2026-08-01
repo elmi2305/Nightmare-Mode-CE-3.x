@@ -37,6 +37,18 @@ public class NMTags {
             Item.silk,
             NMItems.pighideString
     );
+    public static final Tag ironTungstenIngots = Tag.of(loc("iron_tungsten_ingots"),
+            Item.ingotIron,
+            NMItems.tungstenIngot
+    );
+    public static final Tag ironTungstenNuggets = Tag.of(loc("iron_tungsten_nuggets"),
+            BTWItems.ironNugget,
+            NMItems.tungstenNugget
+    );
+    public static final Tag netherSignalBinders = Tag.of(loc("nether_signal_binders"),
+            NMItems.azureSalt,
+            NMItems.searingSilverScale
+    );
 
     private static ResourceLocation loc(String name) {
         return new ResourceLocation("nightmare", name);

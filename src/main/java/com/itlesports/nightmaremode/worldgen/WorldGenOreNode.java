@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.worldgen;
 
 import net.minecraft.src.Block;
-import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
 
@@ -33,20 +32,15 @@ public class WorldGenOreNode extends WorldGenerator {
         int placed = 0;
         List<int[]> vein = new ArrayList<>();
         vein.add(new int[]{x, firstY, z});
-        ChunkCoordinates spawn = world.getSpawnPoint();
 
         for (int attempt = 0; attempt < targetSize * 8 && placed < targetSize; ++attempt) {
             int[] current = vein.get(random.nextInt(vein.size()));
             int currentX = current[0];
             int currentY = current[1];
             int currentZ = current[2];
-            long distanceX = currentX - spawn.posX;
-            long distanceZ = currentZ - spawn.posZ;
             if (world.getBlockId(currentX, currentY, currentZ) == this.replaceBlockId) {
-                if (distanceX * distanceX + distanceZ * distanceZ <= 200L * 200L) {
-                    this.setBlock(world, currentX, currentY, currentZ, this.nodeBlockId);
-                    ++placed;
-                }
+                this.setBlock(world, currentX, currentY, currentZ, this.nodeBlockId);
+                ++placed;
             }
 
             int direction = random.nextInt(6);

@@ -21,6 +21,9 @@ import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
+import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
 import api.item.tag.TagInstance;
 import api.item.tag.TagOrStack;
 import api.item.tag.Tag;
@@ -165,6 +168,7 @@ public abstract class NMInitializer implements AchievementExt {
         addLibrarianTrades();
         addBlacksmithTrades();
         addNightmareVillagerTrades();
+        addNetherPostVillagerTrades();
         finishRecipes("All Trades");
 
     }
@@ -305,6 +309,98 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
 
+    private static void addNetherPostVillagerTrades() {
+        addTierOneNetherPostTrades();
+        addPlaceholderNetherPostTrades(EntityTier2NetherVillager.PROFESSION_ID, "nmNetherTier2");
+        addPlaceholderNetherPostTrades(EntityTier3NetherVillager.PROFESSION_ID, "nmNetherTier3");
+        finishRecipes("Nether Post Villager Trades");
+    }
+
+    private static void addTierOneNetherPostTrades() {
+        int profession = EntityTier1NetherVillager.PROFESSION_ID;
+
+        buy("nmNetherTier1Level1Fallback", profession, 0, BTWItems.groundNetherrack.itemID, 0, 1, 1, 1.0F, true, 1, 1);
+        buy("nmNetherTier1TungstenDust", profession, 1, NMItems.tungstenDust.itemID, 0, 8, 16, 1.0F);
+        buy("nmNetherTier1TungstenChunk", profession, 1, NMItems.tungstenChunk.itemID, 0, 16, 32, 0.8F);
+        buy("nmNetherTier1CrushedTungsten", profession, 1, NMItems.crushedTungsten.itemID, 0, 20, 48, 0.8F);
+        buy("nmNetherTier1TungstenConcentrate", profession, 1, NMItems.tungstenConcentrate.itemID, 0, 16, 32, 0.7F);
+        buy("nmNetherTier1Quartz", profession, 1, Item.netherQuartz.itemID, 0, 8, 32, 1.0F);
+        buy("nmNetherTier1QuartzDust", profession, 1, NMItems.quartzDust.itemID, 0, 8, 12, 1.0F);
+        buy("nmNetherTier1WorkbenchPart", profession, 1, NMItems.netherWorkbenchPart.itemID, 0, 1, 2, 0.8F);
+        buy("nmNetherTier1SoulSand", profession, 1, Block.slowSand.blockID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1Flint", profession, 1, Item.flint.itemID, 0, 12, 36, 1.0F);
+        buy("nmNetherTier1FlintChip", profession, 1, NMItems.flintChip.itemID, 0, 32, 64, 1.0F);
+        buy("nmNetherTier1SoulChip", profession, 1, NMItems.soulChip.itemID, 0, 10, 24, 1.0F);
+        buy("nmNetherTier1SoulFlint", profession, 1, NMItems.soulFlint.itemID, 0, 2, 8, 0.7F);
+        buy("nmNetherTier1PigHide", profession, 1, NMItems.pigHide.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1PighideString", profession, 1, NMItems.pighideString.itemID, 0, 8, 16, 0.8F);
+        buy("nmNetherTier1GroundNetherrack", profession, 1, BTWItems.groundNetherrack.itemID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1GhastTear", profession, 1, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
+        buy("nmNetherTier1CreeperOyster", profession, 1, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
+        buy("nmNetherTier1Nitre", profession, 1, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
+        buy("nmNetherTier1Bone", profession, 1, Item.bone.itemID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1Stick", profession, 1, NMItems.netherStick.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1Gravel", profession, 1, Block.gravel.blockID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1Netherrack", profession, 1, Block.netherrack.blockID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1BlazeRod", profession, 1, Item.blazeRod.itemID, 0, 2, 8, 0.6F);
+        buy("nmNetherTier1RedMushroom", profession, 1, BTWItems.redMushroom.itemID, 0, 12, 16, 0.8F);
+        buy("nmNetherTier1BrownMushroom", profession, 1, BTWItems.brownMushroom.itemID, 0, 12, 16, 0.8F);
+        buy("nmNetherTier1MagmaCream", profession, 1, Item.magmaCream.itemID, 0, 2, 8, 0.7F);
+        buy("nmNetherTier1GoldSword", profession, 1, Item.swordGold.itemID, Short.MAX_VALUE, 1, 1, 0.5F);
+        buy("nmNetherTier1GoldNugget", profession, 1, Item.goldNugget.itemID, 0, 4, 8, 1.0F);
+        buy("nmNetherTier1GoldIngot", profession, 1, Item.ingotGold.itemID, 0, 2, 4, 0.7F);
+        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 24, 36, 1.0F);
+        buy("nmNetherTier1FireCharge", profession, 1, Item.fireballCharge.itemID, 0, 8, 12, 0.8F);
+        buy("nmNetherTier1GlowstoneDust", profession, 1, Item.glowstone.itemID, 0, 24, 48, 1.0F);
+        buy("nmNetherTier1Glowstone", profession, 1, Block.glowStone.blockID, 0, 4, 8, 0.8F);
+        buy("nmNetherTier1Wart", profession, 1, Item.netherStalkSeeds.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1Obsidian", profession, 1, Block.obsidian.blockID, 0, 8, 16, 0.6F);
+        buy("nmNetherTier1Brick", profession, 1, Item.netherrackBrick.itemID, 0, 8, 16, 0.8F);
+        buy("nmNetherTier1BrickBlock", profession, 1, Block.netherBrick.blockID, 0, 16, 32, 0.7F);
+        buy("nmNetherTier1Saddle", profession, 1, Item.saddle.itemID, 0, 1, 2, 0.5F);
+        buy("nmNetherTier1SilverScale", profession, 1, NMItems.searingSilverScale.itemID, 0, 4, 12, 0.8F);
+
+        sell("nmNetherTier1Rails", profession, 1, Block.rail.blockID, 0, 12, 24, 1.2F, false, 2, 4);
+        sell("nmNetherTier1Minecart", profession, 1, Item.minecartEmpty.itemID, 0, 1, 1, 0.7F, false, 5, 8);
+        sell("nmNetherTier1Chest", profession, 1, BTWBlocks.chest.blockID, 0, 1, 2, 0.8F, false, 3, 6);
+        sell("nmNetherTier1AzureSalt", profession, 1, NMItems.azureSalt.itemID, 0, 2, 6, 1.0F, false, 2, 4);
+        sell("nmNetherTier1Redstone", profession, 2, Item.redstone.itemID, 0, 4, 8, 0.8F, false, 3, 6);
+        sell("nmNetherTier1TungstenNugget", profession, 2, NMItems.tungstenNugget.itemID, 0, 2, 4, 0.7F, false, 4, 8);
+        sell("nmNetherTier1PolishedShard", profession, 2, NMItems.polishedCrystalShard.itemID, 0, 1, 2, 0.7F, false, 5, 9);
+        sell("nmNetherTier1BrewingStand", profession, 2, Block.brewingStand.blockID, 0, 1, 1, 0.5F, false, 12, 18);
+        sell("nmNetherTier1Lapis", profession, 3, Item.dyePowder.itemID, 4, 2, 6, 0.7F, false, 4, 8);
+        sell("nmNetherTier1PoweredRail", profession, 3, Block.railPowered.blockID, 0, 6, 12, 0.6F, false, 8, 14);
+        sell("nmNetherTier1DetectorRail", profession, 3, Block.railDetector.blockID, 0, 6, 12, 0.6F, false, 8, 14);
+        sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 1, 1, 0.4F, false, 16, 24);
+        sell("nmNetherTier1HighSpeedCart", profession, 4, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.4F, false, 20, 32);
+        sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
+
+        buy("nmNetherTier1Level2", profession, 1, Block.blockGold.blockID, 0, 1, 1, 1.0F, true, 1, 1);
+        buy("nmNetherTier1Level3", profession, 2, NMItems.redstoneCrystal.itemID, 0, 1, 1, 1.0F, true, 1, 1);
+        buy("nmNetherTier1Level4", profession, 3, Item.bucketWater.itemID, 0, 1, 1, 1.0F, true, 1, 1);
+        buy("nmNetherTier1Level5", profession, 4, Item.netherStar.itemID, 0, 1, 1, 1.0F, true, 1, 1);
+
+        EntityVillager.defaultTradeByProfessionList.put(profession,
+                TradeProvider.getBuilder().name("nmNetherTier1Default").profession(profession).level(1)
+                        .buy().item(BTWItems.groundNetherrack.itemID).itemCount(48, 64).build());
+    }
+
+    private static void addPlaceholderNetherPostTrades(int profession, String prefix) {
+        buy(prefix + "Level1Fallback", profession, 0,
+                NMItems.netherTradePlaceholder.itemID, 0, 1, 1,
+                1.0F, true, 1, 1);
+        buy(prefix + "Input", profession, 1, NMItems.netherTradePlaceholder.itemID, 0, 1, 1, 1.0F);
+        sell(prefix + "Output", profession, 1, NMItems.netherTradePlaceholder.itemID, 0, 1, 1, 1.0F, false, 1, 1);
+        for (int level = 1; level < 5; ++level) {
+            buy(prefix + "Level" + (level + 1), profession, level,
+                    NMItems.netherTradePlaceholder.itemID, 0, level, level,
+                    1.0F, true, 1, 1);
+        }
+        EntityVillager.defaultTradeByProfessionList.put(profession,
+                TradeProvider.getBuilder().name(prefix + "Default").profession(profession).level(1)
+                        .buy().item(NMItems.netherTradePlaceholder.itemID).itemCount(1, 1).build());
+    }
+
 
     private static void addCrucibleRecipes(){
 
@@ -429,6 +525,36 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.redstoneCrystal), 0.12F)
                 .setConsumesFluid());
 
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{
+                        new ItemStack(Item.redstone, 4),
+                        new ItemStack(NMItems.quartzDust, 2),
+                        new ItemStack(BTWItems.soulSandPile),
+                        new ItemStack(BTWItems.brimstone),
+                        new ItemStack(NMItems.azureSalt)
+                },
+                CisternTileEntity.FLUID_LAVA, 3, 12, 600,
+                new ItemStack[]{new ItemStack(NMItems.azureSlag)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{
+                        new ItemStack(Item.redstone, 4),
+                        new ItemStack(NMItems.quartzDust, 2),
+                        new ItemStack(BTWItems.soulSandPile),
+                        new ItemStack(BTWItems.brimstone),
+                        new ItemStack(NMItems.searingSilverScale, 2)
+                },
+                CisternTileEntity.FLUID_LAVA, 3, 12, 600,
+                new ItemStack[]{new ItemStack(NMItems.azureSlag)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.washedAzureSediment), new ItemStack(NMItems.aquamarine)},
+                CisternTileEntity.FLUID_WATER, 0, 8, 480,
+                new ItemStack[]{new ItemStack(NMItems.lapisPrecipitate)})
+                .setConsumesFluid());
+
         finishRecipes("Cistern Recipes");
     }
 
@@ -458,6 +584,10 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(NMItems.washedHemp),
                 new ItemStack(NMItems.rettedHemp),
                 4000);
+        manager.addWaterRecipe(
+                new ItemStack(NMItems.washedAzureSediment),
+                new ItemStack(NMItems.crushedAzureStone),
+                5000);
         manager.addRainRecipe(
                 NMBlocks.blockWashedIronLayer,
                 NMBlocks.blockCrushedIronLayer,
@@ -501,6 +631,8 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().addSmelting(NMItems.pureTungstenChunk.itemID, new ItemStack(NMItems.tungstenNugget), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.obsidianPaste.itemID, new ItemStack(NMItems.obsidianBrick), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.washedHemp.itemID, new ItemStack(NMItems.driedHemp), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(NMItems.azureSlag.itemID, new ItemStack(NMItems.brittleAzureCake), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(NMItems.lapisPrecipitate.itemID, new ItemStack(NMItems.brittleAzureCake), 0.0F);
 
         finishRecipes("Oven Recipes");
 
@@ -581,6 +713,24 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{Block.netherrack, NMItems.netherStick, NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenChunk), new Object[]{NMItems.tungstenDust, NMItems.tungstenDust});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.refinedRedstone), new Object[]{NMItems.redstoneCrystal, NMItems.polishedCrystalShard});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.hydraulicLens), new Object[]{NMItems.aquamarine, NMItems.polishedCrystalShard, Block.glass});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.fluidGauge), new Object[]{NMItems.aquamarine, NMItems.nickelPlate, NMItems.hydraulicLens});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.redstoneEye, 2), new Object[]{"###", "GGG", " R ", Character.valueOf('#'), NMItems.aquamarine, Character.valueOf('G'), Item.goldNugget, Character.valueOf('R'), Item.redstone});
+
+        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 2), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 0)});
+        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 3), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 2)});
+        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 4), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 3)});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.rail, 12), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick, Character.valueOf('R'), BTWItems.redstoneLatch});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.railDetector, 6), new Object[]{"X X", "X#X", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.stonePressurePlates});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.minecartEmpty), new Object[]{"# #", "###", Character.valueOf('#'), Item.ingotIron});
+        RecipeManager.addRecipe(new ItemStack(Block.rail, 12), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('S'), Item.stick});
+        RecipeManager.addRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('S'), Item.stick, Character.valueOf('R'), BTWItems.redstoneLatch});
+        RecipeManager.addRecipe(new ItemStack(Block.railDetector, 6), new Object[]{"XFX", "X#X", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('F'), NMTags.netherSignalBinders, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.stonePressurePlates});
+        RecipeManager.addRecipe(new ItemStack(Block.railActivator, 6), new Object[]{"XSX", "X#X", "XSX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('#'), Block.torchRedstoneActive, Character.valueOf('S'), Item.stick});
+        RecipeManager.addRecipe(new ItemStack(Item.minecartEmpty), new Object[]{"# #", "###", Character.valueOf('#'), NMTags.ironTungstenIngots});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.minerDrill), new Object[]{Block.netherrack, NMItems.tungstenIngot, Item.redstone});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenConcentrate), new Object[]{NMItems.crushedTungsten, Item.netherQuartz});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pureTungstenChunk), new Object[]{NMItems.tungstenPowder, NMItems.tungstenPowder});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.tungstenNugget});
