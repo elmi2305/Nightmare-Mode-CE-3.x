@@ -101,6 +101,7 @@
     "blocks.BlockNetherStalkMixin",
     "blocks.BlockObsidianMixin",
     "blocks.BlockPortalMixin",
+    "blocks.BlockRedstoneOreMixin",
     "blocks.BlockSandStoneMixin",
     "blocks.BlockSignMixin",
     "blocks.BlockSoulSandMixin",

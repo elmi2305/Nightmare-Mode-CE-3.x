@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.Block;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
 public abstract class HammerRecipeList {
@@ -30,6 +31,8 @@ public abstract class HammerRecipeList {
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crushedTungsten, 2), new ItemStack(NMItems.tungstenChunk)).setHitsRequired(2);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.tungstenPowder), new ItemStack(NMItems.brittleTungstenCake)).setHitsRequired(2);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(BTWItems.tannedLeather), new ItemStack(BTWItems.cutTannedLeather, 4)).setHitsRequired(3);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(Item.redstone), new ItemStack(NMItems.redstoneCrystal));
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(Item.redstone, 4), new ItemStack(NMItems.refinedRedstone));
 
     }
 }

@@ -263,6 +263,11 @@ public class NMItems {
     public static FoodItem debonedRawFish;
     private static Item[] rawFish;
 
+
+    public static Item redstoneCrystal;
+    public static Item refinedRedstone;
+
+
     static {
         doNightmareModeItems();
         // info: due to the order of initialization, NMBlocks fields are null at this time, so NMPlaceAsBlockItem or other initializers that require NMBlocks must be passed a copy of the block ID int registered in NMFields
@@ -441,6 +446,10 @@ public class NMItems {
         porosityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2747, ChunkAttribute.POROSITY)
                 .setUnlocalizedName("nmPorosityFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
+
+        redstoneCrystal = new NMItem(2754).setTextureName("nightmare:ifhyRedstoneCrystal").setUnlocalizedName("ifhyRedstoneCrystal").setCreativeTab(CreativeTabs.tabMaterials);
+        refinedRedstone = new NMItem(2755).setTextureName("nightmare:ifhyRefinedRedstone").setUnlocalizedName("ifhyRefinedRedstone").setCreativeTab(CreativeTabs.tabMaterials);
+
 
 
 

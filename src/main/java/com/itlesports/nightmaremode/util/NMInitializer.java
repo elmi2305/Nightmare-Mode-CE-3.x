@@ -404,18 +404,12 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.failedDiamondRefinement), 0.08F)
                 .setConsumesFluid());
 
-        // Retting breaks down the woody material around hemp fibers.  Brine is consumed
-        // deliberately: each batch needs a fresh curing solution before it can be washed.
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(BTWItems.hemp)},
                 CisternTileEntity.FLUID_BRINE, 0, 2, 240,
                 new ItemStack[]{new ItemStack(NMItems.rettedHemp)})
                 .setConsumesFluid());
 
-        // A scoured hide still holds mill grit and loose hair.  Fresh water is deliberately
-        // consumed here, so leather production remains a repeatable wet-processing job rather
-        // than a one-time cistern unlock.  Working the wet hide on an anvil prepares it for the
-        // final, still-required dung-and-bark cauldron tanning bath.
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(BTWItems.scouredLeather)},
                 CisternTileEntity.FLUID_WATER, 0, 1, 180,
@@ -424,8 +418,15 @@ public abstract class NMInitializer implements AchievementExt {
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.obsidianPowder), new ItemStack(Item.magmaCream)},
-                CisternTileEntity.FLUID_LAVA, 0, 0, 200,
+                CisternTileEntity.FLUID_LAVA, 3, 0, 200,
                 new ItemStack[]{new ItemStack(NMItems.obsidianPaste)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(BTWItems.nitre, 3), new ItemStack(Item.netherQuartz)},
+                CisternTileEntity.FLUID_LAVA, 3, 10, 400,
+                new ItemStack[]{new ItemStack(NMItems.redstoneCrystal)})
+                .addRandomOutput(new ItemStack(NMItems.redstoneCrystal), 0.12F)
                 .setConsumesFluid());
 
         finishRecipes("Cistern Recipes");
@@ -579,6 +580,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackChunk, 4), new Object[]{new ItemStack(Block.netherrack, 1, 0)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{Block.netherrack, NMItems.netherStick, NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenChunk), new Object[]{NMItems.tungstenDust, NMItems.tungstenDust});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.refinedRedstone), new Object[]{NMItems.redstoneCrystal, NMItems.polishedCrystalShard});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenConcentrate), new Object[]{NMItems.crushedTungsten, Item.netherQuartz});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pureTungstenChunk), new Object[]{NMItems.tungstenPowder, NMItems.tungstenPowder});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.tungstenNugget});
