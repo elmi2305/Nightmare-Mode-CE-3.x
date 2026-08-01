@@ -19,9 +19,18 @@ public class RenderVillagerMixin {
     @Unique private static final ResourceLocation HUNGRY_SMITH = new ResourceLocation("nightmare:textures/entity/villager_hungry_smith.png");
     @Unique private static final ResourceLocation HUNGRY_BUTCHER = new ResourceLocation("nightmare:textures/entity/villager_hungry_butcher.png");
     @Unique private static final ResourceLocation HUNGRY_NIGHTMARE = new ResourceLocation("nightmare:textures/entity/nmVillagerHungry.png");
+    @Unique private static final ResourceLocation TIER_ONE_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier1NetherVillager.png");
+    @Unique private static final ResourceLocation TIER_TWO_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier2NetherVillager.png");
+    @Unique private static final ResourceLocation TIER_THREE_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier3NetherVillager.png");
 
     @Inject(method = "func_110902_a", at = @At("HEAD"),cancellable = true)
     private void renderCustomNightmareVillager(EntityVillager par1EntityVillager, CallbackInfoReturnable<ResourceLocation> cir){
+        switch (par1EntityVillager.getProfession()) {
+            case 6: cir.setReturnValue(TIER_ONE_NETHER_VILLAGER); return;
+            case 7: cir.setReturnValue(TIER_TWO_NETHER_VILLAGER); return;
+            case 8: cir.setReturnValue(TIER_THREE_NETHER_VILLAGER); return;
+            default: break;
+        }
         if (((VillagerHunger) par1EntityVillager).nightmareMode$isHungry()) {
             switch (par1EntityVillager.getProfession()) {
                 case 0: cir.setReturnValue(HUNGRY_FARMER); return;

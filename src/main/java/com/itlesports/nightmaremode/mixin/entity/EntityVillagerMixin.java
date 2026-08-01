@@ -8,6 +8,10 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
+import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
+import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.interfaces.FoodItemExt;
 import com.itlesports.nightmaremode.util.interfaces.VillagerHunger;
@@ -84,7 +88,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void tickVillagerHunger(CallbackInfo ci) {
-        if (this.worldObj.isRemote || !this.isEntityAlive()) {
+        if ((Object)this instanceof EntityNetherPostVillager || this.worldObj.isRemote || !this.isEntityAlive()) {
             return;
         }
 
@@ -106,6 +110,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void feedHungryVillager(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if ((Object)this instanceof EntityNetherPostVillager) {
+            return;
+        }
         ItemStack stack = player.inventory.getCurrentItem();
         if (!(this.nightmareMode$getHungerLevel() < MAX_VILLAGER_HUNGER)) {
             return;
@@ -146,7 +153,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     private void applySkillTradeProgress(MerchantRecipe recipe, CallbackInfo ci) {
         EntityPlayer player = this.nightmareMode$tradingPlayer;
         SkillHandler.incrementTradesCompleted(player);
-        if (player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
+        if (!((Object)this instanceof EntityNetherPostVillager) && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(player).villagerProfessionChangeChance) {
             int oldProfession = this.getProfession();
             int newProfession = this.rand.nextInt(4);
@@ -161,6 +168,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Override
     public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
+        if ((Object)this instanceof EntityNetherPostVillager) {
+            return false;
+        }
         int profession = this.getProfession();
         int level = this.getCurrentTradeLevel();
         if(this.getHealth() < 10 || this.isDead) return false; // if the villager is about to die, it cannot be vacuumed up. prevents exploits with grabbing them while they're dying / about to die
@@ -191,6 +201,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     }
     @Redirect(method = "interact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityVillager;customInteract(Lnet/minecraft/src/EntityPlayer;)Z"))
     private boolean breedWithRefinedDiamond(EntityVillager instance, EntityPlayer player){
+        if (instance instanceof EntityNetherPostVillager) {
+            return false;
+        }
         ItemStack heldStack = player.inventory.getCurrentItem();
         if (!(heldStack == null || heldStack.getItem().itemID != Item.diamond.itemID && heldStack.getItem().itemID != BTWItems.diamondIngot.itemID || this.getGrowingAge() != 0 || this.getInLove() != 0 || this.isPossessed())) {
             if (!player.capabilities.isCreativeMode) {
@@ -209,6 +222,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Inject(method = "<clinit>", at = @At("TAIL"),remap = false)
     private static void addNightmareVillagerProfession(CallbackInfo ci){
         professionMap.put(5, NightmareVillager.class);
+        professionMap.put(EntityTier1NetherVillager.PROFESSION_ID, EntityTier1NetherVillager.class);
+        professionMap.put(EntityTier2NetherVillager.PROFESSION_ID, EntityTier2NetherVillager.class);
+        professionMap.put(EntityTier3NetherVillager.PROFESSION_ID, EntityTier3NetherVillager.class);
     }
 
     @Override

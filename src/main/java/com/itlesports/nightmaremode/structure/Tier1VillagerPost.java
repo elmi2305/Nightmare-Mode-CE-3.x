@@ -42,17 +42,17 @@ public class Tier1VillagerPost extends NetherVillagerPost {
 
     @Override
     protected int getVillagerProfession() {
-        return 1;
+        return 6;
     }
 
     @Override
     protected double getVillagerHorizontalOffset() {
-        return 3.5D;
+        return 5.5D;
     }
 
     @Override
     protected double getVillagerVerticalOffset() {
-        return -3.0D;
+        return 3.0D;
     }
 
     @Override

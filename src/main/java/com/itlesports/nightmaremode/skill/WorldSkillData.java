@@ -13,6 +13,9 @@ public class WorldSkillData {
     public boolean fireSpreadsSlower;
     public boolean witherSummoningUnlocked;
     public boolean endAccessUnlocked;
+    public boolean netherVillagerTier1Complete;
+    public boolean netherVillagerTier2Complete;
+    public boolean netherVillagerTier3Complete;
     public int woodGravityUnlockProgress;
     public int netherAccessUnlockProgress;
     public int witherSummonUnlockProgress;
@@ -45,6 +48,9 @@ public class WorldSkillData {
         data.fireSpreadsSlower = tag.getBoolean("FireSpreadsSlower");
         data.witherSummoningUnlocked = tag.getBoolean("WitherSummoningUnlocked");
         data.endAccessUnlocked = tag.getBoolean("EndAccessUnlocked");
+        data.netherVillagerTier1Complete = tag.getBoolean("NetherVillagerTier1Complete");
+        data.netherVillagerTier2Complete = tag.getBoolean("NetherVillagerTier2Complete");
+        data.netherVillagerTier3Complete = tag.getBoolean("NetherVillagerTier3Complete");
         data.woodGravityUnlockProgress = tag.getInteger("WoodGravityUnlockProgress");
         data.netherAccessUnlockProgress = tag.getInteger("NetherAccessUnlockProgress");
         data.witherSummonUnlockProgress = tag.getInteger("WitherSummonUnlockProgress");
@@ -67,6 +73,9 @@ public class WorldSkillData {
         tag.setBoolean("FireSpreadsSlower", data.fireSpreadsSlower);
         tag.setBoolean("WitherSummoningUnlocked", data.witherSummoningUnlocked);
         tag.setBoolean("EndAccessUnlocked", data.endAccessUnlocked);
+        tag.setBoolean("NetherVillagerTier1Complete", data.netherVillagerTier1Complete);
+        tag.setBoolean("NetherVillagerTier2Complete", data.netherVillagerTier2Complete);
+        tag.setBoolean("NetherVillagerTier3Complete", data.netherVillagerTier3Complete);
         tag.setInteger("WoodGravityUnlockProgress", data.woodGravityUnlockProgress);
         tag.setInteger("NetherAccessUnlockProgress", data.netherAccessUnlockProgress);
         tag.setInteger("WitherSummonUnlockProgress", data.witherSummonUnlockProgress);

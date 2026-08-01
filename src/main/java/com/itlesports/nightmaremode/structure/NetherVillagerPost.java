@@ -1,8 +1,9 @@
 package com.itlesports.nightmaremode.structure;
 
-import btw.entity.mob.villager.BlacksmithVillagerEntity;
-import btw.entity.mob.villager.LibrarianVillagerEntity;
-import btw.entity.mob.villager.PriestVillagerEntity;
+import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
+import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.NMStructure;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityVillager;
@@ -65,21 +66,22 @@ public abstract class NetherVillagerPost extends NMStructure {
             if (!box.isVecInside((int) Math.floor(villagerX), (int) Math.floor(villagerY), (int) Math.floor(villagerZ))) {
                 continue;
             }
-            EntityVillager villager = createVillager(world);
+            EntityNetherPostVillager villager = createVillager(world);
+            villager.setPostGroup(centerX, centerZ);
             villager.setLocationAndAngles(villagerX, villagerY, villagerZ, random.nextFloat() * 360.0F, 0.0F);
             world.spawnEntityInWorld(villager);
             this.spawnedVillagerMask |= 1 << index;
         }
     }
 
-    private EntityVillager createVillager(World world) {
-        if (getVillagerProfession() == 1) {
-            return new LibrarianVillagerEntity(world);
+    private EntityNetherPostVillager createVillager(World world) {
+        if (getTier() == 1) {
+            return new EntityTier1NetherVillager(world);
         }
-        if (getVillagerProfession() == 2) {
-            return new PriestVillagerEntity(world);
+        if (getTier() == 2) {
+            return new EntityTier2NetherVillager(world);
         }
-        return new BlacksmithVillagerEntity(world);
+        return new EntityTier3NetherVillager(world);
     }
 
     @Override

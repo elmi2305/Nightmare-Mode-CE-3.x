@@ -56,7 +56,7 @@ public class Tier2VillagerPost extends NetherVillagerPost {
 
     @Override
     protected int getVillagerProfession() {
-        return 2;
+        return 7;
     }
 
     @Override
