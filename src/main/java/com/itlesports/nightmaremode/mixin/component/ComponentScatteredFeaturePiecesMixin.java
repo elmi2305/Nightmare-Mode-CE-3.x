@@ -8,6 +8,10 @@ import com.itlesports.nightmaremode.structure.ComponentNetherDesertTemple;
 import com.itlesports.nightmaremode.structure.ComponentOceanDesertTemple;
 import com.itlesports.nightmaremode.structure.StructureNetherDesertTempleStart;
 import com.itlesports.nightmaremode.structure.StructureOceanDesertTempleStart;
+import com.itlesports.nightmaremode.structure.StructureNetherVillagerPostStart;
+import com.itlesports.nightmaremode.structure.Tier1VillagerPost;
+import com.itlesports.nightmaremode.structure.Tier2VillagerPost;
+import com.itlesports.nightmaremode.structure.Tier3VillagerPost;
 import net.minecraft.src.ComponentScatteredFeaturePieces;
 import net.minecraft.src.MapGenStructureIO;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +28,11 @@ public class ComponentScatteredFeaturePiecesMixin {
         MapGenStructureIOAccess.invokeFunction(RibcageOpen.class, "TeRCO");
         MapGenStructureIOAccess.invokeFunction(ComponentNetherDesertTemple.class, "TeNDP");
         MapGenStructureIOAccess.invokeFunction(ComponentOceanDesertTemple.class, "TeODP");
+        MapGenStructureIOAccess.invokeFunction(Tier1VillagerPost.class, "NmNVP1");
+        MapGenStructureIOAccess.invokeFunction(Tier2VillagerPost.class, "NmNVP2");
+        MapGenStructureIOAccess.invokeFunction(Tier3VillagerPost.class, "NmNVP3");
         MapGenStructureIOAccess.invokeFunctionB(StructureNetherDesertTempleStart.class, "NMNetherTemple");
         MapGenStructureIOAccess.invokeFunctionB(StructureOceanDesertTempleStart.class, "NMOceanTemple");
+        MapGenStructureIOAccess.invokeFunctionB(StructureNetherVillagerPostStart.class, "NMNetherVillagerPost");
     }
 }

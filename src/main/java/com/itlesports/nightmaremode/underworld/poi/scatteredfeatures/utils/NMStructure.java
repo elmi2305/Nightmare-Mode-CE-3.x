@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.Set;
 
 public abstract class NMStructure extends ComponentScatteredFeature {
+    protected boolean shouldGenerateAir;
+
     public NMStructure() {}
 
     protected NMStructure(Random random, int x, int y, int z, int xSize, int ySize, int zSize) {
@@ -43,6 +45,8 @@ public abstract class NMStructure extends ComponentScatteredFeature {
 
     protected void afterBlockPlaced(World world, BlockPos position, int blockID, int metadata, Random random) {}
 
+    protected void afterStructurePlaced(World world, Random random, StructureBoundingBox box) {}
+
     @Override
     public final boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         return placeFromNBT(world, random, box, getStructurePath());
@@ -69,7 +73,7 @@ public abstract class NMStructure extends ComponentScatteredFeature {
                 int localZ = ((NBTTagInt) posTag.tagAt(2)).data;
                 int state = block.getInteger("state");
 
-                if (state <= 0 || state >= palette.length || palette[state] == null) {
+                if ((state == 0 && !this.shouldGenerateAir) || state < 0 || state >= palette.length || palette[state] == null) {
                     continue;
                 }
 
@@ -94,6 +98,7 @@ public abstract class NMStructure extends ComponentScatteredFeature {
             if (!world.isRemote) {
                 fillLootContainers(world, lootLocations, random);
                 configureSpawners(world, spawnerLocations, random);
+                afterStructurePlaced(world, random, box);
             }
             return true;
         } catch (Exception exception) {

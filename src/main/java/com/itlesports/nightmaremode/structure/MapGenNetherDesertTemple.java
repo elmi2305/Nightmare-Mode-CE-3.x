@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.structure;
 
+import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.MapGenStructure;
@@ -27,6 +28,9 @@ public class MapGenNetherDesertTemple extends MapGenStructure {
 
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        if (!NetherTierHelper.isChunkEntirelyTierZero(this.worldObj, chunkX, chunkZ)) {
+            return false;
+        }
         int originalX = chunkX;
         int originalZ = chunkZ;
         if (chunkX < 0) chunkX -= MAX_DISTANCE - 1;
