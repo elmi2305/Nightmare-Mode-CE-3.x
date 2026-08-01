@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
+import com.itlesports.nightmaremode.worldgen.StructureSpacingHelper;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
@@ -43,26 +45,26 @@ public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
     protected boolean canSpawnStructureAtCoords(int par1, int par2) {
         int var3 = par1;
         int var4 = par2;
-        if (par1 < 0) par1 -= maxDistanceBetweenScatteredFeatures - 1;
-        if (par2 < 0) par2 -= maxDistanceBetweenScatteredFeatures - 1;
-        int var5 = par1 / maxDistanceBetweenScatteredFeatures;
-        int var6 = par2 / maxDistanceBetweenScatteredFeatures;
+        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(var3 * 16 + 8, var4 * 16 + 8);
+        boolean isBigMushroom = biome instanceof BiomeGenFlowerFields;
+        if (isBigMushroom) {
+            return StructureSpacingHelper.isCandidateChunk(this.worldObj, var3, var4,
+                    BigMushroom.MIN_CHUNKS_APART, BigMushroom.MAX_CHUNKS_APART);
+        }
+
+        int maximum = maxDistanceBetweenScatteredFeatures;
+        int minimum = minDistanceBetweenScatteredFeatures;
+        if (par1 < 0) par1 -= maximum - 1;
+        if (par2 < 0) par2 -= maximum - 1;
+        int var5 = par1 / maximum;
+        int var6 = par2 / maximum;
         Random var7 = this.worldObj.setRandomSeed(var5, var6, 14357617);
-        var5 *= maxDistanceBetweenScatteredFeatures;
-        var6 *= maxDistanceBetweenScatteredFeatures;
-        var5 += var7.nextInt(maxDistanceBetweenScatteredFeatures - minDistanceBetweenScatteredFeatures);
-        var6 += var7.nextInt(maxDistanceBetweenScatteredFeatures - minDistanceBetweenScatteredFeatures);
+        var5 = var5 * maximum + var7.nextInt(maximum - minimum);
+        var6 = var6 * maximum + var7.nextInt(maximum - minimum);
 
         if (var3 == var5 && var4 == var6) {
-            BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(var3 * 16 + 8, var4 * 16 + 8);
-
-            // Check for your custom biomes (add all where mushrooms spawn)
-            if (biome instanceof BiomeGenFlowerFields ||
-                    biome instanceof BiomeGenHighlands ||
-                    biome instanceof BiomeGenBlightlands) {  // Etc.
-
-                // For debugging: Make common but not every chunk (1/5 chance)
-                return this.rand.nextInt(5) == 0;  // Tune: 5=common, 20=rare (vanilla-like)
+            if (biome instanceof BiomeGenHighlands || biome instanceof BiomeGenBlightlands) {
+                return var7.nextInt(5) == 0;
             }
         }
         return false;
@@ -76,26 +78,36 @@ public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
 
     @Override
     protected ChunkPosition getSpawnStructureAtCoords(int par1, int par2) {
-        if (par1 < 0) {
-            par1 -= this.maxDistanceBetweenScatteredFeatures - 1;
+        ChunkPosition mushroom = StructureSpacingHelper.getCandidateForCell(this.worldObj, par1, par2,
+                BigMushroom.MIN_CHUNKS_APART, BigMushroom.MAX_CHUNKS_APART);
+        if (this.worldObj.getBiomeGenForCoords(mushroom.x * 16 + 8, mushroom.z * 16 + 8)
+                instanceof BiomeGenFlowerFields) {
+            return mushroom;
         }
-        if (par2 < 0) {
-            par2 -= this.maxDistanceBetweenScatteredFeatures - 1;
-        }
-        int var5 = par1 / this.maxDistanceBetweenScatteredFeatures;
-        int var6 = par2 / this.maxDistanceBetweenScatteredFeatures;
-        Random var7 = this.worldObj.setRandomSeed(var5, var6, 14357617);
-        var5 *= this.maxDistanceBetweenScatteredFeatures;
-        var6 *= this.maxDistanceBetweenScatteredFeatures;
-        BiomeGenBase var8 = this.worldObj.getWorldChunkManager().getBiomeGenAt((var5 += var7.nextInt(this.maxDistanceBetweenScatteredFeatures - this.minDistanceBetweenScatteredFeatures)) * 16 + 8, (var6 += var7.nextInt(this.maxDistanceBetweenScatteredFeatures - this.minDistanceBetweenScatteredFeatures)) * 16 + 8);
-        for (Object var10 : BiomeGenUnderworld.biomelist) {
-            if (var8 != var10) continue;
-            return new ChunkPosition(var5, 0, var6);
+
+        ChunkPosition other = getCandidate(par1, par2, this.maxDistanceBetweenScatteredFeatures,
+                this.minDistanceBetweenScatteredFeatures, 14357617);
+        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(other.x * 16 + 8, other.z * 16 + 8);
+        for (Object allowedBiome : BiomeGenUnderworld.biomelist) {
+            if (biome == allowedBiome) {
+                return other;
+            }
         }
         return null;
     }
+
+    private ChunkPosition getCandidate(int chunkX, int chunkZ, int maximum, int minimum, int salt) {
+        if (chunkX < 0) chunkX -= maximum - 1;
+        if (chunkZ < 0) chunkZ -= maximum - 1;
+        int regionX = chunkX / maximum;
+        int regionZ = chunkZ / maximum;
+        Random random = this.worldObj.setRandomSeed(regionX, regionZ, salt);
+        regionX = regionX * maximum + random.nextInt(maximum - minimum);
+        regionZ = regionZ * maximum + random.nextInt(maximum - minimum);
+        return new ChunkPosition(regionX, 0, regionZ);
+    }
     @Override
     public int getCheckRange() {
-        return this.maxDistanceBetweenScatteredFeatures;
+        return Math.max(this.maxDistanceBetweenScatteredFeatures, BigMushroom.MAX_CHUNKS_APART);
     }
 }

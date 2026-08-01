@@ -4,7 +4,7 @@ import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.World;
 
 public final class NetherTierHelper {
-    public static int NETHERRACK_BLEND_WIDTH = 5;
+    public static int NETHERRACK_BLEND_WIDTH = 20;
 
     private NetherTierHelper() {}
 

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 
 public class BigMushroom extends NMStructure {
+    public static final int MIN_CHUNKS_APART = 4;
+    public static final int MAX_CHUNKS_APART = 12;
     private static final int BASE_HEIGHT = 50;
     private static final String STRUCTURE_PATH = "structures/mushroom.nbt";
 

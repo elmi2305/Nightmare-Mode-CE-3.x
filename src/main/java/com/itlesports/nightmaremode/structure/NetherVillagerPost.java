@@ -13,14 +13,14 @@ import net.minecraft.src.World;
 import java.util.Random;
 
 public abstract class NetherVillagerPost extends NMStructure {
-    private static final PaletteEntry[] PLACEHOLDER_PALETTE = createPlaceholderPalette();
+    private static PaletteEntry[] PLACEHOLDER_PALETTE = null;
     private int spawnedVillagerMask;
     private boolean loggedGeneration;
 
     protected NetherVillagerPost() {}
 
     protected NetherVillagerPost(Random random, int x, int z, int sizeX, int sizeY, int sizeZ) {
-        super(random, x, 64, z, sizeX, sizeY, sizeZ);
+        super(random, x, 45, z, sizeX, sizeY, sizeZ);
         this.shouldGenerateAir = true;
     }
 
@@ -34,6 +34,9 @@ public abstract class NetherVillagerPost extends NMStructure {
 
     @Override
     protected PaletteEntry[] getPalette() {
+        if (PLACEHOLDER_PALETTE == null) {
+            PLACEHOLDER_PALETTE = createPlaceholderPalette();
+        }
         return PLACEHOLDER_PALETTE;
     }
 
@@ -45,7 +48,7 @@ public abstract class NetherVillagerPost extends NMStructure {
 
         if (!this.loggedGeneration) {
             System.out.println("Generated tier " + getTier() + " Nether villager post at "
-                    + centerX + ", " + (int) centerY + ", " + centerZ);
+                    + centerX + " " + (int) centerY + " " + centerZ);
             this.loggedGeneration = true;
         }
 

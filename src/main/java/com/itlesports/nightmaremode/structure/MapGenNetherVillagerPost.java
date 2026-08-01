@@ -1,16 +1,12 @@
 package com.itlesports.nightmaremode.structure;
 
 import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
+import com.itlesports.nightmaremode.worldgen.StructureSpacingHelper;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.MapGenStructure;
 import net.minecraft.src.StructureStart;
 
-import java.util.Random;
-
 public class MapGenNetherVillagerPost extends MapGenStructure {
-    private static final int MAX_DISTANCE = 32;
-    private static final int MIN_DISTANCE = 8;
-
     @Override
     public String func_143025_a() {
         return "NMNetherVillagerPost";
@@ -20,22 +16,22 @@ public class MapGenNetherVillagerPost extends MapGenStructure {
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         int originalX = chunkX;
         int originalZ = chunkZ;
-        if (chunkX < 0) chunkX -= MAX_DISTANCE - 1;
-        if (chunkZ < 0) chunkZ -= MAX_DISTANCE - 1;
-        int regionX = chunkX / MAX_DISTANCE;
-        int regionZ = chunkZ / MAX_DISTANCE;
-        Random random = this.worldObj.setRandomSeed(regionX, regionZ, 0x4e4d5650);
-        regionX = regionX * MAX_DISTANCE + random.nextInt(MAX_DISTANCE - MIN_DISTANCE);
-        regionZ = regionZ * MAX_DISTANCE + random.nextInt(MAX_DISTANCE - MIN_DISTANCE);
-        if (originalX != regionX || originalZ != regionZ) {
-            return false;
-        }
-
         double centerX = originalX * 16 + 8;
         double centerZ = originalZ * 16 + 8;
         int tier = NetherTierHelper.getTier(this.worldObj, centerX, centerZ);
+        if (tier == 0) {
+            return false;
+        }
+
+        int maximum = getMaximumSpacing(tier);
+        int minimum = getMinimumSpacing(tier);
+        if (!StructureSpacingHelper.isCandidateChunk(
+                this.worldObj, originalX, originalZ, minimum, maximum)) {
+            return false;
+        }
+
         double radius = tier == 1 ? 13.0D : tier == 2 ? 21.0D : tier == 3 ? 35.0D : 0.0D;
-        return tier > 0 && NetherTierHelper.isAreaEntirelyInTier(this.worldObj, centerX, centerZ, radius, tier);
+        return NetherTierHelper.isAreaEntirelyInTier(this.worldObj, centerX, centerZ, radius, tier);
     }
 
     @Override
@@ -50,6 +46,19 @@ public class MapGenNetherVillagerPost extends MapGenStructure {
 
     @Override
     public int getCheckRange() {
-        return MAX_DISTANCE;
+        return Math.max(Tier1VillagerPost.MAX_CHUNKS_APART,
+                Math.max(Tier2VillagerPost.MAX_CHUNKS_APART, Tier3VillagerPost.MAX_CHUNKS_APART));
+    }
+
+    private static int getMinimumSpacing(int tier) {
+        return tier == 1 ? Tier1VillagerPost.MIN_CHUNKS_APART
+                : tier == 2 ? Tier2VillagerPost.MIN_CHUNKS_APART
+                : Tier3VillagerPost.MIN_CHUNKS_APART;
+    }
+
+    private static int getMaximumSpacing(int tier) {
+        return tier == 1 ? Tier1VillagerPost.MAX_CHUNKS_APART
+                : tier == 2 ? Tier2VillagerPost.MAX_CHUNKS_APART
+                : Tier3VillagerPost.MAX_CHUNKS_APART;
     }
 }
