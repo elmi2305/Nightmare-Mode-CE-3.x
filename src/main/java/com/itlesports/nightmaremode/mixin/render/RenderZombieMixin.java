@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityStoneZombie;
+import com.itlesports.nightmaremode.entity.variants.EntityCinderPigman;
+import com.itlesports.nightmaremode.entity.variants.EntityDeadzonePigman;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.EntityPigZombie;
 import net.minecraft.src.EntityZombie;
@@ -19,10 +21,18 @@ public class RenderZombieMixin {
     @Unique private static final ResourceLocation PIG_ECLIPSE = new ResourceLocation("nightmare:textures/entity/zombiePigmanEclipse.png");
     @Unique private static final ResourceLocation PIGMAN_HELL = new ResourceLocation("nightmare:textures/entity/zombiePigmanHell.png");
     @Unique private static final ResourceLocation ZOMBIE_STONE = new ResourceLocation("nightmare:textures/entity/zombieStone.png");
+    @Unique private static final ResourceLocation CINDER_PIGMAN = new ResourceLocation("nightmare:textures/entity/cinderPigman.png");
+    @Unique private static final ResourceLocation DEADZONE_PIGMAN = new ResourceLocation("nightmare:textures/entity/deadzonePigman.png");
 
     @Inject(method = "func_110863_a", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityZombie zomb, CallbackInfoReturnable<ResourceLocation> cir){
-        if(zomb instanceof EntityStoneZombie){
+        if (zomb instanceof EntityCinderPigman) {
+            cir.setReturnValue(CINDER_PIGMAN);
+            return;
+        } else if (zomb instanceof EntityDeadzonePigman) {
+            cir.setReturnValue(DEADZONE_PIGMAN);
+            return;
+        } else if(zomb instanceof EntityStoneZombie){
             cir.setReturnValue(ZOMBIE_STONE);
             return;
         } else if(NMUtils.getIsMobEclipsed(zomb)){
