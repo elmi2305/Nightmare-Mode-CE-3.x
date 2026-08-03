@@ -4,12 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.entity.EntityVillagerAccessor;
-import net.minecraft.src.ChatMessageComponent;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityLivingBase;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityVillager;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.*;
 
 import java.util.List;
 
@@ -56,7 +51,7 @@ public class ItemVillagerDebugTool extends NMItem {
                 return true;
             }
             int maximum = villager.getCurrentTradeMaxXP();
-            int progress = Math.min(maximum, villager.getCurrentTradeXP() + 1);
+            int progress = Math.min(maximum - 1, villager.getCurrentTradeXP() + 1);
             villager.setTradeExperience(progress);
             if (progress == maximum) {
                 this.reroll(villager, player);

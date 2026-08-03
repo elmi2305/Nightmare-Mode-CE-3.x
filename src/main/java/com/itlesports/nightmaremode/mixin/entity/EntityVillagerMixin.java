@@ -6,6 +6,7 @@ import btw.block.tileentity.dispenser.BlockDispenserTileEntity;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemVillagerDebugTool;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
@@ -110,6 +111,10 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void feedHungryVillager(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemVillagerDebugTool tool){
+            player.getHeldItem().func_111282_a(player, this);
+            return;
+        }
         if ((Object)this instanceof EntityNetherPostVillager) {
             return;
         }
