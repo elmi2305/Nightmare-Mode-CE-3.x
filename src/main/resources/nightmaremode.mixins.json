@@ -81,6 +81,7 @@
     "biomegen.ChunkProviderHellMixin",
     "biomegen.MapGenNetherBridgeMixin",
     "biomegen.NoiseGeneratorOctavesMixin",
+    "entity.EntityVillagerAccessor",
     "blocks.AestheticOpaqueEarthBlockMixin",
     "blocks.AnvilBlockMixin",
     "blocks.BlockClayMixin",

@@ -13,12 +13,18 @@ public class WorldGenOreNode extends WorldGenerator {
     private final int replaceBlockId;
     private final int minVeinSize;
     private final int maxVeinSize;
+    private boolean needsAirExposure;
 
     public WorldGenOreNode(int nodeBlockId, int replaceBlockId, int minVeinSize, int maxVeinSize) {
         this.nodeBlockId = nodeBlockId;
         this.replaceBlockId = replaceBlockId;
         this.minVeinSize = minVeinSize;
         this.maxVeinSize = maxVeinSize;
+    }
+
+    public WorldGenOreNode setNeedsAirExposure() {
+        this.needsAirExposure = true;
+        return this;
     }
 
     @Override
@@ -38,7 +44,8 @@ public class WorldGenOreNode extends WorldGenerator {
             int currentX = current[0];
             int currentY = current[1];
             int currentZ = current[2];
-            if (world.getBlockId(currentX, currentY, currentZ) == this.replaceBlockId) {
+            if (world.getBlockId(currentX, currentY, currentZ) == this.replaceBlockId
+                    && (!this.needsAirExposure || this.isExposedToAir(world, currentX, currentY, currentZ))) {
                 this.setBlock(world, currentX, currentY, currentZ, this.nodeBlockId);
                 ++placed;
             }
@@ -57,15 +64,23 @@ public class WorldGenOreNode extends WorldGenerator {
     private int findReplaceableY(World world, int x, int preferredY, int z) {
         for (int distance = 0; distance < 56; ++distance) {
             int above = preferredY + distance;
-            if (above < 60 && world.getBlockId(x, above, z) == this.replaceBlockId) {
+            if (above < 60 && world.getBlockId(x, above, z) == this.replaceBlockId
+                    && (!this.needsAirExposure || this.isExposedToAir(world, x, above, z))) {
                 return above;
             }
             int below = preferredY - distance;
-            if (below >= 4 && world.getBlockId(x, below, z) == this.replaceBlockId) {
+            if (below >= 4 && world.getBlockId(x, below, z) == this.replaceBlockId
+                    && (!this.needsAirExposure || this.isExposedToAir(world, x, below, z))) {
                 return below;
             }
         }
         return -1;
+    }
+
+    private boolean isExposedToAir(World world, int x, int y, int z) {
+        return world.isAirBlock(x + 1, y, z) || world.isAirBlock(x - 1, y, z)
+                || world.isAirBlock(x, y + 1, z) || world.isAirBlock(x, y - 1, z)
+                || world.isAirBlock(x, y, z + 1) || world.isAirBlock(x, y, z - 1);
     }
 
     private boolean contains(List<int[]> positions, int x, int y, int z) {

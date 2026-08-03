@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.structure;
 
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
@@ -17,6 +18,7 @@ public abstract class NetherVillagerPost extends NMStructure {
     private static PaletteEntry[] PLACEHOLDER_PALETTE = null;
     private int spawnedVillagerMask;
     private boolean loggedGeneration;
+    private boolean progressionGemPlaced;
 
     protected NetherVillagerPost() {}
 
@@ -53,6 +55,13 @@ public abstract class NetherVillagerPost extends NMStructure {
             this.loggedGeneration = true;
         }
 
+        int gemY = this.boundingBox.minY + 1;
+        if (!this.progressionGemPlaced && box.isVecInside(centerX, gemY, centerZ)) {
+            world.setBlockAndMetadataWithNotify(centerX, gemY, centerZ,
+                    NMBlocks.netherProgressionGems.blockID, this.getTier() - 1);
+            this.progressionGemPlaced = true;
+        }
+
         double horizontalOffset = getVillagerHorizontalOffset();
         double villagerY = centerY - getVillagerVerticalOffset();
         double[] xSigns = {1.0D, 1.0D, -1.0D, -1.0D};
@@ -67,7 +76,7 @@ public abstract class NetherVillagerPost extends NMStructure {
                 continue;
             }
             EntityNetherPostVillager villager = createVillager(world);
-            villager.setPostGroup(centerX, centerZ);
+            villager.setPostGroup(centerX, centerZ, index);
             villager.setLocationAndAngles(villagerX, villagerY, villagerZ, random.nextFloat() * 360.0F, 0.0F);
             world.spawnEntityInWorld(villager);
             this.spawnedVillagerMask |= 1 << index;
@@ -89,6 +98,7 @@ public abstract class NetherVillagerPost extends NMStructure {
         super.func_143012_a(tag);
         tag.setInteger("NmVillagers", this.spawnedVillagerMask);
         tag.setBoolean("NmLogged", this.loggedGeneration);
+        tag.setBoolean("NmGemPlaced", this.progressionGemPlaced);
     }
 
     @Override
@@ -96,6 +106,7 @@ public abstract class NetherVillagerPost extends NMStructure {
         super.func_143011_b(tag);
         this.spawnedVillagerMask = tag.getInteger("NmVillagers");
         this.loggedGeneration = tag.getBoolean("NmLogged");
+        this.progressionGemPlaced = tag.getBoolean("NmGemPlaced");
         this.shouldGenerateAir = true;
     }
 

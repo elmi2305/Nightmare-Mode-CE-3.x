@@ -40,6 +40,9 @@ public final class NetherItemHelper {
         if (item instanceof INetherItem) {
             return true;
         }
+        if (player != null && SkillHandler.getWorldData(player.worldObj).netherVillagerTier1Complete) {
+            return true;
+        }
         int id = stack.itemID;
         if (id == Block.netherrack.blockID
                 || id == Block.slowSand.blockID

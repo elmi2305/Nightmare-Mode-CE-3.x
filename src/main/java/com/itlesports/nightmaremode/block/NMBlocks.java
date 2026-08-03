@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.NMNetherItemBlock;
+import com.itlesports.nightmaremode.item.itemblock.NMNetherItemBlockMeta;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
@@ -131,6 +132,15 @@ public class NMBlocks {
     public static Block chuteHopper;
     public static Block tungstenOreNode;
     public static Block minerDrill;
+    public static Block minerDrillTier2;
+    public static Block minerDrillTier3;
+    public static Block cisternInterface;
+    public static BlockMetaMultiTextured netherProgressionGems;
+    public static Block fertileNetherrack;
+    public static Block netherFarmland;
+    public static final int META_RED_GEM = 0;
+    public static final int META_PURPLE_GEM = 1;
+    public static final int META_BLACK_GEM = 2;
     public static Block coalOreNode;
     public static Block denseNetherrackCoreOre;
     public static Block denseNetherrackCoreNode;
@@ -205,7 +215,7 @@ public class NMBlocks {
         Item.itemsList[aquamarineOre.blockID] = new NMItemBlock(aquamarineOre.blockID - 256);
 
         chunkLoader = new BlockChunkLoader(2419);
-        Item.itemsList[chunkLoader.blockID] = new NMItemBlock(chunkLoader.blockID - 256);
+        Item.itemsList[chunkLoader.blockID] = new NMNetherItemBlock(chunkLoader.blockID - 256);
 
         chuteHopper = new BlockChuteHopper(2420);
         Item.itemsList[chuteHopper.blockID] = new NMNetherItemBlock(chuteHopper.blockID - 256);
@@ -225,7 +235,7 @@ public class NMBlocks {
                 "ifhyDenseNetherrackCoreOre", "nightmare:ifhyDenseNetherrackCoreOre");
         Item.itemsList[denseNetherrackCoreOre.blockID] = new NMNetherItemBlock(denseNetherrackCoreOre.blockID - 256);
 
-        denseNetherrackCoreNode = new BlockOreNode(2425, NMItems.denseNetherrackCore.itemID, Block.obsidian,
+        denseNetherrackCoreNode = new BlockOreNode(2425, NMItems.denseNetherrackCore.itemID, Block.obsidian, 2,
                 "ifhyDenseNetherrackCoreNode", "nightmare:ifhyDenseNetherrackCoreNode");
         Item.itemsList[denseNetherrackCoreNode.blockID] = new NMNetherItemBlock(denseNetherrackCoreNode.blockID - 256);
 
@@ -233,9 +243,27 @@ public class NMBlocks {
                 "ifhyDeadzoneShardOre", "nightmare:ifhyDeadzoneShardOre");
         Item.itemsList[deadzoneShardOre.blockID] = new NMNetherItemBlock(deadzoneShardOre.blockID - 256);
 
-        deadzoneShardNode = new BlockOreNode(2427, NMItems.deadzoneShard.itemID, Block.obsidian,
+        deadzoneShardNode = new BlockOreNode(2427, NMItems.deadzoneShard.itemID, Block.obsidian, 3,
                 "ifhyDeadzoneShardNode", "nightmare:ifhyDeadzoneShardNode");
         Item.itemsList[deadzoneShardNode.blockID] = new NMNetherItemBlock(deadzoneShardNode.blockID - 256);
+
+        minerDrillTier2 = new BlockMinerDrill(2428, 2, "ifhyMinerDrillTier2", "nightmare:ifhyMinerDrillTier2");
+        Item.itemsList[minerDrillTier2.blockID] = new NMNetherItemBlock(minerDrillTier2.blockID - 256);
+
+        minerDrillTier3 = new BlockMinerDrill(2429, 3, "ifhyMinerDrillTier3", "nightmare:ifhyMinerDrillTier3");
+        Item.itemsList[minerDrillTier3.blockID] = new NMNetherItemBlock(minerDrillTier3.blockID - 256);
+
+        cisternInterface = new BlockCisternInterface(2430);
+        Item.itemsList[cisternInterface.blockID] = new NMNetherItemBlock(cisternInterface.blockID - 256);
+
+        netherProgressionGems = new BlockNetherProgressionGems(2431);
+        Item.itemsList[netherProgressionGems.blockID] = new NMNetherItemBlockMeta(netherProgressionGems.blockID - 256, netherProgressionGems);
+
+        fertileNetherrack = new BlockFertileNetherrack(2432);
+        Item.itemsList[fertileNetherrack.blockID] = new NMNetherItemBlock(fertileNetherrack.blockID - 256);
+
+        netherFarmland = new BlockNetherFarmland(2433);
+        Item.itemsList[netherFarmland.blockID] = new NMNetherItemBlock(netherFarmland.blockID - 256);
 
 
 

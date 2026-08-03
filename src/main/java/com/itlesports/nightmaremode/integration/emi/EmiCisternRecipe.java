@@ -33,7 +33,7 @@ public class EmiCisternRecipe implements EmiRecipe {
 
     public EmiCisternRecipe(CisternRecipe recipe, int index) {
         this.id = new ResourceLocation("nightmare", "cistern/" + index);
-        this.inputs = Arrays.stream(recipe.getInputs()).map(EmiStack::of).collect(Collectors.toList());
+        this.inputs = Arrays.stream(this.mergeInputs(recipe.getInputs())).map(EmiStack::of).collect(Collectors.toList());
         this.outputs = new ArrayList<>();
         for (ItemStack output : recipe.getOutputs()) {
             this.outputs.add(EmiStack.of(output));
@@ -71,37 +71,61 @@ public class EmiCisternRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayWidth() {
-        return 128;
+        return 154;
     }
 
     @Override
     public int getDisplayHeight() {
-        return 58;
+        return 78;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        for (int i = 0; i < 2; ++i) {
+        boolean compact = this.inputs.size() < 4;
+        int displayedSlots = compact ? 4 : 9;
+        int columns = compact ? 2 : 3;
+        int offset = compact ? 9 : 0;
+        for (int i = 0; i < displayedSlots; ++i) {
+            int x = offset + i % columns * 18;
+            int y = offset + i / columns * 18;
             if (i < this.inputs.size()) {
-                widgets.addSlot(this.inputs.get(i), i * 18, 9);
+                widgets.addSlot(this.inputs.get(i), x, y);
             } else {
-                widgets.addSlot(i * 18, 9);
+                widgets.addSlot(x, y);
             }
         }
-        widgets.addFillingArrow(44, 10, Math.max(500, this.duration * 50));
+        widgets.addFillingArrow(62, 19, Math.max(500, this.duration * 50));
         for (int i = 0; i < 4; ++i) {
             if (i < this.outputs.size()) {
-                widgets.addSlot(this.outputs.get(i), 78 + i % 2 * 18, i / 2 * 18).recipeContext(this);
+                widgets.addSlot(this.outputs.get(i), 100 + i % 2 * 18, 9 + i / 2 * 18).recipeContext(this);
             } else {
-                widgets.addSlot(78 + i % 2 * 18, i / 2 * 18);
+                widgets.addSlot(100 + i % 2 * 18, 9 + i / 2 * 18);
             }
         }
         this.addRequirementIcons(widgets);
     }
 
+    private ItemStack[] mergeInputs(ItemStack[] recipeInputs) {
+        List<ItemStack> merged = new ArrayList<>();
+        for (ItemStack input : recipeInputs) {
+            boolean found = false;
+            for (ItemStack existing : merged) {
+                if (existing.isItemEqual(input) && ItemStack.areItemStackTagsEqual(existing, input)) {
+                    existing.stackSize += input.stackSize;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                merged.add(input.copy());
+            }
+        }
+        return merged.toArray(new ItemStack[merged.size()]);
+    }
+
     private void addRequirementIcons(WidgetHolder widgets) {
         int x = 0;
-        int y = 40;
+        int y = 58;
 
         EmiIconHelper.addIcon(
                 widgets,

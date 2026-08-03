@@ -1012,13 +1012,23 @@ public final class NMSkillNodes {
             RITUAL, false);
 
     public static final SkillNode END_BEACON = bring(
-            "end_beacon",
-            "Beacon Offering",
-            Block.beacon,
+            "end_accord",
+            "End Accord",
+            NMItems.endAccord,
             -3, 0,
-            "Bring 1 beacon.",
-            Block.beacon.blockID, 0, false, 1,
+            "Bring the accord assembled from all four Tier 3 commissions.",
+            NMItems.endAccord.itemID, 0, false, 1,
             "Unlock End access.", SkillRewardActions.addEndAccessProgress(),
+            RITUAL, true);
+
+    public static final SkillNode NETHER_INVOCATION_SEAL = bring(
+            "nether_invocation_seal",
+            "Nether Invocation",
+            NMItems.invocationSeal,
+            -4, -1,
+            "Bring the seal assembled from all four Tier 2 commissions.",
+            NMItems.invocationSeal.itemID, 0, false, 1,
+            "+1/5 Wither-summoning progress.", SkillRewardActions.addWitherSummonProgress(),
             RITUAL, true);
 
     public static final SkillNode GHAST_BREW_SPEED = bring(

@@ -5,6 +5,8 @@ import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.Block;
+import net.minecraft.src.Facing;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.TileEntity;
@@ -13,8 +15,14 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
     private ItemStack fuelStack;
     private int fuelTicks;
     private int processingTicks;
-    private int speedUpgradeLevel;
-    private int fuelUpgradeLevel;
+    private int machineTier = 1;
+    private boolean blockedByMaterial;
+
+    public MinerDrillTileEntity() {}
+
+    public MinerDrillTileEntity(int machineTier) {
+        this.machineTier = Math.max(1, machineTier);
+    }
 
     @Override
     public void updateEntity() {
@@ -25,9 +33,23 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         int[] target = this.findNodeTarget();
         if (target == null) {
             this.processingTicks = 0;
+            this.blockedByMaterial = false;
             this.setActive(false);
             return;
         }
+
+        BlockOreNode node = (BlockOreNode)net.minecraft.src.Block.blocksList[this.worldObj.getBlockId(target[0], target[1], target[2])];
+        if (node.getRequiredDrillTier() > this.machineTier) {
+            this.processingTicks = 0;
+            this.setActive(false);
+            if (!this.blockedByMaterial) {
+                this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D,
+                        "random.break", 0.7F, 0.75F);
+            }
+            this.blockedByMaterial = true;
+            return;
+        }
+        this.blockedByMaterial = false;
 
         if (this.fuelTicks <= 0 && !this.consumeCoal()) {
             this.processingTicks = 0;
@@ -42,10 +64,11 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         }
 
         this.processingTicks = 0;
-        BlockOreNode node = (BlockOreNode)net.minecraft.src.Block.blocksList[this.worldObj.getBlockId(target[0], target[1], target[2])];
         ItemStack output = node.mineNodeByMachine(this.worldObj, target[0], target[1], target[2]);
-        if (output != null && !this.insertIntoAdjacentInventory(output)) {
-            ItemUtils.ejectStackFromBlockTowardsFacing(this.worldObj, this.xCoord, this.yCoord, this.zCoord, output, 1);
+        if (output != null) {
+            int facing = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) & 7;
+            ItemUtils.ejectStackFromBlockTowardsFacing(this.worldObj, this.xCoord, this.yCoord, this.zCoord,
+                    output, Block.getOppositeFacing(facing));
         }
         this.onInventoryChanged();
     }
@@ -59,17 +82,11 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
     }
 
     public int getProcessingTicksPerItem() {
-        return Math.max(20, this.getBaseProcessingTicks() * 4 / (4 + this.speedUpgradeLevel));
+        return this.getBaseProcessingTicks();
     }
 
     public int getFuelTicksPerCoal() {
-        return this.getBaseFuelTicksPerCoal() + this.fuelUpgradeLevel * 400;
-    }
-
-    public void setUpgradeLevels(int speedLevel, int fuelLevel) {
-        this.speedUpgradeLevel = Math.max(0, speedLevel);
-        this.fuelUpgradeLevel = Math.max(0, fuelLevel);
-        this.onInventoryChanged();
+        return this.getBaseFuelTicksPerCoal();
     }
 
     public int getProcessingProgress() {
@@ -95,24 +112,12 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
 
     private int[] findNodeTarget() {
         int facing = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) & 7;
-        int targetX = this.xCoord;
-        int targetZ = this.zCoord;
-        if (facing == 2) {
-            --targetZ;
-        } else if (facing == 3) {
-            ++targetZ;
-        } else if (facing == 4) {
-            --targetX;
-        } else if (facing == 5) {
-            ++targetX;
-        }
-        if (this.worldObj.getBlockId(targetX, this.yCoord, targetZ) > 0
-                && net.minecraft.src.Block.blocksList[this.worldObj.getBlockId(targetX, this.yCoord, targetZ)] instanceof BlockOreNode) {
-            return new int[]{targetX, this.yCoord, targetZ};
-        }
-        if (this.worldObj.getBlockId(this.xCoord, this.yCoord - 1, this.zCoord) > 0
-                && net.minecraft.src.Block.blocksList[this.worldObj.getBlockId(this.xCoord, this.yCoord - 1, this.zCoord)] instanceof BlockOreNode) {
-            return new int[]{this.xCoord, this.yCoord - 1, this.zCoord};
+        int targetX = this.xCoord + Facing.offsetsXForSide[facing];
+        int targetY = this.yCoord + Facing.offsetsYForSide[facing];
+        int targetZ = this.zCoord + Facing.offsetsZForSide[facing];
+        if (this.worldObj.getBlockId(targetX, targetY, targetZ) > 0
+                && net.minecraft.src.Block.blocksList[this.worldObj.getBlockId(targetX, targetY, targetZ)] instanceof BlockOreNode) {
+            return new int[]{targetX, targetY, targetZ};
         }
         return null;
     }
@@ -125,46 +130,12 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         }
     }
 
-    private boolean insertIntoAdjacentInventory(ItemStack stack) {
-        int[][] offsets = {{0, 1, 0}, {0, -1, 0}, {1, 0, 0}, {-1, 0, 0}, {0, 0, 1}, {0, 0, -1}};
-        for (int[] offset : offsets) {
-            TileEntity tile = this.worldObj.getBlockTileEntity(
-                    this.xCoord + offset[0], this.yCoord + offset[1], this.zCoord + offset[2]);
-            if (tile instanceof IInventory inventory && tile != this && this.insertIntoInventory(inventory, stack)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean insertIntoInventory(IInventory inventory, ItemStack stack) {
-        for (int slot = 0; slot < inventory.getSizeInventory(); ++slot) {
-            ItemStack existing = inventory.getStackInSlot(slot);
-            if (existing != null && existing.isItemEqual(stack)
-                    && ItemStack.areItemStackTagsEqual(existing, stack)
-                    && existing.stackSize < Math.min(existing.getMaxStackSize(), inventory.getInventoryStackLimit())) {
-                ++existing.stackSize;
-                inventory.onInventoryChanged();
-                return true;
-            }
-        }
-        for (int slot = 0; slot < inventory.getSizeInventory(); ++slot) {
-            if (inventory.getStackInSlot(slot) == null && inventory.isItemValidForSlot(slot, stack)) {
-                inventory.setInventorySlotContents(slot, stack.copy());
-                inventory.onInventoryChanged();
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setInteger("FuelTicks", this.fuelTicks);
         tag.setInteger("ProcessingTicks", this.processingTicks);
-        tag.setInteger("SpeedUpgrade", this.speedUpgradeLevel);
-        tag.setInteger("FuelUpgrade", this.fuelUpgradeLevel);
+        tag.setInteger("MachineTier", this.machineTier);
         if (this.fuelStack != null) {
             NBTTagCompound itemTag = new NBTTagCompound();
             this.fuelStack.writeToNBT(itemTag);
@@ -177,8 +148,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         super.readFromNBT(tag);
         this.fuelTicks = tag.getInteger("FuelTicks");
         this.processingTicks = tag.getInteger("ProcessingTicks");
-        this.speedUpgradeLevel = tag.getInteger("SpeedUpgrade");
-        this.fuelUpgradeLevel = tag.getInteger("FuelUpgrade");
+        this.machineTier = tag.hasKey("MachineTier") ? Math.max(1, tag.getInteger("MachineTier")) : 1;
         if (tag.hasKey("FuelStack")) {
             this.fuelStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("FuelStack"));
         }

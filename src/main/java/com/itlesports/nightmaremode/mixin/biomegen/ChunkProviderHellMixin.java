@@ -42,9 +42,9 @@ public class ChunkProviderHellMixin {
     @Unique private static WorldGenOreNode denseCoreNodes = new WorldGenOreNode(
             NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private static WorldGenMinable deadzoneShardOre = new WorldGenMinable(
-            NMBlocks.deadzoneShardOre.blockID, 2, Block.netherrack.blockID);
+            NMBlocks.deadzoneShardOre.blockID, 2, Block.netherrack.blockID).setNeedsAirExposure();
     @Unique private static WorldGenOreNode deadzoneShardNodes = new WorldGenOreNode(
-            NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1);
+            NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private final MapGenNetherDesertTemple netherDesertTempleGenerator = new MapGenNetherDesertTemple();
     @Unique private final MapGenNetherVillagerPost netherVillagerPostGenerator = new MapGenNetherVillagerPost();
 

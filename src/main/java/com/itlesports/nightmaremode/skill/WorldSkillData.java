@@ -5,6 +5,8 @@ import net.minecraft.src.NBTTagList;
 import net.minecraft.src.NBTTagString;
 
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class WorldSkillData {
@@ -26,6 +28,17 @@ public class WorldSkillData {
     public float globalMobLootChanceBonus;
     public float globalXpGainBonus;
     private final Set<String> unlockedWorldNodes = new HashSet<>();
+    private final Map<String, Integer> netherPostCompletionMasks = new HashMap<>();
+
+    public int markNetherPostVillagerComplete(int tier, String postGroup, int villagerSlot) {
+        if (postGroup == null || postGroup.length() == 0 || villagerSlot < 0 || villagerSlot > 3) {
+            return 0;
+        }
+        String key = tier + "@" + postGroup;
+        int mask = this.netherPostCompletionMasks.getOrDefault(key, 0) | 1 << villagerSlot;
+        this.netherPostCompletionMasks.put(key, mask);
+        return mask;
+    }
 
     public boolean isUnlocked(SkillNode node) {
         return node != null && this.unlockedWorldNodes.contains(node.id.toString());
@@ -64,6 +77,11 @@ public class WorldSkillData {
         for (int i = 0; i < unlocked.tagCount(); ++i) {
             data.unlockedWorldNodes.add(((NBTTagString)unlocked.tagAt(i)).data);
         }
+        NBTTagList postCompletions = tag.getTagList("NetherPostCompletions");
+        for (int i = 0; i < postCompletions.tagCount(); ++i) {
+            NBTTagCompound completion = (NBTTagCompound)postCompletions.tagAt(i);
+            data.netherPostCompletionMasks.put(completion.getString("Key"), completion.getInteger("Mask"));
+        }
         return data;
     }
 
@@ -90,5 +108,13 @@ public class WorldSkillData {
             unlocked.appendTag(new NBTTagString("", id));
         }
         tag.setTag("UnlockedWorldNodes", unlocked);
+        NBTTagList postCompletions = new NBTTagList("NetherPostCompletions");
+        for (Map.Entry<String, Integer> entry : data.netherPostCompletionMasks.entrySet()) {
+            NBTTagCompound completion = new NBTTagCompound();
+            completion.setString("Key", entry.getKey());
+            completion.setInteger("Mask", entry.getValue());
+            postCompletions.appendTag(completion);
+        }
+        tag.setTag("NetherPostCompletions", postCompletions);
     }
 }

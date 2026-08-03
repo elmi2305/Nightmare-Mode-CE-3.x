@@ -13,6 +13,8 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
 
+import java.util.Random;
+
 /** A charged loader permanently keeps only its containing chunk active. */
 public class BlockChunkLoader extends Block {
     private Icon sideIcon;
@@ -26,6 +28,7 @@ public class BlockChunkLoader extends Block {
         this.setPicksEffectiveOn();
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName("ifhyChunkLoader");
+        this.setTickRandomly(true);
     }
 
     @Override
@@ -34,13 +37,15 @@ public class BlockChunkLoader extends Block {
             return true;
         }
         ItemStack held = player.getHeldItem();
-        if (held == null || held.itemID != Item.netherStar.itemID) {
+        if (held == null || held.itemID != Item.diamond.itemID) {
             return true;
         }
         if (!world.isRemote) {
-            --held.stackSize;
-            if (held.stackSize <= 0) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+            if (!player.capabilities.isCreativeMode) {
+                --held.stackSize;
+                if (held.stackSize <= 0) {
+                    player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+                }
             }
             world.setBlockMetadataWithNotify(x, y, z, 1, 3);
             ChunkLoaderManager.addLoader(world, x, y, z);
@@ -54,6 +59,14 @@ public class BlockChunkLoader extends Block {
             ChunkLoaderManager.removeLoader(world, x, y, z);
         }
         super.breakBlock(world, x, y, z, blockID, metadata);
+    }
+
+    /** Migrates already-charged loaders whose old dimension-local save entry was lost. */
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        if (!world.isRemote && world.getBlockMetadata(x, y, z) == 1) {
+            ChunkLoaderManager.addLoader(world, x, y, z);
+        }
     }
 
     @Override

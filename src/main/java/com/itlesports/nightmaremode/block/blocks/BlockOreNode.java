@@ -18,11 +18,17 @@ import java.util.Random;
 public class BlockOreNode extends BlockContainer {
     private final int droppedItemId;
     private final Block requiredToolBlock;
+    private final int requiredDrillTier;
 
     public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, String name, String texture) {
+        this(id, droppedItemId, requiredToolBlock, 1, name, texture);
+    }
+
+    public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, int requiredDrillTier, String name, String texture) {
         super(id, BTWBlocks.netherRockMaterial);
         this.droppedItemId = droppedItemId;
         this.requiredToolBlock = requiredToolBlock;
+        this.requiredDrillTier = Math.max(1, requiredDrillTier);
         this.setHardness(3.0F);
         this.setResistance(20.0F);
         this.setPicksEffectiveOn();
@@ -30,6 +36,10 @@ public class BlockOreNode extends BlockContainer {
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(name);
         this.setTextureName(texture);
+    }
+
+    public int getRequiredDrillTier() {
+        return this.requiredDrillTier;
     }
 
     @Override

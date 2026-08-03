@@ -7,6 +7,8 @@ import btw.block.blocks.PotatoBlock;
 import btw.block.blocks.WheatCropBlock;
 import btw.block.blocks.WheatCropTopBlock;
 import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockTallGrass;
@@ -124,16 +126,19 @@ public final class ChunkAttributeManager {
         }
 
         int metadata = world.getBlockMetadata(farmland.x, farmland.y, farmland.z);
-        if (world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.farmland.blockID) {
+        int farmlandId = world.getBlockId(farmland.x, farmland.y, farmland.z);
+        if (farmlandId != BTWBlocks.farmland.blockID && farmlandId != NMBlocks.netherFarmland.blockID) {
             return false;
         }
-        world.setBlockAndMetadataWithNotify(
-                farmland.x,
-                farmland.y,
-                farmland.z,
-                BTWBlocks.fertilizedFarmland.blockID,
-                metadata
-        );
+        if (farmlandId == BTWBlocks.farmland.blockID) {
+            world.setBlockAndMetadataWithNotify(
+                    farmland.x,
+                    farmland.y,
+                    farmland.z,
+                    BTWBlocks.fertilizedFarmland.blockID,
+                    metadata
+            );
+        }
 
         Chunk chunk = world.getChunkFromChunkCoords(farmland.x >> 4, farmland.z >> 4);
         ChunkAttributes attributes = get(chunk);
@@ -168,7 +173,8 @@ public final class ChunkAttributeManager {
     }
 
     public static boolean hasActiveFertilizer(World world, int x, int y, int z) {
-        if (world.getBlockId(x, y, z) != BTWBlocks.fertilizedFarmland.blockID) {
+        int farmlandId = world.getBlockId(x, y, z);
+        if (farmlandId != BTWBlocks.fertilizedFarmland.blockID && farmlandId != NMBlocks.netherFarmland.blockID) {
             return false;
         }
         ChunkAttributes.FertilizerData data = get(world, x, z)
@@ -183,7 +189,9 @@ public final class ChunkAttributeManager {
         Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
         ChunkAttributes attributes = get(chunk);
         ChunkAttributes.FertilizerData data = attributes.getFarmlandFertilizer(x & 15, y, z & 15);
-        boolean isFertilizedFarmland = world.getBlockId(x, y, z) == BTWBlocks.fertilizedFarmland.blockID;
+        int farmlandId = world.getBlockId(x, y, z);
+        boolean isFertilizedFarmland = farmlandId == BTWBlocks.fertilizedFarmland.blockID
+                || farmlandId == NMBlocks.netherFarmland.blockID;
         if (!isFertilizedFarmland) {
             if (data != null) {
                 attributes.clearFarmlandFertilizer(x & 15, y, z & 15);
@@ -194,7 +202,9 @@ public final class ChunkAttributeManager {
         if (data == null || data.isExpired(world.getTotalWorldTime())) {
             int metadata = world.getBlockMetadata(x, y, z);
             attributes.clearFarmlandFertilizer(x & 15, y, z & 15);
-            world.setBlockAndMetadataWithNotify(x, y, z, BTWBlocks.farmland.blockID, metadata);
+            if (farmlandId == BTWBlocks.fertilizedFarmland.blockID) {
+                world.setBlockAndMetadataWithNotify(x, y, z, BTWBlocks.farmland.blockID, metadata);
+            }
             chunk.setChunkModified();
         }
     }
@@ -291,8 +301,11 @@ public final class ChunkAttributeManager {
         long rollSeed = createRollSeed(chunk);
         Random random = new Random(rollSeed);
         EnumMap<ChunkAttribute, Float> values = new EnumMap<>(ChunkAttribute.class);
+        int netherTier = chunk.worldObj.provider.dimensionId == -1
+                ? NetherTierHelper.getTier(chunk.worldObj, chunk.xPosition * 16 + 8, chunk.zPosition * 16 + 8)
+                : -1;
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
-            Range range = getRange(attribute, biome, height);
+            Range range = netherTier >= 0 ? getNetherRange(attribute, netherTier) : getRange(attribute, biome, height);
             values.put(attribute, range.min + random.nextFloat() * (range.max - range.min));
         }
         int fishCapacity = getFishCapacityRange(biome).next(random);
@@ -319,7 +332,6 @@ public final class ChunkAttributeManager {
         seed ^= (long)chunk.xPosition * 341873128712L;
         seed ^= (long)chunk.zPosition * 132897987541L;
         seed ^= (long)chunk.worldObj.provider.dimensionId * 42317861L;
-        seed ^= chunk.worldObj.rand.nextLong();
         seed ^= seed >>> 33;
         seed *= 0xff51afd7ed558ccdl;
         seed ^= seed >>> 33;
@@ -386,6 +398,45 @@ public final class ChunkAttributeManager {
         };
     }
 
+    /**
+     * Nether soil is intentionally uneven: each ring has a useful strength and
+     * a serious deficiency, so farms benefit from surveying, fertilizer freight,
+     * and eventually the planned automatic fertilizer block. The deadzone is
+     * hostile and erratic rather than a source of mandatory fertile land.
+     */
+    private static Range getNetherRange(ChunkAttribute attribute, int tier) {
+        return switch (tier) {
+            case 1 -> switch (attribute) {
+                case MOISTURE -> new Range(18, 35);
+                case NITROGEN -> new Range(10, 25);
+                case POTASSIUM -> new Range(65, 90);
+                case ACIDITY -> new Range(60, 85);
+                case POROSITY -> new Range(55, 80);
+            };
+            case 2 -> switch (attribute) {
+                case MOISTURE -> new Range(8, 22);
+                case NITROGEN -> new Range(30, 55);
+                case POTASSIUM -> new Range(75, 100);
+                case ACIDITY -> new Range(70, 95);
+                case POROSITY -> new Range(45, 75);
+            };
+            case 3 -> switch (attribute) {
+                case MOISTURE -> new Range(0, 5);
+                case NITROGEN -> new Range(0, 10);
+                case POTASSIUM -> new Range(10, 95);
+                case ACIDITY -> new Range(80, 100);
+                case POROSITY -> new Range(5, 95);
+            };
+            default -> switch (attribute) {
+                case MOISTURE -> new Range(2, 10);
+                case NITROGEN -> new Range(8, 20);
+                case POTASSIUM -> new Range(45, 70);
+                case ACIDITY -> new Range(65, 90);
+                case POROSITY -> new Range(60, 85);
+            };
+        };
+    }
+
     private static ChunkAttribute[] getRequirements(Block crop) {
         if (crop instanceof CarrotBlockBase) {
             return new ChunkAttribute[]{ChunkAttribute.MOISTURE, ChunkAttribute.POTASSIUM};
@@ -428,7 +479,7 @@ public final class ChunkAttributeManager {
 
     private static FarmlandPosition findFarmland(World world, int x, int y, int z) {
         int blockId = world.getBlockId(x, y, z);
-        if (blockId == BTWBlocks.farmland.blockID || blockId == BTWBlocks.fertilizedFarmland.blockID) {
+        if (isFarmlandBlock(blockId)) {
             return new FarmlandPosition(x, y, z);
         }
 
@@ -438,7 +489,7 @@ public final class ChunkAttributeManager {
         }
         for (int offset = 1; offset <= 2; ++offset) {
             int belowId = world.getBlockId(x, y - offset, z);
-            if (belowId == BTWBlocks.farmland.blockID || belowId == BTWBlocks.fertilizedFarmland.blockID) {
+            if (isFarmlandBlock(belowId)) {
                 return new FarmlandPosition(x, y - offset, z);
             }
         }
@@ -447,14 +498,19 @@ public final class ChunkAttributeManager {
 
     private static FarmlandPosition findFarmlandForApplication(World world, int x, int y, int z) {
         int blockId = world.getBlockId(x, y, z);
-        if (blockId == BTWBlocks.farmland.blockID || blockId == BTWBlocks.fertilizedFarmland.blockID) {
+        if (isFarmlandBlock(blockId)) {
             return new FarmlandPosition(x, y, z);
         }
         int belowId = world.getBlockId(x, y - 1, z);
-        if (belowId == BTWBlocks.farmland.blockID || belowId == BTWBlocks.fertilizedFarmland.blockID) {
+        if (isFarmlandBlock(belowId)) {
             return new FarmlandPosition(x, y - 1, z);
         }
         return null;
+    }
+
+    private static boolean isFarmlandBlock(int blockId) {
+        return blockId == BTWBlocks.farmland.blockID || blockId == BTWBlocks.fertilizedFarmland.blockID
+                || NMBlocks.netherFarmland != null && blockId == NMBlocks.netherFarmland.blockID;
     }
 
     private static FishTotals getFishTotals(World world, int blockX, int blockZ) {

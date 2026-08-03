@@ -62,7 +62,8 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
     }
 
     private boolean moveFirstAvailableItem(IInventory source, IInventory target) {
-        int sourceLimit = source == this ? 18 : source.getSizeInventory();
+        int sourceLimit = source == this ? 18 : source instanceof CisternInterfaceTileEntity
+                ? CisternInterfaceTileEntity.OUTPUT_SLOTS : source.getSizeInventory();
         int targetLimit = target == this ? 18 : target.getSizeInventory();
 
         for (int sourceSlot = 0; sourceSlot < sourceLimit; ++sourceSlot) {

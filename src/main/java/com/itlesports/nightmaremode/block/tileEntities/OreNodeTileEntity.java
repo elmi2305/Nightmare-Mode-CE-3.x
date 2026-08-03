@@ -8,7 +8,7 @@ public class OreNodeTileEntity extends TileEntity {
 
     public void initializeCapacity() {
         if (this.remainingCapacity <= 0 && this.worldObj != null) {
-            this.remainingCapacity = 200 + this.worldObj.rand.nextInt(801);
+            this.remainingCapacity = 250 + this.worldObj.rand.nextInt(751);
             this.onInventoryChanged();
         }
     }

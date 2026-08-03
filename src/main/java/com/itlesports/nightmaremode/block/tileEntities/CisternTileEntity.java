@@ -21,10 +21,11 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     public static final int FLUID_LAVA = 5;
 
     public static final int FIRST_INPUT_SLOT = 0;
-    public static final int LAST_INPUT_SLOT = 1;
-    public static final int FIRST_OUTPUT_SLOT = 2;
-    public static final int LAST_OUTPUT_SLOT = 5;
-    private static final int SLOT_COUNT = 6;
+    public static final int LAST_INPUT_SLOT = 8;
+    public static final int FIRST_OUTPUT_SLOT = 9;
+    public static final int LAST_OUTPUT_SLOT = 12;
+    private static final int SLOT_COUNT = 13;
+    private static final int INVENTORY_VERSION = 2;
 
     private final ItemStack[] contents = new ItemStack[SLOT_COUNT];
     private int fluid = FLUID_EMPTY;
@@ -110,7 +111,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     }
 
     /**
-     * inserts as much of the supplied stack as the two input slots can hold.
+     * inserts as much of the supplied stack as the nine input slots can hold.
      * the source stack is never mutated; callers can use the returned amount to
      * preserve a partially accepted EntityItem stack.
      */
@@ -444,7 +445,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return slot >= FIRST_INPUT_SLOT && slot <= LAST_INPUT_SLOT;
+        return this.fluid != FLUID_EMPTY && slot >= FIRST_INPUT_SLOT && slot <= LAST_INPUT_SLOT;
     }
 
     @Override
@@ -467,9 +468,13 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
             this.contents[i] = null;
         }
         NBTTagList list = tag.getTagList("Items");
+        int inventoryVersion = tag.hasKey("InventoryVersion") ? tag.getInteger("InventoryVersion") : 1;
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound itemTag = (NBTTagCompound) list.tagAt(i);
             int slot = itemTag.getByte("Slot") & 255;
+            if (inventoryVersion < INVENTORY_VERSION && slot >= 2 && slot <= 5) {
+                slot += 7;
+            }
             if (slot < this.contents.length) {
                 this.contents[slot] = ItemStack.loadItemStackFromNBT(itemTag);
             }
@@ -483,6 +488,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         tag.setInteger("Heat", this.heatLevel);
         tag.setInteger("Process", this.processingTime);
         tag.setInteger("Stir", this.stirProgress);
+        tag.setInteger("InventoryVersion", INVENTORY_VERSION);
         NBTTagList list = new NBTTagList();
         for (int i = 0; i < this.contents.length; ++i) {
             if (this.contents[i] != null) {

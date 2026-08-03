@@ -279,6 +279,13 @@ public class NMItems {
     public static Item denseNetherrackCore;
     public static Item deadzoneShard;
     public static Item netherTradePlaceholder;
+    public static Item invocationFragment;
+    public static Item invocationSeal;
+    public static Item endAccordFragment;
+    public static Item endAccord;
+    public static Item debugVillagerLevel;
+    public static Item debugVillagerProgress;
+    public static Item debugVillagerReroll;
 
 
     static {
@@ -475,6 +482,16 @@ public class NMItems {
         denseNetherrackCore = new NetherItem(2766).setTextureName("nightmare:ifhyDenseNetherrackCore").setUnlocalizedName("ifhyDenseNetherrackCore").setCreativeTab(CreativeTabs.tabMaterials);
         deadzoneShard = new NetherItem(2767).setTextureName("nightmare:ifhyDeadzoneShard").setUnlocalizedName("ifhyDeadzoneShard").setCreativeTab(CreativeTabs.tabMaterials);
         netherTradePlaceholder = new NetherItem(2768).setTextureName("nightmare:ifhyNetherTradePlaceholder").setUnlocalizedName("ifhyNetherTradePlaceholder").setCreativeTab(CreativeTabs.tabMaterials);
+        invocationFragment = new NetherItem(2769).setTextureName("nightmare:ifhyInvocationFragment").setUnlocalizedName("ifhyInvocationFragment").setCreativeTab(CreativeTabs.tabMaterials);
+        invocationSeal = new NetherItem(2770).setTextureName("nightmare:ifhyInvocationSeal").setUnlocalizedName("ifhyInvocationSeal").setCreativeTab(CreativeTabs.tabMaterials);
+        endAccordFragment = new NetherItem(2771).setTextureName("nightmare:ifhyEndAccordFragment").setUnlocalizedName("ifhyEndAccordFragment").setCreativeTab(CreativeTabs.tabMaterials);
+        endAccord = new NetherItem(2772).setTextureName("nightmare:ifhyEndAccord").setUnlocalizedName("ifhyEndAccord").setCreativeTab(CreativeTabs.tabMaterials);
+        debugVillagerLevel = new ItemVillagerDebugTool(2773, ItemVillagerDebugTool.Action.INCREASE_LEVEL)
+                .setTextureName("nightmare:ifhyDebugVillagerLevel").setUnlocalizedName("ifhyDebugVillagerLevel");
+        debugVillagerProgress = new ItemVillagerDebugTool(2774, ItemVillagerDebugTool.Action.INCREASE_PROGRESS)
+                .setTextureName("nightmare:ifhyDebugVillagerProgress").setUnlocalizedName("ifhyDebugVillagerProgress");
+        debugVillagerReroll = new ItemVillagerDebugTool(2775, ItemVillagerDebugTool.Action.REROLL_TRADES)
+                .setTextureName("nightmare:ifhyDebugVillagerReroll").setUnlocalizedName("ifhyDebugVillagerReroll");
 
 
 
