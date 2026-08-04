@@ -59,6 +59,7 @@ public class InventoryPlayerMixin {
             inv.addItemStackToInventory(new ItemStack(NMItems.rifle));
             inv.addItemStackToInventory(new ItemStack(Block.obsidian));
             inv.addItemStackToInventory(new ItemStack(Item.fireballCharge));
+            inv.addItemStackToInventory(new ItemStack(Block.portal));
 
 
 
