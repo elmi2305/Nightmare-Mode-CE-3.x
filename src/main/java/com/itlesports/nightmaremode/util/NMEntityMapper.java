@@ -89,5 +89,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(OreNodeTileEntity.class, "NmOreNode");
         TileEntity.addMapping(MinerDrillTileEntity.class, "NmMinerDrill");
         TileEntity.addMapping(CisternInterfaceTileEntity.class, "NmCisternInterface");
+        TileEntity.addMapping(CisternStirrerTileEntity.class, "NmCisternStirrer");
+        TileEntity.addMapping(CisternDrainTileEntity.class, "NmCisternDrain");
     }
 }

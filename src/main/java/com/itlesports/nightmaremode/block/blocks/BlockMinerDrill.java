@@ -5,7 +5,9 @@ import api.util.MiscUtils;
 import btw.BTWMod;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.MinerDrillTileEntity;
+import com.itlesports.nightmaremode.block.models.MinerDrillModel;
 import com.itlesports.nightmaremode.nmgui.ContainerMinerDrill;
+import btw.block.model.BlockModel;
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
@@ -25,6 +27,8 @@ import net.fabricmc.api.Environment;
 import java.util.Random;
 
 public class BlockMinerDrill extends BlockContainer {
+    private final MinerDrillModel worldModel = new MinerDrillModel();
+    private final MinerDrillModel itemModel = new MinerDrillModel(0.0D, 0.625D, 1.0D);
     private final int machineTier;
     private final String drillTexture;
     private Icon frontIcon;
@@ -87,6 +91,102 @@ public class BlockMinerDrill extends BlockContainer {
     @Environment(EnvType.CLIENT)
     public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side) {
         return this.getIcon(side, access.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Icon getIconByIndex(int index) {
+        if (index == 1) return this.frontIcon;
+        if (index == 2) return this.backIcon;
+        return this.sideIcon;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public net.minecraft.src.AxisAlignedBB getBlockBoundsFromPoolBasedOnState(
+            IBlockAccess access, int x, int y, int z) {
+        net.minecraft.src.AxisAlignedBB body = net.minecraft.src.AxisAlignedBB.getBoundingBox(
+                0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
+        body.tiltToFacingAlongY(access.getBlockMetadata(x, y, z) & 7);
+        return body;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side) {
+        return this.currentBlockRenderer.shouldSideBeRenderedBasedOnCurrentBounds(x, y, z, side);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public boolean renderBlock(net.minecraft.src.RenderBlocks renderer, int x, int y, int z) {
+        int facing = renderer.blockAccess.getBlockMetadata(x, y, z) & 7;
+        BlockModel model = this.worldModel.makeTemporaryCopy();
+        model.tiltToFacingAlongY(facing);
+        this.applyTextureRotation(renderer, facing);
+        model.renderAsBlock(renderer, this, x, y, z);
+        renderer.clearUVRotation();
+        return true;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void renderBlockAsItem(net.minecraft.src.RenderBlocks renderer, int itemDamage, float brightness) {
+        this.itemModel.renderAsItemBlock(renderer, this, 1);
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void applyTextureRotation(net.minecraft.src.RenderBlocks renderer, int facing) {
+        switch (facing) {
+            case 0 -> {
+                renderer.setUVRotateEast(3);
+                renderer.setUVRotateWest(3);
+                renderer.setUVRotateSouth(1);
+                renderer.setUVRotateNorth(2);
+                renderer.setUVRotateBottom(3);
+            }
+            case 1 -> {
+                renderer.setUVRotateSouth(2);
+                renderer.setUVRotateNorth(1);
+            }
+            case 2 -> {
+                renderer.setUVRotateSouth(3);
+                renderer.setUVRotateNorth(4);
+                renderer.setUVRotateEast(3);
+                renderer.setUVRotateWest(3);
+            }
+            case 3 -> {
+                renderer.setUVRotateSouth(4);
+                renderer.setUVRotateNorth(3);
+                renderer.setUVRotateTop(3);
+                renderer.setUVRotateBottom(3);
+            }
+            case 4 -> {
+                renderer.setUVRotateEast(4);
+                renderer.setUVRotateWest(3);
+                renderer.setUVRotateTop(2);
+                renderer.setUVRotateBottom(1);
+                renderer.setUVRotateNorth(3);
+                renderer.setUVRotateSouth(4);
+            }
+            case 5 -> {
+                renderer.setUVRotateEast(3);
+                renderer.setUVRotateWest(4);
+                renderer.setUVRotateTop(1);
+                renderer.setUVRotateBottom(2);
+                renderer.setUVRotateSouth(4);
+                renderer.setUVRotateNorth(3);
+            }
+        }
     }
 
     @Override

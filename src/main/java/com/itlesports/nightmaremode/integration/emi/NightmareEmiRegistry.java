@@ -63,6 +63,7 @@ public final class NightmareEmiRegistry {
         registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.diamondAnvil));
         registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.netherrackAnvil));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cistern));
+        registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternStirrer));
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));
 
         registry.addDeferredRecipes(addRecipe -> {

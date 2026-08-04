@@ -92,6 +92,10 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMBlocks.asphaltLayer, 0, "nm.blockAsphalt.info");
         this.info(registry, NMBlocks.bloodSaw, 0, "nm.bloodSaw.info");
         this.info(registry, NMBlocks.disenchantmentTable, 0, "nm.disenchantmentTable.info");
+        this.info(registry, NMBlocks.cistern, 0, "nm.cistern.info");
+        this.info(registry, NMBlocks.cisternInterface, 0, "nm.cisternInterface.info");
+        this.info(registry, NMBlocks.cisternStirrer, 0, "nm.cisternStirrer.info");
+        this.info(registry, NMBlocks.cisternDrain, 0, "nm.cisternDrain.info");
 
         // vanilla blocks
         this.info(registry, Block.obsidian, 0, "nm.obsidian.info");

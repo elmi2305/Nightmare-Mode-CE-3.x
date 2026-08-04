@@ -967,6 +967,10 @@ nm.upgradedLadder.info=Upgraded ladders increase player and entity climbing spee
 nm.hellforge.info=The Hellforge cooks at Brick Oven speed and accepts the same fuels. It requires adjacent flowing lava to function. Cookable items can be inserted with a powered Hopper above it, and cooked items can be extracted with a powered Hopper below it.
 nm.bloodSaw.info=The Blood Saw does not require mechanical power to run. It does increased damage and processes blocks much faster.
 nm.disenchantmentTable.info=The Disenchantment Table allows easy removal of enchantments in the form of Enchantment Scrolls.
+nm.cistern.info=The Cistern processes up to nine ingredient stacks using fluid, heat, and stirring. Items enter through its open top; its four output slots can be collected by hand or automation. Empty Cisterns reject ingredients. Interact with Paper to inspect its fluid, heat, stir count, contents, and progress.
+nm.cisternInterface.info=A Cistern Interface attaches to one horizontal face of a Cistern. Hoppers and Chute Hoppers can insert ingredients and extract finished outputs through it. It owns no inventory and cannot connect through another Interface.
+nm.cisternStirrer.info=Place the Powered Cistern Stirrer directly above a Cistern or Cistern Interface and power it with an Axle from above. Its target stir count is the sum of horizontal redstone strengths; adjacent Red, Purple, and Black Gem blocks add 25, 50, and 100. It restores one stir per second until reaching that target.
+nm.cisternDrain.info=Below a Cistern or Cistern Interface, redstone power makes the Cistern Drain empty its fluid and eject every ingredient and output through the drain's bottom. Above a Cistern or Interface, it consumes flowing Water or Lava directly above itself and fills the Cistern if it is empty.
 
 # VANILLA BLOCKS / ITEMS
 nm.obsidian.info=Obsidian can be dropped by Obsidian Creepers in Strata 3, or crafted with Steel after the Wither has been defeated. It has significantly less blast resistance. Mining Obsidian without a Steel Pickaxe drops Obsidian Shards and has a chance to spawn an Obsidian Fish.
@@ -1071,6 +1075,8 @@ tile.ifhyObsidianMillstone.name=Obsidian Millstone
 tile.ifhyAquamarineOre.name=Aquamarine Ore
 tile.ifhyChunkLoader.name=Chunk Loader
 tile.ifhyCisternInterface.name=Cistern Interface
+tile.ifhyCisternStirrer.name=Powered Cistern Stirrer
+tile.ifhyCisternDrain.name=Cistern Drain
 tile.ifhyRedGem.name=Red Gem
 tile.ifhyPurpleGem.name=Purple Gem
 tile.ifhyBlackGem.name=Black Gem

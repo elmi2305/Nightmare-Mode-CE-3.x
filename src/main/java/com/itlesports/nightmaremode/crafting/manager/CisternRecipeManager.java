@@ -26,12 +26,19 @@ public class CisternRecipeManager {
     }
 
     public CisternRecipe getMatchingRecipe(ItemStack[] inventory, int fluid, int heat, int stir) {
+        CisternRecipe bestMatch = null;
         for (CisternRecipe recipe : this.recipes) {
-            if (recipe.matches(inventory, fluid, heat, stir)) {
-                return recipe;
+            if (!recipe.matches(inventory, fluid, heat, stir)) {
+                continue;
+            }
+            if (bestMatch == null
+                    || recipe.getRequiredStir() > bestMatch.getRequiredStir()
+                    || recipe.getRequiredStir() == bestMatch.getRequiredStir()
+                    && recipe.getRequiredHeat() > bestMatch.getRequiredHeat()) {
+                bestMatch = recipe;
             }
         }
-        return null;
+        return bestMatch;
     }
 
     public ItemStack[] getRecipeResult(CisternRecipe recipe, Random random) {

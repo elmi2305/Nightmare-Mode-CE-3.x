@@ -33,6 +33,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     private int processingTime;
     private int stirProgress;
     private int ticksExisted;
+    private long lastAutomaticStirTick = Long.MIN_VALUE;
 
     private CisternRecipe currentRecipe;
 
@@ -95,9 +96,24 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     }
 
     public void stir(EntityPlayer p) {
-        this.stirProgress = Math.min(this.stirProgress + 1, 64);
+        this.stirProgress = Math.min(this.stirProgress + 1, 255);
         p.addExhaustion(0.3f);
         this.syncState();
+    }
+
+    /** Adds one machine stir, with no player exhaustion or splash effects. */
+    public boolean stirAutomatically() {
+        if (this.worldObj == null || this.worldObj.isRemote || this.stirProgress >= 255) {
+            return false;
+        }
+        long worldTick = this.worldObj.getTotalWorldTime();
+        if (this.lastAutomaticStirTick == worldTick) {
+            return false;
+        }
+        this.lastAutomaticStirTick = worldTick;
+        ++this.stirProgress;
+        this.syncState();
+        return true;
     }
 
     public boolean insertInput(ItemStack stack) {
@@ -171,6 +187,28 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
             this.processingTime = 0;
             this.onInventoryChanged();
         }
+    }
+
+    /** Drains the fluid and ejects every input and output through an attached drain. */
+    public boolean drainAndEjectContents(int drainX, int drainY, int drainZ) {
+        boolean changed = this.fluid != FLUID_EMPTY;
+        this.fluid = FLUID_EMPTY;
+        for (int slot = 0; slot < this.contents.length; ++slot) {
+            ItemStack stack = this.contents[slot];
+            if (stack == null) {
+                continue;
+            }
+            ItemUtils.ejectStackFromBlockTowardsFacing(
+                    this.worldObj, drainX, drainY, drainZ, stack.copy(), 0);
+            this.contents[slot] = null;
+            changed = true;
+        }
+        if (changed) {
+            this.currentRecipe = null;
+            this.processingTime = 0;
+            this.onInventoryChanged();
+        }
+        return changed;
     }
 
     /**
@@ -462,7 +500,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.fluid = tag.getInteger("Fluid");
         this.heatLevel = tag.getInteger("Heat");
         this.processingTime = tag.getInteger("Process");
-        this.stirProgress = tag.getInteger("Stir");
+        this.stirProgress = Math.min(255, Math.max(0, tag.getInteger("Stir")));
         this.currentRecipe = null;
         for (int i = 0; i < this.contents.length; ++i) {
             this.contents[i] = null;
@@ -519,7 +557,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.fluid = tag.getInteger("Fluid");
         this.heatLevel = tag.getInteger("Heat");
         this.processingTime = tag.getInteger("Process");
-        this.stirProgress = tag.getInteger("Stir");
+        this.stirProgress = Math.min(255, Math.max(0, tag.getInteger("Stir")));
         this.worldObj.markBlockRangeForRenderUpdate(
                 this.xCoord, this.yCoord, this.zCoord,
                 this.xCoord, this.yCoord, this.zCoord);

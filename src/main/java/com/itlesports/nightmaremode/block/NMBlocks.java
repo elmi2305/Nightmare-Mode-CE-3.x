@@ -138,6 +138,8 @@ public class NMBlocks {
     public static BlockMetaMultiTextured netherProgressionGems;
     public static Block fertileNetherrack;
     public static Block netherFarmland;
+    public static Block cisternStirrer;
+    public static Block cisternDrain;
     public static final int META_RED_GEM = 0;
     public static final int META_PURPLE_GEM = 1;
     public static final int META_BLACK_GEM = 2;
@@ -264,6 +266,12 @@ public class NMBlocks {
 
         netherFarmland = new BlockNetherFarmland(2433);
         Item.itemsList[netherFarmland.blockID] = new NMNetherItemBlock(netherFarmland.blockID - 256);
+
+        cisternStirrer = new BlockCisternStirrer(2434);
+        Item.itemsList[cisternStirrer.blockID] = new NMNetherItemBlock(cisternStirrer.blockID - 256);
+
+        cisternDrain = new BlockCisternDrain(2435);
+        Item.itemsList[cisternDrain.blockID] = new NMNetherItemBlock(cisternDrain.blockID - 256);
 
 
 

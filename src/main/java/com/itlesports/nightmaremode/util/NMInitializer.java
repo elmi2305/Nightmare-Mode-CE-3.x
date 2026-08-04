@@ -795,6 +795,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(Item.minecartEmpty), new Object[]{"# #", "###", Character.valueOf('#'), NMTags.ironTungstenIngots});
         RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.minerDrill), new Object[]{Block.netherrack, NMItems.tungstenIngot, Item.redstone});
         RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.cisternInterface), new Object[]{NMItems.tungstenIngot, NMItems.tungstenIngot, Item.redstone, Block.netherBrick});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.cisternStirrer), new Object[]{NMBlocks.cisternInterface, BTWBlocks.gearBox, BTWBlocks.axle, Item.redstone});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMBlocks.cisternDrain), new Object[]{NMBlocks.cisternInterface, NMItems.tungstenIngot, Item.redstone});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.chunkLoader), new Object[]{"OTO", "TRT", "OTO", Character.valueOf('O'), NMItems.obsidianBrick, Character.valueOf('T'), NMItems.tungstenIngot, Character.valueOf('R'), NMItems.refinedRedstone});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.invocationSeal), new Object[]{NMItems.invocationFragment, NMItems.invocationFragment, NMItems.invocationFragment, NMItems.invocationFragment});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.endAccord), new Object[]{NMItems.endAccordFragment, NMItems.endAccordFragment, NMItems.endAccordFragment, NMItems.endAccordFragment});
