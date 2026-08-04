@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.Block;
 
 import java.util.Random;
@@ -8,10 +9,16 @@ import java.util.Random;
 public class Tier2VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 4;
     public static final int MAX_CHUNKS_APART = 12;
+    private static final VillagerOffset[] VILLAGER_OFFSETS = {
+            new VillagerOffset( 7.5D, -0.5D,7.5D),
+            new VillagerOffset( 7.5D, -0.5D,-6.5D),
+            new VillagerOffset(-6.5D, -0.5D,7.5D),
+            new VillagerOffset(-6.5D, -0.5D,-6.5D)
+    };
     public Tier2VillagerPost() {}
 
     public Tier2VillagerPost(Random random, int x, int z) {
-        super(random, x, z, 29, 14, 29);
+        super(random, x, z, 30, 23, 30);
     }
 
 
@@ -26,16 +33,16 @@ public class Tier2VillagerPost extends NetherVillagerPost {
     }
     private static PaletteEntry[] createPalette() {
         tierTwoBlocks = new PaletteEntry[21];
-        tierTwoBlocks[0] = block(Block.netherrack.blockID, 3);
+        tierTwoBlocks[0] = block(Block.thinGlass.blockID,0);
         tierTwoBlocks[1] = block(0, 0);
-        tierTwoBlocks[2] = block(Block.blockNetherQuartz.blockID, 0);
-        tierTwoBlocks[3] = block(Block.netherFence.blockID, 0);
-        tierTwoBlocks[4] = block(Block.netherBrick.blockID, 0);
-        tierTwoBlocks[5] = block(Block.glowStone.blockID, 0);
-        tierTwoBlocks[6] = block(BTWBlocks.quartzMouldingAndDecorative.blockID, 12); // quartz pillar
-        tierTwoBlocks[7] = block(Block.obsidian.blockID, 0);
-        tierTwoBlocks[8] = block(Block.endPortalFrame.blockID, 0);
-        tierTwoBlocks[9] = block(Block.stoneSingleSlab.blockID, 0);
+        tierTwoBlocks[2] = block(Block.netherrack.blockID, 3);
+        tierTwoBlocks[3] = block(Block.slowSand.blockID, 0);
+        tierTwoBlocks[4] = block(Block.netherFence.blockID, 0);
+        tierTwoBlocks[5] = block(Block.netherBrick.blockID, 0);
+        tierTwoBlocks[6] = block(Block.glowStone.blockID,0);
+        tierTwoBlocks[7] = block(BTWBlocks.quartzMouldingAndDecorative.blockID, 12);
+        tierTwoBlocks[8] = block(Block.obsidian.blockID, 0);
+        tierTwoBlocks[9] = block(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_PURPLE_GEM);
         tierTwoBlocks[10] = block(Block.netherrack.blockID, 0);
         tierTwoBlocks[11] = block(Block.enchantmentTable.blockID, 0);
         tierTwoBlocks[12] = block(Block.beacon.blockID, 0);
@@ -60,13 +67,8 @@ public class Tier2VillagerPost extends NetherVillagerPost {
     }
 
     @Override
-    protected double getVillagerHorizontalOffset() {
-        return 8.0D;
-    }
-
-    @Override
-    protected double getVillagerVerticalOffset() {
-        return 3.0D;
+    protected VillagerOffset[] getVillagerOffsets() {
+        return VILLAGER_OFFSETS;
     }
 
     @Override

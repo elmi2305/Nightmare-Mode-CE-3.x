@@ -10,6 +10,12 @@ import java.util.Random;
 public class Tier1VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 8;
     public static final int MAX_CHUNKS_APART = 16;
+    private static final VillagerOffset[] VILLAGER_OFFSETS = {
+            new VillagerOffset(5.5D, -3.0D, 5.5D),
+            new VillagerOffset(5.5D, -3.0D, -5.5D),
+            new VillagerOffset(-5.5D, -3.0D, 5.5D),
+            new VillagerOffset(-5.5D, -3.0D, -5.5D)
+    };
     private static PaletteEntry[] tierOneBlocks;
 
     public Tier1VillagerPost() {}
@@ -46,13 +52,8 @@ public class Tier1VillagerPost extends NetherVillagerPost {
     }
 
     @Override
-    protected double getVillagerHorizontalOffset() {
-        return 5.5D;
-    }
-
-    @Override
-    protected double getVillagerVerticalOffset() {
-        return 3.0D;
+    protected VillagerOffset[] getVillagerOffsets() {
+        return VILLAGER_OFFSETS;
     }
 
     @Override

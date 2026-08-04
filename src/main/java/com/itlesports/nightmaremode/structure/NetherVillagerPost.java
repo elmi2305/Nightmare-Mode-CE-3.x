@@ -7,7 +7,6 @@ import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.NMStructure;
 import net.minecraft.src.Block;
-import net.minecraft.src.EntityVillager;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.StructureBoundingBox;
 import net.minecraft.src.World;
@@ -29,9 +28,7 @@ public abstract class NetherVillagerPost extends NMStructure {
 
     protected abstract int getVillagerProfession();
 
-    protected abstract double getVillagerHorizontalOffset();
-
-    protected abstract double getVillagerVerticalOffset();
+    protected abstract VillagerOffset[] getVillagerOffsets();
 
     protected abstract int getTier();
 
@@ -62,22 +59,22 @@ public abstract class NetherVillagerPost extends NMStructure {
             this.progressionGemPlaced = true;
         }
 
-        double horizontalOffset = getVillagerHorizontalOffset();
-        double villagerY = centerY - getVillagerVerticalOffset();
-        double[] xSigns = {1.0D, 1.0D, -1.0D, -1.0D};
-        double[] zSigns = {1.0D, -1.0D, 1.0D, -1.0D};
-        for (int index = 0; index < 4; ++index) {
+        VillagerOffset[] villagerOffsets = getVillagerOffsets();
+        for (int index = 0; index < villagerOffsets.length; ++index) {
             if ((this.spawnedVillagerMask & 1 << index) != 0) {
                 continue;
             }
-            double villagerX = centerX + xSigns[index] * horizontalOffset;
-            double villagerZ = centerZ + zSigns[index] * horizontalOffset;
+            VillagerOffset offset = villagerOffsets[index];
+            double villagerX = centerX + offset.x;
+            double villagerY = centerY + offset.y;
+            double villagerZ = centerZ + offset.z;
             if (!box.isVecInside((int) Math.floor(villagerX), (int) Math.floor(villagerY), (int) Math.floor(villagerZ))) {
                 continue;
             }
             EntityNetherPostVillager villager = createVillager(world);
             villager.setPostGroup(centerX, centerZ, index);
             villager.setLocationAndAngles(villagerX, villagerY, villagerZ, random.nextFloat() * 360.0F, 0.0F);
+            System.out.println("spawned villager at " + villagerX + " " + villagerY + " " + villagerZ);
             world.spawnEntityInWorld(villager);
             this.spawnedVillagerMask |= 1 << index;
         }
@@ -118,4 +115,6 @@ public abstract class NetherVillagerPost extends NMStructure {
         }
         return palette;
     }
+
+    protected record VillagerOffset(double x, double y, double z) { }
 }

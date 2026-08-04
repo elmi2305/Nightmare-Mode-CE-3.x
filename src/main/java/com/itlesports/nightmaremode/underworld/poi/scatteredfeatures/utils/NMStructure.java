@@ -79,6 +79,7 @@ public abstract class NMStructure extends ComponentScatteredFeature {
 
                 PaletteEntry entry = palette[state];
                 int blockID = entry.getBlockID(this, random);
+                if(blockID == this.blockToNotReplace() && this.shouldGenerateAir) continue;
                 int metadata = entry.getMetadata(random, blockID);
                 BlockPos worldPosition = getWorldPosition(localX, localY, localZ);
 
@@ -106,6 +107,9 @@ public abstract class NMStructure extends ComponentScatteredFeature {
             exception.printStackTrace();
             return false;
         }
+    }
+    protected int blockToNotReplace(){
+        return Block.thinGlass.blockID;
     }
 
     private BlockPos getWorldPosition(int localX, int localY, int localZ) {

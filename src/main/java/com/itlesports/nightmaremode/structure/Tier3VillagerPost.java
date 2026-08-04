@@ -8,6 +8,12 @@ import java.util.Random;
 public class Tier3VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 4;
     public static final int MAX_CHUNKS_APART = 12;
+    private static final VillagerOffset[] VILLAGER_OFFSETS = {
+            new VillagerOffset(8.0D, -8.0D, 8.0D),
+            new VillagerOffset(8.0D, -8.0D, -8.0D),
+            new VillagerOffset(-8.0D, -8.0D, 8.0D),
+            new VillagerOffset(-8.0D, -8.0D, -8.0D)
+    };
     public Tier3VillagerPost() {}
 
     public Tier3VillagerPost(Random random, int x, int z) {
@@ -58,13 +64,8 @@ public class Tier3VillagerPost extends NetherVillagerPost {
     }
 
     @Override
-    protected double getVillagerHorizontalOffset() {
-        return 8.0D;
-    }
-
-    @Override
-    protected double getVillagerVerticalOffset() {
-        return 8.0D;
+    protected VillagerOffset[] getVillagerOffsets() {
+        return VILLAGER_OFFSETS;
     }
 
     @Override
