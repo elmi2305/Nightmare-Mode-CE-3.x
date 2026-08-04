@@ -15,8 +15,8 @@ public class BlockNetherWorkbench extends BlockWorkbench {
     private Icon topIcon;
     private Icon northIcon;
     private Icon southIcon;
-    private Icon westIcon;
-    private Icon eastIcon;
+//    private Icon westIcon;
+//    private Icon eastIcon;
 
     public BlockNetherWorkbench(int id) {
         super(id);
@@ -33,8 +33,8 @@ public class BlockNetherWorkbench extends BlockWorkbench {
         this.topIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchTop");
         this.northIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchNorth");
         this.southIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchSouth");
-        this.westIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchWest");
-        this.eastIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchEast");
+//        this.westIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchWest");
+//        this.eastIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchEast");
         this.blockIcon = this.northIcon;
     }
 
@@ -51,9 +51,9 @@ public class BlockNetherWorkbench extends BlockWorkbench {
             case 3:
                 return this.southIcon;
             case 4:
-                return this.westIcon;
+                return this.southIcon;
             case 5:
-                return this.eastIcon;
+                return this.northIcon;
             default:
                 return this.blockIcon;
         }

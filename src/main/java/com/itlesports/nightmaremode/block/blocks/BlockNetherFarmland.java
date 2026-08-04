@@ -5,14 +5,42 @@ import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 /** Nether crop soil hydrated by ordinary water or a nearby water-filled cistern. */
 public class BlockNetherFarmland extends FarmlandBlock {
+    @Environment(value= EnvType.CLIENT)
+    protected Icon iconTopWet;
+    @Environment(value=EnvType.CLIENT)
+    protected Icon iconTopDry;
+
     public BlockNetherFarmland(int id) {
         super(id);
         this.setUnlocalizedName("ifhyNetherFarmland");
         this.setCreativeTab(CreativeTabs.tabDecorations);
+    }
+
+
+    @Override
+    @Environment(value=EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        this.blockIcon = register.registerIcon("nightmare:ifhyFertileNetherrack");
+        this.iconTopWet = register.registerIcon("nightmare:ifhyNetherFarmlandWet");
+        this.iconTopDry = register.registerIcon("nightmare:ifhyNetherFarmlandDry");
+    }
+
+    @Override
+    @Environment(value=EnvType.CLIENT)
+    public Icon getIcon(int iSide, int iMetadata) {
+        if (iSide == 1) {
+            if (this.isHydrated(iMetadata)) {
+                return this.iconTopWet;
+            }
+            return this.iconTopDry;
+        }
+        return this.blockIcon;
     }
 
     @Override
