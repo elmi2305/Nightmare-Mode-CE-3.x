@@ -77,7 +77,7 @@ public abstract class RenderGlobalMixin {
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_LINES);
-        double gridY = -1;
+        double gridY = -1.5;
         for (int chunkX = centerChunkX - radius; chunkX <= centerChunkX + radius + 1; ++chunkX) {
             double x = chunkX * 16.0D - RenderManager.renderPosX - 1;
             tessellator.addVertex(x, gridY, minZ);
