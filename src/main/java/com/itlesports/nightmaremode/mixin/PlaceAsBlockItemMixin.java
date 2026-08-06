@@ -23,11 +23,12 @@ import java.util.Set;
 @Mixin(PlaceAsBlockItem.class)
 public abstract class PlaceAsBlockItemMixin {
     @Shadow public abstract int getBlockIDToPlace(World world, int damage, int facing, float clickX, float clickY, float clickZ);
-    @Shadow(remap = false) public abstract int getBlockID();
 
-    @Inject(method = "getMetadata", at = @At("HEAD"), cancellable = true, remap = false)
+    @Shadow protected int blockID;
+
+    @Inject(method = "getMetadata", at = @At("HEAD"), cancellable = true)
     private void preserveNetherrackItemMetadata(int itemDamage, CallbackInfoReturnable<Integer> cir) {
-        if (this.getBlockID() == Block.netherrack.blockID) {
+        if (this.blockID == Block.netherrack.blockID) {
             cir.setReturnValue(itemDamage);
         }
     }
