@@ -11,9 +11,13 @@ import net.minecraft.src.IconRegister;
 import net.minecraft.src.World;
 
 public class BlockNetherWorkbench extends BlockWorkbench {
+    @Environment(EnvType.CLIENT)
     private Icon bottomIcon;
+    @Environment(EnvType.CLIENT)
     private Icon topIcon;
+    @Environment(EnvType.CLIENT)
     private Icon northIcon;
+    @Environment(EnvType.CLIENT)
     private Icon southIcon;
 //    private Icon westIcon;
 //    private Icon eastIcon;
@@ -33,30 +37,19 @@ public class BlockNetherWorkbench extends BlockWorkbench {
         this.topIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchTop");
         this.northIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchNorth");
         this.southIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchSouth");
-//        this.westIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchWest");
-//        this.eastIcon = register.registerIcon("nightmare:ifhyNetherWorkbenchEast");
         this.blockIcon = this.northIcon;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public Icon getIcon(int side, int metadata) {
-        switch (side) {
-            case 0:
-                return this.bottomIcon;
-            case 1:
-                return this.topIcon;
-            case 2:
-                return this.northIcon;
-            case 3:
-                return this.southIcon;
-            case 4:
-                return this.southIcon;
-            case 5:
-                return this.northIcon;
-            default:
-                return this.blockIcon;
-        }
+        return switch (side) {
+            case 0 -> this.bottomIcon;
+            case 1 -> this.topIcon;
+            case 2, 5 -> this.northIcon;
+            case 3, 4 -> this.southIcon;
+            default -> this.blockIcon;
+        };
     }
 
     @Override

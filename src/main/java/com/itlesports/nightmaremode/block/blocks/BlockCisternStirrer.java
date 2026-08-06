@@ -3,16 +3,18 @@ package com.itlesports.nightmaremode.block.blocks;
 import api.block.MechanicalBlock;
 import api.block.util.MechPowerUtils;
 import com.itlesports.nightmaremode.block.tileEntities.CisternStirrerTileEntity;
-import net.minecraft.src.BlockContainer;
-import net.minecraft.src.ChatMessageComponent;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Material;
-import net.minecraft.src.TileEntity;
-import net.minecraft.src.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.src.*;
 
 /** Nonflammable mechanical stirrer configured by horizontal redstone and gems. */
 public class BlockCisternStirrer extends BlockContainer implements MechanicalBlock {
+    @Environment(EnvType.CLIENT)
+    private Icon sideIcon;
+    @Environment(EnvType.CLIENT)
+    private Icon stirIcon;
+    @Environment(EnvType.CLIENT)
+    private Icon bottomIcon;
     public BlockCisternStirrer(int id) {
         super(id, Material.iron);
         this.setHardness(4.0F);
@@ -51,6 +53,25 @@ public class BlockCisternStirrer extends BlockContainer implements MechanicalBlo
             }
         }
         return true;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        this.sideIcon = register.registerIcon("nightmare:ifhyCisternStirrer");
+        this.stirIcon = register.registerIcon("nightmare:ifhyCisternStirrerStir");
+        this.bottomIcon = register.registerIcon("nightmare:ifhyCisternStirrerBottom");
+        this.blockIcon = this.stirIcon;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Icon getIcon(int side, int metadata) {
+        return switch (side) {
+            case 0 -> this.stirIcon;
+            case 1 -> this.bottomIcon;
+            default -> this.sideIcon;
+        };
     }
 
     @Override public boolean canInputMechanicalPower() { return true; }
