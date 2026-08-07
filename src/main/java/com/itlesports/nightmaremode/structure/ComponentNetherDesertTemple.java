@@ -1,8 +1,11 @@
 package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.util.KnowledgeBookLoot;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
@@ -16,15 +19,24 @@ import java.util.Random;
 public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
     private boolean[] field_74940_h = new boolean[4];
     private static final WeightedRandomChestContent[] lootListArray = new WeightedRandomChestContent[]{
+
+//          new WeightedRandomChestContent(Item.helmetGold.itemID, metadata, minChanceToGen, maxChanceToGen, itemWeightHigherMeansMoreLikely),
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
             new WeightedRandomChestContent(Item.plateGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.legsGold.itemID, 0, 1, 1, 5),
+            new WeightedRandomChestContent(NMItems.netherStick.itemID, 0, 4, 13, 20),
+            new WeightedRandomChestContent(Block.planks.blockID, 4, 4, 13, 20),
             new WeightedRandomChestContent(Item.bootsGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.swordGold.itemID, 0, 1, 1, 5),
+            new WeightedRandomChestContent(Item.axeGold.itemID, 0, 1, 1, 5),
+            new WeightedRandomChestContent(NMItems.tungstenChunk.itemID, 0, 0, 4, 5),
+            new WeightedRandomChestContent(BTWItems.groundNetherrack.itemID, 0, 0, 16, 10),
+            new WeightedRandomChestContent(Item.netherQuartz.itemID, 0, 0, 3, 10),
             new WeightedRandomChestContent(Item.emerald.itemID, 0, 1, 5, 15),
-            new WeightedRandomChestContent(Item.bone.itemID, 0, 4, 6, 20),
+            new WeightedRandomChestContent(NMItems.boneShard.itemID, 0, 8, 12, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
             new WeightedRandomChestContent(Item.skull.itemID, 0, 1, 1, 5),
+            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 1, 5), // blood sapling
             new WeightedRandomChestContent(Item.horseArmorGold.itemID, 0, 1, 1, 1)
     };
     private static final WeightedRandomChestContent[] lootedLootListArray = new WeightedRandomChestContent[]{

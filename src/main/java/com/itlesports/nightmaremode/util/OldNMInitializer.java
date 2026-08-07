@@ -910,8 +910,6 @@ public abstract class OldNMInitializer implements AchievementExt {
 
 
     private static void addCrucibleRecipes(){
-        // refined diamond
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{new ItemStack(BTWItems.diamondIngot), new ItemStack(Item.netherQuartz, 4)});
 
         // replace soul flux with ender slag in SFS ingot recipe, to force SFS mining
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), new ItemStack[]{new ItemStack(Item.ingotIron, 1), new ItemStack(BTWItems.coalDust, 1), new ItemStack(BTWItems.soulUrn, 1), new ItemStack(BTWItems.soulFlux, 1)});
@@ -1190,7 +1188,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         // done with sinew
 
         // add blood recipes
-        RecipeManager.addRecipe(new ItemStack(NMItems.bloodIngot), new Object[]{" # ", "#X#", " # ", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(NMItems.refinedDiamondIngot)});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodHelmet), new Object[]{"###", "# #", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});
         RecipeManager.addRecipe(new ItemStack(NMItems.bloodChestplate), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodIngot)});

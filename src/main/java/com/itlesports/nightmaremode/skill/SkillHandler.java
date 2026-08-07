@@ -255,6 +255,26 @@ public class SkillHandler {
         increment(player, 1, data -> data.tradesCompleted++);
     }
 
+    public static void incrementJumps(EntityPlayer player) {
+        increment(player, 1, data -> data.jumps++);
+    }
+
+    public static void recordCurrentBiome(EntityPlayer player) {
+        if (player == null || player.worldObj == null || player.worldObj.isRemote) {
+            return;
+        }
+        BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(
+                MathHelper.floor_double(player.posX),
+                MathHelper.floor_double(player.posZ));
+        if (biome == null) {
+            return;
+        }
+        SkillTreeData data = getPlayerData(player);
+        if (data.visitBiome(biome.biomeID)) {
+            player.setData(NightmareMode.SKILL_TREE, data);
+        }
+    }
+
     private static void increment(EntityPlayer player, int amount, java.util.function.Consumer<SkillTreeData> increment) {
         if (player == null || player.worldObj == null || player.worldObj.isRemote || amount <= 0) {
             return;

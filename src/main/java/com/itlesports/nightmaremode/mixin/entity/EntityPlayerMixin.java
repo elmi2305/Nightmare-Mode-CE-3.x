@@ -411,10 +411,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
+        SkillHandler.incrementJumps((EntityPlayer)(Object)this);
         if(isAprilFools){
             if (this.rand.nextInt(6) == 0) {
                 this.motionY += this.rand.nextFloat() * 0.2f * (this.rand.nextBoolean() ? 1 : -1);
             }
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void trackVisitedBiomes(CallbackInfo ci) {
+        if (this.ticksExisted % 20 == 0) {
+            SkillHandler.recordCurrentBiome((EntityPlayer)(Object)this);
         }
     }
 

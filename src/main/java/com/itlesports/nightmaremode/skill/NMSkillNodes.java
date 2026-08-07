@@ -321,6 +321,17 @@ public final class NMSkillNodes {
             "+5% blaze-rod drop chance.", SkillRewardActions.addBlazeRodDropChance(0.05F),
             MINING, false);
 
+    public static final SkillNode DENSE_CORE_METALLURGY = bring(
+            "dense_core_metallurgy",
+            "Dense-Core Metallurgy",
+            NMItems.denseNetherrackCore,
+            -4, -2,
+            "Bring 16 dense netherrack cores.",
+            NMItems.denseNetherrackCore.itemID, 0, false, 16,
+            "Unlock dense-core machinery and steel-nugget consolidation.", none(),
+            MINING, false,
+            NICKEL_HEAT_RECIPE);
+
 
 
 
@@ -851,7 +862,18 @@ public final class NMSkillNodes {
             "Unlock the Crystal Lens recipe.", none(),
             KNOWLEDGE, false);
 
-    public static final SkillNode CHEST_RECIPE = bring(
+    public static final SkillNode CALIBRATED_CISTERN = bring(
+            "calibrated_cistern",
+            "Calibrated Hydraulics",
+            NMItems.precisionCrystalGear,
+            1, 1,
+            "Bring 4 precision crystal gears.",
+            NMItems.precisionCrystalGear.itemID, 0, false, 4,
+            "Unlock calibrated cistern automation and fluid gauges.", none(),
+            KNOWLEDGE, false,
+            CRYSTAL_LENS_RECIPE, NICKEL_MACHINE_RECIPE);
+
+    public static final SkillNode ITEM_FRAMES = bring(
             "chest_recipe",
             "Framed Storage",
             Item.itemFrame,
@@ -998,6 +1020,17 @@ public final class NMSkillNodes {
             "Bring 128 blood orbs.",
             NMItems.bloodOrb.itemID, 0, false, 128,
             "+5% melee damage.", SkillRewardActions.addMeleeDamage(0.05F),
+            RITUAL, false,
+            NETHER_BLOOD_ORBS);
+
+    public static final SkillNode BLOOD_ARMORY = bring(
+            "blood_armory",
+            "Blood Armory",
+            NMItems.bloodIngot,
+            -4, -2,
+            "Bring 16 blood ingots.",
+            NMItems.bloodIngot.itemID, 0, false, 16,
+            "Unlock blood armor and weapon patterns.", none(),
             RITUAL, false,
             NETHER_BLOOD_ORBS);
 
@@ -1313,6 +1346,356 @@ public final class NMSkillNodes {
             Item.blazeRod.itemID, 0, false, 16,
             "Netherrack can be mined.", SkillRewardActions.unlockNetherrackMining(),
             COMBAT, false);
+
+    // Early crafting progression
+    public static final SkillNode DANDELION_NOTES_I = bring(
+            "dandelion_notes_i",
+            "Dandelion Notes I",
+            Block.plantYellow,
+            -4, 0,
+            "Bring 16 dandelions.",
+            Block.plantYellow.blockID, 0, false, 16,
+            "+1 to the skill-book recipe unlock.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode DANDELION_NOTES_II = bring(
+            "dandelion_notes_ii",
+            "Dandelion Notes II",
+            Block.plantYellow,
+            -5, 1,
+            "Bring another 16 dandelions.",
+            Block.plantYellow.blockID, 0, false, 16,
+            "+1 to the skill-book recipe unlock.", none(),
+            HUSBANDRY, false,
+            DANDELION_NOTES_I);
+
+    public static final SkillNode FLINT_CHIP_NOTES = bring(
+            "flint_chip_notes",
+            "Flint-Chip Notes",
+            NMItems.flintChip,
+            0, 4,
+            "Bring 1 flint chip.",
+            NMItems.flintChip.itemID, 0, false, 1,
+            "+1 to the skill-book recipe unlock.", none(),
+            MINING, false);
+
+    public static final SkillNode ROTTEN_FLESH_NOTES = bring(
+            "rotten_flesh_notes",
+            "Rotten-Flesh Notes",
+            Item.rottenFlesh,
+            -3, -1,
+            "Bring 1 rotten flesh.",
+            Item.rottenFlesh.itemID, 0, false, 1,
+            "+1 to the skill-book recipe unlock.", none(),
+            COMBAT, false);
+
+    public static final SkillNode SUGAR_CANE_NOTES = bring(
+            "sugar_cane_notes",
+            "Sugar-Cane Notes",
+            Item.reed,
+            2, 3,
+            "Bring 1 sugar cane.",
+            Item.reed.itemID, 0, false, 1,
+            "+1 to the skill-book recipe unlock.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode POPPY_NOTES = bring(
+            "poppy_notes",
+            "Poppy Notes",
+            Block.plantRed,
+            -2, 3,
+            "Bring 16 poppies.",
+            Block.plantRed.blockID, 0, false, 16,
+            "+1 to the skill-book recipe unlock.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode BIOME_FIELD_NOTES = counter(
+            "biome_field_notes",
+            "Biome Field Notes",
+            Item.map,
+            -4, 0,
+            "Visit 4 unique biomes.",
+            (p, w) -> SkillHandler.getPlayerData(p).getVisitedBiomeCount() >= 4,
+            "+1 to the skill-book recipe unlock.", none(),
+            KNOWLEDGE, false);
+
+    public static final SkillNode SPIDER_SILK_STRING = bring(
+            "spider_silk_string",
+            "Spider-Silk Twisting",
+            NMItems.spiderSilk,
+            3, -2,
+            "Bring 2 spider silk.",
+            NMItems.spiderSilk.itemID, 0, false, 2,
+            "+1 to unlock the string recipe.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode STICK_CLUB_PATTERNS = bring(
+            "stick_club_patterns",
+            "Stick Club Patterns",
+            Item.stick,
+            0, 3,
+            "Bring 16 sticks.",
+            Item.stick.itemID, 0, false, 16,
+            "+1 to the wooden- and bone-club recipe unlocks.", none(),
+            COMBAT, false);
+
+    public static final SkillNode MOB_CLUB_PATTERNS = counter(
+            "mob_club_patterns",
+            "Practical Bludgeoning",
+            BTWItems.woodenClub,
+            1, 3,
+            "Kill 16 mobs.",
+            (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 16,
+            "+1 to the wooden- and bone-club recipe unlocks.", none(),
+            COMBAT, false);
+
+    public static final SkillNode BONE_CLUB_SWORD_PATTERN = bring(
+            "bone_club_sword_pattern",
+            "Bone-Club Sword Pattern",
+            BTWItems.boneClub,
+            2, 3,
+            "Bring 4 bone clubs.",
+            BTWItems.boneClub.itemID, 0, false, 4,
+            "+1 to the iron-sword recipe unlock.", none(),
+            COMBAT, false);
+
+    public static final SkillNode WOOD_CLUB_SWORD_PATTERN = bring(
+            "wood_club_sword_pattern",
+            "Wood-Club Sword Pattern",
+            BTWItems.woodenClub,
+            3, 3,
+            "Bring 4 wooden clubs.",
+            BTWItems.woodenClub.itemID, 0, false, 4,
+            "+1 to the iron-sword recipe unlock.", none(),
+            COMBAT, false);
+
+    public static final SkillNode PORK_OVEN_PATTERN = bring(
+            "pork_oven_pattern",
+            "Pork Roasting",
+            Item.porkRaw,
+            4, 1,
+            "Bring 16 raw porkchops.",
+            Item.porkRaw.itemID, 0, false, 16,
+            "+1 to the brick-oven recipe unlock.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode MUSHROOM_HOTBAR = bring(
+            "mushroom_hotbar",
+            "Mushroom Foraging",
+            Block.mushroomRed,
+            4, 0,
+            "Bring 32 red mushrooms.",
+            Block.mushroomRed.blockID, 0, false, 32,
+            "+1 hotbar slot.", SkillRewardActions.addHotbarSlots(1),
+            HUSBANDRY, false);
+
+    public static final SkillNode BURNING_TORCH_BOW_DRILL = bring(
+            "burning_torch_bow_drill",
+            "Carried Flame",
+            BTWBlocks.finiteBurningTorch,
+            0, 3,
+            "Bring 1 burning crude torch.",
+            BTWBlocks.finiteBurningTorch.blockID, 0, false, 1,
+            "Unlock the bow-drill recipe.", none(),
+            KNOWLEDGE, false);
+
+    public static final SkillNode SAWDUST_CAMPFIRE = bring(
+            "sawdust_campfire",
+            "Dry Tinder",
+            BTWItems.sawDust,
+            -3, -2,
+            "Bring 16 sawdust.",
+            BTWItems.sawDust.itemID, 0, false, 16,
+            "Unlock the campfire recipe.", none(),
+            HUSBANDRY, false);
+
+    public static final SkillNode JUMP_CUT_SLABS = counter(
+            "jump_cut_slabs",
+            "Repeated Compression",
+            BTWBlocks.dirtSlab,
+            0, -4,
+            "Jump 1,000 times.",
+            (p, w) -> SkillHandler.getPlayerData(p).jumps >= 1000,
+            "+1 to unlock the dirt-, sand-, and gravel-slab recipes.", none(),
+            MINING, false);
+
+    public static final SkillNode BIOME_NETHER_PROGRESS = counter(
+            "biome_nether_progress",
+            "Wide-Ranging Survey",
+            Item.map,
+            4, 2,
+            "Visit 10 unique biomes.",
+            (p, w) -> SkillHandler.getPlayerData(p).getVisitedBiomeCount() >= 10,
+            "+1/7 Nether access progress.", SkillRewardActions.addNetherAccessProgress(),
+            HUSBANDRY, true,
+            BIOME_FIELD_NOTES);
+
+    // cross-branch progression gates. these are declared last so their parent chains can
+    // combine mining, knowledge, ritual, and combat milestones without forward references.
+    public static final SkillNode DIAMOND_TOOLMAKING = bring(
+            "diamond_toolmaking",
+            "Diamond Toolmaking",
+            BTWItems.diamondIngot,
+            4, 0,
+            "Bring 2 diamond ingots.",
+            BTWItems.diamondIngot.itemID, 0, false, 2,
+            "Unlock precision diamond tools and armor plates.", none(),
+            MINING, false,
+            DIAMOND_CRYSTALS, DIAMOND_PRECISION_GEAR, NICKEL_HEAT_RECIPE);
+
+    public static final SkillNode PRECISION_MECHANICS = bring(
+            "precision_mechanics",
+            "Precision Mechanics",
+            NMItems.precisionCrystalGear,
+            3, 2,
+            "Bring 2 precision crystal gears.",
+            NMItems.precisionCrystalGear.itemID, 0, false, 2,
+            "Unlock precision mechanical machinery.", none(),
+            KNOWLEDGE, false,
+            DIAMOND_PRECISION_GEAR, NICKEL_MACHINE_RECIPE, CRYSTAL_LENS_RECIPE);
+
+    public static final SkillNode THERMAL_ENGINEERING = bring(
+            "thermal_engineering",
+            "Thermal Engineering",
+            NMItems.nickelHeatComponent,
+            -4, -3,
+            "Bring 2 heat-resistant nickel components.",
+            NMItems.nickelHeatComponent.itemID, 0, false, 2,
+            "Unlock high-temperature machinery.", none(),
+            MINING, false,
+            NICKEL_HEAT_RECIPE, LITHIUM_STABILIZER_RECIPE);
+
+    public static final SkillNode DEADZONE_FOUNDRY = bring(
+            "deadzone_foundry",
+            "Deadzone Foundry",
+            NMItems.deadzoneShard,
+            -5, -3,
+            "Bring 16 deadzone shards.",
+            NMItems.deadzoneShard.itemID, 0, false, 16,
+            "Unlock deadzone-reinforced late metallurgy.", none(),
+            MINING, false,
+            DENSE_CORE_METALLURGY, THERMAL_ENGINEERING);
+
+    public static final SkillNode SOULFORGE_ENGINEERING = bring(
+            "soulforge_engineering",
+            "Soulforge Engineering",
+            NMItems.refinedDiamondIngot,
+            -5, -2,
+            "Bring 1 refined diamond ingot after defeating the Wither.",
+            NMItems.refinedDiamondIngot.itemID, 0, false, 1,
+            "Unlock the Soulforge conversion recipe.", none(),
+            RITUAL, false,
+            DEADZONE_FOUNDRY, WITHER_KILL_LOOT);
+
+    public static final SkillNode MECHANICAL_APPRENTICESHIP = bring(
+            "mechanical_apprenticeship",
+            "Mechanical Apprenticeship",
+            BTWItems.gear,
+            3, 3,
+            "Bring 12 wooden gears.",
+            BTWItems.gear.itemID, 0, false, 12,
+            "Unlock foundational mechanical machinery.", none(),
+            KNOWLEDGE, false,
+            FLINT_TOOLMAKING);
+
+    public static final SkillNode WIND_ENGINEERING = bring(
+            "wind_engineering",
+            "Wind Engineering",
+            BTWItems.windMillBlade,
+            4, 3,
+            "Bring 8 windmill blades.",
+            BTWItems.windMillBlade.itemID, 0, false, 8,
+            "Unlock wind-powered machinery and the saw.", none(),
+            KNOWLEDGE, false,
+            MECHANICAL_APPRENTICESHIP);
+
+    public static final SkillNode GOLD_ASSAYING = bring(
+            "gold_assaying",
+            "Gold Assaying",
+            BTWItems.goldOrePile,
+            2, 3,
+            "Bring 32 gold ore piles.",
+            BTWItems.goldOrePile.itemID, 0, false, 32,
+            "Unlock precision gold components.", none(),
+            KNOWLEDGE, false,
+            IRON_SAMPLE, CISTERN_USE);
+
+    public static final SkillNode SIGNAL_ENGINEERING = bring(
+            "signal_engineering",
+            "Signal Engineering",
+            NMItems.refinedRedstone,
+            3, 4,
+            "Bring 16 refined redstone.",
+            NMItems.refinedRedstone.itemID, 0, false, 16,
+            "Unlock calibrated redstone devices.", none(),
+            KNOWLEDGE, false,
+            GOLD_ASSAYING, CALIBRATED_CISTERN, CRYSTAL_LENS_RECIPE);
+
+    public static final SkillNode EXPLOSIVES_ENGINEERING = bring(
+            "explosives_engineering",
+            "Explosives Engineering",
+            Item.gunpowder,
+            2, -3,
+            "Bring 128 gunpowder.",
+            Item.gunpowder.itemID, 0, false, 128,
+            "Unlock dynamite and reinforced powder charges.", none(),
+            RITUAL, false,
+            POWDER_KEG_RECIPE, DIAMOND_CRYSTALS);
+
+    public static final SkillNode BLOOD_STORAGE = bring(
+            "blood_storage",
+            "Blood Storage",
+            NMBlocks.bloodChest,
+            -5, -1,
+            "Bring 128 blood orbs.",
+            NMItems.bloodOrb.itemID, 0, false, 128,
+            "Unlock blood-bound storage.", none(),
+            RITUAL, false,
+            BLOOD_ARMORY, BLOOD_ORBS_128_DAMAGE, ITEM_FRAMES);
+
+    public static final SkillNode ROAD_ENGINEERING = bring(
+            "road_engineering",
+            "Road Engineering",
+            NMBlocks.blockRoad,
+            -4, -4,
+            "Bring 64 road blocks.",
+            NMBlocks.blockRoad.blockID, 0, false, 64,
+            "Unlock heat-treated asphalt.", none(),
+            MINING, false,
+            THERMAL_ENGINEERING, PRECISION_MECHANICS);
+
+    public static final SkillNode SOULFORGED_ARMORY = bring(
+            "soulforged_armory",
+            "Soulforged Armory",
+            BTWItems.soulforgedSteelIngot,
+            -6, -2,
+            "Bring 8 soulforged steel ingots.",
+            BTWItems.soulforgedSteelIngot.itemID, 0, false, 8,
+            "Unlock reinforced steel armor plates and equipment patterns.", none(),
+            MINING, false,
+            SOULFORGE_ENGINEERING, DENSE_CORE_METALLURGY);
+
+    public static final SkillNode STEEL_LOGISTICS = bring(
+            "steel_logistics",
+            "Steel Logistics",
+            NMItems.steelBunch,
+            -6, -3,
+            "Bring 8 steel bunches.",
+            NMItems.steelBunch.itemID, 0, false, 8,
+            "Unlock the steel locker.", none(),
+            MINING, false,
+            SOULFORGED_ARMORY, BLOOD_STORAGE, DEADZONE_FOUNDRY);
+
+    public static final SkillNode INFERNAL_SCHOLARSHIP = bring(
+            "infernal_scholarship",
+            "Infernal Scholarship",
+            BTWBlocks.infernalEnchanter,
+            -4, 3,
+            "Bring 16 ancient manuscripts.",
+            Item.enchantedBook.itemID, 0, false, 16,
+            "Unlock the Infernal Enchanter.", none(),
+            KNOWLEDGE, false,
+            ENCHANT_MANUSCRIPTS_10, SOULFORGED_ARMORY, DEADZONE_FOUNDRY);
 
 
     private NMSkillNodes() {

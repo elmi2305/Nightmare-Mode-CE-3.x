@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.skill;
 
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.NBTTagInt;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.NBTTagString;
 
@@ -41,6 +42,8 @@ public class SkillTreeData {
     public int spidersKilled;
     public int slimesKilled;
     public int withersKilled;
+    public int jumps;
+    private final Set<Integer> visitedBiomeIds = new HashSet<>();
 
     public float blockBreakSpeedBonus;
     public float mobLootChanceBonus;
@@ -106,6 +109,14 @@ public class SkillTreeData {
         return this.unlockedNodes;
     }
 
+    public boolean visitBiome(int biomeId) {
+        return this.visitedBiomeIds.add(biomeId);
+    }
+
+    public int getVisitedBiomeCount() {
+        return this.visitedBiomeIds.size();
+    }
+
     public static SkillTreeData readFromNBT(NBTTagCompound tag) {
         SkillTreeData data = new SkillTreeData();
         data.blocksMined = tag.getInteger("BlocksMined");
@@ -141,6 +152,11 @@ public class SkillTreeData {
         data.spidersKilled = tag.getInteger("SpidersKilled");
         data.slimesKilled = tag.getInteger("SlimesKilled");
         data.withersKilled = tag.getInteger("WithersKilled");
+        data.jumps = tag.getInteger("Jumps");
+        NBTTagList visitedBiomes = tag.getTagList("VisitedBiomeIds");
+        for (int i = 0; i < visitedBiomes.tagCount(); ++i) {
+            data.visitedBiomeIds.add(((NBTTagInt)visitedBiomes.tagAt(i)).data);
+        }
         data.blockBreakSpeedBonus = tag.getFloat("BlockBreakSpeedBonus");
         data.mobLootChanceBonus = tag.getFloat("MobLootChanceBonus");
         data.ironPileChanceBonus = tag.getFloat("IronPileChanceBonus");
@@ -224,6 +240,12 @@ public class SkillTreeData {
         tag.setInteger("SpidersKilled", data.spidersKilled);
         tag.setInteger("SlimesKilled", data.slimesKilled);
         tag.setInteger("WithersKilled", data.withersKilled);
+        tag.setInteger("Jumps", data.jumps);
+        NBTTagList visitedBiomes = new NBTTagList("VisitedBiomeIds");
+        for (Integer biomeId : data.visitedBiomeIds) {
+            visitedBiomes.appendTag(new NBTTagInt("", biomeId));
+        }
+        tag.setTag("VisitedBiomeIds", visitedBiomes);
         tag.setFloat("BlockBreakSpeedBonus", data.blockBreakSpeedBonus);
         tag.setFloat("MobLootChanceBonus", data.mobLootChanceBonus);
         tag.setFloat("IronPileChanceBonus", data.ironPileChanceBonus);
