@@ -1,13 +1,16 @@
 package com.itlesports.nightmaremode.block.blocks;
 
-import btw.block.blocks.HopperBlock;
+import com.itlesports.nightmaremode.block.blocks.templates.BlockCustomHopperModel;
 import com.itlesports.nightmaremode.block.tileEntities.ChuteHopperTileEntity;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 
-public class BlockChuteHopper extends HopperBlock {
+public class BlockChuteHopper extends BlockCustomHopperModel {
     public BlockChuteHopper(int id) {
-        super(id);
+        super(id,
+                "nightmare:ifhyChuteHopperTop",
+                "nightmare:ifhyChuteHopperBottom",
+                "nightmare:ifhyChuteHopper");
         this.setUnlocalizedName("ifhyChuteHopper");
     }
 

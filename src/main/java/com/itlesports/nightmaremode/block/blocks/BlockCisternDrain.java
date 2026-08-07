@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import api.block.util.Flammability;
-import btw.block.blocks.HopperBlock;
+import com.itlesports.nightmaremode.block.blocks.templates.BlockCustomHopperModel;
 import com.itlesports.nightmaremode.block.tileEntities.CisternDrainTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.CisternInterfaceTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
@@ -14,9 +14,12 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
 
 /** Hopper-shaped, non-inventory fluid input/output attachment for cisterns. */
-public class BlockCisternDrain extends HopperBlock {
+public class BlockCisternDrain extends BlockCustomHopperModel {
     public BlockCisternDrain(int id) {
-        super(id);
+        super(id,
+                "nightmare:ifhyCisternDrainTop",
+                "nightmare:ifhyCisternDrainBottom",
+                "nightmare:ifhyCisternDrain");
         this.setHardness(4.0F);
         this.setResistance(20.0F);
         this.setFireProperties(Flammability.NONE);
