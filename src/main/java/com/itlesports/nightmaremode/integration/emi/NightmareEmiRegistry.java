@@ -45,6 +45,7 @@ public final class NightmareEmiRegistry {
 
     public static void register(EmiRegistry registry) {
         unhideWoodenTools();
+        allowIngredientInRecipes(BTWItems.ancientProphecy);
 
         registry.addCategory(HAMMERING);
         registry.addCategory(CISTERN);
@@ -132,5 +133,23 @@ public final class NightmareEmiRegistry {
         EmiRemoveFromIndex.removed.removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
         EmiDataAccessor.getHiddenStacks().removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
         EmiHidden.disabledStacks.removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
+    }
+
+    /**
+     * Keeps a deliberately hidden item out of EMI's item index while allowing recipes that
+     * consume it to survive EMI's disabled-ingredient recipe filter.
+     */
+    private static void allowIngredientInRecipes(Item item) {
+        EmiStack stack = EmiStack.of(item);
+        EmiDataAccessor.getHiddenStacks().removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
+        EmiHidden.disabledStacks.removeIf(hidden -> EmiIngredient.areEqual(hidden, stack));
+
+        EmiIngredient recipeIngredient = item.getHasSubtypes()
+                ? RetroEMI.wildcardIngredient(new ItemStack(item, 1, Short.MAX_VALUE))
+                : stack;
+        if (EmiHidden.isDisabled(recipeIngredient)) {
+            throw new IllegalStateException(
+                    item.getUnlocalizedName() + " is still disabled as an EMI recipe ingredient");
+        }
     }
 }

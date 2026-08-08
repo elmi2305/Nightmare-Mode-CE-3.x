@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.integration.emi;
 
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
@@ -21,6 +22,10 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
 public class EmiCisternRecipe implements EmiRecipe {
+    private static final int BASE_HEIGHT = 78;
+    private static final int SKILL_ROW_Y = 79;
+
+    private final CisternRecipe recipe;
     private final ResourceLocation id;
     private final List<EmiIngredient> inputs;
     private final List<EmiStack> outputs;
@@ -32,6 +37,7 @@ public class EmiCisternRecipe implements EmiRecipe {
     private final int duration;
 
     public EmiCisternRecipe(CisternRecipe recipe, int index) {
+        this.recipe = recipe;
         this.id = new ResourceLocation("nightmare", "cistern/" + index);
         this.inputs = Arrays.stream(this.mergeInputs(recipe.getInputs())).map(EmiStack::of).collect(Collectors.toList());
         this.outputs = new ArrayList<>();
@@ -76,7 +82,10 @@ public class EmiCisternRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        return 78;
+        return EmiIconHelper.getSkillRequirementDisplayHeight(
+                BASE_HEIGHT,
+                this.getDisplayWidth(),
+                SkillLockedCrafting.getRequiredSkills(this.recipe));
     }
 
     @Override
@@ -103,6 +112,11 @@ public class EmiCisternRecipe implements EmiRecipe {
             }
         }
         this.addRequirementIcons(widgets);
+        EmiIconHelper.addSkillRequirements(
+                widgets,
+                SKILL_ROW_Y,
+                this.getDisplayWidth(),
+                SkillLockedCrafting.getRequiredSkills(this.recipe));
     }
 
     private ItemStack[] mergeInputs(ItemStack[] recipeInputs) {
