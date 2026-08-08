@@ -4,6 +4,7 @@ import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagInt;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.NBTTagString;
+import net.minecraft.src.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,7 +44,11 @@ public class SkillTreeData {
     public int slimesKilled;
     public int withersKilled;
     public int jumps;
+    public int arrowsFired;
+    public int turntableRotations;
+    public int ironNuggetsKilned;
     private final Set<Integer> visitedBiomeIds = new HashSet<>();
+    private final Set<Integer> craftedOutputIds = new HashSet<>();
 
     public float blockBreakSpeedBonus;
     public float mobLootChanceBonus;
@@ -117,6 +122,15 @@ public class SkillTreeData {
         return this.visitedBiomeIds.size();
     }
 
+    public boolean recordCraftedOutput(ItemStack output) {
+        int outputKey = output.itemID << 16 | (output.getItemDamage() & 65535);
+        return this.craftedOutputIds.add(outputKey);
+    }
+
+    public int getUniqueCraftedOutputCount() {
+        return this.craftedOutputIds.size();
+    }
+
     public static SkillTreeData readFromNBT(NBTTagCompound tag) {
         SkillTreeData data = new SkillTreeData();
         data.blocksMined = tag.getInteger("BlocksMined");
@@ -153,9 +167,16 @@ public class SkillTreeData {
         data.slimesKilled = tag.getInteger("SlimesKilled");
         data.withersKilled = tag.getInteger("WithersKilled");
         data.jumps = tag.getInteger("Jumps");
+        data.arrowsFired = tag.getInteger("ArrowsFired");
+        data.turntableRotations = tag.getInteger("TurntableRotations");
+        data.ironNuggetsKilned = tag.getInteger("IronNuggetsKilned");
         NBTTagList visitedBiomes = tag.getTagList("VisitedBiomeIds");
         for (int i = 0; i < visitedBiomes.tagCount(); ++i) {
             data.visitedBiomeIds.add(((NBTTagInt)visitedBiomes.tagAt(i)).data);
+        }
+        NBTTagList craftedOutputs = tag.getTagList("CraftedOutputIds");
+        for (int i = 0; i < craftedOutputs.tagCount(); ++i) {
+            data.craftedOutputIds.add(((NBTTagInt)craftedOutputs.tagAt(i)).data);
         }
         data.blockBreakSpeedBonus = tag.getFloat("BlockBreakSpeedBonus");
         data.mobLootChanceBonus = tag.getFloat("MobLootChanceBonus");
@@ -241,11 +262,19 @@ public class SkillTreeData {
         tag.setInteger("SlimesKilled", data.slimesKilled);
         tag.setInteger("WithersKilled", data.withersKilled);
         tag.setInteger("Jumps", data.jumps);
+        tag.setInteger("ArrowsFired", data.arrowsFired);
+        tag.setInteger("TurntableRotations", data.turntableRotations);
+        tag.setInteger("IronNuggetsKilned", data.ironNuggetsKilned);
         NBTTagList visitedBiomes = new NBTTagList("VisitedBiomeIds");
         for (Integer biomeId : data.visitedBiomeIds) {
             visitedBiomes.appendTag(new NBTTagInt("", biomeId));
         }
         tag.setTag("VisitedBiomeIds", visitedBiomes);
+        NBTTagList craftedOutputs = new NBTTagList("CraftedOutputIds");
+        for (Integer itemId : data.craftedOutputIds) {
+            craftedOutputs.appendTag(new NBTTagInt("", itemId));
+        }
+        tag.setTag("CraftedOutputIds", craftedOutputs);
         tag.setFloat("BlockBreakSpeedBonus", data.blockBreakSpeedBonus);
         tag.setFloat("MobLootChanceBonus", data.mobLootChanceBonus);
         tag.setFloat("IronPileChanceBonus", data.ironPileChanceBonus);

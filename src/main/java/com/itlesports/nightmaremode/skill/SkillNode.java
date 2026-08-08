@@ -13,7 +13,7 @@ public class SkillNode {
     public final ItemStack icon;
     public final int displayColumn;
     public final int displayRow;
-    public final SkillNode[] parents;
+    public SkillNode[] parents;
     public final SkillCondition triggerCondition;
     public final SkillUnlockAction onUnlockConsume;
     public final SkillReward reward;

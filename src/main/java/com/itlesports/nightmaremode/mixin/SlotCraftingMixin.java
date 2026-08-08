@@ -21,6 +21,7 @@ public class SlotCraftingMixin extends Slot {
 
     @Inject(method = "onCrafting(Lnet/minecraft/src/ItemStack;)V", at = @At("HEAD"))
     private void craft(ItemStack par1ItemStack, CallbackInfo ci){
+        SkillHandler.recordCraftedOutput(this.thePlayer, par1ItemStack);
         if (par1ItemStack != null && par1ItemStack.itemID == Item.book.itemID) {
             SkillHandler.incrementBooksCrafted(this.thePlayer, Math.max(1, this.amountCrafted));
         }

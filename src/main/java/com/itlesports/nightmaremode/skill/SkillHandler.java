@@ -146,7 +146,7 @@ public class SkillHandler {
     }
 
     public static void incrementMobKill(EntityPlayer player, net.minecraft.src.EntityLivingBase killed) {
-        if (player == null || killed == null || player.worldObj.isRemote) {
+        if (player == null || killed == null || player.worldObj.isRemote || !(killed instanceof IMob)) {
             return;
         }
         SkillTreeData data = getPlayerData(player);
@@ -257,6 +257,31 @@ public class SkillHandler {
 
     public static void incrementJumps(EntityPlayer player) {
         increment(player, 1, data -> data.jumps++);
+    }
+
+    public static void incrementArrowsFired(EntityPlayer player) {
+        increment(player, 1, data -> data.arrowsFired++);
+    }
+
+    public static void incrementTurntableRotations(EntityPlayer player) {
+        increment(player, 1, data -> data.turntableRotations++);
+    }
+
+    public static void incrementIronNuggetsKilned(EntityPlayer player, int count) {
+        increment(player, count, data -> data.ironNuggetsKilned += count);
+    }
+
+    public static void recordCraftedOutput(EntityPlayer player, ItemStack output) {
+        if (player == null || output == null || player.worldObj == null || player.worldObj.isRemote) {
+            return;
+        }
+        SkillTreeData data = getPlayerData(player);
+        if (data.recordCraftedOutput(output)) {
+            player.setData(NightmareMode.SKILL_TREE, data);
+            if (player instanceof EntityPlayerMP serverPlayer) {
+                sync(serverPlayer);
+            }
+        }
     }
 
     public static void recordCurrentBiome(EntityPlayer player) {

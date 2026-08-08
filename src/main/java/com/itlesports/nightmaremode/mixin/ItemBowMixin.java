@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -7,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBow.class)
 public abstract class ItemBowMixin extends Item {
@@ -27,5 +30,15 @@ public abstract class ItemBowMixin extends Item {
         boolean bInfiniteArrows = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemStack) > 0 || inventoryPlayer.player.capabilities.isCreativeMode;
         if(bInfiniteArrows) return false;
         return inventoryPlayer.consumeInventoryItem(par1);
+    }
+
+    @Inject(
+            method = "onPlayerStoppedUsing",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z",
+                    shift = At.Shift.AFTER))
+    private void trackArrowFired(ItemStack stack, World world, EntityPlayer player, int ticksRemaining, CallbackInfo ci) {
+        SkillHandler.incrementArrowsFired(player);
     }
 }

@@ -286,6 +286,11 @@ public class NMItems {
     public static Item debugVillagerLevel;
     public static Item debugVillagerProgress;
     public static Item debugVillagerReroll;
+    public static Item librarianEnderTreatise;
+    public static Item automationEssence;
+    public static Item agrarianEssence;
+    public static Item infernalEssence;
+    public static Item artisanEssence;
 
 
     static {
@@ -492,6 +497,29 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyDebugVillagerProgress").setUnlocalizedName("ifhyDebugVillagerProgress");
         debugVillagerReroll = new ItemVillagerDebugTool(2775, ItemVillagerDebugTool.Action.REROLL_TRADES)
                 .setTextureName("nightmare:ifhyDebugVillagerReroll").setUnlocalizedName("ifhyDebugVillagerReroll");
+        // Item adds 256 to constructor IDs. Keep these custom IDs away from the densely
+        // occupied legacy block/item range; registration is verified before recipes are added.
+        librarianEnderTreatise = new NMItem(3200)
+                .setMaxStackSize(1)
+                .setTextureName("nightmare:ifhyLibrarianEnderTreatise")
+                .setUnlocalizedName("ifhyLibrarianEnderTreatise")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        automationEssence = new NMItem(3201)
+                .setTextureName("nightmare:ifhyAutomationEssence")
+                .setUnlocalizedName("ifhyAutomationEssence")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        agrarianEssence = new NMItem(3202)
+                .setTextureName("nightmare:ifhyAgrarianEssence")
+                .setUnlocalizedName("ifhyAgrarianEssence")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        infernalEssence = new NetherItem(3203)
+                .setTextureName("nightmare:ifhyInfernalEssence")
+                .setUnlocalizedName("ifhyInfernalEssence")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        artisanEssence = new NMItem(3204)
+                .setTextureName("nightmare:ifhyArtisanEssence")
+                .setUnlocalizedName("ifhyArtisanEssence")
+                .setCreativeTab(CreativeTabs.tabMaterials);
 
 
 
