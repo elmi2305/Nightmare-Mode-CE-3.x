@@ -724,10 +724,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32),
                 TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("power")));
-        convert("nmlibrarian0", 1, 5, TradeItem.fromID(BTWItems.corpseEye.itemID),
-                TradeItem.fromID(NMItems.bloodOrb.itemID, 4, 10),
-                TradeItem.fromID(Item.eyeOfEnder.itemID), 1.0f, false, true);
-
         finishRecipes("Librarian Trades");
     }
 
