@@ -48,7 +48,12 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
             this.stirProgress--;
         }
         this.heatLevel = this.calculateHeatLevel();
-        CisternRecipe recipe = CisternRecipeManager.instance.getMatchingRecipe(this.contents, this.fluid, this.heatLevel, this.stirProgress);
+        CisternRecipe recipe = CisternRecipeManager.instance.getMatchingRecipe(
+                this.contents,
+                this.fluid,
+                this.heatLevel,
+                this.stirProgress,
+                this.worldObj);
         if (recipe == null || !this.canAcceptOutputs(recipe)) {
             this.currentRecipe = null;
             this.processingTime = 0;

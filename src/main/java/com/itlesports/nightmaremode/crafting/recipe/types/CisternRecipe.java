@@ -101,6 +101,16 @@ public class CisternRecipe {
         return result;
     }
 
+    public void strengthenFirstInput() {
+        if (this.inputs.length == 0 || this.inputs[0] == null) {
+            return;
+        }
+        ItemStack input = this.inputs[0];
+        input.stackSize = Math.min(
+                input.getMaxStackSize(),
+                Math.max(input.stackSize + 1, input.stackSize * 2));
+    }
+
     public ItemStack[] getOutputs() {
         ItemStack[] result = new ItemStack[this.outputs.length];
         for (int i = 0; i < this.outputs.length; ++i) {

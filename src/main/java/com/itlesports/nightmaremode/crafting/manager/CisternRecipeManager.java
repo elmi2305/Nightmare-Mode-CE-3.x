@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.crafting.manager;
 
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,15 @@ public class CisternRecipeManager {
     }
 
     public CisternRecipe getMatchingRecipe(ItemStack[] inventory, int fluid, int heat, int stir) {
+        return this.getMatchingRecipe(inventory, fluid, heat, stir, null);
+    }
+
+    public CisternRecipe getMatchingRecipe(ItemStack[] inventory, int fluid, int heat, int stir, World world) {
         CisternRecipe bestMatch = null;
         for (CisternRecipe recipe : this.recipes) {
+            if (SkillLockedCrafting.isWorldLocked(world, recipe)) {
+                continue;
+            }
             if (!recipe.matches(inventory, fluid, heat, stir)) {
                 continue;
             }

@@ -1,12 +1,11 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
+import com.itlesports.nightmaremode.mixin.accessor.SlotCraftingAccessor;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import net.minecraft.src.Container;
-import net.minecraft.src.CraftingManager;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.InventoryCrafting;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
@@ -29,7 +28,7 @@ public class ContainerMixin {
         if (slotId >= 0 && slotId < this.inventorySlots.size()) {
             Slot slot = (Slot)this.inventorySlots.get(slotId);
             if (slot instanceof SlotCrafting craftingSlot) {
-                IRecipe recipe = CraftingManager.getInstance().findMatchingIRecipe((InventoryCrafting)craftingSlot.getCraftMatrix(), player.worldObj);
+                IRecipe recipe = ((SlotCraftingAccessor)craftingSlot).nightmareMode$getCurrentRecipe();
                 if (SkillLockedCrafting.isLocked(player, recipe)) {
                     SkillLockedCrafting.notifyLocked(player, recipe);
                     cir.setReturnValue(null);
