@@ -102,7 +102,7 @@ public final class NightmareEmiRegistry {
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "wood_clump"), new ItemStack(NMItems.woodClump), new ItemStack(Item.stick)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "twig_sharpening"), new ItemStack(NMItems.twigSharpening), new ItemStack(NMItems.sharpTwig)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "sharp_twig_bark_wrapping"), new ItemStack(NMItems.sharpTwigBarkWrapping), new ItemStack(NMItems.sharpBarkTwig)));
-        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "clean_crystal_shard"), new ItemStack(NMItems.cleanCrystalShard), new ItemStack(NMItems.polishedCrystalShard)));
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "clean_crystal_shard"), new ItemStack(NMItems.crystalCleanShard), new ItemStack(NMItems.crystalPolishedShard)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "fish_flesh"), new ItemStack(NMItems.fishFlesh), new ItemStack(NMItems.debonedRawFish)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "flint_axe_crafting"), new ItemStack(NMItems.flintAxeCrafting), new ItemStack(NMItems.flintAxe)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "crude_string_crafting"), new ItemStack(NMItems.crudeStringCrafting), new ItemStack(NMItems.crudeString)));
