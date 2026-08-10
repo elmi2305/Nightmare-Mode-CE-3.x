@@ -146,6 +146,7 @@
     "blocks.PlantsBlockMixin",
     "blocks.PotatoBlockMixin",
     "blocks.SawBlockMixin",
+    "blocks.BlockStoneMixin",
     "blocks.ScrewPumpBlockMixin",
     "blocks.StairsBlockMixin",
     "blocks.TileEntityChestMixin",

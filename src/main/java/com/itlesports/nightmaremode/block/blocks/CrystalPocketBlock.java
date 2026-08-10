@@ -37,7 +37,7 @@ public class CrystalPocketBlock extends NMBlock {
             int attempts = world.getBlockMetadata(x, y, z);
             float chance = Math.min(1.0F, 0.5F + SkillHandler.getPlayerData(player).crystalDropChanceBonus);
             if (world.rand.nextFloat() < chance) {
-                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.uncleanedCrystalShard));
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.crystalUncleanedShard));
             }
             held.damageItem(1, player);
             if (attempts >= MAX_ATTEMPTS - 1) {

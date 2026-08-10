@@ -46,6 +46,10 @@ public class OreBlockStagedMixin extends OreBlock {
                     summonEntity(world,x,y,z, BTWItems.coalDust);
                 }
             }
+            if(stack.itemID == BTWItems.sharpStone.itemID && world.rand.nextBoolean()){
+                summonEntity(world,x,y,z, BTWItems.coalDust);
+
+            }
 
             world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
             cir.setReturnValue(true);

@@ -148,6 +148,9 @@ public class NMBlocks {
     public static Block denseNetherrackCoreNode;
     public static Block deadzoneShardOre;
     public static Block deadzoneShardNode;
+    public static Block ironAnvil;
+    public static BlockStationRail stationRail;
+
 
 
 
@@ -177,10 +180,10 @@ public class NMBlocks {
         diamondAnvil = new BlockDiamondAnvil(NMFields.BLOCK_DIAMOND_ANVIL);
         Item.itemsList[diamondAnvil.blockID] = new NMItemBlock(NMBlocks.diamondAnvil.blockID - 256);
 
-        nickelOre = new ProcessingOreBlock(2406, NMItems.rawNickelRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyNickelOre").setTextureName("nightmare:ifhyNickelOre");
+        nickelOre = new ProcessingOreBlock(2406, NMItems.nickelRawRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyNickelOre").setTextureName("nightmare:ifhyNickelOre");
         Item.itemsList[nickelOre.blockID] = new NMItemBlock(nickelOre.blockID - 256);
 
-        lithiumOre = new ProcessingOreBlock(2407, NMItems.rawLithium.itemID, 1).setHardness(2.5F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyLithiumOre").setTextureName("nightmare:ifhyLithiumOre");
+        lithiumOre = new ProcessingOreBlock(2407, NMItems.lithiumRaw.itemID, 1).setHardness(2.5F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyLithiumOre").setTextureName("nightmare:ifhyLithiumOre");
         Item.itemsList[lithiumOre.blockID] = new NMItemBlock(lithiumOre.blockID - 256);
 
         crystalPocket = new CrystalPocketBlock(2408).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyCrystalPocket").setTextureName("nightmare:ifhyCrystalPocket");
@@ -273,8 +276,11 @@ public class NMBlocks {
         cisternDrain = new BlockCisternDrain(2435);
         Item.itemsList[cisternDrain.blockID] = new NMNetherItemBlock(cisternDrain.blockID - 256);
 
+        ironAnvil = new BlockIronAnvil(NMFields.BLOCK_IRON_ANVIL);
+        Item.itemsList[ironAnvil.blockID] = new NMItemBlock(NMBlocks.ironAnvil.blockID - 256);
 
-
+        stationRail = new BlockStationRail(2437);
+        Item.itemsList[stationRail.blockID] = new NMItemBlock(NMBlocks.stationRail.blockID - 256);
 
 
 
