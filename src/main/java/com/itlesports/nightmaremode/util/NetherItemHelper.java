@@ -20,8 +20,8 @@ public final class NetherItemHelper {
     private static final List<SkillTransferRule> SKILL_TRANSFER_RULES = new ArrayList<>();
 
     static {
-        registerSkillTransfer(NMSkillNodes.NETHER_OBSIDIAN, NetherItemHelper::isDiamondTool);
-        registerSkillTransfer(NMSkillNodes.NETHER_OBSIDIAN,
+        registerSkillTransfer(NMSkillNodes.BRING_CRUDE_OBSIDIAN_16, NetherItemHelper::isDiamondTool);
+        registerSkillTransfer(NMSkillNodes.BRING_CRUDE_OBSIDIAN_16,
                 stack -> stack != null && stack.getItem() instanceof ItemFood);
     }
 

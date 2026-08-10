@@ -1058,23 +1058,13 @@ public abstract class OldNMInitializer implements AchievementExt {
 
     }
     private static void addCauldronRecipes(){
-        RecipeManager.addCauldronRecipe(new ItemStack(Item.potato, 1), new ItemStack[]{new ItemStack(BTWItems.straw, 8)});
-        RecipeManager.addCauldronRecipe(new ItemStack(Item.clay, 8), new ItemStack[]{new ItemStack(BTWItems.netherSludge, 8)});
         RecipeManager.addCauldronRecipe(new ItemStack(NMItems.friedCalamari), new ItemStack[]{new ItemStack(NMItems.calamariRoast), new ItemStack(Item.bowlEmpty)});
         RecipeManager.addCauldronRecipe(new ItemStack(Item.blazeRod), new ItemStack[]{new ItemStack(Item.blazePowder, 2), new ItemStack(Item.stick)});
-
-        // blood sapling and groth nerf: instead of costing 8 urns, they only cost 1
-        CauldronCraftingManager.getInstance().removeRecipe((new ItemStack(BTWBlocks.aestheticVegetation, 1, 2)), new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(Item.netherStalkSeeds)});
-        RecipeManager.addCauldronRecipe(new ItemStack(BTWBlocks.aestheticVegetation, 1, 2), new ItemStack[]{new ItemStack(BTWBlocks.oakSapling), new ItemStack(BTWBlocks.spruceSapling), new ItemStack(BTWBlocks.birchSapling), new ItemStack(BTWBlocks.jungleSapling), new ItemStack(BTWItems.soulUrn), new ItemStack(Item.netherStalkSeeds)});
-
-        CauldronCraftingManager.getInstance().removeRecipe(new ItemStack[]{new ItemStack(BTWBlocks.looseDirt), new ItemStack(BTWItems.netherGrothSpores)}, new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn, 8), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
-        RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.netherGrothSpores), new ItemStack[]{new ItemStack(Block.mycelium), new ItemStack(BTWItems.brownMushroom), new ItemStack(BTWItems.redMushroom), new ItemStack(BTWItems.soulUrn), new ItemStack(BTWItems.dung), new ItemStack(Item.netherStalkSeeds)});
-
 
 
         RecipeManager.addStokedCauldronRecipe(new ItemStack(BTWItems.netherSludge, 4), new ItemStack[]{new ItemStack(BTWItems.netherBrick, 8)});
 
-        RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator, 2), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(NMItems.obsidianShard, 4), new ItemStack(Item.ingotGold)});
+        RecipeManager.addStokedCauldronRecipe(new ItemStack(NMItems.templeLocator, 2), new ItemStack[]{new ItemStack(BTWItems.sandPile, 64), new ItemStack(NMItems.obsidianShard, 16), new ItemStack(Item.ingotGold, 2)});
 
         CauldronCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{TagInstance.of(BTWTags.cookedPotatoes), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.heartyMeats), new ItemStack(Item.bowlEmpty, 5)});
         RecipeManager.addCauldronRecipe(new ItemStack(BTWItems.heartyStew, 5), new TagOrStack[]{new ItemStack(BTWItems.boiledPotato), new ItemStack(BTWItems.cookedCarrot), new ItemStack(BTWItems.brownMushroom, 3), new ItemStack(BTWItems.flour), TagInstance.of(BTWTags.cookedMeats), new ItemStack(Item.bowlEmpty, 5)});
@@ -1246,11 +1236,7 @@ public abstract class OldNMInitializer implements AchievementExt {
         NMUtils.logTodo(); // every mob should drop its scrolls, or something else should be thought of
 
         // hide all baskets from EMI
-        BTWBlocks.wickerBasket.hideFromEMI();
-        BTWBlocks.oakBarkBox.hideFromEMI();
-        BTWBlocks.spruceBarkBox.hideFromEMI();
-        BTWBlocks.birchBarkBox.hideFromEMI();
-        BTWBlocks.jungleBarkBox.hideFromEMI();
+        NMBlocks.customWickerBasket.hideFromEMI();
         // done hiding
 
         // add compressed block recipes
