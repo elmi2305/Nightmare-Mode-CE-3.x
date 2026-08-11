@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
+import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,6 +31,17 @@ public class ItemInWorldManagerMixin {
 
     @Shadow
     public EntityPlayerMP thisPlayerMP;
+
+    @Inject(method = "activateBlockOrUseItem", at = @At("HEAD"), cancellable = true)
+    private void inspectMechanicalPowerBeforeBlockGui(EntityPlayer player, World world, ItemStack stack,
+                                                       int x, int y, int z, int side,
+                                                       float clickX, float clickY, float clickZ,
+                                                       CallbackInfoReturnable<Boolean> cir) {
+        if (stack != null && stack.getItem() instanceof ItemMechanicalWrench
+                && ItemMechanicalWrench.inspect(player, world, x, y, z)) {
+            cir.setReturnValue(true);
+        }
+    }
 
     @Inject(method = "survivalTryHarvestBlock", at = @At("HEAD"), cancellable = true)
     private void minePersistentOreNode(int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {

@@ -152,6 +152,7 @@ public class NMBlocks {
     public static Block ironAnvil;
     public static BlockStationRail stationRail;
     public static Block terrainExtractor;
+    public static DualInputGearBoxBlock dualInputGearBox;
 
 
 
@@ -286,6 +287,9 @@ public class NMBlocks {
 
         terrainExtractor = new BlockTerrainExtractor(NMFields.BLOCK_TERRAIN_EXTRACTOR);
         Item.itemsList[terrainExtractor.blockID] = new ItemBlockTerrainExtractor(terrainExtractor.blockID - 256);
+
+        dualInputGearBox = new DualInputGearBoxBlock(2439);
+        Item.itemsList[dualInputGearBox.blockID] = new NMItemBlock(dualInputGearBox.blockID - 256);
 
 
 

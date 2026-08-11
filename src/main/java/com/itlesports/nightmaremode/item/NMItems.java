@@ -314,6 +314,7 @@ public class NMItems {
     public static Item burnedChocolateCake;
     public static Item brokenPickaxeFragment;
     public static Item blacksmithFavoritePickaxe;
+    public static Item mechanicalWrench;
 
 
     static {
@@ -621,6 +622,8 @@ public class NMItems {
                 .setCreativeTab(CreativeTabs.tabTools);
         blacksmithFavoritePickaxe = new ItemQuestPickaxe(3229).setTextureName("nightmare:ifhyBlacksmithFavoritePickaxe")
                 .setUnlocalizedName("ifhyBlacksmithFavoritePickaxe").setCreativeTab(CreativeTabs.tabTools);
+        mechanicalWrench = new ItemMechanicalWrench(3230).setTextureName("nightmare:ifhyMechanicalWrench")
+                .setUnlocalizedName("ifhyMechanicalWrench").setCreativeTab(CreativeTabs.tabTools);
 
 
 
