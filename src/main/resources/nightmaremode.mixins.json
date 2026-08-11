@@ -304,6 +304,7 @@
     "gui.GuiMixin",
     "gui.GuiOptionsMixin",
     "gui.GuiScreenMixin",
+    "gui.GuiScreenBookMixin",
     "gui.GuiSelectWorldMixin",
     "gui.GuiShareToLanMixin",
     "gui.GuiSleepMPMixin",
