@@ -31,6 +31,8 @@ import com.itlesports.nightmaremode.mixin.biomegen.BiomeGenBaseAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.mixin.interfaces.StatListAccess;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
+import com.itlesports.nightmaremode.skill.NMSkillNodes;
+import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.util.elements.BloodSawCraftingManager;
 import com.itlesports.nightmaremode.util.elements.NMBeaconEffects;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
@@ -1359,7 +1361,9 @@ public abstract class OldNMInitializer implements AchievementExt {
         // done planter-ing
 
         // potion recycling
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)});
+        SkillLockedCrafting.requireSkill(
+                RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new ItemStack[]{new ItemStack(Item.potion, 1, Short.MAX_VALUE)}),
+                NMSkillNodes.BREW_POTION_64);
         // done recycling
 
         finishRecipes("Crafting Recipes");

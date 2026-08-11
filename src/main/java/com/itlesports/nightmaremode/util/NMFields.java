@@ -102,6 +102,7 @@ public class NMFields {
     public static final int BLOCK_NETHER_SHRUB = 2413;
     public static final int BLOCK_NETHERRACK_ANVIL = 2414;
     public static final int BLOCK_IRON_ANVIL = 2436;
+    public static final int BLOCK_TERRAIN_EXTRACTOR = 2438;
 
 
     // icons - registered in TextureMapMixin

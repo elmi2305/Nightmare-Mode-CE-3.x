@@ -96,6 +96,15 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMBlocks.cisternInterface, 0, "nm.cisternInterface.info");
         this.info(registry, NMBlocks.cisternStirrer, 0, "nm.cisternStirrer.info");
         this.info(registry, NMBlocks.cisternDrain, 0, "nm.cisternDrain.info");
+        this.info(registry, NMBlocks.terrainExtractor, 0, "nm.potassiumExtractor.info");
+        this.info(registry, NMBlocks.terrainExtractor, 1, "nm.nitrogenExtractor.info");
+        this.info(registry, NMBlocks.terrainExtractor, 2, "nm.moistureExtractor.info");
+        this.info(registry, NMBlocks.terrainExtractor, 3, "nm.porosityExtractor.info");
+        this.info(registry, NMBlocks.terrainExtractor, 4, "nm.acidityExtractor.info");
+        this.info(registry, NMItems.potassiumCrystal, 0, "nm.potassiumCrystal.info");
+        this.info(registry, NMItems.nitrogenCrystal, 0, "nm.nitrogenCrystal.info");
+        this.info(registry, NMItems.acidCrystal, 0, "nm.acidCrystal.info");
+        this.info(registry, NMItems.porosityAggregate, 0, "nm.porosityAggregate.info");
 
         // vanilla blocks
         this.info(registry, Block.obsidian, 0, "nm.obsidian.info");

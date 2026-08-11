@@ -20,6 +20,7 @@ import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.QuestToolRepairRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
@@ -940,6 +941,7 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().addSmelting(NMItems.pressedGlueCake.itemID, new ItemStack(BTWItems.glue), 0.0F, 2);
         FurnaceRecipes.smelting().addSmelting(NMItems.mortaredStoneBrick.itemID, new ItemStack(BTWItems.stoneBrick), 0.0F, 2);
         FurnaceRecipes.smelting().addSmelting(NMItems.glassBatch.itemID, new ItemStack(Block.glass), 0.0F, 3);
+        FurnaceRecipes.smelting().addSmelting(NMItems.unbakedChocolateCake.itemID, new ItemStack(NMItems.chocolateCake), 0.0F);
 
         finishRecipes("Oven Recipes");
 
@@ -1408,7 +1410,7 @@ public abstract class NMInitializer implements AchievementExt {
         NMFoodSpoilage.addSnowRefreshRecipes();
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.lithiumRefined), new ItemStack(Item.sugar)});
-        RecipeManager.addRecipe(new ItemStack(NMItems.lithiumHeatCompound), new Object[]{"NLN", "LCL", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumRefined, Character.valueOf('C'), Block.sand});
+        RecipeManager.addRecipe(new ItemStack(NMItems.lithiumHeatCompound), new Object[]{"NLN", "LCL", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumRefined, Character.valueOf('C'), NMItems.potassiumCrystal});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.nickelBinding, 2), new Object[]{"NN", " S", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('S'), Item.silk});
         RecipeManager.addRecipe(new ItemStack(NMItems.oxygenTank), new Object[]{" N ", "NIN", "NLN", Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('I'), Item.ingotIron, Character.valueOf('L'), Item.leather});
@@ -1427,9 +1429,32 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.moistureFertilizer, 4), new Object[]{Item.bucketWater, BTWItems.dirtPile});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.potassiumFertilizer, 4), new Object[]{NMItems.ash, BTWItems.dirtPile});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.acidityFertilizer, 4), new Object[]{Item.fermentedSpiderEye, BTWItems.dirtPile});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.porosityFertilizer, 4), new Object[]{BTWItems.sandPile, BTWItems.gravelPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.potassiumFertilizer, 4), new Object[]{NMItems.potassiumCrystal, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.acidityFertilizer, 4), new Object[]{NMItems.acidCrystal, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.porosityFertilizer, 4), new Object[]{NMItems.porosityAggregate, BTWItems.dirtPile});
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.dyePowder, 4, 15), new Object[]{NMItems.nitrogenCrystal});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.glassBatch, 2), new Object[]{NMItems.acidCrystal, NMItems.porosityAggregate, BTWItems.sandPile});
+        SkillLockedCrafting.requireSkill(
+                RecipeManager.addShapelessRecipe(new ItemStack(Item.glassBottle), new Object[]{NMItems.soilSample}),
+                NMSkillNodes.CRAFT_BOOK_64);
+
+        Item[] extractorKeys = {Item.redstone, Item.dyePowder, Item.bucketEmpty, Item.flint, Item.fermentedSpiderEye};
+        int[] extractorMetadata = {0, 15, 0, 0, 0};
+        for (int type = 0; type < 5; ++type) {
+            SkillLockedCrafting.requireSkills(
+                    RecipeManager.addRecipe(new ItemStack(NMBlocks.terrainExtractor, 1, type), new Object[]{
+                            "IRI", "GKG", "III",
+                            Character.valueOf('I'), Item.ingotIron,
+                            Character.valueOf('R'), Item.redstone,
+                            Character.valueOf('G'), BTWItems.gear,
+                            Character.valueOf('K'), new ItemStack(extractorKeys[type], 1, extractorMetadata[type])}),
+                    NMSkillNodes.CRAFT_BOOK_64, NMSkillNodes.BRING_REDSTONE_16, NMSkillNodes.BRING_GEAR_64);
+        }
+
+        CraftingManager.getInstance().getRecipeList().add(new QuestToolRepairRecipe(
+                "repair_farmers_hoe", NMItems.brokenHoeFragment, BTWItems.ironNugget, -1, NMItems.farmersFavoriteHoe));
+        CraftingManager.getInstance().getRecipeList().add(new QuestToolRepairRecipe(
+                "repair_blacksmith_pickaxe", NMItems.brokenPickaxeFragment, Item.diamond, -1, NMItems.blacksmithFavoritePickaxe));
 
 
         automationEssenceRecipe = RecipeManager.addShapelessRecipe(
@@ -2259,7 +2284,8 @@ public abstract class NMInitializer implements AchievementExt {
 
         SkillRecipeGates.crafting(BTWBlocks.wickerBlock.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
         SkillRecipeGates.crafting(BTWBlocks.wickerSlab.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
-        SkillRecipeGates.crafting(BTWBlocks.wickerPane.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
+        SkillRecipeGates.crafting(BTWBlocks.wickerPane.blockID,
+                NMSkillNodes.BRING_SUGAR_CANE_16, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
         SkillRecipeGates.crafting(BTWBlocks.thatch.blockID, NMSkillNodes.BRING_STRAW_32);
         SkillRecipeGates.crafting(Item.clay.itemID, NMSkillNodes.BRING_CLAY_PILE_16);
 
@@ -2375,6 +2401,179 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.soulforge(BTWBlocks.detectorBlock.blockID, NMSkillNodes.BRING_STEEL_PRESSURE_PLATE_8);
 
         SkillRecipeGates.crafting(NMItems.stoneHammer.itemID, NMSkillNodes.BRING_STONE_BRICK_32, NMSkillNodes.BRING_AQUAMARINE_16);
+
+        SkillRecipeGates.crafting(Block.netherrack.blockID, 2, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+        SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
+        SkillRecipeGates.crafting(Block.netherrack.blockID, 4, NMSkillNodes.BRING_NETHERRACK_TIER_THREE_64);
+        SkillRecipeGates.crafting(NMItems.netherrackChunk.itemID,
+                NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64, NMSkillNodes.BRING_QUARTZ_DUST_32);
+        SkillRecipeGates.crafting(NMItems.netherStick.itemID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+        SkillRecipeGates.crafting(NMItems.netherWorkbenchPart.itemID,
+                NMSkillNodes.BRING_QUARTZ_DUST_32, NMSkillNodes.BRING_TUNGSTEN_CHUNK_16);
+        SkillRecipeGates.crafting(NMBlocks.netherWorkbench.blockID,
+                NMSkillNodes.BRING_NETHER_WORKBENCH_PART_4, NMSkillNodes.BRING_QUARTZ_DUST_32);
+        SkillRecipeGates.crafting(NMBlocks.netherrackAnvil.blockID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+        SkillRecipeGates.crafting(NMItems.netherrackHammer.itemID,
+                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+        SkillRecipeGates.crafting(NMItems.netherrackPickaxe.itemID,
+                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_NETHERRACK_CHUNK_16,
+                NMSkillNodes.BRING_PIGHIDE_STRING_16);
+        SkillRecipeGates.crafting(NMItems.netherFishingRod.itemID,
+                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_BONE_SHARD_16,
+                NMSkillNodes.BRING_PIGHIDE_STRING_16);
+
+        SkillRecipeGates.crafting(NMItems.tungstenChunk.itemID, NMSkillNodes.BRING_TUNGSTEN_DUST_32);
+        SkillRecipeGates.crafting(NMItems.tungstenConcentrate.itemID,
+                NMSkillNodes.BRING_CRUSHED_TUNGSTEN_16, NMSkillNodes.BRING_QUARTZ_16);
+        SkillRecipeGates.crafting(NMItems.pureTungstenChunk.itemID, NMSkillNodes.BRING_TUNGSTEN_POWDER_32);
+        SkillRecipeGates.crafting(NMItems.tungstenIngot.itemID, NMSkillNodes.BRING_TUNGSTEN_NUGGET_32);
+        SkillRecipeGates.crafting(NMItems.tungstenBucket.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.tungstenPickaxe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenShovel.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenKnife.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenScythe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMBlocks.obsidianMillstone.blockID,
+                NMSkillNodes.BRING_OBSIDIAN_BRICK_16, NMSkillNodes.BRING_NETHERRACK_CHUNK_16);
+        SkillRecipeGates.crafting(NMBlocks.cistern.blockID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMBlocks.minerDrill.blockID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
+        SkillRecipeGates.crafting(NMBlocks.cisternInterface.blockID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_AZURE_SALT_16);
+        SkillRecipeGates.crafting(NMBlocks.chunkLoader.blockID,
+                NMSkillNodes.BRING_NETHERRACK_TIER_THREE_256, NMSkillNodes.BRING_DEADZONE_SHARD_16);
+
+        SkillRecipeGates.crafting(NMItems.stoneKnife.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
+        SkillRecipeGates.crafting(NMItems.ironKnife.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.diamondKnife.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.ironScythe.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.diamondScythe.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
+
+        SkillRecipeGates.crafting(NMItems.potassiumFertilizer.itemID, NMSkillNodes.BRING_POTASSIUM_CRYSTAL_16);
+        SkillRecipeGates.crafting(NMItems.acidityFertilizer.itemID, NMSkillNodes.BRING_ACID_CRYSTAL_16);
+        SkillRecipeGates.crafting(NMItems.porosityFertilizer.itemID, NMSkillNodes.BRING_POROSITY_AGGREGATE_16);
+        SkillRecipeGates.crafting(Item.dyePowder.itemID, 15, NMSkillNodes.BRING_NITROGEN_CRYSTAL_16);
+
+        SkillRecipeGates.crafting(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_FLINT_CHIP);
+        SkillRecipeGates.crafting(NMItems.sharpTwigBarkWrapping.itemID, NMSkillNodes.BRING_BARK_64);
+        SkillRecipeGates.crafting(NMItems.scrapedBark.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
+        SkillRecipeGates.crafting(NMItems.crudeStringCrafting.itemID, NMSkillNodes.BRING_DRIED_PLANT_FIBER_64);
+        SkillRecipeGates.crafting(NMItems.primitiveGlue.itemID, NMSkillNodes.BRING_COAL_DUST_32);
+        SkillRecipeGates.crafting(NMItems.woodCupCrafting.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
+        SkillRecipeGates.crafting(NMItems.reedPeeling.itemID, NMSkillNodes.BRING_SUGAR_CANE);
+        SkillRecipeGates.crafting(NMItems.pileOfSticks.itemID, NMSkillNodes.BRING_STICK_4);
+        SkillRecipeGates.crafting(NMItems.soulFlint.itemID, NMSkillNodes.BRING_SOUL_CHIP_16);
+        SkillRecipeGates.crafting(NMItems.pighideStringCrafting.itemID, NMSkillNodes.BRING_PIG_HIDE_16);
+        SkillRecipeGates.crafting(BTWItems.netherSludge.itemID,
+                NMSkillNodes.BRING_GROUND_NETHERRACK_32, NMSkillNodes.BRING_ASH_CLUMP_16);
+        SkillRecipeGates.crafting(NMBlocks.hellforge.blockID,
+                NMSkillNodes.BRING_NETHER_BRICK_32, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+        SkillRecipeGates.crafting(Block.obsidian.blockID,
+                NMSkillNodes.BRING_CRUDE_OBSIDIAN_16, NMSkillNodes.BRING_OBSIDIAN_SHARD_16);
+        SkillRecipeGates.crafting(NMItems.refinedRedstone.itemID,
+                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+        SkillRecipeGates.crafting(NMItems.hydraulicLens.itemID,
+                NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+        SkillRecipeGates.crafting(NMItems.fluidGauge.itemID,
+                NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
+        SkillRecipeGates.crafting(NMItems.invocationSeal.itemID,
+                NMSkillNodes.BRING_GHAST_TEAR_16, NMSkillNodes.BRING_INVOCATION_FRAGMENT_4);
+        SkillRecipeGates.crafting(NMItems.endAccord.itemID,
+                NMSkillNodes.BRING_END_ACCORD_FRAGMENT_4, NMSkillNodes.KILL_WITHER);
+        SkillRecipeGates.crafting(NMBlocks.cisternStirrer.blockID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_GEAR_64);
+        SkillRecipeGates.crafting(NMBlocks.cisternDrain.blockID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_GLUE_SLURRY_16);
+        SkillRecipeGates.crafting(NMBlocks.chuteHopper.blockID,
+                NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_NICKEL_PLATE_4);
+        SkillRecipeGates.crafting(NMItems.highSpeedMinecart.itemID,
+                NMSkillNodes.BRING_MINECART_8, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.highSpeedChestMinecart.itemID,
+                NMSkillNodes.BRING_MINECART_8, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(Item.shovelWood.itemID, NMSkillNodes.BRING_STICK_4);
+        SkillRecipeGates.crafting(NMItems.woodHammer.itemID, NMSkillNodes.BRING_STICK_4);
+        SkillRecipeGates.crafting(Item.pickaxeStone.itemID, NMSkillNodes.BRING_LOOSE_STONE_64);
+        SkillRecipeGates.crafting(Item.axeStone.itemID, NMSkillNodes.BRING_LOOSE_STONE_64);
+        SkillRecipeGates.crafting(Item.shovelStone.itemID, NMSkillNodes.BRING_LOOSE_STONE_64);
+        SkillRecipeGates.crafting(Item.flint.itemID, NMSkillNodes.BRING_FLINT_CHIP);
+        SkillRecipeGates.crafting(NMItems.unshapedWetClayBrick.itemID, NMSkillNodes.BRING_CLAY_64);
+        SkillRecipeGates.crafting(NMBlocks.stoneAnvil.blockID,
+                NMSkillNodes.BRING_LOOSE_STONE_64, NMSkillNodes.BRING_STONE_BRICK_32);
+        SkillRecipeGates.crafting(NMItems.lithiumSalt.itemID, NMSkillNodes.BRING_RAW_LITHIUM_64);
+        SkillRecipeGates.crafting(NMItems.lithiumHeatCompound.itemID,
+                NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_NICKEL_PLATE_4,
+                NMSkillNodes.BRING_POTASSIUM_CRYSTAL_16);
+        SkillRecipeGates.crafting(NMItems.nickelBinding.itemID, NMSkillNodes.BRING_NICKEL_PLATE_4);
+        SkillRecipeGates.crafting(NMItems.oxygenTank.itemID,
+                NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.seededDiamondMatrix.itemID,
+                NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+        SkillRecipeGates.crafting(NMItems.nickelBoundDiamondMatrix.itemID,
+                NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_RAW_LITHIUM_64);
+        SkillRecipeGates.crafting(NMItems.fishFlesh.itemID, NMSkillNodes.CATCH_FISH_50);
+        SkillRecipeGates.crafting(NMItems.moistureFertilizer.itemID, NMSkillNodes.CRAFT_BOOK_64);
+        SkillRecipeGates.crafting(NMItems.glassBatch.itemID,
+                NMSkillNodes.BRING_ACID_CRYSTAL_16, NMSkillNodes.BRING_POROSITY_AGGREGATE_16);
+
+        // old initializer crafting outputs are registered before this pass, so the same
+        // output gates replace their formerly unrestricted behavior without duplicating recipes.
+        SkillRecipeGates.crafting(Block.bookShelf.blockID, NMSkillNodes.CRAFT_BOOK_64);
+        SkillRecipeGates.crafting(BTWBlocks.creeperOysterBlock.blockID, NMSkillNodes.BRING_CREEPER_OYSTER_64);
+        SkillRecipeGates.crafting(BTWBlocks.rottenFleshBlock.blockID, NMSkillNodes.BRING_ROTTEN_FLESH_BLOCK_64);
+        SkillRecipeGates.crafting(BTWBlocks.spiderEyeBlock.blockID, NMSkillNodes.BRING_SPIDER_EYE_64);
+        SkillRecipeGates.crafting(BTWItems.gear.itemID, NMSkillNodes.BRING_STICK_16);
+        SkillRecipeGates.crafting(BTWItems.steelNugget.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.eclipseBow.itemID, NMSkillNodes.FIRE_ARROW_256);
+        SkillRecipeGates.crafting(NMItems.ironKnittingNeedles.itemID,
+                NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_WOOL_16);
+        SkillRecipeGates.crafting(NMItems.magicArrow.itemID,
+                NMSkillNodes.FIRE_ARROW_256, NMSkillNodes.BRING_BROADHEAD_ARROWHEAD_16);
+        SkillRecipeGates.crafting(NMItems.steelBunch.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.elementalRod.itemID,
+                NMSkillNodes.BRING_BLAZE_ROD_16, NMSkillNodes.BRING_GHAST_TEAR_16);
+        SkillRecipeGates.crafting(NMBlocks.blockRoad.blockID, NMSkillNodes.BRING_GRAVEL_64);
+        SkillRecipeGates.crafting(NMBlocks.blockAsphalt.blockID, NMSkillNodes.BRING_ROAD_BLOCK_64);
+        SkillRecipeGates.crafting(NMBlocks.asphaltLayer.blockID, NMSkillNodes.BRING_ROAD_BLOCK_64);
+        SkillRecipeGates.crafting(NMBlocks.steelLocker.blockID, NMSkillNodes.BRING_STEEL_BUNCH_8);
+        SkillRecipeGates.crafting(NMItems.bloodSword.itemID, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodPickaxe.itemID, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodAxe.itemID, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodShovel.itemID, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodHoe.itemID, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMBlocks.bloodChest.blockID, NMSkillNodes.BRING_BLOOD_ORB_64);
+        SkillRecipeGates.crafting(BTWBlocks.aestheticOpaque.blockID, 15, NMSkillNodes.BRING_BONE_128);
+        SkillRecipeGates.crafting(BTWBlocks.chest.blockID, NMSkillNodes.BRING_WOODEN_SIDING_32);
+        SkillRecipeGates.crafting(BTWBlocks.planter.blockID, NMSkillNodes.BRING_CLAY_BLOCK_32);
+        SkillRecipeGates.crafting(BTWItems.curedMeat.itemID, NMSkillNodes.COOK_FOOD_200);
+        SkillRecipeGates.crafting(BTWItems.rawMysteryMeat.itemID, NMSkillNodes.BRING_BLOOD_ORB_64);
+        SkillRecipeGates.crafting(BTWItems.tastySandwich.itemID, NMSkillNodes.COOK_FOOD_200);
+        SkillRecipeGates.crafting(NMItems.dungApple.itemID, NMSkillNodes.BRING_DUNG_16);
+        SkillRecipeGates.crafting(NMItems.ironFishingPole.itemID,
+                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
+        SkillRecipeGates.crafting(NMBlocks.stoneLadder.blockID, NMSkillNodes.BRING_LADDER_64);
+        SkillRecipeGates.crafting(NMBlocks.ironLadder.blockID, NMSkillNodes.BRING_STONE_LADDER_64);
+        SkillRecipeGates.crafting(NMBlocks.bloodSaw.blockID,
+                NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.BRING_SAW);
+        SkillRecipeGates.crafting(NMPostItems.bloodMoonBottle.itemID, NMSkillNodes.BRING_BLOOD_ORB_64);
+        SkillRecipeGates.crafting(Item.appleGold.itemID, 0, NMSkillNodes.BRING_GOLD_NUGGET_32);
+        SkillRecipeGates.crafting(Item.appleGold.itemID, 1, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.goldenCarrot.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(BTWItems.bowDrill.itemID,
+                NMSkillNodes.BRING_STICK_4, NMSkillNodes.BRING_STRING_32);
+        SkillRecipeGates.crafting(Item.flintAndSteel.itemID,
+                NMSkillNodes.BRING_FLINT_4, NMSkillNodes.BRING_IRON_NUGGET_32);
+        SkillRecipeGates.crafting(BTWItems.diamondChisel.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
+        SkillRecipeGates.crafting(BTWItems.diamondShears.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
+        SkillRecipeGates.crafting(BTWItems.creeperOysters.itemID, NMSkillNodes.BRING_CREEPER_OYSTER_16);
+        SkillRecipeGates.crafting(BTWItems.wickerPane.itemID,
+                NMSkillNodes.BRING_SUGAR_CANE_16, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
+        SkillRecipeGates.crafting(Item.book.itemID, NMSkillNodes.BRING_PAPER_64);
+        SkillRecipeGates.crafting(Item.silk.itemID, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
+        SkillRecipeGates.crafting(Item.spiderEye.itemID, NMSkillNodes.KILL_SPIDER_100);
 
         // Cauldrons, crucibles, millstones, and cisterns have no initiating player: hoppers
         // can start their recipes after every player has left. Personal skill nodes must not

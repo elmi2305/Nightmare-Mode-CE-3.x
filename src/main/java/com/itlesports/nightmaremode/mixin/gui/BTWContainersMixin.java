@@ -7,6 +7,9 @@ import com.itlesports.nightmaremode.nmgui.ContainerDisenchantmentGui;
 import com.itlesports.nightmaremode.nmgui.ContainerMinerDrill;
 import com.itlesports.nightmaremode.nmgui.GuiMinerDrill;
 import com.itlesports.nightmaremode.block.tileEntities.MinerDrillTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TerrainExtractorTileEntity;
+import com.itlesports.nightmaremode.nmgui.ContainerTerrainExtractor;
+import com.itlesports.nightmaremode.nmgui.GuiTerrainExtractor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -26,6 +29,9 @@ public class BTWContainersMixin {
         }
         if (containerID == ContainerMinerDrill.ID) {
             cir.setReturnValue(new GuiMinerDrill(p.inventory, new MinerDrillTileEntity()));
+        }
+        if (containerID == ContainerTerrainExtractor.ID) {
+            cir.setReturnValue(new GuiTerrainExtractor(p.inventory, new TerrainExtractorTileEntity()));
         }
     }
 }

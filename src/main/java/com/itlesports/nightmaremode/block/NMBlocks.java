@@ -14,6 +14,7 @@ import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockTerrainExtractor;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -150,6 +151,7 @@ public class NMBlocks {
     public static Block deadzoneShardNode;
     public static Block ironAnvil;
     public static BlockStationRail stationRail;
+    public static Block terrainExtractor;
 
 
 
@@ -281,6 +283,9 @@ public class NMBlocks {
 
         stationRail = new BlockStationRail(2437);
         Item.itemsList[stationRail.blockID] = new NMItemBlock(NMBlocks.stationRail.blockID - 256);
+
+        terrainExtractor = new BlockTerrainExtractor(NMFields.BLOCK_TERRAIN_EXTRACTOR);
+        Item.itemsList[terrainExtractor.blockID] = new ItemBlockTerrainExtractor(terrainExtractor.blockID - 256);
 
 
 

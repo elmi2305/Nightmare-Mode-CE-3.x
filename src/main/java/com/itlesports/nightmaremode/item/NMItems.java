@@ -302,6 +302,18 @@ public class NMItems {
     public static Item crystalPowder;
     public static Item glassBatch;
     public static Item dyeBlend;
+    public static Item potassiumCrystal;
+    public static Item nitrogenCrystal;
+    public static Item acidCrystal;
+    public static Item porosityAggregate;
+    public static Item soilSample;
+    public static Item brokenHoeFragment;
+    public static Item farmersFavoriteHoe;
+    public static Item unbakedChocolateCake;
+    public static Item chocolateCake;
+    public static Item burnedChocolateCake;
+    public static Item brokenPickaxeFragment;
+    public static Item blacksmithFavoritePickaxe;
 
 
     static {
@@ -583,6 +595,32 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyDyeBlend")
                 .setUnlocalizedName("ifhyDyeBlend")
                 .setCreativeTab(CreativeTabs.tabMaterials);
+        potassiumCrystal = new NMItem(3218).setTextureName("nightmare:ifhyPotassiumCrystal")
+                .setUnlocalizedName("ifhyPotassiumCrystal").setCreativeTab(CreativeTabs.tabMaterials);
+        nitrogenCrystal = new NMItem(3219).setTextureName("nightmare:ifhyNitrogenCrystal")
+                .setUnlocalizedName("ifhyNitrogenCrystal").setCreativeTab(CreativeTabs.tabMaterials);
+        acidCrystal = new NMItem(3220).setTextureName("nightmare:ifhyAcidCrystal")
+                .setUnlocalizedName("ifhyAcidCrystal").setCreativeTab(CreativeTabs.tabMaterials);
+        porosityAggregate = new NMItem(3221).setTextureName("nightmare:ifhyPorosityAggregate")
+                .setUnlocalizedName("ifhyPorosityAggregate").setCreativeTab(CreativeTabs.tabMaterials);
+        soilSample = new ItemSoilSample(3222).setTextureName("nightmare:ifhySoilSample")
+                .setUnlocalizedName("ifhySoilSample").setCreativeTab(CreativeTabs.tabMaterials);
+        brokenHoeFragment = new ItemQuestFragment(3223, 8)
+                .setTextureName("nightmare:ifhyBrokenHoeFragment").setUnlocalizedName("ifhyBrokenHoeFragment")
+                .setCreativeTab(CreativeTabs.tabTools);
+        farmersFavoriteHoe = new ItemHoe(3224, EnumToolMaterial.IRON).setTextureName("nightmare:ifhyFarmersFavoriteHoe")
+                .setUnlocalizedName("ifhyFarmersFavoriteHoe").setCreativeTab(CreativeTabs.tabTools);
+        unbakedChocolateCake = new NMItem(3225).setMaxStackSize(1).setTextureName("nightmare:ifhyUnbakedChocolateCake")
+                .setUnlocalizedName("ifhyUnbakedChocolateCake").setCreativeTab(CreativeTabs.tabFood);
+        chocolateCake = new NMItem(3226).setMaxStackSize(1).setTextureName("nightmare:ifhyChocolateCake")
+                .setUnlocalizedName("ifhyChocolateCake").setCreativeTab(CreativeTabs.tabFood);
+        burnedChocolateCake = new NMItem(3227).setMaxStackSize(1).setTextureName("nightmare:ifhyBurnedChocolateCake")
+                .setUnlocalizedName("ifhyBurnedChocolateCake").setCreativeTab(CreativeTabs.tabFood);
+        brokenPickaxeFragment = new ItemQuestFragment(3228, 4)
+                .setTextureName("nightmare:ifhyBrokenPickaxeFragment").setUnlocalizedName("ifhyBrokenPickaxeFragment")
+                .setCreativeTab(CreativeTabs.tabTools);
+        blacksmithFavoritePickaxe = new ItemQuestPickaxe(3229).setTextureName("nightmare:ifhyBlacksmithFavoritePickaxe")
+                .setUnlocalizedName("ifhyBlacksmithFavoritePickaxe").setCreativeTab(CreativeTabs.tabTools);
 
 
 
