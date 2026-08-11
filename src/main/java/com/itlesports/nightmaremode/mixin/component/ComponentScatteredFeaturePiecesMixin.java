@@ -9,6 +9,8 @@ import com.itlesports.nightmaremode.structure.ComponentOceanDesertTemple;
 import com.itlesports.nightmaremode.structure.StructureNetherDesertTempleStart;
 import com.itlesports.nightmaremode.structure.StructureOceanDesertTempleStart;
 import com.itlesports.nightmaremode.structure.StructureNetherVillagerPostStart;
+import com.itlesports.nightmaremode.structure.StructureSkyZiggurathStart;
+import com.itlesports.nightmaremode.structure.SkyZiggurath;
 import com.itlesports.nightmaremode.structure.Tier1VillagerPost;
 import com.itlesports.nightmaremode.structure.Tier2VillagerPost;
 import com.itlesports.nightmaremode.structure.Tier3VillagerPost;
@@ -31,8 +33,10 @@ public class ComponentScatteredFeaturePiecesMixin {
         MapGenStructureIOAccess.invokeFunction(Tier1VillagerPost.class, "NmNVP1");
         MapGenStructureIOAccess.invokeFunction(Tier2VillagerPost.class, "NmNVP2");
         MapGenStructureIOAccess.invokeFunction(Tier3VillagerPost.class, "NmNVP3");
+        MapGenStructureIOAccess.invokeFunction(SkyZiggurath.class, "NmSkyZig");
         MapGenStructureIOAccess.invokeFunctionB(StructureNetherDesertTempleStart.class, "NMNetherTemple");
         MapGenStructureIOAccess.invokeFunctionB(StructureOceanDesertTempleStart.class, "NMOceanTemple");
         MapGenStructureIOAccess.invokeFunctionB(StructureNetherVillagerPostStart.class, "NMNetherVillagerPost");
+        MapGenStructureIOAccess.invokeFunctionB(StructureSkyZiggurathStart.class, "NMSkyZiggurath");
     }
 }

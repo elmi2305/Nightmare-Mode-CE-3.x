@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.villager.PriestVillagerEntity;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.structure.MapGenOceanDesertTemple;
+import com.itlesports.nightmaremode.structure.MapGenSkyZiggurath;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ChunkProviderGenerate;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ChunkProviderGenerateMixin {
     @Unique private static Random rand = new Random();
     @Unique private final MapGenOceanDesertTemple oceanDesertTempleGenerator = new MapGenOceanDesertTemple();
+    @Unique private final MapGenSkyZiggurath skyZiggurathGenerator = new MapGenSkyZiggurath();
     @Shadow private World worldObj;
     @Shadow private Random structureRand;
     @Redirect(method = "generateTerrain", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;waterStill:Lnet/minecraft/src/Block;", opcode = Opcodes.GETSTATIC))
@@ -50,11 +52,13 @@ public class ChunkProviderGenerateMixin {
     @Inject(method = "provideChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/MapGenVillage;generate(Lnet/minecraft/src/IChunkProvider;Lnet/minecraft/src/World;II[S[B)V"))
     private void prepareOceanDesertTemples(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
         oceanDesertTempleGenerator.generate((ChunkProviderGenerate) (Object) this, worldObj, chunkX, chunkZ, null, null);
+        skyZiggurathGenerator.generate((ChunkProviderGenerate) (Object) this, worldObj, chunkX, chunkZ, null, null);
     }
 
     @Inject(method = "populate",  at = @At(value = "INVOKE", target = "Lnet/minecraft/src/MapGenMineshaft;generateStructuresInChunk(Lnet/minecraft/src/World;Ljava/util/Random;II)Z"))
     private void generateOceanDesertTemples(IChunkProvider provider, int chunkX, int chunkZ, CallbackInfo ci) {
         oceanDesertTempleGenerator.generateStructuresInChunk(worldObj, structureRand, chunkX, chunkZ);
+        skyZiggurathGenerator.generateStructuresInChunk(worldObj, structureRand, chunkX, chunkZ);
     }
 
     @Inject(method = "getPossibleCreatures", at = @At("HEAD"), cancellable = true)
