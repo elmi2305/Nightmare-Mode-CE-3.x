@@ -1550,11 +1550,11 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWItems.woodenClub),
-                new Object[]{"XY", "X", Character.valueOf('X'), Item.stick, Character.valueOf('Y'), Item.silk});
+                new Object[]{"X", "X", Character.valueOf('X'), Item.stick});
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(
                         new ItemStack(BTWItems.woodenClub),
-                        new Object[]{"X", "X", Character.valueOf('X'), Item.stick}),
+                        new Object[]{"XY", "X", Character.valueOf('X'), Item.stick, Character.valueOf('Y'), Item.silk}),
                 NMSkillNodes.BRING_STICK_16,
                 NMSkillNodes.KILL_MOB_16,
                 NMSkillNodes.BRING_LOG_64);
@@ -1637,7 +1637,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_WOODEN_GEAR_12, NMSkillNodes.BRING_WINDMILL_BLADE_8);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.saw), new Object[]{"YYY", "XZX", "#X#", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), Item.ingotIron, Character.valueOf('Z'), BTWItems.belt});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.saw), new Object[]{"IGI", "GBG", "SIS", Character.valueOf('I'), Item.ingotIron, Character.valueOf('G'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('B'), BTWItems.belt, Character.valueOf('S'), BTWTags.highEfficiencyWoodSidings}),
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.saw), new Object[]{"III", "GBG", "SPS", Character.valueOf('I'), Item.ingotIron, Character.valueOf('G'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('B'), BTWItems.belt, Character.valueOf('S'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('P'), NMItems.nickelMachinePart}),
                 NMSkillNodes.BRING_WOODEN_GEAR_12, NMSkillNodes.BRING_WINDMILL_BLADE_8, NMSkillNodes.BRING_LEATHER_16);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.gearBox), new Object[]{"#X#", "XYX", "#X#", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), BTWBlocks.axle});
@@ -1850,21 +1850,54 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.shovelIron), new Object[]{"X", "#", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeIron), new Object[]{"X#", " #", " #", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.swordIron), new Object[]{"X", "X", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotIron});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.pickaxeIron), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), NMItems.stoneStick, Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.MINE_IRON_ORE_256);
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.axeIron), new Object[]{"X ", "X#", " #", Character.valueOf('#'), NMItems.stoneStick, Character.valueOf('X'), Item.ingotIron}),
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.pickaxeIron), new Object[]{
+                "XXX", "C#C", "N#N",
+                        Character.valueOf('#'), NMItems.stoneStick,
+                        Character.valueOf('C'), Item.clay,
+                        Character.valueOf('N'), NMItems.primitiveGlue,
+                        Character.valueOf('X'), Item.ingotIron}),
+                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16,
+                NMSkillNodes.KILL_MOB_250, NMSkillNodes.MINE_IRON_ORE_256);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.axeIron), new Object[]{
+                "XXN", "X#L", "G#L",
+                        Character.valueOf('#'), NMItems.stoneStick,
+                        Character.valueOf('G'), BTWItems.glue,
+                        Character.valueOf('N'), NMItems.nickelBinding,
+                        Character.valueOf('L'), NMItems.lithiumStabilizer,
+                        Character.valueOf('X'), Item.ingotIron}),
                 NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.MINE_BLOCK_1000);
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.shovelIron), new Object[]{"X", "#", "#", Character.valueOf('#'), NMItems.stoneStick, Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_IRON_SHOVEL, NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.hoeIron), new Object[]{"X#", " #", " #", Character.valueOf('#'), NMItems.stoneStick, Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.HARVEST_MATURE_CROP_500);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.shovelIron), new Object[]{
+                "CXC", "B#B", "S#S",
+                        Character.valueOf('#'), NMItems.stoneStick,
+                        Character.valueOf('C'), Item.clay,
+                        Character.valueOf('B'), NMItems.nickelBinding,
+                        Character.valueOf('S'), NMItems.lithiumStabilizer,
+                        Character.valueOf('X'), Item.ingotIron}),
+                NMSkillNodes.BRING_IRON_SHOVEL, NMSkillNodes.BRING_STONE_STICK_64,
+                NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_STONE_BRICK_32,
+                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_LITHIUM_SALT_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.hoeIron), new Object[]{
+                "X#G", "S#S", "S#S",
+                        Character.valueOf('#'), NMItems.stoneStick,
+                        Character.valueOf('S'), NMItems.lithiumStabilizer,
+                        Character.valueOf('G'), BTWItems.glue,
+                        Character.valueOf('X'), Item.ingotIron}),
+                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_LITHIUM_SALT_16);
         SkillLockedCrafting.requireSkills(
-                RecipeManager.addRecipe(new ItemStack(Item.swordIron), new Object[]{"X", "X", "#", Character.valueOf('#'), NMItems.stoneStick, Character.valueOf('X'), Item.ingotIron}),
+                RecipeManager.addRecipe(new ItemStack(Item.swordIron), new Object[]{
+                        "X", "X", "#",
+                        Character.valueOf('#'), NMItems.stoneStick,
+                        Character.valueOf('X'), Item.ingotIron}),
                 NMSkillNodes.BRING_IRON_SWORD,
                 NMSkillNodes.BRING_BONE_CLUB_4,
                 NMSkillNodes.BRING_WOODEN_CLUB_4,
                 NMSkillNodes.BRING_STONE_STICK_64,
                 NMSkillNodes.KILL_MOB_250);
+
+        RecipeManager.addRecipe(new ItemStack(Item.boat, 1), new Object[]{"#P#", "###", "S S",
+                Character.valueOf('P'), Item.shovelWood,
+                Character.valueOf('S'), BTWItems.screw,
+                Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings});
 
         // diamond alloying is handled by the cistern. finished diamond equipment then needs
         // the same precision and thermal materials that made the ingots possible.
@@ -1925,7 +1958,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeDiamond), new Object[]{"X#", " #", " #", Character.valueOf('#'), TagInstance.of(BTWTags.lowQualityToolHandles), Character.valueOf('X'), BTWItems.diamondIngot});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.hoeDiamond), new Object[]{
-                        "IL ", "GH ", " H ",
+                        "IHL", "GH ", " H ",
                         Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('L'), NMItems.lithiumStabilizer,
                         Character.valueOf('G'), NMItems.nickelBinding,
