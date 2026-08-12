@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import api.block.MechanicalBlock;
+import btw.block.blocks.GearBoxBlock;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mechanical.MechanicalStressManager;
 import net.minecraft.src.Block;
@@ -35,6 +36,19 @@ public class ItemMechanicalWrench extends NMItem {
                 } else {
                     player.addChatMessage("Mechanical network: unpowered | connected load: "
                             + report.stress() + " SU");
+                }
+                if (block instanceof GearBoxBlock) {
+                    MechanicalStressManager.GearboxStressReport gearbox =
+                            MechanicalStressManager.inspectGearbox(world, x, y, z);
+                    if (gearbox.powered()) {
+                        player.addChatMessage("Gearbox stress: " + gearbox.stress() + " / "
+                                + gearbox.limit() + " SU | local load: " + gearbox.localLoad()
+                                + " | nearest source: " + gearbox.nearestSourceDistance() + " gearbox(es)"
+                                + " | nearby sources: " + gearbox.supportingSources());
+                    } else {
+                        player.addChatMessage("Gearbox stress: unpowered | local load: "
+                                + gearbox.localLoad() + " SU");
+                    }
                 }
             }
             return true;

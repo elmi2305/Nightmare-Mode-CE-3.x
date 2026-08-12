@@ -6,7 +6,6 @@ import btw.block.BTWBlocks;
 import btw.block.blocks.*;
 import btw.entity.mechanical.source.VerticalWindMillEntity;
 import btw.entity.mechanical.source.WaterWheelEntity;
-import btw.entity.mechanical.source.WindMillEntity;
 import com.itlesports.nightmaremode.block.blocks.BlockBloodSaw;
 import com.itlesports.nightmaremode.block.blocks.BlockCisternStirrer;
 import com.itlesports.nightmaremode.block.blocks.DualInputGearBoxBlock;
@@ -27,6 +26,8 @@ public final class MechanicalStressManager {
     public static final int VERTICAL_WIND_MILL_CAPACITY = 192;
     public static final int WATER_WHEEL_CAPACITY = 256;
     public static final int GEARBOX_MAX_STRESS = 128;
+    public static final int GEARBOX_SOURCE_SUPPORT_RANGE = 4;
+    public static final int STRESS_PER_GEARBOX_FROM_SOURCE = 20;
 
     private static final int MAX_NETWORK_NODES = 4096;
     private static boolean validating;
@@ -55,7 +56,7 @@ public final class MechanicalStressManager {
                 for (Pos pos : group.graph) {
                     Block block = blockAt(world, pos);
                     if (block instanceof GearBoxBlock
-                            && stressOf(world, traceFromGearbox(world, pos)) > GEARBOX_MAX_STRESS) {
+                            && calculateGearboxStress(world, pos, group).stress > GEARBOX_MAX_STRESS) {
                         gearboxesToBreak.add(pos);
                     }
                 }
@@ -83,6 +84,20 @@ public final class MechanicalStressManager {
             }
         }
         return new StressReport(stressOf(world, topology), 0, 0, false, false);
+    }
+
+    public static GearboxStressReport inspectGearbox(World world, int x, int y, int z) {
+        Pos inspected = new Pos(x, y, z);
+        Set<Pos> topology = collectTopology(world, inspected);
+        for (PowerGroup group : collectPowerGroups(world, topology)) {
+            if (!group.graph.contains(inspected)) continue;
+            GearboxCalculation calculation = calculateGearboxStress(world, inspected, group);
+            return new GearboxStressReport(calculation.stress, GEARBOX_MAX_STRESS,
+                    calculation.localLoad, calculation.nearestSourceDistance,
+                    calculation.supportingSources, true);
+        }
+        int localLoad = stressOf(world, collectGearboxSpan(world, inspected, topology));
+        return new GearboxStressReport(localLoad, GEARBOX_MAX_STRESS, localLoad, -1, 0, false);
     }
 
     public static int getStressCost(Block block) {
@@ -217,11 +232,6 @@ public final class MechanicalStressManager {
         return visited;
     }
 
-    private static Set<Pos> traceFromGearbox(World world, Pos gearboxPos) {
-        // Starting at a gearbox naturally follows only its output faces.
-        return tracePower(world, gearboxPos);
-    }
-
     private static Set<Pos> findFirstGearboxes(World world, Collection<Pos> sourcePositions) {
         Set<Pos> found = new HashSet<>();
         Set<Pos> visited = new HashSet<>();
@@ -246,6 +256,84 @@ public final class MechanicalStressManager {
             }
         }
         return found;
+    }
+
+    private static GearboxCalculation calculateGearboxStress(World world, Pos gearboxPos, PowerGroup group) {
+        int localLoad = stressOf(world, collectGearboxSpan(world, gearboxPos, group.graph));
+        int nearestSourceDistance = Integer.MAX_VALUE;
+        int supportingSources = 0;
+        float supportUnits = 0.0F;
+
+        for (Source source : group.sources) {
+            int distance = gearboxDistance(world, source.positions, gearboxPos, group.graph);
+            nearestSourceDistance = Math.min(nearestSourceDistance, distance);
+            if (distance <= GEARBOX_SOURCE_SUPPORT_RANGE) {
+                ++supportingSources;
+                supportUnits += (float) source.capacity / (float) WIND_MILL_CAPACITY;
+            }
+        }
+
+        if (nearestSourceDistance == Integer.MAX_VALUE) nearestSourceDistance = 0;
+        // One windmill is one support unit, a vertical windmill is 1.5, and a
+        // water wheel is 2. Sources farther than four gearbox hops do not help.
+        int sharedLocalLoad = (int) Math.ceil(localLoad / Math.max(1.0F, supportUnits));
+        int distanceStress = Math.max(0, nearestSourceDistance - 1) * STRESS_PER_GEARBOX_FROM_SOURCE;
+        return new GearboxCalculation(sharedLocalLoad + distanceStress, localLoad,
+                nearestSourceDistance, supportingSources);
+    }
+
+    /**
+     * The physical load carried directly by one gearbox. Traversal stops at the
+     * next gearbox, preventing the old cumulative-whole-subtree behavior.
+     */
+    private static Set<Pos> collectGearboxSpan(World world, Pos gearboxPos, Set<Pos> poweredGraph) {
+        Set<Pos> span = new HashSet<>();
+        if (!poweredGraph.contains(gearboxPos)) return span;
+        ArrayDeque<Pos> queue = new ArrayDeque<>();
+        queue.add(gearboxPos);
+        while (!queue.isEmpty() && span.size() < MAX_NETWORK_NODES) {
+            Pos current = queue.removeFirst();
+            if (!span.add(current)) continue;
+            Block currentBlock = blockAt(world, current);
+            if (!(currentBlock instanceof AxleBlock) && !(currentBlock instanceof GearBoxBlock)) continue;
+            for (int side = 0; side < 6; ++side) {
+                Pos next = current.offset(side);
+                if (!poweredGraph.contains(next) || span.contains(next)
+                        || !areStructurallyConnected(world, current, next, side)) continue;
+                if (blockAt(world, next) instanceof GearBoxBlock && !next.equals(gearboxPos)) continue;
+                queue.addLast(next);
+            }
+        }
+        return span;
+    }
+
+    /** Returns the fewest gearboxes crossed from this source to the target. */
+    private static int gearboxDistance(World world, Collection<Pos> starts, Pos target, Set<Pos> poweredGraph) {
+        Map<Pos, Integer> best = new HashMap<>();
+        PriorityQueue<DistanceState> queue = new PriorityQueue<>(Comparator.comparingInt(state -> state.distance));
+        for (Pos start : starts) queue.add(new DistanceState(start, 0));
+
+        while (!queue.isEmpty() && best.size() < MAX_NETWORK_NODES) {
+            DistanceState state = queue.poll();
+            Integer known = best.get(state.pos);
+            if (known != null && known <= state.distance) continue;
+            best.put(state.pos, state.distance);
+            if (state.pos.equals(target)) return state.distance;
+            Block currentBlock = blockAt(world, state.pos);
+            if (!(currentBlock instanceof AxleBlock) && !(currentBlock instanceof GearBoxBlock)) continue;
+
+            for (int side = 0; side < 6; ++side) {
+                Pos next = state.pos.offset(side);
+                if (!poweredGraph.contains(next)
+                        || !areStructurallyConnected(world, state.pos, next, side)) continue;
+                int nextDistance = state.distance + (blockAt(world, next) instanceof GearBoxBlock ? 1 : 0);
+                Integer nextKnown = best.get(next);
+                if (nextKnown == null || nextDistance < nextKnown) {
+                    queue.add(new DistanceState(next, nextDistance));
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
     }
 
     private static boolean areStructurallyConnected(World world, Pos current, Pos next, int side) {
@@ -329,18 +417,15 @@ public final class MechanicalStressManager {
         return Block.blocksList[world.getBlockId(x, y, z)];
     }
 
-    public record StressReport(int stress, int capacity, int sources, boolean powered, boolean overloaded) {
-    }
+    public record StressReport(int stress, int capacity, int sources, boolean powered, boolean overloaded) { }
 
-    private static final class SourceIdentity {
-        final int key;
-        final int capacity;
+    public record GearboxStressReport(int stress, int limit, int localLoad, int nearestSourceDistance, int supportingSources, boolean powered) { }
 
-        SourceIdentity(int key, int capacity) {
-            this.key = key;
-            this.capacity = capacity;
-        }
-    }
+    private record GearboxCalculation(int stress, int localLoad, int nearestSourceDistance, int supportingSources) {}
+
+    private record DistanceState(Pos pos, int distance) {}
+
+    private record SourceIdentity(int key, int capacity) {}
 
     private static final class Source {
         final int capacity;
@@ -369,40 +454,25 @@ public final class MechanicalStressManager {
         }
     }
 
-    private static final class Pos {
-        final int x;
-        final int y;
-        final int z;
-
-        Pos(int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
+    private record Pos(int x, int y, int z) {
 
         Pos offset(int side) {
-            return switch (side) {
-                case 0 -> new Pos(x, y - 1, z);
-                case 1 -> new Pos(x, y + 1, z);
-                case 2 -> new Pos(x, y, z - 1);
-                case 3 -> new Pos(x, y, z + 1);
-                case 4 -> new Pos(x - 1, y, z);
-                default -> new Pos(x + 1, y, z);
-            };
-        }
+                return switch (side) {
+                    case 0 -> new Pos(x, y - 1, z);
+                    case 1 -> new Pos(x, y + 1, z);
+                    case 2 -> new Pos(x, y, z - 1);
+                    case 3 -> new Pos(x, y, z + 1);
+                    case 4 -> new Pos(x - 1, y, z);
+                    default -> new Pos(x + 1, y, z);
+                };
+            }
 
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (!(object instanceof Pos pos)) return false;
-            return x == pos.x && y == pos.y && z == pos.z;
-        }
+            @Override
+            public boolean equals(Object object) {
+                if (this == object) return true;
+                if (!(object instanceof Pos pos)) return false;
+                return x == pos.x && y == pos.y && z == pos.z;
+            }
 
-        @Override
-        public int hashCode() {
-            int result = x;
-            result = 31 * result + y;
-            return 31 * result + z;
-        }
     }
 }
