@@ -59,6 +59,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Unique private boolean nightmareMode$questComplete;
     @Unique private int nightmareMode$questAnswerItem = -1;
     @Unique private int nightmareMode$questAnswerMeta = -1;
+    @Unique private int nightmareMode$questAnswerAmount = 1;
+    @Unique private int nightmareMode$questStory;
+    @Unique private int nightmareMode$questQuestion = -1;
+    @Unique private int nightmareMode$questWrongAnswers;
+    @Unique private long nightmareMode$questLockoutUntil;
     @Unique private String nightmareMode$questToken = "";
 
 
@@ -83,6 +88,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         tag.setBoolean("NmQuestComplete", this.nightmareMode$questComplete);
         tag.setInteger("NmQuestAnswerItem", this.nightmareMode$questAnswerItem);
         tag.setInteger("NmQuestAnswerMeta", this.nightmareMode$questAnswerMeta);
+        tag.setInteger("NmQuestAnswerAmount", this.nightmareMode$questAnswerAmount);
+        tag.setInteger("NmQuestStory", this.nightmareMode$questStory);
+        tag.setInteger("NmQuestQuestion", this.nightmareMode$questQuestion);
+        tag.setInteger("NmQuestWrongAnswers", this.nightmareMode$questWrongAnswers);
+        tag.setLong("NmQuestLockoutUntil", this.nightmareMode$questLockoutUntil);
         tag.setString("NmQuestToken", this.nightmareMode$questToken);
     }
 
@@ -96,6 +106,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         this.nightmareMode$questComplete = tag.getBoolean("NmQuestComplete");
         this.nightmareMode$questAnswerItem = tag.hasKey("NmQuestAnswerItem") ? tag.getInteger("NmQuestAnswerItem") : -1;
         this.nightmareMode$questAnswerMeta = tag.hasKey("NmQuestAnswerMeta") ? tag.getInteger("NmQuestAnswerMeta") : -1;
+        this.nightmareMode$questAnswerAmount = tag.hasKey("NmQuestAnswerAmount") ? tag.getInteger("NmQuestAnswerAmount") : 1;
+        this.nightmareMode$questStory = tag.getInteger("NmQuestStory");
+        this.nightmareMode$questQuestion = tag.hasKey("NmQuestQuestion") ? tag.getInteger("NmQuestQuestion") : -1;
+        this.nightmareMode$questWrongAnswers = tag.getInteger("NmQuestWrongAnswers");
+        this.nightmareMode$questLockoutUntil = tag.getLong("NmQuestLockoutUntil");
         this.nightmareMode$questToken = tag.getString("NmQuestToken");
     }
 
@@ -111,6 +126,8 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         if ((Object)this instanceof EntityNetherPostVillager || this.worldObj.isRemote || !this.isEntityAlive()) {
             return;
         }
+
+        if (this.getProfession() == 1) this.nightmareMode$refreshLibrarianLockout();
 
         this.nightmareMode$hungerDrainProgress += HUNGER_DRAIN_PER_TICK
                 * SkillHandler.getWorldData(this.worldObj).globalVillagerHungerDrainRateMultiplier;
@@ -317,6 +334,12 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Unique
     private void nightmareMode$handleQuestInteraction(EntityPlayer player, int profession) {
+        if (profession == 1 && this.nightmareMode$questLockoutUntil > 0L) {
+            if (!this.nightmareMode$refreshLibrarianLockout()) {
+                this.nightmareMode$say(player, "Don't waste my time. I'm not gonna talk to you until next week.");
+                return;
+            }
+        }
         if (this.nightmareMode$questDialogueStage == 0) {
             this.nightmareMode$say(player, "Oh, hello " + player.getEntityName() + ".");
             this.nightmareMode$questDialogueStage = 1;
@@ -351,16 +374,17 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
             }
             case 1 -> {
                 this.nightmareMode$questToken = this.getUniqueID().toString();
-                int story = 1 + this.rand.nextInt(3);
-                questItem = LibrarianStoryBook.create(story, this.nightmareMode$questToken);
-                if (LibrarianStoryBook.QUESTIONS.isEmpty()) {
-                    this.nightmareMode$say(player, "Read this story carefully, then return this exact volume to me.");
-                } else {
-                    LibrarianStoryBook.Question question = LibrarianStoryBook.QUESTIONS.get(this.rand.nextInt(LibrarianStoryBook.QUESTIONS.size()));
-                    this.nightmareMode$questAnswerItem = question.answerItemId();
-                    this.nightmareMode$questAnswerMeta = question.answerMetadata();
-                    this.nightmareMode$say(player, question.prompt());
-                }
+                this.nightmareMode$questStory = 1 + this.rand.nextInt(3);
+                List<LibrarianStoryBook.Question> questions = LibrarianStoryBook.questionsForStory(this.nightmareMode$questStory);
+                this.nightmareMode$questQuestion = this.rand.nextInt(questions.size());
+                LibrarianStoryBook.Question question = questions.get(this.nightmareMode$questQuestion);
+                this.nightmareMode$questAnswerItem = question.answerItemId();
+                this.nightmareMode$questAnswerMeta = question.answerMetadata();
+                this.nightmareMode$questAnswerAmount = question.answerAmount();
+                this.nightmareMode$questWrongAnswers = 0;
+                questItem = LibrarianStoryBook.create(this.nightmareMode$questStory,
+                        this.nightmareMode$questQuestion, this.nightmareMode$questToken);
+                this.nightmareMode$say(player, question.requestText());
             }
             case 2 -> this.nightmareMode$say(player, "Bring me a six-minute splash potion of fire resistance.");
             case 3 -> {
@@ -379,19 +403,23 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     private void nightmareMode$tryCompleteQuest(EntityPlayer player, int profession) {
         ItemStack held = player.inventory.getCurrentItem();
         if (profession == 4 && held != null && held.itemID == NMItems.burnedChocolateCake.itemID) {
-            this.nightmareMode$consumeHeld(player);
+            this.nightmareMode$consumeHeld(player, 1);
             ItemStack retry = new ItemStack(NMItems.unbakedChocolateCake);
             if (!player.inventory.addItemStackToInventory(retry)) player.dropPlayerItem(retry);
-            this.nightmareMode$say(player, "Oh dear. That cake is burned. Please try again.");
+            this.nightmareMode$say(player, "Are you serious?! I'm not eating that. You had one job and you completely messed it up. This time, don't burn it.");
             return;
         }
         if (!this.nightmareMode$isCorrectQuestItem(held, profession)) {
-            this.nightmareMode$say(player, "I am still waiting for the item I requested.");
+            if (profession == 1) {
+                this.nightmareMode$handleWrongLibrarianAnswer(player, held);
+                return;
+            }
+            this.nightmareMode$say(player, "I'm still waiting for the item I requested.");
             return;
         }
-        this.nightmareMode$consumeHeld(player);
+        this.nightmareMode$consumeHeld(player, profession == 1 ? held.stackSize : 1);
         this.nightmareMode$questComplete = true;
-        this.nightmareMode$say(player, "You have proven yourself. We may trade now.");
+        this.nightmareMode$say(player, "You have proven yourself.");
     }
 
     @Unique
@@ -400,10 +428,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         return switch (profession) {
             case 0 -> held.itemID == NMItems.farmersFavoriteHoe.itemID;
             case 1 -> {
-                if (this.nightmareMode$questAnswerItem >= 0) {
-                    yield held.itemID == this.nightmareMode$questAnswerItem
-                            && (this.nightmareMode$questAnswerMeta < 0 || held.getItemDamage() == this.nightmareMode$questAnswerMeta);
-                }
+                LibrarianStoryBook.Question question = LibrarianStoryBook.getQuestion(
+                        this.nightmareMode$questStory, this.nightmareMode$questQuestion);
+                if (question != null) yield question.matches(held);
                 NBTTagCompound tag = held.getTagCompound();
                 yield held.itemID == Item.writtenBook.itemID && tag != null && tag.getBoolean("NMLibrarianStory")
                         && this.nightmareMode$questToken.equals(tag.getString("NMQuestToken"));
@@ -416,15 +443,61 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     }
 
     @Unique
-    private void nightmareMode$consumeHeld(EntityPlayer player) {
+    private void nightmareMode$consumeHeld(EntityPlayer player, int amount) {
         ItemStack held = player.inventory.getCurrentItem();
-        if (!player.capabilities.isCreativeMode && held != null && --held.stackSize <= 0) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+        if (!player.capabilities.isCreativeMode && held != null) {
+            held.stackSize -= amount;
+            if (held.stackSize <= 0) player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
         }
     }
 
     @Unique
+    private void nightmareMode$handleWrongLibrarianAnswer(EntityPlayer player, ItemStack held) {
+        if (held == null) {
+            this.nightmareMode$say(player, "I'm still waiting for the item I requested.");
+            return;
+        }
+
+        ++this.nightmareMode$questWrongAnswers;
+        if (this.nightmareMode$questWrongAnswers >= 3) {
+            this.nightmareMode$questLockoutUntil = this.worldObj.getTotalWorldTime() + (24000L * 7);
+            this.nightmareMode$say(player, "Don't waste my time. I'm not gonna talk to you until next week.");
+            return;
+        }
+
+        int attemptsLeft = 3 - this.nightmareMode$questWrongAnswers;
+        this.nightmareMode$say(player, "That's not correct. Try again.");
+    }
+
+    @Unique
+    private boolean nightmareMode$refreshLibrarianLockout() {
+        if (this.nightmareMode$questLockoutUntil <= 0L) return false;
+        if (this.worldObj.getTotalWorldTime() < this.nightmareMode$questLockoutUntil) return false;
+
+        this.nightmareMode$questDialogueStage = 0;
+        this.nightmareMode$questIssued = false;
+        this.nightmareMode$questComplete = false;
+        this.nightmareMode$questAnswerItem = -1;
+        this.nightmareMode$questAnswerMeta = -1;
+        this.nightmareMode$questAnswerAmount = 1;
+        this.nightmareMode$questStory = 0;
+        this.nightmareMode$questQuestion = -1;
+        this.nightmareMode$questWrongAnswers = 0;
+        this.nightmareMode$questLockoutUntil = 0L;
+        this.nightmareMode$questToken = "";
+        return true;
+    }
+
+    @Unique
     private void nightmareMode$say(EntityPlayer player, String message) {
-        player.sendChatToPlayer(ChatMessageComponent.createFromText(message));
+        String profession = switch (this.getProfession()) {
+            case 0 -> "Farmer";
+            case 1 -> "Librarian";
+            case 2 -> "Priest";
+            case 3 -> "Blacksmith";
+            case 4 -> "Butcher";
+            default -> "Villager";
+        };
+        player.sendChatToPlayer(ChatMessageComponent.createFromText("<" + profession + "> " + message));
     }
 }

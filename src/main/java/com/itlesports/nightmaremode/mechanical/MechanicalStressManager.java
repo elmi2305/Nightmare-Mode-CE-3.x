@@ -23,7 +23,7 @@ import java.util.*;
  */
 public final class MechanicalStressManager {
     public static final int WIND_MILL_CAPACITY = 128;
-    public static final int VERTICAL_WIND_MILL_CAPACITY = 192;
+    public static final int VERTICAL_WIND_MILL_CAPACITY = 256;
     public static final int WATER_WHEEL_CAPACITY = 256;
     public static final int GEARBOX_MAX_STRESS = 128;
     public static final int GEARBOX_SOURCE_SUPPORT_RANGE = 4;

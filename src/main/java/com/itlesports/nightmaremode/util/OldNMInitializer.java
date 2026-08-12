@@ -1271,13 +1271,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         // stone hoe
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeStone), new Object[]{"X#", "S#", " #", '#', Item.stick, 'X', BTWTags.looseRocks, 'S', BTWTags.strings});
 
-        // sail recipe
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodenMouldings});
-        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
-
-        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.woodenMouldings});
-        RecipeManager.addRecipe(new ItemStack(BTWItems.windMillBlade), new Object[]{"###", "XXX", Character.valueOf('#'), BTWItems.fabric, Character.valueOf('X'), BTWTags.planks});
-
 
         // change powder keg recipe for sealed nether
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt, 1), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse});

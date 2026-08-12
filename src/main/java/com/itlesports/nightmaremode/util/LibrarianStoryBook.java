@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.util;
 
+import btw.block.BTWBlocks;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
@@ -19,11 +20,28 @@ import java.util.List;
 
 public final class LibrarianStoryBook {
     private static final String SPECIAL_KEY_BASE64 = "G1YH6ohQqrksLwc/V0BatQ==";
-    public static final List<Question> QUESTIONS = Collections.emptyList();
+    private static final List<List<Question>> QUESTIONS = List.of(
+            Collections.emptyList(),
+            List.of(
+                    torches("How many torches did Steve carry after the supply was split at the start of the trip?", 20),
+                    looseCobblestone("How many cobblestone blocks did it take to build the emergency shelter beside the ravine?", 31),
+                    exact("How many arrows were in Steve's quiver when they left the house that morning?", Item.arrow, 42, "arrows")
+            ),
+            List.of(
+                    exact("How many diamonds did Alex mine from the vein in the crevice?", Item.diamond, 9, "diamonds"),
+                    exact("How many redstone dust did Steve get from the vein near the destroyed spawner using the Fortune II pickaxe?", Item.redstone, 34, "redstone dust"),
+                    torches("How many torches did Alex have left by the time he reached the fork near the second lava pool?", 11)
+            ),
+            List.of(
+                    looseCobblestone("How many blocks of cobblestone did it take to wall off the zombie pigmen on the bridge the first time?", 18),
+                    exact("How many ender pearls were in the fortress chest?", Item.enderPearl, 4, "ender pearls"),
+                    looseCobblestone("How many cobblestone blocks did Steve have left after bridging the collapsed walkway over the lava chasm?", 5)
+            )
+    );
 
     private LibrarianStoryBook() {}
 
-    public static ItemStack create(int story, String questToken) {
+    public static ItemStack create(int story, int question, String questToken) {
         String text;
         try {
             text = decryptResource("/story/story" + story + ".txt");
@@ -37,11 +55,23 @@ public final class LibrarianStoryBook {
         tag.setString("author", "Village Librarian");
         tag.setString("NMQuestToken", questToken);
         tag.setBoolean("NMLibrarianStory", true);
+        tag.setInteger("NMStory", story);
+        tag.setInteger("NMQuestion", question);
         NBTTagList pages = new NBTTagList();
         for (String page : paginate(text)) pages.appendTag(new NBTTagString("", page));
         tag.setTag("pages", pages);
         book.setTagCompound(tag);
         return book;
+    }
+
+    public static List<Question> questionsForStory(int story) {
+        if (story <= 0 || story >= QUESTIONS.size()) return Collections.emptyList();
+        return QUESTIONS.get(story);
+    }
+
+    public static Question getQuestion(int story, int question) {
+        List<Question> questions = questionsForStory(story);
+        return question >= 0 && question < questions.size() ? questions.get(question) : null;
     }
 
     public static String decryptResource(String path) throws Exception {
@@ -95,5 +125,42 @@ public final class LibrarianStoryBook {
         return pages;
     }
 
-    public record Question(String prompt, int answerItemId, int answerMetadata) {}
+    private static Question exact(String prompt, Item item, int amount, String answerName) {
+        return new Question(prompt, item.itemID, -1, amount, AnswerKind.EXACT_ITEM, answerName);
+    }
+
+    private static Question torches(String prompt, int amount) {
+        return new Question(prompt, -1, -1, amount, AnswerKind.TORCH, "torches");
+    }
+
+    private static Question looseCobblestone(String prompt, int amount) {
+        return new Question(prompt, BTWBlocks.looseCobblestone.blockID, -1, amount,
+                AnswerKind.LOOSE_COBBLESTONE, "loose cobblestone");
+    }
+
+    public enum AnswerKind {
+        EXACT_ITEM,
+        TORCH,
+        LOOSE_COBBLESTONE
+    }
+
+    public record Question(String prompt, int answerItemId, int answerMetadata, int answerAmount,
+                           AnswerKind answerKind, String answerName) {
+        public String requestText() {
+            return this.prompt + " Return your answer as exactly that many " + this.answerName + ".";
+        }
+
+        public boolean matches(ItemStack stack) {
+            if (stack == null || stack.stackSize != this.answerAmount) return false;
+            return switch (this.answerKind) {
+                case TORCH -> stack.itemID == BTWBlocks.finiteUnlitTorch.blockID
+                        || stack.itemID == BTWBlocks.finiteBurningTorch.blockID
+                        || stack.itemID == BTWBlocks.infiniteUnlitTorch.blockID
+                        || stack.itemID == BTWBlocks.infiniteBurningTorch.blockID;
+                case LOOSE_COBBLESTONE -> stack.itemID == BTWBlocks.looseCobblestone.blockID;
+                case EXACT_ITEM -> stack.itemID == this.answerItemId
+                        && (this.answerMetadata < 0 || stack.getItemDamage() == this.answerMetadata);
+            };
+        }
+    }
 }
