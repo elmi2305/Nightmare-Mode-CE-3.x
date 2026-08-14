@@ -26,6 +26,8 @@ public abstract class BlockMixin {
     @Shadow public static Block obsidian;
     @Shadow @Final public int blockID;
 
+    @Unique private Icon ifhyHardenedEndstoneIcon;
+
     @Shadow protected abstract void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack);
     @Shadow protected abstract boolean checkForFall(World world, int x, int y, int z);
 
@@ -77,6 +79,48 @@ public abstract class BlockMixin {
         }
 
         ci.cancel();
+    }
+
+    @Inject(method = "getPlayerRelativeBlockHardness", at = @At("HEAD"), cancellable = true)
+    private void gateHardenedEndstone(EntityPlayer player, World world, int x, int y, int z,
+                                      CallbackInfoReturnable<Float> cir) {
+        if (this.blockID == Block.whiteStone.blockID && world.getBlockMetadata(x, y, z) == 1) {
+            ItemStack held = player.getCurrentEquippedItem();
+            if (held == null || held.getItem() != NMItems.enderPickaxe) cir.setReturnValue(0.0F);
+        }
+    }
+
+    @Inject(method = "registerIcons", at = @At("TAIL"))
+    private void registerHardenedEndstoneTexture(IconRegister register, CallbackInfo ci) {
+        if (this.blockID == Block.whiteStone.blockID) {
+            this.ifhyHardenedEndstoneIcon = register.registerIcon("nightmare:ifhyHardenedEndstone");
+        }
+    }
+
+    @Inject(method = "getIcon", at = @At("HEAD"), cancellable = true)
+    private void useHardenedEndstoneTexture(int side, int metadata, CallbackInfoReturnable<Icon> cir) {
+        if (this.blockID == Block.whiteStone.blockID && metadata == 1 && this.ifhyHardenedEndstoneIcon != null) {
+            cir.setReturnValue(this.ifhyHardenedEndstoneIcon);
+        }
+    }
+
+    @Inject(method = "canConvertBlock", at = @At("HEAD"), cancellable = true)
+    private void allowEnderHoeTilling(ItemStack stack, World world, int x, int y, int z,
+                                      CallbackInfoReturnable<Boolean> cir) {
+        if (this.blockID == Block.whiteStone.blockID && stack != null && stack.getItem() == NMItems.enderHoe) {
+            cir.setReturnValue(world.isAirBlock(x, y + 1, z));
+        }
+    }
+
+    @Inject(method = "convertBlock", at = @At("HEAD"), cancellable = true)
+    private void tillEndstone(ItemStack stack, World world, int x, int y, int z, int side,
+                              CallbackInfoReturnable<Boolean> cir) {
+        if (this.blockID == Block.whiteStone.blockID && stack != null && stack.getItem() == NMItems.enderHoe
+                && world.isAirBlock(x, y + 1, z)) {
+            world.setBlockAndMetadataWithNotify(x, y, z, NMBlocks.endFarmland.blockID, 7);
+            if (!world.isRemote) world.playAuxSFX(2291, x, y, z, 0);
+            cir.setReturnValue(true);
+        }
     }
 
     @Unique

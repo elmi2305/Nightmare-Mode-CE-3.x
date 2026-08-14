@@ -13,6 +13,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
 import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,6 +46,14 @@ public class ItemInWorldManagerMixin {
 
     @Inject(method = "survivalTryHarvestBlock", at = @At("HEAD"), cancellable = true)
     private void minePersistentOreNode(int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
+        if (this.theWorld.getBlockId(x, y, z) == Block.whiteStone.blockID
+                && this.theWorld.getBlockMetadata(x, y, z) == 1) {
+            ItemStack tool = this.thisPlayerMP.getCurrentEquippedItem();
+            if (tool == null || tool.getItem() != NMItems.enderPickaxe) {
+                cir.setReturnValue(false);
+                return;
+            }
+        }
         Block block = Block.blocksList[this.theWorld.getBlockId(x, y, z)];
         if (!(block instanceof BlockOreNode oreNode)) {
             return;

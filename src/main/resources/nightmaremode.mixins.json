@@ -81,6 +81,7 @@
     "biomegen.BiomeGenBaseAccessor",
     "biomegen.ChunkProviderGenerateMixin",
     "biomegen.ChunkProviderHellMixin",
+    "biomegen.ChunkProviderEndMixin",
     "biomegen.MapGenNetherBridgeMixin",
     "biomegen.NoiseGeneratorOctavesMixin",
     "entity.EntityVillagerAccessor",

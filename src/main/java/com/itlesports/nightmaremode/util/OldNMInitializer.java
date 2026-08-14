@@ -378,7 +378,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         addPriestTrades();
         addLibrarianTrades();
         addBlacksmithTrades();
-        addNightmareVillagerTrades();
         finishRecipes("All Trades");
 
     }
@@ -899,9 +898,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmMerchant105").profession(5).level(3).buy().item(NMItems.darksunFragment.itemID).itemCount(16,16).addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmMerchant106").profession(5).level(4).buy().item(NMItems.starOfTheBloodGod.itemID).itemCount(1,1).addAsLevelUpTrade();
 
-
-        TradeProvider.getBuilder().name("nmMerchant107").profession(5).level(3).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(0.02f).addToTradeList();
-        TradeProvider.getBuilder().name("nmMerchant108").profession(5).level(4).sell().item(NMBlocks.bloodBones.blockID).buySellSingle().weight(1.2f).addToTradeList();
         finishRecipes("Nightmare Merchant Trades");
 
     }

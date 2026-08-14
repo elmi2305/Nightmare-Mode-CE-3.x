@@ -5,6 +5,7 @@ import btw.BTWMod;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
+import com.itlesports.nightmaremode.client.EnderArmorClient;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -56,6 +57,10 @@ public class MinecraftMixin {
 
     @Inject(method = "clickMouse", at = @At("HEAD"), cancellable = true)
     private void startOrBlockCarcassHarvest(int mouseButton, CallbackInfo ci) {
+        if (mouseButton == 1 && EnderArmorClient.consumeEmptyHandUse((Minecraft)(Object)this)) {
+            ci.cancel();
+            return;
+        }
         if (mouseButton == 1 && CarcassHarvestClient.consumeCarcassRightClick((Minecraft)(Object)this)) {
             ci.cancel();
         }

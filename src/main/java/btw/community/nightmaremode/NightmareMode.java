@@ -313,6 +313,9 @@ public class NightmareMode extends BTWAddon {
                 CarcassHarvestNet.handle(packet.data, playerMP);
             }
         });
+        AddonHandler.registerPacketHandler(EnderArmorNet.CHANNEL, (packet, player) -> {
+            if (player instanceof EntityPlayerMP playerMP) EnderArmorNet.handle(playerMP);
+        });
 
 
     }
@@ -325,6 +328,10 @@ public class NightmareMode extends BTWAddon {
         }
         if (CarcassHarvestNet.CHANNEL.equals(packet.channel) && handler != null && handler.playerEntity != null) {
             CarcassHarvestNet.handle(packet.data, handler.playerEntity);
+            return true;
+        }
+        if (EnderArmorNet.CHANNEL.equals(packet.channel) && handler != null && handler.playerEntity != null) {
+            EnderArmorNet.handle(handler.playerEntity);
             return true;
         }
         return super.serverCustomPacketReceived(handler, packet);

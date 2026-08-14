@@ -716,10 +716,10 @@ public final class NMSkillNodes {
             () -> NMSkillNodes.HARVEST_TALL_GRASS_1000);
 
     public static final SkillNode TAME_ANIMAL_8 = counter(
-            "nether_tamer",
+            "nether_tamer_8",
             "Dimensional Tamer",
             Item.leash,
-            3, 2,
+            5, 1,
             "Tame 8 animals.",
             (p, w) -> SkillHandler.getPlayerData(p).animalsTamed >= 8,
             "+1 Nether access progress.", SkillRewardActions.addNetherAccessProgress(),
@@ -2183,22 +2183,22 @@ public final class NMSkillNodes {
             "rope_8",
             "Heavy Cordage",
             BTWItems.rope,
-            -2, -2,
+            -2, 7,
             "Bring 8 rope.",
             BTWItems.rope.itemID, 0, false, 8,
             "Unlock rope block, name tag, and gearbox recipes.", none(),
-            KNOWLEDGE, false),
+            HUSBANDRY, false),
             () -> NMSkillNodes.BRING_HEMP_FIBER_32);
 
     public static final SkillNode BRING_FABRIC_16 = deferred(bring(
             "fabric_16",
             "Structural Fabric",
             BTWItems.fabric,
-            2, -2,
+            2, 7,
             "Bring 16 fabric.",
             BTWItems.fabric.itemID, 0, false, 16,
             "Unlock windmill blade, axle, and bed recipes.", none(),
-            KNOWLEDGE, false),
+            HUSBANDRY, false),
             () -> NMSkillNodes.BRING_HEMP_32);
 
     public static final SkillNode BRING_BELT_8 = deferred(bring(
@@ -2450,11 +2450,11 @@ public final class NMSkillNodes {
             KNOWLEDGE, false);
 
     public static final SkillNode CRAFT_UNIQUE_RECIPE_OUTPUT_256 = counter(
-            "unique_recipes_64",
+            "unique_recipes_256",
             "EMI Fixed Your Game",
             Block.workbench,
             4, 2,
-            "Craft 64 unique recipe outputs.",
+            "Craft 256 unique recipe outputs.",
             (p, w) -> SkillHandler.getPlayerData(p).getUniqueCraftedOutputCount() >= 256,
             "Unlock even more recipes.", none(),
             KNOWLEDGE, false);
@@ -3361,6 +3361,101 @@ public final class NMSkillNodes {
             "nether_trade_component_4", "Infernal Trade Components", NMItems.netherTradePlaceholder, 3, 12,
             "Bring 4 unfinished Nether trade components.", NMItems.netherTradePlaceholder.itemID, 0, false, 4,
             "Unlock late Nether trade-component recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_THREE_64);
+
+    // Post-dragon progression is grouped by activity instead of being treated as one
+    // oversized mining chain. Each branch gets a compact late-game cluster.
+    public static final SkillNode BRING_EYE_OF_ENDER_ECLIPSE = bring(
+            "eclipse_eye", "Beyond the Dragon", Item.eyeOfEnder, -4, 0,
+            "Bring 1 eye of ender.", Item.eyeOfEnder.itemID, 0, false, 1,
+            "Unlock post-dragon End crafting.", none(), RITUAL, false, BRING_END_ACCORD_FRAGMENT_4);
+
+    public static final SkillNode BRING_RAW_MERCURY_16 = bring(
+            "raw_mercury_16", "Mercury Survey", NMItems.rawMercuryCrystal, 2, 12,
+            "Bring 16 raw Mercury crystals.", NMItems.rawMercuryCrystal.itemID, 0, false, 16,
+            "Record Mercury extraction.", none(), MINING, false, BRING_EYE_OF_ENDER_ECLIPSE);
+
+    public static final SkillNode BRING_ENDER_CRYSTAL_16 = bring(
+            "ender_crystal_16", "Automated Endermen", NMItems.enderCrystal, 8, 6,
+            "Bring 16 Ender Crystals.", NMItems.enderCrystal.itemID, 0, false, 16,
+            "Record post-dragon Enderman farming.", none(), COMBAT, false, BRING_EYE_OF_ENDER_ECLIPSE);
+
+    public static final SkillNode BRING_ENDER_SHELL_16 = bring(
+            "ender_shell_16", "Nest Breaker", NMItems.enderShell, 9, 6,
+            "Bring 16 Ender Shells.", NMItems.enderShell.itemID, 0, false, 16,
+            "Record Ender Nest harvesting.", none(), COMBAT, false, BRING_EYE_OF_ENDER_ECLIPSE);
+
+    public static final SkillNode BRING_DARKSUN_FRAGMENT_16 = bring(
+            "darksun_fragment_16", "Eclipse Cull", NMItems.darksunFragment, 8, 7,
+            "Bring 16 Darksun Fragments.", NMItems.darksunFragment.itemID, 0, false, 16,
+            "Record sustained Eclipse combat.", none(), COMBAT, false, BRING_EYE_OF_ENDER_ECLIPSE);
+
+    public static final SkillNode BRING_PALE_ROOT_SEEDS_8 = bring(
+            "pale_root_seeds_8", "Endstone Cultivation", NMItems.paleRootSeeds, -1, 5,
+            "Bring 8 Pale Root Seeds.", NMItems.paleRootSeeds.itemID, 0, false, 8,
+            "Record a renewable Pale Root seed stock.", none(), HUSBANDRY, false, BRING_EYE_OF_ENDER_ECLIPSE);
+
+    public static final SkillNode BRING_PALE_ROOT_32 = bring(
+            "pale_root_32", "Deep-End Husbandry", NMItems.paleRoot, 0, 6,
+            "Bring 32 Pale Roots.", NMItems.paleRoot.itemID, 0, false, 32,
+            "Record Pale Root agriculture.", none(), HUSBANDRY, false, BRING_PALE_ROOT_SEEDS_8);
+
+    public static final SkillNode BRING_WASHED_MERCURY_8 = bring(
+            "washed_mercury_8", "Mercury Washing", NMItems.washedMercuryConcentrate, 2, 13,
+            "Bring 8 washed Mercury concentrate.", NMItems.washedMercuryConcentrate.itemID, 0, false, 8,
+            "Record cistern Mercury refinement.", none(), MINING, false, BRING_RAW_MERCURY_16);
+
+    public static final SkillNode BRING_ENDER_DUST_16 = bring(
+            "ender_dust_16", "Crystal Milling", NMItems.enderDust, 10, 4,
+            "Bring 16 Ender Dust.", NMItems.enderDust.itemID, 0, false, 16,
+            "Record Ender Crystal milling.", none(), KNOWLEDGE, false, BRING_ENDER_CRYSTAL_16);
+
+    public static final SkillNode BRING_ENDER_SHELL_POWDER_16 = bring(
+            "ender_shell_powder_16", "Shell Milling", NMItems.enderShellPowder, 10, 6,
+            "Bring 16 Ender Shell Powder.", NMItems.enderShellPowder.itemID, 0, false, 16,
+            "Record shell processing.", none(), KNOWLEDGE, false, BRING_ENDER_SHELL_16);
+
+    public static final SkillNode BRING_MERCURY_AMALGAM_8 = bring(
+            "mercury_amalgam_8", "Mercury Amalgamation", NMItems.mercuryAmalgam, 1, 13,
+            "Bring 8 Mercury Amalgam.", NMItems.mercuryAmalgam.itemID, 0, false, 8,
+            "Record acidic Mercury refinement.", none(), MINING, false, BRING_WASHED_MERCURY_8);
+
+    public static final SkillNode BRING_PALE_ROOT_PULP_16 = bring(
+            "pale_root_pulp_16", "Root Pulping", NMItems.paleRootPulp, 0, 7,
+            "Bring 16 Pale Root Pulp.", NMItems.paleRootPulp.itemID, 0, false, 16,
+            "Record mechanical Pale Root processing.", none(), HUSBANDRY, false, BRING_PALE_ROOT_32);
+
+    public static final SkillNode BRING_PALE_ROOT_RESIN_8 = bring(
+            "pale_root_resin_8", "Root Resin", NMItems.paleRootResin, 0, 8,
+            "Bring 8 Pale Root Resin.", NMItems.paleRootResin.itemID, 0, false, 8,
+            "Record brine resin processing.", none(), HUSBANDRY, false, BRING_PALE_ROOT_PULP_16);
+
+    public static final SkillNode BRING_FIRED_CRUCIBLE_LINER = bring(
+            "fired_crucible_liner", "Ender Ceramics", NMItems.firedCrucibleLiner, 11, 6,
+            "Bring 1 fired Crucible Liner.", NMItems.firedCrucibleLiner.itemID, 0, false, 1,
+            "Record turntable shaping and kiln firing.", none(), KNOWLEDGE, false, BRING_ENDER_SHELL_POWDER_16);
+
+    public static final SkillNode BRING_PHASE_STEEL_CHARGE_4 = bring(
+            "phase_steel_charge_4", "Ender Assembly", NMItems.phaseSteelCharge, 11, 5,
+            "Bring 4 Phase Steel Charges.", NMItems.phaseSteelCharge.itemID, 0, false, 4,
+            "Record powered Ender Assembler work.", none(), KNOWLEDGE, false,
+            BRING_MERCURY_AMALGAM_8, BRING_ENDER_DUST_16, BRING_PALE_ROOT_RESIN_8, BRING_FIRED_CRUCIBLE_LINER);
+
+    public static final SkillNode BRING_PHASE_STEEL_8 = bring(
+            "phase_steel_8", "Phase Steel", NMItems.phaseSteelIngot, 0, 13,
+            "Bring 8 Phase Steel ingots.", NMItems.phaseSteelIngot.itemID, 0, false, 8,
+            "Unlock the final End equipment recipes.", none(), MINING, false, BRING_PHASE_STEEL_CHARGE_4);
+
+    public static final SkillNode BRING_ENDER_MECHANISM_4 = bring(
+            "ender_mechanism_4", "Ender Mechanisms", NMItems.enderMechanism, 12, 5,
+            "Bring 4 Ender Mechanisms.", NMItems.enderMechanism.itemID, 0, false, 4,
+            "Complete the End industry cluster.", none(), KNOWLEDGE, false, BRING_PHASE_STEEL_8);
+
+    public static final SkillNode POSSESS_BLOOD_BONE_4 = counter(
+            "blood_bone_altar_4", "Bloodwither Altar", NMBlocks.bloodBones, -5, 0,
+            "Possess 4 Blood Bone Blocks.",
+            (player, world) -> SkillInventory.has(player, NMBlocks.bloodBones.blockID, 0, false, 4),
+            "Record the completed Bloodwither altar without consuming it.", none(),
+            RITUAL, false, BRING_ENDER_MECHANISM_4);
 
     private NMSkillNodes() {
     }

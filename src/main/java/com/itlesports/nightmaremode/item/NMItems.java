@@ -316,6 +316,34 @@ public class NMItems {
     public static Item blacksmithFavoritePickaxe;
     public static Item mechanicalWrench;
 
+    // Post-dragon End / Eclipse progression
+    public static Item rawMercuryCrystal;
+    public static Item mercuryPowder;
+    public static Item washedMercuryConcentrate;
+    public static Item mercuryAmalgam;
+    public static Item enderCrystal;
+    public static Item enderDust;
+    public static Item enderShell;
+    public static Item enderShellPowder;
+    public static Item paleRoot;
+    public static Item paleRootSeeds;
+    public static Item paleRootPulp;
+    public static Item paleRootResin;
+    public static Item firedCrucibleLiner;
+    public static Item phaseSteelCharge;
+    public static Item phaseSteelIngot;
+    public static Item phaseSteelPlate;
+    public static Item enderMechanism;
+    public static ItemEnderSword enderSword;
+    public static ItemEnderPickaxe enderPickaxe;
+    public static ItemEnderAxe enderAxe;
+    public static ItemEnderShovel enderShovel;
+    public static ItemEnderHoe enderHoe;
+    public static ItemEnderArmor enderHelmet;
+    public static ItemEnderArmor enderChestplate;
+    public static ItemEnderArmor enderLeggings;
+    public static ItemEnderArmor enderBoots;
+
 
     static {
         doNightmareModeItems();
@@ -625,10 +653,53 @@ public class NMItems {
         mechanicalWrench = new ItemMechanicalWrench(3230).setTextureName("nightmare:ifhyMechanicalWrench")
                 .setUnlocalizedName("ifhyMechanicalWrench").setCreativeTab(CreativeTabs.tabTools);
 
+        rawMercuryCrystal = material(3231, "ifhyRawMercuryCrystal");
+        mercuryPowder = material(3232, "ifhyMercuryPowder");
+        washedMercuryConcentrate = material(3233, "ifhyWashedMercuryConcentrate");
+        mercuryAmalgam = material(3234, "ifhyMercuryAmalgam");
+        enderCrystal = material(3235, "ifhyEnderCrystal");
+        enderDust = material(3236, "ifhyEnderDust");
+        enderShell = material(3237, "ifhyEnderShell");
+        enderShellPowder = material(3238, "ifhyEnderShellPowder");
+        paleRoot = material(3239, "ifhyPaleRoot");
+        paleRootSeeds = new api.item.items.SeedItem(3240, 2443)
+                .setTextureName("nightmare:ifhyPaleRootSeeds").setUnlocalizedName("ifhyPaleRootSeeds");
+        paleRootPulp = material(3241, "ifhyPaleRootPulp");
+        paleRootResin = material(3242, "ifhyPaleRootResin");
+        firedCrucibleLiner = material(3243, "ifhyFiredCrucibleLiner").setMaxStackSize(1);
+        phaseSteelCharge = material(3244, "ifhyPhaseSteelCharge");
+        phaseSteelIngot = material(3245, "ifhyPhaseSteelIngot");
+        phaseSteelPlate = material(3246, "ifhyPhaseSteelPlate");
+        enderMechanism = material(3247, "ifhyEnderMechanism");
+
+        enderSword = (ItemEnderSword)new ItemEnderSword(3248)
+                .setTextureName("nightmare:ifhyEnderSword").setUnlocalizedName("ifhyEnderSword");
+        enderPickaxe = (ItemEnderPickaxe)new ItemEnderPickaxe(3249)
+                .setTextureName("nightmare:ifhyEnderPickaxe").setUnlocalizedName("ifhyEnderPickaxe");
+        enderAxe = (ItemEnderAxe)new ItemEnderAxe(3250)
+                .setTextureName("nightmare:ifhyEnderAxe").setUnlocalizedName("ifhyEnderAxe");
+        enderShovel = (ItemEnderShovel)new ItemEnderShovel(3251)
+                .setTextureName("nightmare:ifhyEnderShovel").setUnlocalizedName("ifhyEnderShovel");
+        enderHoe = (ItemEnderHoe)new ItemEnderHoe(3252)
+                .setTextureName("nightmare:ifhyEnderHoe").setUnlocalizedName("ifhyEnderHoe");
+        enderHelmet = (ItemEnderArmor)new ItemEnderArmor(3253, 0, 2)
+                .setTextureName("nightmare:ifhyEnderHelmet").setUnlocalizedName("ifhyEnderHelmet");
+        enderChestplate = (ItemEnderArmor)new ItemEnderArmor(3254, 1, 4)
+                .setTextureName("nightmare:ifhyEnderChestplate").setUnlocalizedName("ifhyEnderChestplate");
+        enderLeggings = (ItemEnderArmor)new ItemEnderArmor(3255, 2, 3)
+                .setTextureName("nightmare:ifhyEnderLeggings").setUnlocalizedName("ifhyEnderLeggings");
+        enderBoots = (ItemEnderArmor)new ItemEnderArmor(3256, 3, 1)
+                .setTextureName("nightmare:ifhyEnderBoots").setUnlocalizedName("ifhyEnderBoots");
 
 
 
 
+
+    }
+
+    private static Item material(int id, String name) {
+        return new NMItem(id).setTextureName("nightmare:" + name)
+                .setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
     }
 
     private static FoodItem createRawFish(int id, String name) {

@@ -15,6 +15,13 @@ public abstract class BiomeEndDecoratorMixin extends BiomeDecorator{
         super(par1BiomeGenBase);
     }
 
+    @Inject(method = "decorate", at = @At("HEAD"), cancellable = true)
+    private void keepDragonSpikesOnTheMainIsland(CallbackInfo ci) {
+        long centerX = this.chunk_X + 8L;
+        long centerZ = this.chunk_Z + 8L;
+        if (centerX * centerX + centerZ * centerZ >= 500L * 500L) ci.cancel();
+    }
+
     @Inject(method="decorate", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z",
             shift = At.Shift.AFTER))

@@ -72,6 +72,13 @@ public class BlockMinerDrill extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
+        if (this.machineTier >= 4) {
+            this.frontIcon = register.registerIcon(this.drillTexture);
+            this.backIcon = this.frontIcon;
+            this.sideIcon = this.frontIcon;
+            this.blockIcon = this.frontIcon;
+            return;
+        }
         this.frontIcon = register.registerIcon(this.drillTexture + "Front");
         this.backIcon = register.registerIcon(this.drillTexture + "Back");
         this.sideIcon = register.registerIcon(this.drillTexture + "Side");
@@ -192,6 +199,7 @@ public class BlockMinerDrill extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player,
                                     int side, float hitX, float hitY, float hitZ) {
+        if (this.machineTier >= 4) return false;
         if (world.isRemote) return true;
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if (tile instanceof MinerDrillTileEntity drill) {
@@ -204,7 +212,7 @@ public class BlockMinerDrill extends BlockContainer {
     @Override
     public void breakBlock(World world, int x, int y, int z, int blockId, int metadata) {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        if (!world.isRemote && tile instanceof MinerDrillTileEntity drill) {
+        if (this.machineTier < 4 && !world.isRemote && tile instanceof MinerDrillTileEntity drill) {
             ItemStack fuel = drill.getStackInSlot(0);
             if (fuel != null) ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, fuel, 1);
         }

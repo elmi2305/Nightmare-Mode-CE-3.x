@@ -131,6 +131,15 @@ public abstract class EntityEndermanMixin extends EntityMob {
             }
         }
     }
+
+    /** Farm-compatible End resource: no player-kill or last-hit requirement. */
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void dropPostDragonEnderCrystal(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (!this.worldObj.isRemote && this.worldObj.provider.dimensionId == 1
+                && this.worldObj.getData(NightmareMode.DRAGON_DEFEATED)) {
+            this.dropItem(NMItems.enderCrystal.itemID, 1);
+        }
+    }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {

@@ -16,6 +16,8 @@ import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.EnderAssemblerRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
@@ -62,6 +64,8 @@ public abstract class NMInitializer implements AchievementExt {
         addCisternRecipes();
         addBrewingStandRecipes();
         addMillstoneRecipes();
+        addTurntableRecipes();
+        addEnderAssemblerRecipes();
         addOvenRecipes();
         addSoulforgeRecipes();
         addPistonPackingRecipes();
@@ -387,6 +391,58 @@ public abstract class NMInitializer implements AchievementExt {
 
 
     private static void addNightmareVillagerTrades(){
+        final int profession = 5;
+
+        // Rank one accepts both Overworld Eclipse drops and the first resources brought
+        // back from the outer End. No single farm can carry the whole reputation chain.
+        buy("nmEclipseMerchantDarksun", profession, 1, NMItems.darksunFragment.itemID, 0, 4, 8, 1.2F);
+        buy("nmEclipseMerchantEnderDust", profession, 1, NMItems.enderDust.itemID, 0, 8, 16, 1.1F);
+        buy("nmEclipseMerchantPaleRoot", profession, 1, NMItems.paleRoot.itemID, 0, 12, 24, 1.0F);
+        buy("nmEclipseMerchantMercury", profession, 1, NMItems.rawMercuryCrystal.itemID, 0, 12, 24, 1.0F);
+        buy("nmEclipseMerchantCharredFlesh", profession, 1, NMItems.charredFlesh.itemID, 0, 4, 8, 0.8F);
+        buy("nmEclipseMerchantSilver", profession, 1, NMItems.silverLump.itemID, 0, 4, 8, 0.8F);
+        sell("nmEclipseMerchantSoulFlux", profession, 1, BTWItems.soulFlux.itemID, 0, 2, 4, 0.7F, false, 8, 14);
+
+        buy("nmEclipseMerchantShell", profession, 2, NMItems.enderShell.itemID, 0, 6, 12, 1.2F);
+        buy("nmEclipseMerchantWashedMercury", profession, 2, NMItems.washedMercuryConcentrate.itemID, 0, 4, 8, 1.0F);
+        buy("nmEclipseMerchantRootResin", profession, 2, NMItems.paleRootResin.itemID, 0, 2, 5, 0.9F);
+        buy("nmEclipseMerchantVoidMembrane", profession, 2, NMItems.voidMembrane.itemID, 0, 1, 2, 0.7F);
+        buy("nmEclipseMerchantGhastTentacle", profession, 2, NMItems.ghastTentacle.itemID, 0, 1, 3, 0.7F);
+        sell("nmEclipseMerchantRails", profession, 2, Block.rail.blockID, 0, 16, 32, 0.8F, false, 5, 10);
+
+        buy("nmEclipseMerchantAmalgam", profession, 3, NMItems.mercuryAmalgam.itemID, 0, 2, 4, 1.2F);
+        buy("nmEclipseMerchantPhaseCharge", profession, 3, NMItems.phaseSteelCharge.itemID, 0, 1, 2, 0.9F);
+        buy("nmEclipseMerchantCreeperTear", profession, 3, NMItems.creeperTear.itemID, 0, 1, 2, 0.8F);
+        buy("nmEclipseMerchantElementalRod", profession, 3, NMItems.elementalRod.itemID, 0, 1, 2, 0.7F);
+        sell("nmEclipseMerchantNameTag", profession, 3, Item.nameTag.itemID, 0, 1, 2, 0.5F, false, 8, 16);
+
+        buy("nmEclipseMerchantPhaseSteel", profession, 4, NMItems.phaseSteelIngot.itemID, 0, 2, 4, 1.2F);
+        buy("nmEclipseMerchantMechanism", profession, 4, NMItems.enderMechanism.itemID, 0, 1, 1, 0.8F);
+        buy("nmEclipseMerchantWaterRod", profession, 4, NMItems.waterRod.itemID, 0, 1, 2, 0.7F);
+        buy("nmEclipseMerchantShadowRod", profession, 4, NMItems.shadowRod.itemID, 0, 1, 2, 0.7F);
+        buy("nmEclipseMerchantEnderMechanismFinal", profession, 5, NMItems.enderMechanism.itemID, 0, 1, 2, 1.1F);
+        buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 16, 32, 1.0F);
+        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone1").profession(profession).level(5)
+                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(24, 24).mandatory().addToTradeList();
+        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone2").profession(profession).level(5)
+                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(28, 28).mandatory().addToTradeList();
+        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone3").profession(profession).level(5)
+                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(32, 32).mandatory().addToTradeList();
+        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone4").profession(profession).level(5)
+                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(36, 36).mandatory().addToTradeList();
+
+        TradeProvider.getBuilder().name("nmEclipseMerchantRank2").profession(profession).level(1)
+                .buy().item(NMItems.enderCrystal.itemID).itemCount(16, 16).mandatory().addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmEclipseMerchantRank3").profession(profession).level(2)
+                .buy().item(NMItems.mercuryAmalgam.itemID).itemCount(8, 8).mandatory().addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmEclipseMerchantRank4").profession(profession).level(3)
+                .buy().item(NMItems.phaseSteelIngot.itemID).itemCount(8, 8).mandatory().addAsLevelUpTrade();
+        TradeProvider.getBuilder().name("nmEclipseMerchantRank5").profession(profession).level(4)
+                .buy().item(NMItems.enderMechanism.itemID).itemCount(4, 4).mandatory().addAsLevelUpTrade();
+
+        EntityVillager.defaultTradeByProfessionList.put(profession,
+                TradeProvider.getBuilder().name("nmEclipseMerchantDefault").profession(profession).level(1)
+                        .buy().item(NMItems.enderDust.itemID).itemCount(8, 16).build());
         finishRecipes("Nightmare Merchant Trades");
 
     }
@@ -583,6 +639,12 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(NMItems.ironStick)
         });
 
+        // The fired ceramic liner is a reusable crucible insert, not a consumable shortcut.
+        RecipeManager.addStokedCrucibleRecipe(
+                new ItemStack[]{new ItemStack(NMItems.phaseSteelIngot, 2), new ItemStack(NMItems.firedCrucibleLiner)},
+                new ItemStack[]{new ItemStack(NMItems.phaseSteelCharge), new ItemStack(NMItems.firedCrucibleLiner),
+                        new ItemStack(BTWItems.soulFlux, 2)});
+
 
         finishRecipes("Crucible Recipes");
 
@@ -721,6 +783,25 @@ public abstract class NMInitializer implements AchievementExt {
                 CisternTileEntity.FLUID_SLURRY, 2, 12, 720,
                 new ItemStack[]{new ItemStack(BTWItems.diamondIngot)})
                 .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.20F)
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.mercuryPowder, 4)},
+                CisternTileEntity.FLUID_WATER, 1, 6, 360,
+                new ItemStack[]{new ItemStack(NMItems.washedMercuryConcentrate, 2)})
+                .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.washedMercuryConcentrate, 2),
+                        new ItemStack(Item.goldNugget), new ItemStack(NMItems.nickelBinding)},
+                CisternTileEntity.FLUID_ACIDIC_WASH, 2, 8, 480,
+                new ItemStack[]{new ItemStack(NMItems.mercuryAmalgam)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.paleRootPulp, 2), new ItemStack(NMItems.enderDust)},
+                CisternTileEntity.FLUID_BRINE, 1, 4, 300,
+                new ItemStack[]{new ItemStack(NMItems.paleRootResin)})
                 .setConsumesFluid());
 
         // Failed batches remain expensive to reclaim.  These loops make refinement waste a
@@ -975,6 +1056,39 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWItems.plateBoots), new Object[]{"PNNP", "#LL#", "#CC#", Character.valueOf('#'), BTWItems.soulforgedSteelIngot, Character.valueOf('P'), BTWItems.steelArmorPlate, Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumHeatCompound, Character.valueOf('C'), NMItems.deadzoneShard});
         RecipeManager.addSoulforgeRecipe(new ItemStack(BTWBlocks.dormandSoulforge), new Object[]{"GNNG", "GDCG", "GPLG", "GGGG", Character.valueOf('G'), Item.ingotGold, Character.valueOf('N'), NMItems.nickelHeatComponent, Character.valueOf('D'), NMItems.refinedDiamondIngot, Character.valueOf('C'), NMItems.denseNetherrackCore, Character.valueOf('P'), NMItems.crystalPrecisionGear, Character.valueOf('L'), NMItems.lithiumHeatCompound});
 
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMBlocks.enderAssembler), new Object[]{
+                "PLLP", "NGGN", "GCCG", "PSSP",
+                Character.valueOf('P'), BTWItems.steelArmorPlate,
+                Character.valueOf('L'), NMItems.firedCrucibleLiner,
+                Character.valueOf('N'), NMItems.nickelMachinePart,
+                Character.valueOf('G'), new ItemStack(NMBlocks.netherProgressionGems, 1, NMBlocks.META_PURPLE_GEM),
+                Character.valueOf('C'), NMItems.crystalPrecisionGear,
+                Character.valueOf('S'), BTWItems.soulforgedSteelIngot});
+
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMBlocks.minerDrillTier4), new Object[]{
+                "BEPB", "GM3G", "RSAR", "DCDD",
+                Character.valueOf('B'), NMItems.bloodIngot,
+                Character.valueOf('E'), Item.eyeOfEnder,
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('G'), NMItems.crystalPrecisionGear,
+                Character.valueOf('M'), NMItems.enderMechanism,
+                Character.valueOf('3'), NMBlocks.minerDrillTier3,
+                Character.valueOf('R'), NMItems.refinedRedstone,
+                Character.valueOf('S'), BTWItems.soulforgedSteelIngot,
+                Character.valueOf('A'), NMItems.mercuryAmalgam,
+                Character.valueOf('D'), Item.diamond,
+                Character.valueOf('C'), new ItemStack(NMBlocks.netherProgressionGems, 1, NMBlocks.META_BLACK_GEM)});
+
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderSword), new Object[]{"  I ", " II ", " II ", " M  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderPickaxe), new Object[]{"IIII", " M I", "  H ", "  H ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderAxe), new Object[]{"III ", "IMI ", " H  ", " H  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderShovel), new Object[]{" PI ", " MI ", " H  ", " H  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHoe), new Object[]{"IIP ", " M  ", " H  ", " H  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHelmet), new Object[]{"PPPP", "I  I", "M  M", "    ", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderChestplate), new Object[]{"P  P", "IIII", "IMMI", "PPPP", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderLeggings), new Object[]{"PPPP", "IMMI", "I  I", "I  I", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderBoots), new Object[]{"    ", "I  I", "PMMP", "PPPP", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+
         int recipeIndex = soulforge.getRecipeList().size();
         RecipeManager.addShapelessSoulforgeRecipe(
                 new ItemStack(Item.eyeOfEnder),
@@ -1015,6 +1129,10 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
         millstone.removeRecipe(new ItemStack(BTWItems.hempFibers, 4), new ItemStack(BTWItems.hemp));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.crystalPowder, 2), new ItemStack(NMItems.crystalPolishedShard));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.mercuryPowder, 2), new ItemStack(NMItems.rawMercuryCrystal));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.enderDust, 2), new ItemStack(NMItems.enderCrystal));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.enderShellPowder, 2), new ItemStack(NMItems.enderShell));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.paleRootPulp, 2), new ItemStack(NMItems.paleRoot));
 
 
         finishRecipes("Millstone Recipes");
@@ -1513,6 +1631,13 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('L'), NMItems.crystalLens,
                         Character.valueOf('A'), Item.compass,
                         Character.valueOf('P'), NMItems.crystalPolishedShard});
+
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.enderCeramic, 1, 0), new Object[]{
+                "CEC", "MPM", "CEC",
+                Character.valueOf('C'), Item.clay,
+                Character.valueOf('E'), NMItems.enderShellPowder,
+                Character.valueOf('M'), NMItems.mercuryPowder,
+                Character.valueOf('P'), BTWItems.enderSlag});
 
         finishRecipes("Crafting Recipes");
 
@@ -2613,11 +2738,43 @@ public abstract class NMInitializer implements AchievementExt {
         // be attached to those managers. Their locking support is reserved for deliberate
         // world-reward nodes; no personal node is promoted to a world reward to fit it.
 
+        SkillRecipeGates.crafting(NMBlocks.enderCeramic.blockID, NMSkillNodes.BRING_EYE_OF_ENDER_ECLIPSE);
+        SkillRecipeGates.soulforge(NMBlocks.enderAssembler.blockID, NMSkillNodes.BRING_EYE_OF_ENDER_ECLIPSE);
+        SkillRecipeGates.soulforge(NMBlocks.minerDrillTier4.blockID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderSword.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderPickaxe.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderAxe.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderShovel.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderHoe.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderHelmet.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderChestplate.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderLeggings.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderBoots.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+
         finishRecipes("Skill Gates");
     }
 
     private static void addHammerRecipes(){
         HammerRecipeList.addRecipes();
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.phaseSteelPlate), new ItemStack(NMItems.phaseSteelIngot));
+    }
+
+    private static void addTurntableRecipes() {
+        RecipeManager.addTurntableRecipe(NMBlocks.enderCeramic, 1, NMBlocks.enderCeramic, 0, 8);
+        RecipeManager.addKilnRecipe(new ItemStack(NMItems.firedCrucibleLiner), NMBlocks.enderCeramic, 1, (byte)8);
+    }
+
+    private static void addEnderAssemblerRecipes() {
+        EnderAssemblerRecipeManager manager = EnderAssemblerRecipeManager.instance;
+        manager.addRecipe(new ItemStack(NMItems.phaseSteelCharge), 500,
+                new ItemStack(BTWItems.soulforgedSteelIngot, 2), new ItemStack(NMItems.mercuryAmalgam, 2),
+                new ItemStack(NMItems.enderDust, 4), new ItemStack(NMItems.enderShellPowder, 2),
+                new ItemStack(NMItems.paleRootResin, 2), new ItemStack(NMItems.darksunFragment, 2));
+        manager.addRecipe(new ItemStack(NMItems.enderMechanism), 700,
+                new ItemStack(NMItems.phaseSteelPlate, 2), new ItemStack(NMItems.crystalPrecisionGear),
+                new ItemStack(NMItems.enderCrystal, 2), new ItemStack(NMItems.nickelMachinePart, 2),
+                new ItemStack(NMBlocks.netherProgressionGems, 1, NMBlocks.META_PURPLE_GEM),
+                new ItemStack(NMItems.endAccordFragment));
     }
 
     private static void normalizeWoodSawOutputs() {

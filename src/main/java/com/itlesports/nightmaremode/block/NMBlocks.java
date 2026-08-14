@@ -153,6 +153,13 @@ public class NMBlocks {
     public static BlockStationRail stationRail;
     public static Block terrainExtractor;
     public static DualInputGearBoxBlock dualInputGearBox;
+    public static Block mercuryOre;
+    public static Block mercuryOreNode;
+    public static Block endFarmland;
+    public static Block paleRootCrop;
+    public static BlockMetaMultiTextured enderCeramic;
+    public static Block enderAssembler;
+    public static Block minerDrillTier4;
 
 
 
@@ -290,6 +297,29 @@ public class NMBlocks {
 
         dualInputGearBox = new DualInputGearBoxBlock(2439);
         Item.itemsList[dualInputGearBox.blockID] = new NMItemBlock(dualInputGearBox.blockID - 256);
+
+        mercuryOre = new ProcessingOreBlock(2440, NMItems.rawMercuryCrystal.itemID, 3)
+                .setHardness(8.0F).setResistance(30.0F).setStepSound(BTWBlocks.oreStepSound)
+                .setUnlocalizedName("ifhyMercuryOre").setTextureName("nightmare:ifhyMercuryOre");
+        Item.itemsList[mercuryOre.blockID] = new NMItemBlock(mercuryOre.blockID - 256);
+
+        mercuryOreNode = new BlockOreNode(2441, NMItems.rawMercuryCrystal.itemID, Block.whiteStone, 4,
+                "ifhyMercuryOreNode", "nightmare:ifhyMercuryOreNode");
+        Item.itemsList[mercuryOreNode.blockID] = new NMItemBlock(mercuryOreNode.blockID - 256);
+
+        endFarmland = new BlockEndFarmland(2442);
+        Item.itemsList[endFarmland.blockID] = new NMItemBlock(endFarmland.blockID - 256);
+
+        paleRootCrop = new BlockPaleRootCrop(2443);
+
+        enderCeramic = new BlockEnderCeramic(2444);
+        Item.itemsList[enderCeramic.blockID] = new NMItemBlockMeta(enderCeramic.blockID - 256, enderCeramic);
+
+        enderAssembler = new BlockEnderAssembler(2445);
+        Item.itemsList[enderAssembler.blockID] = new NMItemBlock(enderAssembler.blockID - 256);
+
+        minerDrillTier4 = new BlockMinerDrill(2446, 4, "ifhyMinerDrillTier4", "nightmare:ifhyMinerDrillTier4");
+        Item.itemsList[minerDrillTier4.blockID] = new NMItemBlock(minerDrillTier4.blockID - 256);
 
 
 

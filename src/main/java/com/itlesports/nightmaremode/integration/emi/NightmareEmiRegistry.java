@@ -4,10 +4,12 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.EnderAssemblerRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.EnderAssemblerRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.BrewingStandRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
@@ -35,6 +37,8 @@ public final class NightmareEmiRegistry {
             new ResourceLocation("nightmare", "hammering"), EmiStack.of(NMItems.ironHammer));
     public static final EmiRecipeCategory CISTERN = new EmiRecipeCategory(
             new ResourceLocation("nightmare", "cistern"), EmiStack.of(NMBlocks.cistern));
+    public static final EmiRecipeCategory ENDER_ASSEMBLER = new EmiRecipeCategory(
+            new ResourceLocation("nightmare", "ender_assembler"), EmiStack.of(NMBlocks.enderAssembler));
     public static final EmiRecipeCategory WASHING = new EmiRecipeCategory(
             new ResourceLocation("nightmare", "washing"), EmiStack.of(Item.bucketWater));
     public static final EmiRecipeCategory MISC = new EmiRecipeCategory(
@@ -49,6 +53,7 @@ public final class NightmareEmiRegistry {
 
         registry.addCategory(HAMMERING);
         registry.addCategory(CISTERN);
+        registry.addCategory(ENDER_ASSEMBLER);
         registry.addCategory(WASHING);
         registry.addCategory(MISC);
 
@@ -65,6 +70,7 @@ public final class NightmareEmiRegistry {
         registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.netherrackAnvil));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cistern));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternStirrer));
+        registry.addWorkstation(ENDER_ASSEMBLER, EmiStack.of(NMBlocks.enderAssembler));
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));
 
         registry.addDeferredRecipes(addRecipe -> {
@@ -76,6 +82,11 @@ public final class NightmareEmiRegistry {
             index = 0;
             for (CisternRecipe recipe : CisternRecipeManager.instance.getRecipes()) {
                 addRecipe.accept(new EmiCisternRecipe(recipe, index++));
+            }
+
+            index = 0;
+            for (EnderAssemblerRecipe recipe : EnderAssemblerRecipeManager.instance.getRecipes()) {
+                addRecipe.accept(new EmiEnderAssemblerRecipe(recipe, index++));
             }
 
             index = 0;

@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
 import api.item.util.ItemUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
@@ -51,14 +52,14 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         }
         this.blockedByMaterial = false;
 
-        if (this.fuelTicks <= 0 && !this.consumeCoal()) {
+        if (this.machineTier < 4 && this.fuelTicks <= 0 && !this.consumeCoal()) {
             this.processingTicks = 0;
             this.setActive(false);
             return;
         }
 
         this.setActive(true);
-        --this.fuelTicks;
+        if (this.machineTier < 4) --this.fuelTicks;
         if (++this.processingTicks < this.getProcessingTicksPerItem()) {
             return;
         }
@@ -66,6 +67,8 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         this.processingTicks = 0;
         ItemStack output = node.mineNodeByMachine(this.worldObj, target[0], target[1], target[2]);
         if (output != null) {
+            if (node == NMBlocks.mercuryOreNode) output.stackSize = 1;
+            else if (this.machineTier >= 4) output.stackSize *= 3;
             int facing = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) & 7;
             ItemUtils.ejectStackFromBlockTowardsFacing(this.worldObj, this.xCoord, this.yCoord, this.zCoord,
                     output, Block.getOppositeFacing(facing));
@@ -74,7 +77,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
     }
 
     protected int getBaseProcessingTicks() {
-        return 200;
+        return this.machineTier >= 4 ? 40 : 200;
     }
 
     protected int getBaseFuelTicksPerCoal() {
@@ -136,7 +139,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         tag.setInteger("FuelTicks", this.fuelTicks);
         tag.setInteger("ProcessingTicks", this.processingTicks);
         tag.setInteger("MachineTier", this.machineTier);
-        if (this.fuelStack != null) {
+        if (this.machineTier < 4 && this.fuelStack != null) {
             NBTTagCompound itemTag = new NBTTagCompound();
             this.fuelStack.writeToNBT(itemTag);
             tag.setCompoundTag("FuelStack", itemTag);
@@ -149,16 +152,20 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         this.fuelTicks = tag.getInteger("FuelTicks");
         this.processingTicks = tag.getInteger("ProcessingTicks");
         this.machineTier = tag.hasKey("MachineTier") ? Math.max(1, tag.getInteger("MachineTier")) : 1;
-        if (tag.hasKey("FuelStack")) {
+        if (this.machineTier < 4 && tag.hasKey("FuelStack")) {
             this.fuelStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("FuelStack"));
+        } else if (this.machineTier >= 4) {
+            this.fuelStack = null;
+            this.fuelTicks = 0;
         }
     }
 
-    @Override public int getSizeInventory() { return 1; }
-    @Override public ItemStack getStackInSlot(int slot) { return this.fuelStack; }
+    @Override public int getSizeInventory() { return this.machineTier >= 4 ? 0 : 1; }
+    @Override public ItemStack getStackInSlot(int slot) { return this.machineTier >= 4 ? null : this.fuelStack; }
 
     @Override
     public ItemStack decrStackSize(int slot, int count) {
+        if (this.machineTier >= 4) return null;
         if (this.fuelStack == null) return null;
         if (this.fuelStack.stackSize <= count) {
             ItemStack result = this.fuelStack;
@@ -172,6 +179,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
 
     @Override
     public ItemStack getStackInSlotOnClosing(int slot) {
+        if (this.machineTier >= 4) return null;
         ItemStack result = this.fuelStack;
         this.fuelStack = null;
         return result;
@@ -179,6 +187,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
+        if (this.machineTier >= 4) return;
         this.fuelStack = stack;
         if (stack != null && stack.stackSize > this.getInventoryStackLimit()) stack.stackSize = this.getInventoryStackLimit();
         this.onInventoryChanged();
@@ -193,5 +202,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
     }
     @Override public void openChest() {}
     @Override public void closeChest() {}
-    @Override public boolean isItemValidForSlot(int slot, ItemStack stack) { return stack != null && stack.itemID == Item.coal.itemID; }
+    @Override public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return this.machineTier < 4 && slot == 0 && stack != null && stack.itemID == Item.coal.itemID;
+    }
 }

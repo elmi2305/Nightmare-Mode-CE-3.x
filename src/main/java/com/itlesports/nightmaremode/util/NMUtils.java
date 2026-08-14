@@ -605,4 +605,5 @@ public class NMUtils {
             return blockMeta & ~(FACING_MASK << FACING_SHIFT);
         }
     }
+
 }
