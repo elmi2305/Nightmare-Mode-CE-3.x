@@ -22,6 +22,10 @@ public class GuiSkillTree extends GuiScreen {
     private static final int PANE_HEIGHT = 220;
     private static final int VIEW_WIDTH = 292;
     private static final int VIEW_HEIGHT = 176;
+    private static final int NODE_UNLOCKED_COLOR = 0xFF5AB96F;
+    private static final int NODE_READY_COLOR = 0xFFE1C16E;
+    private static final int NODE_AVAILABLE_COLOR = 0xFF6F91AC;
+    private static final int NODE_PARENT_LOCKED_COLOR = 0xFF292929;
     private static final ResourceLocation BORDER_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/border.png");
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/background.png");
     private static final ResourceLocation TAB_OUTLINE_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/tab_outline.png");
@@ -122,7 +126,9 @@ public class GuiSkillTree extends GuiScreen {
                     int y1 = top + node.displayRow * GRID - windowY + 11;
                     int x2 = left + parent.displayColumn * GRID - windowX + 11;
                     int y2 = top + parent.displayRow * GRID - windowY + 11;
-                    int color = SkillHandler.isUnlocked(this.mc.thePlayer, node) ? 0xFF70C174 : 0xFF3A3A3A;
+                    boolean unlocked = SkillHandler.isUnlocked(this.mc.thePlayer, node);
+                    boolean parentLocked = !unlocked && !SkillHandler.hasUnlockedAllParents(this.mc.thePlayer, node);
+                    int color = unlocked ? 0xFF70C174 : parentLocked ? 0xFF242424 : 0xFF4A6478;
                     drawRect(Math.min(x1, x2), y1, Math.max(x1, x2) + 1, y1 + 1, color);
                     drawRect(x2, Math.min(y1, y2), x2 + 1, Math.max(y1, y2) + 1, color);
                 }
@@ -154,14 +160,22 @@ public class GuiSkillTree extends GuiScreen {
             if (x < left - 24 || y < top - 24 || x > left + VIEW_WIDTH || y > top + VIEW_HEIGHT) {
                 continue;
             }
-            boolean unlocked = SkillHandler.isUnlocked(this.mc.thePlayer, node);
-            boolean eligible = SkillHandler.isEligible(this.mc.thePlayer, node);
-            int color = unlocked ? 0xFF5AB96F : eligible ? 0xFFE1C16E : 0xFF555555;
+            NodeVisualState state = this.getNodeVisualState(node);
+            int color = switch (state) {
+                case UNLOCKED -> NODE_UNLOCKED_COLOR;
+                case READY -> NODE_READY_COLOR;
+                case AVAILABLE -> NODE_AVAILABLE_COLOR;
+                case PARENT_LOCKED -> NODE_PARENT_LOCKED_COLOR;
+            };
             drawRect(x - 2, y - 2, x + 24, y + 24, color);
-            drawRect(x, y, x + 22, y + 22, 0xFF111111);
+            drawRect(x, y, x + 22, y + 22, state == NodeVisualState.PARENT_LOCKED ? 0xFF080808 : 0xFF111111);
             RenderHelper.enableGUIStandardItemLighting();
             renderItem.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine, node.icon, x + 3, y + 3);
             RenderHelper.disableStandardItemLighting();
+            if (state == NodeVisualState.PARENT_LOCKED) {
+                drawRect(x, y, x + 22, y + 22, 0xA8000000);
+                this.drawParentLockBadge(x, y);
+            }
             if (mouseX >= x && mouseX <= x + 22 && mouseY >= y && mouseY <= y + 22
                     && mouseX >= left && mouseX <= left + VIEW_WIDTH && mouseY >= top && mouseY <= top + VIEW_HEIGHT) {
                 hovered = node;
@@ -171,16 +185,61 @@ public class GuiSkillTree extends GuiScreen {
     }
 
     private void drawNodeTooltip(SkillNode node, int mouseX, int mouseY) {
-        boolean unlocked = SkillHandler.isUnlocked(this.mc.thePlayer, node);
-        String reward = unlocked ? node.reward.getText() : "?";
-        String body = node.requirementText + "\nReward: " + reward;
+        NodeVisualState state = this.getNodeVisualState(node);
+        String status = switch (state) {
+            case UNLOCKED -> "Unlocked";
+            case READY -> "Click to unlock";
+            case AVAILABLE -> "Complete the requirement";
+            case PARENT_LOCKED -> "Requires [" + this.getMissingParentNames(node) + "]";
+        };
+        String reward = state == NodeVisualState.UNLOCKED ? node.reward.getText() : "?";
+        String body = status + "\n" + node.requirementText + "\nReward: " + reward;
         int width = Math.max(140, Math.max(this.fontRenderer.getStringWidth(node.name), this.fontRenderer.splitStringWidth(body, 180)));
         int height = 24 + this.fontRenderer.splitStringWidth(body, width);
         int x = mouseX + 12;
         int y = mouseY - 4;
         this.drawGradientRect(x - 3, y - 3, x + width + 3, y + height + 3, 0xE0000000, 0xE0000000);
-        this.fontRenderer.drawStringWithShadow(node.name, x, y, unlocked ? 0x70FF83 : 0xFFFFFF);
+        int titleColor = switch (state) {
+            case UNLOCKED -> 0x70FF83;
+            case READY -> 0xFFE07A;
+            case AVAILABLE -> 0x9FC5E8;
+            case PARENT_LOCKED -> 0x777777;
+        };
+        this.fontRenderer.drawStringWithShadow(node.name, x, y, titleColor);
         this.fontRenderer.drawSplitString(body, x, y + 14, width, 0xD0D0D0);
+    }
+
+    private NodeVisualState getNodeVisualState(SkillNode node) {
+        if (SkillHandler.isUnlocked(this.mc.thePlayer, node)) {
+            return NodeVisualState.UNLOCKED;
+        }
+        if (!SkillHandler.hasUnlockedAllParents(this.mc.thePlayer, node)) {
+            return NodeVisualState.PARENT_LOCKED;
+        }
+        return SkillHandler.isEligible(this.mc.thePlayer, node) ? NodeVisualState.READY : NodeVisualState.AVAILABLE;
+    }
+
+    private String getMissingParentNames(SkillNode node) {
+        StringBuilder missing = new StringBuilder();
+        for (SkillNode parent : node.parents) {
+            if (parent == null || SkillHandler.isUnlocked(this.mc.thePlayer, parent)) {
+                continue;
+            }
+            if (missing.length() > 0) {
+                missing.append(", ");
+            }
+            missing.append(parent.name);
+        }
+        return missing.length() == 0 ? "another skill" : missing.toString();
+    }
+
+    private void drawParentLockBadge(int x, int y) {
+        int color = 0xFF777777;
+        drawRect(x + 16, y + 7, x + 20, y + 8, color);
+        drawRect(x + 15, y + 8, x + 16, y + 11, color);
+        drawRect(x + 20, y + 8, x + 21, y + 11, color);
+        drawRect(x + 15, y + 10, x + 21, y + 16, color);
+        drawRect(x + 17, y + 12, x + 19, y + 15, 0xFF202020);
     }
 
     private void drawTooltip(String text, int mouseX, int mouseY) {
@@ -256,6 +315,13 @@ public class GuiSkillTree extends GuiScreen {
         tessellator.addVertexWithUV(x + width, y, this.zLevel, 1.0D, 0.0D);
         tessellator.addVertexWithUV(x, y, this.zLevel, 0.0D, 0.0D);
         tessellator.draw();
+    }
+
+    private enum NodeVisualState {
+        UNLOCKED,
+        READY,
+        AVAILABLE,
+        PARENT_LOCKED
     }
 
     @Override
