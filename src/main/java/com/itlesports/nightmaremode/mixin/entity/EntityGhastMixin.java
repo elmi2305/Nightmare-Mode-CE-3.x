@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -287,6 +288,11 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
         if(this.dimension == 0){
+            if (OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.DEADZONE) {
+                cir.setReturnValue(this.getCanSpawnHereNoPlayerDistanceRestrictions()
+                        && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 24.0D) == null);
+                return;
+            }
             if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) || NMEvents.SimpleEvent.HELL.isActive()) {
                 if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63 && this.rand.nextInt(8) == 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")) {
                     cir.setReturnValue(true);

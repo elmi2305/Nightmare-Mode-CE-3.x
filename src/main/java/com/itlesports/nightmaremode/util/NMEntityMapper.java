@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.entity.variants.*;
+import com.itlesports.nightmaremode.entity.outer.*;
 import net.minecraft.src.EntityList;
 import net.minecraft.src.EntitySpider;
 import net.minecraft.src.TileEntity;
@@ -66,6 +67,19 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityAshGhast.class, "NmAshGhast", 2351, 0x77706C, 0x322B29);
         EntityList.addMapping(EntitySiegeGhast.class, "NmSiegeGhast", 2352, 0x3A2623, 0x9C271B);
         EntityList.addMapping(EntityEnderSilverfish.class, "NmEnderSilverfish", 2353, 0x17131F, 0x7846A8);
+        EntityList.addMapping(EntityEnderSkeleton.class, "NmOuterEnderSkeleton", 2354, 0x17131F, 0x7846A8);
+        EntityList.addMapping(EntityWitherSkeletonOuter.class, "NmOuterWitherSkeleton", 2355, 0x202020, 0x555555);
+        EntityList.addMapping(EntityFireSkeletonOuter.class, "NmOuterFireSkeleton", 2356, 0xA42C13, 0xFFB52E);
+        EntityList.addMapping(EntityInfernoSkeleton.class, "NmInfernoSkeleton", 2357, 0x5B1008, 0xFF5A00);
+        EntityList.addMapping(EntityIceSkeletonOuter.class, "NmOuterIceSkeleton", 2358, 0xD7F7FF, 0x69B9E8);
+        EntityList.addMapping(EntityMummyZombie.class, "NmMummyZombie", 2359, 0xCDBB82, 0x6D5535);
+        EntityList.addMapping(EntityIceZombie.class, "NmIceZombie", 2360, 0xBCEBFF, 0x4E86A8);
+        EntityList.addMapping(EntityIceGolem.class, "NmIceGolem", 2361, 0xD8F7FF, 0x6BAAC8);
+        EntityList.addMapping(EntityAngelSquid.class, "NmAngelSquid", 2362, 0xF5F5F5, 0xD9C8FF);
+        EntityList.addMapping(EntityAcidSquid.class, "NmAcidSquid", 2363, 0x5FFF36, 0x164C10);
+        EntityList.addMapping(EntityAngelGhast.class, "NmAngelGhast", 2364, 0xF4F4FF, 0xD4B9FF);
+        EntityList.addMapping(EntityAcidGhast.class, "NmAcidGhast", 2365, 0x7AFF38, 0x213C13);
+        EntityList.addMapping(EntityAngelDragon.class, "NmAngelDragon", 2366, 0xF4F4FF, 0xB5A7E8);
 
     }
 

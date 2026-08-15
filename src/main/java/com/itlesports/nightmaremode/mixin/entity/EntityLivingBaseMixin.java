@@ -20,9 +20,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
+import java.util.UUID;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements CarcassAnimal {
+    @Unique private static final UUID OUTER_HEALTH = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f101");
+    @Unique private static final UUID OUTER_SPEED = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f102");
+    @Unique private static final UUID OUTER_DAMAGE = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f103");
+    @Unique private static final UUID OUTER_FOLLOW = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f104");
+    @Unique private static final UUID OUTER_KNOCKBACK = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f105");
     @Unique private static final int CARCASS_WATCHER_ID = 27;
     @Unique private static final int HARVESTER_WATCHER_ID = 28;
     @Unique private static final int HARVEST_PROGRESS_WATCHER_ID = 29;
@@ -46,6 +53,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     @Unique private DamageSource carcassDamageSource;
 
     @Shadow public abstract boolean isEntityAlive();
+    @Shadow public abstract AttributeInstance getEntityAttribute(Attribute attribute);
+    @Shadow public abstract float getHealth();
+    @Shadow public abstract float getMaxHealth();
+    @Shadow public abstract void setHealth(float health);
 
     @Shadow public abstract void addPotionEffect(PotionEffect par1PotionEffect);
     @Shadow protected EntityPlayer attackingPlayer;
@@ -159,6 +170,64 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void tickAnimalCarcass(CallbackInfo ci) {
         this.nm$tickCarcass();
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void applyOuterDistanceScaling(CallbackInfo ci) {
+        if ((Object)this instanceof EntityPlayer || this.worldObj == null || this.worldObj.isRemote
+                || this.worldObj.provider.dimensionId != 0 || !this.isEntityAlive()
+                || (this.ticksExisted + this.entityId) % 100 != 0) return;
+
+        double progress = OverworldTierHelper.getMobScalingProgress(this.worldObj, this.posX, this.posZ);
+        float oldMax = this.getMaxHealth();
+        float healthRatio = oldMax <= 0.0F ? 1.0F : this.getHealth() / oldMax;
+
+        applyMultiplicativeModifier(SharedMonsterAttributes.maxHealth, OUTER_HEALTH,
+                1.0D + progress * 2.5D, Double.MAX_VALUE);
+        applyMultiplicativeModifier(SharedMonsterAttributes.movementSpeed, OUTER_SPEED,
+                1.0D + 0.75D * (1.0D - Math.exp(-3.0D * progress)), 0.6D);
+        applyMultiplicativeModifier(SharedMonsterAttributes.attackDamage, OUTER_DAMAGE,
+                1.0D + 0.75D * (1.0D - Math.exp(-4.0D * progress)), Double.MAX_VALUE);
+        applyMultiplicativeModifier(SharedMonsterAttributes.followRange, OUTER_FOLLOW,
+                1.0D + progress * 1.5D, 48.0D);
+        applyAdditiveModifier(SharedMonsterAttributes.knockbackResistance, OUTER_KNOCKBACK,
+                Math.min(0.45D, progress * 0.45D));
+
+        if (Math.abs(this.getMaxHealth() - oldMax) > 0.01F) {
+            this.setHealth(Math.min(this.getMaxHealth(), Math.max(1.0F, this.getMaxHealth() * healthRatio)));
+        }
+    }
+
+    @Inject(method = "getTotalArmorValue", at = @At("RETURN"), cancellable = true)
+    private void addOuterDistanceArmor(CallbackInfoReturnable<Integer> cir) {
+        if ((Object)this instanceof EntityPlayer || this.worldObj == null || this.worldObj.provider.dimensionId != 0) return;
+        int bonus = (int)Math.floor(OverworldTierHelper.getMobScalingProgress(this.worldObj, this.posX, this.posZ) * 10.0D);
+        if (bonus > 0) cir.setReturnValue(Math.min(20, cir.getReturnValue() + bonus));
+    }
+
+    @Unique
+    private void applyMultiplicativeModifier(Attribute attribute, UUID id, double multiplier, double hardCap) {
+        AttributeInstance instance = this.getEntityAttribute(attribute);
+        if (instance == null) return;
+        AttributeModifier existing = instance.getModifier(id);
+        if (existing != null) instance.removeModifier(existing);
+        if (multiplier <= 1.0D) return;
+        double current = instance.getAttributeValue();
+        if (current <= 0.0D) return;
+        double desired = Math.min(hardCap, current * multiplier);
+        double amount = desired / current - 1.0D;
+        if (Math.abs(amount) > 0.000001D) {
+            instance.applyModifier(new AttributeModifier(id, "outer distance scaling", amount, 2).setSaved(false));
+        }
+    }
+
+    @Unique
+    private void applyAdditiveModifier(Attribute attribute, UUID id, double amount) {
+        AttributeInstance instance = this.getEntityAttribute(attribute);
+        if (instance == null) return;
+        AttributeModifier existing = instance.getModifier(id);
+        if (existing != null) instance.removeModifier(existing);
+        if (amount > 0.0D) instance.applyModifier(new AttributeModifier(id, "outer distance scaling", amount, 0).setSaved(false));
     }
 
     @Inject(method = "moveEntityWithHeading", at = @At("HEAD"), cancellable = true)

@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.entity.*;
 import com.itlesports.nightmaremode.entity.creepers.*;
 import com.itlesports.nightmaremode.entity.underworld.*;
 import com.itlesports.nightmaremode.entity.variants.*;
+import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
 import net.minecraft.src.*;
@@ -55,6 +56,20 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityAwakenedWither.class, new RenderWither());
         RenderManager.addEntityRenderer(EntityWalker.class, new RenderWalker());
         RenderManager.addEntityRenderer(EntityNetherFish.class, new RenderSilverfish());
+        RenderManager.addEntityRenderer(EntityEnderSkeleton.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityWitherSkeletonOuter.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityFireSkeletonOuter.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityInfernoSkeleton.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityIceSkeletonOuter.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityMummyZombie.class, new RenderOuterZombie());
+        RenderManager.addEntityRenderer(EntityIceZombie.class, new RenderOuterZombie());
+        RenderManager.addEntityRenderer(EntityIceGolem.class, new RenderIceGolem());
+        RenderManager.addEntityRenderer(EntityAngelSquid.class, new RenderOuterSquid());
+        RenderManager.addEntityRenderer(EntityAcidSquid.class, new RenderOuterSquid());
+        RenderManager.addEntityRenderer(EntityAngelGhast.class, new RenderOuterGhast());
+        RenderManager.addEntityRenderer(EntityAcidGhast.class, new RenderOuterGhast());
+        RenderManager.addEntityRenderer(EntityAngelDragon.class, new RenderAngelDragon());
+        RenderManager.addEntityRenderer(EntityAcidProjectile.class, new RenderSnowball(Item.snowball));
 
 
 

@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.underworld.EntityBlackHole;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.World;
 
 public class EntityVoidCreeper extends EntityCreeperVariant{
@@ -24,6 +25,7 @@ public class EntityVoidCreeper extends EntityCreeperVariant{
     }
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        boolean deadzone = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.DEADZONE;
+        return (deadzone || NightmareMode.moreVariants) && super.getCanSpawnHere();
     }
 }

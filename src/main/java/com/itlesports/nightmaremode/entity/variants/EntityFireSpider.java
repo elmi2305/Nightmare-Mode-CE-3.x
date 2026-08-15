@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 
 public class EntityFireSpider extends EntitySpider {
@@ -38,6 +39,7 @@ public class EntityFireSpider extends EntitySpider {
 
     @Override
     public boolean getCanSpawnHere() {
-        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
+        boolean cruelDesert = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.CRUEL_DESERT;
+        return (cruelDesert || NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 }

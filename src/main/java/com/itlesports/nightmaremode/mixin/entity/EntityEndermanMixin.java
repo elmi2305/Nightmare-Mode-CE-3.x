@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -272,6 +273,16 @@ public abstract class EntityEndermanMixin extends EntityMob {
                     cir.setReturnValue(target);
                 }
             }
+        }
+    }
+
+    @Inject(method = "findPlayerToAttack", at = @At("HEAD"), cancellable = true)
+    private void remainHostileInDeadzone(CallbackInfoReturnable<Entity> cir) {
+        if (OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) != OverworldTierHelper.Region.DEADZONE) return;
+        EntityPlayer target = this.worldObj.getClosestVulnerablePlayerToEntity(this, 48.0D);
+        if (target != null) {
+            this.angerNearbyEndermen(target);
+            cir.setReturnValue(target);
         }
     }
 

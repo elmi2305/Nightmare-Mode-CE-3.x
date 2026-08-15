@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.entity.variants;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
@@ -58,6 +59,7 @@ public class EntityBlackWidowSpider extends EntitySpider {
 
     @Override
     public boolean getCanSpawnHere() {
-        return (NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
+        boolean deadzone = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.DEADZONE;
+        return (deadzone || NightmareMode.moreVariants || NightmareMode.isAprilFools) && super.getCanSpawnHere();
     }
 }

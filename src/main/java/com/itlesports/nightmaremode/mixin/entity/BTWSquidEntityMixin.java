@@ -5,9 +5,12 @@ import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
+import com.itlesports.nightmaremode.entity.outer.EntityAcidSquid;
+import com.itlesports.nightmaremode.entity.outer.EntityAngelSquid;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,10 +19,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Iterator;
-import java.util.List;
 
 import static com.itlesports.nightmaremode.util.NMFields.*;
 
@@ -28,6 +27,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // shadowed fields
     @Shadow(remap = false) private int tentacleAttackCooldownTimer;
     @Shadow(remap = false) protected abstract void retractTentacleAttackOnCollision();
+    @Shadow(remap = false) protected abstract void tentacleAttackFlingTarget(Entity targetEntity, boolean primary);
 
 
     @Shadow(remap = false)
@@ -65,43 +65,6 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private void stopHeadCrabUpdateAfterHostDismount(CallbackInfo ci) {
         if (this.ridingEntity == null) {
             ci.cancel();
-        }
-    }
-
-    @Inject(method = "updateTentacleAttack",
-            at = @At(value = "INVOKE",
-                    target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V",
-                    shift = At.Shift.AFTER),
-            locals = LocalCapture.CAPTURE_FAILHARD)
-
-    private void teleportPlayer(CallbackInfo ci, Vec3 tentacleTip, AxisAlignedBB tipBox, List potentialCollisionList, Iterator collisionIterator, EntityLivingBase tempEntity){
-        if (tempEntity instanceof EntityPlayer && ((EntityPlayer) tempEntity).isBlocking()) {
-            Vec3 lookVec = tempEntity.getLookVec();
-            Vec3 directionToSquid = Vec3.createVectorHelper(
-                    this.posX - tempEntity.posX,
-                    this.posY - (tempEntity.posY + tempEntity.getEyeHeight()),
-                    this.posZ - tempEntity.posZ
-            ).normalize();
-
-            double dotProduct = lookVec.dotProduct(directionToSquid);
-
-            if (dotProduct > 0.7) {
-                ((EntityPlayer) tempEntity).setItemInUse(null, 0);
-                tempEntity.getHeldItem().attemptDamageItem(this.rand.nextInt(6) + 2 + 2 * this.recentParryCount, this.rand);
-                this.retractTentacleAttackOnCollision();
-                this.recentParryCount += 1;
-                return;
-            }
-        }
-        if(tempEntity.isRiding()){
-            tempEntity.dismountEntity(tempEntity.ridingEntity);
-            tempEntity.mountEntity(null);
-        }
-        tempEntity.setPositionAndUpdate(this.posX,this.posY,this.posZ);
-        if (tempEntity instanceof EntityPlayer) {
-            this.playSound("mob.endermen.portal",2.0F,1.0F);
-        } else{
-            this.worldObj.playSoundAtEntity(this,"mob.endermen.portal",1.0F,this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
     }
 
@@ -171,7 +134,19 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Redirect(method = "updateTentacleAttack",
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
-    private void doNothing(BTWSquidEntity instance, Entity targetEntity, boolean bPrimary){}
+    private void manageOuterSquidFling(BTWSquidEntity instance, Entity targetEntity, boolean bPrimary){
+        if (instance instanceof EntityAngelSquid) {
+            double motionX = targetEntity.motionX;
+            double motionY = targetEntity.motionY;
+            double motionZ = targetEntity.motionZ;
+            targetEntity.attackEntityFrom(DamageSource.causeMobDamage(instance), 6.0F);
+            targetEntity.motionX = motionX;
+            targetEntity.motionY = motionY;
+            targetEntity.motionZ = motionZ;
+            return;
+        }
+        this.tentacleAttackFlingTarget(targetEntity, bPrimary);
+    }
 
     @ModifyConstant(method = "updateHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceSquidDamageInterval(int constant){
@@ -188,6 +163,9 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
     private double increaseSquidRange(double dRange){
+        if ((Object)this instanceof EntityAngelSquid) {
+            return 8.0D;
+        }
         if(NMUtils.getIsEclipse()){
             return 16;
         }
@@ -281,6 +259,13 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             this.motionY = 0.2f;
         }
     }
+
+    @Inject(method = "checkForHeadCrab", at = @At("HEAD"), cancellable = true, remap = false)
+    private void stopAngelSquidHeadCrab(CallbackInfo ci) {
+        if ((Object)this instanceof EntityAngelSquid) {
+            ci.cancel();
+        }
+    }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void manageSquidsOnBossFight(CallbackInfo ci){
         if(this.posY <= 200 && EntityBloodWither.isBossActive()){
@@ -290,12 +275,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.02,ordinal = 0))
     private double noGravityOnEclipse(double constant){
-        return NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 ? 0d : constant;
+        return NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid ? 0d : constant;
     }
 
     @ModifyConstant(method = "onLivingUpdate", constant = @Constant(doubleValue = 0.8d))
     private double noGravityOnEclipse1(double constant){
-        return NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 ? 1d : constant;
+        return NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid ? 1d : constant;
     }
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;ridingEntity:Lnet/minecraft/src/Entity;", opcode = Opcodes.GETFIELD))
     private Entity treatPlayersAsAlwaysNotBeingBoated(EntityPlayer instance){
@@ -311,7 +296,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
     @Inject(method = "attemptTentacleAttackOnTarget", at = @At("HEAD"),cancellable = true,remap = false)
     private void squidAvoidAttackingHeadcrabbedPlayer(CallbackInfo ci){
-        if(this.entityToAttack.hasHeadCrabbedSquid()){
+        if ((Object)this instanceof EntityAcidSquid || this.entityToAttack == null || this.entityToAttack.hasHeadCrabbedSquid()) {
             ci.cancel();
         }
     }
@@ -323,11 +308,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // let squid see through walls
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughWalls1(BTWSquidEntity instance, Entity entity){
-        return true;
+        return this.nightmareMode$isLostOcean() || instance.canEntityBeSeen(entity);
     }
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityCenterOfMassBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughWalls2(BTWSquidEntity instance, Entity entity){
-        return true;
+        return this.nightmareMode$isLostOcean() || instance.canEntityCenterOfMassBeSeen(entity);
     }
 
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
@@ -390,18 +375,18 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughObstacles(BTWSquidEntity instance, Entity entity){
-        return true;
+        return this.nightmareMode$isLostOcean() || instance.canEntityBeSeen(entity);
     }
 
     // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is not in water
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z", ordinal = 1, opcode = Opcodes.GETFIELD))
     private boolean tentacleEvenIfBeached(BTWSquidEntity instance){
-        return true;
+        return this.nightmareMode$isLostOcean() || instance.inWater;
     }
 
     @Override
     public boolean isInWater() {
-        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
+        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid){
             return true;
         }
         return super.isInWater();
@@ -409,7 +394,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Override
     public boolean isInsideOfMaterial(Material par1Material) {
-        if((NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2) && par1Material == Material.water){
+        if((NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid) && par1Material == Material.water){
             return true;
         }
         return super.isInsideOfMaterial(par1Material);
@@ -418,7 +403,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "updateEntityActionState", at = @At("TAIL"))
     private void doEclipseMovement(CallbackInfo ci){
-        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
+        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid){
             if (this.randomMotionVecY == 0.0f || this.randomMotionVecY == -0.1f) { // hardcoded -0.1f recalculation. hack to simulate fluid movement
                 this.randomMotionVecY = this.rand.nextFloat() - 0.5f;
             }
@@ -427,6 +412,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
 
     // unique methods (helpers)
+
+    @Unique
+    private boolean nightmareMode$isLostOcean() {
+        return this.worldObj != null && OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.LOST_OCEAN;
+    }
 
     @Unique
     private void dropBloodOrbs(int lootingModifier) {

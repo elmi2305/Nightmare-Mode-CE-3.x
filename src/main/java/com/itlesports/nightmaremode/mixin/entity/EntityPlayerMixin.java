@@ -20,6 +20,7 @@ import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
+import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
@@ -41,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 
 import static btw.community.nightmaremode.NightmareMode.*;
 import static com.itlesports.nightmaremode.util.NMFields.*;
@@ -79,6 +81,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private float fear = 0f;
     @Unique private int heartCrackLength = 0;
     @Unique private int drowningUnconsciousTicks = -1;
+    @Unique private int outerColdExposure;
     @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
     @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
     ;
@@ -1319,6 +1322,122 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 //                AchievementHandler.triggerAchievement(((EntityPlayer)(Object)this), (Achievement) ac);
 //            }
 //        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageOuterOverworldHazards(CallbackInfo ci) {
+        if (this.dimension != 0 || !this.isEntityAlive() || this.capabilities.disableDamage) {
+            this.outerColdExposure = Math.max(0, this.outerColdExposure - 4);
+            return;
+        }
+        OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ);
+
+        if (!this.worldObj.isRemote && region == OverworldTierHelper.Region.CRUEL_DESERT
+                && !this.isWearingFullDiamondArmor() && this.ticksExisted % 20 == 0) {
+            this.setFire(3);
+        }
+
+        if (!this.worldObj.isRemote && region == OverworldTierHelper.Region.LOST_OCEAN
+                && this.isInWater() && this.ticksExisted % 20 == 0) {
+            this.attackEntityFrom(DamageSource.magic, 1.0F);
+        }
+
+        if (region == OverworldTierHelper.Region.FROZEN_WASTES) {
+            int x = MathHelper.floor_double(this.posX);
+            int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
+            int z = MathHelper.floor_double(this.posZ);
+            if (this.isNearOuterHeatSource(x, y, z)) {
+                this.outerColdExposure = Math.max(0, this.outerColdExposure - 20);
+            } else if (this.worldObj.canBlockSeeTheSky(x, y, z)) {
+                this.outerColdExposure = Math.min(1200, this.outerColdExposure + 1);
+            } else {
+                this.outerColdExposure = Math.max(0, this.outerColdExposure - 2);
+            }
+            if (!this.worldObj.isRemote && this.outerColdExposure >= 600 && this.ticksExisted % 40 == 0) {
+                this.attackEntityFrom(DamageSource.generic, 1.0F);
+            }
+        } else {
+            this.outerColdExposure = Math.max(0, this.outerColdExposure - 8);
+        }
+
+        if (!this.worldObj.isRemote) this.spawnOuterFlyingMobs(region);
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void saveOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
+        tag.setInteger("nmOuterColdExposure", this.outerColdExposure);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void loadOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
+        this.outerColdExposure = tag.getInteger("nmOuterColdExposure");
+    }
+
+    @Unique
+    private boolean isWearingFullDiamondArmor() {
+        for (int slot = 0; slot < 4; ++slot) {
+            ItemStack stack = this.getCurrentArmor(slot);
+            if (stack == null || !(stack.getItem() instanceof ItemArmor armor)
+                    || armor.getArmorMaterial() != EnumArmorMaterial.DIAMOND) return false;
+        }
+        return true;
+    }
+
+    @Unique
+    private boolean isNearOuterHeatSource(int centerX, int centerY, int centerZ) {
+        for (int x = centerX - 4; x <= centerX + 4; ++x) {
+            for (int y = centerY - 2; y <= centerY + 2; ++y) {
+                for (int z = centerZ - 4; z <= centerZ + 4; ++z) {
+                    int blockId = this.worldObj.getBlockId(x, y, z);
+                    if (blockId == Block.fire.blockID || blockId == Block.lavaStill.blockID || blockId == Block.lavaMoving.blockID
+                            || blockId == BTWBlocks.smallCampfire.blockID || blockId == BTWBlocks.mediumCampfire.blockID
+                            || blockId == BTWBlocks.largeCampfire.blockID) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Unique
+    private void spawnOuterFlyingMobs(OverworldTierHelper.Region region) {
+        if (!this.worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")) return;
+        EntityPlayer self = (EntityPlayer)(Object)this;
+        if (region == OverworldTierHelper.Region.GREAT_VOID && (this.ticksExisted + this.entityId) % 100 == 0) {
+            AxisAlignedBB area = this.boundingBox.expand(80.0D, 48.0D, 80.0D);
+            int nearby = this.worldObj.getEntitiesWithinAABB(EntityAngelSquid.class, area).size()
+                    + this.worldObj.getEntitiesWithinAABB(EntityAngelGhast.class, area).size()
+                    + this.worldObj.getEntitiesWithinAABB(EntityAngelDragon.class, area).size();
+            if (nearby < 7) {
+                int roll = this.rand.nextInt(10);
+                EntityLiving entity;
+                if (roll == 0 && this.worldObj.getEntitiesWithinAABB(EntityAngelDragon.class, area).isEmpty()) {
+                    entity = new EntityAngelDragon(this.worldObj);
+                } else if (roll < 6) {
+                    entity = new EntityAngelSquid(this.worldObj);
+                } else {
+                    entity = new EntityAngelGhast(this.worldObj);
+                }
+                this.placeOuterFlyingMob(entity, self, 18.0D, 34.0D);
+            }
+        } else if (region == OverworldTierHelper.Region.LOST_OCEAN
+                && (this.ticksExisted + this.entityId) % 180 == 0) {
+            AxisAlignedBB area = this.boundingBox.expand(72.0D, 40.0D, 72.0D);
+            if (this.worldObj.getEntitiesWithinAABB(EntityAcidGhast.class, area).size() < 4) {
+                this.placeOuterFlyingMob(new EntityAcidGhast(this.worldObj), self, 22.0D, 38.0D);
+            }
+        }
+    }
+
+    @Unique
+    private void placeOuterFlyingMob(EntityLiving entity, EntityPlayer player, double minimumRange, double maximumRange) {
+        double angle = this.rand.nextDouble() * Math.PI * 2.0D;
+        double range = minimumRange + this.rand.nextDouble() * (maximumRange - minimumRange);
+        double x = player.posX + Math.cos(angle) * range;
+        double y = Math.max(10.0D, Math.min(118.0D, player.posY + this.rand.nextInt(25) - 8));
+        if (entity instanceof EntityAcidGhast) y = Math.max(104.0D, y);
+        double z = player.posZ + Math.sin(angle) * range;
+        entity.setLocationAndAngles(x, y, z, this.rand.nextFloat() * 360.0F, 0.0F);
+        this.worldObj.spawnEntityInWorld(entity);
     }
 
 

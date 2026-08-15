@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
 import com.itlesports.nightmaremode.util.underworld.postprocessing.*;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -417,6 +418,19 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 
     @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V", remap = false))
     private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
+        OverworldTierHelper.Region outerRegion = this.nightmareMode$getOuterFogRegion();
+        if (outerRegion == OverworldTierHelper.Region.CRUEL_DESERT) {
+            this.fogColorRed = 0.42F;
+            this.fogColorGreen = 0.19F;
+            this.fogColorBlue = 0.07F;
+            return;
+        }
+        if (outerRegion == OverworldTierHelper.Region.FROZEN_WASTES) {
+            this.fogColorRed = 0.60F;
+            this.fogColorGreen = 0.70F;
+            this.fogColorBlue = 0.76F;
+            return;
+        }
         if (this.mc.thePlayer.dimension == 1) {
             this.fogColorRed = 0;
             this.fogColorBlue = 0;
@@ -488,6 +502,28 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     private void doUnderworldFog(int par1, float partialTicks, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
 //        if(NightmareMode.devMode) return;
+
+        OverworldTierHelper.Region outerRegion = this.nightmareMode$getOuterFogRegion();
+        if (outerRegion == OverworldTierHelper.Region.CRUEL_DESERT || outerRegion == OverworldTierHelper.Region.FROZEN_WASTES) {
+            boolean frozen = outerRegion == OverworldTierHelper.Region.FROZEN_WASTES;
+            float red = frozen ? 0.60F : 0.42F;
+            float green = frozen ? 0.70F : 0.19F;
+            float blue = frozen ? 0.76F : 0.07F;
+
+            GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
+            GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(red, green, blue, 1.0F));
+            GL11.glFogf(GL11.GL_FOG_DENSITY, frozen ? 0.042F : 0.034F);
+            if (GLContext.getCapabilities().GL_NV_fog_distance) {
+                GL11.glFogi(0x855A, 0x855B);
+            }
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glNormal3f(0.0F, -1.0F, 0.0F);
+            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+            GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+            GL11.glEnable(GL11.GL_FOG);
+            ci.cancel();
+            return;
+        }
 
         if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p) {
             //// DEBUG: returning because getIsSolarFlare just returns false
@@ -703,6 +739,15 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         }
 
         return 0f;
+    }
+
+    @Unique
+    private OverworldTierHelper.Region nightmareMode$getOuterFogRegion() {
+        if (this.mc.theWorld == null || this.mc.renderViewEntity == null || this.mc.renderViewEntity.dimension != 0) {
+            return OverworldTierHelper.Region.INNER;
+        }
+        EntityLivingBase entity = this.mc.renderViewEntity;
+        return OverworldTierHelper.getRegion(this.mc.theWorld, entity.posX, entity.posZ);
     }
 
     @Unique
