@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import com.itlesports.nightmaremode.client.EnderArmorClient;
+import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -41,6 +42,12 @@ public class MinecraftMixin {
     private String changeWindowText(String newTitle){
         return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Nightmare Mode v"+ AddonHandler.getModByID("nightmare").getVersionString();
     }
+
+    @Inject(method = "startGame", at = @At("TAIL"))
+    private void startAutomatedRecipeExport(CallbackInfo ci) {
+        RecipeIndexExporter.startAutomatedExport((Minecraft)(Object)this);
+    }
+
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
         if (Keyboard.isKeyDown(NightmareKeyBindings.nmZoomHold.keyCode) && this.currentScreen == null) {
@@ -69,5 +76,9 @@ public class MinecraftMixin {
     @Inject(method = "runTick", at = @At("TAIL"))
     private void tickCarcassHarvest(CallbackInfo ci) {
         CarcassHarvestClient.tick((Minecraft)(Object)this);
+        if (RecipeIndexExporter.consumeDevelopmentStopRequest()
+                || RecipeIndexExporter.consumeAutomatedStopRequest()) {
+            ((Minecraft)(Object)this).shutdown();
+        }
     }
 }
