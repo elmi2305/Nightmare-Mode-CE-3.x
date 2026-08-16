@@ -1647,7 +1647,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addSkillLockedRecipes(){
         RecipeManager.addShapelessRecipe(
                 new ItemStack(NMItems.skillBook),
-                new Object[]{new ItemStack(Item.leather), new ItemStack(Item.dyePowder, 1, 0), new ItemStack(Item.stick), new ItemStack(Item.silk)});
+                new Object[]{new ItemStack(Item.leather), new ItemStack(Item.dyePowder, 1, 0), new ItemStack(NMItems.twig), new ItemStack(NMItems.driedPlantFiber)});
 
 
         SkillLockedCrafting.requireSkill(
@@ -2617,7 +2617,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.porosityFertilizer.itemID, NMSkillNodes.BRING_POROSITY_AGGREGATE_16);
         SkillRecipeGates.crafting(Item.dyePowder.itemID, 15, NMSkillNodes.BRING_NITROGEN_CRYSTAL_16);
 
-        SkillRecipeGates.crafting(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_FLINT_CHIP);
+        SkillRecipeGates.crafting(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_GRAVEL_PILE_32);
         SkillRecipeGates.crafting(NMItems.sharpTwigBarkWrapping.itemID, NMSkillNodes.BRING_BARK_64);
         SkillRecipeGates.crafting(NMItems.scrapedBark.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
         SkillRecipeGates.crafting(NMItems.crudeStringCrafting.itemID, NMSkillNodes.BRING_DRIED_PLANT_FIBER_64);

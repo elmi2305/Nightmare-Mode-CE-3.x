@@ -497,17 +497,22 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
         float prog = NMUtils.getWorldProgress() * 0.08f;
-        return constant + prog + 0.1f;
+        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+        return (float) ((constant + prog + 0.1f) * mult);
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
         float prog = NMUtils.getWorldProgress() * 0.2f;
-        return constant + prog + 0.5f;
+        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+
+        return (float) ((constant + prog + 0.5f) * mult);
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
         float prog = NMUtils.getWorldProgress() * 0.05f;
-        return constant + prog + 0.2f;
+        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+
+        return (float) ((constant + prog + 0.2f) * mult);
     }
 
 

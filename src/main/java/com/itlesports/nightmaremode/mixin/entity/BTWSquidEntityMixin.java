@@ -158,7 +158,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "updateHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceSquidDamageInterval(int constant){
-        return (int) (11 / NMUtils.getBuffedSquidBonus());
+        return (int) (20 / NMUtils.getBuffedSquidBonus());
     }
 
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
@@ -197,7 +197,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         }
 
         if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.ridingEntity instanceof EntityPlayer player) {
-            if (this.squidOnHeadTimer > 100 && !EntityBloodWither.isBossActive()) {
+            if (this.squidOnHeadTimer > 200 && !EntityBloodWither.isBossActive()) {
                 player.addPotionEffect(new PotionEffect(Potion.blindness.id, 200, 0));
             }
             switch (NMUtils.getWorldProgress()) {

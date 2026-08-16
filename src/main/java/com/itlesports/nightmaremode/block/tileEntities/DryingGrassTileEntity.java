@@ -40,7 +40,7 @@ public class DryingGrassTileEntity extends TileEntity {
     private boolean canDry() {
         int maxNaturalLight = this.worldObj.getBlockNaturalLightValueMaximum(this.xCoord, this.yCoord, this.zCoord);
         int currentNaturalLight = maxNaturalLight - this.worldObj.skylightSubtracted;
-        if (currentNaturalLight < 15) {
+        if (currentNaturalLight < 15 || this.worldObj.isRainingAtPos(this.xCoord, this.yCoord, this.zCoord)) {
             return false;
         }
 

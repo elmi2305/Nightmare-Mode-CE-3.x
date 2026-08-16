@@ -276,6 +276,9 @@ public class GuiSkillTree extends GuiScreen {
             }
             if (!this.movedWhileDragging) {
                 SkillNode clicked = this.getNodeAt(mouseX, mouseY);
+                if (clicked != null) {
+                    System.out.println("x:"+ clicked.displayColumn + " y:"+ clicked.displayRow);
+                }
                 if (clicked != null && this.getNodeVisualState(clicked) == NodeVisualState.PARENT_LOCKED) {
                     this.focusFirstLockedParent(clicked);
                 } else if (clicked != null && !SkillHandler.isUnlocked(this.mc.thePlayer, clicked)) {

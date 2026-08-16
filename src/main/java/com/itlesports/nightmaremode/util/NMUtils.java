@@ -7,7 +7,6 @@ import btw.entity.mob.DireWolfEntity;
 import btw.util.BTWDamageSources;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
-import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
@@ -46,6 +45,10 @@ public class NMUtils {
             return false;
         }
         return !(victim instanceof EntityVillager && attacker instanceof EntityZombie);
+    }
+
+    public static double getFirstFiveDaysMultiplier(World world){
+        return Math.min((double) world.getWorldTime() / (120000), 1.0);
     }
 
     public static boolean canBecomeCarcass(EntityLivingBase entity) {
