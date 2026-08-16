@@ -232,6 +232,7 @@ public class NMItems {
     public static ItemChunkFertilizer porosityFertilizer;
     public static Item highSpeedMinecart;
     public static Item highSpeedChestMinecart;
+    public static Item highSpeedFurnaceMinecart;
 
     public static FoodItem mackerel;
     public static FoodItem cod;
@@ -511,6 +512,7 @@ public class NMItems {
         aquamarine = new NMItem(2751).setTextureName("nightmare:ifhyAquamarine").setUnlocalizedName("ifhyAquamarine").setCreativeTab(CreativeTabs.tabMaterials);
         highSpeedMinecart = new ItemHighSpeedMinecart(2752, 0).setTextureName("nightmare:ifhyHighSpeedMinecart").setUnlocalizedName("ifhyHighSpeedMinecart");
         highSpeedChestMinecart = new ItemHighSpeedMinecart(2753, 1).setTextureName("nightmare:ifhyHighSpeedChestMinecart").setUnlocalizedName("ifhyHighSpeedChestMinecart");
+        highSpeedFurnaceMinecart = new ItemHighSpeedMinecart(3257, 2).setTextureName("minecart_furnace").setUnlocalizedName("ifhyHighSpeedFurnaceMinecart");
         moistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2744, ChunkAttribute.MOISTURE)
                 .setUnlocalizedName("nmMoistureFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);

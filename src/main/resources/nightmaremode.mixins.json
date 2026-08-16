@@ -210,6 +210,7 @@
     "entity.EntityLivingMixin",
     "entity.EntityMagmaCubeMixin",
     "entity.EntityMinecartMixin",
+    "entity.EntityMinecartFurnaceMixin",
     "entity.EntityMixin",
     "entity.EntityMobMixin",
     "entity.EntityMooshroomMixin",

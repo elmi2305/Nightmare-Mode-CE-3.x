@@ -1505,6 +1505,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_SCREW_16);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedMinecart), new Object[]{Item.minecartEmpty, NMItems.tungstenNugget});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedChestMinecart), new Object[]{Item.minecartCrate, NMItems.tungstenNugget});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedFurnaceMinecart), new Object[]{Item.minecartPowered, NMItems.tungstenNugget});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), Item.stick, NMItems.primitiveGlue, BTWItems.sawDust});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.shovelWood), new Object[]{BTWTags.logs, Item.stick, NMItems.primitiveGlue});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodHammer), new Object[]{BTWTags.logs, BTWTags.logs, Item.stick, NMItems.primitiveGlue});
@@ -2651,6 +2652,8 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.highSpeedMinecart.itemID,
                 NMSkillNodes.BRING_MINECART_8, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMItems.highSpeedChestMinecart.itemID,
+                NMSkillNodes.BRING_MINECART_8, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.highSpeedFurnaceMinecart.itemID,
                 NMSkillNodes.BRING_MINECART_8, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(Item.shovelWood.itemID, NMSkillNodes.BRING_STICK_4);
         SkillRecipeGates.crafting(NMItems.woodHammer.itemID, NMSkillNodes.BRING_STICK_4);
