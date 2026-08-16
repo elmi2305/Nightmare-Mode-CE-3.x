@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,11 +19,25 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+
 @Mixin(InventoryPlayer.class)
 public class InventoryPlayerMixin {
     @Shadow public ItemStack[] mainInventory;
+    @Shadow public ItemStack[] armorInventory;
     @Shadow public int currentItem;
     @Shadow public EntityPlayer player;
+
+    @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
+    private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {
+        if (NMUtils.getWorldProgress() != PREHARDMODE) {
+            return;
+        }
+
+        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory);
+        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory);
+        ci.cancel();
+    }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void perfectStart(EntityPlayer par1EntityPlayer, CallbackInfo ci){
@@ -176,12 +191,14 @@ public class InventoryPlayerMixin {
             if (this.mainInventory[slot] != null
                     && this.mainInventory[slot].itemID == stack.itemID
                     && this.mainInventory[slot].isStackable()
-                    && this.mainInventory[slot].stackSize < this.mainInventory[slot].getMaxStackSize()
-                    && this.mainInventory[slot].stackSize < ((InventoryPlayer)(Object)this).getInventoryStackLimit()
-                    && (!this.mainInventory[slot].getHasSubtypes() || this.mainInventory[slot].getItemDamage() == stack.getItemDamage())
-                    && ItemStack.areItemStackTagsEqual(this.mainInventory[slot], stack)) {
-                cir.setReturnValue(slot);
-                return;
+                    && this.mainInventory[slot].stackSize < this.mainInventory[slot].getMaxStackSize()) {
+                InventoryPlayer inventoryPlayerObject = (InventoryPlayer) (Object) this;
+                if (this.mainInventory[slot].stackSize < inventoryPlayerObject.getInventoryStackLimit()
+                        && (!this.mainInventory[slot].getHasSubtypes() || this.mainInventory[slot].getItemDamage() == stack.getItemDamage())
+                        && ItemStack.areItemStackTagsEqual(this.mainInventory[slot], stack)) {
+                    cir.setReturnValue(slot);
+                    return;
+                }
             }
         }
         cir.setReturnValue(-1);
@@ -226,6 +243,18 @@ public class InventoryPlayerMixin {
             this.currentItem = 0;
         } else if (this.currentItem >= hotbarSlots) {
             this.currentItem = hotbarSlots - 1;
+        }
+    }
+
+    @Unique
+    private void nightmareMode$dropItemsWithPreHardmodeRetention(ItemStack[] inventory) {
+        for (int slot = 0; slot < inventory.length; ++slot) {
+            ItemStack stack = inventory[slot];
+            if (stack == null || stack.itemID == NMItems.skillBook.itemID || this.player.worldObj.rand.nextFloat() >= 0.75F) {
+                continue;
+            }
+            this.player.dropPlayerItemWithRandomChoice(stack, true);
+            inventory[slot] = null;
         }
     }
 }
