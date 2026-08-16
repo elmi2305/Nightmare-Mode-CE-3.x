@@ -26,6 +26,7 @@ public class GuiSkillTree extends GuiScreen {
     private static final int NODE_READY_COLOR = 0xFFE1C16E;
     private static final int NODE_AVAILABLE_COLOR = 0xFF6F91AC;
     private static final int NODE_PARENT_LOCKED_COLOR = 0xFF292929;
+    private static final int NODE_FOCUSED_COLOR = 0xFFFF4FD8;
     private static final ResourceLocation BORDER_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/border.png");
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/background.png");
     private static final ResourceLocation TAB_OUTLINE_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/tab_outline.png");
@@ -38,6 +39,7 @@ public class GuiSkillTree extends GuiScreen {
     private boolean movedWhileDragging;
     private SkillBranch hoveredBranch;
     private SkillNode hoveredNode;
+    private SkillNode focusedNode;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -59,7 +61,9 @@ public class GuiSkillTree extends GuiScreen {
         GL11.glDisable(2929);
         GL11.glDisable(2896);
         if (this.hoveredNode != null) {
-            this.drawNodeTooltip(this.hoveredNode, mouseX, mouseY);
+            NodeVisualState state = this.getNodeVisualState(this.hoveredNode);
+
+            this.drawNodeTooltip(this.hoveredNode,state, mouseX, mouseY);
         } else if (this.hoveredBranch != null) {
             this.drawTooltip(this.hoveredBranch.getName(), mouseX, mouseY);
         }
@@ -167,14 +171,20 @@ public class GuiSkillTree extends GuiScreen {
                 case AVAILABLE -> NODE_AVAILABLE_COLOR;
                 case PARENT_LOCKED -> NODE_PARENT_LOCKED_COLOR;
             };
+            if (node == this.focusedNode) {
+                drawRect(x - 4, y - 4, x + 26, y + 26, NODE_FOCUSED_COLOR);
+            }
             drawRect(x - 2, y - 2, x + 24, y + 24, color);
             drawRect(x, y, x + 22, y + 22, state == NodeVisualState.PARENT_LOCKED ? 0xFF080808 : 0xFF111111);
             RenderHelper.enableGUIStandardItemLighting();
             renderItem.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine, node.icon, x + 3, y + 3);
             RenderHelper.disableStandardItemLighting();
             if (state == NodeVisualState.PARENT_LOCKED) {
+                // Item rendering writes to the depth buffer, which can otherwise hide this 2D overlay.
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
                 drawRect(x, y, x + 22, y + 22, 0xA8000000);
                 this.drawParentLockBadge(x, y);
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
             }
             if (mouseX >= x && mouseX <= x + 22 && mouseY >= y && mouseY <= y + 22
                     && mouseX >= left && mouseX <= left + VIEW_WIDTH && mouseY >= top && mouseY <= top + VIEW_HEIGHT) {
@@ -184,16 +194,15 @@ public class GuiSkillTree extends GuiScreen {
         return hovered;
     }
 
-    private void drawNodeTooltip(SkillNode node, int mouseX, int mouseY) {
-        NodeVisualState state = this.getNodeVisualState(node);
+    private void drawNodeTooltip(SkillNode node, NodeVisualState state, int mouseX, int mouseY) {
         String status = switch (state) {
             case UNLOCKED -> "Unlocked";
             case READY -> "Click to unlock";
-            case AVAILABLE -> "Complete the requirement";
+            case AVAILABLE -> null;
             case PARENT_LOCKED -> "Requires [" + this.getMissingParentNames(node) + "]";
         };
         String reward = state == NodeVisualState.UNLOCKED ? node.reward.getText() : "?";
-        String body = status + "\n" + node.requirementText + "\nReward: " + reward;
+        String body = (status == null ? "" : (status + "\n")) + (state != NodeVisualState.PARENT_LOCKED ? (node.requirementText + "\n" + "Reward: " + reward) : "");
         int width = Math.max(140, Math.max(this.fontRenderer.getStringWidth(node.name), this.fontRenderer.splitStringWidth(body, 180)));
         int height = 24 + this.fontRenderer.splitStringWidth(body, width);
         int x = mouseX + 12;
@@ -267,7 +276,9 @@ public class GuiSkillTree extends GuiScreen {
             }
             if (!this.movedWhileDragging) {
                 SkillNode clicked = this.getNodeAt(mouseX, mouseY);
-                if (clicked != null && !SkillHandler.isUnlocked(this.mc.thePlayer, clicked)) {
+                if (clicked != null && this.getNodeVisualState(clicked) == NodeVisualState.PARENT_LOCKED) {
+                    this.focusFirstLockedParent(clicked);
+                } else if (clicked != null && !SkillHandler.isUnlocked(this.mc.thePlayer, clicked)) {
                     SkillNet.sendUnlockRequest(clicked.id.toString());
                 }
             }
@@ -292,6 +303,24 @@ public class GuiSkillTree extends GuiScreen {
             }
         }
         return null;
+    }
+
+    private void focusFirstLockedParent(SkillNode node) {
+        for (SkillNode parent : node.parents) {
+            if (parent != null && !SkillHandler.isUnlocked(this.mc.thePlayer, parent)) {
+                this.focusNode(parent);
+                return;
+            }
+        }
+    }
+
+    private void focusNode(SkillNode node) {
+        this.focusedNode = node;
+        if (node.branch != null) {
+            this.branchIndex = node.branch.getIndex();
+        }
+        this.mapX = node.displayColumn * GRID - (VIEW_WIDTH - 22) / 2.0D;
+        this.mapY = node.displayRow * GRID - (VIEW_HEIGHT - 22) / 2.0D;
     }
 
     private SkillBranch getBranch() {

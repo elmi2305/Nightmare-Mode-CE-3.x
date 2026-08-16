@@ -153,6 +153,9 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         }
         EntityLivingBase thisObj = (EntityLivingBase)(Object)this;
         if (NMUtils.canBecomeCarcass(thisObj) && NMUtils.isDamageSourceAllowedToCreateCarcass(thisObj, source)) {
+            if (!this.worldObj.isRemote && source.getEntity() instanceof EntityPlayer player) {
+                SkillHandler.incrementMobKill(player, thisObj);
+            }
             this.nm$becomeCarcass(source);
             ci.cancel();
         }

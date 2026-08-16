@@ -5,6 +5,8 @@ import btw.community.nightmaremode.NightmareMode;
 import java.util.function.Consumer;
 
 public final class SkillRewardActions {
+    public static final int NETHER_ACCESS_PROGRESS_REQUIRED = 8;
+    public static final int WITHER_SUMMON_PROGRESS_REQUIRED = 6;
     private SkillRewardActions() {
     }
 
@@ -230,7 +232,7 @@ public final class SkillRewardActions {
     public static SkillUnlockAction addNetherAccessProgress() {
         return worldReward(data -> {
             data.netherAccessUnlockProgress++;
-            data.netherAccessUnlocked = data.netherAccessUnlockProgress >= 7;
+            data.netherAccessUnlocked = data.netherAccessUnlockProgress >= NETHER_ACCESS_PROGRESS_REQUIRED;
         });
     }
 
@@ -248,7 +250,7 @@ public final class SkillRewardActions {
     public static SkillUnlockAction addWitherSummonProgress() {
         return worldReward(data -> {
             data.witherSummonUnlockProgress++;
-            data.witherSummoningUnlocked = data.witherSummonUnlockProgress >= 5;
+            data.witherSummoningUnlocked = data.witherSummonUnlockProgress >= WITHER_SUMMON_PROGRESS_REQUIRED;
         });
     }
 
