@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.entity.underworld;
 
 import api.entity.EntityWithCustomPacket;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
+import com.itlesports.nightmaremode.entity.outer.EntityAcidGhast;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -131,6 +132,7 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
         for (EntityLivingBase living : entities) {
 
             if (living instanceof EntityCreeperVariant && living.getDistanceSqToEntity(this) < 1.0D) continue;
+            if (living instanceof EntityAcidGhast) continue;
 
             if(living.isPotionActive(Potion.poison)) continue;
 

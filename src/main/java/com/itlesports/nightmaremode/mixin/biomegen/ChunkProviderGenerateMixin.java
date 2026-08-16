@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.biomegen;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.villager.PriestVillagerEntity;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.structure.MapGenOceanDesertTemple;
 import com.itlesports.nightmaremode.structure.MapGenSkyZiggurath;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
@@ -13,6 +14,7 @@ import net.minecraft.src.EnumCreatureType;
 import net.minecraft.src.IChunkProvider;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
+import net.minecraft.src.WorldGenLakes;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -79,6 +81,15 @@ public class ChunkProviderGenerateMixin {
             ci.cancel();
         }
     }
+
+    @Redirect(method = "populate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldGenLakes;generate(Lnet/minecraft/src/World;Ljava/util/Random;III)Z"))
+    private boolean suppressDeadzonePools(WorldGenLakes generator, World world, Random random, int x, int y, int z) {
+        OverworldTierHelper.Region region = OverworldTierHelper.getRegion(world, x, z);
+        if (region == OverworldTierHelper.Region.DEADZONE || region == OverworldTierHelper.Region.CRUEL_DESERT) {
+            return false;
+        }
+        return generator.generate(world, random, x, y, z);
+    }
     @Redirect(method = "generateTerrain", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;waterStill:Lnet/minecraft/src/Block;", opcode = Opcodes.GETSTATIC))
     private Block funnyLavaOcean(){
         if(NightmareMode.isAprilFools && rand.nextInt(8) == 0){
@@ -126,26 +137,42 @@ public class ChunkProviderGenerateMixin {
             for (int localZ = 0; localZ < 16; ++localZ) {
                 int worldZ = chunkZ * 16 + localZ;
                 OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, worldX, worldZ);
+                if (afterCarvers && region == OverworldTierHelper.Region.DEADZONE) {
+                    blendDeadzoneSurface(blocks, metadata, localX, localZ, worldX, worldZ);
+                    continue;
+                }
                 if (region == OverworldTierHelper.Region.INNER || region == OverworldTierHelper.Region.DEADZONE
-                        || region == OverworldTierHelper.Region.BEYOND
-                        || afterCarvers && region == OverworldTierHelper.Region.FROZEN_WASTES) continue;
+                        || region == OverworldTierHelper.Region.BEYOND) continue;
+                if (!afterCarvers && region != OverworldTierHelper.Region.FROZEN_WASTES) continue;
+                if (afterCarvers && region == OverworldTierHelper.Region.FROZEN_WASTES) continue;
 
                 double distance = OverworldTierHelper.getDistanceFromSpawn(this.worldObj, worldX, worldZ);
                 if (region == OverworldTierHelper.Region.CRUEL_DESERT) {
-                    int height = 70 + (int)Math.round(valueNoise2D(worldX, worldZ, 190.0D, 0x44554E45L) * 9.0D
+                    int sourceHeight = findSurfaceHeight(blocks, localX, localZ);
+                    int desertHeight = 70 + (int)Math.round(valueNoise2D(worldX, worldZ, 190.0D, 0x44554E45L) * 9.0D
                             + valueNoise2D(worldX, worldZ, 42.0D, 0x53414E44L) * 3.0D);
-                    writeDesertColumn(blocks, metadata, localX, localZ, height);
+                    double transition = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.CRUEL_DESERT_START)
+                            / OverworldTierHelper.SURFACE_BLEND_LENGTH);
+                    int height = (int)Math.round(sourceHeight + (desertHeight - sourceHeight) * transition);
+                    writeDesertColumn(blocks, metadata, localX, localZ, worldX, worldZ, height, transition);
                 } else if (region == OverworldTierHelper.Region.GREAT_VOID) {
-                    double descent = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.GREAT_VOID_START) / 500.0D);
-                    int height = (int)Math.round(70.0D * (1.0D - descent));
+                    int edgeHeight = 70 + (int)Math.round(valueNoise2D(worldX, worldZ, 190.0D, 0x44554E45L) * 9.0D
+                            + valueNoise2D(worldX, worldZ, 42.0D, 0x53414E44L) * 3.0D);
+                    double descent = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.GREAT_VOID_START)
+                            / OverworldTierHelper.VOID_SLOPE_LENGTH);
+                    int height = (int)Math.round(edgeHeight * (1.0D - descent));
                     writeVoidColumn(blocks, metadata, localX, localZ, height);
                 } else if (region == OverworldTierHelper.Region.LOST_OCEAN) {
-                    double rise = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.LOST_OCEAN_START) / 750.0D);
+                    double rise = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.LOST_OCEAN_START)
+                            / OverworldTierHelper.OCEAN_SLOPE_LENGTH);
                     writeOceanColumn(blocks, metadata, localX, localZ, worldX, worldZ, rise);
                 } else if (region == OverworldTierHelper.Region.FROZEN_WASTES) {
                     int height = 88 + (int)Math.round(valueNoise2D(worldX, worldZ, 240.0D, 0x46524F5354L) * 20.0D
                             + Math.abs(valueNoise2D(worldX, worldZ, 68.0D, 0x5045414BL)) * 12.0D);
-                    writeFrozenColumn(blocks, metadata, localX, localZ, Math.min(122, height));
+                    double transition = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.FROZEN_WASTES_START)
+                            / OverworldTierHelper.FROZEN_SLOPE_LENGTH);
+                    writeOceanToFrozenColumn(blocks, metadata, localX, localZ, worldX, worldZ,
+                            Math.min(122, height), transition);
                 }
             }
         }
@@ -161,14 +188,21 @@ public class ChunkProviderGenerateMixin {
     }
 
     @Unique
-    private static void writeDesertColumn(short[] blocks, byte[] metadata, int localX, int localZ, int height) {
+    private void writeDesertColumn(short[] blocks, byte[] metadata, int localX, int localZ,
+                                   int worldX, int worldZ, int height, double transition) {
         clearColumn(blocks, metadata, localX, localZ);
         int base = (localX * 16 + localZ) * 128;
         blocks[base] = (short)Block.bedrock.blockID;
+        boolean desertSurface = (hashNoise(worldX, 0, worldZ, 0x424C454E44L) + 1.0D) * 0.5D <= transition;
         for (int y = 1; y <= height && y < 128; ++y) {
-            if (y == height) blocks[base + y] = (short)Block.sand.blockID;
-            else if (y >= height - 4) blocks[base + y] = (short)Block.sandStone.blockID;
-            else blocks[base + y] = (short)Block.stone.blockID;
+            if (y == height) {
+                blocks[base + y] = (short)(desertSurface ? Block.sand.blockID : NMBlocks.underGrass.blockID);
+            } else if (y >= height - 4) {
+                blocks[base + y] = (short)(desertSurface ? Block.sandStone.blockID : NMBlocks.underFlowerDirts.blockID);
+                if (!desertSurface) metadata[base + y] = (byte)NMBlocks.META_UNDER_DIRT;
+            } else {
+                blocks[base + y] = (short)Block.stone.blockID;
+            }
         }
     }
 
@@ -184,7 +218,7 @@ public class ChunkProviderGenerateMixin {
                                   int worldX, int worldZ, double rise) {
         clearColumn(blocks, metadata, localX, localZ);
         int base = (localX * 16 + localZ) * 128;
-        int waterTop = (int)Math.round(100.0D * OverworldTierHelper.smoothstep(Math.min(1.0D, rise * 2.0D)));
+        int waterTop = (int)Math.round(100.0D * rise);
         double floor = rise * (34.0D + valueNoise2D(worldX, worldZ, 210.0D, 0x4F4345414EL) * 20.0D);
         for (int y = 0; y < 128; ++y) {
             double archNoise = valueNoise3D(worldX, y, worldZ, 36.0D, 0x415243484553L);
@@ -213,6 +247,74 @@ public class ChunkProviderGenerateMixin {
             if (y == height) blocks[base + y] = (short)Block.grass.blockID;
             else if (y >= height - 3) blocks[base + y] = (short)Block.dirt.blockID;
             else blocks[base + y] = (short)Block.stone.blockID;
+        }
+    }
+
+    @Unique
+    private void writeOceanToFrozenColumn(short[] blocks, byte[] metadata, int localX, int localZ,
+                                          int worldX, int worldZ, int frozenHeight, double transition) {
+        clearColumn(blocks, metadata, localX, localZ);
+        int base = (localX * 16 + localZ) * 128;
+        double oceanFloor = 34.0D + valueNoise2D(worldX, worldZ, 210.0D, 0x4F4345414EL) * 20.0D;
+        double floor = oceanFloor + (frozenHeight - oceanFloor) * transition;
+        int waterTop = (int)Math.round(100.0D + (floor - 100.0D) * transition);
+        for (int y = 0; y < 128; ++y) {
+            double archNoise = valueNoise3D(worldX, y, worldZ, 36.0D, 0x415243484553L) * (1.0D - transition);
+            double fineNoise = valueNoise3D(worldX, y, worldZ, 15.0D, 0x434156495459L) * (1.0D - transition);
+            double density = floor - y + archNoise * 15.0D + fineNoise * 3.5D;
+            if (y == 0 || density > 0.0D) {
+                blocks[base + y] = (short)(y == 0 ? Block.bedrock.blockID : Block.stone.blockID);
+            } else if (y <= waterTop) {
+                blocks[base + y] = (short)Block.waterStill.blockID;
+            }
+        }
+        for (int y = 126; y > 1; --y) {
+            if (blocks[base + y] == Block.stone.blockID && blocks[base + y + 1] == 0) {
+                blocks[base + y] = (short)Block.grass.blockID;
+                for (int depth = 1; depth <= 3 && y - depth > 0; ++depth) {
+                    blocks[base + y - depth] = (short)Block.dirt.blockID;
+                }
+                break;
+            }
+            if (blocks[base + y] == Block.stone.blockID && blocks[base + y + 1] == Block.waterStill.blockID) {
+                blocks[base + y] = (short)Block.gravel.blockID;
+                break;
+            }
+        }
+    }
+
+    @Unique
+    private static int findSurfaceHeight(short[] blocks, int localX, int localZ) {
+        int base = (localX * 16 + localZ) * 128;
+        for (int y = 127; y > 0; --y) {
+            int blockId = blocks[base + y];
+            if (blockId != 0 && blockId != Block.waterMoving.blockID && blockId != Block.waterStill.blockID
+                    && blockId != Block.lavaMoving.blockID && blockId != Block.lavaStill.blockID) return y;
+        }
+        return 64;
+    }
+
+    @Unique
+    private void blendDeadzoneSurface(short[] blocks, byte[] metadata, int localX, int localZ, int worldX, int worldZ) {
+        double distance = OverworldTierHelper.getDistanceFromSpawn(this.worldObj, worldX, worldZ);
+        double transition = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.DEADZONE_START)
+                / OverworldTierHelper.SURFACE_BLEND_LENGTH);
+        double sample = (hashNoise(worldX, 0, worldZ, 0x44454144424C454EL) + 1.0D) * 0.5D;
+        if (sample <= transition) return;
+        int base = (localX * 16 + localZ) * 128;
+        for (int y = 127; y > 0; --y) {
+            if (blocks[base + y] == NMBlocks.underGrass.blockID) {
+                blocks[base + y] = (short)Block.grass.blockID;
+                metadata[base + y] = 0;
+                for (int depth = 1; depth <= 3 && y - depth > 0; ++depth) {
+                    if (blocks[base + y - depth] == NMBlocks.underFlowerDirts.blockID) {
+                        blocks[base + y - depth] = (short)Block.dirt.blockID;
+                        metadata[base + y - depth] = 0;
+                    }
+                }
+                return;
+            }
+            if (blocks[base + y] != 0) return;
         }
     }
 

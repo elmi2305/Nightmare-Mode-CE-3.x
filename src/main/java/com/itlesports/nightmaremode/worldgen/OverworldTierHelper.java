@@ -1,7 +1,13 @@
 package com.itlesports.nightmaremode.worldgen;
 
 import net.minecraft.src.ChunkCoordinates;
+import net.minecraft.src.ChunkCoordIntPair;
+import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public final class OverworldTierHelper {
     public static final double MOB_SCALING_START = 5000.0D;
@@ -10,7 +16,11 @@ public final class OverworldTierHelper {
     public static final double GREAT_VOID_START = 35000.0D;
     public static final double LOST_OCEAN_START = 40000.0D;
     public static final double FROZEN_WASTES_START = 45000.0D;
-    public static final double STRONGHOLD_RADIUS = 50000.0D;
+    public static final double STRONGHOLD_RADIUS = 50120.0D;
+    public static final double SURFACE_BLEND_LENGTH = 160.0D;
+    public static final double VOID_SLOPE_LENGTH = 192.0D;
+    public static final double OCEAN_SLOPE_LENGTH = 256.0D;
+    public static final double FROZEN_SLOPE_LENGTH = 192.0D;
 
     private OverworldTierHelper() {}
 
@@ -75,6 +85,20 @@ public final class OverworldTierHelper {
     public static double getDeadzoneWarpProgress(World world, double x, double z) {
         double distance = getDistanceFromSpawn(world, x, z);
         return clamp((distance - DEADZONE_START) / (CRUEL_DESERT_START - DEADZONE_START), 0.0D, 1.0D);
+    }
+
+    public static List<ChunkPosition> getStrongholdPositions(World world) {
+        ChunkCoordinates spawn = world.getSpawnPoint();
+        Random random = new Random(world.getSeed() ^ 0x5354524F4E47484FL);
+        double initialAngle = random.nextDouble() * Math.PI * 2.0D;
+        List<ChunkPosition> positions = new ArrayList<>();
+        for (int i = 0; i < 3; ++i) {
+            double angle = initialAngle + i * Math.PI * 2.0D / 3.0D;
+            int blockX = spawn.posX + (int)Math.round(Math.cos(angle) * STRONGHOLD_RADIUS);
+            int blockZ = spawn.posZ + (int)Math.round(Math.sin(angle) * STRONGHOLD_RADIUS);
+            positions.add(new ChunkCoordIntPair(blockX >> 4, blockZ >> 4).getChunkPosition(64));
+        }
+        return positions;
     }
 
     public static double clamp(double value, double minimum, double maximum) {

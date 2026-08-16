@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.underworld.SkyboxObject;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -323,7 +324,7 @@ public abstract class RenderGlobalMixin {
             ), remap = false
     )
     private void redirectGlCallList(int list) {
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION) {
+        if(this.isUnderWorld() || this.nightmareMode$hasOuterSkybox()) {
             try {
                 // always render custom sky texture, regardless of time
                 if (list == this.glSkyList || list == this.starGLCallList) {
@@ -352,7 +353,7 @@ public abstract class RenderGlobalMixin {
         // attempt to bind the texture (best-effort for 1.6.4)
         if (this.mc != null && this.mc.renderEngine != null) {
             try {
-                this.mc.renderEngine.bindTexture(SKYBOX);
+                this.mc.renderEngine.bindTexture(this.nightmareMode$getSkyboxTexture());
             } catch (Exception e) {
                 System.out.println("ERROR: Failed to bind texture");
                 // ignore binding failure (falls back to plain color)
@@ -373,9 +374,14 @@ public abstract class RenderGlobalMixin {
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glDisable(GL11.GL_CULL_FACE);
-
-        // dome color, if required
-//        GL11.glColor4f(0.9f, 0.1f, 0.1f, 1f);
+        OverworldTierHelper.Region outerRegion = this.nightmareMode$getOuterSkyRegion();
+        if (outerRegion == OverworldTierHelper.Region.CRUEL_DESERT) {
+            GL11.glColor4f(0.46F, 0.16F, 0.055F, 1.0F);
+        } else if (outerRegion == OverworldTierHelper.Region.FROZEN_WASTES) {
+            GL11.glColor4f(0.56F, 0.69F, 0.78F, 1.0F);
+        } else {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        }
 
 
 
@@ -438,17 +444,36 @@ public abstract class RenderGlobalMixin {
     private double patchHorizon(WorldClient wcl) {
         // magic "disable the stupid horizon lines because they're ugly" method
         // love it
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+        if(this.isUnderWorld() || this.nightmareMode$hasOuterSkybox()){
             return -200;
         }
         return wcl.getHorizon();
     }
     @ModifyConstant(method = "renderSky", constant = @Constant(doubleValue = 0, ordinal = 10))
     private double renderEverythingDespiteHorizon(double constant){
-        if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
+        if(this.isUnderWorld() || this.nightmareMode$hasOuterSkybox()){
             return -199;
         }
         return constant;
+    }
+
+    @Unique
+    private boolean nightmareMode$hasOuterSkybox() {
+        OverworldTierHelper.Region region = this.nightmareMode$getOuterSkyRegion();
+        return region == OverworldTierHelper.Region.CRUEL_DESERT
+                || region == OverworldTierHelper.Region.FROZEN_WASTES;
+    }
+
+    @Unique
+    private OverworldTierHelper.Region nightmareMode$getOuterSkyRegion() {
+        if (this.mc == null || this.mc.theWorld == null || this.mc.renderViewEntity == null
+                || this.mc.renderViewEntity.dimension != 0) return OverworldTierHelper.Region.INNER;
+        return OverworldTierHelper.getRegion(this.mc.theWorld, this.mc.renderViewEntity.posX, this.mc.renderViewEntity.posZ);
+    }
+
+    @Unique
+    private ResourceLocation nightmareMode$getSkyboxTexture() {
+        return this.nightmareMode$hasOuterSkybox() ? SKYBOX_WHITE : SKYBOX;
     }
 
     // code stops here

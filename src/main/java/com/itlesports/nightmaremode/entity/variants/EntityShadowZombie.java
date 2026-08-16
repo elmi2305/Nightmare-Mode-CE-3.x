@@ -122,7 +122,9 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     public void onLivingUpdate() {
-        explore();
+        if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
+            this.explore();
+        }
         super.onLivingUpdate();
     }
 

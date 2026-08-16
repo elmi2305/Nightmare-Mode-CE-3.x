@@ -15,4 +15,9 @@ public class EntityAcidGhast extends EntityOuterGhast {
     protected EntityLargeFireball createOuterFireball(EntityPlayer target, double dx, double dy, double dz) {
         return new EntityAcidFireball(this.worldObj, this, dx, dy, dz);
     }
+
+    @Override
+    public boolean isPotionApplicable(PotionEffect effect) {
+        return effect.getPotionID() != Potion.poison.id && super.isPotionApplicable(effect);
+    }
 }

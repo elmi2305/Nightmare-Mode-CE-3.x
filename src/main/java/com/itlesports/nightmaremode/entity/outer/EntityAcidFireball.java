@@ -19,7 +19,7 @@ public class EntityAcidFireball extends EntityLargeFireball {
             if (hit.entityHit != null) {
                 hit.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6.0F);
             }
-            this.worldObj.newExplosion(null, this.posX, this.posY, this.posZ, 1.0F, true,
+            this.worldObj.newExplosion(null, this.posX, this.posY, this.posZ, 1.0F, false,
                     this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
             this.worldObj.spawnEntityInWorld(new EntityPollenCloud(this.worldObj, this.posX, this.posY, this.posZ, 7.0D));
             this.setDead();

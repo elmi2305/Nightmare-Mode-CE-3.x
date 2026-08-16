@@ -25,6 +25,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.elements.NMDamageSource;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -469,7 +470,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @Inject(method = "onKillEntity", at = @At("TAIL"))
     private void setBloodWitherDataEntry(EntityLivingBase elb, CallbackInfo ci){
-        SkillHandler.incrementMobKill((EntityPlayer)(Object)this, elb);
+        if (!(elb instanceof CarcassAnimal carcass) || !carcass.nm$isCarcass()) {
+            SkillHandler.incrementMobKill((EntityPlayer)(Object)this, elb);
+        }
         if(elb instanceof EntityBloodWither){
             this.setData(DEFEATED_BLOODWITHER, true);
         }
@@ -1402,28 +1405,28 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void spawnOuterFlyingMobs(OverworldTierHelper.Region region) {
         if (!this.worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")) return;
         EntityPlayer self = (EntityPlayer)(Object)this;
-        if (region == OverworldTierHelper.Region.GREAT_VOID && (this.ticksExisted + this.entityId) % 100 == 0) {
-            AxisAlignedBB area = this.boundingBox.expand(80.0D, 48.0D, 80.0D);
+        if (region == OverworldTierHelper.Region.GREAT_VOID && (this.ticksExisted + this.entityId) % 80 == 0) {
+            AxisAlignedBB area = this.boundingBox.expand(128.0D, 64.0D, 128.0D);
             int nearby = this.worldObj.getEntitiesWithinAABB(EntityAngelSquid.class, area).size()
                     + this.worldObj.getEntitiesWithinAABB(EntityAngelGhast.class, area).size()
                     + this.worldObj.getEntitiesWithinAABB(EntityAngelDragon.class, area).size();
             if (nearby < 7) {
-                int roll = this.rand.nextInt(10);
+                int roll = this.rand.nextInt(8);
                 EntityLiving entity;
-                if (roll == 0 && this.worldObj.getEntitiesWithinAABB(EntityAngelDragon.class, area).isEmpty()) {
+                if (roll < 2 && this.worldObj.getEntitiesWithinAABB(EntityAngelDragon.class, area).isEmpty()) {
                     entity = new EntityAngelDragon(this.worldObj);
-                } else if (roll < 6) {
+                } else if (roll < 5) {
                     entity = new EntityAngelSquid(this.worldObj);
                 } else {
                     entity = new EntityAngelGhast(this.worldObj);
                 }
-                this.placeOuterFlyingMob(entity, self, 18.0D, 34.0D);
+                this.placeOuterFlyingMob(entity, self, 52.0D, 80.0D);
             }
         } else if (region == OverworldTierHelper.Region.LOST_OCEAN
-                && (this.ticksExisted + this.entityId) % 180 == 0) {
-            AxisAlignedBB area = this.boundingBox.expand(72.0D, 40.0D, 72.0D);
-            if (this.worldObj.getEntitiesWithinAABB(EntityAcidGhast.class, area).size() < 4) {
-                this.placeOuterFlyingMob(new EntityAcidGhast(this.worldObj), self, 22.0D, 38.0D);
+                && (this.ticksExisted + this.entityId) % 900 == 0) {
+            AxisAlignedBB area = this.boundingBox.expand(128.0D, 56.0D, 128.0D);
+            if (this.worldObj.getEntitiesWithinAABB(EntityAcidGhast.class, area).size() < 2) {
+                this.placeOuterFlyingMob(new EntityAcidGhast(this.worldObj), self, 64.0D, 92.0D);
             }
         }
     }

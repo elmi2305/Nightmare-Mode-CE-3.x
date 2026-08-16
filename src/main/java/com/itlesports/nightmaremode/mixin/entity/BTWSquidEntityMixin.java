@@ -31,12 +31,20 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
 
     @Shadow(remap = false)
+    private float randomMotionVecX;
+    @Shadow(remap = false)
     private float randomMotionVecY;
+    @Shadow(remap = false)
+    private float randomMotionVecZ;
     // unique fields
     @Unique private int calamariDropCountdown = 0; // how many ticks the squid is eligible to drop calamari. set every time the player hits the squid
     @Unique private int squidOnHeadTimer = 0; // tracks how long the squid is riding something
     @Unique private int recentParryCount = 0; // tracks how many times the squid's tentacle was parried
     @Unique private boolean isValidForEventLoot = false;
+    @Unique private int angelWanderTicks;
+    @Unique private float angelWanderX;
+    @Unique private float angelWanderY;
+    @Unique private float angelWanderZ;
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -288,6 +296,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return null; // not riding anything
     }
 
+    @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;inWater:Z", opcode = Opcodes.GETFIELD))
+    private boolean letAngelSquidsHuntDryPlayers(EntityPlayer player) {
+        return (Object)this instanceof EntityAngelSquid || player.inWater;
+    }
+
     // increasing the squid range
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
@@ -318,6 +331,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"), name = "bIsInDarkness")
     private boolean hostilePostNether(boolean bIsInDarkness) {
+        if ((Object)this instanceof EntityAngelSquid) return true;
         if (NMUtils.getWorldProgress() > PREHARDMODE && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return true;
         }
@@ -325,14 +339,15 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean squidAlwaysNightPostNether(World instance){
-        if(NMUtils.getWorldProgress() > PREHARDMODE){
+        if((Object)this instanceof EntityAngelSquid || NMUtils.getWorldProgress() > PREHARDMODE){
             return false;
         } else return this.worldObj.isDaytime();
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
     private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
-        if(NMUtils.getWorldProgress() > PREHARDMODE && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+        if((Object)this instanceof EntityAngelSquid
+                || NMUtils.getWorldProgress() > PREHARDMODE && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return 0f;
         }
         return instance.getBrightness(v);
@@ -381,7 +396,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is not in water
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lbtw/entity/mob/BTWSquidEntity;inWater:Z", ordinal = 1, opcode = Opcodes.GETFIELD))
     private boolean tentacleEvenIfBeached(BTWSquidEntity instance){
-        return this.nightmareMode$isLostOcean() || instance.inWater;
+        return instance instanceof EntityAngelSquid || this.nightmareMode$isLostOcean() || instance.inWater;
     }
 
     @Override
@@ -403,9 +418,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Inject(method = "updateEntityActionState", at = @At("TAIL"))
     private void doEclipseMovement(CallbackInfo ci){
-        if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2 || (Object)this instanceof EntityAngelSquid){
-            if (this.randomMotionVecY == 0.0f || this.randomMotionVecY == -0.1f) { // hardcoded -0.1f recalculation. hack to simulate fluid movement
-                this.randomMotionVecY = this.rand.nextFloat() - 0.5f;
+        if ((Object)this instanceof EntityAngelSquid) {
+            this.nightmareMode$updateAngelMovement();
+        } else if(NMUtils.getIsMobEclipsed(this) || NMUtils.getBuffedSquidBonus() >= 2){
+            if (this.randomMotionVecY == 0.0F || this.randomMotionVecY == -0.1F) {
+                this.randomMotionVecY = this.rand.nextFloat() - 0.5F;
             }
         }
     }
@@ -416,6 +433,36 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Unique
     private boolean nightmareMode$isLostOcean() {
         return this.worldObj != null && OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.LOST_OCEAN;
+    }
+
+    @Unique
+    private void nightmareMode$updateAngelMovement() {
+        if (this.entityToAttack != null && this.entityToAttack.isEntityAlive()) {
+            double dx = this.entityToAttack.posX - this.posX;
+            double dy = this.entityToAttack.posY + this.entityToAttack.getEyeHeight()
+                    - (this.posY + this.height * 0.5D);
+            double dz = this.entityToAttack.posZ - this.posZ;
+            double length = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+            if (length > 0.001D) {
+                this.randomMotionVecX = (float)(dx / length * 0.32D);
+                this.randomMotionVecY = (float)(dy / length * 0.32D);
+                this.randomMotionVecZ = (float)(dz / length * 0.32D);
+            }
+            return;
+        }
+
+        if (--this.angelWanderTicks <= 0) {
+            double heading = this.rand.nextDouble() * Math.PI * 2.0D;
+            this.angelWanderX = (float)(Math.cos(heading) * 0.18D);
+            this.angelWanderZ = (float)(Math.sin(heading) * 0.18D);
+            this.angelWanderY = (this.rand.nextFloat() - 0.5F) * 0.18F;
+            this.angelWanderTicks = 35 + this.rand.nextInt(55);
+        }
+        if (this.posY < 10.0D) this.angelWanderY = Math.abs(this.angelWanderY) + 0.08F;
+        if (this.posY > 116.0D) this.angelWanderY = -Math.abs(this.angelWanderY) - 0.08F;
+        this.randomMotionVecX = this.angelWanderX;
+        this.randomMotionVecY = this.angelWanderY;
+        this.randomMotionVecZ = this.angelWanderZ;
     }
 
     @Unique

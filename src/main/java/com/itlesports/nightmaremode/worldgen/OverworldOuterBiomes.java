@@ -43,6 +43,7 @@ public final class OverworldOuterBiomes {
             super(id);
             this.setBiomeName("Deadzone");
             ((BiomeGenBaseAccessor)this).invokeSetTemperatureRainfall(0.55F, 0.3F);
+            ((BiomeDecoratorAccess)this.theBiomeDecorator).setGrassPerChunk(0);
             this.topBlock = (short) NMBlocks.underGrass.blockID;
             this.fillerBlock = (short) NMBlocks.underFlowerDirts.blockID;
             this.fillerBlockMetadata = NMBlocks.META_UNDER_DIRT;
@@ -109,7 +110,7 @@ public final class OverworldOuterBiomes {
             this.topBlock = (short) Block.gravel.blockID;
             this.fillerBlock = (short) Block.stone.blockID;
             clearSpawns(this);
-            this.spawnableMonsterList.add(new SpawnListEntry(EntityAcidGhast.class, 8, 1, 1));
+            this.spawnableMonsterList.add(new SpawnListEntry(EntityAcidGhast.class, 2, 1, 1));
             this.spawnableWaterCreatureList.add(new SpawnListEntry(EntityAcidSquid.class, 12, 1, 3));
             this.spawnableWaterCreatureList.add(new SpawnListEntry(btw.entity.mob.BTWSquidEntity.class, 12, 1, 4));
             this.theBiomeDecorator.generateLakes = false;
