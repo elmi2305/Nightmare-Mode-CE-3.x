@@ -83,7 +83,7 @@ public class SkillHandler {
 
     public static boolean tryUnlock(EntityPlayerMP player, String nodeId) {
         SkillNode node = SkillRegistry.getNode(nodeId);
-        if (!isEligible(player, node) && !NightmareMode.devMode) {
+        if (!isEligible(player, node) && !NightmareMode.unlockSkillsWithClick) {
             sendStatus(player, "Skill is not ready to unlock.");
             return false;
         }

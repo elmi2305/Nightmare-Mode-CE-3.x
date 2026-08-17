@@ -17,6 +17,8 @@ public class SkyZiggurath extends NMStructure {
 
     public SkyZiggurath(Random random, int x, int z) {
         super(random, x, 200, z, 54, 30, 54);
+        // Keep the NBT template aligned with the world's positive X/Z axes.
+        this.coordBaseMode = 0;
         this.shouldGenerateAir = true;
     }
 

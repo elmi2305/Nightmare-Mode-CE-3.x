@@ -134,6 +134,26 @@ public class NMUtils {
         return NightmareMode.isBloodMoon;
     }
 
+    /**
+     * Blood moons begin before the Nether is reached, but their opening-tier
+     * stat bonuses deliberately remain small.  Keep event-specific escalation
+     * behind this check so the early event is a warning rather than a siege.
+     */
+    public static boolean isPreHardmodeBloodMoon() {
+        return getIsBloodMoon() && getWorldProgress() == NMFields.PREHARDMODE;
+    }
+
+    public static boolean hasEmpoweredBloodMoonMobs() {
+        return getIsBloodMoon() && getWorldProgress() > NMFields.PREHARDMODE;
+    }
+
+    public static double getBloodMoonModifier(double fullModifier) {
+        if (!getIsBloodMoon()) {
+            return 1.0D;
+        }
+        return isPreHardmodeBloodMoon() ? 1.0D + (fullModifier - 1.0D) * 0.25D : fullModifier;
+    }
+
     public static boolean getIsEclipse() {
         return NightmareMode.isEclipse;
     }
@@ -305,7 +325,7 @@ public class NMUtils {
 
     public static long getNextBloodMoonTime(long currentTime) {
         int currentDay = (int) Math.ceil((double) currentTime / 24000);
-        int nextBloodMoonDay = currentDay + (15 - (currentDay % 16) + 9) % 16;
+        int nextBloodMoonDay = currentDay + (31 - (currentDay % 32) + 9) % 32;
         return (nextBloodMoonDay * 24000L) + 18000;
     }
 

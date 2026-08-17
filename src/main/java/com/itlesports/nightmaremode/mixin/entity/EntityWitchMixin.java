@@ -286,7 +286,7 @@ public abstract class EntityWitchMixin extends EntityMob {
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             int progress = NMUtils.getWorldProgress();
-            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.5);
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 30 : 0;
 
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);

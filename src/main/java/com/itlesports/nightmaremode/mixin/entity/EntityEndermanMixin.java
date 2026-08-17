@@ -96,7 +96,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         int progress = NMUtils.getWorldProgress();
-        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+        double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.5);
         boolean isBloodMoon = bloodMoonModifier > 1;
 
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);

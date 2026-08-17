@@ -255,9 +255,8 @@ public abstract class MinecraftServerMixin {
     }
 
     @Unique private boolean getIsBloodMoon(World world, int dayCount){
-        if(NMUtils.getWorldProgress() == PREHARDMODE){return false;}
         if(world.provider.dimensionId == NMFields.UNDERWORLD_DIMENSION){return false;}
-        return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 16 == 9)) || NightmareMode.bloodmare;
+        return this.getIsNightFromWorldTime(world) && (world.getMoonPhase() == 0  && (dayCount % 32 == 9)) || NightmareMode.bloodmare;
     }
 
     @Unique private boolean getIsNightFromWorldTime(World world){

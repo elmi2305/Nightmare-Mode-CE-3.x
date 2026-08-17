@@ -1506,9 +1506,10 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedMinecart), new Object[]{Item.minecartEmpty, NMItems.tungstenNugget});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedChestMinecart), new Object[]{Item.minecartCrate, NMItems.tungstenNugget});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedFurnaceMinecart), new Object[]{Item.minecartPowered, NMItems.tungstenNugget});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), Item.stick, NMItems.primitiveGlue, BTWItems.sawDust});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), Item.stick, NMItems.crudeString, BTWItems.sawDust});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.shovelWood), new Object[]{BTWTags.logs, Item.stick, NMItems.primitiveGlue});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodHammer), new Object[]{BTWTags.logs, BTWTags.logs, Item.stick, NMItems.primitiveGlue});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodHammer), new Object[]{BTWTags.logs, BTWTags.logs, Item.stick, NMItems.crudeString});
+        RecipeManager.addShapelessRecipe(new ItemStack(Item.bone), new Object[]{NMItems.boneShard,NMItems.boneShard,NMItems.boneShard,NMItems.boneShard});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneHammer), new Object[]{BTWTags.looseCobblestones,BTWTags.looseCobblestones, Item.stick, Item.silk});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.stoneHammer), new Object[]{
@@ -1796,7 +1797,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(
                         new ItemStack(NMItems.flintAxeCrafting, 1, NMItems.flintAxeCrafting.getMaxDamage() - 1),
-                        new Object[]{Item.flint, Item.flint, Item.stick, Item.silk}),
+                        new Object[]{Item.flint, Item.flint, Item.stick, NMItems.crudeString}),
                 NMSkillNodes.BRING_FLINT_4);
 
         SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(NMItems.nickelHeatComponent), new Object[]{
@@ -2349,11 +2350,11 @@ public abstract class NMInitializer implements AchievementExt {
         // Hand-crafting and workbench recipes have an owning player, so these gates may use
         // either personal or world skills. Repeated calls deliberately merge into AND gates.
         SkillRecipeGates.crafting(BTWItems.pointyStick.itemID, NMSkillNodes.BRING_STICK_4);
-        SkillRecipeGates.crafting(BTWItems.sharpStone.itemID, NMSkillNodes.BRING_STICK_4, NMSkillNodes.BRING_LOOSE_STONE_2);
+//        SkillRecipeGates.crafting(BTWItems.sharpStone.itemID, NMSkillNodes.BRING_STICK_4, NMSkillNodes.BRING_LOOSE_STONE_2);
         SkillRecipeGates.crafting(BTWItems.firePlough.itemID, NMSkillNodes.BRING_STICK_4, NMSkillNodes.BRING_SHARP_STONE_4);
         SkillRecipeGates.crafting(NMItems.drill.itemID, NMSkillNodes.BRING_STICK_4);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestone.blockID, 0, NMSkillNodes.BRING_LOOSE_STONE_64);
-        SkillRecipeGates.crafting(BTWBlocks.looseCobblestoneSlab.blockID, 0, NMSkillNodes.BRING_LOOSE_STONE_64);
+        SkillRecipeGates.crafting(BTWBlocks.looseCobblestoneSlab.blockID, 0, NMSkillNodes.BRING_LOOSE_STONE_2, NMSkillNodes.BRING_STICK_4);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestone.blockID, 4, NMSkillNodes.BRING_STRATA_TWO_LOOSE_STONE_128);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestoneSlab.blockID, 4, NMSkillNodes.BRING_STRATA_TWO_LOOSE_STONE_128);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestone.blockID, 8, NMSkillNodes.BRING_STRATA_THREE_LOOSE_STONE_256);
@@ -2362,6 +2363,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.spruceBarkBox.blockID, NMSkillNodes.BRING_BARK_64);
         SkillRecipeGates.crafting(BTWBlocks.birchBarkBox.blockID, NMSkillNodes.BRING_BARK_64);
         SkillRecipeGates.crafting(BTWBlocks.jungleBarkBox.blockID, NMSkillNodes.BRING_BARK_64);
+        SkillRecipeGates.crafting(BTWBlocks.looseDirtSlab.blockID, NMSkillNodes.JUMP_1000);
 
         SkillRecipeGates.crafting(Item.arrow.itemID, NMSkillNodes.BRING_FLINT_64, NMSkillNodes.BRING_FEATHER_32, NMSkillNodes.BRING_STRING_32);
         SkillRecipeGates.crafting(Item.bow.itemID, NMSkillNodes.BRING_ARROW_64);

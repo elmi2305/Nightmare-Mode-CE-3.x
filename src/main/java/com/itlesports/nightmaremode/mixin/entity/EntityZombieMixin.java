@@ -343,7 +343,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
             int progress = NMUtils.getWorldProgress();
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
-            double bloodMoonModifier = isBloodMoon ? 0.5 : 1;
+            double bloodMoonModifier = !isBloodMoon ? 1 : (NMUtils.isPreHardmodeBloodMoon() ? 0.75 : 0.5);
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
@@ -401,7 +401,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     wasVariantSelected = true;
                 }
 
-                if(isHostile && (isBloodMoon || NightmareMode.evolvedMobs)){
+                if(isHostile && (NMUtils.hasEmpoweredBloodMoonMobs() || NightmareMode.evolvedMobs)){
                     if(rand.nextInt((int) Math.max(50 * (1 / niteMultiplier), 2)) == 0){
                         this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.steelSword));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3));
@@ -504,7 +504,8 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             double niteMultiplier = NMUtils.getNiteMultiplier();
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
             this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * niteMultiplier);
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 24 : 20) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
+            double bloodMoonHealthBonus = isBloodMoon ? (NMUtils.isPreHardmodeBloodMoon() ? 1 : 4) : 0;
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + bloodMoonHealthBonus + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
             // 40 -> 46 -> 52 -> 58 eclipse
             // 24 -> 32 -> 40 -> 48 bm
             // 20 -> 26 -> 32 -> 38 normal

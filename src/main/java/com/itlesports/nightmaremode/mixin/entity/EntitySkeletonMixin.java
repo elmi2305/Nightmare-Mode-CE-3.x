@@ -187,7 +187,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     private void increaseHealth(CallbackInfo ci){
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
-            float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.4f : 1;
+            float bloodMoonModifier = (float) NMUtils.getBloodMoonModifier(1.4);
             boolean isBloodMoon = bloodMoonModifier > 1;
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
@@ -229,7 +229,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     @Inject(method = "preInitCreature", at = @At("TAIL"))
     private void manageBloodMoonWitherSkellySpawning(CallbackInfo ci){
         if(this.worldObj != null){
-            if((NMUtils.getIsBloodMoon() || NightmareMode.evolvedMobs) && this.rand.nextInt(16) == 0 && this.getSkeletonType().id() == 0){
+            if((NMUtils.hasEmpoweredBloodMoonMobs() || NightmareMode.evolvedMobs) && this.rand.nextInt(16) == 0 && this.getSkeletonType().id() == 0){
                 this.setSkeletonType(SKELETON_WITHER);
             } else if (this.rand.nextInt(NMUtils.divByNiteMultiplier(10, 4)) == 0 && (WorldUtils.gameProgressHasWitherBeenSummonedServerOnly() || NightmareMode.evolvedMobs) && this.getSkeletonType().id() == 0){
                 this.setSkeletonType(SKELETON_WITHER);
@@ -308,7 +308,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if(this.worldObj != null){
-            if (NMUtils.getIsBloodMoon()){
+            if (NMUtils.hasEmpoweredBloodMoonMobs()){
                 if (rand.nextBoolean()) {
                     this.shootArrowAtEntity(target);
                     if(rand.nextBoolean()){
@@ -331,7 +331,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
-            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.5);
             boolean isEclipse = NMUtils.getIsEclipse();
             double niteMultiplier = NMUtils.getNiteMultiplier();
 
@@ -609,7 +609,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     private void setVariantAttributes(VariantComponent.EntityVariant variant, CallbackInfoReturnable<Boolean> cir){
         int id = variant.id();
         int progress = NMUtils.getWorldProgress();
-        float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.4f : 1;
+        float bloodMoonModifier = (float) NMUtils.getBloodMoonModifier(1.4);
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         double niteMultiplier = NMUtils.getNiteMultiplier();

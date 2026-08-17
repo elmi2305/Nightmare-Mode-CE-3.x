@@ -293,7 +293,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
                         && this.worldObj.getClosestPlayer(this.posX, this.posY, this.posZ, 24.0D) == null);
                 return;
             }
-            if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) || NMEvents.SimpleEvent.HELL.isActive()) {
+            if ((NMUtils.hasEmpoweredBloodMoonMobs() || NMUtils.getIsMobEclipsed(this) || NMEvents.SimpleEvent.HELL.isActive())) {
                 if (this.getCanSpawnHereNoPlayerDistanceRestrictions() && this.posY >= 63 && this.rand.nextInt(8) == 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobSpawning")) {
                     cir.setReturnValue(true);
                 }
@@ -304,7 +304,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     }
     @ModifyArg(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"),index = 3)
     private double increaseGhastSpawnrateOnBloodMoon(double par1){
-        if(NMUtils.getIsBloodMoon() && this.dimension == -1){return 16.0;}
+        if(NMUtils.hasEmpoweredBloodMoonMobs() && this.dimension == -1){return 16.0;}
         return par1;
     }
 

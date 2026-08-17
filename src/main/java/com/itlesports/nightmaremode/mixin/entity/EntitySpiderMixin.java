@@ -289,7 +289,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             int progress = NMUtils.getWorldProgress();
             int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
             int spiderRainModifier = NMEvents.SimpleEvent.SPIDER_RAIN.isActive() ? 16 : 0;
-            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.5 : 1;
+            double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.5);
             boolean isEclipse = eclipseModifier > 1;
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
