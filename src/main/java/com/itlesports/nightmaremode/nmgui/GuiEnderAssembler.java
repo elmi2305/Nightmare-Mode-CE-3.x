@@ -5,7 +5,7 @@ import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
 public class GuiEnderAssembler extends GuiContainer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/gui/guiEnderAssembler.png");
     private final EnderAssemblerTileEntity assembler;
 
     public GuiEnderAssembler(InventoryPlayer inventory, EnderAssemblerTileEntity assembler) {
