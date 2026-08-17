@@ -4,6 +4,7 @@ import api.world.WorldUtils;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.util.NMConfUtils;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
+import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
@@ -43,6 +45,12 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         if (par1 == 1 && !NightmareMode.allSkillsUnlocked && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the Beacon Offering skill.");
             ci.cancel();
+        }
+    }
+    @Inject(method = "clonePlayer", at = @At("TAIL"))
+    private void retainPreHardmodeIfhyDeathInventory(EntityPlayer oldPlayer, boolean playerLeavingTheEnd, CallbackInfo ci) {
+        if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
+            this.inventory.copyInventory(oldPlayer.inventory);
         }
     }
 

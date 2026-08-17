@@ -53,6 +53,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
     @Shadow public abstract ItemStack getHeldItem();
+    @Shadow public InventoryPlayer inventory;
     @Shadow protected abstract boolean isPlayer();
     @Shadow public PlayerCapabilities capabilities;
     @Shadow public FoodStats foodStats;
@@ -74,6 +75,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow public abstract ItemStack getCurrentArmor(int par1);
 
     @Shadow public abstract int getGloomLevel();
+
+    @Shadow
+    public abstract EntityItem dropPlayerItemWithRandomChoice(ItemStack par1ItemStack, boolean par2);
 
     @Unique private int ticksInWater;
     @Unique private int ticksSleeping;
@@ -515,6 +519,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         return (float) ((constant + prog + 0.2f) * mult);
     }
 
+    @Inject(method = "clonePlayer", at = @At("TAIL"))
+    private void retainPreHardmodeIfhyDeathInventory(EntityPlayer oldPlayer, boolean playerLeavingTheEnd, CallbackInfo ci) {
+        if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
+            this.inventory.copyInventory(oldPlayer.inventory);
+        }
+    }
 
     @Inject(method = "onItemUseFinish", at = @At("HEAD"))
     private void manageWaterDrinking(CallbackInfo ci){
