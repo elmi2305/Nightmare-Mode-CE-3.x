@@ -17,12 +17,17 @@ public class BlockEndFarmland extends FarmlandBlock {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("nightmare:ifhyEndFarmland");
-        this.top = this.blockIcon;
+        this.blockIcon = register.registerIcon("nightmare:ifhyHardenedEndstone");
+        this.top = register.registerIcon("nightmare:ifhyEndFarmland");
     }
 
     @Override @Environment(EnvType.CLIENT)
-    public Icon getIcon(int side, int metadata) { return this.top; }
+    public Icon getIcon(int side, int metadata) {
+        if (side == 0) {
+            return this.top;
+        }
+        return this.blockIcon;
+    }
 
     @Override protected boolean hasIrrigatingBlocks(World world, int x, int y, int z) { return true; }
     @Override protected void checkForSoilReversion(World world, int x, int y, int z) {}
