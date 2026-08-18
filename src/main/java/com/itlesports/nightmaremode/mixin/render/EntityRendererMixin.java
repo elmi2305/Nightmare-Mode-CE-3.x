@@ -733,12 +733,10 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 
         EntityLivingBase viewEntity = this.mc.renderViewEntity;
 
-        // Only apply in the overworld.
         if (viewEntity.dimension != 0) {
             return;
         }
 
-        // Determine the region the player is currently in.
         OverworldTierHelper.Region region = OverworldTierHelper.getRegion(
                 this.mc.theWorld,
                 viewEntity.posX,
@@ -750,7 +748,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             return;
         }
 
-        // Region‑specific fog colour.
         float r, g, b, range;
         if (region == OverworldTierHelper.Region.CRUEL_DESERT) {
             r = 1.0F;
@@ -765,14 +762,13 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             range = 120.0F;
         }
         else {
-            // Frozen wastes.
+            // Frozen wastes
             r = 1.0F;
             g = 1.0F;
             b = 1.0F;
             range = 40.0F;
         }
 
-        // Dense linear fog: fully opaque at 10 blocks.
         GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
         GL11.glFogf(GL11.GL_FOG_START, 0.0F);
         GL11.glFogf(GL11.GL_FOG_END, range);

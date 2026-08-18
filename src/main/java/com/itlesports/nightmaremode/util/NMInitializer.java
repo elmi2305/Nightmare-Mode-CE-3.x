@@ -2282,7 +2282,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_SCREW_16,
                 NMSkillNodes.BRING_SCREW_PUMP_4,
                 NMSkillNodes.BRING_REDSTONE_LATCH_16,
-                NMSkillNodes.COMPLETE_AUTOMATION_ACHIEVEMENTS);
+                NMSkillNodes.COMPLETE_IRON_AGE_ACHIEVEMENTS);
 
 //        SkillLockedCrafting.requireSkills(
 //                agrarianEssenceRecipe,
@@ -2318,7 +2318,7 @@ public abstract class NMInitializer implements AchievementExt {
                 ultimateEyeOfEnderRecipe,
                 NMSkillNodes.BRING_LIBRARIAN_ENDER_TREATISE,
                 NMSkillNodes.BRING_SCREW_PUMP_4,
-                NMSkillNodes.COMPLETE_AUTOMATION_ACHIEVEMENTS,
+                NMSkillNodes.COMPLETE_IRON_AGE_ACHIEVEMENTS,
                 NMSkillNodes.KILL_HOSTILE_MOB_10000,
                 NMSkillNodes.BRING_DIAMOND_INGOT_8,
                 NMSkillNodes.BRING_SOUL_URN_16,
@@ -2369,7 +2369,6 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.bow.itemID, NMSkillNodes.BRING_ARROW_64);
         SkillRecipeGates.crafting(BTWItems.compositeBow.itemID, NMSkillNodes.BRING_BOW_36, NMSkillNodes.BRING_BONE_16, NMSkillNodes.BRING_GLUE_16, NMSkillNodes.BRING_SINEW_16, NMSkillNodes.FIRE_ARROW_256);
         SkillRecipeGates.crafting(BTWItems.broadheadArrow.itemID, NMSkillNodes.BRING_BROADHEAD_ARROWHEAD_16);
-        SkillRecipeGates.crafting(BTWItems.boneFishHook.itemID, NMSkillNodes.BRING_BONE_CARVING_16);
         SkillRecipeGates.crafting(Item.fishingRod.itemID, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
         SkillRecipeGates.crafting(BTWItems.baitedFishingRod.itemID, NMSkillNodes.BRING_BAT_WING_16);
         SkillRecipeGates.crafting(BTWItems.stake.itemID, NMSkillNodes.BRING_SILK_16);
@@ -2531,11 +2530,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.breadDough.itemID, NMSkillNodes.BRING_FLOUR_32);
         SkillRecipeGates.crafting(BTWItems.rawMushroomOmelet.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_BROWN_MUSHROOM_32);
         SkillRecipeGates.crafting(BTWItems.rawScrambledEggs.itemID, NMSkillNodes.BRING_RAW_EGG_16);
-        SkillRecipeGates.crafting(BTWItems.unbakedPumpkinPie.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_FRESH_PUMPKIN_16);
+        SkillRecipeGates.crafting(BTWItems.unbakedPumpkinPie.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_PUMPKIN_16);
         SkillRecipeGates.crafting(Item.cake.itemID, NMSkillNodes.BRING_RAW_EGG_16);
         SkillRecipeGates.crafting(BTWItems.unbakedCookies.itemID, NMSkillNodes.BRING_CHOCOLATE_16);
-        SkillRecipeGates.crafting(BTWBlocks.carvedPumpkin.blockID, NMSkillNodes.BRING_FRESH_PUMPKIN_16);
-        SkillRecipeGates.crafting(Block.pumpkinLantern.blockID, NMSkillNodes.BRING_FRESH_PUMPKIN_16);
+        SkillRecipeGates.crafting(BTWBlocks.carvedPumpkin.blockID, NMSkillNodes.BRING_PUMPKIN_16);
+        SkillRecipeGates.crafting(Block.pumpkinLantern.blockID, NMSkillNodes.BRING_PUMPKIN_16);
         SkillRecipeGates.crafting(Item.bowlSoup.itemID, NMSkillNodes.BRING_BROWN_MUSHROOM_32);
         SkillRecipeGates.crafting(BTWItems.rawKebab.itemID, NMSkillNodes.BRING_BROWN_MUSHROOM_32, NMSkillNodes.BRING_RAW_MUTTON_16);
 
