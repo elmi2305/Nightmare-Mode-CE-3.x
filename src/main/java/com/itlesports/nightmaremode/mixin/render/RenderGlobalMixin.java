@@ -376,11 +376,19 @@ public abstract class RenderGlobalMixin {
         GL11.glDisable(GL11.GL_CULL_FACE);
         OverworldTierHelper.Region outerRegion = this.nightmareMode$getOuterSkyRegion();
         if (outerRegion == OverworldTierHelper.Region.CRUEL_DESERT) {
-            GL11.glColor4f(0.46F, 0.16F, 0.055F, 1.0F);
+            GL11.glColor4f(1.0F, 0.5F, 0.0F, 1.0F);
         } else if (outerRegion == OverworldTierHelper.Region.FROZEN_WASTES) {
-            GL11.glColor4f(0.56F, 0.69F, 0.78F, 1.0F);
-        } else {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        } else if (outerRegion == OverworldTierHelper.Region.LOST_OCEAN) {
+            GL11.glColor4f(0.0F, 0.5F, 0.0F, 1.0F);
+        } else if (outerRegion == OverworldTierHelper.Region.DEADZONE) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_FOG);
+            GL11.glColor4f(0.412F, 0.412F, 0.412F, 1.0F);
+        } else if (outerRegion == OverworldTierHelper.Region.GREAT_VOID) {
+            GL11.glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
+        } else {
+            GL11.glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
         }
 
 
@@ -461,7 +469,8 @@ public abstract class RenderGlobalMixin {
     private boolean nightmareMode$hasOuterSkybox() {
         OverworldTierHelper.Region region = this.nightmareMode$getOuterSkyRegion();
         return region == OverworldTierHelper.Region.CRUEL_DESERT
-                || region == OverworldTierHelper.Region.FROZEN_WASTES;
+                || region == OverworldTierHelper.Region.FROZEN_WASTES || region == OverworldTierHelper.Region.DEADZONE
+                || region == OverworldTierHelper.Region.GREAT_VOID || region == OverworldTierHelper.Region.LOST_OCEAN;
     }
 
     @Unique

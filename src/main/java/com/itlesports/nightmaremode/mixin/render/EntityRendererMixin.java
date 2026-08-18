@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -722,6 +723,61 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             targetAlpha = Math.max(0.0f, 1.0f - sunriseProgress * (1000.0f / 240.0f));
         }
         return targetAlpha;
+    }
+
+    @Inject(method = "setupFog", at = @At("TAIL"))
+    private void applyOuterRegionDenseFog(int startCoords, float farPlaneDistance, CallbackInfo ci) {
+        if (this.mc == null || this.mc.theWorld == null || this.mc.renderViewEntity == null) {
+            return;
+        }
+
+        EntityLivingBase viewEntity = this.mc.renderViewEntity;
+
+        // Only apply in the overworld.
+        if (viewEntity.dimension != 0) {
+            return;
+        }
+
+        // Determine the region the player is currently in.
+        OverworldTierHelper.Region region = OverworldTierHelper.getRegion(
+                this.mc.theWorld,
+                viewEntity.posX,
+                viewEntity.posZ
+        );
+
+        if (region != OverworldTierHelper.Region.CRUEL_DESERT
+                && region != OverworldTierHelper.Region.FROZEN_WASTES && region != OverworldTierHelper.Region.GREAT_VOID) {
+            return;
+        }
+
+        // Region‑specific fog colour.
+        float r, g, b, range;
+        if (region == OverworldTierHelper.Region.CRUEL_DESERT) {
+            r = 1.0F;
+            g = 0.5F;
+            b = 0.0F;
+            range = 40.0F;
+        }
+        else if (region == OverworldTierHelper.Region.GREAT_VOID) {
+            r = 0.0F;
+            g = 0.0F;
+            b = 0.0F;
+            range = 120.0F;
+        }
+        else {
+            // Frozen wastes.
+            r = 1.0F;
+            g = 1.0F;
+            b = 1.0F;
+            range = 40.0F;
+        }
+
+        // Dense linear fog: fully opaque at 10 blocks.
+        GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+        GL11.glFogf(GL11.GL_FOG_START, 0.0F);
+        GL11.glFogf(GL11.GL_FOG_END, range);
+        GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
+        GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(r, g, b, 1.0f));
     }
 
 }
