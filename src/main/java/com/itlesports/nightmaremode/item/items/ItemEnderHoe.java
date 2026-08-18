@@ -18,7 +18,7 @@ public class ItemEnderHoe extends HoeItem {
     }
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
-        if (block == Block.whiteStone && world.getBlockMetadata(x, y, z) != 1) {
+        if (block == Block.whiteStone && world.getBlockMetadata(x, y, z) == 1) {
             return this.efficiencyOnProperMaterial;
         }
         return super.getStrVsBlock(stack, world, block, x, y, z);

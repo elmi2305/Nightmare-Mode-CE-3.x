@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.skill.gui;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.skill.SkillBranch;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillNet;
@@ -201,7 +202,7 @@ public class GuiSkillTree extends GuiScreen {
             case AVAILABLE -> null;
             case PARENT_LOCKED -> "Requires [" + this.getMissingParentNames(node) + "]";
         };
-        String reward = state == NodeVisualState.UNLOCKED ? node.reward.getText() : "?";
+        String reward = (state == NodeVisualState.UNLOCKED || NightmareMode.alwaysShowRewards) ? node.reward.getText() : "?";
         String body = (status == null ? "" : (status + "\n")) + (state != NodeVisualState.PARENT_LOCKED ? (node.requirementText + "\n" + "Reward: " + reward) : "");
         int width = Math.max(140, Math.max(this.fontRenderer.getStringWidth(node.name), this.fontRenderer.splitStringWidth(body, 180)));
         int height = 24 + this.fontRenderer.splitStringWidth(body, width);

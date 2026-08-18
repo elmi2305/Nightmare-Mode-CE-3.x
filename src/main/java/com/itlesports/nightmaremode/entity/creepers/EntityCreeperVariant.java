@@ -80,7 +80,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
 
         int progress = NMUtils.getWorldProgress();
-        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
+        double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.25);
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
@@ -547,7 +547,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     protected float getExplosionSize() {
         float aprilFools = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
         float variantMod = 1f;
-        float bloodmoon = NMUtils.getIsBloodMoon() ? 0.25f : 0;
+        float bloodmoon = (float) (NMUtils.getBloodMoonModifier(1.25) - 1.0);
         float eclipse = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float nite = (float) NMUtils.getNiteMultiplier();
         int p = NMUtils.getWorldProgress();
@@ -602,7 +602,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if(!isHostile){
             return constant;
         }
-        int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
+        int bloodMoonModifier = NMUtils.hasEmpoweredBloodMoonMobs() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
 
         final double niteMultiplier = NMUtils.getNiteMultiplier();

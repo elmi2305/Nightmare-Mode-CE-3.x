@@ -32,7 +32,7 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         super.applyEntityAttributes();
 
         int progress = NMUtils.getWorldProgress();
-        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
+        double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.25);
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
 
 

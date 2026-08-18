@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import api.achievement.AchievementEventDispatcher;
+import api.block.blocks.OreBlockStaged;
 import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
@@ -55,6 +56,18 @@ public class ItemInWorldManagerMixin {
             }
         }
         Block block = Block.blocksList[this.theWorld.getBlockId(x, y, z)];
+        if (this.isSkillLockedOre(block, x, y, z)) {
+            ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
+            block.convertBlock(held, this.theWorld, x, y, z, fromSide);
+            if (held != null) {
+                held.onBlockDestroyed(this.theWorld, block.blockID, x, y, z, this.thisPlayerMP);
+                if (held.stackSize <= 0) {
+                    this.thisPlayerMP.destroyCurrentEquippedItem();
+                }
+            }
+            cir.setReturnValue(true);
+            return;
+        }
         if (!(block instanceof BlockOreNode oreNode)) {
             return;
         }
@@ -73,6 +86,21 @@ public class ItemInWorldManagerMixin {
             this.thisPlayerMP.destroyCurrentEquippedItem();
         }
         cir.setReturnValue(true);
+    }
+
+    @Unique
+    private boolean isSkillLockedOre(Block block, int x, int y, int z) {
+        if (!(block instanceof OreBlockStaged ore)) {
+            return false;
+        }
+
+        if (ore.getStrata(this.theWorld, x, y, z) == 2
+                && !SkillHandler.getPlayerData(this.thisPlayerMP).canMineStrataThreeOre) {
+            return true;
+        }
+
+        return block.blockID == Block.oreDiamond.blockID
+                && !SkillHandler.canHarvestDiamondOre(this.thisPlayerMP);
     }
 
     @Inject(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;playAuxSFXAtEntity(Lnet/minecraft/src/EntityPlayer;IIIII)V"))

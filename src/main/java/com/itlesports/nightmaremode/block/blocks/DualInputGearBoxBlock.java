@@ -1,20 +1,25 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import api.block.util.MechPowerUtils;
+import api.world.BlockPos;
+import btw.block.BTWBlocks;
+import btw.block.blocks.AxleBlock;
 import btw.block.blocks.GearBoxBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.src.Block;
-import net.minecraft.src.IBlockAccess;
-import net.minecraft.src.Icon;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 /** A gearbox whose front and back faces are inputs and whose other faces output. */
 public class DualInputGearBoxBlock extends GearBoxBlock {
+    @Environment(EnvType.CLIENT)
+    private Icon iconInput;
+    @Environment(EnvType.CLIENT)
+    private Icon iconOutput;
+
     public DualInputGearBoxBlock(int blockId) {
         super(blockId);
         this.setUnlocalizedName("ifhyDualInputGearBox");
-        this.setTextureName("btw:gearbox");
+        this.setTextureName("nightmare:ifhyDoubleGearbox");
     }
 
     @Override
@@ -40,14 +45,46 @@ public class DualInputGearBoxBlock extends GearBoxBlock {
         return 0;
     }
 
+//    @Override
+//    @Environment(EnvType.CLIENT)
+//    public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side) {
+//        int facing = this.getFacing(access, x, y, z);
+//        if (side == facing || side == Block.getOppositeFacing(facing)) {
+//            // Asking the base implementation for the marked face returns its input texture.
+//            return super.getBlockTexture(access, x, y, z, facing);
+//        }
+//        return super.getBlockTexture(access, x, y, z, side);
+//    }
+
     @Override
-    @Environment(EnvType.CLIENT)
-    public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side) {
-        int facing = this.getFacing(access, x, y, z);
-        if (side == facing || side == Block.getOppositeFacing(facing)) {
-            // Asking the base implementation for the marked face returns its input texture.
-            return super.getBlockTexture(access, x, y, z, facing);
+    @Environment(value=EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        super.registerIcons(register);
+        this.iconInput = register.registerIcon(this.getTextureName() + "_input");
+        this.iconOutput = register.registerIcon(this.getTextureName() + "_output");
+    }
+
+    @Override
+    @Environment(value=EnvType.CLIENT)
+    public Icon getIcon(int iSide, int iMetadata) {
+        if (iSide == 3) {
+            return this.iconInput;
         }
-        return super.getBlockTexture(access, x, y, z, side);
+        return this.blockIcon;
+    }
+
+    @Override
+    @Environment(value=EnvType.CLIENT)
+    public Icon getBlockTexture(IBlockAccess blockAccess, int i, int j, int k, int iSide) {
+        int iFacing = this.getFacing(blockAccess, i, j, k);
+        if (iSide == iFacing || iSide == Block.getOppositeFacing(iFacing)) {
+            return this.iconInput;
+        }
+        BlockPos sideBlockPos = new BlockPos(i, j, k);
+        sideBlockPos.addFacingAsOffset(iSide);
+        if (blockAccess.getBlockId(sideBlockPos.x, sideBlockPos.y, sideBlockPos.z) == BTWBlocks.axle.blockID && ((AxleBlock)BTWBlocks.axle).isAxleOrientedTowardsFacing(blockAccess, sideBlockPos.x, sideBlockPos.y, sideBlockPos.z, iSide)) {
+            return this.iconOutput;
+        }
+        return this.blockIcon;
     }
 }

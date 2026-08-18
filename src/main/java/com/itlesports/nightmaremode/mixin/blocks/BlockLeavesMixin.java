@@ -10,6 +10,7 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
@@ -23,6 +24,17 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         super(par1, par2Material, par3);
     }
 
+
+    @Override
+    public int quantityDropped(Random par1Random) {
+        return par1Random.nextInt(12) == 0 ? 1 : 0;
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void doHardness(int par1, CallbackInfo ci)
+    {
+        this.setHardness(0.08f);
+    }
     @Override
     public boolean isBreakableBarricade(World world, int i, int j, int k, boolean advancedBreaker) {
         return false;
@@ -30,12 +42,14 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Inject(method = "idDropped", at= @At("HEAD"),cancellable = true)
     private void allowAppleDrops(int metadata, Random rand, int fortuneModifier, CallbackInfoReturnable<Integer> cir){
-        if(rand.nextInt(8) == 0){
+        if(rand.nextInt(4) == 0){
             cir.setReturnValue(NMItems.twig.itemID);
             return;
         }
         cir.setReturnValue(NMItems.leaf.itemID);
     }
+
+
 
     @Override
     public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {

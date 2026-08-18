@@ -33,7 +33,7 @@ public final class NMSkillNodes {
             "clay_bulk",
             "Clay Stockpile",
             Block.blockClay,
-            2, 3,
+            5, 2,
             "Bring 32 clay blocks.",
             Block.blockClay.blockID, 0, false, 32,
             "Clay cooks 12,000 ticks faster.", SkillRewardActions.addClayCookTimeReduction(12000),
@@ -54,7 +54,7 @@ public final class NMSkillNodes {
             "stone_marathon",
             "Stone Marathon",
             Block.stone,
-            0, 2,
+            5, 0,
             "Mine 1,000 stone of any strata.",
             (p, w) -> SkillHandler.getPlayerData(p).stoneMined >= 1000,
             "+5% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.05F),
@@ -64,7 +64,7 @@ public final class NMSkillNodes {
             "flint_toolmaking",
             "Flint Toolmaking",
             Item.flint,
-            4, 0,
+            3, 0,
             "Bring 4 flint.",
             Item.flint.itemID, 0, false, 4,
             "Unlock the flint axe crafting recipe.", none(),
@@ -74,7 +74,7 @@ public final class NMSkillNodes {
             "iron_sample",
             "Iron Sample",
             Item.ingotIron,
-            4, -1,
+            1, -1,
             "Bring 1 iron ingot.",
             Item.ingotIron.itemID, 0, false, 1,
             "+5% global iron-pile chance and 1 wood-gravity progress.", combine(SkillRewardActions.addGlobalIronPileChance(0.05F), SkillRewardActions.addWoodGravityProgress()),
@@ -84,7 +84,7 @@ public final class NMSkillNodes {
             "iron_pile_cache",
             "Pile Preference",
             BTWItems.ironOrePile,
-            5, -1,
+            2, -1,
             "Bring 8 iron ore piles.",
             BTWItems.ironOrePile.itemID, 0, false, 8,
             "+5% iron-pile chance.", SkillRewardActions.addIronPileChance(0.05F),
@@ -105,7 +105,7 @@ public final class NMSkillNodes {
             "lithium_doubling",
             "Lithium Prospector",
             NMItems.lithiumRefined,
-            -1, -2,
+            -1, -1,
             "Bring 256 refined lithium.",
             NMItems.lithiumRefined.itemID, 0, false, 256,
             "Lithium ore drops twice as much raw lithium.", SkillRewardActions.doubleLithiumDrops(),
@@ -115,8 +115,8 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_BLACKSTONE_64 = deferred(bring(
             "blackstone_authority",
             "Blackstone Authority",
-            new ItemStack(Block.cobblestone, 1, 2),
-            4, -2,
+            new ItemStack(BTWBlocks.looseCobblestone, 1, 2),
+            2, -2,
             "Bring 64 blackstone (strata-three cobblestone).",
             Block.cobblestone.blockID, 2, true, 64,
             "Strata-three ore can be mined.", SkillRewardActions.unlockStrataThreeOre(),
@@ -127,7 +127,7 @@ public final class NMSkillNodes {
             "perfect_diamond_yield",
             "Perfect Diamond Yield",
             NMItems.refinedDiamondIngot,
-            -3, 3,
+            4, 6,
             "Bring 1 refined diamond ingot.",
             NMItems.refinedDiamondIngot.itemID, 0, false, 1,
             "Diamond ore always drops diamond-bearing rock.", SkillRewardActions.guaranteeDiamondRockDrop(),
@@ -137,7 +137,7 @@ public final class NMSkillNodes {
             "nickel_duplication",
             "Nickel Duplication",
             NMBlocks.nickelOre,
-            5, -2,
+            3, -2,
             "Mine 500 nickel ore.",
             (p, w) -> SkillHandler.getPlayerData(p).nickelOreMined >= 500,
             "Nickel ore gains a 5% chance to drop a second rock.", SkillRewardActions.addDoubleNickelRockChance(0.05F),
@@ -148,17 +148,17 @@ public final class NMSkillNodes {
             "diamond_lithium",
             "Lithium Diamond Theory",
             NMItems.lithiumRefined,
-            -1, -1,
+            -1, 0,
             "Bring 1 refined lithium.",
             NMItems.lithiumRefined.itemID, 0, false, 1,
-            "+1/5 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
+            "+1 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
             MINING, false);
 
     public static final SkillNode BRING_CRUDE_OBSIDIAN_16 = bring(
             "nether_obsidian",
             "Crude Portal Theory",
             new ItemStack(Block.obsidian, 1, 1),
-            6, 2,
+            4, -2,
             "Bring 16 crude obsidian.",
             Block.obsidian.blockID, 1, true, 16,
             "+1/8 Nether access progress. Diamond tools and food can survive Nether entry.",
@@ -169,20 +169,20 @@ public final class NMSkillNodes {
             "diamond_crystals",
             "Crystal Diamond Theory",
             NMItems.crystalPolishedShard,
-            1, -2,
+            0, -2,
             "Bring 4 polished crystal shards.",
             NMItems.crystalPolishedShard.itemID, 0, false, 4,
-            "+1/5 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
+            "+1 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
             MINING, false);
 
     public static final SkillNode BRING_IRON_ANVIL = bring(
             "diamond_anvil",
             "Anvil Diamond Theory",
             NMBlocks.ironAnvil,
-            6, -2,
+            7, 5,
             "Bring 1 iron anvil.",
             NMBlocks.ironAnvil.blockID, 0, false, 1,
-            "+1/5 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
+            "+1 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
             MINING, false);
 
     public static final SkillNode MINE_STRATA_ONE_COBBLESTONE_3000 = deferred(counter(
@@ -200,7 +200,7 @@ public final class NMSkillNodes {
             "waste_efficiency",
             "Waste Efficiency",
             NMItems.refinementWaste,
-            7, -3,
+            1, -3,
             "Bring 32 refinement waste.",
             NMItems.refinementWaste.itemID, 0, false, 32,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F),
@@ -210,7 +210,7 @@ public final class NMSkillNodes {
             "failed_refinement",
             "Failure Analysis",
             NMItems.failedDiamondRefinement,
-            7, -2,
+            7, 6,
             "Bring 16 failed diamond refinement.",
             NMItems.failedDiamondRefinement.itemID, 0, false, 16,
             "+10% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.10F),
@@ -220,7 +220,7 @@ public final class NMSkillNodes {
             "cave_oxygen",
             "Cave Breathing",
             NMItems.diamondBearingRock,
-            -1, 0,
+            7, 1,
             "Bring 64 diamond-bearing rock.",
             NMItems.diamondBearingRock.itemID, 0, false, 64,
             "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F),
@@ -230,38 +230,39 @@ public final class NMSkillNodes {
             "nickel_heat_recipe",
             "Nickel Heatwork",
             NMItems.nickelPlate,
-            0, -2,
+            -1, -2,
             "Bring 4 nickel plates.",
             NMItems.nickelPlate.itemID, 0, false, 4,
             "Unlock the Heat-Resistant Nickel Component recipe.", none(),
             MINING, false);
 
-    public static final SkillNode BRING_COAL_DUST_64 = bring(
+    public static final SkillNode BRING_COAL_DUST_64 = deferred(bring(
             "coal_recipe",
             "Coal Reconstitution",
             BTWItems.coalDust,
-            1, -1,
+            0, 1,
             "Bring 64 coal dust.",
             BTWItems.coalDust.itemID, 0, false, 64,
             "Unlock the coal recipe.", none(),
-            MINING, false);
+            MINING, false),
+            () -> NMSkillNodes.BRING_COAL_DUST_32);
 
-    public static final SkillNode BRING_LITHIUM_SALT_16 = deferred(bring(
+    public static final SkillNode BRING_LITHIUM_SALT_16 = bring(
             "lithium_cistern",
             "Lithium Brine Control",
             NMItems.lithiumSalt,
-            7, -1,
+            2, -3,
             "Bring 16 lithium salt.",
             NMItems.lithiumSalt.itemID, 0, false, 16,
             "+10% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.10F),
-            MINING, false),
-            () -> NMSkillNodes.BRING_FAILED_DIAMOND_REFINEMENT_16);
+            MINING, false,
+            BRING_RAW_LITHIUM_64);
 
     public static final SkillNode BRING_IRON_BLOOM_8 = bring(
             "iron_bloom_recipe",
             "Bloom Consolidation",
             NMItems.ironBloom,
-            3, -1,
+            0, -1,
             "Bring 8 iron bloom items.",
             NMItems.ironBloom.itemID, 0, false, 8,
             "+1/5 iron-ingot recipe progress.", SkillRewardActions.addIronIngotRecipeProgress(),
@@ -271,7 +272,7 @@ public final class NMSkillNodes {
             "nether_diamond_hammer",
             "Portal Hammer",
             NMItems.diamondHammer,
-            6, 1,
+            7, 4,
             "Bring 1 diamond hammer.",
             NMItems.diamondHammer.itemID, 0, false, 1,
             "+1/8 Nether access progress.", SkillRewardActions.addNetherAccessProgress(),
@@ -301,7 +302,7 @@ public final class NMSkillNodes {
             "gravel_shovel",
             "Gravel Familiarity",
             Block.gravel,
-            4, 1,
+            4, 0,
             "Bring 64 gravel.",
             Block.gravel.blockID, 0, false, 64,
             "Shovels mine 5% faster.", SkillRewardActions.addShovelSpeed(0.05F),
@@ -311,7 +312,7 @@ public final class NMSkillNodes {
             "clay_shovel",
             "Clay Familiarity",
             Item.clay,
-            4, 3,
+            4, 2,
             "Bring 64 clay.",
             Item.clay.itemID, 0, false, 64,
             "Shovels mine 5% faster.", SkillRewardActions.addShovelSpeed(0.05F),
@@ -332,7 +333,7 @@ public final class NMSkillNodes {
             "dense_core_metallurgy",
             "Dense-Core Metallurgy",
             NMItems.denseNetherrackCore,
-            -3, 4,
+            7, -1,
             "Bring 16 dense netherrack cores.",
             NMItems.denseNetherrackCore.itemID, 0, false, 16,
             "Unlock dense-core machinery and steel-nugget consolidation.", none(),
@@ -353,7 +354,7 @@ public final class NMSkillNodes {
             "jump_cut_slabs",
             "Repeated Compression",
             BTWBlocks.dirtSlab,
-            1, 3,
+            3, 3,
             "Jump 1,000 times.",
             (p, w) -> SkillHandler.getPlayerData(p).jumps >= 1000,
             "+1 to unlock the dirt, sand, and gravel-slab recipes.", none(),
@@ -363,7 +364,7 @@ public final class NMSkillNodes {
             "diamond_toolmaking",
             "Diamond Toolmaking",
             BTWItems.diamondIngot,
-            7, 0,
+            6, 6,
             "Bring 2 diamond ingots.",
             BTWItems.diamondIngot.itemID, 0, false, 2,
             "Unlock precision diamond tools and armor plates.", none(),
@@ -376,7 +377,7 @@ public final class NMSkillNodes {
             "thermal_engineering",
             "Thermal Engineering",
             NMItems.nickelHeatComponent,
-            -3, 5,
+            7, -2,
             "Bring 2 heat-resistant nickel components.",
             NMItems.nickelHeatComponent.itemID, 0, false, 2,
             "Unlock high-temperature machinery.", none(),
@@ -400,7 +401,7 @@ public final class NMSkillNodes {
             "road_engineering",
             "Road Engineering",
             NMBlocks.blockRoad,
-            -3, 2,
+            7, 0,
             "Bring 64 road blocks.",
             NMBlocks.blockRoad.blockID, 0, false, 64,
             "Unlock heat-treated asphalt.", none(),
@@ -470,7 +471,7 @@ public final class NMSkillNodes {
             "deep_strata_stones_256",
             "Deep-Strata Consolidation",
             new ItemStack(BTWItems.stone, 1, 2),
-            3, -2,
+            1, -2,
             "Bring 256 loose stones from strata three.",
             BTWItems.stone.itemID, 2, true, 256,
             "Unlock strata-three cobblestone block and slab recipes.", none(),
@@ -501,38 +502,20 @@ public final class NMSkillNodes {
             "clay_balls_32",
             "Potter's Feedstock",
             Item.clay,
-            4, 2,
+            4, 1,
             "Bring 32 clay balls.",
             Item.clay.itemID, 0, false, 32,
             "Unlock turntable pottery recipes.", none(),
             MINING, false),
             () -> NMSkillNodes.BRING_CLAY_PILE_16);
 
-    public static final SkillNode BRING_UNFIRED_CRUDE_BRICK_16 = bring(
-            "unfired_crude_bricks_16",
-            "Crude Kiln Load",
-            BTWItems.unfiredCrudeBrick,
-            3, 3,
-            "Bring 16 unfired crude bricks.",
-            BTWItems.unfiredCrudeBrick.itemID, 0, false, 16,
-            "Unlock crude brick kiln recipes.", none(),
-            MINING, false);
 
-    public static final SkillNode BRING_BRICK_32 = bring(
-            "bricks_32",
-            "Brick Architecture",
-            Item.brick,
-            0, 1,
-            "Bring 32 bricks.",
-            Item.brick.itemID, 0, false, 32,
-            "Unlock brick block, slab, siding, moulding, corner, and stair recipes.", none(),
-            MINING, false);
 
     public static final SkillNode BRING_STONE_BRICK_32 = bring(
             "stone_bricks_32",
             "Stone Architecture",
             BTWItems.stoneBrick,
-            0, 0,
+            0, 3,
             "Bring 32 stone brick items.",
             BTWItems.stoneBrick.itemID, 0, false, 32,
             "Unlock stone brick decorative recipes.", none(),
@@ -575,14 +558,38 @@ public final class NMSkillNodes {
             1, 1,
             "Bring 32 gravel piles.",
             BTWItems.gravelPile.itemID, 0, false, 32,
-            "Unlock gravel and flint piston packing recipes.", none(),
+            "Unlock unlit torch, twig sharpening, gravel and flint piston packing recipes.", none(),
             MINING, false);
 
+    public static final SkillNode BRING_UNFIRED_CRUDE_BRICK_16 = bring(
+            "unfired_crude_bricks_16",
+            "Crude Kiln Load",
+            BTWItems.unfiredCrudeBrick,
+            4, 3,
+            "Bring 16 unfired crude bricks.",
+            BTWItems.unfiredCrudeBrick.itemID, 0, false, 16,
+            "Unlock crude brick kiln recipes.", none(),
+            MINING, false,
+            BRING_CLAY_64,
+            BRING_GRAVEL_PILE_32,
+            BRING_DIRT_PILE_32,
+            BRING_SAND_PILE_32);
+
+    public static final SkillNode BRING_BRICK_32 = bring(
+            "bricks_32",
+            "Brick Architecture",
+            Item.brick,
+            1, 3,
+            "Bring 32 bricks.",
+            Item.brick.itemID, 0, false, 32,
+            "Unlock brick block, slab, siding, moulding, corner, and stair recipes.", none(),
+            MINING, false,
+            BRING_UNFIRED_CRUDE_BRICK_16);
     public static final SkillNode BRING_IRON_ORE_PILE_32 = bring(
             "iron_ore_piles_32",
             "Iron Ore Packing",
             BTWItems.ironOrePile,
-            2, -1,
+            0, 0,
             "Bring 32 iron ore piles.",
             BTWItems.ironOrePile.itemID, 0, false, 32,
             "Unlock the iron ore chunk piston packing recipe.", none(),
@@ -592,7 +599,7 @@ public final class NMSkillNodes {
             "emeralds_16",
             "Emerald Reclamation",
             Item.emerald,
-            2, -2,
+            6, -3,
             "Bring 16 emeralds.",
             Item.emerald.itemID, 0, false, 16,
             "Unlock the emerald pile crucible recovery recipe.", none(),
@@ -602,7 +609,7 @@ public final class NMSkillNodes {
             "diamonds_16",
             "Diamond Reclamation",
             Item.diamond,
-            6, -1,
+            7, 2,
             "Bring 16 diamonds.",
             Item.diamond.itemID, 0, false, 16,
             "Unlock the diamond pile crucible recovery recipe.", none(),
@@ -612,7 +619,7 @@ public final class NMSkillNodes {
             "iron_ingots_16",
             "Iron Toolmaking",
             Item.ingotIron,
-            5, 0,
+            3, -1,
             "Bring 16 iron ingots.",
             Item.ingotIron.itemID, 0, false, 16,
             "Unlock anvil, anchor, and iron tool recipes.", none(),
@@ -622,7 +629,7 @@ public final class NMSkillNodes {
             "diamond_ingots_8",
             "Diamond Industry",
             BTWItems.diamondIngot,
-            7, 1,
+            5, 6,
             "Bring 8 diamond ingots.",
             BTWItems.diamondIngot.itemID, 0, false, 8,
             "Unlock diamond tool, diamond armor plate, and diamond ingot block recipes.", none(),
@@ -698,7 +705,7 @@ public final class NMSkillNodes {
             "sapling_planter",
             "Forest Planter",
             Block.sapling,
-            2, 3,
+            0, 4,
             "Plant 100 saplings.",
             (p, w) -> SkillHandler.getPlayerData(p).saplingsPlanted >= 100,
             "+5% twig drop chance.", SkillRewardActions.addTwigDropChance(0.05F),
@@ -708,7 +715,7 @@ public final class NMSkillNodes {
             "grass_block_hemp",
             "Sod Examination",
             Block.grass,
-            1, 4,
+            2, 4,
             "Bring 1 grass block.",
             Block.grass.blockID, 0, false, 1,
             "+2% hemp-seed chance.", SkillRewardActions.addHempSeedChance(0.02F),
@@ -727,7 +734,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode TAME_ANIMAL_1 = counter(
             "nether_tamer",
-            "Dimensional Tamer",
+            "Tamer",
             Item.leash,
             3, 0,
             "Tame 1 animal.",
@@ -749,7 +756,7 @@ public final class NMSkillNodes {
             "rare_fishing",
             "Rare Angler",
             Item.fishingRod,
-            5, 0,
+            5, -1,
             "Catch 50 fish.",
             (p, w) -> SkillHandler.getPlayerData(p).fishCaught >= 50,
             "+5% rare-fish chance.", SkillRewardActions.addRareFishChance(0.05F),
@@ -759,7 +766,7 @@ public final class NMSkillNodes {
             "cooked_preservation",
             "Preserving Cook",
             Item.beefCooked,
-            1, -1,
+            0, -1,
             "Cook 200 food items.",
             (p, w) -> SkillHandler.getPlayerData(p).foodCooked >= 200,
             "Raw food globally spoils 5% slower and grants 1 wood-gravity progress.", combine(SkillRewardActions.slowFoodSpoilageGlobally(), SkillRewardActions.addWoodGravityProgress()),
@@ -779,29 +786,28 @@ public final class NMSkillNodes {
             "dirt_fiber",
             "Soil Fiber Mastery",
             Block.dirt,
-            0, 4,
+            1, 4,
             "Break 2,000 dirt.",
             (p, w) -> SkillHandler.getPlayerData(p).dirtMined >= 2000,
             "Tall grass always drops plant fiber.", SkillRewardActions.alwaysDropPlantFiberFromTallGrass(),
             HUSBANDRY, false),
             () -> NMSkillNodes.BREAK_DIRT_1000);
 
-    public static final SkillNode BRING_LOG_64 = deferred(bring(
+    public static final SkillNode BRING_LOG_64 = bring(
             "log_twigs",
             "Logged Branches",
             Block.wood,
-            1, 3,
+            2, 3,
             "Bring 64 logs.",
             Block.wood.blockID, 0, false, 64,
             "+5% twig drop chance.", SkillRewardActions.addTwigDropChance(0.05F),
-            HUSBANDRY, false),
-            () -> NMSkillNodes.PLANT_SAPLING_100);
+            HUSBANDRY, false);
 
     public static final SkillNode BRING_CALAMARI_16 = bring(
             "calamari_loot",
             "Calamari Tribute",
             NMItems.calamari,
-            5, 1,
+            5, 0,
             "Bring 16 calamari.",
             NMItems.calamari.itemID, 0, false, 16,
             "+5% mob drops.", SkillRewardActions.addMobLootChance(0.05F),
@@ -811,7 +817,7 @@ public final class NMSkillNodes {
             "crop_hemp",
             "Crop Rotation",
             Block.crops,
-            4, -1,
+            3, -1,
             "Plant 200 crops.",
             (p, w) -> SkillHandler.getPlayerData(p).cropsPlanted >= 200,
             "+5% hemp-seed chance when hoeing grass.", SkillRewardActions.addHempSeedChance(0.05F),
@@ -891,7 +897,7 @@ public final class NMSkillNodes {
             "rare_fish_trophies",
             "Trophy Angler",
             NMItems.swordfish,
-            5, 2,
+            5, 1,
             "Bring 32 rare fish.",
             32,
             "+5% rare-fish chance.", SkillRewardActions.addRareFishChance(0.05F),
@@ -908,16 +914,15 @@ public final class NMSkillNodes {
             "Unlock the Oxygen Mask recipe.", none(),
             HUSBANDRY, false);
 
-    public static final SkillNode BREAK_LEAF_500 = deferred(counter(
+    public static final SkillNode BREAK_LEAF_500 = counter(
             "leaf_twigs",
             "Leaf Sifter",
             Block.leaves,
-            0, 3,
+            1, 3,
             "Break 500 leaves.",
             (p, w) -> SkillHandler.getPlayerData(p).leavesMined >= 500,
             "+5% twig drop chance.", SkillRewardActions.addTwigDropChance(0.05F),
-            HUSBANDRY, false),
-            () -> NMSkillNodes.PLANT_SAPLING_100);
+            HUSBANDRY, false);
 
     public static final SkillNode BRING_MELON_BLOCK_64 = bring(
             "melon_damage",
@@ -933,7 +938,7 @@ public final class NMSkillNodes {
             "mature_crop_hemp",
             "Mature Harvest",
             Block.crops,
-            5, -1,
+            4, -1,
             "Harvest 500 fully-grown crops.",
             (p, w) -> SkillHandler.getPlayerData(p).fullyGrownCropsHarvested >= 500,
             "+2% hemp-seed chance.", SkillRewardActions.addHempSeedChance(0.02F),
@@ -944,7 +949,7 @@ public final class NMSkillNodes {
             "cured_preservation",
             "Cured Example",
             BTWItems.curedMeat,
-            2, -1,
+            1, -1,
             "Bring 16 cured meat.",
             BTWItems.curedMeat.itemID, 0, false, 16,
             "Raw food spoils 5% slower.", SkillRewardActions.slowFoodSpoilage(),
@@ -976,7 +981,7 @@ public final class NMSkillNodes {
             "foul_preservation",
             "Spoilage Autopsy",
             BTWItems.foulFood,
-            3, -1,
+            2, -1,
             "Bring 256 foul food.",
             BTWItems.foulFood.itemID, 0, false, 256,
             "Raw food spoils 5% slower.", SkillRewardActions.slowFoodSpoilage(),
@@ -1075,15 +1080,16 @@ public final class NMSkillNodes {
             HUSBANDRY, true),
             () -> NMSkillNodes.VISIT_UNIQUE_BIOME_4);
 
-    public static final SkillNode BRING_DRILL_1 = bring(
+    public static final SkillNode BRING_DRILL_1 = deferred(bring(
             "bring_drill",
             "Driller",
             NMItems.drill,
-            0, 2,
+            0, 3,
             "Bring 1 Drill.",
             NMItems.drill.itemID, 0, false, 1,
             "Food spoils 10% faster, but many recipes are unlocked", SkillRewardActions.multiplyFoodSpoilageRate(1.1f),
-            HUSBANDRY, false);
+            HUSBANDRY, false),
+            () -> NMSkillNodes.BRING_SAWDUST_16);
 
     public static final SkillNode BRING_BARK_64 = bring(
             "bark_64",
@@ -1099,7 +1105,7 @@ public final class NMSkillNodes {
             "bone_carvings_16",
             "Hook Carving",
             BTWItems.boneCarving,
-            0, 1,
+            0, 2,
             "Bring 16 bone carvings.",
             BTWItems.boneCarving.itemID, 0, false, 16,
             "Unlock the bone fish hook recipe.", none(),
@@ -1109,7 +1115,7 @@ public final class NMSkillNodes {
             "bone_hooks_8",
             "Primitive Angling",
             BTWItems.boneFishHook,
-            0, 0,
+            0, 1,
             "Bring 8 bone fish hooks.",
             BTWItems.boneFishHook.itemID, 0, false, 8,
             "Unlock the fishing rod recipe.", none(),
@@ -1120,7 +1126,7 @@ public final class NMSkillNodes {
             "bat_wings_16",
             "Nocturnal Baiting",
             BTWItems.batWing,
-            0, -1,
+            0, 0,
             "Bring 16 bat wings.",
             BTWItems.batWing.itemID, 0, false, 16,
             "Unlock the baited fishing rod recipe.", none(),
@@ -1316,7 +1322,7 @@ public final class NMSkillNodes {
             "raw_eggs_16",
             "Egg Cookery",
             BTWItems.rawEgg,
-            5, 4,
+            5, 3,
             "Bring 16 raw eggs.",
             BTWItems.rawEgg.itemID, 0, false, 16,
             "Unlock hard-boiled egg, omelet, scrambled egg, pumpkin pie, and cake recipes.", none(),
@@ -1347,7 +1353,7 @@ public final class NMSkillNodes {
             "pumpkins_16",
             "Pumpkin Cookery",
             BTWBlocks.freshPumpkin,
-            4, 4,
+            5, 4,
             "Bring 16 fresh pumpkins.",
             BTWBlocks.freshPumpkin.blockID, 0, false, 16,
             "Unlock carved pumpkin and unbaked pumpkin pie recipes.", none(),
@@ -1357,7 +1363,7 @@ public final class NMSkillNodes {
             "brown_mushrooms_32",
             "Mushroom Cookery",
             BTWItems.brownMushroom,
-            3, 4,
+            4, 4,
             "Bring 32 brown mushrooms.",
             BTWItems.brownMushroom.itemID, 0, false, 32,
             "Unlock kebab, omelet, mushroom stew, and hearty stew recipes.", none(),
@@ -1367,7 +1373,7 @@ public final class NMSkillNodes {
             "raw_mutton_16",
             "Kebab Butchery",
             BTWItems.rawMutton,
-            2, 4,
+            3, 4,
             "Bring 16 raw mutton.",
             BTWItems.rawMutton.itemID, 0, false, 16,
             "Unlock the raw kebab recipe.", none(),
@@ -1568,7 +1574,7 @@ public final class NMSkillNodes {
             1, 4,
             "Bring 1 blood orb.",
             NMItems.bloodOrb.itemID, 0, false, 1,
-            "+1/5 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
+            "+1 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
             RITUAL, false);
 
     public static final SkillNode BRING_VESSEL_OF_THE_DRAGON_2 = deferred(bring(
@@ -1720,7 +1726,7 @@ public final class NMSkillNodes {
             "+1 to the gunpowder recipe unlock.", none(),
             RITUAL, false);
 
-    public static final SkillNode BRING_COAL_DUST_32 = bring(
+    public static final SkillNode BRING_COAL_DUST_32 = deferred(bring(
             "coal_dust_32",
             "Carbon Proportioning",
             BTWItems.coalDust,
@@ -1728,7 +1734,8 @@ public final class NMSkillNodes {
             "Bring 32 coal dust.",
             BTWItems.coalDust.itemID, 0, false, 32,
             "+1 to the gunpowder recipe unlock.", none(),
-            RITUAL, false);
+            RITUAL, false),
+            () -> NMSkillNodes.BRING_SHARP_STONE_4);
 
     public static final SkillNode BRING_GUNPOWDER_16 = bring(
             "gunpowder_16",
@@ -1797,7 +1804,7 @@ public final class NMSkillNodes {
             "experience_primer",
             "Experience Primer",
             Item.book,
-            1, 0,
+            1, 1,
             "Bring 1 book.",
             Item.book.itemID, 0, false, 1,
             "Experience points can be gained.", SkillRewardActions.unlockExperienceGain(),
@@ -1807,7 +1814,7 @@ public final class NMSkillNodes {
             "wood_gravity_books",
             "Structural Library",
             Item.book,
-            2, 0,
+            1, 0,
             "Bring 16 books.",
             Item.book.itemID, 0, false, 16,
             "+1 wood-gravity progress.", SkillRewardActions.addWoodGravityProgress(),
@@ -1853,14 +1860,14 @@ public final class NMSkillNodes {
             0, -2,
             "Bring 1 precision crystal gear.",
             NMItems.crystalPrecisionGear.itemID, 0, false, 1,
-            "+1/5 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
+            "+1 Diamond Extraction progress.", SkillRewardActions.addDiamondHarvestProgress(),
             KNOWLEDGE, false);
 
     public static final SkillNode REACH_XP_LEVEL_30 = deferred(counter(
             "third_inventory_row",
             "Expanded Studies",
             BTWBlocks.chest,
-            4, 0,
+            3, 0,
             "Reach 30 XP levels.",
             (p, w) -> p.experienceLevel >= 30,
             "Permanently unlock the third inventory row.", SkillRewardActions.unlockThirdInventoryRow(),
@@ -2039,7 +2046,7 @@ public final class NMSkillNodes {
             "bookshelf_recipe",
             "Authored Shelving",
             Item.writtenBook,
-            3, 0,
+            2, 0,
             "Bring 3 written books.",
             Item.writtenBook.itemID, 0, false, 3,
             "Unlock the bookshelf recipe.", none(),
@@ -2049,7 +2056,7 @@ public final class NMSkillNodes {
             "book_quill_recipe",
             "Paperwork",
             Item.paper,
-            1, 2,
+            2, 2,
             "Bring 64 paper.",
             Item.paper.itemID, 0, false, 64,
             "Unlock the book-and-quill recipe.", none(),
@@ -2069,11 +2076,15 @@ public final class NMSkillNodes {
             "burning_torch_bow_drill",
             "Carried Flame",
             BTWBlocks.finiteBurningTorch,
-            2, 2,
+            4, 2,
             "Bring 1 burning crude torch.",
             BTWBlocks.finiteBurningTorch.blockID, 0, false, 1,
             "Unlock the bow-drill recipe.", none(),
-            KNOWLEDGE, false);
+            KNOWLEDGE, false,
+            BRING_FLINT_CHIP,
+            BRING_GRAVEL_PILE_32,
+            BRING_DRILL_1,
+            BRING_COAL_DUST_64);
 
     public static final SkillNode BRING_PRECISION_CRYSTAL_GEAR_2 = deferred(bring(
             "precision_mechanics",
@@ -2443,7 +2454,7 @@ public final class NMSkillNodes {
             "unique_recipes_64",
             "Improvised Curriculum",
             Block.workbench,
-            4, 2,
+            4, 1,
             "Craft 64 unique recipe outputs.",
             (p, w) -> SkillHandler.getPlayerData(p).getUniqueCraftedOutputCount() >= 64,
             "Unlock more recipes.", none(),
@@ -2865,7 +2876,7 @@ public final class NMSkillNodes {
     // compact bottom-right progression clusters
 
     public static final SkillNode MINE_BLOCK_1000 = counter(
-            "mine_blocks_1000", "Working Rhythm", Block.stone, 0, 3,
+            "mine_blocks_1000", "Working Rhythm", Block.stone, 2, 3,
             "Mine 1,000 blocks.",
             (p, w) -> SkillHandler.getPlayerData(p).blocksMined >= 1000,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
@@ -2878,13 +2889,13 @@ public final class NMSkillNodes {
             MINE_BLOCK_1000);
 
     public static final SkillNode MINE_COAL_ORE_256 = counter(
-            "mine_coal_ore_256", "Coal Survey", Block.oreCoal, 5, 1,
+            "mine_coal_ore_256", "Coal Survey", Block.oreCoal, 4, -1,
             "Mine 256 coal ore.",
             (p, w) -> SkillHandler.getPlayerData(p).coalOreMined >= 256,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
 
     public static final SkillNode MINE_IRON_ORE_256 = counter(
-            "mine_iron_ore_256", "Iron Survey", Block.oreIron, 5, 2,
+            "mine_iron_ore_256", "Iron Survey", Block.oreIron, 5, -1,
             "Mine 256 iron ore.",
             (p, w) -> SkillHandler.getPlayerData(p).ironOreMined >= 256,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
@@ -2897,13 +2908,13 @@ public final class NMSkillNodes {
             MINE_IRON_ORE_256);
 
     public static final SkillNode MINE_DIAMOND_ORE_100 = counter(
-            "mine_diamond_ore_100", "Diamond Census", Block.oreDiamond, 6, 0,
+            "mine_diamond_ore_100", "Diamond Census", Block.oreDiamond, 7, 3,
             "Mine 100 diamond ore.",
             (p, w) -> SkillHandler.getPlayerData(p).diamondOreMined >= 100,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
 
     public static final SkillNode BRING_STONE_STICK_64 = bring(
-            "stone_sticks_64", "Stone Shafts", NMItems.stoneStick, 3, 0,
+            "stone_sticks_64", "Stone Shafts", NMItems.stoneStick, 5, 1,
             "Bring 64 stone sticks.", NMItems.stoneStick.itemID, 0, false, 64,
             "No reward", none(), MINING, false);
 
@@ -2913,13 +2924,13 @@ public final class NMSkillNodes {
             "No reward", none(), MINING, false, BRING_STONE_STICK_64);
 
     public static final SkillNode BRING_DIAMOND_STICK_16 = bring(
-            "diamond_sticks_16", "Diamond Shafts", NMItems.diamondStick, 7, 2,
+            "diamond_sticks_16", "Diamond Shafts", NMItems.diamondStick, 3, -3,
             "Bring 16 diamond sticks.", NMItems.diamondStick.itemID, 0, false, 16,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false,
             BRING_IRON_STICK_64);
 
     public static final SkillNode BRING_STONE_BRICK_64 = bring(
-            "stone_bricks_64", "Masonry Stockpile", BTWItems.stoneBrick, 0, -1,
+            "stone_bricks_64", "Masonry Stockpile", BTWItems.stoneBrick, 0, 2,
             "Bring 64 stone bricks.", BTWItems.stoneBrick.itemID, 0, false, 64,
             "No reward", none(), MINING, false);
 
@@ -2930,18 +2941,18 @@ public final class NMSkillNodes {
             BRING_STONE_BRICK_64);
 
     public static final SkillNode BRING_DIAMOND_BRICK_4 = bring(
-            "diamond_bricks_4", "Diamond Masonry", NMItems.diamondBrick, 7, 3,
+            "diamond_bricks_4", "Diamond Masonry", NMItems.diamondBrick, 4, -3,
             "Bring 4 diamond bricks.", NMItems.diamondBrick.itemID, 0, false, 4,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false,
             BRING_IRON_BRICK_64);
 
     public static final SkillNode BRING_CRYSTAL_POWDER_32 = bring(
-            "crystal_powder_32", "Crystal Frit", NMItems.crystalPowder, 7, 4,
+            "crystal_powder_32", "Crystal Frit", NMItems.crystalPowder, 5, -3,
             "Bring 32 crystal powder.", NMItems.crystalPowder.itemID, 0, false, 32,
             "No reward", none(), MINING, false);
 
     public static final SkillNode BRING_GLASS_BATCH_32 = bring(
-            "glass_batch_32", "Glass Batch", NMItems.glassBatch, 7, 5,
+            "glass_batch_32", "Glass Batch", NMItems.glassBatch, 7, -3,
             "Bring 32 glass batches.", NMItems.glassBatch.itemID, 0, false, 32,
             "No reward", none(), MINING, false, BRING_CRYSTAL_POWDER_32);
 
@@ -2986,13 +2997,13 @@ public final class NMSkillNodes {
             "No reward", none(), HUSBANDRY, false, BRING_GLUE_SLURRY_16);
 
     public static final SkillNode CATCH_RARE_ITEM_16 = counter(
-            "catch_rare_items_16", "Rare Catch Ledger", Item.fishingRod, 5, 3,
+            "catch_rare_items_16", "Rare Catch Ledger", Item.fishingRod, 5, 2,
             "Catch 16 rare fishing items.",
             (p, w) -> SkillHandler.getPlayerData(p).rareItemsCaught >= 16,
             "No reward", none(), HUSBANDRY, false);
 
     public static final SkillNode BRING_DYE_64 = bring(
-            "dyes_64", "Dyer's Stockpile", Item.dyePowder, 1, 1,
+            "dyes_64", "Dyer's Stockpile", Item.dyePowder, 1, 2,
             "Bring 64 dyes of any color.", Item.dyePowder.itemID, 0, false, 64,
             "No reward", none(), KNOWLEDGE, false);
 
@@ -3002,7 +3013,7 @@ public final class NMSkillNodes {
             "No reward", none(), KNOWLEDGE, false, BRING_DYE_64);
 
     public static final SkillNode BRING_SLAB_1000 = bringAny(
-            "slabs_1000", "Slab Logistics", Block.woodSingleSlab, 4, 1,
+            "slabs_1000", "Slab Logistics", Block.woodSingleSlab, 4, 0,
             "Bring 1,000 slabs of any kind.", 1000,
             new Item[]{Item.itemsList[Block.woodSingleSlab.blockID], Item.itemsList[Block.stoneSingleSlab.blockID],
                     Item.itemsList[BTWBlocks.stoneSlab.blockID], Item.itemsList[BTWBlocks.stoneBrickSlab.blockID]},
@@ -3140,32 +3151,32 @@ public final class NMSkillNodes {
             new Item[]{NMItems.bloodHelmet, NMItems.bloodChestplate, NMItems.bloodLeggings, NMItems.bloodBoots}, COMBAT);
 
     public static final SkillNode BRING_NETHERRACK_TIER_ONE_64 = bring(
-            "netherrack_tier_one_64", "First-Ring Stone", new ItemStack(Block.netherrack, 1, 2), 6, 4,
+            "netherrack_tier_one_64", "First-Ring Stone", new ItemStack(Block.netherrack, 1, 2), 6, -2,
             "Bring 64 tier-one netherrack.", Block.netherrack.blockID, 2, true, 64,
             "Unlock first-ring netherrack processing.", none(), MINING, false, BRING_CRUDE_OBSIDIAN_16);
 
     public static final SkillNode BRING_NETHERRACK_TIER_ONE_256 = bring(
-            "netherrack_tier_one_256", "First-Ring Mason", new ItemStack(Block.netherrack, 1, 2), 6, 5,
+            "netherrack_tier_one_256", "First-Ring Mason", new ItemStack(Block.netherrack, 1, 2), 6, -1,
             "Bring 256 tier-one netherrack.", Block.netherrack.blockID, 2, true, 256,
             "Unlock bulk first-ring compression.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_NETHERRACK_TIER_ONE_1024 = bring(
-            "netherrack_tier_one_1024", "First-Ring Quarry", new ItemStack(Block.netherrack, 1, 2), 5, 5,
+            "netherrack_tier_one_1024", "First-Ring Quarry", new ItemStack(Block.netherrack, 1, 2), 6, 0,
             "Bring 1,024 tier-one netherrack.", Block.netherrack.blockID, 2, true, 1024,
             "Unlock industrial first-ring masonry.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_256);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_64 = bring(
-            "netherrack_tier_two_64", "Second-Ring Stone", new ItemStack(Block.netherrack, 1, 3), 7, 6,
+            "netherrack_tier_two_64", "Second-Ring Stone", new ItemStack(Block.netherrack, 1, 3), 3, 6,
             "Bring 64 tier-two netherrack.", Block.netherrack.blockID, 3, true, 64,
             "Unlock second-ring netherrack processing.", none(), MINING, false, BRING_DIAMOND_16, TRADE_100);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_256 = bring(
-            "netherrack_tier_two_256", "Second-Ring Mason", new ItemStack(Block.netherrack, 1, 3), 6, 6,
+            "netherrack_tier_two_256", "Second-Ring Mason", new ItemStack(Block.netherrack, 1, 3), 2, 6,
             "Bring 256 tier-two netherrack.", Block.netherrack.blockID, 3, true, 256,
             "Unlock bulk second-ring compression.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_1024 = bring(
-            "netherrack_tier_two_1024", "Second-Ring Quarry", new ItemStack(Block.netherrack, 1, 3), 5, 6,
+            "netherrack_tier_two_1024", "Second-Ring Quarry", new ItemStack(Block.netherrack, 1, 3), 1, 6,
             "Bring 1,024 tier-two netherrack.", Block.netherrack.blockID, 3, true, 1024,
             "Unlock industrial second-ring masonry.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_256);
 
@@ -3187,163 +3198,163 @@ public final class NMSkillNodes {
             BRING_NETHERRACK_TIER_THREE_256, BRING_DEADZONE_SHARD_16);
 
     public static final SkillNode BRING_QUARTZ_16 = bring(
-            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 1, 5,
+            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 6, 4,
             "Bring 16 nether quartz.", Item.netherQuartz.itemID, 0, false, 16,
             "Unlock quartz-based Nether processing.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_QUARTZ_DUST_32 = bring(
-            "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, 0, 5,
+            "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, 6, 5,
             "Bring 32 quartz dust.", NMItems.quartzDust.itemID, 0, false, 32,
             "Unlock quartz-dust components.", none(), MINING, false, BRING_QUARTZ_16);
 
     public static final SkillNode BRING_NETHER_STICK_16 = bring(
-            "nether_stick_16", "Infernal Handles", NMItems.netherStick, -1, -3,
+            "nether_stick_16", "Infernal Handles", NMItems.netherStick, -2, 2,
             "Bring 16 nether sticks.", NMItems.netherStick.itemID, 0, false, 16,
             "Unlock Nether-handled tools.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_NETHERRACK_CHUNK_16 = bring(
-            "netherrack_chunk_16", "Netherrack Aggregate", NMItems.netherrackChunk, 0, -3,
+            "netherrack_chunk_16", "Netherrack Aggregate", NMItems.netherrackChunk, -2, 1,
             "Bring 16 netherrack chunks.", NMItems.netherrackChunk.itemID, 0, false, 16,
             "Unlock netherrack construction recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_TUNGSTEN_CHUNK_16 = bring(
-            "tungsten_chunk_16", "Tungsten Prospecting", NMItems.tungstenChunk, -2, 5,
+            "tungsten_chunk_16", "Tungsten Prospecting", NMItems.tungstenChunk, 4, 5,
             "Bring 16 tungsten chunks.", NMItems.tungstenChunk.itemID, 0, false, 16,
             "Unlock early tungsten processing.", none(), MINING, false, BRING_QUARTZ_16);
 
     public static final SkillNode BRING_TUNGSTEN_CONCENTRATE_16 = bring(
-            "tungsten_concentrate_16", "Tungsten Concentration", NMItems.tungstenConcentrate, -2, 2,
+            "tungsten_concentrate_16", "Tungsten Concentration", NMItems.tungstenConcentrate, 1, 5,
             "Bring 16 tungsten concentrate.", NMItems.tungstenConcentrate.itemID, 0, false, 16,
             "Unlock concentrated tungsten recipes.", none(), MINING, false, BRING_TUNGSTEN_CHUNK_16);
 
     public static final SkillNode BRING_TUNGSTEN_POWDER_32 = bring(
-            "tungsten_powder_32", "Tungsten Powderwork", NMItems.tungstenPowder, -2, 0,
+            "tungsten_powder_32", "Tungsten Powderwork", NMItems.tungstenPowder, -1, 5,
             "Bring 32 tungsten powder.", NMItems.tungstenPowder.itemID, 0, false, 32,
             "Unlock pure tungsten consolidation.", none(), MINING, false, BRING_TUNGSTEN_CONCENTRATE_16);
 
     public static final SkillNode BRING_TUNGSTEN_INGOT_8 = bring(
-            "tungsten_ingot_8", "Tungsten Metallurgy", NMItems.tungstenIngot, -2, -3,
+            "tungsten_ingot_8", "Tungsten Metallurgy", NMItems.tungstenIngot, -2, 3,
             "Bring 8 tungsten ingots.", NMItems.tungstenIngot.itemID, 0, false, 8,
             "Unlock tungsten tools and machinery.", none(), MINING, false, BRING_TUNGSTEN_POWDER_32);
 
     public static final SkillNode BRING_AZURE_SALT_16 = bring(
-            "azure_salt_16", "Azure Chemistry", NMItems.azureSalt, 4, 6,
+            "azure_salt_16", "Azure Chemistry", NMItems.azureSalt, 0, 6,
             "Bring 16 azure salt.", NMItems.azureSalt.itemID, 0, false, 16,
             "Unlock azure chemical recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
 
     public static final SkillNode BRING_SEARING_SILVER_SCALE_4 = bring(
-            "searing_silver_scale_4", "Searing Silver", NMItems.searingSilverScale, 3, 6,
+            "searing_silver_scale_4", "Searing Silver", NMItems.searingSilverScale, -1, 6,
             "Bring 4 searing silver scales.", NMItems.searingSilverScale.itemID, 0, false, 4,
             "Unlock searing-scale components.", none(), MINING, false, BRING_AZURE_SALT_16);
 
     public static final SkillNode BRING_POTASSIUM_CRYSTAL_16 = bring(
-            "potassium_crystal_16", "Potassium Extraction", NMItems.potassiumCrystal, 0, 6,
+            "potassium_crystal_16", "Potassium Extraction", NMItems.potassiumCrystal, -3, 5,
             "Bring 16 potassium crystals.", NMItems.potassiumCrystal.itemID, 0, false, 16,
             "Unlock potassium fertilizer production.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_NITROGEN_CRYSTAL_16 = bring(
-            "nitrogen_crystal_16", "Nitrogen Extraction", NMItems.nitrogenCrystal, -1, 6,
+            "nitrogen_crystal_16", "Nitrogen Extraction", NMItems.nitrogenCrystal, -3, 4,
             "Bring 16 nitrogen crystals.", NMItems.nitrogenCrystal.itemID, 0, false, 16,
             "Unlock crystallized nitrogen processing.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_ACID_CRYSTAL_16 = bring(
-            "acid_crystal_16", "Acidity Extraction", NMItems.acidCrystal, -2, 6,
+            "acid_crystal_16", "Acidity Extraction", NMItems.acidCrystal, -3, 3,
             "Bring 16 acid crystals.", NMItems.acidCrystal.itemID, 0, false, 16,
             "Unlock acid fertilizer production.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_POROSITY_AGGREGATE_16 = bring(
-            "porosity_aggregate_16", "Porosity Extraction", NMItems.porosityAggregate, -3, 6,
+            "porosity_aggregate_16", "Porosity Extraction", NMItems.porosityAggregate, -3, 2,
             "Bring 16 porosity aggregate.", NMItems.porosityAggregate.itemID, 0, false, 16,
             "Unlock porosity fertilizer production.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_ASH_16 = bring(
-            "nether_ash_16", "Ash Gathering", NMItems.ash, 1, -3,
+            "nether_ash_16", "Ash Gathering", NMItems.ash, -2, 0,
             "Bring 16 ash.", NMItems.ash.itemID, 0, false, 16,
             "Unlock ash-based Nether recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_SOUL_CHIP_16 = bring(
-            "soul_chip_16", "Soul Knapping", NMItems.soulChip, 3, -3,
+            "soul_chip_16", "Soul Knapping", NMItems.soulChip, -2, -2,
             "Bring 16 soul chips.", NMItems.soulChip.itemID, 0, false, 16,
             "Unlock soul-flint recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_PIG_HIDE_16 = bring(
-            "pig_hide_16", "Infernal Hidework", NMItems.pigHide, 4, -3,
+            "pig_hide_16", "Infernal Hidework", NMItems.pigHide, -2, -3,
             "Bring 16 pig hides.", NMItems.pigHide.itemID, 0, false, 16,
             "Unlock pig-hide cordage.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_BONE_SHARD_16 = bring(
-            "bone_shard_16", "Infernal Bonework", NMItems.boneShard, 6, -3,
+            "bone_shard_16", "Infernal Bonework", NMItems.boneShard, 0, -3,
             "Bring 16 bone shards.", NMItems.boneShard.itemID, 0, false, 16,
             "Unlock Nether fishing components.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
 
     public static final SkillNode BRING_TUNGSTEN_DUST_32 = bring(
-            "tungsten_dust_32", "Tungsten Dust Survey", NMItems.tungstenDust, -1, 5,
+            "tungsten_dust_32", "Tungsten Dust Survey", NMItems.tungstenDust, 5, 5,
             "Bring 32 tungsten dust.", NMItems.tungstenDust.itemID, 0, false, 32,
             "Unlock tungsten-dust consolidation.", none(), MINING, false, BRING_QUARTZ_DUST_32);
 
     public static final SkillNode BRING_CRUSHED_TUNGSTEN_16 = bring(
-            "crushed_tungsten_16", "Tungsten Crushing", NMItems.crushedTungsten, -2, 3,
+            "crushed_tungsten_16", "Tungsten Crushing", NMItems.crushedTungsten, 2, 5,
             "Bring 16 crushed tungsten.", NMItems.crushedTungsten.itemID, 0, false, 16,
             "Unlock tungsten concentration.", none(), MINING, false, BRING_TUNGSTEN_CHUNK_16);
 
     public static final SkillNode BRING_BRITTLE_TUNGSTEN_CAKE_16 = bring(
-            "brittle_tungsten_cake_16", "Brittle Tungsten", NMItems.brittleTungstenCake, -2, 1,
+            "brittle_tungsten_cake_16", "Brittle Tungsten", NMItems.brittleTungstenCake, 0, 5,
             "Bring 16 brittle tungsten cakes.", NMItems.brittleTungstenCake.itemID, 0, false, 16,
             "Unlock late tungsten refining.", none(), MINING, false, BRING_TUNGSTEN_CONCENTRATE_16);
 
     public static final SkillNode BRING_PURE_TUNGSTEN_CHUNK_16 = bring(
-            "pure_tungsten_chunk_16", "Pure Tungsten", NMItems.pureTungstenChunk, -2, -1,
+            "pure_tungsten_chunk_16", "Pure Tungsten", NMItems.pureTungstenChunk, -2, 5,
             "Bring 16 pure tungsten chunks.", NMItems.pureTungstenChunk.itemID, 0, false, 16,
             "Unlock pure tungsten smelting.", none(), MINING, false, BRING_TUNGSTEN_POWDER_32);
 
     public static final SkillNode BRING_TUNGSTEN_NUGGET_32 = bring(
-            "tungsten_nugget_32", "Tungsten Casting", NMItems.tungstenNugget, -2, -2,
+            "tungsten_nugget_32", "Tungsten Casting", NMItems.tungstenNugget, -2, 4,
             "Bring 32 tungsten nuggets.", NMItems.tungstenNugget.itemID, 0, false, 32,
             "Unlock tungsten ingot consolidation.", none(), MINING, false, BRING_PURE_TUNGSTEN_CHUNK_16);
 
     public static final SkillNode BRING_OBSIDIAN_POWDER_32 = bring(
-            "obsidian_powder_32", "Obsidian Grinding", NMItems.obsidianPowder, 4, 5,
+            "obsidian_powder_32", "Obsidian Grinding", NMItems.obsidianPowder, 6, 1,
             "Bring 32 obsidian powder.", NMItems.obsidianPowder.itemID, 0, false, 32,
             "Unlock obsidian paste.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_256);
 
     public static final SkillNode BRING_OBSIDIAN_PASTE_16 = bring(
-            "obsidian_paste_16", "Obsidian Binding", NMItems.obsidianPaste, 3, 5,
+            "obsidian_paste_16", "Obsidian Binding", NMItems.obsidianPaste, 6, 2,
             "Bring 16 obsidian paste.", NMItems.obsidianPaste.itemID, 0, false, 16,
             "Unlock fired obsidian bricks.", none(), MINING, false, BRING_OBSIDIAN_POWDER_32);
 
     public static final SkillNode BRING_OBSIDIAN_BRICK_16 = bring(
-            "obsidian_brick_16", "Obsidian Masonry", NMItems.obsidianBrick, 2, 5,
+            "obsidian_brick_16", "Obsidian Masonry", NMItems.obsidianBrick, 6, 3,
             "Bring 16 obsidian bricks.", NMItems.obsidianBrick.itemID, 0, false, 16,
             "Unlock obsidian machinery.", none(), MINING, false, BRING_OBSIDIAN_PASTE_16);
 
     public static final SkillNode BRING_AZURE_SLAG_16 = bring(
-            "azure_slag_16", "Azure Slagwork", NMItems.azureSlag, 2, 6,
+            "azure_slag_16", "Azure Slagwork", NMItems.azureSlag, -2, 6,
             "Bring 16 azure slag.", NMItems.azureSlag.itemID, 0, false, 16,
             "Unlock fired azure materials.", none(), MINING, false, BRING_AZURE_SALT_16);
 
     public static final SkillNode BRING_BRITTLE_AZURE_CAKE_16 = bring(
-            "brittle_azure_cake_16", "Brittle Azure", NMItems.brittleAzureCake, 1, 6,
+            "brittle_azure_cake_16", "Brittle Azure", NMItems.brittleAzureCake, -3, 6,
             "Bring 16 brittle azure cakes.", NMItems.brittleAzureCake.itemID, 0, false, 16,
             "Unlock advanced azure components.", none(), MINING, false, BRING_AZURE_SLAG_16);
 
     public static final SkillNode BRING_ASH_CLUMP_16 = bring(
-            "ash_clump_16", "Compacted Ash", NMItems.ashClump, 2, -3,
+            "ash_clump_16", "Compacted Ash", NMItems.ashClump, -2, -1,
             "Bring 16 ash clumps.", NMItems.ashClump.itemID, 0, false, 16,
             "Unlock ash-sludge mixtures.", none(), MINING, false, BRING_ASH_16);
 
     public static final SkillNode BRING_PIGHIDE_STRING_16 = bring(
-            "pighide_string_16", "Infernal Cordage", NMItems.pighideString, 5, -3,
+            "pighide_string_16", "Infernal Cordage", NMItems.pighideString, -1, -3,
             "Bring 16 pig-hide string.", NMItems.pighideString.itemID, 0, false, 16,
             "Unlock corded Nether tools.", none(), MINING, false, BRING_PIG_HIDE_16);
 
     public static final SkillNode BRING_NETHER_WORKBENCH_PART_4 = bring(
-            "nether_workbench_part_4", "Infernal Joinery", NMItems.netherWorkbenchPart, -2, 4,
+            "nether_workbench_part_4", "Infernal Joinery", NMItems.netherWorkbenchPart, 3, 5,
             "Bring 4 Nether workbench parts.", NMItems.netherWorkbenchPart.itemID, 0, false, 4,
             "Unlock the Nether crafting table.", none(), MINING, false,
             BRING_QUARTZ_DUST_32, BRING_TUNGSTEN_CHUNK_16);
 
     public static final SkillNode BRING_OBSIDIAN_SHARD_16 = bring(
-            "obsidian_shard_16", "Obsidian Shards", NMItems.obsidianShard, 6, 3,
+            "obsidian_shard_16", "Obsidian Shards", NMItems.obsidianShard, 5, -2,
             "Bring 16 obsidian shards.", NMItems.obsidianShard.itemID, 0, false, 16,
             "Unlock shard consolidation.", none(), MINING, false, BRING_CRUDE_OBSIDIAN_16);
 
@@ -3472,6 +3483,80 @@ public final class NMSkillNodes {
             pending.node.parents = parents;
         }
         PENDING_PARENTS.clear();
+        addMissingParents();
+    }
+
+    /**
+     * Post-initialization prerequisite pass. Use SkillNode.addParents() here for
+     * every new cross-tab or forward-reference parent relationship.
+     */
+    private static void addMissingParents() {
+        // Mining: early materials through the brick oven.
+        BRING_CLAY_BLOCK_32.addParents(BRING_CLAY_BALL_32, CRAFT_UNIQUE_RECIPE_OUTPUT_64);
+        BRING_FLINT_4.addParents(BRING_FLINT_CHIP);
+        BRING_GRAVEL_64.addParents(BRING_GRAVEL_PILE_32);
+        BRING_STONE_STICK_64.addParents(BRING_LOOSE_STONE_64, MINE_STONE_1000);
+        BRING_IRON_ORE_PILE_32.addParents(BRING_SHARP_STONE_4);
+        BRING_IRON_BLOOM_8.addParents(BRING_BRICK_32, BRING_IRON_ORE_PILE_32);
+        BRING_IRON_INGOT.addParents(BRING_IRON_BLOOM_8, BRING_STONE_BRICK_32);
+        BRING_IRON_INGOT_16.addParents(BRING_IRON_INGOT);
+        MINE_COAL_ORE_256.addParents(BRING_IRON_INGOT_16);
+        MINE_IRON_ORE_256.addParents(BRING_IRON_INGOT_16);
+        MINE_STONE_1000.addParents(BRING_IRON_INGOT_16);
+
+        // Mining: iron tools unlock the specialty-ore and wet-processing branch.
+        BRING_RAW_LITHIUM_64.addParents(BRING_IRON_INGOT_16);
+        BRING_NICKEL_BEARING_ROCK_64.addParents(BRING_IRON_INGOT_16);
+        BRING_NICKEL_PLATE_4.addParents(BRING_IRON_BLOOM_8, BRING_NICKEL_BEARING_ROCK_64);
+        BRING_UNCLEANED_CRYSTAL_SHARD_32.addParents(KILL_WITCH_4);
+        BRING_CRYSTAL_POWDER_32.addParents(BRING_POLISHED_CRYSTAL_SHARD_4);
+        BRING_EMERALD_16.addParents(BRING_SOUL_URN_16);
+        BRING_REFINEMENT_WASTE_32.addParents(BRING_REDSTONE_16);
+
+        // Diamond extraction. Iron Anvil is intentionally not a parent of
+        // BRING_DIAMOND_16: its crafting recipe already requires that node.
+        BRING_DIAMOND_BEARING_ROCK_64.addParents(
+                BRING_REFINED_LITHIUM,
+                BRING_POLISHED_CRYSTAL_SHARD_4,
+                BRING_BLOOD_ORB,
+                BRING_PRECISION_CRYSTAL_GEAR);
+        BRING_DIAMOND_16.addParents(
+                BRING_LITHIUM_SALT_16,
+                BRING_REFINED_LITHIUM,
+                BRING_POLISHED_CRYSTAL_SHARD_4,
+                BRING_BLOOD_ORB,
+                BRING_PRECISION_CRYSTAL_GEAR,
+                BRING_REDSTONE_16);
+        BRING_FAILED_DIAMOND_REFINEMENT_16.addParents(
+                BRING_DIAMOND_16,
+                BRING_NICKEL_PLATE_4,
+                BRING_REDSTONE_16);
+        BRING_IRON_ANVIL.addParents(
+                BRING_DIAMOND_16,
+                BRING_DIAMOND_HAMMER,
+                BRING_DENSE_NETHERRACK_CORE_16,
+                CRAFT_CAULDRON,
+                BRING_WOODEN_BLADE_16,
+                CRAFT_UNIQUE_RECIPE_OUTPUT_64,
+                KILL_MOB_250,
+                BRING_ENCHANTMENT_TABLE,
+                MINE_STONE_1000,
+                KILL_WITCH_4);
+        MINE_DIAMOND_ORE_100.addParents(BRING_DIAMOND_BEARING_ROCK_64);
+        BRING_DIAMOND_INGOT_8.addParents(BRING_DIAMOND_16, BRING_NICKEL_PLATE_4);
+        BRING_DIAMOND_HAMMER.addParents(BRING_DIAMOND_16);
+        BRING_REFINED_DIAMOND_INGOT.addParents(
+                BRING_DIAMOND_INGOT_8,
+                BRING_DENSE_NETHERRACK_CORE_16,
+                BRING_HEAT_RESISTANT_NICKEL_COMPONENT_2,
+                BRING_PRECISION_CRYSTAL_GEAR);
+
+        // Soulforge metallurgy and its direct products.
+        BRING_STEEL_NUGGET_32.addParents(BRING_SOULFORGED_STEEL_INGOT_8);
+        BRING_SOULFORGED_STEEL_INGOT_16.addParents(BRING_STEEL_NUGGET_32);
+        BRING_STEEL_HAMMER.addParents(BRING_SOULFORGED_STEEL_INGOT_16);
+        BRING_MAIL_16.addParents(BRING_IRON_NUGGET_32);
+        BRING_STONE_BRICK_64.addParents(BRING_STONE_BRICK_32);
     }
 
     public static void initialize() {

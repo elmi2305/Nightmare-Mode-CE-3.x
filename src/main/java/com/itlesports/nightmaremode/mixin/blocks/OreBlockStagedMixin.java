@@ -36,7 +36,8 @@ public class OreBlockStagedMixin extends OreBlock {
             if (!world.isRemote) {
                 SkillHandler.sendStatus(closestPlayer, "Requires skill: Blackstone Authority - Bring 64 blackstone.");
             }
-            cir.setReturnValue(false);
+            this.chipLockedOre(world, x, y, z, iStrata);
+            cir.setReturnValue(true);
             return;
         }
         if(blockID == Block.oreCoal.blockID){
@@ -81,7 +82,8 @@ public class OreBlockStagedMixin extends OreBlock {
                 if (!world.isRemote) {
                     SkillHandler.sendStatus(closestPlayer, "Requires all five Diamond Extraction contributions.");
                 }
-                cir.setReturnValue(false);
+                this.chipLockedOre(world, x, y, z, iStrata);
+                cir.setReturnValue(true);
                 return;
             }
 
@@ -94,6 +96,11 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
 
         }
+    }
+
+    @Unique
+    private void chipLockedOre(World world, int x, int y, int z, int strata) {
+        world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[strata].blockID, 4);
     }
 
     @Unique

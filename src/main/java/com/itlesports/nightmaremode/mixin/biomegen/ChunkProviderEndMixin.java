@@ -105,12 +105,12 @@ public class ChunkProviderEndMixin {
                 for (int y = 0; y < 128; ++y) {
                     int index = (localX * 16 + localZ) * 128 + y;
                     if (blocks[index] != Block.whiteStone.blockID) continue;
+                    if (deep) metadata[index] = 1;
+
                     long oreHash = mix(seed ^ ((long)worldX * 341873128712L) ^ ((long)y * 42317861L) ^ ((long)worldZ * 132897987541L));
                     int chance = deep ? 95 : 220;
                     if (Math.floorMod(oreHash, chance) == 0) {
                         blocks[index] = (short)NMBlocks.mercuryOre.blockID;
-                    } else if (deep) {
-                        metadata[index] = 1;
                     }
                 }
             }

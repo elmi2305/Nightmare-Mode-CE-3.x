@@ -81,7 +81,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void chanceToSpawnWithSpeed(CallbackInfo ci){
         int progress = NMUtils.getWorldProgress();
-        double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25 : 1;
+        double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.25);
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
@@ -182,7 +182,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     private void explodeIfShorn(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
-        float bloodMoonModifier = NMUtils.getIsBloodMoon() ? 1.25f : 1;
+        float bloodMoonModifier = (float) NMUtils.getBloodMoonModifier(1.25);
         EntityCreeper thisObj = (EntityCreeper)(Object)this;
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && thisObj.getNeuteredState() == 0) {
@@ -311,7 +311,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     @Unique
     private float getExplosionSize() {
         float aprilFoolsExplosionModifier = NightmareMode.isAprilFools ? 1.05f + 0.15f * this.rand.nextFloat() : 1f;
-        float bloodmoonModifier = NMUtils.getIsBloodMoon() ? 0.25f : 0;
+        float bloodmoonModifier = (float) (NMUtils.getBloodMoonModifier(1.25) - 1.0);
         float eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 0.15f : 0;
         float niteModifier = (float) NMUtils.getNiteMultiplier();
 
@@ -366,7 +366,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         if(!isHostile){
             return constant;
         }
-        int bloodMoonModifier = NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
+        int bloodMoonModifier = NMUtils.hasEmpoweredBloodMoonMobs() || NMUtils.getIsMobEclipsed(this) ? 3 : 1;
         int i = NMUtils.getWorldProgress();
 
         float returnValue = (float) switch (i) {
@@ -398,7 +398,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
             }
         }
 
-        if (NMUtils.getIsBloodMoon() || NMUtils.getIsMobEclipsed(this)) {
+        if (NMUtils.hasEmpoweredBloodMoonMobs() || NMUtils.getIsMobEclipsed(this)) {
             return self.rand.nextInt(6) == 0 ? 1 : 0;
         }
 
