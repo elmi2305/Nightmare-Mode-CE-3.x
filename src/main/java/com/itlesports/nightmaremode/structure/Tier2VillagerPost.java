@@ -19,6 +19,7 @@ public class Tier2VillagerPost extends NetherVillagerPost {
 
     public Tier2VillagerPost(Random random, int x, int z) {
         super(random, x, z, 30, 23, 30);
+        this.coordBaseMode = 0;
     }
 
 

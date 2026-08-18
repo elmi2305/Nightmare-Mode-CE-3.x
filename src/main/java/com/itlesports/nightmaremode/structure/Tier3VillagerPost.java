@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import net.minecraft.src.Block;
 
 import java.util.Random;
@@ -10,15 +11,16 @@ public class Tier3VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 4;
     public static final int MAX_CHUNKS_APART = 12;
     private static final VillagerOffset[] VILLAGER_OFFSETS = {
-            new VillagerOffset(8.0D, -8.0D, 8.0D),
-            new VillagerOffset(8.0D, -8.0D, -8.0D),
-            new VillagerOffset(-8.0D, -8.0D, 8.0D),
-            new VillagerOffset(-8.0D, -8.0D, -8.0D)
+            new VillagerOffset(0.0D, -2.0D, 0.0D),
+            new VillagerOffset(0.0D, -2.0D, -13.0D),
+            new VillagerOffset(-13.0D, -2.0D, 0.0D),
+            new VillagerOffset(-13.0D, -2.0D, -13.0D)
     };
     public Tier3VillagerPost() {}
 
     public Tier3VillagerPost(Random random, int x, int z) {
         super(random, x, z, 49, 24, 49);
+        this.coordBaseMode = 0;
     }
     private static PaletteEntry[] tierThreeBlocks;
 
@@ -41,11 +43,11 @@ public class Tier3VillagerPost extends NetherVillagerPost {
         tierThreeBlocks[7] = block(Block.blockNetherQuartz.blockID, 1);
         tierThreeBlocks[8] = block(Block.netherFence.blockID, 0);
         tierThreeBlocks[9] = block(Block.stoneSingleSlab.blockID, 14);
-        tierThreeBlocks[10] = block(NMBlocks.steelOre.blockID, 0);
+        tierThreeBlocks[10] = block(NMBlock.slowSand.blockID, 0);
         tierThreeBlocks[11] = block(Block.enchantmentTable.blockID, 0);
         tierThreeBlocks[12] = block(BTWBlocks.quartzMouldingAndDecorative.blockID, 12);
-        tierThreeBlocks[13] = block(121, 0);
-        tierThreeBlocks[14] = block(Block.endPortalFrame.blockID, 0);
+        tierThreeBlocks[13] = block(BTWBlocks.deepStrataRoughStone.blockID, 0);
+        tierThreeBlocks[14] = block(NMBlocks.netherProgressionGems.blockID, 2);
         tierThreeBlocks[15] = block(Block.chest.blockID, 0);
         tierThreeBlocks[16] = block(Block.oreCoal.blockID, 0);
         tierThreeBlocks[17] = block(Block.hay.blockID, 0);

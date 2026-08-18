@@ -11,14 +11,16 @@ public class Tier1VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 8;
     public static final int MAX_CHUNKS_APART = 16;
     private static final VillagerOffset[] VILLAGER_OFFSETS = {
-            new VillagerOffset(5.5D, -3.0D, 5.5D),
-            new VillagerOffset(5.5D, -3.0D, -5.5D),
-            new VillagerOffset(-5.5D, -3.0D, 5.5D),
-            new VillagerOffset(-5.5D, -3.0D, -5.5D)
+            new VillagerOffset(5.0D, 0.0D, 5.0D),
+            new VillagerOffset(5.0D, 0.0D, -4.0D),
+            new VillagerOffset(-4.0D, 0.0D, 5.0D),
+            new VillagerOffset(-4.0D, 0.0D, -4.0D)
     };
     private static PaletteEntry[] tierOneBlocks;
 
-    public Tier1VillagerPost() {}
+    public Tier1VillagerPost() {
+        this.coordBaseMode = 0;
+    }
 
     @Override
     protected PaletteEntry[] getPalette() {
