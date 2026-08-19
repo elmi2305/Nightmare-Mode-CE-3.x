@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.AddonHandler;
 import btw.BTWMod;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
@@ -48,7 +49,7 @@ public abstract class MinecraftMixin {
 
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
     private String changeWindowText(String newTitle){
-        return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Nightmare Mode v"+ AddonHandler.getModByID("nightmare").getVersionString();
+        return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Journey Mode v"+ AddonHandler.getModByID(NMFields.modID).getVersionString();
     }
 
     @Inject(method = "startGame", at = @At("TAIL"))

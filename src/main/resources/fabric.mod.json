@@ -3,10 +3,11 @@
   "id": "nightmare",
   "version": "${version}",
 
-  "name": "Nightmare Mode",
-  "description": "A hardcore challenge addon for BTW 3.0. You will not survive.",
+  "name": "Journey Mode",
+  "description": "Steve's final journey",
   "authors": [
-    "elmi2305"
+    "elmi2305",
+    "shiroinfinity"
   ],
   "contact": {
     "homepage": "https://itlesports.com/",
