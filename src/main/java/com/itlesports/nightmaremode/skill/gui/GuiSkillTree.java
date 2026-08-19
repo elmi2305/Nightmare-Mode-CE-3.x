@@ -14,8 +14,12 @@ import net.minecraft.src.RenderItem;
 import net.minecraft.src.ResourceLocation;
 import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.Tessellator;
+import emi.shims.java.com.unascribed.retroemi.RetroEMI;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Locale;
 
 public class GuiSkillTree extends GuiScreen {
     private static final int GRID = 30;
@@ -28,6 +32,7 @@ public class GuiSkillTree extends GuiScreen {
     private static final int NODE_AVAILABLE_COLOR = 0xFF6F91AC;
     private static final int NODE_PARENT_LOCKED_COLOR = 0xFF292929;
     private static final int NODE_FOCUSED_COLOR = 0xFFFF4FD8;
+    private static final int NODE_SEARCH_MATCH_COLOR = 0xFF70D6FF;
     private static final ResourceLocation BORDER_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/border.png");
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/background.png");
     private static final ResourceLocation TAB_OUTLINE_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/tab_outline.png");
@@ -41,6 +46,16 @@ public class GuiSkillTree extends GuiScreen {
     private SkillBranch hoveredBranch;
     private SkillNode hoveredNode;
     private SkillNode focusedNode;
+    private final boolean[] keysHeldWhenOpened = new boolean[Keyboard.KEYBOARD_SIZE];
+    private String searchText = "";
+    private int searchResultIndex;
+
+    @Override
+    public void initGui() {
+        for (int keyCode = 0; keyCode < Keyboard.KEYBOARD_SIZE; keyCode++) {
+            this.keysHeldWhenOpened[keyCode] = Keyboard.isKeyDown(keyCode);
+        }
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -56,7 +71,8 @@ public class GuiSkillTree extends GuiScreen {
         this.drawFullTexturedRect(left , top + 28 - 5, PANE_WIDTH - 16 + 4, PANE_HEIGHT - 38 + 10);
         this.mc.renderEngine.bindTexture(BORDER_TEXTURE);
         this.drawFullTexturedRect(left - 4, top + 18, PANE_WIDTH + 8, PANE_HEIGHT - 14);
-        this.drawCenteredString(this.fontRenderer, "Skill Tree", this.width / 2, top + 8, 0xFFFFFF);
+        this.drawCenteredString(this.fontRenderer, "Skill Tree", left + 82, top + 8, 0xFFFFFF);
+        this.drawSearchBar(left, top);
         this.drawTabs(left, top, mouseX, mouseY);
         this.drawMap(left + 14, top + 34, mouseX, mouseY, partialTicks);
         GL11.glDisable(2929);
@@ -172,8 +188,11 @@ public class GuiSkillTree extends GuiScreen {
                 case AVAILABLE -> NODE_AVAILABLE_COLOR;
                 case PARENT_LOCKED -> NODE_PARENT_LOCKED_COLOR;
             };
+            if (this.isSearchMatch(node)) {
+                drawRect(x - 4, y - 4, x + 26, y + 26, NODE_SEARCH_MATCH_COLOR);
+            }
             if (node == this.focusedNode) {
-                drawRect(x - 4, y - 4, x + 26, y + 26, NODE_FOCUSED_COLOR);
+                drawRect(x - 6, y - 6, x + 28, y + 28, NODE_FOCUSED_COLOR);
             }
             drawRect(x - 2, y - 2, x + 24, y + 24, color);
             drawRect(x, y, x + 22, y + 22, state == NodeVisualState.PARENT_LOCKED ? 0xFF080808 : 0xFF111111);
@@ -258,6 +277,106 @@ public class GuiSkillTree extends GuiScreen {
         int width = this.fontRenderer.getStringWidth(text);
         this.drawGradientRect(x - 3, y - 3, x + width + 3, y + 12, 0xE0000000, 0xE0000000);
         this.fontRenderer.drawStringWithShadow(text, x, y, 0xFFFFFF);
+    }
+
+    private void drawSearchBar(int left, int top) {
+        int x = left + 166;
+        int y = top + 3;
+        int width = 138;
+        drawRect(x, y, x + width, y + 15, 0xFF111111);
+        drawRect(x + 1, y + 1, x + width - 1, y + 14, 0xFF303030);
+        String text = "Search: " + this.searchText;
+        this.fontRenderer.drawStringWithShadow(this.fontRenderer.trimStringToWidth(text, width - 6), x + 3, y + 4, 0xFFFFFF);
+    }
+
+    private boolean isSearchMatch(SkillNode node) {
+        if (this.searchText.isEmpty()) {
+            return false;
+        }
+        String query = this.searchText.toLowerCase(Locale.ROOT);
+        return node.name.toLowerCase(Locale.ROOT).contains(query)
+                || node.requirementText.toLowerCase(Locale.ROOT).contains(query);
+    }
+
+    private void focusNextSearchResult() {
+        int matchCount = 0;
+        for (SkillBranch branch : SkillRegistry.getBranches()) {
+            for (SkillNode node : branch.getNodes()) {
+                if (!this.isSearchMatch(node)) {
+                    continue;
+                }
+                if (matchCount == this.searchResultIndex) {
+                    this.focusNode(node);
+                    this.searchResultIndex = (this.searchResultIndex + 1) % this.getSearchResultCount();
+                    return;
+                }
+                matchCount++;
+            }
+        }
+    }
+
+    private int getSearchResultCount() {
+        int count = 0;
+        for (SkillBranch branch : SkillRegistry.getBranches()) {
+            for (SkillNode node : branch.getNodes()) {
+                if (this.isSearchMatch(node)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public void handleKeyboardInput() {
+        int keyCode = Keyboard.getEventKey();
+        char character = Keyboard.getEventCharacter();
+        boolean keyPressed = Keyboard.getEventKeyState();
+
+        if (!keyPressed) {
+            if (keyCode >= 0 && keyCode < this.keysHeldWhenOpened.length) {
+                this.keysHeldWhenOpened[keyCode] = false;
+            }
+            return;
+        }
+        if (keyCode >= 0 && keyCode < this.keysHeldWhenOpened.length && this.keysHeldWhenOpened[keyCode]) {
+            return;
+        }
+        if (keyCode == Keyboard.KEY_F11) {
+            this.mc.toggleFullscreen();
+            return;
+        }
+        RetroEMI.handleKeyboardInput();
+        this.keyTyped(character, keyCode);
+    }
+
+    @Override
+    protected void keyTyped(char character, int keyCode) {
+        if (keyCode == Keyboard.KEY_BACK) {
+            if (!this.searchText.isEmpty()) {
+                this.searchText = this.searchText.substring(0, this.searchText.length() - 1);
+                this.searchResultIndex = 0;
+            }
+            return;
+        }
+        if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER) {
+            if (!this.searchText.isEmpty()) {
+                this.focusNextSearchResult();
+            }
+            return;
+        }
+        if (character >= ' ' && character <= '~') {
+            this.searchText += character;
+            this.searchResultIndex = 0;
+            return;
+        }
+        super.keyTyped(character, keyCode);
+    }
+
+    @Override
+    public void onGuiClosed() {
+        this.searchText = "";
+        this.searchResultIndex = 0;
     }
 
     @Override

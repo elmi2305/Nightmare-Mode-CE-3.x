@@ -18,7 +18,7 @@ public final class OverworldTierHelper {
     public static final double FROZEN_WASTES_START = 45000.0D;
     public static final double STRONGHOLD_RADIUS = 50120.0D;
     public static final double SURFACE_BLEND_LENGTH = 160.0D;
-    public static final double VOID_SLOPE_LENGTH = 192.0D;
+    public static final double VOID_SLOPE_LENGTH = 20.0D;
     public static final double OCEAN_SLOPE_LENGTH = 256.0D;
     public static final double FROZEN_SLOPE_LENGTH = 192.0D;
 
