@@ -3,12 +3,18 @@ package com.itlesports.nightmaremode.mixin.gui;
 import com.itlesports.nightmaremode.nmgui.GuiJourneyIconButton;
 import com.itlesports.nightmaremode.nmgui.GuiJourneyRowButton;
 import com.itlesports.nightmaremode.nmgui.GuiJourneySmallButton;
+import com.itlesports.nightmaremode.nmgui.JourneyBrowserBounds;
+import com.itlesports.nightmaremode.nmgui.JourneyBrowserMode;
+import com.itlesports.nightmaremode.nmgui.JourneyServerDialogAction;
 import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.JourneyBrowserInput;
+import com.itlesports.nightmaremode.util.interfaces.JourneyMenuBackdrop;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import api.AddonHandler;
 import btw.BTWMod;
 import net.minecraft.src.*;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,20 +24,41 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 @Mixin(GuiMainMenu.class)
-public class GuiMainMenuMixin extends GuiScreen {
+public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, JourneyMenuBackdrop {
     @Shadow private String splashText;
     @Shadow private void renderSkybox(int mouseX, int mouseY, float partialTicks) {}
+    @Shadow private int panoramaTimer;
 
     @Unique private JourneyTitleTheme titleTheme;
     @Unique private long titleOpenedAt;
+    @Unique private long journeyMode$backdropLastTick;
     @Unique private NMUtils.JourneyWorldSummary recentWorld;
     @Unique private int worldCardTop;
     @Unique private int worldCardBottom;
+    @Unique private JourneyBrowserMode browserMode = JourneyBrowserMode.NONE;
+    @Unique private final List<SaveFormatComparator> browserWorlds = new ArrayList<SaveFormatComparator>();
+    @Unique private ServerList browserServers;
+    @Unique private final Set<String> browserFavorites = new HashSet<String>();
+    @Unique private int browserSelected = -1;
+    @Unique private static final int BROWSER_ROW_HEIGHT = 80;
+    @Unique private float browserScroll;
+    @Unique private float browserScrollVelocity;
+    @Unique private boolean browserDraggingScrollbar;
+    @Unique private int browserLastDragY;
+    @Unique private long browserLastClick;
+    @Unique private int browserLastClicked = -1;
+    @Unique private JourneyServerDialogAction pendingServerAction = JourneyServerDialogAction.NONE;
+    @Unique private ServerData pendingServerData;
+    @Unique private int pendingServerIndex = -1;
+    @Unique private int renamingWorldIndex = -1;
+    @Unique private String inlineWorldName = "";
+    @Unique private static final int CONFIRM_DELETE_WORLD = 9101;
+    @Unique private static final int CONFIRM_DELETE_SERVER = 9102;
     // Supply this as a 256x16 horizontal atlas: each 16x16 cell maps to JourneyProfile's progression index.
     @Unique private static final ResourceLocation PROGRESS_ICONS = new ResourceLocation("nightmare:textures/menu/journeyProgressIcons.png");
 
@@ -39,19 +66,25 @@ public class GuiMainMenuMixin extends GuiScreen {
     private void journeyMode$layout(CallbackInfo ci) {
         this.titleTheme = JourneyTitleTheme.getActive(this.mc);
         this.titleOpenedAt = Minecraft.getSystemTime();
+        rebuildJourneyLayout();
+    }
+
+    @Unique private void rebuildJourneyLayout() {
         int panelWidth = getPanelWidth();
         int x = 12;
-        int iconY = this.height - 52;
+        // In the full-screen browser these controls belong to its header.  Keeping
+        // them there avoids covering either the list or the browser action buttons.
+        int iconY = isCompactBrowser() ? 12 : this.height - 52;
         boolean compactLayout = iconY < 215 && iconY + 24 > 185;
         int rowWidth = compactLayout ? panelWidth - 120 : panelWidth - 24;
-        int iconX = compactLayout ? panelWidth - 96 : x;
+        int iconX = isCompactBrowser() ? this.width - 96 : compactLayout ? panelWidth - 96 : x;
         this.buttonList.clear();
-        if (this.mc.isDemo()) {
+        if (this.mc.isDemo() && !isCompactBrowser()) {
             this.buttonList.add(new GuiJourneyRowButton(11, x, 150, rowWidth, "Play Demo", "Begin your journey"));
             GuiButton resetDemo = new GuiJourneyRowButton(12, x, 185, rowWidth, "Reset Demo", "Start the demo anew");
             resetDemo.enabled = this.mc.getSaveLoader().getWorldInfo("Demo_World") != null;
             this.buttonList.add(resetDemo);
-        } else {
+        } else if (!this.mc.isDemo() && !isCompactBrowser()) {
             this.buttonList.add(new GuiJourneyRowButton(1, x, 150, rowWidth, "Singleplayer", "Continue your journey"));
             this.buttonList.add(new GuiJourneyRowButton(2, x, 185, rowWidth, "Multiplayer", "Journey with friends"));
         }
@@ -62,17 +95,143 @@ public class GuiMainMenuMixin extends GuiScreen {
         this.refreshRecentWorld();
         this.worldCardTop = 225;
         this.worldCardBottom = iconY - 8;
-        if (this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
+        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
             this.buttonList.add(new GuiJourneySmallButton(33, x, this.worldCardBottom - 24, 72, "Jump In"));
         }
+        if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) addBrowserButtons();
     }
 
     /** Retain the existing title-screen anti-xray safeguard without depending on button-list indices. */
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void journeyMode$disableForXray(CallbackInfo ci) {
+        updateBrowserScroll();
         if (AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")) {
             this.splashText = "Probably Shouldn't Xray!";
             for (Object button : this.buttonList) ((GuiButton) button).enabled = false;
+        }
+    }
+
+    /** Keep world/server selection in this screen whenever the resolution can support the browser. */
+    @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
+    private void journeyMode$handleBrowserActions(GuiButton button, CallbackInfo ci) {
+        if (button.id == 1 && !this.mc.isDemo() && canShowBrowser()) {
+            openBrowser(JourneyBrowserMode.WORLDS);
+            ci.cancel();
+            return;
+        }
+        if (button.id == 2 && !this.mc.isDemo() && canShowBrowser()) {
+            openBrowser(JourneyBrowserMode.SERVERS);
+            ci.cancel();
+            return;
+        }
+        if (button.id >= 100 && button.id <= 206) {
+            performBrowserAction(button.id);
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void journeyMode$clickBrowserRow(int mouseX, int mouseY, int mouseButton, CallbackInfo ci) {
+        if (this.browserMode == JourneyBrowserMode.NONE || mouseButton != 0 || !canShowBrowser()) return;
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        if (mouseX >= bounds.right - 13 && mouseX < bounds.right && mouseY >= bounds.listTop && mouseY < bounds.listBottom && browserCanScroll(bounds)) {
+            this.browserDraggingScrollbar = true;
+            this.browserLastDragY = mouseY;
+            this.browserScrollVelocity = 0.0F;
+            ci.cancel();
+            return;
+        }
+        if (mouseX < bounds.x || mouseX >= bounds.right || mouseY < bounds.listTop || mouseY >= bounds.listBottom) return;
+        int row = (int) ((mouseY - bounds.listTop + this.browserScroll) / BROWSER_ROW_HEIGHT);
+        int size = browserSize();
+        if (row < 0 || row >= size) {
+            ci.cancel();
+            return;
+        }
+        if (this.browserMode == JourneyBrowserMode.WORLDS && mouseX < bounds.x + 24) {
+            toggleBrowserFavorite(this.browserWorlds.get(row).getFileName());
+            refreshWorldBrowser();
+            ci.cancel();
+            return;
+        }
+        boolean doubleClick = this.browserLastClicked == row && Minecraft.getSystemTime() - this.browserLastClick < 250L;
+        this.browserSelected = row;
+        this.browserLastClicked = row;
+        this.browserLastClick = Minecraft.getSystemTime();
+        updateBrowserButtonState();
+        if (doubleClick) performBrowserAction(this.browserMode == JourneyBrowserMode.WORLDS ? 101 : 201);
+        ci.cancel();
+    }
+
+    @Override
+    public void nightmareMode$handleJourneyBrowserWheel(int mouseX, int mouseY, int wheel) {
+        if (this.browserMode == JourneyBrowserMode.NONE || !canShowBrowser()) return;
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        if (mouseX >= bounds.x && mouseX < bounds.right && mouseY >= bounds.listTop && mouseY < bounds.listBottom) {
+            this.browserScrollVelocity += wheel > 0 ? -38.0F : 38.0F;
+        }
+    }
+
+    @Override
+    public void nightmareMode$handleJourneyBrowserDrag(int mouseX, int mouseY, int button) {
+        if (!this.browserDraggingScrollbar || button != 0 || this.browserMode == JourneyBrowserMode.NONE) return;
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        int max = browserMaximumScroll(bounds);
+        int visibleHeight = bounds.listBottom - bounds.listTop;
+        int thumbHeight = browserThumbHeight(bounds);
+        int track = Math.max(1, visibleHeight - thumbHeight);
+        float delta = (mouseY - this.browserLastDragY) * max / (float) track;
+        this.browserScroll += delta;
+        this.browserScrollVelocity = delta;
+        this.browserLastDragY = mouseY;
+        clampBrowserScroll(bounds);
+    }
+
+    @Override
+    public void nightmareMode$releaseJourneyBrowserMouse(int mouseX, int mouseY, int button) {
+        if (button == 0) this.browserDraggingScrollbar = false;
+    }
+
+    @Inject(method = "keyTyped", at = @At("HEAD"), cancellable = true)
+    private void journeyMode$closeBrowserWithEscape(char typedChar, int keyCode, CallbackInfo ci) {
+        if (this.renamingWorldIndex >= 0) {
+            if (keyCode == 1) cancelInlineRename();
+            else if (keyCode == 28 || keyCode == 156) commitInlineRename();
+            else if (keyCode == 14 && !this.inlineWorldName.isEmpty()) this.inlineWorldName = this.inlineWorldName.substring(0, this.inlineWorldName.length() - 1);
+            else if (typedChar >= 32 && typedChar != 127 && ChatAllowedCharacters.allowedCharacters.indexOf(typedChar) >= 0 && this.inlineWorldName.length() < 64) this.inlineWorldName += typedChar;
+            ci.cancel();
+            return;
+        }
+        if (keyCode == 1 && this.browserMode != JourneyBrowserMode.NONE) {
+            closeBrowser();
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "confirmClicked", at = @At("TAIL"))
+    private void journeyMode$confirmBrowserAction(boolean confirmed, int id, CallbackInfo ci) {
+        if (id == CONFIRM_DELETE_WORLD) {
+            if (confirmed && this.browserSelected >= 0 && this.browserSelected < this.browserWorlds.size()) {
+                try {
+                    this.browserFavorites.remove(this.browserWorlds.get(this.browserSelected).getFileName());
+                    writeBrowserFavorites();
+                    this.mc.getSaveLoader().flushCache();
+                    this.mc.getSaveLoader().deleteWorldDirectory(this.browserWorlds.get(this.browserSelected).getFileName());
+                } catch (Throwable ignored) { }
+            }
+            refreshWorldBrowser();
+            this.browserSelected = -1;
+            this.mc.displayGuiScreen(this);
+        } else if (id == CONFIRM_DELETE_SERVER) {
+            if (confirmed && this.browserServers != null && this.browserSelected >= 0 && this.browserSelected < this.browserServers.countServers()) {
+                this.browserServers.removeServerData(this.browserSelected);
+                this.browserServers.saveServerList();
+            }
+            refreshServerBrowser();
+            this.browserSelected = -1;
+            this.mc.displayGuiScreen(this);
+        } else if (id == 0 && this.pendingServerAction != JourneyServerDialogAction.NONE) {
+            completeServerDialog(confirmed);
         }
     }
 
@@ -97,11 +256,38 @@ public class GuiMainMenuMixin extends GuiScreen {
         return vanillaFace;
     }
 
+    @Override
+    public void nightmareMode$drawJourneyBackdrop(int mouseX, int mouseY, float partialTicks, int width, int height) {
+        // Child screens do not call this menu's updateScreen(), so advance its
+        // panorama at the normal game-tick cadence while they borrow it.
+        long now = Minecraft.getSystemTime();
+        if (this.journeyMode$backdropLastTick == 0L) this.journeyMode$backdropLastTick = now;
+        while (now - this.journeyMode$backdropLastTick >= 50L) {
+            ++this.panoramaTimer;
+            this.journeyMode$backdropLastTick += 50L;
+        }
+        // A child can be resized while its parent is inactive. Render using the
+        // child's live dimensions without disturbing the browser's own layout.
+        int oldWidth = this.width;
+        int oldHeight = this.height;
+        this.width = width;
+        this.height = height;
+        this.renderSkybox(mouseX, mouseY, partialTicks);
+        this.width = oldWidth;
+        this.height = oldHeight;
+    }
+
     @Inject(method = "drawScreen", at = @At("HEAD"), cancellable = true)
     private void journeyMode$drawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         ci.cancel();
         this.renderSkybox(mouseX, mouseY, partialTicks);
         JourneyTitleTheme theme = this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme;
+        if (isCompactBrowser()) {
+            drawTintedPanel(this.width, theme);
+            drawEmbeddedBrowser(mouseX, mouseY, theme);
+            super.drawScreen(mouseX, mouseY, partialTicks);
+            return;
+        }
         int panelWidth = getPanelWidth();
         drawTintedPanel(panelWidth, theme);
         drawRect(panelWidth - 1, 0, panelWidth, this.height, theme.divider);
@@ -114,13 +300,333 @@ public class GuiMainMenuMixin extends GuiScreen {
         int journeyY = 18 + btwHeight + 3;
         drawTexture(theme.journeyMode, 12, journeyY, journeyWidth, journeyHeight);
         drawTypedSplash(12, journeyY + journeyHeight + 10);
-        if (this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) drawRecentWorldCard(panelWidth);
+        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) drawRecentWorldCard(panelWidth);
         this.drawString(this.fontRenderer, "Minecraft 1.6.4 - BTW CE V" + BTWMod.instance.getVersionString(), 12, this.height - 22, theme.textMuted);
         this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", 12, this.height - 12, theme.textMuted);
+        if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) drawEmbeddedBrowser(mouseX, mouseY, theme);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
+    // GuiScreen dimensions are scaled: the 856x512 default window commonly arrives here as about 427x240.
+    @Unique private boolean canShowBrowser() { return this.width >= 360 && this.height >= 220; }
+    @Unique private boolean isCompactBrowser() { return this.browserMode != JourneyBrowserMode.NONE && canShowBrowser() && this.width < 960; }
     @Unique private int getPanelWidth() { return Math.min(this.width - 20, Math.max(320, this.width * 35 / 100)); }
+    @Unique private void openBrowser(JourneyBrowserMode mode) {
+        this.browserMode = mode;
+        this.browserSelected = -1;
+        this.browserScroll = 0.0F;
+        this.browserScrollVelocity = 0.0F;
+        if (mode == JourneyBrowserMode.WORLDS) refreshWorldBrowser(); else refreshServerBrowser();
+        rebuildJourneyLayout();
+    }
+
+    @Unique private void closeBrowser() {
+        cancelInlineRename();
+        this.browserMode = JourneyBrowserMode.NONE;
+        this.browserSelected = -1;
+        this.browserScroll = 0.0F;
+        this.browserScrollVelocity = 0.0F;
+        rebuildJourneyLayout();
+    }
+
+    @Unique private void refreshWorldBrowser() {
+        this.browserWorlds.clear();
+        loadBrowserFavorites();
+        try {
+            List saves = this.mc.getSaveLoader().getSaveList();
+            if (saves != null) for (Object save : saves) if (save instanceof SaveFormatComparator) this.browserWorlds.add((SaveFormatComparator) save);
+            Collections.sort(this.browserWorlds, new Comparator<SaveFormatComparator>() {
+                @Override public int compare(SaveFormatComparator a, SaveFormatComparator b) {
+                    boolean aFavorite = browserFavorites.contains(a.getFileName());
+                    boolean bFavorite = browserFavorites.contains(b.getFileName());
+                    if (aFavorite != bFavorite) return aFavorite ? -1 : 1;
+                    return a.compareTo(b);
+                }
+            });
+        } catch (Throwable ignored) { }
+        this.browserSelected = -1;
+    }
+
+    @Unique private void refreshServerBrowser() {
+        if (this.browserServers == null) this.browserServers = new ServerList(this.mc);
+        else this.browserServers.loadServerList();
+        this.browserSelected = -1;
+    }
+
+    @Unique private void addBrowserButtons() {
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        int width = bounds.right - bounds.x;
+        if (this.browserMode == JourneyBrowserMode.WORLDS) {
+            addBrowserButton(101, bounds.x, this.height - 54, width / 3 - 3, "Play");
+            addBrowserButton(102, bounds.x + width / 3 + 2, this.height - 54, width / 3 - 4, "Create New");
+            addBrowserButton(103, bounds.x + width * 2 / 3 + 2, this.height - 54, width / 3 - 2, "Rename");
+            addBrowserButton(104, bounds.x, this.height - 30, width / 3 - 3, "Delete");
+            addBrowserButton(105, bounds.x + width / 3 + 2, this.height - 30, width / 3 - 4, "Recreate");
+            addBrowserButton(106, bounds.x + width * 2 / 3 + 2, this.height - 30, width / 3 - 2, "Back");
+        } else {
+            addBrowserButton(201, bounds.x, this.height - 54, width / 3 - 3, "Join");
+            addBrowserButton(202, bounds.x + width / 3 + 2, this.height - 54, width / 3 - 4, "Direct");
+            addBrowserButton(203, bounds.x + width * 2 / 3 + 2, this.height - 54, width / 3 - 2, "Add Server");
+            addBrowserButton(204, bounds.x, this.height - 30, width / 4 - 3, "Edit");
+            addBrowserButton(205, bounds.x + width / 4 + 2, this.height - 30, width / 4 - 3, "Delete");
+            addBrowserButton(206, bounds.x + width / 2 + 2, this.height - 30, width / 4 - 3, "Refresh");
+            addBrowserButton(106, bounds.x + width * 3 / 4 + 2, this.height - 30, width / 4 - 2, "Back");
+        }
+        updateBrowserButtonState();
+    }
+
+    @Unique private void addBrowserButton(int id, int x, int y, int width, String text) { this.buttonList.add(new GuiJourneySmallButton(id, x, y, Math.max(42, width), text)); }
+
+    @Unique private void updateBrowserButtonState() {
+        boolean selected = this.browserSelected >= 0 && this.browserSelected < browserSize();
+        for (Object object : this.buttonList) {
+            GuiButton button = (GuiButton) object;
+            if (button.id == 101 || button.id == 103 || button.id == 104 || button.id == 105 || button.id == 201 || button.id == 204 || button.id == 205) button.enabled = selected;
+        }
+    }
+
+    @Unique private void performBrowserAction(int id) {
+        if (id == 106) { closeBrowser(); return; }
+        if (this.browserMode == JourneyBrowserMode.WORLDS) {
+            if (id == 102) { this.mc.displayGuiScreen(new GuiCreateWorld(this)); return; }
+            if (this.browserSelected < 0 || this.browserSelected >= this.browserWorlds.size()) return;
+            SaveFormatComparator save = this.browserWorlds.get(this.browserSelected);
+            if (id == 101) launchBrowserWorld(save);
+            else if (id == 103) beginInlineRename(save, this.browserSelected);
+            else if (id == 104) this.mc.displayGuiScreen(GuiSelectWorld.getDeleteWorldScreen(this, browserWorldName(save, this.browserSelected), CONFIRM_DELETE_WORLD));
+            else if (id == 105) recreateBrowserWorld(save);
+        } else {
+            if (id == 202) openServerDialog(JourneyServerDialogAction.DIRECT, new ServerData(I18n.getString("selectServer.defaultName"), ""), -1);
+            else if (id == 203) openServerDialog(JourneyServerDialogAction.ADD, new ServerData(I18n.getString("selectServer.defaultName"), ""), -1);
+            else if (id == 206) { refreshServerBrowser(); rebuildJourneyLayout(); }
+            else if (this.browserSelected >= 0 && this.browserServers != null && this.browserSelected < this.browserServers.countServers()) {
+                ServerData server = this.browserServers.getServerData(this.browserSelected);
+                if (id == 201) this.mc.displayGuiScreen(new GuiConnecting(this, this.mc, server));
+                else if (id == 204) openServerDialog(JourneyServerDialogAction.EDIT, copyServerData(server), this.browserSelected);
+                else if (id == 205) this.mc.displayGuiScreen(new GuiYesNo(this, I18n.getString("selectServer.deleteQuestion"), "'" + server.serverName + "' " + I18n.getString("selectServer.deleteWarning"), I18n.getString("selectServer.deleteButton"), I18n.getString("gui.cancel"), CONFIRM_DELETE_SERVER));
+            }
+        }
+    }
+
+    @Unique private void launchBrowserWorld(SaveFormatComparator save) {
+        String folder = save.getFileName();
+        String displayName = browserWorldName(save, this.browserSelected);
+        if (!this.mc.getSaveLoader().canLoadWorld(folder)) return;
+        this.mc.displayGuiScreen(null);
+        if (this.mc.getSaveLoader().isWorldGlobal(folder)) this.mc.launchIntegratedServerHostile(folder, displayName, null);
+        else this.mc.launchIntegratedServer(folder, displayName, null);
+        this.mc.statFileWriter.readStat(StatList.loadWorldStat, 1);
+    }
+
+    @Unique private void recreateBrowserWorld(SaveFormatComparator save) {
+        try {
+            ISaveHandler handler = this.mc.getSaveLoader().getSaveLoader(save.getFileName(), false);
+            WorldInfo info = handler.loadWorldInfo();
+            handler.flush();
+            GuiCreateWorld screen = new GuiCreateWorld(this);
+            screen.func_82286_a(info);
+            this.mc.displayGuiScreen(screen);
+        } catch (Throwable ignored) { }
+    }
+
+    @Unique private void openServerDialog(JourneyServerDialogAction action, ServerData data, int index) {
+        this.pendingServerAction = action;
+        this.pendingServerData = data;
+        this.pendingServerIndex = index;
+        if (action == JourneyServerDialogAction.DIRECT) this.mc.displayGuiScreen(new GuiScreenServerList(this, data));
+        else this.mc.displayGuiScreen(new GuiScreenAddServer(this, data));
+    }
+
+    @Unique private ServerData copyServerData(ServerData source) {
+        ServerData copy = new ServerData(source.serverName, source.serverIP);
+        copy.setHideAddress(source.isHidingAddress());
+        return copy;
+    }
+
+    @Unique private void completeServerDialog(boolean confirmed) {
+        JourneyServerDialogAction action = this.pendingServerAction;
+        ServerData data = this.pendingServerData;
+        int index = this.pendingServerIndex;
+        this.pendingServerAction = JourneyServerDialogAction.NONE;
+        this.pendingServerData = null;
+        this.pendingServerIndex = -1;
+        if (confirmed && data != null) {
+            if (action == JourneyServerDialogAction.DIRECT) { this.mc.displayGuiScreen(new GuiConnecting(this, this.mc, data)); return; }
+            if (this.browserServers == null) this.browserServers = new ServerList(this.mc);
+            if (action == JourneyServerDialogAction.ADD) this.browserServers.addServerData(data);
+            else if (action == JourneyServerDialogAction.EDIT && index >= 0 && index < this.browserServers.countServers()) {
+                ServerData previous = this.browserServers.getServerData(index);
+                previous.serverName = data.serverName;
+                previous.serverIP = data.serverIP;
+                previous.setHideAddress(data.isHidingAddress());
+            }
+            this.browserServers.saveServerList();
+        }
+        refreshServerBrowser();
+        this.mc.displayGuiScreen(this);
+    }
+
+    @Unique private void drawEmbeddedBrowser(int mouseX, int mouseY, JourneyTitleTheme theme) {
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        clampBrowserScroll(bounds);
+        drawRect(bounds.x, 8, bounds.right, this.height - 8, 0x8A000000 | (theme.cardFill & 0x00FFFFFF));
+        drawRect(bounds.x, 8, bounds.right, 9, theme.edge);
+        drawRect(bounds.x, 8, bounds.x + 1, this.height - 8, theme.edge);
+        drawRect(bounds.right - 1, 8, bounds.right, this.height - 8, theme.edge);
+        String title = this.browserMode == JourneyBrowserMode.WORLDS ? "Your Worlds" : "Multiplayer Servers";
+        this.drawString(this.fontRenderer, title, bounds.x + 9, 18, theme.textHighlight);
+        this.drawString(this.fontRenderer, this.browserMode == JourneyBrowserMode.WORLDS ? "Favorites rise to the top" : "Saved servers", bounds.x + 9, 30, theme.textMuted);
+        int size = browserSize();
+        beginBrowserListClip(bounds);
+        for (int index = 0; index < size; index++) {
+            int y = (int) (bounds.listTop + index * BROWSER_ROW_HEIGHT - this.browserScroll);
+            // Draw rows that intersect the viewport, including partial rows at either
+            // edge.  The scissor box keeps their content beneath the fixed UI chrome.
+            if (y + BROWSER_ROW_HEIGHT - 4 <= bounds.listTop || y >= bounds.listBottom) continue;
+            boolean selected = index == this.browserSelected;
+            int fill = 0xE0000000 | ((selected ? theme.buttonHoverFill : theme.buttonFill) & 0x00FFFFFF);
+            drawRect(bounds.x + 5, y, bounds.right - 11, y + BROWSER_ROW_HEIGHT - 4, fill);
+            drawRect(bounds.x + 5, y, bounds.right - 11, y + 1, selected ? theme.textHighlight : theme.edge);
+            if (this.browserMode == JourneyBrowserMode.WORLDS) drawWorldBrowserRow(index, bounds, y, theme);
+            else drawServerBrowserRow(index, bounds, y, theme);
+        }
+        endBrowserListClip();
+        // A narrow, opaque seam gives the fixed header and footer a clear edge while
+        // the partially visible rows continue to scroll smoothly behind them.
+        drawRect(bounds.x + 1, bounds.listTop - 1, bounds.right - 1, bounds.listTop, theme.edge);
+        drawRect(bounds.x + 1, bounds.listBottom, bounds.right - 1, bounds.listBottom + 1, theme.edge);
+        if (size == 0) this.drawCenteredString(this.fontRenderer, this.browserMode == JourneyBrowserMode.WORLDS ? "No worlds yet" : "No saved servers", (bounds.x + bounds.right) / 2, bounds.listTop + 18, theme.textMuted);
+        drawBrowserScrollbar(bounds, size, theme);
+    }
+
+    @Unique private void drawWorldBrowserRow(int index, JourneyBrowserBounds bounds, int y, JourneyTitleTheme theme) {
+        SaveFormatComparator save = this.browserWorlds.get(index);
+        boolean favorite = this.browserFavorites.contains(save.getFileName());
+        drawScaledString(favorite ? "★" : "☆", bounds.x + 11, y + 25, 3.0F, favorite ? theme.textHighlight : theme.textMuted);
+        drawTexture(theme.worldIcon, bounds.x + 48, y + 10, 56, 56);
+        int textX = bounds.x + 114;
+        String name = this.renamingWorldIndex == index ? this.inlineWorldName + "_" : browserWorldName(save, index);
+        drawScaledString(trimToWidth(name, (int) ((bounds.right - textX - 16) / 1.2F)), textX, y + 11, 1.2F, theme.text);
+        this.drawString(this.fontRenderer, trimToWidth(save.getFileName() + "  " + formatDate(save.getLastTimePlayed()), bounds.right - textX - 16), textX, y + 32, theme.textMuted);
+        String mode = save.isHardcoreModeEnabled() ? "Hardcore" : save.getEnumGameType().getName();
+        this.drawString(this.fontRenderer, mode, textX, y + 46, save.isHardcoreModeEnabled() ? 0xFFD86C64 : theme.textMuted);
+    }
+
+    @Unique private void drawServerBrowserRow(int index, JourneyBrowserBounds bounds, int y, JourneyTitleTheme theme) {
+        ServerData server = this.browserServers.getServerData(index);
+        int textX = bounds.x + 13;
+        drawScaledString(trimToWidth(server.serverName, (int) ((bounds.right - textX - 16) / 1.2F)), textX, y + 11, 1.2F, theme.text);
+        String address = server.isHidingAddress() ? I18n.getString("selectServer.hiddenAddress") : server.serverIP;
+        this.drawString(this.fontRenderer, trimToWidth(address, bounds.right - textX - 16), textX, y + 34, theme.textMuted);
+        this.drawString(this.fontRenderer, server.serverMOTD == null ? "" : trimToWidth(server.serverMOTD, bounds.right - textX - 16), textX, y + 48, theme.textMuted);
+    }
+
+    /** Clips moving rows to the list viewport, leaving the header and action area fixed. */
+    @Unique private void beginBrowserListClip(JourneyBrowserBounds bounds) {
+        ScaledResolution resolution = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
+        int scale = resolution.getScaleFactor();
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor((bounds.x + 5) * scale, this.mc.displayHeight - bounds.listBottom * scale,
+                (bounds.right - bounds.x - 16) * scale, (bounds.listBottom - bounds.listTop) * scale);
+    }
+
+    @Unique private void endBrowserListClip() {
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    @Unique private void drawBrowserScrollbar(JourneyBrowserBounds bounds, int size, JourneyTitleTheme theme) {
+        int contentHeight = size * BROWSER_ROW_HEIGHT;
+        int visibleHeight = bounds.listBottom - bounds.listTop;
+        if (contentHeight <= visibleHeight) return;
+        int thumbHeight = browserThumbHeight(bounds);
+        int track = visibleHeight - thumbHeight;
+        int max = Math.max(1, contentHeight - visibleHeight);
+        int thumbY = bounds.listTop + (int) (this.browserScroll * track / max);
+        drawRect(bounds.right - 11, bounds.listTop, bounds.right - 5, bounds.listBottom, 0xB0000000);
+        drawRect(bounds.right - 11, thumbY, bounds.right - 5, thumbY + thumbHeight, theme.edge);
+    }
+
+    @Unique private JourneyBrowserBounds getBrowserBounds() {
+        int x = isCompactBrowser() ? 12 : Math.max(getPanelWidth() + 18, this.width * 49 / 100);
+        return new JourneyBrowserBounds(x, this.width - 12, 44, this.height - 62);
+    }
+
+    @Unique private int browserSize() { return this.browserMode == JourneyBrowserMode.WORLDS ? this.browserWorlds.size() : this.browserServers == null ? 0 : this.browserServers.countServers(); }
+    @Unique private void clampBrowserScroll(JourneyBrowserBounds bounds) {
+        int max = browserMaximumScroll(bounds);
+        this.browserScroll = Math.max(0.0F, Math.min(this.browserScroll, max));
+    }
+
+    @Unique private int browserMaximumScroll(JourneyBrowserBounds bounds) {
+        return Math.max(0, browserSize() * BROWSER_ROW_HEIGHT - (bounds.listBottom - bounds.listTop));
+    }
+
+    @Unique private boolean browserCanScroll(JourneyBrowserBounds bounds) { return browserMaximumScroll(bounds) > 0; }
+
+    @Unique private int browserThumbHeight(JourneyBrowserBounds bounds) {
+        int visibleHeight = bounds.listBottom - bounds.listTop;
+        int contentHeight = Math.max(1, browserSize() * BROWSER_ROW_HEIGHT);
+        return Math.min(visibleHeight, Math.max(22, visibleHeight * visibleHeight / contentHeight));
+    }
+
+    @Unique private void updateBrowserScroll() {
+        if (this.browserMode == JourneyBrowserMode.NONE || this.browserDraggingScrollbar || Math.abs(this.browserScrollVelocity) < 0.15F) return;
+        this.browserScroll += this.browserScrollVelocity;
+        this.browserScrollVelocity *= 0.78F;
+        clampBrowserScroll(getBrowserBounds());
+    }
+
+    @Unique private void beginInlineRename(SaveFormatComparator save, int index) {
+        this.renamingWorldIndex = index;
+        this.inlineWorldName = browserWorldName(save, index);
+        Keyboard.enableRepeatEvents(true);
+    }
+
+    @Unique private void commitInlineRename() {
+        if (this.renamingWorldIndex >= 0 && this.renamingWorldIndex < this.browserWorlds.size() && !this.inlineWorldName.trim().isEmpty()) {
+            this.mc.getSaveLoader().renameWorld(this.browserWorlds.get(this.renamingWorldIndex).getFileName(), this.inlineWorldName.trim());
+        }
+        cancelInlineRename();
+        refreshWorldBrowser();
+        rebuildJourneyLayout();
+    }
+
+    @Unique private void cancelInlineRename() {
+        this.renamingWorldIndex = -1;
+        this.inlineWorldName = "";
+        Keyboard.enableRepeatEvents(false);
+    }
+
+    @Unique private String browserWorldName(SaveFormatComparator save, int index) {
+        String name = save.getDisplayName();
+        return name == null || name.trim().isEmpty() ? I18n.getString("selectWorld.world") + " " + (index + 1) : name;
+    }
+
+    @Unique private File getBrowserFavoritesFile() { return new File(this.mc.mcDataDir, "nmfavoritedworlds.txt"); }
+    @Unique private void loadBrowserFavorites() {
+        this.browserFavorites.clear();
+        File file = getBrowserFavoritesFile();
+        if (!file.exists()) return;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null) if (!line.trim().isEmpty()) this.browserFavorites.add(line.trim());
+            reader.close();
+        } catch (IOException ignored) { }
+    }
+
+    @Unique private void toggleBrowserFavorite(String folder) {
+        if (!this.browserFavorites.add(folder)) this.browserFavorites.remove(folder);
+        writeBrowserFavorites();
+    }
+
+    @Unique private void writeBrowserFavorites() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(getBrowserFavoritesFile(), false));
+            for (String favorite : this.browserFavorites) { writer.write(favorite); writer.newLine(); }
+            writer.close();
+        } catch (IOException ignored) { }
+    }
 
     @Unique private void refreshRecentWorld() {
         this.recentWorld = null;

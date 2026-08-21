@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.interfaces.JourneyBrowserInput;
 import net.minecraft.src.*;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,5 +60,29 @@ public class GuiScreenMixin {
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
+    }
+
+    @Inject(method = "handleMouseInput", at = @At("HEAD"))
+    private void passJourneyBrowserWheel(CallbackInfo ci) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        if (!(screen instanceof JourneyBrowserInput)) return;
+        int wheel = Mouse.getEventDWheel();
+        if (wheel == 0) return;
+        Minecraft mc = Minecraft.getMinecraft();
+        int mouseX = Mouse.getEventX() * this.width / mc.displayWidth;
+        int mouseY = this.height - Mouse.getEventY() * this.height / mc.displayHeight - 1;
+        ((JourneyBrowserInput) screen).nightmareMode$handleJourneyBrowserWheel(mouseX, mouseY, wheel);
+    }
+
+    @Inject(method = "mouseClickMove", at = @At("HEAD"))
+    private void passJourneyBrowserDrag(int mouseX, int mouseY, int button, long heldTime, CallbackInfo ci) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        if (screen instanceof JourneyBrowserInput) ((JourneyBrowserInput) screen).nightmareMode$handleJourneyBrowserDrag(mouseX, mouseY, button);
+    }
+
+    @Inject(method = "mouseMovedOrUp", at = @At("HEAD"))
+    private void releaseJourneyBrowserDrag(int mouseX, int mouseY, int button, CallbackInfo ci) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        if (screen instanceof JourneyBrowserInput) ((JourneyBrowserInput) screen).nightmareMode$releaseJourneyBrowserMouse(mouseX, mouseY, button);
     }
 }

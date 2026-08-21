@@ -318,6 +318,7 @@
     "gui.GuiScreenBookMixin",
     "gui.GuiSelectWorldMixin",
     "gui.GuiShareToLanMixin",
+    "gui.GuiYesNoMixin",
     "gui.GuiSleepMPMixin",
     "gui.GuiSlotMixin",
     "gui.GuiWorldSlotMixin",
