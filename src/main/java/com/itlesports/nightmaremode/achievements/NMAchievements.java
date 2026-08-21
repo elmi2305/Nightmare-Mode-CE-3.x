@@ -100,6 +100,40 @@ public class NMAchievements {
                     .parents(SMELT_IRON)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
+
+    // The linear Journey Mode milestone track. These use the ordinary item event so they
+    // work naturally for crafting, processing, and receiving the IFHY materials.
+    public static final Achievement<ItemStack> IFHY_LITHIUM_REFINED =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("journeyLithium"))
+                    .icon(NMItems.lithiumRefined)
+                    .displayLocation(13, 1)
+                    .triggerCondition(stack -> stack.itemID == NMItems.lithiumRefined.itemID)
+                    .parents(SMELT_IRON)
+                    .build()
+                    .registerAchievement(TAB_GETTING_STARTED);
+
+    public static final Achievement<ItemStack> IFHY_NICKEL_INGOT =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("journeyNickel"))
+                    .icon(NMItems.nickelIngot)
+                    .displayLocation(14, 1)
+                    .triggerCondition(stack -> stack.itemID == NMItems.nickelIngot.itemID)
+                    .parents(IFHY_LITHIUM_REFINED)
+                    .build()
+                    .registerAchievement(TAB_GETTING_STARTED);
+
+    public static final Achievement<ItemStack> IFHY_CISTERN =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("journeyCistern"))
+                    .icon(NMBlocks.cistern)
+                    .displayLocation(15, 1)
+                    .triggerCondition(stack -> stack.itemID == NMBlocks.cistern.blockID)
+                    .parents(IFHY_NICKEL_INGOT)
+                    .build()
+                    .registerAchievement(TAB_GETTING_STARTED);
+
+
     public static final Achievement<ItemStack> CRAFT_BANDAGE =
             AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("bandage"))

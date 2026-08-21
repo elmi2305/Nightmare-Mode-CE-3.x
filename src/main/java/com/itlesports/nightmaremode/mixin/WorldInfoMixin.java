@@ -4,10 +4,7 @@ import api.world.difficulty.Difficulty;
 import btw.community.nightmaremode.NightmareMode;
 import btw.world.BTWDifficulties;
 import com.itlesports.nightmaremode.mixin.interfaces.WorldInfoAccessor;
-import net.minecraft.src.EnumGameType;
-import net.minecraft.src.GameRules;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.WorldInfo;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -71,4 +68,5 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor {
     private void countDeaths(NBTTagCompound par1NBTTagCompound, CallbackInfo ci){
         this.setDeathCounter(EnumGameType.getByID(par1NBTTagCompound.getInteger("DeathCount")));
     }
+
 }

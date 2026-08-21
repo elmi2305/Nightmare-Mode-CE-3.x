@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.skill;
 import api.world.data.DataSyncManager;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.*;
 
 public class SkillHandler {
@@ -60,6 +61,7 @@ public class SkillHandler {
             }
             player.setData(NightmareMode.SKILL_TREE, playerData);
             player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+            recordJourneySkillProgress(player);
         } finally {
             APPLYING_ALL_SKILLS.remove();
         }
@@ -100,9 +102,17 @@ public class SkillHandler {
         node.reward.getAction().apply(player, player.worldObj);
         player.setData(NightmareMode.SKILL_TREE, playerData);
         player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+        recordJourneySkillProgress(player);
         sync(player);
         sendStatus(player, "Unlocked skill: " + node.name);
         return true;
+    }
+
+    private static void recordJourneySkillProgress(EntityPlayer player) {
+        if (player == null || player.worldObj == null || player.worldObj.isRemote) return;
+        JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
+        profile.recordSkillState(player, player.worldObj);
+        player.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
     }
 
     public static void incrementBlocksMined(EntityPlayer player, int blockId, int metadata) {

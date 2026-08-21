@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.item.items.template.ItemKnife;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.CarcassHarvesting;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -158,6 +159,16 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             }
             this.nm$becomeCarcass(source);
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void countJourneyKills(DamageSource source, CallbackInfo ci) {
+        EntityLivingBase thisObj = (EntityLivingBase) (Object)(this);
+        if (!this.worldObj.isRemote && !(thisObj instanceof EntityPlayer) && source.getEntity() instanceof EntityPlayer) {
+            JourneyProfile profile = JourneyProfile.getOrCreate(this.worldObj);
+            profile.kills++;
+            this.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
         }
     }
 

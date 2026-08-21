@@ -3,8 +3,10 @@ package com.itlesports.nightmaremode.mixin;
 import api.world.WorldUtils;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.world.ChunkLoaderManager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -65,6 +67,12 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
         }
         if (time % 20 == 0) {
             ChunkLoaderManager.loadChargedChunks((WorldServer)(Object)this);
+        }
+        if (this.provider.dimensionId == 0 && time % 200 == 0) {
+            JourneyProfile profile = JourneyProfile.getOrCreate((World)(Object)this);
+            profile.playTicks = Math.max(profile.playTicks, this.getTotalWorldTime());
+            profile.worldState = NMUtils.getWorldProgress();
+            this.setData(NightmareMode.JOURNEY_PROFILE, profile);
         }
     }
     @Unique private void setBlueMoonWorld(boolean b){

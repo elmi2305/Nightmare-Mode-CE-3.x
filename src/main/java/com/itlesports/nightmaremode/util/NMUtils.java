@@ -16,6 +16,7 @@ import com.itlesports.nightmaremode.mixin.interfaces.EntityLivingBaseAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.SoundManagerAccess;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Unique;
 import paulscode.sound.SoundSystemConfig;
@@ -629,4 +630,5 @@ public class NMUtils {
         }
     }
 
+    public record JourneyWorldSummary(String folderName, String displayName, WorldInfo worldInfo, JourneyProfile profile) { }
 }

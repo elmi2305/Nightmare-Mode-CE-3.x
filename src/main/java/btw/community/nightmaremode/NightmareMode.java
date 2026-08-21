@@ -20,6 +20,7 @@ import com.itlesports.nightmaremode.util.CarcassHarvestNet;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.world.ChunkLoaderData;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
@@ -805,7 +806,18 @@ public class NightmareMode extends BTWAddon {
                     .defaultSupplier(() -> false)
                     .readNBT(nbt -> nbt.getBoolean("DragonDefeated"))
                     .writeNBT((nbt, v) -> nbt.setBoolean("DragonDefeated", v))
+            .global()
+            .build();
+
+    /** Synced, root-level metadata for the Journey Mode recent-world title card. */
+    public static final DataEntry.WorldDataEntry<JourneyProfile> JOURNEY_PROFILE =
+            DataProvider.getBuilder(JourneyProfile.class)
+                    .name(JourneyProfile.TAG)
+                    .defaultSupplier(JourneyProfile::missing)
+                    .readNBT(JourneyProfile::read)
+                    .writeNBT((nbt, profile) -> profile.write(nbt))
                     .global()
+                    .sync()
                     .build();
 
     public static final DataEntry.WorldDataEntry<ChunkLoaderData> CHUNK_LOADERS =
@@ -948,6 +960,7 @@ public class NightmareMode extends BTWAddon {
         DEFEATED_BLOODWITHER.register();
         SKILL_TREE.register();
         WORLD_SKILL_TREE.register();
+        JOURNEY_PROFILE.register();
     }
 
     @Override

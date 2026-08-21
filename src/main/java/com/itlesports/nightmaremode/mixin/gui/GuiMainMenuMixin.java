@@ -1,207 +1,252 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import api.AddonHandler;
-import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.nmgui.GuiTexturedButton;
-import com.itlesports.nightmaremode.nmgui.GuiWorldInfoConfig;
+import com.itlesports.nightmaremode.nmgui.GuiJourneyIconButton;
+import com.itlesports.nightmaremode.nmgui.GuiJourneyRowButton;
+import com.itlesports.nightmaremode.nmgui.GuiJourneySmallButton;
+import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import com.itlesports.nightmaremode.util.NMUtils;
-import net.minecraft.server.MinecraftServer;
+import com.itlesports.nightmaremode.world.JourneyProfile;
+import api.AddonHandler;
+import btw.BTWMod;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
+import java.text.SimpleDateFormat;
 
 @Mixin(GuiMainMenu.class)
 public class GuiMainMenuMixin extends GuiScreen {
     @Shadow private String splashText;
-    @Shadow @Final private static Random rand;
-    @Unique private static ResourceLocation MENU = null;
+    @Shadow private void renderSkybox(int mouseX, int mouseY, float partialTicks) {}
 
-    @Unique private final ResourceLocation BLOODMARE_CLEAN = new ResourceLocation("nightmare:textures/menu/NightmareModeBloodmareClean.png");
-    @Unique private final ResourceLocation BLOODMARE = new ResourceLocation("nightmare:textures/menu/NightmareModeBloodmare.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE = new ResourceLocation("nightmare:textures/menu/NightmareMode.png");
-    @Unique private final ResourceLocation CANCER_MODE = new ResourceLocation("nightmare:textures/menu/CancerMode.png");
-    @Unique private final ResourceLocation BTW_CANCER = new ResourceLocation("nightmare:textures/menu/BTWCancer.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_RED = new ResourceLocation("nightmare:textures/menu/NightmareModeRed.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_DARK = new ResourceLocation("nightmare:textures/menu/NightmareModeDark.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_GREEN = new ResourceLocation("nightmare:textures/menu/NightmareModeGreen.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_BLUE = new ResourceLocation("nightmare:textures/menu/NightmareModeBlue.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_MISSING = new ResourceLocation("nightmare:textures/menu/NightmareModeMissing.png");
-    @Unique private final ResourceLocation NIGHTMARE_MODE_PURPLE = new ResourceLocation("nightmare:textures/menu/NightmareModePurple.png");
-    @Unique private final List<ResourceLocation> logoList = Arrays.asList(
-            NIGHTMARE_MODE_RED,
-            NIGHTMARE_MODE_DARK,
-            NIGHTMARE_MODE_GREEN,
-            NIGHTMARE_MODE_BLUE,
-            NIGHTMARE_MODE_MISSING,
-            NIGHTMARE_MODE_PURPLE
-    );
-    @Unique private final ResourceLocation GEAR = new ResourceLocation("nightmare:textures/gui/gear.png");
+    @Unique private JourneyTitleTheme titleTheme;
+    @Unique private long titleOpenedAt;
+    @Unique private NMUtils.JourneyWorldSummary recentWorld;
+    @Unique private int worldCardTop;
+    @Unique private int worldCardBottom;
+    // Supply this as a 256x16 horizontal atlas: each 16x16 cell maps to JourneyProfile's progression index.
+    @Unique private static final ResourceLocation PROGRESS_ICONS = new ResourceLocation("nightmare:textures/menu/journeyProgressIcons.png");
 
-    @Unique private boolean createClicked; // used to make sure the Jump In dev mode button isn't activated twice
-    @Unique private int heightMod;
-
-    @ModifyConstant(method = "initGui",constant = @Constant(intValue = 72))
-    private int changeHeight(int constant){
-        if(heightMod != 0){
-            return constant + 12;
-        }
-        return constant;
-    }
     @Inject(method = "initGui", at = @At("TAIL"))
-    private void manageSplashText(CallbackInfo ci){
-        this.splashText = getLocalizedSplash();
-        if (MENU == null) {
-            MENU = NightmareMode.isAprilFools ? CANCER_MODE
-                    : (NightmareMode.bloodmare ? (rand.nextInt(64) == 0 ? BLOODMARE : BLOODMARE_CLEAN)
-                    : (rand.nextInt(100000) == 0 ? logoList.get(rand.nextInt(logoList.size())) : NIGHTMARE_MODE));
+    private void journeyMode$layout(CallbackInfo ci) {
+        this.titleTheme = JourneyTitleTheme.getActive(this.mc);
+        this.titleOpenedAt = Minecraft.getSystemTime();
+        int panelWidth = getPanelWidth();
+        int x = 12;
+        int iconY = this.height - 52;
+        boolean compactLayout = iconY < 215 && iconY + 24 > 185;
+        int rowWidth = compactLayout ? panelWidth - 120 : panelWidth - 24;
+        int iconX = compactLayout ? panelWidth - 96 : x;
+        this.buttonList.clear();
+        if (this.mc.isDemo()) {
+            this.buttonList.add(new GuiJourneyRowButton(11, x, 150, rowWidth, "Play Demo", "Begin your journey"));
+            GuiButton resetDemo = new GuiJourneyRowButton(12, x, 185, rowWidth, "Reset Demo", "Start the demo anew");
+            resetDemo.enabled = this.mc.getSaveLoader().getWorldInfo("Demo_World") != null;
+            this.buttonList.add(resetDemo);
+        } else {
+            this.buttonList.add(new GuiJourneyRowButton(1, x, 150, rowWidth, "Singleplayer", "Continue your journey"));
+            this.buttonList.add(new GuiJourneyRowButton(2, x, 185, rowWidth, "Multiplayer", "Journey with friends"));
+        }
+
+        this.buttonList.add(new GuiJourneyIconButton(0, iconX, iconY, GuiJourneyIconButton.Icon.OPTIONS));
+        this.buttonList.add(new GuiJourneyIconButton(5, iconX + 30, iconY, GuiJourneyIconButton.Icon.LANGUAGE));
+        this.buttonList.add(new GuiJourneyIconButton(4, iconX + 60, iconY, GuiJourneyIconButton.Icon.QUIT));
+        this.refreshRecentWorld();
+        this.worldCardTop = 225;
+        this.worldCardBottom = iconY - 8;
+        if (this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
+            this.buttonList.add(new GuiJourneySmallButton(33, x, this.worldCardBottom - 24, 72, "Jump In"));
         }
     }
 
-    @Inject(method = "addSingleplayerMultiplayerButtons", at = @At("HEAD"))
-    private void addJumpInButtonDevMode(int par1, int par2, CallbackInfo ci){
-        int w = 178;
-        int h = 20;
-        this.heightMod = 0;
-        if(AddonHandler.modList.keySet().toString().toLowerCase().contains("modmenu")) {
-            heightMod = 24;
-        }
-
-//        this.buttonList.add(new GuiButton(33, this.width / 2 - 100, par1 + par2 * 2 + heightMod, w, h, I18n.getString("selectWorld.create")));
-//        this.buttonList.add(new GuiTexturedButton(34, this.width / 2 - 100 + w + 1, par1 + par2 * 2 + heightMod, 20, 20, GEAR));
-    }
+    /** Retain the existing title-screen anti-xray safeguard without depending on button-list indices. */
     @Inject(method = "updateScreen", at = @At("TAIL"))
-    private void disableOptionsIfXray(CallbackInfo ci){
-        if(AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")){
+    private void journeyMode$disableForXray(CallbackInfo ci) {
+        if (AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")) {
             this.splashText = "Probably Shouldn't Xray!";
-            ((GuiButton)(this.buttonList.get(1))).enabled = false;
-            ((GuiButton)(this.buttonList.get(0))).enabled = false;
-            ((GuiButton)(this.buttonList.get(2))).enabled = false;
-            ((GuiButton)(this.buttonList.get(3))).enabled = false;
-            ((GuiButton)(this.buttonList.get(5))).enabled = false;
+            for (Object button : this.buttonList) ((GuiButton) button).enabled = false;
         }
     }
 
-    @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
-    private void doCustomButton(GuiButton par1GuiButton, CallbackInfo ci){
-        if(par1GuiButton.id == 33){
-            if (this.createClicked) {
-                return;
-            }
-
-            this.createClicked = true;
-            long seed = rand.nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
-
-            WorldSettings settings = NMUtils.decodeSettings(NightmareMode.getInstance().addonConfig.getString("WorldInfoString"), seed);
-
-            ISaveFormat saveLoader = this.mc.getSaveLoader();
-
-
-            List saveList = null;
-            try {
-                saveList = saveLoader.getSaveList();
-            } catch (AnvilConverterException ignored) {}
-
-            saveList.sort(null);
-            String mostRecentWorld = NMUtils.updateWorldName(((SaveFormatComparator) saveList.get(0)).getDisplayName());
-
-            try {
-                if (MinecraftServer.getServer() != null) {
-                    MinecraftServer.getServer().stopServer();
-                    this.mc.loadWorld(null);
-                }
-                this.mc.launchIntegratedServer(NMUtils.makeUseableName(mostRecentWorld,this.mc), mostRecentWorld.trim(), settings);
-                this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
-            } catch (Exception e) {
-                this.createClicked = false;
-                ci.cancel();
-                return;
-            }
-        } else if(par1GuiButton.id == 34){
-            this.mc.displayGuiScreen(new GuiWorldInfoConfig(this, NightmareMode.getInstance().addonConfig.getString("WorldInfoString")));
+    @Inject(method = "actionPerformed", at = @At("TAIL"))
+    private void journeyMode$jumpIntoRecentWorld(GuiButton button, CallbackInfo ci) {
+        if (button.id != 33 || this.recentWorld == null || !button.enabled) return;
+        try {
+            this.mc.launchIntegratedServer(this.recentWorld.folderName(), this.recentWorld.displayName(),
+                    new WorldSettings(this.recentWorld.worldInfo()));
+            this.mc.statFileWriter.readStat(StatList.createWorldStat, 1);
+        } catch (Throwable ignored) {
+            // A deleted or damaged save should fail like a normal singleplayer launch, never crash the title screen.
         }
     }
 
-    @Unique
-    private static String getLocalizedSplash() {
-        List<String> splashList = new ArrayList<>();
-        for (int i = 1; i <= 24; ++i) {
-            splashList.add(I18n.getString("gui.mainmenu.splash" + i));
+    @ModifyArg(method = "drawPanorama", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
+    private ResourceLocation journeyMode$selectPanorama(ResourceLocation vanillaFace) {
+        if (this.titleTheme == null) return vanillaFace;
+        for (int i = 0; i < this.titleTheme.panorama.length; i++) {
+            if (vanillaFace.getResourcePath().endsWith("panorama_" + i + ".png")) return this.titleTheme.panorama[i];
         }
-        return splashList.get(rand.nextInt(splashList.size()));
+        return vanillaFace;
     }
 
-    @ModifyArg(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
-    private ResourceLocation cancerBTWLogo(ResourceLocation par1ResourceLocation){
-        if(NightmareMode.isAprilFools){
-            return BTW_CANCER;
-        }
-        return par1ResourceLocation;
+    @Inject(method = "drawScreen", at = @At("HEAD"), cancellable = true)
+    private void journeyMode$drawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        ci.cancel();
+        this.renderSkybox(mouseX, mouseY, partialTicks);
+        JourneyTitleTheme theme = this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme;
+        int panelWidth = getPanelWidth();
+        drawTintedPanel(panelWidth, theme);
+        drawRect(panelWidth - 1, 0, panelWidth, this.height, theme.divider);
+        int available = panelWidth - 24;
+        int btwWidth = Math.min(available, 250);
+        int btwHeight = btwWidth * 326 / 1182;
+        drawTexture(theme.betterThanWolves, 24, 18, btwWidth, btwHeight);
+        int journeyWidth = available;
+        int journeyHeight = journeyWidth * 164 / 1362;
+        int journeyY = 18 + btwHeight + 3;
+        drawTexture(theme.journeyMode, 12, journeyY, journeyWidth, journeyHeight);
+        drawTypedSplash(12, journeyY + journeyHeight + 10);
+        if (this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) drawRecentWorldCard(panelWidth);
+        this.drawString(this.fontRenderer, "Minecraft 1.6.4 - BTW CE V" + BTWMod.instance.getVersionString(), 12, this.height - 22, theme.textMuted);
+        this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", 12, this.height - 12, theme.textMuted);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 0),index = 3)
-    private String replaceSinglePlayerText(String par4Str){
-        if(NightmareMode.isAprilFools){
-            return I18n.getString("gui.mainmenu.skibidiplayer");
-        }
-        return par4Str;
-    }
-    @ModifyArg(method = "addSingleplayerMultiplayerButtons", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiButton;<init>(IIILjava/lang/String;)V",ordinal = 1),index = 3)
-    private String replaceMultiPlayerText(String par4Str){
-        if(NightmareMode.isAprilFools){
-            return I18n.getString("gui.mainmenu.rizzfriends");
-        }
-        return par4Str;
-    }
+    @Unique private int getPanelWidth() { return Math.min(this.width - 20, Math.max(320, this.width * 35 / 100)); }
 
-    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiMainMenu;drawCenteredString(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V"))
-    private void changeSplashScreenHeight(Args args) {
-        int xOffset = args.get(2);
-        int yOffset = args.get(3);
-        args.set(2, xOffset + 25);
-        args.set(3, yOffset - 3);
-    }
-    @ModifyArgs(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false))
-    private void colorOfBetterThanWolvesSign(Args args){
-        if (NightmareMode.bloodmare) {
-            args.set(1, 0.15f);
-            args.set(2, 0.15f);
-            args.set(3, 0.15f);
-        }
-    }
-
-    @ModifyArgs(method = "drawPanorama", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorRGBA_I(II)V"))
-    private void modifyColorsOnBloodmare0(Args args){
-        if (NightmareMode.bloodmare) {
-            args.set(0, (255 << 16) | (40 << 8) | 40);
+    @Unique private void refreshRecentWorld() {
+        this.recentWorld = null;
+        if (this.mc.isDemo()) return;
+        try {
+            List saves = this.mc.getSaveLoader().getSaveList();
+            if (saves == null || saves.isEmpty()) return;
+            saves.sort(null);
+            SaveFormatComparator save = (SaveFormatComparator)saves.get(0);
+            WorldInfo info = this.mc.getSaveLoader().getWorldInfo(save.getFileName());
+            if (info != null) this.recentWorld = new NMUtils.JourneyWorldSummary(save.getFileName(), save.getDisplayName(), info,
+                    info.getData(btw.community.nightmaremode.NightmareMode.JOURNEY_PROFILE));
+        } catch (Throwable ignored) {
+            // The card is optional; malformed or unavailable saves simply leave the title screen unchanged.
         }
     }
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V", remap = false))
-    private void customNightmareGui(int par1, int par2, float par3, CallbackInfo ci){
-        short var5 = 256;
-        int var6 = this.width / 2 - var5 / 2;
-        byte var7 = 30;
+    @Unique private void drawRecentWorldCard(int panelWidth) {
+        JourneyTitleTheme theme = this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme;
+        int x = 12;
+        int width = panelWidth - 24;
+        int height = this.worldCardBottom - this.worldCardTop;
+        drawRect(x, this.worldCardTop, x + width, this.worldCardBottom, theme.cardFill);
+        drawRect(x, this.worldCardTop, x + width, this.worldCardTop + 1, theme.edge);
+        drawRect(x, this.worldCardTop, x + 1, this.worldCardBottom, theme.edge);
+        drawRect(x + width - 1, this.worldCardTop, x + width, this.worldCardBottom, 0x803C2918);
+        int iconSize = 56;
+        int iconX = x + 7;
+        int iconY = this.worldCardTop + 7;
+        drawTexture(theme.worldIcon, iconX, iconY, iconSize, iconSize);
+        int detailsX = iconX + iconSize + 7;
+        drawScaledString(trimToWidth(this.recentWorld.displayName(), (int) ((x + width - detailsX - 7) / 1.25F)), detailsX, iconY + 2, 1.25F, theme.textHighlight);
+        JourneyProfile data = this.recentWorld.profile();
+        if (!data.valid) {
+            this.drawString(this.fontRenderer, "World records: N/A", detailsX, iconY + 16, theme.textMuted);
+            return;
+        }
+        // This four-part stack remains within the 56px high world art: title, state, total, then the achievement icon.
+        this.drawString(this.fontRenderer, worldStateName(data.worldState), detailsX, iconY + 17, theme.text);
+        this.drawString(this.fontRenderer, "Total completion: " + formatTotalCompletion(data) + "%", detailsX, iconY + 28, theme.textMuted);
+        drawProgressIcon(detailsX, iconY + 40, data.progressIndex, theme);
+        int statsY = iconY + iconSize + 6;
+        int actionY = this.worldCardBottom - 24;
+        if (statsY + 8 <= actionY) this.drawString(this.fontRenderer, "Playtime " + formatPlaytime(data.playTicks) + "  |  Created " + formatDate(data.createdAt), x + 8, statsY, theme.textMuted);
+        if (statsY + 20 <= actionY) this.drawString(this.fontRenderer, "Deaths " + data.deaths + "  |  Kills " + data.kills + "  |  Joined " + data.joins + " times", x + 8, statsY + 12, theme.textMuted);
+        if (statsY + 32 <= actionY) this.drawString(this.fontRenderer,
+                "Progress " + (data.progressIndex + 1) + "/" + JourneyProfile.progressCount() + " | Skills " + data.getSkillCompletionPercent() + "%",
+                x + 8, statsY + 24, theme.textMuted);
+    }
 
-        this.mc.getTextureManager().bindTexture(MENU);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    @Unique private void drawProgressIcon(int x, int y, int index, JourneyTitleTheme theme) {
+        try {
+            this.mc.getResourceManager().getResource(PROGRESS_ICONS);
+            this.mc.getTextureManager().bindTexture(PROGRESS_ICONS);
+            // The supplied atlas is 256x16, not the 256x256 sheet assumed by drawTexturedModalRect.
+            int cell = Math.max(0, Math.min(15, index));
+            float u0 = cell / 16.0F;
+            float u1 = (cell + 1) / 16.0F;
+            GL11.glColor4f(((theme.textHighlight >> 16) & 255) / 255.0F, ((theme.textHighlight >> 8) & 255) / 255.0F,
+                    (theme.textHighlight & 255) / 255.0F, 1.0F);
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
+            tessellator.addVertexWithUV(x, y + 16, 0, u0, 1.0F);
+            tessellator.addVertexWithUV(x + 16, y + 16, 0, u1, 1.0F);
+            tessellator.addVertexWithUV(x + 16, y, 0, u1, 0.0F);
+            tessellator.addVertexWithUV(x, y, 0, u0, 0.0F);
+            tessellator.draw();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        } catch (Throwable ignored) {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            drawRect(x, y, x + 16, y + 16, theme.cardFill);
+            drawRect(x, y, x + 16, y + 1, theme.edge);
+        }
+    }
 
-        int customTextureY = var7 + 46;
+    @Unique private static String formatDate(long timestamp) { return timestamp <= 0 ? "N/A" : new SimpleDateFormat("dd/MM/yyyy").format(new Date(timestamp)); }
+    @Unique private static String formatPlaytime(long ticks) {
+        if (ticks <= 0) return "N/A";
+        long seconds = ticks / 20L, days = seconds / 86400L;
+        seconds %= 86400L;
+        return days + "d " + String.format("%02d:%02d:%02d", seconds / 3600L, seconds / 60L % 60L, seconds % 60L);
+    }
+    @Unique private static int formatTotalCompletion(JourneyProfile data) {
+        int milestoneTotal = JourneyProfile.progressCount();
+        int milestoneComplete = Math.min(milestoneTotal, Math.max(0, data.progressIndex + 1));
+        int skillTotal = Math.max(0, data.getSkillTotal());
+        int total = milestoneTotal + skillTotal;
+        return total == 0 ? 0 : (milestoneComplete + Math.min(skillTotal, Math.max(0, data.getCompletedSkillCount()))) * 100 / total;
+    }
+    @Unique private static String worldStateName(int state) { return new String[]{"Pre Hardmode", "Hardmode", "Post Wither", "Post Dragon"}[Math.max(0, Math.min(3, state))]; }
 
-        int customWidth = 256;
-        int customHeight = 51;
+    @Unique private void drawScaledString(String text, int x, int y, float scale, int color) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0.0F);
+        GL11.glScalef(scale, scale, 1.0F);
+        this.drawString(this.fontRenderer, text, 0, 0, color);
+        GL11.glPopMatrix();
+    }
 
-        this.drawTexturedModalRect(var6, customTextureY, 0, 0, customWidth, customHeight);
+    @Unique private String trimToWidth(String text, int maximumWidth) {
+        if (this.fontRenderer.getStringWidth(text) <= maximumWidth) return text;
+        String ellipsis = "...";
+        while (!text.isEmpty() && this.fontRenderer.getStringWidth(text + ellipsis) > maximumWidth) text = text.substring(0, text.length() - 1);
+        return text + ellipsis;
+    }
+
+    @Unique private void drawTintedPanel(int panelWidth, JourneyTitleTheme theme) {
+        panelWidth += 56;
+        for (int left = 0; left < panelWidth; left += 4) {
+            int right = Math.min(left + 4, panelWidth);
+            int alpha = 170 * (panelWidth - left) / panelWidth;
+            drawRect(left, 0, right, this.height, (alpha << 24) | theme.panelRgb);
+        }
+    }
+
+    @Unique private void drawTexture(ResourceLocation texture, int x, int y, int width, int height) {
+        this.mc.getTextureManager().bindTexture(texture); GL11.glColor4f(1, 1, 1, 1);
+        Tessellator t = Tessellator.instance; t.startDrawingQuads();
+        t.addVertexWithUV(x, y + height, 0, 0, 1); t.addVertexWithUV(x + width, y + height, 0, 1, 1);
+        t.addVertexWithUV(x + width, y, 0, 1, 0); t.addVertexWithUV(x, y, 0, 0, 0); t.draw();
+    }
+
+    @Unique private void drawTypedSplash(int x, int y) {
+        int shown = Math.min(this.splashText.length(), (int) ((Minecraft.getSystemTime() - this.titleOpenedAt) / 45L));
+        String visible = this.splashText.substring(0, Math.max(0, shown));
+        GL11.glPushMatrix(); GL11.glTranslatef(x, y, 0); GL11.glRotatef(-2.0F, 0, 0, 1);
+        this.drawString(this.fontRenderer, visible, 0, 0, 0xFFE0B667); GL11.glPopMatrix();
     }
 }

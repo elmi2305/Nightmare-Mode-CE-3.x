@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.util.NetherItemHelper;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ItemStack;
@@ -71,6 +72,12 @@ public class ServerConfigurationManagerMixin {
 
     @Inject(method = "playerLoggedIn", at = @At("TAIL"))
     private void sendFoodPacketToJoinedPlayer(EntityPlayerMP player, CallbackInfo ci){
+        if (!player.worldObj.isRemote) {
+            JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
+            profile.joins++;
+            profile.recordSkillState(player, player.worldObj);
+            player.worldObj.setData(btw.community.nightmaremode.NightmareMode.JOURNEY_PROFILE, profile);
+        }
         if (player instanceof EntityPlayerExt ext){
             ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
         }

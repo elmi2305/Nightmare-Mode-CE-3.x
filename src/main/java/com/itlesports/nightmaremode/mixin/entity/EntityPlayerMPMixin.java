@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -190,6 +191,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
+        if (!this.worldObj.isRemote) {
+            JourneyProfile profile = JourneyProfile.getOrCreate(this.worldObj);
+            profile.deaths++;
+            this.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
+        }
         if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !MinecraftServer.getIsServer()) {
             Entity lightningbolt = new EntityLightningBolt(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
             getEntityWorld().addWeatherEffect(lightningbolt);
