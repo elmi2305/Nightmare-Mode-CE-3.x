@@ -35,6 +35,16 @@ public abstract class HopperTileEntityMixin extends TileEntity {
         return xp * 10;
     }
 
+    @ModifyConstant(method = "attemptToEjectXPIntoArcaneVessel", constant = @Constant(intValue = 1000), remap = false)
+    private int increaseArcaneVesselCapacity(int xp) {
+        return 100000;
+    }
+
+    @ModifyConstant(method = "resetXPEjectCount", constant = @Constant(intValue = 10), remap = false)
+    private int reduceExperienceEjectDelay(int delay) {
+        return 2;
+    }
+
     @Inject(method = "attemptToEjectStackFromInv", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockTileEntity(III)Lnet/minecraft/src/TileEntity;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void governHellforge(CallbackInfo ci, int iStackIndex, ItemStack invStack, int iEjectStackSize, ItemStack ejectStack, int iTargetI, int iTargetJ, int iTargetK, boolean bEjectIntoWorld, int iTargetBlockID, Block targetBlock) {
         TileEntity targetTileEntity = this.worldObj.getBlockTileEntity(iTargetI, iTargetJ, iTargetK);
