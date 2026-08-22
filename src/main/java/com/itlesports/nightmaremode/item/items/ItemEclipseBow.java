@@ -52,12 +52,13 @@ public class ItemEclipseBow extends CompositeBowItem {
             float spreadAngle = world.rand.nextFloat() * 3 + 2; // Angle for left and right arrows
             float spreadAngleVertical = world.rand.nextFloat() * 3 + 1;
 
-            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0, fPullStrength, 0);
+            boolean hasInfinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemStack) > 0;
+            spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, 0, fPullStrength, 0, hasInfinity);
             if (arrowStack.stackSize > 1 || infiniteArrows) {
-                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical) ;
+                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, -spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical, hasInfinity) ;
             }
             if (arrowStack.stackSize > 2 || infiniteArrows) {
-                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical);
+                spawnArrowWithSpread(world, player, arrowStack.itemID, arrowVelocity, spreadAngle, fPullStrength, (world.rand.nextBoolean() ? 1 : -1) * spreadAngleVertical, hasInfinity);
             }
             if (!infiniteArrows) {
                 player.inventory.consumeInventoryItem(arrowStack.itemID);
@@ -83,8 +84,12 @@ public class ItemEclipseBow extends CompositeBowItem {
     /**
      * Spawns an arrow with a given yaw offset to create spread effect.
      */
-    private void spawnArrowWithSpread(World world, EntityPlayer player, int arrowItemID, float velocity, float yawOffset, float fPullStrength, float pitchOffset) {
+    private void spawnArrowWithSpread(World world, EntityPlayer player, int arrowItemID, float velocity, float yawOffset, float fPullStrength, float pitchOffset, boolean hasInfinity) {
         EntityArrow arrow = this.createArrowEntityForItem(world, player, arrowItemID, velocity / this.getPullStrengthToArrowVelocityMultiplier());
+
+        if (hasInfinity) {
+            arrow.canBePickedUp = 0;
+        }
 
         // Calculate the directional vectors with adjusted yaw
         float yaw = player.rotationYaw + yawOffset;
