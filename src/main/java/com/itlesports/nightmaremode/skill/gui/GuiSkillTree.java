@@ -71,7 +71,6 @@ public class GuiSkillTree extends GuiScreen {
         this.drawFullTexturedRect(left , top + 28 - 5, PANE_WIDTH - 16 + 4, PANE_HEIGHT - 38 + 10);
         this.mc.renderEngine.bindTexture(BORDER_TEXTURE);
         this.drawFullTexturedRect(left - 4, top + 18, PANE_WIDTH + 8, PANE_HEIGHT - 14);
-        this.drawCenteredString(this.fontRenderer, "Skill Tree", left + 82, top + 8, 0xFFFFFF);
         this.drawSearchBar(left, top);
         this.drawTabs(left, top, mouseX, mouseY);
         this.drawMap(left + 14, top + 34, mouseX, mouseY, partialTicks);

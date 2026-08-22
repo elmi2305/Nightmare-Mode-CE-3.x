@@ -33,7 +33,7 @@ public class WorldGenAquamarineOre extends WorldGenerator {
                 }
                 for (int candidateY = y - 1; candidateY <= y + 1; ++candidateY) {
                     int blockId = world.getBlockId(candidateX, candidateY, candidateZ);
-                    if (blockId == Block.dirt.blockID || blockId == Block.blockClay.blockID) {
+                    if (blockId == Block.sand.blockID) {
                         world.setBlock(candidateX, candidateY, candidateZ, this.oreBlockId, 0, 2);
                     }
                 }
