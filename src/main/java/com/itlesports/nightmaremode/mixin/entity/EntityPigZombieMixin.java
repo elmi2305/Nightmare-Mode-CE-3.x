@@ -206,6 +206,15 @@ public class EntityPigZombieMixin extends EntityZombie {
         return super.attackEntityAsMob(attackedEntity);
     }
 
+    @Override
+    protected void entityMobAttackEntity(Entity attackedEntity, float distanceToTarget) {
+        float attackRange = this.getHeldItem() != null && this.getHeldItem().getItem() instanceof ItemSword ? 3.0f : 2.0f;
+        if (this.attackTime <= 0 && distanceToTarget < attackRange && attackedEntity.boundingBox.maxY > this.boundingBox.minY && attackedEntity.boundingBox.minY < this.boundingBox.maxY) {
+            this.attackTime = 20;
+            this.attackEntityAsMob(attackedEntity);
+        }
+    }
+
     @Unique private static HashSet<Integer> illegalItemList = new HashSet<>(16);
     @Unique private static @NotNull HashSet<Integer> getIllegalItems() {
         if (illegalItemList.isEmpty()) {

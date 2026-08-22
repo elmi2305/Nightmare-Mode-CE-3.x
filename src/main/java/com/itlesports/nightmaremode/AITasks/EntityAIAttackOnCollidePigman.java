@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.AITasks;
 import net.minecraft.src.EntityAIBase;
 import net.minecraft.src.EntityCreature;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.ItemSword;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.PathEntity;
 import net.minecraft.src.World;
@@ -82,6 +83,9 @@ public class EntityAIAttackOnCollidePigman extends EntityAIBase {
 
         EntityLivingBase var1 = this.attacker.getAttackTarget();
         double dCombinedWidth = this.attacker.width + var1.width;
+        if (this.attacker.getHeldItem() != null && this.attacker.getHeldItem().getItem() instanceof ItemSword) {
+            dCombinedWidth += 1.0D;
+        }
         this.attackRangeSq = dCombinedWidth * dCombinedWidth; // cached, width is static per entity
         this.lastTargetX = var1.posX;
         this.lastTargetY = var1.posY;
