@@ -419,7 +419,7 @@ public class NMAchievements {
                     .name(loc("equipBloodArmor"))
                     .icon(NMItems.bloodChestplate)
                     .displayLocation(15, 8)
-                    .triggerCondition(NMUtils::isWearingFullBloodArmor)
+                    .triggerCondition(NMUtils::isWearingFullBloodArmorWithoutSword)
                     .parents(BLOOD_INGOT)
                     .build()
                     .registerAchievement(TAB_IRON_AGE);
