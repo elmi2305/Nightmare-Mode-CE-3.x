@@ -625,16 +625,20 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static void sendWorldStateToAllPlayers() {
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null || server.getConfigurationManager() == null) return;
         Packet250CustomPayload packet = createWorldStatePacket();
-        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+        for (Object player : server.getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
             }
         }
     }
     public static void sendMoonAndSunEventsToAllPlayers() {
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null || server.getConfigurationManager() == null) return;
         Packet250CustomPayload packet = createMoonAndSunEventPacket();
-        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+        for (Object player : server.getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
             }
@@ -642,8 +646,10 @@ public class NightmareMode extends BTWAddon {
     }
 
     public static void sendNetherLightmapUpdateToClients() {
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null || server.getConfigurationManager() == null) return;
         Packet250CustomPayload packet = createNetherChangePacket();
-        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+        for (Object player : server.getConfigurationManager().playerEntityList) {
             if (player instanceof EntityPlayerMP) {
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(packet);
             }

@@ -31,6 +31,7 @@ public abstract class MinecraftServerMixin {
 
     @Shadow
     private ServerConfigurationManager serverConfigManager;
+    @Shadow private static MinecraftServer mcServer;
     @Unique private boolean oldBloodMoon;
     @Unique private boolean oldEclipse;
     // copied because it kept crashing when I tried shadowing it normally
@@ -46,6 +47,24 @@ public abstract class MinecraftServerMixin {
     @Unique private long averagingStart = System.nanoTime();
     @Unique private double accumulatedMs = 0.0;
     @Unique private int tickCount = 0;
+
+    /**
+     * MinecraftServer.run() clears a process-wide singleton from its finally
+     * block. A previous integrated server may finish after a new one has been
+     * constructed, in which case clearing it would detach the live server
+     * during player login. Only the server that currently owns the singleton
+     * may clear it.
+     */
+    @Redirect(
+            method = "run",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;mcServer:Lnet/minecraft/server/MinecraftServer;", opcode = Opcodes.PUTSTATIC)
+    )
+    private void nightmareMode$clearSingletonOnlyWhenCurrent(MinecraftServer ignored) {
+        MinecraftServer self = (MinecraftServer) (Object) this;
+        if (mcServer == self) {
+            mcServer = null;
+        }
+    }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void startTimer(CallbackInfo ci) {
@@ -113,6 +132,9 @@ public abstract class MinecraftServerMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void nmOnServerTick(CallbackInfo ci) {
+        // a retiring server can still receive one final tick while a newly created server owns the static singleton.
+        // its world state must never be broadcast through the new server's player manager though
+        if (MinecraftServer.getServer() != (MinecraftServer) (Object) this) return;
         TeleportScheduler.onServerTick();
 
         WorldServer world = this.worldServers[0];

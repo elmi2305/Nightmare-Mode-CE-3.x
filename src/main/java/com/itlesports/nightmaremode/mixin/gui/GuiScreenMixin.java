@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.nmgui.GuiJoiningWorld;
+import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import com.itlesports.nightmaremode.util.interfaces.JourneyBrowserInput;
 import net.minecraft.src.*;
 import org.lwjgl.input.Mouse;
@@ -18,6 +20,17 @@ import java.util.List;
 public class GuiScreenMixin {
     @Shadow public int width;
     @Shadow public int height;
+
+    /** Keep the pre-world terrain screens visually continuous with the themed loader. */
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V"))
+    private int journeyMode$tintTerrainLoadingDirt(int vanillaColor) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        if (screen instanceof GuiDownloadTerrain || screen instanceof GuiJoiningWorld) {
+            return JourneyTitleTheme.getActive(Minecraft.getMinecraft()).buttonFill & 0x00FFFFFF;
+        }
+        return vanillaColor;
+    }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawGlobalDarkness(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {

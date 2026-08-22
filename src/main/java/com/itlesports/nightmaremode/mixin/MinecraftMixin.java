@@ -4,10 +4,12 @@ import api.AddonHandler;
 import btw.BTWMod;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
+import com.itlesports.nightmaremode.nmgui.GuiJoiningWorld;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import com.itlesports.nightmaremode.client.EnderArmorClient;
 import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import api.item.items.PlaceAsBlockItem;
 import org.lwjgl.input.Keyboard;
@@ -30,12 +32,84 @@ public abstract class MinecraftMixin {
     @Shadow public WorldClient theWorld;
     @Shadow public MovingObjectPosition objectMouseOver;
     @Shadow public PlayerControllerMP playerController;
+    @Shadow private IntegratedServer theIntegratedServer;
 
     @Unique private boolean wasZooming = false;
     @Unique private float originalFov = 0.0f;
     @Unique private boolean nightmareMode$railExtensionActive;
     @Unique private boolean nightmareMode$automatedRailClick;
     @Unique private int nightmareMode$borrowedRailSlot = -1;
+    /**
+     * Vanilla drops its reference to an integrated server before its thread has
+     * necessarily finished. Keep this reference until that thread confirms
+     * it has stopped so a subsequent world launch cannot overlap it.
+     */
+    @Unique private MinecraftServer nightmareMode$serverAwaitingShutdown;
+
+    @Inject(method = "loadWorld(Lnet/minecraft/src/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
+    private void nightmareMode$stopIntegratedServerBeforeUnloading(WorldClient world, String message, CallbackInfo ci) {
+        if (world != null) {
+            return;
+        }
+        if (this.theIntegratedServer != null) {
+            this.nightmareMode$serverAwaitingShutdown = this.theIntegratedServer;
+        }
+        this.nightmareMode$waitForIntegratedServerShutdown();
+    }
+
+    @Inject(method = "launchIntegratedServer", at = @At("HEAD"), cancellable = true)
+    private void nightmareMode$preventOverlappingIntegratedServers(String folderName, String worldName,
+                                                                     WorldSettings settings, CallbackInfo ci) {
+        if (!this.nightmareMode$waitForIntegratedServerShutdown()) {
+            // starting a second server after a failed shutdown corrupts the singleton used by login and packet handling.
+            // returning to the menu is preferable to starting a server that will inevitably crash.
+            // some call it code, I call it a cry for help
+            ((Minecraft) (Object) this).displayGuiScreen(new GuiMainMenu());
+            ci.cancel();
+        }
+    }
+
+    /**
+     * Vanilla closes the current screen as soon as the integrated server enters
+     * its run loop. The client world does not exist until the login packet is
+     * processed, so displayGuiScreen(null) immediately substitutes the main
+     * menu for a few frames. Keep a non-interactive loading screen in place
+     * until NetClientHandler replaces it with GuiDownloadTerrain.
+     */
+    @Redirect(method = "launchIntegratedServer", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Minecraft;displayGuiScreen(Lnet/minecraft/src/GuiScreen;)V"))
+    private void nightmareMode$keepLoadingScreenUntilLogin(Minecraft minecraft, GuiScreen ignored) {
+        minecraft.displayGuiScreen(new GuiJoiningWorld());
+    }
+
+    @Unique
+    private boolean nightmareMode$waitForIntegratedServerShutdown() {
+        MinecraftServer server = this.nightmareMode$serverAwaitingShutdown;
+        if (server == null && this.theIntegratedServer != null) {
+            server = this.theIntegratedServer;
+            this.nightmareMode$serverAwaitingShutdown = server;
+        }
+        if (server == null || server.isServerStopped()) {
+            this.nightmareMode$serverAwaitingShutdown = null;
+            return true;
+        }
+
+        server.initiateShutdown();
+        long deadline = Minecraft.getSystemTime() + 10000L;
+        while (!server.isServerStopped() && Minecraft.getSystemTime() < deadline) {
+            try {
+                Thread.sleep(25L);
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        if (server.isServerStopped()) {
+            this.nightmareMode$serverAwaitingShutdown = null;
+            return true;
+        }
+        return false;
+    }
 
     @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I", remap = false))
     private int nmBlockHotbarScrollWhenZoom() {
