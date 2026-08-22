@@ -373,7 +373,8 @@ public class NMUtils {
     }
 
     public static boolean isGracePeriodServer(World world) {
-        return world.getWorldTime() - world.getData(NightmareMode.PORTAL_TIME) < 72000 && world.getData(NightmareMode.PORTAL_TIME) > 0;
+        long portalTime = world.getData(NightmareMode.PORTAL_TIME);
+        return portalTime > 0 && world.getWorldTime() < portalTime;
     }
 
     // Game settings and world creation methods

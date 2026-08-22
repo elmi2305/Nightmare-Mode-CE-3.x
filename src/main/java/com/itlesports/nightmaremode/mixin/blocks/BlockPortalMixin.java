@@ -67,9 +67,10 @@ public class BlockPortalMixin{
                 }
             }
 
-            world.setData(NightmareMode.PORTAL_TIME, world.getWorldTime() + 72000);
+            int timeDelay = NightmareMode.realTime ? 24000 : 72000;
+            world.setData(NightmareMode.PORTAL_TIME, world.getWorldTime() + timeDelay);
 
-            world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + 72000);
+            world.worldInfo.getNBTTagCompound().setLong("PortalTime", world.getWorldTime() + timeDelay);
             world.playSoundEffect(x,y,z,"mob.wither.death",1f,0.905F);
             // the rest is handled in EntityPlayerMPMixin
         }
