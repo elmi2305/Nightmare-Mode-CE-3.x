@@ -1,19 +1,40 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import net.minecraft.src.LoadingScreenRenderer;
-import net.minecraft.src.ResourceLocation;
+import net.minecraft.src.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(LoadingScreenRenderer.class)
 public class LoadingScreenRendererMixin {
-    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
-    private ResourceLocation setCustomBackground(ResourceLocation resource){
-        if(NightmareMode.bloodmare){
-            return new ResourceLocation("nightmare:textures/gui/bloodNightmare.png");
-        }
-        return resource;
+    @Shadow private Minecraft mc;
+
+    /** Keep the dependable vanilla loading renderer, but carry the menu's palette into it. */
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 0))
+    private int journeyMode$tintLoadingDirt(int vanillaColor) {
+        return JourneyTitleTheme.getActive(this.mc).buttonFill & 0x00FFFFFF;
+    }
+
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 1))
+    private int journeyMode$tintProgressTrack(int vanillaColor) {
+        return JourneyTitleTheme.getActive(this.mc).edge & 0x00FFFFFF;
+    }
+
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 2))
+    private int journeyMode$tintProgressFill(int vanillaColor) {
+        return JourneyTitleTheme.getActive(this.mc).textHighlight & 0x00FFFFFF;
+    }
+
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I", ordinal = 0), index = 3)
+    private int journeyMode$tintPrimaryLoadingText(int vanillaColor) {
+        return JourneyTitleTheme.getActive(this.mc).textHighlight;
+    }
+
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I", ordinal = 1), index = 3)
+    private int journeyMode$tintSecondaryLoadingText(int vanillaColor) {
+        return JourneyTitleTheme.getActive(this.mc).text;
     }
 }

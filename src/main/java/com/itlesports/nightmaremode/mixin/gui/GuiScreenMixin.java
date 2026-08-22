@@ -17,16 +17,7 @@ import java.util.List;
 @Mixin(GuiScreen.class)
 public class GuiScreenMixin {
     @Shadow public int width;
-
     @Shadow public int height;
-
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
-    private ResourceLocation changeBackground(ResourceLocation par1ResourceLocation){
-        if(NightmareMode.bloodmare){
-            return new ResourceLocation("nightmare:textures/gui/bloodNightmare.png");
-        }
-        return par1ResourceLocation;
-    }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawGlobalDarkness(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
