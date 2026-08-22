@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.item.items.bloodItems;
 
 import api.item.items.PickaxeItem;
 import btw.block.BTWBlocks;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 
 public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
@@ -25,7 +26,7 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         int iToolLevel = 3;
         int iBlockToolLevel = block.getHarvestToolLevel(world, i, j, k);
-        if(block == Block.netherrack){
+        if(block == Block.netherrack || block == NMBlocks.blockBloodIngot){
             return true;
         }
         if (iBlockToolLevel > iToolLevel) {
@@ -48,7 +49,7 @@ public class ItemBloodPickaxe extends PickaxeItem implements IBloodTool{
     public float getStrVsBlock(ItemStack stack, World world, Block block, int i, int j, int k) {
         int iToolLevel = 3;
         int iBlockToolLevel = block.getEfficientToolLevel(world, i, j, k);
-        if(block == Block.netherrack){
+        if(block == Block.netherrack || block == NMBlocks.blockBloodIngot){
             return this.efficiencyOnProperMaterial * 1.25f;
         }
         if (iBlockToolLevel > iToolLevel) {

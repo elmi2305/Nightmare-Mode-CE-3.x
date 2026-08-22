@@ -86,6 +86,8 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMBlocks.asphaltLayer, 0, "nm.blockAsphalt.info");
         this.info(registry, NMBlocks.bloodSaw, 0, "nm.bloodSaw.info");
         this.info(registry, NMBlocks.disenchantmentTable, 0, "nm.disenchantmentTable.info");
+        this.info(registry, NMBlocks.blockBloodIngot, 0, "nm.bloodIngotBlock.info");
+        this.info(registry, NMBlocks.blockRefinedDiamondIngot, 0, "nm.refinedDiamondBlock.info");
 
         // vanilla blocks
         this.info(registry, Block.obsidian, 0, "nm.obsidian.info");

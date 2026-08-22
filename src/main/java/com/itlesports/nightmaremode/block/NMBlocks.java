@@ -318,10 +318,10 @@ public class NMBlocks {
         customLog = new BlockCustomLog(2350).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("nmUnderworldLog").setTextureName("nightmare:nmLog").setHardness(1000f).setResistance(1000f);
         Item.itemsList[customLog.blockID] = new ItemMultiTextureTile(customLog.blockID - 256, customLog, BlockCustomLog.woodType).setUnlocalizedName("nmLog");
 
-        blockBloodIngot = new NMBlock(2351, BTWBlocks.soulforgedSteelMaterial).setHardness(20f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmBloodIngotBlock").setTextureName("nightmare:nmBloodIngotBlock");
+        blockBloodIngot = new NMBlock(2351, BTWBlocks.soulforgedSteelMaterial).setPicksEffectiveOn().setHardness(20f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmBloodIngotBlock").setTextureName("nightmare:nmBloodIngotBlock");
         Item.itemsList[blockBloodIngot.blockID] = new NMItemBlock(blockBloodIngot.blockID - 256);
 
-        blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
+        blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setPicksEffectiveOn().setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
         Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
 
 
