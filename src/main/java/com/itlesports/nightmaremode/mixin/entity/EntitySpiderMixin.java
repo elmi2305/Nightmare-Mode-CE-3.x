@@ -165,7 +165,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
     }
     @ModifyArg(method = "dropFewItems", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int increaseSpiderEyeRates(int bound){
-        return bound + 4;
+        return Math.max(bound - 4, 1);
     }
 
     @Inject(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;entityMobAttackEntity(Lnet/minecraft/src/Entity;F)V"))

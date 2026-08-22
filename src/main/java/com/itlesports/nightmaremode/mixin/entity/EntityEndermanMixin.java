@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityRadioactiveEnderman;
@@ -135,15 +136,18 @@ public abstract class EntityEndermanMixin extends EntityMob {
                 }
             }
 
-            int itemID = Item.eyeOfEnder.itemID;
+            boolean dragonDefeated = NMUtils.getWorldProgress() >= NMFields.POSTDRAGON;
+            if (dragonDefeated) {
+                int itemID = Item.eyeOfEnder.itemID;
 
-            int var4 = this.rand.nextInt(3);
-            if (lootingLevel > 0) {
-                var4 += this.rand.nextInt(lootingLevel + 1);
-            }
-            for (int var5 = 0; var5 < var4; ++var5) {
-                if(this.rand.nextInt(3) == 0) continue;
-                this.dropItem(itemID, 1);
+                int var4 = this.rand.nextInt(3);
+                if (lootingLevel > 0) {
+                    var4 += this.rand.nextInt(lootingLevel + 1);
+                }
+                for (int var5 = 0; var5 < var4; ++var5) {
+                    if(this.rand.nextInt(3) == 0) continue;
+                    this.dropItem(itemID, 1);
+                }
             }
         }
     }
