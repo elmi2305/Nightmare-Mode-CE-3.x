@@ -77,7 +77,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         int iconY = isCompactBrowser() ? 12 : this.height - 52;
         boolean compactLayout = iconY < 215 && iconY + 24 > 185;
         int rowWidth = compactLayout ? panelWidth - 120 : panelWidth - 24;
-        int iconX = isCompactBrowser() ? this.width - 96 : compactLayout ? panelWidth - 96 : x;
+        int iconX = isCompactBrowser() ? this.width - 102 : compactLayout ? panelWidth - 96 : x;
         this.buttonList.clear();
         if (this.mc.isDemo() && !isCompactBrowser()) {
             this.buttonList.add(new GuiJourneyRowButton(11, x, 150, rowWidth, "Play Demo", "Begin your journey"));
@@ -96,7 +96,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.worldCardTop = 225;
         this.worldCardBottom = iconY - 8;
         if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
-            this.buttonList.add(new GuiJourneySmallButton(33, x, this.worldCardBottom - 24, 72, "Jump In"));
+            this.buttonList.add(new GuiJourneySmallButton(33, x + 4, this.worldCardBottom - 24, 72, "Jump In"));
         }
         if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) addBrowserButtons();
     }
@@ -506,8 +506,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         drawTexture(theme.worldIcon, bounds.x + 48, y + 10, 56, 56);
         int textX = bounds.x + 114;
         String name = this.renamingWorldIndex == index ? this.inlineWorldName + "_" : browserWorldName(save, index);
-        drawScaledString(trimToWidth(name, (int) ((bounds.right - textX - 16) / 1.2F)), textX, y + 11, 1.2F, theme.text);
-        this.drawString(this.fontRenderer, trimToWidth(save.getFileName() + "  " + formatDate(save.getLastTimePlayed()), bounds.right - textX - 16), textX, y + 32, theme.textMuted);
+        drawScaledString(trimToWidth(name, (int) ((bounds.right - textX - 16) / 1.25F)), textX, y + 13, 1.25F, theme.text);
+        this.drawString(this.fontRenderer, trimToWidth(save.getFileName() + " (" + formatDate(save.getLastTimePlayed()) + ")", bounds.right - textX - 16), textX, y + 32, theme.textMuted);
         String mode = save.isHardcoreModeEnabled() ? "Hardcore" : save.getEnumGameType().getName();
         this.drawString(this.fontRenderer, mode, textX, y + 46, save.isHardcoreModeEnabled() ? 0xFFD86C64 : theme.textMuted);
     }
