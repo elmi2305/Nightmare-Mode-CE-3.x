@@ -74,7 +74,7 @@ public class NMConfUtils {
         DARK_STORMY_NIGHTMARE(11, "darkStormyNightmare", ClearCondition.CLEAR_DRAGON){
             @Override public boolean isActive() {return NightmareMode.darkStormyNightmare;}
         },
-        REAL_TIME(12, "realTime", ClearCondition.CLEAR_GLOOM){
+        REAL_TIME(12, "realTime", ClearCondition.CLEAR_BW){
             @Override public boolean isActive() {return NightmareMode.realTime;}
         },
         CANCER_MODE(13, "isAprilFools", ClearCondition.CLEAR_HARDMODE){

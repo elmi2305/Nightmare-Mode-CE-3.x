@@ -21,7 +21,7 @@ public abstract class DailyGrowthCropsBlockMixin extends CropsBlock {
     protected DailyGrowthCropsBlockMixin(int iBlockID) {
         super(iBlockID);
     }
-    @Inject(method = "attemptToGrow", at = @At(value = "INVOKE", target = "Lapi/block/blocks/DailyGrowthCropsBlock;incrementGrowthLevel(Lnet/minecraft/src/World;III)V"))
+    @Inject(method = "attemptToGrow", at = @At(value = "INVOKE", target = "Lapi/block/blocks/DailyGrowthCropsBlock;incrementGrowthLevel(Lnet/minecraft/src/World;III)V", shift = At.Shift.AFTER))
     private void increaseGrowth(World world, int x, int y, int z, Random rand, CallbackInfo ci)
     {
         if(rand.nextBoolean() && !this.isFullyGrown(world, x, y, z)){
@@ -31,6 +31,9 @@ public abstract class DailyGrowthCropsBlockMixin extends CropsBlock {
     @Redirect(method = "attemptToGrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;getWorldTime()J"))
     private long a(WorldInfo instance)
     {
+        if(NightmareMode.realTime){
+            return instance.getWorldTotalTime();
+        }
         if(NMEvents.SimpleEvent.GREAT_HARVEST.isActive() || NightmareMode.darkStormyNightmare){
             return 5000;
         }
