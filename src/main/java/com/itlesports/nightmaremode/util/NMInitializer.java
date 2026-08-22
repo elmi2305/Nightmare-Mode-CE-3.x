@@ -104,7 +104,7 @@ public abstract class NMInitializer implements AchievementExt {
         addMobToAllBiomes(EntityRadioactiveEnderman.class, 1, 1, 1);
         addMobToAllBiomes(EntityDungCreeper.class, 3, 1, 1);
         addMobToAllBiomes(EntityVoidCreeper.class, 2, 1, 1);
-        addMobToAllBiomes(EntityGelCreeper.class, 3, 1, 1);
+        addMobToAllBiomes(EntityGelCreeper.class, 2, 1, 1);
         addMobToAllBiomes(EntityGlitchCreeper.class, 1, 1, 1);
         addMobToAllBiomes(EntityLightningCreeper.class, 1, 1, 1);
         addMobToAllBiomes(EntityBloodZombie.class, 2, 1, 1);
@@ -359,6 +359,10 @@ public abstract class NMInitializer implements AchievementExt {
         kill(EXPLODED_WITH_BLASTING_OIL);
         kill(MAKE_COMPANION_SLAB);
         move(POWER_THE_CAKE, -2, 0);
+
+        move(FIND_BLAZE_ROD, 0, -2);
+        move(LOCATE_FORTRESS_BOUNDS_WITH_PILE, 0, -2);
+
         finishRecipes("Achievement Edits");
 
     }
@@ -1546,7 +1550,6 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addMultiplayerRecipes(){
         if(MinecraftServer.getIsServer()){
             // signs
-            RecipeManager.removeVanillaRecipe(new ItemStack(Item.sign, 3), new Object[]{"#", "X", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('X'), BTWTags.woodenMouldings});
             RecipeManager.addRecipe(new ItemStack(Item.sign), new Object[]{"#", "X", Character.valueOf('#'), BTWTags.logs, Character.valueOf('X'), Item.stick}).setAsDefaultAfterAchievement(BTWAchievements.CRAFT_SAW);
             // done with signs
 
