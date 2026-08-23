@@ -24,7 +24,7 @@ public final class JourneyTitleTheme {
             0xC03C6F31, 0xD0558C42, 0xFFD0F0A4, 0xFFE5FFBE, 0xFFAACD7E);
 
     public static final JourneyTitleTheme BRASS = new JourneyTitleTheme("brass", panorama("brass"),
-            "betterThanWolvesBrass.png", "journeyModeBrass.png", "world_basic_brass.png", 7,
+            "betterThanWolvesBrass.png", "journeyModeBrass.png", "world_basic_brass.png", 9,
             0x003B2D1B, 0x30AA8040, 0xB05A4326, 0xFFB58C4D,
             0xC07A5A32, 0xD09A7340, 0xFFF0D6A3, 0xFFFFE6B5, 0xFFD1B57D);
 
@@ -53,6 +53,8 @@ public final class JourneyTitleTheme {
     public final ResourceLocation betterThanWolves;
     public final ResourceLocation journeyMode;
     public final ResourceLocation worldIcon;
+    /** Replaces the vanilla tiled dirt texture on loading and standard GUI screens. */
+    public final ResourceLocation background;
     public final int panelRgb;
     public final int divider;
     public final int cardFill;
@@ -72,6 +74,7 @@ public final class JourneyTitleTheme {
         this.betterThanWolves = menuTexture(betterThanWolves);
         this.journeyMode = menuTexture(journeyMode);
         this.worldIcon = new ResourceLocation("nightmare:textures/gui/" + worldIcon);
+        this.background = new ResourceLocation("nightmare:textures/gui/menu_backgrounds/" + id + ".png");
         this.panelRgb = panelRgb;
         this.divider = divider;
         this.cardFill = cardFill;

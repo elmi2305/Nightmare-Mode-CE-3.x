@@ -21,15 +21,40 @@ public class GuiScreenMixin {
     @Shadow public int width;
     @Shadow public int height;
 
+    /** Use the title screen's startup-selected texture anywhere vanilla draws its tiled dirt background. */
+    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
+    private ResourceLocation journeyMode$replaceDirtBackground(ResourceLocation vanillaTexture) {
+        return JourneyTitleTheme.getActive(Minecraft.getMinecraft()).background;
+    }
+
     /** Keep the pre-world terrain screens visually continuous with the themed loader. */
     @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V"))
     private int journeyMode$tintTerrainLoadingDirt(int vanillaColor) {
         GuiScreen screen = (GuiScreen) (Object) this;
-        if (screen instanceof GuiDownloadTerrain || screen instanceof GuiJoiningWorld) {
+        if (screen instanceof GuiDownloadTerrain || screen instanceof GuiJoiningWorld || screen instanceof GuiOptions) {
             return JourneyTitleTheme.getActive(Minecraft.getMinecraft()).buttonFill & 0x00FFFFFF;
         }
         return vanillaColor;
+    }
+
+    @ModifyArg(method = "drawWorldBackground", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiScreen;drawGradientRect(IIIIII)V"), index = 4)
+    private int journeyMode$tintOptionsGradientTop(int vanillaColor) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        return screen instanceof GuiOptions
+                ? JourneyTitleTheme.getActive(Minecraft.getMinecraft()).cardFill
+                : vanillaColor;
+    }
+
+    @ModifyArg(method = "drawWorldBackground", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiScreen;drawGradientRect(IIIIII)V"), index = 5)
+    private int journeyMode$tintOptionsGradientBottom(int vanillaColor) {
+        GuiScreen screen = (GuiScreen) (Object) this;
+        return screen instanceof GuiOptions
+                ? JourneyTitleTheme.getActive(Minecraft.getMinecraft()).buttonFill
+                : vanillaColor;
     }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))

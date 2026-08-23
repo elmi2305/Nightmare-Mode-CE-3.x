@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import net.minecraft.src.LoadingScreenRenderer;
 import net.minecraft.src.Minecraft;
+import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +12,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(LoadingScreenRenderer.class)
 public class LoadingScreenRendererMixin {
     @Shadow private Minecraft mc;
+
+    /** The loading renderer binds the vanilla dirt texture directly instead of using GuiScreen. */
+    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
+    private ResourceLocation journeyMode$replaceLoadingDirt(ResourceLocation vanillaTexture) {
+        return JourneyTitleTheme.getActive(this.mc).background;
+    }
 
     /** Keep the dependable vanilla loading renderer, but carry the menu's palette into it. */
     @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 0))
