@@ -515,16 +515,20 @@ public class NMItems {
         highSpeedChestMinecart = new ItemHighSpeedMinecart(2753, 1).setTextureName("nightmare:ifhyHighSpeedChestMinecart").setUnlocalizedName("ifhyHighSpeedChestMinecart");
         highSpeedFurnaceMinecart = new ItemHighSpeedMinecart(3257, 2).setTextureName("minecart_furnace").setUnlocalizedName("ifhyHighSpeedFurnaceMinecart");
         moistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2744, ChunkAttribute.MOISTURE)
-                .setUnlocalizedName("nmMoistureFertilizer")
+                .setTextureName("nightmare:ifhyMoistureFertilizer")
+                .setUnlocalizedName("ifhyMoistureFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         potassiumFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2745, ChunkAttribute.POTASSIUM)
-                .setUnlocalizedName("nmPotassiumFertilizer")
+                .setTextureName("nightmare:ifhyPotassiumFertilizer")
+                .setUnlocalizedName("ifhyPotassiumFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         acidityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2746, ChunkAttribute.ACIDITY)
-                .setUnlocalizedName("nmAcidityFertilizer")
+                .setTextureName("nightmare:ifhyAcidityFertilizer")
+                .setUnlocalizedName("ifhyAcidityFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         porosityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(2747, ChunkAttribute.POROSITY)
-                .setUnlocalizedName("nmPorosityFertilizer")
+                .setTextureName("nightmare:ifhyPorosityFertilizer")
+                .setUnlocalizedName("ifhyPorosityFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
 
         redstoneCrystal = new NMItem(2754).setTextureName("nightmare:ifhyRedstoneCrystal").setUnlocalizedName("ifhyRedstoneCrystal").setCreativeTab(CreativeTabs.tabMaterials);
