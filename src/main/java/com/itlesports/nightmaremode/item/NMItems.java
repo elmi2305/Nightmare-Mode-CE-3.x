@@ -340,6 +340,7 @@ public class NMItems {
     public static ItemEnderAxe enderAxe;
     public static ItemEnderShovel enderShovel;
     public static ItemEnderHoe enderHoe;
+    public static Item snowPile;
     public static ItemEnderArmor enderHelmet;
     public static ItemEnderArmor enderChestplate;
     public static ItemEnderArmor enderLeggings;
@@ -455,7 +456,7 @@ public class NMItems {
         woodCupCrafting = (NMProgressiveItem) new NMProgressiveItem(2691, woodCup.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyWoodCup").setUnlocalizedName("ifhyWoodCupCrafting").setCreativeTab(CreativeTabs.tabMaterials);
         unshapedWetClayBrick = (NMProgressiveItem) new NMProgressiveItem(2692, 22355 /* the ID of the crude brick block */).setTargetDurability(100).setTextureName("nightmare:ifhyUnshapedWetClayBrick").setUnlocalizedName("ifhyUnshapedWetClayBrick").setCreativeTab(CreativeTabs.tabMaterials);
         reedStem = new NMItem(2693).setTextureName("nightmare:ifhyReedStem").setUnlocalizedName("ifhyReedStem").setCreativeTab(CreativeTabs.tabMaterials);
-        reedPeeling = (NMProgressiveItem) new NMProgressiveItem(2694, reedStem.itemID).setTargetDurability(100).setTextureName("reeds").setUnlocalizedName("ifhyReedPeeling").setCreativeTab(CreativeTabs.tabMaterials);
+        reedPeeling = (NMProgressiveItem) new NMProgressiveItem(2694, reedStem.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyReedPeeling").setUnlocalizedName("ifhyReedPeeling").setCreativeTab(CreativeTabs.tabMaterials);
         washedPith = new NMItem(2695).setTextureName("nightmare:ifhyWashedPith").setUnlocalizedName("ifhyWashedPith").setCreativeTab(CreativeTabs.tabMaterials);
         wetFusedPlantSheet = new NMItem(2696).setTextureName("nightmare:ifhyWetFusedPlantSheet").setUnlocalizedName("ifhyWetFusedPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
         plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
@@ -692,7 +693,8 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyEnderLeggings").setUnlocalizedName("ifhyEnderLeggings");
         enderBoots = (ItemEnderArmor)new ItemEnderArmor(3256, 3, 1)
                 .setTextureName("nightmare:ifhyEnderBoots").setUnlocalizedName("ifhyEnderBoots");
-
+        snowPile = new NMItem(3258).setTextureName("nightmare:ifhySnowPile").setUnlocalizedName("ifhySnowPile")
+                .setCreativeTab(CreativeTabs.tabMaterials);
 
 
 

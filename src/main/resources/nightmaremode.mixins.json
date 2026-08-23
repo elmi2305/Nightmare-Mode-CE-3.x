@@ -116,6 +116,7 @@
     "blocks.BlockSandStoneMixin",
     "blocks.BlockSignMixin",
     "blocks.BlockSoulSandMixin",
+    "blocks.SnowCoverBlockMixin",
     "blocks.BlockTallGrassMixin",
     "blocks.BlockTNTMixin",
     "blocks.BlockTrapDoorMixin",
