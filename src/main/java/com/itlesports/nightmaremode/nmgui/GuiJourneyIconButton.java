@@ -22,7 +22,12 @@ public class GuiJourneyIconButton extends GuiButton {
     }
     private void drawIcon(Minecraft mc, int cx, int cy, int color) {
         if (this.icon == Icon.LANGUAGE) mc.fontRenderer.drawString("A", cx - 3, cy - 4, color);
-        else if (this.icon == Icon.QUIT) { drawRect(cx - 4, cy - 4, cx + 4, cy - 3, color); drawRect(cx - 4, cy + 3, cx + 4, cy + 4, color); drawRect(cx - 4, cy - 4, cx - 3, cy + 4, color); drawRect(cx + 3, cy - 4, cx + 4, cy + 4, color); }
+        else if (this.icon == Icon.QUIT) {
+            for (int offset = -4; offset <= 4; offset++) {
+                drawRect(cx + offset, cy + offset, cx + offset + 1, cy + offset + 1, color);
+                drawRect(cx - offset, cy + offset, cx - offset + 1, cy + offset + 1, color);
+            }
+        }
         else { drawRect(cx - 5, cy - 4, cx + 5, cy - 3, color); drawRect(cx - 5, cy - 1, cx + 5, cy, color); drawRect(cx - 5, cy + 2, cx + 5, cy + 3, color); drawRect(cx - 2, cy - 5, cx - 1, cy - 2, color); drawRect(cx + 2, cy - 2, cx + 3, cy + 1, color); drawRect(cx, cy + 1, cx + 1, cy + 4, color); }
     }
 }
