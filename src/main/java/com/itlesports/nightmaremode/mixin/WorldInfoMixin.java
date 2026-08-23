@@ -26,27 +26,27 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor {
     private boolean allowCommands;
     @Unique private boolean shouldCheck = true;
 
-    @Inject(method = "getWorldTime()J", at = @At("HEAD"))
-    private void setTimeToNightAndManageGracePeriod(CallbackInfoReturnable<Long> cir) {
-        if (this.shouldCheck) {
-            long initialTime = NightmareMode.perfectStart || NightmareMode.darkStormyNightmare ? 24000L : 18000L;
-            long gracePeriodEnd = initialTime + (NightmareMode.bloodmare ? 2400: 2100) + (this.getDifficulty() != BTWDifficulties.HOSTILE ? 2000 : 0); // 1:45 grace period, 3:25 on bad dream
-            if (this.totalTime == 0L) {
-                this.worldTime = initialTime;
-                this.theGameRules.addGameRule("doMobSpawning", "false");
-            } else if (this.worldTime >= gracePeriodEnd && !this.theGameRules.getGameRuleBooleanValue("doMobSpawning")) {
-                this.theGameRules.addGameRule("doMobSpawning", "true");
-                this.shouldCheck = false;
-            }
-            if(NightmareMode.devMode && this.totalTime == 0L){
-                this.theGameRules.addGameRule("extendedDebugAccess", "creativeOnly");
-                this.theGameRules.addGameRule("keepInventory", "true");
-                this.allowCommands = true;
-                this.worldTime = 0;
-                this.shouldCheck = false;
-            }
-        }
-    }
+//    @Inject(method = "getWorldTime()J", at = @At("HEAD"))
+//    private void setTimeToNightAndManageGracePeriod(CallbackInfoReturnable<Long> cir) {
+//        if (this.shouldCheck) {
+//            long initialTime = NightmareMode.perfectStart || NightmareMode.darkStormyNightmare ? 24000L : 18000L;
+//            long gracePeriodEnd = initialTime + (NightmareMode.bloodmare ? 2400: 2100) + (this.getDifficulty() != BTWDifficulties.HOSTILE ? 2000 : 0); // 1:45 grace period, 3:25 on bad dream
+//            if (this.totalTime == 0L) {
+//                this.worldTime = initialTime;
+//                this.theGameRules.addGameRule("doMobSpawning", "false");
+//            } else if (this.worldTime >= gracePeriodEnd && !this.theGameRules.getGameRuleBooleanValue("doMobSpawning")) {
+//                this.theGameRules.addGameRule("doMobSpawning", "true");
+//                this.shouldCheck = false;
+//            }
+//            if(NightmareMode.devMode && this.totalTime == 0L){
+//                this.theGameRules.addGameRule("extendedDebugAccess", "creativeOnly");
+//                this.theGameRules.addGameRule("keepInventory", "true");
+//                this.allowCommands = true;
+//                this.worldTime = 0;
+//                this.shouldCheck = false;
+//            }
+//        }
+//    }
 
 
     @ModifyArg(method = "updateTagCompound", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NBTTagCompound;setBoolean(Ljava/lang/String;Z)V",ordinal = 4),index = 0)
