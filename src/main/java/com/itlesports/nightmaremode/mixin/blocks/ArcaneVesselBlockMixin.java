@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ArcaneVesselBlock.class)
 public class ArcaneVesselBlockMixin {
-    @ModifyConstant(method = "getComparatorInputOverride", constant = @Constant(floatValue = 1000.0f), remap = false)
+    @ModifyConstant(method = "getComparatorInputOverride", constant = @Constant(floatValue = 1000.0f))
     private float increaseExperienceCapacity(float capacity) {
         return 100000.0f;
     }
