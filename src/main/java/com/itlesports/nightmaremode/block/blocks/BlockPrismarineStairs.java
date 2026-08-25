@@ -8,6 +8,6 @@ public class BlockPrismarineStairs extends StairsBlock {
     public BlockPrismarineStairs(int blockID, Block prismarine) {
         super(blockID, prismarine, 0);
         this.setPicksEffectiveOn();
-        this.setUnlocalizedName("nmPrismarineStairs");
+        this.setUnlocalizedName("ifhyPrismarineStairs");
     }
 }
