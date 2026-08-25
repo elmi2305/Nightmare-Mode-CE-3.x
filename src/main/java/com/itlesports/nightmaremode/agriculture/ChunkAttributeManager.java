@@ -241,6 +241,7 @@ public final class ChunkAttributeManager {
                     .append(String.format(Locale.ROOT, "%.2f", attributes.get(attribute)));
         }
         text.append(" | Fish ").append(attributes.getFish()).append('/').append(attributes.getMaxFish());
+        text.append(" | Pollution ").append(String.format(Locale.ROOT, "%.0f", attributes.getPollution()));
         return text.toString();
     }
 

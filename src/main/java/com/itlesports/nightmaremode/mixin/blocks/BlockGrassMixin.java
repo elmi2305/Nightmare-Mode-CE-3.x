@@ -6,6 +6,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockGrass;
 import net.minecraft.src.Material;
+import net.minecraft.src.World;
+import java.util.Random;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,5 +44,20 @@ public class BlockGrassMixin extends Block {
         if(NightmareMode.crimson){
             cir.setReturnValue(CRIMSON_COLOR);
         }
+    }
+
+    @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
+    private void decayPollutedGrass(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        float pollution = ChunkPollutionManager.get(world, x, z);
+        if (pollution < ChunkPollutionManager.GRASS_STOPS_SPREADING) return;
+        if (pollution >= ChunkPollutionManager.GRASS_DECAYS) {
+            BlockGrass grass = (BlockGrass)(Object)this;
+            if (grass.isSparse(world, x, y, z) && random.nextInt(4) == 0) {
+                world.setBlockWithNotify(x, y, z, Block.dirt.blockID);
+            } else {
+                grass.setSparse(world, x, y, z);
+            }
+        }
+        ci.cancel();
     }
 }

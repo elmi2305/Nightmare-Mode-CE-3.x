@@ -812,7 +812,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         this.addonStuff();
 
         if (devMode && !this.worldObj.isRemote && this.ticksExisted % 20 == 0 && this.isSneaking()) {
-            System.out.println(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
+            ((EntityPlayer)(Object)this).addChatMessage(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
         }
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
@@ -970,7 +970,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
         // manage blight effects
-        if((this.ticksExisted & 16) == 0) {
+        if(false && (this.ticksExisted & 16) == 0) {
             if (!this.capabilities.isCreativeMode && this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID) {
                 EntityPlayer thisObj = (EntityPlayer) (Object) this;
 

@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 import java.util.UUID;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 
 @Mixin(EntityLivingBase.class)
 public abstract class EntityLivingBaseMixin extends Entity implements CarcassAnimal {
@@ -421,6 +422,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         }
 
         if (this.carcassAge >= CARCASS_LIFETIME) {
+            ChunkPollutionManager.pollute(this.worldObj, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 45.0F);
             this.nm$spawnCarcassPoof();
             this.setDead();
             return;

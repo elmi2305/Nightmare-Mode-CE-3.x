@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.block.blocks.DailyGrowthCropsBlock;
 import btw.block.blocks.WheatCropBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.item.items.ItemScythe;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
@@ -27,6 +28,11 @@ public abstract class  WheatCropBlockMixin extends DailyGrowthCropsBlock {
 
     @Inject(method = "incrementGrowthLevel", at = @At("HEAD"), cancellable = true)
     private void requireChunkResources(World world, int x, int y, int z, CallbackInfo ci) {
+        if (ChunkPollutionManager.isAtLeast(world, x, z, ChunkPollutionManager.BIOLOGICAL_DAMAGE)) {
+            world.setBlockToAir(x, y, z);
+            ci.cancel();
+            return;
+        }
         if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
             ci.cancel();
         }

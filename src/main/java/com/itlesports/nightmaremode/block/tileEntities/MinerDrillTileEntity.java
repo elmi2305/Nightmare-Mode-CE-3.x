@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -100,6 +101,10 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
         return this.fuelTicks;
     }
 
+    public int getMachineTier() {
+        return this.machineTier;
+    }
+
     private boolean consumeCoal() {
         if (this.fuelStack == null || this.fuelStack.itemID != Item.coal.itemID || this.fuelStack.stackSize <= 0) {
             return false;
@@ -109,6 +114,13 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
             this.fuelStack = null;
         }
         this.fuelTicks = this.getFuelTicksPerCoal();
+        float pollution = switch (this.machineTier) {
+            case 1 -> 90.0F;
+            case 2 -> 55.0F;
+            case 3 -> 25.0F;
+            default -> 0.0F;
+        };
+        ChunkPollutionManager.pollute(this.worldObj, this.xCoord, this.yCoord, this.zCoord, pollution);
         this.onInventoryChanged();
         return true;
     }

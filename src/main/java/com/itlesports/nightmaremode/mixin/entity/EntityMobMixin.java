@@ -409,7 +409,8 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
     @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
     private void manageBlightPowerUp(CallbackInfo ci){
 
-        if (NMUtils.getWorldProgress() > HARDMODE && this.ticksExisted % 40 == 0) {
+        // Blight is now environmental only; pollution drives its danger rather than mob buffs.
+        if (false && NMUtils.getWorldProgress() > HARDMODE && this.ticksExisted % 40 == 0) {
             if(this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID){
                 int i = MathHelper.floor_double(this.posX);
                 int j = MathHelper.floor_double(this.posY - 1);

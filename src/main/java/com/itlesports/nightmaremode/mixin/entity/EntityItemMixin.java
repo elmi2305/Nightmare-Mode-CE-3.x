@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,6 +28,9 @@ public abstract class EntityItemMixin extends Entity {
     @Unique private int ticksNearLava;
     @Shadow public abstract ItemStack getEntityItem();
     @Shadow public abstract void setEntityItemStack(ItemStack stack);
+    @Shadow public int age;
+    @Unique private boolean nightmareMode$burned;
+    @Unique private boolean nightmareMode$pollutionReported;
 
     public EntityItemMixin(World par1World) {
         super(par1World);
@@ -109,6 +113,30 @@ public abstract class EntityItemMixin extends Entity {
                 && par1DamageSource != DamageSource.lava) {
             cir.setReturnValue(false);
         }
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void rememberBurningDamage(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        this.nightmareMode$burned |= source == DamageSource.inFire || source == DamageSource.onFire || source == DamageSource.lava;
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("TAIL"))
+    private void polluteBurnedItem(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(2.0F);
+    }
+
+    @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 4, shift = At.Shift.BEFORE))
+    private void polluteNaturalItemDespawn(CallbackInfo ci) {
+        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 2.0F : 1.0F);
+    }
+
+    @Unique
+    private void nightmareMode$reportItemPollution(float multiplier) {
+        if (this.nightmareMode$pollutionReported) return;
+        ItemStack stack = this.getEntityItem();
+        if (stack == null) return;
+        this.nightmareMode$pollutionReported = true;
+        ChunkPollutionManager.pollute(this.worldObj, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), stack.stackSize * 5.0F * multiplier);
     }
     @Unique private static Set<Integer> nonFlammableItems = null;
 

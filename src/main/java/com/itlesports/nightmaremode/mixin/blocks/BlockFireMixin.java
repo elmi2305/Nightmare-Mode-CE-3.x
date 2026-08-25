@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockSteelFrame;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockFire;
 import net.minecraft.src.World;
@@ -13,6 +14,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockFire.class)
 public class BlockFireMixin {
+
+    @Inject(method = "onBlockDestroyedByFire", at = @At("HEAD"))
+    private static void polluteWhenFuelBurns(World world, int x, int y, int z, int fireAge,
+                                             boolean forcedFireSpread, CallbackInfo ci) {
+        Block fuel = Block.blocksList[world.getBlockId(x, y, z)];
+        if (world.isRemote || fuel == null || fuel == Block.netherrack) return;
+        for (int face = 0; face < 6; ++face) {
+            if (fuel.doesInfiniteBurnToFacing(world, x, y, z, face)) return;
+        }
+        float amount = 8.0F;
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dy = -1; dy <= 1; ++dy) {
+                for (int dz = -1; dz <= 1; ++dz) {
+                    int id = world.getBlockId(x + dx, y + dy, z + dz);
+                    if (id == BTWBlocks.stokedFire.blockID) amount = 30.0F;
+                    else if (id == Block.fire.blockID && world.getBlockId(x + dx, y + dy - 1, z + dz) == BTWBlocks.hibachi.blockID) amount = Math.max(amount, 18.0F);
+                }
+            }
+        }
+        ChunkPollutionManager.pollute(world, x, y, z, amount);
+    }
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"), cancellable = true)
     private void onFireAdded(World world, int x, int y, int z, CallbackInfo ci) {
