@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.block.tileEntities.CisternDrainTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.MinerDrillTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.ObsidianMillstoneTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TerrainExtractorTileEntity;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
@@ -28,7 +29,16 @@ public final class ChunkPollutionManager {
     public static final float BIOLOGICAL_DAMAGE = 4000.0F;
     public static final float GEARBOX_FAILURE = 7000.0F;
     public static final float PASSIVE_DRAIN_PER_TICK = 0.0125F;
+    /** Pollution above this level slowly diffuses into loaded cardinal-neighbor chunks. */
+    public static final float PASSIVE_SPREAD_THRESHOLD = 500.0F;
+    private static final float CLIENT_SYNC_INTERVAL = 100.0F;
+    /** Attribute loss per second for each pollution point above the spread threshold. */
+    private static final float ATTRIBUTE_DAMAGE_PER_EXCESS_POLLUTION = 0.0002F;
+    private static final float VEGETATION_DECAY_BASE_CHANCE = 0.10F;
+    private static final float VEGETATION_DECAY_CHANCE_PER_POLLUTION = 0.00018F;
+    private static final float MAX_VEGETATION_DECAY_CHANCE = 0.75F;
     private static final float NEIGHBOR_SHARE = 0.15F;
+    private static final float PASSIVE_SPREAD_FRACTION = 0.01F;
 
     private ChunkPollutionManager() {}
 
@@ -38,6 +48,14 @@ public final class ChunkPollutionManager {
 
     public static boolean isAtLeast(World world, int x, int z, float threshold) {
         return get(world, x, z) >= threshold;
+    }
+
+    /** Chance for one vegetation random tick to advance decay in a polluted chunk. */
+    public static float getVegetationDecayChance(float pollution) {
+        if (pollution < PASSIVE_SPREAD_THRESHOLD) return 0.0F;
+        return Math.min(MAX_VEGETATION_DECAY_CHANCE,
+                VEGETATION_DECAY_BASE_CHANCE
+                        + (pollution - PASSIVE_SPREAD_THRESHOLD) * VEGETATION_DECAY_CHANCE_PER_POLLUTION);
     }
 
     /** Adds pollution only when the source can reach the surface in the overworld. */
@@ -63,7 +81,16 @@ public final class ChunkPollutionManager {
             ChunkAttributes attributes = ((ChunkAttributesAccess)chunk).nightmareMode$getChunkAttributes();
             if (!attributes.belongsTo(chunk.xPosition, chunk.zPosition, world.provider.dimensionId)) continue;
             if (attributes.getPollution() <= 0.0F) continue;
+            erodeSoilAttributes(attributes);
             attributes.addPollution(-PASSIVE_DRAIN_PER_TICK * 20.0F);
+            spreadPassively(world, chunk, attributes);
+            boolean visualBandChanged = updateVisualBand(attributes);
+            float pollution = attributes.getPollution();
+            if (visualBandChanged || Float.isNaN(attributes.getLastClientSyncedPollution())
+                    || Math.abs(pollution - attributes.getLastClientSyncedPollution()) >= CLIENT_SYNC_INTERVAL) {
+                PollutionVisualNet.broadcastPollution(world, chunk.xPosition, chunk.zPosition, attributes.getPollution());
+                attributes.setLastClientSyncedPollution(pollution);
+            }
             chunk.setChunkModified();
             if (attributes.getPollution() >= BLIGHT_STARTS && world.rand.nextInt(20) == 0) {
                 seedBlight(world, chunk.xPosition * 16 + 8, 64, chunk.zPosition * 16 + 8);
@@ -122,6 +149,16 @@ public final class ChunkPollutionManager {
         if (pollution >= GEARBOX_FAILURE && world.rand.nextInt(80) == 0) gearbox.breakGearBox(world, x, y, z);
     }
 
+    /** Pollution leaves persistent, broad soil damage rather than only temporary crop effects. */
+    private static void erodeSoilAttributes(ChunkAttributes attributes) {
+        float damage = (attributes.getPollution() - PASSIVE_SPREAD_THRESHOLD)
+                * ATTRIBUTE_DAMAGE_PER_EXCESS_POLLUTION;
+        if (damage <= 0.0F) return;
+        for (ChunkAttribute attribute : ChunkAttribute.values()) {
+            attributes.consume(attribute, damage);
+        }
+    }
+
     /** Human-readable source rate for the mechanical wrench. */
     public static String getSourceDescription(World world, int x, int y, int z) {
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
@@ -147,6 +184,44 @@ public final class ChunkPollutionManager {
 
     private static boolean canReachSurface(World world, int x, int y, int z) {
         return world.provider.dimensionId != 0 || y >= 40 || world.canBlockSeeTheSky(x, y, z);
+    }
+
+    /**
+     * Moves pollution, rather than creating it, so heavily polluted chunks cannot remain isolated
+     * while their surroundings stay clean. Chunks at or below the threshold retain their baseline.
+     */
+    private static void spreadPassively(World world, Chunk source, ChunkAttributes attributes) {
+        float excess = attributes.getPollution() - PASSIVE_SPREAD_THRESHOLD;
+        if (excess <= 0.0F) return;
+
+        float transferred = excess * PASSIVE_SPREAD_FRACTION;
+        int activeNeighbors = 0;
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dz = -1; dz <= 1; ++dz) {
+                if ((dx == 0 && dz == 0) || (dx != 0 && dz != 0)) continue;
+                if (world.isChunkActive(source.xPosition + dx, source.zPosition + dz)) ++activeNeighbors;
+            }
+        }
+        if (activeNeighbors == 0) return;
+
+        float share = transferred / activeNeighbors;
+        attributes.addPollution(-transferred);
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dz = -1; dz <= 1; ++dz) {
+                if ((dx == 0 && dz == 0) || (dx != 0 && dz != 0)) continue;
+                int neighborX = source.xPosition + dx;
+                int neighborZ = source.zPosition + dz;
+                if (world.isChunkActive(neighborX, neighborZ)) addToChunk(world, neighborX, neighborZ, share);
+            }
+        }
+    }
+
+    private static boolean updateVisualBand(ChunkAttributes attributes) {
+        byte band = PollutionVisualNet.getBand(attributes.getPollution());
+        byte previousBand = attributes.getPollutionVisualBand();
+        if (band == previousBand) return false;
+        attributes.setPollutionVisualBand(band);
+        return previousBand >= 0;
     }
 
     private static void addToChunk(World world, int chunkX, int chunkZ, float amount) {

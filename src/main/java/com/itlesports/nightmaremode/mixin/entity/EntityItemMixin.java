@@ -125,7 +125,7 @@ public abstract class EntityItemMixin extends Entity {
         if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(2.0F);
     }
 
-    @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 4, shift = At.Shift.BEFORE))
+    @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 5, shift = At.Shift.BEFORE))
     private void polluteNaturalItemDespawn(CallbackInfo ci) {
         this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 2.0F : 1.0F);
     }

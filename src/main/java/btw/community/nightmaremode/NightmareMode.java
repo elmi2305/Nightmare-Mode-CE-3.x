@@ -14,6 +14,7 @@ import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityRendererAccessor;
 import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.util.CarcassHarvestNet;
@@ -259,6 +260,7 @@ public class NightmareMode extends BTWAddon {
 
 
         SteelLockerNet.register(this);
+        PollutionVisualNet.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

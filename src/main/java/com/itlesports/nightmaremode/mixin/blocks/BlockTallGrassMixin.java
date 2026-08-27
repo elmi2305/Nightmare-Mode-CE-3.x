@@ -2,9 +2,11 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemScythe;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -59,8 +61,14 @@ public class BlockTallGrassMixin extends BlockFlower {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
         }
     }
-    @Inject(method = "updateTick", at = @At("HEAD"))
+    @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
     private void declareVariables(World world, int i, int j, int k, Random rand, CallbackInfo ci){
+        if (!world.isRemote && rand.nextFloat() < ChunkPollutionManager.getVegetationDecayChance(
+                ChunkPollutionManager.get(world, i, k))) {
+            world.setBlockToAir(i, j, k);
+            ci.cancel();
+            return;
+        }
         this.xPos = i;
         this.yPos = j;
         this.zPos = k;
@@ -117,9 +125,11 @@ public class BlockTallGrassMixin extends BlockFlower {
     }
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "colorMultiplier", at = @At(value = "RETURN"), cancellable = true)
-    private void redGrass2(CallbackInfoReturnable<Integer> cir){
+    private void redGrass2(IBlockAccess blockAccess, int x, int y, int z, CallbackInfoReturnable<Integer> cir){
         if(NightmareMode.crimson){
             cir.setReturnValue(CRIMSON_COLOR);
+            return;
         }
+        cir.setReturnValue(PollutionVisualNet.tintColor(cir.getReturnValue(), x, z));
     }
 }

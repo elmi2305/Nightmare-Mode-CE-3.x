@@ -4,6 +4,8 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -64,5 +66,21 @@ public class BlockLeavesMixin extends BlockLeavesBase {
     @Override
     public int tickRate(World w) {
         return 4;
+    }
+
+    @Environment(value = EnvType.CLIENT)
+    @Inject(method = "colorMultiplier", at = @At("RETURN"), cancellable = true)
+    private void tintPollutedLeaves(IBlockAccess blockAccess, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(PollutionVisualNet.tintColor(cir.getReturnValue(), x, z));
+    }
+
+    @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
+    private void decayPollutedLeaves(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (!world.isRemote && ChunkPollutionManager.isAtLeast(world, x, z, ChunkPollutionManager.BLIGHT_STARTS)
+                && random.nextInt(8) == 0) {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+            ci.cancel();
+        }
     }
 }

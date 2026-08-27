@@ -24,6 +24,8 @@ public final class ChunkAttributes {
     private int maxFish;
     private boolean fishInitialized;
     private float pollution;
+    private byte pollutionVisualBand = -1;
+    private float lastClientSyncedPollution = Float.NaN;
 
     public boolean isInitialized() {
         return this.initialized;
@@ -82,6 +84,27 @@ public final class ChunkAttributes {
 
     public void addPollution(float amount) {
         this.pollution = Math.max(0.0F, Math.min(10000.0F, this.pollution + amount));
+    }
+
+    /** Used by the client-side pollution visual sync. */
+    public void setPollution(float pollution) {
+        this.pollution = Math.max(0.0F, Math.min(10000.0F, pollution));
+    }
+
+    public byte getPollutionVisualBand() {
+        return this.pollutionVisualBand;
+    }
+
+    public void setPollutionVisualBand(byte pollutionVisualBand) {
+        this.pollutionVisualBand = pollutionVisualBand;
+    }
+
+    public float getLastClientSyncedPollution() {
+        return this.lastClientSyncedPollution;
+    }
+
+    public void setLastClientSyncedPollution(float lastClientSyncedPollution) {
+        this.lastClientSyncedPollution = lastClientSyncedPollution;
     }
 
     public void setFarmlandFertilizer(

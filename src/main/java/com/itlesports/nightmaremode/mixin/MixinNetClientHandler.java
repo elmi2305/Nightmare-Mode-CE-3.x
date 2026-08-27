@@ -4,6 +4,7 @@ import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.entity.EntityMagicArrow;
 import com.itlesports.nightmaremode.entity.underworld.EntitySporeArrow;
 import com.itlesports.nightmaremode.mixin.interfaces.NetClientHandlerExt;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.nmgui.*;
 import com.itlesports.nightmaremode.nmgui.GuiLocker;
 import net.minecraft.src.*;
@@ -14,6 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetClientHandler.class)
 public abstract class MixinNetClientHandler {
+    @Inject(method = "handleMapChunk", at = @At("TAIL"))
+    private void requestPollutionVisualBand(Packet51MapChunk packet, CallbackInfo ci) {
+        PollutionVisualNet.requestBand(packet.xCh, packet.zCh);
+    }
+
+    @Inject(method = "handleMapChunks", at = @At("TAIL"))
+    private void requestBatchedPollutionVisualBands(Packet56MapChunks packet, CallbackInfo ci) {
+        for (int index = 0; index < packet.getNumberOfChunkInPacket(); ++index) {
+            PollutionVisualNet.requestBand(packet.getChunkPosX(index), packet.getChunkPosZ(index));
+        }
+    }
+
     @Inject(method = "handleOpenWindow", at = @At("HEAD"), cancellable = true)
     private void moreblocks$handleOpenWindow(Packet100OpenWindow packet, CallbackInfo ci) {
         if (packet.inventoryType != BlockSteelLocker.CUSTOM_WINDOW_TYPE) return;
