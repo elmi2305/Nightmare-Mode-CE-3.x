@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.ItemKnife;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.CarcassHarvesting;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.*;
@@ -69,6 +70,21 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
 
     public EntityLivingBaseMixin(World par1World) {
         super(par1World);
+    }
+
+    @ModifyVariable(method = "addPotionEffect", at = @At("HEAD"), argsOnly = true)
+    private PotionEffect adjustAdvancedArmorPotionDuration(PotionEffect effect) {
+        if (effect == null || effect.getDuration() <= 1 || !((Object)this instanceof EntityPlayer player)) return effect;
+        Potion potion = Potion.potionTypes[effect.getPotionID()];
+        if (potion != null && potion.isBadEffect() && ArmorSetHelper.isWearingCompleteAzureSet(player)) {
+            return new PotionEffect(effect.getPotionID(), Math.max(1, effect.getDuration() / 2),
+                    effect.getAmplifier(), effect.getIsAmbient());
+        }
+        if (potion != null && !potion.isBadEffect() && ArmorSetHelper.isWearingCompleteDarkSet(player)) {
+            return new PotionEffect(effect.getPotionID(), Math.min(Integer.MAX_VALUE / 2, effect.getDuration() * 2),
+                    effect.getAmplifier(), effect.getIsAmbient());
+        }
+        return effect;
     }
 
     @ModifyArg(method = "entityLivingOnDeath", at = @At(value = "INVOKE",

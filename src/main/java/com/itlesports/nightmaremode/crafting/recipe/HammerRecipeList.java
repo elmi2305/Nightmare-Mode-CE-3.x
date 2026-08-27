@@ -25,6 +25,23 @@ public abstract class HammerRecipeList {
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crystalPolishedShard), new ItemStack(NMItems.crystalCleanShard, 1, Short.MAX_VALUE)).setHitsRequired(4);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crackedDiamondBearingRock), new ItemStack(NMItems.diamondBearingRock)).setHitsRequired(3);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.nickelPlate), new ItemStack(NMItems.nickelIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.carbonIronPlate), new ItemStack(NMItems.carbonIronIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.reinforcedIronPlate), new ItemStack(NMItems.reinforcedIronIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.tungstenPlate), new ItemStack(NMItems.tungstenIngot)).setHitsRequired(8);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.quartzglassPlate), new ItemStack(NMItems.quartzglassIngot)).setHitsRequired(6);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crackedEmerald), new ItemStack(Item.emerald)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.verdantPlate), new ItemStack(NMItems.verdantIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.blackglassPlate), new ItemStack(NMItems.blackglassIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.coresteelPlate), new ItemStack(NMItems.coresteelIngot)).setHitsRequired(8);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.deadzoneAlloyPlate), new ItemStack(NMItems.deadzoneAlloyIngot)).setHitsRequired(8);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.signalAlloyPlate), new ItemStack(NMItems.signalAlloyIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.azureCeramicPlate), new ItemStack(NMItems.azureCeramicIngot)).setHitsRequired(2);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.prismaticPlate), new ItemStack(NMItems.prismaticIngot)).setHitsRequired(4);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.sealedQuicksilverPlate), new ItemStack(NMItems.sealedQuicksilverIngot)).setHitsRequired(100);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.endstonePlate), new ItemStack(NMItems.endstoneIngot)).setHitsRequired(40);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.carbonIronNugget, 3), new ItemStack(NMItems.carburizedIronBloom)).setHitsRequired(8);
+        HammerCraftingManager.instance.addRecipe(new ItemStack(NMItems.carbonIronNugget, 3), NMBlocks.carburizedIronBloom,
+                new int[]{0, 1, 2, 3, 4, 5, 6, 7}).setHitsRequired(8);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.wetFusedPlantSheet), new ItemStack(NMItems.washedPith));
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(BTWItems.hempFibers, 4), new ItemStack(NMItems.driedHemp)).setHitsRequired(3);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.workedScouredLeather), new ItemStack(NMItems.washedScouredLeather)).setHitsRequired(3);

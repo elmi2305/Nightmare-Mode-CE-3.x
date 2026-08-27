@@ -87,7 +87,7 @@ public class BlockPortalMixin{
                         player.sendChatToPlayer(text1);
 
                         text1 = new ChatMessageComponent();
-                        text1.addText("I should probably store all my items before entering, and wear a heat-resistant armor...");
+                        text1.addKey("world.portal_heat_suit_warning");
                         player.sendChatToPlayer(text1);
 
                         player.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));

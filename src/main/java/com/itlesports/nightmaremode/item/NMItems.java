@@ -4,6 +4,7 @@ import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
+import com.itlesports.nightmaremode.block.blocks.templates.NMNetherPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
@@ -345,6 +346,140 @@ public class NMItems {
     public static ItemEnderArmor enderChestplate;
     public static ItemEnderArmor enderLeggings;
     public static ItemEnderArmor enderBoots;
+
+    // IFHY alloy armor expansion
+    public static Item carbonRichIronMix;
+    public static Item carburizedIronBloom;
+    public static Item carbonIronNugget;
+    public static Item carbonIronIngot;
+    public static Item carbonIronPlate;
+    public static Item lithiumTreatedIronBlank;
+    public static Item reinforcedIronIngot;
+    public static Item reinforcedIronPlate;
+    public static Item wetGasket;
+    public static Item waxedGasket;
+    public static Item refractoryPaste;
+    public static Item wetRefractoryCloth;
+    public static Item refractoryCloth;
+    public static Item pressureRegulator;
+    public static Item thermalLaminate;
+    public static ItemCarbonIronArmor carbonIronHelmet;
+    public static ItemCarbonIronArmor carbonIronChestplate;
+    public static ItemCarbonIronArmor carbonIronLeggings;
+    public static ItemCarbonIronArmor carbonIronBoots;
+    public static ItemAlloyArmor reinforcedIronHelmet;
+    public static ItemAlloyArmor reinforcedIronChestplate;
+    public static ItemAlloyArmor reinforcedIronLeggings;
+    public static ItemAlloyArmor reinforcedIronBoots;
+    public static ItemAlloyArmor nickelWorkLeggings;
+    public static ItemAlloyArmor nickelWorkBoots;
+    public static ItemHeatResistantArmor heatResistantHelmet;
+    public static ItemHeatResistantArmor heatResistantChestplate;
+    public static ItemHeatResistantArmor heatResistantLeggings;
+    public static ItemHeatResistantArmor heatResistantBoots;
+    public static ItemDivingGear divingMask;
+    public static ItemDivingGear divingTank;
+    public static Item tungstenPlate;
+    public static Item thermalChestLining;
+    public static Item tankReinforcementCradle;
+    public static Item moltenQuartzCompound;
+    public static Item quartzglassIngot;
+    public static Item quartzglassPlate;
+    public static Item crackedEmerald;
+    public static Item emeraldGrit;
+    public static Item washedEmeraldPowder;
+    public static Item verdantIngot;
+    public static Item verdantPlate;
+    public static Item blackglassCharge;
+    public static Item blackglassIngot;
+    public static Item blackglassPlate;
+    public static Item saturatedCoresteelCharge;
+    public static Item cooledCoresteelCharge;
+    public static Item coresteelIngot;
+    public static Item coresteelPlate;
+    public static Item unstableDeadzoneCharge;
+    public static Item deadzoneAlloyIngot;
+    public static Item deadzoneAlloyPlate;
+    public static Item solarBaffle;
+    public static ItemNetherAlloyArmor tungstenHelmet;
+    public static ItemNetherAlloyArmor tungstenChestplate;
+    public static ItemNetherAlloyArmor tungstenLeggings;
+    public static ItemNetherAlloyArmor tungstenBoots;
+    public static ItemCoresteelArmor coresteelHelmet;
+    public static ItemCoresteelArmor coresteelChestplate;
+    public static ItemCoresteelArmor coresteelLeggings;
+    public static ItemCoresteelArmor coresteelBoots;
+    public static ItemNetherAlloyArmor deadzoneHelmet;
+    public static ItemNetherAlloyArmor deadzoneChestplate;
+    public static ItemNetherAlloyArmor deadzoneLeggings;
+    public static ItemNetherAlloyArmor deadzoneBoots;
+    public static ItemHeatResistantArmor sunHelmet;
+    public static ItemHeatResistantArmor sunChestplate;
+    public static ItemHeatResistantArmor sunLeggings;
+    public static ItemHeatResistantArmor sunBoots;
+    public static ItemSunDivingGear sunVisor;
+    public static ItemSunDivingGear sunReservoir;
+    public static Item signalConductiveCharge;
+    public static Item signalAlloyIngot;
+    public static Item signalAlloyPlate;
+    public static Item azureSlip;
+    public static Item azureCeramicIngot;
+    public static Item azureCeramicPlate;
+    public static Item crystalLatticeCharge;
+    public static Item setCrystalLattice;
+    public static Item prismaticIngot;
+    public static Item prismaticPlate;
+    public static Item sealedQuicksilverIngot;
+    public static Item sealedQuicksilverPlate;
+    public static Item endstonePowder;
+    public static Item endstoneClay;
+    public static Item endstoneIngot;
+    public static Item endstonePlate;
+    public static Item darkIngot;
+    public static ItemChargedArmor signalHelmet;
+    public static ItemChargedArmor signalChestplate;
+    public static ItemChargedArmor signalLeggings;
+    public static ItemChargedArmor signalBoots;
+    public static ItemAlloyArmor azureHelmet;
+    public static ItemAlloyArmor azureChestplate;
+    public static ItemAlloyArmor azureLeggings;
+    public static ItemAlloyArmor azureBoots;
+    public static ItemAlloyArmor prismaticHelmet;
+    public static ItemAlloyArmor prismaticChestplate;
+    public static ItemAlloyArmor prismaticLeggings;
+    public static ItemAlloyArmor prismaticBoots;
+    public static ItemAlloyArmor refinedPrismaHelmet;
+    public static ItemAlloyArmor refinedPrismaChestplate;
+    public static ItemAlloyArmor refinedPrismaLeggings;
+    public static ItemAlloyArmor refinedPrismaBoots;
+    public static ItemAlloyArmor verdantHelmet;
+    public static ItemAlloyArmor verdantChestplate;
+    public static ItemAlloyArmor verdantLeggings;
+    public static ItemAlloyArmor verdantBoots;
+    public static ItemGlassArmor glassHelmet;
+    public static ItemGlassArmor glassChestplate;
+    public static ItemGlassArmor glassLeggings;
+    public static ItemGlassArmor glassBoots;
+    public static ItemNetherAlloyArmor blackglassHelmet;
+    public static ItemNetherAlloyArmor blackglassChestplate;
+    public static ItemNetherAlloyArmor blackglassLeggings;
+    public static ItemNetherAlloyArmor blackglassBoots;
+    public static ItemNetherAlloyArmor quartzglassHelmet;
+    public static ItemNetherAlloyArmor quartzglassChestplate;
+    public static ItemNetherAlloyArmor quartzglassLeggings;
+    public static ItemNetherAlloyArmor quartzglassBoots;
+    public static ItemNetherAlloyArmor darkHelmet;
+    public static ItemNetherAlloyArmor darkChestplate;
+    public static ItemNetherAlloyArmor darkLeggings;
+    public static ItemNetherAlloyArmor darkBoots;
+    public static ItemAlloyArmor quicksilverHelmet;
+    public static ItemAlloyArmor quicksilverChestplate;
+    public static ItemAlloyArmor quicksilverLeggings;
+    public static ItemAlloyArmor quicksilverBoots;
+    public static ItemAlloyArmor anchorHelmet;
+    public static ItemAlloyArmor anchorChestplate;
+    public static ItemAlloyArmor anchorLeggings;
+    public static ItemAlloyArmor anchorBoots;
 
 
     static {
@@ -700,6 +835,186 @@ public class NMItems {
         snowPile = new NMItem(3258).setTextureName("nightmare:ifhySnowPile").setUnlocalizedName("ifhySnowPile")
                 .setCreativeTab(CreativeTabs.tabMaterials);
 
+        carbonRichIronMix = material(3259, "ifhyCarbonRichIronMix");
+        carburizedIronBloom = new NMPlaceAsBlockItem(3260, NMFields.BLOCK_CARBURIZED_IRON_BLOOM)
+                .setTextureName("nightmare:ifhyCarburizedIronBloom").setUnlocalizedName("ifhyCarburizedIronBloom")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        carbonIronNugget = material(3261, "ifhyCarbonIronNugget");
+        carbonIronIngot = material(3262, "ifhyCarbonIronIngot");
+        carbonIronPlate = material(3263, "ifhyCarbonIronPlate");
+        lithiumTreatedIronBlank = material(3264, "ifhyLithiumTreatedIronBlank");
+        reinforcedIronIngot = material(3265, "ifhyReinforcedIronIngot");
+        reinforcedIronPlate = material(3266, "ifhyReinforcedIronPlate");
+        wetGasket = material(3267, "ifhyWetGasket");
+        waxedGasket = material(3268, "ifhyWaxedGasket");
+        refractoryPaste = material(3269, "ifhyRefractoryPaste");
+        wetRefractoryCloth = material(3270, "ifhyWetRefractoryCloth");
+        refractoryCloth = material(3271, "ifhyRefractoryCloth");
+        pressureRegulator = material(3272, "ifhyPressureRegulator");
+        thermalLaminate = material(3273, "ifhyThermalLaminate");
+
+        carbonIronHelmet = carbonIronArmor(3274, 0, 2, 5, 480, 5, 0.0D,
+                carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronHelmet");
+        carbonIronChestplate = carbonIronArmor(3275, 1, 7, 9, 480, 5, 0.0D,
+                carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronChestplate");
+        carbonIronLeggings = carbonIronArmor(3276, 2, 5, 7, 480, 5, 0.0D,
+                carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronLeggings");
+        carbonIronBoots = carbonIronArmor(3277, 3, 2, 4, 480, 5, 0.0D,
+                carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronBoots");
+
+        reinforcedIronHelmet = alloyArmor(3278, 0, 2, 4, 720, 8, 0.025D,
+                reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronHelmet");
+        reinforcedIronChestplate = alloyArmor(3279, 1, 6, 7, 720, 8, 0.025D,
+                reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronChestplate");
+        reinforcedIronLeggings = alloyArmor(3280, 2, 5, 5, 720, 8, 0.025D,
+                reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronLeggings");
+        reinforcedIronBoots = alloyArmor(3281, 3, 2, 3, 720, 8, 0.025D,
+                reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronBoots");
+
+        nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 560, 10, 0.0D,
+                nickelPlate, "oxygenGear", "item.ifhyNickelWorkArmor.bonus", "ifhyNickelWorkLeggings");
+        nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 400, 10, 0.0D,
+                nickelPlate, "oxygenGear", "item.ifhyNickelWorkArmor.bonus", "ifhyNickelWorkBoots");
+
+        heatResistantHelmet = heatArmor(3284, 0, 3, 4, EnumArmorMaterial.DIAMOND.getDurability(0),
+                "ifhyHeatResistantHelmet");
+        heatResistantChestplate = heatArmor(3285, 1, 8, 7, EnumArmorMaterial.DIAMOND.getDurability(1),
+                "ifhyHeatResistantChestplate");
+        heatResistantLeggings = heatArmor(3286, 2, 6, 6, EnumArmorMaterial.DIAMOND.getDurability(2),
+                "ifhyHeatResistantLeggings");
+        heatResistantBoots = heatArmor(3287, 3, 3, 3, EnumArmorMaterial.DIAMOND.getDurability(3),
+                "ifhyHeatResistantBoots");
+
+        tungstenPlate = new NetherItem(3290).setTextureName("nightmare:ifhyTungstenPlate")
+                .setUnlocalizedName("ifhyTungstenPlate").setCreativeTab(CreativeTabs.tabMaterials);
+
+        thermalChestLining = material(3291, "ifhyThermalChestLining");
+        tankReinforcementCradle = netherMaterial(3292, "ifhyTankReinforcementCradle");
+        moltenQuartzCompound = netherMaterial(3293, "ifhyMoltenQuartzCompound");
+        quartzglassIngot = netherMaterial(3294, "ifhyQuartzglassIngot");
+        quartzglassPlate = netherMaterial(3295, "ifhyQuartzglassPlate");
+        divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 600, 8, 0.0D,
+                quartzglassPlate.itemID, 0.50F, 0, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
+                .setTextureName("nightmare:ifhyDivingMask").setUnlocalizedName("ifhyDivingMask");
+        divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 900, 8, 0.0D,
+                tungstenPlate.itemID, 0.45F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
+                .setTextureName("nightmare:ifhyDivingTank").setUnlocalizedName("ifhyDivingTank");
+        crackedEmerald = material(3296, "ifhyCrackedEmerald");
+        emeraldGrit = material(3297, "ifhyEmeraldGrit");
+        washedEmeraldPowder = material(3298, "ifhyWashedEmeraldPowder");
+        verdantIngot = material(3299, "ifhyVerdantIngot");
+        verdantPlate = material(3300, "ifhyVerdantPlate");
+        blackglassCharge = netherMaterial(3301, "ifhyBlackglassCharge");
+        blackglassIngot = netherMaterial(3302, "ifhyBlackglassIngot");
+        blackglassPlate = netherMaterial(3303, "ifhyBlackglassPlate");
+        saturatedCoresteelCharge = new NMNetherPlaceAsBlockItem(3304, NMFields.BLOCK_SATURATED_CORESTEEL_CHARGE)
+                .setTextureName("nightmare:ifhySaturatedCoresteelCharge")
+                .setUnlocalizedName("ifhySaturatedCoresteelCharge").setCreativeTab(CreativeTabs.tabMaterials);
+        cooledCoresteelCharge = netherMaterial(3305, "ifhyCooledCoresteelCharge");
+        coresteelIngot = netherMaterial(3306, "ifhyCoresteelIngot");
+        coresteelPlate = netherMaterial(3307, "ifhyCoresteelPlate");
+        unstableDeadzoneCharge = netherMaterial(3308, "ifhyUnstableDeadzoneCharge");
+        deadzoneAlloyIngot = netherMaterial(3309, "ifhyDeadzoneAlloyIngot");
+        deadzoneAlloyPlate = netherMaterial(3310, "ifhyDeadzoneAlloyPlate");
+        solarBaffle = netherMaterial(3311, "ifhySolarBaffle");
+
+        tungstenHelmet = netherArmor(3312, 0, 3, 7, 1100, 6, 0.055D, tungstenIngot,
+                "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenHelmet");
+        tungstenChestplate = netherArmor(3313, 1, 8, 12, 1100, 6, 0.055D, tungstenIngot,
+                "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenChestplate");
+        tungstenLeggings = netherArmor(3314, 2, 6, 10, 1100, 6, 0.055D, tungstenIngot,
+                "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenLeggings");
+        tungstenBoots = netherArmor(3315, 3, 3, 6, 1100, 6, 0.055D, tungstenIngot,
+                "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenBoots");
+
+        coresteelHelmet = coresteelArmor(3316, 0, 3, 6, 1300, 800, "ifhyCoresteelHelmet");
+        coresteelChestplate = coresteelArmor(3317, 1, 8, 10, 1300, 1600, "ifhyCoresteelChestplate");
+        coresteelLeggings = coresteelArmor(3318, 2, 6, 8, 1300, 1200, "ifhyCoresteelLeggings");
+        coresteelBoots = coresteelArmor(3319, 3, 3, 5, 1300, 800, "ifhyCoresteelBoots");
+
+        deadzoneHelmet = netherArmor(3320, 0, 3, 4, 1500, 8, 0.05D, deadzoneAlloyIngot,
+                "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneHelmet");
+        deadzoneChestplate = netherArmor(3321, 1, 9, 7, 1500, 8, 0.05D, deadzoneAlloyIngot,
+                "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneChestplate");
+        deadzoneLeggings = netherArmor(3322, 2, 7, 6, 1500, 8, 0.05D, deadzoneAlloyIngot,
+                "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneLeggings");
+        deadzoneBoots = netherArmor(3323, 3, 3, 3, 1500, 8, 0.05D, deadzoneAlloyIngot,
+                "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneBoots");
+
+        sunHelmet = sunArmorPiece(3324, 0, 3, 3, "ifhySunHelmet");
+        sunChestplate = sunArmorPiece(3325, 1, 8, 6, "ifhySunChestplate");
+        sunLeggings = sunArmorPiece(3326, 2, 6, 5, "ifhySunLeggings");
+        sunBoots = sunArmorPiece(3327, 3, 3, 3, "ifhySunBoots");
+        sunVisor = (ItemSunDivingGear)new ItemSunDivingGear(3328, 0, 3, 3, 1400, 10, 0.05D,
+                deadzoneAlloyIngot.itemID, 0.50F, 0, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
+                .setTextureName("nightmare:ifhySunVisor").setUnlocalizedName("ifhySunVisor");
+        sunReservoir = (ItemSunDivingGear)new ItemSunDivingGear(3329, 1, 8, 6, 1400, 10, 0.05D,
+                coresteelIngot.itemID, 0.45F, 20 * 60 * 6, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
+                .setTextureName("nightmare:ifhySunReservoir").setUnlocalizedName("ifhySunReservoir");
+
+        signalConductiveCharge = material(3330, "ifhySignalConductiveCharge");
+        signalAlloyIngot = material(3331, "ifhySignalAlloyIngot");
+        signalAlloyPlate = material(3332, "ifhySignalAlloyPlate");
+        azureSlip = material(3333, "ifhyAzureSlip");
+        azureCeramicIngot = material(3334, "ifhyAzureCeramicIngot");
+        azureCeramicPlate = material(3335, "ifhyAzureCeramicPlate");
+        crystalLatticeCharge = material(3336, "ifhyCrystalLatticeCharge");
+        setCrystalLattice = material(3337, "ifhySetCrystalLattice");
+        prismaticIngot = material(3338, "ifhyPrismaticIngot");
+        prismaticPlate = material(3339, "ifhyPrismaticPlate");
+        sealedQuicksilverIngot = material(3340, "ifhySealedQuicksilverIngot");
+        sealedQuicksilverPlate = material(3341, "ifhySealedQuicksilverPlate");
+        endstonePowder = material(3342, "ifhyEndstonePowder");
+        endstoneClay = material(3343, "ifhyEndstoneClay");
+        endstoneIngot = material(3344, "ifhyEndstoneIngot");
+        endstonePlate = material(3345, "ifhyEndstonePlate");
+        darkIngot = netherMaterial(3346, "ifhyDarkIngot");
+
+        signalHelmet = chargedArmor(3347, 0, 2, 2, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalHelmet");
+        signalChestplate = chargedArmor(3348, 1, 6, 4, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalChestplate");
+        signalLeggings = chargedArmor(3349, 2, 5, 3, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalLeggings");
+        signalBoots = chargedArmor(3350, 3, 2, 1, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalBoots");
+        azureHelmet = alloyArmor(3351, 0, 2, 2, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureHelmet");
+        azureChestplate = alloyArmor(3352, 1, 5, 4, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureChestplate");
+        azureLeggings = alloyArmor(3353, 2, 4, 3, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureLeggings");
+        azureBoots = alloyArmor(3354, 3, 2, 1, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureBoots");
+        prismaticHelmet = alloyArmor(3355, 0, 2, 1, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticHelmet");
+        prismaticChestplate = alloyArmor(3356, 1, 5, 3, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticChestplate");
+        prismaticLeggings = alloyArmor(3357, 2, 4, 2, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticLeggings");
+        prismaticBoots = alloyArmor(3358, 3, 2, 1, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticBoots");
+        refinedPrismaHelmet = alloyArmor(3359, 0, 3, 3, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaHelmet");
+        refinedPrismaChestplate = alloyArmor(3360, 1, 8, 5, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaChestplate");
+        refinedPrismaLeggings = alloyArmor(3361, 2, 6, 4, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaLeggings");
+        refinedPrismaBoots = alloyArmor(3362, 3, 3, 2, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaBoots");
+        verdantHelmet = alloyArmor(3363, 0, 2, 1, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantHelmet");
+        verdantChestplate = alloyArmor(3364, 1, 5, 3, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantChestplate");
+        verdantLeggings = alloyArmor(3365, 2, 3, 2, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantLeggings");
+        verdantBoots = alloyArmor(3366, 3, 1, 1, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantBoots");
+        glassHelmet = glassArmor(3367, 0, 1, "ifhyGlassHelmet");
+        glassChestplate = glassArmor(3368, 1, 3, "ifhyGlassChestplate");
+        glassLeggings = glassArmor(3369, 2, 2, "ifhyGlassLeggings");
+        glassBoots = glassArmor(3370, 3, 1, "ifhyGlassBoots");
+        blackglassHelmet = netherArmor(3371, 0, 3, 9, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassHelmet");
+        blackglassChestplate = netherArmor(3372, 1, 8, 15, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassChestplate");
+        blackglassLeggings = netherArmor(3373, 2, 6, 12, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassLeggings");
+        blackglassBoots = netherArmor(3374, 3, 3, 7, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassBoots");
+        quartzglassHelmet = netherArmor(3375, 0, 2, 1, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassHelmet");
+        quartzglassChestplate = netherArmor(3376, 1, 4, 2, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassChestplate");
+        quartzglassLeggings = netherArmor(3377, 2, 3, 2, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassLeggings");
+        quartzglassBoots = netherArmor(3378, 3, 1, 1, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassBoots");
+        darkHelmet = netherArmor(3379, 0, 3, 2, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkHelmet");
+        darkChestplate = netherArmor(3380, 1, 9, 4, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkChestplate");
+        darkLeggings = netherArmor(3381, 2, 7, 3, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkLeggings");
+        darkBoots = netherArmor(3382, 3, 3, 2, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkBoots");
+        quicksilverHelmet = alloyArmor(3383, 0, 2, 0, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverHelmet");
+        quicksilverChestplate = alloyArmor(3384, 1, 5, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverChestplate");
+        quicksilverLeggings = alloyArmor(3385, 2, 4, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverLeggings");
+        quicksilverBoots = alloyArmor(3386, 3, 2, 0, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverBoots");
+        anchorHelmet = alloyArmor(3387, 0, 3, 9, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorHelmet");
+        anchorChestplate = alloyArmor(3388, 1, 8, 15, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
+        anchorLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
+        anchorBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
+
 
 
 
@@ -708,6 +1023,72 @@ public class NMItems {
     private static Item material(int id, String name) {
         return new NMItem(id).setTextureName("nightmare:" + name)
                 .setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+    }
+
+    private static Item netherMaterial(int id, String name) {
+        return new NetherItem(id).setTextureName("nightmare:" + name)
+                .setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+    }
+
+    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses,
+                                              int enchantability, double knockbackResistance, Item repairItem,
+                                              String wornTexture, String bonusKey, String name) {
+        return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability,
+                knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemCarbonIronArmor carbonIronArmor(int id, int armorType, int protection, int weight,
+                                                        int maxUses, int enchantability,
+                                                        double knockbackResistance, Item repairItem,
+                                                        String wornTexture, String bonusKey, String name) {
+        return (ItemCarbonIronArmor)new ItemCarbonIronArmor(id, armorType, protection, weight, maxUses,
+                enchantability, knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemHeatResistantArmor heatArmor(int id, int armorType, int protection, int weight,
+                                                     int maxUses, String name) {
+        return (ItemHeatResistantArmor)new ItemHeatResistantArmor(id, armorType, protection, weight, maxUses,
+                10, 0.0D, nickelPlate.itemID, "ifhyHeatResistantArmor",
+                "item.ifhyHeatResistantArmor.bonus", 0.12F)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemNetherAlloyArmor netherArmor(int id, int armorType, int protection, int weight,
+                                                     int maxUses, int enchantability, double knockbackResistance,
+                                                     Item repairItem, String wornTexture, String bonusKey, String name) {
+        return (ItemNetherAlloyArmor)new ItemNetherAlloyArmor(id, armorType, protection, weight, maxUses,
+                enchantability, knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemCoresteelArmor coresteelArmor(int id, int armorType, int protection, int weight,
+                                                      int maxUses, int heatCapacity, String name) {
+        return (ItemCoresteelArmor)new ItemCoresteelArmor(id, armorType, protection, weight, maxUses,
+                7, 0.055D, coresteelIngot.itemID, "ifhyCoresteelArmor",
+                "item.ifhyCoresteelArmor.bonus", heatCapacity)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemChargedArmor chargedArmor(int id, int armorType, int protection, int weight, int maxUses,
+                                                  Item repairItem, String wornTexture, String bonusKey, String name) {
+        return (ItemChargedArmor)new ItemChargedArmor(id, armorType, protection, weight, maxUses, 12, 0.0D,
+                repairItem.itemID, wornTexture, bonusKey, 1000)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemGlassArmor glassArmor(int id, int armorType, int protection, String name) {
+        return (ItemGlassArmor)new ItemGlassArmor(id, armorType, protection, 0, 90, 8, 0.0D,
+                Block.glass.blockID, "ifhyGlassArmor", "item.ifhyGlassArmor.bonus")
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+
+    private static ItemHeatResistantArmor sunArmorPiece(int id, int armorType, int protection, int weight,
+                                                         String name) {
+        return (ItemHeatResistantArmor)new ItemHeatResistantArmor(id, armorType, protection, weight, 1400,
+                10, 0.05D, deadzoneAlloyIngot.itemID, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
 
     private static FoodItem createRawFish(int id, String name) {

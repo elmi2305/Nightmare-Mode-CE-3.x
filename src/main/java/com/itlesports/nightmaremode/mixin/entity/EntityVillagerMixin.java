@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerDebugTool;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.LibrarianStoryBook;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
@@ -201,6 +202,14 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     private void applySkillTradeProgress(MerchantRecipe recipe, CallbackInfo ci) {
         EntityPlayer player = this.nightmareMode$tradingPlayer;
         SkillHandler.incrementTradesCompleted(player);
+        if (!this.worldObj.isRemote && player != null && ArmorSetHelper.isWearingCompleteVerdantSet(player)
+                && this.rand.nextInt(8) == 0 && recipe.getItemToBuy().itemID != Item.emerald.itemID) {
+            ItemStack refund = recipe.getItemToBuy().copy();
+            refund.stackSize = 1;
+            if (!player.inventory.addItemStackToInventory(refund)) {
+                player.dropPlayerItem(refund);
+            }
+        }
         if (!((Object)this instanceof EntityNetherPostVillager) && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(player).villagerProfessionChangeChance) {
             int oldProfession = this.getProfession();

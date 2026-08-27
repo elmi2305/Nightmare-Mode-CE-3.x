@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.entity.variants.EntityRadioactiveEnderman;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
@@ -258,6 +259,11 @@ public abstract class EntityEndermanMixin extends EntityMob {
     @Inject(method = "findPlayerToAttack", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void hostileInEnd(CallbackInfoReturnable<Entity> cir, EntityPlayer target){
         if (target != null){
+            if (ArmorSetHelper.isWearingCompleteQuicksilverSet(target)
+                    || ArmorSetHelper.isWearingCompleteAnchorSet(target)) {
+                cir.setReturnValue(null);
+                return;
+            }
             ItemStack var2 = target.inventory.armorInventory[3];
             if (target.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (var2 == null) {
