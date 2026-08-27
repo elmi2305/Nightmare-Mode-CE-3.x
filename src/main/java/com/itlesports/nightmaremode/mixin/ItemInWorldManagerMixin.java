@@ -13,6 +13,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
+import com.itlesports.nightmaremode.block.blocks.CrystalPocketBlock;
 import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -69,6 +70,25 @@ public class ItemInWorldManagerMixin {
             return;
         }
         if (!(block instanceof BlockOreNode oreNode)) {
+            if (!(block instanceof CrystalPocketBlock crystalPocket)) {
+                return;
+            }
+
+            ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
+            int metadata = this.theWorld.getBlockMetadata(x, y, z);
+            if (!crystalPocket.isValidMiningTool(held, this.theWorld, x, y, z)
+                    || !crystalPocket.minePocket(this.theWorld, this.thisPlayerMP, x, y, z, fromSide)) {
+                cir.setReturnValue(false);
+                return;
+            }
+
+            this.theWorld.playAuxSFXAtEntity(this.thisPlayerMP, 2001, x, y, z,
+                    block.blockID + (metadata << 12));
+            held.onBlockDestroyed(this.theWorld, block.blockID, x, y, z, this.thisPlayerMP);
+            if (held.stackSize <= 0) {
+                this.thisPlayerMP.destroyCurrentEquippedItem();
+            }
+            cir.setReturnValue(true);
             return;
         }
 
