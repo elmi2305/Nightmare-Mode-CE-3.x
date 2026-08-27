@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.WolfHowlBehavior;
 import com.itlesports.nightmaremode.util.NMUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,15 +16,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class WolfHowlBehaviorMixin {
     @Inject(method = "shouldExecute", at = @At("HEAD"), cancellable = true)
     private void alwaysReturnFalse(CallbackInfoReturnable<Boolean> cir) {
-//        cir.setReturnValue(false);
+        if (NightmareMode.devMode) {
+            cir.setReturnValue(false);
+        }
     }
     @ModifyArg(method = "shouldExecute", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0),index = 0)
     private int increaseChance(int bound){
+        if(NightmareMode.devMode){
+            return 1206152501;
+        }
         if(NMUtils.getWorldProgress() > 0){return 4;}
         return 120;
     }
     @ModifyArg(method = "shouldExecute", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 1),index = 0)
     private int increaseChance0(int bound){
+        if(NightmareMode.devMode){
+            return 1206152501;
+        }
         if(NMUtils.getWorldProgress() > 0){return 4;}
         return 120;
     }
