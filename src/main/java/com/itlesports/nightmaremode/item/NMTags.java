@@ -39,10 +39,13 @@ public class NMTags {
     );
     public static final Tag ironTungstenIngots = Tag.of(loc("iron_tungsten_ingots"),
             Item.ingotIron,
+            NMItems.carbonIronIngot,
+            NMItems.reinforcedIronIngot,
             NMItems.tungstenIngot
     );
     public static final Tag ironTungstenNuggets = Tag.of(loc("iron_tungsten_nuggets"),
             BTWItems.ironNugget,
+            NMItems.carbonIronNugget,
             NMItems.tungstenNugget
     );
     public static final Tag netherSignalBinders = Tag.of(loc("nether_signal_binders"),

@@ -409,6 +409,18 @@ public final class NMSkillNodes {
             "Bring 8 reinforced iron ingots.", NMItems.reinforcedIronIngot.itemID, 0, false, 8,
             "Unlock Reinforced Iron chassis upgrades.", none(), MINING, false);
 
+    public static final SkillNode BRING_CARBON_IRON_PLATE_8 = bring(
+            "carbon_iron_lamination", "Carbon Iron Lamination", NMItems.carbonIronPlate, 1, 0,
+            "Bring 8 Carbon Iron plates.", NMItems.carbonIronPlate.itemID, 0, false, 8,
+            "Unlock Carbon Iron armor and efficient rail stock.", none(), MINING, false,
+            BRING_CARBON_RICH_IRON_MIX_8);
+
+    public static final SkillNode BRING_REINFORCED_IRON_PLATE_8 = bring(
+            "reinforced_iron_lamination", "Reinforced Iron Lamination", NMItems.reinforcedIronPlate, 8, 3,
+            "Bring 8 Reinforced Iron plates.", NMItems.reinforcedIronPlate.itemID, 0, false, 8,
+            "Unlock Reinforced Iron armor and powered rail stock.", none(), MINING, false,
+            BRING_REINFORCED_IRON_INGOT_8);
+
     public static final SkillNode BRING_THERMAL_LAMINATE_4 = bring(
             "thermal_suiting", "Thermal Suiting", NMItems.thermalLaminate, 8, 3,
             "Bring 4 thermal laminates.", NMItems.thermalLaminate.itemID, 0, false, 4,
@@ -418,6 +430,12 @@ public final class NMSkillNodes {
             "quartz_lamination", "Quartz Lamination", NMItems.quartzglassIngot, 3, 5,
             "Bring 8 quartzglass ingots.", NMItems.quartzglassIngot.itemID, 0, false, 8,
             "Unlock quartzglass pressure components.", none(), MINING, false);
+
+    public static final SkillNode BRING_QUARTZGLASS_PLATE_8 = bring(
+            "quartzglass_pressure_lamination", "Quartzglass Pressure Lamination", NMItems.quartzglassPlate, 3, 6,
+            "Bring 8 quartzglass plates.", NMItems.quartzglassPlate.itemID, 0, false, 8,
+            "Unlock quartzglass armor and pressure equipment.", none(), MINING, false,
+            BRING_QUARTZGLASS_INGOT_8);
 
     public static final SkillNode BRING_TUNGSTEN_PLATE_8 = bring(
             "tungsten_armory", "Tungsten Armory", NMItems.tungstenPlate, 3, -3,
@@ -429,10 +447,22 @@ public final class NMSkillNodes {
             "Bring 8 coresteel ingots.", NMItems.coresteelIngot.itemID, 0, false, 8,
             "Unlock Coresteel heat-sink armor upgrades.", none(), MINING, false);
 
+    public static final SkillNode BRING_CORESTEEL_PLATE_8 = bring(
+            "coresteel_lamination", "Coresteel Lamination", NMItems.coresteelPlate, 6, 6,
+            "Bring 8 Coresteel plates.", NMItems.coresteelPlate.itemID, 0, false, 8,
+            "Unlock Coresteel heat-sink armor and solar reservoirs.", none(), MINING, false,
+            BRING_CORESTEEL_INGOT_8);
+
     public static final SkillNode BRING_UNSTABLE_DEADZONE_CHARGE_4 = bring(
             "deadzone_armory", "Deadzone Armory", NMItems.unstableDeadzoneCharge, 7, -4,
             "Bring 4 unstable deadzone charges.", NMItems.unstableDeadzoneCharge.itemID, 0, false, 4,
             "Unlock Deadzone Alloy forging and armor upgrades.", none(), MINING, false);
+
+    public static final SkillNode BRING_DEADZONE_ALLOY_PLATE_8 = bring(
+            "deadzone_lamination", "Deadzone Lamination", NMItems.deadzoneAlloyPlate, 8, -4,
+            "Bring 8 Deadzone Alloy plates.", NMItems.deadzoneAlloyPlate.itemID, 0, false, 8,
+            "Unlock Deadzone armor and solar baffle construction.", none(), MINING, false,
+            BRING_UNSTABLE_DEADZONE_CHARGE_4);
 
     public static final SkillNode BRING_PRESSURE_REGULATOR_2 = bring(
             "pressure_engineering", "Pressure Engineering", NMItems.pressureRegulator, 7, 4,
@@ -458,14 +488,29 @@ public final class NMSkillNodes {
             "signal_metallurgy", "Signal Metallurgy", NMItems.signalAlloyIngot, 5, 5,
             "Bring 8 Signal Alloy ingots.", NMItems.signalAlloyIngot.itemID, 0, false, 8,
             "Unlock chargeable Signal Armor upgrades.", none(), KNOWLEDGE, false);
+    public static final SkillNode BRING_SIGNAL_ALLOY_PLATE_8 = bring(
+            "signal_lamination", "Signal Lamination", NMItems.signalAlloyPlate, 6, 5,
+            "Bring 8 Signal Alloy plates.", NMItems.signalAlloyPlate.itemID, 0, false, 8,
+            "Unlock chargeable armor and paired signal relays.", none(), KNOWLEDGE, false,
+            BRING_SIGNAL_ALLOY_INGOT_8);
     public static final SkillNode BRING_AZURE_CERAMIC_INGOT_8 = bring(
             "azure_ceramics", "Azure Ceramics", NMItems.azureCeramicIngot, -2, 3,
             "Bring 8 Azure Ceramic ingots.", NMItems.azureCeramicIngot.itemID, 0, false, 8,
             "Unlock magic-ward Azure Armor upgrades.", none(), KNOWLEDGE, false);
+    public static final SkillNode BRING_AZURE_CERAMIC_PLATE_8 = bring(
+            "azure_ceramic_lamination", "Azure Ceramic Lamination", NMItems.azureCeramicPlate, -1, 3,
+            "Bring 8 Azure Ceramic plates.", NMItems.azureCeramicPlate.itemID, 0, false, 8,
+            "Unlock Azure armor and infernal enchanting liners.", none(), KNOWLEDGE, false,
+            BRING_AZURE_CERAMIC_INGOT_8);
     public static final SkillNode BRING_PRISMATIC_INGOT_8 = bring(
             "prismatic_lamination", "Prismatic Lamination", NMItems.prismaticIngot, 4, 4,
             "Bring 8 Prismatic ingots.", NMItems.prismaticIngot.itemID, 0, false, 8,
             "Unlock projectile-reflecting Prismatic Armor.", none(), KNOWLEDGE, false);
+    public static final SkillNode BRING_PRISMATIC_PLATE_8 = bring(
+            "prismatic_plate_lamination", "Prismatic Plate Lamination", NMItems.prismaticPlate, 5, 4,
+            "Bring 8 Prismatic plates.", NMItems.prismaticPlate.itemID, 0, false, 8,
+            "Unlock Prismatic and Refined Prisma armor construction.", none(), KNOWLEDGE, false,
+            BRING_PRISMATIC_INGOT_8);
     public static final SkillNode BRING_REFINED_PRISMA_ARMOR = bring(
             "refined_prisma", "Refined Prisma", NMItems.refinedPrismaChestplate, 5, 3,
             "Bring a Refined Prisma chestplate.", NMItems.refinedPrismaChestplate.itemID, 0, false, 1,
@@ -482,6 +527,15 @@ public final class NMSkillNodes {
             "mercury_sealing", "Mercury Sealing", NMItems.sealedQuicksilverIngot, 8, 4,
             "Bring 4 Sealed Quicksilver ingots.", NMItems.sealedQuicksilverIngot.itemID, 0, false, 4,
             "Unlock Quicksilver freight armor in the Ender Assembler.", none(), KNOWLEDGE, false);
+    public static final SkillNode BRING_SEALED_QUICKSILVER_PLATE_4 = bring(
+            "mercury_lamination", "Quicksilver Lamination", NMItems.sealedQuicksilverPlate, 9, 4,
+            "Bring 4 Sealed Quicksilver plates.", NMItems.sealedQuicksilverPlate.itemID, 0, false, 4,
+            "Record sealed Mercury plating for Ender mechanisms and freight armor.", none(), KNOWLEDGE, false,
+            BRING_SEALED_QUICKSILVER_INGOT_4);
+    public static final SkillNode BRING_ENDSTONE_CERAMIC_PLATE_8 = bring(
+            "endstone_ceramic_lamination", "Endstone Ceramic Lamination", NMItems.endstonePlate, 8, -5,
+            "Bring 8 Endstone Ceramic plates.", NMItems.endstonePlate.itemID, 0, false, 8,
+            "Record the anchor-grade ceramic used by the post-dragon End suit.", none(), KNOWLEDGE, false);
     public static final SkillNode BRING_ENDSTONE_ANCHOR_ARMOR = bring(
             "endstone_anchor", "Endstone Anchor", NMItems.anchorChestplate, 7, -4,
             "Bring an Endstone Anchor chestplate.", NMItems.anchorChestplate.itemID, 0, false, 1,
@@ -3649,7 +3703,10 @@ public final class NMSkillNodes {
         BRING_DARK_INGOT_8.addParents(BRING_UNSTABLE_DEADZONE_CHARGE_4, BRING_SOULFORGED_STEEL_INGOT_8);
         BRING_SEALED_QUICKSILVER_INGOT_4.addParents(BRING_MERCURY_AMALGAM_8, BRING_TUNGSTEN_INGOT_8);
         BRING_ENDSTONE_ANCHOR_ARMOR.addParents(BRING_PALE_ROOT_RESIN_8, BRING_ENDER_SHELL_POWDER_16,
-                BRING_PHASE_STEEL_8);
+                BRING_PHASE_STEEL_8, BRING_ENDSTONE_CERAMIC_PLATE_8);
+        BRING_ENDSTONE_CERAMIC_PLATE_8.addParents(BRING_PALE_ROOT_RESIN_8,
+                BRING_ENDER_SHELL_POWDER_16, BRING_PHASE_STEEL_8);
+        BRING_ENDER_MECHANISM_4.addParents(BRING_SEALED_QUICKSILVER_PLATE_4);
 
         // Diamond extraction. Iron Anvil is intentionally not a parent of
         // BRING_DIAMOND_16: its crafting recipe already requires that node.
