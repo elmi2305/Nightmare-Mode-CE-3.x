@@ -89,7 +89,7 @@ public final class NMSkillNodes {
             BTWItems.ironOrePile.itemID, 0, false, 8,
             "+5% iron-pile chance.", SkillRewardActions.addIronPileChance(0.05F),
             MINING, false),
-            () -> NMSkillNodes.BRING_IRON_INGOT);
+            () -> NMSkillNodes.BRING_SHARP_STONE_4);
 
     public static final SkillNode BRING_RAW_LITHIUM_64 = bring(
             "lithium_crafting",
@@ -692,7 +692,7 @@ public final class NMSkillNodes {
             HUSBANDRY, false);
 
 
-    public static final SkillNode BRING_DRIED_PLANT_FIBER_64 = deferred(bring(
+    public static final SkillNode BRING_DRIED_PLANT_FIBER_64 = bring(
             "dried_fiber_hemp",
             "Fiber Seed Lore",
             NMItems.driedPlantFiber,
@@ -700,8 +700,7 @@ public final class NMSkillNodes {
             "Bring 64 dried plant fibers.",
             NMItems.driedPlantFiber.itemID, 0, false, 64,
             "+2% hemp-seed chance.", SkillRewardActions.addHempSeedChance(0.02F),
-            HUSBANDRY, false),
-            () -> NMSkillNodes.HARVEST_TALL_GRASS_1000);
+            HUSBANDRY, false);
 
     public static final SkillNode PLANT_SAPLING_100 = counter(
             "sapling_planter",
@@ -3516,7 +3515,7 @@ public final class NMSkillNodes {
         BRING_FLINT_4.addParents(BRING_FLINT_CHIP);
         BRING_GRAVEL_64.addParents(BRING_GRAVEL_PILE_32);
         BRING_STONE_STICK_64.addParents(BRING_LOOSE_STONE_64, MINE_STONE_1000);
-        BRING_IRON_ORE_PILE_32.addParents(BRING_SHARP_STONE_4);
+        BRING_IRON_ORE_PILE_32.addParents(BRING_IRON_ORE_PILE_8);
         BRING_IRON_BLOOM_8.addParents(BRING_BRICK_32, BRING_IRON_ORE_PILE_32);
         BRING_IRON_INGOT.addParents(BRING_IRON_BLOOM_8);
         BRING_IRON_INGOT_16.addParents(BRING_IRON_INGOT);
@@ -3693,10 +3692,10 @@ public final class NMSkillNodes {
         // Combat: dependable weapons and armor precede advanced kills and loot.
         BRING_STICK_16.addParents(BRING_STICK_4);
         BRING_WOODEN_CLUB_4.addParents(BRING_STICK_16);
-        BRING_BONE_CLUB_4.addParents(KILL_MOB_16, BRING_WOODEN_CLUB_4);
+        BRING_BONE_CLUB_4.addParents(KILL_MOB_16, BRING_WOODEN_CLUB_4, BRING_BONE_128);
         KILL_MOB_250.addParents(BRING_BONE_CLUB_4);
         KILL_ZOMBIE_100.addParents(BRING_BONE_CLUB_4);
-        KILL_SKELETON_100.addParents(BRING_BONE_CLUB_4);
+        //KILL_SKELETON_100.addParents(BRING_BONE_CLUB_4);
         KILL_SPIDER_100.addParents(BRING_BONE_CLUB_4);
         BRING_STRING_32.addParents(KILL_SPIDER_100);
         BRING_LEATHER_16.addParents(KILL_MOB_16);

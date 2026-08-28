@@ -700,10 +700,6 @@ public abstract class NMInitializer implements AchievementExt {
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 3), new TagOrStack[]{new ItemStack(Item.legsLeather, 1, Short.MAX_VALUE)});
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 2), new TagOrStack[]{new ItemStack(Item.bootsLeather, 1, Short.MAX_VALUE)});
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 2), new TagOrStack[]{new ItemStack(Item.saddle)});
-        cauldron.removeRecipe(new ItemStack(BTWItems.glue, 2), new TagOrStack[]{new ItemStack(BTWItems.gimpHelmet, 1, Short.MAX_VALUE)});
-        cauldron.removeRecipe(new ItemStack(BTWItems.glue, 3), new TagOrStack[]{new ItemStack(BTWItems.gimpChest, 1, Short.MAX_VALUE)});
-        cauldron.removeRecipe(new ItemStack(BTWItems.glue, 3), new TagOrStack[]{new ItemStack(BTWItems.gimpLeggings, 1, Short.MAX_VALUE)});
-        cauldron.removeRecipe(new ItemStack(BTWItems.glue), new TagOrStack[]{new ItemStack(BTWItems.gimpBoots, 1, Short.MAX_VALUE)});
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 3), new TagOrStack[]{new ItemStack(BTWItems.breedingHarness, 1, Short.MAX_VALUE)});
         cauldron.removeRecipe(new ItemStack(BTWItems.glue), new TagOrStack[]{TagInstance.of(BTWTags.books, 2)});
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 2), new TagOrStack[]{new ItemStack(BTWItems.tannedLeatherHelmet, 1, Short.MAX_VALUE)});
@@ -1480,7 +1476,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pureTungstenChunk), new Object[]{NMItems.tungstenPowder, NMItems.tungstenPowder});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.tungstenNugget});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenBucket), new Object[]{"# #", " # ", Character.valueOf('#'), NMItems.tungstenIngot});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"ISI", "ISI", "III", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), BTWItems.netherSludge});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"ISI", "ISI", "III", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), BTWItems.netherSludge}), NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         RecipeManager.addRecipe(new ItemStack(Block.obsidian, 1, 0), new Object[]{"BBB", "BSB", "BBB", Character.valueOf('B'), NMItems.obsidianBrick, Character.valueOf('S'), BTWItems.netherSludge});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneKnife), new Object[]{new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE), Item.stick, NMTags.knifeStrings});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironKnife), new Object[]{Item.ingotIron, Item.stick, NMTags.knifeStrings});
@@ -1526,7 +1522,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(Item.flint), new Object[]{NMItems.flintChip, NMItems.flintChip, NMItems.flintChip, NMItems.flintChip});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.snowball), new Object[]{NMItems.snowPile, NMItems.snowPile, NMItems.snowPile, NMItems.snowPile});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unshapedWetClayBrick, 1, NMItems.unshapedWetClayBrick.getMaxDamage() - 1), new Object[]{Item.clay, BTWItems.gravelPile, BTWItems.dirtPile, BTWItems.sandPile});
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.cistern), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron}), NMSkillNodes.BRING_IRON_INGOT_16);
         RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SSS", " S ", "SSS", Character.valueOf('S'), BTWTags.looseCobblestones});
         NMFoodSpoilage.addSnowRefreshRecipes();
 
@@ -1817,7 +1813,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.ingotIron), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(BTWItems.ironNugget), Character.valueOf('X'), new ItemStack(BTWItems.stoneBrick)}),
                 NMSkillNodes.BRING_IRON_BLOOM_8, NMSkillNodes.BRING_IRON_HELMET, NMSkillNodes.BRING_IRON_CHESTPLATE,
                 NMSkillNodes.BRING_IRON_LEGGINGS, NMSkillNodes.BRING_IRON_BOOTS, NMSkillNodes.BRING_IRON_NUGGET_32,
-                NMSkillNodes.BRING_IRON_SWORD, NMSkillNodes.MINE_IRON_ORE_256, NMSkillNodes.MINE_COAL_ORE_256);
+                NMSkillNodes.BRING_IRON_SWORD);
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings});
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings, BTWItems.padding, BTWItems.padding}),
@@ -1985,7 +1981,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('N'), NMItems.primitiveGlue,
                         Character.valueOf('X'), Item.ingotIron}),
                 NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16,
-                NMSkillNodes.KILL_MOB_250, NMSkillNodes.MINE_IRON_ORE_256);
+                NMSkillNodes.KILL_MOB_250);
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.axeIron), new Object[]{
                 "XXN", "X#L", "G#L",
                         Character.valueOf('#'), NMItems.stoneStick,
@@ -2380,7 +2376,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.gearBox.blockID, NMSkillNodes.BRING_ROPE_8, NMSkillNodes.BRING_GEAR_64, NMSkillNodes.BRING_PADDING_16);
         SkillRecipeGates.crafting(BTWItems.fabric.itemID, NMSkillNodes.BRING_HEMP_32, NMSkillNodes.BRING_HEMP_FIBER_32);
         SkillRecipeGates.crafting(NMItems.bandage.itemID, NMSkillNodes.BRING_BEDROLL);
-        SkillRecipeGates.crafting(BTWItems.padding.itemID, NMSkillNodes.BRING_BEDROLL);
+        SkillRecipeGates.crafting(BTWItems.padding.itemID, NMSkillNodes.BRING_FABRIC_16);
         SkillRecipeGates.crafting(BTWItems.windMillBlade.itemID, NMSkillNodes.BRING_FABRIC_16, NMSkillNodes.BRING_WOOL_128, NMSkillNodes.BRING_WOOL_KNIT_16);
         SkillRecipeGates.crafting(BTWBlocks.axle.blockID, NMSkillNodes.BRING_FABRIC_16, NMSkillNodes.BRING_GEAR_64, NMSkillNodes.CRAFT_CAULDRON, NMSkillNodes.BRING_HEMP_32, NMSkillNodes.BRING_WINDMILL_BLADE_8);
         SkillRecipeGates.crafting(Item.bed.itemID, NMSkillNodes.BRING_FABRIC_16, NMSkillNodes.BRING_BELT_8, NMSkillNodes.BRING_PADDING_16, NMSkillNodes.BRING_POPPY_16, NMSkillNodes.BRING_BEDROLL);
@@ -2434,10 +2430,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
         SkillRecipeGates.crafting(Item.bootsChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
         SkillRecipeGates.crafting(Item.helmetGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
         SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
@@ -2488,7 +2484,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.ocularOfEnder.itemID, NMSkillNodes.BRING_GOLD_NUGGET_32, NMSkillNodes.BRING_ENDER_PEARL_16);
         SkillRecipeGates.crafting(Item.pocketSundial.itemID, NMSkillNodes.BRING_GOLD_NUGGET_32);
         SkillRecipeGates.crafting(NMItems.crystalLens.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_DIAMOND_8);
-        SkillRecipeGates.crafting(NMItems.crystalPrecisionGear.itemID, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_CRYSTAL_POWDER_32);
+        SkillRecipeGates.crafting(NMItems.crystalPrecisionGear.itemID, NMSkillNodes.BRING_CRYSTAL_POWDER_32);
         SkillRecipeGates.crafting(BTWBlocks.lightningRod.blockID, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(BTWItems.diamondIngot.itemID, NMSkillNodes.BRING_DIAMOND_8, NMSkillNodes.BRING_CREEPER_OYSTER_16);
         SkillRecipeGates.crafting(BTWItems.stumpRemover.itemID, NMSkillNodes.BRING_CREEPER_OYSTER_16);
@@ -2599,7 +2595,6 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMBlocks.obsidianMillstone.blockID,
                 NMSkillNodes.BRING_OBSIDIAN_BRICK_16, NMSkillNodes.BRING_NETHERRACK_CHUNK_16);
-        SkillRecipeGates.crafting(NMBlocks.cistern.blockID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMBlocks.minerDrill.blockID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
         SkillRecipeGates.crafting(NMBlocks.cisternInterface.blockID,
