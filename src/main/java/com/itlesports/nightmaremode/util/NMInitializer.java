@@ -3143,8 +3143,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_GROUND_NETHERRACK_32, NMSkillNodes.BRING_ASH_CLUMP_16);
         SkillRecipeGates.crafting(NMBlocks.hellforge.blockID,
                 NMSkillNodes.BRING_NETHER_BRICK_32, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
-        SkillRecipeGates.crafting(Block.obsidian.blockID,
-                NMSkillNodes.BRING_CRUDE_OBSIDIAN_16, NMSkillNodes.BRING_OBSIDIAN_SHARD_16);
+        SkillRecipeGates.crafting(Block.obsidian.blockID, NMSkillNodes.BRING_OBSIDIAN_SHARD_16);
         SkillRecipeGates.crafting(NMItems.refinedRedstone.itemID,
                 NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
         SkillRecipeGates.crafting(NMItems.hydraulicLens.itemID,
