@@ -26,6 +26,7 @@
     "EnchantmentDurabilityMixin",
     "EnchantmentHelperMixin",
     "EnchantmentProtectionMixin",
+    "ExplosionMixin",
     "EnumCreatureTypeMixin",
     "FoodItemMixin",
     "FoodStatsMixin",

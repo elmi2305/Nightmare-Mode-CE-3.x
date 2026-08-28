@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.util;
 import btw.item.BTWItems;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillNode;
@@ -80,7 +81,8 @@ public final class NetherItemHelper {
                 || id == BTWItems.soulSandPile.itemID
                 || id == BTWItems.soulFlux.itemID
                 || id == BTWItems.netherSludge.itemID
-                || id == BTWItems.unfiredNetherBrick.itemID) {
+                || id == BTWItems.unfiredNetherBrick.itemID
+                || id == NMItems.nickelPlate.itemID) {
             return true;
         }
         if (player != null) {

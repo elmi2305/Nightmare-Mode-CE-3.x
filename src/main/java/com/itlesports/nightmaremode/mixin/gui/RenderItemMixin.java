@@ -1,15 +1,22 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
 import net.minecraft.src.*;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(RenderItem.class)
 public class RenderItemMixin {
+    @Shadow private void renderQuad(Tessellator tessellator, int x, int y, int width, int height, int color) {}
+
     @ModifyArgs(method = "renderItemIntoGUI", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false))
     private void changeBrightnessItem(Args args){
         float r = args.get(0);
@@ -39,5 +46,26 @@ public class RenderItemMixin {
             float maxDarkness = 0.95F;
             float stageDarkness = Math.min((float)gloomProgress / 250.0f, 1.0f) * maxDarkness;
             return Math.min(stageDarkness, 1.0F);
+    }
+
+    @Inject(method = "renderItemOverlayIntoGUI(Lnet/minecraft/src/FontRenderer;Lnet/minecraft/src/TextureManager;Lnet/minecraft/src/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
+    private void renderCompressedAirBar(FontRenderer font, TextureManager textures, ItemStack stack,
+                                        int x, int y, String text, CallbackInfo ci) {
+        if (stack == null || !(stack.getItem() instanceof IArmorStatus status)) {
+            return;
+        }
+
+        int width = MathHelper.clamp_int(Math.round(13.0F * status.getStatusFraction(stack)), 0, 13);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        Tessellator tessellator = Tessellator.instance;
+        this.renderQuad(tessellator, x + 2, y + 11, 13, 2, 0);
+        this.renderQuad(tessellator, x + 2, y + 11, 12, 1, status.getStatusBackgroundColor());
+        this.renderQuad(tessellator, x + 2, y + 11, width, 1, status.getStatusColor(stack));
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

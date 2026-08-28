@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.world.ChunkLoaderManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -64,6 +65,9 @@ public abstract class WorldServerMixin extends World implements WorldServerExt {
 
         if ((time & 15) == 0) {
             NMEvents.onServerTick((WorldServer)(Object)this);
+        }
+        if (time % 20 == 0) {
+            ChunkPollutionManager.tickLoadedChunks((WorldServer)(Object)this);
         }
         if (time % 20 == 0) {
             ChunkLoaderManager.loadChargedChunks((WorldServer)(Object)this);

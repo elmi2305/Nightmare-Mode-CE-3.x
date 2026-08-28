@@ -10,6 +10,7 @@ import btw.crafting.manager.SawCraftingManager;
 import btw.item.BTWItems;
 import btw.util.BTWDamageSources;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.util.elements.BloodSawCraftingManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -156,8 +157,12 @@ public class BlockBloodSaw
                 }
                 for (int iTempListIndex = 0; iTempListIndex < collisionList.size(); ++iTempListIndex) {
                     EntityLivingBase tempTargetEntity = (EntityLivingBase) collisionList.get(iTempListIndex);
+                    boolean lethal = tempTargetEntity.getHealth() <= iDamage;
                     if (!tempTargetEntity.attackEntityFrom(source, iDamage)) continue;
                     world.playAuxSFX(2223, i, j, k, iFacing);
+                    if (lethal) {
+                        ChunkPollutionManager.pollute(world, i, j, k, 10.0F);
+                    }
                 }
             }
         }

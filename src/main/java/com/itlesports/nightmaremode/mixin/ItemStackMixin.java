@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.item.items.ItemHammer;
+import com.itlesports.nightmaremode.item.items.ItemGlassArmor;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
@@ -18,6 +19,15 @@ public class ItemStackMixin {
         if (amount > 0 && stack.getItem() instanceof ItemHammer && user instanceof EntityPlayer player
                 && player.rand.nextFloat() < SkillHandler.getPlayerData(player).hammerDurabilitySaveChance) {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "damageItem", at = @At("RETURN"))
+    private void punishGlassArmorBreakage(int amount, EntityLivingBase user, CallbackInfo ci) {
+        ItemStack stack = (ItemStack)(Object)this;
+        if (amount > 0 && stack.stackSize == 0 && stack.getItem() instanceof ItemGlassArmor
+                && user instanceof EntityPlayer && !user.worldObj.isRemote) {
+            user.attackEntityFrom(net.minecraft.src.DamageSource.magic, 2.0F);
         }
     }
 }

@@ -4,6 +4,7 @@ import api.block.MechanicalBlock;
 import btw.block.blocks.GearBoxBlock;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mechanical.MechanicalStressManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
@@ -24,6 +25,11 @@ public class ItemMechanicalWrench extends NMItem {
     public static boolean inspect(EntityPlayer player, World world, int x, int y, int z) {
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
         if (block == null) return false;
+
+        String pollution = ChunkPollutionManager.getSourceDescription(world, x, y, z);
+        if (pollution != null && !world.isRemote) {
+            player.addChatMessage(pollution);
+        }
 
         if (MechanicalStressManager.isInspectableNetworkBlock(block)) {
             if (!world.isRemote) {
@@ -53,6 +59,8 @@ public class ItemMechanicalWrench extends NMItem {
             }
             return true;
         }
+
+        if (pollution != null) return true;
 
         if (block instanceof MechanicalBlock) {
             if (!world.isRemote) {

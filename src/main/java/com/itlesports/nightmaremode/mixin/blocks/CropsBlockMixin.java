@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.block.blocks.CropsBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CropsBlockMixin {
     @Inject(method = "incrementGrowthLevel", at = @At("HEAD"), cancellable = true)
     private void requireChunkResources(World world, int x, int y, int z, CallbackInfo ci) {
+        if (ChunkPollutionManager.isAtLeast(world, x, z, ChunkPollutionManager.BIOLOGICAL_DAMAGE)) {
+            world.setBlockToAir(x, y, z);
+            ci.cancel();
+            return;
+        }
         if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
             ci.cancel();
         }

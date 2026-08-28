@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.util.NMConfUtils;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.world.JourneyProfile;
@@ -151,7 +152,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "isInGloom", at = @At("HEAD"),cancellable = true)
     private void noGloomIfWearingEnderSpectacles(CallbackInfoReturnable<Boolean> cir){
-        if(this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == BTWItems.enderSpectacles.itemID){
+        if((this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == BTWItems.enderSpectacles.itemID)
+                || ArmorSetHelper.isWearingCompleteDarkSet(this)
+                || ArmorSetHelper.isWearingCompleteQuicksilverSet(this)){
             cir.setReturnValue(false);
         }
     }
@@ -176,17 +179,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void keepUnprotectedPlayerBurningInNether(CallbackInfo ci) {
-        if (this.dimension == -1 && !this.isWearingFullDiamondArmor() && !NightmareMode.devMode) {
+        if (this.dimension == -1 && !ArmorSetHelper.isProtectedFromNetherAmbientHeat(this) && !NightmareMode.devMode) {
             this.setFire(2);
         }
-    }
-
-    @Unique
-    private boolean isWearingFullDiamondArmor() {
-        return this.getCurrentItemOrArmor(1) != null && this.getCurrentItemOrArmor(1).itemID == Item.bootsDiamond.itemID
-                && this.getCurrentItemOrArmor(2) != null && this.getCurrentItemOrArmor(2).itemID == Item.legsDiamond.itemID
-                && this.getCurrentItemOrArmor(3) != null && this.getCurrentItemOrArmor(3).itemID == Item.plateDiamond.itemID
-                && this.getCurrentItemOrArmor(4) != null && this.getCurrentItemOrArmor(4).itemID == Item.helmetDiamond.itemID;
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))

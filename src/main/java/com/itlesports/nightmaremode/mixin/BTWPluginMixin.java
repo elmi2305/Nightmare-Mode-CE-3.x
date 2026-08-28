@@ -78,6 +78,23 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMItems.refinedDiamondIngot, 0, "nm.refineddiamond.info");
         this.info(registry, NMItems.witherSoul, 0, "nm.withersoul.info");
         this.info(registry, NMItems.obsidianShard, 0, "nm.obsidianshard.info");
+        this.info(registry, NMItems.heatResistantHelmet, 0, "nm.heatResistantArmor.info");
+        this.info(registry, NMItems.divingTank, 0, "nm.divingTank.info");
+        this.info(registry, NMItems.saturatedCoresteelCharge, 0, "nm.coresteelCooling.info");
+        this.info(registry, NMItems.coresteelChestplate, 0, "nm.coresteelArmor.info");
+        this.info(registry, NMItems.deadzoneChestplate, 0, "nm.deadzoneArmor.info");
+        this.info(registry, NMItems.sunReservoir, 0, "nm.sunArmor.info");
+        this.info(registry, NMItems.signalChestplate, 0, "nm.signalArmor.info");
+        this.info(registry, NMItems.azureChestplate, 0, "nm.azureArmor.info");
+        this.info(registry, NMItems.prismaticChestplate, 0, "nm.prismaticArmor.info");
+        this.info(registry, NMItems.refinedPrismaChestplate, 0, "nm.refinedPrismaArmor.info");
+        this.info(registry, NMItems.verdantChestplate, 0, "nm.verdantArmor.info");
+        this.info(registry, NMItems.glassChestplate, 0, "nm.glassArmor.info");
+        this.info(registry, NMItems.blackglassChestplate, 0, "nm.blackglassArmor.info");
+        this.info(registry, NMItems.quartzglassChestplate, 0, "nm.quartzglassArmor.info");
+        this.info(registry, NMItems.darkChestplate, 0, "nm.darkArmor.info");
+        this.info(registry, NMItems.quicksilverChestplate, 0, "nm.quicksilverArmor.info");
+        this.info(registry, NMItems.anchorChestplate, 0, "nm.anchorArmor.info");
 
         // blocks
 

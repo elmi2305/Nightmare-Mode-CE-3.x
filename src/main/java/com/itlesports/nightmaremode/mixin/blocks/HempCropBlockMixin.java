@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.HempCropBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +21,11 @@ public class HempCropBlockMixin {
             int z,
             CallbackInfoReturnable<Float> cir
     ) {
+        if (ChunkPollutionManager.isAtLeast(world, x, z, ChunkPollutionManager.BIOLOGICAL_DAMAGE)) {
+            world.setBlockToAir(x, y, z);
+            cir.setReturnValue(0.0F);
+            return;
+        }
         cir.setReturnValue(ChunkAttributeManager.adjustGrowthChance(
                 0.01F,
                 world,

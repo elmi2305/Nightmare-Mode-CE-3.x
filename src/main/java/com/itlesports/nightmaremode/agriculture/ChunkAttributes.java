@@ -10,7 +10,7 @@ import java.util.Map;
 public final class ChunkAttributes {
     public static final float MAX_VALUE = 100.0F;
     private static final String NBT_KEY = "NMChunkAttributes";
-    private static final int DATA_VERSION = 3;
+    private static final int DATA_VERSION = 4;
     private static final long MIGRATED_FERTILIZER_DURATION = 24000L;
 
     private final EnumMap<ChunkAttribute, Float> values = new EnumMap<>(ChunkAttribute.class);
@@ -23,6 +23,9 @@ public final class ChunkAttributes {
     private int fish;
     private int maxFish;
     private boolean fishInitialized;
+    private float pollution;
+    private byte pollutionVisualBand = -1;
+    private float lastClientSyncedPollution = Float.NaN;
 
     public boolean isInitialized() {
         return this.initialized;
@@ -57,6 +60,8 @@ public final class ChunkAttributes {
         this.ownerDimension = dimension;
         this.rollSeed = rollSeed;
         this.initializeFish(fishCapacity);
+        // Pollution is deliberately never rolled from terrain generation.
+        this.pollution = 0.0F;
         this.initialized = true;
     }
 
@@ -71,6 +76,35 @@ public final class ChunkAttributes {
 
     public void consume(ChunkAttribute attribute, float amount) {
         this.add(attribute, -amount);
+    }
+
+    public float getPollution() {
+        return this.pollution;
+    }
+
+    public void addPollution(float amount) {
+        this.pollution = Math.max(0.0F, Math.min(10000.0F, this.pollution + amount));
+    }
+
+    /** Used by the client-side pollution visual sync. */
+    public void setPollution(float pollution) {
+        this.pollution = Math.max(0.0F, Math.min(10000.0F, pollution));
+    }
+
+    public byte getPollutionVisualBand() {
+        return this.pollutionVisualBand;
+    }
+
+    public void setPollutionVisualBand(byte pollutionVisualBand) {
+        this.pollutionVisualBand = pollutionVisualBand;
+    }
+
+    public float getLastClientSyncedPollution() {
+        return this.lastClientSyncedPollution;
+    }
+
+    public void setLastClientSyncedPollution(float lastClientSyncedPollution) {
+        this.lastClientSyncedPollution = lastClientSyncedPollution;
     }
 
     public void setFarmlandFertilizer(
@@ -136,6 +170,7 @@ public final class ChunkAttributes {
         }
         tag.setInteger("Fish", this.fish);
         tag.setInteger("MaxFish", this.maxFish);
+        tag.setFloat("Pollution", this.pollution);
 
         NBTTagList fertilizers = new NBTTagList("FarmlandFertilizers");
         for (Map.Entry<Integer, FertilizerData> entry : this.farmlandFertilizers.entrySet()) {
@@ -177,6 +212,7 @@ public final class ChunkAttributes {
         this.ownerChunkZ = chunkZ;
         this.ownerDimension = dimension;
         this.rollSeed = tag.getLong("RollSeed");
+        this.pollution = Math.max(0.0F, Math.min(10000.0F, tag.getFloat("Pollution")));
         if (tag.hasKey("MaxFish")) {
             this.maxFish = Math.max(0, tag.getInteger("MaxFish"));
             this.fish = Math.max(0, Math.min(this.maxFish, tag.getInteger("Fish")));

@@ -8,8 +8,8 @@ import java.util.Random;
 
 /** A 54 x 54 sky landmark placed from structures/skyZiggurath.nbt at Y=200. */
 public class SkyZiggurath extends NMStructure {
-    public static final int MIN_CHUNKS_APART = 8;
-    public static final int MAX_CHUNKS_APART = 32;
+    public static final int MIN_CHUNKS_APART = 32;
+    public static final int MAX_CHUNKS_APART = 48;
     private static PaletteEntry[] palette;
 
     public SkyZiggurath() {

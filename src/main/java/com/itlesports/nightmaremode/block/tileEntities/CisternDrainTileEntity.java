@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.TileEntity;
 
@@ -15,7 +16,10 @@ public class CisternDrainTileEntity extends TileEntity {
 
         CisternTileEntity cisternAbove = this.resolveCisternAt(this.yCoord + 1);
         if (cisternAbove != null && this.worldObj.isBlockGettingPowered(this.xCoord, this.yCoord, this.zCoord)) {
+            int drainedFluid = cisternAbove.getFluid();
             if (cisternAbove.drainAndEjectContents(this.xCoord, this.yCoord, this.zCoord)) {
+                ChunkPollutionManager.pollute(this.worldObj, this.xCoord, this.yCoord, this.zCoord,
+                        this.pollutionForFluid(drainedFluid));
                 this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.25D, this.zCoord + 0.5D,
                         "random.pop", 0.4F, 0.7F);
             }
@@ -45,5 +49,16 @@ public class CisternDrainTileEntity extends TileEntity {
             return cisternInterface.getCistern();
         }
         return null;
+    }
+
+    private float pollutionForFluid(int fluid) {
+        return switch (fluid) {
+            case CisternTileEntity.FLUID_WATER -> 2.0F;
+            case CisternTileEntity.FLUID_BRINE -> 12.0F;
+            case CisternTileEntity.FLUID_SLURRY -> 35.0F;
+            case CisternTileEntity.FLUID_ACIDIC_WASH -> 50.0F;
+            case CisternTileEntity.FLUID_LAVA -> 20.0F;
+            default -> 0.0F;
+        };
     }
 }

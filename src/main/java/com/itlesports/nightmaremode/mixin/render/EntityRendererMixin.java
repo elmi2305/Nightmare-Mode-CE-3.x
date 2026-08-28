@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.mixin.entity.EntityAccessor;
@@ -58,6 +59,18 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 
     @Shadow
     protected abstract void setupFog(int par1, float par2);
+
+    @Inject(method = "setupFog", at = @At("TAIL"))
+    private void improveDivingMaskVisibility(int fogMode, float partialTicks, CallbackInfo ci) {
+        EntityLivingBase viewer = this.mc.renderViewEntity;
+        if (!(viewer instanceof EntityPlayer) || viewer.isPotionActive(Potion.blindness)
+                || !ArmorSetHelper.isWearingClearVisionMask(viewer)) return;
+        int blockID = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, viewer, partialTicks);
+        if (blockID > 0 && Block.blocksList[blockID].blockMaterial == Material.water) {
+            GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
+            GL11.glFogf(GL11.GL_FOG_DENSITY, 0.02F);
+        }
+    }
 
     @Shadow protected abstract float getNightVisionBrightness(EntityPlayer par1EntityPlayer, float par2);
     @Shadow protected abstract void updateLightmap(float par1);

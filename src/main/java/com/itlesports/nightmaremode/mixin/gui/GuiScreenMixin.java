@@ -1,7 +1,5 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.nmgui.GuiJoiningWorld;
 import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import com.itlesports.nightmaremode.util.interfaces.JourneyBrowserInput;
 import net.minecraft.src.*;
@@ -13,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
 
 @Mixin(GuiScreen.class)
 public class GuiScreenMixin {
@@ -28,34 +24,6 @@ public class GuiScreenMixin {
         return JourneyTitleTheme.getActive(Minecraft.getMinecraft()).background;
     }
 
-    /** Keep the pre-world terrain screens visually continuous with the themed loader. */
-    @ModifyArg(method = "drawBackground", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V"))
-    private int journeyMode$tintTerrainLoadingDirt(int vanillaColor) {
-        GuiScreen screen = (GuiScreen) (Object) this;
-        if (screen instanceof GuiDownloadTerrain || screen instanceof GuiJoiningWorld || screen instanceof GuiOptions) {
-            return JourneyTitleTheme.getActive(Minecraft.getMinecraft()).buttonFill & 0x00FFFFFF;
-        }
-        return vanillaColor;
-    }
-
-    @ModifyArg(method = "drawWorldBackground", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/GuiScreen;drawGradientRect(IIIIII)V"), index = 4)
-    private int journeyMode$tintOptionsGradientTop(int vanillaColor) {
-        GuiScreen screen = (GuiScreen) (Object) this;
-        return screen instanceof GuiOptions
-                ? JourneyTitleTheme.getActive(Minecraft.getMinecraft()).cardFill
-                : vanillaColor;
-    }
-
-    @ModifyArg(method = "drawWorldBackground", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/GuiScreen;drawGradientRect(IIIIII)V"), index = 5)
-    private int journeyMode$tintOptionsGradientBottom(int vanillaColor) {
-        GuiScreen screen = (GuiScreen) (Object) this;
-        return screen instanceof GuiOptions
-                ? JourneyTitleTheme.getActive(Minecraft.getMinecraft()).buttonFill
-                : vanillaColor;
-    }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))
     private void drawGlobalDarkness(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {

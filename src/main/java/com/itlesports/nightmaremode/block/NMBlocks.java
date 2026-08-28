@@ -160,6 +160,8 @@ public class NMBlocks {
     public static BlockMetaMultiTextured enderCeramic;
     public static Block enderAssembler;
     public static Block minerDrillTier4;
+    public static Block carburizedIronBloom;
+    public static Block saturatedCoresteelCharge;
 
 
 
@@ -183,6 +185,15 @@ public class NMBlocks {
 
         ironBloom = new BlockIronBloom(NMFields.BLOCK_IRON_BLOOM);
         Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256).hideFromEMI();
+
+        carburizedIronBloom = new BlockMaterialBloom(NMFields.BLOCK_CARBURIZED_IRON_BLOOM,
+                NMItems.carburizedIronBloom.itemID, "ifhyCarburizedIronBloom", "nightmare:ifhyCarburizedIronBloom");
+        Item.itemsList[carburizedIronBloom.blockID] = new NMItemBlock(carburizedIronBloom.blockID - 256).hideFromEMI();
+
+        saturatedCoresteelCharge = new BlockCoolingCharge(NMFields.BLOCK_SATURATED_CORESTEEL_CHARGE,
+                NMItems.saturatedCoresteelCharge.itemID, NMItems.cooledCoresteelCharge.itemID,
+                "ifhySaturatedCoresteelCharge", "nightmare:ifhySaturatedCoresteelCharge");
+        Item.itemsList[saturatedCoresteelCharge.blockID] = new NMNetherItemBlock(saturatedCoresteelCharge.blockID - 256).hideFromEMI();
 
         stoneAnvil = new BlockStoneAnvil(NMFields.BLOCK_STONE_ANVIL);
         Item.itemsList[stoneAnvil.blockID] = new NMItemBlock(NMBlocks.stoneAnvil.blockID - 256);
@@ -220,7 +231,7 @@ public class NMBlocks {
         obsidianMillstone = new BlockObsidianMillstone(2415);
         Item.itemsList[obsidianMillstone.blockID] = new NMItemBlock(obsidianMillstone.blockID - 256);
 
-        prismarine = new NMBlock(2416, Material.rock).setHardness(1.5F).setResistance(10.0F).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("nmPrismarine").setTextureName("nightmare:ifhyPrismarine").setCreativeTab(CreativeTabs.tabBlock);
+        prismarine = new NMBlock(2416, Material.rock).setHardness(1.5F).setResistance(10.0F).setStepSound(BTWBlocks.stoneStepSound).setUnlocalizedName("ifhyPrismarine").setTextureName("nightmare:ifhyPrismarine").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[prismarine.blockID] = new NMItemBlock(prismarine.blockID - 256);
 
         prismarineStairs = new BlockPrismarineStairs(2417, prismarine).setTextureName("nightmare:ifhyPrismarine");

@@ -20,12 +20,6 @@ public class LoadingScreenRendererMixin {
         return JourneyTitleTheme.getActive(this.mc).background;
     }
 
-    /** Keep the dependable vanilla loading renderer, but carry the menu's palette into it. */
-    @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 0))
-    private int journeyMode$tintLoadingDirt(int vanillaColor) {
-        return JourneyTitleTheme.getActive(this.mc).buttonFill & 0x00FFFFFF;
-    }
-
     @ModifyArg(method = "setLoadingProgress", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorOpaque_I(I)V", ordinal = 1))
     private int journeyMode$tintProgressTrack(int vanillaColor) {
         return JourneyTitleTheme.getActive(this.mc).edge & 0x00FFFFFF;

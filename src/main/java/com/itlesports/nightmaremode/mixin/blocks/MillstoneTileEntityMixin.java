@@ -2,6 +2,9 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.MillstoneBlock;
 import btw.block.tileentity.MillstoneTileEntity;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.block.tileEntities.ObsidianMillstoneTileEntity;
+import net.minecraft.src.Block;
 import btw.crafting.manager.MillStoneCraftingManager;
 import com.itlesports.nightmaremode.skill.SkillLockedBulkCrafting;
 import net.minecraft.src.ItemStack;
@@ -13,11 +16,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
 @Mixin(MillstoneTileEntity.class)
 public abstract class MillstoneTileEntityMixin extends TileEntity {
+    @Inject(method = "updateEntity", at = @At("TAIL"))
+    private void polluteWhileMilling(CallbackInfo ci) {
+        MillstoneTileEntity self = (MillstoneTileEntity)(Object)this;
+        if (this.worldObj == null || this.worldObj.isRemote || !self.isGrinding() || this.worldObj.getTotalWorldTime() % 20L != 0L) return;
+        ItemStack input = self.stackMilling;
+        float amount = input != null && input.itemID == Block.netherrack.blockID ? 12.0F : 2.0F;
+        if (self instanceof ObsidianMillstoneTileEntity) amount *= 0.3F;
+        ChunkPollutionManager.pollute(this.worldObj, this.xCoord, this.yCoord, this.zCoord, amount);
+    }
 
 
     @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 200))

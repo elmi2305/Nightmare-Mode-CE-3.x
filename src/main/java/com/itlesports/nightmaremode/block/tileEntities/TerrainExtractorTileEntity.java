@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
@@ -84,6 +85,7 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
         ItemStack result = this.getResult(attribute);
         if (this.inventory[2] == null) this.inventory[2] = result;
         else this.inventory[2].stackSize += result.stackSize;
+        ChunkPollutionManager.pollute(this.worldObj, this.xCoord, this.yCoord, this.zCoord, 70.0F);
         this.onInventoryChanged();
     }
 

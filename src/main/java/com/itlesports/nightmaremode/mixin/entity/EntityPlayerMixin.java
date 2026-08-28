@@ -12,16 +12,20 @@ import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
+import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
+import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemCarbonIronArmor;
+import com.itlesports.nightmaremode.item.items.ItemDivingGear;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -87,6 +91,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int heartCrackLength = 0;
     @Unique private int drowningUnconsciousTicks = -1;
     @Unique private int outerColdExposure;
+    @Unique private int outerSolarExposure;
+    @Unique private int carbonArmorWetTicks;
     @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
     @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
     ;
@@ -169,8 +175,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @ModifyVariable(method = "addExperience", at = @At("HEAD"), argsOnly = true)
     private int applySkillExperienceBonus(int amount) {
-        return amount <= 0 ? amount : Math.round(amount * (1.0F + this.nightmareMode$getSkillData().xpGainBonus
-                + SkillHandler.getWorldData(this.worldObj).globalXpGainBonus));
+        if (amount <= 0) return amount;
+        float verdantBonus = 0.0375F * ArmorSetHelper.getVerdantPieceCount(this);
+        return Math.round(amount * (1.0F + this.nightmareMode$getSkillData().xpGainBonus
+                + SkillHandler.getWorldData(this.worldObj).globalXpGainBonus + verdantBonus));
     }
 
     @Inject(method = "addExperience", at = @At("TAIL"))
@@ -191,7 +199,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @ModifyVariable(method = "attackTargetEntityWithCurrentItem", at = @At(value = "STORE"), ordinal = 0)
     private float applySkillMeleeDamage(float damage) {
-        return damage * (1.0F + this.nightmareMode$getSkillData().meleeDamageBonus);
+        float setMultiplier = ArmorSetHelper.isWearingCompleteDeadzoneSet(this)
+                || ArmorSetHelper.isWearingCompleteDarkSet(this) ? 1.5F : 1.0F;
+        return damage * (1.0F + this.nightmareMode$getSkillData().meleeDamageBonus) * setMultiplier;
+    }
+
+    @Inject(method = "attackTargetEntityWithCurrentItem", at = @At("TAIL"))
+    private void dischargeSignalArmor(Entity target, CallbackInfo ci) {
+        if (this.worldObj.isRemote || !(target instanceof EntityLivingBase)
+                || !ArmorSetHelper.isWearingCompleteSignalSet(this)) return;
+        int spent = ArmorSetHelper.drainSignalCharge(this, 160);
+        if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 160.0F);
     }
 
     public EntityPlayerMixin(World par1World) {
@@ -311,6 +329,27 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         if (this.capabilities.disableDamage && !src.canHarmInCreative()) {
             return false;
+        }
+        boolean fireDamage = src == DamageSource.inFire || src == DamageSource.onFire || src == DamageSource.lava;
+        if (fireDamage && ArmorSetHelper.isWearingCompleteDeadzoneSet(this)) {
+            this.extinguish();
+            return false;
+        }
+        if (fireDamage && ArmorSetHelper.isWearingCompleteDarkSet(this)) {
+            this.extinguish();
+            return false;
+        }
+        if (fireDamage && !this.worldObj.isRemote && ArmorSetHelper.isWearingCompleteCoresteelSet(this)) {
+            float heatPerDamage = src == DamageSource.lava ? 160.0F : 60.0F;
+            int remainingCapacity = ArmorSetHelper.getCoresteelRemainingHeatCapacity(this);
+            int absorbedHeat = Math.min(remainingCapacity, MathHelper.ceiling_float_int(amount * heatPerDamage));
+            if (absorbedHeat > 0 && ArmorSetHelper.addCoresteelHeat(this, absorbedHeat)) {
+                amount = Math.max(0.0F, amount - absorbedHeat / heatPerDamage);
+                if (amount <= 0.0F) return false;
+            }
+        }
+        if (src == DamageSource.inFire || src == DamageSource.onFire) {
+            amount *= 1.0F - ArmorSetHelper.getFireTimeReduction(this);
         }
         this.entityAge = 0;
         if (this.getHealth() <= 0.0f) {
@@ -812,7 +851,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         this.addonStuff();
 
         if (devMode && !this.worldObj.isRemote && this.ticksExisted % 20 == 0 && this.isSneaking()) {
-            System.out.println(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
+            ((EntityPlayer)(Object)this).addChatMessage(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
         }
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
@@ -970,7 +1009,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
         // manage blight effects
-        if((this.ticksExisted & 16) == 0) {
+        if(false && (this.ticksExisted & 16) == 0) {
             if (!this.capabilities.isCreativeMode && this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID) {
                 EntityPlayer thisObj = (EntityPlayer) (Object) this;
 
@@ -1157,6 +1196,37 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void corrodeWetCarbonIronArmor(CallbackInfo ci) {
+        if (this.worldObj.isRemote || !this.isEntityAlive()) return;
+
+        int x = MathHelper.floor_double(this.posX);
+        int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
+        int z = MathHelper.floor_double(this.posZ);
+        boolean wet = this.isInWater() || this.worldObj.isRainingAtPos(x, y, z);
+        if (!wet) {
+            this.carbonArmorWetTicks = Math.max(0, this.carbonArmorWetTicks - 4);
+            return;
+        }
+
+        if (++this.carbonArmorWetTicks < 200) return;
+        this.carbonArmorWetTicks = 0;
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        Item[] carbonPieces = {
+                NMItems.carbonIronBoots,
+                NMItems.carbonIronLeggings,
+                NMItems.carbonIronChestplate,
+                NMItems.carbonIronHelmet
+        };
+        for (int slot = 0; slot < carbonPieces.length; ++slot) {
+            ItemStack stack = this.getCurrentArmor(slot);
+            if (stack != null && stack.itemID == carbonPieces[slot].itemID
+                    && !ItemCarbonIronArmor.isWaxed(stack)) {
+                stack.damageItem(1, player);
+            }
+        }
+    }
+
 
 
     @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
@@ -1255,6 +1325,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return;
         }
 
+        if (this.consumeDivingTankAir()) return;
+
         this.setAir(this.getAir() - 1);
         if (this.getAir() <= -20) {
             this.setAir(0);
@@ -1262,9 +1334,37 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "decreaseAirSupply", at = @At("HEAD"), cancellable = true)
+    private void breatheFromDivingTankUnderwater(int currentAir, CallbackInfoReturnable<Integer> cir) {
+        ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
+        if (tank == null || !(tank.getItem() instanceof ItemDivingGear gear) || gear.getStoredAir(tank) <= 0) {
+            return;
+        }
+        if (!this.worldObj.isRemote) this.consumeDivingTankAir(tank, gear);
+        cir.setReturnValue(currentAir);
+    }
+
+    @Unique
+    private boolean consumeDivingTankAir() {
+        ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
+        if (tank == null || !(tank.getItem() instanceof ItemDivingGear gear) || gear.getStoredAir(tank) <= 0) {
+            return false;
+        }
+        if (!this.worldObj.isRemote) this.consumeDivingTankAir(tank, gear);
+        return true;
+    }
+
+    @Unique
+    private void consumeDivingTankAir(ItemStack tank, ItemDivingGear gear) {
+        float remaining = tank.getMaxDamage() <= 0 ? 1.0F
+                : 1.0F - (float)tank.getItemDamage() / (float)tank.getMaxDamage();
+        int airCost = remaining < 0.1F ? 4 : remaining < 0.5F ? 2 : 1;
+        gear.consumeAir(tank, airCost);
+    }
+
     @Inject(method = "recoverAirSupply", at = @At(value = "HEAD"), cancellable = true)
     private void preventAirRecoveryInDeepCaves(CallbackInfo ci) {
-        if (this.shouldLoseOxygenInDeepCave()) {
+        if (this.shouldLoseOxygenInDeepCave() || this.shouldLoseOxygenAtAltitude()) {
             ci.cancel();
         }
     }
@@ -1283,7 +1383,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         double y = Math.max(24.0D, this.posY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
         int baseInterval = Math.max(1, (int)Math.round(8.0D - depthRatio * 7.0D));
-        float reduction = Math.min(this.getOxygenGearReduction(), 0.8F);
+        float cap = ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
+        float reduction = Math.min(this.getOxygenGearReduction(), cap);
         return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction)));
     }
 
@@ -1304,6 +1405,34 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Override
     protected float applyArmorCalculations(DamageSource damageSource, float damageAmount) {
+        int azurePieces = ArmorSetHelper.getPieceCount(this, NMItems.azureHelmet, NMItems.azureChestplate,
+                NMItems.azureLeggings, NMItems.azureBoots);
+        int prismaticPieces = ArmorSetHelper.getPieceCount(this, NMItems.prismaticHelmet, NMItems.prismaticChestplate,
+                NMItems.prismaticLeggings, NMItems.prismaticBoots, NMItems.refinedPrismaHelmet,
+                NMItems.refinedPrismaChestplate, NMItems.refinedPrismaLeggings, NMItems.refinedPrismaBoots);
+        int quartzPieces = ArmorSetHelper.getPieceCount(this, NMItems.quartzglassHelmet, NMItems.quartzglassChestplate,
+                NMItems.quartzglassLeggings, NMItems.quartzglassBoots);
+        Entity attacker = damageSource.getSourceOfDamage();
+        boolean projectile = attacker instanceof EntityArrow || attacker instanceof EntityFireball;
+        if (damageSource == DamageSource.magic) {
+            damageAmount *= 1.0F - 0.06F * azurePieces - 0.04F * quartzPieces;
+            if (ArmorSetHelper.isWearingCompleteDarkSet(this)) damageAmount *= 0.65F;
+        }
+        if (projectile) damageAmount *= 1.0F - 0.09F * prismaticPieces;
+        if (damageSource.isExplosion()) {
+            if (ArmorSetHelper.isWearingCompleteBlackglassSet(this)) damageAmount *= 0.45F;
+            if (ArmorSetHelper.isWearingCompleteRefinedPrismaSet(this)) damageAmount *= 0.80F;
+        }
+        if (damageSource == DamageSource.fall) {
+            ItemStack boots = this.getCurrentArmor(0);
+            if (boots != null && boots.itemID == NMItems.sunBoots.itemID && ArmorSetHelper.isIntact(boots)) {
+                damageAmount *= 0.6F;
+            } else if (ArmorSetHelper.isWearingCompleteNickelWorkSet(this)) {
+                damageAmount *= 0.85F;
+            }
+            if (ArmorSetHelper.isWearingCompleteQuicksilverSet(this)) damageAmount *= 0.45F;
+            if (ArmorSetHelper.isWearingCompleteAnchorSet(this)) damageAmount *= 0.35F;
+        }
         if(damageSource.getSourceOfDamage() instanceof IFlowerMob){
             return (damageAmount / 2) + super.applyArmorCalculations(damageSource, damageAmount);
         }
@@ -1351,7 +1480,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ);
 
         if (!this.worldObj.isRemote && region == OverworldTierHelper.Region.CRUEL_DESERT
-                && !this.isWearingFullDiamondArmor() && this.ticksExisted % 20 == 0) {
+                && !ArmorSetHelper.isWearingCompleteHeatResistantSet(this) && this.ticksExisted % 20 == 0) {
             this.setFire(3);
         }
 
@@ -1367,7 +1496,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             if (this.isNearOuterHeatSource(x, y, z)) {
                 this.outerColdExposure = Math.max(0, this.outerColdExposure - 20);
             } else if (this.worldObj.canBlockSeeTheSky(x, y, z)) {
-                this.outerColdExposure = Math.min(1200, this.outerColdExposure + 1);
+                int reinforcedPieces = ArmorSetHelper.getReinforcedIronPieceCount(this);
+                if (this.ticksExisted % 8 >= reinforcedPieces) {
+                    this.outerColdExposure = Math.min(1200, this.outerColdExposure + 1);
+                }
             } else {
                 this.outerColdExposure = Math.max(0, this.outerColdExposure - 2);
             }
@@ -1381,24 +1513,103 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (!this.worldObj.isRemote) this.spawnOuterFlyingMobs(region);
     }
 
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageCoresteelTemperature(CallbackInfo ci) {
+        if (this.worldObj.isRemote || !this.isEntityAlive()) return;
+        int x = MathHelper.floor_double(this.posX);
+        int y = MathHelper.floor_double(this.posY);
+        int z = MathHelper.floor_double(this.posZ);
+        boolean snowContact = this.worldObj.getBlockId(x, y, z) == Block.snow.blockID
+                || this.worldObj.getBlockId(x, y - 1, z) == Block.blockSnow.blockID;
+        if (this.isWet() || snowContact) ArmorSetHelper.coolCoresteel(this, this.isInWater() ? 4 : 2);
+        if (ArmorSetHelper.isWearingCompleteDeadzoneSet(this)) this.extinguish();
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageDeferredArmorEffects(CallbackInfo ci) {
+        if (this.worldObj.isRemote || !this.isEntityAlive()) return;
+
+        if (ArmorSetHelper.isWearingCompleteGlassSet(this)) {
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30, 0));
+        }
+        if (ArmorSetHelper.isWearingCompleteQuicksilverSet(this)) {
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30, 1));
+        }
+
+        if (!ArmorSetHelper.isWearingCompleteSignalSet(this)) return;
+        if (this.isInWater()) {
+            ArmorSetHelper.drainSignalCharge(this, 20);
+            return;
+        }
+
+        int x = MathHelper.floor_double(this.posX);
+        int y = MathHelper.floor_double(this.boundingBox.minY - 0.1D);
+        int z = MathHelper.floor_double(this.posZ);
+        boolean powered = this.worldObj.isBlockGettingPowered(x, y, z)
+                || this.worldObj.isBlockGettingPowered(x, y - 1, z);
+        if (powered && this.ticksExisted % 10 == 0) {
+            ArmorSetHelper.addSignalCharge(this, 8);
+            this.foodStats.addExhaustion(0.01F);
+        }
+        int railId = this.worldObj.getBlockId(x, y, z);
+        if (railId == Block.railPowered.blockID && (this.worldObj.getBlockMetadata(x, y, z) & 8) != 0
+                && ArmorSetHelper.getSignalCharge(this) >= 40) {
+            ArmorSetHelper.drainSignalCharge(this, 2);
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30, 0));
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void manageHighAltitudeHazards(CallbackInfo ci) {
+        if (this.worldObj.isRemote || !this.isEntityAlive() || this.capabilities.disableDamage || this.dimension != 0) {
+            this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 8);
+            return;
+        }
+
+        if (this.shouldLoseOxygenAtAltitude()) {
+            int interval = Math.max(2, 20 - MathHelper.floor_double((this.posY - 120.0D) / 5.0D));
+            if (this.ticksExisted % interval == 0 && !this.consumeDivingTankAir()) {
+                this.setAir(this.getAir() - 1);
+                if (this.getAir() <= -20) {
+                    this.setAir(0);
+                    this.attackEntityFrom(DamageSource.drown, 2.0F);
+                }
+            }
+        }
+
+        int x = MathHelper.floor_double(this.posX);
+        int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
+        int z = MathHelper.floor_double(this.posZ);
+        boolean exposed = this.posY > 160.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
+        if (!exposed || ArmorSetHelper.hasSuppliedSunSet(this)) {
+            this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 12);
+            return;
+        }
+
+        boolean day = this.worldObj.isDaytime();
+        boolean rain = this.worldObj.isRainingAtPos(x, y, z);
+        this.outerSolarExposure = Math.min(400, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
+        if (this.outerSolarExposure >= 100 && this.ticksExisted % 40 == 0) {
+            this.attackEntityFrom(DamageSource.magic, day && !rain ? 2.0F : 1.0F);
+        }
+    }
+
+    @Unique
+    private boolean shouldLoseOxygenAtAltitude() {
+        return this.dimension == 0 && this.posY > 120.0D && !this.capabilities.disableDamage
+                && this.isEntityAlive() && !this.isInsideOfMaterial(Material.water);
+    }
+
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
     private void saveOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
         tag.setInteger("nmOuterColdExposure", this.outerColdExposure);
+        tag.setInteger("nmOuterSolarExposure", this.outerSolarExposure);
     }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
     private void loadOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
         this.outerColdExposure = tag.getInteger("nmOuterColdExposure");
-    }
-
-    @Unique
-    private boolean isWearingFullDiamondArmor() {
-        for (int slot = 0; slot < 4; ++slot) {
-            ItemStack stack = this.getCurrentArmor(slot);
-            if (stack == null || !(stack.getItem() instanceof ItemArmor armor)
-                    || armor.getArmorMaterial() != EnumArmorMaterial.DIAMOND) return false;
-        }
-        return true;
+        this.outerSolarExposure = tag.getInteger("nmOuterSolarExposure");
     }
 
     @Unique
