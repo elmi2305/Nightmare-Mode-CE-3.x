@@ -872,9 +872,9 @@ public class NMItems {
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronBoots");
 
         nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 560, 10, 0.0D,
-                nickelPlate, "oxygenGear", "item.ifhyNickelWorkArmor.bonus", "ifhyNickelWorkLeggings");
+                nickelPlate, "oxygenGear","ifhyNickelWorkLeggings");
         nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 400, 10, 0.0D,
-                nickelPlate, "oxygenGear", "item.ifhyNickelWorkArmor.bonus", "ifhyNickelWorkBoots");
+                nickelPlate, "oxygenGear", "ifhyNickelWorkBoots");
 
         heatResistantHelmet = heatArmor(3284, 0, 3, 4, EnumArmorMaterial.DIAMOND.getDurability(0),
                 "ifhyHeatResistantHelmet");
@@ -1035,6 +1035,13 @@ public class NMItems {
                                               String wornTexture, String bonusKey, String name) {
         return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability,
                 knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
+                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    }
+    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses,
+                                             int enchantability, double knockbackResistance, Item repairItem,
+                                             String wornTexture, String name) {
+        return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability,
+                knockbackResistance, repairItem.itemID, wornTexture, null)
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
 

@@ -32,6 +32,19 @@ public class ItemAlloyArmor extends ArmorItemMod {
         this.setInfernalMaxEnchantmentCost(50);
         this.setInfernalMaxNumEnchants(3);
     }
+    public ItemAlloyArmor(int id, int armorType, int protection, int weight, int maxUses,
+                          int enchantability, double knockbackResistance, int repairItemID,
+                          String wornTexturePrefix) {
+        super(id, EnumArmorMaterial.IRON, 6, armorType, weight, knockbackResistance);
+        this.damageReduceAmount = protection;
+        this.setMaxDamage(maxUses);
+        this.enchantability = enchantability;
+        this.repairItemID = repairItemID;
+        this.wornTexturePrefix = wornTexturePrefix;
+        this.setBonusKey = null;
+        this.setInfernalMaxEnchantmentCost(50);
+        this.setInfernalMaxNumEnchants(3);
+    }
 
     @Override
     public int getItemEnchantability() {
