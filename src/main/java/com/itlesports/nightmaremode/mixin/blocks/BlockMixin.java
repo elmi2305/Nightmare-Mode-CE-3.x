@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import api.item.util.ItemUtils;
+import api.util.MiscUtils;
 import btw.item.BTWItems;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -79,6 +81,26 @@ public abstract class BlockMixin {
         }
 
         ci.cancel();
+    }
+
+    @Inject(method = "harvestBlock", at = @At("TAIL"))
+    private void dropPotashFromNaturalStone(World world, EntityPlayer player, int x, int y, int z, int metadata,
+                                            CallbackInfo ci) {
+        if (world.isRemote || EnchantmentHelper.getSilkTouchModifier(player)) {
+            return;
+        }
+
+        int chance = 0;
+        if (this.blockID == Block.stone.blockID && metadata >= 0 && metadata <= 2) {
+            chance = 256;
+        } else if (this.blockID == Block.sandStone.blockID && metadata == 0) {
+            chance = 128;
+        }
+
+        if (chance > 0 && world.rand.nextInt(chance) == 0) {
+            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.potash),
+                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+        }
     }
 
     @Inject(method = "getPlayerRelativeBlockHardness", at = @At("HEAD"), cancellable = true)
