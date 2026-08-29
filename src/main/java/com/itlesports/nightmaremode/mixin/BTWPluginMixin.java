@@ -1,25 +1,39 @@
 package com.itlesports.nightmaremode.mixin;
 
+import api.item.items.AxeItem;
 import btw.block.BTWBlocks;
 import btw.block.blocks.MushroomBlockBrown;
 import btw.block.blocks.MushroomCapBlock;
 import btw.block.blocks.legacy.LegacyMushroomCapBlock;
 import btw.item.BTWItems;
+import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.integration.emi.NightmareEmiRegistry;
+import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.EmiRegistry;
+import emi.dev.emi.emi.api.recipe.EmiRecipe;
+import emi.dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
+import emi.dev.emi.emi.api.stack.EmiIngredient;
+import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockMushroom;
 import net.minecraft.src.BlockMushroomCap;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(BTWPlugin.class)
 public abstract class BTWPluginMixin {
@@ -31,6 +45,133 @@ public abstract class BTWPluginMixin {
     @Inject(method = "register", at = @At("TAIL"), remap = false)
     private void registerNightmareRecipes(EmiRegistry registry, CallbackInfo ci) {
         NightmareEmiRegistry.register(registry);
+    }
+
+    @Inject(method = "addWorldRecipes", at = @At("TAIL"), remap = false)
+    private void correctWorldInteractionRecipes(EmiRegistry registry, CallbackInfo ci) {
+        List<EmiStack> logTools = getLogConversionTools();
+        List<EmiStack> stumpTools = getStumpConversionTools();
+        List<EmiStack> logs = getLogs();
+
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("crafting_stump"))
+                .leftInput(EmiIngredient.of(stumpTools)).rightInput(EmiIngredient.of(logs), false, sw -> {
+                    sw.appendTooltip(EmiPort.translatable("emi.world_interaction.btw.crafting_stump"));
+                    return sw;
+                }).output(EmiStack.of(BTWBlocks.workStump)).supportsRecipeTree(false).build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("string_from_web"))
+                .leftInput(EmiStack.of(BTWItems.sharpStone)).rightInput(EmiStack.of(BTWBlocks.web), false)
+                .output(EmiStack.of(NMItems.spiderSilk)).supportsRecipeTree(true).build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("brick_sundrying"))
+                .leftInput(EmiStack.of(BTWItems.unfiredCrudeBrick)).rightInput(EmiStack.of(Item.pocketSundial), false, sw -> {
+                    sw.appendTooltip(EmiPort.literal("Requires 36,000 ticks of direct daylight (about three full sunny days)."));
+                    return sw;
+                }).output(EmiStack.of(Item.brick)).supportsRecipeTree(true).build());
+
+        replaceLogInteractionRecipe(registry, "shaft_from_chiseling", logTools, logs, EmiStack.of(Item.stick),
+                "emi.world_interaction.btw.shaft_from_chiseling");
+        replaceLogInteractionRecipe(registry, "sawdust_from_chiseling", logTools, logs, EmiStack.of(BTWItems.sawDust),
+                "emi.world_interaction.btw.sawdust_from_chiseling");
+        replaceLogInteractionRecipe(registry, "oak_bark_from_chiseling", logTools,
+                List.of(EmiStack.of(new ItemStack(Block.wood, 1, 0))), EmiStack.of(new ItemStack(BTWItems.bark, 1, 0)),
+                "emi.world_interaction.btw.bark_from_chiseling");
+        replaceLogInteractionRecipe(registry, "spruce_bark_from_chiseling", logTools,
+                List.of(EmiStack.of(new ItemStack(Block.wood, 1, 1))), EmiStack.of(new ItemStack(BTWItems.bark, 1, 1)),
+                "emi.world_interaction.btw.bark_from_chiseling");
+        replaceLogInteractionRecipe(registry, "birch_bark_from_chiseling", logTools,
+                List.of(EmiStack.of(new ItemStack(Block.wood, 1, 2))), EmiStack.of(new ItemStack(BTWItems.bark, 1, 2)),
+                "emi.world_interaction.btw.bark_from_chiseling");
+        replaceLogInteractionRecipe(registry, "jungle_bark_from_chiseling", logTools,
+                List.of(EmiStack.of(new ItemStack(Block.wood, 1, 3))), EmiStack.of(new ItemStack(BTWItems.bark, 1, 3)),
+                "emi.world_interaction.btw.bark_from_chiseling");
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("wood_clump_from_chiseling"))
+                .leftInput(EmiIngredient.of(logTools)).rightInput(EmiIngredient.of(logs), false)
+                .output(EmiStack.of(new ItemStack(NMItems.woodClump, 1, 199))).supportsRecipeTree(true).build());
+
+        replaceStoneBrickRecipe(registry, "stone_brick_from_chiseling", EmiIngredient.of(List.of(
+                EmiStack.of(BTWItems.ironChisel), EmiStack.of(BTWItems.diamondChisel))), 0);
+        replaceStoneBrickRecipe(registry, "deepslate_brick_from_chiseling", EmiIngredient.of(List.of(
+                EmiStack.of(BTWItems.ironChisel), EmiStack.of(BTWItems.diamondChisel))), 1);
+        replaceStoneBrickRecipe(registry, "blackstone_brick_from_chiseling", EmiStack.of(BTWItems.diamondChisel), 2);
+    }
+
+    @Unique
+    private static void replaceLogInteractionRecipe(EmiRegistry registry, String id, List<EmiStack> tools,
+                                                    List<EmiStack> logs, EmiStack output, String tooltip) {
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId(id))
+                .leftInput(EmiIngredient.of(tools)).rightInput(EmiIngredient.of(logs), false, sw -> {
+                    sw.appendTooltip(EmiPort.translatable(tooltip));
+                    return sw;
+                }).output(output).supportsRecipeTree(true).build());
+    }
+
+    @Unique
+    private static void replaceStoneBrickRecipe(EmiRegistry registry, String id, EmiIngredient chisel, int strata) {
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId(id))
+                .leftInput(chisel).rightInput(EmiStack.of(new ItemStack(Block.stone, 1, strata)), false)
+                .output(EmiStack.of(NMItems.roughStoneBrick)).supportsRecipeTree(true).build());
+    }
+
+    @Unique
+    private static ResourceLocation worldRecipeId(String name) {
+        return new ResourceLocation("emi", "/world/block_interaction/btw/" + name);
+    }
+
+    @Redirect(method = "addWorldRecipes", at = @At(value = "INVOKE",
+            target = "Lemi/dev/emi/emi/api/EmiRegistry;addRecipe(Lemi/dev/emi/emi/api/recipe/EmiRecipe;)V"), remap = false)
+    private void replaceModifiedWorldRecipes(EmiRegistry registry, EmiRecipe recipe) {
+        ResourceLocation id = recipe.getId();
+        if (id == null || !isModifiedWorldRecipe(id.getResourcePath())) {
+            registry.addRecipe(recipe);
+        }
+    }
+
+    @Unique
+    private static boolean isModifiedWorldRecipe(String path) {
+        return path.equals("/world/block_interaction/btw/crafting_stump")
+                || path.equals("/world/block_interaction/btw/string_from_web")
+                || path.equals("/world/block_interaction/btw/brick_sundrying")
+                || path.equals("/world/block_interaction/btw/shaft_from_chiseling")
+                || path.equals("/world/block_interaction/btw/sawdust_from_chiseling")
+                || path.equals("/world/block_interaction/btw/oak_bark_from_chiseling")
+                || path.equals("/world/block_interaction/btw/spruce_bark_from_chiseling")
+                || path.equals("/world/block_interaction/btw/birch_bark_from_chiseling")
+                || path.equals("/world/block_interaction/btw/jungle_bark_from_chiseling")
+                || path.equals("/world/block_interaction/btw/stone_brick_from_chiseling")
+                || path.equals("/world/block_interaction/btw/deepslate_brick_from_chiseling")
+                || path.equals("/world/block_interaction/btw/blackstone_brick_from_chiseling");
+    }
+
+    @Unique
+    private static List<EmiStack> getLogs() {
+        ArrayList<ItemStack> logs = new ArrayList<>();
+        Block.wood.getSubBlocks(Block.wood.blockID, Block.wood.getCreativeTabToDisplayOn(), logs);
+        return logs.stream().map(EmiStack::of).toList();
+    }
+
+    @Unique
+    private static List<EmiStack> getLogConversionTools() {
+        List<EmiStack> tools = new ArrayList<>();
+        for (Item item : Item.itemsList) {
+            if (item != null && (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
+                    || item instanceof ChiselItem || item instanceof AxeItem)) {
+                tools.add(EmiStack.of(item));
+            }
+        }
+        return tools;
+    }
+
+    @Unique
+    private static List<EmiStack> getStumpConversionTools() {
+        List<EmiStack> tools = new ArrayList<>();
+        for (Item item : Item.itemsList) {
+            if (item != null && (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
+                    || item == BTWItems.ironChisel || item == BTWItems.diamondChisel || item instanceof AxeItem)) {
+                tools.add(EmiStack.of(item));
+            }
+        }
+        return tools;
     }
 
     @Inject(method = "addInfoRecipes", at = @At("TAIL"),remap = false)
