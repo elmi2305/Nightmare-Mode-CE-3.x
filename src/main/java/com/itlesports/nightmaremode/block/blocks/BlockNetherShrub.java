@@ -7,11 +7,11 @@ import net.minecraft.src.*;
 import java.util.Random;
 
 public class BlockNetherShrub extends BlockFlower {
-    public static final int STICK_DROP_CHANCE = 8;
+    public static final int STICK_DROP_CHANCE = 4;
 
     public BlockNetherShrub(int id) {
         super(id, Material.vine);
-        this.setHardness(1.0F);
+        this.setHardness(0.5F);
         this.setStepSound(Block.soundGrassFootstep);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setUnlocalizedName("ifhyNetherShrub");
