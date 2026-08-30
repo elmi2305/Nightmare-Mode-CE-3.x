@@ -200,7 +200,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @ModifyVariable(method = "attackTargetEntityWithCurrentItem", at = @At(value = "STORE"), ordinal = 0)
     private float applySkillMeleeDamage(float damage) {
         float setMultiplier = ArmorSetHelper.isWearingCompleteDeadzoneSet(this)
-                || ArmorSetHelper.isWearingCompleteDarkSet(this) ? 1.5F : 1.0F;
+                || ArmorSetHelper.isWearingCompleteDarkSet(this) ? 1.25F : 1.0F;
         return damage * (1.0F + this.nightmareMode$getSkillData().meleeDamageBonus) * setMultiplier;
     }
 
