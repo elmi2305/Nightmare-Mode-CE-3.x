@@ -1591,7 +1591,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         int x = MathHelper.floor_double(this.posX);
         int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
         int z = MathHelper.floor_double(this.posZ);
-        boolean exposed = this.posY > 160.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
+        boolean exposed = this.posY > 140.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
         if (!exposed || ArmorSetHelper.hasSuppliedSunSet(this)) {
             this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 12);
             return;
@@ -1600,8 +1600,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         boolean day = this.worldObj.isDaytime();
         boolean rain = this.worldObj.isRainingAtPos(x, y, z);
         this.outerSolarExposure = Math.min(400, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
-        if (this.outerSolarExposure >= 100 && this.ticksExisted % 40 == 0) {
-            this.attackEntityFrom(DamageSource.magic, day && !rain ? 2.0F : 1.0F);
+        if (this.outerSolarExposure >= 100 && this.ticksExisted % 8 == 0) {
+            this.attackEntityFrom(DamageSource.magic, 1.0f);
         }
     }
 

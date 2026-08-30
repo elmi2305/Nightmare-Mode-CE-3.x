@@ -62,7 +62,17 @@ public class NMItems {
 
     public static ItemEclipseBow eclipseBow;
     public static ItemMagicArrow magicArrow;
-    public static ItemIronFishingPole ironFishingPole;
+    public static ItemUpgradeableFishingRod ironFishingPole;
+    public static ItemUpgradeableFishingRod ironFishingPoleBaited;
+    public static ItemUpgradeableFishingRod diamondFishingPole;
+    public static ItemUpgradeableFishingRod diamondFishingPoleBaited;
+    public static ItemUpgradeableFishingRod steelFishingPole;
+    public static ItemUpgradeableFishingRod steelFishingPoleBaited;
+    public static Item fishingBellUpgrade;
+    public static Item fishingLureUpgrade;
+    public static Item fishingAutoReelUpgrade;
+    public static Item rareFishLureUpgrade;
+    public static Item fishingEssence;
 
     public static FoodItem dungApple;
     public static FoodItem creeperBallSoup;
@@ -927,10 +937,10 @@ public class NMItems {
         tungstenBoots = netherArmor(3315, 3, 3, 6, 1100, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenBoots");
 
-        coresteelHelmet = coresteelArmor(3316, 0, 3, 6, 1300, 800, "ifhyCoresteelHelmet");
-        coresteelChestplate = coresteelArmor(3317, 1, 8, 10, 1300, 1600, "ifhyCoresteelChestplate");
-        coresteelLeggings = coresteelArmor(3318, 2, 6, 8, 1300, 1200, "ifhyCoresteelLeggings");
-        coresteelBoots = coresteelArmor(3319, 3, 3, 5, 1300, 800, "ifhyCoresteelBoots");
+        coresteelHelmet = coresteelArmor(3316, 0, 3, 6, 1300, 4800, "ifhyCoresteelHelmet");
+        coresteelChestplate = coresteelArmor(3317, 1, 8, 10, 1300, 9600, "ifhyCoresteelChestplate");
+        coresteelLeggings = coresteelArmor(3318, 2, 6, 8, 1300, 7200, "ifhyCoresteelLeggings");
+        coresteelBoots = coresteelArmor(3319, 3, 3, 5, 1300, 4800, "ifhyCoresteelBoots");
 
         deadzoneHelmet = netherArmor(3320, 0, 3, 4, 1500, 8, 0.05D, deadzoneAlloyIngot,
                 "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneHelmet");
@@ -1015,9 +1025,21 @@ public class NMItems {
         anchorLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
         anchorBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
 
-
-
-
+        ironFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3405, 2352, true, 250)
+                .setTextureName("nightmare:ifhyIronFishingRodBaited").setUnlocalizedName("ifhyIronFishingRodBaited");
+        diamondFishingPole = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3406, 3407, false, 768)
+                .setTextureName("nightmare:ifhyDiamondFishingRod").setUnlocalizedName("ifhyDiamondFishingRod").setCreativeTab(CreativeTabs.tabTools);
+        diamondFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3407, 3406, true, 768)
+                .setTextureName("nightmare:ifhyDiamondFishingRodBaited").setUnlocalizedName("ifhyDiamondFishingRodBaited");
+        steelFishingPole = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3408, 3409, false, 1024)
+                .setTextureName("nightmare:ifhySteelFishingRod").setUnlocalizedName("ifhySteelFishingRod").setCreativeTab(CreativeTabs.tabTools);
+        steelFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3409, 3408, true, 1024)
+                .setTextureName("nightmare:ifhySteelFishingRodBaited").setUnlocalizedName("ifhySteelFishingRodBaited");
+        fishingBellUpgrade = material(3410, "ifhyFishingBellUpgrade");
+        fishingLureUpgrade = material(3411, "ifhyFishingLureUpgrade");
+        fishingAutoReelUpgrade = material(3412, "ifhyFishingAutoReelUpgrade");
+        rareFishLureUpgrade = material(3413, "ifhyRareFishLureUpgrade");
+        fishingEssence = material(3414, "ifhyFishingEssence");
     }
 
     private static Item material(int id, String name) {
@@ -1158,7 +1180,8 @@ public class NMItems {
         steelBunch = new NMItem(2349).setTextureName("nightmare:nmSteelBunch").setUnlocalizedName("nmSteelBunch").setCreativeTab(CreativeTabs.tabMaterials);
         eclipseBow = (ItemEclipseBow) new ItemEclipseBow(2350).setCreativeTab(CreativeTabs.tabCombat);
         magicArrow = (ItemMagicArrow) new ItemMagicArrow(2351).setTextureName("nightmare:nmMagicArrow").setUnlocalizedName("nmMagicArrow").setCreativeTab(CreativeTabs.tabCombat);
-        ironFishingPole = (ItemIronFishingPole) new ItemIronFishingPole(2352).setCreativeTab(CreativeTabs.tabTools);
+        ironFishingPole = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(2352, 3405, false, 250)
+                .setTextureName("nightmare:ifhyIronFishingRod").setUnlocalizedName("ifhyIronFishingRod").setCreativeTab(CreativeTabs.tabTools);
 
         dungApple = (NMFoodItem) new NMFoodItem(2353, 2, 0.25f, false, "nmDungApple", false).setPotionEffect(Potion.poison.id, 1, 128, 1.0f).setTextureName("nightmare:nmDungApple").setCreativeTab(CreativeTabs.tabFood);
         creeperBallSoup = (NMFoodItem) new NMFoodItem(2354, 6, 1f, false, "nmOysterSoup", false).setPotionEffect(Potion.regeneration.id, 10, 4, 1.0f).setTextureName("nightmare:nmOysterSoup").hideFromEMI();
