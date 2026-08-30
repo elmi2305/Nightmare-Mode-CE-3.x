@@ -223,7 +223,15 @@ public final class ArmorSetHelper {
     public static boolean addCoresteelHeat(EntityLivingBase wearer, int amount) {
         if (!isWearingCompleteCoresteelSet(wearer) || amount <= 0
                 || getCoresteelRemainingHeatCapacity(wearer) < amount) return false;
+        int totalCapacity = getCoresteelRemainingHeatCapacity(wearer);
         int remaining = amount;
+        for (int slot = 1; slot <= 4 && remaining > 0; ++slot) {
+            ItemStack stack = wearer.getCurrentItemOrArmor(slot);
+            ItemCoresteelArmor armor = (ItemCoresteelArmor)stack.getItem();
+            int available = armor.getHeatCapacity() - armor.getStoredHeat(stack);
+            int share = Math.min(available, Math.round((float)amount * available / totalCapacity));
+            remaining -= armor.addHeat(stack, Math.min(share, remaining));
+        }
         for (int slot = 1; slot <= 4 && remaining > 0; ++slot) {
             ItemStack stack = wearer.getCurrentItemOrArmor(slot);
             ItemCoresteelArmor armor = (ItemCoresteelArmor)stack.getItem();
@@ -232,12 +240,41 @@ public final class ArmorSetHelper {
         return remaining <= 0;
     }
 
-    public static void coolCoresteel(EntityLivingBase wearer, int amountPerPiece) {
-        if (amountPerPiece <= 0) return;
+    /**
+     * Removes one shared cooling budget from the suit. This makes a single hot piece cool much
+     * faster than a fully heated set, while keeping equally heated pieces at similar percentages.
+     */
+    public static void coolCoresteel(EntityLivingBase wearer, int amount) {
+        if (amount <= 0) return;
+        int totalHeat = 0;
         for (int slot = 1; slot <= 4; ++slot) {
             ItemStack stack = wearer.getCurrentItemOrArmor(slot);
             if (isIntact(stack) && stack.getItem() instanceof ItemCoresteelArmor armor) {
-                armor.setStoredHeat(stack, armor.getStoredHeat(stack) - amountPerPiece);
+                totalHeat += armor.getStoredHeat(stack);
+            }
+        }
+
+        if (totalHeat <= 0) return;
+        int remaining = Math.min(amount, totalHeat);
+        for (int slot = 1; slot <= 4; ++slot) {
+            ItemStack stack = wearer.getCurrentItemOrArmor(slot);
+            if (isIntact(stack) && stack.getItem() instanceof ItemCoresteelArmor armor) {
+                int stored = armor.getStoredHeat(stack);
+                int share = Math.min(stored, Math.round((float)amount * stored / totalHeat));
+                int cooled = Math.min(share, remaining);
+                armor.setStoredHeat(stack, stored - cooled);
+                remaining -= cooled;
+            }
+        }
+        for (int slot = 1; slot <= 4 && remaining > 0; ++slot) {
+            ItemStack stack = wearer.getCurrentItemOrArmor(slot);
+            if (isIntact(stack) && stack.getItem() instanceof ItemCoresteelArmor armor) {
+                int stored = armor.getStoredHeat(stack);
+                if (stored > 0) {
+                    int cooled = Math.min(stored, remaining);
+                    armor.setStoredHeat(stack, stored - cooled);
+                    remaining -= cooled;
+                }
             }
         }
     }

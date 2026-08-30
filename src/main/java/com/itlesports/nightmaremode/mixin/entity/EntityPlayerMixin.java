@@ -340,7 +340,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return false;
         }
         if (fireDamage && !this.worldObj.isRemote && ArmorSetHelper.isWearingCompleteCoresteelSet(this)) {
-            float heatPerDamage = src == DamageSource.lava ? 160.0F : 60.0F;
+            float heatPerDamage = src == DamageSource.lava ? 30.0F : 20.0F;
             int remainingCapacity = ArmorSetHelper.getCoresteelRemainingHeatCapacity(this);
             int absorbedHeat = Math.min(remainingCapacity, MathHelper.ceiling_float_int(amount * heatPerDamage));
             if (absorbedHeat > 0 && ArmorSetHelper.addCoresteelHeat(this, absorbedHeat)) {
@@ -1521,7 +1521,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         int z = MathHelper.floor_double(this.posZ);
         boolean snowContact = this.worldObj.getBlockId(x, y, z) == Block.snow.blockID
                 || this.worldObj.getBlockId(x, y - 1, z) == Block.blockSnow.blockID;
-        if (this.isWet() || snowContact) ArmorSetHelper.coolCoresteel(this, this.isInWater() ? 4 : 2);
+        boolean lowerBodyInWater = this.isInWater();
+        boolean fullySubmerged = lowerBodyInWater && this.isInsideOfMaterial(Material.water);
+        if (fullySubmerged) {
+            ArmorSetHelper.coolCoresteel(this, 24);
+        } else if (lowerBodyInWater) {
+            ArmorSetHelper.coolCoresteel(this, 12);
+        } else if (this.isWet() || snowContact) {
+            ArmorSetHelper.coolCoresteel(this, 4);
+        } else if (this.dimension != -1 && !this.isBurning() && !this.handleLavaMovement()
+                && !this.isNearOuterHeatSource(x, y, z)) {
+            ArmorSetHelper.coolCoresteel(this, 1);
+        }
         if (ArmorSetHelper.isWearingCompleteDeadzoneSet(this)) this.extinguish();
     }
 
