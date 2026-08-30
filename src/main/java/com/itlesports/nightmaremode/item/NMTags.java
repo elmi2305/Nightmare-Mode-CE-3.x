@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.item;
 
 import api.item.tag.Tag;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.Item;
 import net.minecraft.src.ResourceLocation;
 
@@ -51,6 +52,22 @@ public class NMTags {
     public static final Tag netherSignalBinders = Tag.of(loc("nether_signal_binders"),
             NMItems.azureSalt,
             NMItems.searingSilverScale
+    );
+    public static final Tag hammers = Tag.of(loc("hammers"),
+            NMItems.woodHammer,
+            NMItems.stoneHammer,
+            NMItems.ironHammer,
+            NMItems.diamondHammer,
+            NMItems.goldHammer,
+            NMItems.steelHammer,
+            NMItems.netherrackHammer
+    );
+    public static final Tag anvils = Tag.of(loc("anvils"),
+            net.minecraft.src.Block.anvil,
+            NMBlocks.stoneAnvil,
+            NMBlocks.ironAnvil,
+            NMBlocks.diamondAnvil,
+            NMBlocks.netherrackAnvil
     );
 
     private static ResourceLocation loc(String name) {
