@@ -2849,7 +2849,7 @@ public final class NMSkillNodes {
             -1, 0,
             "Bring 16 blaze rods.",
             Item.blazeRod.itemID, 0, false, 16,
-            "Netherrack can be mined.", SkillRewardActions.unlockNetherrackMining(),
+            "Netherrack can be mined.", none(),
             COMBAT, false);
 
     public static final SkillNode BRING_ROTTEN_FLESH = bring(
@@ -3358,30 +3358,36 @@ public final class NMSkillNodes {
             "Unlock industrial third-ring masonry.", none(), MINING, false,
             BRING_NETHERRACK_TIER_THREE_256, BRING_DEADZONE_SHARD_64);
 
-    public static final SkillNode BRING_QUARTZ_16 = bring(
-            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 4, 5,
-            "Bring 16 nether quartz.", Item.netherQuartz.itemID, 0, false, 16,
-            "Unlock quartz-based Nether processing.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
-
     public static final SkillNode BRING_QUARTZ_DUST_32 = bring(
             "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, 3, 5,
             "Bring 32 quartz dust.", NMItems.quartzDust.itemID, 0, false, 32,
-            "Unlock quartz-dust components.", none(), MINING, false, BRING_QUARTZ_16);
+            "Unlock quartz-dust components.", none(), MINING, false);
+
+    public static final SkillNode BRING_QUARTZ_16 = bring(
+            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 4, 5,
+            "Bring 16 nether quartz.", Item.netherQuartz.itemID, 0, false, 16,
+            "Unlock quartz-based Nether processing.", none(), MINING, false, BRING_QUARTZ_DUST_32);
+
 
     public static final SkillNode BRING_NETHER_STICK_16 = bring(
             "nether_stick_16", "Infernal Handles", NMItems.netherStick, -2, -3,
             "Bring 16 nether sticks.", NMItems.netherStick.itemID, 0, false, 16,
-            "Unlock Nether-handled tools.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
+            "Unlock Nether-handled tools.", SkillRewardActions.unlockNetherrackMining(), MINING, false);
 
     public static final SkillNode BRING_NETHERRACK_CHUNK_16 = bring(
             "netherrack_chunk_16", "Netherrack Aggregate", NMItems.netherrackChunk, -1, -3,
             "Bring 16 netherrack chunks.", NMItems.netherrackChunk.itemID, 0, false, 16,
-            "Unlock netherrack construction recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
+            "Unlock netherrack construction recipes.", none(), MINING, false);
+
+    public static final SkillNode BRING_TUNGSTEN_DUST_32 = bring(
+            "tungsten_dust_32", "Tungsten Dust Survey", NMItems.tungstenDust, 0, 5,
+            "Bring 32 tungsten dust.", NMItems.tungstenDust.itemID, 0, false, 32,
+            "Unlock tungsten-dust consolidation.", none(), MINING, false, BRING_QUARTZ_DUST_32);
 
     public static final SkillNode BRING_TUNGSTEN_CHUNK_16 = bring(
             "tungsten_chunk_16", "Tungsten Prospecting", NMItems.tungstenChunk, -1, 5,
             "Bring 16 tungsten chunks.", NMItems.tungstenChunk.itemID, 0, false, 16,
-            "Unlock early tungsten processing.", none(), MINING, false, BRING_QUARTZ_16);
+            "Unlock early tungsten processing.", none(), MINING, false, BRING_TUNGSTEN_DUST_32);
 
     public static final SkillNode BRING_TUNGSTEN_CONCENTRATE_16 = bring(
             "tungsten_concentrate_16", "Tungsten Concentration", NMItems.tungstenConcentrate, -2, 3,
@@ -3431,27 +3437,22 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ASH_16 = bring(
             "nether_ash_16", "Ash Gathering", NMItems.ash, 0, -3,
             "Bring 16 ash.", NMItems.ash.itemID, 0, false, 16,
-            "Unlock ash-based Nether recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
+            "Unlock ash-based Nether recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_SOUL_CHIP_16 = bring(
             "soul_chip_16", "Soul Knapping", NMItems.soulChip, 2, -3,
             "Bring 16 soul chips.", NMItems.soulChip.itemID, 0, false, 16,
-            "Unlock soul-flint recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
+            "Unlock soul-flint recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_PIG_HIDE_16 = bring(
             "pig_hide_16", "Infernal Hidework", NMItems.pigHide, 3, -3,
             "Bring 16 pig hides.", NMItems.pigHide.itemID, 0, false, 16,
-            "Unlock pig-hide cordage.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
+            "Unlock pig-hide cordage.", none(), MINING, false);
 
     public static final SkillNode BRING_BONE_SHARD_16 = bring(
             "bone_shard_16", "Infernal Bonework", NMItems.boneShard, 7, -3,
             "Bring 16 bone shards.", NMItems.boneShard.itemID, 0, false, 16,
-            "Unlock Nether fishing components.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_64);
-
-    public static final SkillNode BRING_TUNGSTEN_DUST_32 = bring(
-            "tungsten_dust_32", "Tungsten Dust Survey", NMItems.tungstenDust, 0, 5,
-            "Bring 32 tungsten dust.", NMItems.tungstenDust.itemID, 0, false, 32,
-            "Unlock tungsten-dust consolidation.", none(), MINING, false, BRING_QUARTZ_DUST_32);
+            "Unlock Nether fishing components.", none(), MINING, false);
 
     public static final SkillNode BRING_CRUSHED_TUNGSTEN_16 = bring(
             "crushed_tungsten_16", "Tungsten Crushing", NMItems.crushedTungsten, -2, 4,
@@ -3501,7 +3502,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ASH_CLUMP_16 = bring(
             "ash_clump_16", "Compacted Ash", NMItems.ashClump, 1, -3,
             "Bring 16 ash clumps.", NMItems.ashClump.itemID, 0, false, 16,
-            "Unlock ash-sludge mixtures.", none(), MINING, false, BRING_ASH_16);
+            "Unlock ash-sludge mixtures.", none(), MINING, false);
 
     public static final SkillNode BRING_PIGHIDE_STRING_16 = bring(
             "pighide_string_16", "Infernal Cordage", NMItems.pighideString, 4, -3,
@@ -3512,12 +3513,12 @@ public final class NMSkillNodes {
             "nether_workbench_part_4", "Infernal Joinery", NMItems.netherWorkbenchPart, -2, 5,
             "Bring 4 Nether workbench parts.", NMItems.netherWorkbenchPart.itemID, 0, false, 4,
             "Unlock the Nether crafting table.", none(), MINING, false,
-            BRING_QUARTZ_DUST_32, BRING_TUNGSTEN_CHUNK_16);
+            BRING_QUARTZ_DUST_32, BRING_TUNGSTEN_DUST_32);
 
     public static final SkillNode BRING_OBSIDIAN_SHARD_16 = bring(
             "obsidian_shard_16", "Obsidian Shards", NMItems.obsidianShard, 6, 0,
             "Bring 16 obsidian shards.", NMItems.obsidianShard.itemID, 0, false, 16,
-            "Unlock shard consolidation.", none(), MINING, false, BRING_CRUDE_OBSIDIAN_16);
+            "Unlock shard consolidation.", none(), MINING, false);
 
     public static final SkillNode BRING_INVOCATION_FRAGMENT_4 = bring(
             "invocation_fragment_4", "Invocation Fragments", NMItems.invocationFragment, 8, 5,
@@ -3676,7 +3677,7 @@ public final class NMSkillNodes {
         BRING_STONE_BRICK_32.addParents(BRING_IRON_NUGGET_32, BRING_IRON_INGOT);
         MINE_BLOCK_1000.addParents(BRING_IRON_INGOT);
         BRING_POLISHED_CRYSTAL_SHARD_4.addParents(BRING_IRON_INGOT);
-        BRING_CRUDE_OBSIDIAN_16.addParents(BRING_DIAMOND_INGOT_2);
+        BRING_CRUDE_OBSIDIAN_16.addParents(BRING_DIAMOND_INGOT_2, BRING_OBSIDIAN_SHARD_16);
         BRING_CARBON_RICH_IRON_MIX_16.addParents(BRING_IRON_BLOOM_8, BRING_COAL_DUST_64);
         BRING_REINFORCED_IRON_INGOT_32.addParents(BRING_IRON_ARMOR_SET, BRING_RAW_LITHIUM_64, CRAFT_CAULDRON);
         BRING_THERMAL_LAMINATE_4.addParents(BRING_DIAMOND_ARMOR_SET,
@@ -3728,7 +3729,6 @@ public final class NMSkillNodes {
         BRING_IRON_ANVIL.addParents(
                 BRING_DIAMOND_16,
                 BRING_DIAMOND_HAMMER,
-                BRING_DENSE_NETHERRACK_CORE_16,
                 CRAFT_CAULDRON,
                 BRING_WOODEN_BLADE_16,
                 CRAFT_UNIQUE_RECIPE_OUTPUT_64,
@@ -3796,26 +3796,19 @@ public final class NMSkillNodes {
         BRING_WITCH_WART_64.addParents(KILL_WITCH_4);
         BRING_ENCHANTMENT_TABLE.addParents(MINE_DIAMOND_ORE_100);
         BRING_BLOOD_ORB_64.addParents(BRING_IRON_INGOT_16);
-        BRING_BLAZE_POWDER_16.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_VESSEL_OF_THE_DRAGON.addParents(BRING_DIAMOND_INGOT_8);
         CRAFT_CAULDRON.addParents(BRING_IRON_INGOT_16);
         BRING_SPIDER_EYE_64.addParents(KILL_SPIDER_100);
         BRING_END_ACCORD.addParents(KILL_WITHER);
         BRING_NETHER_INVOCATION_SEAL.addParents(KILL_WITHER);
-        BRING_GHAST_TEAR_16.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_GUNPOWDER_64.addParents(CRAFT_CAULDRON, BRING_BRIMSTONE_16);
         BRING_RUNED_WITHER_SKELETON_SKULL.addParents(BRING_NETHERRACK_TIER_ONE_64);
-        BRING_SOUL_SAND_512.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_SILK_16.addParents(KILL_SPIDER_100);
         BRING_UNFIRED_NETHER_BRICK_16.addParents(BRING_NETHERRACK_TIER_ONE_64);
-        BRING_SOUL_SAND_PILE_32.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_SOUL_URN_16.addParents(BRING_SOUL_SAND_PILE_32, BRING_IRON_INGOT_16);
         BRING_ENDER_PEARL_16.addParents(KILL_ENDERMAN_50);
-        BRING_BRIMSTONE_16.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_GUNPOWDER_16.addParents(CRAFT_CAULDRON, BRING_BRIMSTONE_16);
         BRING_BLASTING_OIL_16.addParents(BRING_GUNPOWDER_16);
-        BRING_HELLFIRE_DUST_32.addParents(BRING_NETHERRACK_TIER_ONE_64);
-        BRING_GROUND_NETHERRACK_32.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_CANDLE_16.addParents(BRING_TALLOW_16);
         BREW_POTION_64.addParents(CRAFT_CAULDRON, BRING_CANDLE_16);
 

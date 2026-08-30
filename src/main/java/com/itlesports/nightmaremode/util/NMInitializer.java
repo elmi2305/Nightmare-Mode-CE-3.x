@@ -3075,7 +3075,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
         SkillRecipeGates.crafting(Block.netherrack.blockID, 4, NMSkillNodes.BRING_NETHERRACK_TIER_THREE_64);
         SkillRecipeGates.crafting(NMItems.netherrackChunk.itemID,
-                NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64, NMSkillNodes.BRING_QUARTZ_DUST_32);
+                NMSkillNodes.BRING_NETHER_WORKBENCH_PART_4, NMSkillNodes.BRING_QUARTZ_DUST_32);
         SkillRecipeGates.crafting(NMItems.netherStick.itemID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(NMItems.netherWorkbenchPart.itemID,
                 NMSkillNodes.BRING_QUARTZ_DUST_32, NMSkillNodes.BRING_TUNGSTEN_CHUNK_16);
