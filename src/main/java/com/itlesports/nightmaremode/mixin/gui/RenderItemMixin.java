@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import com.itlesports.nightmaremode.item.items.ItemDivingGear;
 import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -51,7 +52,8 @@ public class RenderItemMixin {
     @Inject(method = "renderItemOverlayIntoGUI(Lnet/minecraft/src/FontRenderer;Lnet/minecraft/src/TextureManager;Lnet/minecraft/src/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     private void renderCompressedAirBar(FontRenderer font, TextureManager textures, ItemStack stack,
                                         int x, int y, String text, CallbackInfo ci) {
-        if (stack == null || !(stack.getItem() instanceof IArmorStatus status)) {
+        if (stack == null || !(stack.getItem() instanceof IArmorStatus status)
+                || stack.getItem() instanceof ItemDivingGear gear && !gear.storesAir()) {
             return;
         }
 
