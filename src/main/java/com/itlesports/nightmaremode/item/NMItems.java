@@ -1103,7 +1103,7 @@ public class NMItems {
     private static ItemChargedArmor chargedArmor(int id, int armorType, int protection, int weight, int maxUses,
                                                   Item repairItem, String wornTexture, String bonusKey, String name) {
         return (ItemChargedArmor)new ItemChargedArmor(id, armorType, protection, weight, maxUses, 12, 0.0D,
-                repairItem.itemID, wornTexture, bonusKey, 1000)
+                repairItem.itemID, wornTexture, bonusKey, 4000)
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
 

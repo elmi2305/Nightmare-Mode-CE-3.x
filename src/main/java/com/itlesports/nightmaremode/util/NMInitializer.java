@@ -1149,6 +1149,18 @@ public abstract class NMInitializer implements AchievementExt {
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(Item.redstone, 4), new ItemStack(Item.ingotIron)},
+                CisternTileEntity.FLUID_BRINE, 1, 6, 300,
+                new ItemStack[]{new ItemStack(NMItems.signalConductiveCharge)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.refinedRedstone), new ItemStack(Item.ingotIron)},
+                CisternTileEntity.FLUID_BRINE, 1, 6, 300,
+                new ItemStack[]{new ItemStack(NMItems.signalConductiveCharge, 2)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.obsidianBrick), new ItemStack(NMItems.tungstenNugget)},
                 CisternTileEntity.FLUID_LAVA, 3, 8, 300,
                 new ItemStack[]{new ItemStack(NMItems.blackglassCharge)}));
@@ -1617,6 +1629,23 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addCraftingRecipes(){
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.carbonRichIronMix), new Object[]{
                 NMPostItems.washedIronMix, BTWItems.coalDust, BTWItems.coalDust, BTWItems.coalDust});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 4), new Object[]{
+                "SNS",
+                "NIN",
+                "SNS",
+                Character.valueOf('I'), Item.ingotIron,
+                Character.valueOf('S'), BTWTags.strings,
+                Character.valueOf('N'), BTWItems.ironNugget
+        });
+
+        RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 4), new Object[]{
+                "SNS",
+                "NIN",
+                "SNS",
+                Character.valueOf('I'), Item.ingotIron,
+                Character.valueOf('N'), BTWTags.strings,
+                Character.valueOf('S'), BTWItems.ironNugget
+        });
         RecipeManager.addRecipe(new ItemStack(NMItems.carbonIronIngot), new Object[]{
                 "NNN", "NYN", "NNN", Character.valueOf('N'), NMItems.carbonIronNugget, Character.valueOf('Y'), BTWItems.stoneBrick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.wetGasket), new Object[]{
@@ -2394,41 +2423,189 @@ public abstract class NMInitializer implements AchievementExt {
 
     /** Deferred sidegrades stay here so their chassis costs remain legible beside one another. */
     private static void addDeferredArmorRecipes() {
-        RecipeManager.addRecipe(new ItemStack(NMItems.signalHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.signalAlloyPlate, Character.valueOf('C'), new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.refinedRedstone});
-        RecipeManager.addRecipe(new ItemStack(NMItems.signalChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.signalAlloyPlate, Character.valueOf('C'), new ItemStack(Item.plateChain, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.signalLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.signalAlloyPlate, Character.valueOf('C'), new ItemStack(Item.legsChain, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.signalBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.signalAlloyPlate, Character.valueOf('C'), new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE), Character.valueOf('E'), Item.redstone});
+        RecipeManager.addRecipe(new ItemStack(NMItems.signalHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                "RER",
+                Character.valueOf('P'), NMItems.signalAlloyPlate,
+                Character.valueOf('R'), NMItems.redstoneCrystal,
+                Character.valueOf('C'), new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.refinedRedstone});
+        RecipeManager.addRecipe(new ItemStack(NMItems.signalChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.signalAlloyPlate,
+                Character.valueOf('C'), new ItemStack(Item.plateChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.signalLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.signalAlloyPlate,
+                Character.valueOf('C'), new ItemStack(Item.legsChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.signalBoots), new Object[]{
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.signalAlloyPlate,
+                Character.valueOf('C'), new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), Item.redstone});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.azureHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.azureCeramicPlate, Character.valueOf('C'), new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.crystalLens});
-        RecipeManager.addRecipe(new ItemStack(NMItems.azureChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.azureCeramicPlate, Character.valueOf('C'), new ItemStack(Item.plateGold, 1, Short.MAX_VALUE), Character.valueOf('E'), Item.emerald});
-        RecipeManager.addRecipe(new ItemStack(NMItems.azureLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.azureCeramicPlate, Character.valueOf('C'), new ItemStack(Item.legsGold, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.azureBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.azureCeramicPlate, Character.valueOf('C'), new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.azureHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                "AEA",
+                Character.valueOf('P'), NMItems.azureCeramicPlate,
+                Character.valueOf('A'), NMItems.aquamarine,
+                Character.valueOf('C'), new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.crystalLens});
+        RecipeManager.addRecipe(new ItemStack(NMItems.azureChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.azureCeramicPlate,
+                Character.valueOf('C'), new ItemStack(Item.plateGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.aquamarine});
+        RecipeManager.addRecipe(new ItemStack(NMItems.azureLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.azureCeramicPlate,
+                Character.valueOf('C'), new ItemStack(Item.legsGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.azureBoots), new Object[]{
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.azureCeramicPlate,
+                Character.valueOf('C'), new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('C'), new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.crystalLens});
-        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('C'), new ItemStack(Item.plateChain, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('C'), new ItemStack(Item.legsChain, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('C'), new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.crystalLatticeCharge), new Object[]{
+                " C ",
+                "CPC",
+                " C ",
+                Character.valueOf('C'), NMItems.crystalPolishedShard,
+                Character.valueOf('P'), NMItems.nickelPlate});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.verdantHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.verdantPlate, Character.valueOf('C'), new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.crystalLens});
-        RecipeManager.addRecipe(new ItemStack(NMItems.verdantChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.verdantPlate, Character.valueOf('C'), new ItemStack(Item.plateGold, 1, Short.MAX_VALUE), Character.valueOf('E'), Item.emerald});
-        RecipeManager.addRecipe(new ItemStack(NMItems.verdantLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.verdantPlate, Character.valueOf('C'), new ItemStack(Item.legsGold, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.verdantBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.verdantPlate, Character.valueOf('C'), new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                " E ",
+                Character.valueOf('P'), NMItems.prismaticPlate,
+                Character.valueOf('C'), new ItemStack(Item.helmetChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.crystalLens});
+        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.prismaticPlate,
+                Character.valueOf('C'), new ItemStack(Item.plateChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.prismaticPlate,
+                Character.valueOf('C'), new ItemStack(Item.legsChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.prismaticBoots), new Object[]{
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.prismaticPlate,
+                Character.valueOf('C'), new ItemStack(Item.bootsChain, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.blackglassPlate, Character.valueOf('C'), new ItemStack(Item.helmetIron, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.blackglassPlate, Character.valueOf('C'), new ItemStack(Item.plateIron, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.blackglassPlate, Character.valueOf('C'), new ItemStack(Item.legsIron, 1, Short.MAX_VALUE), Character.valueOf('E'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.blackglassPlate, Character.valueOf('C'), new ItemStack(Item.bootsIron, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                " E ",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('C'), new ItemStack(Item.helmetGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.crystalLens});
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('C'), new ItemStack(Item.plateGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), Item.emerald});
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('C'), new ItemStack(Item.legsGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantBoots), new Object[]{
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('C'), new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassHelmet), new Object[]{"P P", " C ", " E ", Character.valueOf('P'), NMItems.quartzglassPlate, Character.valueOf('C'), new ItemStack(NMItems.glassHelmet, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.refractoryCloth});
-        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassChestplate), new Object[]{"P P", "PCP", "P E", Character.valueOf('P'), NMItems.quartzglassPlate, Character.valueOf('C'), new ItemStack(NMItems.glassChestplate, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.refractoryCloth});
-        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassLeggings), new Object[]{"P P", "PCP", "PEP", Character.valueOf('P'), NMItems.quartzglassPlate, Character.valueOf('C'), new ItemStack(NMItems.glassLeggings, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.refractoryCloth});
-        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassBoots), new Object[]{"PCP", " E ", Character.valueOf('P'), NMItems.quartzglassPlate, Character.valueOf('C'), new ItemStack(NMItems.glassBoots, 1, Short.MAX_VALUE), Character.valueOf('E'), NMItems.refractoryCloth});
+        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                " E ",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('C'), new ItemStack(Item.helmetIron, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('C'), new ItemStack(Item.plateIron, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('C'), new ItemStack(Item.legsIron, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), BTWItems.padding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.blackglassBoots), new Object[]{
+                "PCP",
+                "PEP",
+
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('C'), new ItemStack(Item.bootsIron, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassHelmet), new Object[]{
+                "PPP",
+                "PCP",
+                " E ",
+                Character.valueOf('P'), NMItems.quartzglassPlate,
+                Character.valueOf('C'), new ItemStack(NMItems.glassHelmet, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.refractoryCloth});
+        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassChestplate), new Object[]{
+                "PEP",
+                "PCP",
+                "PPP",
+                Character.valueOf('P'), NMItems.quartzglassPlate,
+                Character.valueOf('C'), new ItemStack(NMItems.glassChestplate, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.refractoryCloth});
+        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassLeggings), new Object[]{
+                "PPP",
+                "PCP",
+                "PEP",
+                Character.valueOf('P'), NMItems.quartzglassPlate,
+                Character.valueOf('C'), new ItemStack(NMItems.glassLeggings, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.refractoryCloth});
+        RecipeManager.addRecipe(new ItemStack(NMItems.quartzglassBoots), new Object[]{
+                "PCP",
+                "PEP",
+
+                Character.valueOf('P'), NMItems.quartzglassPlate,
+                Character.valueOf('C'), new ItemStack(NMItems.glassBoots, 1, Short.MAX_VALUE),
+                Character.valueOf('E'), NMItems.refractoryCloth});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.refinedPrismaHelmet), new Object[]{
-                "PBP", "DRG", "LHF",
+                "PBP", "DRG", "FHF",
                 Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('B'), new ItemStack(NMItems.bloodHelmet, 1, Short.MAX_VALUE),
                 Character.valueOf('D'), NMItems.dyeBlend, Character.valueOf('R'), new ItemStack(NMItems.prismaticHelmet, 1, Short.MAX_VALUE),
-                Character.valueOf('G'), NMItems.crystalPrecisionGear, Character.valueOf('L'), BTWItems.belt,
+                Character.valueOf('G'), NMItems.crystalPrecisionGear,
                 Character.valueOf('H'), NMItems.lithiumHeatCompound, Character.valueOf('F'), Item.blazePowder});
         RecipeManager.addRecipe(new ItemStack(NMItems.refinedPrismaChestplate), new Object[]{
                 "PBP", "DRG", "PHP",
@@ -2436,16 +2613,16 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('D'), NMItems.dyeBlend, Character.valueOf('R'), new ItemStack(NMItems.prismaticChestplate, 1, Short.MAX_VALUE),
                 Character.valueOf('G'), NMItems.crystalPrecisionGear, Character.valueOf('H'), NMItems.lithiumHeatCompound});
         RecipeManager.addRecipe(new ItemStack(NMItems.refinedPrismaLeggings), new Object[]{
-                "PBP", "DRG", "LHP",
+                "PBP", "DRG", "PHP",
                 Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('B'), new ItemStack(NMItems.bloodLeggings, 1, Short.MAX_VALUE),
                 Character.valueOf('D'), NMItems.dyeBlend, Character.valueOf('R'), new ItemStack(NMItems.prismaticLeggings, 1, Short.MAX_VALUE),
-                Character.valueOf('G'), NMItems.crystalPrecisionGear, Character.valueOf('L'), BTWItems.belt,
+                Character.valueOf('G'), NMItems.crystalPrecisionGear,
                 Character.valueOf('H'), NMItems.lithiumHeatCompound});
         RecipeManager.addRecipe(new ItemStack(NMItems.refinedPrismaBoots), new Object[]{
-                "PBP", "DRG", "LHF",
+                "PBP", "DRG", "FHF",
                 Character.valueOf('P'), NMItems.prismaticPlate, Character.valueOf('B'), new ItemStack(NMItems.bloodBoots, 1, Short.MAX_VALUE),
                 Character.valueOf('D'), NMItems.dyeBlend, Character.valueOf('R'), new ItemStack(NMItems.prismaticBoots, 1, Short.MAX_VALUE),
-                Character.valueOf('G'), NMItems.crystalPrecisionGear, Character.valueOf('L'), BTWItems.belt,
+                Character.valueOf('G'), NMItems.crystalPrecisionGear,
                 Character.valueOf('H'), NMItems.lithiumHeatCompound, Character.valueOf('F'), Item.blazePowder});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.glassHelmet), new Object[]{
@@ -2462,22 +2639,21 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.darkHelmet), new Object[]{
-                "DZD", "SCG",
+                "DDD", "DZD", "SCG",
                 Character.valueOf('D'), NMItems.darkIngot, Character.valueOf('Z'), new ItemStack(NMItems.deadzoneHelmet, 1, Short.MAX_VALUE),
                 Character.valueOf('S'), new ItemStack(BTWItems.plateHelmet, 1, Short.MAX_VALUE), Character.valueOf('C'), NMItems.deadzoneShard,
                 Character.valueOf('G'), NMItems.crystalPrecisionGear});
         RecipeManager.addRecipe(new ItemStack(NMItems.darkChestplate), new Object[]{
-                "DZD", "SCG", "D D",
+                "DZD", "DSD", "DDD",
                 Character.valueOf('D'), NMItems.darkIngot, Character.valueOf('Z'), new ItemStack(NMItems.deadzoneChestplate, 1, Short.MAX_VALUE),
-                Character.valueOf('S'), new ItemStack(BTWItems.plateBreastplate, 1, Short.MAX_VALUE), Character.valueOf('C'), NMItems.deadzoneShard,
-                Character.valueOf('G'), NMItems.crystalPrecisionGear});
+                Character.valueOf('S'), new ItemStack(BTWItems.plateBreastplate, 1, Short.MAX_VALUE), Character.valueOf('C'), NMItems.deadzoneShard,});
         RecipeManager.addRecipe(new ItemStack(NMItems.darkLeggings), new Object[]{
-                "DZD", "SCG", " D ",
+                "DDD", "GZG", "DCD",
                 Character.valueOf('D'), NMItems.darkIngot, Character.valueOf('Z'), new ItemStack(NMItems.deadzoneLeggings, 1, Short.MAX_VALUE),
                 Character.valueOf('S'), new ItemStack(BTWItems.plateLeggings, 1, Short.MAX_VALUE), Character.valueOf('C'), NMItems.deadzoneShard,
                 Character.valueOf('G'), NMItems.crystalPrecisionGear});
         RecipeManager.addRecipe(new ItemStack(NMItems.darkBoots), new Object[]{
-                "DZD", "SCG",
+                "DZD", "DSD","GCG",
                 Character.valueOf('D'), NMItems.darkIngot, Character.valueOf('Z'), new ItemStack(NMItems.deadzoneBoots, 1, Short.MAX_VALUE),
                 Character.valueOf('S'), new ItemStack(BTWItems.plateBoots, 1, Short.MAX_VALUE), Character.valueOf('C'), NMItems.deadzoneShard,
                 Character.valueOf('G'), NMItems.crystalPrecisionGear});
@@ -2959,7 +3135,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"XXX", "XYX", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{
-                        "IXI", "NYN",
+                        "IXI", "IYI","N N",
                         Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
@@ -2968,7 +3144,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.plateDiamond), new Object[]{"Y Y", "XXX", "XXX", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{
-                        "N N", "IXI", "ILI",
+                        "NLN", "IXI", "III",
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
@@ -2977,7 +3153,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsDiamond), new Object[]{"XXX", "Y Y", "Y Y", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{
-                        "IXI", "N N", "L L",
+                        "IXI", "NLN", "ILI",
                         Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
@@ -2986,7 +3162,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), BTWItems.diamondIngot});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.bootsDiamond), new Object[]{
-                        "I I", "NLN",
+                        "I I", "ILI", "N N",
                         Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),

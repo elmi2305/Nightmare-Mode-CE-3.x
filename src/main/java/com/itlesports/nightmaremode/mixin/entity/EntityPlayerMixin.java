@@ -209,7 +209,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (this.worldObj.isRemote || !(target instanceof EntityLivingBase)
                 || !ArmorSetHelper.isWearingCompleteSignalSet(this)) return;
         int spent = ArmorSetHelper.drainSignalCharge(this, 160);
-        if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 160.0F);
+        if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 80.0F);
     }
 
     public EntityPlayerMixin(World par1World) {
@@ -1559,14 +1559,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         boolean powered = this.worldObj.isBlockGettingPowered(x, y, z)
                 || this.worldObj.isBlockGettingPowered(x, y - 1, z);
         if (powered && this.ticksExisted % 10 == 0) {
-            ArmorSetHelper.addSignalCharge(this, 8);
+            ArmorSetHelper.addSignalCharge(this, 40);
             this.foodStats.addExhaustion(0.01F);
         }
-        int railId = this.worldObj.getBlockId(x, y, z);
-        if (railId == Block.railPowered.blockID && (this.worldObj.getBlockMetadata(x, y, z) & 8) != 0
+        int railId = this.worldObj.getBlockId(x, y + 1, z);
+        if (railId == Block.railPowered.blockID && (this.worldObj.getBlockMetadata(x, y + 1, z) & 8) != 0
                 && ArmorSetHelper.getSignalCharge(this) >= 40) {
             ArmorSetHelper.drainSignalCharge(this, 2);
-            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30, 0));
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 80, 1));
         }
     }
 
