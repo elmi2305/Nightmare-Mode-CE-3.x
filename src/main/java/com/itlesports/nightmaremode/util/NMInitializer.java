@@ -24,12 +24,14 @@ import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.QuestToolRepairRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityFishermanVillager;
 import api.item.tag.TagInstance;
 import api.item.tag.TagOrStack;
 import api.item.tag.Tag;
@@ -38,6 +40,7 @@ import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillNode;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.skill.SkillRecipeGates;
+import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
@@ -83,6 +86,13 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Agrarian Essence", NMItems.agrarianEssence);
         validateItemRegistration("Infernal Essence", NMItems.infernalEssence);
         validateItemRegistration("Artisan Essence", NMItems.artisanEssence);
+        validateItemRegistration("Fishing Essence", NMItems.fishingEssence);
+        validateItemRegistration("Iron Fishing Rod", NMItems.ironFishingPole);
+        validateItemRegistration("Baited Iron Fishing Rod", NMItems.ironFishingPoleBaited);
+        validateItemRegistration("Diamond Fishing Rod", NMItems.diamondFishingPole);
+        validateItemRegistration("Baited Diamond Fishing Rod", NMItems.diamondFishingPoleBaited);
+        validateItemRegistration("Steel Fishing Rod", NMItems.steelFishingPole);
+        validateItemRegistration("Baited Steel Fishing Rod", NMItems.steelFishingPoleBaited);
     }
 
     private static void validateItemRegistration(String name, Item expected) {
@@ -245,6 +255,7 @@ public abstract class NMInitializer implements AchievementExt {
         addPriestTrades();
         addLibrarianTrades();
         addBlacksmithTrades();
+        addFishermanTrades();
         addNightmareVillagerTrades();
         addNetherPostVillagerTrades();
         finishRecipes("All Trades");
@@ -252,6 +263,102 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     public static void editExistingTrades(){
+        // Farmer
+        tweakInput(34, 46, "btw:buy_loose_dirt");
+        tweakInput(28, 40, "btw:buy_logs", "btw:buy_logs_variant_oak");
+        tweakInput(30, 43, "btw:buy_logs_variant_spruce", "btw:buy_logs_variant_birch");
+        tweakInput(32, 45, "btw:buy_logs_variant_jungle", "btw:buy_brown_wool");
+        tweakInput(36, 50, "btw:buy_bone_meal", "btw:buy_sugar");
+        tweakInput(22, 34, "btw:buy_cocoa_beans");
+        tweakInput(10, 16, "btw:buy_brown_mushrooms", "btw:buy_eggs");
+        tweakInput(38, 54, "btw:buy_hemp_seeds");
+        tweakInput(24, 38, "btw:buy_glass_panes");
+        tweakInput(4, 6, "btw:buy_water_wheel");
+        tweakInput(14, 22, "btw:sell_apple", "btw:sell_sugar_cane_roots", "btw:sell_bread", "btw:sell_egg_foods", "btw:sell_desserts", "btw:sell_mycelium");
+        tweakInput(10, 16, "btw:buy_chocolate");
+        tweakInput(10, 16, "btw:buy_melons");
+        tweakInput(9, 15, "btw:buy_pumpkins", "btw:buy_stump_remover");
+        tweakInput(42, 56, "btw:buy_soap", "btw:buy_light_block", "btw:buy_stake_and_string");
+        tweakInput(18, 28, "btw:buy_planters");
+        tweakInput(40, 58, "btw:sell_looting_scroll");
+
+        // Librarian
+        tweakInput(34, 48, "btw:buy_paper", "btw:buy_ink");
+        tweakInput(30, 44, "btw:buy_feathers");
+        tweakInput(36, 52, "btw:buy_redstone", "btw:buy_redstone_latch");
+        tweakInput(12, 20, "btw:buy_piston", "btw:buy_turntable");
+        tweakInput(16, 25, "btw:sell_advanced_redstone", "btw:sell_bookshelf");
+        tweakInput(10, 16, "btw:buy_nether_wart");
+        tweakInput(38, 54, "btw:buy_glowstone");
+        tweakInput(40, 56, "btw:buy_nitre", "btw:buy_witch_warts");
+        tweakInput(10, 16, "btw:buy_spider_eyes");
+        tweakInput(28, 42, "btw:buy_mysterious_glands", "btw:buy_fermented_spider_eyes");
+        tweakInput(24, 36, "btw:buy_ghast_tears", "btw:buy_magma_cream", "btw:buy_blaze_powder");
+        tweakInput(32, 46, "btw:buy_brimstone", "btw:buy_blood_wood_saplings");
+        tweakInput(6, 10, "btw:buy_nether_groth_spores");
+        tweakInput(42, 58, "btw:sell_power_scroll");
+
+        // Priest
+        tweakInput(36, 50, "btw:buy_hemp", "btw:buy_cactus", "btw:buy_paintings");
+        tweakInput(10, 16, "btw:buy_red_mushrooms");
+        tweakSecondary(18, 27,
+                "btw:enchant_tools_variant_iron_sword", "btw:enchant_tools_variant_iron_axe", "btw:enchant_tools_variant_iron_pickaxe",
+                "btw:enchant_tools_variant_diamond_sword", "btw:enchant_tools_variant_diamond_axe", "btw:enchant_tools_variant_diamond_pickaxe",
+                "btw:enchant_armor_variant_iron_helmet", "btw:enchant_armor_variant_iron_chestplate", "btw:enchant_armor_variant_iron_leggings", "btw:enchant_armor_variant_iron_boots",
+                "btw:enchant_armor_variant_diamond_helmet", "btw:enchant_armor_variant_diamond_chestplate", "btw:enchant_armor_variant_diamond_leggings", "btw:enchant_armor_variant_diamond_boots",
+                "btw:convert_infused_skull_level_up", "btw:convert_infused_skull");
+        tweakInput(12, 19, "btw:buy_vessel_of_the_dragon");
+        tweakInput(28, 42, "btw:buy_mob_heads", "btw:buy_mob_heads_variant_skeleton", "btw:buy_mob_heads_variant_zombie", "btw:buy_mob_heads_variant_creeper");
+        tweakInput(34, 48, "btw:buy_bone_block", "btw:buy_rotten_flesh_block");
+        tweakInput(30, 44, "btw:buy_candles", "btw:buy_candles_variant_black", "btw:buy_candles_variant_white", "btw:buy_candles_variant_red", "btw:buy_candles_variant_yellow", "btw:buy_candles_variant_blue", "btw:buy_candles_variant_green");
+        tweakInput(22, 34, "btw:buy_soul_urn");
+        tweakInput(38, 52, "btw:buy_canvas");
+        tweakSecondary(44, 60, "btw:sell_fortune_scroll");
+
+        // Blacksmith
+        tweakInput(38, 52, "btw:buy_coal", "btw:buy_birch_logs", "btw:buy_iron_nuggets");
+        tweakInput(10, 17, "btw:buy_hibachi", "btw:buy_iron_ingot", "btw:buy_crucible");
+        tweakInput(34, 48, "btw:buy_gold_nuggets", "btw:buy_charcoal");
+        tweakInput(16, 24, "btw:sell_iron_equipment", "btw:sell_chain_armor", "btw:sell_diamond_equipment", "btw:sell_steel_tools");
+        tweakInput(30, 42, "btw:buy_nethercoal", "btw:buy_diamonds");
+        tweakInput(10, 16, "btw:buy_creeper_oysters");
+        tweakInput(24, 36, "btw:buy_soul_urns_blacksmith");
+        tweakInput(36, 50, "btw:buy_padding", "btw:buy_straps", "btw:buy_hafts");
+        tweakInput(28, 40, "btw:buy_mining_charges", "btw:buy_steel_ingots", "btw:buy_soul_flux");
+        tweakInput(46, 62, "btw:sell_unbreaking_scroll");
+
+        // Butcher
+        tweakInput(40, 56, "btw:buy_arrows", "btw:buy_flour", "btw:buy_dung", "btw:buy_spruce_bark", "btw:buy_leather");
+        tweakInput(6, 10, "btw:buy_fishing_rod", "btw:buy_saddle", "btw:buy_composite_bow", "btw:buy_battleaxe");
+        tweakInput(18, 28, "btw:sell_meat", "btw:sell_mid_tier_foods", "btw:sell_dinners", "btw:sell_hearty_stew", "btw:sell_tanned_leather_armor");
+        tweakInput(10, 16, "btw:buy_potatoes", "btw:buy_carrots", "btw:buy_wolf_chops", "btw:buy_liver", "btw:buy_mystery_meat");
+        tweakInput(42, 58, "btw:sell_tanned_leather", "btw:buy_breeding_harness", "btw:buy_dirty_chopping_block", "btw:buy_companion_cube");
+        tweakInput(30, 44, "btw:buy_screw", "btw:buy_dynamite", "btw:buy_broadhead_arrows", "btw:buy_lightning_rod_and_soap");
+        tweakInput(20, 31, "btw:convert_runed_skull");
+        tweakInput(48, 63, "btw:sell_sharpness_scroll");
+
+        // Restore normal emerald payouts where the previous tweaks accidentally
+        // turned a one-to-four-emerald reward into a full stack.
+        TradeTweaks.setOutputCount("btw:buy_brown_wool", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_iron_hoe", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_shears", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_flint_and_steel", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_brewing_stand", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_enchanting_table", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_infernal_enchanter", 4, 4);
+        TradeTweaks.setOutputCount("btw:buy_oven", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_anvil_level_up", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_hibachi", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_iron_ingot", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_bellows", 2, 2);
+        TradeTweaks.setOutputCount("btw:buy_diamonds", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_crucible", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_steel_ingots", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_shears_butcher", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_bow", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_cauldron", 1, 1);
+        TradeTweaks.setOutputCount("btw:buy_saw", 2, 2);
+        TradeTweaks.setOutputCount("btw:buy_screw", 1, 1);
 
         finishRecipes("Trade Tweaks");
 
@@ -267,7 +374,22 @@ public abstract class NMInitializer implements AchievementExt {
     }
     // trades begin here
 
+    private static void tweakInput(int min, int max, String... tradeNames) {
+        for (String tradeName : tradeNames) {
+            TradeTweaks.setInputCount(tradeName, min, max);
+        }
+    }
+
+    private static void tweakSecondary(int min, int max, String... tradeNames) {
+        for (String tradeName : tradeNames) {
+            TradeTweaks.setSecondaryInputCount(tradeName, min, max);
+        }
+    }
+
     private static void buy(String name, int profession, int level, int id1, int meta, int count1, int count2, float w, boolean levelUp, int cost1, int cost2){
+        if (name.startsWith("ifhy:")) {
+            validateTradeStackLimit(name, id1, count2);
+        }
         TradeProvider.FinalStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).buy().item(id1, meta).itemCount(count1, count2).weight(w); // we have to add a variant that does emeraldCost. emeraldcost has to come after .item(), and takes 2 parameters (cost1, cost2) which are the min and max costs. additionally, .emeraldCost().itemCount() are not valid (cannot be used one after another)
         if(cost1 != 0 && cost2 != 0){
             ((TradeProvider.BuySellCountStep)(step)).emeraldCost(cost1, cost2);
@@ -280,6 +402,12 @@ public abstract class NMInitializer implements AchievementExt {
         step.addToTradeList();
     }
     private static void sell(String name, int profession, int level, int id1, int meta, int c1, int c2, float w, boolean levelUp, int minCost, int maxCost){
+        if (name.startsWith("ifhy:")) {
+            validateTradeStackLimit(name, id1, c2);
+            if (maxCost > Item.emerald.getItemStackLimit()) {
+                throw new IllegalArgumentException("Trade " + name + " requests too many emeralds: " + maxCost);
+            }
+        }
         TradeProvider.FinalStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).sell().item(id1, meta).itemCount(c1, c2).weight(w);
         if(minCost != 0 && maxCost != 0){
             ((TradeProvider.BuySellCountStep)(step)).emeraldCost(minCost, maxCost);
@@ -316,6 +444,13 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void convert(String name, int profession, int level, TradeItem firstInput, TradeItem secondInput, TradeItem output, float weight, boolean levelUp, boolean mandatory) {
+        if (name.startsWith("ifhy:")) {
+            validateTradeStackLimit(name, firstInput);
+            if (secondInput != null && secondInput != TradeItem.EMPTY) {
+                validateTradeStackLimit(name, secondInput);
+            }
+            validateTradeStackLimit(name, output);
+        }
         TradeProvider.ConvertSecondInputStep step = TradeProvider.getBuilder().name(name).profession(profession).level(level).convert().input(firstInput);
         if (secondInput != null && secondInput != TradeItem.EMPTY) {
             step = (TradeProvider.ConvertSecondInputStep) step.secondInput(secondInput);
@@ -350,14 +485,109 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addFarmerTrades(){
+        removeOldFarmerTrades();
+
+        buy("btw:buy_brown_mushrooms", 0, 2, BTWItems.brownMushroom.itemID, 0, 22, 34);
+        buy("ifhy:farmer_millstone_level_up", 0, 2, BTWBlocks.millstone.blockID, 0, 10, 16, 1.0F, true, 0, 0);
+        TradeProvider.getBuilder().name("btw:sell_looting_scroll").profession(0).level(5)
+                .arcaneScroll().scrollEnchant(Enchantment.looting).secondaryEmeraldCost(42, 58).mandatory().addToTradeList();
+
+        // Plant products and their slow IFHY processing chain.
+        buy("ifhy:farmer_hemp", 0, 1, BTWItems.hemp.itemID, 0, 34, 48);
+        buy("ifhy:farmer_hemp_fibers", 0, 1, BTWItems.hempFibers.itemID, 0, 38, 52);
+        buy("ifhy:farmer_plant_fiber", 0, 1, NMItems.plantFiber.itemID, 0, 42, 58);
+        buy("ifhy:farmer_dried_plant_fiber", 0, 1, NMItems.driedPlantFiber.itemID, 0, 44, 60);
+        buy("ifhy:farmer_retted_hemp", 0, 2, NMItems.rettedHemp.itemID, 0, 30, 43);
+        buy("ifhy:farmer_washed_hemp", 0, 2, NMItems.washedHemp.itemID, 0, 32, 46);
+        buy("ifhy:farmer_dried_hemp", 0, 2, NMItems.driedHemp.itemID, 0, 36, 50);
+        buy("ifhy:farmer_straw", 0, 2, BTWItems.straw.itemID, 0, 40, 56);
+        buy("ifhy:farmer_thatch", 0, 3, BTWBlocks.thatch.blockID, 0, 26, 38);
+        buy("ifhy:farmer_chicken_feed", 0, 3, BTWItems.chickenFeed.itemID, 0, 34, 47);
+
+        // Husbandry products, including the leather wet-processing chain.
+        buy("ifhy:farmer_raw_pork", 0, 2, Item.porkRaw.itemID, 0, 10, 16);
+        buy("ifhy:farmer_raw_beef", 0, 2, Item.beefRaw.itemID, 0, 9, 15);
+        buy("ifhy:farmer_raw_chicken", 0, 2, Item.chickenRaw.itemID, 0, 12, 16);
+        buy("ifhy:farmer_feathers", 0, 2, Item.feather.itemID, 0, 39, 54);
+        buy("ifhy:farmer_dung", 0, 3, BTWItems.dung.itemID, 0, 46, 61);
+        buy("ifhy:farmer_scoured_leather", 0, 3, BTWItems.scouredLeather.itemID, 0, 30, 44);
+        buy("ifhy:farmer_washed_scoured_leather", 0, 3, NMItems.washedScouredLeather.itemID, 0, 32, 45);
+        buy("ifhy:farmer_worked_scoured_leather", 0, 3, NMItems.workedScouredLeather.itemID, 0, 34, 48);
+        buy("ifhy:farmer_tanned_leather", 0, 4, BTWItems.tannedLeather.itemID, 0, 28, 41);
+        buy("ifhy:farmer_leather_straps", 0, 4, BTWItems.leatherStrap.itemID, 0, 40, 55);
+
+        // Soil management, farm blocks, and every terrain-extractor variant.
+        buy("ifhy:farmer_moisture_fertilizer", 0, 4, NMItems.moistureFertilizer.itemID, 0, 36, 50);
+        buy("ifhy:farmer_potassium_fertilizer", 0, 4, NMItems.potassiumFertilizer.itemID, 0, 38, 53);
+        buy("ifhy:farmer_acidity_fertilizer", 0, 4, NMItems.acidityFertilizer.itemID, 0, 34, 49);
+        buy("ifhy:farmer_porosity_fertilizer", 0, 4, NMItems.porosityFertilizer.itemID, 0, 40, 56);
+        buy("ifhy:farmer_fertile_netherrack", 0, 4, NMBlocks.fertileNetherrack.blockID, 0, 24, 35);
+        buy("ifhy:farmer_terrain_extractor_potassium", 0, 5, NMBlocks.terrainExtractor.blockID, 0, 18, 28);
+        buy("ifhy:farmer_terrain_extractor_nitrogen", 0, 5, NMBlocks.terrainExtractor.blockID, 1, 20, 31);
+        buy("ifhy:farmer_terrain_extractor_moisture", 0, 5, NMBlocks.terrainExtractor.blockID, 2, 22, 34);
+        buy("ifhy:farmer_terrain_extractor_porosity", 0, 5, NMBlocks.terrainExtractor.blockID, 3, 19, 29);
+        buy("ifhy:farmer_terrain_extractor_acidity", 0, 5, NMBlocks.terrainExtractor.blockID, 4, 21, 32);
+
+        // Barters give a farmer a few useful recovery paths without implying that
+        // the input is physically transformed into the output.
+        convert("ifhy:farmer_soil_to_hemp_seeds", 0, 3,
+                TradeItem.fromID(NMItems.soilSample.itemID),
+                TradeItem.fromID(Item.emerald.itemID, 3, 5),
+                TradeItem.fromID(BTWItems.hempSeeds.itemID, 6, 12));
+        convert("ifhy:farmer_soil_to_fertilizer", 0, 4,
+                TradeItem.fromID(NMItems.soilSample.itemID),
+                TradeItem.fromID(NMItems.driedPlantFiber.itemID, 34, 48),
+                TradeItem.fromID(NMItems.moistureFertilizer.itemID, 4, 8));
+        convert("ifhy:farmer_thatch_to_wheat", 0, 4,
+                TradeItem.fromID(BTWBlocks.thatch.blockID, 16, 24),
+                TradeItem.fromID(Item.emerald.itemID, 4, 7),
+                TradeItem.fromID(Item.wheat.itemID, 10, 18));
 
         finishRecipes("Farmer Trades");
 
     }
 
+    private static void validateTradeStackLimit(String tradeName, TradeItem item) {
+        validateTradeStackLimit(tradeName, item.id(), item.maxCount());
+    }
+
+    private static void validateTradeStackLimit(String tradeName, int itemId, int maximumCount) {
+        Item item = Item.itemsList[itemId];
+        if (item == null) {
+            throw new IllegalStateException("Trade " + tradeName + " uses an unregistered item id " + itemId);
+        }
+        if (maximumCount > item.getItemStackLimit()) {
+            throw new IllegalArgumentException("Trade " + tradeName + " requests " + maximumCount + " "
+                    + item.getUnlocalizedName() + " but its stack limit is " + item.getItemStackLimit());
+        }
+    }
+
+    private static void removeOldFarmerTrades() {
+        EntityVillager.removeLevelUpTrade(0, 2);
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1)
+                .sell().item(Block.grass.blockID).itemCount(2, 4).weight(0.3F).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(1)
+                .convert().input(TradeItem.fromIDAndMetadata(Block.tallGrass.blockID, 1, 2, 4))
+                .secondInput(TradeItem.fromID(Item.emerald.itemID, 1, 2))
+                .output(TradeItem.fromID(BTWItems.hempSeeds.itemID, 2, 6)).weight(0.3F).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(2)
+                .buy().item(Item.shears.itemID).itemCount(1, 1).weight(0.4F).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3)
+                .buy().item(BTWItems.redMushroom.itemID).itemCount(2, 5).weight(1.2F).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(3)
+                .buy().item(Item.bucketWater.itemID).itemCount(1, 1).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(4)
+                .buy().item(BTWItems.chowder.itemID).itemCount(1, 2).build());
+        EntityVillager.removeCustomTrade(0, TradeProvider.getBuilder().name("nmFarmer0").profession(0).level(5)
+                .convert().input(TradeItem.fromID(Item.paper.itemID))
+                .secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID, 8, 16))
+                .output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("efficiency")))
+                .mandatory().build());
+    }
+
     private static void addLibrarianTrades(){
         convert(
-                "nmlibrarian0",
+                "ifhy:librarian_ender_treatise",
                 1,
                 5,
                 TradeItem.fromID(BTWItems.corpseEye.itemID),
@@ -367,12 +597,59 @@ public abstract class NMInitializer implements AchievementExt {
                 false,
                 true);
 
+        buy("ifhy:librarian_reed_stems", 1, 1, NMItems.reedStem.itemID, 0, 39, 54);
+        buy("ifhy:librarian_washed_pith", 1, 1, NMItems.washedPith.itemID, 0, 35, 49);
+        buy("ifhy:librarian_wet_plant_sheets", 1, 1, NMItems.wetFusedPlantSheet.itemID, 0, 28, 42);
+        buy("ifhy:librarian_plant_sheets", 1, 1, NMItems.plantSheet.itemID, 0, 33, 47);
+        buy("ifhy:librarian_washed_sugar_cane", 1, 1, NMItems.washedSugarCane.itemID, 0, 43, 57);
+        buy("ifhy:librarian_books", 1, 2, Item.book.itemID, 0, 19, 29);
+        buy("ifhy:librarian_writable_book", 1, 2, Item.writableBook.itemID, 0, 1, 1);
+        buy("ifhy:librarian_bookshelves", 1, 2, Block.bookShelf.blockID, 0, 6, 10);
+        buy("ifhy:librarian_repeaters", 1, 2, Item.redstoneRepeater.itemID, 0, 24, 36);
+        buy("ifhy:librarian_hellfire_dust", 1, 3, BTWItems.hellfireDust.itemID, 0, 31, 45);
+        buy("ifhy:librarian_dispensers", 1, 4, BTWBlocks.blockDispenser.blockID, 0, 11, 17);
+        buy("ifhy:librarian_buddy_blocks", 1, 4, BTWBlocks.buddyBlock.blockID, 0, 9, 15);
+        buy("ifhy:librarian_detector_blocks", 1, 4, BTWBlocks.detectorBlock.blockID, 0, 8, 13);
+        sell("ifhy:librarian_soul_flux", 1, 4, BTWItems.soulFlux.itemID, 0, 2, 4, 1.0F, false, 17, 25);
+        convert("ifhy:librarian_blast_scroll", 1, 4,
+                TradeItem.fromID(Item.paper.itemID, 32, 46),
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 13, 20),
+                TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("blast")));
+
         finishRecipes("Librarian Trades");
     }
 
 
 
     private static void addPriestTrades(){
+
+        buy("ifhy:priest_bone_shards", 2, 1, NMItems.boneShard.itemID, 0, 40, 56);
+        buy("ifhy:priest_ash", 2, 1, NMItems.ash.itemID, 0, 34, 49);
+        buy("ifhy:priest_blood_orbs", 2, 2, NMItems.bloodOrb.itemID, 0, 30, 44);
+        buy("ifhy:priest_witch_warts", 2, 2, BTWItems.witchWart.itemID, 0, 38, 54);
+        buy("ifhy:priest_spider_eyes", 2, 3, Item.spiderEye.itemID, 0, 12, 16);
+        buy("ifhy:priest_blaze_powder", 2, 3, Item.blazePowder.itemID, 0, 32, 46);
+        buy("ifhy:priest_gunpowder", 2, 3, Item.gunpowder.itemID, 0, 46, 62);
+        buy("ifhy:priest_soul_sand_piles", 2, 4, BTWItems.soulSandPile.itemID, 0, 36, 52);
+        buy("ifhy:priest_soul_chips", 2, 4, NMItems.soulChip.itemID, 0, 28, 41);
+        buy("ifhy:priest_rotten_arrows", 2, 4, BTWItems.rottenArrow.itemID, 0, 40, 55);
+        convert("ifhy:priest_wart_to_nether_wart", 2, 2,
+                TradeItem.fromID(BTWItems.witchWart.itemID, 36, 50),
+                TradeItem.fromID(Item.emerald.itemID, 4, 7),
+                TradeItem.fromID(Item.netherStalkSeeds.itemID, 2, 5));
+        convert("ifhy:priest_blood_orb_to_potion", 2, 3,
+                TradeItem.fromID(NMItems.bloodOrb.itemID, 32, 46),
+                TradeItem.fromID(Item.emerald.itemID, 6, 10),
+                TradeItem.fromIDAndMetadata(Item.potion.itemID, 0));
+        convert("ifhy:priest_soul_chip_to_urn", 2, 4,
+                TradeItem.fromID(NMItems.soulChip.itemID, 28, 40),
+                TradeItem.fromID(Item.emerald.itemID, 8, 12),
+                TradeItem.fromID(BTWItems.soulUrn.itemID, 2, 4));
+        convert("ifhy:priest_bone_shard_to_candle", 2, 4,
+                TradeItem.fromID(NMItems.boneShard.itemID, 38, 52),
+                TradeItem.fromID(Item.emerald.itemID, 10, 14),
+                TradeItem.fromID(BTWItems.candle.itemID, 2, 4));
+        sell("ifhy:priest_brewing_stand", 2, 4, Item.brewingStand.itemID, 0, 1, 2, 1.0F, false, 12, 18);
 
         finishRecipes("Priest Trades");
 
@@ -381,16 +658,128 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addBlacksmithTrades(){
 
+        buy("ifhy:blacksmith_iron_bloom", 3, 1, NMItems.ironBloom.itemID, 0, 26, 38);
+        buy("ifhy:blacksmith_nickel_raw_rock", 3, 1, NMItems.nickelRawRock.itemID, 0, 34, 48);
+        buy("ifhy:blacksmith_nickel_crushed", 3, 2, NMItems.nickelCrushedRock.itemID, 0, 38, 53);
+        buy("ifhy:blacksmith_nickel_washed", 3, 2, NMItems.nickelWashedConcentrate.itemID, 0, 30, 43);
+        buy("ifhy:blacksmith_nickel_roasted", 3, 2, NMItems.nickelRoastedConcentrate.itemID, 0, 26, 37);
+        buy("ifhy:blacksmith_lithium_raw", 3, 2, NMItems.lithiumRaw.itemID, 0, 36, 50);
+        buy("ifhy:blacksmith_lithium_hammered", 3, 2, NMItems.lithiumHammered.itemID, 0, 32, 45);
+        buy("ifhy:blacksmith_lithium_washed", 3, 2, NMItems.lithiumWashed.itemID, 0, 28, 40);
+        buy("ifhy:blacksmith_lithium_refined", 3, 2, NMItems.lithiumRefined.itemID, 0, 24, 35);
+        buy("ifhy:blacksmith_diamond_rock", 3, 3, NMItems.diamondBearingRock.itemID, 0, 20, 30);
+        buy("ifhy:blacksmith_cracked_diamond_rock", 3, 3, NMItems.crackedDiamondBearingRock.itemID, 0, 24, 36);
+        buy("ifhy:blacksmith_diamond_grit", 3, 3, NMItems.washedDiamondGrit.itemID, 0, 30, 42);
+        buy("ifhy:blacksmith_diamond_slurry", 3, 3, NMItems.stabilizedDiamondSlurry.itemID, 0, 22, 33);
+        buy("ifhy:blacksmith_seeded_matrix", 3, 3, NMItems.seededDiamondMatrix.itemID, 0, 18, 27);
+        buy("ifhy:blacksmith_nickel_matrix", 3, 3, NMItems.nickelBoundDiamondMatrix.itemID, 0, 16, 24);
+        buy("ifhy:blacksmith_carbon_mix", 3, 4, NMItems.carbonRichIronMix.itemID, 0, 32, 46);
+        buy("ifhy:blacksmith_carburized_bloom", 3, 4, NMItems.carburizedIronBloom.itemID, 0, 24, 35);
+        buy("ifhy:blacksmith_carbon_nuggets", 3, 4, NMItems.carbonIronNugget.itemID, 0, 40, 56);
+        buy("ifhy:blacksmith_carbon_ingots", 3, 4, NMItems.carbonIronIngot.itemID, 0, 26, 38);
+        buy("ifhy:blacksmith_carbon_plates", 3, 4, NMItems.carbonIronPlate.itemID, 0, 22, 32);
+        buy("ifhy:blacksmith_lithium_iron_blanks", 3, 4, NMItems.lithiumTreatedIronBlank.itemID, 0, 24, 34);
+        buy("ifhy:blacksmith_reinforced_ingots", 3, 4, NMItems.reinforcedIronIngot.itemID, 0, 20, 29);
+        buy("ifhy:blacksmith_reinforced_plates", 3, 4, NMItems.reinforcedIronPlate.itemID, 0, 18, 26);
+        buy("ifhy:blacksmith_raw_mercury", 3, 4, NMItems.rawMercuryCrystal.itemID, 0, 30, 42);
+        buy("ifhy:blacksmith_mercury_powder", 3, 4, NMItems.mercuryPowder.itemID, 0, 34, 48);
+        buy("ifhy:blacksmith_mercury_concentrate", 3, 4, NMItems.washedMercuryConcentrate.itemID, 0, 28, 39);
+        buy("ifhy:blacksmith_mercury_amalgam", 3, 4, NMItems.mercuryAmalgam.itemID, 0, 22, 31);
+        buy("ifhy:blacksmith_tungsten_chunk", 3, 5, NMItems.tungstenChunk.itemID, 0, 22, 33);
+        buy("ifhy:blacksmith_crushed_tungsten", 3, 5, NMItems.crushedTungsten.itemID, 0, 26, 38);
+        buy("ifhy:blacksmith_tungsten_concentrate", 3, 5, NMItems.tungstenConcentrate.itemID, 0, 24, 35);
+        buy("ifhy:blacksmith_brittle_tungsten", 3, 5, NMItems.brittleTungstenCake.itemID, 0, 18, 28);
+        buy("ifhy:blacksmith_tungsten_powder", 3, 5, NMItems.tungstenPowder.itemID, 0, 30, 44);
+        buy("ifhy:blacksmith_pure_tungsten", 3, 5, NMItems.pureTungstenChunk.itemID, 0, 16, 24);
+        buy("ifhy:blacksmith_tungsten_nuggets", 3, 5, NMItems.tungstenNugget.itemID, 0, 38, 54);
+        buy("ifhy:blacksmith_tungsten_ingots", 3, 5, NMItems.tungstenIngot.itemID, 0, 20, 30);
+        buy("ifhy:blacksmith_saturated_coresteel", 3, 5, NMItems.saturatedCoresteelCharge.itemID, 0, 14, 22);
+        buy("ifhy:blacksmith_cooled_coresteel", 3, 5, NMItems.cooledCoresteelCharge.itemID, 0, 12, 19);
+        buy("ifhy:blacksmith_coresteel_ingots", 3, 5, NMItems.coresteelIngot.itemID, 0, 18, 27);
+        buy("ifhy:blacksmith_coresteel_plates", 3, 5, NMItems.coresteelPlate.itemID, 0, 16, 24);
+
         finishRecipes("Blacksmith Trades");
     }
 
 
     private static void addButcherTrades(){
 
+        buy("ifhy:butcher_raw_mutton", 4, 1, BTWItems.rawMutton.itemID, 0, 10, 16);
+        buy("ifhy:butcher_raw_cheval", 4, 1, BTWItems.rawCheval.itemID, 0, 9, 15);
+        buy("ifhy:butcher_raw_eggs", 4, 1, Item.egg.itemID, 0, 12, 16);
+        buy("ifhy:butcher_wool", 4, 1, BTWItems.wool.itemID, 0, 42, 58);
+        buy("ifhy:butcher_tallow", 4, 2, BTWItems.tallow.itemID, 0, 34, 47);
+        buy("ifhy:butcher_cured_meat", 4, 2, BTWItems.curedMeat.itemID, 0, 10, 16);
+        buy("ifhy:butcher_raw_fish", 4, 2, Item.fishRaw.itemID, 0, 12, 16);
+        buy("ifhy:butcher_deboned_fish", 4, 2, NMItems.debonedRawFish.itemID, 0, 10, 16);
+        buy("ifhy:butcher_fish_flesh", 4, 3, NMItems.fishFlesh.itemID, 0, 1, 1);
+        buy("ifhy:butcher_calamari", 4, 3, NMItems.calamari.itemID, 0, 10, 16);
+        buy("ifhy:butcher_raw_wolf_chops", 4, 3, BTWItems.rawWolfChop.itemID, 0, 10, 16);
+        buy("ifhy:butcher_raw_liver", 4, 3, BTWItems.rawLiver.itemID, 0, 10, 16);
+        buy("ifhy:butcher_raw_mystery_meat", 4, 4, BTWItems.rawMysteryMeat.itemID, 0, 10, 16);
+        convert("ifhy:butcher_mutton_to_cooked", 4, 2,
+                TradeItem.fromID(BTWItems.rawMutton.itemID, 12, 16),
+                TradeItem.fromID(Item.emerald.itemID, 6, 10),
+                TradeItem.fromID(BTWItems.cookedMutton.itemID, 4, 8));
+        convert("ifhy:butcher_eggs_to_feed", 4, 2,
+                TradeItem.fromID(Item.egg.itemID, 12, 16),
+                TradeItem.fromID(Item.emerald.itemID, 4, 7),
+                TradeItem.fromID(BTWItems.chickenFeed.itemID, 3, 6));
+        convert("ifhy:butcher_tallow_to_soap", 4, 3,
+                TradeItem.fromID(BTWItems.tallow.itemID, 28, 40),
+                TradeItem.fromID(Item.emerald.itemID, 8, 12),
+                TradeItem.fromID(BTWItems.soap.itemID, 4, 8));
+        convert("ifhy:butcher_fish_to_hooks", 4, 3,
+                TradeItem.fromID(Item.fishRaw.itemID, 12, 16),
+                TradeItem.fromID(Item.emerald.itemID, 5, 9),
+                TradeItem.fromID(BTWItems.boneFishHook.itemID, 2, 4));
+
         finishRecipes("Butcher Trades");
 
     }
 
+    private static void addFishermanTrades() {
+        final int profession = EntityFishermanVillager.PROFESSION_ID;
+
+        // The base pool is intentionally mundane: a fisherman converts supplies and
+        // catches into the emeralds needed for his useful stock.
+        buy("ifhy:fisherman_string", profession, 1, Item.silk.itemID, 0, 20, 32);
+        buy("ifhy:fisherman_bone_hooks", profession, 1, BTWItems.boneFishHook.itemID, 0, 8, 16);
+        buy("ifhy:fisherman_raw_fish", profession, 1, Item.fishRaw.itemID, 0, 12, 16);
+        buy("ifhy:fisherman_mackerel", profession, 1, NMItems.mackerel.itemID, 0, 12, 16);
+        buy("ifhy:fisherman_cod", profession, 1, NMItems.cod.itemID, 0, 12, 16);
+        buy("ifhy:fisherman_calamari", profession, 2, NMItems.calamari.itemID, 0, 8, 16);
+        buy("ifhy:fisherman_bass", profession, 2, NMItems.bass.itemID, 0, 10, 16);
+        buy("ifhy:fisherman_trout", profession, 2, NMItems.trout.itemID, 0, 10, 16);
+        buy("ifhy:fisherman_carp", profession, 2, NMItems.carp.itemID, 0, 8, 14);
+        buy("ifhy:fisherman_salmon", profession, 3, NMItems.salmon.itemID, 0, 8, 14);
+        buy("ifhy:fisherman_fish_flesh", profession, 3, NMItems.fishFlesh.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_swordfish", profession, 3, NMItems.swordfish.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_golden_carp", profession, 4, NMItems.goldenCarp.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_lavafish", profession, 4, NMItems.lavafish.itemID, 0, 8, 16);
+
+        sell("ifhy:fisherman_bell_upgrade", profession, 1, NMItems.fishingBellUpgrade.itemID, 0, 1, 1, 1.0F, false, 4, 6);
+        sell("ifhy:fisherman_iron_rod", profession, 2, NMItems.ironFishingPole.itemID, 0, 1, 1, 0.8F, false, 10, 14);
+        sell("ifhy:fisherman_lure_upgrade", profession, 2, NMItems.fishingLureUpgrade.itemID, 0, 1, 1, 1.0F, false, 7, 10);
+        sell("ifhy:fisherman_auto_reel", profession, 3, NMItems.fishingAutoReelUpgrade.itemID, 0, 1, 1, 1.0F, false, 12, 16);
+        sell("ifhy:fisherman_diamond_rod", profession, 3, NMItems.diamondFishingPole.itemID, 0, 1, 1, 0.8F, false, 18, 24);
+        sell("ifhy:fisherman_rare_lure", profession, 4, NMItems.rareFishLureUpgrade.itemID, 0, 1, 1, 1.0F, false, 18, 24);
+        sell("ifhy:fisherman_steel_rod", profession, 4, NMItems.steelFishingPole.itemID, 0, 1, 1, 0.8F, false, 26, 32);
+        TradeProvider.getBuilder().name("ifhy:fisherman_fishing_essence").profession(profession).level(5)
+                .sell().item(NMItems.fishingEssence.itemID).emeraldCost(32, 32).mandatory().addToTradeList();
+
+        buy("ifhy:fisherman_level_two", profession, 1, Item.fishingRod.itemID, 0, 1, 1, 1.0F, true, 0, 0);
+        buy("ifhy:fisherman_level_three", profession, 2, Item.fishRaw.itemID, 0, 16, 16, 1.0F, true, 0, 0);
+        buy("ifhy:fisherman_level_four", profession, 3, NMItems.swordfish.itemID, 0, 2, 2, 1.0F, true, 0, 0);
+        buy("ifhy:fisherman_level_five", profession, 4, NMItems.goldenCarp.itemID, 0, 4, 4, 1.0F, true, 0, 0);
+        TradeProvider.getBuilder().name("ifhy:fisherman_lavafish_final").profession(profession).level(5)
+                .buy().item(NMItems.lavafish.itemID).itemCount(16, 16).mandatory().addToTradeList();
+
+        EntityVillager.defaultTradeByProfessionList.put(profession,
+                TradeProvider.getBuilder().name("ifhy:fisherman_default").profession(profession).level(1)
+                        .buy().item(Item.silk.itemID).itemCount(20, 32).build());
+        finishRecipes("Fisherman Trades");
+    }
 
     private static void addNightmareVillagerTrades(){
         final int profession = 5;
@@ -1181,6 +1570,7 @@ public abstract class NMInitializer implements AchievementExt {
                       NMItems.agrarianEssence,
                       NMItems.infernalEssence,
                       NMItems.artisanEssence,
+                      NMItems.fishingEssence,
                       NMItems.refinedDiamondIngot,
                       NMItems.deadzoneShard,
                       BTWItems.soulforgedSteelIngot,
@@ -1191,8 +1581,7 @@ public abstract class NMInitializer implements AchievementExt {
                       NMItems.endAccord,
                       Item.netherStar,
                       BTWItems.verticalWindMill,
-                      BTWItems.ocularOfEnder,
-                      NMItems.hellGem});
+                      BTWItems.ocularOfEnder});
         ultimateEyeOfEnderRecipe = (IRecipe)soulforge.getRecipeList().get(recipeIndex);
         finishRecipes("Soulforge Recipes");
 
@@ -1358,9 +1747,13 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unstableDeadzoneCharge), new Object[]{
                 NMItems.coresteelIngot, NMItems.deadzoneShard, NMItems.deadzoneShard, BTWItems.soulFlux});
         RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.deadzoneAlloyIngot), new Object[]{
-                "US  ", "    ", "    ", "    ",
+                "USSU", "DBBD", "DIID", "UYYU",
                 Character.valueOf('U'), NMItems.unstableDeadzoneCharge,
-                Character.valueOf('S'), BTWItems.steelNugget});
+                Character.valueOf('B'), NMItems.bloodIngot,
+                Character.valueOf('D'), NMItems.deadzoneShard,
+                Character.valueOf('I'), NMItems.blackglassIngot,
+                Character.valueOf('Y'), NMItems.reinforcedIronIngot,
+                Character.valueOf('S'), BTWItems.soulforgedSteelIngot});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.solarBaffle), new Object[]{
                 NMItems.deadzoneShard, NMItems.refinedRedstone, NMItems.refractoryCloth});
 
@@ -1413,19 +1806,17 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('B'), NMItems.nickelBinding});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneHelmet), new Object[]{
-                "PDP", "BSC",
+                "PPP", "PDP","BSC",
                 Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
                 Character.valueOf('D'), new ItemStack(NMItems.coresteelHelmet, 1, Short.MAX_VALUE),
                 Character.valueOf('B'), NMItems.nickelBinding,
                 Character.valueOf('S'), NMItems.deadzoneShard,
                 Character.valueOf('C'), NMItems.crystalLens});
         RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneChestplate), new Object[]{
-                "PDP", "PCP", "PSB",
+                "PDP", "PPP", "PCP",
                 Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
                 Character.valueOf('D'), new ItemStack(NMItems.coresteelChestplate, 1, Short.MAX_VALUE),
-                Character.valueOf('C'), NMItems.crystalPrecisionGear,
-                Character.valueOf('S'), NMItems.deadzoneShard,
-                Character.valueOf('B'), NMItems.nickelBinding});
+                Character.valueOf('C'), NMItems.crystalPrecisionGear});
         RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneLeggings), new Object[]{
                 "PSP", "PDP", "PBP",
                 Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
@@ -1433,7 +1824,7 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('S'), NMItems.deadzoneShard,
                 Character.valueOf('B'), NMItems.nickelBinding});
         RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneBoots), new Object[]{
-                "PDP", "SB ",
+                "PDP", "PBP", "S S",
                 Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
                 Character.valueOf('D'), new ItemStack(NMItems.coresteelBoots, 1, Short.MAX_VALUE),
                 Character.valueOf('S'), NMItems.deadzoneShard,
@@ -1892,6 +2283,14 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addShapelessRecipe(new ItemStack(NMItems.fishFlesh, 1, 99), new Object[]{new ItemStack(rawFish, 1, Short.MAX_VALUE)});
             }
         }
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "fishing_bell_upgrade", NMItems.fishingBellUpgrade, "IfhyFishingBell"));
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "fishing_lure_upgrade", NMItems.fishingLureUpgrade, "IfhyFishingLure"));
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "fishing_auto_reel_upgrade", NMItems.fishingAutoReelUpgrade, "IfhyFishingAutoReel"));
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "rare_fish_lure_upgrade", NMItems.rareFishLureUpgrade, "IfhyRareFishLure"));
 
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.moistureFertilizer, 4), new Object[]{Item.bucketWater, BTWItems.dirtPile});
@@ -2937,10 +3336,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
         SkillRecipeGates.crafting(Item.bootsDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
-        SkillRecipeGates.crafting(NMItems.bloodHelmet.itemID, NMSkillNodes.BRING_STEEL_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodChestplate.itemID, NMSkillNodes.BRING_STEEL_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodLeggings.itemID, NMSkillNodes.BRING_STEEL_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodBoots.itemID, NMSkillNodes.BRING_STEEL_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodHelmet.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodChestplate.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodLeggings.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodBoots.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
         SkillRecipeGates.crafting(NMItems.carbonIronHelmet.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
         SkillRecipeGates.crafting(NMItems.carbonIronChestplate.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
         SkillRecipeGates.crafting(NMItems.carbonIronLeggings.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
@@ -2969,7 +3368,9 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.coresteelLeggings.itemID, NMSkillNodes.BRING_CORESTEEL_INGOT_8);
         SkillRecipeGates.crafting(NMItems.coresteelBoots.itemID, NMSkillNodes.BRING_CORESTEEL_INGOT_8);
         SkillRecipeGates.crafting(NMItems.unstableDeadzoneCharge.itemID, NMSkillNodes.BRING_DEADZONE_SHARD_64);
-        SkillRecipeGates.soulforge(NMItems.deadzoneAlloyIngot.itemID, NMSkillNodes.BRING_UNSTABLE_DEADZONE_CHARGE_4);
+        SkillRecipeGates.soulforge(NMItems.deadzoneAlloyIngot.itemID,
+                NMSkillNodes.BRING_UNSTABLE_DEADZONE_CHARGE_4, NMSkillNodes.KILL_WITHER, NMSkillNodes.BRING_BLOOD_ARMOR_SET,
+                NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16);
         SkillRecipeGates.crafting(NMItems.deadzoneHelmet.itemID, NMSkillNodes.BRING_UNSTABLE_DEADZONE_CHARGE_4);
         SkillRecipeGates.crafting(NMItems.deadzoneChestplate.itemID, NMSkillNodes.BRING_UNSTABLE_DEADZONE_CHARGE_4);
         SkillRecipeGates.crafting(NMItems.deadzoneLeggings.itemID, NMSkillNodes.BRING_UNSTABLE_DEADZONE_CHARGE_4);

@@ -20,6 +20,8 @@ public final class TradeTweaks {
         volatile Integer outMax;
         volatile Integer inMin;
         volatile Integer inMax;
+        volatile Integer secondaryInMin;
+        volatile Integer secondaryInMax;
         volatile Boolean drop;        // true -> drop trade
     }
 
@@ -37,6 +39,14 @@ public final class TradeTweaks {
     public static void setInputCount(String name, int min, int max) {
         edits.computeIfAbsent(name, k -> new Edit()).inMin = min;
         edits.get(name).inMax = max;
+    }
+
+    // Converts, enchantments, and arcane scrolls put their emerald price in the
+    // second input. Keeping this separate prevents us from trying to stack tools,
+    // skulls, or paper just to raise the cost.
+    public static void setSecondaryInputCount(String name, int min, int max) {
+        edits.computeIfAbsent(name, k -> new Edit()).secondaryInMin = min;
+        edits.get(name).secondaryInMax = max;
     }
 
     public static void dropTrade(String name) {
@@ -108,6 +118,25 @@ public final class TradeTweaks {
                     } else {
                         debug("TradeTweaks: failed to set input counts for %s", key);
                     }
+                }
+            }
+
+            if (e.secondaryInMin != null && e.secondaryInMax != null) {
+                TradeItem secondary = acc.getSecondaryInput();
+                int id = tryExtractItemID(secondary);
+                int meta = tryExtractMeta(secondary);
+                boolean done = false;
+                if (id >= 0) {
+                    try {
+                        acc.setSecondaryInput(TradeItem.fromIDAndMetadata(id, meta, e.secondaryInMin, e.secondaryInMax));
+                        debug("TradeTweaks: set secondary input counts %s -> [%d,%d] (via factory)", key, e.secondaryInMin, e.secondaryInMax);
+                        done = true;
+                    } catch (Throwable t) {
+                        // factory failed; fall through to reflective mutate
+                    }
+                }
+                if (!done && !reflectivelySetTradeItemCounts(secondary, e.secondaryInMin, e.secondaryInMax)) {
+                    debug("TradeTweaks: failed to set secondary input counts for %s", key);
                 }
             }
 

@@ -701,13 +701,10 @@ public abstract class OldNMInitializer implements AchievementExt {
     }
 
     private static void addLibrarianTrades(){
-        EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(1).buy().item(Item.paper.itemID).itemCount(24, 32).build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(2).variants().addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 2)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.detectorBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(BTWItems.redstoneEye.itemID, 4)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.buddyBlock.blockID)).build()).addTradeVariant(TradeProvider.getBuilder().name("nmlibrarian0").profession(1).level(2).convert().input(TradeItem.fromID(Block.cobblestoneMossy.blockID, 6)).conversionCost(4, 6).output(TradeItem.fromID(BTWBlocks.blockDispenser.blockID)).build()).finishVariants().mandatory().build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(5).convert().input(TradeItem.fromID(Item.enderPearl.itemID)).conversionCost(6, 8).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("btw:sell_power_scroll").profession(1).level(5).arcaneScroll().scrollEnchant(Enchantment.power).secondaryEmeraldCost(48, 64).mandatory().build());
-        EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("btw:buy_bat_wings").profession(1).level(3).buy().item(BTWItems.batWing.itemID).itemCount(8, 12).build());
 
-        buy("nmlibrarian0", 1, 1, NMItems.ironKnittingNeedles.itemID, 0, 1, 1, 2, 3);
         buy("nmlibrarian0", 1, 2, Block.bookShelf.blockID, 0, 1, 2);
         buy("nmlibrarian0", 1, 2, Item.book.itemID, 0, 3, 6);
         buy("nmlibrarian0", 1, 2, Item.redstoneRepeater.itemID, 0, 1, 2);
