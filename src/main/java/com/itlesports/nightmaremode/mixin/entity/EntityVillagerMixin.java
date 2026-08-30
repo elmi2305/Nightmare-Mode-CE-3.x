@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
+import com.itlesports.nightmaremode.entity.EntityFishermanVillager;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.interfaces.FoodItemExt;
 import com.itlesports.nightmaremode.util.interfaces.VillagerHunger;
@@ -44,6 +45,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Shadow protected MerchantRecipeList buyingList;
     @Shadow public static Map<Integer, Class> professionMap;
+    @Shadow public static Map<Integer, java.util.ArrayList<Integer>> casteMap;
 
     @Shadow public abstract int getCurrentTradeLevel();
     @Shadow public abstract int getProfession();
@@ -210,7 +212,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
                 player.dropPlayerItem(refund);
             }
         }
-        if (!((Object)this instanceof EntityNetherPostVillager) && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
+        if (this.getProfession() >= 0 && this.getProfession() <= 4 && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(player).villagerProfessionChangeChance) {
             int oldProfession = this.getProfession();
             int newProfession = this.rand.nextInt(4);
@@ -226,6 +228,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Override
     public boolean onBlockDispenserConsume(BlockDispenserBlock blockDispenser, BlockDispenserTileEntity tileEntity) {
         if ((Object)this instanceof EntityNetherPostVillager) {
+            return false;
+        }
+        if ((Object)this instanceof EntityFishermanVillager) {
             return false;
         }
         int profession = this.getProfession();
@@ -285,6 +290,9 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         professionMap.put(EntityTier1NetherVillager.PROFESSION_ID, EntityTier1NetherVillager.class);
         professionMap.put(EntityTier2NetherVillager.PROFESSION_ID, EntityTier2NetherVillager.class);
         professionMap.put(EntityTier3NetherVillager.PROFESSION_ID, EntityTier3NetherVillager.class);
+        professionMap.put(EntityFishermanVillager.PROFESSION_ID, EntityFishermanVillager.class);
+        casteMap.put(3, new java.util.ArrayList<Integer>());
+        casteMap.get(3).add(EntityFishermanVillager.PROFESSION_ID);
     }
 
     @Override

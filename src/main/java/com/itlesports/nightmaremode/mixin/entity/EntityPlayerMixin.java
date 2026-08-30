@@ -200,7 +200,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @ModifyVariable(method = "attackTargetEntityWithCurrentItem", at = @At(value = "STORE"), ordinal = 0)
     private float applySkillMeleeDamage(float damage) {
         float setMultiplier = ArmorSetHelper.isWearingCompleteDeadzoneSet(this)
-                || ArmorSetHelper.isWearingCompleteDarkSet(this) ? 1.5F : 1.0F;
+                || ArmorSetHelper.isWearingCompleteDarkSet(this) ? 1.25F : 1.0F;
         return damage * (1.0F + this.nightmareMode$getSkillData().meleeDamageBonus) * setMultiplier;
     }
 
@@ -209,7 +209,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (this.worldObj.isRemote || !(target instanceof EntityLivingBase)
                 || !ArmorSetHelper.isWearingCompleteSignalSet(this)) return;
         int spent = ArmorSetHelper.drainSignalCharge(this, 160);
-        if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 160.0F);
+        if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 80.0F);
     }
 
     public EntityPlayerMixin(World par1World) {
@@ -340,7 +340,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             return false;
         }
         if (fireDamage && !this.worldObj.isRemote && ArmorSetHelper.isWearingCompleteCoresteelSet(this)) {
-            float heatPerDamage = src == DamageSource.lava ? 160.0F : 60.0F;
+            float heatPerDamage = src == DamageSource.lava ? 30.0F : 20.0F;
             int remainingCapacity = ArmorSetHelper.getCoresteelRemainingHeatCapacity(this);
             int absorbedHeat = Math.min(remainingCapacity, MathHelper.ceiling_float_int(amount * heatPerDamage));
             if (absorbedHeat > 0 && ArmorSetHelper.addCoresteelHeat(this, absorbedHeat)) {
@@ -1521,7 +1521,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         int z = MathHelper.floor_double(this.posZ);
         boolean snowContact = this.worldObj.getBlockId(x, y, z) == Block.snow.blockID
                 || this.worldObj.getBlockId(x, y - 1, z) == Block.blockSnow.blockID;
-        if (this.isWet() || snowContact) ArmorSetHelper.coolCoresteel(this, this.isInWater() ? 4 : 2);
+        boolean lowerBodyInWater = this.isInWater();
+        boolean fullySubmerged = lowerBodyInWater && this.isInsideOfMaterial(Material.water);
+        if (fullySubmerged) {
+            ArmorSetHelper.coolCoresteel(this, 24);
+        } else if (lowerBodyInWater) {
+            ArmorSetHelper.coolCoresteel(this, 12);
+        } else if (this.isWet() || snowContact) {
+            ArmorSetHelper.coolCoresteel(this, 4);
+        } else if (this.dimension != -1 && !this.isBurning() && !this.handleLavaMovement()
+                && !this.isNearOuterHeatSource(x, y, z)) {
+            ArmorSetHelper.coolCoresteel(this, 1);
+        }
         if (ArmorSetHelper.isWearingCompleteDeadzoneSet(this)) this.extinguish();
     }
 
@@ -1548,14 +1559,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         boolean powered = this.worldObj.isBlockGettingPowered(x, y, z)
                 || this.worldObj.isBlockGettingPowered(x, y - 1, z);
         if (powered && this.ticksExisted % 10 == 0) {
-            ArmorSetHelper.addSignalCharge(this, 8);
+            ArmorSetHelper.addSignalCharge(this, 40);
             this.foodStats.addExhaustion(0.01F);
         }
-        int railId = this.worldObj.getBlockId(x, y, z);
-        if (railId == Block.railPowered.blockID && (this.worldObj.getBlockMetadata(x, y, z) & 8) != 0
+        int railId = this.worldObj.getBlockId(x, y + 1, z);
+        if (railId == Block.railPowered.blockID && (this.worldObj.getBlockMetadata(x, y + 1, z) & 8) != 0
                 && ArmorSetHelper.getSignalCharge(this) >= 40) {
             ArmorSetHelper.drainSignalCharge(this, 2);
-            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 30, 0));
+            this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 80, 1));
         }
     }
 
@@ -1580,7 +1591,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         int x = MathHelper.floor_double(this.posX);
         int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
         int z = MathHelper.floor_double(this.posZ);
-        boolean exposed = this.posY > 160.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
+        boolean exposed = this.posY > 140.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
         if (!exposed || ArmorSetHelper.hasSuppliedSunSet(this)) {
             this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 12);
             return;
@@ -1589,8 +1600,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         boolean day = this.worldObj.isDaytime();
         boolean rain = this.worldObj.isRainingAtPos(x, y, z);
         this.outerSolarExposure = Math.min(400, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
-        if (this.outerSolarExposure >= 100 && this.ticksExisted % 40 == 0) {
-            this.attackEntityFrom(DamageSource.magic, day && !rain ? 2.0F : 1.0F);
+        if (this.outerSolarExposure >= 100 && this.ticksExisted % 8 == 0) {
+            this.attackEntityFrom(DamageSource.magic, 1.0f);
         }
     }
 

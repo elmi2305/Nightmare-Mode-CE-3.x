@@ -5,6 +5,8 @@ import btw.util.BTWSounds;
 import api.world.WorldUtils;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemUpgradeableFishingRod;
+import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.FishingCatch;
 import net.minecraft.src.*;
@@ -91,6 +93,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
     private int increaseLavaFishingBiteChance(int odds) {
+        if (this.hasRodUpgrade("IfhyFishingLure")) {
+            return Math.max(1, odds / 2);
+        }
         if (this.isNetherFishing()) {
             return Math.max(1, odds / 6);
         }
@@ -133,24 +138,40 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;", ordinal = 0))
     private Item recognizeUnbaitedNetherRod(ItemStack stack) {
-        return stack.getItem() == NMItems.netherFishingRod ? Item.fishingRod : stack.getItem();
+        if (stack.getItem() == NMItems.netherFishingRod) return Item.fishingRod;
+        if (stack.getItem() instanceof ItemUpgradeableFishingRod rod) {
+            return rod.isBaited() ? BTWItems.baitedFishingRod : Item.fishingRod;
+        }
+        return stack.getItem();
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;", ordinal = 1))
     private Item recognizeBaitedNetherRod(ItemStack stack) {
-        return stack.getItem() == NMItems.netherFishingRodBaited ? BTWItems.baitedFishingRod : stack.getItem();
+        if (stack.getItem() == NMItems.netherFishingRodBaited) return BTWItems.baitedFishingRod;
+        if (stack.getItem() instanceof ItemUpgradeableFishingRod rod) {
+            return rod.isBaited() ? BTWItems.baitedFishingRod : Item.fishingRod;
+        }
+        return stack.getItem();
     }
 
     @Redirect(method = "loseBait", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;"))
     private Item recognizeBaitedNetherRodWhenLosingBait(ItemStack stack) {
-        return stack.getItem() == NMItems.netherFishingRodBaited ? BTWItems.baitedFishingRod : stack.getItem();
+        if (stack.getItem() == NMItems.netherFishingRodBaited) return BTWItems.baitedFishingRod;
+        if (stack.getItem() instanceof ItemUpgradeableFishingRod rod) {
+            return rod.isBaited() ? BTWItems.baitedFishingRod : Item.fishingRod;
+        }
+        return stack.getItem();
     }
 
     @Redirect(method = "loseBait", at = @At(value = "FIELD", target = "Lnet/minecraft/src/ItemStack;itemID:I", opcode = Opcodes.PUTFIELD))
     private void restoreUnbaitedNetherRod(ItemStack stack, int itemID) {
-        stack.itemID = stack.getItem() == NMItems.netherFishingRodBaited
-                ? NMItems.netherFishingRod.itemID
-                : itemID;
+        if (stack.getItem() == NMItems.netherFishingRodBaited) {
+            stack.itemID = NMItems.netherFishingRod.itemID;
+        } else if (stack.getItem() instanceof ItemUpgradeableFishingRod rod && rod.isBaited()) {
+            stack.itemID = rod.getCounterpartItemId();
+        } else {
+            stack.itemID = itemID;
+        }
     }
 
     @Redirect(method = "catchFish", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityFishHook;bobber:Lnet/minecraft/src/Entity;", ordinal = 0))
@@ -210,6 +231,14 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         } else {
             instance.worldObj.playSoundAtEntity(instance.angler, sound, volume, pitch);
         }
+        if (this.hasRodUpgrade("IfhyFishingBell")) {
+            instance.worldObj.playSoundAtEntity(instance.angler, "random.orb", 0.7F, 1.35F);
+        }
+        if (!instance.worldObj.isRemote && this.hasRodUpgrade("IfhyFishingAutoReel") && instance.angler != null) {
+            int damage = instance.catchFish();
+            ItemStack held = instance.angler.getCurrentEquippedItem();
+            if (held != null) held.damageItem(damage, instance.angler);
+        }
     }
 
     @Unique
@@ -231,8 +260,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 MathHelper.floor_double(this.posX),
                 MathHelper.floor_double(this.posZ)
         );
-        if (this.angler != null
-                && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus) {
+        if (this.angler != null && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus
+                + (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)) {
             this.selectedCatchIsFish = true;
             return biomeCatches[biomeCatches.length - 1];
         }
@@ -305,6 +334,11 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         }
         ItemStack held = this.angler.getCurrentEquippedItem();
         return held != null && (held.itemID == NMItems.netherFishingRod.itemID || held.itemID == NMItems.netherFishingRodBaited.itemID);
+    }
+
+    @Unique
+    private boolean hasRodUpgrade(String key) {
+        return this.angler != null && FishingRodUpgradeRecipe.hasUpgrade(this.angler.getCurrentEquippedItem(), key);
     }
 
 }

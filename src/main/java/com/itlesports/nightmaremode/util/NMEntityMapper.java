@@ -80,6 +80,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityAngelGhast.class, "NmAngelGhast", 2364, 0xF4F4FF, 0xD4B9FF);
         EntityList.addMapping(EntityAcidGhast.class, "NmAcidGhast", 2365, 0x7AFF38, 0x213C13);
         EntityList.addMapping(EntityAngelDragon.class, "NmAngelDragon", 2366, 0xF4F4FF, 0xB5A7E8);
+        EntityList.addMapping(EntityFishermanVillager.class, "NmFishermanVillager", 2367, 0x3E6B79, 0xD7E7E8);
 
     }
 

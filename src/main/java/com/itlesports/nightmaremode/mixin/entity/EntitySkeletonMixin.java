@@ -611,6 +611,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         int progress = NMUtils.getWorldProgress();
         float bloodMoonModifier = (float) NMUtils.getBloodMoonModifier(1.4);
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
+        if(this.worldObj == null) return;
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         double niteMultiplier = NMUtils.getNiteMultiplier();
 

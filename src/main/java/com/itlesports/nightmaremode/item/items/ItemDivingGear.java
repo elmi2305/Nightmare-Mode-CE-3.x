@@ -38,6 +38,11 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
         return this.airCapacity;
     }
 
+    /** Only tanks and reservoirs are compressed-air containers; masks merely seal their breathing loop. */
+    public boolean storesAir() {
+        return this.airCapacity > 0;
+    }
+
     public int getStoredAir(ItemStack stack) {
         return stack != null && stack.hasTagCompound()
                 ? Math.max(0, Math.min(this.airCapacity, stack.getTagCompound().getInteger(AIR_TAG)))
@@ -63,7 +68,7 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (this.airCapacity <= 0 || this.getStoredAir(stack) >= this.airCapacity) return stack;
+        if (!this.storesAir() || this.getStoredAir(stack) >= this.airCapacity) return stack;
 
         int x = MathHelper.floor_double(player.posX);
         int y = MathHelper.floor_double(player.posY + player.getEyeHeight());
@@ -91,7 +96,7 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
 
     @Override
     public long getItemRightClickCooldown() {
-        return 20L;
+        return this.storesAir() ? 20L : 0L;
     }
 
     @Override
@@ -123,7 +128,7 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
 
     @Override
     public float getStatusFraction(ItemStack stack) {
-        return this.airCapacity <= 0 ? 0.0F : (float)this.getStoredAir(stack) / (float)this.airCapacity;
+        return !this.storesAir() ? 0.0F : (float)this.getStoredAir(stack) / (float)this.airCapacity;
     }
 
     @Override

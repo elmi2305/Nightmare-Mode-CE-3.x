@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.MiscRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.mixin.EmiDataAccessor;
 import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.api.EmiRegistry;
@@ -57,17 +58,8 @@ public final class NightmareEmiRegistry {
         registry.addCategory(WASHING);
         registry.addCategory(MISC);
 
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.woodHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.stoneHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.ironHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.diamondHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.goldHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.steelHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMItems.netherrackHammer));
-        registry.addWorkstation(HAMMERING, EmiStack.of(Block.anvil));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.stoneAnvil));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.diamondAnvil));
-        registry.addWorkstation(HAMMERING, EmiStack.of(NMBlocks.netherrackAnvil));
+        registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.hammers));
+        registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.anvils));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cistern));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternStirrer));
         registry.addWorkstation(ENDER_ASSEMBLER, EmiStack.of(NMBlocks.enderAssembler));
