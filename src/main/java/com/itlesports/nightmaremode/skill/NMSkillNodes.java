@@ -2849,7 +2849,7 @@ public final class NMSkillNodes {
             -1, 0,
             "Bring 16 blaze rods.",
             Item.blazeRod.itemID, 0, false, 16,
-            "Netherrack can be mined.", none(),
+            "+5% blaze-rod drop chance.", SkillRewardActions.addBlazeRodDropChance(0.1f),
             COMBAT, false);
 
     public static final SkillNode BRING_ROTTEN_FLESH = bring(
@@ -3372,7 +3372,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_NETHER_STICK_16 = bring(
             "nether_stick_16", "Infernal Handles", NMItems.netherStick, -2, -3,
             "Bring 16 nether sticks.", NMItems.netherStick.itemID, 0, false, 16,
-            "Unlock Nether-handled tools.", SkillRewardActions.unlockNetherrackMining(), MINING, false);
+            "Unlock ability to mine Netherrack.", SkillRewardActions.unlockNetherrackMining(), MINING, false);
 
     public static final SkillNode BRING_NETHERRACK_CHUNK_16 = bring(
             "netherrack_chunk_16", "Netherrack Aggregate", NMItems.netherrackChunk, -1, -3,
