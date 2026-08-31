@@ -758,13 +758,68 @@ public abstract class NMInitializer implements AchievementExt {
         buy("ifhy:fisherman_golden_carp", profession, 4, NMItems.goldenCarp.itemID, 0, 1, 2);
         buy("ifhy:fisherman_lavafish", profession, 4, NMItems.lavafish.itemID, 0, 8, 16);
 
-        sell("ifhy:fisherman_bell_upgrade", profession, 1, NMItems.fishingBellUpgrade.itemID, 0, 1, 1, 1.0F, false, 4, 6);
-        sell("ifhy:fisherman_iron_rod", profession, 2, NMItems.ironFishingPole.itemID, 0, 1, 1, 0.8F, false, 10, 14);
-        sell("ifhy:fisherman_lure_upgrade", profession, 2, NMItems.fishingLureUpgrade.itemID, 0, 1, 1, 1.0F, false, 7, 10);
-        sell("ifhy:fisherman_auto_reel", profession, 3, NMItems.fishingAutoReelUpgrade.itemID, 0, 1, 1, 1.0F, false, 12, 16);
-        sell("ifhy:fisherman_diamond_rod", profession, 3, NMItems.diamondFishingPole.itemID, 0, 1, 1, 0.8F, false, 18, 24);
-        sell("ifhy:fisherman_rare_lure", profession, 4, NMItems.rareFishLureUpgrade.itemID, 0, 1, 1, 1.0F, false, 18, 24);
-        sell("ifhy:fisherman_steel_rod", profession, 4, NMItems.steelFishingPole.itemID, 0, 1, 1, 0.8F, false, 26, 32);
+        // Upgrades and rods are conversions, not clean emerald purchases. This keeps
+        // the fisherman tied to fishing supplies instead of becoming an emerald sink.
+        convert("ifhy:fisherman_bell_upgrade", profession, 1,
+                TradeItem.fromID(BTWItems.boneFishHook.itemID, 4, 8),
+                TradeItem.fromID(Item.emerald.itemID, 4, 6),
+                TradeItem.fromID(NMItems.fishingBellUpgrade.itemID));
+        convert("ifhy:fisherman_iron_rod", profession, 2,
+                TradeItem.fromID(Item.ingotIron.itemID, 8),
+                TradeItem.fromID(Item.emerald.itemID, 10, 14),
+                TradeItem.fromID(NMItems.ironFishingPole.itemID));
+        convert("ifhy:fisherman_lure_upgrade", profession, 2,
+                TradeItem.fromID(Item.silk.itemID, 12, 16),
+                TradeItem.fromID(Item.emerald.itemID, 7, 10),
+                TradeItem.fromID(NMItems.fishingLureUpgrade.itemID));
+        convert("ifhy:fisherman_auto_reel", profession, 3,
+                TradeItem.fromID(Item.bone.itemID, 12, 16),
+                TradeItem.fromID(Item.emerald.itemID, 12, 16),
+                TradeItem.fromID(NMItems.fishingAutoReelUpgrade.itemID));
+        convert("ifhy:fisherman_diamond_rod", profession, 3,
+                TradeItem.fromID(BTWItems.diamondIngot.itemID, 8),
+                TradeItem.fromID(Item.emerald.itemID, 18, 24),
+                TradeItem.fromID(NMItems.diamondFishingPole.itemID));
+        convert("ifhy:fisherman_rare_lure", profession, 4,
+                TradeItem.fromID(BTWItems.batWing.itemID, 1, 2),
+                TradeItem.fromID(Item.emerald.itemID, 18, 24),
+                TradeItem.fromID(NMItems.rareFishLureUpgrade.itemID));
+        convert("ifhy:fisherman_steel_rod", profession, 4,
+                TradeItem.fromID(BTWItems.soulforgedSteelIngot.itemID, 8),
+                TradeItem.fromID(Item.emerald.itemID, 26, 32),
+                TradeItem.fromID(NMItems.steelFishingPole.itemID));
+
+        // Disposable bait and basic rod supplies occupy the otherwise low-value slots.
+        // Every offer consumes a catch as well as emeralds, so the fisherman cannot turn
+        // an emerald surplus into unrestricted valuable stock.
+        convert("ifhy:fisherman_rotten_flesh_bait", profession, 1,
+                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.emerald.itemID, 1, 2),
+                TradeItem.fromID(Item.rottenFlesh.itemID, 8, 16));
+        convert("ifhy:fisherman_fish_to_sticks", profession, 1,
+                TradeItem.fromID(Item.fishRaw.itemID, 6, 10),
+                TradeItem.fromID(Item.emerald.itemID, 1, 2),
+                TradeItem.fromID(Item.stick.itemID, 8, 16));
+        convert("ifhy:fisherman_fish_to_string", profession, 1,
+                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.emerald.itemID, 2, 3),
+                TradeItem.fromID(Item.silk.itemID, 4, 8));
+        convert("ifhy:fisherman_fish_to_bones", profession, 1,
+                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.emerald.itemID, 2, 3),
+                TradeItem.fromID(Item.bone.itemID, 4, 8));
+        convert("ifhy:fisherman_creeper_oyster_bait", profession, 2,
+                TradeItem.fromID(NMItems.mackerel.itemID, 8, 12),
+                TradeItem.fromID(Item.emerald.itemID, 4, 6),
+                TradeItem.fromID(BTWItems.creeperOysters.itemID, 2, 4));
+        convert("ifhy:fisherman_bat_wing_bait", profession, 3,
+                TradeItem.fromID(NMItems.salmon.itemID, 4, 6),
+                TradeItem.fromID(Item.emerald.itemID, 8, 12),
+                TradeItem.fromID(BTWItems.batWing.itemID));
+        convert("ifhy:fisherman_spider_eye_bait", profession, 4,
+                TradeItem.fromID(NMItems.goldenCarp.itemID),
+                TradeItem.fromID(Item.emerald.itemID, 12, 16),
+                TradeItem.fromID(Item.spiderEye.itemID, 2, 4));
         TradeProvider.getBuilder().name("ifhy:fisherman_fishing_essence").profession(profession).level(5)
                 .sell().item(NMItems.fishingEssence.itemID).emeraldCost(32, 32).mandatory().addToTradeList();
 
@@ -3589,7 +3644,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_CORESTEEL_PLATE_8);
         gateArmorSet(NMItems.deadzoneHelmet, NMItems.deadzoneChestplate, NMItems.deadzoneLeggings, NMItems.deadzoneBoots,
                 NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8);
-        SkillRecipeGates.crafting(NMItems.solarBaffle.itemID, NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8);
+            SkillRecipeGates.crafting(NMItems.solarBaffle.itemID, NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8);
         gateArmorSet(NMItems.darkHelmet, NMItems.darkChestplate, NMItems.darkLeggings, NMItems.darkBoots,
                 NMSkillNodes.BRING_DARK_INGOT_8);
 
