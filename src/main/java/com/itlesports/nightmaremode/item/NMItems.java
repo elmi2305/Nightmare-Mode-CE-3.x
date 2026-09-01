@@ -214,6 +214,9 @@ public class NMItems {
     public static Item ironScythe;
     public static Item diamondScythe;
     public static Item tungstenScythe;
+    public static Item stoneLeafRake;
+    public static Item ironLeafRake;
+    public static Item diamondLeafRake;
     public static Item aquamarine;
     public static Item netherFishingRod;
     public static Item netherFishingRodBaited;
@@ -608,11 +611,11 @@ public class NMItems {
         washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
         pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
         boneShard = new NetherItem(2700).setTextureName("nightmare:ifhyBoneShard").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
-        stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
-        ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
-        diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
-        goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 32).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
-        tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 256).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
+        stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
+        ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setDamageVsEntity(3).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
+        diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setDamageVsEntity(4).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
+        goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
+        tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 256).setDamageVsEntity(3).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
 
         ash = new NetherItem(2704).setTextureName("nightmare:ifhyAsh").setUnlocalizedName("ifhyAsh").setCreativeTab(CreativeTabs.tabMaterials);
         ashClump = new NetherItem(2705).setTextureName("nightmare:ifhyAshClump").setUnlocalizedName("ifhyAshClump").setCreativeTab(CreativeTabs.tabMaterials);
@@ -1040,6 +1043,10 @@ public class NMItems {
         fishingAutoReelUpgrade = material(3412, "ifhyFishingAutoReelUpgrade");
         rareFishLureUpgrade = material(3413, "ifhyRareFishLureUpgrade");
         fishingEssence = material(3414, "ifhyFishingEssence");
+
+        stoneLeafRake = new ItemLeafRake(3415, EnumToolMaterial.STONE, 50, 0.4F, 0.08F, 1).setTextureName("nightmare:ifhyStoneRake").setUnlocalizedName("ifhyLeafRake").setCreativeTab(CreativeTabs.tabTools);
+        ironLeafRake = new ItemLeafRake(3416, EnumToolMaterial.IRON, 250, 0.7F, 0.15F, 2).setTextureName("nightmare:ifhyIronRake").setUnlocalizedName("ifhyIronLeafRake").setCreativeTab(CreativeTabs.tabTools);
+        diamondLeafRake = new ItemLeafRake(3417, EnumToolMaterial.EMERALD, 768, 1.0F, 0.50F, 3).setTextureName("nightmare:ifhyDiamondRake").setUnlocalizedName("ifhyDiamondLeafRake").setCreativeTab(CreativeTabs.tabTools);
     }
 
     private static Item material(int id, String name) {
