@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemLeafRake;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
@@ -44,7 +45,7 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Inject(method = "idDropped", at= @At("HEAD"),cancellable = true)
     private void allowAppleDrops(int metadata, Random rand, int fortuneModifier, CallbackInfoReturnable<Integer> cir){
-        if(rand.nextInt(4) == 0){
+        if(rand.nextInt(3) == 0){
             cir.setReturnValue(NMItems.twig.itemID);
             return;
         }
@@ -59,6 +60,11 @@ public class BlockLeavesMixin extends BlockLeavesBase {
         EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
         float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).twigDropChanceBonus;
         if (!world.isRemote && bonus > 0.0F && world.rand.nextFloat() < bonus) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.twig));
+        }
+        ItemStack held = player == null ? null : player.getCurrentEquippedItem();
+        if (!world.isRemote && held != null && held.getItem() instanceof ItemLeafRake rake
+                && world.rand.nextFloat() < rake.getTwigDropChance()) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.twig));
         }
     }

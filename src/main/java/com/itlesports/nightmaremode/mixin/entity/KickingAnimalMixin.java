@@ -27,7 +27,7 @@ public abstract class KickingAnimalMixin extends EntityAnimal {
             return AxisAlignedBB.getAABBPool().getAABB(kickCenter.xCoord - 1.45, kickCenter.yCoord - 1.2, kickCenter.zCoord - 1.45, kickCenter.xCoord + 1.45, kickCenter.yCoord + 1.2, kickCenter.zCoord + 1.45);
         } else if (self instanceof EntityCow){
             Vec3 kickCenter = this.computeKickAttackCenter();
-            double horizontalOffsetMin = 0.9;
+            double horizontalOffsetMin = 0.7;
             double verticalOffsetMin = 0.65;
             double verticalOffsetMax = 1.2;
             double horizontalOffsetMax = 1.45;
