@@ -6,6 +6,7 @@ import net.minecraft.src.EnumToolMaterial;
 public class ItemFlintAxe extends AxeItem {
     public ItemFlintAxe(int itemID) {
         super(itemID, EnumToolMaterial.STONE);
-        this.setMaxDamage(1);
+        this.setMaxDamage(3);
+        this.setDamageVsEntity(1);
     }
 }
