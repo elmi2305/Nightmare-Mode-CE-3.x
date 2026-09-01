@@ -18,7 +18,6 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.EnderAssemblerRecipeManager;
-import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
@@ -83,7 +82,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void validateUltimateItemRegistrations() {
         validateItemRegistration("Librarian's Ender Treatise", NMItems.librarianEnderTreatise);
         validateItemRegistration("Automation Essence", NMItems.automationEssence);
-        validateItemRegistration("Agrarian Essence", NMItems.agrarianEssence);
+        validateItemRegistration("Agrarian Essence", NMItems.husbandryEssence);
         validateItemRegistration("Infernal Essence", NMItems.infernalEssence);
         validateItemRegistration("Artisan Essence", NMItems.artisanEssence);
         validateItemRegistration("Fishing Essence", NMItems.fishingEssence);
@@ -108,7 +107,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void validateUltimateCraftingRecipeRegistrations() {
         validateShapelessRecipeRegistration("Automation Essence", automationEssenceRecipe, NMItems.automationEssence);
-        validateShapelessRecipeRegistration("Agrarian Essence", agrarianEssenceRecipe, NMItems.agrarianEssence);
+        validateShapelessRecipeRegistration("Agrarian Essence", agrarianEssenceRecipe, NMItems.husbandryEssence);
         validateShapelessRecipeRegistration("Infernal Essence", infernalEssenceRecipe, NMItems.infernalEssence);
 
         if (artisanEssenceRecipe == null
@@ -1634,7 +1633,7 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(Item.eyeOfEnder),
                 new Object[]{
                       NMItems.automationEssence,
-                      NMItems.agrarianEssence,
+                      NMItems.husbandryEssence,
                       NMItems.infernalEssence,
                       NMItems.artisanEssence,
                       NMItems.fishingEssence,
@@ -2421,7 +2420,7 @@ public abstract class NMInitializer implements AchievementExt {
                 });
 
         agrarianEssenceRecipe = RecipeManager.addShapelessRecipe(
-                new ItemStack(NMItems.agrarianEssence),
+                new ItemStack(NMItems.husbandryEssence),
                 new Object[]{
                         BTWItems.hemp,
                         BTWItems.fabric,

@@ -288,7 +288,7 @@ public class NMItems {
     public static Item searingSilverScale;
     public static Item denseNetherrackCore;
     public static Item deadzoneShard;
-    public static Item netherTradePlaceholder;
+//    public static Item netherTradePlaceholder;
     public static Item invocationFragment;
     public static Item invocationSeal;
     public static Item endAccordFragment;
@@ -298,7 +298,7 @@ public class NMItems {
     public static Item debugVillagerReroll;
     public static Item librarianEnderTreatise;
     public static Item automationEssence;
-    public static Item agrarianEssence;
+    public static Item husbandryEssence;
     public static Item infernalEssence;
     public static Item artisanEssence;
     public static Item stoneStick;
@@ -690,7 +690,7 @@ public class NMItems {
         searingSilverScale = new NetherItem(2765).setTextureName("nightmare:ifhySearingSilverScale").setUnlocalizedName("ifhySearingSilverScale").setCreativeTab(CreativeTabs.tabMaterials);
         denseNetherrackCore = new NetherItem(2766).setTextureName("nightmare:ifhyDenseNetherrackCore").setUnlocalizedName("ifhyDenseNetherrackCore").setCreativeTab(CreativeTabs.tabMaterials);
         deadzoneShard = new NetherItem(2767).setTextureName("nightmare:ifhyDeadzoneShard").setUnlocalizedName("ifhyDeadzoneShard").setCreativeTab(CreativeTabs.tabMaterials);
-        netherTradePlaceholder = new NetherItem(2768).setTextureName("nightmare:ifhyNetherTradePlaceholder").setUnlocalizedName("ifhyNetherTradePlaceholder").setCreativeTab(CreativeTabs.tabMaterials);
+//        netherTradePlaceholder = new NetherItem(2768).setTextureName("nightmare:ifhyNetherTradePlaceholder").setUnlocalizedName("ifhyNetherTradePlaceholder").setCreativeTab(CreativeTabs.tabMaterials);
         invocationFragment = new NetherItem(2769).setTextureName("nightmare:ifhyInvocationFragment").setUnlocalizedName("ifhyInvocationFragment").setCreativeTab(CreativeTabs.tabMaterials);
         invocationSeal = new NetherItem(2770).setTextureName("nightmare:ifhyInvocationSeal").setUnlocalizedName("ifhyInvocationSeal").setCreativeTab(CreativeTabs.tabMaterials);
         endAccordFragment = new NetherItem(2771).setTextureName("nightmare:ifhyEndAccordFragment").setUnlocalizedName("ifhyEndAccordFragment").setCreativeTab(CreativeTabs.tabMaterials);
@@ -712,16 +712,16 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyAutomationEssence")
                 .setUnlocalizedName("ifhyAutomationEssence")
                 .setCreativeTab(CreativeTabs.tabMaterials);
-        agrarianEssence = new NMItem(3202)
-                .setTextureName("nightmare:ifhyAgrarianEssence")
+        husbandryEssence = new NMItem(3202)
+                .setTextureName("nightmare:ifhyHusbandryEssence")
                 .setUnlocalizedName("ifhyAgrarianEssence")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         infernalEssence = new NetherItem(3203)
-                .setTextureName("nightmare:ifhyInfernalEssence")
+                .setTextureName("nightmare:ifhyInfernoEssence")
                 .setUnlocalizedName("ifhyInfernalEssence")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         artisanEssence = new NMItem(3204)
-                .setTextureName("nightmare:ifhyArtisanEssence")
+                .setTextureName("nightmare:ifhyArtificeEssence")
                 .setUnlocalizedName("ifhyArtisanEssence")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         stoneStick = new NMItem(3205)
@@ -1043,41 +1043,29 @@ public class NMItems {
     }
 
     private static Item material(int id, String name) {
-        return new NMItem(id).setTextureName("nightmare:" + name)
-                .setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+        return new NMItem(id).setTextureName("nightmare:" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
     }
 
     private static Item netherMaterial(int id, String name) {
-        return new NetherItem(id).setTextureName("nightmare:" + name)
-                .setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+        return new NetherItem(id).setTextureName("nightmare:" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
     }
 
-    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses,
-                                              int enchantability, double knockbackResistance, Item repairItem,
-                                              String wornTexture, String bonusKey, String name) {
-        return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability,
-                knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
-                .setTextureName("nightmare:" + name).setUnlocalizedName(name);
+    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses, int enchantability, double knockbackResistance, Item repairItem, String wornTexture, String bonusKey, String name) {
+        return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability, knockbackResistance, repairItem.itemID, wornTexture, bonusKey).setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
-    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses,
-                                             int enchantability, double knockbackResistance, Item repairItem,
-                                             String wornTexture, String name) {
+    private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses, int enchantability, double knockbackResistance, Item repairItem, String wornTexture, String name) {
         return (ItemAlloyArmor)new ItemAlloyArmor(id, armorType, protection, weight, maxUses, enchantability,
                 knockbackResistance, repairItem.itemID, wornTexture, null)
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
 
-    private static ItemCarbonIronArmor carbonIronArmor(int id, int armorType, int protection, int weight,
-                                                        int maxUses, int enchantability,
-                                                        double knockbackResistance, Item repairItem,
-                                                        String wornTexture, String bonusKey, String name) {
+    private static ItemCarbonIronArmor carbonIronArmor(int id, int armorType, int protection, int weight, int maxUses, int enchantability, double knockbackResistance, Item repairItem, String wornTexture, String bonusKey, String name) {
         return (ItemCarbonIronArmor)new ItemCarbonIronArmor(id, armorType, protection, weight, maxUses,
                 enchantability, knockbackResistance, repairItem.itemID, wornTexture, bonusKey)
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
 
-    private static ItemHeatResistantArmor heatArmor(int id, int armorType, int protection, int weight,
-                                                     int maxUses, String name) {
+    private static ItemHeatResistantArmor heatArmor(int id, int armorType, int protection, int weight, int maxUses, String name) {
         return (ItemHeatResistantArmor)new ItemHeatResistantArmor(id, armorType, protection, weight, maxUses,
                 10, 0.0D, nickelPlate.itemID, "ifhyHeatResistantArmor",
                 "item.ifhyHeatResistantArmor.bonus", 0.12F)
