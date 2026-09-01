@@ -93,6 +93,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int outerColdExposure;
     @Unique private int outerSolarExposure;
     @Unique private int carbonArmorWetTicks;
+    @Unique private float lastMeleeDamage;
     @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
     @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
     ;
@@ -501,11 +502,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyArg(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float unkillableMobs(float par2){
+        this.lastMeleeDamage = par2;
         if(unkillableMobs){
+            this.lastMeleeDamage = 0.0F;
             return 0f;
         }
         return par2;
     }
+
+    @Redirect(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;addVelocity(DDD)V"))
+    private void scalePlayerAttackKnockback(Entity target, double x, double y, double z) {
+        if (MeleeKnockback.isPreventedBy((EntityPlayer)(Object)this)) {
+            return;
+        }
+        float scale = MeleeKnockback.getScale(this.lastMeleeDamage);
+        target.addVelocity(x * scale, y * scale, z * scale);
+    }
+
     @Inject(method = "attackTargetEntityWithCurrentItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;triggerAchievement(Lnet/minecraft/src/StatBase;)V"),locals = LocalCapture.CAPTURE_FAILHARD)
     private void manageAchievementsOnPlayerHit(Entity entityHit, CallbackInfo ci, float dmg){
         EntityPlayer player = (EntityPlayer)(Object)this;

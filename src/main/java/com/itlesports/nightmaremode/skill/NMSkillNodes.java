@@ -1235,13 +1235,13 @@ public final class NMSkillNodes {
             HUSBANDRY, false),
             () -> NMSkillNodes.BRING_SAWDUST_16);
 
-    public static final SkillNode BRING_BARK_64 = bring(
+    public static final SkillNode BRING_BARK_16 = bring(
             "bark_64",
             "Bark Bundling",
             BTWItems.bark,
             2, 0,
-            "Bring 64 bark.",
-            BTWItems.bark.itemID, 0, false, 64,
+            "Bring 16 bark.",
+            BTWItems.bark.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
             HUSBANDRY, false);
 

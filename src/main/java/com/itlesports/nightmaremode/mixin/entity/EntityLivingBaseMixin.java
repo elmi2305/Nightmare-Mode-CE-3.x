@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.MeleeKnockback;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -296,6 +297,23 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         if (this.nm$isCarcass()) {
             cir.setReturnValue(false);
         }
+    }
+
+    @Redirect(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;knockBack(Lnet/minecraft/src/Entity;FDD)V"))
+    private void suppressWeaponKnockback(EntityLivingBase target, Entity attacker, float damage, double x, double z) {
+        if (!MeleeKnockback.isPreventedBy(attacker)) {
+            target.knockBack(attacker, damage, x, z);
+        }
+    }
+
+    @ModifyConstant(method = "attackEntityFrom", constant = @Constant(floatValue = 1.0F))
+    private float allowMinimumDamageKnockback(float threshold) {
+        return 0.0F;
+    }
+
+    @Redirect(method = "knockBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;knockbackMagnitude()F"))
+    private float scaleDamageKnockback(EntityLivingBase target, Entity attacker, float damage, double x, double z) {
+        return target.knockbackMagnitude() * MeleeKnockback.getScale(damage);
     }
 
     @Inject(method = "isEntityAlive", at = @At("HEAD"), cancellable = true)
