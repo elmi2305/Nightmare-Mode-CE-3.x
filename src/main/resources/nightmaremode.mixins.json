@@ -156,6 +156,7 @@
     "blocks.PlantsBlockMixin",
     "blocks.RedstoneClutchBlockStressMixin",
     "blocks.PotatoBlockMixin",
+    "blocks.RoughStoneBlockMixin",
     "blocks.SawBlockMixin",
     "blocks.BlockStoneMixin",
     "blocks.ScrewPumpBlockMixin",

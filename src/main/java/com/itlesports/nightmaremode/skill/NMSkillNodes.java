@@ -3530,10 +3530,10 @@ public final class NMSkillNodes {
             "Bring 4 End Accord fragments.", NMItems.endAccordFragment.itemID, 0, false, 4,
             "Unlock End Accord assembly.", none(), MINING, false, BRING_VESSEL_OF_THE_DRAGON_2);
 
-    public static final SkillNode BRING_NETHER_TRADE_PLACEHOLDER_4 = bring(
-            "nether_trade_component_4", "Infernal Trade Components", NMItems.netherTradePlaceholder, 8, -4,
-            "Bring 4 unfinished Nether trade components.", NMItems.netherTradePlaceholder.itemID, 0, false, 4,
-            "Unlock late Nether trade-component recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_THREE_64);
+    public static final SkillNode BRING_DEADZONE_SHARD_512 = bring(
+            "nether_trade_component_4", "Infernal Components", NMItems.deadzoneShard, 8, -4,
+            "Bring 512 Deadzone Shards.", NMItems.deadzoneShard.itemID, 0, false, 512,
+            "Unlock late Nether trade-component recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_THREE_64, BRING_DEADZONE_SHARD_64);
 
     // Post-dragon progression is grouped by activity instead of being treated as one
     // oversized mining chain. Each branch gets a compact late-game cluster.
