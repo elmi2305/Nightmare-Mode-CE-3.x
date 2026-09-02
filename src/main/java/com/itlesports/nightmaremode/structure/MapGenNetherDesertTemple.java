@@ -6,6 +6,7 @@ import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.MapGenStructure;
 import net.minecraft.src.SpawnListEntry;
 import net.minecraft.src.StructureStart;
+import net.minecraft.src.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,47 @@ public class MapGenNetherDesertTemple extends MapGenStructure {
             return false;
         }
         return this.hasStructureAt(x, y, z);
+    }
+
+    /**
+     * Finds the nearest possible temple without loading or generating its chunk.
+     * Nether temples occupy only the finite inner-Nether band, so all eligible
+     * regions can be checked deterministically.
+     */
+    public static ChunkPosition findNearestTemple(World world, int x, int z) {
+        int spawnX = world.getSpawnPoint().posX;
+        int spawnZ = world.getSpawnPoint().posZ;
+        int minChunkX = (int) Math.floor((spawnX - 1024.0D) / 16.0D);
+        int maxChunkX = (int) Math.floor((spawnX + 1024.0D) / 16.0D);
+        int minChunkZ = (int) Math.floor((spawnZ - 1024.0D) / 16.0D);
+        int maxChunkZ = (int) Math.floor((spawnZ + 1024.0D) / 16.0D);
+        ChunkPosition nearest = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (int regionX = regionForChunk(minChunkX); regionX <= regionForChunk(maxChunkX); ++regionX) {
+            for (int regionZ = regionForChunk(minChunkZ); regionZ <= regionForChunk(maxChunkZ); ++regionZ) {
+                Random random = new Random((long) regionX * 341873128712L
+                        + (long) regionZ * 132897987541L + world.getSeed() + 14357617L);
+                int chunkX = regionX * MAX_DISTANCE + random.nextInt(MAX_DISTANCE - MIN_DISTANCE);
+                int chunkZ = regionZ * MAX_DISTANCE + random.nextInt(MAX_DISTANCE - MIN_DISTANCE);
+                if (!NetherTierHelper.isChunkEntirelyTierZero(world, chunkX, chunkZ)) {
+                    continue;
+                }
+                int templeX = chunkX * 16 + 8;
+                int templeZ = chunkZ * 16 + 8;
+                double distance = (double) (templeX - x) * (templeX - x)
+                        + (double) (templeZ - z) * (templeZ - z);
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearest = new ChunkPosition(templeX, 64, templeZ);
+                }
+            }
+        }
+        return nearest;
+    }
+
+    private static int regionForChunk(int chunk) {
+        return chunk < 0 ? (chunk - (MAX_DISTANCE - 1)) / MAX_DISTANCE : chunk / MAX_DISTANCE;
     }
 
     public List getSpawnList() {

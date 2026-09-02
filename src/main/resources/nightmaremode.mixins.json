@@ -38,6 +38,7 @@
     "ItemDyeMixin",
     "ItemFoodMixin",
     "ItemInWorldManagerMixin",
+    "LocatorPileItemMixin",
     "ItemMixin",
     "ItemPotionMixin",
     "ItemSeedsMixin",
