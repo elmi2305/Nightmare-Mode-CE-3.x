@@ -8,7 +8,7 @@ import net.minecraft.src.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class GuiMinerDrill extends GuiContainer {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/gui/horseGui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/gui/minerDrillGui.png");
 
     public GuiMinerDrill(InventoryPlayer playerInventory, MinerDrillTileEntity drill) {
         super(new ContainerMinerDrill(playerInventory, drill));
