@@ -1,8 +1,11 @@
 package com.itlesports.nightmaremode.item;
 
 import api.item.tag.Tag;
+import btw.block.BTWBlocks;
 import btw.item.BTWItems;
+import btw.item.BTWTags;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ResourceLocation;
 
@@ -37,6 +40,32 @@ public class NMTags {
     public static final Tag knifeStrings = Tag.of(loc("knife_strings"),
             Item.silk,
             NMItems.pighideString
+    );
+    public static final Tag netherCompatibleStrings = Tag.of(loc("nether_compatible_strings"),
+            BTWTags.strings
+    ).add(NMItems.pighideString);
+    public static final Tag netherCompatibleSticks = Tag.of(loc("nether_compatible_sticks"),
+            Item.stick,
+            NMItems.netherStick
+    );
+    public static final Tag reinforcedIronIngots = Tag.of(loc("reinforced_iron_ingots"),
+            NMItems.carbonIronIngot,
+            NMItems.reinforcedIronIngot
+    );
+    public static final Tag netherKilnMasonry = Tag.of(loc("nether_kiln_masonry"),
+            BTWTags.stoneBrickItems
+    ).add(Block.brick, Block.netherBrick);
+    public static final Tag netherRailPressurePlates = Tag.of(loc("nether_rail_pressure_plates"),
+            BTWTags.stonePressurePlates,
+            BTWTags.woodenPressurePlates
+    );
+    public static final Tag highSpeedCartReinforcements = Tag.of(loc("high_speed_cart_reinforcements"),
+            NMItems.tungstenNugget,
+            NMItems.azureCeramicPlate
+    );
+    public static final Tag netherCartFurnaces = Tag.of(loc("nether_cart_furnaces"),
+            BTWBlocks.idleLooseOven,
+            NMBlocks.hellforge
     );
     public static final Tag ironTungstenIngots = Tag.of(loc("iron_tungsten_ingots"),
             Item.ingotIron,
