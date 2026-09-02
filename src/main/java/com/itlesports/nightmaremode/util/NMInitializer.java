@@ -2911,6 +2911,8 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.comparator), new Object[]{"TRT", "LEL", "SNS", Character.valueOf('T'), Block.torchRedstoneActive, Character.valueOf('R'), NMItems.refinedRedstone, Character.valueOf('L'), NMItems.crystalLens, Character.valueOf('E'), BTWItems.redstoneEye, Character.valueOf('S'), BTWTags.stoneBrickItems, Character.valueOf('N'), NMItems.nickelMachinePart}),
                 NMSkillNodes.BRING_REFINED_REDSTONE_16, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_4, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2);
 
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.redstoneEye, 2), new Object[]{"###", "GGG", " R ", Character.valueOf('#'), new ItemStack(Item.dyePowder, 1, 4), Character.valueOf('G'), Item.goldNugget, Character.valueOf('R'), Item.redstone});
+
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(
                         new ItemStack(NMItems.flintAxeCrafting, 1, NMItems.flintAxeCrafting.getMaxDamage() - 1),
                         new Object[]{Item.flint, Item.flint, Item.stick, NMItems.crudeString}),
