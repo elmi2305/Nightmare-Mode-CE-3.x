@@ -1828,15 +1828,15 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('P'), NMItems.reinforcedIronPlate,
                 Character.valueOf('C'), new ItemStack(Item.bootsIron, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkLeggings), new Object[]{
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkLeggings), new Object[]{
                 "PPP", "PBP", "N N",
                 Character.valueOf('P'), NMItems.nickelPlate,
                 Character.valueOf('B'), BTWItems.belt,
-                Character.valueOf('N'), BTWItems.padding});
-        RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkBoots), new Object[]{
+                Character.valueOf('N'), BTWItems.padding}), NMSkillNodes.BRING_NICKEL_PLATE_4);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkBoots), new Object[]{
                 "P P", "S S",
                 Character.valueOf('P'), NMItems.nickelPlate,
-                Character.valueOf('S'), BTWItems.leatherStrap});
+                Character.valueOf('S'), BTWItems.leatherStrap}), NMSkillNodes.BRING_NICKEL_PLATE_4);
 
         RecipeManager.addRecipe(new ItemStack(NMItems.thermalChestLining), new Object[]{
                 "LBP", "PBL",
@@ -2768,18 +2768,18 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('G'), NMItems.crystalPrecisionGear,
                 Character.valueOf('H'), NMItems.lithiumHeatCompound, Character.valueOf('F'), Item.blazePowder});
 
-        RecipeManager.addRecipe(new ItemStack(NMItems.glassHelmet), new Object[]{
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.glassHelmet), new Object[]{
                 "GSG", "XGX", "G G",
-                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue});
-        RecipeManager.addRecipe(new ItemStack(NMItems.glassChestplate), new Object[]{
+                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue}), NMSkillNodes.BRING_GLASS_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.glassChestplate), new Object[]{
                 "G G", "GXG", "SXS",
-                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue});
-        RecipeManager.addRecipe(new ItemStack(NMItems.glassLeggings), new Object[]{
+                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue}), NMSkillNodes.BRING_GLASS_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.glassLeggings), new Object[]{
                 "GSG", "GXG", "G G",
-                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue});
-        RecipeManager.addRecipe(new ItemStack(NMItems.glassBoots), new Object[]{
+                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue}), NMSkillNodes.BRING_GLASS_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.glassBoots), new Object[]{
                 "G G", "XSX",
-                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue});
+                Character.valueOf('G'), Block.glass, Character.valueOf('S'), BTWItems.leatherStrap, Character.valueOf('X'), NMItems.primitiveGlue}), NMSkillNodes.BRING_GLASS_64);
 
         RecipeManager.addRecipe(new ItemStack(NMItems.darkHelmet), new Object[]{
                 "DDD", "DZD", "SCG",
