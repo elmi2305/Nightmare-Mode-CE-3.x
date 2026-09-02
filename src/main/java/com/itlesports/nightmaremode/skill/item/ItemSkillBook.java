@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.skill.item;
 
-import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.item.items.template.NetherItem;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.skill.gui.GuiSkillTree;
@@ -11,7 +11,7 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.World;
 
-public class ItemSkillBook extends NMItem {
+public class ItemSkillBook extends NetherItem {
     public ItemSkillBook(int id) {
         super(id);
         this.setCreativeTab(CreativeTabs.tabMisc);

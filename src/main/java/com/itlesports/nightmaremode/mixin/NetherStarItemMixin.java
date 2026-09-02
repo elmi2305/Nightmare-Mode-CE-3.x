@@ -6,11 +6,12 @@ import com.itlesports.nightmaremode.block.blocks.BloodBoneBlock;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
 import com.itlesports.nightmaremode.item.items.NMBloodStarItem;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(NetherStarItem.class)
-public class NetherStarItemMixin extends ItemSimpleFoiled {
+public class NetherStarItemMixin extends ItemSimpleFoiled implements INetherItem {
     public NetherStarItemMixin(int i) {
         super(i);
     }
