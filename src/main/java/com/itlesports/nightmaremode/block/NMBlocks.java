@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block;
 
+import api.item.items.PlaceAsBlockItem;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.blocks.*;
@@ -211,7 +212,9 @@ public class NMBlocks {
         Item.itemsList[crystalPocket.blockID] = new NMItemBlock(crystalPocket.blockID - 256);
 
         cistern = (CisternBlock) new CisternBlock(2409).setUnlocalizedName("ifhyCistern").setTextureName("cauldron");
-        Item.itemsList[cistern.blockID] = new NMItemBlock(cistern.blockID - 256);
+
+        ((PlaceAsBlockItem)Item.cauldron).setAssociatedBlockID(cistern.blockID);
+        Item.itemsList[cistern.blockID] = new NMItemBlock(cistern.blockID - 256).hideFromEMI();
 
         dryingGrass = new BlockDryingGrass(NMFields.BLOCK_DRYING_GRASS);
         Item.itemsList[dryingGrass.blockID] = new NMItemBlock(NMBlocks.dryingGrass.blockID - 256).hideFromEMI();

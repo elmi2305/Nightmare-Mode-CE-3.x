@@ -38,12 +38,12 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
 
     @Override
     public int idDropped(int meta, Random random, int fortune) {
-        return this.blockID;
+        return Item.cauldron.itemID;
     }
 
     @Override
     public int idPicked(World world, int x, int y, int z) {
-        return this.blockID;
+        return Item.cauldron.itemID;
     }
 
     @Override

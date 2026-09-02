@@ -126,9 +126,9 @@ public class NMAchievements {
     public static final Achievement<ItemStack> IFHY_CISTERN =
             AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                     .name(loc("journeyCistern"))
-                    .icon(NMBlocks.cistern)
+                    .icon(Item.cauldron)
                     .displayLocation(15, 1)
-                    .triggerCondition(stack -> stack.itemID == NMBlocks.cistern.blockID)
+                    .triggerCondition(stack -> stack.itemID == Item.cauldron.itemID)
                     .parents(IFHY_NICKEL_INGOT)
                     .build()
                     .registerAchievement(TAB_GETTING_STARTED);
