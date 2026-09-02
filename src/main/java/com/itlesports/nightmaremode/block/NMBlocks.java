@@ -150,6 +150,8 @@ public class NMBlocks {
     public static Block denseNetherrackCoreNode;
     public static Block deadzoneShardOre;
     public static Block deadzoneShardNode;
+    public static Block nickelOreNode;
+    public static Block lithiumOreNode;
     public static Block ironAnvil;
     public static BlockStationRail stationRail;
     public static Block terrainExtractor;
@@ -334,6 +336,14 @@ public class NMBlocks {
 
         minerDrillTier4 = new BlockMinerDrill(2446, 4, "ifhyMinerDrillTier4", "nightmare:ifhyMinerDrillTier4");
         Item.itemsList[minerDrillTier4.blockID] = new NMItemBlock(minerDrillTier4.blockID - 256);
+
+        nickelOreNode = new BlockOreNode(2449, NMItems.nickelRawRock.itemID, Block.oreGold,
+                "ifhyNickelOreNode", "nightmare:ifhyNickelOre");
+        Item.itemsList[nickelOreNode.blockID] = new NMNetherItemBlock(nickelOreNode.blockID - 256);
+
+        lithiumOreNode = new BlockOreNode(2450, NMItems.lithiumRaw.itemID, Block.oreIron,
+                "ifhyLithiumOreNode", "nightmare:ifhyLithiumOre");
+        Item.itemsList[lithiumOreNode.blockID] = new NMNetherItemBlock(lithiumOreNode.blockID - 256);
 
 
 

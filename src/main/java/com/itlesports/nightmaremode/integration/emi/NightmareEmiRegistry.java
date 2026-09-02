@@ -37,7 +37,7 @@ public final class NightmareEmiRegistry {
     public static final EmiRecipeCategory HAMMERING = new EmiRecipeCategory(
             new ResourceLocation("nightmare", "hammering"), EmiStack.of(NMItems.ironHammer));
     public static final EmiRecipeCategory CISTERN = new EmiRecipeCategory(
-            new ResourceLocation("nightmare", "cistern"), EmiStack.of(NMBlocks.cistern));
+            new ResourceLocation("nightmare", "cistern"), EmiStack.of(Item.cauldron));
     public static final EmiRecipeCategory ENDER_ASSEMBLER = new EmiRecipeCategory(
             new ResourceLocation("nightmare", "ender_assembler"), EmiStack.of(NMBlocks.enderAssembler));
     public static final EmiRecipeCategory WASHING = new EmiRecipeCategory(
@@ -123,6 +123,7 @@ public final class NightmareEmiRegistry {
         unhideItem(Item.pickaxeWood);
         unhideItem(Item.axeWood);
         unhideItem(Item.hoeWood);
+        unhideItem(Item.minecartPowered);
     }
 
     private static EmiIngredient createBrewingIngredient(ItemStack stack) {

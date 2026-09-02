@@ -67,6 +67,10 @@ public class NMTags {
             BTWBlocks.idleLooseOven,
             NMBlocks.hellforge
     );
+    public static final Tag stationRailFrames = Tag.of(loc("station_rail_frames"),
+            NMItems.ironBrick,
+            NMItems.tungstenPlate
+    );
     public static final Tag ironTungstenIngots = Tag.of(loc("iron_tungsten_ingots"),
             Item.ingotIron,
             NMItems.carbonIronIngot,

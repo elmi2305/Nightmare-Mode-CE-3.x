@@ -1039,6 +1039,7 @@ public abstract class OldNMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.emeraldPile, 8), new ItemStack[]{new ItemStack(Item.emerald, 1), new ItemStack(BTWItems.soulSandPile, 8)});
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.emeraldPile, 4), new ItemStack[]{new ItemStack(Item.emerald, 1), new ItemStack(BTWItems.soulSandPile, 8)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondPile, 4), new ItemStack[]{new ItemStack(Item.diamond, 1), new ItemStack(BTWItems.soulSandPile, 8)});
         // diamond pile
 
         // glass

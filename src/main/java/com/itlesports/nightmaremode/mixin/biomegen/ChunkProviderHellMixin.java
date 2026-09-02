@@ -37,6 +37,10 @@ public class ChunkProviderHellMixin {
             NMBlocks.tungstenOreNode.blockID, Block.netherrack.blockID, 1, 4);
     @Unique private static WorldGenOreNode coalNodes = new WorldGenOreNode(
             NMBlocks.coalOreNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenOreNode nickelNodes = new WorldGenOreNode(
+            NMBlocks.nickelOreNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenOreNode lithiumNodes = new WorldGenOreNode(
+            NMBlocks.lithiumOreNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private static WorldGenMinable denseCoreOre = new WorldGenMinable(
             NMBlocks.denseNetherrackCoreOre.blockID, 3, Block.netherrack.blockID);
     @Unique private static WorldGenOreNode denseCoreNodes = new WorldGenOreNode(
@@ -62,6 +66,23 @@ public class ChunkProviderHellMixin {
         }
 
         int tier = NetherTierHelper.getTier(this.worldObj, baseX + 8, baseZ + 8);
+        // Chemical metals are a scarce inner-Nether discovery and a Tier 1 resource.
+        // They intentionally stop before Tier 2, where the node economy changes over.
+        if (tier == 0) {
+            if (this.hellRNG.nextInt(64) == 0) {
+                this.generateNodeInChunk(nickelNodes, baseX, baseZ, 12);
+            }
+            if (this.hellRNG.nextInt(64) == 0) {
+                this.generateNodeInChunk(lithiumNodes, baseX, baseZ, 12);
+            }
+        } else if (tier == 1) {
+            if (this.hellRNG.nextInt(16) == 0) {
+                this.generateNodeInChunk(nickelNodes, baseX, baseZ, 12);
+            }
+            if (this.hellRNG.nextInt(16) == 0) {
+                this.generateNodeInChunk(lithiumNodes, baseX, baseZ, 12);
+            }
+        }
         if (tier >= 1) {
             this.generateNodeInChunk(coalNodes, baseX, baseZ, 12);
         }

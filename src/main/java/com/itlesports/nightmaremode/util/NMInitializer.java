@@ -1287,6 +1287,14 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F)
                 .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
 
+        // The water route remains for the overworld; lava provides the native wash.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.nickelCrushedRock)},
+                CisternTileEntity.FLUID_LAVA, 2, 6, 240,
+                new ItemStack[]{new ItemStack(NMItems.nickelWashedConcentrate)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F)
+                .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
+
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.lithiumRaw)},
                 CisternTileEntity.FLUID_WATER, 0, 2, 160,
@@ -1294,9 +1302,21 @@ public abstract class NMInitializer implements AchievementExt {
                 .setResultingFluid(CisternTileEntity.FLUID_BRINE));
 
         manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.lithiumRaw)},
+                CisternTileEntity.FLUID_LAVA, 3, 8, 240,
+                new ItemStack[0])
+                .setResultingFluid(CisternTileEntity.FLUID_BRINE));
+
+        manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.lithiumHammered)},
                 CisternTileEntity.FLUID_WATER, 0, 1, 140,
                 new ItemStack[]{new ItemStack(NMItems.lithiumWashed)}));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.lithiumHammered)},
+                CisternTileEntity.FLUID_LAVA, 3, 18, 180,
+                new ItemStack[]{new ItemStack(NMItems.lithiumWashed)})
+                .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.crackedDiamondBearingRock)},
@@ -2021,10 +2041,11 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('D'), Item.diamond}),
                 NMSkillNodes.BRING_IRON_BRICK_64);
 
+        // Keep the iron-brick route intact; tungsten plate is the costly Nether frame.
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.stationRail, 4), new Object[]{
                         "IGI", "DCP", "INI",
-                        Character.valueOf('I'), NMItems.ironBrick,
+                        Character.valueOf('I'), NMTags.stationRailFrames,
                         Character.valueOf('G'), Item.ingotGold,
                         Character.valueOf('D'), Block.railDetector,
                         Character.valueOf('C'), Item.comparator,
