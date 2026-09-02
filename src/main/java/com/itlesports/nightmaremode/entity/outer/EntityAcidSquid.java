@@ -1,15 +1,22 @@
 package com.itlesports.nightmaremode.entity.outer;
 
 import btw.entity.mob.BTWSquidEntity;
+import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.SharedMonsterAttributes;
 import net.minecraft.src.World;
 
 public class EntityAcidSquid extends BTWSquidEntity {
+    private static final double VISUAL_BOUND_PADDING = 4.75D;
     private int acidAttackCooldown;
 
     public EntityAcidSquid(World world) {
         super(world);
+    }
+
+    @Override
+    public AxisAlignedBB getVisualBoundingBox() {
+        return this.boundingBox.expand(VISUAL_BOUND_PADDING, VISUAL_BOUND_PADDING, VISUAL_BOUND_PADDING);
     }
 
     @Override

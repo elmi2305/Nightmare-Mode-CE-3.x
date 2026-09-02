@@ -72,13 +72,6 @@ public class BlockMinerDrill extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        if (this.machineTier >= 4) {
-            this.frontIcon = register.registerIcon(this.drillTexture);
-            this.backIcon = this.frontIcon;
-            this.sideIcon = this.frontIcon;
-            this.blockIcon = this.frontIcon;
-            return;
-        }
         this.frontIcon = register.registerIcon(this.drillTexture + "Front");
         this.backIcon = register.registerIcon(this.drillTexture + "Back");
         this.sideIcon = register.registerIcon(this.drillTexture + "Side");

@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.rendering.*;
 import com.itlesports.nightmaremode.rendering.entities.*;
+import com.itlesports.nightmaremode.rendering.entities.models.ModelAcidSquid;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -65,7 +66,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityIceZombie.class, new RenderOuterZombie());
         RenderManager.addEntityRenderer(EntityIceGolem.class, new RenderIceGolem());
         RenderManager.addEntityRenderer(EntityAngelSquid.class, new RenderOuterSquid());
-        RenderManager.addEntityRenderer(EntityAcidSquid.class, new RenderOuterSquid());
+        RenderManager.addEntityRenderer(EntityAcidSquid.class, new RenderOuterSquid(new ModelAcidSquid()));
         RenderManager.addEntityRenderer(EntityAngelGhast.class, new RenderOuterGhast());
         RenderManager.addEntityRenderer(EntityAcidGhast.class, new RenderOuterGhast());
         RenderManager.addEntityRenderer(EntityAngelDragon.class, new RenderAngelDragon());
