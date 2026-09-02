@@ -413,7 +413,7 @@ public class NMItems {
     public static Item unstableDeadzoneCharge;
     public static Item deadzoneAlloyIngot;
     public static Item deadzoneAlloyPlate;
-    public static Item solarBaffle;
+    public static Item solarCloth;
     public static ItemNetherAlloyArmor tungstenHelmet;
     public static ItemNetherAlloyArmor tungstenChestplate;
     public static ItemNetherAlloyArmor tungstenLeggings;
@@ -929,7 +929,7 @@ public class NMItems {
         unstableDeadzoneCharge = netherMaterial(3308, "ifhyUnstableDeadzoneCharge");
         deadzoneAlloyIngot = netherMaterial(3309, "ifhyDeadzoneAlloyIngot");
         deadzoneAlloyPlate = netherMaterial(3310, "ifhyDeadzoneAlloyPlate");
-        solarBaffle = netherMaterial(3311, "ifhySolarBaffle");
+        solarCloth = netherMaterial(3311, "ifhySolarBaffle");
 
         tungstenHelmet = netherArmor(3312, 0, 3, 7, 1100, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenHelmet");

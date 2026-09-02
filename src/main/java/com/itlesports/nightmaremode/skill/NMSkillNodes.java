@@ -479,9 +479,9 @@ public final class NMSkillNodes {
             "Bring 4 verdant plates.", NMItems.verdantPlate.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
-    public static final SkillNode BRING_SOLAR_BAFFLE_4 = bring(
-            "solar_expedition", "Solar Expedition", NMItems.solarBaffle, 6, 7,
-            "Bring 4 solar baffles.", NMItems.solarBaffle.itemID, 0, false, 4,
+    public static final SkillNode BRING_SOLAR_CLOTH_4 = bring(
+            "solar_expedition", "Solar Expedition", NMItems.solarCloth, 6, 7,
+            "Bring 4 solar cloth.", NMItems.solarCloth.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_SIGNAL_ALLOY_INGOT_8 = bring(
@@ -3692,7 +3692,7 @@ public final class NMSkillNodes {
                 BRING_TUNGSTEN_PLATE_8, BRING_REDSTONE_256, BRING_REFINED_REDSTONE_16);
         BRING_BLACKGLASS_PLATE_4.addParents(BRING_OBSIDIAN_BRICK_16, BRING_TUNGSTEN_PLATE_8);
         BRING_VERDANT_PLATE_4.addParents(BRING_EMERALD_16, BRING_GOLD_INGOT_16);
-        BRING_SOLAR_BAFFLE_4.addParents(BRING_UNSTABLE_DEADZONE_CHARGE_4,
+        BRING_SOLAR_CLOTH_4.addParents(BRING_UNSTABLE_DEADZONE_CHARGE_4,
                 BRING_PRESSURE_REGULATOR_2, BRING_BLACKGLASS_PLATE_4,
                 BRING_VERDANT_PLATE_4, BRING_THERMAL_LAMINATE_4);
         BRING_SIGNAL_ALLOY_INGOT_8.addParents(BRING_REFINED_REDSTONE_16, BRING_NICKEL_PLATE_4);

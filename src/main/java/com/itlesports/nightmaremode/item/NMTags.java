@@ -54,7 +54,7 @@ public class NMTags {
     );
     public static final Tag netherKilnMasonry = Tag.of(loc("nether_kiln_masonry"),
             BTWTags.stoneBrickItems
-    ).add(Block.brick, Block.netherBrick);
+    ).add(Item.netherrackBrick);
     public static final Tag netherRailPressurePlates = Tag.of(loc("nether_rail_pressure_plates"),
             BTWTags.stonePressurePlates,
             BTWTags.woodenPressurePlates

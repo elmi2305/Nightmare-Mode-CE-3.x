@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
-/** Nether crop soil hydrated by ordinary water or a nearby water-filled cistern. */
+/** Nether crop soil hydrated by ordinary water or a nearby lava-filled cistern. */
 public class BlockNetherFarmland extends FarmlandBlock {
     @Environment(value= EnvType.CLIENT)
     protected Icon iconTopWet;
@@ -52,7 +52,7 @@ public class BlockNetherFarmland extends FarmlandBlock {
                 for (int checkZ = z - range; checkZ <= z + range; ++checkZ) {
                     TileEntity tile = world.getBlockTileEntity(checkX, checkY, checkZ);
                     if (tile instanceof CisternTileEntity
-                            && ((CisternTileEntity)tile).getFluid() == CisternTileEntity.FLUID_WATER) return true;
+                            && ((CisternTileEntity)tile).getFluid() == CisternTileEntity.FLUID_LAVA) return true;
                 }
             }
         }
