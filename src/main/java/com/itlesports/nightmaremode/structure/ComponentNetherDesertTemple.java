@@ -24,6 +24,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
             new WeightedRandomChestContent(Item.plateGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.legsGold.itemID, 0, 1, 1, 5),
+            // these  hampers are the only renewable bootstrap source of Nether wood.
             new WeightedRandomChestContent(NMItems.netherStick.itemID, 0, 4, 13, 20),
             new WeightedRandomChestContent(Block.planks.blockID, 4, 4, 13, 20),
             new WeightedRandomChestContent(Item.bootsGold.itemID, 0, 1, 1, 2),
@@ -36,9 +37,10 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(NMItems.boneShard.itemID, 0, 8, 12, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
             new WeightedRandomChestContent(Item.skull.itemID, 0, 1, 1, 5),
-            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 1, 5), // blood sapling
+            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 1, 2), // blood sapling
+            new WeightedRandomChestContent(BTWItems.soulUrn.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.horseArmorGold.itemID, 0, 1, 1, 1)
-    };
+        };
     private static final WeightedRandomChestContent[] lootedLootListArray = new WeightedRandomChestContent[]{
             new WeightedRandomChestContent(Item.bone.itemID, 0, 4, 6, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
