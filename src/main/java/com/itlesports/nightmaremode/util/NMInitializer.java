@@ -3633,10 +3633,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
         SkillRecipeGates.crafting(Item.bootsDiamond.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_GOLD_ARMOR_SET);
-        SkillRecipeGates.crafting(NMItems.bloodHelmet.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodChestplate.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodLeggings.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.bloodBoots.itemID, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodHelmet.itemID, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodChestplate.itemID, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodLeggings.itemID, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.bloodBoots.itemID, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_BLOOD_INGOT_16);
         SkillRecipeGates.crafting(NMItems.carbonIronHelmet.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
         SkillRecipeGates.crafting(NMItems.carbonIronChestplate.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
         SkillRecipeGates.crafting(NMItems.carbonIronLeggings.itemID, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16);
@@ -3649,13 +3649,19 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_CARBON_IRON_PLATE_8);
         gateArmorSet(NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate, NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots,
                 NMSkillNodes.BRING_REINFORCED_IRON_PLATE_64);
+        gateArmorSet(NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate, NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots,
+                NMSkillNodes.BRING_CARBON_IRON_ARMOR_SET);
         SkillRecipeGates.crafting(BTWBlocks.infernalEnchanter.blockID, NMSkillNodes.BRING_AZURE_CERAMIC_PLATE_8);
         SkillRecipeGates.crafting(NMItems.heatResistantHelmet.itemID, NMSkillNodes.BRING_THERMAL_LAMINATE_4);
         SkillRecipeGates.crafting(NMItems.heatResistantChestplate.itemID, NMSkillNodes.BRING_THERMAL_LAMINATE_4);
         SkillRecipeGates.crafting(NMItems.heatResistantLeggings.itemID, NMSkillNodes.BRING_THERMAL_LAMINATE_4);
         SkillRecipeGates.crafting(NMItems.heatResistantBoots.itemID, NMSkillNodes.BRING_THERMAL_LAMINATE_4);
-        SkillRecipeGates.crafting(NMItems.divingMask.itemID, NMSkillNodes.BRING_PRESSURE_REGULATOR_2);
-        SkillRecipeGates.crafting(NMItems.divingTank.itemID, NMSkillNodes.BRING_PRESSURE_REGULATOR_2);
+        gateArmorSet(NMItems.heatResistantHelmet, NMItems.heatResistantChestplate, NMItems.heatResistantLeggings, NMItems.heatResistantBoots,
+                NMSkillNodes.BRING_REINFORCED_IRON_ARMOR_SET);
+        SkillRecipeGates.crafting(NMItems.divingMask.itemID,
+                NMSkillNodes.BRING_PRESSURE_REGULATOR_2, NMSkillNodes.BRING_OXYGEN_APPARATUS);
+        SkillRecipeGates.crafting(NMItems.divingTank.itemID,
+                NMSkillNodes.BRING_PRESSURE_REGULATOR_2, NMSkillNodes.BRING_OXYGEN_APPARATUS);
         SkillRecipeGates.crafting(NMItems.tungstenHelmet.itemID, NMSkillNodes.BRING_TUNGSTEN_PLATE_8);
         SkillRecipeGates.crafting(NMItems.tungstenChestplate.itemID, NMSkillNodes.BRING_TUNGSTEN_PLATE_8);
         SkillRecipeGates.crafting(NMItems.tungstenLeggings.itemID, NMSkillNodes.BRING_TUNGSTEN_PLATE_8);
@@ -3677,8 +3683,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.sunChestplate.itemID, NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.crafting(NMItems.sunLeggings.itemID, NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.crafting(NMItems.sunBoots.itemID, NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.crafting(NMItems.sunVisor.itemID, NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.crafting(NMItems.sunReservoir.itemID, NMSkillNodes.BRING_SOLAR_CLOTH_4);
+        SkillRecipeGates.crafting(NMItems.sunVisor.itemID,
+                NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.KILL_WITHER, NMSkillNodes.BRING_DIVING_KIT);
+        SkillRecipeGates.crafting(NMItems.sunReservoir.itemID,
+                NMSkillNodes.BRING_SOLAR_CLOTH_4, NMSkillNodes.BRING_DIVING_KIT);
         gateArmorSet(NMItems.signalHelmet, NMItems.signalChestplate, NMItems.signalLeggings, NMItems.signalBoots,
                 NMSkillNodes.BRING_SIGNAL_ALLOY_INGOT_8);
         gateArmorSet(NMItems.signalHelmet, NMItems.signalChestplate, NMItems.signalLeggings, NMItems.signalBoots,
@@ -3692,13 +3700,9 @@ public abstract class NMInitializer implements AchievementExt {
         gateArmorSet(NMItems.prismaticHelmet, NMItems.prismaticChestplate, NMItems.prismaticLeggings, NMItems.prismaticBoots,
                 NMSkillNodes.BRING_PRISMATIC_PLATE_8);
         gateArmorSet(NMItems.refinedPrismaHelmet, NMItems.refinedPrismaChestplate, NMItems.refinedPrismaLeggings, NMItems.refinedPrismaBoots,
-                NMSkillNodes.BRING_REFINED_PRISMA_ARMOR);
-        gateArmorSet(NMItems.refinedPrismaHelmet, NMItems.refinedPrismaChestplate, NMItems.refinedPrismaLeggings, NMItems.refinedPrismaBoots,
                 NMSkillNodes.BRING_PRISMATIC_PLATE_8);
         gateArmorSet(NMItems.verdantHelmet, NMItems.verdantChestplate, NMItems.verdantLeggings, NMItems.verdantBoots,
                 NMSkillNodes.BRING_VERDANT_PLATE_4);
-        gateArmorSet(NMItems.glassHelmet, NMItems.glassChestplate, NMItems.glassLeggings, NMItems.glassBoots,
-                NMSkillNodes.BRING_GLASS_ARMOR);
         gateArmorSet(NMItems.blackglassHelmet, NMItems.blackglassChestplate, NMItems.blackglassLeggings, NMItems.blackglassBoots,
                 NMSkillNodes.BRING_BLACKGLASS_PLATE_4);
         gateArmorSet(NMItems.quartzglassHelmet, NMItems.quartzglassChestplate, NMItems.quartzglassLeggings, NMItems.quartzglassBoots,
@@ -3959,6 +3963,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.soulforge(NMItems.enderChestplate.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
         SkillRecipeGates.soulforge(NMItems.enderLeggings.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
         SkillRecipeGates.soulforge(NMItems.enderBoots.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
+        SkillRecipeGates.soulforge(NMItems.enderHelmet.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
+        SkillRecipeGates.soulforge(NMItems.enderChestplate.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
+        SkillRecipeGates.soulforge(NMItems.enderLeggings.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
+        SkillRecipeGates.soulforge(NMItems.enderBoots.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
 
         finishRecipes("Skill Gates");
     }

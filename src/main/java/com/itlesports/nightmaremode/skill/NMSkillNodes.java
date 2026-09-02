@@ -127,7 +127,7 @@ public final class NMSkillNodes {
             "perfect_diamond_yield",
             "Perfect Diamond Yield",
             NMItems.refinedDiamondIngot,
-            -3, 2,
+            -3, -4,
             "Bring 1 refined diamond ingot.",
             NMItems.refinedDiamondIngot.itemID, 0, false, 1,
             "Diamond ore always drops diamond-bearing rock.", SkillRewardActions.guaranteeDiamondRockDrop(),
@@ -160,7 +160,7 @@ public final class NMSkillNodes {
             "nether_obsidian",
             "Crude Portal Theory",
             new ItemStack(Block.obsidian, 1, 1),
-            6, -1,
+            6, 0,
             "Bring 16 crude obsidian.",
             Block.obsidian.blockID, 1, true, 16,
             "+1 to Nether Access unlock.",
@@ -181,7 +181,7 @@ public final class NMSkillNodes {
             "diamond_anvil",
             "Anvil Diamond Theory",
             NMBlocks.ironAnvil,
-            -3, 5,
+            -3, -1,
             "Bring 1 iron anvil.",
             NMBlocks.ironAnvil.blockID, 0, false, 1,
             "+1 to Diamond Extraction unlock.", SkillRewardActions.addDiamondHarvestProgress(),
@@ -202,7 +202,7 @@ public final class NMSkillNodes {
             "waste_efficiency",
             "Waste Efficiency",
             NMItems.refinementWaste,
-            7, -2,
+            7, -1,
             "Bring 32 refinement waste.",
             NMItems.refinementWaste.itemID, 0, false, 32,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F),
@@ -212,7 +212,7 @@ public final class NMSkillNodes {
             "failed_refinement",
             "Failure Analysis",
             NMItems.failedDiamondRefinement,
-            -3, 4,
+            -3, -2,
             "Bring 16 failed diamond refinement.",
             NMItems.failedDiamondRefinement.itemID, 0, false, 16,
             "+10% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.10F),
@@ -222,7 +222,7 @@ public final class NMSkillNodes {
             "cave_oxygen",
             "Cave Breathing",
             NMItems.diamondBearingRock,
-            0, 6,
+            -3, 3,
             "Bring 64 diamond-bearing rock.",
             NMItems.diamondBearingRock.itemID, 0, false, 64,
             "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F),
@@ -253,7 +253,7 @@ public final class NMSkillNodes {
             "lithium_cistern",
             "Lithium Brine Control",
             NMItems.lithiumSalt,
-            7, -1,
+            7, 0,
             "Bring 16 lithium salt.",
             NMItems.lithiumSalt.itemID, 0, false, 16,
             "+10% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.10F),
@@ -274,7 +274,7 @@ public final class NMSkillNodes {
             "nether_diamond_hammer",
             "Portal Hammer",
             NMItems.diamondHammer,
-            -3, 6,
+            -3, 0,
             "Bring 1 diamond hammer.",
             NMItems.diamondHammer.itemID, 0, false, 1,
             "+1 to Nether Access unlock.", SkillRewardActions.addNetherAccessProgress(),
@@ -294,7 +294,7 @@ public final class NMSkillNodes {
             "steel_hammer_damage",
             "Steel-Driven Violence",
             NMItems.steelHammer,
-            8, 3,
+            5, 7,
             "Bring 1 steel hammer.",
             NMItems.steelHammer.itemID, 0, false, 1,
             "+5% melee damage.", SkillRewardActions.addMeleeDamage(0.05F),
@@ -335,7 +335,7 @@ public final class NMSkillNodes {
             "dense_core_metallurgy",
             "Dense-Core Metallurgy",
             NMItems.denseNetherrackCore,
-            4, 6,
+            -1, 6,
             "Bring 16 dense netherrack cores.",
             NMItems.denseNetherrackCore.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -379,7 +379,7 @@ public final class NMSkillNodes {
             "thermal_engineering",
             "Thermal Engineering",
             NMItems.nickelHeatComponent,
-            5, 6,
+            0, 6,
             "Bring 2 heat-resistant nickel components.",
             NMItems.nickelHeatComponent.itemID, 0, false, 2,
             "Unlocks Additional Recipes.", none(),
@@ -391,7 +391,7 @@ public final class NMSkillNodes {
             "deadzone_foundry",
             "Deadzone Foundry",
             NMItems.deadzoneShard,
-            4, -4,
+            8, -2,
             "Bring 64 deadzone shards.",
             NMItems.deadzoneShard.itemID, 0, false, 64,
             "Unlocks Additional Recipes.", none(),
@@ -405,7 +405,7 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_REINFORCED_IRON_INGOT_32 = bring(
-            "lithium_reinforcement", "Lithium Reinforcement", NMItems.reinforcedIronIngot, 7, 5,
+            "lithium_reinforcement", "Lithium Reinforcement", NMItems.reinforcedIronIngot, 7, 6,
             "Bring 32 reinforced iron ingots.", NMItems.reinforcedIronIngot.itemID, 0, false, 32,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
@@ -416,13 +416,13 @@ public final class NMSkillNodes {
             BRING_CARBON_RICH_IRON_MIX_16);
 
     public static final SkillNode BRING_REINFORCED_IRON_PLATE_64 = bring(
-            "reinforced_iron_lamination", "Reinforced Iron Lamination", NMItems.reinforcedIronPlate, 7, 7,
+            "reinforced_iron_lamination", "Reinforced Iron Lamination", NMItems.reinforcedIronPlate, 0, 7,
             "Bring 64 Reinforced Iron plates.", NMItems.reinforcedIronPlate.itemID, 0, false, 64,
             "Unlocks Additional Recipes.", none(), MINING, false,
             BRING_REINFORCED_IRON_INGOT_32);
 
     public static final SkillNode BRING_THERMAL_LAMINATE_4 = bring(
-            "thermal_suiting", "Thermal Suiting", NMItems.thermalLaminate, 8, 7,
+            "thermal_suiting", "Thermal Suiting", NMItems.thermalLaminate, 1, 7,
             "Bring 4 thermal laminates.", NMItems.thermalLaminate.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
@@ -443,44 +443,44 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_CORESTEEL_INGOT_8 = bring(
-            "coresteel_heat_sinks", "Coresteel Heat Sinks", NMItems.coresteelIngot, 3, 6,
+            "coresteel_heat_sinks", "Coresteel Heat Sinks", NMItems.coresteelIngot, -2, 6,
             "Bring 8 coresteel ingots.", NMItems.coresteelIngot.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_CORESTEEL_PLATE_8 = bring(
-            "coresteel_lamination", "Coresteel Lamination", NMItems.coresteelPlate, 2, 6,
+            "coresteel_lamination", "Coresteel Lamination", NMItems.coresteelPlate, -3, 6,
             "Bring 8 Coresteel plates.", NMItems.coresteelPlate.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), MINING, false,
             BRING_CORESTEEL_INGOT_8);
 
     public static final SkillNode BRING_UNSTABLE_DEADZONE_CHARGE_4 = bring(
-            "deadzone_armory", "Deadzone Armory", NMItems.unstableDeadzoneCharge, 8, -2,
+            "deadzone_armory", "Deadzone Armory", NMItems.unstableDeadzoneCharge, 8, 4,
             "Bring 4 unstable deadzone charges.", NMItems.unstableDeadzoneCharge.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_DEADZONE_ALLOY_PLATE_8 = bring(
-            "deadzone_lamination", "Deadzone Lamination", NMItems.deadzoneAlloyPlate, 8, -1,
+            "deadzone_lamination", "Deadzone Lamination", NMItems.deadzoneAlloyPlate, 8, 5,
             "Bring 8 Deadzone Alloy plates.", NMItems.deadzoneAlloyPlate.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), MINING, false,
             BRING_UNSTABLE_DEADZONE_CHARGE_4);
 
     public static final SkillNode BRING_PRESSURE_REGULATOR_2 = bring(
-            "pressure_engineering", "Pressure Engineering", NMItems.pressureRegulator, 7, 6,
+            "pressure_engineering", "Pressure Engineering", NMItems.pressureRegulator, 4, 6,
             "Bring 2 pressure regulators.", NMItems.pressureRegulator.itemID, 0, false, 2,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_BLACKGLASS_PLATE_4 = bring(
-            "blackglass_lamination", "Blackglass Lamination", NMItems.blackglassPlate, 6, -3,
+            "blackglass_lamination", "Blackglass Lamination", NMItems.blackglassPlate, 7, -3,
             "Bring 4 blackglass plates.", NMItems.blackglassPlate.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_VERDANT_PLATE_4 = bring(
-            "verdant_lamination", "Verdant Lamination", NMItems.verdantPlate, 7, 4,
+            "verdant_lamination", "Verdant Lamination", NMItems.verdantPlate, 7, 5,
             "Bring 4 verdant plates.", NMItems.verdantPlate.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_SOLAR_CLOTH_4 = bring(
-            "solar_expedition", "Solar Expedition", NMItems.solarCloth, 6, 7,
+            "solar_expedition", "Solar Expedition", NMItems.solarCloth, -3, 7,
             "Bring 4 solar cloth.", NMItems.solarCloth.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
@@ -511,41 +511,47 @@ public final class NMSkillNodes {
             "Bring 8 Prismatic plates.", NMItems.prismaticPlate.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), KNOWLEDGE, false,
             BRING_PRISMATIC_INGOT_8);
-    public static final SkillNode BRING_REFINED_PRISMA_ARMOR = bring(
-            "refined_prisma", "Refined Prisma", NMItems.refinedPrismaChestplate, 3, -3,
-            "Bring a Refined Prisma chestplate.", NMItems.refinedPrismaChestplate.itemID, 0, false, 1,
+    public static final SkillNode BRING_REFINED_PRISMA_ARMOR = itemSet(
+            "refined_prisma", "Refined Prisma Wardrobe", NMItems.refinedPrismaChestplate, 4, -3,
+            "Bring a full Refined Prisma armor set.", new Item[]{
+                    NMItems.refinedPrismaHelmet, NMItems.refinedPrismaChestplate,
+                    NMItems.refinedPrismaLeggings, NMItems.refinedPrismaBoots},
             "Unlocks Additional Recipes.", none(), KNOWLEDGE, false);
-    public static final SkillNode BRING_GLASS_ARMOR = bring(
-            "glass_armor", "Glass Armor", NMItems.glassChestplate, -1, 2,
-            "Bring a Glass chestplate.", NMItems.glassChestplate.itemID, 0, false, 1,
+    public static final SkillNode BRING_GLASS_ARMOR = itemSet(
+            "glass_armor", "Glass Wardrobe", NMItems.glassChestplate, -1, 2,
+            "Bring a full Glass armor set.", new Item[]{
+                    NMItems.glassHelmet, NMItems.glassChestplate,
+                    NMItems.glassLeggings, NMItems.glassBoots},
             "Unlocks Additional Recipes.", none(), KNOWLEDGE, false);
     public static final SkillNode BRING_DARK_INGOT_8 = bring(
             "dark_armory", "Dark Armory", NMItems.darkIngot, -1, 4,
             "Bring 8 Dark Ingots.", NMItems.darkIngot.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), RITUAL, false);
     public static final SkillNode BRING_SEALED_QUICKSILVER_INGOT_4 = bring(
-            "mercury_sealing", "Mercury Sealing", NMItems.sealedQuicksilverIngot, 7, 5,
+            "mercury_sealing", "Mercury Sealing", NMItems.sealedQuicksilverIngot, 7, 6,
             "Bring 4 Sealed Quicksilver ingots.", NMItems.sealedQuicksilverIngot.itemID, 0, false, 4,
             "No reward.", none(), KNOWLEDGE, false);
     public static final SkillNode BRING_SEALED_QUICKSILVER_PLATE_4 = bring(
-            "mercury_lamination", "Quicksilver Lamination", NMItems.sealedQuicksilverPlate, 7, 6,
+            "mercury_lamination", "Quicksilver Lamination", NMItems.sealedQuicksilverPlate, 6, 6,
             "Bring 4 Sealed Quicksilver plates.", NMItems.sealedQuicksilverPlate.itemID, 0, false, 4,
             "No reward.", none(), KNOWLEDGE, false,
             BRING_SEALED_QUICKSILVER_INGOT_4);
     public static final SkillNode BRING_ENDSTONE_CERAMIC_PLATE_8 = bring(
-            "endstone_ceramic_lamination", "Endstone Ceramic Lamination", NMItems.endstonePlate, 6, 6,
+            "endstone_ceramic_lamination", "Endstone Ceramic Lamination", NMItems.endstonePlate, 5, 6,
             "Bring 8 Endstone Ceramic plates.", NMItems.endstonePlate.itemID, 0, false, 8,
             "No reward.", none(), KNOWLEDGE, false);
-    public static final SkillNode BRING_ENDSTONE_ANCHOR_ARMOR = bring(
-            "endstone_anchor", "Endstone Anchor", NMItems.anchorChestplate, 5, 6,
-            "Bring an Endstone Anchor chestplate.", NMItems.anchorChestplate.itemID, 0, false, 1,
+    public static final SkillNode BRING_ENDSTONE_ANCHOR_ARMOR = itemSet(
+            "endstone_anchor", "Endstone Anchor Wardrobe", NMItems.anchorChestplate, 4, 6,
+            "Bring a full Endstone Anchor armor set.", new Item[]{
+                    NMItems.anchorHelmet, NMItems.anchorChestplate,
+                    NMItems.anchorLeggings, NMItems.anchorBoots},
             "No reward.", none(), KNOWLEDGE, false);
 
     public static final SkillNode BRING_ROAD_BLOCK_64 = deferred(bring(
             "road_engineering",
             "Road Engineering",
             NMBlocks.blockRoad,
-            1, 6,
+            -3, 4,
             "Bring 64 road blocks.",
             NMBlocks.blockRoad.blockID, 0, false, 64,
             "Unlocks Additional Recipes.", none(),
@@ -557,7 +563,7 @@ public final class NMSkillNodes {
             "soulforged_armory",
             "Soulforged Armory",
             BTWItems.soulforgedSteelIngot,
-            5, -4,
+            8, -1,
             "Bring 8 soulforged steel ingots.",
             BTWItems.soulforgedSteelIngot.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(),
@@ -569,7 +575,7 @@ public final class NMSkillNodes {
             "steel_logistics",
             "Steel Logistics",
             NMItems.steelBunch,
-            8, 2,
+            6, 7,
             "Bring 8 steel bunches.",
             NMItems.steelBunch.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(),
@@ -626,7 +632,7 @@ public final class NMSkillNodes {
             "mail_16",
             "Mail Assembly",
             BTWItems.mail,
-            8, 4,
+            4, 7,
             "Bring 16 mail.",
             BTWItems.mail.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -743,7 +749,7 @@ public final class NMSkillNodes {
             "emeralds_16",
             "Emerald Reclamation",
             Item.emerald,
-            7, 3,
+            7, 4,
             "Bring 16 emeralds.",
             Item.emerald.itemID, 0, false, 16,
             "No reward.", none(),
@@ -753,7 +759,7 @@ public final class NMSkillNodes {
             "diamonds_16",
             "Diamond Reclamation",
             Item.diamond,
-            -1, 6,
+            -3, 2,
             "Bring 16 diamonds.",
             Item.diamond.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -773,7 +779,7 @@ public final class NMSkillNodes {
             "diamond_ingots_8",
             "Diamond Industry",
             BTWItems.diamondIngot,
-            -3, 3,
+            -3, -3,
             "Bring 8 diamond ingots.",
             BTWItems.diamondIngot.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(),
@@ -783,7 +789,7 @@ public final class NMSkillNodes {
             "steel_nuggets_32",
             "Steel Consolidation",
             BTWItems.steelNugget,
-            8, -3,
+            8, 3,
             "Bring 32 steel nuggets.",
             BTWItems.steelNugget.itemID, 0, false, 32,
             "No reward.", none(),
@@ -793,7 +799,7 @@ public final class NMSkillNodes {
             "soulforged_ingots_16",
             "Soulforged Toolmaking",
             BTWItems.soulforgedSteelIngot,
-            8, 0,
+            8, 7,
             "Bring 16 soulforged steel ingots.",
             BTWItems.soulforgedSteelIngot.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -803,7 +809,7 @@ public final class NMSkillNodes {
             "steel_armor_plates_16",
             "Plate Armoring",
             BTWItems.steelArmorPlate,
-            8, 1,
+            7, 7,
             "Bring 16 steel armor plates.",
             BTWItems.steelArmorPlate.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -2085,7 +2091,7 @@ public final class NMSkillNodes {
             "trade_500",
             "Market Certainty",
             Item.emerald,
-            4, -3,
+            5, -3,
             "Trade 500 times.",
             (p, w) -> SkillHandler.getPlayerData(p).tradesCompleted >= 500,
             "Villagers never change profession on level-up.", SkillRewardActions.setVillagerProfessionChangeChance(0.0F),
@@ -2294,7 +2300,7 @@ public final class NMSkillNodes {
             "infernal_scholarship",
             "Infernal Scholarship",
             BTWBlocks.infernalEnchanter,
-            5, -3,
+            6, -3,
             "Bring 16 ancient manuscripts.",
             Item.enchantedBook.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(),
@@ -2455,7 +2461,7 @@ public final class NMSkillNodes {
             "diamonds_8_precision",
             "Diamond Optics",
             Item.diamond,
-            7, 0,
+            7, 1,
             "Bring 8 diamonds.",
             Item.diamond.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(),
@@ -2465,7 +2471,7 @@ public final class NMSkillNodes {
             "steel_pressure_plates_8",
             "Steel Detection",
             BTWBlocks.steelPressurePlate,
-            7, -2,
+            7, -1,
             "Bring 8 steel pressure plates.",
             BTWBlocks.steelPressurePlate.blockID, 0, false, 8,
             "Unlocks Additional Recipes.", none(),
@@ -2579,7 +2585,7 @@ public final class NMSkillNodes {
             "librarian_ender_treatise",
             "Forbidden Ender Treatise",
             NMItems.librarianEnderTreatise,
-            6, -3,
+            7, -3,
             "Bring the Librarian's Ender Treatise.",
             NMItems.librarianEnderTreatise.itemID, 0, false, 1,
             "Unlocks Additional Recipes.", none(),
@@ -2589,7 +2595,7 @@ public final class NMSkillNodes {
             "music_records_16",
             "Discographic Metallurgy",
             Item.record13,
-            7, -1,
+            7, 0,
             "Bring 16 music records.",
             "Unlocks Additional Recipes.", none(),
             KNOWLEDGE, false);
@@ -2631,7 +2637,7 @@ public final class NMSkillNodes {
             "automation_achievements",
             "Iron Age Completionist",
             BTWBlocks.blockDispenser,
-            7, -3,
+            7, -2,
             "Complete every achievement in the Iron Age category.",
             (p, w) -> BTWAchievements.TAB_IRON_AGE.achievementList.stream()
                     .allMatch(achievement -> AchievementHandler.hasUnlocked(p, achievement)),
@@ -3057,7 +3063,7 @@ public final class NMSkillNodes {
             MINE_IRON_ORE_256);
 
     public static final SkillNode MINE_DIAMOND_ORE_100 = counter(
-            "mine_diamond_ore_100", "Diamond Census", Block.oreDiamond, -2, 6,
+            "mine_diamond_ore_100", "Diamond Census", Block.oreDiamond, -3, 1,
             "Mine 100 diamond ore.",
             (p, w) -> SkillHandler.getPlayerData(p).diamondOreMined >= 100,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
@@ -3073,7 +3079,7 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_STONE_STICK_64);
 
     public static final SkillNode BRING_DIAMOND_STICK_16 = bring(
-            "diamond_sticks_16", "Diamond Shafts", NMItems.diamondStick, 7, 0,
+            "diamond_sticks_16", "Diamond Shafts", NMItems.diamondStick, 7, 1,
             "Bring 16 diamond sticks.", NMItems.diamondStick.itemID, 0, false, 16,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false,
             BRING_IRON_STICK_64);
@@ -3090,18 +3096,18 @@ public final class NMSkillNodes {
             BRING_STONE_BRICK_64);
 
     public static final SkillNode BRING_DIAMOND_BRICK_4 = bring(
-            "diamond_bricks_4", "Diamond Masonry", NMItems.diamondBrick, 7, 1,
+            "diamond_bricks_4", "Diamond Masonry", NMItems.diamondBrick, 7, 2,
             "Bring 4 diamond bricks.", NMItems.diamondBrick.itemID, 0, false, 4,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false,
             BRING_IRON_BRICK_64);
 
     public static final SkillNode BRING_CRYSTAL_POWDER_32 = bring(
-            "crystal_powder_32", "Crystal Frit", NMItems.crystalPowder, 7, 2,
+            "crystal_powder_32", "Crystal Frit", NMItems.crystalPowder, 7, 3,
             "Bring 32 crystal powder.", NMItems.crystalPowder.itemID, 0, false, 32,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_GLASS_BATCH_32 = bring(
-            "glass_batch_32", "Glass Batch", NMItems.glassBatch, 6, 6,
+            "glass_batch_32", "Glass Batch", NMItems.glassBatch, 1, 6,
             "Bring 32 glass batches.", NMItems.glassBatch.itemID, 0, false, 32,
             "No reward.", none(), MINING, false, BRING_CRYSTAL_POWDER_32);
 
@@ -3327,44 +3333,44 @@ public final class NMSkillNodes {
             "No reward.", none(), MINING, false, BRING_NETHERRACK_TIER_ONE_256);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_64 = bring(
-            "netherrack_tier_two_64", "Second-Ring Stone", new ItemStack(Block.netherrack, 1, 3), -3, 1,
+            "netherrack_tier_two_64", "Second-Ring Stone", new ItemStack(Block.netherrack, 1, 3), -2, -4,
             "Bring 64 tier-two netherrack.", Block.netherrack.blockID, 3, true, 64,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_DIAMOND_16, TRADE_100);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_256 = bring(
-            "netherrack_tier_two_256", "Second-Ring Mason", new ItemStack(Block.netherrack, 1, 3), -3, 0,
+            "netherrack_tier_two_256", "Second-Ring Mason", new ItemStack(Block.netherrack, 1, 3), -1, -4,
             "Bring 256 tier-two netherrack.", Block.netherrack.blockID, 3, true, 256,
             "No reward.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
 
     public static final SkillNode BRING_NETHERRACK_TIER_TWO_1024 = bring(
-            "netherrack_tier_two_1024", "Second-Ring Quarry", new ItemStack(Block.netherrack, 1, 3), -3, -1,
+            "netherrack_tier_two_1024", "Second-Ring Quarry", new ItemStack(Block.netherrack, 1, 3), 0, -4,
             "Bring 1,024 tier-two netherrack.", Block.netherrack.blockID, 3, true, 1024,
             "No reward.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_256);
 
     public static final SkillNode BRING_NETHERRACK_TIER_THREE_64 = bring(
-            "netherrack_tier_three_64", "Third-Ring Stone", new ItemStack(Block.netherrack, 1, 4), 3, -4,
+            "netherrack_tier_three_64", "Third-Ring Stone", new ItemStack(Block.netherrack, 1, 4), 8, -3,
             "Bring 64 tier-three netherrack.", Block.netherrack.blockID, 4, true, 64,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_DENSE_NETHERRACK_CORE_16);
 
     public static final SkillNode BRING_NETHERRACK_TIER_THREE_256 = bring(
-            "netherrack_tier_three_256", "Third-Ring Mason", new ItemStack(Block.netherrack, 1, 4), 6, -4,
+            "netherrack_tier_three_256", "Third-Ring Mason", new ItemStack(Block.netherrack, 1, 4), 8, 0,
             "Bring 256 tier-three netherrack.", Block.netherrack.blockID, 4, true, 256,
             "Unlocks Additional Recipes.", none(), MINING, false,
             BRING_NETHERRACK_TIER_THREE_64, KILL_WITHER, BRING_SOULFORGED_STEEL_INGOT_8);
 
     public static final SkillNode BRING_NETHERRACK_TIER_THREE_1024 = bring(
-            "netherrack_tier_three_1024", "Third-Ring Quarry", new ItemStack(Block.netherrack, 1, 4), 7, -4,
+            "netherrack_tier_three_1024", "Third-Ring Quarry", new ItemStack(Block.netherrack, 1, 4), 8, 1,
             "Bring 1,024 tier-three netherrack.", Block.netherrack.blockID, 4, true, 1024,
             "No reward.", none(), MINING, false,
             BRING_NETHERRACK_TIER_THREE_256, BRING_DEADZONE_SHARD_64);
 
     public static final SkillNode BRING_QUARTZ_DUST_32 = bring(
-            "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, 3, 5,
+            "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, 4, 5,
             "Bring 32 quartz dust.", NMItems.quartzDust.itemID, 0, false, 32,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_QUARTZ_16 = bring(
-            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 4, 5,
+            "nether_quartz_16", "Quartz Survey", Item.netherQuartz, 3, 5,
             "Bring 16 nether quartz.", Item.netherQuartz.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_QUARTZ_DUST_32);
 
@@ -3405,32 +3411,32 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_TUNGSTEN_POWDER_32);
 
     public static final SkillNode BRING_AZURE_SALT_16 = bring(
-            "azure_salt_16", "Azure Chemistry", NMItems.azureSalt, -3, -2,
+            "azure_salt_16", "Azure Chemistry", NMItems.azureSalt, 1, -4,
             "Bring 16 azure salt.", NMItems.azureSalt.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
 
     public static final SkillNode BRING_SEARING_SILVER_SCALE_4 = bring(
-            "searing_silver_scale_4", "Searing Silver", NMItems.searingSilverScale, -3, -3,
+            "searing_silver_scale_4", "Searing Silver", NMItems.searingSilverScale, 2, -4,
             "Bring 4 searing silver scales.", NMItems.searingSilverScale.itemID, 0, false, 4,
             "No reward.", none(), MINING, false, BRING_AZURE_SALT_16);
 
     public static final SkillNode BRING_POTASSIUM_CRYSTAL_16 = bring(
-            "potassium_crystal_16", "Potassium Extraction", NMItems.potassiumCrystal, -1, -4,
+            "potassium_crystal_16", "Potassium Extraction", NMItems.potassiumCrystal, 5, -4,
             "Bring 16 potassium crystals.", NMItems.potassiumCrystal.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_NITROGEN_CRYSTAL_16 = bring(
-            "nitrogen_crystal_16", "Nitrogen Extraction", NMItems.nitrogenCrystal, 0, -4,
+            "nitrogen_crystal_16", "Nitrogen Extraction", NMItems.nitrogenCrystal, 6, -4,
             "Bring 16 nitrogen crystals.", NMItems.nitrogenCrystal.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_ACID_CRYSTAL_16 = bring(
-            "acid_crystal_16", "Acidity Extraction", NMItems.acidCrystal, 1, -4,
+            "acid_crystal_16", "Acidity Extraction", NMItems.acidCrystal, 7, -4,
             "Bring 16 acid crystals.", NMItems.acidCrystal.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, CRAFT_BOOK_64);
 
     public static final SkillNode BRING_POROSITY_AGGREGATE_16 = bring(
-            "porosity_aggregate_16", "Porosity Extraction", NMItems.porosityAggregate, 2, -4,
+            "porosity_aggregate_16", "Porosity Extraction", NMItems.porosityAggregate, 8, -4,
             "Bring 16 porosity aggregate.", NMItems.porosityAggregate.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false, CRAFT_BOOK_64);
 
@@ -3450,7 +3456,7 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_BONE_SHARD_16 = bring(
-            "bone_shard_16", "Infernal Bonework", NMItems.boneShard, 7, -3,
+            "bone_shard_16", "Infernal Bonework", NMItems.boneShard, 7, -2,
             "Bring 16 bone shards.", NMItems.boneShard.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
@@ -3490,12 +3496,12 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_OBSIDIAN_PASTE_16);
 
     public static final SkillNode BRING_AZURE_SLAG_16 = bring(
-            "azure_slag_16", "Azure Slagwork", NMItems.azureSlag, -3, -4,
+            "azure_slag_16", "Azure Slagwork", NMItems.azureSlag, 3, -4,
             "Bring 16 azure slag.", NMItems.azureSlag.itemID, 0, false, 16,
             "No reward.", none(), MINING, false, BRING_AZURE_SALT_16);
 
     public static final SkillNode BRING_BRITTLE_AZURE_CAKE_16 = bring(
-            "brittle_azure_cake_16", "Brittle Azure", NMItems.brittleAzureCake, -2, -4,
+            "brittle_azure_cake_16", "Brittle Azure", NMItems.brittleAzureCake, 4, -4,
             "Bring 16 brittle azure cakes.", NMItems.brittleAzureCake.itemID, 0, false, 16,
             "No reward.", none(), MINING, false, BRING_AZURE_SLAG_16);
 
@@ -3516,22 +3522,22 @@ public final class NMSkillNodes {
             BRING_QUARTZ_DUST_32, BRING_TUNGSTEN_DUST_32);
 
     public static final SkillNode BRING_OBSIDIAN_SHARD_16 = bring(
-            "obsidian_shard_16", "Obsidian Shards", NMItems.obsidianShard, 6, 0,
+            "obsidian_shard_16", "Obsidian Shards", NMItems.obsidianShard, 6, -1,
             "Bring 16 obsidian shards.", NMItems.obsidianShard.itemID, 0, false, 16,
             "Unlocks Additional Recipes.", none(), MINING, false);
 
     public static final SkillNode BRING_INVOCATION_FRAGMENT_4 = bring(
-            "invocation_fragment_4", "Invocation Fragments", NMItems.invocationFragment, 8, 5,
+            "invocation_fragment_4", "Invocation Fragments", NMItems.invocationFragment, 3, 7,
             "Bring 4 invocation fragments.", NMItems.invocationFragment.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_RUNED_WITHER_SKELETON_SKULL);
 
     public static final SkillNode BRING_END_ACCORD_FRAGMENT_4 = bring(
-            "end_accord_fragment_4", "Accord Fragments", NMItems.endAccordFragment, 8, 6,
+            "end_accord_fragment_4", "Accord Fragments", NMItems.endAccordFragment, 2, 7,
             "Bring 4 End Accord fragments.", NMItems.endAccordFragment.itemID, 0, false, 4,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_VESSEL_OF_THE_DRAGON_2);
 
     public static final SkillNode BRING_DEADZONE_SHARD_512 = bring(
-            "nether_trade_component_4", "Infernal Components", NMItems.deadzoneShard, 8, -4,
+            "nether_trade_component_4", "Infernal Components", NMItems.deadzoneShard, 8, 2,
             "Bring 512 Deadzone Shards.", NMItems.deadzoneShard.itemID, 0, false, 512,
             "No reward.", none(), MINING, false, BRING_NETHERRACK_TIER_THREE_64, BRING_DEADZONE_SHARD_64);
 
@@ -3543,7 +3549,7 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes.", none(), RITUAL, false, BRING_END_ACCORD_FRAGMENT_4);
 
     public static final SkillNode BRING_RAW_MERCURY_16 = bring(
-            "raw_mercury_16", "Mercury Survey", NMItems.rawMercuryCrystal, 5, 7,
+            "raw_mercury_16", "Mercury Survey", NMItems.rawMercuryCrystal, -4, 6,
             "Bring 16 raw Mercury crystals.", NMItems.rawMercuryCrystal.itemID, 0, false, 16,
             "No reward.", none(), MINING, false, BRING_EYE_OF_ENDER_ECLIPSE);
 
@@ -3573,22 +3579,22 @@ public final class NMSkillNodes {
             "No reward.", none(), HUSBANDRY, false, BRING_PALE_ROOT_SEEDS_8);
 
     public static final SkillNode BRING_WASHED_MERCURY_8 = bring(
-            "washed_mercury_8", "Mercury Washing", NMItems.washedMercuryConcentrate, 4, 7,
+            "washed_mercury_8", "Mercury Washing", NMItems.washedMercuryConcentrate, -4, 5,
             "Bring 8 washed Mercury concentrate.", NMItems.washedMercuryConcentrate.itemID, 0, false, 8,
             "No reward.", none(), MINING, false, BRING_RAW_MERCURY_16);
 
     public static final SkillNode BRING_ENDER_DUST_16 = bring(
-            "ender_dust_16", "Crystal Milling", NMItems.enderDust, 7, 1,
+            "ender_dust_16", "Crystal Milling", NMItems.enderDust, 7, 2,
             "Bring 16 Ender Dust.", NMItems.enderDust.itemID, 0, false, 16,
             "No reward.", none(), KNOWLEDGE, false, BRING_ENDER_CRYSTAL_16);
 
     public static final SkillNode BRING_ENDER_SHELL_POWDER_16 = bring(
-            "ender_shell_powder_16", "Shell Milling", NMItems.enderShellPowder, 7, 2,
+            "ender_shell_powder_16", "Shell Milling", NMItems.enderShellPowder, 7, 3,
             "Bring 16 Ender Shell Powder.", NMItems.enderShellPowder.itemID, 0, false, 16,
             "No reward.", none(), KNOWLEDGE, false, BRING_ENDER_SHELL_16);
 
     public static final SkillNode BRING_MERCURY_AMALGAM_8 = bring(
-            "mercury_amalgam_8", "Mercury Amalgamation", NMItems.mercuryAmalgam, 3, 7,
+            "mercury_amalgam_8", "Mercury Amalgamation", NMItems.mercuryAmalgam, -4, 4,
             "Bring 8 Mercury Amalgam.", NMItems.mercuryAmalgam.itemID, 0, false, 8,
             "No reward.", none(), MINING, false, BRING_WASHED_MERCURY_8);
 
@@ -3603,25 +3609,105 @@ public final class NMSkillNodes {
             "No reward.", none(), HUSBANDRY, false, BRING_PALE_ROOT_PULP_16);
 
     public static final SkillNode BRING_FIRED_CRUCIBLE_LINER = bring(
-            "fired_crucible_liner", "Ender Ceramics", NMItems.firedCrucibleLiner, 7, 3,
+            "fired_crucible_liner", "Ender Ceramics", NMItems.firedCrucibleLiner, 7, 4,
             "Bring 1 fired Crucible Liner.", NMItems.firedCrucibleLiner.itemID, 0, false, 1,
             "No reward.", none(), KNOWLEDGE, false, BRING_ENDER_SHELL_POWDER_16);
 
     public static final SkillNode BRING_PHASE_STEEL_CHARGE_4 = bring(
-            "phase_steel_charge_4", "Ender Assembly", NMItems.phaseSteelCharge, 7, 4,
+            "phase_steel_charge_4", "Ender Assembly", NMItems.phaseSteelCharge, 7, 5,
             "Bring 4 Phase Steel Charges.", NMItems.phaseSteelCharge.itemID, 0, false, 4,
             "No reward.", none(), KNOWLEDGE, false,
             BRING_MERCURY_AMALGAM_8, BRING_ENDER_DUST_16, BRING_PALE_ROOT_RESIN_8, BRING_FIRED_CRUCIBLE_LINER);
 
     public static final SkillNode BRING_PHASE_STEEL_8 = bring(
-            "phase_steel_8", "Phase Steel", NMItems.phaseSteelIngot, 2, 7,
+            "phase_steel_8", "Phase Steel", NMItems.phaseSteelIngot, -4, 3,
             "Bring 8 Phase Steel ingots.", NMItems.phaseSteelIngot.itemID, 0, false, 8,
             "Unlocks Additional Recipes.", none(), MINING, false, BRING_PHASE_STEEL_CHARGE_4);
 
     public static final SkillNode BRING_ENDER_MECHANISM_4 = bring(
-            "ender_mechanism_4", "Ender Mechanisms", NMItems.enderMechanism, 4, 6,
+            "ender_mechanism_4", "Ender Mechanisms", NMItems.enderMechanism, 3, 6,
             "Bring 4 Ender Mechanisms.", NMItems.enderMechanism.itemID, 0, false, 4,
             "No reward.", none(), KNOWLEDGE, false, BRING_PHASE_STEEL_8);
+
+    public static final SkillNode BRING_OXYGEN_APPARATUS = itemSet(
+            "oxygen_apparatus", "Oxygen Apparatus", NMItems.oxygenMask, 3, 6,
+            "Bring 1 oxygen mask and 1 oxygen tank.", new Item[]{NMItems.oxygenMask, NMItems.oxygenTank},
+            "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F), MINING, false,
+            BRING_NICKEL_PLATE_4, BRING_DRIED_PLANT_FIBER_300);
+
+    public static final SkillNode BRING_DIVING_KIT = itemSet(
+            "diving_kit", "Diving Kit", NMItems.divingMask, 2, 6,
+            "Bring 1 diving mask and 1 diving tank.", new Item[]{NMItems.divingMask, NMItems.divingTank},
+            "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F), MINING, false,
+            BRING_OXYGEN_APPARATUS, BRING_PRESSURE_REGULATOR_2);
+
+    public static final SkillNode BRING_PHASE_STEEL_PLATE_8 = bring(
+            "phase_steel_plate_8", "Phase Steel Lamination", NMItems.phaseSteelPlate, -4, 2,
+            "Bring 8 Phase Steel plates.", NMItems.phaseSteelPlate.itemID, 0, false, 8,
+            "Unlocks Additional Recipes.", none(), MINING, false,
+            BRING_PHASE_STEEL_8, BRING_ENDER_MECHANISM_4);
+
+    public static final SkillNode BRING_CARBON_IRON_ARMOR_SET = itemSet(
+            "carbon_iron_armor_set", "Carbon Iron Wardrobe", NMItems.carbonIronChestplate, 6, 6,
+            "Bring a full Carbon Iron armor set.", new Item[]{
+                    NMItems.carbonIronHelmet, NMItems.carbonIronChestplate,
+                    NMItems.carbonIronLeggings, NMItems.carbonIronBoots},
+            "Unlocks Additional Recipes.", none(), MINING, false,
+            BRING_CARBON_IRON_PLATE_8, BRING_IRON_ARMOR_SET);
+
+    public static final SkillNode BRING_REINFORCED_IRON_ARMOR_SET = itemSet(
+            "reinforced_iron_armor_set", "Reinforced Iron Wardrobe", NMItems.reinforcedIronChestplate, -1, 7,
+            "Bring a full Reinforced Iron armor set.", new Item[]{
+                    NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate,
+                    NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots},
+            "Unlocks Additional Recipes.", none(), MINING, false,
+            BRING_REINFORCED_IRON_PLATE_64, BRING_CARBON_IRON_ARMOR_SET);
+
+    public static final SkillNode BRING_NICKEL_WORKWEAR_SET = itemSet(
+            "nickel_workwear_set", "Nickel Workwear", NMItems.nickelWorkLeggings, 5, 6,
+            "Bring Nickel Work leggings and boots.", new Item[]{NMItems.nickelWorkLeggings, NMItems.nickelWorkBoots},
+            "No reward.", none(), MINING, false, BRING_NICKEL_PLATE_4);
+
+    public static final SkillNode BRING_HEAT_RESISTANT_ARMOR_SET = itemSet(
+            "heat_resistant_armor_set", "Heat-Resistant Wardrobe", NMItems.heatResistantChestplate, -2, 7,
+            "Bring a full Heat-Resistant armor set.", new Item[]{
+                    NMItems.heatResistantHelmet, NMItems.heatResistantChestplate,
+                    NMItems.heatResistantLeggings, NMItems.heatResistantBoots},
+            "No reward.", none(), MINING, false, BRING_THERMAL_LAMINATE_4);
+
+    public static final SkillNode BRING_TUNGSTEN_ARMOR_SET = itemSet(
+            "tungsten_armor_set", "Tungsten Wardrobe", NMItems.tungstenChestplate, 6, -3,
+            "Bring a full Tungsten armor set.", new Item[]{
+                    NMItems.tungstenHelmet, NMItems.tungstenChestplate,
+                    NMItems.tungstenLeggings, NMItems.tungstenBoots},
+            "No reward.", none(), MINING, false, BRING_TUNGSTEN_PLATE_8);
+
+    public static final SkillNode BRING_CORESTEEL_ARMOR_SET = itemSet(
+            "coresteel_armor_set", "Coresteel Wardrobe", NMItems.coresteelChestplate, -3, 5,
+            "Bring a full Coresteel armor set.", new Item[]{
+                    NMItems.coresteelHelmet, NMItems.coresteelChestplate,
+                    NMItems.coresteelLeggings, NMItems.coresteelBoots},
+            "No reward.", none(), MINING, false, BRING_CORESTEEL_PLATE_8);
+
+    public static final SkillNode BRING_DEADZONE_ARMOR_SET = itemSet(
+            "deadzone_armor_set", "Deadzone Wardrobe", NMItems.deadzoneChestplate, 8, 6,
+            "Bring a full Deadzone armor set.", new Item[]{
+                    NMItems.deadzoneHelmet, NMItems.deadzoneChestplate,
+                    NMItems.deadzoneLeggings, NMItems.deadzoneBoots},
+            "No reward.", none(), MINING, false, BRING_DEADZONE_ALLOY_PLATE_8);
+
+    public static final SkillNode BRING_SUN_ARMOR_SET = itemSet(
+            "sun_armor_set", "Sun Wardrobe", NMItems.sunChestplate, -4, 7,
+            "Bring a full Sun armor set.", new Item[]{
+                    NMItems.sunHelmet, NMItems.sunChestplate, NMItems.sunLeggings, NMItems.sunBoots},
+            "No reward.", none(), MINING, false, BRING_SOLAR_CLOTH_4);
+
+    public static final SkillNode BRING_PRISMATIC_ARMOR_SET = itemSet(
+            "prismatic_armor_set", "Prismatic Wardrobe", NMItems.prismaticChestplate, 3, -3,
+            "Bring a full Prismatic armor set.", new Item[]{
+                    NMItems.prismaticHelmet, NMItems.prismaticChestplate,
+                    NMItems.prismaticLeggings, NMItems.prismaticBoots},
+            "No reward.", none(), KNOWLEDGE, false, BRING_PRISMATIC_PLATE_8);
 
     public static final SkillNode POSSESS_BLOOD_BONE_4 = counter(
             "blood_bone_altar_4", "Bloodwither Altar", NMBlocks.bloodBones, 0, -2,
@@ -3950,6 +4036,13 @@ public final class NMSkillNodes {
     private static SkillNode itemSet(
             String id, String name, Object icon, int x, int y, String requirement, Item[] items,
             SkillBranch branch) {
+        return itemSet(id, name, icon, x, y, requirement, items, "No reward", none(), branch, false);
+    }
+
+    private static SkillNode itemSet(
+            String id, String name, Object icon, int x, int y, String requirement, Item[] items,
+            String rewardText, SkillUnlockAction reward, SkillBranch branch, boolean worldReward,
+            SkillNode... parents) {
         SkillNodeProvider.BuildStep step = getBuilder().id(loc(id)).name(name).icon(stack(icon)).displayLocation(x, y)
                 .requirementText(requirement)
                 .triggerCondition((player, world) -> {
@@ -3960,8 +4053,10 @@ public final class NMSkillNodes {
                 })
                 .onUnlockConsume((player, world) -> {
                     for (Item item : items) SkillInventory.consume(player, item, 1);
-                })
-                .reward("No reward", none());
+                });
+        if (parents.length > 0) step.parents(parents);
+        step.reward(rewardText, reward);
+        if (worldReward) step.worldReward();
         return step.build().register(branch);
     }
 
