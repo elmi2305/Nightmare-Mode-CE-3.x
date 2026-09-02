@@ -956,6 +956,10 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 1, 1, 0.4F, false, 16, 24);
         sell("nmNetherTier1HighSpeedCart", profession, 4, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.4F, false, 20, 32);
         sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
+        // Rank five is reached before the Wither, so its stock must improve Nether
+        // logistics without leaking soulforged-steel progression into the dimension.
+        sell("nmNetherTier1TungstenIngotBulk", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.5F, false, 28, 40);
+        sell("nmNetherTier1HighSpeedCartFinal", profession, 5, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.65F, false, 16, 24);
 
         buy("nmNetherTier1Level2", profession, 1, Block.blockGold.blockID, 0, 1, 1, 1.0F, true, 1, 1);
         buy("nmNetherTier1Level3", profession, 2, NMItems.redstoneCrystal.itemID, 0, 1, 1, 1.0F, true, 1, 1);
@@ -963,7 +967,7 @@ public abstract class NMInitializer implements AchievementExt {
                 TradeItem.fromID(NMItems.redstoneCrystal.itemID, 4),
                 TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_PURPLE_GEM),
                 TradeItem.fromID(Item.diamond.itemID), true, true);
-        buy("nmNetherTier1Level5", profession, 4, Item.netherStar.itemID, 0, 1, 1, 1.0F, true, 1, 1);
+        buy("nmNetherTier1Level5", profession, 4, NMItems.deadzoneShard.itemID, 0, 16, 16, 1.0F, true, 1, 1);
 
         EntityVillager.defaultTradeByProfessionList.put(profession,
                 TradeProvider.getBuilder().name("nmNetherTier1Default").profession(profession).level(1)
@@ -987,7 +991,8 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier2Gearbox", profession, 2, BTWBlocks.gearBox.blockID, 0, 1, 1, 0.5F, false, 14, 20);
         sell("nmNetherTier2CisternInterface", profession, 2, NMBlocks.cisternInterface.blockID, 0, 1, 1, 0.6F, false, 12, 18);
         sell("nmNetherTier2ChunkLoader", profession, 3, NMBlocks.chunkLoader.blockID, 0, 1, 1, 0.35F, false, 24, 36);
-        sell("nmNetherTier2BrewingStand", profession, 3, Block.brewingStand.blockID, 0, 1, 1, 0.4F, false, 12, 18);
+        sell("nmNetherTier2PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.45F, false, 20, 32);
+        sell("nmNetherTier2TungstenIngot", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.5F, false, 28, 40);
 
         buy("nmNetherTier2Level2", profession, 1, NMBlocks.netherProgressionGems.blockID,
                 NMBlocks.META_RED_GEM, 1, 1, 1.0F, true, 1, 1);
@@ -995,11 +1000,21 @@ public abstract class NMInitializer implements AchievementExt {
                 TradeItem.fromID(NMBlocks.minerDrill.blockID),
                 TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_PURPLE_GEM),
                 TradeItem.fromID(NMBlocks.minerDrillTier2.blockID), true, true);
+        convert("nmNetherTier2Drill", profession, 3,
+                TradeItem.fromID(NMBlocks.minerDrill.blockID),
+                TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_PURPLE_GEM),
+                TradeItem.fromID(NMBlocks.minerDrillTier2.blockID), 1.0F, false, true);
         buy("nmNetherTier2Level4", profession, 3, NMItems.deadzoneShard.itemID, 0, 16, 16, 1.0F, true, 1, 1);
         convert("nmNetherTier2Level5Invocation", profession, 4,
-                TradeItem.fromID(BTWItems.soulforgedSteelIngot.itemID, 4),
+                TradeItem.fromID(NMItems.deadzoneShard.itemID, 32),
                 TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_BLACK_GEM),
                 TradeItem.fromID(NMItems.invocationFragment.itemID), true, true);
+        // The final commission is both the one-shot rank-up and a repeatable,
+        // guaranteed late-rank offer so four fragments remain obtainable.
+        convert("nmNetherTier2Invocation", profession, 5,
+                TradeItem.fromID(NMItems.deadzoneShard.itemID, 32),
+                TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_BLACK_GEM),
+                TradeItem.fromID(NMItems.invocationFragment.itemID), 0.2F, false, true);
 
         EntityVillager.defaultTradeByProfessionList.put(profession,
                 TradeProvider.getBuilder().name("nmNetherTier2Default").profession(profession).level(1)
@@ -1014,19 +1029,24 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3DeadzoneShard", profession, 1, NMItems.deadzoneShard.itemID, 0, 8, 20, 1.2F);
         buy("nmNetherTier3RefinedRedstone", profession, 1, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.8F);
         buy("nmNetherTier3AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 8, 16, 0.8F);
-        buy("nmNetherTier3Steel", profession, 3, BTWItems.soulforgedSteelIngot.itemID, 0, 4, 12, 0.7F);
+        buy("nmNetherTier3RedstoneEye", profession, 3, BTWItems.redstoneEye.itemID, 0, 4, 8, 0.7F);
 
         sell("nmNetherTier3Diamond", profession, 1, Item.diamond.itemID, 0, 1, 1, 0.35F, false, 24, 36);
         sell("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 24, 36);
         sell("nmNetherTier3ChunkLoader", profession, 2, NMBlocks.chunkLoader.blockID, 0, 1, 1, 0.5F, false, 20, 30);
-        sell("nmNetherTier3SteelIngot", profession, 3, BTWItems.soulforgedSteelIngot.itemID, 0, 1, 2, 0.5F, false, 18, 30);
+        sell("nmNetherTier3PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.5F, false, 18, 30);
+        sell("nmNetherTier3TungstenIngot", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.55F, false, 24, 36);
 
         buy("nmNetherTier3Level2", profession, 1, NMItems.deadzoneShard.itemID, 0, 12, 12, 1.0F, true, 1, 1);
         convert("nmNetherTier3Level3Drill", profession, 2,
                 TradeItem.fromID(NMBlocks.minerDrillTier2.blockID),
                 TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_BLACK_GEM),
                 TradeItem.fromID(NMBlocks.minerDrillTier3.blockID), true, true);
-        buy("nmNetherTier3Level4", profession, 3, BTWItems.soulforgedSteelIngot.itemID, 0, 16, 16, 1.0F, true, 1, 1);
+        convert("nmNetherTier3Drill", profession, 3,
+                TradeItem.fromID(NMBlocks.minerDrillTier2.blockID),
+                TradeItem.fromIDAndMetadata(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_BLACK_GEM),
+                TradeItem.fromID(NMBlocks.minerDrillTier3.blockID), 1.0F, false, true);
+        buy("nmNetherTier3Level4", profession, 3, NMItems.refinedRedstone.itemID, 0, 16, 16, 1.0F, true, 1, 1);
         convert("nmNetherTier3Level5EndAccord", profession, 4,
                 TradeItem.fromID(NMItems.deadzoneShard.itemID, 32),
                 TradeItem.fromID(Item.diamond.itemID, 4),
