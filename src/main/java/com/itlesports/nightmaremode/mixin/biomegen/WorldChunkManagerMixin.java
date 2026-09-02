@@ -3,9 +3,13 @@ package com.itlesports.nightmaremode.mixin.biomegen;
 import com.itlesports.nightmaremode.worldgen.OverworldOuterBiomes;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.GenLayer;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldChunkManager;
+import net.minecraft.src.WorldType;
+import com.itlesports.nightmaremode.worldgen.IFHYOverworldGenLayer;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +19,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorldChunkManager.class)
 public class WorldChunkManagerMixin {
     @Unique private World nightmareMode$world;
+    @Shadow private GenLayer genBiomes;
+    @Shadow private GenLayer biomeIndexLayer;
+
+    @Inject(method = "<init>(JLnet/minecraft/src/WorldType;)V", at = @At("TAIL"))
+    private void installIfhyBiomePipeline(long seed, WorldType worldType, CallbackInfo ci) {
+        GenLayer[] layers = IFHYOverworldGenLayer.initializeAllBiomeGenerators(seed, worldType);
+        this.genBiomes = layers[0];
+        this.biomeIndexLayer = layers[1];
+    }
 
     @Inject(method = "<init>(Lnet/minecraft/src/World;)V", at = @At("TAIL"))
     private void rememberOwningWorld(World world, CallbackInfo ci) {
