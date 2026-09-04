@@ -1474,6 +1474,13 @@ public abstract class NMInitializer implements AchievementExt {
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(Item.redstone, 3), new ItemStack(NMItems.crystalPolishedShard)},
+                CisternTileEntity.FLUID_BRINE, 3, 10, 400,
+                new ItemStack[]{new ItemStack(NMItems.redstoneCrystal)})
+                .addRandomOutput(new ItemStack(NMItems.redstoneCrystal), 0.12F)
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{
                         new ItemStack(Item.redstone, 4),
                         new ItemStack(NMItems.quartzDust, 2),
