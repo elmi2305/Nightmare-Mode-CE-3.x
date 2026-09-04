@@ -3583,14 +3583,14 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.gimpLeggings.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(BTWItems.gimpBoots.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(BTWBlocks.aestheticVegetation.blockID, 0, NMSkillNodes.BRING_VINE_256);
-        SkillRecipeGates.crafting(Item.helmetChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.plateChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.legsChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.bootsChain.itemID, NMSkillNodes.BRING_GIMP_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.helmetChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.plateChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.legsChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.bootsChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
         SkillRecipeGates.crafting(Item.helmetGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
@@ -3792,10 +3792,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.soulforge(BTWItems.steelHoe.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.soulforge(BTWItems.battleaxe.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.soulforge(BTWItems.steelAxe.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.soulforge(BTWItems.plateHelmet.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.soulforge(BTWItems.plateBreastplate.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.soulforge(BTWItems.plateLeggings.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
-        SkillRecipeGates.soulforge(BTWItems.plateBoots.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
+        SkillRecipeGates.soulforge(BTWItems.plateHelmet.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_BLOOD_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
+        SkillRecipeGates.soulforge(BTWItems.plateBreastplate.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_BLOOD_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
+        SkillRecipeGates.soulforge(BTWItems.plateLeggings.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_BLOOD_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
+        SkillRecipeGates.soulforge(BTWItems.plateBoots.itemID, NMSkillNodes.BRING_STEEL_ARMOR_PLATE_16, NMSkillNodes.BRING_BLOOD_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.soulforge(BTWBlocks.dormandSoulforge.blockID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DIAMOND_BRICK_4, NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4, NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.BRING_AQUAMARINE_64, NMSkillNodes.KILL_WITHER);
         SkillRecipeGates.soulforge(BTWBlocks.detectorBlock.blockID, NMSkillNodes.BRING_STEEL_PRESSURE_PLATE_8);
 
@@ -3909,7 +3909,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.flint.itemID, NMSkillNodes.BRING_FLINT_CHIP);
         SkillRecipeGates.crafting(NMItems.unshapedWetClayBrick.itemID, NMSkillNodes.BRING_CLAY_64);
         SkillRecipeGates.crafting(NMBlocks.stoneAnvil.blockID,
-                NMSkillNodes.BRING_LOOSE_STONE_64, NMSkillNodes.BRING_STONE_BRICK_32);
+                NMSkillNodes.BRING_LOOSE_STONE_64);
         SkillRecipeGates.crafting(NMItems.lithiumSalt.itemID, NMSkillNodes.BRING_RAW_LITHIUM_64);
         SkillRecipeGates.crafting(NMItems.lithiumHeatCompound.itemID,
                 NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_NICKEL_PLATE_4,
