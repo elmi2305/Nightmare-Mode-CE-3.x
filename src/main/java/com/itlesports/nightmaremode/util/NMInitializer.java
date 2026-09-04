@@ -3797,6 +3797,9 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.soulforge(BTWBlocks.detectorBlock.blockID, NMSkillNodes.BRING_STEEL_PRESSURE_PLATE_8);
 
         SkillRecipeGates.crafting(NMItems.stoneHammer.itemID, NMSkillNodes.BRING_STONE_BRICK_32, NMSkillNodes.BRING_AQUAMARINE_16);
+        SkillRecipeGates.crafting(NMItems.diamondHammer.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_IRON_STICK_64);
+        SkillRecipeGates.crafting(NMItems.steelHammer.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.goldHammer.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
 
         SkillRecipeGates.crafting(Block.netherrack.blockID, 2, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
