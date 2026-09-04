@@ -3588,10 +3588,15 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
         SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.helmetGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.bootsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET);
+        SkillRecipeGates.crafting(Item.helmetGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.bootsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.axeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.swordGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.shovelGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.hoeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
 
         SkillRecipeGates.crafting(BTWBlocks.wickerBlock.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
         SkillRecipeGates.crafting(BTWBlocks.wickerSlab.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
