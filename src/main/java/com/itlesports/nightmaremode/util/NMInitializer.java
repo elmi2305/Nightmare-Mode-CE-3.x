@@ -2393,7 +2393,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenPickaxe), new Object[]{"III", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShovel), new Object[]{" I ", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), NMItems.stoneStick});
-        RecipeManager.addRecipe(new ItemStack(NMItems.diamondScythe), new Object[]{" II", "ISC ", " SC ", Character.valueOf('I'), BTWItems.diamondIngot, Character.valueOf('S'), NMItems.ironStick, Character.valueOf('C'), NMItems.crystalPolishedShard});
+        RecipeManager.addRecipe(new ItemStack(NMItems.diamondScythe), new Object[]{" II", "ISC", " SC", Character.valueOf('I'), BTWItems.diamondIngot, Character.valueOf('S'), NMItems.ironStick, Character.valueOf('C'), NMItems.crystalPolishedShard});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.chuteHopper), new Object[]{
@@ -2419,6 +2419,9 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodHammer), new Object[]{BTWTags.logs, BTWTags.logs, Item.stick, NMItems.crudeString});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.bone), new Object[]{NMItems.boneShard,NMItems.boneShard,NMItems.boneShard,NMItems.boneShard});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneHammer), new Object[]{BTWTags.looseCobblestones,BTWTags.looseCobblestones, Item.stick, Item.silk});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.goldHammer), new Object[]{Block.blockGold,Block.blockGold, Item.stick, NMItems.primitiveGlue});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironHammer), new Object[]{Block.blockIron,Block.blockIron, NMItems.stoneStick, BTWItems.glue});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondHammer), new Object[]{Block.blockDiamond, NMItems.nickelBinding, NMItems.ironStick, NMItems.lithiumHeatCompound});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.stoneHammer), new Object[]{
                 "CCC", "CSC", "LSL",
@@ -3799,7 +3802,8 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.stoneHammer.itemID, NMSkillNodes.BRING_STONE_BRICK_32, NMSkillNodes.BRING_AQUAMARINE_16);
         SkillRecipeGates.crafting(NMItems.diamondHammer.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_IRON_STICK_64);
         SkillRecipeGates.crafting(NMItems.steelHammer.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
-        SkillRecipeGates.crafting(NMItems.goldHammer.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.goldHammer.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STICK_16);
+        SkillRecipeGates.crafting(NMItems.ironHammer.itemID, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
 
         SkillRecipeGates.crafting(Block.netherrack.blockID, 2, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
