@@ -3319,6 +3319,41 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4);
 
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.swordGold), new Object[]{"X", "X", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotGold});
+        RecipeManager.addRecipe(new ItemStack(Item.swordGold), new Object[]{
+                        " I ", " IC", " H ",
+                        Character.valueOf('I'), Item.ingotGold,
+                        Character.valueOf('C'), NMItems.primitiveGlue,
+                        Character.valueOf('H'), NMItems.stoneStick});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.axeGold), new Object[]{"X ", "X#", " #", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotGold});
+        RecipeManager.addRecipe(new ItemStack(Item.axeGold), new Object[]{
+                "IG ", "IH ", " H ",
+                Character.valueOf('I'), Item.ingotGold,
+                Character.valueOf('G'), NMItems.primitiveGlue,
+                Character.valueOf('H'), NMItems.stoneStick});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.shovelGold), new Object[]{"X", "#", "#", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotGold});
+        RecipeManager.addRecipe(new ItemStack(Item.shovelGold), new Object[]{
+                " I ", " HG", " H ",
+                Character.valueOf('I'), Item.ingotGold,
+                Character.valueOf('G'), NMItems.primitiveGlue,
+                Character.valueOf('H'), NMItems.stoneStick});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.hoeGold), new Object[]{"X#", " #", " #", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotGold});
+        RecipeManager.addRecipe(new ItemStack(Item.hoeGold), new Object[]{
+                "IHG", " H ", " H ",
+                Character.valueOf('I'), Item.ingotGold,
+                Character.valueOf('G'), NMItems.primitiveGlue,
+                Character.valueOf('H'), NMItems.stoneStick});
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeGold), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), Item.ingotGold});
+        RecipeManager.addRecipe(new ItemStack(Item.pickaxeGold), new Object[]{
+                "III", "GHG", " H ",
+                Character.valueOf('I'), Item.ingotGold,
+                Character.valueOf('G'), NMItems.primitiveGlue,
+                Character.valueOf('H'), NMItems.stoneStick});
+
         // manual cistern work produces the components for this tier. none of these gates
         // depends on the mechanical blocks being replaced here.
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.turntable), new Object[]{"###", "ZXZ", "ZYZ", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('X'), Item.pocketSundial, Character.valueOf('Y'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Z'), BTWTags.stoneBrickItems});
@@ -3595,11 +3630,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.bootsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(Item.axeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(Item.swordGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(Item.shovelGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(Item.hoeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.axeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
+        SkillRecipeGates.crafting(Item.swordGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
+        SkillRecipeGates.crafting(Item.shovelGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
+        SkillRecipeGates.crafting(Item.hoeGold.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
+        SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
 
         SkillRecipeGates.crafting(BTWBlocks.wickerBlock.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
         SkillRecipeGates.crafting(BTWBlocks.wickerSlab.blockID, NMSkillNodes.BRING_WICKER_PANE_16);
