@@ -3845,7 +3845,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.ironKnife.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
         SkillRecipeGates.crafting(NMItems.diamondKnife.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
         SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.ironScythe.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.ironScythe.itemID, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_IRON_SWORD,
+                NMSkillNodes.BRING_BONE_CLUB_4,
+                NMSkillNodes.BRING_WOODEN_CLUB_4,
+                NMSkillNodes.BRING_STONE_STICK_64,
+                NMSkillNodes.KILL_MOB_250);
         SkillRecipeGates.crafting(NMItems.diamondScythe.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
 
         SkillRecipeGates.crafting(NMItems.potassiumFertilizer.itemID, NMSkillNodes.BRING_POTASSIUM_CRYSTAL_16);
