@@ -3594,6 +3594,20 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.windMill.itemID, NMSkillNodes.BRING_WINDMILL_BLADE_8);
         SkillRecipeGates.crafting(BTWItems.verticalWindMill.itemID, NMSkillNodes.BRING_WINDMILL_4);
 
+        SkillRecipeGates.crafting(Item.saddle.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_ROPE_8, NMSkillNodes.BRING_LEATHER_16);
+        SkillRecipeGates.crafting(BTWBlocks.woodenDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
+        SkillRecipeGates.crafting(BTWBlocks.steelDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
+        SkillRecipeGates.crafting(Block.beacon.blockID, NMSkillNodes.KILL_WITHER, NMSkillNodes.BRING_OBSIDIAN_BRICK_16);
+        SkillRecipeGates.crafting(NMItems.husbandryEssence.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_FABRIC_16,
+                NMSkillNodes.BRING_FLOUR_32, NMSkillNodes.PLANT_CROP_200, NMSkillNodes.PLANT_SAPLING_100, NMSkillNodes.BRING_HEMP_32,
+                NMSkillNodes.BRING_DUNG_16, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET);
+        SkillRecipeGates.crafting(NMItems.infernalEssence.itemID, NMSkillNodes.BRING_END_ACCORD, NMSkillNodes.BRING_OCULAR_OF_ENDER_8, NMSkillNodes.BRING_ENDER_PEARL_16,
+                NMSkillNodes.BRING_HELLFIRE_DUST_32, NMSkillNodes.BRING_SOUL_URN_16);
+
+        SkillRecipeGates.crafting(Item.horseArmorIron.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.horseArmorGold.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_GOLD_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Item.horseArmorDiamond.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_INGOT_8);
+
         SkillRecipeGates.crafting(BTWItems.knittingNeedles.itemID, NMSkillNodes.BRING_WOOL_16, NMSkillNodes.BRING_STICK_16);
         SkillRecipeGates.crafting(BTWItems.woolKnit.itemID, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
         SkillRecipeGates.crafting(BTWItems.woolHelmet.itemID, NMSkillNodes.BRING_WOOL_KNIT_16);
