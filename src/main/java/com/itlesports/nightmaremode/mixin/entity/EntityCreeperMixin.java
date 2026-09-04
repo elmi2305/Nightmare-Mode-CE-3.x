@@ -31,6 +31,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         super(par1World);
     }
 
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void dropCinderResin(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (this.dimension == UNDERWORLD_DIMENSION
+                && this.worldObj.getBiomeGenForCoords((int)this.posX, (int)this.posZ) instanceof com.itlesports.nightmaremode.underworld.biomes.BiomeGenUnderHell) {
+            if (this.rand.nextInt(Math.max(1, 3 - looting)) == 0) this.dropItem(NMItems.blastDust.itemID, 1);
+            if (this.rand.nextInt(Math.max(2, 5 - looting)) == 0) this.dropItem(NMItems.cinderResin.itemID, 1);
+        }
+    }
+
     @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
     private void noScrollDrops(CallbackInfo ci){
         ci.cancel();

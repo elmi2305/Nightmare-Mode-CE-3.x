@@ -7,11 +7,13 @@ import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
 import btw.block.BTWBlocks;
 import btw.block.blocks.BedrollBlock;
+import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.entity.underworld.IFlowerMob;
+import com.itlesports.nightmaremode.underworld.biomes.*;
 import com.itlesports.nightmaremode.util.*;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.achievements.NMAchievements;
@@ -23,6 +25,7 @@ import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.util.interfaces.UnderworldInventoryExt;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityFireworkRocketAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -40,7 +43,7 @@ import static btw.community.nightmaremode.NightmareMode.*;
 import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityPlayerExt {
+public abstract class EntityPlayerMixin extends EntityLivingBase implements EntityPlayerExt, UnderworldInventoryExt {
 
 
     @Shadow public abstract ItemStack getHeldItem();
@@ -60,6 +63,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Shadow protected abstract void detonateCarriedBlastingOil();
     @Shadow public abstract void addStat(StatBase par1StatBase, int par2);
     @Shadow protected abstract boolean isCarryingBlastingOil();
+    @Shadow public InventoryPlayer inventory;
+    @Shadow public Container inventoryContainer;
+    @Shadow public abstract InventoryEnderChest getInventoryEnderChest();
 
     @Shadow public abstract int getGloomLevel();
 
@@ -69,6 +75,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int blinkLength = 0;
     @Unique private float fear = 0f;
     @Unique private int heartCrackLength = 0;
+    @Unique private NBTTagCompound nm$overworldInventoryState;
+    @Unique private NBTTagCompound nm$underworldInventoryState;
+    @Unique private boolean nm$pendingUnderworldInventoryReset;
     ;
 
     public void nightmareMode$setBlinkLength(int target) {
@@ -105,6 +114,147 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
+    }
+
+    @Override
+    public void nm$swapInventoryForDimension(int destinationDimension) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        if (player.dimension == destinationDimension) return;
+        if (player.dimension != UNDERWORLD_DIMENSION && destinationDimension != UNDERWORLD_DIMENSION) return;
+
+        nm$saveCurrentInventoryState(player.dimension);
+        nm$restoreInventoryState(destinationDimension == UNDERWORLD_DIMENSION ? nm$underworldInventoryState : nm$overworldInventoryState);
+    }
+
+    @Override
+    public void nm$snapshotCurrentInventory() {
+        nm$saveCurrentInventoryState(((EntityPlayer)(Object)this).dimension);
+    }
+
+    @Override
+    public NBTTagCompound nm$getOverworldInventoryState() {
+        return nm$copyState(nm$overworldInventoryState);
+    }
+
+    @Override
+    public NBTTagCompound nm$getUnderworldInventoryState() {
+        return nm$copyState(nm$underworldInventoryState);
+    }
+
+    @Override
+    public boolean nm$applyPendingUnderworldInventoryReset() {
+        if (!nm$pendingUnderworldInventoryReset) return false;
+        nm$pendingUnderworldInventoryReset = false;
+        nm$restoreInventoryState(null);
+        return true;
+    }
+
+    @Override
+    public void nm$copyInventoryStateFrom(EntityPlayer source, boolean keepCurrentInventory) {
+        UnderworldInventoryExt sourceState = (UnderworldInventoryExt)source;
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        int sourceDimension = source.worldObj.provider.dimensionId;
+
+        if (keepCurrentInventory) sourceState.nm$snapshotCurrentInventory();
+
+        nm$overworldInventoryState = sourceState.nm$getOverworldInventoryState();
+        nm$underworldInventoryState = sourceState.nm$getUnderworldInventoryState();
+
+        if (keepCurrentInventory || sourceDimension != player.dimension) {
+            nm$restoreInventoryState(player.dimension == UNDERWORLD_DIMENSION ? nm$underworldInventoryState : nm$overworldInventoryState);
+        } else {
+            nm$saveCurrentInventoryState(player.dimension);
+        }
+    }
+
+    @Unique
+    private void nm$saveCurrentInventoryState(int dimension) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        NBTTagCompound state = new NBTTagCompound();
+        state.setTag("Inventory", inventory.writeToNBT(new NBTTagList()));
+        state.setInteger("SelectedItemSlot", inventory.currentItem);
+        state.setTag("EnderItems", player.getInventoryEnderChest().saveInventoryToNBT());
+        state.setTag("ActiveEffects", nm$writePotionEffects(player));
+
+        if (dimension == UNDERWORLD_DIMENSION) {
+            nm$underworldInventoryState = state;
+        } else {
+            nm$overworldInventoryState = state;
+        }
+    }
+
+    @Unique
+    private void nm$restoreInventoryState(NBTTagCompound state) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        NBTTagList inventoryTag = state == null ? new NBTTagList() : state.getTagList("Inventory");
+        NBTTagList enderTag = state == null ? new NBTTagList() : state.getTagList("EnderItems");
+
+        inventory.readFromNBT(inventoryTag);
+        inventory.currentItem = state == null ? 0 : state.getInteger("SelectedItemSlot");
+        player.getInventoryEnderChest().loadInventoryFromNBT(enderTag);
+        player.clearActivePotions();
+        if (state == null) return;
+
+        NBTTagList effects = state.getTagList("ActiveEffects");
+        for (int index = 0; index < effects.tagCount(); index++) {
+            PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT((NBTTagCompound)effects.tagAt(index));
+            if (effect != null) player.addPotionEffect(effect);
+        }
+    }
+
+    @Unique
+    private NBTTagList nm$writePotionEffects(EntityPlayer player) {
+        NBTTagList effects = new NBTTagList();
+        for (Object value : player.getActivePotionEffects()) {
+            PotionEffect effect = (PotionEffect)value;
+            effects.appendTag(effect.writeCustomPotionEffectToNBT(new NBTTagCompound()));
+        }
+        return effects;
+    }
+
+    @Unique
+    private NBTTagCompound nm$copyState(NBTTagCompound state) {
+        return state == null ? null : (NBTTagCompound)state.copy();
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void loadUnderworldInventoryState(NBTTagCompound tag, CallbackInfo ci) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        boolean hasOverworldState = tag.hasKey("NightmareOverworldInventory");
+        boolean hasUnderworldState = tag.hasKey("NightmareUnderworldInventory");
+        nm$overworldInventoryState = hasOverworldState ? nm$copyState(tag.getCompoundTag("NightmareOverworldInventory")) : null;
+        nm$underworldInventoryState = hasUnderworldState ? nm$copyState(tag.getCompoundTag("NightmareUnderworldInventory")) : null;
+
+        if (!hasOverworldState && !hasUnderworldState) {
+            if (player.dimension == UNDERWORLD_DIMENSION) {
+                nm$saveCurrentInventoryState(0);
+                nm$pendingUnderworldInventoryReset = true;
+            } else {
+                nm$saveCurrentInventoryState(player.dimension);
+            }
+        }
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void saveUnderworldInventoryState(NBTTagCompound tag, CallbackInfo ci) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        nm$saveCurrentInventoryState(player.dimension);
+        if (nm$overworldInventoryState != null) tag.setTag("NightmareOverworldInventory", nm$copyState(nm$overworldInventoryState));
+        if (nm$underworldInventoryState != null) tag.setTag("NightmareUnderworldInventory", nm$copyState(nm$underworldInventoryState));
+    }
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void clearDeadUnderworldInventory(DamageSource source, CallbackInfo ci) {
+        if (!worldObj.isRemote && ((EntityPlayer)(Object)this).dimension == UNDERWORLD_DIMENSION
+                && !worldObj.getGameRules().getGameRuleBooleanValue("keepInventory")) {
+            nm$underworldInventoryState = null;
+        }
+    }
+
+    @Inject(method = "clonePlayer", at = @At("TAIL"))
+    private void copyUnderworldInventoryState(EntityPlayer source, boolean playerLeavingTheEnd, CallbackInfo ci) {
+        boolean keepCurrentInventory = playerLeavingTheEnd || worldObj.getGameRules().getGameRuleBooleanValue("keepInventory");
+        nm$copyInventoryStateFrom(source, keepCurrentInventory);
     }
 
     // can't jump if you have slowness
@@ -792,24 +942,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.checkAndValidateConfig();
         }
         // manage underworld events
-        if(this.dimension == UNDERWORLD_DIMENSION && devMode){
+        if (!this.worldObj.isRemote && !this.capabilities.isCreativeMode && this.dimension == UNDERWORLD_DIMENSION) {
             if(this.ticksExisted % 10 == 0){
-                // recalculate drain amount every 10 ticks
                 drainAmount = this.getSanityDrain();
             }
-            this.setData(SANITY, this.getData(SANITY) + drainAmount);
+            NMSanityUtils.drain((EntityPlayer)(Object)this, drainAmount);
 
-            // sanity damage
-            if(this.getSanity() > CRITICAL_SANITY * 1.1d && this.ticksExisted % 20 == 0){
+            double percent = NMSanityUtils.getPercent((EntityPlayer)(Object)this);
+            if (percent <= 0.0 && this.ticksExisted % 20 == 0) {
                 this.damageEntity(NMDamageSource.insanity, 1);
-                if(this.getSanity() >= MAX_SANITY){
-                    this.damageEntity(NMDamageSource.insanity, 1);
-                }
+            } else if (percent < DANGER_SANITY_PERCENT && this.ticksExisted % 40 == 0) {
+                this.damageEntity(NMDamageSource.insanity, 1);
             }
-
-            if(this.ticksExisted % 20 == 0 && this.isSneaking()){
-                System.out.println("current sanity is: " + this.getData(SANITY));
-            }
+        } else if (!this.worldObj.isRemote && this.dimension != UNDERWORLD_DIMENSION && this.ticksExisted % 4 == 0) {
+            NMSanityUtils.restore((EntityPlayer)(Object)this, 1.0);
+        }
+        if(this.ticksExisted % 20 == 0 && devMode && this.dimension == UNDERWORLD_DIMENSION){
+            System.out.println(NMSanityUtils.getDebugSummary((EntityPlayer)(Object)this));
         }
 
 

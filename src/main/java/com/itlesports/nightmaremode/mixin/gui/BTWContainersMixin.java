@@ -4,6 +4,9 @@ import btw.inventory.BTWContainers;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityDisenchantmentTable;
 import com.itlesports.nightmaremode.nmgui.ContainerDisenchantment;
 import com.itlesports.nightmaremode.nmgui.ContainerDisenchantmentGui;
+import com.itlesports.nightmaremode.nmgui.ContainerUnderforge;
+import com.itlesports.nightmaremode.nmgui.GuiUnderforge;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityUnderforge;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -20,6 +23,8 @@ public class BTWContainersMixin {
     private static void registerAnvilGuiUsingBTWMod(EntityClientPlayerMP p, int containerID, CallbackInfoReturnable<GuiContainer> cir){
         if(containerID == ContainerDisenchantment.ID){
             cir.setReturnValue(new ContainerDisenchantmentGui(p.inventory, new TileEntityDisenchantmentTable()));
+        } else if (containerID == ContainerUnderforge.ID) {
+            cir.setReturnValue(new GuiUnderforge(p.inventory, new TileEntityUnderforge()));
         }
     }
 }

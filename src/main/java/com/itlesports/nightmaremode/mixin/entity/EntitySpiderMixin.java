@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.JungleSpiderEntity;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
+import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -29,6 +31,18 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
     public EntitySpiderMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void dropFlowerFieldMaterials(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (this.dimension != NMFields.UNDERWORLD_DIMENSION) return;
+        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords((int)this.posX, (int)this.posZ);
+        if (biome instanceof BiomeGenFlowerFields && this.rand.nextInt(Math.max(2, 5 - looting)) == 0) {
+            this.dropItem(NMItems.bloomPollen.itemID, 1);
+        }
+        if (biome instanceof BiomeGenBlightlands && this.rand.nextInt(Math.max(1, 3 - looting)) == 0) {
+            this.dropItem(NMItems.underwebThread.itemID, 1);
+        }
     }
 
     @Inject(method = "shouldContinueAttacking", at = @At("RETURN"), cancellable = true)

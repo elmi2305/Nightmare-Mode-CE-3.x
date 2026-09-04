@@ -48,6 +48,8 @@ public abstract class NMInitializer implements AchievementExt {
     private static void finishRecipes(String type){System.out.println("Finished initializing: [" + type + "]");}
 
     public static void initNightmareRecipes(){
+        // underforge recipes are disabled pending the separate-inventory progression redesign
+        // com.itlesports.nightmaremode.underworld.crafting.UnderforgeRecipeManager.registerDefaults();
         addCraftingRecipes();
         addCampfireRecipes();
         addCrucibleRecipes();
@@ -323,6 +325,9 @@ public abstract class NMInitializer implements AchievementExt {
         kill(TOSS_THE_MILK);
         move(CONVERT_SOULFORGE, 0, -2);
         addParent(CONVERT_EYES_OF_ENDER, NMAchievements.CRAFT_CORPSE_EYE);
+        addParent(CONVERT_EYES_OF_ENDER, NMAchievements.TUNGSTEN_TOOLS);
+        addParent(CONVERT_EYES_OF_ENDER, NMAchievements.TUNGSTEN_ARMOR);
+        addParent(CONVERT_EYES_OF_ENDER, NMAchievements.MYCELIAL_HEART);
         move(FIND_DORMANT_SOULFORGE, 0, -2);
 
         // 4TH TAB - TAB_END_GAME
@@ -745,10 +750,6 @@ public abstract class NMInitializer implements AchievementExt {
         convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32),
                 TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("power")));
-        convert("nmlibrarian0", 1, 5, TradeItem.fromID(BTWItems.corpseEye.itemID),
-                TradeItem.fromID(NMItems.bloodOrb.itemID, 4, 10),
-                TradeItem.fromID(Item.eyeOfEnder.itemID), 1.0f, false, true);
-
         finishRecipes("Librarian Trades");
     }
 
@@ -1170,6 +1171,19 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addCraftingRecipes(){
+        // underworld entry and expedition equipment
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.portalCore), new Object[]{
+                "OSO", "SNS", "OSO", 'O', NMItems.obsidianShard, 'S', BTWItems.soulforgedSteelIngot, 'N', Item.netherStar});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.bloomResin), new Object[]{NMItems.bloomPollen, NMItems.bloomPollen, NMItems.underwebThread});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.riftWorkbench), new Object[]{"UU", "UU", 'U', NMBlocks.underCobble});
+        // underforge crafting is disabled pending its repurposed role
+        // RecipeManager.addRecipe(new ItemStack(NMBlocks.underforge), new Object[]{
+        //         "RUR", "UBU", "RUR", 'R', NMItems.rawTitanium, 'U', NMBlocks.underCobble, 'B', NMItems.bloomResin});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.soulTorch, 4), new Object[]{"B", "W", 'B', NMItems.bloomResin, 'W', NMItems.underwebThread});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.soulLantern), new Object[]{" T ", "PBP", " P ", 'T', NMBlocks.soulTorch, 'P', NMItems.titaniumSteelPlate, 'B', NMItems.bloomResin});
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantHeart), new Object[]{"PRP", "RFR", "PWP", 'P', NMItems.lucidPetal, 'R', NMItems.bloomResin, 'F', NMItems.lucidFruit, 'W', NMItems.underwebThread});
+        RecipeManager.addRecipe(new ItemStack(NMItems.mycelialHeart), new Object[]{"PCP", "RMR", "PVP", 'P', NMItems.lucidPetal, 'C', NMItems.cinderResin, 'R', NMItems.bloomResin, 'M', NMItems.mycelialCore, 'V', NMItems.voidMembrane});
+
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.planter, 1), new Object[]{"# #", "# #", "###", Character.valueOf('#'), Item.brick});
         RecipeManager.addRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XXX", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodSidingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.book,1,Short.MAX_VALUE)});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.steelBunch), Character.valueOf('X'), new ItemStack(NMBlocks.bloodChest)});

@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
+import com.itlesports.nightmaremode.util.interfaces.UnderworldInventoryExt;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ServerConfigurationManager;
@@ -28,11 +29,22 @@ public class ServerConfigurationManagerMixin {
         if (player instanceof EntityPlayerExt ext){
             ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
         }
+        if (((UnderworldInventoryExt)player).nm$applyPendingUnderworldInventoryReset()) {
+            player.sendContainerToPlayer(player.inventoryContainer);
+            player.playerNetServerHandler.sendPacketToPlayer(new net.minecraft.src.Packet16BlockItemSwitch(player.inventory.currentItem));
+        }
     }
     @Inject(method = "transferPlayerToDimension", at = @At("TAIL"))
     private void sendFoodPacketToDimensionChangedPlayer(EntityPlayerMP player, int dimensionID, CallbackInfo ci){
         if (player instanceof EntityPlayerExt ext){
             ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
         }
+    }
+
+    @Inject(method = "transferPlayerToDimension", at = @At("HEAD"))
+    private void swapUnderworldInventory(EntityPlayerMP player, int dimensionID, CallbackInfo ci){
+        if (player.dimension != NMFields.UNDERWORLD_DIMENSION && dimensionID != NMFields.UNDERWORLD_DIMENSION) return;
+        player.closeScreen();
+        ((UnderworldInventoryExt)player).nm$swapInventoryForDimension(dimensionID);
     }
 }

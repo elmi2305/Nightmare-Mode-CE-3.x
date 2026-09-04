@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.mixin.interfaces.BiomeDecoratorAccess;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.EntityEnderman;
+import net.minecraft.src.EntityCreeper;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.SpawnListEntry;
 
@@ -16,7 +17,7 @@ public class BiomeGenUnderHell extends BiomeGenUnderworld {
         this.spawnableMonsterList.clear();
 
         this.spawnableMonsterList.add(new SpawnListEntry(EntityShadowZombie.class, 15, 2, 6));
-        // add squids
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 8, 2, 4));
         this.spawnableMonsterList.add(new SpawnListEntry(EntitySkeleton.class, 1, 1, 1));
         this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 5, 1, 4));
 

@@ -5,6 +5,7 @@ import btw.entity.mob.behavior.ZombieSecondaryAttackBehavior;
 import com.itlesports.nightmaremode.AITasks.EntityAIBurrow;
 import com.itlesports.nightmaremode.AITasks.EntityAISummonBabies;
 import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 public class FlowerZombie extends EntityZombieVariant implements IFlowerMob{
@@ -55,6 +56,14 @@ public class FlowerZombie extends EntityZombieVariant implements IFlowerMob{
             b.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
         }
         return super.attackEntityAsMob(attackedEntity);
+    }
+
+    @Override
+    protected void dropFewItems(boolean killedByPlayer, int looting) {
+        super.dropFewItems(killedByPlayer, looting);
+        if (killedByPlayer && this.rand.nextInt(Math.max(1, 3 - looting)) == 0) {
+            this.dropItem(NMItems.bloomPollen.itemID, 1);
+        }
     }
 
 }

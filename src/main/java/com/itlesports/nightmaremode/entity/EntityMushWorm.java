@@ -19,6 +19,9 @@ public class EntityMushWorm extends EntitySilverfish {
 
     protected void dropFewItems(boolean bKilledByPlayer, int looting) {
         this.dropItem(BTWItems.redMushroom.itemID, looting + this.rand.nextInt(2));
+        if (bKilledByPlayer && this.rand.nextInt(Math.max(3, 10 - looting * 2)) == 0) {
+            this.dropItem(com.itlesports.nightmaremode.item.NMItems.lucidFruit.itemID, 1);
+        }
     }
 
     public void onUpdate() {

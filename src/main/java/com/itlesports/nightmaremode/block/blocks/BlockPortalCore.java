@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore;
 import com.itlesports.nightmaremode.util.underworld.RitualState;
 import net.minecraft.src.*;
@@ -25,12 +26,17 @@ public class BlockPortalCore extends BlockContainer {
         TileEntityPortalCore core = (TileEntityPortalCore) te;
         ItemStack held = player.getHeldItem();
 
-        if (held != null && side == 1 && core.tryInsertCatalyst(held)) {
-            consumeOneItem(player, held);
+        if (NightmareMode.devMode && player.isSneaking() && held == null && core.spawnDebugRift()) {
+            player.sendChatToPlayer(new ChatMessageComponent().addKey("nm.portal.debug_rift"));
             return true;
         }
 
-        sendStateFeedback(core.getState());
+        if (held != null && side == 1 && core.tryInsertCatalyst(held)) {
+            if (!player.capabilities.isCreativeMode) consumeOneItem(player, held);
+            return true;
+        }
+
+        sendStateFeedback(player, core.getState());
         return true;
     }
 
@@ -46,24 +52,15 @@ public class BlockPortalCore extends BlockContainer {
         return false;
     }
 
-    private void sendStateFeedback(RitualState state) {
-        switch (state) {
-            case INVALID:
-                System.out.println("The altar is incomplete.");
-                break;
-            case VALID_IDLE:
-                System.out.println("The altar waits. Place a soul within it.");
-                break;
-            case ACTIVE:
-                System.out.println("The ritual consumes.");
-                break;
-            case COMPLETE:
-                System.out.println("The gate is open.");
-                break;
-            case FAILED:
-                System.out.println("The ritual has failed. The altar needs time.");
-                break;
-        }
+    private void sendStateFeedback(EntityPlayer player, RitualState state) {
+        String key = switch (state) {
+            case INVALID -> "nm.portal.invalid";
+            case VALID_IDLE -> "nm.portal.valid_idle";
+            case ACTIVE -> "nm.portal.active";
+            case COMPLETE -> "nm.portal.complete";
+            case FAILED -> "nm.portal.failed";
+        };
+        player.sendChatToPlayer(new ChatMessageComponent().addKey(key));
     }
 
     @Override
@@ -73,7 +70,7 @@ public class BlockPortalCore extends BlockContainer {
 
     @Override
     public void breakBlock(World world, int x, int y, int z, int blockId, int meta) {
-        // Give the tile entity a chance to shut down the ritual cleanly
+        // give the tile entity a chance to shut down the ritual cleanly
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityPortalCore) {
             ((TileEntityPortalCore) te).onCoreRemoved();

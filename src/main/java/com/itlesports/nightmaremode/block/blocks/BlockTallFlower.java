@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.itlesports.nightmaremode.util.NMFields.FLOWER_NAMES;
+import com.itlesports.nightmaremode.item.NMItems;
 
 public class BlockTallFlower extends BlockFlower {
     @Environment(EnvType.CLIENT)
@@ -25,6 +26,7 @@ public class BlockTallFlower extends BlockFlower {
     public static int BERRY_BUSH = 4;
     public static int LAVA_FLOWER = 5;
     public static int VOID_SHRUB = 6;
+    public static int LUCID_BLOOM = 7;
 
     public BlockTallFlower(int blockID) {
         super(blockID, Material.plants);
@@ -33,7 +35,7 @@ public class BlockTallFlower extends BlockFlower {
         this.setUnlocalizedName("tallFlower");
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.initBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
-        this.setTickRandomly(false);
+        this.setTickRandomly(true);
     }
 
     @Override
@@ -110,6 +112,35 @@ public class BlockTallFlower extends BlockFlower {
     @Override
     public int quantityDropped(Random rand) {
         return 1;
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        int meta = world.getBlockMetadata(x, y, z);
+        if ((meta & TOP_FLAG) != 0 || (meta & TYPE_MASK) != LUCID_BLOOM || !world.isAirBlock(x, y + 1, z)) return;
+        long time = world.getWorldTime() % 24000L;
+        if (time >= 11500L && time <= 13500L && random.nextInt(3) == 0) {
+            world.setBlock(x, y + 1, z, this.blockID, LUCID_BLOOM | TOP_FLAG, 3);
+        }
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune) {
+        if ((meta & TOP_FLAG) != 0 || (meta & TYPE_MASK) != LUCID_BLOOM) {
+            super.dropBlockAsItemWithChance(world, x, y, z, meta, chance, fortune);
+            return;
+        }
+        if (world.isRemote) return;
+        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.lucidBloomSeeds));
+        long time = world.getWorldTime() % 24000L;
+        boolean mature = world.getBlockId(x, y + 1, z) == this.blockID
+                && (world.getBlockMetadata(x, y + 1, z) & TYPE_MASK) == LUCID_BLOOM;
+        if (mature && time >= 12000L && time <= 14000L) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.lucidPetal, 1 + world.rand.nextInt(2)));
+            if (world.rand.nextInt(3) == 0) {
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.lucidBloomSeeds));
+            }
+        }
     }
 
     @Override

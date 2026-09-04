@@ -8,6 +8,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.client.emi.UnderforgeEmiRecipes;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import net.minecraft.src.Block;
@@ -29,6 +30,7 @@ public abstract class BTWPluginMixin {
 
     @Inject(method = "addInfoRecipes", at = @At("TAIL"),remap = false)
     private void addNightmareInfo(EmiRegistry registry, CallbackInfo ci){
+        UnderforgeEmiRecipes.register(registry);
         this.info(registry, NMItems.rpg, 0, "nm.rpg.info");
         this.info(registry, NMItems.rifle, 0, "nm.rifle.info");
         this.info(registry, NMItems.bandage, 0, "nm.bandage.info");
@@ -72,6 +74,18 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMItems.refinedDiamondIngot, 0, "nm.refineddiamond.info");
         this.info(registry, NMItems.witherSoul, 0, "nm.withersoul.info");
         this.info(registry, NMItems.obsidianShard, 0, "nm.obsidianshard.info");
+        this.info(registry, NMItems.verdantHeart, 0, "nm.verdantHeart.info");
+        this.info(registry, NMItems.mycelialHeart, 0, "nm.mycelialHeart.info");
+        this.info(registry, NMItems.titaniumHelmet, 0, "nm.titaniumArmor.info");
+        this.info(registry, NMItems.titaniumChestplate, 0, "nm.titaniumArmor.info");
+        this.info(registry, NMItems.titaniumLeggings, 0, "nm.titaniumArmor.info");
+        this.info(registry, NMItems.titaniumBoots, 0, "nm.titaniumArmor.info");
+        this.info(registry, NMItems.tungstenHelmet, 0, "nm.tungstenArmor.info");
+        this.info(registry, NMItems.tungstenChestplate, 0, "nm.tungstenArmor.info");
+        this.info(registry, NMItems.tungstenLeggings, 0, "nm.tungstenArmor.info");
+        this.info(registry, NMItems.tungstenBoots, 0, "nm.tungstenArmor.info");
+        this.info(registry, NMItems.lucidFruit, 0, "nm.lucidFruit.info");
+        this.info(registry, NMItems.clarityDraught, 0, "nm.clarityDraught.info");
 
         // blocks
 
@@ -88,6 +102,10 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMBlocks.disenchantmentTable, 0, "nm.disenchantmentTable.info");
         this.info(registry, NMBlocks.blockBloodIngot, 0, "nm.bloodIngotBlock.info");
         this.info(registry, NMBlocks.blockRefinedDiamondIngot, 0, "nm.refinedDiamondBlock.info");
+        this.info(registry, NMBlocks.underforge, 0, "nm.underforge.info");
+        this.info(registry, NMBlocks.soulTorch, 0, "nm.soulTorch.info");
+        this.info(registry, NMBlocks.soulLantern, 0, "nm.soulLantern.info");
+        this.info(registry, NMBlocks.riftWorkbench, 0, "nm.riftWorkbench.info");
 
         // vanilla blocks
         this.info(registry, Block.obsidian, 0, "nm.obsidian.info");

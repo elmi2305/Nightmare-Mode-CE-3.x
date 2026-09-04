@@ -22,6 +22,7 @@ public class BigMushroom extends ComponentScatteredFeature {
 
     public BigMushroom(Random random, int x, int z) {
         super(random, x, BASE_HEIGHT, z, 64,64,64);
+        this.structureRand.setSeed(random.nextLong());
     }
     private final Random structureRand = new Random();
     private static final byte BASE_HEIGHT = 50;
@@ -193,6 +194,8 @@ public class BigMushroom extends ComponentScatteredFeature {
 
             ArrayList<LootEntry> lootPool = new ArrayList<>();
             // lootPool.add(new LootEntry(new ItemStack([ITEM]]), [WEIGHT], [MIN COUNT], [MAX COUNT]));
+            lootPool.add(new LootEntry(new ItemStack(NMItems.mycelialCore), 4, 1, 1));
+            lootPool.add(new LootEntry(new ItemStack(NMItems.clarityDraught), 1, 1, 1));
             lootPool.add(new LootEntry(new ItemStack(NMItems.bloodOrb), 10, 3, 13));
             lootPool.add(new LootEntry(new ItemStack(Item.appleRed), 10, 1, 2));
             lootPool.add(new LootEntry(new ItemStack(BTWItems.brownMushroom), 25, 6, 20));
@@ -216,7 +219,6 @@ public class BigMushroom extends ComponentScatteredFeature {
             lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("unbreaking")), 3, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("fortune")), 1, 0, 1));
             lootPool.add(new LootEntry(new ItemStack(BTWItems.arcaneScroll, 1, NMUtils.getScrollMetadata("infinity")), 1, 0, 1));
-            lootPool.add(new LootEntry(new ItemStack(BTWItems.soulFlux), 5, 1, 4));
             lootPool.add(new LootEntry(new ItemStack(Item.enderPearl), 8, 1, 2));
 
 

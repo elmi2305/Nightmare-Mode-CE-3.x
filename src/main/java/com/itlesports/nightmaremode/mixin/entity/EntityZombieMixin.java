@@ -9,6 +9,7 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
 import com.itlesports.nightmaremode.entity.zombies.EntityZombieVariant;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
@@ -43,8 +44,6 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     public EntityZombieMixin(World par1World) {
         super(par1World);
     }
-
-
 
     @Unique private int lungedAgo;
 
@@ -267,6 +266,11 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Override
     protected void entityLivingDropFewItems(boolean par1, int par2) {
+        if (par1 && this.dimension == NMFields.UNDERWORLD_DIMENSION
+                && this.worldObj.getBiomeGenForCoords((int)this.posX, (int)this.posZ) instanceof com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands
+                && this.rand.nextInt(Math.max(1, 3 - par2)) == 0) {
+            this.dropItem(NMItems.blightedFlesh.itemID, 1);
+        }
         if (par1 && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (par2 * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {

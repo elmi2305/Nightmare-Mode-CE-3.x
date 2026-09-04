@@ -23,13 +23,13 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     private final World worldObj;
     private double[] noiseArray;
     private double[] stoneNoise = new double[256];
-    private final MapGenBase caveGenerator = new MapGenCaves();
+    private final MapGenBase caveGenerator = new com.itlesports.nightmaremode.underworld.worldgen.MapGenCavesUnderworld();
     private final MapGenStronghold strongholdGenerator = new MapGenStronghold();
     private final MapGenVillage villageGenerator = new MapGenVillage();
     private final MapGenMineshaft mineshaftGenerator = new MapGenMineshaft();
     private final MapGenScatteredFeatureUnderworld scatteredFeatureGenerator = new MapGenScatteredFeatureUnderworld();
     private final WorldGenFlowers mushroomBrownGen = new WorldGenFlowers(Block.mushroomBrown.blockID);
-    private final MapGenBase ravineGenerator = new MapGenRavine();
+    private final MapGenBase ravineGenerator = new com.itlesports.nightmaremode.underworld.worldgen.MapGenRavineUnderworld();
     private BiomeGenBase[] biomesForGeneration;
     double[] noise3;
     double[] noise1;
@@ -194,6 +194,11 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     }
 
                     if (currentBlock != NMBlocks.underCobble.blockID) continue;
+                    if (y < 48) {
+                        blockIDs[blockIndex] = (short)NMBlocks.underrock.blockID;
+                        metadata[blockIndex] = (byte)(y <= 24 ? 2 : 1);
+                        continue;
+                    }
 
                     if (remainingDepth == -1) {
                         if (surfaceDepth <= 0) {
@@ -242,10 +247,16 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         this.replaceBlocksForBiome(chunkX, chunkZ, blockIDs, metadata, this.biomesForGeneration);
         this.caveGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
         this.ravineGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
-        if (true) {
+        if (this.mapFeaturesEnabled) {
+            if (this.mineshaftsEnabled) {
             this.mineshaftGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
+            }
+            if (this.villagesEnabled) {
             this.villageGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
+            }
+            if (this.strongholdsEnabled) {
             this.strongholdGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
+            }
             this.scatteredFeatureGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
         }
         Chunk var4 = new Chunk(this.worldObj, blockIDs, metadata, chunkX, chunkZ);
@@ -531,17 +542,22 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 
     @Override
     public void recreateStructures(int par1, int par2) {
-        if (false) {
+        if (this.mapFeaturesEnabled) {
+            if (this.mineshaftsEnabled) {
             this.mineshaftGenerator.generate(this, this.worldObj, par1, par2, null, null);
+            }
+            if (this.villagesEnabled) {
             this.villageGenerator.generate(this, this.worldObj, par1, par2, null, null);
+            }
+            if (this.strongholdsEnabled) {
             this.strongholdGenerator.generate(this, this.worldObj, par1, par2, null, null);
+            }
             this.scatteredFeatureGenerator.generate(this, this.worldObj, par1, par2, null, null);
         }
     }
 
     private void btwPostProcessChunk(World worldObj, int iChunkX, int iChunkZ) {
         if (worldObj.provider.dimensionId == 0 || worldObj.provider.dimensionId == NMFields.UNDERWORLD_DIMENSION) {
-            this.generateStrata(worldObj, iChunkX, iChunkZ);
             this.generateAdditionalBrownMushrooms(worldObj, iChunkX, iChunkZ);
         }
     }
@@ -552,27 +568,6 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
             int y = worldObj.rand.nextInt(25);
             int z = chunkBlockZ + worldObj.rand.nextInt(16) + 8;
             mushroomBrownGen.generate(worldObj, worldObj.rand, x, y, z);
-        }
-    }
-
-    private void generateStrata(World world, int iChunkX, int iChunkZ) {
-        Chunk chunk = world.getChunkFromChunkCoords(iChunkX >> 4, iChunkZ >> 4);
-        for (int iTempI = 0; iTempI < 16; ++iTempI) {
-            for (int iTempK = 0; iTempK < 16; ++iTempK) {
-                int strataH1 = 24 + world.rand.nextInt(2);
-                int strataH2 = 48 + world.rand.nextInt(2);
-                for (int y = 0; y <= 255; ++y) {
-                    int blockID = chunk.getBlockID(iTempI, y, iTempK);
-                    if (blockID != Block.stone.blockID) continue;
-                    if (y <= strataH1) {
-                        chunk.setBlockMetadata(iTempI, y, iTempK, 2);
-                    } else if (y <= strataH2) {
-                        chunk.setBlockMetadata(iTempI, y, iTempK, 1);
-                    } else {
-                        chunk.setBlockIDWithMetadata(iTempI, y, iTempK, NMBlocks.underCobble.blockID, 0);
-                    }
-                }
-            }
         }
     }
 

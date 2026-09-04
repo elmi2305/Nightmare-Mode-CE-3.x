@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 
 import api.block.TileEntityDataPacketHandler;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.underworld.EntityRift;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -46,6 +47,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
      * used instead of entity ids which become stale after world reloads
      */
     private Set<UUID> blobEntityUUIDs = new HashSet<>();
+    private Set<UUID> ritualMobUUIDs = new HashSet<>();
+    private int wavesSpawned = 0;
 
     /** current rendered beam height grows to max during active shrinks otherwise */
     public float beamHeight  = 0f;
@@ -78,7 +81,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             case VALID_IDLE:
                 if (worldTime % VALIDATION_INTERVAL == 0) {
                     if (!RitualStructureValidator.isIntact(worldObj, xCoord, yCoord, zCoord)) {
-                        System.out.println("[PortalCore] Structure broken - transitioning to INVALID");
                         transitionTo(RitualState.INVALID);
                     }
                 }
@@ -87,7 +89,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             case ACTIVE:
                 if (worldTime % VALIDATION_INTERVAL == 0) {
                     if (!RitualStructureValidator.isIntact(worldObj, xCoord, yCoord, zCoord)) {
-                        System.out.println("[PortalCore] Structure broken during ACTIVE ritual - failing");
                         failRitual();
                         return;
                     }
@@ -96,13 +97,11 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 if (worldTime % 20 == 0) {
                     EntityRitualPortal blob = findPortalEntity();
                     if (blob == null) {
-                        System.out.println("[PortalCore] Blob entity gone — failing ritual");
                         failRitual();
                         return;
                     }
                     if (blob.getAltar() == null) {
                         blob.bindToAltar(this); // restore lost reference after relog
-                        System.out.println("[PortalCore] Rebound blob entity after relog");
                     }
                 }
 
@@ -119,7 +118,11 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 }
 
                 ritualTicks++;
-                if (ritualTicks + 20 >= UW_PORTAL_DURATION) {
+                if (wavesSpawned < 1 && ritualTicks >= 20) spawnHordeWave(5);
+                if (wavesSpawned < 2 && ritualTicks >= 420) spawnHordeWave(7);
+                if (wavesSpawned < 3 && ritualTicks >= 820) spawnHordeWave(9);
+
+                if (ritualTicks + 20 == UW_PORTAL_DURATION) {
                     // a bit before it dies. sends blink effect to all players
                     int distance = 32;
                     List<EntityPlayer> players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.xCoord - distance, this.yCoord - distance, this.zCoord - distance, this.xCoord + distance, this.yCoord + distance, this.zCoord + distance));
@@ -132,8 +135,11 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                     }
                 }
 
-                if (ritualTicks >= UW_PORTAL_DURATION) {
+                if (ritualTicks >= UW_PORTAL_DURATION && countLivingRitualMobs() == 0) {
                     completeRitual();
+                } else if (NightmareMode.devMode && ritualTicks >= UW_PORTAL_DURATION && ritualTicks % 100 == 0) {
+                    System.out.println("[Underworld/Ritual] waiting for " + countLivingRitualMobs()
+                            + " horde mobs at " + xCoord + "," + yCoord + "," + zCoord);
                 }
 
                 markDirtyAndSync();
@@ -149,8 +155,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
 
             case COMPLETE:
                 if (!this.hasSpawnedRift) {
-                    this.worldObj.spawnEntityInWorld(new EntityRift(this.worldObj, this.xCoord + 0.5f, this.yCoord + BLOB_SPAWN_HEIGHT, this.zCoord + 0.5f));
-                    this.hasSpawnedRift = true;
+                    spawnRift();
                 }
                 break;
         }
@@ -179,17 +184,13 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
      * Returns true if the catalyst was consumed and the ritual started.
      */
     public boolean tryInsertCatalyst(ItemStack stack) {
-        System.out.println("[PortalCore] Catalyst insertion attempt at (" + xCoord + "," + yCoord + "," + zCoord + "), current state: " + state);
         if (state != RitualState.VALID_IDLE) {
-            System.out.println("[PortalCore] Catalyst rejected - not in VALID_IDLE state");
             return false;
         }
         if (!isWitherSoul(stack)) {
-            System.out.println("[PortalCore] Catalyst rejected - not a wither soul");
             return false;
         }
 
-        System.out.println("[PortalCore] Catalyst accepted - starting ritual");
         startRitual();
         return true;
     }
@@ -202,6 +203,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     private void startRitual() {
         transitionTo(RitualState.ACTIVE);
         ritualTicks = 0;
+        wavesSpawned = 0;
+        ritualMobUUIDs.clear();
 
         sustainStorm();
         spawnBlobEntity();
@@ -209,8 +212,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     }
 
     private void failRitual() {
-        System.out.println("[PortalCore] Ritual failed at (" + xCoord + "," + yCoord + "," + zCoord + ")");
         killBlobEntity();
+        killRitualMobs();
         transitionTo(RitualState.FAILED);
         failedTicks = 0;
 
@@ -223,21 +226,16 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
 
     private void completeRitual() {
         killBlobEntity();
+        ritualMobUUIDs.clear();
         transitionTo(RitualState.COMPLETE);
-
-
-        System.out.println("we have completed");
-
-        // todo portal open logic here
-
         markDirtyAndSync();
     }
 
     /** Called from PortalCoreBlock.breakBlock() */
     public void onCoreRemoved() {
-        System.out.println("[PortalCore] Core removed at (" + xCoord + "," + yCoord + "," + zCoord + "), state: " + state);
         if (state == RitualState.ACTIVE) {
             killBlobEntity();
+            killRitualMobs();
         }
     }
 
@@ -287,21 +285,80 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         double ey = yCoord + BLOB_SPAWN_HEIGHT;
         double ez = zCoord + 0.5d;
 
-        System.out.println("[PortalCore] Spawning blob entity at (" + ex + "," + ey + "," + ez + ")");
         EntityRitualPortal blob = new EntityRitualPortal(worldObj, this);
         blob.setPositionAndUpdate(ex, ey, ez);
         worldObj.spawnEntityInWorld(blob);
         blobEntityUUIDs.add(blob.getUniqueID());
-        System.out.println("[PortalCore] Blob entity spawned with UUID: " + blob.getUniqueID());
+    }
+
+    private void spawnHordeWave(int count) {
+        for (int index = 0; index < count; index++) {
+            EntityLiving mob;
+            switch ((wavesSpawned + index) % 4) {
+                case 0: mob = new EntityZombie(worldObj); break;
+                case 1: mob = new EntitySkeleton(worldObj); break;
+                case 2: mob = new EntitySpider(worldObj); break;
+                default: mob = new EntityCreeper(worldObj); break;
+            }
+            double angle = Math.PI * 2.0D * index / count + worldObj.rand.nextDouble() * 0.35D;
+            double radius = 9.0D + worldObj.rand.nextDouble() * 5.0D;
+            int spawnX = MathHelper.floor_double(xCoord + 0.5D + Math.cos(angle) * radius);
+            int spawnZ = MathHelper.floor_double(zCoord + 0.5D + Math.sin(angle) * radius);
+            int spawnY = Math.max(yCoord + 1, worldObj.getTopSolidOrLiquidBlock(spawnX, spawnZ));
+            mob.setPositionAndUpdate(spawnX + 0.5D, spawnY, spawnZ + 0.5D);
+            mob.spawnerInitCreature();
+            mob.setPersistent(true);
+            if (worldObj.spawnEntityInWorld(mob)) ritualMobUUIDs.add(mob.getUniqueID());
+        }
+        wavesSpawned++;
+        if (NightmareMode.devMode) {
+            System.out.println("[Underworld/Ritual] spawned wave " + wavesSpawned + " size=" + count
+                    + " at " + xCoord + "," + yCoord + "," + zCoord);
+        }
+        markDirtyAndSync();
+    }
+
+    private int countLivingRitualMobs() {
+        int alive = 0;
+        for (Object object : worldObj.loadedEntityList) {
+            if (object instanceof EntityLivingBase mob && ritualMobUUIDs.contains(mob.getUniqueID()) && mob.isEntityAlive()) {
+                alive++;
+            }
+        }
+        return alive;
+    }
+
+    private void killRitualMobs() {
+        for (Object object : worldObj.loadedEntityList) {
+            if (object instanceof EntityLivingBase mob && ritualMobUUIDs.contains(mob.getUniqueID())) mob.setDead();
+        }
+        ritualMobUUIDs.clear();
+    }
+
+    private void spawnRift() {
+        this.worldObj.spawnEntityInWorld(new EntityRift(this.worldObj,
+                this.xCoord + 0.5D, this.yCoord + 1.0D, this.zCoord + 0.5D));
+        this.hasSpawnedRift = true;
+        markDirtyAndSync();
+    }
+
+    public boolean spawnDebugRift() {
+        if (worldObj == null || worldObj.isRemote || hasSpawnedRift) return false;
+        killBlobEntity();
+        killRitualMobs();
+        state = RitualState.COMPLETE;
+        spawnRift();
+        if (NightmareMode.devMode) {
+            System.out.println("[Underworld/Ritual] spawned debug rift at " + xCoord + "," + yCoord + "," + zCoord);
+        }
+        return true;
     }
 
     private void killBlobEntity() {
-        System.out.println("[PortalCore] Killing blob entities at (" + xCoord + "," + yCoord + "," + zCoord + ")");
         Set<EntityRitualPortal> blobs = findPortalEntities();
         for (EntityRitualPortal blob : blobs) {
             if (blob != null && !blob.isDead) {
                 blob.setDead();
-                System.out.println("[PortalCore] Blob entity killed: " + blob.getUniqueID());
             }
         }
         blobEntityUUIDs.clear();
@@ -367,7 +424,10 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
 
 
     private void transitionTo(RitualState next) {
-        System.out.println("[PortalCore] State transition: " + this.state + " -> " + next + " at (" + xCoord + "," + yCoord + "," + zCoord + ")");
+        if (NightmareMode.devMode && this.state != next) {
+            System.out.println("[Underworld/Ritual] " + this.state + " -> " + next + " at "
+                    + xCoord + "," + yCoord + "," + zCoord);
+        }
         this.state = next;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -402,6 +462,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         tag.setInteger("RitualTicks",  ritualTicks);
         tag.setInteger("FailedTicks",  failedTicks);
         tag.setBoolean("Completed",  this.hasSpawnedRift);
+        tag.setInteger("WavesSpawned", wavesSpawned);
 
         if (blobEntityUUIDs != null) {
             NBTTagList list = new NBTTagList();
@@ -412,6 +473,15 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             }
             tag.setTag("blobEntityUUIDs", list);
         }
+
+        NBTTagList ritualMobs = new NBTTagList();
+        for (UUID uuid : ritualMobUUIDs) {
+            NBTTagCompound mobTag = new NBTTagCompound();
+            mobTag.setLong("Most", uuid.getMostSignificantBits());
+            mobTag.setLong("Least", uuid.getLeastSignificantBits());
+            ritualMobs.appendTag(mobTag);
+        }
+        tag.setTag("RitualMobs", ritualMobs);
     }
 
     @Override
@@ -422,6 +492,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         ritualTicks = tag.getInteger("RitualTicks");
         failedTicks = tag.getInteger("FailedTicks");
         this.hasSpawnedRift = tag.getBoolean("Completed");
+        this.wavesSpawned = tag.getInteger("WavesSpawned");
 
 
         if (blobEntityUUIDs == null) {
@@ -436,6 +507,14 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 if (uuidString != null && !uuidString.isEmpty()) {
                     blobEntityUUIDs.add(UUID.fromString(uuidString));
                 }
+            }
+        }
+        ritualMobUUIDs.clear();
+        if (tag.hasKey("RitualMobs")) {
+            NBTTagList list = tag.getTagList("RitualMobs");
+            for (int i = 0; i < list.tagCount(); i++) {
+                NBTTagCompound mobTag = (NBTTagCompound)list.tagAt(i);
+                ritualMobUUIDs.add(new UUID(mobTag.getLong("Most"), mobTag.getLong("Least")));
             }
         }
     }

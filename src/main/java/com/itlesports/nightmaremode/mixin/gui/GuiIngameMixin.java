@@ -5,6 +5,7 @@ import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NMSanityUtils;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
@@ -25,8 +26,6 @@ import java.util.Random;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
-import static com.itlesports.nightmaremode.util.NMFields.CRITICAL_SANITY;
-import static com.itlesports.nightmaremode.util.NMFields.MAX_SANITY;
 
 @Mixin(GuiIngame.class)
 public abstract class GuiIngameMixin extends Gui {
@@ -42,9 +41,8 @@ public abstract class GuiIngameMixin extends Gui {
     private void renderUnderworldSanity(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci){
         if(this.mc.thePlayer.dimension == NMFields.UNDERWORLD_DIMENSION){
             double sanity = this.mc.thePlayer.getData(SANITY);
-
-            double sanityPercent = Math.min(sanity / MAX_SANITY, 1.0);
-            double fillPercent = 1.0 - sanityPercent;
+            double capacity = NMSanityUtils.getCapacity(this.mc.thePlayer);
+            double sanityPercent = Math.max(0.0, Math.min(sanity / capacity, 1.0));
 
             // bar dimensions in pixels
             final int BAR_WIDTH = 81;
@@ -66,12 +64,12 @@ public abstract class GuiIngameMixin extends Gui {
                 baseY += 10;
             }
 
-            // shake at high sanity
+            // shake as remaining sanity approaches zero
             int shakeX = 0;
             int shakeY = 0;
-            if (sanity > CRITICAL_SANITY) {
+            if (sanityPercent < 0.25) {
                 long time = System.currentTimeMillis();
-                double shakeIntensity = ((sanity - CRITICAL_SANITY) / (MAX_SANITY - CRITICAL_SANITY)) * 2.0;
+                double shakeIntensity = ((0.25 - sanityPercent) / 0.25) * 2.0;
                 shakeX = (int)(Math.sin(time * 0.05) * shakeIntensity);
                 shakeY = (int)(Math.cos(time * 0.07) * shakeIntensity);
             }
@@ -99,7 +97,7 @@ public abstract class GuiIngameMixin extends Gui {
 
                 // render the actual sanity fill
             // drains from right to left
-            int fillWidth = (int)(BAR_WIDTH * fillPercent);
+            int fillWidth = (int)(BAR_WIDTH * sanityPercent);
 
             if (fillWidth > 0) {
                 float[] color = calculateSanityColor(sanity, partialTicks);
@@ -112,12 +110,12 @@ public abstract class GuiIngameMixin extends Gui {
                 renderClippedTexture(barX, barY, 0, 0, fillWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
                 // sparkles
-                if (fillPercent > 0.1) {
+                if (sanityPercent > 0.1) {
                     renderSparkles(barX, barY, fillWidth, BAR_HEIGHT, sanityPercent, partialTicks);
                 }
 
                 // glow effect
-                if (sanity > (MAX_SANITY / 2)) {
+                if (sanityPercent < 0.5) {
                     renderInsanityGlow(barX, barY, fillWidth, BAR_HEIGHT, sanity, partialTicks);
                 }
             }
@@ -157,26 +155,24 @@ public abstract class GuiIngameMixin extends Gui {
     private float[] calculateSanityColor(double sanity, float partialTicks) {
         float r, g, b;
 
-        if (sanity < (MAX_SANITY / 4)) {
-            // 75% - 100% sanity, astral blue
+        double capacity = NMSanityUtils.getCapacity(this.mc.thePlayer);
+        double percent = Math.max(0.0, Math.min(sanity / capacity, 1.0));
+        if (percent > 0.75) {
             r = 0.3F;
             g = 0.7F;
             b = 1.0F;
-        } else if (sanity < (MAX_SANITY / 2)) {
-            // 75% - 50%, blue/cyan
-            float progress = (float)((sanity - (MAX_SANITY / 4)) / (MAX_SANITY / 4));
-            r = 0.3F + (0.5F * progress); // 0.3 -> 0.8
-            g = 0.7F + (0.2F * progress); // 0.7 → 0.9
+        } else if (percent > 0.5) {
+            float progress = (float)((0.75 - percent) / 0.25);
+            r = 0.3F + (0.5F * progress);
+            g = 0.7F + (0.2F * progress);
             b = 1.0F;
-        } else if (sanity < (MAX_SANITY * 3 / 4)) {
-            // 50% - 25% sanity, purple
-            float progress = (float)((sanity - (MAX_SANITY / 2)) / (MAX_SANITY / 4));
-            r = 0.8F + (0.1F * progress); // 0.8 → 0.9
-            g = 0.9F - (0.5F * progress); // 0.9 → 0.4
-            b = 1.0F - (0.1F * progress); // 1.0 → 0.9
+        } else if (percent > 0.25) {
+            float progress = (float)((0.5 - percent) / 0.25);
+            r = 0.8F + (0.1F * progress);
+            g = 0.9F - (0.5F * progress);
+            b = 1.0F - (0.1F * progress);
         } else {
-            // 25% - 0% sanity, deep red
-            float progress = (float)Math.min((sanity - (MAX_SANITY * 3 / 4)) / (MAX_SANITY / 4), 1.0);
+            float progress = (float)Math.min((0.25 - percent) / 0.25, 1.0);
             float pulse = (float)(Math.sin((System.currentTimeMillis() + partialTicks * 50) * 0.01) * 0.15 + 0.85);
 
             r = (0.9F + (0.1F * progress)) * pulse; // 0.9 → 1.0
@@ -302,9 +298,10 @@ public abstract class GuiIngameMixin extends Gui {
      */
     @Unique
     private void renderInsanityGlow(int barX, int barY, int fillWidth, int barHeight, double sanity, float partialTicks) {
-        if (sanity < (MAX_SANITY / 2)) return;
+        double percent = NMSanityUtils.getPercent(this.mc.thePlayer);
+        if (percent >= 0.5) return;
 
-        float intensity = (float)Math.min((sanity - (MAX_SANITY / 2)) / (MAX_SANITY / 2), 1.0);
+        float intensity = (float)Math.min((0.5 - percent) / 0.5, 1.0);
         float pulse = (float)(Math.sin((System.currentTimeMillis() + partialTicks * 50) * 0.008) * 0.3 + 0.7);
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);

@@ -49,7 +49,7 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
 
     public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                           new BiomeGenBlightlands(24) .setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains"))         .invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
     public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)      new BiomeGenHighlands(25)   .setDrainMultiplier(1.1f).setBiomeName("UnderworldDesert"))         .invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                          new BiomeGenFlowerFields(26).setDrainMultiplier(0.3f).setBiomeName("UnderworldFlowerFields"))   .invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                          new BiomeGenFlowerFields(26).setDrainMultiplier(2.8f).setBiomeName("UnderworldFlowerFields"))   .invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
     public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)    new BiomeGenShadowRealm(27) .setDrainMultiplier(2.3f).setBiomeName("UnderworldVoid"))           .invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
     public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                             new BiomeGenUnderHell(28)   .setDrainMultiplier(1.5f).setBiomeName("UnderworldHell"))           .invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
 

@@ -834,6 +834,13 @@ nm.goldenAppleEnchanted.info=附魔金苹果会提供30秒生命恢复IV、火�
 nm.brownMushroom.info=棕色蘑菇会自然生长于下界。蘑菇岛上的棕色蘑菇树只有在进入下界后才能采收。
 nm.pumpkin.info=佩戴南瓜会导致末影人和恶魂无论白天黑夜都会自动追踪玩家，并且能够隔墙锁定玩家。
 
+nm.portal.invalid=祭坛尚未完成。
+nm.portal.valid_idle=祭坛正在等待凋灵之魂。
+nm.portal.active=仪式正在吞噬世界。
+nm.portal.complete=裂隙已开启。
+nm.portal.failed=仪式失败了。祭坛需要时间恢复。
+nm.portal.debug_rift=已生成测试裂隙。
+
 
 
 

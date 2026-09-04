@@ -10,8 +10,10 @@ import com.itlesports.nightmaremode.block.blocks.templates.NMBlockGroundLayer;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockUnderworldOre;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
+import com.itlesports.nightmaremode.util.underworld.UnderworldToolTier;
 import net.minecraft.src.*;
 
 public class NMBlocks {
@@ -24,6 +26,11 @@ public class NMBlocks {
     public static BlockBloodChest bloodChest;
     public static BlockSteelLocker steelLocker;
     public static BlockSteelFrame steelFrame;
+    public static BlockUnderworldOre underworldOres;
+    public static Block underforge;
+    public static Block soulTorch;
+    public static Block soulLantern;
+    public static Block riftWorkbench;
     public static BlockRoad blockRoad;
     public static BlockRoad blockAsphalt;
     public static BlockCustomLadder stoneLadder;
@@ -162,13 +169,13 @@ public class NMBlocks {
         villagerBlock = new BlockVillagerBase(2320);
         Item.itemsList[villagerBlock.blockID] = new ItemVillagerContainer(NMBlocks.villagerBlock.blockID - 256);
 
-        underrock = new NMBlock(2321, Material.rock).setTextureName("nightmare:nmUnderworldRock").setUnlocalizedName("nmUnderworldRock").setCreativeTab(CreativeTabs.tabBlock).setHardness(50f).setResistance(300f);
+        underrock = new BlockUnderrock(2321).setCreativeTab(CreativeTabs.tabBlock).setHardness(50f).setResistance(300f);
         Item.itemsList[underrock.blockID] = new NMItemBlock(NMBlocks.underrock.blockID - 256);
 
-        understoneSmooth = new NMBlock(2322, Material.rock).setTextureName("nightmare:nmUnderworldRockSmooth").setUnlocalizedName("nmUnderworldRockSmooth").setCreativeTab(CreativeTabs.tabBlock).setHardness(20f).setResistance(10f);
+        understoneSmooth = new BlockTieredUnderworld(2322, Material.rock, UnderworldToolTier.TITANIUM).setTextureName("nightmare:nmUnderworldRockSmooth").setUnlocalizedName("nmUnderworldRockSmooth").setCreativeTab(CreativeTabs.tabBlock).setHardness(20f).setResistance(10f);
         Item.itemsList[understoneSmooth.blockID] = new NMItemBlock(NMBlocks.understoneSmooth.blockID - 256);
 
-        underCobble = new NMBlock(2323, Material.rock).setTextureName("nightmare:nmUnderworldRockCobble").setUnlocalizedName("nmUnderworldRockCobble").setCreativeTab(CreativeTabs.tabBlock).setHardness(10f).setResistance(5f);
+        underCobble = new BlockTieredUnderworld(2323, Material.rock, UnderworldToolTier.STEEL).setTextureName("nightmare:nmUnderworldRockCobble").setUnlocalizedName("nmUnderworldRockCobble").setCreativeTab(CreativeTabs.tabBlock).setHardness(10f).setResistance(5f);
         Item.itemsList[underCobble.blockID] = new NMItemBlock(NMBlocks.underCobble.blockID - 256);
 
         underGrass = new BlockUnderGrass(2324, Material.ground);
@@ -206,7 +213,7 @@ public class NMBlocks {
         Item.itemsList[disenchantmentTable.blockID] = new NMItemBlock(NMBlocks.disenchantmentTable.blockID - 256);
 
         // Mushroom structure blocks
-        mushBlocks = new BlockMetaMultiTextured(2331, Material.rock,
+        mushBlocks = new BlockTieredMetaUnderworld(2331, Material.rock, UnderworldToolTier.TUNGSTEN,
                 /* 0: mushroomStem                */ BlockMetaMultiTextured.Variant
                 .allSides("nightmare:nmMushStem")
                 .hardness(-1f).resistance(1000f)
@@ -285,7 +292,7 @@ public class NMBlocks {
         Item.itemsList[mushBookshelf.blockID] = new NMItemBlock(NMBlocks.mushBookshelf.blockID - 256);
 
         // Underworld stones
-        underStones = new BlockMetaMultiTextured(2345, Material.rock,
+        underStones = new BlockTieredMetaUnderworld(2345, Material.rock, UnderworldToolTier.TUNGSTEN,
                 /* 0: voidStone  */ BlockMetaMultiTextured.Variant
                 .allSides("nightmare:nmVoidStone")
                 .name("nmVoidStone")
@@ -298,7 +305,7 @@ public class NMBlocks {
         Item.itemsList[underStones.blockID] = new NMItemBlockMeta(underStones.blockID - 256, underStones);
 
         // Misc hell stones group
-        hellStones = new BlockMetaMultiTextured(2346, Material.rock,
+        hellStones = new BlockTieredMetaUnderworld(2346, Material.rock, UnderworldToolTier.TUNGSTEN,
                 /* 0: hellstone */ BlockMetaMultiTextured.Variant
                 .allSides("nightmare:hellfire")
                 .name("nmHellstone")
@@ -324,6 +331,21 @@ public class NMBlocks {
         blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setPicksEffectiveOn().setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
         Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
 
+        underworldOres = new BlockUnderworldOre(2353);
+        Item.itemsList[underworldOres.blockID] = new ItemBlockUnderworldOre(underworldOres.blockID - 256);
+
+        underforge = new BlockUnderforge(2354);
+        Item.itemsList[underforge.blockID] = new NMItemBlock(underforge.blockID - 256);
+
+        soulTorch = new BlockSoulLight(2356, 0.85F, "nmSoulTorch");
+        Item.itemsList[soulTorch.blockID] = new NMItemBlock(soulTorch.blockID - 256);
+
+        soulLantern = new BlockSoulLight(2357, 1.0F, "nmSoulLantern");
+        Item.itemsList[soulLantern.blockID] = new NMItemBlock(soulLantern.blockID - 256);
+
+        riftWorkbench = new BlockRiftWorkbench(2358);
+        Item.itemsList[riftWorkbench.blockID] = new NMItemBlock(riftWorkbench.blockID - 256);
+
 
     }
 
@@ -332,11 +354,7 @@ public class NMBlocks {
 
         // hiding by groups instead of individually. again, this is just to keep nosy people from asking me what certain things do
         underworldPortal = (BlockUnderworldPortal) underworldPortal.hideFromEMI().setCreativeTab(null);
-        yellowFlowerRoots = yellowFlowerRoots.hideFromEMI().setCreativeTab(null);
-        plantMatter       = plantMatter.hideFromEMI().setCreativeTab(null);
         disenchantmentTable = disenchantmentTable.hideFromEMI().setCreativeTab(null);
-
-        underFlowerDirts = (BlockMetaMultiTextured) underFlowerDirts.hideFromEMI().setCreativeTab(null);
 
         mushBlocks = (BlockMetaMultiTextured) mushBlocks.hideFromEMI().setCreativeTab(null);
 
@@ -348,14 +366,6 @@ public class NMBlocks {
 
         hellStones = (BlockMetaMultiTextured) hellStones.hideFromEMI().setCreativeTab(null);
 
-        underGrass = (BlockUnderGrass) underGrass.hideFromEMI().setCreativeTab(null);
-        underrock        = underrock.hideFromEMI().setCreativeTab(null);
-        understoneSmooth = understoneSmooth.hideFromEMI().setCreativeTab(null);
-        underCobble      = underCobble.hideFromEMI().setCreativeTab(null);
-
-        portalCore = portalCore.hideFromEMI().setCreativeTab(null);
-        honeyCover = honeyCover.hideFromEMI().setCreativeTab(null);
-        customLog = customLog.hideFromEMI().setCreativeTab(null);
         bloodBonesUpgraded = bloodBonesUpgraded.hideFromEMI().setCreativeTab(null);
         steelFrame = (BlockSteelFrame) steelFrame.hideFromEMI().setCreativeTab(null);
     }

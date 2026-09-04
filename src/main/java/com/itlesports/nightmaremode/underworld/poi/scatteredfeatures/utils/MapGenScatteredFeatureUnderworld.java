@@ -1,101 +1,141 @@
 package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
-import net.minecraft.src.*;
+import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.ChunkPosition;
+import net.minecraft.src.MapGenStructure;
+import net.minecraft.src.StructureStart;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * one structure map owns every Underworld scattered feature. Feature identity,
+ * progression role and placement are explicit instead of inferred from a biome.
+ */
 public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
-    private final int maxDistanceBetweenScatteredFeatures = 16;  // max gap (vanilla 32)
-    private final int minDistanceBetweenScatteredFeatures = 8;  // min gap (vanilla 8)
-    private final List scatteredFeatureSpawnList = new ArrayList();
+    public enum Feature {
+        BIG_MUSHROOM(true, true, 28, 20, 0x5B17A91L),
+        RIBCAGE_CLOSED(false, true, 12, 8, 0x19C4D31L),
+        RIBCAGE_OPEN(false, true, 12, 8, 0x19C4D31L),
+        OBSIDIAN_SPIKE(false, false, 12, 8, 0x4F08BC9L);
 
+        public final boolean dungeon;
+        public final boolean enabled;
+        public final int spacing;
+        public final int separation;
+        public final long salt;
 
-    public MapGenScatteredFeatureUnderworld() {
-        // No-arg constructor for instantiation in chunk provider
-    }
-
-
-    public boolean shouldUseStructureSpawnTable(int x, int y, int z) {
-        StructureStart structStart = this.func_143028_c(x, y, z);
-        if (structStart != null && structStart instanceof StructureScatteredFeatureStart && !structStart.getComponents().isEmpty()) {
-            StructureComponent component = (StructureComponent)structStart.getComponents().getFirst();
-            return component instanceof ComponentScatteredFeatureSwampHut; // what?
+        Feature(boolean dungeon, boolean enabled, int spacing, int separation, long salt) {
+            this.dungeon = dungeon;
+            this.enabled = enabled;
+            this.spacing = spacing;
+            this.separation = separation;
+            this.salt = salt;
         }
-        return false;
-    }
 
-    public List getScatteredFeatureSpawnList() {
-        return this.scatteredFeatureSpawnList;
+        boolean accepts(BiomeGenBase biome) {
+            switch (this) {
+                case BIG_MUSHROOM:
+                    return biome == BiomeGenUnderworld.flowerFields;
+                case RIBCAGE_CLOSED:
+                case RIBCAGE_OPEN:
+                    return biome == BiomeGenUnderworld.highlands || biome == BiomeGenUnderworld.blightlands;
+                case OBSIDIAN_SPIKE:
+                    return biome == BiomeGenUnderworld.underHell || biome == BiomeGenUnderworld.shadowRealm;
+                default:
+                    return false;
+            }
+        }
     }
 
     @Override
     public String func_143025_a() {
-        return "nmTemple";
+        return "nmUnderworldFeature";
     }
 
-    @Override
-    protected boolean canSpawnStructureAtCoords(int par1, int par2) {
-        int var3 = par1;
-        int var4 = par2;
-        if (par1 < 0) par1 -= maxDistanceBetweenScatteredFeatures - 1;
-        if (par2 < 0) par2 -= maxDistanceBetweenScatteredFeatures - 1;
-        int var5 = par1 / maxDistanceBetweenScatteredFeatures;
-        int var6 = par2 / maxDistanceBetweenScatteredFeatures;
-        Random var7 = this.worldObj.setRandomSeed(var5, var6, 14357617);
-        var5 *= maxDistanceBetweenScatteredFeatures;
-        var6 *= maxDistanceBetweenScatteredFeatures;
-        var5 += var7.nextInt(maxDistanceBetweenScatteredFeatures - minDistanceBetweenScatteredFeatures);
-        var6 += var7.nextInt(maxDistanceBetweenScatteredFeatures - minDistanceBetweenScatteredFeatures);
-
-        if (var3 == var5 && var4 == var6) {
-            BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(var3 * 16 + 8, var4 * 16 + 8);
-
-            // Check for your custom biomes (add all where mushrooms spawn)
-            if (biome instanceof BiomeGenFlowerFields ||
-                    biome instanceof BiomeGenHighlands ||
-                    biome instanceof BiomeGenBlightlands) {  // Etc.
-
-                // For debugging: Make common but not every chunk (1/5 chance)
-                return this.rand.nextInt(5) == 0;  // Tune: 5=common, 20=rare (vanilla-like)
-            }
-        }
+    public boolean shouldUseStructureSpawnTable(int x, int y, int z) {
         return false;
     }
 
-    @Override
-    protected StructureStart getStructureStart(int par1, int par2) {
-        return new StructureScatteredFeatureStartUnderworld(this.worldObj, this.rand, par1, par2);
+    public List getScatteredFeatureSpawnList() {
+        return Collections.emptyList();
     }
 
-
     @Override
-    protected ChunkPosition getSpawnStructureAtCoords(int par1, int par2) {
-        if (par1 < 0) {
-            par1 -= this.maxDistanceBetweenScatteredFeatures - 1;
+    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        return selectFeature(chunkX, chunkZ) != null;
+    }
+
+    Feature selectFeature(int chunkX, int chunkZ) {
+        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(chunkX * 16 + 8, chunkZ * 16 + 8);
+        Feature dungeon = Feature.BIG_MUSHROOM;
+        if (dungeon.enabled && dungeon.accepts(biome) && isCandidate(dungeon, chunkX, chunkZ)) {
+            return dungeon;
         }
-        if (par2 < 0) {
-            par2 -= this.maxDistanceBetweenScatteredFeatures - 1;
-        }
-        int var5 = par1 / this.maxDistanceBetweenScatteredFeatures;
-        int var6 = par2 / this.maxDistanceBetweenScatteredFeatures;
-        Random var7 = this.worldObj.setRandomSeed(var5, var6, 14357617);
-        var5 *= this.maxDistanceBetweenScatteredFeatures;
-        var6 *= this.maxDistanceBetweenScatteredFeatures;
-        BiomeGenBase var8 = this.worldObj.getWorldChunkManager().getBiomeGenAt((var5 += var7.nextInt(this.maxDistanceBetweenScatteredFeatures - this.minDistanceBetweenScatteredFeatures)) * 16 + 8, (var6 += var7.nextInt(this.maxDistanceBetweenScatteredFeatures - this.minDistanceBetweenScatteredFeatures)) * 16 + 8);
-        for (Object var10 : BiomeGenUnderworld.biomelist) {
-            if (var8 != var10) continue;
-            return new ChunkPosition(var5, 0, var6);
+
+        Feature closed = Feature.RIBCAGE_CLOSED;
+        Feature open = Feature.RIBCAGE_OPEN;
+        if ((closed.enabled || open.enabled) && closed.accepts(biome) && isCandidate(closed, chunkX, chunkZ)) {
+            if (!closed.enabled) return open;
+            if (!open.enabled) return closed;
+            long variantSeed = this.worldObj.getSeed() ^ (long)chunkX * 73428767L ^ (long)chunkZ * 912931L;
+            return new Random(variantSeed).nextBoolean() ? closed : open;
         }
         return null;
     }
+
+    private boolean isCandidate(Feature feature, int chunkX, int chunkZ) {
+        int regionX = floorDiv(chunkX, feature.spacing);
+        int regionZ = floorDiv(chunkZ, feature.spacing);
+        long seed = this.worldObj.getSeed()
+                + (long) regionX * 341873128712L
+                + (long) regionZ * 132897987541L
+                + feature.salt;
+        Random random = new Random(seed);
+        int spread = feature.spacing - feature.separation;
+        int candidateX = regionX * feature.spacing + random.nextInt(spread);
+        int candidateZ = regionZ * feature.spacing + random.nextInt(spread);
+        return chunkX == candidateX && chunkZ == candidateZ;
+    }
+
+    private static int floorDiv(int value, int divisor) {
+        return value < 0 ? (value - divisor + 1) / divisor : value / divisor;
+    }
+
+    @Override
+    protected StructureStart getStructureStart(int chunkX, int chunkZ) {
+        Feature feature = selectFeature(chunkX, chunkZ);
+        if (NightmareMode.devMode && feature != null) {
+            System.out.println("[Underworld/Features] " + feature.name() + " at chunk " + chunkX + "," + chunkZ
+                    + " dungeon=" + feature.dungeon);
+        }
+        return new StructureScatteredFeatureStartUnderworld(this.rand, chunkX, chunkZ, feature);
+    }
+
+    @Override
+    protected ChunkPosition getSpawnStructureAtCoords(int x, int z) {
+        int centerChunkX = x >> 4;
+        int centerChunkZ = z >> 4;
+        for (int radius = 0; radius <= 64; radius++) {
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (Math.abs(dx) != radius && Math.abs(dz) != radius) continue;
+                    int chunkX = centerChunkX + dx;
+                    int chunkZ = centerChunkZ + dz;
+                    if (selectFeature(chunkX, chunkZ) != null) {
+                        return new ChunkPosition(chunkX * 16 + 8, 0, chunkZ * 16 + 8);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public int getCheckRange() {
-        return this.maxDistanceBetweenScatteredFeatures;
+        return 28;
     }
 }

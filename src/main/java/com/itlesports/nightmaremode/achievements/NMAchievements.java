@@ -730,6 +730,99 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_AUTOMATION);
 
+    // UNDERWORLD PART OF THE AUTOMATION TAB
+
+    public static final Achievement<ItemStack> BUILD_PORTAL_CORE =
+                AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                        .name(loc("buildPortalCore")).icon(NMBlocks.portalCore).displayLocation(7, 5)
+                        .triggerCondition(stack -> stack.itemID == NMBlocks.portalCore.blockID)
+                        .parents(KILLED_WITHER).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> ENTER_UNDERWORLD =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("enterUnderworld")).icon(NMBlocks.underCobble).displayLocation(8, 5)
+                    .triggerCondition(player -> player.dimension == com.itlesports.nightmaremode.util.NMFields.UNDERWORLD_DIMENSION)
+                    .parents(BUILD_PORTAL_CORE).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> MAKE_SOUL_LIGHT =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("makeSoulLight")).icon(NMBlocks.soulTorch).displayLocation(9, 5)
+                    .triggerCondition(stack -> stack.itemID == NMBlocks.soulTorch.blockID || stack.itemID == NMBlocks.soulLantern.blockID)
+                    .parents(ENTER_UNDERWORLD).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> BUILD_UNDERFORGE =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("buildUnderforge")).icon(NMBlocks.underforge).displayLocation(10, 5)
+                    .triggerCondition(stack -> stack.itemID == NMBlocks.underforge.blockID)
+                    .parents(MAKE_SOUL_LIGHT).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> TITANIUM_PICK =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("titaniumPick")).icon(NMItems.titaniumPickaxe).displayLocation(11, 4)
+                    .triggerCondition(stack -> stack.itemID == NMItems.titaniumPickaxe.itemID)
+                    .parents(BUILD_UNDERFORGE).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> TITANIUM_TOOLS =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("titaniumTools")).icon(NMItems.titaniumSword).displayLocation(12, 3)
+                    .triggerCondition(player -> hasAllTools(player, false))
+                    .parents(TITANIUM_PICK).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> TITANIUM_ARMOR =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("titaniumArmor")).icon(NMItems.titaniumChestplate).displayLocation(12, 5)
+                    .triggerCondition(player -> hasArmorSet(player, false))
+                    .parents(BUILD_UNDERFORGE).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> VERDANT_HEART =
+            AchievementProvider.getBuilder(AchievementEvents.EatenEvent.class)
+                    .name(loc("verdantHeart")).icon(NMItems.verdantHeart).displayLocation(11, 6)
+                    .triggerCondition(stack -> stack.itemID == NMItems.verdantHeart.itemID)
+                    .parents(BUILD_UNDERFORGE).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> BOTTOM_OUT_SANITY =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("bottomOutSanity")).icon(NMItems.clarityDraught).displayLocation(9, 7)
+                    .triggerCondition(player -> player.dimension == com.itlesports.nightmaremode.util.NMFields.UNDERWORLD_DIMENSION
+                            && com.itlesports.nightmaremode.util.NMSanityUtils.getPercent(player) <= 0.0D)
+                    .parents(ENTER_UNDERWORLD).build().setHidden().setSecret().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> TUNGSTEN_PICK =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("tungstenPick")).icon(NMItems.tungstenPickaxe).displayLocation(13, 4)
+                    .triggerCondition(stack -> stack.itemID == NMItems.tungstenPickaxe.itemID)
+                    .parents(TITANIUM_PICK).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> TUNGSTEN_TOOLS =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("tungstenTools")).icon(NMItems.tungstenSword).displayLocation(14, 3)
+                    .triggerCondition(player -> hasAllTools(player, true))
+                    .parents(TITANIUM_TOOLS, TUNGSTEN_PICK).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<EntityPlayer> TUNGSTEN_ARMOR =
+            AchievementProvider.getBuilder(NMAchievementEvents.MiscPlayerEvent.class)
+                    .name(loc("tungstenArmor")).icon(NMItems.tungstenChestplate).displayLocation(14, 5)
+                    .triggerCondition(player -> hasArmorSet(player, true))
+                    .parents(TITANIUM_ARMOR, TUNGSTEN_PICK).build().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> FIND_MYCELIAL_CORE =
+            AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
+                    .name(loc("findMycelialCore")).icon(NMItems.mycelialCore).displayLocation(14, 6)
+                    .triggerCondition(stack -> stack.itemID == NMItems.mycelialCore.itemID)
+                    .parents(TUNGSTEN_PICK).build().setSpecial().registerAchievement(TAB_AUTOMATION);
+    public static final Achievement<ItemStack> MYCELIAL_HEART =
+            AchievementProvider.getBuilder(AchievementEvents.EatenEvent.class)
+                    .name(loc("mycelialHeart")).icon(NMItems.mycelialHeart).displayLocation(15, 6)
+                    .triggerCondition(stack -> stack.itemID == NMItems.mycelialHeart.itemID)
+                    .parents(VERDANT_HEART, FIND_MYCELIAL_CORE).build().registerAchievement(TAB_AUTOMATION);
+
+    private static boolean hasArmorSet(EntityPlayer player, boolean tungsten) {
+        Item[] expected = tungsten
+                ? new Item[]{NMItems.tungstenBoots, NMItems.tungstenLeggings, NMItems.tungstenChestplate, NMItems.tungstenHelmet}
+                : new Item[]{NMItems.titaniumBoots, NMItems.titaniumLeggings, NMItems.titaniumChestplate, NMItems.titaniumHelmet};
+        for (int slot = 0; slot < expected.length; slot++) {
+            ItemStack worn = player.inventory.armorInventory[slot];
+            if (worn == null || worn.itemID != expected[slot].itemID) return false;
+        }
+        return true;
+    }
+
+    private static boolean hasAllTools(EntityPlayer player, boolean tungsten) {
+        Item[] tools = tungsten
+                ? new Item[]{NMItems.tungstenPickaxe, NMItems.tungstenSword, NMItems.tungstenAxe, NMItems.tungstenShovel, NMItems.tungstenHoe}
+                : new Item[]{NMItems.titaniumPickaxe, NMItems.titaniumSword, NMItems.titaniumAxe, NMItems.titaniumShovel, NMItems.titaniumHoe};
+        for (Item tool : tools) if (!player.inventory.hasItem(tool.itemID)) return false;
+        return true;
+    }
+
 
     // TAB_END_GAME
 

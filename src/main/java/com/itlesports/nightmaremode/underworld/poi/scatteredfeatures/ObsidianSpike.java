@@ -1,19 +1,11 @@
 package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures;
 
-import api.world.BlockPos;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
-import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.NMPostItems;
-import com.itlesports.nightmaremode.underworld.poi.LootEntry;
 import net.minecraft.src.*;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 public class ObsidianSpike extends ComponentScatteredFeature {
@@ -22,17 +14,17 @@ public class ObsidianSpike extends ComponentScatteredFeature {
 
     private static final int[] paletteIDs = new int[]{
             Block.jukebox.blockID, // jukebox
-            NMBlocks.mushBlocks.blockID, // yellow cap
-            NMBlocks.mushBlocks.blockID, // white cap
-            NMBlocks.mushBlocks.blockID, // yellow wall
-            NMBlocks.mushBlocks.blockID, // stem
-            NMBlocks.mushBlocks.blockID, // stem
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
             Block.hay.blockID, // hay bale
-            NMBlocks.mushBlocks.blockID, // partial yellow floor
+            NMBlocks.underStones.blockID,
             NMBlocks.underFlowerDirts.blockID, // flower grass
-            NMBlocks.mushBlocks.blockID, // stem
-            NMBlocks.mushBlocks.blockID, // stem
-            NMBlocks.mushBlocks.blockID, // top yellow floor
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
+            NMBlocks.underStones.blockID,
             BTWBlocks.unlitCampfire.blockID, // unlit campfire
             NMBlocks.yellowFlowerRoots.blockID, // yellow roots
     };
@@ -74,32 +66,7 @@ public class ObsidianSpike extends ComponentScatteredFeature {
             NBTTagCompound root = CompressedStreamTools.readCompressed(in);
             in.close();
 
-            ArrayList<LootEntry> lootPool = new ArrayList<>();
-            // lootPool.add(new LootEntry(new ItemStack([ITEM]]), [WEIGHT], [MIN COUNT], [MAX COUNT]));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodOrb), 10, 3, 13));
-            lootPool.add(new LootEntry(new ItemStack(Item.appleRed), 10, 1, 2));
-            lootPool.add(new LootEntry(new ItemStack(BTWItems.brownMushroom), 25, 6, 20));
-            lootPool.add(new LootEntry(new ItemStack(BTWItems.redMushroom), 25, 10, 12));
-            lootPool.add(new LootEntry(new ItemStack(Item.potion, 1, 8197), 15, 1, 3)); // healing 1
-            lootPool.add(new LootEntry(new ItemStack(Item.potion, 1, 16421), 3, 0, 2)); // splash healing 2
-            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodIngot), 30, 0, 1));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.refinedDiamondIngot), 24, 1, 2));
-            lootPool.add(new LootEntry(new ItemStack(Item.diamond), 5, 1, 2));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.friedCalamari), 15, 1, 4));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.darksunFragment), 15, 1, 3));
-            lootPool.add(new LootEntry(new ItemStack(NMPostItems.bloodMoonBottle), 2, 0, 1));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodBoots), 1, 0, 1));
-            lootPool.add(new LootEntry(new ItemStack(NMItems.bloodShovel), 2, 0, 1));
-
-            // Calculate total weight once (for efficiency)
-            int totalWeight = 0;
-            for (LootEntry entry : lootPool) {
-                totalWeight += entry.weight;
-            }
-
             NBTTagList blocks = root.getTagList("blocks");
-            HashSet<BlockPos> lootLocations = new HashSet<>();
-            HashSet<BlockPos> spawnerLocations = new HashSet<>();
             for (int i = 0; i < blocks.tagCount(); i++) {
                 NBTTagCompound block = (NBTTagCompound) blocks.tagAt(i);
 
@@ -115,79 +82,8 @@ public class ObsidianSpike extends ComponentScatteredFeature {
                 if(mappedID == BTWBlocks.plainCandle.blockID){
                     mappedID = BTWBlocks.coloredCandle[this.structureRand.nextInt(BTWBlocks.coloredCandle.length)].blockID;
                 }
-                if(mappedID == NMBlocks.bloodChest.blockID){
-                    int zPos = this.getZWithOffset(x, z);
-                    int yPos = this.getYWithOffset(y);
-                    int xPos = this.getXWithOffset(x, z);
-
-                    lootLocations.add(new BlockPos(xPos, yPos, zPos));
-                }
-                if(mappedID == Block.mobSpawner.blockID){
-                    int zPos = this.getZWithOffset(x, z);
-                    int yPos = this.getYWithOffset(y);
-                    int xPos = this.getXWithOffset(x, z);
-
-                    spawnerLocations.add(new BlockPos(xPos, yPos, zPos));
-                }
-
                 this.place(world, mappedID, getMeta(state, mappedID), x, y, z, box);
             }
-
-            for(BlockPos bp : lootLocations){
-                TileEntity chest = world.getBlockTileEntity(bp.x, bp.y, bp.z);
-                if(chest == null){
-                    continue;
-                }
-                // add the loot
-                if (!(chest instanceof TileEntityBloodChest)) {
-                    continue;
-                }
-                TileEntityBloodChest chestTE = (TileEntityBloodChest) chest;
-
-                // Clear the chest first if needed (vanilla dungeons start empty)
-                for (int slot = 0; slot < chestTE.getSizeInventory(); slot++) {
-                    chestTE.setInventorySlotContents(slot, null);
-                }
-
-                int numItems = structureRand.nextInt(7) + 4;
-                if(bp.y > 93){
-                    // this is just the upper 2 chests
-                    numItems += 10;
-                }
-
-                for (int itemIndex = 0; itemIndex < numItems; itemIndex++) {
-                    if (totalWeight <= 0) break; // No loot defined
-
-                    // Weighted random selection
-                    int randWeight = structureRand.nextInt(totalWeight);
-                    int currentWeight = 0;
-                    LootEntry selected = null;
-                    for (LootEntry entry : lootPool) {
-                        currentWeight += entry.weight;
-                        if (randWeight < currentWeight) {
-                            selected = entry;
-                            break;
-                        }
-                    }
-
-                    if (selected != null) {
-                        ItemStack toAdd = selected.stack.copy();
-                        toAdd.stackSize = selected.minCount + structureRand.nextInt(selected.maxCount - selected.minCount + 1);
-
-                        // Find a random empty slot (like vanilla randomization)
-                        int attempts = 0;
-                        int slot = structureRand.nextInt(chestTE.getSizeInventory());
-                        while (chestTE.getStackInSlot(slot) != null && attempts < 10) { // Limit attempts to avoid infinite loop
-                            slot = structureRand.nextInt(chestTE.getSizeInventory());
-                            attempts++;
-                        }
-                        if (chestTE.getStackInSlot(slot) == null) {
-                            chestTE.setInventorySlotContents(slot, toAdd);
-                        }
-                    }
-                }
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,6 +132,7 @@ public class ObsidianSpike extends ComponentScatteredFeature {
 
     public ObsidianSpike(Random random, int x, int z) {
         super(random, x, 63, z, 64, 64, 64);
+        this.structureRand.setSeed(random.nextLong());
     }
 
     private final Random structureRand = new Random();

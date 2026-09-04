@@ -48,7 +48,7 @@ public class NMFields {
     public static final int BLAZE_AQUA = 2;
 
     // custom flower names
-    public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "hellFlower", "voidShrub", "dandelion8"};
+    public static final String[] FLOWER_NAMES = {"dandelion", "dandelion2", "dandelion3", "dandelion4", "dandelion5", "hellFlower", "voidShrub", "lucidBloom"};
 
     // portal ritual duration
     public static final int UW_PORTAL_DURATION = 20 * 65;
@@ -69,11 +69,8 @@ public class NMFields {
 
     // sanity
     public static final double MAX_SANITY = 2000.0;
-    public static final double CRITICAL_SANITY = 1500.0;
-
-    // sanity drain
-    public static final double LIGHT_DRAIN_MULTIPLIER = 0.02;
-    public static final double HEIGHT_DRAIN_MULTIPLIER = 0.012;
-    public static final double BIOME_DRAIN_MULTIPLIER = 0.04;
-    public static final double ENEMY_DRAIN_MULTIPLIER = 0.015;
+    public static final double SANITY_PER_CAPACITY_LEVEL = 500.0;
+    public static final int MAX_SANITY_CAPACITY_LEVEL = 2;
+    public static final double CRITICAL_SANITY_PERCENT = 0.25;
+    public static final double DANGER_SANITY_PERCENT = 0.10;
 }

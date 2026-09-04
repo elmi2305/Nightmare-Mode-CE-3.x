@@ -40,7 +40,7 @@ public class NightmareMode extends BTWAddon {
 
 
     // dev
-    public static boolean devMode = false;
+    public static boolean devMode = true;
     public static boolean benchmarkPerformance = false;
     public static volatile double MSPT = 0.0;
 
@@ -758,9 +758,29 @@ public class NightmareMode extends BTWAddon {
     public static final DataEntry.PlayerDataEntry<Double> SANITY =
             DataProvider.getBuilder(Double.class)
                     .name("Sanity")
-                    .defaultSupplier(() -> 0D)
+                    .defaultSupplier(() -> 2000D)
                     .readNBT(nbt -> nbt.getDouble("Sanity"))
                     .writeNBT((nbt, v) -> nbt.setDouble("Sanity", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
+    public static final DataEntry.PlayerDataEntry<Integer> SANITY_CAPACITY_LEVEL =
+            DataProvider.getBuilder(Integer.class)
+                    .name("SanityCapacityLevel")
+                    .defaultSupplier(() -> 0)
+                    .readNBT(nbt -> nbt.getInteger("SanityCapacityLevel"))
+                    .writeNBT((nbt, v) -> nbt.setInteger("SanityCapacityLevel", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
+    public static final DataEntry.PlayerDataEntry<Long> SANITY_ITEM_COOLDOWN =
+            DataProvider.getBuilder(Long.class)
+                    .name("SanityItemCooldown")
+                    .defaultSupplier(() -> 0L)
+                    .readNBT(nbt -> nbt.getLong("SanityItemCooldown"))
+                    .writeNBT((nbt, v) -> nbt.setLong("SanityItemCooldown", v))
                     .player()
                     .syncPlayer()
                     .buildPlayer();
@@ -830,6 +850,8 @@ public class NightmareMode extends BTWAddon {
         APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
         SANITY.register();
+        SANITY_CAPACITY_LEVEL.register();
+        SANITY_ITEM_COOLDOWN.register();
         DEFEATED_BM.register();
         DEFEATED_BLOODWITHER.register();
     }

@@ -4,6 +4,8 @@ import com.itlesports.nightmaremode.mixin.interfaces.MapGenStructureIOAccess;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.BigMushroom;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageClosed;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.RibcageOpen;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.ObsidianSpike;
+import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.StructureScatteredFeatureStartUnderworld;
 import net.minecraft.src.ComponentScatteredFeaturePieces;
 import net.minecraft.src.MapGenStructureIO;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,5 +20,7 @@ public class ComponentScatteredFeaturePiecesMixin {
         MapGenStructureIOAccess.invokeFunction(BigMushroom.class, "TeBM");
         MapGenStructureIOAccess.invokeFunction(RibcageClosed.class, "TeRCC");
         MapGenStructureIOAccess.invokeFunction(RibcageOpen.class, "TeRCO");
+        MapGenStructureIOAccess.invokeFunction(ObsidianSpike.class, "TeOSP");
+        MapGenStructureIOAccess.invokeFunctionB(StructureScatteredFeatureStartUnderworld.class, "nmUnderworldFeature");
     }
 }

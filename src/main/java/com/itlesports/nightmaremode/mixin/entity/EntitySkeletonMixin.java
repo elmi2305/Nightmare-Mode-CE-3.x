@@ -45,6 +45,15 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         super(par1World);
     }
 
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void dropBrittleBone(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (this.dimension == UNDERWORLD_DIMENSION
+                && this.worldObj.getBiomeGenForCoords((int)this.posX, (int)this.posZ) instanceof com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands
+                && this.rand.nextInt(Math.max(1, 3 - looting)) == 0) {
+            this.dropItem(NMItems.brittleBone.itemID, 1);
+        }
+    }
+
 //    @Inject(method = "<init>", at = @At("TAIL"))
 //    private void doComponents(CallbackInfo ci){
 //        this.initComponents();

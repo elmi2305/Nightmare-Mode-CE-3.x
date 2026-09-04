@@ -832,6 +832,13 @@ nm.goldenAppleEnchanted.info=Táo Vàng Phù phép áp dụng Hồi phục IV + 
 nm.brownMushroom.info=Nấm Nâu mọc tự nhiên trong Nether. Cây Nấm Nâu trên Đảo Nấm chỉ có thể thu hoạch sau khi đã tiếp cận Nether.
 nm.pumpkin.info=Đội Bí Ngô sẽ khiến Enderman và Ghast tự động truy đuổi người chơi bất kể ngày hay đêm, kể cả xuyên tường.
 
+nm.portal.invalid=Bàn thờ chưa hoàn chỉnh.
+nm.portal.valid_idle=Bàn thờ đang chờ Linh hồn Wither.
+nm.portal.active=Nghi lễ đang nuốt chửng thế giới.
+nm.portal.complete=Khe nứt đã mở.
+nm.portal.failed=Nghi lễ thất bại. Bàn thờ cần thời gian.
+nm.portal.debug_rift=Đã tạo khe nứt thử nghiệm.
+
 
 
 

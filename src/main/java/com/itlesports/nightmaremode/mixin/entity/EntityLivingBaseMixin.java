@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NMSanityUtils;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -75,6 +76,7 @@ public abstract class EntityLivingBaseMixin extends Entity {
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
         if(source.getEntity() instanceof EntityPlayer player && Objects.equals(source.damageType, "player")){
+            NMSanityUtils.restoreForKill(player, (EntityLivingBase)(Object)this);
             if(NMUtils.isWearingFullBloodArmor(player)){
                 int chance = NMUtils.getIsBloodMoon() ? 2 : 3;
                 if(this.rand.nextInt(chance) == 0){

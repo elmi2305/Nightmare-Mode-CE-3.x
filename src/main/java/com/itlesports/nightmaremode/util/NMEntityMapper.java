@@ -66,5 +66,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityDisenchantmentTable.class, "TileEntityDisenchantmentTable");
         TileEntity.addMapping(TileEntityBloodBone.class, "TileEntityBloodBone");
         TileEntity.addMapping(TileEntityPortalCore.class, "TileEntityPortalCore");
+        TileEntity.addMapping(TileEntityUnderforge.class, "TileEntityUnderforge");
     }
 }

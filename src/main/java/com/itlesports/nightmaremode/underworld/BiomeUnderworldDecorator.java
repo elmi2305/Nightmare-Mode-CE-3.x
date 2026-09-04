@@ -2,8 +2,10 @@ package com.itlesports.nightmaremode.underworld;
 
 import api.AddonHandler;
 import api.util.ForkableRandom;
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockTallFlower;
+import com.itlesports.nightmaremode.block.blocks.BlockUnderworldOre;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
@@ -15,6 +17,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
     protected WorldGenerator tallPlantGen;
     protected WorldGenerator lavaPlantGen;
     protected WorldGenerator voidPlantGen;
+    protected WorldGenerator lucidBloomGen;
     protected WorldGenerator tallFlowerTulipGen;
     protected WorldGenerator tallFlowerBulbGen;
     protected WorldGenerator tallFlowerDroopingGen;
@@ -32,6 +35,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         this.tallPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, 5, false);
         this.lavaPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, BlockTallFlower.LAVA_FLOWER, true);
         this.voidPlantGen       = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, BlockTallFlower.VOID_SHRUB, true);
+        this.lucidBloomGen      = new WorldGenTallFlowers(NMBlocks.yellowFlowerRoots.blockID, BlockTallFlower.LUCID_BLOOM, true);
         this.tallFlowerTulipGen = new WorldGenTulip(false);
         this.tallFlowerBulbGen  = new WorldGenTallBulbFlower();
         this.simpleTreeGen = new WorldGenSimpleTree(false);
@@ -54,6 +58,7 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         int var2;
         int numPerChunk;
         this.generateOres();
+        this.generateProgressionOres();
         for (numPerChunk = 0; numPerChunk < this.sandPerChunk2; ++numPerChunk) {
             var2 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var3 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
@@ -93,6 +98,12 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         }
 
         boolean isFlowerFields = this.biome instanceof BiomeGenFlowerFields;
+        if (isFlowerFields && this.randomGenerator.nextInt(24) == 0) {
+            int bloomX = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
+            int bloomZ = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
+            this.lucidBloomGen.generate(this.currentWorld, this.randomGenerator, bloomX,
+                    this.currentWorld.getPrecipitationHeight(bloomX, bloomZ), bloomZ);
+        }
         for (var2 = 0; var2 < this.flowersPerChunk; ++var2) {
 //            if(true) continue;
             var3 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
@@ -222,6 +233,42 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
 
         ForkableRandom forkedRand = ForkableRandom.forkRandom(this.randomGenerator);
         AddonHandler.decorateWorld(this, this.currentWorld, forkedRand, this.chunk_X, this.chunk_Z, this.biome);
+    }
+
+    private void generateProgressionOres() {
+        int titaniumVeins = 0;
+        int tungstenVeins = 0;
+        boolean titaniumBiome = biome instanceof BiomeGenBlightlands || biome instanceof BiomeGenFlowerFields
+                || biome instanceof com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+        if (titaniumBiome) {
+            for (int i = 0; i < 5; i++) {
+                int x = chunk_X + randomGenerator.nextInt(16);
+                int y = 48 + randomGenerator.nextInt(65);
+                int z = chunk_Z + randomGenerator.nextInt(16);
+                if (new WorldGenUnderworldOre(NMBlocks.underworldOres.blockID, BlockUnderworldOre.TITANIUM,
+                        3 + randomGenerator.nextInt(4), NMBlocks.underCobble.blockID).generate(currentWorld, randomGenerator, x, y, z)) {
+                    titaniumVeins++;
+                }
+            }
+        }
+        boolean tungstenBiome = biome instanceof BiomeGenBlightlands
+                || biome instanceof com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
+        if (tungstenBiome) {
+            for (int i = 0; i < 2; i++) {
+                int x = chunk_X + randomGenerator.nextInt(16);
+                int y = 8 + randomGenerator.nextInt(33);
+                int z = chunk_Z + randomGenerator.nextInt(16);
+                if (new WorldGenUnderworldOre(NMBlocks.underworldOres.blockID, BlockUnderworldOre.TUNGSTEN,
+                        2 + randomGenerator.nextInt(3), NMBlocks.underrock.blockID).generate(currentWorld, randomGenerator, x, y, z)) {
+                    tungstenVeins++;
+                }
+            }
+        }
+        if (NightmareMode.devMode && (titaniumBiome || tungstenBiome)) {
+            System.out.println("[Underworld/Ores] chunk=" + (chunk_X >> 4) + "," + (chunk_Z >> 4)
+                    + " biome=" + biome.biomeName + " titaniumVeins=" + titaniumVeins
+                    + " tungstenVeins=" + tungstenVeins);
+        }
     }
 
     private WorldGenerator getTreeGenForBiome(){

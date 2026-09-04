@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.entity.underworld;
 
+import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 public class FlowerSkeleton extends EntitySkeleton implements IFlowerMob{
@@ -17,5 +18,13 @@ public class FlowerSkeleton extends EntitySkeleton implements IFlowerMob{
 
 
         this.playSound("random.bow", 1.0f, 1.0f / (this.getRNG().nextFloat() * 0.4f + 0.8f));
+    }
+
+    @Override
+    protected void dropFewItems(boolean killedByPlayer, int looting) {
+        super.dropFewItems(killedByPlayer, looting);
+        if (killedByPlayer && this.rand.nextInt(Math.max(1, 3 - looting)) == 0) {
+            this.dropItem(NMItems.bloomPollen.itemID, 1);
+        }
     }
 }

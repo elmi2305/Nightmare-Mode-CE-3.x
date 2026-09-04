@@ -827,6 +827,13 @@ nm.goldenAppleEnchanted.info=Verzauberte Goldene Äpfel verleihen Regeneration I
 nm.brownMushroom.info=Braune Pilze wachsen natürlicherweise im Nether. Braune Pilzbäume auf Pilzinseln können erst geerntet werden, nachdem der Nether betreten wurde.
 nm.pumpkin.info=Das Tragen von Kürbissen bewirkt, dass Endermen und Ghasts den Spieler automatisch verfolgen, unabhängig von der Tageszeit und sogar durch Wände hindurch.
 
+nm.portal.invalid=Der Altar ist unvollständig.
+nm.portal.valid_idle=Der Altar wartet auf eine Witherseele.
+nm.portal.active=Das Ritual zehrt an der Welt.
+nm.portal.complete=Der Riss ist geöffnet.
+nm.portal.failed=Das Ritual ist fehlgeschlagen. Der Altar braucht Zeit.
+nm.portal.debug_rift=Debug-Riss erzeugt.
+
 
 
 

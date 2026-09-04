@@ -830,4 +830,11 @@ nm.goldenAppleEnchanted.info=Maçãs Douradas Encantadas aplicam Regeneração I
 nm.brownMushroom.info=Cogumelos Marrons crescem naturalmente no Nether. Árvores de Cogumelo Marrom em Ilhas de Cogumelos só podem ser colhidas depois que o Nether tiver sido acessado.
 nm.pumpkin.info=Usar Abóboras faz com que Endermen e Ghasts persigam automaticamente o jogador independentemente da hora do dia e através de paredes.
 
+nm.portal.invalid=O altar está incompleto.
+nm.portal.valid_idle=O altar aguarda uma Alma do Wither.
+nm.portal.active=O ritual consome o mundo.
+nm.portal.complete=A fenda está aberta.
+nm.portal.failed=O ritual falhou. O altar precisa de tempo.
+nm.portal.debug_rift=Fenda de teste criada.
+
 

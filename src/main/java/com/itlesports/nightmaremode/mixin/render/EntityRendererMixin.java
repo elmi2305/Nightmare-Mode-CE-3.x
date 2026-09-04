@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.NMSanityUtils;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -484,7 +485,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
 
     @Unique private float underworldFogAlpha = 0.0f;
     @Unique private float horrorFogAlpha = 0.0f;
-    @Inject(method = "setupFog", at = @At("HEAD"),cancellable = true)
+    @Inject(method = "setupFog", at = @At("RETURN"))
     private void doUnderworldFog(int par1, float partialTicks, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
 //        if(NightmareMode.devMode) return;
@@ -554,15 +555,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 GL11.glFogi(0x855A, 0x855B);
             }
 
-            GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-            GL11.glNormal3f(0.0f, -1.0f, 0.0f);
-
-            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-            GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
-
-            GL11.glEnable(GL11.GL_FOG);
-
-            ci.cancel();
         }
 
         // UW RITUAL FOG STUFF AND UNUSED HELL FOG
@@ -623,7 +615,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
 
                 GL11.glEnable(GL11.GL_FOG);
-                ci.cancel();
             }
         }
 
@@ -686,23 +677,15 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
 
                 GL11.glEnable(GL11.GL_FOG);
-                ci.cancel();
             }
         }
     }
 
     @Unique private float getPlayerSanityFogModifier(EntityPlayer p){
-        double sanity = p.getData(SANITY);
-
-        if (sanity >= MAX_SANITY){
-            // player is fully insane
-            return (float) Math.min((sanity - MAX_SANITY + 30) / 30, 16.0f);
-        } else if(sanity > CRITICAL_SANITY) {
-            // player is very insane, intense fog
-            return (float) Math.min((sanity - CRITICAL_SANITY) / 30, 1.0);
-        }
-
-        return 0f;
+        double percent = NMSanityUtils.getPercent(p);
+        if (percent <= 0.0) return 16.0F;
+        if (percent < 0.25) return (float)Math.min((0.25 - percent) / 0.25, 1.0);
+        return 0.0F;
     }
 
     @Unique

@@ -1,156 +1,191 @@
 package com.itlesports.nightmaremode.util;
 
 import btw.entity.mob.BTWSquidEntity;
-import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
+import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.IUnderworldSanityArmor;
+import com.itlesports.nightmaremode.underworld.biomes.*;
 import net.minecraft.src.*;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Locale;
+import java.util.WeakHashMap;
 
 import static btw.community.nightmaremode.NightmareMode.SANITY;
+import static btw.community.nightmaremode.NightmareMode.SANITY_CAPACITY_LEVEL;
 
+/** server-authoritative sanity calculations; values are remaining sanity points */
 public final class NMSanityUtils {
     private NMSanityUtils() {}
 
-    public static final double HEIGHT_REFERENCE_Y = 100;
+    public static final double HEIGHT_REFERENCE_Y = 100.0;
+    private static final double ENEMY_DETECTION_RADIUS = 16.0;
+    private static final Map<EntityPlayer, LightCache> LIGHT_CACHE = new WeakHashMap<>();
+    private static final Map<EntityPlayer, RecoveryWindow> RECOVERY_WINDOWS = new WeakHashMap<>();
 
-    public static final double ENEMY_DETECTION_RADIUS = 16.0;
-    public static final double ENEMY_HEALTH_WEIGHT = 0.20;
+    public static double getCapacity(EntityPlayer player) {
+        int level = MathHelper.clamp_int(player.getData(SANITY_CAPACITY_LEVEL), 0, NMFields.MAX_SANITY_CAPACITY_LEVEL);
+        return NMFields.MAX_SANITY + level * NMFields.SANITY_PER_CAPACITY_LEVEL;
+    }
 
+    public static double getPercent(EntityPlayer player) {
+        return clamp(player.getData(SANITY), 0.0, getCapacity(player)) / getCapacity(player);
+    }
+
+    public static void set(EntityPlayer player, double value) {
+        player.setData(SANITY, clamp(value, 0.0, getCapacity(player)));
+    }
+
+    public static void restore(EntityPlayer player, double points) {
+        if (points > 0.0) set(player, player.getData(SANITY) + points);
+    }
+
+    public static void drain(EntityPlayer player, double points) {
+        if (points > 0.0) set(player, player.getData(SANITY) - points);
+    }
+
+    /** Returns points drained per tick. */
     public static double getSanityDrainPerTick(EntityPlayer player) {
-        if (player == null) return 0.0;
-        if (player.worldObj == null) return 0.0;
+        if (player == null || player.worldObj == null || player.dimension != NMFields.UNDERWORLD_DIMENSION) return 0.0;
 
-        double drain = 0.0;
+        Protection protection = getProtection(player);
+        double darkness = getLightPressure(player);
+        if (protection == Protection.SOUL_LANTERN) darkness = 0.0;
+        else if (protection == Protection.SOUL_TORCH) darkness *= 0.25;
+        else if (isSaferBiome(player)) darkness *= 0.75;
+        else darkness = 2.0;
 
-        drain += getLightDrain(player);
-        drain += getHeightDrain(player);
-        drain += getBiomeDrain(player);
-        drain += getNearbyEnemyDrain(player);
+        double environment = getHeightPressure(player) + getBiomePressure(player);
+        if (protection == Protection.SOUL_LANTERN) environment *= 0.5;
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_O)){
-            drain += 10;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-            return -10;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_I)){
-            player.setData(SANITY, 0d);
-            return 0;
-        }
-
-
-        if (player.ticksExisted % 40 == 0 && player.isSneaking()) {
-            // DEBUG
-            System.out.println("sanity drain from LIGHT:  " + getLightDrain(player));
-            System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
-            System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
-            System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
-            System.out.println(" ");
-        }
-        // can be positive or negative
-        return drain;
+        double pressure = darkness + environment + getNearbyEnemyPressure(player);
+        return pressure * (1.0 - getArmorPressureReduction(player)) / 20.0;
     }
 
-
-
-    public static double getLightDrain(EntityPlayer player) {
-        World world = player.worldObj;
-
+    public static double getLightPressure(EntityPlayer player) {
         int x = MathHelper.floor_double(player.posX);
-        int y = MathHelper.floor_double(player.posY);
+        int y = MathHelper.floor_double(player.posY + player.getEyeHeight());
         int z = MathHelper.floor_double(player.posZ);
-
-        float brightness = world.getLightBrightness(x, y, z); // think this is only skylight
-        double darkness = 1.0 - brightness; // 0.0 to 1.0
-
-        return darkness * NMFields.LIGHT_DRAIN_MULTIPLIER;
+        int light = player.worldObj.getBlockLightValue(x, y, z);
+        return clamp((7.0 - light) / 7.0, 0.0, 1.0) * 2.0;
     }
 
-    public static double getHeightDrain(EntityPlayer player) {
-        double below = Math.max(0.0, (HEIGHT_REFERENCE_Y - player.posY) / HEIGHT_REFERENCE_Y); // 0..1
-        return below * NMFields.HEIGHT_DRAIN_MULTIPLIER;
+    public static double getHeightPressure(EntityPlayer player) {
+        return clamp((HEIGHT_REFERENCE_Y - player.posY) / 52.0, 0.0, 1.0) * 2.0;
     }
 
-    public static double getBiomeDrain(EntityPlayer player) {
-        World world = player.worldObj;
-
-        int bx = MathHelper.floor_double(player.posX);
-        int bz = MathHelper.floor_double(player.posZ);
-
-        if(player.dimension == NMFields.UNDERWORLD_DIMENSION) {
-            BiomeGenBase tempBiome = world.getBiomeGenForCoords(bx, bz);
-            if (tempBiome == null) return 0.0;
-
-            if(!(tempBiome instanceof BiomeGenUnderworld biome)) return 0.0;
-
-            double factor = biome.getDrainMultiplier();
-            return (factor - 1.0) * NMFields.BIOME_DRAIN_MULTIPLIER;
-        }
-        return 0d;
+    public static double getBiomePressure(EntityPlayer player) {
+        BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posZ));
+        if (biome instanceof BiomeGenFlowerFields) return 3.5;
+        if (biome instanceof BiomeGenBlightlands) return 0.5;
+        if (biome instanceof BiomeGenHighlands) return 1.0;
+        if (biome instanceof BiomeGenUnderHell) return 2.0;
+        if (biome instanceof BiomeGenShadowRealm) return 3.0;
+        return 1.0;
     }
 
-    public static double getNearbyEnemyDrain(EntityPlayer player) {
-        World world = player.worldObj;
-
-        double radius = ENEMY_DETECTION_RADIUS;
-
+    public static double getNearbyEnemyPressure(EntityPlayer player) {
         AxisAlignedBB box = AxisAlignedBB.getBoundingBox(
-                player.posX - radius, player.posY - radius, player.posZ - radius,
-                player.posX + radius, player.posY + radius, player.posZ + radius);
-
-        List list = world.getEntitiesWithinAABB(Entity.class, box);
-
-        double sum = 0.0;
-
-        for (Object o : list) {
-            if (!(o instanceof EntityLivingBase)) continue;
-
-            EntityLivingBase mob = (EntityLivingBase) o;
-            if (mob == player) continue;
-            if (mob.isDead) continue;
-
-            if (!isHostileMob(mob)) continue;
-
-            double dist = player.getDistanceToEntity(mob);
-            if (dist >= radius) continue;
-
-            double mobContribution = getMobContribution(radius, dist, mob);
-
-            sum += mobContribution;
+                player.posX - ENEMY_DETECTION_RADIUS, player.posY - ENEMY_DETECTION_RADIUS, player.posZ - ENEMY_DETECTION_RADIUS,
+                player.posX + ENEMY_DETECTION_RADIUS, player.posY + ENEMY_DETECTION_RADIUS, player.posZ + ENEMY_DETECTION_RADIUS);
+        List<?> entities = player.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
+        double pressure = 0.0;
+        for (Object value : entities) {
+            if (!(value instanceof EntityLivingBase mob) || mob == player || mob.isDead || !isHostileMob(mob)) continue;
+            pressure += clamp(1.0 - player.getDistanceToEntity(mob) / ENEMY_DETECTION_RADIUS, 0.15, 1.0);
         }
-
-        return sum * NMFields.ENEMY_DRAIN_MULTIPLIER;
+        return Math.min(3.0, pressure);
     }
 
-    private static double getMobContribution(double radius, double dist, EntityLivingBase mob) {
-        double proximity = (radius - dist) / radius;
+    public static String getDebugSummary(EntityPlayer player) {
+        return String.format(Locale.ROOT,
+                "[Underworld/Sanity] %s remaining=%.1f/%.1f drain=%.3f/tick light=%.2f depth=%.2f biome=%.2f hostiles=%.2f protection=%s armor=%.0f%%",
+                player.username, player.getData(SANITY), getCapacity(player), getSanityDrainPerTick(player),
+                getLightPressure(player), getHeightPressure(player), getBiomePressure(player),
+                getNearbyEnemyPressure(player), getProtection(player).name(), getArmorPressureReduction(player) * 100.0D);
+    }
 
-        // low impact; mostly just makes big mobs a bit scarier
-        double healthFactor = 1.0;
-        float maxHp = mob.getMaxHealth();
-        if (maxHp > 0.0F) {
-            healthFactor = mob.getHealth() / maxHp; // 0 - 1
+    public static void restoreForKill(EntityPlayer player, EntityLivingBase victim) {
+        if (player.dimension != NMFields.UNDERWORLD_DIMENSION || player.worldObj.isRemote) return;
+        boolean boss = victim instanceof IBossDisplayData;
+        double amount = boss ? 100.0 : (isElite(victim) ? 25.0 : 10.0);
+        if (!boss) {
+            long now = player.worldObj.getTotalWorldTime();
+            RecoveryWindow window = RECOVERY_WINDOWS.computeIfAbsent(player, ignored -> new RecoveryWindow(now));
+            if (now - window.startedAt >= 1200L) {
+                window.startedAt = now;
+                window.points = 0.0;
+            }
+            amount = Math.min(amount, 100.0 - window.points);
+            if (amount <= 0.0) return;
+            window.points += amount;
         }
+        restore(player, amount);
+    }
 
-        // this makes an Enderman (20hp) about ~20% scarier than a Zombie (20hp too)
-        double mobContribution = proximity * (1.0 + ENEMY_HEALTH_WEIGHT * healthFactor);
+    private static boolean isElite(EntityLivingBase victim) {
+        String name = victim.getClass().getName();
+        return name.startsWith("com.itlesports.nightmaremode.entity") || name.contains("Wither") || name.contains("Enderman");
+    }
 
-        return mobContribution;
+    public static double getArmorPressureReduction(EntityPlayer player) {
+        double reduction = 0.0;
+        for (ItemStack stack : player.inventory.armorInventory) {
+            if (stack != null && stack.getItem() instanceof IUnderworldSanityArmor armor) {
+                reduction += armor.getSanityPressureReduction();
+            }
+        }
+        return Math.min(0.40D, reduction);
+    }
+
+    private static boolean isSaferBiome(EntityPlayer player) {
+        BiomeGenBase biome = player.worldObj.getBiomeGenForCoords(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posZ));
+        return biome instanceof BiomeGenBlightlands || biome instanceof BiomeGenHighlands;
+    }
+
+    private static Protection getProtection(EntityPlayer player) {
+        LightCache cache = LIGHT_CACHE.get(player);
+        if (cache != null && player.ticksExisted - cache.tick < 20) return cache.protection;
+        Protection result = scanFor(player, NMBlocks.soulLantern, 12) ? Protection.SOUL_LANTERN
+                : scanFor(player, NMBlocks.soulTorch, 8) ? Protection.SOUL_TORCH : Protection.NONE;
+        LIGHT_CACHE.put(player, new LightCache(player.ticksExisted, result));
+        return result;
+    }
+
+    private static boolean scanFor(EntityPlayer player, Block target, int radius) {
+        if (target == null) return false;
+        int px = MathHelper.floor_double(player.posX);
+        int py = MathHelper.floor_double(player.posY);
+        int pz = MathHelper.floor_double(player.posZ);
+        int vertical = Math.min(radius, 6);
+        for (int x = px - radius; x <= px + radius; x++) {
+            for (int y = py - vertical; y <= py + vertical; y++) {
+                for (int z = pz - radius; z <= pz + radius; z++) {
+                    if ((x - px) * (x - px) + (y - py) * (y - py) + (z - pz) * (z - pz) <= radius * radius
+                            && player.worldObj.getBlockId(x, y, z) == target.blockID) return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static boolean isHostileMob(EntityLivingBase mob) {
-        if (mob instanceof IMob) return true;
+        if (mob instanceof EntityRitualPortal) return false;
+        if (mob instanceof IMob || mob instanceof EntityMob || mob instanceof BTWSquidEntity) return true;
+        return mob instanceof EntityWolf wolf && wolf.isAngry();
+    }
 
-        if (mob instanceof EntityMob) return true;
+    private static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
 
-        if (mob instanceof BTWSquidEntity) return true;
-
-        // optional: treat angry wolves as hostile
-        if (mob instanceof EntityWolf) {
-            return ((EntityWolf) mob).isAngry();
-        }
-
-        return false;
+    private enum Protection { NONE, SOUL_TORCH, SOUL_LANTERN }
+    private record LightCache(int tick, Protection protection) {}
+    private static final class RecoveryWindow {
+        private long startedAt;
+        private double points;
+        private RecoveryWindow(long startedAt) { this.startedAt = startedAt; }
     }
 }

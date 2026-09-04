@@ -828,5 +828,12 @@ nm.goldenApple.info=Złote Jabłka nakładają Regenerację I na 4 sekundy i Abs
 nm.goldenAppleEnchanted.info=Zaklęte Złote Jabłka nakładają Regenerację IV + Odporność na Ogień + Siłę II + Szybkość II + Pośpiech II na 30 sekund, Odporność I na 40 sekund, Noktowizję i Absorpcję II na 2 minuty. Mają 90-sekundowy czas odnowienia.
 nm.brownMushroom.info=Brązowe Grzyby naturalnie rosną w Netherze.  na Wyspach Grzybowych można ścinać dopiero po uzyskaniu dostępu do Netheru.
 
+nm.portal.invalid=Ołtarz jest niekompletny.
+nm.portal.valid_idle=Ołtarz czeka na Duszę Withera.
+nm.portal.active=Rytuał pochłania świat.
+nm.portal.complete=Szczelina została otwarta.
+nm.portal.failed=Rytuał nie powiódł się. Ołtarz potrzebuje czasu.
+nm.portal.debug_rift=Utworzono szczelinę testową.
+
 
 

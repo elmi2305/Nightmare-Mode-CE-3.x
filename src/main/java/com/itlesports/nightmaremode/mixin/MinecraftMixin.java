@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import api.AddonHandler;
 import btw.BTWMod;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
+import com.itlesports.nightmaremode.util.api.RecipeIndexExporter;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
@@ -33,6 +34,17 @@ public class MinecraftMixin {
             }
         }
         return Mouse.getEventDWheel();
+    }
+    @Inject(method = "runTick", at = @At("TAIL"))
+    private void tickCarcassHarvest(CallbackInfo ci) {
+        if (RecipeIndexExporter.consumeDevelopmentStopRequest()
+                || RecipeIndexExporter.consumeAutomatedStopRequest()) {
+            ((Minecraft)(Object)this).shutdown();
+        }
+    }
+    @Inject(method = "startGame", at = @At("TAIL"))
+    private void startAutomatedRecipeExport(CallbackInfo ci) {
+        RecipeIndexExporter.startAutomatedExport((Minecraft)(Object)this);
     }
 
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
