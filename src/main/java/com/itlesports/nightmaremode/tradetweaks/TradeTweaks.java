@@ -106,7 +106,7 @@ public final class TradeTweaks {
                 if (id >= 0) {
                     try {
                         acc.setInput(TradeItem.fromIDAndMetadata(id, meta, e.inMin, e.inMax));
-                        debug("TradeTweaks: set input counts %s -> [%d,%d] (via factory)", key, e.inMin, e.inMax);
+//                        debug("TradeTweaks: set input counts %s -> [%d,%d] (via factory)", key, e.inMin, e.inMax);
                         done = true;
                     } catch (Throwable t) {
                         // factory failed
