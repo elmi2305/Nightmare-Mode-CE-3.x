@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin;
 
 import api.world.WorldUtils;
+import com.itlesports.nightmaremode.item.NMItems;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EnchantmentHelper;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
@@ -34,6 +36,22 @@ public class EnchantmentHelperMixin {
             if(a>8 && iTableSlotNum == 1){a = 8;}
             if(a<5 && iTableSlotNum == 1){a = 5;}
             cir.setReturnValue(MathHelper.floor_double(((a << 1) + iNumBookShelves % 2) / 1.5));
+        }
+    }
+
+    @Inject(method = "getFortuneModifier", at = @At("RETURN"), cancellable = true)
+    private static void applyVerdantFortune(EntityLivingBase entity, CallbackInfoReturnable<Integer> cir) {
+        ItemStack held = entity.getHeldItem();
+        if (held != null && held.getItem() == NMItems.verdantPickaxe) {
+            cir.setReturnValue(cir.getReturnValue() + 1);
+        }
+    }
+
+    @Inject(method = "getLootingModifier", at = @At("RETURN"), cancellable = true)
+    private static void applyVerdantLooting(EntityLivingBase entity, CallbackInfoReturnable<Integer> cir) {
+        ItemStack held = entity.getHeldItem();
+        if (held != null && held.getItem() == NMItems.verdantSword) {
+            cir.setReturnValue(cir.getReturnValue() + 1);
         }
     }
 }

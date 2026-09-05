@@ -509,6 +509,25 @@ public class NMItems {
     public static ItemAlloyArmor anchorLeggings;
     public static ItemAlloyArmor anchorBoots;
 
+    // alloy tool expansion
+    public static Item tungstenSword;
+    public static Item verdantPickaxe;
+    public static Item verdantSword;
+    public static Item blackglassSword;
+    public static Item blackglassScythe;
+    public static ItemKnife blackglassKnife;
+    public static Item coresteelSword;
+    public static Item coresteelPickaxe;
+    public static Item coresteelAxe;
+    public static Item coresteelShovel;
+    public static Item deadzoneSword;
+    public static Item deadzoneScythe;
+    public static Item quicksilverPickaxe;
+    public static Item quicksilverShovel;
+    public static Item quicksilverAxe;
+    public static Item endstoneSword;
+    public static ItemKnife endstoneKnife;
+
 
     static {
         doNightmareModeItems();
@@ -1042,6 +1061,41 @@ public class NMItems {
         anchorChestplate = alloyArmor(3388, 1, 8, 15, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
         anchorLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
         anchorBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
+
+        tungstenSword = new ItemAlloySword(3435, EnumToolMaterial.IRON, 500, 6.0D, 14, tungstenIngot.itemID)
+                .setTextureName("nightmare:ifhyTungstenSword").setUnlocalizedName("ifhyTungstenSword").setCreativeTab(CreativeTabs.tabCombat);
+        verdantPickaxe = new ItemAlloyPickaxe(3436, EnumToolMaterial.IRON, 650, 5, 1.0F, 30, verdantIngot.itemID)
+                .setTextureName("nightmare:ifhyVerdantPickaxe").setUnlocalizedName("ifhyVerdantPickaxe").setCreativeTab(CreativeTabs.tabTools);
+        verdantSword = new ItemAlloySword(3437, EnumToolMaterial.EMERALD, 650, 8.0D, 30, verdantIngot.itemID)
+                .setTextureName("nightmare:ifhyVerdantSword").setUnlocalizedName("ifhyVerdantSword").setCreativeTab(CreativeTabs.tabCombat);
+        blackglassSword = new ItemAlloySword(3438, EnumToolMaterial.EMERALD, 180, 11.0D, 6, blackglassIngot.itemID)
+                .setTextureName("nightmare:ifhyBlackglassSword").setUnlocalizedName("ifhyBlackglassSword").setCreativeTab(CreativeTabs.tabCombat);
+        blackglassScythe = new ItemAlloyScythe(3439, 9.0F, 220)
+                .setTextureName("nightmare:ifhyBlackglassScythe").setUnlocalizedName("ifhyBlackglassScythe").setCreativeTab(CreativeTabs.tabCombat);
+        blackglassKnife = (ItemKnife) new ItemKnife(3440, 48, ItemKnife.TIER_DIAMOND, 96).setDamageVsEntity(8)
+                .setTextureName("nightmare:ifhyBlackglassKnife").setUnlocalizedName("ifhyBlackglassKnife");
+        coresteelSword = new ItemAlloySword(3441, EnumToolMaterial.EMERALD, 1600, 10.0D, 10, coresteelIngot.itemID)
+                .setTextureName("nightmare:ifhyCoresteelSword").setUnlocalizedName("ifhyCoresteelSword").setCreativeTab(CreativeTabs.tabCombat);
+        coresteelPickaxe = new ItemAlloyPickaxe(3442, EnumToolMaterial.EMERALD, 1600, 5, 1.0F, 10, coresteelIngot.itemID)
+                .setTextureName("nightmare:ifhyCoresteelPickaxe").setUnlocalizedName("ifhyCoresteelPickaxe").setCreativeTab(CreativeTabs.tabTools);
+        coresteelAxe = new ItemAlloyAxe(3443, 1600, 10, 1.0F, 10, coresteelIngot.itemID)
+                .setTextureName("nightmare:ifhyCoresteelAxe").setUnlocalizedName("ifhyCoresteelAxe").setCreativeTab(CreativeTabs.tabTools);
+        coresteelShovel = new ItemAlloyShovel(3444, 1600, 6, 1.0F, 10, coresteelIngot.itemID)
+                .setTextureName("nightmare:ifhyCoresteelShovel").setUnlocalizedName("ifhyCoresteelShovel").setCreativeTab(CreativeTabs.tabTools);
+        deadzoneSword = new ItemAlloySword(3445, EnumToolMaterial.EMERALD, 1200, 12.0D, 8, deadzoneAlloyIngot.itemID)
+                .setTextureName("nightmare:ifhyDeadzoneSword").setUnlocalizedName("ifhyDeadzoneSword").setCreativeTab(CreativeTabs.tabCombat);
+        deadzoneScythe = new ItemAlloyScythe(3446, 11.0F, 1200)
+                .setTextureName("nightmare:ifhyDeadzoneScythe").setUnlocalizedName("ifhyDeadzoneScythe").setCreativeTab(CreativeTabs.tabCombat);
+        quicksilverPickaxe = new ItemAlloyPickaxe(3447, EnumToolMaterial.EMERALD, 420, 4, 2.0F, 18, sealedQuicksilverIngot.itemID)
+                .setTextureName("nightmare:ifhyQuicksilverPickaxe").setUnlocalizedName("ifhyQuicksilverPickaxe").setCreativeTab(CreativeTabs.tabTools);
+        quicksilverShovel = new ItemAlloyShovel(3448, 420, 5, 2.0F, 18, sealedQuicksilverIngot.itemID)
+                .setTextureName("nightmare:ifhyQuicksilverShovel").setUnlocalizedName("ifhyQuicksilverShovel").setCreativeTab(CreativeTabs.tabTools);
+        quicksilverAxe = new ItemAlloyAxe(3449, 420, 8, 2.0F, 18, sealedQuicksilverIngot.itemID)
+                .setTextureName("nightmare:ifhyQuicksilverAxe").setUnlocalizedName("ifhyQuicksilverAxe").setCreativeTab(CreativeTabs.tabTools);
+        endstoneSword = new ItemAlloySword(3450, EnumToolMaterial.EMERALD, 950, 9.0D, 6, endstoneIngot.itemID)
+                .setTextureName("nightmare:ifhyEndstoneSword").setUnlocalizedName("ifhyEndstoneSword").setCreativeTab(CreativeTabs.tabCombat);
+        endstoneKnife = (ItemKnife) new ItemKnife(3451, 56, ItemKnife.TIER_DIAMOND, 640).setDamageVsEntity(7)
+                .setTextureName("nightmare:ifhyEndstoneKnife").setUnlocalizedName("ifhyEndstoneKnife");
 
         ironFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3405, 2352, true, 250)
                 .setTextureName("nightmare:ifhyIronFishingRodBaited").setUnlocalizedName("ifhyIronFishingRodBaited");
