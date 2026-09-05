@@ -7,6 +7,7 @@ import btw.item.BTWTags;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
 
@@ -36,6 +37,11 @@ public class NMTags {
     public static final Tag bookLeather = Tag.of(loc("book_leather"),
             BTWItems.cutTannedLeather,
             BTWItems.cutScouredLeather
+    );
+
+    public static final Tag choppingBlocks = Tag.of(loc("chopping_blocks"),
+            new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 13),
+            new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 12)
     );
     public static final Tag knifeStrings = Tag.of(loc("knife_strings"),
             Item.silk,

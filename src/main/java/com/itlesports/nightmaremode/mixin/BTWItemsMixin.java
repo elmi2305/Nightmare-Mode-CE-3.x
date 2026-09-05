@@ -5,7 +5,9 @@ import api.item.items.ToolItem;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
+import com.itlesports.nightmaremode.item.itemblock.NetherrackItemBlock;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
+import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,5 +33,7 @@ public class BTWItemsMixin {
         ((ItemAccessor)pointyStick).invSetMaxDamage(1);
         ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
         ((ItemAccessor)Item.shovelWood).invSetMaxDamage(3);
+        Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)
+                .setUnlocalizedName("netherrack");
     }
 }

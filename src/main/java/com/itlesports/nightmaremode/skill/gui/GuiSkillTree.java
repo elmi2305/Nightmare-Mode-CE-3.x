@@ -49,6 +49,20 @@ public class GuiSkillTree extends GuiScreen {
     private final boolean[] keysHeldWhenOpened = new boolean[Keyboard.KEYBOARD_SIZE];
     private String searchText = "";
     private int searchResultIndex;
+    private final GuiScreen parentScreen;
+    private boolean ignoreOpeningMouseRelease;
+
+    public GuiSkillTree() {
+        this(null, null);
+    }
+
+    public GuiSkillTree(GuiScreen parentScreen, SkillNode node) {
+        this.parentScreen = parentScreen;
+        this.ignoreOpeningMouseRelease = parentScreen != null;
+        if (node != null) {
+            this.focusNode(node);
+        }
+    }
 
     @Override
     public void initGui() {
@@ -218,10 +232,14 @@ public class GuiSkillTree extends GuiScreen {
             case UNLOCKED -> "Unlocked";
             case READY -> "Click to unlock";
             case AVAILABLE -> null;
-            case PARENT_LOCKED -> "Requires [" + this.getMissingParentNames(node) + "]";
+            case PARENT_LOCKED -> "Unlock parent skills first";
         };
         String reward = (state == NodeVisualState.UNLOCKED || NightmareMode.alwaysShowRewards) ? node.reward.getText() : "?";
         String body = (status == null ? "" : (status + "\n")) + (state != NodeVisualState.PARENT_LOCKED ? (node.requirementText + "\n" + "Reward: " + reward) : "");
+        String parents = this.getMissingParentNames(node);
+        if (!parents.isEmpty()) {
+            body += (body.isEmpty() || body.endsWith("\n") ? "" : "\n") + parents;
+        }
         int width = Math.max(140, Math.max(this.fontRenderer.getStringWidth(node.name), this.fontRenderer.splitStringWidth(body, 180)));
         int height = 24 + this.fontRenderer.splitStringWidth(body, width);
         int x = mouseX + 12;
@@ -248,17 +266,17 @@ public class GuiSkillTree extends GuiScreen {
     }
 
     private String getMissingParentNames(SkillNode node) {
-        StringBuilder missing = new StringBuilder();
+        StringBuilder names = new StringBuilder();
         for (SkillNode parent : node.parents) {
             if (parent == null || SkillHandler.isUnlocked(this.mc.thePlayer, parent)) {
                 continue;
             }
-            if (missing.length() > 0) {
-                missing.append(", ");
+            if (names.length() > 0) {
+                names.append("\n");
             }
-            missing.append(parent.name);
+            names.append("- ").append(parent.name);
         }
-        return missing.length() == 0 ? "another skill" : missing.toString();
+        return names.toString();
     }
 
     private void drawParentLockBadge(int x, int y) {
@@ -351,9 +369,14 @@ public class GuiSkillTree extends GuiScreen {
 
     @Override
     protected void keyTyped(char character, int keyCode) {
+        if (keyCode == Keyboard.KEY_ESCAPE && this.parentScreen != null) {
+            this.mc.displayGuiScreen(this.parentScreen);
+            return;
+        }
         if (keyCode == Keyboard.KEY_BACK) {
             if (!this.searchText.isEmpty()) {
-                this.searchText = this.searchText.substring(0, this.searchText.length() - 1);
+                this.searchText = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)
+                        ? "" : this.searchText.substring(0, this.searchText.length() - 1);
                 this.searchResultIndex = 0;
             }
             return;
@@ -365,8 +388,10 @@ public class GuiSkillTree extends GuiScreen {
             return;
         }
         if (character >= ' ' && character <= '~') {
-            this.searchText += character;
-            this.searchResultIndex = 0;
+            if (this.searchText.length() < 15) {
+                this.searchText += character;
+                this.searchResultIndex = 0;
+            }
             return;
         }
         super.keyTyped(character, keyCode);
@@ -379,8 +404,21 @@ public class GuiSkillTree extends GuiScreen {
     }
 
     @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
+        if (button == 0) {
+            this.ignoreOpeningMouseRelease = false;
+        }
+        super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int state) {
         if (state == 0) {
+            if (this.ignoreOpeningMouseRelease) {
+                this.ignoreOpeningMouseRelease = false;
+                this.dragging = false;
+                return;
+            }
             int left = (this.width - PANE_WIDTH) / 2;
             int top = (this.height - PANE_HEIGHT) / 2;
             for (SkillBranch branch : SkillRegistry.getBranches()) {

@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.block.blocks.BlockRoad;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
+import com.itlesports.nightmaremode.item.items.ItemAlloyHorseArmor;
 import com.itlesports.nightmaremode.util.interfaces.IHorseTamingClient;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
@@ -49,6 +50,53 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     }
 
     @Unique private int swimmingTicks;
+    @Unique
+    private ItemAlloyHorseArmor.Material getAlloyArmorMaterial() {
+        return ItemAlloyHorseArmor.Material.fromArmorIndex(((EntityHorse) (Object) this).func_110241_cb());
+    }
+
+    @Inject(method = "func_110211_v", at = @At("HEAD"), cancellable = true)
+    private static void acceptAlloyHorseArmor(int itemId, CallbackInfoReturnable<Boolean> cir) {
+        if (itemId >= 0 && itemId < Item.itemsList.length && Item.itemsList[itemId] instanceof ItemAlloyHorseArmor) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Inject(method = "getHorseArmorIndex", at = @At("HEAD"), cancellable = true)
+    private void indexAlloyHorseArmor(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        if (stack != null && stack.getItem() instanceof ItemAlloyHorseArmor armor) {
+            cir.setReturnValue(armor.getMaterial().armorIndex());
+        }
+    }
+
+    @Inject(method = "getTotalArmorValue", at = @At("HEAD"), cancellable = true)
+    private void alloyHorseProtection(CallbackInfoReturnable<Integer> cir) {
+        ItemAlloyHorseArmor.Material material = getAlloyArmorMaterial();
+        if (material != null) cir.setReturnValue(material.protection);
+    }
+
+    @Redirect(method = "setHorseTexturePaths", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityHorse;func_110241_cb()I"))
+    private int alloyHorseTextureIndex(EntityHorse horse) {
+        int index = horse.func_110241_cb();
+        return ItemAlloyHorseArmor.Material.fromArmorIndex(index) == null ? index : 1;
+    }
+
+    @Override
+    protected void damageArmor(float damage) {
+        super.damageArmor(damage);
+        if (this.worldObj.isRemote || !isWearingArmor()) return;
+        ItemStack stack = this.horseChest.getStackInSlot(1);
+        if (!(stack.getItem() instanceof ItemAlloyHorseArmor)) return;
+        int wear = Math.max(1, (int) (damage / 4.0f));
+        if (stack.getItemDamage() + wear >= stack.getMaxDamage()) {
+            this.horseChest.setInventorySlotContents(1, null);
+        } else {
+            stack.setItemDamage(stack.getItemDamage() + wear);
+        }
+        this.horseChest.onInventoryChanged();
+    }
+
     @Unique private int kickCooldown = 20;
 
 
@@ -108,6 +156,8 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     }
 
     @Unique private float getWeightFromArmor(){
+        ItemAlloyHorseArmor.Material material = getAlloyArmorMaterial();
+        if (material != null) return material.speedMultiplier();
         float f = 1.0f;
         if(!this.isWearingArmor()) return f;
         if(this.horseChest.getStackInSlot(1).getItem() instanceof ItemAdvancedHorseArmor armor){
@@ -171,12 +221,24 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     public boolean getCanCreatureBePossessedFromDistance(boolean bPersistentSpirit) {
         return false;
     }
-    @Unique private int applyArmorMod(int a){
-        if(!this.isWearingArmor()) return a;
+    @Unique private float armorHungerRemainder;
 
-        return MathHelper.ceiling_float_int(a * (this.getWeightFromArmor() * 2 - 0.1f));
-        // gold/iron: 1.7x drain
-        // diamond: 1.5x drain
+    @Unique private int applyArmorMod(int amount){
+        ItemAlloyHorseArmor.Material material = getAlloyArmorMaterial();
+        if (material == null) return amount;
+        float scaled = amount * material.hunger + armorHungerRemainder;
+        int whole = (int) scaled;
+        armorHungerRemainder = scaled - whole;
+        return whole;
+    }
+
+    @Override
+    public void updateHungerState() {
+        if (!this.worldObj.isRemote && this.isSubjectToHunger()) {
+            int base = this.isChild() ? 2 : 1;
+            this.hungerCountdown -= applyArmorMod(base) - base;
+        }
+        super.updateHungerState();
     }
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void horseOnUpdate(CallbackInfo ci){
@@ -188,12 +250,12 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
                 EntityHorse horseHost = (EntityHorse)(Object)this;
 //                    System.out.println(this.hungerCountdown + " | " + this.getHungerLevel());
 
-                this.hungerCountdown -= 3;
+                this.hungerCountdown -= applyArmorMod(3);
                 if(this.isSprinting()){
-                    this.hungerCountdown -= 2;
+                    this.hungerCountdown -= applyArmorMod(2);
                 }
                 if(this.isHorseJumping()){
-                    this.hungerCountdown -= 3;
+                    this.hungerCountdown -= applyArmorMod(3);
                 }
 
                 if (this.ticksExisted % 4 == 0) {
@@ -282,7 +344,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         if (this.isWearingArmor()) {
-            this.hungerCountdown -= (int) ((par2 + 2) * 4);
+            this.hungerCountdown -= applyArmorMod((int) ((par2 + 2) * 4));
         }
         if(this.isTame() && this.riddenByEntity instanceof EntityPlayer p){
             if(p.rand.nextInt(16) == 0){
@@ -294,7 +356,8 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
     }
 
     @Unique private boolean isWearingArmor(){
-        return this.horseChest.getStackInSlot(1) != null;
+        return this.horseChest != null && this.horseChest.getStackInSlot(1) != null
+                && this.horseChest.getStackInSlot(1).getItem() instanceof ItemAdvancedHorseArmor;
     }
 
     @Unique private void eatFood(int amount){
@@ -308,7 +371,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         // checks null for armor, checks if armor has wheat, if conditions are right it eats the food in the armor
         ItemStack armor = this.horseChest.getStackInSlot(1);
         if(armor == null) return false;
-        if(armor.getItemDamage() == armor.getMaxDamage()) return false;
+        if (!(armor.getItem() instanceof ItemAdvancedHorseArmor item) || item.getWheatCount(armor) <= 0) return false;
 
         // eats wheat - default item
         return this.eatFoodItem(new ItemStack(BTWItems.wheat));
@@ -512,6 +575,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         double dotProduct = horseForward.dotProduct(playerForward);
 
         int scoreGain = getScoreGain(dotProduct);
+        if(NightmareMode.devMode){scoreGain *= 3;}
         // score gain: 12 per tick at >= 95%. 0 when dot product is negative. everything else is mapped 1:1
 
         // update taming progress

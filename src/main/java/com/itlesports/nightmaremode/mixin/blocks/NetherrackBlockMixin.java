@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -114,6 +115,16 @@ public class NetherrackBlockMixin extends FullBlock {
         this.nightmareMode$tierOneIcon = register.registerIcon("nightmare:ifhyToughNetherrack");
         this.nightmareMode$tierTwoIcon = register.registerIcon("nightmare:ifhyDenserNetherrack");
         this.nightmareMode$deadzoneIcon = register.registerIcon("nightmare:ifhyDeadzoneNetherrack");
+    }
+
+    @Override
+    @Environment(value=EnvType.CLIENT)
+    public void getSubBlocks(int blockID, CreativeTabs creativeTabs, List list) {
+        list.add(new ItemStack(blockID, 1, 0));
+        list.add(new ItemStack(blockID, 1, 1));
+        list.add(new ItemStack(blockID, 1, 2));
+        list.add(new ItemStack(blockID, 1, 3));
+        list.add(new ItemStack(blockID, 1, 4));
     }
 
     @Override

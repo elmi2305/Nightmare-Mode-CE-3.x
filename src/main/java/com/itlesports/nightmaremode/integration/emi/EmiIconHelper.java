@@ -1,9 +1,14 @@
 package com.itlesports.nightmaremode.integration.emi;
 
+import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.skill.SkillNode;
+import com.itlesports.nightmaremode.skill.gui.GuiSkillTree;
 import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.stack.EmiStack;
+import emi.dev.emi.emi.api.widget.DrawableWidget;
 import emi.dev.emi.emi.api.widget.WidgetHolder;
 import emi.shims.java.net.minecraft.client.gui.tooltip.TooltipComponent;
 import java.util.List;
@@ -12,6 +17,7 @@ import net.minecraft.src.Gui;
 import net.minecraft.src.Icon;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.TextureMap;
+import org.lwjgl.opengl.GL11;
 
 public final class EmiIconHelper {
     private static final int SKILL_ICON_SIZE = 16;
@@ -69,6 +75,8 @@ public final class EmiIconHelper {
                 int iconY = index / columns * SKILL_SPACING;
                 Icon background = NMFields.ICON_SKILL_REQUIREMENT_BACKGROUND;
                 if (background != null) {
+                    boolean unlocked = SkillHandler.isUnlocked(Minecraft.getMinecraft().thePlayer, skills.get(index));
+                    GL11.glColor4f(unlocked ? 0.45F : 1.0F, 1.0F, unlocked ? 0.55F : 1.0F, 1.0F);
                     Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
                     new Gui().drawTexturedModelRectFromIcon(
                             iconX,
@@ -76,6 +84,7 @@ public final class EmiIconHelper {
                             background,
                             SKILL_BACKGROUND_SIZE,
                             SKILL_BACKGROUND_SIZE);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 }
                 icons.get(index).render(draw, iconX + SKILL_PADDING, iconY + SKILL_PADDING, delta);
             }
@@ -85,13 +94,27 @@ public final class EmiIconHelper {
             SkillNode skill = skills.get(index);
             int iconX = index % columns * SKILL_SPACING;
             int iconY = startY + index / columns * SKILL_SPACING;
-            widgets.addDrawable(
+            widgets.add(new DrawableWidget(
                     iconX,
                     iconY,
                     SKILL_BACKGROUND_SIZE,
                     SKILL_BACKGROUND_SIZE,
                     (draw, mouseX, mouseY, delta) -> {
-                    }).tooltip((mouseX, mouseY) -> List.of(
+                    }) {
+                @Override
+                public boolean mouseClicked(int mouseX, int mouseY, int button) {
+                    Minecraft mc = Minecraft.getMinecraft();
+                    if (button != 0 || mc.thePlayer == null
+                            || SkillHandler.isUnlocked(mc.thePlayer, skill)
+                            || NMItems.skillBook == null
+                            || !mc.thePlayer.inventory.hasItem(NMItems.skillBook.itemID)) {
+                        return false;
+                    }
+                    SkillNet.sendSyncRequest();
+                    mc.displayGuiScreen(new GuiSkillTree(mc.currentScreen, skill));
+                    return true;
+                }
+            }).tooltip((mouseX, mouseY) -> List.of(
                             TooltipComponent.of(EmiPort.ordered(EmiPort.literal(
                                     "Required skill: " + skill.name))),
                             TooltipComponent.of(EmiPort.ordered(EmiPort.literal(

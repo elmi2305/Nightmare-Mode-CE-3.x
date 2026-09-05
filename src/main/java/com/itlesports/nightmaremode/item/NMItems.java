@@ -13,6 +13,21 @@ import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMItems {
+    public static ItemAlloyHorseArmor nickelHorseArmor;
+    public static ItemAlloyHorseArmor carbonIronHorseArmor;
+    public static ItemAlloyHorseArmor reinforcedIronHorseArmor;
+    public static ItemAlloyHorseArmor tungstenHorseArmor;
+    public static ItemAlloyHorseArmor quartzglassHorseArmor;
+    public static ItemAlloyHorseArmor verdantHorseArmor;
+    public static ItemAlloyHorseArmor blackglassHorseArmor;
+    public static ItemAlloyHorseArmor coresteelHorseArmor;
+    public static ItemAlloyHorseArmor deadzoneAlloyHorseArmor;
+    public static ItemAlloyHorseArmor signalAlloyHorseArmor;
+    public static ItemAlloyHorseArmor azureCeramicHorseArmor;
+    public static ItemAlloyHorseArmor prismaticHorseArmor;
+    public static ItemAlloyHorseArmor phaseSteelHorseArmor;
+    public static ItemAlloyHorseArmor sealedQuicksilverHorseArmor;
+    public static ItemAlloyHorseArmor endstoneHorseArmor;
     public static final int BLOOD_MOON_DURABILITY = 1200;
 
 
@@ -1228,6 +1243,39 @@ public class NMItems {
         ACHIEVEMENT_SPECIAL_ARROW_RED = new NMItem(2417).setTextureName("nightmare:nmAchievementArrowRed").hideFromEMI();
         ACHIEVEMENT_SPECIAL_TRIPLE_TEAR = new NMItem(2418).setTextureName("nightmare:nmAchievementTripleTear").hideFromEMI();
         ACHIEVEMENT_SPECIAL_BLOOD_ZOMBIE = new NMItem(2419).setTextureName("nightmare:nmAchievementBloodZombie").hideFromEMI();
+    }
+
+    static {
+        nickelHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3420, ItemAlloyHorseArmor.Material.NICKEL)
+                .setUnlocalizedName("nmNickelHorseArmor");
+        carbonIronHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3421, ItemAlloyHorseArmor.Material.CARBON_IRON)
+                .setUnlocalizedName("nmCarbonIronHorseArmor");
+        reinforcedIronHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3422, ItemAlloyHorseArmor.Material.REINFORCED_IRON)
+                .setUnlocalizedName("nmReinforcedIronHorseArmor");
+        tungstenHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3423, ItemAlloyHorseArmor.Material.TUNGSTEN)
+                .setUnlocalizedName("nmTungstenHorseArmor");
+        quartzglassHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3424, ItemAlloyHorseArmor.Material.QUARTZGLASS)
+                .setUnlocalizedName("nmQuartzglassHorseArmor");
+        verdantHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3425, ItemAlloyHorseArmor.Material.VERDANT)
+                .setUnlocalizedName("nmVerdantHorseArmor");
+        blackglassHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3426, ItemAlloyHorseArmor.Material.BLACKGLASS)
+                .setUnlocalizedName("nmBlackglassHorseArmor");
+        coresteelHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3427, ItemAlloyHorseArmor.Material.CORESTEEL)
+                .setUnlocalizedName("nmCoresteelHorseArmor");
+        deadzoneAlloyHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3428, ItemAlloyHorseArmor.Material.DEADZONE_ALLOY)
+                .setUnlocalizedName("nmDeadzoneAlloyHorseArmor");
+        signalAlloyHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3429, ItemAlloyHorseArmor.Material.SIGNAL_ALLOY)
+                .setUnlocalizedName("nmSignalAlloyHorseArmor");
+        azureCeramicHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3430, ItemAlloyHorseArmor.Material.AZURE_CERAMIC)
+                .setUnlocalizedName("nmAzureCeramicHorseArmor");
+        prismaticHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3431, ItemAlloyHorseArmor.Material.PRISMATIC)
+                .setUnlocalizedName("nmPrismaticHorseArmor");
+        phaseSteelHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3432, ItemAlloyHorseArmor.Material.PHASE_STEEL)
+                .setUnlocalizedName("nmPhaseSteelHorseArmor");
+        sealedQuicksilverHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3433, ItemAlloyHorseArmor.Material.SEALED_QUICKSILVER)
+                .setUnlocalizedName("nmSealedQuicksilverHorseArmor");
+        endstoneHorseArmor = (ItemAlloyHorseArmor) new ItemAlloyHorseArmor(3434, ItemAlloyHorseArmor.Material.ENDSTONE)
+                .setUnlocalizedName("nmEndstoneHorseArmor");
     }
 
     public static void runItemInit(){}

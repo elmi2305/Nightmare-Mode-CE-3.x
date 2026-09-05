@@ -40,7 +40,7 @@ public class WorkbenchContainerMixin extends ContainerWorkbench {
             instance.getStack().attemptDamageItem(damage, this.world.rand);
         }
         if(instance.getStack() != null && instance.getStack().getItem() instanceof ItemAdvancedHorseArmor && instance.slotNumber == 0){
-            instance.getStack().setItemDamage(instance.getStack().getMaxDamage());
+            ((ItemAdvancedHorseArmor) instance.getStack().getItem()).setWheatCount(instance.getStack(), 0);
         }
 
         return instance.getStack();
