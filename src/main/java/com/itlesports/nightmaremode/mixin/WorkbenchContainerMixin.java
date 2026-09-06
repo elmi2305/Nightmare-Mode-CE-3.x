@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorkbenchContainer.class)
 public class WorkbenchContainerMixin extends ContainerWorkbench {
     @Shadow public World world;
-    @Shadow public int blockX;
-    @Shadow public int blockY;
-    @Shadow public int blockZ;
+    @Shadow(remap = false) public int blockX;
+    @Shadow(remap = false) public int blockY;
+    @Shadow(remap = false) public int blockZ;
 
     public WorkbenchContainerMixin(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5) {
         super(par1InventoryPlayer, par2World, par3, par4, par5);
