@@ -28,11 +28,57 @@ import java.util.regex.Pattern;
 import static btw.community.nightmaremode.NightmareMode.sendSongToPlayer;
 
 public class NMUtils {
+    public static final int MAX_TOOLTIP_LINE_LENGTH = 40;
     private static Random utilRandom = new Random();
     private static double buffedSquidBonus = 1;
     private static boolean intenseCorruption = false;
 
     public static void logTodo(){}
+
+    public static void addWrappedTooltip(List tooltip, String text) {
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        String formattingPrefix = getTooltipFormattingPrefix(text);
+        String content = text.substring(formattingPrefix.length());
+        String[] paragraphs = content.split("\\r?\\n", -1);
+
+        for (String paragraph : paragraphs) {
+            addWrappedTooltipParagraph(tooltip, formattingPrefix, paragraph);
+        }
+    }
+
+    private static void addWrappedTooltipParagraph(List tooltip, String formattingPrefix, String paragraph) {
+        String remaining = paragraph.trim();
+        if (remaining.isEmpty()) {
+            tooltip.add(formattingPrefix);
+            return;
+        }
+
+        while (remaining.length() > MAX_TOOLTIP_LINE_LENGTH) {
+            int breakAt = remaining.substring(0, MAX_TOOLTIP_LINE_LENGTH + 1).lastIndexOf(' ');
+            if (breakAt <= 0) {
+                breakAt = MAX_TOOLTIP_LINE_LENGTH;
+            }
+
+            tooltip.add(formattingPrefix + remaining.substring(0, breakAt).trim());
+            remaining = remaining.substring(breakAt).trim();
+        }
+
+        if (!remaining.isEmpty()) {
+            tooltip.add(formattingPrefix + remaining);
+        }
+    }
+
+    private static String getTooltipFormattingPrefix(String text) {
+        int prefixLength = 0;
+        while (prefixLength + 1 < text.length()
+                && text.charAt(prefixLength) == '\u00a7') {
+            prefixLength += 2;
+        }
+        return text.substring(0, prefixLength);
+    }
 
     public static boolean isDamageSourceAllowedToCreateCarcass(EntityLivingBase victim, DamageSource source) {
         if (source == null || source == DamageSource.inWall || source == BTWDamageSources.damageSourceSaw || "inWall".equals(source.damageType) || "fcSaw".equals(source.damageType)) {

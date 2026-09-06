@@ -206,7 +206,7 @@ public final class ArmorSetHelper {
     public static boolean isWearingClearVisionMask(EntityLivingBase wearer) {
         ItemStack helmet = wearer.getCurrentItemOrArmor(4);
         return isIntact(helmet, NMItems.divingMask) || isIntact(helmet, NMItems.sunVisor)
-                || isIntact(helmet, NMItems.quartzglassHelmet);
+                || ArmorSetHelper.isWearingCompleteQuartzglassSet(wearer);
     }
 
     public static int getCoresteelRemainingHeatCapacity(EntityLivingBase wearer) {

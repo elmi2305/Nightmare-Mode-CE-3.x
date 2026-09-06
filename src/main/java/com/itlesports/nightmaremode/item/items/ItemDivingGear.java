@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.item.items;
 
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -113,11 +114,11 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         if (this.airCapacity > 0) {
-            tooltip.add(EnumChatFormatting.AQUA + I18n.getStringParams(
+            NMUtils.addWrappedTooltip(tooltip, EnumChatFormatting.AQUA + I18n.getStringParams(
                     "item.ifhyDivingAir", this.getStoredAir(stack) / 20, this.airCapacity / 20));
         }
         if (this.setBonusKey != null && !this.setBonusKey.isEmpty()) {
-            tooltip.add(I18n.getString(this.setBonusKey));
+            NMUtils.addWrappedTooltip(tooltip, I18n.getString(this.setBonusKey));
         }
     }
 

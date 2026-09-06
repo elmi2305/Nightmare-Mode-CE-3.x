@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class ItemChargedArmor extends ItemAlloyArmor implements IArmorStatus {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(EnumChatFormatting.RED + I18n.getStringParams("item.ifhySignalCharge",
+        NMUtils.addWrappedTooltip(tooltip, EnumChatFormatting.RED + I18n.getStringParams("item.ifhySignalCharge",
                 this.getCharge(stack), this.chargeCapacity));
     }
 

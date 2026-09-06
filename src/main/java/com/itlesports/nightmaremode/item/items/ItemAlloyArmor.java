@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import api.item.items.ArmorItemMod;
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EnumArmorMaterial;
 import net.minecraft.src.I18n;
@@ -60,7 +61,7 @@ public class ItemAlloyArmor extends ArmorItemMod {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         if (this.setBonusKey != null && !this.setBonusKey.isEmpty()) {
-            tooltip.add(I18n.getString(this.setBonusKey));
+            NMUtils.addWrappedTooltip(tooltip, I18n.getString(this.setBonusKey));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EnumChatFormatting;
 import net.minecraft.src.I18n;
@@ -36,7 +37,8 @@ public class ItemCarbonIronArmor extends ItemAlloyArmor {
     public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         if (isWaxed(stack)) {
-            tooltip.add(EnumChatFormatting.GREEN + I18n.getString("item.ifhyCarbonIronArmor.waxed"));
+            NMUtils.addWrappedTooltip(tooltip,
+                    EnumChatFormatting.GREEN + I18n.getString("item.ifhyCarbonIronArmor.waxed"));
         }
     }
 }
