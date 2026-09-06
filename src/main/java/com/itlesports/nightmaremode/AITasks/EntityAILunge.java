@@ -39,6 +39,10 @@ public class EntityAILunge extends EntityAITarget {
 
     @Override
     public boolean continueExecuting(){
+        if (this.targetEntity == null || !this.targetEntity.isEntityAlive()) {
+            return false;
+        }
+
         boolean isHoldingItem = this.taskOwner.getHeldItem() != null;
         boolean isEclipse = NMUtils.getIsMobEclipsed(this.taskOwner);
 
@@ -54,10 +58,7 @@ public class EntityAILunge extends EntityAITarget {
             this.taskOwner.motionY = 0.34;
             this.taskOwner.motionZ = clamp(vector.zCoord * 0.2, 1.0);
 
-            this.taskOwner.getNavigator().tryMoveToEntityLiving(this.taskOwner.getAttackTarget(), this.taskOwner.getAIMoveSpeed());
-//            if(this.taskOwner.getAttackTarget() == null){
-//                System.out.println("null target");
-//            }
+            this.taskOwner.getNavigator().tryMoveToEntityLiving(this.targetEntity, this.taskOwner.getAIMoveSpeed());
 
             if(isEclipse){
                 this.cooldown = isHoldingItem ? 20 + this.taskOwner.rand.nextInt(20) : 0;
