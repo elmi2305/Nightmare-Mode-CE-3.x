@@ -345,6 +345,7 @@
     "render.RenderGhastMixin",
     "render.RenderGlobalMixin",
     "render.RenderHorseMixin",
+    "render.RenderPlayerMixin",
     "render.RenderPigMixin",
     "render.RenderSheepMixin",
     "render.RenderSkeletonMixin",
