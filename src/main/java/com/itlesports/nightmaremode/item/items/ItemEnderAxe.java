@@ -11,7 +11,7 @@ public class ItemEnderAxe extends AxeItem {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
         this.setMaxDamage(3200);
         this.efficiencyOnProperMaterial = 16.0F;
-        this.setDamageVsEntity(9);
+        this.setDamageVsEntity(8);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
     @Override public boolean getIsRepairable(ItemStack tool, ItemStack material) { return material != null && material.getItem() == NMItems.phaseSteelIngot; }

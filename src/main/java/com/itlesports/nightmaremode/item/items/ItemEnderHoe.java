@@ -13,7 +13,7 @@ public class ItemEnderHoe extends HoeItem {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
         this.setMaxDamage(3200);
         this.efficiencyOnProperMaterial = 16.0F;
-        this.setDamageVsEntity(5);
+        this.setDamageVsEntity(4);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
     @Override

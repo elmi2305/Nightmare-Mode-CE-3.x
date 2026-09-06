@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.integration.emi;
 
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.EnderAssemblerRecipeManager;
@@ -60,7 +61,9 @@ public final class NightmareEmiRegistry {
 
         registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.hammers));
         registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.anvils));
-        registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cistern));
+        registry.addWorkstation(CISTERN, EmiStack.of(Item.cauldron));
+        registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternInterface));
+        registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternDrain));
         registry.addWorkstation(CISTERN, EmiStack.of(NMBlocks.cisternStirrer));
         registry.addWorkstation(ENDER_ASSEMBLER, EmiStack.of(NMBlocks.enderAssembler));
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));

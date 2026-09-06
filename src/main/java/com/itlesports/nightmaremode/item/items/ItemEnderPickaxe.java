@@ -10,7 +10,7 @@ public class ItemEnderPickaxe extends PickaxeItem {
     public ItemEnderPickaxe(int id) {
         super(id, EnumToolMaterial.SOULFORGED_STEEL, 3200);
         this.efficiencyOnProperMaterial = 16.0F;
-        this.setDamageVsEntity(7);
+        this.setDamageVsEntity(6);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
     @Override public boolean getIsRepairable(ItemStack tool, ItemStack material) { return material != null && material.getItem() == NMItems.phaseSteelIngot; }

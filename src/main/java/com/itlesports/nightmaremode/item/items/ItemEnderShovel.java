@@ -11,7 +11,7 @@ public class ItemEnderShovel extends ShovelItem {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
         this.setMaxDamage(3200);
         this.efficiencyOnProperMaterial = 16.0F;
-        this.setDamageVsEntity(6);
+        this.setDamageVsEntity(5);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
     @Override public boolean getIsRepairable(ItemStack tool, ItemStack material) { return material != null && material.getItem() == NMItems.phaseSteelIngot; }

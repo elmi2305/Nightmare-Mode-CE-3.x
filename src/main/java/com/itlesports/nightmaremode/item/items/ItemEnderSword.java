@@ -21,7 +21,7 @@ public class ItemEnderSword extends SwordItem {
     @Override public Multimap getItemAttributeModifiers() {
         Multimap modifiers = HashMultimap.create();
         modifiers.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(),
-                new AttributeModifier(Item.field_111210_e, "Weapon modifier", 10.0D, 0));
+                new AttributeModifier(Item.field_111210_e, "Weapon modifier", 9.0D, 0));
         return modifiers;
     }
     @Override public boolean getIsRepairable(ItemStack tool, ItemStack material) { return material != null && material.getItem() == NMItems.phaseSteelIngot; }

@@ -6,12 +6,14 @@ import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 
+import java.util.Arrays;
+
 public class ItemAlloyShovel extends ShovelItem {
     private final float speedMultiplier;
     private final int enchantability;
-    private final int repairItemID;
+    private final int[] repairItemID;
 
-    public ItemAlloyShovel(int id, int durability, int damage, float speedMultiplier, int enchantability, int repairItemID) {
+    public ItemAlloyShovel(int id, int durability, int damage, float speedMultiplier, int enchantability, int ... repairItemID) {
         super(id, EnumToolMaterial.EMERALD);
         this.setMaxDamage(durability);
         this.setDamageVsEntity(damage);
@@ -32,6 +34,6 @@ public class ItemAlloyShovel extends ShovelItem {
 
     @Override
     public boolean getIsRepairable(ItemStack tool, ItemStack material) {
-        return material != null && material.itemID == this.repairItemID;
+        return material != null && Arrays.stream(this.repairItemID).anyMatch(a -> a == material.itemID);
     }
 }

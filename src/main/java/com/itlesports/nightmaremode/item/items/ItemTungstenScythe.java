@@ -5,6 +5,6 @@ import net.minecraft.src.EnumToolMaterial;
 
 public class ItemTungstenScythe extends ItemScythe implements INetherItem {
     public ItemTungstenScythe(int id) {
-        super(id, EnumToolMaterial.IRON, 4.0F);
+        super(id, EnumToolMaterial.IRON, 3.0F);
     }
 }

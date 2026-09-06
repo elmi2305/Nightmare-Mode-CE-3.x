@@ -9,13 +9,15 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.SharedMonsterAttributes;
 
+import java.util.Arrays;
+
 public class ItemAlloySword extends SwordItem {
     private final double weaponDamage;
     private final int enchantability;
-    private final int repairItemID;
+    private final int[] repairItemID;
 
     public ItemAlloySword(int id, EnumToolMaterial material, int durability, double weaponDamage,
-                          int enchantability, int repairItemID) {
+                          int enchantability, int ... repairItemID) {
         super(id, material);
         this.setMaxDamage(durability);
         this.weaponDamage = weaponDamage;
@@ -38,6 +40,6 @@ public class ItemAlloySword extends SwordItem {
 
     @Override
     public boolean getIsRepairable(ItemStack tool, ItemStack material) {
-        return material != null && material.itemID == this.repairItemID;
+        return material != null && Arrays.stream(this.repairItemID).anyMatch(a -> a == material.itemID);
     }
 }

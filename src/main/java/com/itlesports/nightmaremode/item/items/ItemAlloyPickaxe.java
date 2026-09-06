@@ -6,13 +6,15 @@ import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 
+import java.util.Arrays;
+
 public class ItemAlloyPickaxe extends PickaxeItem {
     private final float speedMultiplier;
     private final int enchantability;
-    private final int repairItemID;
+    private final int[] repairItemID;
 
     public ItemAlloyPickaxe(int id, EnumToolMaterial material, int durability, int damage, float speedMultiplier,
-                            int enchantability, int repairItemID) {
+                            int enchantability, int ... repairItemID) {
         super(id, material);
         this.setMaxDamage(durability);
         this.setDamageVsEntity(damage);
@@ -33,6 +35,6 @@ public class ItemAlloyPickaxe extends PickaxeItem {
 
     @Override
     public boolean getIsRepairable(ItemStack tool, ItemStack material) {
-        return material != null && material.itemID == this.repairItemID;
+        return material != null && Arrays.stream(this.repairItemID).anyMatch(a -> a == material.itemID);
     }
 }
