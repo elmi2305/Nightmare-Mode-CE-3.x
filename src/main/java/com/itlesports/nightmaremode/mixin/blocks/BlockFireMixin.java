@@ -23,17 +23,20 @@ public class BlockFireMixin {
         for (int face = 0; face < 6; ++face) {
             if (fuel.doesInfiniteBurnToFacing(world, x, y, z, face)) return;
         }
-        float amount = 8.0F;
+        float amount = 4.0F;
         for (int dx = -1; dx <= 1; ++dx) {
             for (int dy = -1; dy <= 1; ++dy) {
                 for (int dz = -1; dz <= 1; ++dz) {
                     int id = world.getBlockId(x + dx, y + dy, z + dz);
-                    if (id == BTWBlocks.stokedFire.blockID) amount = 30.0F;
-                    else if (id == Block.fire.blockID && world.getBlockId(x + dx, y + dy - 1, z + dz) == BTWBlocks.hibachi.blockID) amount = Math.max(amount, 18.0F);
+                    if (id == Block.fire.blockID && world.getBlockId(x + dx, y + dy - 1, z + dz) == BTWBlocks.hibachi.blockID) amount = Math.max(amount, 6.0F);
+                    if (id == BTWBlocks.stokedFire.blockID) amount = 10.0F;
+
                 }
             }
         }
-        ChunkPollutionManager.pollute(world, x, y, z, amount);
+        if (y > 50) {
+            ChunkPollutionManager.pollute(world, x, y, z, amount);
+        }
     }
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"), cancellable = true)

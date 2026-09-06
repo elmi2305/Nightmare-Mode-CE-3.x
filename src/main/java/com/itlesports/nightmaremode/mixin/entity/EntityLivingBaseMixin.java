@@ -456,7 +456,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         }
 
         if (this.carcassAge >= CARCASS_LIFETIME) {
-            ChunkPollutionManager.pollute(this.worldObj, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 45.0F);
+            ChunkPollutionManager.pollute(this.worldObj, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 15.0F);
             this.nm$spawnCarcassPoof();
             this.setDead();
             return;
