@@ -705,20 +705,10 @@ public abstract class OldNMInitializer implements AchievementExt {
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("nmLibrarian0").profession(1).level(5).convert().input(TradeItem.fromID(Item.enderPearl.itemID)).conversionCost(6, 8).output(TradeItem.fromID(Item.eyeOfEnder.itemID)).mandatory().build());
         EntityVillager.removeCustomTrade(1, TradeProvider.getBuilder().name("btw:sell_power_scroll").profession(1).level(5).arcaneScroll().scrollEnchant(Enchantment.power).secondaryEmeraldCost(48, 64).mandatory().build());
 
-        buy("nmlibrarian0", 1, 2, Block.bookShelf.blockID, 0, 1, 2);
-        buy("nmlibrarian0", 1, 2, Item.book.itemID, 0, 3, 6);
-        buy("nmlibrarian0", 1, 2, Item.redstoneRepeater.itemID, 0, 1, 2);
-        buy("nmlibrarian0", 1, 3, BTWItems.hellfireDust.itemID, 0, 16, 24);
         convert("nmlibrarian0", 1, 3, TradeItem.fromIDAndMetadata(BTWItems.wool.itemID, 15, 2, 4),
                 TradeItem.fromID(Item.emerald.itemID, 1, 2),
                 TradeItem.fromID(NMItems.bandage.itemID, 1, 2));
-        buy("nmlibrarian0", 1, 4, BTWBlocks.blockDispenser.blockID, 0, 1, 2);
-        buy("nmlibrarian0", 1, 4, BTWBlocks.buddyBlock.blockID, 0, 1, 2);
-        buy("nmlibrarian0", 1, 4, BTWBlocks.detectorBlock.blockID, 0, 1, 3);
 
-        convert("nmlibrarian0", 1, 4, TradeItem.fromID(Item.paper.itemID),
-                TradeItem.fromID(NMItems.bloodOrb.itemID, 12, 24), TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("blast")), 1.2f);
-        sell("nmlibrarian0", 1, 4, BTWItems.soulFlux.itemID, 0, 2, 4, 1.2f);
         convert("nmlibrarian0", 1, 5, TradeItem.fromID(Item.paper.itemID),
                 TradeItem.fromID(NMItems.bloodOrb.itemID, 24, 32),
                 TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("power")));

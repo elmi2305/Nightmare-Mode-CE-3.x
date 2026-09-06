@@ -602,7 +602,6 @@ public abstract class NMInitializer implements AchievementExt {
         buy("ifhy:librarian_plant_sheets", 1, 1, NMItems.plantSheet.itemID, 0, 33, 47);
         buy("ifhy:librarian_washed_sugar_cane", 1, 1, NMItems.washedSugarCane.itemID, 0, 43, 57);
         buy("ifhy:librarian_books", 1, 2, Item.book.itemID, 0, 19, 29);
-        buy("ifhy:librarian_writable_book", 1, 2, Item.writableBook.itemID, 0, 1, 1);
         buy("ifhy:librarian_bookshelves", 1, 2, Block.bookShelf.blockID, 0, 6, 10);
         buy("ifhy:librarian_repeaters", 1, 2, Item.redstoneRepeater.itemID, 0, 24, 36);
         buy("ifhy:librarian_hellfire_dust", 1, 3, BTWItems.hellfireDust.itemID, 0, 31, 45);
@@ -1804,6 +1803,26 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('I'), Item.ingotIron,
                 Character.valueOf('N'), BTWTags.strings,
                 Character.valueOf('S'), BTWItems.ironNugget
+        });
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpHelmet), new Object[]{
+                "###", "#I#",
+                Character.valueOf('#'), BTWTags.tannedLeathers,
+                Character.valueOf('I'), Item.ingotIron
+        });
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpChest), new Object[]{
+                "# #", "I#I", "###",
+                Character.valueOf('#'), BTWTags.tannedLeathers,
+                Character.valueOf('I'), Item.ingotIron
+        });
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpLeggings), new Object[]{
+                "#I#", "# #", "# #",
+                Character.valueOf('#'), BTWTags.tannedLeathers,
+                Character.valueOf('I'), Item.ingotIron
+        });
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpBoots), new Object[]{
+                "# #", "I I",
+                Character.valueOf('#'), BTWTags.tannedLeathers,
+                Character.valueOf('I'), Item.ingotIron
         });
         RecipeManager.addRecipe(new ItemStack(NMItems.carbonIronIngot), new Object[]{
                 "NNN", "NYN", "NNN", Character.valueOf('N'), NMItems.carbonIronNugget, Character.valueOf('Y'), BTWItems.stoneBrick});
@@ -4112,7 +4131,7 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addTurntableRecipes() {
-        RecipeManager.addTurntableRecipe(NMBlocks.enderCeramic, 1, NMBlocks.enderCeramic, 0, 8);
+        RecipeManager.addTurntableRecipe(NMBlocks.enderCeramic, 1, new ItemStack[0], NMBlocks.enderCeramic, 0, 8);
         RecipeManager.addKilnRecipe(new ItemStack(NMItems.firedCrucibleLiner), NMBlocks.enderCeramic, 1, (byte)8);
     }
 
