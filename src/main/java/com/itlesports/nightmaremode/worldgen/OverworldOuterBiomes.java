@@ -72,10 +72,9 @@ public final class OverworldOuterBiomes {
             decoratorAccess.setCactiPerChunk(0);
             this.theBiomeDecorator.generateLakes = false;
             clearSpawns(this);
-            this.spawnableMonsterList.add(new SpawnListEntry(EntityFireSkeletonOuter.class, 14, 1, 3));
             this.spawnableMonsterList.add(new SpawnListEntry(com.itlesports.nightmaremode.entity.EntityFauxVillager.class, 5, 1, 1));
             this.spawnableMonsterList.add(new SpawnListEntry(EntityFireSpider.class, 12, 1, 3));
-            this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernoSkeleton.class, 10, 1, 2));
+            this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernoSkeleton.class, 14, 1, 2));
             this.spawnableMonsterList.add(new SpawnListEntry(EntityMummyZombie.class, 18, 1, 4));
         }
 

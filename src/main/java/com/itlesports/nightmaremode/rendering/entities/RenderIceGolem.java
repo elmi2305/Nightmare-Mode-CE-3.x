@@ -5,7 +5,7 @@ import net.minecraft.src.RenderIronGolem;
 import net.minecraft.src.ResourceLocation;
 
 public class RenderIceGolem extends RenderIronGolem {
-    private static final ResourceLocation ICE = new ResourceLocation("nightmare:textures/entity/outer/ice_golem.png");
+    private static final ResourceLocation ICE = new ResourceLocation("nightmare:textures/entity/outer/ifhyIceGolem.png");
 
     @Override
     protected ResourceLocation getIronGolemTextures(EntityIronGolem golem) {

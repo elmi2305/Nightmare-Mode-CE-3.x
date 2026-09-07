@@ -6,8 +6,8 @@ import net.minecraft.src.RenderZombie;
 import net.minecraft.src.ResourceLocation;
 
 public class RenderOuterZombie extends RenderZombie {
-    private static final ResourceLocation MUMMY = new ResourceLocation("nightmare:textures/entity/outer/mummy_zombie.png");
-    private static final ResourceLocation ICE = new ResourceLocation("nightmare:textures/entity/outer/ice_zombie.png");
+    private static final ResourceLocation MUMMY = new ResourceLocation("nightmare:textures/entity/outer/ifhyMummyZombie.png");
+    private static final ResourceLocation ICE = new ResourceLocation("nightmare:textures/entity/outer/ifhyIceZombie.png");
 
     @Override
     protected ResourceLocation func_110863_a(EntityZombie zombie) {

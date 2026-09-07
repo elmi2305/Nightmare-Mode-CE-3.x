@@ -4,7 +4,7 @@ import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
 public class RenderAngelDragon extends RenderLiving {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/entity/outer/angel_dragon.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("nightmare:textures/entity/outer/ifhyAngelDragon.png");
 
     public RenderAngelDragon() {
         super(new ModelDragon(0.0F), 1.0F);

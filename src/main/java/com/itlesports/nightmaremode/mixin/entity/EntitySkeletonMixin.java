@@ -602,7 +602,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     }
     @ModifyArg(method = "initComponents", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent;<init>(IIILjava/util/function/Function;)V"), index =  0, remap = false)
     private int allowMoreThanTwoSkeletonVariants(int numVariants){
-        return 8;
+        return 11;
     }
 
     @Inject(method = "lambda$initComponents$0", at = @At(value = "INVOKE", target = "Lapi/entity/component/VariantComponent$EntityVariant;id()I"), remap = false)

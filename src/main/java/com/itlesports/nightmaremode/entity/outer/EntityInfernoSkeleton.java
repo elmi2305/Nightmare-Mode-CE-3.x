@@ -11,7 +11,7 @@ import net.minecraft.src.World;
 public class EntityInfernoSkeleton extends EntitySkeleton {
     public EntityInfernoSkeleton(World world) {
         super(world);
-        this.setSkeletonType(NMFields.SKELETON_FIRE);
+        this.setSkeletonType(NMFields.SKELETON_INFERNO_OUTER);
         this.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
         this.setEquipmentDropChance(0, 0.0F);
         this.isImmuneToFire = true;
@@ -27,7 +27,7 @@ public class EntityInfernoSkeleton extends EntitySkeleton {
     @Override
     public EntityLivingData onSpawnWithEgg(EntityLivingData data) {
         data = super.onSpawnWithEgg(data);
-        this.setSkeletonType(NMFields.SKELETON_FIRE);
+        this.setSkeletonType(NMFields.SKELETON_INFERNO_OUTER);
         this.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));
         this.setEquipmentDropChance(0, 0.0F);
         return data;

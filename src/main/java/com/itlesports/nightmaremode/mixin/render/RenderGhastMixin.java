@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import com.itlesports.nightmaremode.entity.outer.EntityAngelGhast;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.entity.variants.EntityAshGhast;

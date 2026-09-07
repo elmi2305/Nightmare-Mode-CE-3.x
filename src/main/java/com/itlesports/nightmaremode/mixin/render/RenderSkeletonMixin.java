@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
+import com.itlesports.nightmaremode.entity.outer.EntityIceSkeletonOuter;
+import com.itlesports.nightmaremode.entity.outer.EntityInfernoSkeleton;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
@@ -25,6 +27,10 @@ public class RenderSkeletonMixin extends RenderBiped {
     @Unique private static final ResourceLocation ENDER_ECLIPSE = new ResourceLocation("nightmare:textures/entity/enderskeletonEclipse.png");
     @Unique private static final ResourceLocation WITHER_ECLIPSE = new ResourceLocation("nightmare:textures/entity/witherskeletonEclipse.png");
     @Unique private static final ResourceLocation NORMAL_ECLIPSE = new ResourceLocation("nightmare:textures/entity/normalskeletonEclipse.png");
+
+
+    @Unique private static final ResourceLocation ICE_OUTER_SKELETON = new ResourceLocation("nightmare:textures/entity/outer/ifhyIceSkeleton.png");
+    @Unique private static final ResourceLocation INFERNO_OUTER_SKELETON = new ResourceLocation("nightmare:textures/entity/outer/ifhyInfernoSkeleton.png");
 
     @Unique private static final ResourceLocation armor = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
 
@@ -78,33 +84,55 @@ public class RenderSkeletonMixin extends RenderBiped {
 
         if(id == NMFields.SKELETON_JUNGLE){
             cir.setReturnValue(JUNGLE);
+            return;
         } else if(id == NMFields.SKELETON_SUPERCRITICAL) {
             cir.setReturnValue(NITRO);
+            return;
         } else if(id == NMFields.SKELETON_LIGHTNING) {
             cir.setReturnValue(LIGHTNING);
+            return;
+        }
+
+        if(id == NMFields.SKELETON_INFERNO_OUTER){
+            cir.setReturnValue(INFERNO_OUTER_SKELETON);
+            return;
+        }
+        if(id == NMFields.SKELETON_ICE_OUTER){
+            cir.setReturnValue(ICE_OUTER_SKELETON);
+            return;
         }
 
 
         if (NMUtils.getIsMobEclipsed(skeleton)) {
             if(id == NMFields.SKELETON_ENDER) {
                 cir.setReturnValue(ENDER_ECLIPSE);
+                return;
             }else if(id == NMFields.SKELETON_FIRE) {
                 cir.setReturnValue(FIRE_ECLIPSE);
+                return;
             } else if(id == NMFields.SKELETON_ICE){
                 cir.setReturnValue(ICE_ECLIPSE);
+                return;
             } else if(id == NMFields.SKELETON_WITHER) {
                 cir.setReturnValue(WITHER_ECLIPSE);
+                return;
             } else if(id == 0){
                 cir.setReturnValue(NORMAL_ECLIPSE);
+                return;
             }
         } else {
              if(id == NMFields.SKELETON_ENDER){
                 cir.setReturnValue(ENDER);
+                return;
             }else if(id == NMFields.SKELETON_FIRE){
                 cir.setReturnValue(FIRE);
+                return;
             } else if(id == NMFields.SKELETON_ICE){
                 cir.setReturnValue(ICE);
+                return;
             }
         }
+
+
     }
 }
