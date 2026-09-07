@@ -286,6 +286,7 @@
     "interfaces.WorldInfoAccessor",
     "render.RenderBipedMixin",
     "render.RenderBlocksMixin",
+    "render.FenceGateRendererMixin",
     "render.RenderLightningBoltMixin",
     "render.RenderMinecartMixin",
     "render.RenderLivingEntityMixin",
@@ -293,6 +294,7 @@
     "render.TileEntityRendererMixin"
   ],
   "client": [
+    "render.FenceGateRendererMixin",
     "AnvilSaveConverterMixin",
     "EmiCraftingRecipeMixin",
     "EmiSoulforgeRecipeMixin",
