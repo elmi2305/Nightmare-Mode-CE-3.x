@@ -504,10 +504,10 @@ public class NMItems {
     public static ItemAlloyArmor quicksilverChestplate;
     public static ItemAlloyArmor quicksilverLeggings;
     public static ItemAlloyArmor quicksilverBoots;
-    public static ItemAlloyArmor anchorHelmet;
-    public static ItemAlloyArmor anchorChestplate;
-    public static ItemAlloyArmor anchorLeggings;
-    public static ItemAlloyArmor anchorBoots;
+    public static ItemAlloyArmor endstoneHelmet;
+    public static ItemAlloyArmor endstoneChest;
+    public static ItemAlloyArmor endstoneLeggings;
+    public static ItemAlloyArmor endstoneBoots;
 
     // alloy tool expansion
     public static Item tungstenSword;
@@ -1057,10 +1057,10 @@ public class NMItems {
         quicksilverChestplate = alloyArmor(3384, 1, 5, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverChestplate");
         quicksilverLeggings = alloyArmor(3385, 2, 4, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverLeggings");
         quicksilverBoots = alloyArmor(3386, 3, 2, 0, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverBoots");
-        anchorHelmet = alloyArmor(3387, 0, 3, 9, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorHelmet");
-        anchorChestplate = alloyArmor(3388, 1, 8, 15, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
-        anchorLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
-        anchorBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
+        endstoneHelmet = alloyArmor(3387, 0, 3, 9, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorHelmet");
+        endstoneChest = alloyArmor(3388, 1, 8, 15, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
+        endstoneLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
+        endstoneBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
 
         tungstenSword = new ItemAlloySword(3435, EnumToolMaterial.IRON, 500, 4.5D, 14, tungstenIngot.itemID, tungstenPlate.itemID)
                 .setTextureName("nightmare:ifhyTungstenSword").setUnlocalizedName("ifhyTungstenSword").setCreativeTab(CreativeTabs.tabCombat);

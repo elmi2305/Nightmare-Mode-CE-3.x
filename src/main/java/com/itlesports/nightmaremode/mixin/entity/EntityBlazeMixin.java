@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
+import com.itlesports.nightmaremode.entity.variants.EntityCinderBlaze;
+import com.itlesports.nightmaremode.entity.variants.EntityHellfireBlaze;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -28,6 +30,8 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
     private void applyAdditionalAttributes(CallbackInfo ci){
         if(this.worldObj != null) {
             boolean isVariant = false;
+            EntityBlaze self = (EntityBlaze) (Object)this;
+            if(self instanceof EntityCinderBlaze || self instanceof EntityHellfireBlaze) {isVariant = true;}
             int progress = NMUtils.getWorldProgress();
             int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic() ? 20 : 10) : 0;
             Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);

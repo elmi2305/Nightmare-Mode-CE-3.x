@@ -57,6 +57,7 @@ public abstract class NMInitializer implements AchievementExt {
     public static void initIFHYRecipes(){
         validateUltimateItemRegistrations();
         addCraftingRecipes();
+        addAlloyToolRecipes();
         validateUltimateCraftingRecipeRegistrations();
         addWashingRecipes();
         addMiscRecipes();
@@ -1695,15 +1696,79 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('D'), Item.diamond,
                 Character.valueOf('C'), new ItemStack(NMBlocks.netherProgressionGems, 1, NMBlocks.META_BLACK_GEM)});
 
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderSword), new Object[]{"  I ", " II ", " II ", " HM ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderPickaxe), new Object[]{"IIII", " MHI", "  H ", "  H ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderAxe), new Object[]{"II", "IM", " H", " H", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderShovel), new Object[]{"IPI ", "IMI ", " H  ", " H  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHoe), new Object[]{"IIP ", " M  ", " H  ", " H  ", Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHelmet), new Object[]{"PPPP", "I  I", "M  M", "    ", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderChestplate), new Object[]{"P  P", "IIII", "IMMI", "PPPP", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderLeggings), new Object[]{"PPPP", "IMMI", "I  I", "I  I", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
-        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderBoots), new Object[]{"P  P", "I  I", "PMMP", "P  P", Character.valueOf('P'), NMItems.phaseSteelPlate, Character.valueOf('I'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderSword), new Object[]{
+                "  I ",
+                " II ",
+                " II ",
+                " HM ",
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism,
+                Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderPickaxe), new Object[]{
+                "IIII",
+                " MHI",
+                "  H ",
+                "  H ",
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism,
+                Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderShovel), new Object[]{
+                "IPI ",
+                "IMI ",
+                " H  ",
+                " H  ",
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHoe), new Object[]{
+                "IIP ",
+                " M  ",
+                " H  ",
+                " H  ",
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('M'), NMItems.enderMechanism, Character.valueOf('H'), BTWItems.haft});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderHelmet), new Object[]{
+                "PPPP",
+                "I  I",
+                "M  M",
+                "    ",
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderChestplate), new Object[]{
+                "P  P",
+                "IIII",
+                "IMMI",
+                "PPPP",
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderLeggings), new Object[]{
+                "PPPP",
+                "IMMI",
+                "I  I",
+                "I  I",
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism});
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderBoots), new Object[]{
+                "P  P",
+                "I  I",
+                "PMMP",
+                "P  P",
+                Character.valueOf('P'), NMItems.phaseSteelPlate,
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism});
+
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMItems.enderAxe), new Object[]{
+                "II",
+                "IM",
+                " H",
+                " H",
+                Character.valueOf('I'), NMItems.phaseSteelIngot,
+                Character.valueOf('M'), NMItems.enderMechanism,
+                Character.valueOf('H'), BTWItems.haft});
 
         int recipeIndex = soulforge.getRecipeList().size();
         RecipeManager.addShapelessSoulforgeRecipe(
@@ -2329,15 +2394,15 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherWorkbenchPart), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.tungstenDust, NMItems.quartzDust});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherWorkbench), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherWorkbenchPart});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
-        RecipeManager.addRecipe(new ItemStack(NMItems.netherrackPickaxe), new Object[]{"CCC", "TST", " S ", Character.valueOf('C'), NMItems.netherrackChunk, Character.valueOf('T'), NMItems.pighideString, Character.valueOf('S'), NMItems.netherStick});
-        RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMItems.netherStick, Character.valueOf('B'), NMItems.boneShard, Character.valueOf('T'), NMItems.pighideString});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherrackPickaxe), new Object[]{"CCC", "TST", " S ", Character.valueOf('C'), NMItems.netherrackChunk, Character.valueOf('T'), NMItems.pighideString, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('B'), NMItems.boneShard, Character.valueOf('T'), NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump, BTWItems.gravelPile});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{"##", "##", Character.valueOf('#'), BTWBlocks.looseNetherBrickSlab});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherrackAnvil), new Object[]{"###", " # ", "###", Character.valueOf('#'), Block.netherrack});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.obsidianMillstone), new Object[]{"BBB", "BGB", "BBB", Character.valueOf('B'), NMItems.obsidianBrick, Character.valueOf('G'), BTWItems.gear});
         RecipeManager.addRecipe(new ItemStack(Block.netherrack), new Object[]{"###", "#S#", "###", Character.valueOf('#'), NMItems.netherrackChunk, Character.valueOf('S'), BTWItems.netherSludge});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackChunk, 4), new Object[]{new ItemStack(Block.netherrack, 1, 0)});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{new ItemStack(Block.netherrack, 1, Short.MAX_VALUE),new ItemStack(Block.netherrack, 1, Short.MAX_VALUE), NMItems.netherStick, NMItems.pighideString});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherrackHammer), new Object[]{new ItemStack(Block.netherrack, 1, Short.MAX_VALUE),new ItemStack(Block.netherrack, 1, Short.MAX_VALUE), NMTags.netherCompatibleSticks, NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenChunk), new Object[]{NMItems.tungstenDust, NMItems.tungstenDust});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.refinedRedstone), new Object[]{NMItems.redstoneCrystal, NMItems.crystalPolishedShard});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.hydraulicLens), new Object[]{NMItems.aquamarine, NMItems.crystalPolishedShard, Block.glass});
@@ -2449,12 +2514,13 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironKnife), new Object[]{Item.ingotIron, Item.stick, NMTags.knifeStrings});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondKnife), new Object[]{BTWItems.diamondIngot, Item.stick, NMTags.knifeStrings});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.goldKnife), new Object[]{Item.ingotGold, Item.stick, NMTags.knifeStrings});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenKnife), new Object[]{NMItems.tungstenIngot, Item.stick, NMTags.knifeStrings});
-        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenPickaxe), new Object[]{"III", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
-        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShovel), new Object[]{" I ", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenKnife), new Object[]{NMItems.tungstenIngot, NMTags.netherCompatibleSticks, NMTags.knifeStrings});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenPickaxe), new Object[]{"III", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenSword), new Object[]{" I ", " I ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShovel), new Object[]{" I ", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), NMItems.stoneStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.diamondScythe), new Object[]{" II", "ISC", " SC", Character.valueOf('I'), BTWItems.diamondIngot, Character.valueOf('S'), NMItems.ironStick, Character.valueOf('C'), NMItems.crystalPolishedShard});
-        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMItems.netherStick});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.chuteHopper), new Object[]{
                         "NSN", "HRH", "IGI",
@@ -2591,7 +2657,7 @@ public abstract class NMInitializer implements AchievementExt {
                         BTWItems.fabric,
                         BTWItems.tannedLeather,
                         BTWItems.goldenDung,
-                        Block.cake,
+                        Item.cake,
                         BTWItems.cookedScrambledEggs,
                         Item.pumpkinPie,
                         NMItems.friedCalamari,
@@ -2759,6 +2825,22 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('P'), NMItems.verdantPlate,
                 Character.valueOf('C'), new ItemStack(Item.bootsGold, 1, Short.MAX_VALUE),
                 Character.valueOf('E'), NMItems.nickelBinding});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantPickaxe), new Object[]{
+                "PPP",
+                "BSB",
+                " S ",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('B'), NMItems.nickelBinding,
+                Character.valueOf('S'), NMItems.stoneStick});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.verdantSword), new Object[]{
+                " P ",
+                "BPB",
+                " S ",
+                Character.valueOf('P'), NMItems.verdantPlate,
+                Character.valueOf('B'), NMItems.nickelBinding,
+                Character.valueOf('S'), NMItems.stoneStick});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.blackglassHelmet), new Object[]{
                 "PPP",
@@ -3865,6 +3947,9 @@ public abstract class NMInitializer implements AchievementExt {
         gateArmorSet(NMItems.darkHelmet, NMItems.darkChestplate, NMItems.darkLeggings, NMItems.darkBoots,
                 NMSkillNodes.BRING_DARK_INGOT_8);
 
+        SkillRecipeGates.crafting(NMItems.verdantSword.itemID, NMSkillNodes.BRING_VERDANT_PLATE_4);
+        SkillRecipeGates.crafting(NMItems.verdantPickaxe.itemID, NMSkillNodes.BRING_VERDANT_PLATE_4);
+
         SkillRecipeGates.crafting(Block.pistonBase.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16, NMSkillNodes.BRING_SOUL_URN_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.crafting(Block.music.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16);
         SkillRecipeGates.crafting(Item.comparator.itemID, NMSkillNodes.BRING_REDSTONE_EYE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
@@ -3951,6 +4036,8 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.tungstenIngot.itemID, NMSkillNodes.BRING_TUNGSTEN_NUGGET_32);
         SkillRecipeGates.crafting(NMItems.tungstenBucket.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMItems.tungstenPickaxe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenSword.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenShovel.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
@@ -4135,6 +4222,103 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addKilnRecipe(new ItemStack(NMItems.firedCrucibleLiner), NMBlocks.enderCeramic, 1, (byte)8);
     }
 
+    private static void addAlloyToolRecipes() {
+        // plates form the heads; collars, insulation, and resin secure reinforced handles.
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.blackglassSword), new Object[]{
+                " P ", "BPB", " S ",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('B'), NMItems.nickelPlate,
+                Character.valueOf('S'), NMItems.ironStick}),
+                NMSkillNodes.BRING_BLACKGLASS_PLATE_4, NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_STICK_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.blackglassScythe), new Object[]{
+                " PP", "PSB", " S ",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('B'), NMItems.nickelPlate,
+                Character.valueOf('S'), NMItems.ironStick}),
+                NMSkillNodes.BRING_BLACKGLASS_PLATE_4, NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_STICK_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.blackglassKnife), new Object[]{
+                " P", "BS",
+                Character.valueOf('P'), NMItems.blackglassPlate,
+                Character.valueOf('B'), NMItems.nickelPlate,
+                Character.valueOf('S'), NMItems.ironStick}),
+                NMSkillNodes.BRING_BLACKGLASS_PLATE_4, NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_STICK_64);
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.coresteelSword), new Object[]{
+                " P ", "BPB", " S ",
+                Character.valueOf('P'), NMItems.coresteelPlate,
+                Character.valueOf('B'), NMItems.thermalLaminate,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_CORESTEEL_PLATE_8, NMSkillNodes.BRING_THERMAL_LAMINATE_4, NMSkillNodes.BRING_DIAMOND_STICK_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.coresteelPickaxe), new Object[]{
+                "PPP", "BSB", " S ",
+                Character.valueOf('P'), NMItems.coresteelPlate,
+                Character.valueOf('B'), NMItems.thermalLaminate,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_CORESTEEL_PLATE_8, NMSkillNodes.BRING_THERMAL_LAMINATE_4, NMSkillNodes.BRING_DIAMOND_STICK_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.coresteelAxe), new Object[]{
+                "PP ", "PSB", " S ",
+                Character.valueOf('P'), NMItems.coresteelPlate,
+                Character.valueOf('B'), NMItems.thermalLaminate,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_CORESTEEL_PLATE_8, NMSkillNodes.BRING_THERMAL_LAMINATE_4, NMSkillNodes.BRING_DIAMOND_STICK_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.coresteelShovel), new Object[]{
+                " P ", "BSB", " S ",
+                Character.valueOf('P'), NMItems.coresteelPlate,
+                Character.valueOf('B'), NMItems.thermalLaminate,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_CORESTEEL_PLATE_8, NMSkillNodes.BRING_THERMAL_LAMINATE_4, NMSkillNodes.BRING_DIAMOND_STICK_16);
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneSword), new Object[]{
+                " P ", "BPB", "RS ",
+                Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
+                Character.valueOf('B'), NMItems.coresteelIngot,
+                Character.valueOf('S'), NMItems.diamondStick,
+                Character.valueOf('R'), NMItems.deadzoneShard}),
+                NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8, NMSkillNodes.BRING_CORESTEEL_INGOT_8, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DEADZONE_SHARD_64);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneScythe), new Object[]{
+                " PP", "PSB", "RS ",
+                Character.valueOf('P'), NMItems.deadzoneAlloyPlate,
+                Character.valueOf('B'), NMItems.coresteelIngot,
+                Character.valueOf('S'), NMItems.diamondStick,
+                Character.valueOf('R'), NMItems.deadzoneShard}),
+                NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8, NMSkillNodes.BRING_CORESTEEL_INGOT_8, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_DEADZONE_SHARD_64);
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.quicksilverPickaxe), new Object[]{
+                "PPP", "BSB", " S ",
+                Character.valueOf('P'), NMItems.sealedQuicksilverPlate,
+                Character.valueOf('B'), NMItems.paleRootResin,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_SEALED_QUICKSILVER_PLATE_4, NMSkillNodes.BRING_PALE_ROOT_RESIN_8, NMSkillNodes.BRING_DIAMOND_STICK_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.quicksilverShovel), new Object[]{
+                " P ", "BSB", " S ",
+                Character.valueOf('P'), NMItems.sealedQuicksilverPlate,
+                Character.valueOf('B'), NMItems.paleRootResin,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_SEALED_QUICKSILVER_PLATE_4, NMSkillNodes.BRING_PALE_ROOT_RESIN_8, NMSkillNodes.BRING_DIAMOND_STICK_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.quicksilverAxe), new Object[]{
+                "PP ", "PSB", " S ",
+                Character.valueOf('P'), NMItems.sealedQuicksilverPlate,
+                Character.valueOf('B'), NMItems.paleRootResin,
+                Character.valueOf('S'), NMItems.diamondStick}),
+                NMSkillNodes.BRING_SEALED_QUICKSILVER_PLATE_4, NMSkillNodes.BRING_PALE_ROOT_RESIN_8, NMSkillNodes.BRING_DIAMOND_STICK_16);
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.endstoneSword), new Object[]{
+                " P ", "BPB", "RS ",
+                Character.valueOf('P'), NMItems.endstonePlate,
+                Character.valueOf('B'), NMItems.darkIngot,
+                Character.valueOf('S'), NMItems.diamondStick,
+                Character.valueOf('R'), NMItems.paleRootResin}),
+                NMSkillNodes.BRING_ENDSTONE_CERAMIC_PLATE_8, NMSkillNodes.BRING_DARK_INGOT_8, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_PALE_ROOT_RESIN_8);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.endstoneKnife), new Object[]{
+                "RP", "BS",
+                Character.valueOf('P'), NMItems.endstonePlate,
+                Character.valueOf('B'), NMItems.darkIngot,
+                Character.valueOf('S'), NMItems.diamondStick,
+                Character.valueOf('R'), NMItems.paleRootResin}),
+                NMSkillNodes.BRING_ENDSTONE_CERAMIC_PLATE_8, NMSkillNodes.BRING_DARK_INGOT_8, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_PALE_ROOT_RESIN_8);
+
+    }
+
     private static void addEnderAssemblerRecipes() {
         EnderAssemblerRecipeManager manager = EnderAssemblerRecipeManager.instance;
         manager.addRecipe(new ItemStack(NMItems.phaseSteelCharge), 300,
@@ -4154,20 +4338,56 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addEndArmorRecipes(EnderAssemblerRecipeManager manager) {
-        addEndArmorRecipe(manager, NMItems.quicksilverHelmet, NMItems.sealedQuicksilverPlate, 3, NMItems.nickelBinding, NMItems.waxedGasket);
-        addEndArmorRecipe(manager, NMItems.quicksilverChestplate, NMItems.sealedQuicksilverPlate, 5, NMItems.nickelBinding, BTWItems.fabric);
-        addEndArmorRecipe(manager, NMItems.quicksilverLeggings, NMItems.sealedQuicksilverPlate, 4, NMItems.waxedGasket, BTWItems.fabric);
-        addEndArmorRecipe(manager, NMItems.quicksilverBoots, NMItems.sealedQuicksilverPlate, 2, NMItems.nickelBinding, NMItems.waxedGasket);
-        addEndArmorRecipe(manager, NMItems.anchorHelmet, NMItems.endstonePlate, 3, NMItems.phaseSteelIngot, NMItems.paleRootResin);
-        addEndArmorRecipe(manager, NMItems.anchorChestplate, NMItems.endstonePlate, 5, NMItems.phaseSteelIngot, BTWItems.fabric);
-        addEndArmorRecipe(manager, NMItems.anchorLeggings, NMItems.endstonePlate, 4, NMItems.tungstenIngot, NMItems.paleRootResin);
-        addEndArmorRecipe(manager, NMItems.anchorBoots, NMItems.endstonePlate, 2, NMItems.tungstenIngot, BTWItems.fabric);
+        manager.addRecipe(new ItemStack(NMItems.quicksilverHelmet), 450,
+                new ItemStack(NMItems.sealedQuicksilverPlate, 3),
+                new ItemStack(NMItems.nickelBinding, 2),
+                new ItemStack(NMItems.waxedGasket, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.quicksilverChestplate), 450,
+                new ItemStack(NMItems.sealedQuicksilverPlate, 5),
+                new ItemStack(NMItems.nickelBinding, 2),
+                new ItemStack(BTWItems.fabric, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.quicksilverLeggings), 450,
+                new ItemStack(NMItems.sealedQuicksilverPlate, 4),
+                new ItemStack(NMItems.waxedGasket, 2),
+                new ItemStack(BTWItems.fabric, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.quicksilverBoots), 450,
+                new ItemStack(NMItems.sealedQuicksilverPlate, 2),
+                new ItemStack(NMItems.nickelBinding, 2),
+                new ItemStack(NMItems.waxedGasket, 2));
+
+
+
+        manager.addRecipe(new ItemStack(NMItems.endstoneHelmet), 950,
+                new ItemStack(NMItems.endstonePlate, 5),
+                new ItemStack(NMItems.blackglassIngot, 3),
+                new ItemStack(NMItems.darkIngot, 2),
+                new ItemStack(NMItems.paleRootResin, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.endstoneChest), 1600,
+                new ItemStack(NMItems.endstonePlate, 7),
+                new ItemStack(NMItems.blackglassIngot, 4),
+                new ItemStack(NMItems.darkIngot, 3),
+                new ItemStack(NMItems.solarCloth, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.endstoneLeggings), 1200,
+                new ItemStack(NMItems.endstonePlate, 5),
+                new ItemStack(NMItems.blackglassIngot, 4),
+                new ItemStack(NMItems.darkIngot, 3),
+                new ItemStack(NMItems.paleRootResin, 2));
+
+        manager.addRecipe(new ItemStack(NMItems.endstoneBoots), 800,
+                new ItemStack(NMItems.endstonePlate, 3),
+                new ItemStack(NMItems.blackglassIngot, 2),
+                new ItemStack(NMItems.darkIngot, 2),
+                new ItemStack(NMItems.solarCloth, 2));
+
     }
 
-    private static void addEndArmorRecipe(EnderAssemblerRecipeManager manager, Item output, Item plate,
-                                           int plateCount, Item structure, Item seal) {
-        manager.addRecipe(new ItemStack(output), 450, new ItemStack(plate, plateCount),
-                new ItemStack(structure, 2), new ItemStack(seal, 2));
+    private static void addEndArmorRecipe(EnderAssemblerRecipeManager manager, Item output, Item plate, int plateCount, Item structure, Item seal) {
+        manager.addRecipe(new ItemStack(output), 450, new ItemStack(plate, plateCount), new ItemStack(structure, 2), new ItemStack(seal, 2));
     }
 
     private static void gateArmorSet(Item helmet, Item chestplate, Item leggings, Item boots, SkillNode skill) {

@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class RenderBlazeMixin {
     @Unique private static final ResourceLocation BLAZE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/blazeEclipse.png");
     @Unique private static final ResourceLocation BLAZE_WATER = new ResourceLocation("nightmare:textures/entity/blazeBlue.png");
-    @Unique private static final ResourceLocation CINDER_BLAZE = new ResourceLocation("nightmare:textures/entity/cinderBlaze.png");
-    @Unique private static final ResourceLocation HELLFIRE_BLAZE = new ResourceLocation("nightmare:textures/entity/hellfireBlaze.png");
+    @Unique private static final ResourceLocation CINDER_BLAZE = new ResourceLocation("nightmare:textures/entity/ifhyCinderBlaze.png");
+    @Unique private static final ResourceLocation HELLFIRE_BLAZE = new ResourceLocation("nightmare:textures/entity/ifhyHellfireBlaze.png");
 
     @Inject(method = "getBlazeTextures", at = @At("HEAD"),cancellable = true)
     private void blazeEclipseTextures(EntityBlaze par1, CallbackInfoReturnable<ResourceLocation> cir){

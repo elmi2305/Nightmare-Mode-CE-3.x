@@ -541,10 +541,10 @@ public final class NMSkillNodes {
             "Bring 8 Endstone Ceramic plates.", NMItems.endstonePlate.itemID, 0, false, 8,
             "No reward.", none(), KNOWLEDGE, false);
     public static final SkillNode BRING_ENDSTONE_ANCHOR_ARMOR = itemSet(
-            "endstone_anchor", "Endstone Anchor Wardrobe", NMItems.anchorChestplate, 4, 6,
+            "endstone_anchor", "Endstone Anchor Wardrobe", NMItems.endstoneChest, 4, 6,
             "Bring a full Endstone Anchor armor set.", new Item[]{
-                    NMItems.anchorHelmet, NMItems.anchorChestplate,
-                    NMItems.anchorLeggings, NMItems.anchorBoots},
+                    NMItems.endstoneHelmet, NMItems.endstoneChest,
+                    NMItems.endstoneLeggings, NMItems.endstoneBoots},
             "No reward.", none(), KNOWLEDGE, false);
 
     public static final SkillNode BRING_ROAD_BLOCK_64 = deferred(bring(

@@ -21,8 +21,8 @@ public class RenderZombieMixin {
     @Unique private static final ResourceLocation PIG_ECLIPSE = new ResourceLocation("nightmare:textures/entity/zombiePigmanEclipse.png");
     @Unique private static final ResourceLocation PIGMAN_HELL = new ResourceLocation("nightmare:textures/entity/zombiePigmanHell.png");
     @Unique private static final ResourceLocation ZOMBIE_STONE = new ResourceLocation("nightmare:textures/entity/zombieStone.png");
-    @Unique private static final ResourceLocation CINDER_PIGMAN = new ResourceLocation("nightmare:textures/entity/cinderPigman.png");
-    @Unique private static final ResourceLocation DEADZONE_PIGMAN = new ResourceLocation("nightmare:textures/entity/deadzonePigman.png");
+    @Unique private static final ResourceLocation CINDER_PIGMAN = new ResourceLocation("nightmare:textures/entity/ifhyCinderPigman.png");
+    @Unique private static final ResourceLocation DEADZONE_PIGMAN = new ResourceLocation("nightmare:textures/entity/ifhyDeadzonePigman.png");
 
     @Inject(method = "func_110863_a", at = @At("HEAD"),cancellable = true)
     private void manageEclipsedTextures(EntityZombie zomb, CallbackInfoReturnable<ResourceLocation> cir){

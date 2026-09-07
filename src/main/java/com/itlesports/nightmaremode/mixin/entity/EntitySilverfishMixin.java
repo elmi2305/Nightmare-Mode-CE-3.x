@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.entity.EntityEnderSilverfish;
 import com.itlesports.nightmaremode.entity.EntityMushWorm;
+import com.itlesports.nightmaremode.entity.EntityNetherFish;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -44,7 +46,7 @@ public class EntitySilverfishMixin extends EntityMob{
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntitySilverfish;worldObj:Lnet/minecraft/src/World;", ordinal = 0, opcode = Opcodes.GETFIELD), cancellable = true)
     private void returnIfMushWorm(CallbackInfo ci){
         EntitySilverfish sf = (EntitySilverfish) (Object)this;
-        if(sf instanceof EntityMushWorm) {ci.cancel();}
+        if(sf instanceof EntityMushWorm || sf instanceof EntityEnderSilverfish || sf instanceof EntityNetherFish) {ci.cancel();}
     }
     @Unique
     private boolean isValidForEventLoot = false;

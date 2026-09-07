@@ -136,7 +136,7 @@ public final class ArmorSetHelper {
     }
 
     public static boolean isWearingCompleteAnchorSet(EntityLivingBase wearer) {
-        return hasSet(wearer, NMItems.anchorHelmet, NMItems.anchorChestplate, NMItems.anchorLeggings, NMItems.anchorBoots);
+        return hasSet(wearer, NMItems.endstoneHelmet, NMItems.endstoneChest, NMItems.endstoneLeggings, NMItems.endstoneBoots);
     }
 
     public static int getSignalCharge(EntityLivingBase wearer) {

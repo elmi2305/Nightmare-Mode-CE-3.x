@@ -8,12 +8,9 @@ import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAILunge;
+import com.itlesports.nightmaremode.entity.variants.*;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.variants.EntityBloodZombie;
-import com.itlesports.nightmaremode.entity.variants.EntitySkeletonDrowned;
-import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
-import com.itlesports.nightmaremode.entity.variants.EntitySkeletonMelted;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
@@ -79,7 +76,9 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void setBaby(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
-        boolean willBeBaby = this.rand.nextInt(32) == 0;
+        EntityZombie thisObj =(EntityZombie)(Object)this;
+
+        boolean willBeBaby = this.rand.nextInt(32) == 0 && !(thisObj instanceof EntityCinderPigman || thisObj instanceof EntityDeadzonePigman);
         if(willBeBaby && !this.worldObj.isRemote){
             this.setChild(true);
             this.setSize(this.width, 1.0f);

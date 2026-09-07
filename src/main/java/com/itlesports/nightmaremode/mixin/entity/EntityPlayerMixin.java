@@ -209,7 +209,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void dischargeSignalArmor(Entity target, CallbackInfo ci) {
         if (this.worldObj.isRemote || !(target instanceof EntityLivingBase)
                 || !ArmorSetHelper.isWearingCompleteSignalSet(this)) return;
-        int spent = ArmorSetHelper.drainSignalCharge(this, 160);
+        int spent = ArmorSetHelper.drainSignalCharge(this, 320);
         if (spent > 0) target.attackEntityFrom(DamageSource.magic, spent / 80.0F);
     }
 

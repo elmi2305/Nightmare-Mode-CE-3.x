@@ -62,6 +62,8 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntityFireSkeletonOuter.class, new RenderSkeleton());
         RenderManager.addEntityRenderer(EntityInfernoSkeleton.class, new RenderSkeleton());
         RenderManager.addEntityRenderer(EntityIceSkeletonOuter.class, new RenderSkeleton());
+        RenderManager.addEntityRenderer(EntityHellfireBlaze.class, new RenderBlaze());
+        RenderManager.addEntityRenderer(EntityCinderBlaze.class, new RenderBlaze());
         RenderManager.addEntityRenderer(EntityMummyZombie.class, new RenderOuterZombie());
         RenderManager.addEntityRenderer(EntityIceZombie.class, new RenderOuterZombie());
         RenderManager.addEntityRenderer(EntityIceGolem.class, new RenderIceGolem());

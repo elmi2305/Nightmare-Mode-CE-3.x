@@ -2,14 +2,10 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.item.items.AxeItem;
 import btw.block.BTWBlocks;
-import btw.block.blocks.MushroomBlockBrown;
-import btw.block.blocks.MushroomCapBlock;
-import btw.block.blocks.legacy.LegacyMushroomCapBlock;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.integration.emi.NightmareEmiRegistry;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.EmiRegistry;
@@ -19,8 +15,6 @@ import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import net.minecraft.src.Block;
-import net.minecraft.src.BlockMushroom;
-import net.minecraft.src.BlockMushroomCap;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
@@ -232,7 +226,7 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMItems.quartzglassChestplate, 0, "nm.quartzglassArmor.info");
         this.info(registry, NMItems.darkChestplate, 0, "nm.darkArmor.info");
         this.info(registry, NMItems.quicksilverChestplate, 0, "nm.quicksilverArmor.info");
-        this.info(registry, NMItems.anchorChestplate, 0, "nm.anchorArmor.info");
+        this.info(registry, NMItems.endstoneChest, 0, "nm.anchorArmor.info");
 
         // blocks
 
