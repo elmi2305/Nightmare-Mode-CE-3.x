@@ -3,14 +3,20 @@ package com.itlesports.nightmaremode.block.blocks;
 import api.item.util.ItemUtils;
 import btw.BTWMod;
 import btw.block.BTWBlocks;
+import btw.client.render.util.RenderUtils;
 import com.itlesports.nightmaremode.block.tileEntities.TerrainExtractorTileEntity;
 import com.itlesports.nightmaremode.nmgui.ContainerTerrainExtractor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 import java.util.List;
 
 public class BlockTerrainExtractor extends BlockContainer {
     public static final String[] TYPES = {"Potassium", "Nitrogen", "Moisture", "Porosity", "Acidity"};
+    @Environment(EnvType.CLIENT) private Icon[] sideIcons;
+    @Environment(EnvType.CLIENT) private Icon[] topIcons;
+    @Environment(EnvType.CLIENT) private Icon[] bottomIcons;
 
     public BlockTerrainExtractor(int id) {
         super(id, Material.iron);
@@ -24,6 +30,35 @@ public class BlockTerrainExtractor extends BlockContainer {
     }
 
     @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+    @Override
+    public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
+        return false;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        this.sideIcons = new Icon[TYPES.length];
+        this.topIcons = new Icon[TYPES.length];
+        this.bottomIcons = new Icon[TYPES.length];
+        for (int type = 0; type < TYPES.length; ++type) {
+            this.sideIcons[type] = register.registerIcon("nightmare:ifhyExtractor" + TYPES[type] + "Side");
+            this.topIcons[type] = register.registerIcon("nightmare:ifhyExtractor" + TYPES[type] + "Top");
+            this.bottomIcons[type] = register.registerIcon("nightmare:ifhyExtractor" + TYPES[type] + "Bottom");
+        }
+        this.blockIcon = this.sideIcons[0];
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World world) {
         return new TerrainExtractorTileEntity();
     }
@@ -31,6 +66,23 @@ public class BlockTerrainExtractor extends BlockContainer {
     @Override
     public int damageDropped(int metadata) {
         return metadata % TYPES.length;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Icon getIcon(int side, int metadata) {
+        int type = Math.max(0, Math.min(this.sideIcons.length - 1, metadata % TYPES.length));
+        if (side == 0) return this.bottomIcons[type];
+        if (side == 1) return this.topIcons[type];
+        return this.sideIcons[type];
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void renderBlockAsItem(RenderBlocks renderer, int metadata, float brightness) {
+        renderer.setRenderBounds(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
+        RenderUtils.renderInvBlockWithMetadata(renderer, this, -0.5F, -0.5F, -0.5F, metadata);
+        renderer.setRenderBounds(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     }
 
     @Override
