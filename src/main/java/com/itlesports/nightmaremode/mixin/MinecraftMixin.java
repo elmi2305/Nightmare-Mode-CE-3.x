@@ -37,7 +37,7 @@ public class MinecraftMixin {
 
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
     private String changeWindowText(String newTitle){
-        return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Nightmare Mode v"+ AddonHandler.getModByID("nightmare").getVersionString();
+        return newTitle + " | Nightmare Mode v"+ AddonHandler.getModByID("nightmare").getVersionString();
     }
     @Inject(method = "screenshotListener", at = @At(value = "HEAD"))
     private void manageKeybinds(CallbackInfo ci) {
