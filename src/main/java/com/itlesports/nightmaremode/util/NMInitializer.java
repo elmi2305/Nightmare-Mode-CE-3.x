@@ -1063,6 +1063,11 @@ public abstract class NMInitializer implements AchievementExt {
 
         crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
 
+        crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(Item.ingotIron, 1), new ItemStack(BTWItems.coalDust, 1), new ItemStack(BTWItems.soulUrn, 1), new ItemStack(BTWItems.soulFlux, 1)});
+
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 6), new ItemStack[]{new ItemStack(NMItems.goldHammer, 1, Short.MAX_VALUE)});
+        addMaterialRecoveryCrucibleRecipes(crucible);
 
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{
@@ -1115,6 +1120,8 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(Item.ingotIron, 4), new ItemStack(NMItems.bloodOrb, 8)
         });
 
+        addCustomArmorRecoveryCrucibleRecipes(crucible);
+
         // The fired ceramic liner is a reusable crucible insert, not a consumable shortcut.
         RecipeManager.addStokedCrucibleRecipe(
                 new ItemStack[]{new ItemStack(NMItems.phaseSteelIngot, 2), new ItemStack(NMItems.firedCrucibleLiner)},
@@ -1124,6 +1131,184 @@ public abstract class NMInitializer implements AchievementExt {
 
         finishRecipes("Crucible Recipes");
 
+    }
+
+    private static void addMaterialRecoveryCrucibleRecipes(CrucibleStokedCraftingManager crucible) {
+        removeExactCrucibleRecipe(crucible, new ItemStack(Item.ingotIron, 4), new ItemStack(Item.horseArmorIron));
+        removeExactCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 6), new ItemStack(Item.horseArmorDiamond));
+        removeCrucibleRecipe(crucible, new ItemStack(Item.ingotIron, 4), Item.horseArmorIron);
+        removeCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 6), Item.horseArmorDiamond);
+        addCrucibleRecovery(new ItemStack(Item.ingotIron, 2), Item.horseArmorIron);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 3), Item.horseArmorDiamond);
+
+
+        removeCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 6), Item.helmetDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 8), Item.plateDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 7), Item.legsDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(BTWItems.diamondIngot, 4), Item.bootsDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 5), Item.helmetDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 8), Item.plateDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 7), Item.legsDiamond);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 4), Item.bootsDiamond);
+        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 2), Item.helmetDiamond);
+        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 4), Item.plateDiamond);
+        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 3), Item.legsDiamond);
+        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 2), Item.bootsDiamond);
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.bloodOrb, 4), new ItemStack(BTWItems.steelNugget, 18)}, new ItemStack[]{new ItemStack(NMBlocks.steelLocker)});
+
+    }
+
+    private static void addCustomArmorRecoveryCrucibleRecipes(CrucibleStokedCraftingManager crucible) {
+        // All armor recovery is deliberately lossy: plates, mechanisms, and bindings never survive.
+        removeLegacyBloodGearRecoveryCrucibleRecipes(crucible);
+        addArmorSetRecovery(NMItems.bloodIngot, 1, 3, 2, 1,
+                NMItems.bloodHelmet, NMItems.bloodChestplate, NMItems.bloodLeggings, NMItems.bloodBoots);
+        addArmorSetRecovery(NMItems.carbonIronIngot, 1, 3, 2, 1,
+                NMItems.carbonIronHelmet, NMItems.carbonIronChestplate, NMItems.carbonIronLeggings, NMItems.carbonIronBoots);
+        addArmorSetRecovery(NMItems.tungstenIngot, 1, 3, 2, 1,
+                NMItems.tungstenHelmet, NMItems.tungstenChestplate, NMItems.tungstenLeggings, NMItems.tungstenBoots);
+        addArmorSetRecovery(NMItems.phaseSteelIngot, 1, 3, 2, 1,
+                NMItems.enderHelmet, NMItems.enderChestplate, NMItems.enderLeggings, NMItems.enderBoots);
+        addArmorSetRecovery(NMItems.verdantIngot, 1, 3, 2, 1,
+                NMItems.verdantHelmet, NMItems.verdantChestplate, NMItems.verdantLeggings, NMItems.verdantBoots);
+        addArmorSetRecovery(NMItems.blackglassIngot, 1, 3, 2, 1,
+                NMItems.blackglassHelmet, NMItems.blackglassChestplate, NMItems.blackglassLeggings, NMItems.blackglassBoots);
+        addArmorSetRecovery(NMItems.sealedQuicksilverIngot, 1, 3, 2, 1,
+                NMItems.quicksilverHelmet, NMItems.quicksilverChestplate, NMItems.quicksilverLeggings, NMItems.quicksilverBoots);
+
+        addArmorRecovery(NMItems.nickelWorkLeggings, new ItemStack(NMItems.nickelIngot, 2));
+        addArmorRecovery(NMItems.nickelWorkBoots, new ItemStack(NMItems.nickelIngot));
+
+        // Reinforced armor consumes an iron chassis; only its reinforced outer layer can be recovered.
+        // Returning both materials lets the armor be recrafted and melted for a net iron gain.
+        addArmorSetRecovery(NMItems.reinforcedIronIngot, 1, 3, 2, 1,
+                NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate, NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots);
+        addScaledDualArmorSetRecovery(NMItems.refinedDiamondIngot, NMItems.nickelIngot,
+                NMItems.heatResistantHelmet, NMItems.heatResistantChestplate, NMItems.heatResistantLeggings, NMItems.heatResistantBoots);
+        addScaledDualArmorSetRecovery(NMItems.tungstenIngot, NMItems.coresteelIngot,
+                NMItems.coresteelHelmet, NMItems.coresteelChestplate, NMItems.coresteelLeggings, NMItems.coresteelBoots);
+        addScaledDualArmorSetRecovery(NMItems.coresteelIngot, NMItems.deadzoneAlloyIngot,
+                NMItems.deadzoneHelmet, NMItems.deadzoneChestplate, NMItems.deadzoneLeggings, NMItems.deadzoneBoots);
+        addScaledDualArmorSetRecovery(Item.ingotIron, NMItems.signalAlloyIngot,
+                NMItems.signalHelmet, NMItems.signalChestplate, NMItems.signalLeggings, NMItems.signalBoots);
+        addScaledDualArmorSetRecovery(Item.ingotGold, NMItems.azureCeramicIngot,
+                NMItems.azureHelmet, NMItems.azureChestplate, NMItems.azureLeggings, NMItems.azureBoots);
+        addScaledDualArmorSetRecovery(Item.ingotIron, NMItems.prismaticIngot,
+                NMItems.prismaticHelmet, NMItems.prismaticChestplate, NMItems.prismaticLeggings, NMItems.prismaticBoots);
+        addScaledDualArmorSetRecovery(Block.glass, NMItems.quartzglassIngot,
+                NMItems.quartzglassHelmet, NMItems.quartzglassChestplate, NMItems.quartzglassLeggings, NMItems.quartzglassBoots);
+        addScaledDualArmorSetRecovery(NMItems.bloodIngot, NMItems.prismaticIngot,
+                NMItems.refinedPrismaHelmet, NMItems.refinedPrismaChestplate, NMItems.refinedPrismaLeggings, NMItems.refinedPrismaBoots);
+
+        addArmorRecovery(NMItems.glassHelmet, new ItemStack(Block.glass));
+        addArmorRecovery(NMItems.glassChestplate, new ItemStack(Block.glass, 3));
+        addArmorRecovery(NMItems.glassLeggings, new ItemStack(Block.glass, 2));
+        addArmorRecovery(NMItems.glassBoots, new ItemStack(Block.glass));
+        addDarkArmorRecovery(NMItems.darkHelmet, 1, 2);
+        addDarkArmorRecovery(NMItems.darkChestplate, 1, 3);
+        addDarkArmorRecovery(NMItems.darkLeggings, 1, 2);
+        addDarkArmorRecovery(NMItems.darkBoots, 1, 1);
+        addArmorRecovery(NMItems.sunHelmet, new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.deadzoneAlloyIngot), new ItemStack(NMItems.blackglassIngot));
+        addArmorRecovery(NMItems.sunChestplate, new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack(NMItems.nickelIngot, 3), new ItemStack(NMItems.deadzoneAlloyIngot, 3), new ItemStack(NMItems.verdantIngot));
+        addArmorRecovery(NMItems.sunLeggings, new ItemStack(NMItems.refinedDiamondIngot, 3), new ItemStack(NMItems.nickelIngot, 2), new ItemStack(NMItems.deadzoneAlloyIngot, 2), new ItemStack(NMItems.quartzglassIngot));
+        addArmorRecovery(NMItems.sunBoots, new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.coresteelIngot), new ItemStack(NMItems.tungstenIngot));
+        addArmorRecovery(NMItems.endstoneHelmet, new ItemStack(NMItems.endstoneIngot), new ItemStack(NMItems.blackglassIngot), new ItemStack(NMItems.darkIngot));
+        addArmorRecovery(NMItems.endstoneChest, new ItemStack(NMItems.endstoneIngot, 3), new ItemStack(NMItems.blackglassIngot, 2), new ItemStack(NMItems.darkIngot));
+        addArmorRecovery(NMItems.endstoneLeggings, new ItemStack(NMItems.endstoneIngot, 2), new ItemStack(NMItems.blackglassIngot, 2), new ItemStack(NMItems.darkIngot));
+        addArmorRecovery(NMItems.endstoneBoots, new ItemStack(NMItems.endstoneIngot), new ItemStack(NMItems.blackglassIngot), new ItemStack(NMItems.darkIngot));
+
+        addHorseArmorRecovery(NMItems.nickelHorseArmor, NMItems.nickelIngot, 3);
+        addHorseArmorRecovery(NMItems.carbonIronHorseArmor, NMItems.carbonIronIngot, 3);
+        addHorseArmorRecovery(NMItems.reinforcedIronHorseArmor, NMItems.reinforcedIronIngot, 3);
+        addHorseArmorRecovery(NMItems.tungstenHorseArmor, NMItems.tungstenIngot, 3);
+        addHorseArmorRecovery(NMItems.quartzglassHorseArmor, NMItems.quartzglassIngot, 3);
+        addHorseArmorRecovery(NMItems.verdantHorseArmor, NMItems.verdantIngot, 3);
+        addHorseArmorRecovery(NMItems.blackglassHorseArmor, NMItems.blackglassIngot, 3);
+        addHorseArmorRecovery(NMItems.coresteelHorseArmor, NMItems.coresteelIngot, 2);
+        addHorseArmorRecovery(NMItems.deadzoneAlloyHorseArmor, NMItems.deadzoneAlloyIngot, 2);
+        addHorseArmorRecovery(NMItems.signalAlloyHorseArmor, NMItems.signalAlloyIngot, 3);
+        addHorseArmorRecovery(NMItems.azureCeramicHorseArmor, NMItems.azureCeramicIngot, 3);
+        addHorseArmorRecovery(NMItems.prismaticHorseArmor, NMItems.prismaticIngot, 3);
+        addHorseArmorRecovery(NMItems.phaseSteelHorseArmor, NMItems.phaseSteelIngot, 2);
+        addHorseArmorRecovery(NMItems.sealedQuicksilverHorseArmor, NMItems.sealedQuicksilverIngot, 2);
+        addHorseArmorRecovery(NMItems.endstoneHorseArmor, NMItems.endstoneIngot, 2);
+
+        addCrucibleRecovery(new ItemStack[]{new ItemStack(NMItems.bloodIngot, 3), new ItemStack(Item.blazeRod, 2)}, NMItems.bloodPickaxe);
+        addCrucibleRecovery(new ItemStack[]{new ItemStack(NMItems.bloodIngot), new ItemStack(Item.blazeRod)}, NMItems.bloodSword);
+        addCrucibleRecovery(new ItemStack[]{new ItemStack(NMItems.bloodIngot, 3), new ItemStack(Item.blazeRod)}, NMItems.bloodAxe);
+        addCrucibleRecovery(new ItemStack[]{new ItemStack(NMItems.bloodIngot), new ItemStack(Item.blazeRod)}, NMItems.bloodShovel);
+        addCrucibleRecovery(new ItemStack[]{new ItemStack(NMItems.bloodIngot, 2), new ItemStack(Item.blazeRod)}, NMItems.bloodHoe);
+    }
+
+    private static void addArmorSetRecovery(Item material, int helmetCount, int chestplateCount, int leggingsCount, int bootsCount,
+                                             Item helmet, Item chestplate, Item leggings, Item boots) {
+        addArmorRecovery(helmet, new ItemStack(material, helmetCount));
+        addArmorRecovery(chestplate, new ItemStack(material, chestplateCount));
+        addArmorRecovery(leggings, new ItemStack(material, leggingsCount));
+        addArmorRecovery(boots, new ItemStack(material, bootsCount));
+    }
+
+    private static void addScaledDualArmorSetRecovery(Item chassisMaterial, Item armorMaterial,
+                                                       Item helmet, Item chestplate, Item leggings, Item boots) {
+        addArmorRecovery(helmet, new ItemStack(chassisMaterial, 2), new ItemStack(armorMaterial));
+        addArmorRecovery(chestplate, new ItemStack(chassisMaterial, 4), new ItemStack(armorMaterial, 3));
+        addArmorRecovery(leggings, new ItemStack(chassisMaterial, 3), new ItemStack(armorMaterial, 2));
+        addArmorRecovery(boots, new ItemStack(chassisMaterial, 2), new ItemStack(armorMaterial));
+    }
+
+    private static void addScaledDualArmorSetRecovery(Block chassisMaterial, Item armorMaterial,
+                                                       Item helmet, Item chestplate, Item leggings, Item boots) {
+        addArmorRecovery(helmet, new ItemStack(chassisMaterial, 2), new ItemStack(armorMaterial));
+        addArmorRecovery(chestplate, new ItemStack(chassisMaterial, 4), new ItemStack(armorMaterial, 3));
+        addArmorRecovery(leggings, new ItemStack(chassisMaterial, 3), new ItemStack(armorMaterial, 2));
+        addArmorRecovery(boots, new ItemStack(chassisMaterial, 2), new ItemStack(armorMaterial));
+    }
+
+    private static void addDarkArmorRecovery(Item armor, int darkIngots, int coalDust) {
+        addArmorRecovery(armor, new ItemStack(NMItems.darkIngot, darkIngots), new ItemStack(NMItems.coresteelIngot),
+                new ItemStack(BTWItems.steelNugget, 3), new ItemStack(BTWItems.coalDust, coalDust),
+                new ItemStack(NMItems.bloodOrb));
+    }
+
+    private static void addHorseArmorRecovery(Item armor, Item material, int ingotCount) {
+        addArmorRecovery(armor, new ItemStack(material, ingotCount));
+    }
+
+    private static void addArmorRecovery(Item armor, ItemStack... outputs) {
+        RecipeManager.addStokedCrucibleRecipe(outputs, new ItemStack[]{new ItemStack(armor, 1, Short.MAX_VALUE)});
+    }
+
+    private static void removeLegacyBloodGearRecoveryCrucibleRecipes(CrucibleStokedCraftingManager crucible) {
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 5), NMItems.bloodHelmet);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 8), NMItems.bloodChestplate);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 7), NMItems.bloodLeggings);
+        removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 4), NMItems.bloodBoots);
+        removeCrucibleRecipe(crucible, new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 3), new ItemStack(Item.blazeRod, 2)}, NMItems.bloodPickaxe);
+        removeCrucibleRecipe(crucible, new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack(Item.blazeRod)}, NMItems.bloodSword);
+        removeCrucibleRecipe(crucible, new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(Item.blazeRod, 2)}, NMItems.bloodAxe);
+        removeCrucibleRecipe(crucible, new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot), new ItemStack(Item.blazeRod, 2)}, NMItems.bloodShovel);
+        removeCrucibleRecipe(crucible, new ItemStack[]{new ItemStack(NMItems.refinedDiamondIngot), new ItemStack(Item.blazeRod, 3)}, NMItems.bloodHoe);
+    }
+
+    private static void removeCrucibleRecipe(CrucibleStokedCraftingManager crucible, ItemStack output, Item input) {
+        crucible.removeRecipe(output, new ItemStack[]{new ItemStack(input, 1, Short.MAX_VALUE)});
+    }
+
+    private static void removeCrucibleRecipe(CrucibleStokedCraftingManager crucible, ItemStack[] output, Item input) {
+        crucible.removeRecipe(output, new ItemStack[]{new ItemStack(input, 1, Short.MAX_VALUE)});
+    }
+
+    private static void removeExactCrucibleRecipe(CrucibleStokedCraftingManager crucible, ItemStack output, ItemStack input) {
+        crucible.removeRecipe(output, new ItemStack[]{input});
+    }
+
+    private static void addCrucibleRecovery(ItemStack output, Item input) {
+        RecipeManager.addStokedCrucibleRecipe(output, new ItemStack[]{new ItemStack(input, 1, Short.MAX_VALUE)});
+    }
+
+    private static void addCrucibleRecovery(ItemStack[] output, Item input) {
+        RecipeManager.addStokedCrucibleRecipe(output, new ItemStack[]{new ItemStack(input, 1, Short.MAX_VALUE)});
     }
     private static void addCauldronRecipes(){
         // BTW has separate tannin-strength variants (and a pre-cut shortcut). IFHY instead
@@ -3236,11 +3421,11 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_DIAMOND_INGOT_2);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.bloodOrb), Character.valueOf('X'), new ItemStack(BTWBlocks.chest)});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"OBO", "NCN", "PLP", Character.valueOf('O'), NMItems.bloodOrb, Character.valueOf('B'), NMItems.bloodIngot, Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('C'), BTWBlocks.chest, Character.valueOf('L'), NMItems.lithiumStabilizer, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.bloodChest), new Object[]{"BBB", "NCN", "PLP", Character.valueOf('B'), NMItems.bloodIngot, Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('C'), BTWBlocks.chest, Character.valueOf('L'), NMItems.lithiumStabilizer, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
                 NMSkillNodes.BRING_BLOOD_ORB_128_II, NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_4);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.steelBunch), Character.valueOf('X'), new ItemStack(NMBlocks.bloodChest)});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"SDS", "LBL", "SPS", Character.valueOf('S'), NMItems.steelBunch, Character.valueOf('D'), NMItems.deadzoneShard, Character.valueOf('L'), NMItems.lithiumHeatCompound, Character.valueOf('B'), NMBlocks.bloodChest, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"SDS", "LBL", "SPS", Character.valueOf('S'), BTWItems.soulforgedSteelIngot, Character.valueOf('D'), NMItems.deadzoneShard, Character.valueOf('L'), NMItems.lithiumHeatCompound, Character.valueOf('B'), NMBlocks.bloodChest, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
                 NMSkillNodes.BRING_STEEL_BUNCH_8, NMSkillNodes.BRING_BLOOD_ORB_128_II, NMSkillNodes.BRING_DEADZONE_SHARD_64, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.blockAsphalt, 8), new Object[]{"XXX", "XYX", "XXX", Character.valueOf('X'), NMBlocks.blockRoad, Character.valueOf('Y'), BTWItems.soulUrn});
@@ -3439,7 +3624,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"XXX", "XYX", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{
                         "IXI", "IYI","N N",
-                        Character.valueOf('I'), BTWItems.diamondIngot,
+                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('Y'), NMItems.crystalLens}),
@@ -3449,7 +3634,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{
                         "NLN", "IXI", "III",
                         Character.valueOf('N'), NMItems.nickelBinding,
-                        Character.valueOf('I'), BTWItems.diamondIngot,
+                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4);
@@ -3457,7 +3642,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsDiamond), new Object[]{"XXX", "Y Y", "Y Y", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{
                         "IXI", "NLN", "ILI",
-                        Character.valueOf('I'), BTWItems.diamondIngot,
+                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
@@ -3466,7 +3651,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), BTWItems.diamondIngot});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.bootsDiamond), new Object[]{
                         "I I", "ILI", "N N",
-                        Character.valueOf('I'), BTWItems.diamondIngot,
+                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4);

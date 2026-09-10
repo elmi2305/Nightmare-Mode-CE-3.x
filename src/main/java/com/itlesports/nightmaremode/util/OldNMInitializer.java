@@ -1006,7 +1006,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         // done with refined diamond
         // blood chest and steel locker
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.bloodOrb, 4), new ItemStack[]{new ItemStack(NMBlocks.bloodChest)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.bloodOrb, 4), new ItemStack(BTWItems.steelNugget, 32)}, new ItemStack[]{new ItemStack(NMBlocks.steelLocker)});
 
 
         // chainmail
@@ -1327,7 +1326,6 @@ public abstract class OldNMInitializer implements AchievementExt {
 
         // firestarters
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.flintAndSteel, 1), new Object[]{new ItemStack(BTWItems.ironNugget), new ItemStack(Item.flint)});
-        RecipeManager.addRecipe(new ItemStack(Item.flintAndSteel, 1), new Object[]{"## ", "#  ", " SS", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('S'), Item.flint});
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.bowDrill), new Object[]{new ItemStack(Item.stick), new ItemStack(Item.stick), new ItemStack(Item.stick), BTWTags.strings});
