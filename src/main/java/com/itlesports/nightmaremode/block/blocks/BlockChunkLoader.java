@@ -20,6 +20,7 @@ public class BlockChunkLoader extends Block {
     private Icon sideIcon;
     private Icon topIcon;
     private Icon chargedTopIcon;
+    private Icon bottomIcon;
 
     public BlockChunkLoader(int blockID) {
         super(blockID, Material.rock);
@@ -75,6 +76,7 @@ public class BlockChunkLoader extends Block {
         this.sideIcon = register.registerIcon("nightmare:ifhyChunkLoaderSide");
         this.topIcon = register.registerIcon("nightmare:ifhyChunkLoaderTop");
         this.chargedTopIcon = register.registerIcon("nightmare:ifhyChunkLoaderTopCharged");
+        this.bottomIcon = register.registerIcon("nightmare:ifhyChunkLoaderBottom");
         this.blockIcon = this.sideIcon;
     }
 
@@ -83,6 +85,9 @@ public class BlockChunkLoader extends Block {
     public Icon getIcon(int side, int metadata) {
         if (side == 1) {
             return metadata == 1 ? this.chargedTopIcon : this.topIcon;
+        }
+        if (side == 0) {
+            return this.bottomIcon;
         }
         return this.sideIcon;
     }
