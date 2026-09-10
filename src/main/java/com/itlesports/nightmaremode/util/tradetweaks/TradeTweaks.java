@@ -71,7 +71,7 @@ public final class TradeTweaks {
                 if (id >= 0) {
                     try {
                         acc.setOutput(TradeItem.fromIDAndMetadata(id, meta, e.outMin, e.outMax));
-                        debug("TradeTweaks: set output counts %s -> [%d,%d] (via factory)", key, e.outMin, e.outMax);
+//                        debug("TradeTweaks: set output counts %s -> [%d,%d] (via factory)", key, e.outMin, e.outMax);
                         done = true;
                     } catch (Throwable t) {
                         // factory failed; fall through to reflective mutate
