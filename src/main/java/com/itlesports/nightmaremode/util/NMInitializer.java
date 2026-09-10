@@ -14,6 +14,7 @@ import btw.crafting.manager.CrucibleStokedCraftingManager;
 import btw.crafting.manager.MillStoneCraftingManager;
 import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
+import btw.crafting.recipe.types.PistonPackingRecipe;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.util.BTWDamageSources;
@@ -39,6 +40,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.util.Set;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 import static btw.achievement.BTWAchievements.*;
@@ -1173,6 +1175,10 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.planter, 1), new Object[]{"# #", "# #", "###", Character.valueOf('#'), Item.brick});
         RecipeManager.addRecipe(new ItemStack(Block.bookShelf), new Object[]{"###", "XXX", "###", Character.valueOf('#'), new ItemStack(BTWItems.woodSidingStubID, 1, Short.MAX_VALUE), Character.valueOf('X'), new ItemStack(Item.book,1,Short.MAX_VALUE)});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.steelLocker), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.steelBunch), Character.valueOf('X'), new ItemStack(NMBlocks.bloodChest)});
+        for (int i = 0; i < 16; i++) {
+            RecipeManager.addRecipe(new ItemStack(Block.carpet, 3, i), new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.cloth, 1, i)});
+        }
+        RecipeManager.addRecipe(new ItemStack(BTWBlocks.aestheticVegetation, 1, 0), new Object[]{"###", Character.valueOf('#'), Block.vine});
         // add gapple and carrot recipes
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.appleGold, 1, 0), new Object[]{"###", "#X#", "###", '#', Item.ingotGold, 'X', Item.appleRed});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.appleGold, 1, 1), new Object[]{"###", "#X#", "###", '#', Block.blockGold, 'X', Item.appleRed});
@@ -1560,14 +1566,24 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addPistonPackingRecipes() {
         // oysters
-        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.creeperOysterBlock, 0 , new ItemStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
+        removePistonPackingRecipe(BTWBlocks.creeperOysterBlock, 0, new TagOrStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.creeperOysterBlock, new ItemStack(BTWItems.creeperOysters, 9));
 
         // spider eyes
-        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.spiderEyeBlock, 0 , new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
+        removePistonPackingRecipe(BTWBlocks.spiderEyeBlock, 0, new TagOrStack[]{new ItemStack(Item.spiderEye, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
         finishRecipes("Piston Packing Recipes");
 
+    }
+
+    private static void removePistonPackingRecipe(Block output, int outputMetadata, TagOrStack[] inputs) {
+        for (Iterator<PistonPackingRecipe> iterator = PistonPackingCraftingManager.instance.getRecipes().iterator(); iterator.hasNext(); ) {
+            PistonPackingRecipe recipe = iterator.next();
+            if (recipe.getOutput() == output && recipe.getOutputMetadata() == outputMetadata && recipe.matchesInputs(inputs)) {
+                iterator.remove();
+                return;
+            }
+        }
     }
 
     private static void addBloodSawRecipes(){
@@ -1610,7 +1626,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         BloodSawCraftingManager.instance.addSawSubBlockRecipes(BTWBlocks.aestheticOpaque, 9,
                 BTWBlocks.whiteStoneSidingAndCorner,
-                BTWBlocks.whiteStoneMouldingAndDecroative,
+                BTWBlocks.whiteStoneMouldingAndDecorative,
                 new ItemStack(BTWBlocks.aestheticNonOpaque, 1, 10));
 
         BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.netherBrick, 0,
