@@ -303,7 +303,6 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         }
     }
 
-
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
         if(this.worldObj != null){
