@@ -41,6 +41,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Unique private int swimmingTicks;
     @Unique private int kickCooldown = 20;
+    @Unique private boolean isValidForEventLoot = false;
 
 
     public EntityHorseMixin(World par1World) {
@@ -122,7 +123,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
+        if (bKilledByPlayer && isValidForEventLoot && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -144,6 +145,10 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
             }
 
         }
+    }
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"))
+    private void storeLastHit(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir){
+        this.isValidForEventLoot = damageSource.getEntity() instanceof EntityPlayer;
     }
 
     @Override

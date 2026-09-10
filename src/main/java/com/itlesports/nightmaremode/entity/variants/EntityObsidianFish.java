@@ -7,6 +7,8 @@ import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 public class EntityObsidianFish extends EntitySilverfish {
+    private boolean isValidForEventLoot = false;
+
     public EntityObsidianFish(World par1World) {
         super(par1World);
         this.isImmuneToFire = true;
@@ -28,7 +30,7 @@ public class EntityObsidianFish extends EntitySilverfish {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int looting) {
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this)) {
+        if (bKilledByPlayer && isValidForEventLoot && NMUtils.getIsMobEclipsed(this)) {
             for(int i = 0; i < (looting * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -61,6 +63,7 @@ public class EntityObsidianFish extends EntitySilverfish {
     }
 
     public boolean attackEntityFrom(DamageSource source, float dmg) {
+        this.isValidForEventLoot = source.getEntity() instanceof EntityPlayer;
         if (this.isEntityInvulnerable() || this.isBlacklistedDamage(source)) {
             return false;
         }
