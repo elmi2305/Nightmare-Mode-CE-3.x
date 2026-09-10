@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.AddonHandler;
 import btw.BTWMod;
+import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
 import com.itlesports.nightmaremode.util.NightmareKeyBindings;
 import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import net.minecraft.src.*;
@@ -31,6 +33,15 @@ public class MinecraftMixin {
 
     @Unique private boolean wasZooming = false;
     @Unique private float originalFov = 0.0f;
+
+    @Inject(method = "startGame", at = @At("TAIL"))
+    private void nightmareMode$startAutomatedRecipeExport(CallbackInfo ci) {
+        if (NightmareMode.devMode) {
+            RecipeIndexExporter.startAutomatedExport((Minecraft) (Object) this);
+        } else{
+            System.out.println("Recipe export was skipped because devmode is disabled");
+        }
+    }
 
     @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventDWheel()I", remap = false))
     private int nmBlockHotbarScrollWhenZoom() {
@@ -72,6 +83,14 @@ public class MinecraftMixin {
             }
             buffer.flip();
             return buffer;
+        }
+    }
+
+    @Inject(method = "runTick", at = @At("TAIL"))
+    private void nightmareMode$stopAfterRecipeExport(CallbackInfo ci) {
+        if (RecipeIndexExporter.consumeDevelopmentStopRequest()
+                || RecipeIndexExporter.consumeAutomatedStopRequest()) {
+            ((Minecraft) (Object) this).shutdown();
         }
     }
 

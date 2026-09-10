@@ -240,6 +240,7 @@
   ],
   "client": [
     "AnvilSaveConverterMixin",
+    "EmiRecipesMixin",
     "GameSettingsMixin",
     "MinecraftMixin",
     "MixinNetClientHandler",
