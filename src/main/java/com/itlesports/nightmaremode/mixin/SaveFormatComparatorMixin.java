@@ -14,13 +14,11 @@ public abstract class SaveFormatComparatorMixin implements SaveFormatExt, Compar
     public int[] nightmareMode$getConfArray() {
         int targetSize = NMConfUtils.CONFIG_COUNT;
 
-        // Old saves or pre-config-era worlds
         if (this.confArray == null) {
-            this.confArray = new int[targetSize]; // all defaults = 0
+            this.confArray = new int[targetSize];
             return this.confArray;
         }
 
-        // Config count changed between versions
         if (this.confArray.length != targetSize) {
             int[] fixed = new int[targetSize];
             System.arraycopy(this.confArray, 0, fixed, 0,
@@ -30,7 +28,6 @@ public abstract class SaveFormatComparatorMixin implements SaveFormatExt, Compar
 
         return this.confArray;
     }
-
 
     @Override
     public void nightmareMode$setConfArray(int[] arr) {

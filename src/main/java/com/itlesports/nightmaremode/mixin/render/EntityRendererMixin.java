@@ -38,7 +38,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Unique private boolean nmToggleZoomActive = false;
     @Unique private boolean nmToggleToggleZoomKeyWasDown = false;
     @Unique private double targetZoom = 1.0D;
-    //    @Unique private double lastZoomLevel = 4.0D;
+
     @Mutable
     @Shadow float fogColorRed;
     @Shadow float fogColorBlue;
@@ -49,7 +49,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Shadow protected abstract void enableLightmap(double partialTicks);
     @Shadow protected abstract void disableLightmap(double partialTicks);
     @Shadow protected abstract float getFOVModifier(float partialTicks, boolean useFOVSetting);
-
 
     @Mutable @Shadow @Final private int[] lightmapColors;
     @Shadow protected abstract FloatBuffer setFogColorBuffer(float par1, float par2, float par3, float par4);
@@ -64,7 +63,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Unique private static final ResourceLocation BLOOD_RAIN = new ResourceLocation("nightmare:textures/effects/nmBloodRain.png");
     @Unique private static final ResourceLocation SLIME_RAIN = new ResourceLocation("nightmare:textures/effects/nmSlimeRain.png");
 
-    // interfaces
     @Override
     public boolean nightmareMode$isToggleZoomActive() {
         return nmToggleZoomActive;
@@ -74,7 +72,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     public boolean nightmareMode$isToggleZoomKeyHeld() {
         return Keyboard.isKeyDown(NightmareKeyBindings.nmZoomToggle.keyCode);
     }
-
 
     @ModifyArg(method = "renderRainSnow", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V",ordinal = 1))
     private ResourceLocation bloodMoonCustomRain(ResourceLocation resource){
@@ -92,14 +89,13 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         if (mc == null || mc.thePlayer == null) return;
 
         boolean zoomKeyDown = Keyboard.isKeyDown(NightmareKeyBindings.nmZoomToggle.keyCode);
-        // toggle
+
         if (zoomKeyDown && !nmToggleToggleZoomKeyWasDown && mc.currentScreen == null) {
             nmToggleZoomActive = !nmToggleZoomActive;
             targetZoom = nmToggleZoomActive ? 4.0D : 1.0D;
         }
         nmToggleToggleZoomKeyWasDown = zoomKeyDown;
 
-        // Allow scroll wheel to set zoom only in the frame just activated
         if (nmToggleZoomActive && zoomKeyDown) {
             int wheel = Mouse.getDWheel();
             if (wheel != 0 && mc.currentScreen == null) {
@@ -122,7 +118,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 }
                 if (targetZoom < 1.0D) targetZoom = 1.0D;
                 if (targetZoom > 32.0D) targetZoom = 32.0D;
-//                lastZoomLevel = targetZoom;
+
             }
         }
         double absDelta = Math.abs(targetZoom - cameraZoom);
@@ -160,21 +156,15 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         }
     }
 
-    /**
-     * Force render hand when zoomed by injecting after the zoom check
-     */
     @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClear(I)V", shift = At.Shift.AFTER, remap = false))
     private void nightmaremode$forceRenderHandWhenZoomed(float partialTicks, long timeSlice, CallbackInfo ci) {
-        // Check if we're in a zoom state and the normal hand rendering was skipped
+
         if (this.cameraZoom != 1.0D) {
-            // Render hand manually when zoomed
+
             this.nightmaremode$renderHandForZoom(partialTicks, 0);
         }
     }
 
-    /**
-     * Custom hand rendering method for zoom
-     */
     @Unique
     private void nightmaremode$renderHandForZoom(float partialTicks, int pass) {
         if (this.mc.gameSettings.thirdPersonView == 0 && !this.mc.renderViewEntity.isPlayerSleeping() && !this.mc.gameSettings.hideGUI && !this.mc.playerController.enableEverythingIsScrewedUpMode()) {
@@ -233,13 +223,13 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         try {
             inWeb = ((EntityAccessor) player).getIsInWeb();
         } catch (Throwable t) {
-            // Use reflection as a fallback
+
             try {
                 Field f = player.getClass().getDeclaredField("isInWeb");
                 f.setAccessible(true);
                 inWeb = f.getBoolean(player);
             } catch (Throwable tt) {
-                // Ignore, don't crash if field missing
+
             }
         }
         if (inWeb) {
@@ -261,13 +251,13 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         try {
             inWeb = ((EntityAccessor) player).getIsInWeb();
         } catch (Throwable t) {
-            // Use reflection as a fallback
+
             try {
                 Field f = player.getClass().getDeclaredField("isInWeb");
                 f.setAccessible(true);
                 inWeb = f.getBoolean(player);
             } catch (Throwable tt) {
-                // Ignore, don't crash if field missing
+
             }
         }
         if (inWeb) {
@@ -311,20 +301,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             }
         }
 
-//        if(NMUtils.getIsBlueMoon()){
-//            if(fadeTracker < 800){
-//                fadeTracker++;
-//            }
-//
-//            // funny strobe effect
-////            int strobeColor = getRainbowStrobeColor(0.008f);
-////            setCurrentColorTarget(originalArray, strobeColor, 0.8f);
-//
-//            setCurrentColorTarget(originalArray, 0xAA0028AD, 0.8f); // darkish blue, with slightly lower target alpha
-////            System.out.println("hi");
-//            return originalArray;
-//        }
-//        else // cannot run concurrently, blood moons and blue moons are mutually exclusive
         if(NMUtils.getIsBloodMoon()){
             if(NightmareMode.bloodmoonColors){
                 if(fadeTracker[C_BM] < 800){
@@ -384,36 +360,16 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Inject(method = "updateCameraAndRender", at = @At("HEAD"))
     private void nm$beginGrayscale(float partialTicks, CallbackInfo ci) {
 
-//        if (SepiaPostProcessor.INSTANCE.isEnabled()) {
-//            SepiaPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
-//        }
-//        if(CinematicPostProcessor.INSTANCE.isEnabled()){
-//            CinematicPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
-//        }
-//        if(MonoInvertPostProcessor.INSTANCE.isEnabled()){
         MonoInvertPostProcessor.INSTANCE.beginCapture(this.mc.displayWidth, this.mc.displayHeight);
 
-//        }
     }
 
     @Inject(method = "updateCameraAndRender", at = @At("RETURN"))
     private void nm$endGrayscale(float partialTicks, CallbackInfo ci) {
-//        if (CinematicPostProcessor.INSTANCE.isEnabled()) {
-//            CinematicPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
-//        }
-//        if (MonoInvertPostProcessor.INSTANCE.isEnabled()) {
 
             MonoInvertPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
-//        }
-//        if (SepiaPostProcessor.INSTANCE.isEnabled()) {
-//            SepiaPostProcessor.INSTANCE.endCaptureAndPresent(this.mc.displayWidth, this.mc.displayHeight);
-//        }
 
     }
-
-    // <===============================================================>
-    //                           FOG STUFF
-    // <===============================================================>
 
     @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V", remap = false))
     private void manageEndFogWithNightVision(float par1, CallbackInfo ci){
@@ -434,7 +390,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     private void setFogDistance(int par1, float par2, CallbackInfo ci)
     {
         if(NMEvents.SimpleEvent.HELL.isActive()){
-            /* unique implementation of fog. it hides the clouds though, which is not ideal. better ways to do this, probably. */
+
             float range = 120f;
             if (Math.abs(this.farPlaneDistance - range) > 0.1f) {
                 this.farPlaneDistance = NMUtils.lerp(0.05f,this.farPlaneDistance, range);
@@ -474,29 +430,19 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         return numbers;
     }
 
-
-
-
-
-    // <===============================================================>
-    //                           UNDERWORLD
-    // <===============================================================>
-
     @Unique private float underworldFogAlpha = 0.0f;
     @Unique private float horrorFogAlpha = 0.0f;
     @Inject(method = "setupFog", at = @At("HEAD"),cancellable = true)
     private void doUnderworldFog(int par1, float partialTicks, CallbackInfo ci){
         EntityLivingBase entity = this.mc.renderViewEntity;
-//        if(NightmareMode.devMode) return;
 
         if (entity.dimension == NMFields.UNDERWORLD_DIMENSION && entity instanceof EntityPlayer p) {
-            //// DEBUG: returning because getIsSolarFlare just returns false
+
             long worldTime = this.mc.theWorld.getWorldTime();
             long timeOfDay = worldTime % 24000L;
 
             float targetAlpha = Math.max(getTargetAlpha(timeOfDay), getPlayerSanityFogModifier(p));
 
-            // Smooth interpolation over 120 ticks (6 seconds at 20 TPS)
             float fadeSpeed = 1.0f / 240.0f;
             if (this.underworldFogAlpha < targetAlpha) {
                 this.underworldFogAlpha = Math.min(targetAlpha, this.underworldFogAlpha + fadeSpeed);
@@ -504,9 +450,8 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 this.underworldFogAlpha = Math.max(targetAlpha, this.underworldFogAlpha - fadeSpeed);
             }
 
-            // Skip fog rendering entirely if alpha is effectively zero
             if (this.underworldFogAlpha < 0.001f) {
-                // No fog during day - let vanilla fog handle it
+
                 return;
             }
 
@@ -565,7 +510,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             ci.cancel();
         }
 
-        // UW RITUAL FOG STUFF AND UNUSED HELL FOG
         if (entity instanceof EntityPlayer && false) {
             EntityPlayer player = (EntityPlayer) entity;
             double ritualRange = 128.0;
@@ -626,7 +570,6 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
                 ci.cancel();
             }
         }
-
 
         if (entity instanceof EntityPlayer && NMEvents.SimpleEvent.HELL.isActive() && false) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -695,10 +638,10 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         double sanity = p.getData(SANITY);
 
         if (sanity >= MAX_SANITY){
-            // player is fully insane
+
             return (float) Math.min((sanity - MAX_SANITY + 30) / 30, 16.0f);
         } else if(sanity > CRITICAL_SANITY) {
-            // player is very insane, intense fog
+
             return (float) Math.min((sanity - CRITICAL_SANITY) / 30, 1.0);
         }
 
@@ -710,14 +653,14 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         float targetAlpha = 0.0f;
 
         if (timeOfDay >= 12542 && timeOfDay <= 23458) {
-            // night - fog should be visible
+
             targetAlpha = 1.0f;
         } else if (timeOfDay >= 11542 && timeOfDay < 12542) {
-            // sunset fade-in (1000 ticks before night)
+
             float sunsetProgress = (timeOfDay - 11542) / 1000.0f;
             targetAlpha = Math.min(1.0f, sunsetProgress * (1000.0f / 240.0f));
         } else if (timeOfDay > 23458 && timeOfDay <= 24458) {
-            // sunrise fade-out (1000 ticks after night)
+
             float sunriseProgress = (timeOfDay - 23458) / 1000.0f;
             targetAlpha = Math.max(0.0f, 1.0f - sunriseProgress * (1000.0f / 240.0f));
         }

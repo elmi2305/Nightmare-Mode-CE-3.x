@@ -39,20 +39,17 @@ public final class NMSanityUtils {
             return 0;
         }
 
-
         if (player.ticksExisted % 40 == 0 && player.isSneaking()) {
-            // DEBUG
+
             System.out.println("sanity drain from LIGHT:  " + getLightDrain(player));
             System.out.println("sanity drain from HEIGHT: " + getHeightDrain(player));
             System.out.println("sanity drain from BLIGHT: " + getBiomeDrain(player));
             System.out.println("sanity drain from FRIGHT: " + getNearbyEnemyDrain(player));
             System.out.println(" ");
         }
-        // can be positive or negative
+
         return drain;
     }
-
-
 
     public static double getLightDrain(EntityPlayer player) {
         World world = player.worldObj;
@@ -61,14 +58,14 @@ public final class NMSanityUtils {
         int y = MathHelper.floor_double(player.posY);
         int z = MathHelper.floor_double(player.posZ);
 
-        float brightness = world.getLightBrightness(x, y, z); // think this is only skylight
-        double darkness = 1.0 - brightness; // 0.0 to 1.0
+        float brightness = world.getLightBrightness(x, y, z);
+        double darkness = 1.0 - brightness;
 
         return darkness * NMFields.LIGHT_DRAIN_MULTIPLIER;
     }
 
     public static double getHeightDrain(EntityPlayer player) {
-        double below = Math.max(0.0, (HEIGHT_REFERENCE_Y - player.posY) / HEIGHT_REFERENCE_Y); // 0..1
+        double below = Math.max(0.0, (HEIGHT_REFERENCE_Y - player.posY) / HEIGHT_REFERENCE_Y);
         return below * NMFields.HEIGHT_DRAIN_MULTIPLIER;
     }
 
@@ -126,14 +123,12 @@ public final class NMSanityUtils {
     private static double getMobContribution(double radius, double dist, EntityLivingBase mob) {
         double proximity = (radius - dist) / radius;
 
-        // low impact; mostly just makes big mobs a bit scarier
         double healthFactor = 1.0;
         float maxHp = mob.getMaxHealth();
         if (maxHp > 0.0F) {
-            healthFactor = mob.getHealth() / maxHp; // 0 - 1
+            healthFactor = mob.getHealth() / maxHp;
         }
 
-        // this makes an Enderman (20hp) about ~20% scarier than a Zombie (20hp too)
         double mobContribution = proximity * (1.0 + ENEMY_HEALTH_WEIGHT * healthFactor);
 
         return mobContribution;
@@ -146,7 +141,6 @@ public final class NMSanityUtils {
 
         if (mob instanceof BTWSquidEntity) return true;
 
-        // optional: treat angry wolves as hostile
         if (mob instanceof EntityWolf) {
             return ((EntityWolf) mob).isAngry();
         }

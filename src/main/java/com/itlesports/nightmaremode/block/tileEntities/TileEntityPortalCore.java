@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
-
 import api.block.TileEntityDataPacketHandler;
 import com.itlesports.nightmaremode.entity.underworld.EntityRift;
 import com.itlesports.nightmaremode.entity.underworld.EntityRitualPortal;
@@ -17,40 +16,22 @@ import java.util.UUID;
 
 import static com.itlesports.nightmaremode.util.NMFields.UW_PORTAL_DURATION;
 
-/**
- *   INVALID     ->  periodic structure check -> VALID_IDLE
- *   VALID_IDLE  ->  catalyst inserted        -> ACTIVE
- *   VALID_IDLE  ->  structure broken         -> INVALID
- *   ACTIVE      ->  structure broken         -> FAILED
- *   ACTIVE      ->  RITUAL_DURATION elapsed  -> COMPLETE
- *   FAILED      ->  FAILED_COOLDOWN elapsed  -> INVALID (reset)
- * Client-side fields (beamHeight, pulsePhase) are updated locally and used by TileEntityPortalCoreRenderer
- */
 public class TileEntityPortalCore extends TileEntity implements TileEntityDataPacketHandler {
 
-    /** ticks in failed state before resetting to invalid */
     private static final int FAILED_COOLDOWN = 20 * 8;
 
-    /** how often ticks to re-validate structure in invalid valid idle */
     private static final int VALIDATION_INTERVAL = 40;
 
-    /** how far above the core the blob entity spawns */
     public static final double BLOB_SPAWN_HEIGHT = 12.0;
 
     private RitualState state = RitualState.INVALID;
     private int ritualTicks   = 0;
     private int failedTicks   = 0;
 
-    /**
-     * UUIDs of spawned blob entities for persistent tracking across world loads
-     * used instead of entity ids which become stale after world reloads
-     */
     private Set<UUID> blobEntityUUIDs = new HashSet<>();
 
-    /** current rendered beam height grows to max during active shrinks otherwise */
     public float beamHeight  = 0f;
     public float pulsePhase  = 0f;
-
 
     @Override
     public void updateEntity() {
@@ -60,7 +41,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         }
         tickServer();
     }
-
 
     private void tickServer() {
         long worldTime = worldObj.getTotalWorldTime();
@@ -96,12 +76,12 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                 if (worldTime % 20 == 0) {
                     EntityRitualPortal blob = findPortalEntity();
                     if (blob == null) {
-                        System.out.println("[PortalCore] Blob entity gone — failing ritual");
+                        System.out.println("[PortalCore] Blob entity gone - failing ritual");
                         failRitual();
                         return;
                     }
                     if (blob.getAltar() == null) {
-                        blob.bindToAltar(this); // restore lost reference after relog
+                        blob.bindToAltar(this);
                         System.out.println("[PortalCore] Rebound blob entity after relog");
                     }
                 }
@@ -120,7 +100,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
 
                 ritualTicks++;
                 if (ritualTicks + 20 >= UW_PORTAL_DURATION) {
-                    // a bit before it dies. sends blink effect to all players
+
                     int distance = 32;
                     List<EntityPlayer> players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.xCoord - distance, this.yCoord - distance, this.zCoord - distance, this.xCoord + distance, this.yCoord + distance, this.zCoord + distance));
 
@@ -157,12 +137,10 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     }
     private boolean hasSpawnedRift = false;
 
-
     private void tickClientEffects() {
         if (state == RitualState.ACTIVE) {
             float progress = getRitualProgress();
 
-            // beam grows faster and pulses more intensely as ritual progresses
             beamHeight = Math.min(beamHeight + 1.5f + progress * 2.0f, 255f);
             pulsePhase += 0.05f + progress * 0.1f;
             if (pulsePhase > (float) (Math.PI * 2)) {
@@ -173,11 +151,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         }
     }
 
-
-    /**
-     * Called when a player right-clicks the core holding an item.
-     * Returns true if the catalyst was consumed and the ritual started.
-     */
     public boolean tryInsertCatalyst(ItemStack stack) {
         System.out.println("[PortalCore] Catalyst insertion attempt at (" + xCoord + "," + yCoord + "," + zCoord + "), current state: " + state);
         if (state != RitualState.VALID_IDLE) {
@@ -225,15 +198,11 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         killBlobEntity();
         transitionTo(RitualState.COMPLETE);
 
-
         System.out.println("we have completed");
-
-        // todo portal open logic here
 
         markDirtyAndSync();
     }
 
-    /** Called from PortalCoreBlock.breakBlock() */
     public void onCoreRemoved() {
         System.out.println("[PortalCore] Core removed at (" + xCoord + "," + yCoord + "," + zCoord + "), state: " + state);
         if (state == RitualState.ACTIVE) {
@@ -241,9 +210,8 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         }
     }
 
-
     private void sustainStorm() {
-//        system.out.println("[portalcore] sustaining storm at " + xCoord + "," + yCoord + "," + zCoord);
+
         WorldInfo info = worldObj.getWorldInfo();
 
         if (!info.isThundering()) {
@@ -257,7 +225,7 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             info.setRainTime(UW_PORTAL_DURATION * 2);
             this.worldObj.setRainStrength(0f);
         }
-//        info.setRaining(false);
+
     }
 
     private void spawnAltarLightning() {
@@ -280,7 +248,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             worldObj.spawnParticle("portal", px, py, pz, 0, 0.1, 0);
         }
     }
-
 
     private void spawnBlobEntity() {
         double ex = xCoord + 0.5d;
@@ -307,15 +274,9 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         blobEntityUUIDs.clear();
     }
 
-    /**
-     * Finds all blob entities by UUID, falling back to a positional search
-     * in case UUIDs are stale (world reload, chunk unload, etc.).
-     * Returns a validated set of alive entities.
-     */
     private Set<EntityRitualPortal> findPortalEntities() {
         Set<EntityRitualPortal> foundEntities = new HashSet<>();
 
-        // first try to find by uuids
         if (blobEntityUUIDs != null && !blobEntityUUIDs.isEmpty()) {
             for (Object entityObj : worldObj.loadedEntityList) {
                 if (entityObj instanceof EntityRitualPortal) {
@@ -327,7 +288,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
             }
         }
 
-        // positional fallback search within the column above the altar
         if (foundEntities.isEmpty()) {
             AxisAlignedBB searchBox = AxisAlignedBB.getAABBPool().getAABB(
                     xCoord - 2, yCoord,                       zCoord - 2,
@@ -342,29 +302,24 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
                         && blob.getAltarZ() == zCoord
                         && blob.isEntityAlive()) {
                     foundEntities.add(blob);
-                    blobEntityUUIDs.add(blob.getUniqueID()); // refresh cached uuid
+                    blobEntityUUIDs.add(blob.getUniqueID());
                 }
             }
         }
 
         if (foundEntities.isEmpty()) {
-//            System.out.println("[PortalCore] No blob entities found");
+
         } else {
-//            System.out.println("[PortalCore] Found " + foundEntities.size() + " blob entities");
+
         }
 
         return foundEntities;
     }
 
-    /**
-     * Finds a single portal entity (for compatibility with existing code).
-     * Returns the first valid entity or null if none found.
-     */
     private EntityRitualPortal findPortalEntity() {
         Set<EntityRitualPortal> entities = findPortalEntities();
         return entities.isEmpty() ? null : entities.iterator().next();
     }
-
 
     private void transitionTo(RitualState next) {
         System.out.println("[PortalCore] State transition: " + this.state + " -> " + next + " at (" + xCoord + "," + yCoord + "," + zCoord + ")");
@@ -375,7 +330,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
     private void markDirtyAndSync() {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-
 
     @Override
     public void invalidate() {
@@ -393,7 +347,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         writeToNBT(tag);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
-
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
@@ -423,7 +376,6 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         failedTicks = tag.getInteger("FailedTicks");
         this.hasSpawnedRift = tag.getBoolean("Completed");
 
-
         if (blobEntityUUIDs == null) {
             blobEntityUUIDs = new HashSet<>();
         }
@@ -440,13 +392,10 @@ public class TileEntityPortalCore extends TileEntity implements TileEntityDataPa
         }
     }
 
-
-
     public RitualState getState(){ return state; }
     public int getRitualTicks(){ return ritualTicks; }
     public boolean isActive() { return state == RitualState.ACTIVE; }
 
-    /** 0 to 1 progress through the ritual used by renderer for effects */
     public float getRitualProgress() {
         if (state != RitualState.ACTIVE) return 0f;
         return (float) ritualTicks / UW_PORTAL_DURATION;

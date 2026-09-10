@@ -86,22 +86,20 @@ public class EntityFauxVillager extends EntityMob {
             }
         }
 
-        // Default damage behavior
         return super.attackEntityFrom(par1DamageSource, par2);
     }
 
     @Override
     protected void updateAITasks() {
-        // look for the nearest player within 30 blocks
+
         EntityPlayer nearest = worldObj.getClosestVulnerablePlayerToEntity(this, 30.0D);
 
         if (nearest != null) {
             double dist = this.getDistanceToEntity(nearest);
 
-            // 1) Anger buildup if close, otherwise decay
             if (dist < 12) {
-                float factor = 1.0F - (float)(dist / 12.0); // 0.0 to 1.0
-                int increase = Math.round(1.5F + 4.0F * factor); // Between ~1.5 to ~5.5
+                float factor = 1.0F - (float)(dist / 12.0);
+                int increase = Math.round(1.5F + 4.0F * factor);
                 this.angerTicks = Math.min(this.angerTicks + increase, MAX_ANGER);
             } else {
                 this.angerTicks = Math.max(this.angerTicks - 1, 0);
@@ -110,21 +108,19 @@ public class EntityFauxVillager extends EntityMob {
                 this.angerTicks = Math.min(this.angerTicks + 3, MAX_ANGER);
             }
 
-            // 2) Start following once angry enough and not too close
             if (this.angerTicks >= FOLLOW_ANGER_THRESHOLD && dist > 1.0D) {
                 this.followTarget = nearest;
             } else {
                 this.followTarget = null;
             }
 
-            // 3) Final transformation when max anger reached
             if (this.angerTicks >= MAX_ANGER) {
                 this.transformToEnemy(this.followTarget);
                 this.transformNearbyVillagers(this.followTarget);
             }
 
         } else {
-            // No player around → cool off and stop following
+
             this.angerTicks = Math.max(angerTicks - 1, 0);
             this.followTarget = null;
         }
@@ -138,11 +134,10 @@ public class EntityFauxVillager extends EntityMob {
 
     @Override
     public void entityMobOnLivingUpdate() {
-            // Head twitch: sudden snap if angry
 
         if (this.angerTicks > (MAX_ANGER - 300) && this.rand.nextInt(40) == 0) {
-            float twitchYaw = (this.rand.nextFloat() - 0.5F) * 160F;   // -80 to +80
-            float twitchPitch = (this.rand.nextFloat() - 0.5F) * 60F;  // -30 to +30
+            float twitchYaw = (this.rand.nextFloat() - 0.5F) * 160F;
+            float twitchPitch = (this.rand.nextFloat() - 0.5F) * 60F;
 
             this.rotationYawHead += twitchYaw;
             this.renderYawOffset += twitchYaw * 0.5F;
@@ -175,7 +170,6 @@ public class EntityFauxVillager extends EntityMob {
         }
     }
 
-
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
         if(bKilledByPlayer){
@@ -198,7 +192,6 @@ public class EntityFauxVillager extends EntityMob {
 
         super.onDeath(source);
     }
-
 
     public void transformToEnemy(EntityPlayer target){
         for (int i = 0; i < 40; i++) {
@@ -244,7 +237,6 @@ public class EntityFauxVillager extends EntityMob {
             return false;
         }
 
-        // Reject if ANY artificial light is present
         int blockLightValue = this.worldObj.getBlockLightValueNoSky(x, y, z);
         if (blockLightValue > 0) {
             return false;
@@ -255,7 +247,6 @@ public class EntityFauxVillager extends EntityMob {
             naturalLightValue = Math.min(naturalLightValue, 5);
         }
 
-        // Require good natural light too (e.g., not shaded or thunder-darkened)
         return naturalLightValue > this.rand.nextInt(8);
     }
     public int getAngerTicks() {

@@ -14,7 +14,6 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
     private int repathDelay;
     private int attackTick;
 
-
     public EntityAIChaseTargetSmart(EntityCreature creature, double speed) {
         this.taskOwner = creature;
         this.moveSpeed = speed;
@@ -47,30 +46,22 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         this.attackTick = 0;
     }
 
+    private boolean lastNavSuccess    = true;
 
-    // state:
-    private boolean lastNavSuccess    = true;  // assume “good” at start
-
-
-    // tuning constants
     private static final double   MAX_RANGE_SQ              = 32.0D * 32.0D;
-    private static final double   VERTICAL_UNREACHABLE_Y    = 4.0D;           // any vertical gap > this is unreachable
-    private static final int      CLOSE_REPATH_INTERVAL     = 8;             // ticks between nav when healthy & close
-    private static final int      BROKEN_PROBE_BASE         = 30;             // min ticks before retrying nav/fallback
-    private static final int      BROKEN_PROBE_VARIANCE     = 20;             // + rand(0..39) to BROKEN_PROBE_BASE
-    private static final double   STALE_THRESHOLD_SQ        = 4.0D * 4.0D;  // 4-block threshold
-
-
+    private static final double   VERTICAL_UNREACHABLE_Y    = 4.0D;
+    private static final int      CLOSE_REPATH_INTERVAL     = 8;
+    private static final int      BROKEN_PROBE_BASE         = 30;
+    private static final int      BROKEN_PROBE_VARIANCE     = 20;
+    private static final double   STALE_THRESHOLD_SQ        = 4.0D * 4.0D;
 
     @Override
     public void updateTask() {
-        // 1) Validate target
+
         if (this.targetEntity == null || !this.targetEntity.isEntityAlive()) {
             return;
         }
 
-
-        // 2) Compute vector to player
         double dx    = this.targetEntity.posX - this.taskOwner.posX;
         double dy    = this.targetEntity.posY - this.taskOwner.posY;
         double dz    = this.targetEntity.posZ - this.taskOwner.posZ;
@@ -78,39 +69,34 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         double vert   = Math.abs(dy);
         this.performExtendedMeleeAttack();
 
-        // 3) Detect stale navigator path
         if (!this.taskOwner.getNavigator().noPath()) {
             PathEntity path = this.taskOwner.getNavigator().getPath();
             PathPoint end = path.getFinalPathPoint();
 
-            double ex = end.xCoord + 0.5 - this.targetEntity.posX; // X diff
-            double ey = end.yCoord      - this.targetEntity.posY; // Y diff (no center adjust for Y)
-            double ez = end.zCoord + 0.5 - this.targetEntity.posZ; // Z diff
+            double ex = end.xCoord + 0.5 - this.targetEntity.posX;
+            double ey = end.yCoord      - this.targetEntity.posY;
+            double ez = end.zCoord + 0.5 - this.targetEntity.posZ;
 
             double distSq = ex * ex + ey * ey + ez * ez;
 
             if (distSq > STALE_THRESHOLD_SQ) {
-                // Path is too far off — cancel and fallback
+
                 this.taskOwner.getNavigator().clearPathEntity();
                 this.lastNavSuccess = false;
                 this.repathDelay = 0;
             }
         }
 
-
-        // 4) Gate further logic behind repathDelay
         if (--this.repathDelay > 0) {
             return;
         }
 
-        // 5) Vertical unreachable?
         if (vert > VERTICAL_UNREACHABLE_Y) {
             applyFallbackMotion(dx, dz);
             scheduleBrokenProbe();
             return;
         }
 
-        // 6) Horizontal far?
         if (horizSq > MAX_RANGE_SQ) {
             this.lastNavSuccess = false;
             applyFallbackMotion(dx, dz);
@@ -118,7 +104,6 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
             return;
         }
 
-        // 7) Navigator broken → fallback + probe
         if (!this.lastNavSuccess) {
             applyFallbackMotion(dx, dz);
             boolean success = this.taskOwner.getNavigator().tryMoveToEntityLiving(this.targetEntity, this.moveSpeed);
@@ -127,7 +112,6 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
             return;
         }
 
-        // 8) Navigator healthy & close enough → run A*
         double horiz = Math.sqrt(horizSq);
         int    interval = (horiz <= 8.0D)
                 ? 2 + this.taskOwner.getRNG().nextInt(3)
@@ -139,22 +123,15 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         this.repathDelay    = success ? interval : (BROKEN_PROBE_BASE + this.taskOwner.getRNG().nextInt(BROKEN_PROBE_VARIANCE));
     }
 
-    /** Applies cheap motion without raycasts. */
     private void applyFallbackMotion(double dx, double dz) {
         Vec3 dir = Vec3.createVectorHelper(dx, 0.0, dz).normalize();
         this.taskOwner.motionX += dir.xCoord * 0.1;
         this.taskOwner.motionZ += dir.zCoord * 0.1;
     }
 
-    /** Schedule next broken‐nav probe sooner. */
     private void scheduleBrokenProbe() {
         this.repathDelay = BROKEN_PROBE_BASE + this.taskOwner.getRNG().nextInt(BROKEN_PROBE_VARIANCE);
     }
-
-
-
-
-
 
     private void performExtendedMeleeAttack() {
         if (this.targetEntity == null) return;
@@ -189,7 +166,6 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         return NightmareMode.isAprilFools ? 7 : 2;
     }
 
-    // You should define or import these as needed
     private Set<Integer> getLongRangeItems() {
         return NMUtils.LONG_RANGE_ITEMS;
     }
@@ -198,5 +174,3 @@ public class EntityAIChaseTargetSmart extends EntityAIBase {
         return NMUtils.LESSER_RANGE_ITEMS;
     }
 }
-
-

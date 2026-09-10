@@ -9,16 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BiomeGenUnderworld extends BiomeGenBase {
-    // biome specific information
-    /** Default: 1.0f
-     * <br>
-     * Higher than 1.0 means the player loses sanity in this biome
-     * <br>
-     * Less than 1.0 means the player becomes enlightened in this biome
-     **/
+
     private float drainMultiplier = 1.0f;
 
-    // the min/max
     private static final float BLIGHT_MIN = 0.5f;
     private static final float BLIGHT_MAX = 0.6f;
 
@@ -33,19 +26,6 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
 
     private static final float DEFAULT_MIN = 0.5f;
     private static final float DEFAULT_MAX = 0.6f;
-
-//    private static final float BLIGHT_MIN = 0.1f;
-//    private static final float BLIGHT_MAX = 0.3f;
-
-//    private static final float HIGH_MIN = 0.5f;
-//    private static final float HIGH_MAX = 1.2f;
-
-//    private static final float FLOWER_MIN = 0.05f;
-//    private static final float FLOWER_MAX = 0.06f;
-//
-//    private static final float VOID_MIN = 0.25f;
-//    private static final float VOID_MAX = 0.2501f;
-
 
     public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                           new BiomeGenBlightlands(24) .setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains"))         .invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
     public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)      new BiomeGenHighlands(25)   .setDrainMultiplier(1.1f).setBiomeName("UnderworldDesert"))         .invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
@@ -82,22 +62,13 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
         this.spawnableMonsterList.add(new SpawnListEntry(EntitySlime.class, 4, 4, 4));
         this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 2, 1, 4));
 
-//        System.out.println("USING OLD BIOME DECORATOR FOR DEBUG");
-//        this.theBiomeDecorator = new BiomeDecorator(this);
         this.theBiomeDecorator = new BiomeUnderworldDecorator(this);
     }
-
-
 
     public float getDrainMultiplier() {
         return drainMultiplier;
     }
 
-    /**
-     * Higher than 1.0 means the player loses sanity in this biome
-     * <br>
-     * Less than 1.0 means the player becomes enlightened in this biome
-     **/
     public BiomeGenUnderworld setDrainMultiplier(float drainMultiplier) {
         this.drainMultiplier = drainMultiplier;
         return this;

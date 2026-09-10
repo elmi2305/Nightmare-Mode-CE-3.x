@@ -4,24 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
-/**
- * A block that uses metadata (0–15) to represent up to 16 distinct variants,
- * conserving block ID space. Each variant defines its own textures, hardness,
- * resistance, and behavioral flags.
- *
- *
- * <h3>Forcing a separate block ID</h3>
- * If a variant truly needs its own ID (e.g. it must be visible in creative while
- * its siblings are hidden, or it has a fundamentally different material), it can
- * be registered as a standalone {@code BlockMultiTextured}
- *
- * <h3>Explosion resistance caveat</h3>
- * The classic {@code getExplosionResistance(Entity)} overload has no world-coordinate
- * parameter, so the block-level {@code blockResistance} field is set to the minimum
- * resistance across all variants as a conservative fallback. If the runtime provides
- * the 5-parameter overload {@code getExplosionResistance(Entity, World, int, int, int)},
- * that override returns the exact per-variant value.
- */
 public class BlockMetaMultiTextured extends NMBlock {
 
     public static class Variant {
@@ -42,27 +24,17 @@ public class BlockMetaMultiTextured extends NMBlock {
             this.unlocalizedName   = b.unlocalizedName;
         }
 
-
-        /** All six faces share one texture. */
         public static Builder allSides(String tex) {
             return new Builder(tex, tex, tex, tex, tex, tex);
         }
 
-        /**
-         * Unique top and bottom texture; other faces the same
-         */
         public static Builder topBotSides(String top, String bot, String sides) {
             return new Builder(bot, top, sides, sides, sides, sides);
         }
 
-        /**
-         * Each face has its own texture
-         */
         public static Builder custom(String bot, String top, String south, String north, String west, String east) {
             return new Builder(bot, top, south, north, west, east);
         }
-
-
 
         public static class Builder {
 
@@ -92,12 +64,10 @@ public class BlockMetaMultiTextured extends NMBlock {
         }
     }
 
-
     private final Variant[] variants;
 
     @Environment(EnvType.CLIENT)
     private Icon[][] icons;
-
 
     public BlockMetaMultiTextured(int id, Material material, Variant... variants) {
         super(id, material);
@@ -109,16 +79,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         this.variants = variants;
         this.setCreativeTab(CreativeTabs.tabBlock);
 
-        // ----------------------------------------------------------------
-        // BLOCK HARDNESS SHENANIGANS
-        //
-        // getBlockHardness(World,x,y,z) is the method used for player digging.
-        // The fields below are fallbacks used in other places (e.g. the single-argument explosion check).
-        //
-        // I use the minimum value across all variants so the block is never accidentally harder than intended
-        // The meta overrides then enforce exact values during actual gameplay
-        // ----------------------------------------------------------------
-
         float minH = Float.NaN;
         float minR = Float.NaN;
         for (Variant v : this.variants) {
@@ -129,7 +89,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         if (!Float.isNaN(minR)) this.setResistance(minR);
     }
 
-    // textures
     @Environment(EnvType.CLIENT)
     @Override
     public void registerIcons(IconRegister register) {
@@ -160,8 +119,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         return safeIcon(meta, side);
     }
 
-
-    // metadata hardness and resistance
     @Override
     public float getBlockHardness(World world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
@@ -172,10 +129,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         return blockHardness;
     }
 
-    /**
-     * Returns the exact per-variant resistance when world coordinates are available.
-     * Vanilla divides the returned value by 5 internally before comparing.
-     */
     public float getExplosionResistance(Entity entity, World world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         if (meta >= 0 && meta < variants.length) {
@@ -184,8 +137,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         }
         return super.getExplosionResistance(entity);
     }
-
-    // metadata behaviour
 
     @Override
     public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
@@ -224,14 +175,10 @@ public class BlockMetaMultiTextured extends NMBlock {
         return meta >= 0 && meta < variants.length && variants[meta].canGrowVegetation;
     }
 
-    // drop and metadata preservation
-
     @Override
     public int damageDropped(int meta) {
         return meta;
     }
-
-    // localization
 
     public String getUnlocalizedName(int meta) {
         if (meta >= 0 && meta < variants.length) {
@@ -241,7 +188,6 @@ public class BlockMetaMultiTextured extends NMBlock {
         return getUnlocalizedName();
     }
 
-    /** Returns the first variant's name as a no-meta fallback. */
     @Override
     public String getUnlocalizedName() {
         if (variants.length > 0) {
@@ -251,8 +197,5 @@ public class BlockMetaMultiTextured extends NMBlock {
         return super.getUnlocalizedName();
     }
 
-    // utility
-
-    /** Number of registered variants (= highest valid metadata value + 1). */
     public int variantCount() { return variants.length; }
 }

@@ -21,7 +21,6 @@ import java.util.List;
 
 import static btw.community.nightmaremode.NightmareMode.logical;
 
-
 public class NMConfUtils {
     public static final List<CONFIG> confList = new ArrayList<>();
     static{
@@ -136,7 +135,6 @@ public class NMConfUtils {
         public abstract boolean isActive();
     }
 
-
     public static boolean isConfigCompleted(CONFIG config){
         int[] confList = getCompletedConfigs();
         if(confList.length < config.getId() - 1){
@@ -144,8 +142,6 @@ public class NMConfUtils {
         }
         return confList[config.getId() - 1] == 1;
     }
-
-
 
     public static int[] getWorldConfigData(World w){
         return w.getData(NightmareMode.CONFIGS_CREATED);
@@ -176,7 +172,6 @@ public class NMConfUtils {
         return new File(FILE_NAME);
     }
 
-
     private static final String KEY_STRING = "ThisIsAVeryLongAndConvolutedSecretKeyStringThatIsAtLeast32CharactersForAES256!";
 
     private static SecretKey getKey() {
@@ -202,28 +197,26 @@ public class NMConfUtils {
             return;
         }
 
-        // If file exists but decryption fails (e.g., tampered or corrupt), reset
         try {
-            getCompletedConfigs(); // This will throw if invalid
+            getCompletedConfigs();
         } catch (Exception e) {
-            // Reset to defaults
+
             int[] defaults = new int[CONFIG_COUNT];
             writeConfigs(defaults);
         }
     }
 
-    /** Returns all completed configs */
     public static int[] getCompletedConfigs() {
         File file = getConfigFile();
 
         if (!file.exists()) {
             initConfigFile();
-            return new int[CONFIG_COUNT]; // Defaults are all 0
+            return new int[CONFIG_COUNT];
         }
 
         try {
             byte[] fileBytes = Files.readAllBytes(file.toPath());
-            if (fileBytes.length < 12) { // Min size: IV (12 bytes)
+            if (fileBytes.length < 12) {
                 throw new IllegalStateException("Invalid config file");
             }
 
@@ -247,7 +240,7 @@ public class NMConfUtils {
 
             return configs;
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            // tampering detected
+
             throw new RuntimeException("Config file tampered or corrupt", e);
         } catch (Exception e) {
             throw new RuntimeException("Error reading config", e);
@@ -274,12 +267,11 @@ public class NMConfUtils {
             }
             sb.append(values[i]).append(",");
         }
-        sb.deleteCharAt(sb.length() - 1); // remove last comma
+        sb.deleteCharAt(sb.length() - 1);
 
         try {
             byte[] plaintext = sb.toString().getBytes("UTF-8");
 
-            // encrypt
             byte[] iv = new byte[12];
             new SecureRandom().nextBytes(iv);
             byte[] ciphertext = encrypt(plaintext, iv);
@@ -339,11 +331,9 @@ public class NMConfUtils {
         return sb.toString();
     }
 
-
     private static boolean isEnabled(int[] arr, int index) {
         return arr != null && index >= 0 && index < arr.length && arr[index] == 1;
     }
-
 
     public static boolean isClientUsingHelpConfig(){
         return NightmareMode.perfectStart || NightmareMode.fastVillagers || NightmareMode.extraArmor;

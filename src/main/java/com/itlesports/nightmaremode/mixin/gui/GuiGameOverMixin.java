@@ -25,7 +25,6 @@ public class GuiGameOverMixin extends GuiScreen {
     @Unique private String subTip = "";
     @Unique private String deathMessage = "";
 
-    // Get tips from lang file
     @Unique private static String[] tips = new String[32];
     @Unique private static String[] lategameTips = new String[9];
 
@@ -63,7 +62,6 @@ public class GuiGameOverMixin extends GuiScreen {
         if (!this.subTip.isEmpty()) {
             this.drawCenteredString(this.fontRenderer, this.subTip, centerX, initialY + 20, 0xFFFFFF);
         }
-
 
         if (this.deathMessage != null) {
             float textSizeMod = 1.25f;
@@ -118,13 +116,13 @@ public class GuiGameOverMixin extends GuiScreen {
     @Inject(method = "actionPerformed", at = @At("TAIL"), cancellable = true)
     private void manageExtraButton(GuiButton par1GuiButton, CallbackInfo ci){
         if(par1GuiButton.id == 4){
-//            this.mc.displayGuiScreen(null);
+
             if (this.createClicked) {
                 return;
             }
 
             this.createClicked = true;
-            long seed = new Random().nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
+            long seed = new Random().nextLong();
             WorldSettings settings = new WorldSettings(seed, this.mc.theWorld.getWorldInfo().getGameType(), true, false, this.mc.theWorld.getWorldInfo().getTerrainType(), this.mc.theWorld.getWorldInfo().getDifficulty(),true);
             ISaveFormat var1 = this.mc.getSaveLoader();
 

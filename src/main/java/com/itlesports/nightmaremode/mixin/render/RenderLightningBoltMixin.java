@@ -17,14 +17,7 @@ import java.util.Random;
 
 @Mixin(RenderLightningBolt.class)
 public class RenderLightningBoltMixin {
-//    @ModifyArgs(method = "doRenderLightningBolt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;setColorRGBA_F(FFFF)V"))
-//    private void changeLightningColor(Args args){
-//        if (NMUtils.getIsBloodMoon()) {
-//            args.set(0,1.0f);
-//            args.set(1,0.05f);
-//            args.set(2,0.05f);
-//        }
-//    }
+
     @Inject(method = "doRenderLightningBolt", at = @At("HEAD"), cancellable = true)
     private void renderBloodMoon(EntityLightningBolt entityBolt, double par2, double par4, double par6, float par8, float par9, CallbackInfo ci){
         if(NMUtils.getIsBloodMoon()) {
@@ -32,7 +25,6 @@ public class RenderLightningBoltMixin {
             ci.cancel();
         }
     }
-
 
     @Unique
     public void renderBloodMoonLightningBolt(EntityLightningBolt entityBolt, double par2, double par4, double par6, float par8, float par9) {
@@ -56,7 +48,7 @@ public class RenderLightningBoltMixin {
             var15 += (double)(var17.nextInt(15) - 7);
         }
 
-        for (int var45 = 0; var45 < 6; ++var45) {  // Increased from 4
+        for (int var45 = 0; var45 < 6; ++var45) {
             Random var46 = new Random(entityBolt.renderSeed);
             for (int var19 = 0; var19 < 5; ++var19) {
                 int var20 = segments - 1;
@@ -130,17 +122,16 @@ public class RenderLightningBoltMixin {
         }
 
         Random chaosRand = new Random(entityBolt.renderSeed * 17L);
-        for (int vein = 0; vein < 6; ++vein) {                    // More veins
+        for (int vein = 0; vein < 6; ++vein) {
             double baseOffsetX = chaosRand.nextDouble() * 5.0 - 2.5;
             double baseOffsetZ = chaosRand.nextDouble() * 5.0 - 2.5;
 
-            int startSeg = 5 + chaosRand.nextInt(segments - 8);   // Start from various heights
-            int veinLength = 5 + chaosRand.nextInt(6);             // Varying length
+            int startSeg = 5 + chaosRand.nextInt(segments - 8);
+            int veinLength = 5 + chaosRand.nextInt(6);
 
             for (int subLayer = 0; subLayer < 4; ++subLayer) {
                 var10.startDrawing(5);
 
-                // Darker, bloodier vein color
                 float veinAlpha = 0.24f - subLayer * 0.04f;
                 var10.setColorRGBA_F(0.82f, 0.03f, 0.04f, veinAlpha);
 
@@ -156,7 +147,6 @@ public class RenderLightningBoltMixin {
                     double vx2 = var11[seg2] - var13 + baseOffsetX * 0.6;
                     double vz2 = var12[seg2] - var15 + baseOffsetZ * 0.6;
 
-                    // Add extra chaos per corner
                     double chaosX = chaosRand.nextDouble() * 1.8 - 0.9;
                     double chaosZ = chaosRand.nextDouble() * 1.8 - 0.9;
 

@@ -30,7 +30,7 @@ public class SimpleWanderBehaviorMixin {
         if(this.myEntity.getRNG().nextInt(chanceToDoSmartCheck) != 0) return;
 
         EntityPlayer nearestPlayer;
-        // find the nearest player
+
         if(lastCachedPlayer == null || this.myEntity.getRNG().nextInt(20) == 0){
             if(this.myEntity.posY < 40) return;
             nearestPlayer = this.myEntity.worldObj.getClosestPlayerToEntity(this.myEntity, 72);
@@ -46,7 +46,6 @@ public class SimpleWanderBehaviorMixin {
                     nearestPlayer.posZ
             );
 
-            // attempt to find a random target toward that player
             Vec3 targetVec = RandomPositionGenerator.findRandomTargetBlockTowards(this.myEntity, 10, 7, playerVec);
 
             if (targetVec != null) {
@@ -59,10 +58,10 @@ public class SimpleWanderBehaviorMixin {
     @Unique private int getChanceForSmartCheck(){
         int progress = NMUtils.getWorldProgress();
         int baseChance = 36;
-                                                        //      b    b/2  b/3  b/4
-        int tempChance = baseChance / (progress + 1);    //     36,  18,  12,  9
-        if(NMUtils.getIsBloodMoon()) {tempChance /= 2;}  //     18,   9,   6,  4
-        if(NMUtils.getIsEclipse()) {tempChance /= 4;}    //     9,   4,   3,   2
+
+        int tempChance = baseChance / (progress + 1);
+        if(NMUtils.getIsBloodMoon()) {tempChance /= 2;}
+        if(NMUtils.getIsEclipse()) {tempChance /= 4;}
         if(NMEvents.SimpleEvent.HELL.isActive()){tempChance = 3;}
         return tempChance;
     }

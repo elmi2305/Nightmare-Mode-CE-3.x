@@ -49,7 +49,7 @@ public class ItemEclipseBow extends CompositeBowItem {
             }
 
             float arrowVelocity = fPullStrength * 4f;
-            float spreadAngle = world.rand.nextFloat() * 3 + 2; // Angle for left and right arrows
+            float spreadAngle = world.rand.nextFloat() * 3 + 2;
             float spreadAngleVertical = world.rand.nextFloat() * 3 + 1;
 
             boolean hasInfinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemStack) > 0;
@@ -81,9 +81,6 @@ public class ItemEclipseBow extends CompositeBowItem {
         }
     }
 
-    /**
-     * Spawns an arrow with a given yaw offset to create spread effect.
-     */
     private void spawnArrowWithSpread(World world, EntityPlayer player, int arrowItemID, float velocity, float yawOffset, float fPullStrength, float pitchOffset, boolean hasInfinity) {
         EntityArrow arrow = this.createArrowEntityForItem(world, player, arrowItemID, velocity / this.getPullStrengthToArrowVelocityMultiplier());
 
@@ -91,7 +88,6 @@ public class ItemEclipseBow extends CompositeBowItem {
             arrow.canBePickedUp = 0;
         }
 
-        // Calculate the directional vectors with adjusted yaw
         float yaw = player.rotationYaw + yawOffset;
         float pitch = player.rotationPitch + pitchOffset;
         float motionX = -MathHelper.sin(yaw * (float)Math.PI / 180.0F) * MathHelper.cos(pitch * (float)Math.PI / 180.0F);
@@ -129,8 +125,6 @@ public class ItemEclipseBow extends CompositeBowItem {
         }
         return super.createArrowEntityForItem(world, player, iItemID, fPullStrength);
     }
-
-
 
     @Override
     protected float getCurrentPullStrength(EntityPlayer player, ItemStack itemStack, int iTicksInUseRemaining) {

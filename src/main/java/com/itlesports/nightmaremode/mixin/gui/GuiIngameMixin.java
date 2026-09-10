@@ -46,7 +46,6 @@ public abstract class GuiIngameMixin extends Gui {
             double sanityPercent = Math.min(sanity / MAX_SANITY, 1.0);
             double fillPercent = 1.0 - sanityPercent;
 
-            // bar dimensions in pixels
             final int BAR_WIDTH = 81;
             final int BAR_HEIGHT = 9;
             final int TEXTURE_WIDTH = 256;
@@ -56,7 +55,6 @@ public abstract class GuiIngameMixin extends Gui {
             int screenWidth = scaledRes.getScaledWidth();
             int screenHeight = scaledRes.getScaledHeight();
 
-            // the position of the sanity meter
             int baseX = screenWidth / 2 - 91;
             int baseY = screenHeight - 49 - BAR_HEIGHT - 5;
 
@@ -66,7 +64,6 @@ public abstract class GuiIngameMixin extends Gui {
                 baseY += 10;
             }
 
-            // shake at high sanity
             int shakeX = 0;
             int shakeY = 0;
             if (sanity > CRITICAL_SANITY) {
@@ -83,9 +80,6 @@ public abstract class GuiIngameMixin extends Gui {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-
-
-                // render background bar
             this.mc.renderEngine.bindTexture(new ResourceLocation("nightmare", "textures/gui/sanity_background.png"));
             Tessellator tessellator = Tessellator.instance;
 
@@ -96,9 +90,6 @@ public abstract class GuiIngameMixin extends Gui {
             tessellator.addVertexWithUV(barX, barY, 0, 0.0F, 0.0F);
             tessellator.draw();
 
-
-                // render the actual sanity fill
-            // drains from right to left
             int fillWidth = (int)(BAR_WIDTH * fillPercent);
 
             if (fillWidth > 0) {
@@ -108,25 +99,21 @@ public abstract class GuiIngameMixin extends Gui {
 
                 GL11.glColor4f(color[0], color[1], color[2], 1.0F);
 
-                // render fill (from left, width determined by fillPercent)
                 renderClippedTexture(barX, barY, 0, 0, fillWidth, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-                // sparkles
                 if (fillPercent > 0.1) {
                     renderSparkles(barX, barY, fillWidth, BAR_HEIGHT, sanityPercent, partialTicks);
                 }
 
-                // glow effect
                 if (sanity > (MAX_SANITY / 2)) {
                     renderInsanityGlow(barX, barY, fillWidth, BAR_HEIGHT, sanity, partialTicks);
                 }
             }
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-                // render border around everything
             int offset = 5;
-            int borderWidth = BAR_WIDTH + (offset * 2);  // 91
-            int borderHeight = BAR_HEIGHT + (offset * 2); // 19
+            int borderWidth = BAR_WIDTH + (offset * 2);
+            int borderHeight = BAR_HEIGHT + (offset * 2);
 
             this.mc.renderEngine.bindTexture(new ResourceLocation("nightmare", "textures/gui/sanity_border.png"));
 
@@ -150,46 +137,40 @@ public abstract class GuiIngameMixin extends Gui {
         }
     }
 
-    /**
-     * Calculate color based on sanity level with smooth transitions
-     */
     @Unique
     private float[] calculateSanityColor(double sanity, float partialTicks) {
         float r, g, b;
 
         if (sanity < (MAX_SANITY / 4)) {
-            // 75% - 100% sanity, astral blue
+
             r = 0.3F;
             g = 0.7F;
             b = 1.0F;
         } else if (sanity < (MAX_SANITY / 2)) {
-            // 75% - 50%, blue/cyan
+
             float progress = (float)((sanity - (MAX_SANITY / 4)) / (MAX_SANITY / 4));
-            r = 0.3F + (0.5F * progress); // 0.3 -> 0.8
-            g = 0.7F + (0.2F * progress); // 0.7 → 0.9
+            r = 0.3F + (0.5F * progress);
+            g = 0.7F + (0.2F * progress);
             b = 1.0F;
         } else if (sanity < (MAX_SANITY * 3 / 4)) {
-            // 50% - 25% sanity, purple
+
             float progress = (float)((sanity - (MAX_SANITY / 2)) / (MAX_SANITY / 4));
-            r = 0.8F + (0.1F * progress); // 0.8 → 0.9
-            g = 0.9F - (0.5F * progress); // 0.9 → 0.4
-            b = 1.0F - (0.1F * progress); // 1.0 → 0.9
+            r = 0.8F + (0.1F * progress);
+            g = 0.9F - (0.5F * progress);
+            b = 1.0F - (0.1F * progress);
         } else {
-            // 25% - 0% sanity, deep red
+
             float progress = (float)Math.min((sanity - (MAX_SANITY * 3 / 4)) / (MAX_SANITY / 4), 1.0);
             float pulse = (float)(Math.sin((System.currentTimeMillis() + partialTicks * 50) * 0.01) * 0.15 + 0.85);
 
-            r = (0.9F + (0.1F * progress)) * pulse; // 0.9 → 1.0
-            g = (0.4F - (0.3F * progress)) * pulse; // 0.4 → 0.1
-            b = (0.9F - (0.6F * progress)) * pulse; // 0.9 → 0.3
+            r = (0.9F + (0.1F * progress)) * pulse;
+            g = (0.4F - (0.3F * progress)) * pulse;
+            b = (0.9F - (0.6F * progress)) * pulse;
         }
 
         return new float[]{r, g, b};
     }
 
-    /**
-     * Render texture with clipping for the drain effect
-     */
     @Unique
     private void renderClippedTexture(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int textureSheetWidth, int textureSheetHeight) {
         Tessellator tessellator = Tessellator.instance;
@@ -199,7 +180,6 @@ public abstract class GuiIngameMixin extends Gui {
         float vMin = (float)v / textureSheetHeight;
         float vMax = (float)(v + textureHeight) / textureSheetHeight;
 
-        // adjust uMax for clipping (bar drains from right)
         float uvWidth = (uMax - uMin) * ((float)width / textureWidth);
         uMax = uMin + uvWidth;
 
@@ -211,27 +191,23 @@ public abstract class GuiIngameMixin extends Gui {
         tessellator.draw();
     }
 
-    /**
-     * Render sparkle/shine effects on the filled portion
-     */
     @Unique
     private void renderSparkles(int barX, int barY, int fillWidth, int barHeight, double sanityPercent, float partialTicks) {
-        long time = System.currentTimeMillis(); // used to seed the randomness
+        long time = System.currentTimeMillis();
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE); // glow
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
         Tessellator tessellator = Tessellator.instance;
 
-        int sparkleCount = Math.max(3, fillWidth / 10); // at least 3 sparkles, scales with width
+        int sparkleCount = Math.max(3, fillWidth / 10);
 
         for (int i = 0; i < sparkleCount; i++) {
-            // use unique seed for each sparkle based on index and time. this ensures even distribution across the bar
+
             long sparkleTimeSeed = (time / 150) + (i * 1000L);
             Random rand = new Random(sparkleTimeSeed);
 
-            // distribute sparkles evenly with some randomness
             float basePosition = (float)i / (float)sparkleCount;
             float randomOffset = (rand.nextFloat() - 0.5F) * 0.15F;
             float normalizedX = Math.max(0.0F, Math.min(1.0F, basePosition + randomOffset));
@@ -240,7 +216,6 @@ public abstract class GuiIngameMixin extends Gui {
             float sparkleY = barY + (rand.nextFloat() * barHeight);
             float sparkleSize = 0.8F + (rand.nextFloat() * 1.2F);
 
-            // Twinkle animation - each sparkle has unique phase
             long phaseOffset = i * 317L;
             float phase = (float)((time + phaseOffset) % 1500) / 1500.0F;
             float alpha = (float)(Math.sin(phase * Math.PI * 2) * 0.5 + 0.5);
@@ -248,7 +223,6 @@ public abstract class GuiIngameMixin extends Gui {
 
             float colorVariation = 0.9F + (rand.nextFloat() * 0.1F);
 
-            // sparkle color - mostly white with slight blue tint at high sanity
             float r = colorVariation;
             float g = colorVariation;
             float b = 1.0F;
@@ -262,7 +236,6 @@ public abstract class GuiIngameMixin extends Gui {
 
             GL11.glColor4f(r, g, b, alpha * 0.7F);
 
-            // actually do the render
             tessellator.startDrawingQuads();
             tessellator.addVertex(sparkleX - sparkleSize, sparkleY + sparkleSize, 0.0D);
             tessellator.addVertex(sparkleX + sparkleSize, sparkleY + sparkleSize, 0.0D);
@@ -270,12 +243,11 @@ public abstract class GuiIngameMixin extends Gui {
             tessellator.addVertex(sparkleX - sparkleSize, sparkleY - sparkleSize, 0.0D);
             tessellator.draw();
 
-            // add a cross-shaped highlight for extra sparkle
             if (alpha > 0.6F) {
                 GL11.glColor4f(r, g, b, (alpha - 0.6F) * 0.5F);
 
                 float crossSize = sparkleSize * 1.5F;
-                // horizontal bar of cross
+
                 tessellator.startDrawingQuads();
                 tessellator.addVertex(sparkleX - crossSize, sparkleY + 0.5F, 0.0D);
                 tessellator.addVertex(sparkleX + crossSize, sparkleY + 0.5F, 0.0D);
@@ -283,7 +255,6 @@ public abstract class GuiIngameMixin extends Gui {
                 tessellator.addVertex(sparkleX - crossSize, sparkleY - 0.5F, 0.0D);
                 tessellator.draw();
 
-                // vertical bar of cross
                 tessellator.startDrawingQuads();
                 tessellator.addVertex(sparkleX - 0.5F, sparkleY + crossSize, 0.0D);
                 tessellator.addVertex(sparkleX + 0.5F, sparkleY + crossSize, 0.0D);
@@ -297,9 +268,6 @@ public abstract class GuiIngameMixin extends Gui {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    /**
-     * Render pulsing glow effect at high insanity levels
-     */
     @Unique
     private void renderInsanityGlow(int barX, int barY, int fillWidth, int barHeight, double sanity, float partialTicks) {
         if (sanity < (MAX_SANITY / 2)) return;
@@ -311,7 +279,6 @@ public abstract class GuiIngameMixin extends Gui {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
-        // color based on insanity level
         float r = 0.8F + (intensity * 0.2F);
         float g = 0.3F - (intensity * 0.2F);
         float b = 0.6F - (intensity * 0.3F);
@@ -321,7 +288,6 @@ public abstract class GuiIngameMixin extends Gui {
 
         Tessellator tessellator = Tessellator.instance;
 
-        // render glow slightly larger than the bar
         int glowExpand = 2;
         tessellator.startDrawingQuads();
         tessellator.addVertex(barX - glowExpand, barY + barHeight + glowExpand, 0.0D);
@@ -333,11 +299,6 @@ public abstract class GuiIngameMixin extends Gui {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
-
-
-    // unused inject
-//    @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
-//    private void renderVignetteInUnderworld(float par1, boolean par2, int par3, int par4, CallbackInfo ci){}
 
     @Redirect(method = "func_110327_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;getAir()I"))
     private int doNot(EntityClientPlayerMP instance)
@@ -360,12 +321,8 @@ public abstract class GuiIngameMixin extends Gui {
         float maxHealth = (float)maxHealthAttribute.getAttributeValue();
         float absorption = this.mc.thePlayer.getAbsorptionAmount();
 
-
-//        int healthRows = MathHelper.ceiling_float_int((maxHealth + absorption) / 2.0F / 10.0F);
-//        int healthRowHeight = Math.max(10 - (healthRows - 2), 3);
         ArrayList<StatusEffect> activeStatuses = this.mc.thePlayer.getAllActiveStatusEffects();
         FontRenderer fontRenderer = this.mc.fontRenderer;
-
 
         amountRendered = 0;
         if((maxHealth + absorption) > 20){
@@ -375,8 +332,6 @@ public abstract class GuiIngameMixin extends Gui {
         if (((FoodStatsExt)this.mc.thePlayer.getFoodStats()).nightmareMode$getMaxFoodLevel() > 60) {
             amountRendered++;
         }
-
-//        int airBarY = screenY - (healthRows - 1) * healthRowHeight - amountRendered * 10;
 
         int airBarY = screenY - amountRendered * 10;
 
@@ -402,8 +357,6 @@ public abstract class GuiIngameMixin extends Gui {
             int stringWidth = fontRenderer.getStringWidth(status);
             fontRenderer.drawStringWithShadow(status, screenX - stringWidth, screenY - (i * 10), 0xFFFFFF);
         }
-
-
 
         String period = this.mc.theWorld.isDaytime() ? I18n.getString("gui.nmTimer.day") : I18n.getString("gui.nmTimer.night");
         if (this.mc.thePlayer.dimension == -1) {
@@ -441,7 +394,7 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness2(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
-        // draw mspt
+
         FontRenderer fontRenderer = this.mc.fontRenderer;
 
         if (NightmareMode.benchmarkPerformance) {
@@ -476,10 +429,9 @@ public abstract class GuiIngameMixin extends Gui {
         this.renderBlink(screenWidth,screenHeight);
     }
 
-
     @Unique private final List<CrackFragment> heartCrackFragments = new ArrayList<CrackFragment>();
     @Unique private long heartCrackLastNano = -1L;
-    @Unique private boolean heartCrackPrevTrigger = false; // placeholder edge-trigger, see note below
+    @Unique private boolean heartCrackPrevTrigger = false;
 
     @Unique private void spawnHeartCrack(float originX, float originY) {
         int fragmentCount = 5;
@@ -487,7 +439,7 @@ public abstract class GuiIngameMixin extends Gui {
             float angle = (float) (this.rand.nextFloat() * Math.PI * 2.0);
             float speed = 18.0f + this.rand.nextFloat() * 14.0f;
             float vx = (float) Math.cos(angle) * speed;
-            float vy = (float) Math.sin(angle) * speed - 10.0f; // slight upward pop
+            float vy = (float) Math.sin(angle) * speed - 10.0f;
             float rotation = this.rand.nextFloat() * 360.0f;
             float rotationSpeed = (this.rand.nextFloat() - 0.5f) * 720.0f;
             float size = 6.0f + this.rand.nextFloat() * 3.0f;
@@ -532,7 +484,7 @@ public abstract class GuiIngameMixin extends Gui {
         long now = System.nanoTime();
         float delta = this.heartCrackLastNano < 0 ? 0.0f : (now - this.heartCrackLastNano) * 1.0E-9f;
         this.heartCrackLastNano = now;
-        delta = Math.min(delta, 0.1f); // guard against lag spikes
+        delta = Math.min(delta, 0.1f);
 
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
@@ -553,7 +505,7 @@ public abstract class GuiIngameMixin extends Gui {
                 continue;
             }
 
-            frag.vy += 60.0f * delta; // gravity
+            frag.vy += 60.0f * delta;
             frag.x += frag.vx * delta;
             frag.y += frag.vy * delta;
             frag.rotation += frag.rotationSpeed * delta;
@@ -599,14 +551,13 @@ public abstract class GuiIngameMixin extends Gui {
 
         ResourceLocation texture = vignette;
 
-
         if (Math.abs(fear) > 0.001f) {
             float lc = fear > 0.5f ? 0.0015f : 0.005f;
             if (!paused) {
                 fear = NMUtils.lerp(lc, fear, 0f);
             }
             ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$setFear(fear);
-//            System.out.println(fear);
+
         } else {
             fear = 0f;
         }
@@ -727,8 +678,6 @@ public abstract class GuiIngameMixin extends Gui {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-
-    /** Ken Perlin's smootherstep - C2 continuous, no velocity pop at endpoints */
     private float smootherstep(float t) {
         t = Math.max(0.0f, Math.min(1.0f, t));
         return t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
@@ -777,17 +726,12 @@ public abstract class GuiIngameMixin extends Gui {
 
         if (!(mc.thePlayer.ridingEntity instanceof EntityHorse horse)) return;
 
-
-        // only show for untamed horses while riding
         if (!horse.isTame() && horse.riddenByEntity instanceof EntityPlayer) {
-            // read the required direction stored by the horse (updated from packets)
+
             byte ordinal = ((IHorseTamingClient) horse).nm$getRequiredDirection();
             if (ordinal < 0 || ordinal >= EnumFacing.values().length) return;
 
-
             EnumFacing required = EnumFacing.values()[ordinal];
-
-//            System.out.println("horse direction: " + ordinal + " | " + required + "| " + (horse.worldObj.isRemote ? "client" : "server"));
 
             float transparency = this.calcTransparencyForAngles(horse, mc.thePlayer);
 
@@ -806,26 +750,7 @@ public abstract class GuiIngameMixin extends Gui {
 
             fontRenderer.drawStringWithShadow(textToShow, textX - stringWidth / 2, textY, 0XFFFFFF);
         }
-//        if(Keyboard.isKeyDown(Keyboard.KEY_L)){
-//            heightField -= 1;
-//            System.out.println("height: " + heightField);
-//        }
-//        if(Keyboard.isKeyDown(Keyboard.KEY_K)){
-//            widthField -= 1;
-//            System.out.println("width: "+ widthField);
-//        }
-//        if(Keyboard.isKeyDown(Keyboard.KEY_O)){
-//            heightField += 1;
-//            System.out.println("height: " + heightField);
-//        }
-//        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-//            widthField += 1;
-//            System.out.println("width: "+ widthField);
-//        }
-//        if(Keyboard.isKeyDown(Keyboard.KEY_R)){
-//            widthField = 6;
-//            heightField = 14;
-//        }
+
     }
     @Unique
     private int times_added = 0;
@@ -865,19 +790,13 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private void drawVerticalProgressBar(int x, int y, int width, int height, int progress, int max, float transparency) {
         Tessellator tess = Tessellator.instance;
 
-//        System.out.println("progress: " + progress);
-
-        // Clamp progress
         float pct = Math.max(0f, Math.min(1f, (float) progress / (float) max));
         int filledHeight = (int) (pct * height);
-
-
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        // Draw background (dark gray)
         tess.startDrawingQuads();
         tess.setColorRGBA_F(0.2f, 0.2f, 0.2f, transparency);
         tess.addVertex(x, y + height, 0.0);
@@ -886,7 +805,6 @@ public abstract class GuiIngameMixin extends Gui {
         tess.addVertex(x, y, 0.0);
         tess.draw();
 
-        // Draw filled portion (green)
         tess.startDrawingQuads();
         tess.setColorRGBA_F(0f, 0.8f, 0f, transparency);
         tess.addVertex(x, y + height, 0.0);
@@ -895,7 +813,6 @@ public abstract class GuiIngameMixin extends Gui {
         tess.addVertex(x, y + height - filledHeight, 0.0);
         tess.draw();
 
-        // Optional: white outline
         GL11.glLineWidth(1.5f);
         tess.startDrawing(GL11.GL_LINE_LOOP);
         tess.setColorRGBA_F(1f, 1f, 1f, transparency);
@@ -918,12 +835,10 @@ public abstract class GuiIngameMixin extends Gui {
         int sh = sr.getScaledHeight();
 
         int cx = sw / 2;
-        int cy = sh / 2 + 40; // below crosshair
+        int cy = sh / 2 + 40;
         int arrowSize = 24;
-        int shaftLength = heightField; // length of the arrow shaft
-        int shaftWidth = widthField;   // width of the arrow shaft
-
-
+        int shaftLength = heightField;
+        int shaftWidth = widthField;
 
         float angleDeg;
         switch (dir) {
@@ -943,30 +858,26 @@ public abstract class GuiIngameMixin extends Gui {
 
         Tessellator tess = Tessellator.instance;
 
-        // ---- draw black fill first ----
         tess.startDrawingQuads();
         tess.setColorRGBA_F(0f, 0f, 0f, transparency);
 
-        // shaft (centered vertically)
         tess.addVertex(-shaftWidth / 2f, shaftLength / 2f, 0.0);
         tess.addVertex(shaftWidth / 2f, shaftLength / 2f, 0.0);
         tess.addVertex(shaftWidth / 2f, -shaftLength / 2f, 0.0);
         tess.addVertex(-shaftWidth / 2f, -shaftLength / 2f, 0.0);
         tess.draw();
 
-        // arrowhead (triangle tip)
         tess.startDrawing(GL11.GL_TRIANGLES);
         tess.setColorRGBA_F(0f, 0f, 0f, transparency);
         tess.addVertex(-arrowSize / 2.0, -shaftLength / 2.0, 0.0);
         tess.addVertex(arrowSize / 2.0, -shaftLength / 2.0, 0.0);
-        tess.addVertex(0.0, -arrowSize / 2.0 - 6.0, 0.0); // tip
+        tess.addVertex(0.0, -arrowSize / 2.0 - 6.0, 0.0);
         tess.draw();
 
-        // ---- draw white outline ----
         GL11.glLineWidth(2f);
         tess.startDrawing(GL11.GL_LINE_LOOP);
         tess.setColorRGBA_F(1f, 1f, 1f, transparency);
-        // outline shaft
+
         tess.addVertex(-shaftWidth / 2f, shaftLength / 2f, 0.0);
         tess.addVertex(shaftWidth / 2f, shaftLength / 2f, 0.0);
         tess.addVertex(shaftWidth / 2f, -shaftLength / 2f, 0.0);
@@ -975,7 +886,7 @@ public abstract class GuiIngameMixin extends Gui {
 
         tess.startDrawing(GL11.GL_LINE_LOOP);
         tess.setColorRGBA_F(1f, 1f, 1f, transparency);
-        // outline arrowhead
+
         tess.addVertex(-arrowSize / 2.0, -shaftLength / 2.0, 0.0);
         tess.addVertex(arrowSize / 2.0, -shaftLength / 2.0, 0.0);
         tess.addVertex(0.0, -arrowSize / 2.0 - 6.0, 0.0);
@@ -986,7 +897,7 @@ public abstract class GuiIngameMixin extends Gui {
         GL11.glPopMatrix();
 
         int barX = cx + 20;
-        int barY = cy - (32/2); // top of bar
+        int barY = cy - (32/2);
         int barWidth = 6;
         int barHeight = 32;
         drawVerticalProgressBar(barX, barY, barWidth, barHeight, ((IHorseTamingClient)horse).nm$getTamingProgress(), 1000, transparency);
@@ -996,18 +907,17 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private float calcTransparencyForAngles(EntityHorse horseHost, EntityPlayer player){
         double horseYawRad = Math.toRadians(horseHost.rotationYawHead);
         Vec3 horseForward = Vec3.createVectorHelper(
-                -Math.sin(horseYawRad), // x
+                -Math.sin(horseYawRad),
                 0.0,
-                Math.cos(horseYawRad)  // z
+                Math.cos(horseYawRad)
         ).normalize();
 
         double playerYawRad = Math.toRadians(player.rotationYawHead);
         Vec3 playerForward = Vec3.createVectorHelper(
-                -Math.sin(playerYawRad), // x
+                -Math.sin(playerYawRad),
                 0.0,
-                Math.cos(playerYawRad)  // z
+                Math.cos(playerYawRad)
         ).normalize();
-
 
         double dotProduct = horseForward.dotProduct(playerForward);
 
@@ -1016,9 +926,6 @@ public abstract class GuiIngameMixin extends Gui {
         }
         return (float) Math.min(dotProduct, 1.0f);
     }
-
-
-
 
     @Unique
     private void renderText(String text, int stringWidth, int iScreenX, int iScreenY, FontRenderer fontRenderer, ArrayList<StatusEffect> activeStatuses){

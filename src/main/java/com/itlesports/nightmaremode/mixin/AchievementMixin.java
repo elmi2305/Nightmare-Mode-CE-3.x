@@ -49,7 +49,7 @@ public class AchievementMixin implements AchievementExt {
     @Override
     public Achievement[] nightmareMode$removeParent(Achievement[] original, Achievement toRemove) {
         if (original == null || original.length == 0) {
-            return original; // nothing to remove
+            return original;
         }
 
         int count = 0;
@@ -60,7 +60,7 @@ public class AchievementMixin implements AchievementExt {
         }
 
         if (count == original.length) {
-            // not found
+
             return original;
         }
 

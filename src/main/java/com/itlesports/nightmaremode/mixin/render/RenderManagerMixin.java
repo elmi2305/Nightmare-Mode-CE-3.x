@@ -16,8 +16,8 @@ import java.util.Random;
 public class RenderManagerMixin {
     @Unique private static final Random random = new Random();
     @Unique private static long lastChangeTime = 0;
-    @Unique private static int activeEffect = -1; // -1 means no effect
-    @Unique private static int threshold = 100; // -1 means no effect
+    @Unique private static int activeEffect = -1;
+    @Unique private static int threshold = 100;
 
     @Inject(method = "renderEntity", at = @At("TAIL"))
     private void destroyRenderingTemporarily(Entity par1Entity, float par2, CallbackInfo ci) {
@@ -33,79 +33,79 @@ public class RenderManagerMixin {
                 threshold = 100;
             }
             switch (activeEffect) {
-                case 0: // Fisheye
+                case 0:
                     GL11.glScalef(1.2f, 1.2f, 1);
                     GL11.glRotatef(10, 1, 0, 0);
                     break;
-                case 1: // Jittering
+                case 1:
                     GL11.glScalef(1 + (float) (Math.random() * 0.5 - 0.25),
                             1 + (float) (Math.random() * 0.5 - 0.25),
                             1);
                     break;
-                case 2: // Spinning
-                    GL11.glRotatef((currentTime % 180) / 2.0f, 0, 0, 1); // Adjusted for tick-based time
+                case 2:
+                    GL11.glRotatef((currentTime % 180) / 2.0f, 0, 0, 1);
                     break;
-                case 3: // Flip Y-axis
+                case 3:
                     GL11.glScalef(1, -1, 1);
                     break;
-                case 4: // Extreme Distortion
+                case 4:
                     GL11.glScalef(-0.5f, -1, 0.5f);
                     break;
-                case 5: // Wobble
+                case 5:
                     GL11.glScalef(1 + 0.1f * (float) Math.sin(currentTime * 0.1),
                             1 + 0.1f * (float) Math.cos(currentTime * 0.1),
                             1);
                     break;
-                case 6: // Barrel Roll
+                case 6:
                     GL11.glRotatef(currentTime % 360, 0, 0, 1);
                     break;
-                case 7: // Wave Warp
+                case 7:
                     GL11.glScalef(1 + 0.2f * (float) Math.sin(currentTime * 0.05),
                             1 + 0.2f * (float) Math.cos(currentTime * 0.05),
                             1);
                     break;
-                case 8: // Offset Chaos
+                case 8:
                     GL11.glTranslatef((float) (Math.random() * 0.2 - 0.1),
                             (float) (Math.random() * 0.2 - 0.1),
                             0);
                     break;
-                case 9: // Zoom Pulse
+                case 9:
                     float pulse = 1 + 0.3f * (float) Math.sin(currentTime * 0.1);
                     GL11.glScalef(pulse, pulse, 1);
                     break;
-                case 10: // Inverted Depth
+                case 10:
                     GL11.glScalef(1, 1, -1);
                     break;
-                case 11: // Screen Splitting
+                case 11:
                     GL11.glTranslatef(0, (currentTime % 20 < 10) ? 0.05f : -0.05f, 0);
                     break;
-                case 12: // Drunk Mode
+                case 12:
                     GL11.glRotatef(5 * (float) Math.sin(currentTime * 0.1), 0, 0, 1);
                     break;
-                case 13: // Tornado Spin
+                case 13:
                     float scaleTornado = 1 + 0.2f * (float) Math.sin(currentTime * 0.2);
                     GL11.glScalef(scaleTornado, scaleTornado, 1);
                     GL11.glRotatef(currentTime % 360, 0, 0, 1);
                     break;
-                case 14: // Vortex Stretch
+                case 14:
                     GL11.glScalef(1 + 0.5f * (float) Math.sin(currentTime * 0.1),
                             1 - 0.5f * (float) Math.sin(currentTime * 0.1),
                             1);
                     break;
-                case 15: // Chromatic Aberration (Fake)
+                case 15:
                     GL11.glTranslatef((float) Math.sin(currentTime * 0.1) * 0.01f,
                             (float) Math.cos(currentTime * 0.1) * 0.01f,
                             0);
                     break;
-                case 16: // Screen Meltdown
+                case 16:
                     GL11.glScalef(1, Math.max(0.1f, 1 - (currentTime % 200) / 200.0f), 1);
                     break;
-                case 17: // Hyperspeed Zoom
+                case 17:
                     float zoomSpeed = 1 + 0.5f * (float) Math.sin(currentTime * 0.5);
                     GL11.glScalef(zoomSpeed, zoomSpeed, 1);
                     break;
                 default:
-                    // No effect (normal rendering)
+
                     break;
             }
         }

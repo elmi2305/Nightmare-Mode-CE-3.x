@@ -21,7 +21,7 @@ public abstract class AddonConfigMixin implements AddonConfigExtender {
 
     @Override
     public void nightmareMode$modifyProperty(String path, Object newValue) {
-        // ensure the path exists and is registered
+
         if (!this.currentConfig.hasPath(path)) {
             throw new IllegalArgumentException("Config path '" + path + "' does not exist");
         }
@@ -31,23 +31,18 @@ public abstract class AddonConfigMixin implements AddonConfigExtender {
             throw new IllegalArgumentException("Path '" + path + "' was not registered with a validator");
         }
 
-        // create new value
         ConfigValue newValueObj = ConfigValueFactory.fromAnyRef(newValue);
 
-        // validate new value
         if (!validator.validate(newValueObj)) {
             throw new IllegalArgumentException(validator.getErrorMessage(newValueObj, this.currentConfig.getValue(path), path));
         }
 
-        // preserve comments
         ConfigValue currentValue = this.currentConfig.getValue(path);
         newValueObj = newValueObj.withOrigin(newValueObj.origin().withComments(currentValue.origin().comments()));
 
-        // Apply the new value
         this.currentConfig = this.currentConfig.withValue(path, newValueObj);
         this.hasChanged = true;
         this.writeConfig();
     }
-
 
 }
