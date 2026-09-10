@@ -35,6 +35,7 @@ public class MushroomCapBlockMixin extends BlockMushroomCap {
         }
         if(NMUtils.getWorldProgress() > PREHARDMODE){
             cir.setReturnValue(BTWItems.brownMushroom.itemID);
+            return;
         }
         cir.setReturnValue(0);
     }
