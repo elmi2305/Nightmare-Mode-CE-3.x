@@ -813,6 +813,8 @@ nm.withersoul.info=Một Linh hồn Wither rơi ra từ Wither mỗi lần nó b
 nm.obsidianshard.info=Mảnh Obsidian có được khi khai thác Obsidian bằng Cuốc kim cương hoặc Cuốc Máu. Cuốc Thép có thể dùng để khai thác cả khối hoàn chỉnh. Mảnh Obsidian có thể được biến thành Obsidian thô, rồi dùng để xây Cổng Nether.
 
 # NM BLOCK info
+nm.bloodIngotBlock.info=Khối Thỏi Máu có thể được dùng để xây Beacon Máu, giúp nhận hiệu ứng Sức mạnh. Beacon Máu cấp 4 cho hiệu ứng Sức mạnh cho mọi người chơi trong chiều không gian của nó.
+nm.refinedDiamondBlock.info=Khối Kim cương Tinh luyện có thể được dùng để xây Beacon Kim cương Tinh luyện, giúp nhận hiệu ứng Tốc độ. Beacon Kim cương Tinh luyện cấp 4 cho hiệu ứng Tốc độ cho mọi người chơi trong chiều không gian của nó.
 nm.steelOre.info=Quặng Thép xuất hiện ở Tầng 2 và 3, phía trên mức Kim cương. Nó chỉ có thể được khai thác sau khi đánh bại Wither hoặc dùng Cuốc Thép.
 nm.bloodChest.info=Rương Máu là một kho chứa không cháy, có dung lượng gấp đôi rương thường và khả năng chống nổ cao hơn. Nó có 54 ô chứa.
 nm.steelLocker.info=Tủ Thép là một kho chứa cứng cáp với 133 ô chứa. Nó chống được phần lớn vụ nổ và không thể cháy.

@@ -810,6 +810,8 @@ nm.withersoul.info=Dusza Withera wypada z Withera za każdym razem, gdy zostanie
 nm.obsidianshard.info=Odłamki Obsydianu zdobywa się przez wydobywanie Obsydianu Diamentowym lub Krwawym Kilofem. Stalowe Kilofy mogą wydobywać cały blok. Odłamki Obsydianu można przerobić na Surowy Obsydian, z którego można zbudować Portal Netheru.
 
 # NM BLOCK info
+nm.bloodIngotBlock.info=Bloki Krwawych Sztabek można wykorzystać do budowy Latarni Krwi, które dają Siłę. Latarnia Krwi poziomu 4 daje Siłę każdemu graczowi w jej wymiarze.
+nm.refinedDiamondBlock.info=Bloki Udoskonalonego Diamentu można wykorzystać do budowy Latarni z Udoskonalonego Diamentu, które dają Szybkość. Latarnia z Udoskonalonego Diamentu poziomu 4 daje Szybkość każdemu graczowi w jej wymiarze.
 nm.steelOre.info=Ruda Stali pojawia się w Warstwach 2 i 3, powyżej poziomu diamentu. Można ją wydobyć dopiero po pokonaniu Withera albo używając Stalowego Kilofa.
 nm.bloodChest.info=Krwawa Skrzynia to niepalny magazyn z dwukrotnie większą ilością miejsca niż zwykła skrzynia i zwiększoną odpornością na wybuchy. Ma 54 sloty.
 nm.steelLocker.info=Stalowa Szafka to wytrzymały magazyn z 133 slotami. Jest odporna na większość eksplozji i nie może spłonąć.

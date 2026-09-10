@@ -808,6 +808,8 @@ nm.withersoul.info=Eine Witherseele wird jedes Mal vom Wither fallen gelassen, w
 nm.obsidianshard.info=Obsidianscherben erhält man durch den Abbau von Obsidian mit einer Diamant- oder Blutspitzhacke.
 
 # NM BLOCK info
+nm.bloodIngotBlock.info=Blutbarrenblöcke können zum Bau von Blutleuchtfeuern verwendet werden, die Stärke verleihen. Ein Blutleuchtfeuer der Stufe 4 verleiht jedem Spieler in seiner Dimension Stärke.
+nm.refinedDiamondBlock.info=Blöcke aus Veredeltem Diamant können zum Bau von Leuchtfeuern aus Veredeltem Diamant verwendet werden, die Schnelligkeit verleihen. Ein Leuchtfeuer aus Veredeltem Diamant der Stufe 4 verleiht jedem Spieler in seiner Dimension Schnelligkeit.
 nm.steelOre.info=Stahlerz erscheint in Schicht 2 und 3 oberhalb der Diamanthöhe. Es kann erst nach dem Besiegen des Withers oder mit einer Stahlspitzhacke abgebaut werden.
 nm.bloodChest.info=Die Bluttruhe ist eine nicht brennbare Lagereinheit mit doppelt so viel Platz wie eine normale Truhe und erhöhter Explosionsresistenz. Sie besitzt 54 Plätze.
 nm.steelLocker.info=Der Stahlschrank ist eine robuste Lagereinheit mit 133 Plätzen. Er ist gegen die meisten Explosionen resistent und kann nicht brennen.

@@ -813,6 +813,8 @@ nm.obsidianshard.info=Obsidian Shards are gotten by mining Obsidian with a Diamo
 
 # NM BLOCK info
 nm.steelOre.info=Steel Ore spawns in Strata 2 & 3, above Diamond level. It can only be mined after defeating the Wither or using a Steel Pickaxe.
+nm.bloodIngotBlock.info=Blood Ingot Blocks can be used to build Blood Beacons, which grant Strength. A tier 4 Blood Beacon grants Strength to every player in its dimension.
+nm.refinedDiamondBlock.info=Refined Diamond Blocks can be used to build Refined Diamond Beacons, which grant Speed. A tier 4 Refined Diamond Beacon grants Speed to every player in its dimension.
 nm.bloodChest.info=The Blood Chest is a non-flammable storage unit with twice the space of a regular chest and increased blast resistance. It has 54 slots of space.
 nm.steelLocker.info=The Steel Locker is a tough storage unit with 133 slots of space. It is resistant to most explosions and cannot burn.
 nm.blockRoad.info=Road increases mob and player movement speed when walked on.

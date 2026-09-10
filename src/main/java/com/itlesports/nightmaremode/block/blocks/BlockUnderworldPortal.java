@@ -24,7 +24,7 @@ public class BlockUnderworldPortal extends BlockBreakable {
             player.timeUntilPortal = 100;
             // transfer:
             if (NightmareMode.devMode) {
-                player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
+//                player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
             } else {
                 ChatMessageComponent text = new ChatMessageComponent();
                 text.addText("<???> Nice try. ");
