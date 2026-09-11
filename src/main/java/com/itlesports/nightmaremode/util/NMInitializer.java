@@ -45,6 +45,7 @@ import net.minecraft.src.*;
 
 import java.util.function.Predicate;
 
+@SuppressWarnings("deprecation")
 public abstract class NMInitializer implements AchievementExt {
     private static IRecipe automationEssenceRecipe;
     private static IRecipe agrarianEssenceRecipe;
@@ -867,14 +868,22 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmEclipseMerchantShadowRod", profession, 4, NMItems.shadowRod.itemID, 0, 1, 2, 0.7F);
         buy("nmEclipseMerchantEnderMechanismFinal", profession, 5, NMItems.enderMechanism.itemID, 0, 1, 2, 1.1F);
         buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 16, 32, 1.0F);
-        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone1").profession(profession).level(5)
-                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(24, 24).mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone2").profession(profession).level(5)
-                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(28, 28).mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone3").profession(profession).level(5)
-                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(32, 32).mandatory().addToTradeList();
-        TradeProvider.getBuilder().name("nmEclipseMerchantBloodBone4").profession(profession).level(5)
-                .sell().item(NMBlocks.bloodBones.blockID).emeraldCost(36, 36).mandatory().addToTradeList();
+        convert("nmEclipseMerchantBloodBone1", profession, 5,
+                TradeItem.fromID(Item.emerald.itemID, 24, 32),
+                TradeItem.fromID(NMItems.automationEssence.itemID),
+                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
+        convert("nmEclipseMerchantBloodBone2", profession, 5,
+                TradeItem.fromID(Item.emerald.itemID, 28, 36),
+                TradeItem.fromID(NMItems.artisanEssence.itemID),
+                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
+        convert("nmEclipseMerchantBloodBone3", profession, 5,
+                TradeItem.fromID(Item.emerald.itemID, 32, 40),
+                TradeItem.fromID(NMItems.husbandryEssence.itemID),
+                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
+        convert("nmEclipseMerchantBloodBone4", profession, 5,
+                TradeItem.fromID(Item.emerald.itemID, 36, 44),
+                TradeItem.fromID(NMItems.infernalEssence.itemID),
+                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
 
         TradeProvider.getBuilder().name("nmEclipseMerchantRank2").profession(profession).level(1)
                 .buy().item(NMItems.enderCrystal.itemID).itemCount(16, 16).mandatory().addAsLevelUpTrade();
