@@ -7,6 +7,8 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.world.JourneyProfile;
+import com.itlesports.nightmaremode.world.PhasePortalData;
+import com.itlesports.nightmaremode.world.PhasePortalManager;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ItemStack;
@@ -26,6 +28,16 @@ public class ServerConfigurationManagerMixin {
 
     @Redirect(method = "transferEntityToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Teleporter;placeInPortal(Lnet/minecraft/src/Entity;DDDF)V"))
     private void doNotGenerateNetherPortalForUnderworld(Teleporter instance, Entity d, double e, double f, double g, float v){
+        PhasePortalData.Endpoint phaseTarget = PhasePortalManager.getTransferTarget();
+        if (phaseTarget != null) {
+            double x = phaseTarget.x + (phaseTarget.axis == 0 ? 1.0D : 0.5D);
+            double z = phaseTarget.z + (phaseTarget.axis == 1 ? 1.0D : 0.5D);
+            d.setLocationAndAngles(x, phaseTarget.y + 0.1D, z, d.rotationYaw, d.rotationPitch);
+            d.motionX = 0.0D;
+            d.motionY = 0.0D;
+            d.motionZ = 0.0D;
+            return;
+        }
         if(d.dimension == NMFields.UNDERWORLD_DIMENSION) return;
         if (d.dimension == -1) {
             if (!instance.placeInExistingPortal(d, e, f, g, v)) {
@@ -58,6 +70,7 @@ public class ServerConfigurationManagerMixin {
 
     @Inject(method = "transferPlayerToDimension", at = @At("HEAD"))
     private void incinerateInventoryOnNetherEntry(EntityPlayerMP player, int dimensionID, CallbackInfo ci) {
+        if (PhasePortalManager.getTransferTarget() != null) return;
         if (player.dimension != 0 || dimensionID != -1) {
             return;
         }

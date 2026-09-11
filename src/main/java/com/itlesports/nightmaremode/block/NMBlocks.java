@@ -12,10 +12,12 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.NMNetherItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMNetherItemBlockMeta;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
+import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTerrainExtractor;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockPhasePortalFrame;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -165,6 +167,13 @@ public class NMBlocks {
     public static Block minerDrillTier4;
     public static Block carburizedIronBloom;
     public static Block saturatedCoresteelCharge;
+    public static Block phasePortalFrame;
+    public static Block phasePortal;
+    public static Block gravititeNode;
+    public static Block solarQuartzNode;
+    public static Block abyssNode;
+    public static Block cryoliteNode;
+    public static Block voidExtractor;
 
 
 
@@ -344,6 +353,24 @@ public class NMBlocks {
         lithiumOreNode = new BlockOreNode(2450, NMItems.lithiumRaw.itemID, Block.oreIron,
                 "ifhyLithiumOreNode", "nightmare:ifhyLithiumOre");
         Item.itemsList[lithiumOreNode.blockID] = new NMNetherItemBlock(lithiumOreNode.blockID - 256);
+
+        phasePortalFrame = new BlockPhasePortalFrame(2451);
+        Item.itemsList[phasePortalFrame.blockID] = new ItemBlockPhasePortalFrame(phasePortalFrame.blockID - 256);
+        phasePortal = new BlockPhasePortal(2452);
+        gravititeNode = new BlockOreNode(2453, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.GRAVITITE_CHUNK, Block.whiteStone, 4,
+                "ifhyGravititeNode", "nightmare:ifhyMercuryOreNode", 0x7866A8);
+        solarQuartzNode = new BlockOreNode(2454, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK, Block.whiteStone, 4,
+                "ifhySolarQuartzNode", "nightmare:ifhyMercuryOreNode", 0xF0B95A);
+        abyssNode = new BlockOreNode(2455, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.ABYSS_CHUNK, Block.whiteStone, 4,
+                "ifhyAbyssNode", "nightmare:ifhyMercuryOreNode", 0x2B718A);
+        cryoliteNode = new BlockOreNode(2456, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.CRYOLITE_CHUNK, Block.whiteStone, 4,
+                "ifhyCryoliteNode", "nightmare:ifhyMercuryOreNode", 0xA7E8F6);
+        Item.itemsList[gravititeNode.blockID] = new NMItemBlock(gravititeNode.blockID - 256);
+        Item.itemsList[solarQuartzNode.blockID] = new NMItemBlock(solarQuartzNode.blockID - 256);
+        Item.itemsList[abyssNode.blockID] = new NMItemBlock(abyssNode.blockID - 256);
+        Item.itemsList[cryoliteNode.blockID] = new NMItemBlock(cryoliteNode.blockID - 256);
+        voidExtractor = new BlockVoidExtractor(2457);
+        Item.itemsList[voidExtractor.blockID] = new NMItemBlock(voidExtractor.blockID - 256);
 
 
 

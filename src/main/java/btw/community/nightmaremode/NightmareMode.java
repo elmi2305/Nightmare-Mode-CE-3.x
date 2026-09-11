@@ -21,6 +21,7 @@ import com.itlesports.nightmaremode.util.CarcassHarvestNet;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.world.ChunkLoaderData;
+import com.itlesports.nightmaremode.world.PhasePortalData;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.tpa.TPACommand;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
@@ -837,6 +838,15 @@ public class NightmareMode extends BTWAddon {
                     .global()
                     .build();
 
+    public static final DataEntry.WorldDataEntry<PhasePortalData> PHASE_PORTALS =
+            DataProvider.getBuilder(PhasePortalData.class)
+                    .name("PhasePortals")
+                    .defaultSupplier(PhasePortalData::new)
+                    .readNBT(PhasePortalData::readFromNBT)
+                    .writeNBT(PhasePortalData::writeToNBT)
+                    .global()
+                    .build();
+
     public static final DataEntry.PlayerDataEntry<Long> APPLE_COOLDOWN =
             DataProvider.getBuilder(Long.class)
                     .name("AppleCooldown")
@@ -960,6 +970,7 @@ public class NightmareMode extends BTWAddon {
         PORTAL_TIME.register();
         DRAGON_DEFEATED.register();
         CHUNK_LOADERS.register();
+        PHASE_PORTALS.register();
         APPLE_COOLDOWN.register();
         CONFIGS_CREATED.register();
         SANITY.register();

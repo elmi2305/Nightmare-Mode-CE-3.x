@@ -311,6 +311,8 @@ public class NMItems {
     public static Item invocationSeal;
     public static Item endAccordFragment;
     public static Item endAccord;
+    public static Item lateGameMaterial;
+    public static Item phaseCell;
     public static Item debugVillagerLevel;
     public static Item debugVillagerProgress;
     public static Item debugVillagerReroll;
@@ -881,6 +883,9 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyEnderBoots").setUnlocalizedName("ifhyEnderBoots");
         snowPile = new NMItem(3258).setTextureName("nightmare:ifhySnowPile").setUnlocalizedName("ifhySnowPile")
                 .setCreativeTab(CreativeTabs.tabMaterials);
+
+        lateGameMaterial = new ItemLateGameMaterial(3452);
+        phaseCell = new ItemPhaseCell(3453);
 
         carbonRichIronMix = material(3259, "ifhyCarbonRichIronMix");
         carburizedIronBloom = new NMPlaceAsBlockItem(3260, NMFields.BLOCK_CARBURIZED_IRON_BLOOM)

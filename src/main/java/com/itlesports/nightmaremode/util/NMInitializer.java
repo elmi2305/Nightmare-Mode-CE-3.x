@@ -27,6 +27,7 @@ import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecip
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
+import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier3NetherVillager;
@@ -866,6 +867,11 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmEclipseMerchantMechanism", profession, 4, NMItems.enderMechanism.itemID, 0, 1, 1, 0.8F);
         buy("nmEclipseMerchantWaterRod", profession, 4, NMItems.waterRod.itemID, 0, 1, 2, 0.7F);
         buy("nmEclipseMerchantShadowRod", profession, 4, NMItems.shadowRod.itemID, 0, 1, 2, 0.7F);
+        buy("nmEclipseMerchantDeadzoneEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.DEADZONE_ESSENCE, 2, 4, 1.0F);
+        buy("nmEclipseMerchantSolarEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.SOLAR_ESSENCE, 2, 4, 1.0F);
+        buy("nmEclipseMerchantVoidEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.VOID_ESSENCE, 2, 4, 1.0F);
+        buy("nmEclipseMerchantAbyssalEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.ABYSSAL_ESSENCE, 2, 4, 1.0F);
+        buy("nmEclipseMerchantFrozenEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.FROZEN_ESSENCE, 2, 4, 1.0F);
         buy("nmEclipseMerchantEnderMechanismFinal", profession, 5, NMItems.enderMechanism.itemID, 0, 1, 2, 1.1F);
         buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 16, 32, 1.0F);
         convert("nmEclipseMerchantBloodBone1", profession, 5,
@@ -884,6 +890,9 @@ public abstract class NMInitializer implements AchievementExt {
                 TradeItem.fromID(Item.emerald.itemID, 36, 44),
                 TradeItem.fromID(NMItems.infernalEssence.itemID),
                 TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
+        convert("nmEclipseMerchantSteelBlockAutomation", profession, 5,
+                TradeItem.fromID(BTWBlocks.soulforgedSteelBlock.blockID, 30, 48), TradeItem.EMPTY,
+                TradeItem.fromID(Item.emerald.itemID, 2, 2), 1.0F, false, true);
 
         TradeProvider.getBuilder().name("nmEclipseMerchantRank2").profession(profession).level(1)
                 .buy().item(NMItems.enderCrystal.itemID).itemCount(16, 16).mandatory().addAsLevelUpTrade();
@@ -892,7 +901,8 @@ public abstract class NMInitializer implements AchievementExt {
         TradeProvider.getBuilder().name("nmEclipseMerchantRank4").profession(profession).level(3)
                 .buy().item(NMItems.phaseSteelIngot.itemID).itemCount(8, 8).mandatory().addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmEclipseMerchantRank5").profession(profession).level(4)
-                .buy().item(NMItems.enderMechanism.itemID).itemCount(4, 4).mandatory().addAsLevelUpTrade();
+                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.CONVERGENCE_ESSENCE)
+                .itemCount(1, 1).mandatory().addAsLevelUpTrade();
 
         EntityVillager.defaultTradeByProfessionList.put(profession,
                 TradeProvider.getBuilder().name("nmEclipseMerchantDefault").profession(profession).level(1)
@@ -1136,6 +1146,15 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(NMItems.phaseSteelIngot, 2), new ItemStack(NMItems.firedCrucibleLiner)},
                 new ItemStack[]{new ItemStack(NMItems.phaseSteelCharge), new ItemStack(NMItems.firedCrucibleLiner),
                         new ItemStack(BTWItems.soulFlux, 2)});
+
+        int[] chunks = {ItemLateGameMaterial.GRAVITITE_CHUNK, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK,
+                ItemLateGameMaterial.AETHER_CHUNK, ItemLateGameMaterial.ABYSS_CHUNK, ItemLateGameMaterial.CRYOLITE_CHUNK};
+        for (int chunk : chunks) RecipeManager.addStokedCrucibleRecipe(late(chunk + 1, 1), new ItemStack[]{late(chunk, 1)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWBlocks.soulforgedSteelBlock, 2), new ItemStack[]{
+                late(ItemLateGameMaterial.SHADOW_DUST, 32), late(ItemLateGameMaterial.CHARRED_STRING, 32),
+                late(ItemLateGameMaterial.ACID_INK_SAC, 24), late(ItemLateGameMaterial.FROZEN_BONE, 24),
+                late(ItemLateGameMaterial.AETHER_INGOT, 8), new ItemStack(BTWItems.soulFlux, 16)
+        });
 
 
         finishRecipes("Crucible Recipes");
@@ -1388,6 +1407,12 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCisternRecipes(){
         CisternRecipeManager manager = CisternRecipeManager.instance;
+
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.GRAVITITE_INGOT,16),late(ItemLateGameMaterial.SHADOW_DUST,64),late(ItemLateGameMaterial.ENDER_BONE,48),late(ItemLateGameMaterial.VERTEBRAE,32),late(ItemLateGameMaterial.BLACKWIDOW_GLAND,32),late(ItemLateGameMaterial.DEADZONE_TEAR,24),late(ItemLateGameMaterial.VOID_POWDER,48),late(ItemLateGameMaterial.DISPLACED_PEARL,24)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.DEADZONE_ESSENCE,1)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.SOLAR_QUARTZ_INGOT,16),late(ItemLateGameMaterial.CHARRED_STRING,64),late(ItemLateGameMaterial.CINDER_BONE,48),late(ItemLateGameMaterial.DESICCATED_FLESH,64),new ItemStack(NMItems.darksunFragment,16)},CisternTileEntity.FLUID_LAVA,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.SOLAR_ESSENCE,1)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.AETHER_INGOT,16),late(ItemLateGameMaterial.LUMINOUS_INK_SAC,32),late(ItemLateGameMaterial.HALO_TEAR,24),late(ItemLateGameMaterial.ANGEL_BREATH,16),new ItemStack(NMItems.enderCrystal,32)},CisternTileEntity.FLUID_WATER,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.VOID_ESSENCE,1)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.ABYSS_INGOT,16),late(ItemLateGameMaterial.CAUSTIC_TEAR,32),late(ItemLateGameMaterial.ACID_INK_SAC,64),new ItemStack(NMItems.mercuryAmalgam,16)},CisternTileEntity.FLUID_WATER,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.ABYSSAL_ESSENCE,1)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.CRYOLITE_INGOT,16),late(ItemLateGameMaterial.FROZEN_BONE,64),late(ItemLateGameMaterial.FROZEN_FLESH,64),new ItemStack(NMItems.paleRootResin,16)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.FROZEN_ESSENCE,1)}).setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(Item.ingotIron), new ItemStack(NMItems.lithiumStabilizer), new ItemStack(NMItems.lithiumStabilizer)},
@@ -1833,6 +1858,17 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addSoulforgeRecipes(){
         SoulforgeCraftingManager soulforge = SoulforgeCraftingManager.getInstance();
 
+        RecipeManager.addSoulforgeRecipe(new ItemStack(NMBlocks.voidExtractor), new Object[]{
+                "P0P1", "2M34", "ECEC", "SSSS",
+                Character.valueOf('0'), new ItemStack(NMBlocks.terrainExtractor,1,0),
+                Character.valueOf('1'), new ItemStack(NMBlocks.terrainExtractor,1,1),
+                Character.valueOf('2'), new ItemStack(NMBlocks.terrainExtractor,1,2),
+                Character.valueOf('3'), new ItemStack(NMBlocks.terrainExtractor,1,3),
+                Character.valueOf('4'), new ItemStack(NMBlocks.terrainExtractor,1,4),
+                Character.valueOf('P'), NMItems.phaseSteelIngot, Character.valueOf('M'), NMItems.enderMechanism,
+                Character.valueOf('E'), NMItems.enderCrystal, Character.valueOf('C'), NMItems.crystalPrecisionGear,
+                Character.valueOf('S'), BTWItems.soulforgedSteelIngot});
+
         soulforge.removeRecipe(new ItemStack(BTWItems.steelSword), new Object[]{"#", "#", "#", "X", Character.valueOf('#'), BTWItems.soulforgedSteelIngot, Character.valueOf('X'), BTWItems.haft});
         soulforge.removeRecipe(new ItemStack(BTWItems.steelShovel), new Object[]{"#", "X", "X", "X", Character.valueOf('#'), BTWItems.soulforgedSteelIngot, Character.valueOf('X'), BTWItems.haft});
         soulforge.removeRecipe(new ItemStack(BTWItems.steelPickaxe), new Object[]{"###", " X ", " X ", " X ", Character.valueOf('#'), BTWItems.soulforgedSteelIngot, Character.valueOf('X'), BTWItems.haft});
@@ -2044,6 +2080,13 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCraftingRecipes(){
         addAlloyHorseArmorRecipes();
+        int[] lateNuggets = {ItemLateGameMaterial.GRAVITITE_NUGGET, ItemLateGameMaterial.SOLAR_QUARTZ_NUGGET,
+                ItemLateGameMaterial.AETHER_NUGGET, ItemLateGameMaterial.ABYSS_NUGGET, ItemLateGameMaterial.CRYOLITE_NUGGET};
+        for (int nugget : lateNuggets) RecipeManager.addRecipe(late(nugget + 1, 1), new Object[]{
+                "###", "###", "###", Character.valueOf('#'), late(nugget, 1)});
+        for (int color = 0; color < 16; ++color) RecipeManager.addShapelessRecipe(
+                new ItemStack(NMBlocks.phasePortalFrame, 1, color), new Object[]{
+                        new ItemStack(NMBlocks.phasePortalFrame, 1, Short.MAX_VALUE), new ItemStack(Item.dyePowder, 1, color)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.carbonRichIronMix), new Object[]{
                 NMPostItems.washedIronMix, BTWItems.coalDust, BTWItems.coalDust, BTWItems.coalDust});
         RecipeManager.addRecipe(new ItemStack(BTWItems.mail, 4), new Object[]{
@@ -4522,13 +4565,28 @@ public abstract class NMInitializer implements AchievementExt {
         manager.addRecipe(new ItemStack(NMItems.enderMechanism), 700,
                 new ItemStack(NMItems.phaseSteelPlate, 4), new ItemStack(NMItems.crystalPrecisionGear),
                 new ItemStack(NMItems.enderCrystal, 8), new ItemStack(NMItems.nickelMachinePart, 2),
-                new ItemStack(NMBlocks.netherProgressionGems, 1, NMBlocks.META_PURPLE_GEM),
                 new ItemStack(NMItems.endAccordFragment), new ItemStack(NMItems.sealedQuicksilverPlate));
+        manager.addRecipe(new ItemStack(NMBlocks.phasePortalFrame, 8, 15), 900,
+                new ItemStack(NMItems.phaseSteelIngot, 16), new ItemStack(NMItems.enderMechanism, 4),
+                new ItemStack(NMItems.enderShellPowder, 32), new ItemStack(NMItems.paleRootResin, 32),
+                new ItemStack(NMItems.mercuryAmalgam, 32), new ItemStack(Block.obsidian, 64));
+        manager.addRecipe(new ItemStack(NMItems.phaseCell), 600,
+                new ItemStack(NMItems.phaseSteelIngot, 4), new ItemStack(NMItems.enderCrystal, 16),
+                new ItemStack(NMItems.mercuryAmalgam, 8), new ItemStack(NMItems.enderShell, 4),
+                new ItemStack(NMItems.paleRootResin, 8), new ItemStack(NMItems.darksunFragment, 8));
+        manager.addRecipe(late(ItemLateGameMaterial.CONVERGENCE_ESSENCE, 1), 2400,
+                late(ItemLateGameMaterial.DEADZONE_ESSENCE, 4), late(ItemLateGameMaterial.SOLAR_ESSENCE, 4),
+                late(ItemLateGameMaterial.VOID_ESSENCE, 4), late(ItemLateGameMaterial.ABYSSAL_ESSENCE, 4),
+                late(ItemLateGameMaterial.FROZEN_ESSENCE, 4), new ItemStack(NMItems.endAccordFragment, 8));
         manager.addRecipe(new ItemStack(NMItems.sealedQuicksilverIngot), 300,
                 new ItemStack(NMItems.mercuryAmalgam), new ItemStack(NMItems.tungstenNugget, 4),
                 new ItemStack(NMItems.waxedGasket), new ItemStack(NMItems.enderDust, 2),
                 new ItemStack(Item.ingotIron));
         addEndArmorRecipes(manager);
+    }
+
+    private static ItemStack late(int metadata, int count) {
+        return new ItemStack(NMItems.lateGameMaterial, count, metadata);
     }
 
     private static void addEndArmorRecipes(EnderAssemblerRecipeManager manager) {

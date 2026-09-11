@@ -17,18 +17,30 @@ import java.util.Random;
 
 public class BlockOreNode extends BlockContainer {
     private final int droppedItemId;
+    private final int droppedItemMetadata;
     private final Block requiredToolBlock;
     private final int requiredDrillTier;
+    private final int tint;
 
     public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, String name, String texture) {
         this(id, droppedItemId, requiredToolBlock, 1, name, texture);
     }
 
     public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, int requiredDrillTier, String name, String texture) {
+        this(id, droppedItemId, 0, requiredToolBlock, requiredDrillTier, name, texture, 0xFFFFFF);
+    }
+
+    public BlockOreNode(int id, int droppedItemId, int droppedItemMetadata, Block requiredToolBlock, int requiredDrillTier, String name, String texture) {
+        this(id, droppedItemId, droppedItemMetadata, requiredToolBlock, requiredDrillTier, name, texture, 0xFFFFFF);
+    }
+
+    public BlockOreNode(int id, int droppedItemId, int droppedItemMetadata, Block requiredToolBlock, int requiredDrillTier, String name, String texture, int tint) {
         super(id, BTWBlocks.netherRockMaterial);
         this.droppedItemId = droppedItemId;
+        this.droppedItemMetadata = droppedItemMetadata;
         this.requiredToolBlock = requiredToolBlock;
         this.requiredDrillTier = Math.max(1, requiredDrillTier);
+        this.tint = tint;
         this.setHardness(3.0F);
         this.setResistance(20.0F);
         this.setPicksEffectiveOn();
@@ -37,6 +49,9 @@ public class BlockOreNode extends BlockContainer {
         this.setUnlocalizedName(name);
         this.setTextureName(texture);
     }
+
+    @Override public int getRenderColor(int metadata) { return this.tint; }
+    @Override public int colorMultiplier(IBlockAccess world, int x, int y, int z) { return this.tint; }
 
     public int getRequiredDrillTier() {
         return this.requiredDrillTier;
@@ -93,7 +108,7 @@ public class BlockOreNode extends BlockContainer {
             return;
         }
 
-        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, 1, 0));
+        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, 1, this.droppedItemMetadata));
         player.addStat(net.minecraft.src.StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, 0);
         if (node.consumeOne() <= 0) {
@@ -108,7 +123,7 @@ public class BlockOreNode extends BlockContainer {
         if (!(tileEntity instanceof OreNodeTileEntity node)) {
             return null;
         }
-        ItemStack result = new ItemStack(this.droppedItemId, 1, 0);
+        ItemStack result = new ItemStack(this.droppedItemId, 1, this.droppedItemMetadata);
         if (node.consumeOne() <= 0) {
             world.setBlockToAir(x, y, z);
         } else {

@@ -956,24 +956,24 @@ public class NMAchievements {
                     .build()
                     .registerAchievement(TAB_END_GAME);
 
-    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_BLOODWITHER =
-            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
-                    .name(loc("killBloodWither"))
-                    .icon(NMItems.starOfTheBloodGod)
-                    .displayLocation(11, 0)
-                    .triggerCondition(data -> data.entity() instanceof EntityBloodWither)
-                    .parents(ECLIPSE_BOW, NIGHTMARE_MERCHANT_LEVEL_4)
-                    .build()
-                    .setSpecial()
-                    .registerAchievement(TAB_END_GAME);
-
     public static final Achievement<AchievementEvents.EntityInteractedEventData> NIGHTMARE_MERCHANT_LEVEL_5 =
             AchievementProvider.getBuilder(AchievementEvents.EntityInteractedEvent.class)
                     .name(loc("nightmareMerchantLevel5"))
                     .icon(NMItems.ACHIEVEMENT_SPECIAL_TRIPLE_TEAR)
                     .displayLocation(11, -2)
                     .triggerCondition(data -> data.entity() instanceof NightmareVillager nmv && nmv.getCurrentTradeLevel() == 5)
-                    .parents(NIGHTMARE_MERCHANT_LEVEL_4, KILL_BLOODWITHER)
+                    .parents(NIGHTMARE_MERCHANT_LEVEL_4)
+                    .build()
+                    .setSpecial()
+                    .registerAchievement(TAB_END_GAME);
+
+    public static final Achievement<AchievementEvents.EntityInteractedEventData> KILL_BLOODWITHER =
+            AchievementProvider.getBuilder(AchievementEvents.EntityKilledEvent.class)
+                    .name(loc("killBloodWither"))
+                    .icon(NMItems.starOfTheBloodGod)
+                    .displayLocation(11, 0)
+                    .triggerCondition(data -> data.entity() instanceof EntityBloodWither)
+                    .parents(ECLIPSE_BOW, NIGHTMARE_MERCHANT_LEVEL_5)
                     .build()
                     .setSpecial()
                     .registerAchievement(TAB_END_GAME);

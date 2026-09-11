@@ -12,6 +12,13 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.CarcassHarvesting;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
+import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
+import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
+import com.itlesports.nightmaremode.entity.creepers.EntityVoidCreeper;
+import com.itlesports.nightmaremode.entity.outer.*;
+import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
+import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
+import com.itlesports.nightmaremode.entity.variants.EntityShadowZombie;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
@@ -188,6 +195,46 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             profile.kills++;
             this.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
         }
+    }
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void dropPhaseTransitMaterials(DamageSource source, CallbackInfo ci) {
+        if (this.worldObj.isRemote) return;
+        EntityLivingBase entity = (EntityLivingBase)(Object)this;
+        OverworldTierHelper.Region current = this.dimension == 0
+                ? OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) : OverworldTierHelper.Region.INNER;
+        if (current == OverworldTierHelper.Region.GREAT_VOID) {
+            if (entity instanceof EntityAngelSquid) this.dropLateMaterial(ItemLateGameMaterial.LUMINOUS_INK_SAC, 1, 2);
+            else if (entity instanceof EntityAngelGhast) this.dropLateMaterial(ItemLateGameMaterial.HALO_TEAR, 1, 1);
+            else if (entity instanceof EntityAngelDragon) this.dropLateMaterial(ItemLateGameMaterial.ANGEL_BREATH, 2, 3);
+            else return;
+            this.dropLateMaterial(ItemLateGameMaterial.AETHER_CHUNK, 1, 2);
+            return;
+        }
+        if (this.dimension != 0 || current != OverworldTierHelper.Region.INNER
+                || !(entity instanceof PhaseTransitEntity transit) || transit.nightmareMode$getPhaseOrigin() < 0) return;
+        int material = -1;
+        if (entity instanceof EntityShadowZombie) material = ItemLateGameMaterial.SHADOW_DUST;
+        else if (entity instanceof EntityEnderSkeleton) material = ItemLateGameMaterial.ENDER_BONE;
+        else if (entity instanceof EntityWitherSkeletonOuter) material = ItemLateGameMaterial.VERTEBRAE;
+        else if (entity instanceof EntityBlackWidowSpider) material = ItemLateGameMaterial.BLACKWIDOW_GLAND;
+        else if (entity instanceof EntityVoidCreeper) material = ItemLateGameMaterial.VOID_POWDER;
+        else if (entity.getClass() == EntityEnderman.class) material = ItemLateGameMaterial.DISPLACED_PEARL;
+        else if (entity.getClass() == EntityGhast.class) material = ItemLateGameMaterial.DEADZONE_TEAR;
+        else if (entity instanceof EntityFireSpider) material = ItemLateGameMaterial.CHARRED_STRING;
+        else if (entity instanceof EntityInfernoSkeleton) material = ItemLateGameMaterial.CINDER_BONE;
+        else if (entity instanceof EntityMummyZombie) material = ItemLateGameMaterial.DESICCATED_FLESH;
+        else if (entity instanceof EntityAcidGhast) material = ItemLateGameMaterial.CAUSTIC_TEAR;
+        else if (entity instanceof EntityAcidSquid) material = ItemLateGameMaterial.ACID_INK_SAC;
+        else if (entity instanceof EntityIceSkeletonOuter) material = ItemLateGameMaterial.FROZEN_BONE;
+        else if (entity instanceof EntityIceZombie) material = ItemLateGameMaterial.FROZEN_FLESH;
+        if (entity instanceof EntityIceGolem) this.dropLateMaterial(ItemLateGameMaterial.CRYOLITE_CHUNK, 2, 5);
+        else if (material >= 0) this.dropLateMaterial(material, 1, 2);
+    }
+
+    @Unique
+    private void dropLateMaterial(int metadata, int minimum, int randomExtra) {
+        this.entityDropItem(new ItemStack(NMItems.lateGameMaterial, minimum + this.rand.nextInt(randomExtra + 1), metadata), 0.0F);
     }
 
     @Inject(method = "entityInit", at = @At("TAIL"))

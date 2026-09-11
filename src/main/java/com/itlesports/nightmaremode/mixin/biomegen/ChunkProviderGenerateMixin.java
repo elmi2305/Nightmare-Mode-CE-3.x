@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.structure.MapGenOceanDesertTemple;
 import com.itlesports.nightmaremode.structure.MapGenSkyZiggurath;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
+import com.itlesports.nightmaremode.worldgen.WorldGenOreNode;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ChunkProviderGenerate;
@@ -75,11 +76,29 @@ public class ChunkProviderGenerateMixin {
     @Inject(method = "populate", at = @At("HEAD"), cancellable = true)
     private void suppressOuterDecoration(IChunkProvider provider, int chunkX, int chunkZ, CallbackInfo ci) {
         OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, chunkX * 16 + 8, chunkZ * 16 + 8);
+        this.generateOuterOreNode(chunkX, chunkZ, region);
         if (region == OverworldTierHelper.Region.CRUEL_DESERT
                 || region == OverworldTierHelper.Region.GREAT_VOID
                 || region == OverworldTierHelper.Region.LOST_OCEAN) {
             ci.cancel();
         }
+    }
+
+    @Unique
+    private void generateOuterOreNode(int chunkX, int chunkZ, OverworldTierHelper.Region region) {
+        int blockId = switch (region) {
+            case DEADZONE -> NMBlocks.gravititeNode.blockID;
+            case CRUEL_DESERT -> NMBlocks.solarQuartzNode.blockID;
+            case LOST_OCEAN -> NMBlocks.abyssNode.blockID;
+            case FROZEN_WASTES -> NMBlocks.cryoliteNode.blockID;
+            default -> 0;
+        };
+        if (blockId == 0) return;
+        Random random = new Random(this.worldObj.getSeed() ^ (chunkX * 341873128712L) ^ (chunkZ * 132897987541L) ^ blockId);
+        if (random.nextInt(10) != 0) return;
+        int x = chunkX * 16 + 2 + random.nextInt(12);
+        int z = chunkZ * 16 + 2 + random.nextInt(12);
+        new WorldGenOreNode(blockId, Block.stone.blockID, 1, 1).generate(this.worldObj, random, x, 8 + random.nextInt(48), z);
     }
 
     @Redirect(method = "populate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldGenLakes;generate(Lnet/minecraft/src/World;Ljava/util/Random;III)Z"))

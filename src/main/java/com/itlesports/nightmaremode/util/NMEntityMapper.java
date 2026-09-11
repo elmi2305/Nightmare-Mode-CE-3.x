@@ -108,5 +108,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(CisternDrainTileEntity.class, "NmCisternDrain");
         TileEntity.addMapping(TerrainExtractorTileEntity.class, "NmTerrainExtractor");
         TileEntity.addMapping(EnderAssemblerTileEntity.class, "NmEnderAssembler");
+        TileEntity.addMapping(VoidExtractorTileEntity.class, "NmVoidExtractor");
     }
 }

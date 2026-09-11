@@ -40,11 +40,6 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
     }
 
     @Override
-    protected boolean isMovementBlocked() {
-        return true;
-    }
-
-    @Override
     public boolean canBePushed() {
         return false;
     }

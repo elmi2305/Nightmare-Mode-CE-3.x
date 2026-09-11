@@ -13,6 +13,9 @@ import com.itlesports.nightmaremode.nmgui.GuiTerrainExtractor;
 import com.itlesports.nightmaremode.block.tileEntities.EnderAssemblerTileEntity;
 import com.itlesports.nightmaremode.nmgui.ContainerEnderAssembler;
 import com.itlesports.nightmaremode.nmgui.GuiEnderAssembler;
+import com.itlesports.nightmaremode.block.tileEntities.VoidExtractorTileEntity;
+import com.itlesports.nightmaremode.nmgui.ContainerVoidExtractor;
+import com.itlesports.nightmaremode.nmgui.GuiVoidExtractor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -38,6 +41,9 @@ public class BTWContainersMixin {
         }
         if (containerID == ContainerEnderAssembler.ID) {
             cir.setReturnValue(new GuiEnderAssembler(p.inventory, new EnderAssemblerTileEntity()));
+        }
+        if (containerID == ContainerVoidExtractor.ID) {
+            cir.setReturnValue(new GuiVoidExtractor(p.inventory, new VoidExtractorTileEntity()));
         }
     }
 }
