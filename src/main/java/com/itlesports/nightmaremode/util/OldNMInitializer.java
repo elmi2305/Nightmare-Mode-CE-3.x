@@ -13,6 +13,7 @@ import btw.crafting.manager.CauldronCraftingManager;
 import btw.crafting.manager.CrucibleStokedCraftingManager;
 import btw.crafting.manager.PistonPackingCraftingManager;
 import btw.crafting.recipe.RecipeManager;
+import btw.crafting.recipe.types.PistonPackingRecipe;
 import btw.item.BTWItems;
 import btw.item.BTWTags;
 import btw.util.BTWDamageSources;
@@ -39,6 +40,7 @@ import com.itlesports.nightmaremode.util.interfaces.DamageSourceExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -1359,16 +1361,25 @@ public abstract class OldNMInitializer implements AchievementExt {
 
     private static void addPistonPackingRecipes() {
         // oysters
-        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.creeperOysterBlock, 0 , new ItemStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
+        removePistonPackingRecipe(BTWBlocks.creeperOysterBlock, 0, new TagOrStack[]{new ItemStack(BTWItems.creeperOysters, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.creeperOysterBlock, new ItemStack(BTWItems.creeperOysters, 9));
 
         // spider eyes
-        PistonPackingCraftingManager.instance.removeRecipe(BTWBlocks.spiderEyeBlock, 0 , new ItemStack[]{new ItemStack(Item.spiderEye, 16)});
+        removePistonPackingRecipe(BTWBlocks.spiderEyeBlock, 0, new TagOrStack[]{new ItemStack(Item.spiderEye, 16)});
         RecipeManager.addPistonPackingRecipe(BTWBlocks.spiderEyeBlock, new ItemStack(Item.spiderEye, 9));
         finishRecipes("Piston Packing Recipes");
 
     }
 
+    private static void removePistonPackingRecipe(Block output, int outputMetadata, TagOrStack[] inputs) {
+        for (Iterator<PistonPackingRecipe> iterator = PistonPackingCraftingManager.instance.getRecipes().iterator(); iterator.hasNext(); ) {
+            PistonPackingRecipe recipe = iterator.next();
+            if (recipe.getOutput() == output && recipe.getOutputMetadata() == outputMetadata && recipe.matchesInputs(inputs)) {
+                iterator.remove();
+                return;
+            }
+        }
+    }
     private static void addBloodSawRecipes(){
 //        BloodSawCraftingManager.instance.addRecipe(new ItemStack[]{new ItemStack(Block.planks, 4, 0), new ItemStack(BTWItems.sawDust, 2), new ItemStack(BTWItems.bark, 1, 0)}, Block.wood, new int[]{0, 4, 8, 12}).setAsDefaultAfterAchievement(BTWAchievements.CRAFT_SAW);
 
@@ -1409,7 +1420,7 @@ public abstract class OldNMInitializer implements AchievementExt {
 
         BloodSawCraftingManager.instance.addSawSubBlockRecipes(BTWBlocks.aestheticOpaque, 9,
                 BTWBlocks.whiteStoneSidingAndCorner,
-                BTWBlocks.whiteStoneMouldingAndDecroative,
+                BTWBlocks.whiteStoneMouldingAndDecorative,
                 new ItemStack(BTWBlocks.aestheticNonOpaque, 1, 10));
 
         BloodSawCraftingManager.instance.addSawSubBlockRecipes(Block.netherBrick, 0,

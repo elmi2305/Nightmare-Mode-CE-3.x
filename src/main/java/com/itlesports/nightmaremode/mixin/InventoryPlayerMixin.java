@@ -126,7 +126,7 @@ public class InventoryPlayerMixin {
     }
 
     @Inject(method = "setCurrentItem", at = @At("RETURN"))
-    private void keepCurrentItemUnlocked(int itemId, int itemDamage, boolean matchDamage, boolean useCreativePickBlock, CallbackInfo ci) {
+    private void keepCurrentItemUnlocked(int par1, int par2, boolean par3, CallbackInfo ci) {
         this.nightmareMode$clampCurrentItem();
     }
 
