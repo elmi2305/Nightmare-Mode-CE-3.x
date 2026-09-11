@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(LibrarianVillagerEntity.class)
 public class LibrarianVillagerEntityMixin extends EntityVillager {
-    @Unique private int conversionCountdown = 600;
+    @Unique private int conversionCountdown = 200;
 
     public LibrarianVillagerEntityMixin(World par1World) {
         super(par1World);
@@ -22,7 +22,7 @@ public class LibrarianVillagerEntityMixin extends EntityVillager {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(this.worldObj != null && NMUtils.getIsEclipse()){
+        if(this.worldObj != null && NMUtils.getIsEclipse() && this.ticksExisted % 20 == 0 && this.worldObj.canBlockSeeTheSky((int) this.posX, (int) this.posY, (int) this.posZ)){
             if (this.conversionCountdown > 0) {
                 this.conversionCountdown -= 1;
             } else if (!this.worldObj.isRemote){
