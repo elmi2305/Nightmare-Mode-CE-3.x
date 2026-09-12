@@ -72,7 +72,7 @@ public class ItemLateGameMaterial extends Item {
     @Environment(EnvType.CLIENT) private Icon chunkIcon;
     @Environment(EnvType.CLIENT) private Icon nuggetIcon;
     @Environment(EnvType.CLIENT) private Icon ingotIcon;
-    @Environment(EnvType.CLIENT) private Icon dropIcon;
+    @Environment(EnvType.CLIENT) private Icon[] dropIcons;
     @Environment(EnvType.CLIENT) private Icon essenceIcon;
 
     public ItemLateGameMaterial(int id) {
@@ -91,10 +91,14 @@ public class ItemLateGameMaterial extends Item {
     public void registerIcons(IconRegister register) {
         this.chunkIcon = register.registerIcon("nightmare:ifhyTungstenChunk");
         this.nuggetIcon = register.registerIcon("nightmare:ifhyTungstenNugget");
-        this.ingotIcon = register.registerIcon("nightmare:ifhyPhaseSteelIngot");
-        this.dropIcon = register.registerIcon("nightmare:nmDarksunFragment");
+        this.ingotIcon = register.registerIcon("nightmare:ifhyTungstenIngot");
+        this.dropIcons = new Icon[DEADZONE_ESSENCE - SHADOW_DUST];
+        for (int metadata = SHADOW_DUST; metadata < DEADZONE_ESSENCE; ++metadata) {
+            String name = this.getUnlocalizedName(new ItemStack(this, 1, metadata)).substring("item.".length());
+            this.dropIcons[metadata - SHADOW_DUST] = register.registerIcon("nightmare:" + name);
+        }
         this.essenceIcon = register.registerIcon("nightmare:ifhyAutomationEssence");
-        this.itemIcon = this.dropIcon;
+        this.itemIcon = this.dropIcons[0];
     }
 
     @Override @Environment(EnvType.CLIENT)
@@ -105,11 +109,12 @@ public class ItemLateGameMaterial extends Item {
             case 1 -> this.nuggetIcon;
             default -> this.ingotIcon;
         };
-        return this.dropIcon;
+        return this.dropIcons[metadata - SHADOW_DUST];
     }
 
     @Override @Environment(EnvType.CLIENT)
     public int getColorFromItemStack(ItemStack stack, int pass) {
+        if (stack.getItemDamage() >= SHADOW_DUST && stack.getItemDamage() < DEADZONE_ESSENCE) return 0xFFFFFF;
         return COLORS[Math.max(0, Math.min(COLORS.length - 1, stack.getItemDamage()))];
     }
 

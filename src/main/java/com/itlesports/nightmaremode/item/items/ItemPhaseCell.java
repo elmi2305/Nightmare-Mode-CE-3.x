@@ -15,7 +15,7 @@ public class ItemPhaseCell extends Item {
         this.setMaxDamage(4);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setUnlocalizedName("ifhyPhaseCell");
-        this.setTextureName("nightmare:ifhyPhaseSteelCharge");
+        this.setTextureName("nightmare:ifhyPhaseCell");
     }
 
     @Override
