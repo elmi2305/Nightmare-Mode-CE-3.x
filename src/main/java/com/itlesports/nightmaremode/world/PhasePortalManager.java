@@ -13,7 +13,7 @@ import net.minecraft.src.WorldServer;
 import java.util.List;
 
 public final class PhasePortalManager {
-    private static final int PHASE_PORTAL_COOLDOWN = 100;
+    private static final int PHASE_PORTAL_COOLDOWN = 20;
     public static final String[] COLOR_NAMES = {"black","red","green","brown","blue","purple","cyan","light gray",
             "gray","pink","lime","yellow","light blue","magenta","orange","white"};
     private static final ThreadLocal<PhasePortalData.Endpoint> TRANSFER_TARGET = new ThreadLocal<>();
