@@ -6,6 +6,7 @@ import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.IInventory;
+import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntity;
 
@@ -69,6 +70,7 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
         for (int sourceSlot = 0; sourceSlot < sourceLimit; ++sourceSlot) {
             ItemStack sourceStack = source.getStackInSlot(sourceSlot);
             if (sourceStack == null || sourceStack.stackSize <= 0
+                    || !this.canExtractFrom(source, sourceSlot, sourceStack)
                     || !transferFilter.canTransfer(sourceStack, source, target)) {
                 continue;
             }
@@ -86,6 +88,12 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
             return true;
         }
         return false;
+    }
+
+    private boolean canExtractFrom(IInventory source, int sourceSlot, ItemStack stack) {
+        return !(source instanceof TerrainExtractorTileEntity)
+                || sourceSlot == 2
+                || stack.itemID == Item.bucketWater.itemID;
     }
 
     private boolean insertSingleItem(IInventory target, ItemStack transferStack, int targetLimit) {

@@ -10,6 +10,16 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class CookingVesselTileEntityMixin {
     @Shadow(remap = false) protected int stokedCooldownCounter;
 
+    @ModifyConstant(method = "<init>", constant = @Constant(intValue = 27), remap = false)
+    private int restoreInitialInventorySize(int constant) {
+        return 30;
+    }
+
+    @ModifyConstant(method = "getSizeInventory", constant = @Constant(intValue = 27), remap = false)
+    private int restoreInventorySize(int constant) {
+        return 30;
+    }
+
     @ModifyConstant(method = "performNormalFireUpdate", constant = @Constant(intValue = 4350),remap = false)
     private int lowerCookTimeNormal(int constant){
         return 24000;

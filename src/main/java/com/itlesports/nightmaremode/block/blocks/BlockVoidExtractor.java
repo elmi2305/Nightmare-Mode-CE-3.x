@@ -11,10 +11,25 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 public class BlockVoidExtractor extends BlockContainer {
-    @Environment(EnvType.CLIENT) private Icon sideIcon,topIcon,bottomIcon;
-    public BlockVoidExtractor(int id){super(id,Material.iron);setHardness(8).setResistance(30);setPicksEffectiveOn();setStepSound(BTWBlocks.oreStepSound);setCreativeTab(CreativeTabs.tabRedstone);setUnlocalizedName("ifhyVoidExtractor");}
+    @Environment(EnvType.CLIENT) private Icon sideIcon, topIcon, bottomIcon;
+
+    public BlockVoidExtractor(int id) {
+        super(id, Material.iron);
+        setHardness(8);
+        setResistance(30);
+        setPicksEffectiveOn();
+        setStepSound(BTWBlocks.oreStepSound);
+        setCreativeTab(CreativeTabs.tabRedstone);
+        setUnlocalizedName("ifhyVoidExtractor");
+        setTextureName("nightmare:ifhyVoidExtractor");
+    }
     @Override public boolean isOpaqueCube(){return false;} @Override public boolean renderAsNormalBlock(){return false;} @Override public boolean renderBlock(RenderBlocks r,int x,int y,int z){return false;}
-    @Override @Environment(EnvType.CLIENT) public void registerIcons(IconRegister r){sideIcon=r.registerIcon("nightmare:ifhyExtractorAciditySide");topIcon=r.registerIcon("nightmare:ifhyExtractorMoistureTop");bottomIcon=r.registerIcon("nightmare:ifhyExtractorPorosityBottom");blockIcon=sideIcon;}
+    @Override @Environment(EnvType.CLIENT) public void registerIcons(IconRegister r) {
+        sideIcon = r.registerIcon("nightmare:ifhyVoidExtractorSide");
+        topIcon = r.registerIcon("nightmare:ifhyVoidExtractorTop");
+        bottomIcon = r.registerIcon("nightmare:ifhyVoidExtractorBottom");
+        blockIcon = sideIcon;
+    }
     @Override @Environment(EnvType.CLIENT) public Icon getIcon(int side,int meta){return side==0?bottomIcon:side==1?topIcon:sideIcon;}
     @Override @Environment(EnvType.CLIENT) public void renderBlockAsItem(RenderBlocks r,int m,float b){r.setRenderBounds(0,0,0,1,.75,1);RenderUtils.renderInvBlockWithMetadata(r,this,-.5F,-.5F,-.5F,m);r.setRenderBounds(0,0,0,1,1,1);}
     @Override public TileEntity createNewTileEntity(World w){return new VoidExtractorTileEntity();}

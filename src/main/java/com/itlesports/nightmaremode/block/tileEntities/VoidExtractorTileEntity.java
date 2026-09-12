@@ -7,7 +7,9 @@ import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 
 public class VoidExtractorTileEntity extends TileEntity implements IInventory {
-    public static final int PROCESS_TICKS = 600;
+    public static final int NUGGET_PROCESS_TICKS = 200;
+    public static final int CHUNK_PROCESS_TICKS = 600;
+    public static final int INGOT_PROCESS_TICKS = 1800;
     private final ItemStack[] inventory = new ItemStack[3];
     private int fuelTicks, processTicks;
 
@@ -17,7 +19,7 @@ public class VoidExtractorTileEntity extends TileEntity implements IInventory {
                 != OverworldTierHelper.Region.GREAT_VOID || !this.canProcess()) { this.processTicks = 0; return; }
         if (this.fuelTicks <= 0 && !this.consumeFuel()) { this.processTicks = 0; return; }
         --this.fuelTicks;
-        if (++this.processTicks >= PROCESS_TICKS) { this.processTicks = 0; this.process(); }
+        if (++this.processTicks >= this.getProcessTicksRequired()) { this.processTicks = 0; this.process(); }
     }
 
     private ItemStack result() {
@@ -27,6 +29,14 @@ public class VoidExtractorTileEntity extends TileEntity implements IInventory {
         if (input.itemID == BTWItems.ironOreChunk.itemID) return new ItemStack(NMItems.lateGameMaterial, 1, ItemLateGameMaterial.AETHER_CHUNK);
         if (input.itemID == BTWItems.ironNugget.itemID) return new ItemStack(NMItems.lateGameMaterial, 1, ItemLateGameMaterial.AETHER_NUGGET);
         return null;
+    }
+
+    public int getProcessTicksRequired() {
+        ItemStack input = this.inventory[1];
+        if (input == null) return CHUNK_PROCESS_TICKS;
+        if (input.itemID == Item.ingotIron.itemID) return INGOT_PROCESS_TICKS;
+        if (input.itemID == BTWItems.ironNugget.itemID) return NUGGET_PROCESS_TICKS;
+        return CHUNK_PROCESS_TICKS;
     }
 
     private boolean canProcess() {

@@ -2665,9 +2665,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16,
                 NMSkillNodes.BRING_DYE_BLEND_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
 
-        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 2), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 0)});
-        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 3), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 2)});
-        RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, 4), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, 3)});
+        // netherrack compression is performed through piston packing.
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.rail, 12), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick});
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick, Character.valueOf('R'), BTWItems.redstoneLatch});
@@ -2936,12 +2934,7 @@ public abstract class NMInitializer implements AchievementExt {
                         new ItemStack(Item.emptyMap, 1, Short.MAX_VALUE),
                         Block.tnt});
 
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.enderCeramic, 1, 0), new Object[]{
-                "CEC", "MPM", "CEC",
-                Character.valueOf('C'), Item.clay,
-                Character.valueOf('E'), NMItems.enderShellPowder,
-                Character.valueOf('M'), NMItems.mercuryPowder,
-                Character.valueOf('P'), BTWItems.enderSlag});
+        // ender ceramic is pressed through piston packing.
 
         addDeferredArmorRecipes();
 
@@ -3490,8 +3483,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_STEEL_BUNCH_8, NMSkillNodes.BRING_BLOOD_ORB_128_II, NMSkillNodes.BRING_DEADZONE_SHARD_64, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.blockAsphalt, 8), new Object[]{"XXX", "XYX", "XXX", Character.valueOf('X'), NMBlocks.blockRoad, Character.valueOf('Y'), BTWItems.soulUrn});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.blockAsphalt, 4), new Object[]{"RXR", "RUR", "RNR", Character.valueOf('R'), NMBlocks.blockRoad, Character.valueOf('X'), NMItems.lithiumHeatCompound, Character.valueOf('U'), BTWItems.soulUrn, Character.valueOf('N'), NMItems.nickelHeatComponent}),
-                NMSkillNodes.BRING_ROAD_BLOCK_64, NMSkillNodes.BRING_HEAT_RESISTANT_NICKEL_COMPONENT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2);
+        // asphalt is compacted from road blocks through piston packing.
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), Item.ingotIron});
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.chest), new Object[]{"###", "#I#", "###", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('I'), BTWItems.ironNugget});
@@ -4677,6 +4669,21 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addPistonPackingRecipes() {
+        RecipeManager.addPistonPackingRecipe(NMBlocks.blockBloodIngot, new ItemStack(NMItems.bloodIngot, 9));
+        RecipeManager.addPistonPackingRecipe(NMBlocks.blockRefinedDiamondIngot, new ItemStack(NMItems.refinedDiamondIngot, 9));
+
+        RecipeManager.addPistonPackingRecipe(NMBlocks.blockAsphalt, new ItemStack(NMBlocks.blockRoad, 9));
+        RecipeManager.addPistonPackingRecipe(NMBlocks.prismarine, new ItemStack(NMItems.aquamarine, 9));
+        RecipeManager.addPistonPackingRecipe(NMBlocks.enderCeramic, new TagOrStack[]{
+                new ItemStack(Item.clay, 3),
+                new ItemStack(NMItems.enderShellPowder, 2),
+                new ItemStack(NMItems.mercuryPowder, 2),
+                new ItemStack(BTWItems.enderSlag)
+        });
+
+        RecipeManager.addPistonPackingRecipe(Block.netherrack, 2, new ItemStack(Block.netherrack, 9, 0));
+        RecipeManager.addPistonPackingRecipe(Block.netherrack, 3, new ItemStack(Block.netherrack, 9, 2));
+        RecipeManager.addPistonPackingRecipe(Block.netherrack, 4, new ItemStack(Block.netherrack, 9, 3));
 
         finishRecipes("Piston Packing Recipes");
 
