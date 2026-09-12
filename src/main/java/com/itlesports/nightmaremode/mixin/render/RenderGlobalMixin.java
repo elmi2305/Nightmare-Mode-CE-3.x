@@ -327,7 +327,7 @@ public abstract class RenderGlobalMixin {
         if(this.isUnderWorld() || this.nightmareMode$hasOuterSkybox()) {
             try {
                 // always render custom sky texture, regardless of time
-                if (list == this.glSkyList || list == this.starGLCallList) {
+                if (list == this.glSkyList) {
                     renderTexturedSkyDome();
                 } else {
                     // for other lists (stars etc.) preserve original behavior
@@ -344,7 +344,7 @@ public abstract class RenderGlobalMixin {
 
     @Unique
     private void renderTexturedSkyDome() {
-        final float radius = 128;
+        final float radius = 40;
         final int latSteps = 16;
         final int lonSteps = 64;
         final float uRepeat = 1.0f;
@@ -482,7 +482,7 @@ public abstract class RenderGlobalMixin {
 
     @Unique
     private ResourceLocation nightmareMode$getSkyboxTexture() {
-        return this.nightmareMode$hasOuterSkybox() ? SKYBOX_WHITE : SKYBOX;
+        return this.nightmareMode$hasOuterSkybox() ? SKYBOX_WHITE : SKYBOX_RED;
     }
 
     // code stops here
