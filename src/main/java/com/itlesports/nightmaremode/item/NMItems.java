@@ -595,7 +595,8 @@ public class NMItems {
         diamondBearingMaterial = new NMItem(2650).setUnlocalizedName("ifhyDiamondBearingMaterial").setTextureName("nightmare:ifhyDiamondBearingMaterial").setCreativeTab(CreativeTabs.tabMaterials);
         failedDiamondRefinement = new NMItem(2651).setUnlocalizedName("ifhyFailedDiamondRefinement").setTextureName("nightmare:ifhyFailedDiamondRefinement").setCreativeTab(CreativeTabs.tabMaterials);
         refinementWaste = new NMItem(2652).setUnlocalizedName("ifhyRefinementWaste").setTextureName("nightmare:ifhyRefinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
-        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F).setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
+        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F, 0.0D, "ifhyOxygenMask")
+                .setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
         oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
@@ -946,7 +947,7 @@ public class NMItems {
         quartzglassIngot = netherMaterial(3294, "ifhyQuartzglassIngot");
         quartzglassPlate = netherMaterial(3295, "ifhyQuartzglassPlate");
         divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 600, 8, 0.0D,
-                quartzglassPlate.itemID, 0.50F, 0, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
+                quartzglassPlate.itemID, 0.50F, 0, "ifhyDivingMask", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingMask").setUnlocalizedName("ifhyDivingMask");
         divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 900, 8, 0.0D,
                 tungstenPlate.itemID, 0.45F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
@@ -998,7 +999,7 @@ public class NMItems {
         sunLeggings = sunArmorPiece(3326, 2, 6, 5, "ifhySunLeggings");
         sunBoots = sunArmorPiece(3327, 3, 3, 3, "ifhySunBoots");
         sunVisor = (ItemSunDivingGear)new ItemSunDivingGear(3328, 0, 3, 3, 1400, 10, 0.05D,
-                deadzoneAlloyIngot.itemID, 0.50F, 0, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
+                deadzoneAlloyIngot.itemID, 0.50F, 0, "ifhySunVisor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:ifhySunVisor").setUnlocalizedName("ifhySunVisor");
         sunReservoir = (ItemSunDivingGear)new ItemSunDivingGear(3329, 1, 8, 6, 1400, 10, 0.05D,
                 coresteelIngot.itemID, 0.45F, 20 * 60 * 6, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
