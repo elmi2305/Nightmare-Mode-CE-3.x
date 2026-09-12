@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.entity.underworld.EntityAwakenedWither;
-import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
@@ -26,11 +25,7 @@ public abstract class EntityWitherSkullMixin extends EntityFireball implements E
 
     @ModifyConstant(method = "onImpact", constant = @Constant(intValue = 1))
     private int increaseEffectAmplifier(int constant){
-        EntityWitherSkull thisObj = (EntityWitherSkull)(Object)this;
-        if(thisObj.rand.nextFloat() < 0.15 && thisObj.worldObj != null && thisObj.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !(thisObj.shootingEntity instanceof EntityBloodWither)){
-            return 2;
-        }
-        return 1;
+        return constant;
     }
 
     @Inject(method = "onImpact", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"))
@@ -48,15 +43,6 @@ public abstract class EntityWitherSkullMixin extends EntityFireball implements E
             p.addPotionEffect(new PotionEffect(Potion.resistance.id, 10, 0));
         }
     }
-    @Inject(method = "onImpact",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V")
-    )
-    private void applyAdditionalEffectsOnImpact(MovingObjectPosition pos, CallbackInfo ci){
-        if (pos.entityHit.rand.nextFloat()<0.06 && !(this.shootingEntity instanceof EntityBloodWither)) {
-            ((EntityLivingBase)pos.entityHit).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
-        }
-    }
     @ModifyConstant(method = "onImpact", constant = @Constant(floatValue = 8.0f))
     private float increaseDamage(float constant){
         if(this.shootingEntity instanceof EntityAwakenedWither){
@@ -65,7 +51,10 @@ public abstract class EntityWitherSkullMixin extends EntityFireball implements E
             }
             return 18f;
         }
-        return this.shootingEntity instanceof EntityBloodWither bloodWither ? (bloodWither.isDoingLaserAttack ? 50f : 15f) : 12f;
+        if (this.shootingEntity instanceof EntityBloodWither bloodWither) {
+            return bloodWither.isDoingLaserAttack ? 50f : 15f;
+        }
+        return 8f;
     }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))

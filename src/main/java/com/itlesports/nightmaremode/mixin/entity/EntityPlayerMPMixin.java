@@ -32,7 +32,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 
-    @Unique int steelModifier;
     public EntityPlayerMPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
     }
@@ -213,39 +212,18 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Redirect(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;dealFireDamage(I)V"))
     private void dealMagicDamage(EntityPlayerMP instance, int i){
-        this.attackEntityFrom(DamageSource.magic, NMUtils.getWorldProgress() * 2 + this.rand.nextInt(4) + 3);
+        this.attackEntityFrom(DamageSource.magic, 2 + this.rand.nextInt(2));
         // makes fire resistance not bypass the lightning damage
     }
 
     @Inject(method = "onStruckByLightning",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V", ordinal = 1, shift = At.Shift.AFTER))
     private void addLightningEffects(EntityLightningBolt boltEntity, CallbackInfo ci){
-        EntityPlayerMP thisObj = (EntityPlayerMP)(Object)this;
-        this.steelModifier = 0;
-
-        if(isPlayerWearingItem(thisObj, BTWItems.plateBoots,1)){
-            this.steelModifier += 1;
-        }
-        if(isPlayerWearingItem(thisObj, BTWItems.plateLeggings,2)){
-            this.steelModifier += 3;
-        }
-        if(isPlayerWearingItem(thisObj, BTWItems.plateBreastplate,3)) {
-            this.steelModifier += 5;
-        }
-        if(isPlayerWearingItem(thisObj, BTWItems.plateHelmet,4) || isPlayerWearingItem(thisObj, BTWItems.enderSpectacles,4)) {
-            this.steelModifier += 1;
-        }
-
-        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(),110 - this.steelModifier * 10,Math.max(10 - (int)(this.steelModifier / 2) - NMUtils.getWorldProgress(), 0),true));
-        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(),800 - this.steelModifier * 79,3,true));
-        this.addPotionEffect(new PotionEffect(Potion.confusion.getId(),260 - this.steelModifier * 25,0,true));
-        this.addPotionEffect(new PotionEffect(Potion.blindness.getId(),260 - this.steelModifier * 25,0,true));
-        this.addPotionEffect(new PotionEffect(Potion.weakness.getId(),800 - this.steelModifier * 75,1,true));
-    }
-
-    @Unique private boolean isPlayerWearingItem(EntityPlayerMP player, Item itemToCheck, int armorIndex){
-        // armor indices: boots 1, legs 2, chest 3, helmet 4, held item 0
-        return player.getCurrentItemOrArmor(armorIndex) != null && player.getCurrentItemOrArmor(armorIndex).itemID == itemToCheck.itemID;
+        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(), 40, 0, true));
+        this.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 160, 0, true));
+        this.addPotionEffect(new PotionEffect(Potion.confusion.getId(), 60, 0, true));
+        this.addPotionEffect(new PotionEffect(Potion.blindness.getId(), 60, 0, true));
+        this.addPotionEffect(new PotionEffect(Potion.weakness.getId(), 160, 0, true));
     }
 
     @Inject(method = "travelToDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;triggerAchievement(Lnet/minecraft/src/StatBase;)V",ordinal = 1))

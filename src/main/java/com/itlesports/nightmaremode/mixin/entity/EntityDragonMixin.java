@@ -80,7 +80,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
     @ModifyArg(method = "func_82195_e", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"),index = 1)
     private float manageDamageCap(float par2){
         if(par2 > 20){
-            return 20 + (par2 - 20) / 6;
+            return 20 + (par2 - 20) / 3;
         }
         return par2;
     }
@@ -163,7 +163,7 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
 
 
         if(!(this.target instanceof EntityPlayer player)) return;
-        int threshold = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 25 : 40;
+        int threshold = 100;
 
 
         if(this.boundingBox.expand(1,1,1).intersectsWith(player.boundingBox)){
@@ -217,11 +217,6 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
             } else if (i < 0.6){
                 EntityTNTPrimed minion = new EntityTNTPrimed(this.worldObj);
                 minion.fuse = 60;
-                minion.mountEntity(var11);
-                this.worldObj.spawnEntityInWorld(minion);
-            } else if (i < 0.63){
-                EntityWitch minion = new EntityWitch(this.worldObj);
-                minion.entityToAttack = player;
                 minion.mountEntity(var11);
                 this.worldObj.spawnEntityInWorld(minion);
             }

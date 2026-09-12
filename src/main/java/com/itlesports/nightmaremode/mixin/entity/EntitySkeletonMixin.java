@@ -95,6 +95,11 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     }
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
+        if (this.dimension == -1 && this.getSkeletonType().id() == NMFields.SKELETON_WITHER) {
+            for (int arrowCount = 1 + this.rand.nextInt(3); arrowCount > 0; --arrowCount) {
+                this.dropItem(Item.arrow.itemID, 1);
+            }
+        }
         if (bKilledByPlayer && isValidForEventLoot) {
             int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
             if (bloodOrbID > 0) {
@@ -375,6 +380,11 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             this.setArmor(1052688, BTWItems.woolBoots, BTWItems.woolLeggings, BTWItems.woolChest);
         } else if(id == SKELETON_LIGHTNING){
             this.clearArmor();
+        }
+
+        if (this.dimension == -1 && id == NMFields.SKELETON_WITHER && this.rand.nextInt(3) == 0) {
+            this.setCurrentItemOrArmor(0, new ItemStack(Item.bow));
+            this.equipmentDropChances[0] = -1.0F;
         }
 
 
