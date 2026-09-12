@@ -16,6 +16,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.Teleporter;
+import net.minecraft.src.WorldServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,18 +27,38 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
 
+    @Inject(method = "transferEntityToWorld", at = @At("HEAD"), cancellable = true)
+    private void transferPhaseEntityToWorld(Entity entity, int sourceDimension, WorldServer sourceWorld,
+                                            WorldServer destinationWorld, CallbackInfo ci) {
+        PhasePortalData.Endpoint phaseTarget = PhasePortalManager.getTransferTarget();
+        if (phaseTarget == null) return;
+
+        // vanilla skips placement entirely when the source is the end.
+        // phase portals have an explicit destination, so bypass its coordinate scaling,
+        // end-return handling, and portal generation for every source dimension.
+        double x = phaseTarget.x + (phaseTarget.axis == 0 ? 1.0D : 0.5D);
+        double y = phaseTarget.y + 0.1D;
+        double z = phaseTarget.z + (phaseTarget.axis == 1 ? 1.0D : 0.5D);
+        int chunkX = MathHelper.floor_double(x / 16.0D);
+        int chunkZ = MathHelper.floor_double(z / 16.0D);
+
+        destinationWorld.theChunkProviderServer.loadChunk(chunkX, chunkZ);
+        destinationWorld.addChunkRangeToCheckForUnloadList(chunkX - 9, chunkZ - 9, chunkX + 9, chunkZ + 9);
+        entity.setLocationAndAngles(x, y, z, entity.rotationYaw, entity.rotationPitch);
+        entity.motionX = 0.0D;
+        entity.motionY = 0.0D;
+        entity.motionZ = 0.0D;
+
+        if (entity.isEntityAlive()) {
+            destinationWorld.spawnEntityInWorld(entity);
+            destinationWorld.updateEntityWithOptionalForce(entity, false);
+        }
+        entity.setWorld(destinationWorld);
+        ci.cancel();
+    }
+
     @Redirect(method = "transferEntityToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Teleporter;placeInPortal(Lnet/minecraft/src/Entity;DDDF)V"))
     private void doNotGenerateNetherPortalForUnderworld(Teleporter instance, Entity d, double e, double f, double g, float v){
-        PhasePortalData.Endpoint phaseTarget = PhasePortalManager.getTransferTarget();
-        if (phaseTarget != null) {
-            double x = phaseTarget.x + (phaseTarget.axis == 0 ? 1.0D : 0.5D);
-            double z = phaseTarget.z + (phaseTarget.axis == 1 ? 1.0D : 0.5D);
-            d.setLocationAndAngles(x, phaseTarget.y + 0.1D, z, d.rotationYaw, d.rotationPitch);
-            d.motionX = 0.0D;
-            d.motionY = 0.0D;
-            d.motionZ = 0.0D;
-            return;
-        }
         if(d.dimension == NMFields.UNDERWORLD_DIMENSION) return;
         if (d.dimension == -1) {
             if (!instance.placeInExistingPortal(d, e, f, g, v)) {

@@ -13,7 +13,8 @@ import net.minecraft.src.WorldServer;
 import java.util.List;
 
 public final class PhasePortalManager {
-    private static final int PHASE_PORTAL_COOLDOWN = 20;
+    private static final int SAME_DIMENSION_PORTAL_COOLDOWN = 20;
+    private static final int DIMENSION_TRANSFER_PORTAL_COOLDOWN = 100;
     public static final String[] COLOR_NAMES = {"black","red","green","brown","blue","purple","cyan","light gray",
             "gray","pink","lime","yellow","light blue","magenta","orange","white"};
     private static final ThreadLocal<PhasePortalData.Endpoint> TRANSFER_TARGET = new ThreadLocal<>();
@@ -61,7 +62,9 @@ public final class PhasePortalManager {
                     && region != OverworldTierHelper.Region.BEYOND) transit.nightmareMode$setPhaseOrigin(region.ordinal());
         }
         if (entity instanceof PhaseTransitEntity transit) transit.nm$setMustLeavePhasePortal(true);
-        entity.timeUntilPortal = Math.max(entity.getPortalCooldown(), PHASE_PORTAL_COOLDOWN);
+        int phasePortalCooldown = entity.dimension == target.dimension
+                ? SAME_DIMENSION_PORTAL_COOLDOWN : DIMENSION_TRANSFER_PORTAL_COOLDOWN;
+        entity.timeUntilPortal = Math.max(entity.getPortalCooldown(), phasePortalCooldown);
         double x = target.x + (target.axis == 0 ? 1.0D : 0.5D);
         double z = target.z + (target.axis == 1 ? 1.0D : 0.5D);
         double y = target.y + 0.1D;
@@ -76,11 +79,13 @@ public final class PhasePortalManager {
         MinecraftServer server = MinecraftServer.getServer();
         WorldServer destination = server.worldServerForDimension(target.dimension);
         destination.theChunkProviderServer.loadChunk(target.x >> 4, target.z >> 4);
+        PhasePortalData.Endpoint previousTarget = TRANSFER_TARGET.get();
         TRANSFER_TARGET.set(target);
         try {
             entity.travelToDimension(target.dimension);
         } finally {
-            TRANSFER_TARGET.remove();
+            if (previousTarget == null) TRANSFER_TARGET.remove();
+            else TRANSFER_TARGET.set(previousTarget);
         }
     }
 
