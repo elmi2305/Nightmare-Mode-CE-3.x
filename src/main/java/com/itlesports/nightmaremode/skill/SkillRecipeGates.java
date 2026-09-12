@@ -15,6 +15,7 @@ import java.util.Set;
 
 public final class SkillRecipeGates {
     private static final Set<IRecipe> TAXED_CRAFTING_RECIPES = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Set<IRecipe> EXEMPT_CRAFTING_RECIPES = Collections.newSetFromMap(new IdentityHashMap<>());
     private static final Set<BulkRecipe> TAXED_BULK_RECIPES = Collections.newSetFromMap(new IdentityHashMap<>());
     private static final Set<CisternRecipe> TAXED_CISTERN_RECIPES = Collections.newSetFromMap(new IdentityHashMap<>());
 
@@ -28,12 +29,18 @@ public final class SkillRecipeGates {
     public static void crafting(int outputId, int metadata, SkillNode... skills) {
         for (Object object : CraftingManager.getInstance().getRecipeList()) {
             IRecipe recipe = (IRecipe)object;
-            ItemStack output = recipe.getRecipeOutput();
-            if (!matches(output, outputId, metadata)) {
+            if (EXEMPT_CRAFTING_RECIPES.contains(recipe)
+                    || !matches(recipe.getRecipeOutput(), outputId, metadata)) {
                 continue;
             }
             SkillLockedCrafting.requireSkills(recipe, skills);
             reduceMultiOutputYield(recipe);
+        }
+    }
+
+    public static void exemptCrafting(IRecipe recipe) {
+        if (recipe != null) {
+            EXEMPT_CRAFTING_RECIPES.add(recipe);
         }
     }
 

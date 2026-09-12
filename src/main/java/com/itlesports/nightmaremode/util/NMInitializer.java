@@ -1079,6 +1079,10 @@ public abstract class NMInitializer implements AchievementExt {
                 TradeItem.fromID(NMItems.deadzoneShard.itemID, 32),
                 TradeItem.fromID(Item.diamond.itemID, 4),
                 TradeItem.fromID(NMItems.endAccordFragment.itemID), true, true);
+        convert("nmNetherTier3EndAccord", profession, 5,
+                TradeItem.fromID(NMItems.deadzoneShard.itemID, 32),
+                TradeItem.fromID(Item.diamond.itemID, 4),
+                TradeItem.fromID(NMItems.endAccordFragment.itemID), 1.0F, false, true);
 
         EntityVillager.defaultTradeByProfessionList.put(profession,
                 TradeProvider.getBuilder().name("nmNetherTier3Default").profession(profession).level(1)
@@ -1464,6 +1468,21 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(BTWItems.hemp)},
                 CisternTileEntity.FLUID_LAVA, 2, 18, 360,
                 new ItemStack[]{new ItemStack(NMItems.washedHemp)})
+                .setConsumesFluid());
+
+        // pig hide, magma cream, and soul sand provide a self-contained adhesive route.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.pigHide, 2), new ItemStack(Item.magmaCream),
+                        new ItemStack(Block.slowSand, 4)},
+                CisternTileEntity.FLUID_LAVA, 2, 12, 420,
+                new ItemStack[]{new ItemStack(BTWItems.glue, 2)})
+                .setConsumesFluid());
+
+        // tungsten makes nether masonry a limited alternative instead of a replacement for quarrying stone.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(Item.netherrackBrick, 32), new ItemStack(NMItems.tungstenIngot)},
+                CisternTileEntity.FLUID_BRINE, 2, 12, 600,
+                new ItemStack[]{new ItemStack(BTWItems.stoneBrick, 4)})
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
@@ -2636,7 +2655,16 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(NMItems.pighideStringCrafting, 1, NMItems.pighideStringCrafting.getMaxDamage() - 1),
                 new Object[]{NMItems.pigHide, new ItemStack(NMItems.soulFlint, 1, 0)});
         RecipeManager.addRecipe(new ItemStack(Item.bow), new Object[]{" TS", "T S", " TS", Character.valueOf('S'), NMTags.netherCompatibleStrings, Character.valueOf('T'), NMTags.netherCompatibleSticks});
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.arrow, 4), new Object[]{NMItems.soulFlint, NMItems.pighideString, NMItems.tungstenNugget});
+        IRecipe netherArrowRecipe = RecipeManager.addShapelessRecipe(new ItemStack(Item.arrow, 4),
+                new Object[]{NMItems.soulFlint, NMItems.pighideString, NMItems.tungstenNugget});
+        SkillRecipeGates.exemptCrafting(netherArrowRecipe);
+        IRecipe netherCompositeBowRecipe = RecipeManager.addRecipe(new ItemStack(BTWItems.compositeBow), new Object[]{
+                "BGS", "BTS", "BGS",
+                Character.valueOf('B'), Item.bone,
+                Character.valueOf('G'), BTWItems.glue,
+                Character.valueOf('S'), NMItems.pighideString,
+                Character.valueOf('T'), NMTags.netherCompatibleSticks});
+        SkillRecipeGates.exemptCrafting(netherCompositeBowRecipe);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherWorkbenchPart), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.tungstenDust, NMItems.quartzDust});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherWorkbench), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherWorkbenchPart});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
