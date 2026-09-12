@@ -825,9 +825,18 @@ public abstract class NMInitializer implements AchievementExt {
                 .sell().item(NMItems.fishingEssence.itemID).emeraldCost(32, 32).mandatory().addToTradeList();
 
         buy("ifhy:fisherman_level_two", profession, 1, Item.fishingRod.itemID, 0, 1, 1, 1.0F, true, 0, 0);
-        buy("ifhy:fisherman_level_three", profession, 2, Item.fishRaw.itemID, 0, 16, 16, 1.0F, true, 0, 0);
-        buy("ifhy:fisherman_level_four", profession, 3, NMItems.swordfish.itemID, 0, 2, 2, 1.0F, true, 0, 0);
-        buy("ifhy:fisherman_level_five", profession, 4, NMItems.goldenCarp.itemID, 0, 4, 4, 1.0F, true, 0, 0);
+        convert("ifhy:fisherman_level_three", profession, 2,
+                TradeItem.fromID(NMItems.swordfish.itemID, 2),
+                TradeItem.fromID(NMItems.goldenCarp.itemID, 3),
+                TradeItem.fromID(Item.emerald.itemID), true, true);
+        convert("ifhy:fisherman_level_four", profession, 3,
+                TradeItem.fromID(NMItems.alligatorGar.itemID, 4),
+                TradeItem.fromID(NMItems.arapaima.itemID, 2),
+                TradeItem.fromID(Item.emerald.itemID), true, true);
+        convert("ifhy:fisherman_level_five", profession, 4,
+                TradeItem.fromID(NMItems.frostfish.itemID, 4),
+                TradeItem.fromID(NMItems.duneKoi.itemID, 2),
+                TradeItem.fromID(Item.emerald.itemID), true, true);
         TradeProvider.getBuilder().name("ifhy:fisherman_lavafish_final").profession(profession).level(5)
                 .buy().item(NMItems.lavafish.itemID).itemCount(16, 16).mandatory().addToTradeList();
 
