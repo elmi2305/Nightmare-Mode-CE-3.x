@@ -17,11 +17,11 @@ public abstract class EntityNetherPigZombieVariant extends EntityPigZombie {
     protected abstract int getFireSecondsOnHit();
 
     protected double getVariantHealth() {
-        return 30.0D;
+        return 65.0D;
     }
 
     protected double getVariantDamage() {
-        return 7.0D;
+        return 11.0D;
     }
 
     @Override
@@ -42,5 +42,12 @@ public abstract class EntityNetherPigZombieVariant extends EntityPigZombie {
     public boolean getCanSpawnHere() {
         return NetherTierHelper.getTier(this.worldObj, this.posX, this.posZ) >= this.getMinimumNetherTier()
                 && super.getCanSpawnHere();
+    }
+
+    @Override
+    public void addPotionEffect(net.minecraft.src.PotionEffect effect) {
+        if (effect.getPotionID() != net.minecraft.src.Potion.field_76443_y.id) {
+            super.addPotionEffect(effect);
+        }
     }
 }

@@ -29,9 +29,8 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         if(this.worldObj != null) {
-            boolean isVariant = false;
             EntityBlaze self = (EntityBlaze) (Object)this;
-            if(self instanceof EntityCinderBlaze || self instanceof EntityHellfireBlaze) {isVariant = true;}
+            boolean isVariant = isTieredNetherBlaze(self);
             int progress = NMUtils.getWorldProgress();
             int eclipseBonus = NMUtils.getIsMobEclipsed(this) ? (isAquatic() ? 20 : 10) : 0;
             Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
@@ -43,7 +42,7 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
-            if(NMUtils.getIsMobEclipsed(this)){
+            if(!isVariant && NMUtils.getIsMobEclipsed(this)){
                 if(rand.nextBoolean()){
                     this.nm$setBlazeVariant((byte) NMFields.BLAZE_AQUA);
                     this.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, 1000000, 0));
@@ -86,8 +85,39 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
     }
     @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 100))
     private int lowerBlazeAttackCooldown(int constant) {
+        EntityBlaze blaze = (EntityBlaze)(Object)this;
+        if (blaze instanceof EntityHellfireBlaze) {
+            return 35;
+        }
+        if (blaze instanceof EntityCinderBlaze) {
+            return 50;
+        }
         if (NMUtils.getIsMobEclipsed(this) && this.getActivePotionEffects().isEmpty()){
             return 50; // hacky. should be redone. this is stupid
+        }
+        return constant;
+    }
+
+    @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 60))
+    private int lowerVariantBlazeWindup(int constant) {
+        EntityBlaze blaze = (EntityBlaze)(Object)this;
+        if (blaze instanceof EntityHellfireBlaze) {
+            return 20;
+        }
+        if (blaze instanceof EntityCinderBlaze) {
+            return 30;
+        }
+        return constant;
+    }
+
+    @ModifyConstant(method = "attackEntity", constant = @Constant(intValue = 6))
+    private int lowerVariantBlazeBurstDelay(int constant) {
+        EntityBlaze blaze = (EntityBlaze)(Object)this;
+        if (blaze instanceof EntityHellfireBlaze) {
+            return 3;
+        }
+        if (blaze instanceof EntityCinderBlaze) {
+            return 4;
         }
         return constant;
     }
@@ -107,10 +137,11 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
             }
 
 
-            boolean isEclipse = NMUtils.getIsMobEclipsed(this);
-            int threshold = isEclipse ? 80 : 200;
+            EntityBlaze blaze = (EntityBlaze)(Object)this;
+            boolean evasiveDash = NMUtils.getIsMobEclipsed(this) || blaze instanceof EntityHellfireBlaze;
+            int threshold = evasiveDash ? 80 : 200;
 
-            if(isEclipse && distToPlayerSq < 49){
+            if(evasiveDash && distToPlayerSq < 49){
                 // it goes vroom when close to the player
                 this.dashTimer += 3;
             }
@@ -121,7 +152,7 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
                 double dy = target.posY - this.posY;
                 double dz = target.posZ - this.posZ;
 
-                if(distToPlayerSq < 49 && isEclipse && !this.isInvisibleBlaze()){
+                if(distToPlayerSq < 49 && evasiveDash && !this.isInvisibleBlaze()){
                     dx *= -1.5;
                     dy *= -1;
                     dz *= -1.5;
@@ -143,12 +174,19 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
-        NMUtils.manageEclipseChance(this,8);
+        if (!isTieredNetherBlaze((EntityBlaze)(Object)this)) {
+            NMUtils.manageEclipseChance(this,8);
+        }
     }
 
 
     @ModifyArg(method = "attackEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private Entity manageWaterBlazeAttack(Entity projectile){
+        EntityBlaze blaze = (EntityBlaze)(Object)this;
+        if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode
+                && blaze instanceof EntityHellfireBlaze) {
+            return createLargeFireball(blaze, target);
+        }
         if (this.getEntityToAttack() instanceof EntityPlayer target && !target.capabilities.isCreativeMode && NMUtils.getIsMobEclipsed(this)) {
             if(isAquatic()){
                 BTWSquidEntity squid = new BTWSquidEntity(this.worldObj);
@@ -163,15 +201,7 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
 
                 return squid;
             } else{
-                double deltaX = target.posX - this.posX;
-                double deltaY = target.boundingBox.minY + (double) (target.height / 2.0F) - (this.posY + (double) (this.height / 2.0F)) - 0.5;
-                double deltaZ = target.posZ - this.posZ;
-
-                EntityLargeFireball largeFireball = new EntityLargeFireball(this.worldObj, this, deltaX, deltaY, deltaZ);
-                this.worldObj.playAuxSFXAtEntity(null, 1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
-                largeFireball.posY = this.posY + (double) (this.height / 2.0f) + 0.5;
-
-                return largeFireball;
+                return createLargeFireball(blaze, target);
             }
         }
 
@@ -185,6 +215,23 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
 
     @Unique private static double getRandomOffsetFromPosition(EntityLivingBase entity){
         return ((entity.rand.nextBoolean() ? -1 : 1) * entity.rand.nextInt(3)+2);
+    }
+
+    @Unique
+    private static boolean isTieredNetherBlaze(EntityBlaze blaze) {
+        return blaze instanceof EntityCinderBlaze || blaze instanceof EntityHellfireBlaze;
+    }
+
+    @Unique
+    private EntityLargeFireball createLargeFireball(EntityBlaze blaze, EntityPlayer target) {
+        double deltaX = target.posX - blaze.posX;
+        double deltaY = target.boundingBox.minY + (double)(target.height / 2.0F)
+                - (blaze.posY + (double)(blaze.height / 2.0F)) - 0.5D;
+        double deltaZ = target.posZ - blaze.posZ;
+        EntityLargeFireball largeFireball = new EntityLargeFireball(this.worldObj, blaze, deltaX, deltaY, deltaZ);
+        this.worldObj.playAuxSFXAtEntity(null, 1009, (int)blaze.posX, (int)blaze.posY, (int)blaze.posZ, 0);
+        largeFireball.setPosition(blaze.posX, blaze.posY + (double)(blaze.height / 2.0F) + 0.5D, blaze.posZ);
+        return largeFireball;
     }
 
 

@@ -66,6 +66,7 @@ public class NMEntityMapper {
         EntityList.addMapping(EntityHellfireBlaze.class, "NmHellfireBlaze", 2350, 0x4A0D0D, 0xFF2D00);
         EntityList.addMapping(EntityAshGhast.class, "NmAshGhast", 2351, 0x77706C, 0x322B29);
         EntityList.addMapping(EntitySiegeGhast.class, "NmSiegeGhast", 2352, 0x3A2623, 0x9C271B);
+        EntityList.addMapping(EntitySiegeFireball.class, "NmSiegeFireball", 2356);
         EntityList.addMapping(EntityEnderSilverfish.class, "NmEnderSilverfish", 2353, 0x17131F, 0x7846A8);
         EntityList.addMapping(EntityEnderSkeleton.class, "NmOuterEnderSkeleton", 2354, 0x17131F, 0x7846A8);
         EntityList.addMapping(EntityWitherSkeletonOuter.class, "NmOuterWitherSkeleton", 2355, 0x202020, 0x555555);
