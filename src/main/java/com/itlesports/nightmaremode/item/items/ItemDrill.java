@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.Block;
@@ -18,7 +19,8 @@ public class ItemDrill extends NMItem {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
                              int facing, float clickX, float clickY, float clickZ) {
-        if (facing < 2 || facing > 5 || world.getBlockId(x, y, z) != Block.wood.blockID) {
+        int blockID = world.getBlockId(x, y, z);
+        if (facing < 2 || facing > 5 || (blockID != Block.wood.blockID && blockID != BTWBlocks.bloodWoodLog.blockID)) {
             return false;
         }
 

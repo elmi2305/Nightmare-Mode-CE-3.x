@@ -1612,9 +1612,26 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         boolean day = this.worldObj.isDaytime();
         boolean rain = this.worldObj.isRainingAtPos(x, y, z);
-        this.outerSolarExposure = Math.min(400, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
+        this.outerSolarExposure = Math.min(800, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
         if (this.outerSolarExposure >= 100 && this.ticksExisted % 8 == 0) {
-            this.attackEntityFrom(DamageSource.magic, 1.0f);
+            this.applySolarRadiationEffects();
+            float damage = 1.0F + (float) (this.outerSolarExposure - 100) / 20;
+            this.attackEntityFrom(DamageSource.magic, damage);
+        }
+    }
+
+    @Unique
+    private void applySolarRadiationEffects() {
+        int slowness = this.outerSolarExposure >= 500 ? 2 : this.outerSolarExposure >= 250 ? 1 : 0;
+        this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 200, slowness));
+
+        if (this.outerSolarExposure >= 300 && !this.isPotionActive(Potion.blindness)) {
+            this.addPotionEffect(new PotionEffect(Potion.blindness.id, 200,
+                    this.outerSolarExposure >= 600 ? 1 : 0));
+        }
+        if (this.outerSolarExposure >= 400 && !this.isPotionActive(Potion.wither)) {
+            this.addPotionEffect(new PotionEffect(Potion.wither.id, 120,
+                    this.outerSolarExposure >= 650 ? 2 : 1));
         }
     }
 

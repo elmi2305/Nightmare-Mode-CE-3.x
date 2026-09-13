@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block.blocks;
 
+import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,6 +18,8 @@ import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.World;
 
 public class BlockSapTap extends Block {
+    private static final int BLOOD_WOOD_TYPE = 4;
+
     @Environment(EnvType.CLIENT)
     private Icon[] icons;
 
@@ -68,15 +71,23 @@ public class BlockSapTap extends Block {
             logType = 0;
         }
 
-        return logType | (this.getAttachmentIndexForFacing(facing) << 2);
+        return (logType == BLOOD_WOOD_TYPE ? 0 : logType) | (this.getAttachmentIndexForFacing(facing) << 2);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborBlockID) {
         if (!this.hasAttachedLog(world, x, y, z)) {
-            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
         }
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {
+    }
+
+    @Override
+    public ItemStack getStackRetrievedByBlockDispenser(World world, int x, int y, int z) {
+        return null;
     }
 
     @Override
@@ -94,7 +105,8 @@ public class BlockSapTap extends Block {
                 }
             }
 
-            ItemStack sapStack = new ItemStack(NMItems.cupOfSap, 1, this.getLogType(world.getBlockMetadata(x, y, z)));
+            ItemStack sapStack = new ItemStack(NMItems.cupOfSap, 1, this.getAttachedLogType(world, x, y, z,
+                    this.getPlacementFacingFromAttachment(this.getAttachmentFromMetadata(world.getBlockMetadata(x, y, z)))));
             if (!player.inventory.addItemStackToInventory(sapStack)) {
                 player.dropPlayerItem(sapStack);
             }
@@ -128,7 +140,14 @@ public class BlockSapTap extends Block {
     @Environment(EnvType.CLIENT)
     public boolean renderBlock(RenderBlocks renderer, int x, int y, int z) {
         renderer.setRenderBounds(this.getBlockBoundsFromPoolBasedOnState(renderer.blockAccess, x, y, z));
-        return renderer.renderStandardBlock(this, x, y, z);
+        int logType = this.getAttachedLogType(renderer.blockAccess, x, y, z,
+                this.getPlacementFacingFromAttachment(this.getAttachmentFromMetadata(renderer.blockAccess.getBlockMetadata(x, y, z))));
+        if (logType >= 0) {
+            renderer.setOverrideBlockTexture(this.icons[logType]);
+        }
+        boolean rendered = renderer.renderStandardBlock(this, x, y, z);
+        renderer.clearOverrideBlockTexture();
+        return rendered;
     }
 
     @Override
@@ -172,7 +191,7 @@ public class BlockSapTap extends Block {
         return 2;
     }
 
-    private int getAttachedLogType(World world, int x, int y, int z, int facing) {
+    private int getAttachedLogType(IBlockAccess world, int x, int y, int z, int facing) {
         int logX = x;
         int logZ = z;
 
@@ -190,6 +209,10 @@ public class BlockSapTap extends Block {
 
         if (world.getBlockId(logX, y, logZ) == Block.wood.blockID) {
             return BlockLog.limitToValidMetadata(world.getBlockMetadata(logX, y, logZ));
+        }
+
+        if (world.getBlockId(logX, y, logZ) == BTWBlocks.bloodWoodLog.blockID) {
+            return BLOOD_WOOD_TYPE;
         }
 
         return -1;
@@ -238,9 +261,10 @@ public class BlockSapTap extends Block {
     @Override
     @Environment(EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.icons = new Icon[BlockLog.woodType.length];
-        for (int i = 0; i < this.icons.length; ++i) {
+        this.icons = new Icon[BlockLog.woodType.length + 1];
+        for (int i = 0; i < BlockLog.woodType.length; ++i) {
             this.icons[i] = register.registerIcon("nightmare:ifhySapTap_" + BlockLog.woodType[i]);
         }
+        this.icons[BLOOD_WOOD_TYPE] = register.registerIcon("nightmare:ifhySapTap_bloodWood");
     }
 }

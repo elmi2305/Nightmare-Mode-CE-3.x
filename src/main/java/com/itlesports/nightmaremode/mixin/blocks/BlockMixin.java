@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
@@ -110,6 +111,30 @@ public abstract class BlockMixin {
             ItemStack held = player.getCurrentEquippedItem();
             if (held == null || held.getItem() != NMItems.enderPickaxe) cir.setReturnValue(0.0F);
         }
+    }
+
+    @Inject(method = "idPicked", at = @At("HEAD"), cancellable = true)
+    private void pickNMPlaceAsBlockItem(World world, int x, int y, int z, CallbackInfoReturnable<Integer> cir) {
+        int itemID = this.getNMPlaceAsBlockItemID(world, x, y, z);
+        if (itemID > 0) {
+            cir.setReturnValue(itemID);
+        }
+    }
+
+    @Inject(method = "getStackRetrievedByBlockDispenser", at = @At("HEAD"), cancellable = true)
+    private void retrieveNMPlaceAsBlockItem(World world, int x, int y, int z,
+                                             CallbackInfoReturnable<ItemStack> cir) {
+        int itemID = this.getNMPlaceAsBlockItemID(world, x, y, z);
+        if (itemID > 0) {
+            cir.setReturnValue(new ItemStack(Item.itemsList[itemID]));
+        }
+    }
+
+    @Unique
+    private int getNMPlaceAsBlockItemID(World world, int x, int y, int z) {
+        int itemID = ((Block)(Object)this).idDropped(world.getBlockMetadata(x, y, z), world.rand, 0);
+        return itemID > 0 && itemID < Item.itemsList.length && Item.itemsList[itemID] instanceof NMPlaceAsBlockItem
+                ? itemID : 0;
     }
 
     @Inject(method = "registerIcons", at = @At("TAIL"))

@@ -1,9 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
-import api.item.items.AxeItem;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
-import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.integration.emi.NightmareEmiRegistry;
@@ -62,6 +60,16 @@ public abstract class BTWPluginMixin {
                     sw.appendTooltip(EmiPort.literal("Requires 36,000 ticks of direct daylight (about three full sunny days)."));
                     return sw;
                 }).output(EmiStack.of(Item.brick)).supportsRecipeTree(true).build());
+
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("cup_of_sap"))
+                .leftInput(EmiStack.of(NMItems.woodCup)).rightInput(EmiStack.of(NMBlocks.sapTap), false)
+                .output(EmiStack.of(NMItems.cupOfSap)).supportsRecipeTree(true).build());
+
+        List<EmiStack> sapTapLogs = new ArrayList<>(logs);
+        sapTapLogs.add(EmiStack.of(BTWBlocks.bloodWoodLog));
+        registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("sap_tap_from_drilling"))
+                .leftInput(EmiStack.of(NMItems.drill)).rightInput(EmiIngredient.of(sapTapLogs), false)
+                .output(EmiStack.of(NMBlocks.sapTap)).supportsRecipeTree(false).build());
 
         replaceLogInteractionRecipe(registry, "shaft_from_chiseling", logTools, logs, EmiStack.of(Item.stick),
                 "emi.world_interaction.btw.shaft_from_chiseling");
@@ -146,26 +154,18 @@ public abstract class BTWPluginMixin {
 
     @Unique
     private static List<EmiStack> getLogConversionTools() {
-        List<EmiStack> tools = new ArrayList<>();
-        for (Item item : Item.itemsList) {
-            if (item != null && (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
-                    || item instanceof ChiselItem || item instanceof AxeItem)) {
-                tools.add(EmiStack.of(item));
-            }
-        }
-        return tools;
+        return List.of(
+                EmiStack.of(NMItems.sharpTwig),
+                EmiStack.of(NMItems.sharpBarkTwig),
+                EmiStack.of(BTWItems.pointyStick),
+                EmiStack.of(BTWItems.sharpStone),
+                EmiStack.of(BTWItems.ironChisel),
+                EmiStack.of(BTWItems.diamondChisel));
     }
 
     @Unique
     private static List<EmiStack> getStumpConversionTools() {
-        List<EmiStack> tools = new ArrayList<>();
-        for (Item item : Item.itemsList) {
-            if (item != null && (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
-                    || item == BTWItems.ironChisel || item == BTWItems.diamondChisel || item instanceof AxeItem)) {
-                tools.add(EmiStack.of(item));
-            }
-        }
-        return tools;
+        return List.of(EmiStack.of(BTWItems.ironChisel), EmiStack.of(BTWItems.diamondChisel));
     }
 
     @Inject(method = "addInfoRecipes", at = @At("TAIL"),remap = false)

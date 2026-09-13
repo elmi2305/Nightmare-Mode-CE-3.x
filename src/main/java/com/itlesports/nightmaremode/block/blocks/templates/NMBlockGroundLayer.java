@@ -49,7 +49,12 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     }
 
     public boolean canDropFromExplosion(Explosion explosion) {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onSelfRemoval(World world, int x, int y, int z) {
+        this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
     }
 
 
@@ -116,6 +121,11 @@ public class NMBlockGroundLayer extends GroundCoverBlock {
     public int idDropped(int meta, Random par2Random, int par3) {
         if(meta != 0) return 0;
         return this.dropItemID;
+    }
+
+    @Override
+    public int idPicked(World world, int x, int y, int z) {
+        return this.idDropped(world.getBlockMetadata(x, y, z), world.rand, 0);
     }
 
     @Override
