@@ -166,7 +166,6 @@ public class NMBlocks {
     public static Block enderAssembler;
     public static Block minerDrillTier4;
     public static Block carburizedIronBloom;
-    public static Block saturatedCoresteelCharge;
     public static Block phasePortalFrame;
     public static Block phasePortal;
     public static Block gravititeNode;
@@ -201,11 +200,6 @@ public class NMBlocks {
         carburizedIronBloom = new BlockMaterialBloom(NMFields.BLOCK_CARBURIZED_IRON_BLOOM,
                 NMItems.carburizedIronBloom.itemID, "ifhyCarburizedIronBloom", "nightmare:ifhyCarburizedIronBloom");
         Item.itemsList[carburizedIronBloom.blockID] = new NMItemBlock(carburizedIronBloom.blockID - 256).hideFromEMI();
-
-        saturatedCoresteelCharge = new BlockCoolingCharge(NMFields.BLOCK_SATURATED_CORESTEEL_CHARGE,
-                NMItems.saturatedCoresteelCharge.itemID, NMItems.cooledCoresteelCharge.itemID,
-                "ifhySaturatedCoresteelCharge", "nightmare:ifhySaturatedCoresteelCharge");
-        Item.itemsList[saturatedCoresteelCharge.blockID] = new NMNetherItemBlock(saturatedCoresteelCharge.blockID - 256).hideFromEMI();
 
         stoneAnvil = new BlockStoneAnvil(NMFields.BLOCK_STONE_ANVIL);
         Item.itemsList[stoneAnvil.blockID] = new NMItemBlock(NMBlocks.stoneAnvil.blockID - 256);
@@ -346,12 +340,12 @@ public class NMBlocks {
         minerDrillTier4 = new BlockMinerDrill(2446, 4, "ifhyMinerDrillTier4", "nightmare:ifhyMinerDrillTier4");
         Item.itemsList[minerDrillTier4.blockID] = new NMItemBlock(minerDrillTier4.blockID - 256);
 
-        nickelOreNode = new BlockOreNode(2449, NMItems.nickelRawRock.itemID, Block.oreGold,
-                "ifhyNickelOreNode", "nightmare:ifhyNickelOre");
+        nickelOreNode = new BlockOreNode(2449, NMItems.nickelRawRock.itemID, Block.oreIron,
+                "ifhyNickelOreNode", "nightmare:ifhyNickelOreNode");
         Item.itemsList[nickelOreNode.blockID] = new NMNetherItemBlock(nickelOreNode.blockID - 256);
 
         lithiumOreNode = new BlockOreNode(2450, NMItems.lithiumRaw.itemID, Block.oreIron,
-                "ifhyLithiumOreNode", "nightmare:ifhyLithiumOre");
+                "ifhyLithiumOreNode", "nightmare:ifhyLithiumOreNode");
         Item.itemsList[lithiumOreNode.blockID] = new NMNetherItemBlock(lithiumOreNode.blockID - 256);
 
         phasePortalFrame = new BlockPhasePortalFrame(2451);
@@ -362,7 +356,7 @@ public class NMBlocks {
         solarQuartzNode = new BlockOreNode(2454, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK, Block.whiteStone, 4,
                 "ifhySolarQuartzNode", "nightmare:ifhyMercuryOreNode", 0xF0B95A);
         abyssNode = new BlockOreNode(2455, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.ABYSS_CHUNK, Block.whiteStone, 4,
-                "ifhyAbyssNode", "nightmare:ifhyMercuryOreNode", 0x2B718A);
+                "ifhyAbyssNode", "nightmare:ifhyMercuryOreNode", 0x204654);
         cryoliteNode = new BlockOreNode(2456, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.CRYOLITE_CHUNK, Block.whiteStone, 4,
                 "ifhyCryoliteNode", "nightmare:ifhyMercuryOreNode", 0xA7E8F6);
         Item.itemsList[gravititeNode.blockID] = new NMItemBlock(gravititeNode.blockID - 256);

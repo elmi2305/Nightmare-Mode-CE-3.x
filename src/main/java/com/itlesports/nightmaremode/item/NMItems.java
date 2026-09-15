@@ -4,7 +4,6 @@ import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
-import com.itlesports.nightmaremode.block.blocks.templates.NMNetherPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
@@ -312,6 +311,9 @@ public class NMItems {
     public static Item endAccordFragment;
     public static Item endAccord;
     public static Item lateGameMaterial;
+    public static Item aetherChunk;
+    public static Item aetherNugget;
+    public static Item aetherIngot;
     public static Item phaseCell;
     public static Item debugVillagerLevel;
     public static Item debugVillagerProgress;
@@ -887,6 +889,9 @@ public class NMItems {
 
         lateGameMaterial = new ItemLateGameMaterial(3452);
         phaseCell = new ItemPhaseCell(3453);
+        aetherChunk = material(3454, "ifhyAetherChunk");
+        aetherNugget = material(3455, "ifhyAetherNugget");
+        aetherIngot = material(3456, "ifhyAetherIngot");
 
         carbonRichIronMix = material(3259, "ifhyCarbonRichIronMix");
         carburizedIronBloom = new NMPlaceAsBlockItem(3260, NMFields.BLOCK_CARBURIZED_IRON_BLOOM)
@@ -960,9 +965,7 @@ public class NMItems {
         blackglassCharge = netherMaterial(3301, "ifhyBlackglassCharge");
         blackglassIngot = netherMaterial(3302, "ifhyBlackglassIngot");
         blackglassPlate = netherMaterial(3303, "ifhyBlackglassPlate");
-        saturatedCoresteelCharge = new NMNetherPlaceAsBlockItem(3304, NMFields.BLOCK_SATURATED_CORESTEEL_CHARGE)
-                .setTextureName("nightmare:ifhySaturatedCoresteelCharge")
-                .setUnlocalizedName("ifhySaturatedCoresteelCharge").setCreativeTab(CreativeTabs.tabMaterials);
+        saturatedCoresteelCharge = netherMaterial(3304, "ifhySaturatedCoresteelCharge");
         cooledCoresteelCharge = netherMaterial(3305, "ifhyCooledCoresteelCharge");
         coresteelIngot = netherMaterial(3306, "ifhyCoresteelIngot");
         coresteelPlate = netherMaterial(3307, "ifhyCoresteelPlate");

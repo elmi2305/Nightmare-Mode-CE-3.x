@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.block.tileEntities;
 
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 
@@ -25,9 +24,9 @@ public class VoidExtractorTileEntity extends TileEntity implements IInventory {
     private ItemStack result() {
         ItemStack input = this.inventory[1];
         if (input == null) return null;
-        if (input.itemID == Item.ingotIron.itemID) return new ItemStack(NMItems.lateGameMaterial, 1, ItemLateGameMaterial.AETHER_INGOT);
-        if (input.itemID == BTWItems.ironOreChunk.itemID) return new ItemStack(NMItems.lateGameMaterial, 1, ItemLateGameMaterial.AETHER_CHUNK);
-        if (input.itemID == BTWItems.ironNugget.itemID) return new ItemStack(NMItems.lateGameMaterial, 1, ItemLateGameMaterial.AETHER_NUGGET);
+        if (input.itemID == Item.ingotIron.itemID) return new ItemStack(NMItems.aetherIngot);
+        if (input.itemID == BTWItems.ironOreChunk.itemID) return new ItemStack(NMItems.aetherChunk);
+        if (input.itemID == BTWItems.ironNugget.itemID) return new ItemStack(NMItems.aetherNugget);
         return null;
     }
 

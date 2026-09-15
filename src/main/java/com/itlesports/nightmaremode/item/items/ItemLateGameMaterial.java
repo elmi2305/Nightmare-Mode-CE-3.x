@@ -17,9 +17,8 @@ public class ItemLateGameMaterial extends Item {
     public static final int SOLAR_QUARTZ_CHUNK = 3;
     public static final int SOLAR_QUARTZ_NUGGET = 4;
     public static final int SOLAR_QUARTZ_INGOT = 5;
-    public static final int AETHER_CHUNK = 6;
-    public static final int AETHER_NUGGET = 7;
-    public static final int AETHER_INGOT = 8;
+    private static final int RETIRED_MATERIAL_START = 6;
+    private static final int RETIRED_MATERIAL_END = 8;
     public static final int ABYSS_CHUNK = 9;
     public static final int ABYSS_NUGGET = 10;
     public static final int ABYSS_INGOT = 11;
@@ -53,7 +52,7 @@ public class ItemLateGameMaterial extends Item {
     private static final String[] NAMES = {
             "GravititeChunk", "GravititeNugget", "GravititeIngot",
             "SolarQuartzChunk", "SolarQuartzNugget", "SolarQuartzIngot",
-            "AetherChunk", "AetherNugget", "AetherIngot",
+            "RetiredMaterial", "RetiredMaterial", "RetiredMaterial",
             "AbyssChunk", "AbyssNugget", "AbyssIngot",
             "CryoliteChunk", "CryoliteNugget", "CryoliteIngot",
             "ShadowDust", "EnderBone", "Vertebrae", "BlackwidowGland", "DeadzoneTear",
@@ -64,7 +63,7 @@ public class ItemLateGameMaterial extends Item {
     };
     private static final int[] COLORS = {
             0x7866A8,0xA18FC7,0xC0AFE8, 0xD8832D,0xF0B95A,0xFFD87A,
-            0xC8E7FF,0xDDF2FF,0xF2FAFF, 0x16445A,0x2B718A,0x49A7BA,
+            0xFFFFFF,0xFFFFFF,0xFFFFFF, 0x16445A,0x2B718A,0x49A7BA,
             0x76CFE8,0xA7E8F6,0xD4F7FF, 0x302746,0x7456A0,0x3B3337,0x8E1E31,0x4A3B67,
             0x15131E,0x7D4DA4,0xB64620,0xE15A26,0xA8895A, 0xE8E5FF,0xE0C9FF,0xFFF4D0,
             0x74B929,0x84D33D,0xBDEEFF,0x96D7EF, 0x594472,0xCF812E,0xE7E7FF,0x25647A,0x8FDFF2,0xD6B4FF
@@ -119,6 +118,9 @@ public class ItemLateGameMaterial extends Item {
     }
 
     @Override public void getSubItems(int id, CreativeTabs tab, List list) {
-        for (int metadata = 0; metadata < NAMES.length; ++metadata) list.add(new ItemStack(id, 1, metadata));
+        for (int metadata = 0; metadata < NAMES.length; ++metadata) {
+            if (metadata >= RETIRED_MATERIAL_START && metadata <= RETIRED_MATERIAL_END) continue;
+            list.add(new ItemStack(id, 1, metadata));
+        }
     }
 }

@@ -208,7 +208,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             else if (entity instanceof EntityAngelGhast) this.dropLateMaterial(ItemLateGameMaterial.HALO_TEAR, 1, 1);
             else if (entity instanceof EntityAngelDragon) this.dropLateMaterial(ItemLateGameMaterial.ANGEL_BREATH, 2, 3);
             else return;
-            this.dropLateMaterial(ItemLateGameMaterial.AETHER_CHUNK, 1, 2);
+            this.entityDropItem(new ItemStack(NMItems.aetherChunk, 1 + this.rand.nextInt(3)), 0.0F);
             return;
         }
         if (this.dimension != 0 || current != OverworldTierHelper.Region.INNER

@@ -1161,12 +1161,14 @@ public abstract class NMInitializer implements AchievementExt {
                         new ItemStack(BTWItems.soulFlux, 2)});
 
         int[] chunks = {ItemLateGameMaterial.GRAVITITE_CHUNK, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK,
-                ItemLateGameMaterial.AETHER_CHUNK, ItemLateGameMaterial.ABYSS_CHUNK, ItemLateGameMaterial.CRYOLITE_CHUNK};
+                ItemLateGameMaterial.ABYSS_CHUNK, ItemLateGameMaterial.CRYOLITE_CHUNK};
         for (int chunk : chunks) RecipeManager.addStokedCrucibleRecipe(late(chunk + 1, 1), new ItemStack[]{late(chunk, 1)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.aetherNugget), new ItemStack[]{new ItemStack(NMItems.aetherChunk)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.aetherIngot), new ItemStack[]{new ItemStack(NMItems.aetherNugget)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWBlocks.soulforgedSteelBlock, 2), new ItemStack[]{
                 late(ItemLateGameMaterial.SHADOW_DUST, 32), late(ItemLateGameMaterial.CHARRED_STRING, 32),
                 late(ItemLateGameMaterial.ACID_INK_SAC, 24), late(ItemLateGameMaterial.FROZEN_BONE, 24),
-                late(ItemLateGameMaterial.AETHER_INGOT, 8), new ItemStack(BTWItems.soulFlux, 16)
+                new ItemStack(NMItems.aetherIngot, 8), new ItemStack(BTWItems.soulFlux, 16)
         });
 
 
@@ -1423,7 +1425,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.GRAVITITE_INGOT,16),late(ItemLateGameMaterial.SHADOW_DUST,64),late(ItemLateGameMaterial.ENDER_BONE,48),late(ItemLateGameMaterial.VERTEBRAE,32),late(ItemLateGameMaterial.BLACKWIDOW_GLAND,32),late(ItemLateGameMaterial.DEADZONE_TEAR,24),late(ItemLateGameMaterial.VOID_POWDER,48),late(ItemLateGameMaterial.DISPLACED_PEARL,24)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.DEADZONE_ESSENCE,1)}).setConsumesFluid());
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.SOLAR_QUARTZ_INGOT,16),late(ItemLateGameMaterial.CHARRED_STRING,64),late(ItemLateGameMaterial.CINDER_BONE,48),late(ItemLateGameMaterial.DESICCATED_FLESH,64),new ItemStack(NMItems.darksunFragment,16)},CisternTileEntity.FLUID_LAVA,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.SOLAR_ESSENCE,1)}).setConsumesFluid());
-        manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.AETHER_INGOT,16),late(ItemLateGameMaterial.LUMINOUS_INK_SAC,32),late(ItemLateGameMaterial.HALO_TEAR,24),late(ItemLateGameMaterial.ANGEL_BREATH,16),new ItemStack(NMItems.enderCrystal,32)},CisternTileEntity.FLUID_WATER,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.VOID_ESSENCE,1)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(new ItemStack[]{new ItemStack(NMItems.aetherIngot,16),late(ItemLateGameMaterial.LUMINOUS_INK_SAC,32),late(ItemLateGameMaterial.HALO_TEAR,24),late(ItemLateGameMaterial.ANGEL_BREATH,16),new ItemStack(NMItems.enderCrystal,32)},CisternTileEntity.FLUID_WATER,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.VOID_ESSENCE,1)}).setConsumesFluid());
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.ABYSS_INGOT,16),late(ItemLateGameMaterial.CAUSTIC_TEAR,32),late(ItemLateGameMaterial.ACID_INK_SAC,64),new ItemStack(NMItems.mercuryAmalgam,16)},CisternTileEntity.FLUID_WATER,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.ABYSSAL_ESSENCE,1)}).setConsumesFluid());
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.CRYOLITE_INGOT,16),late(ItemLateGameMaterial.FROZEN_BONE,64),late(ItemLateGameMaterial.FROZEN_FLESH,64),new ItemStack(NMItems.paleRootResin,16)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.FROZEN_ESSENCE,1)}).setConsumesFluid());
 
@@ -1833,7 +1835,7 @@ public abstract class NMInitializer implements AchievementExt {
         MiscRecipeManager.instance.addRecipe(
                 new ItemStack(NMItems.cooledCoresteelCharge),
                 new ItemStack(NMItems.saturatedCoresteelCharge),
-                "Place touching water for 15s");
+                "Submerge in water for 15s");
 
 
 
@@ -2109,9 +2111,11 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addCraftingRecipes(){
         addAlloyHorseArmorRecipes();
         int[] lateNuggets = {ItemLateGameMaterial.GRAVITITE_NUGGET, ItemLateGameMaterial.SOLAR_QUARTZ_NUGGET,
-                ItemLateGameMaterial.AETHER_NUGGET, ItemLateGameMaterial.ABYSS_NUGGET, ItemLateGameMaterial.CRYOLITE_NUGGET};
+                ItemLateGameMaterial.ABYSS_NUGGET, ItemLateGameMaterial.CRYOLITE_NUGGET};
         for (int nugget : lateNuggets) RecipeManager.addRecipe(late(nugget + 1, 1), new Object[]{
                 "###", "###", "###", Character.valueOf('#'), late(nugget, 1)});
+        RecipeManager.addRecipe(new ItemStack(NMItems.aetherIngot), new Object[]{
+                "###", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.aetherNugget)});
         for (int color = 0; color < 16; ++color) RecipeManager.addShapelessRecipe(
                 new ItemStack(NMBlocks.phasePortalFrame, 1, color), new Object[]{
                         new ItemStack(NMBlocks.phasePortalFrame, 1, Short.MAX_VALUE), new ItemStack(Item.dyePowder, 1, color)});
