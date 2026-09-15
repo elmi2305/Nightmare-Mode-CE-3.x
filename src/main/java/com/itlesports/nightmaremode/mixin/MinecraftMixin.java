@@ -123,7 +123,7 @@ public abstract class MinecraftMixin {
 
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
     private String changeWindowText(String newTitle){
-        return newTitle + " | Better Than Wolves CE " + AddonHandler.getModByID("btw").getVersionString() + " | Journey Mode v"+ AddonHandler.getModByID(NMFields.modID).getVersionString();
+        return newTitle + " | Journey Mode v"+ AddonHandler.getModByID(NMFields.modID).getVersionString();
     }
 
     @Inject(method = "startGame", at = @At("TAIL"))
