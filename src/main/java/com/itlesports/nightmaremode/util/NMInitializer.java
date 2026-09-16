@@ -966,7 +966,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1GoldSword", profession, 1, Item.swordGold.itemID, Short.MAX_VALUE, 1, 1, 0.5F);
         buy("nmNetherTier1GoldNugget", profession, 1, Item.goldNugget.itemID, 0, 4, 8, 1.0F);
         buy("nmNetherTier1GoldIngot", profession, 1, Item.ingotGold.itemID, 0, 2, 4, 0.7F);
-        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 24, 36, 1.0F);
+        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier1FireCharge", profession, 1, Item.fireballCharge.itemID, 0, 8, 12, 0.8F);
         buy("nmNetherTier1GlowstoneDust", profession, 1, Item.glowstone.itemID, 0, 24, 48, 1.0F);
         buy("nmNetherTier1Glowstone", profession, 1, Block.glowStone.blockID, 0, 4, 8, 0.8F);
@@ -984,7 +984,7 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1Redstone", profession, 2, Item.redstone.itemID, 0, 4, 8, 0.8F, false, 3, 6);
         sell("nmNetherTier1TungstenNugget", profession, 2, NMItems.tungstenNugget.itemID, 0, 2, 4, 0.7F, false, 4, 8);
         sell("nmNetherTier1PolishedShard", profession, 2, NMItems.crystalPolishedShard.itemID, 0, 1, 2, 0.7F, false, 5, 9);
-        sell("nmNetherTier1BrewingStand", profession, 2, Block.brewingStand.blockID, 0, 1, 1, 0.5F, false, 12, 18);
+        sell("nmNetherTier1BrewingStand", profession, 2, Item.brewingStand.itemID, 0, 1, 1, 0.5F, false, 12, 18);
         sell("nmNetherTier1Lapis", profession, 3, Item.dyePowder.itemID, 4, 2, 6, 0.7F, false, 4, 8);
         sell("nmNetherTier1PoweredRail", profession, 3, Block.railPowered.blockID, 0, 6, 12, 0.6F, false, 8, 14);
         sell("nmNetherTier1DetectorRail", profession, 3, Block.railDetector.blockID, 0, 6, 12, 0.6F, false, 8, 14);
