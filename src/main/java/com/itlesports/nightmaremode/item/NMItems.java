@@ -12,6 +12,11 @@ import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMItems {
+    public static final Item[] journeyJournals = {
+            new ItemJourneyJournal(3457, 0),
+            new ItemJourneyJournal(3458, 1),
+            new ItemJourneyJournal(3459, 2)
+    };
     public static ItemAlloyHorseArmor nickelHorseArmor;
     public static ItemAlloyHorseArmor carbonIronHorseArmor;
     public static ItemAlloyHorseArmor reinforcedIronHorseArmor;

@@ -1,11 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiScreenBook;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Minecraft;
+import btw.community.nightmaremode.NightmareMode;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,7 +21,7 @@ public abstract class GuiScreenBookMixin extends GuiScreen {
     private void nightmareMode$darkenBookInLowLight(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getMinecraft();
         EntityPlayer player = minecraft.thePlayer;
-        if (minecraft.theWorld == null || player == null) return;
+        if (minecraft.theWorld == null || player == null || player.isPotionActive(Potion.nightVision)) return;
 
         int x = MathHelper.floor_double(player.posX);
         int y = MathHelper.floor_double(player.posY + player.getEyeHeight());

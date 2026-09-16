@@ -5,6 +5,8 @@ import com.itlesports.nightmaremode.util.KnowledgeBookLoot;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -13,14 +15,30 @@ import java.util.Random;
 
 @Mixin(ComponentScatteredFeatureDesertPyramid.class)
 public abstract class ComponentScatteredFeatureDesertPyramidMixin extends ComponentScatteredFeature {
+    @Unique private boolean journalPlaced;
+
+    @Inject(method = "func_143012_a", at = @At("TAIL"))
+    private void saveJournalPlacement(NBTTagCompound tag, CallbackInfo ci) {
+        tag.setBoolean("JourneyJournalPlaced", this.journalPlaced);
+    }
+
+    @Inject(method = "func_143011_b", at = @At("TAIL"))
+    private void loadJournalPlacement(NBTTagCompound tag, CallbackInfo ci) {
+        this.journalPlaced = tag.getBoolean("JourneyJournalPlaced");
+    }
+
     @Inject(method = "addComponentParts", at = @At("TAIL"))
     private void addKnowledgeBooksToTempleHampers(World world, Random random, StructureBoundingBox boundingBox, CallbackInfoReturnable<Boolean> cir) {
         for (int direction = 0; direction < 4; ++direction) {
             int x = this.getXWithOffset(10 + Direction.offsetX[direction] * 2, 10 + Direction.offsetZ[direction] * 2);
             int y = this.getYWithOffset(-11);
             int z = this.getZWithOffset(10 + Direction.offsetX[direction] * 2, 10 + Direction.offsetZ[direction] * 2);
+            if (!boundingBox.isVecInside(x, y, z)) continue;
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
             if (tileEntity instanceof IInventory inventory) {
+                if (!this.journalPlaced) {
+                    this.journalPlaced = com.itlesports.nightmaremode.util.JourneyJournals.addToInventory(inventory, 0);
+                }
                 KnowledgeBookLoot.addBookIfRolled(inventory, random, NMFields.KNOWLEDGE_BOOKS_DESERT_TEMPLE, 3);
             }
         }

@@ -83,6 +83,9 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void validateUltimateItemRegistrations() {
+        for (int index = 0; index < JourneyJournals.COUNT; ++index) {
+            validateItemRegistration(JourneyJournals.title(index), JourneyJournals.item(index));
+        }
         validateItemRegistration("Librarian's Ender Treatise", NMItems.librarianEnderTreatise);
         validateItemRegistration("Automation Essence", NMItems.automationEssence);
         validateItemRegistration("Agrarian Essence", NMItems.husbandryEssence);
@@ -585,6 +588,10 @@ public abstract class NMInitializer implements AchievementExt {
                 .secondInput(TradeItem.fromID(NMItems.bloodOrb.itemID, 8, 16))
                 .output(TradeItem.fromIDAndMetadata(BTWItems.arcaneScroll.itemID, NMUtils.getScrollMetadata("efficiency")))
                 .mandatory().build());
+    }
+
+    public static MerchantRecipe createExpeditionJournalTrade() {
+        return new MerchantRecipe(new ItemStack(Item.emerald, 1), JourneyJournals.create(1), 5);
     }
 
     private static void addLibrarianTrades(){

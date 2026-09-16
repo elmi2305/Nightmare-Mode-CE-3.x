@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.skill.SkillNode;
 import com.itlesports.nightmaremode.skill.SkillRegistry;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.JourneyJournals;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.RenderHelper;
@@ -44,6 +45,7 @@ public class GuiSkillTree extends GuiScreen {
     private boolean dragging;
     private boolean movedWhileDragging;
     private SkillBranch hoveredBranch;
+    private int hoveredJournal = -1;
     private SkillNode hoveredNode;
     private SkillNode focusedNode;
     private final boolean[] keysHeldWhenOpened = new boolean[Keyboard.KEYBOARD_SIZE];
@@ -74,6 +76,7 @@ public class GuiSkillTree extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.hoveredBranch = null;
+        this.hoveredJournal = -1;
         this.hoveredNode = null;
         this.drawDefaultBackground();
         this.handleDragging(mouseX, mouseY);
@@ -87,6 +90,7 @@ public class GuiSkillTree extends GuiScreen {
         this.drawFullTexturedRect(left - 4, top + 18, PANE_WIDTH + 8, PANE_HEIGHT - 14);
         this.drawSearchBar(left, top);
         this.drawTabs(left, top, mouseX, mouseY);
+        this.drawJournalTabs(left, top, mouseX, mouseY);
         this.drawMap(left + 14, top + 34, mouseX, mouseY, partialTicks);
         GL11.glDisable(2929);
         GL11.glDisable(2896);
@@ -94,6 +98,8 @@ public class GuiSkillTree extends GuiScreen {
             NodeVisualState state = this.getNodeVisualState(this.hoveredNode);
 
             this.drawNodeTooltip(this.hoveredNode,state, mouseX, mouseY);
+        } else if (this.hoveredJournal >= 0) {
+            this.drawTooltip(JourneyJournals.title(this.hoveredJournal), mouseX, mouseY);
         } else if (this.hoveredBranch != null) {
             this.drawTooltip(this.hoveredBranch.getName(), mouseX, mouseY);
         }
@@ -139,6 +145,31 @@ public class GuiSkillTree extends GuiScreen {
             if (mouseX >= x && mouseX <= x + 26 && mouseY >= y && mouseY <= y + 26) {
                 this.hoveredBranch = branch;
             }
+        }
+    }
+
+    private void drawJournalTabs(int left, int top, int mouseX, int mouseY) {
+        RenderItem renderItem = new RenderItem();
+        for (int index = 0; index < JourneyJournals.COUNT; ++index) {
+            if (!JourneyJournals.isUnlocked(this.mc.thePlayer, index)) continue;
+            int x = left + PANE_WIDTH + 3;
+            int y = top + 34 + index * 30;
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            this.mc.renderEngine.bindTexture(TAB_OUTLINE_TEXTURE);
+            GL11.glPushMatrix();
+            GL11.glTranslatef(x + 26, y, 0);
+            GL11.glRotatef(90, 0, 0, 1);
+            this.drawFullTexturedRect(0, 0, 26, 26);
+            GL11.glPopMatrix();
+            RenderHelper.enableGUIStandardItemLighting();
+            renderItem.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine,
+                    new net.minecraft.src.ItemStack(JourneyJournals.item(index)), x + 5, y + 5);
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            drawRect(x + 12, y + 16, x + 26, y + 26, 0xCC202020);
+            this.fontRenderer.drawStringWithShadow("#" + (index + 1), x + 13, y + 17, 0xFFFFFF);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            if (mouseX >= x && mouseX < x + 26 && mouseY >= y && mouseY < y + 26) this.hoveredJournal = index;
         }
     }
 
@@ -421,6 +452,15 @@ public class GuiSkillTree extends GuiScreen {
             }
             int left = (this.width - PANE_WIDTH) / 2;
             int top = (this.height - PANE_HEIGHT) / 2;
+            for (int index = 0; index < JourneyJournals.COUNT; ++index) {
+                int x = left + PANE_WIDTH + 3;
+                int y = top + 34 + index * 30;
+                if (JourneyJournals.isUnlocked(this.mc.thePlayer, index)
+                        && mouseX >= x && mouseX < x + 26 && mouseY >= y && mouseY < y + 26) {
+                    this.mc.displayGuiScreen(new GuiJourneyJournal(this.mc.thePlayer, index, this));
+                    return;
+                }
+            }
             for (SkillBranch branch : SkillRegistry.getBranches()) {
                 int x = left + 12 + branch.getIndex() * 30;
                 int y = top - 18 + 11;

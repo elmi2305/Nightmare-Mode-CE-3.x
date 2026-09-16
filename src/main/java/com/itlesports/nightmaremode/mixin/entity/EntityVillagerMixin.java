@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerDebugTool;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.LibrarianStoryBook;
+import com.itlesports.nightmaremode.util.JourneyJournals;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.entity.NightmareVillager;
 import com.itlesports.nightmaremode.entity.EntityNetherPostVillager;
@@ -44,6 +45,31 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Unique private static final float HUNGER_DRAIN_PER_TICK = 1.0F / 1200.0F;
 
     @Shadow protected MerchantRecipeList buyingList;
+
+    @Inject(method = "getRecipes", at = @At("RETURN"))
+    private void offerExpeditionJournal(EntityPlayer player, CallbackInfoReturnable<MerchantRecipeList> cir) {
+        if (this.worldObj.isRemote || player == null) return;
+        MerchantRecipeList recipes = cir.getReturnValue();
+        if (recipes == null) return;
+        boolean eligible = this.getProfession() == 1 && this.getCurrentTradeLevel() >= 5
+                && JourneyJournals.canBuyExpeditionJournal(player);
+        boolean found = false;
+        for (java.util.Iterator iterator = recipes.iterator(); iterator.hasNext();) {
+            MerchantRecipe recipe = (MerchantRecipe)iterator.next();
+            if (recipe.getItemToSell().itemID != JourneyJournals.item(1).itemID) continue;
+            if (!eligible) iterator.remove();
+            else found = true;
+        }
+        if (eligible && !found) recipes.add(com.itlesports.nightmaremode.util.NMInitializer.createExpeditionJournalTrade());
+    }
+
+    @Inject(method = "useRecipe", at = @At("HEAD"))
+    private void collectTradedJournal(MerchantRecipe recipe, CallbackInfo ci) {
+        EntityPlayer player = this.getCustomer();
+        if (player != null && recipe.getItemToSell().itemID == JourneyJournals.item(1).itemID) {
+            JourneyJournals.collect(player, recipe.getItemToSell(), 1);
+        }
+    }
     @Shadow public static Map<Integer, Class> professionMap;
     @Shadow public static Map<Integer, java.util.ArrayList<Integer>> casteMap;
 
