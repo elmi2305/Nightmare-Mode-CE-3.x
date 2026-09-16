@@ -226,6 +226,14 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         this.nightmareMode$tradingPlayer = this.getCustomer();
     }
 
+    @Inject(method = "checkForNewTrades", at = @At("HEAD"))
+    private void initializeNetherPostTradeList(int availableTrades, CallbackInfo ci) {
+        EntityVillager thisObj = (EntityVillager) (Object)this;
+        if (thisObj instanceof EntityNetherPostVillager && this.buyingList == null) {
+            this.buyingList = new MerchantRecipeList();
+        }
+    }
+
     @Inject(method = "useRecipe", at = @At("TAIL"))
     private void applySkillTradeProgress(MerchantRecipe recipe, CallbackInfo ci) {
         EntityPlayer player = this.nightmareMode$tradingPlayer;

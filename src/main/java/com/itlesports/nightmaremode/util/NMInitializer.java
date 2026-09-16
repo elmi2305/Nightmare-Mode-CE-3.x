@@ -989,6 +989,12 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1PoweredRail", profession, 3, Block.railPowered.blockID, 0, 6, 12, 0.6F, false, 8, 14);
         sell("nmNetherTier1DetectorRail", profession, 3, Block.railDetector.blockID, 0, 6, 12, 0.6F, false, 8, 14);
         sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 1, 1, 0.4F, false, 16, 24);
+        // rank four needs repeatable ways to advance that do not consume the diamond commission inputs.
+        buy("nmNetherTier1Rank4TungstenIngot", profession, 4, NMItems.tungstenIngot.itemID, 0, 2, 4, 1.0F);
+        buy("nmNetherTier1Rank4Redstone", profession, 4, Item.redstone.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1Rank4PolishedShard", profession, 4, NMItems.crystalPolishedShard.itemID, 0, 4, 8, 0.9F);
+        buy("nmNetherTier1Rank4TungstenNugget", profession, 4, NMItems.tungstenNugget.itemID, 0, 12, 24, 0.9F);
+        buy("nmNetherTier1Rank4BlazeRod", profession, 4, Item.blazeRod.itemID, 0, 8, 16, 0.8F);
         sell("nmNetherTier1HighSpeedCart", profession, 4, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.4F, false, 20, 32);
         sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
         // Rank five is reached before the Wither, so its stock must improve Nether
@@ -1017,7 +1023,18 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier2RedstoneCrystal", profession, 1, NMItems.redstoneCrystal.itemID, 0, 4, 12, 0.9F);
         buy("nmNetherTier2AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier2LapisPrecipitate", profession, 2, NMItems.lapisPrecipitate.itemID, 0, 4, 8, 0.7F);
+        // these materials are all established by the time the tier-two drill is relevant.
+        buy("nmNetherTier2Rank3RefinedRedstone", profession, 3, NMItems.refinedRedstone.itemID, 0, 4, 8, 1.0F);
+        buy("nmNetherTier2Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 0.9F);
+        buy("nmNetherTier2Rank3AzureSlag", profession, 3, NMItems.azureSlag.itemID, 0, 8, 16, 0.9F);
+        buy("nmNetherTier2Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 4, 8, 0.8F);
+        buy("nmNetherTier2Rank3RedstoneEye", profession, 3, BTWItems.redstoneEye.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier2DeadzoneShard", profession, 3, NMItems.deadzoneShard.itemID, 0, 4, 10, 0.8F);
+        buy("nmNetherTier2Rank4TungstenIngot", profession, 4, NMItems.tungstenIngot.itemID, 0, 2, 4, 1.0F);
+        buy("nmNetherTier2Rank4RefinedRedstone", profession, 4, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.9F);
+        buy("nmNetherTier2Rank4PolishedShard", profession, 4, NMItems.crystalPolishedShard.itemID, 0, 4, 8, 0.9F);
+        buy("nmNetherTier2Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 12, 20, 0.8F);
+        buy("nmNetherTier2Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.8F);
 
         sell("nmNetherTier2HempSeeds", profession, 1, BTWItems.hempSeeds.itemID, 0, 2, 4, 0.8F, false, 6, 10);
         sell("nmNetherTier2FertileNetherrack", profession, 1, NMBlocks.fertileNetherrack.blockID, 0, 4, 8, 0.8F, false, 8, 14);
@@ -1064,7 +1081,18 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3DeadzoneShard", profession, 1, NMItems.deadzoneShard.itemID, 0, 8, 20, 1.2F);
         buy("nmNetherTier3RefinedRedstone", profession, 1, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.8F);
         buy("nmNetherTier3AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 8, 16, 0.8F);
+        // rank three and four both need a broad pool of current-rank experience trades.
+        buy("nmNetherTier3Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 1.0F);
+        buy("nmNetherTier3Rank3AzureSlag", profession, 3, NMItems.azureSlag.itemID, 0, 12, 20, 0.9F);
+        buy("nmNetherTier3Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.9F);
+        buy("nmNetherTier3Rank3TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.8F);
+        buy("nmNetherTier3Rank3RedstoneCrystal", profession, 3, NMItems.redstoneCrystal.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier3RedstoneEye", profession, 3, BTWItems.redstoneEye.itemID, 0, 4, 8, 0.7F);
+        buy("nmNetherTier3Rank4RedstoneEye", profession, 4, BTWItems.redstoneEye.itemID, 0, 8, 16, 1.0F);
+        buy("nmNetherTier3Rank4PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.8F);
+        buy("nmNetherTier3Rank4RefinedRedstone", profession, 4, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.9F);
+        buy("nmNetherTier3Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 16, 24, 0.8F);
+        buy("nmNetherTier3Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 8, 16, 0.8F);
 
         sell("nmNetherTier3Diamond", profession, 1, Item.diamond.itemID, 0, 1, 1, 0.35F, false, 24, 36);
         sell("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 24, 36);
@@ -1226,11 +1254,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMItems.blackglassHelmet, NMItems.blackglassChestplate, NMItems.blackglassLeggings, NMItems.blackglassBoots);
         addArmorSetRecovery(NMItems.sealedQuicksilverIngot, 1, 3, 2, 1,
                 NMItems.quicksilverHelmet, NMItems.quicksilverChestplate, NMItems.quicksilverLeggings, NMItems.quicksilverBoots);
-
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+        
 
         addArmorRecovery(NMItems.nickelWorkLeggings, new ItemStack(NMItems.nickelIngot, 2));
         addArmorRecovery(NMItems.nickelWorkBoots, new ItemStack(NMItems.nickelIngot));
@@ -1725,6 +1749,19 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(NMItems.obsidianPowder), new ItemStack(Item.magmaCream)},
                 CisternTileEntity.FLUID_LAVA, 3, 0, 200,
                 new ItemStack[]{new ItemStack(NMItems.obsidianPaste)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{
+                        new ItemStack(Item.netherStalkSeeds, 4),
+                        new ItemStack(BTWItems.redMushroom),
+                        new ItemStack(BTWItems.brownMushroom),
+                        new ItemStack(Item.glowstone, 4),
+                        new ItemStack(NMItems.quartzDust, 2),
+                        new ItemStack(NMItems.soulChip, 4)
+                },
+                CisternTileEntity.FLUID_LAVA, 2, 8, 480,
+                new ItemStack[]{new ItemStack(NMItems.dyeBlend, 2)})
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(

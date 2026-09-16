@@ -9,6 +9,7 @@ import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.MerchantRecipe;
+import net.minecraft.src.MerchantRecipeList;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.World;
 
@@ -65,6 +66,10 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
 
     @Override
     public void onLivingUpdate() {
+        if (!this.worldObj.isRemote && (this.buyingList == null || this.buyingList.isEmpty())) {
+            this.buyingList = new MerchantRecipeList();
+            this.checkForNewTrades(this.getCurrentMaxNumTrades());
+        }
         super.onLivingUpdate();
         this.motionX = 0.0D;
         this.motionY = 0.0D;
