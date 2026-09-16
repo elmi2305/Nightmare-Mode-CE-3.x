@@ -59,7 +59,6 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private String inlineWorldName = "";
     @Unique private static final int CONFIRM_DELETE_WORLD = 9101;
     @Unique private static final int CONFIRM_DELETE_SERVER = 9102;
-    // Supply this as a 256x16 horizontal atlas: each 16x16 cell maps to JourneyProfile's progression index.
     @Unique private static final ResourceLocation PROGRESS_ICONS = new ResourceLocation("nightmare:textures/menu/journeyProgressIcons.png");
 
     @Inject(method = "initGui", at = @At("TAIL"))
@@ -72,8 +71,6 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private void rebuildJourneyLayout() {
         int panelWidth = getPanelWidth();
         int x = 12;
-        // In the full-screen browser these controls belong to its header.  Keeping
-        // them there avoids covering either the list or the browser action buttons.
         int iconY = isCompactBrowser() ? 12 : this.height - 52;
         boolean compactLayout = iconY < 215 && iconY + 24 > 185;
         int rowWidth = compactLayout ? panelWidth - 120 : panelWidth - 24;
@@ -640,7 +637,6 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
             if (info != null) this.recentWorld = new NMUtils.JourneyWorldSummary(save.getFileName(), save.getDisplayName(), info,
                     info.getData(btw.community.nightmaremode.NightmareMode.JOURNEY_PROFILE));
         } catch (Throwable ignored) {
-            // The card is optional; malformed or unavailable saves simply leave the title screen unchanged.
         }
     }
 
