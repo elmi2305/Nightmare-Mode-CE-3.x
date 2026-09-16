@@ -38,16 +38,20 @@ public class ChunkProviderHellMixin {
     @Unique private static WorldGenOreNode coalNodes = new WorldGenOreNode(
             NMBlocks.coalOreNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private static WorldGenOreNode nickelNodes = new WorldGenOreNode(
-            NMBlocks.nickelOreNode.blockID, Block.netherrack.blockID, 1, 1);
+            NMBlocks.nickelOreNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private static WorldGenOreNode lithiumNodes = new WorldGenOreNode(
-            NMBlocks.lithiumOreNode.blockID, Block.netherrack.blockID, 1, 1);
+            NMBlocks.lithiumOreNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private static WorldGenMinable denseCoreOre = new WorldGenMinable(
             NMBlocks.denseNetherrackCoreOre.blockID, 3, Block.netherrack.blockID);
     @Unique private static WorldGenOreNode denseCoreNodes = new WorldGenOreNode(
             NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenOreNode denseCoreExposedNodes = new WorldGenOreNode(
+            NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private static WorldGenMinable deadzoneShardOre = new WorldGenMinable(
             NMBlocks.deadzoneShardOre.blockID, 2, Block.netherrack.blockID).setNeedsAirExposure();
     @Unique private static WorldGenOreNode deadzoneShardNodes = new WorldGenOreNode(
+            NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1);
+    @Unique private static WorldGenOreNode deadzoneShardExposedNodes = new WorldGenOreNode(
             NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private final MapGenNetherDesertTemple netherDesertTempleGenerator = new MapGenNetherDesertTemple();
     @Unique private final MapGenNetherVillagerPost netherVillagerPostGenerator = new MapGenNetherVillagerPost();
@@ -69,17 +73,17 @@ public class ChunkProviderHellMixin {
         // Chemical metals are a scarce inner-Nether discovery and a Tier 1 resource.
         // They intentionally stop before Tier 2, where the node economy changes over.
         if (tier == 0) {
-            if (this.hellRNG.nextInt(64) == 0) {
+            if (this.hellRNG.nextInt(32) == 0) {
                 this.generateNodeInChunk(nickelNodes, baseX, baseZ, 12);
             }
-            if (this.hellRNG.nextInt(64) == 0) {
+            if (this.hellRNG.nextInt(32) == 0) {
                 this.generateNodeInChunk(lithiumNodes, baseX, baseZ, 12);
             }
         } else if (tier == 1) {
-            if (this.hellRNG.nextInt(16) == 0) {
+            if (this.hellRNG.nextInt(12) == 0) {
                 this.generateNodeInChunk(nickelNodes, baseX, baseZ, 12);
             }
-            if (this.hellRNG.nextInt(16) == 0) {
+            if (this.hellRNG.nextInt(12) == 0) {
                 this.generateNodeInChunk(lithiumNodes, baseX, baseZ, 12);
             }
         }
@@ -92,15 +96,23 @@ public class ChunkProviderHellMixin {
                         baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
                         baseZ + this.hellRNG.nextInt(16));
             }
-            if (this.hellRNG.nextInt(24) == 0) {
+            if (this.hellRNG.nextInt(16) == 0) {
                 this.generateNodeInChunk(denseCoreNodes, baseX, baseZ, 12);
             }
+            if (this.hellRNG.nextInt(24) == 0) {
+                this.generateNodeInChunk(denseCoreExposedNodes, baseX, baseZ, 12);
+            }
         } else if (tier == 3) {
-            deadzoneShardOre.generate(this.worldObj, this.hellRNG,
-                    baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
-                    baseZ + this.hellRNG.nextInt(16));
-            if (this.hellRNG.nextInt(64) == 0) {
+            for (int attempt = 0; attempt < 2; ++attempt) {
+                deadzoneShardOre.generate(this.worldObj, this.hellRNG,
+                        baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
+                        baseZ + this.hellRNG.nextInt(16));
+            }
+            if (this.hellRNG.nextInt(32) == 0) {
                 this.generateNodeInChunk(deadzoneShardNodes, baseX, baseZ, 12);
+            }
+            if (this.hellRNG.nextInt(24) == 0) {
+                this.generateNodeInChunk(deadzoneShardExposedNodes, baseX, baseZ, 12);
             }
         }
 

@@ -8,6 +8,7 @@ import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemAlloyPickaxe;
 import com.itlesports.nightmaremode.entity.EntityNetherFish;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
@@ -158,10 +159,13 @@ public class NetherrackBlockMixin extends FullBlock {
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
         int metadata = world.getBlockMetadata(i, j, k);
-        if (metadata == 4) {
+        ItemStack held = player.getCurrentEquippedItem();
+        boolean hasLateNetherPick = held != null
+                && (held.getItem() == BTWItems.steelPickaxe || held.getItem() instanceof ItemAlloyPickaxe);
+
+        if (metadata == 4 && !hasLateNetherPick) {
             return 0.0F;
         }
-        ItemStack held = player.getCurrentEquippedItem();
 
         if (!SkillHandler.getPlayerData(player).canMineNetherrack || held == null) {
             return 0.0F;
@@ -175,6 +179,11 @@ public class NetherrackBlockMixin extends FullBlock {
         if (held.getItem() instanceof ItemTungstenPickaxe) {
             return this.nightmareMode$applyTierHardness(
                     player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 10.0F,
+                    metadata);
+        }
+        if (hasLateNetherPick) {
+            return this.nightmareMode$applyTierHardness(
+                    player.getCurrentPlayerStrVsBlock(this, i, j, k) / this.blockHardness / 5.0F,
                     metadata);
         }
         if (held.getItem() instanceof ItemBloodPickaxe) {

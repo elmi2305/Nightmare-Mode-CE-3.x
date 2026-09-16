@@ -74,12 +74,16 @@ public class ServerConfigurationManagerMixin {
     private void createNetherArrivalPlatform(Teleporter teleporter, Entity entity) {
         int centerX = MathHelper.floor_double(entity.posX);
         int platformY = Math.max(1, Math.min(MathHelper.floor_double(entity.posY) - 1,
-                ((TeleporterAccess)teleporter).getWorld().getActualHeight() - 3));
+                ((TeleporterAccess)teleporter).getWorld().getActualHeight() - 4));
         int centerZ = MathHelper.floor_double(entity.posZ);
+        WorldServer world = ((TeleporterAccess)teleporter).getWorld();
 
         for (int x = centerX - 2; x <= centerX + 2; ++x) {
             for (int z = centerZ - 2; z <= centerZ + 2; ++z) {
-                ((TeleporterAccess)teleporter).getWorld().setBlock(x, platformY, z, Block.netherrack.blockID, 0, 2);
+                world.setBlock(x, platformY, z, Block.netherrack.blockID, 0, 2);
+                for (int y = platformY + 1; y <= platformY + 3; ++y) {
+                    world.setBlockToAir(x, y, z);
+                }
             }
         }
         entity.setLocationAndAngles(centerX + 0.5D, platformY + 1.0D, centerZ + 0.5D,
