@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.util;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.ItemStack;
@@ -13,6 +14,9 @@ public final class KnowledgeBookLoot {
     }
 
     public static WeightedRandomChestContent[] addWeightedBooks(WeightedRandomChestContent[] loot, int[] allowedMetadata, int weight) {
+        if (!NightmareMode.spawnKnowledgeBooksInStructures) {
+            return loot;
+        }
         WeightedRandomChestContent[] additions = new WeightedRandomChestContent[allowedMetadata.length];
         for (int i = 0; i < allowedMetadata.length; ++i) {
             additions[i] = new WeightedRandomChestContent(NMItems.knowledgeBook.itemID, allowedMetadata[i], 1, 1, weight);
@@ -21,7 +25,7 @@ public final class KnowledgeBookLoot {
     }
 
     public static void addBookIfRolled(IInventory inventory, Random random, int[] allowedMetadata, int chance) {
-        if (allowedMetadata.length == 0 || random.nextInt(chance) != 0) {
+        if (!NightmareMode.spawnKnowledgeBooksInStructures || allowedMetadata.length == 0 || random.nextInt(chance) != 0) {
             return;
         }
         int startSlot = random.nextInt(inventory.getSizeInventory());

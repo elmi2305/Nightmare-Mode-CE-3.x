@@ -56,6 +56,7 @@ public class NightmareMode extends BTWAddon {
     public static boolean allSkillsUnlocked = true;
     public static boolean alwaysShowRewards = true;
     public static boolean unlockSkillsWithClick = true;
+    public static boolean spawnKnowledgeBooksInStructures = false;
 
 
     // world gen
