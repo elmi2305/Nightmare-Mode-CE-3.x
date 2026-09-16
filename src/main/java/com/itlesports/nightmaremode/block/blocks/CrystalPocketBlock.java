@@ -6,10 +6,16 @@ import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 
 public class CrystalPocketBlock extends NMBlock {
     private static final int MAX_ATTEMPTS = 4;
+    private static final int ATTEMPT_MASK = 3;
+    private static final int STRATA_MASK = 12;
+    @Environment(EnvType.CLIENT)
+    private Icon[] iconByMetadataArray;
 
     public CrystalPocketBlock(int id) {
         super(id, Material.rock);
@@ -54,13 +60,49 @@ public class CrystalPocketBlock extends NMBlock {
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, 0);
 
-        int attempts = world.getBlockMetadata(x, y, z);
+        int metadata = world.getBlockMetadata(x, y, z);
+        int attempts = metadata & ATTEMPT_MASK;
         if (attempts >= MAX_ATTEMPTS - 1) {
             world.setBlockToAir(x, y, z);
         } else {
-            world.setBlockMetadataWithNotify(x, y, z, attempts + 1, 3);
+            world.setBlockMetadataWithNotify(x, y, z,
+                    (metadata & STRATA_MASK) | (attempts + 1), 3);
         }
         return true;
+    }
+
+    @Override
+    public boolean hasStrata() {
+        return true;
+    }
+
+    @Override
+    public int getMetadataConversionForStrataLevel(int strataLevel, int metadata) {
+        return (metadata & ATTEMPT_MASK) | (strataLevel << 2);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void registerIcons(IconRegister register) {
+        this.iconByMetadataArray = new Icon[16];
+        super.registerIcons(register);
+        Icon strataOne = this.blockIcon;
+        Icon strataTwo = register.registerIcon(this.getTextureName() + "_strata_2");
+        Icon strataThree = register.registerIcon(this.getTextureName() + "_strata_3");
+        for (int metadata = 0; metadata < 16; ++metadata) {
+            int strata = (metadata & STRATA_MASK) >> 2;
+            this.iconByMetadataArray[metadata] = switch (strata) {
+                case 1 -> strataTwo;
+                case 2 -> strataThree;
+                default -> strataOne;
+            };
+        }
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Icon getIcon(int side, int metadata) {
+        return this.iconByMetadataArray[metadata & 15];
     }
 
     @Override

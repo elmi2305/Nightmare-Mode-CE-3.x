@@ -1000,10 +1000,7 @@ public abstract class OldNMInitializer implements AchievementExt {
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
         CrucibleStokedCraftingManager.getInstance().removeRecipe(new ItemStack(BTWItems.diamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+
 
         // done with refined diamond
         // blood chest and steel locker

@@ -1220,6 +1220,11 @@ public abstract class NMInitializer implements AchievementExt {
         addArmorSetRecovery(NMItems.sealedQuicksilverIngot, 1, 3, 2, 1,
                 NMItems.quicksilverHelmet, NMItems.quicksilverChestplate, NMItems.quicksilverLeggings, NMItems.quicksilverBoots);
 
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 5), new ItemStack[]{new ItemStack(Item.helmetDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 8), new ItemStack[]{new ItemStack(Item.plateDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 7), new ItemStack[]{new ItemStack(Item.legsDiamond, 1, Short.MAX_VALUE)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack[]{new ItemStack(Item.bootsDiamond, 1, Short.MAX_VALUE)});
+
         addArmorRecovery(NMItems.nickelWorkLeggings, new ItemStack(NMItems.nickelIngot, 2));
         addArmorRecovery(NMItems.nickelWorkBoots, new ItemStack(NMItems.nickelIngot));
 
@@ -2638,6 +2643,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.diamondIngot), new Object[]{new ItemStack(Item.ingotIron), new ItemStack(Item.diamond), new ItemStack(BTWItems.creeperOysters)});
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.clay), new Object[]{BTWItems.clayPile, BTWItems.clayPile});
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.unfiredCrudeBrick), new Object[]{Item.clay});
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.steelNugget, 9), new Object[]{new ItemStack(BTWItems.soulforgedSteelIngot)});
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", "S# ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks, Character.valueOf('S'), BTWTags.strings});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks});
