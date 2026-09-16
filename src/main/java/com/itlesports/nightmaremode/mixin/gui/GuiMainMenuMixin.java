@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.nmgui.GuiJourneyIconButton;
 import com.itlesports.nightmaremode.nmgui.GuiJourneyRowButton;
 import com.itlesports.nightmaremode.nmgui.GuiJourneySmallButton;
@@ -102,6 +103,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void journeyMode$disableForXray(CallbackInfo ci) {
         updateBrowserScroll();
+        if(NightmareMode.devMode) return;
         if (AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")) {
             this.splashText = "Probably Shouldn't Xray!";
             for (Object button : this.buttonList) ((GuiButton) button).enabled = false;
