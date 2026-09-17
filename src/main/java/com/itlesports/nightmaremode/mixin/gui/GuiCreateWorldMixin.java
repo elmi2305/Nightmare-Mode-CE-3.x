@@ -176,7 +176,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             journeyMode$drawTextBox(this.textboxWorldName, this.width / 2 - 100, 60, 200, theme);
             this.drawString(this.fontRenderer, I18n.getString("selectWorld.enterName"), this.width / 2 - 100, 47, theme.textMuted);
             this.drawString(this.fontRenderer, I18n.getString("selectWorld.resultFolder") + " " + this.folderName, this.width / 2 - 100, 85, theme.textMuted);
-            this.drawString(this.fontRenderer, "Choose a game mode. Nightmare difficulty is always locked.", this.width / 2 - 153, 125, theme.textMuted);
+            this.drawString(this.fontRenderer, "Choose a game mode. Journey difficulty is always locked.", this.width / 2 - 153, 125, theme.textMuted);
             this.drawString(this.fontRenderer, "World settings can be adjusted under More World Options.", this.width / 2 - 153, 139, theme.textMuted);
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
