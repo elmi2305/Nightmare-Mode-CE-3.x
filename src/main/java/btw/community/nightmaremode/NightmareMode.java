@@ -39,6 +39,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -53,6 +54,10 @@ public class NightmareMode extends BTWAddon {
     public static boolean disableFatigue = true;
     public static boolean benchmarkPerformance = true;
     public static volatile double MSPT = 0.0;
+    public static boolean showBetaOverlay = true;
+    public static String betaEnvironmentLine = "Dev Environment";
+    public static String betaBuildLine = "Build 1709";
+    public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = true;
     public static boolean alwaysShowRewards = true;
     public static boolean unlockSkillsWithClick = true;

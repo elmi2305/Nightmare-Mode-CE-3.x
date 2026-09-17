@@ -461,6 +461,8 @@ public abstract class GuiIngameMixin extends Gui {
             );
         }
 
+        this.renderBetaOverlay(screenWidth, fontRenderer);
+
         if (NightmareMode.renderVignette) {
             this.renderVignetteNightmare(partialTicks,screenWidth,screenHeight);
         } else{
@@ -476,12 +478,32 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
+        this.renderBetaOverlay(screenWidth, this.mc.fontRenderer);
+
         if (NightmareMode.renderVignette) {
             this.renderVignetteNightmare(partialTicks, screenWidth, screenHeight);
         } else{
             this.renderVignette(partialTicks, screenWidth, screenHeight);
         }
         this.renderBlink(screenWidth,screenHeight);
+    }
+
+    @Unique
+    private void renderBetaOverlay(int screenWidth, FontRenderer fontRenderer) {
+        if (!NightmareMode.showBetaOverlay) return;
+
+        String[] lines = {
+                NightmareMode.betaEnvironmentLine,
+                NightmareMode.betaBuildLine,
+                NightmareMode.betaDateLine
+        };
+
+        for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+            String line = lines[lineIndex];
+            if (line != null && !line.isEmpty()) {
+                fontRenderer.drawStringWithShadow(line, screenWidth - fontRenderer.getStringWidth(line) - 2, 2 + lineIndex * 10, 0xFFFFFF);
+            }
+        }
     }
 
 
