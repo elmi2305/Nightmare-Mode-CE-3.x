@@ -7,8 +7,8 @@ import net.minecraft.src.Block;
 import java.util.Random;
 
 public class Tier2VillagerPost extends NetherVillagerPost {
-    public static final int MIN_CHUNKS_APART = 4;
-    public static final int MAX_CHUNKS_APART = 12;
+    public static final int MIN_CHUNKS_APART = 24;
+    public static final int MAX_CHUNKS_APART = 28;
     private static final VillagerOffset[] VILLAGER_OFFSETS = {
             new VillagerOffset( 7.5D, -0.5D,7.5D),
             new VillagerOffset( 7.5D, -0.5D,-6.5D),
