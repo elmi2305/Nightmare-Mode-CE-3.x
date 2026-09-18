@@ -946,49 +946,33 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1WorkbenchPart", profession, 1, NMItems.netherWorkbenchPart.itemID, 0, 1, 2, 0.8F);
         buy("nmNetherTier1SoulSand", profession, 1, Block.slowSand.blockID, 0, 48, 64, 1.0F);
         buy("nmNetherTier1Flint", profession, 1, Item.flint.itemID, 0, 12, 36, 1.0F);
-        buy("nmNetherTier1FlintChip", profession, 1, NMItems.flintChip.itemID, 0, 32, 64, 1.0F);
         buy("nmNetherTier1SoulChip", profession, 1, NMItems.soulChip.itemID, 0, 10, 24, 1.0F);
-        buy("nmNetherTier1SoulFlint", profession, 1, NMItems.soulFlint.itemID, 0, 2, 8, 0.7F);
-        buy("nmNetherTier1PigHide", profession, 1, NMItems.pigHide.itemID, 0, 16, 32, 1.0F);
-        buy("nmNetherTier1PighideString", profession, 1, NMItems.pighideString.itemID, 0, 8, 16, 0.8F);
-        buy("nmNetherTier1GroundNetherrack", profession, 1, BTWItems.groundNetherrack.itemID, 0, 48, 64, 1.0F);
-        buy("nmNetherTier1GhastTear", profession, 1, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
-        buy("nmNetherTier1CreeperOyster", profession, 1, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
-        buy("nmNetherTier1Nitre", profession, 1, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
-        buy("nmNetherTier1Bone", profession, 1, Item.bone.itemID, 0, 48, 64, 1.0F);
-        buy("nmNetherTier1Stick", profession, 1, NMItems.netherStick.itemID, 0, 16, 32, 1.0F);
-        buy("nmNetherTier1Gravel", profession, 1, Block.gravel.blockID, 0, 48, 64, 1.0F);
-        buy("nmNetherTier1Netherrack", profession, 1, Block.netherrack.blockID, 0, 48, 64, 1.0F);
-        buy("nmNetherTier1BlazeRod", profession, 1, Item.blazeRod.itemID, 0, 2, 8, 0.6F);
-        buy("nmNetherTier1RedMushroom", profession, 1, BTWItems.redMushroom.itemID, 0, 12, 16, 0.8F);
-        buy("nmNetherTier1BrownMushroom", profession, 1, BTWItems.brownMushroom.itemID, 0, 12, 16, 0.8F);
-        buy("nmNetherTier1MagmaCream", profession, 1, Item.magmaCream.itemID, 0, 2, 8, 0.7F);
-        buy("nmNetherTier1GoldSword", profession, 1, Item.swordGold.itemID, Short.MAX_VALUE, 1, 1, 0.5F);
-        buy("nmNetherTier1GoldNugget", profession, 1, Item.goldNugget.itemID, 0, 4, 8, 1.0F);
-        buy("nmNetherTier1GoldIngot", profession, 1, Item.ingotGold.itemID, 0, 2, 4, 0.7F);
-        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 8, 16, 1.0F);
-        buy("nmNetherTier1FireCharge", profession, 1, Item.fireballCharge.itemID, 0, 8, 12, 0.8F);
-        buy("nmNetherTier1GlowstoneDust", profession, 1, Item.glowstone.itemID, 0, 24, 48, 1.0F);
-        buy("nmNetherTier1Glowstone", profession, 1, Block.glowStone.blockID, 0, 4, 8, 0.8F);
-        buy("nmNetherTier1Wart", profession, 1, Item.netherStalkSeeds.itemID, 0, 16, 32, 1.0F);
-        buy("nmNetherTier1Obsidian", profession, 1, Block.obsidian.blockID, 0, 8, 16, 0.6F);
-        buy("nmNetherTier1Brick", profession, 1, Item.netherrackBrick.itemID, 0, 8, 16, 0.8F);
-        buy("nmNetherTier1BrickBlock", profession, 1, Block.netherBrick.blockID, 0, 16, 32, 0.7F);
-        buy("nmNetherTier1Saddle", profession, 1, Item.saddle.itemID, 0, 1, 2, 0.5F);
-        buy("nmNetherTier1SilverScale", profession, 1, NMItems.searingSilverScale.itemID, 0, 4, 12, 0.8F);
-
-        sell("nmNetherTier1Rails", profession, 1, Block.rail.blockID, 0, 12, 24, 1.2F, false, 2, 4);
-        sell("nmNetherTier1Minecart", profession, 1, Item.minecartEmpty.itemID, 0, 1, 1, 0.7F, false, 5, 8);
-        sell("nmNetherTier1Chest", profession, 1, BTWBlocks.chest.blockID, 0, 1, 2, 0.8F, false, 3, 6);
-        sell("nmNetherTier1AzureSalt", profession, 1, NMItems.azureSalt.itemID, 0, 2, 6, 1.0F, false, 2, 4);
+        buy("nmNetherTier1EarlyRedMushroom", profession, 1, BTWItems.redMushroom.itemID, 0, 12, 16, 0.8F);
+        buy("nmNetherTier1EarlyBrownMushroom", profession, 1, BTWItems.brownMushroom.itemID, 0, 12, 16, 0.8F);
+        buy("nmNetherTier1EarlyRottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 8, 16, 1.0F);
+        buy("nmNetherTier1EarlyGravel", profession, 1, Block.gravel.blockID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1EarlyNetherrack", profession, 1, Block.netherrack.blockID, 0, 48, 64, 1.0F);
         sell("nmNetherTier1Redstone", profession, 2, Item.redstone.itemID, 0, 4, 8, 0.8F, false, 3, 6);
         sell("nmNetherTier1TungstenNugget", profession, 2, NMItems.tungstenNugget.itemID, 0, 2, 4, 0.7F, false, 4, 8);
         sell("nmNetherTier1PolishedShard", profession, 2, NMItems.crystalPolishedShard.itemID, 0, 1, 2, 0.7F, false, 5, 9);
         sell("nmNetherTier1BrewingStand", profession, 2, Item.brewingStand.itemID, 0, 1, 1, 0.5F, false, 12, 18);
+        buy("nmNetherTier1FlintChip", profession, 2, NMItems.flintChip.itemID, 0, 32, 64, 1.0F);
+        buy("nmNetherTier1PigHide", profession, 2, NMItems.pigHide.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1PighideString", profession, 2, NMItems.pighideString.itemID, 0, 8, 16, 0.8F);
+        buy("nmNetherTier1GroundNetherrack", profession, 2, BTWItems.groundNetherrack.itemID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1EarlyGlowstoneDust", profession, 2, Item.glowstone.itemID, 0, 24, 48, 1.0F);
+        buy("nmNetherTier1EarlyGlowstone", profession, 2, Block.glowStone.blockID, 0, 4, 8, 0.8F);
+        buy("nmNetherTier1EarlyBlazeRod", profession, 2, Item.blazeRod.itemID, 0, 2, 8, 0.6F);
         sell("nmNetherTier1Lapis", profession, 3, Item.dyePowder.itemID, 4, 2, 6, 0.7F, false, 4, 8);
         sell("nmNetherTier1PoweredRail", profession, 3, Block.railPowered.blockID, 0, 6, 12, 0.6F, false, 8, 14);
         sell("nmNetherTier1DetectorRail", profession, 3, Block.railDetector.blockID, 0, 6, 12, 0.6F, false, 8, 14);
         sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 1, 1, 0.4F, false, 16, 24);
+        buy("nmNetherTier1SoulFlint", profession, 3, NMItems.soulFlint.itemID, 0, 2, 8, 0.7F);
+        buy("nmNetherTier1GhastTear", profession, 3, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
+        buy("nmNetherTier1CreeperOyster", profession, 3, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
+        buy("nmNetherTier1Nitre", profession, 3, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
+        buy("nmNetherTier1Bone", profession, 3, Item.bone.itemID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1EarlyBlazePowder", profession, 3, Item.blazePowder.itemID, 0, 16, 32, 0.6F);
         // rank four needs repeatable ways to advance that do not consume the diamond commission inputs.
         buy("nmNetherTier1Rank4TungstenIngot", profession, 4, NMItems.tungstenIngot.itemID, 0, 2, 4, 1.0F);
         buy("nmNetherTier1Rank4Redstone", profession, 4, Item.redstone.itemID, 0, 16, 32, 1.0F);
@@ -996,6 +980,9 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1Rank4TungstenNugget", profession, 4, NMItems.tungstenNugget.itemID, 0, 12, 24, 0.9F);
         buy("nmNetherTier1Rank4BlazeRod", profession, 4, Item.blazeRod.itemID, 0, 8, 16, 0.8F);
         sell("nmNetherTier1HighSpeedCart", profession, 4, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.4F, false, 20, 32);
+        buy("nmNetherTier1Stick", profession, 4, NMItems.netherStick.itemID, 0, 16, 32, 1.0F);
+        buy("nmNetherTier1BlazeRod", profession, 3, Item.blazeRod.itemID, 0, 2, 8, 0.6F);
+        buy("nmNetherTier1Obsidian", profession, 4, Block.obsidian.blockID, 0, 8, 16, 0.6F);
         sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
         // Rank five is reached before the Wither, so its stock must improve Nether
         // logistics without leaking soulforged-steel progression into the dimension.
@@ -1035,6 +1022,20 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier2Rank4PolishedShard", profession, 4, NMItems.crystalPolishedShard.itemID, 0, 4, 8, 0.9F);
         buy("nmNetherTier2Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 12, 20, 0.8F);
         buy("nmNetherTier2Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.8F);
+
+        // early resources remain useful in tier two only as bulk, low-frequency sinks.
+        buy("nmNetherTier1RedMushroom", profession, 1, BTWItems.redMushroom.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1BrownMushroom", profession, 1, BTWItems.brownMushroom.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1MagmaCream", profession, 1, Item.magmaCream.itemID, 0, 32, 48, 0.35F);
+        buy("nmNetherTier1GoldNugget", profession, 1, Item.goldNugget.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1GoldSword", profession, 2, Item.swordGold.itemID, Short.MAX_VALUE, 1, 1, 0.25F);
+        buy("nmNetherTier1GoldIngot", profession, 2, Item.ingotGold.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1FireCharge", profession, 2, Item.fireballCharge.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1GlowstoneDust", profession, 3, Item.glowstone.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1Glowstone", profession, 4, Block.glowStone.blockID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1Wart", profession, 4, Item.netherStalkSeeds.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1Brick", profession, 4, Item.netherrackBrick.itemID, 0, 48, 64, 0.35F);
 
         sell("nmNetherTier2HempSeeds", profession, 1, BTWItems.hempSeeds.itemID, 0, 2, 4, 0.8F, false, 6, 10);
         sell("nmNetherTier2FertileNetherrack", profession, 1, NMBlocks.fertileNetherrack.blockID, 0, 4, 8, 0.8F, false, 8, 14);
@@ -1093,6 +1094,17 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3Rank4RefinedRedstone", profession, 4, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.9F);
         buy("nmNetherTier3Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 16, 24, 0.8F);
         buy("nmNetherTier3Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 8, 16, 0.8F);
+
+        // tier three keeps basic supplies as rare bulk exchanges rather than easy currency.
+        buy("nmNetherTier1Gravel", profession, 1, Block.gravel.blockID, 0, 56, 64, 0.35F);
+        buy("nmNetherTier1Netherrack", profession, 1, Block.netherrack.blockID, 0, 56, 64, 0.35F);
+        buy("nmNetherTier1BrickBlock", profession, 1, Block.netherBrick.blockID, 0, 56, 64, 0.35F);
+        buy("nmNetherTier1Saddle", profession, 1, Item.saddle.itemID, 0, 1, 1, 0.25F);
+        buy("nmNetherTier1SilverScale", profession, 2, NMItems.searingSilverScale.itemID, 0, 48, 64, 0.35F);
+        sell("nmNetherTier1Rails", profession, 2, Block.rail.blockID, 0, 12, 24, 0.35F, false, 2, 4);
+        sell("nmNetherTier1Minecart", profession, 2, Item.minecartEmpty.itemID, 0, 1, 1, 0.25F, false, 5, 8);
+        sell("nmNetherTier1Chest", profession, 2, BTWBlocks.chest.blockID, 0, 1, 2, 0.35F, false, 3, 6);
+        sell("nmNetherTier1AzureSalt", profession, 4, NMItems.azureSalt.itemID, 0, 2, 6, 0.35F, false, 2, 4);
 
         sell("nmNetherTier3Diamond", profession, 1, Item.diamond.itemID, 0, 1, 1, 0.35F, false, 24, 36);
         sell("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 24, 36);
