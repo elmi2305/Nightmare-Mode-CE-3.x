@@ -939,7 +939,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         buy("nmNetherTier1TungstenDust", profession, 1, NMItems.tungstenDust.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier1TungstenChunk", profession, 1, NMItems.tungstenChunk.itemID, 0, 16, 32, 0.8F);
-        buy("nmNetherTier1CrushedTungsten", profession, 1, NMItems.crushedTungsten.itemID, 0, 20, 48, 0.8F);
+        buy("nmNetherTier1CrushedTungsten", profession, 1, NMItems.crushedTungsten.itemID, 0, 16, 32, 0.8F);
         buy("nmNetherTier1TungstenConcentrate", profession, 1, NMItems.tungstenConcentrate.itemID, 0, 16, 32, 0.7F);
         buy("nmNetherTier1Quartz", profession, 1, Item.netherQuartz.itemID, 0, 8, 32, 1.0F);
         buy("nmNetherTier1QuartzDust", profession, 1, NMItems.quartzDust.itemID, 0, 8, 12, 1.0F);
@@ -954,7 +954,8 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1EarlyNetherrack", profession, 1, Block.netherrack.blockID, 0, 48, 64, 1.0F);
         sell("nmNetherTier1Redstone", profession, 2, Item.redstone.itemID, 0, 4, 8, 0.8F, false, 3, 6);
         sell("nmNetherTier1TungstenNugget", profession, 2, NMItems.tungstenNugget.itemID, 0, 2, 4, 0.7F, false, 4, 8);
-        sell("nmNetherTier1PolishedShard", profession, 2, NMItems.crystalPolishedShard.itemID, 0, 1, 2, 0.7F, false, 5, 9);
+        sell("nmNetherTier1PolishedShard", profession, 2, NMItems.crystalPolishedShard.itemID, 0, 4, 12, 0.7F, false, 5, 9);
+        sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
         sell("nmNetherTier1BrewingStand", profession, 2, Item.brewingStand.itemID, 0, 1, 1, 0.5F, false, 12, 18);
         buy("nmNetherTier1FlintChip", profession, 2, NMItems.flintChip.itemID, 0, 32, 64, 1.0F);
         buy("nmNetherTier1PigHide", profession, 2, NMItems.pigHide.itemID, 0, 16, 32, 1.0F);
@@ -981,9 +982,9 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1Rank4BlazeRod", profession, 4, Item.blazeRod.itemID, 0, 8, 16, 0.8F);
         sell("nmNetherTier1HighSpeedCart", profession, 4, NMItems.highSpeedMinecart.itemID, 0, 1, 1, 0.4F, false, 20, 32);
         buy("nmNetherTier1Stick", profession, 4, NMItems.netherStick.itemID, 0, 16, 32, 1.0F);
-        buy("nmNetherTier1BlazeRod", profession, 3, Item.blazeRod.itemID, 0, 2, 8, 0.6F);
         buy("nmNetherTier1Obsidian", profession, 4, Block.obsidian.blockID, 0, 8, 16, 0.6F);
-        sell("nmNetherTier1MinerDrill", profession, 2, NMBlocks.minerDrill.blockID, 0, 1, 1, 0.5F, false, 16, 24);
+        sell("nmNetherTier1PolishedShardL4", profession, 4, NMItems.crystalPolishedShard.itemID, 0, 12, 32, 0.7F, false, 5, 9);
+
         // Rank five is reached before the Wither, so its stock must improve Nether
         // logistics without leaking soulforged-steel progression into the dimension.
         sell("nmNetherTier1TungstenIngotBulk", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.5F, false, 28, 40);
@@ -1024,11 +1025,8 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier2Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.8F);
 
         // early resources remain useful in tier two only as bulk, low-frequency sinks.
-        buy("nmNetherTier1RedMushroom", profession, 1, BTWItems.redMushroom.itemID, 0, 48, 64, 0.35F);
-        buy("nmNetherTier1BrownMushroom", profession, 1, BTWItems.brownMushroom.itemID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1MagmaCream", profession, 1, Item.magmaCream.itemID, 0, 32, 48, 0.35F);
         buy("nmNetherTier1GoldNugget", profession, 1, Item.goldNugget.itemID, 0, 48, 64, 0.35F);
-        buy("nmNetherTier1RottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1GoldSword", profession, 2, Item.swordGold.itemID, Short.MAX_VALUE, 1, 1, 0.25F);
         buy("nmNetherTier1GoldIngot", profession, 2, Item.ingotGold.itemID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1FireCharge", profession, 2, Item.fireballCharge.itemID, 0, 48, 64, 0.35F);
@@ -1043,7 +1041,6 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier2Axle", profession, 2, BTWBlocks.axle.blockID, 0, 2, 4, 0.6F, false, 10, 16);
         sell("nmNetherTier2Gearbox", profession, 2, BTWBlocks.gearBox.blockID, 0, 1, 1, 0.5F, false, 14, 20);
         sell("nmNetherTier2CisternInterface", profession, 2, NMBlocks.cisternInterface.blockID, 0, 1, 1, 0.6F, false, 12, 18);
-        sell("nmNetherTier2ChunkLoader", profession, 3, NMBlocks.chunkLoader.blockID, 0, 1, 1, 0.35F, false, 24, 36);
         sell("nmNetherTier2PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.45F, false, 20, 32);
         sell("nmNetherTier2TungstenIngot", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.5F, false, 28, 40);
 
@@ -1084,20 +1081,13 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 8, 16, 0.8F);
         // rank three and four both need a broad pool of current-rank experience trades.
         buy("nmNetherTier3Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 1.0F);
-        buy("nmNetherTier3Rank3AzureSlag", profession, 3, NMItems.azureSlag.itemID, 0, 12, 20, 0.9F);
         buy("nmNetherTier3Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.9F);
         buy("nmNetherTier3Rank3TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.8F);
         buy("nmNetherTier3Rank3RedstoneCrystal", profession, 3, NMItems.redstoneCrystal.itemID, 0, 4, 8, 0.8F);
-        buy("nmNetherTier3RedstoneEye", profession, 3, BTWItems.redstoneEye.itemID, 0, 4, 8, 0.7F);
         buy("nmNetherTier3Rank4RedstoneEye", profession, 4, BTWItems.redstoneEye.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier3Rank4PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.8F);
-        buy("nmNetherTier3Rank4RefinedRedstone", profession, 4, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.9F);
-        buy("nmNetherTier3Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 16, 24, 0.8F);
-        buy("nmNetherTier3Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 8, 16, 0.8F);
 
         // tier three keeps basic supplies as rare bulk exchanges rather than easy currency.
-        buy("nmNetherTier1Gravel", profession, 1, Block.gravel.blockID, 0, 56, 64, 0.35F);
-        buy("nmNetherTier1Netherrack", profession, 1, Block.netherrack.blockID, 0, 56, 64, 0.35F);
         buy("nmNetherTier1BrickBlock", profession, 1, Block.netherBrick.blockID, 0, 56, 64, 0.35F);
         buy("nmNetherTier1Saddle", profession, 1, Item.saddle.itemID, 0, 1, 1, 0.25F);
         buy("nmNetherTier1SilverScale", profession, 2, NMItems.searingSilverScale.itemID, 0, 48, 64, 0.35F);
