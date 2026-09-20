@@ -951,6 +951,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1EarlyRottenFlesh", profession, 1, Item.rottenFlesh.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier1EarlyGravel", profession, 1, Block.gravel.blockID, 0, 48, 64, 1.0F);
         buy("nmNetherTier1EarlyNetherrack", profession, 1, Block.netherrack.blockID, 0, 48, 64, 1.0F);
+        sell("nmNetherTier1Lavafish", profession, 1, NMItems.lavafish.itemID, 0, 4, 8, 0.8F, false, 3, 6);
         sell("nmNetherTier1Redstone", profession, 2, Item.redstone.itemID, 0, 4, 8, 0.8F, false, 3, 6);
         sell("nmNetherTier1TungstenNugget", profession, 2, NMItems.tungstenNugget.itemID, 0, 2, 4, 0.7F, false, 4, 8);
         sell("nmNetherTier1PolishedShard", profession, 2, NMItems.crystalPolishedShard.itemID, 0, 4, 12, 0.7F, false, 5, 9);
@@ -1078,6 +1079,8 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3DeadzoneShard", profession, 1, NMItems.deadzoneShard.itemID, 0, 8, 20, 1.2F);
         buy("nmNetherTier3RefinedRedstone", profession, 1, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.8F);
         buy("nmNetherTier3AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 8, 16, 0.8F);
+        sell("nmNetherTier3AzureSalt", profession, 2, NMItems.azureSalt.itemID, 0, 2, 6, 0.35F, false, 2, 4);
+
         // rank three and four both need a broad pool of current-rank experience trades.
         buy("nmNetherTier3Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 1.0F);
         buy("nmNetherTier3Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.9F);
@@ -1093,8 +1096,6 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1Rails", profession, 2, Block.rail.blockID, 0, 12, 24, 0.35F, false, 2, 4);
         sell("nmNetherTier1Minecart", profession, 2, Item.minecartEmpty.itemID, 0, 1, 1, 0.25F, false, 5, 8);
         sell("nmNetherTier1Chest", profession, 2, BTWBlocks.chest.blockID, 0, 1, 2, 0.35F, false, 3, 6);
-        sell("nmNetherTier1AzureSalt", profession, 4, NMItems.azureSalt.itemID, 0, 2, 6, 0.35F, false, 2, 4);
-
         sell("nmNetherTier3Diamond", profession, 1, Item.diamond.itemID, 0, 1, 1, 0.35F, false, 24, 36);
         sell("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 24, 36);
         sell("nmNetherTier3ChunkLoader", profession, 2, NMBlocks.chunkLoader.blockID, 0, 1, 1, 0.5F, false, 20, 30);
