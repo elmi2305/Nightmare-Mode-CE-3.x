@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SkillTreeData {
+    public int netherPostCompletedTiers;
     public int blocksMined;
     public int coalOreMined;
     public int ironOreMined;
@@ -133,6 +134,7 @@ public class SkillTreeData {
 
     public static SkillTreeData readFromNBT(NBTTagCompound tag) {
         SkillTreeData data = new SkillTreeData();
+        data.netherPostCompletedTiers = tag.getInteger("NetherPostCompletedTiers");
         data.blocksMined = tag.getInteger("BlocksMined");
         data.coalOreMined = tag.getInteger("CoalOreMined");
         data.ironOreMined = tag.getInteger("IronOreMined");
@@ -228,6 +230,7 @@ public class SkillTreeData {
     }
 
     public static void writeToNBT(NBTTagCompound tag, SkillTreeData data) {
+        tag.setInteger("NetherPostCompletedTiers", data.netherPostCompletedTiers);
         tag.setInteger("BlocksMined", data.blocksMined);
         tag.setInteger("CoalOreMined", data.coalOreMined);
         tag.setInteger("IronOreMined", data.ironOreMined);

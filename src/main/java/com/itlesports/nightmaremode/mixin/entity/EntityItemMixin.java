@@ -36,6 +36,14 @@ public abstract class EntityItemMixin extends Entity {
         super(par1World);
     }
 
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void destroyRecallEntity(CallbackInfo ci) {
+        if (!this.worldObj.isRemote && com.itlesports.nightmaremode.util.NetherRecall.isRecall(this.getEntityItem())) {
+            this.setDead();
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void doWaterCheck(CallbackInfo ci) {
         if (this.worldObj.isRemote) {

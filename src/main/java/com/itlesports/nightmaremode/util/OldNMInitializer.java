@@ -278,7 +278,7 @@ public abstract class OldNMInitializer implements AchievementExt {
         move(CRAFT_BEDROLL, 2, 1);
         kill(CRAFT_BARK_BOX);
 
-                            // 2ND TAB - TAB_IRON_AGE
+        // 2ND TAB - TAB_IRON_AGE
         move(CRAFT_CAULDRON, 0, -2);
 
         // hemp arc
@@ -301,7 +301,7 @@ public abstract class OldNMInitializer implements AchievementExt {
 
         move(CRAFT_HAND_CRANK, 2,0);
         move(LOCATE_FORTRESS_WITH_PILE, 0, -2);
-            // shift everything 1 block to the right
+        // shift everything 1 block to the right
         move(FIND_BLAZE_ROD, 0, 2);
         move(CRAFT_HIBACHI, 0, 1);
         move(STOKE_FIRE, 0, 1);
@@ -361,6 +361,18 @@ public abstract class OldNMInitializer implements AchievementExt {
         kill(EXPLODED_WITH_BLASTING_OIL);
         kill(MAKE_COMPANION_SLAB);
         move(POWER_THE_CAKE, -2, 0);
+
+        move(FIND_BLAZE_ROD, 0, -2);
+        move(LOCATE_FORTRESS_BOUNDS_WITH_PILE, 0, -2);
+
+
+
+        move(CRAFT_IRON_NEEDLES,-2,0);
+        move(IFHY_LITHIUM_REFINED,0,-1);
+        move(IFHY_NICKEL_INGOT,1,-2);
+        move(IFHY_CISTERN,2,-3);
+
+
         finishRecipes("Achievement Edits");
 
     }

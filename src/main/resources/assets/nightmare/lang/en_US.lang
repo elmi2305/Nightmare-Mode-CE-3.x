@@ -1498,3 +1498,15 @@ achievement.nm.journeyJournal3=The Last Shore
 achievement.nm.journeyJournal3.desc=Recover the Wayfarer's final account from a deep dungeon.
 achievement.nm.journeyMasterFisherman=Master of the Waters
 achievement.nm.journeyMasterFisherman.desc=Meet a level-five fisherman.
+
+item.ifhyLimitedRecallPotion.name=Fleeting Recall Potion
+item.ifhyLimitedRecallPotion.desc=Drink to return to your entry portal. Expires after 15 seconds.
+item.ifhyLimitedRecallPotion.warning=Destroyed if dropped or stored outside your inventory.
+achievement.nm.journeyLithium=Light Metal, Heavy Industry
+achievement.nm.journeyLithium.desc=Obtain refined lithium to begin advanced material processing.
+achievement.nm.journeyNickel=Nickel and Dime
+achievement.nm.journeyNickel.desc=Obtain a nickel ingot to expand your industrial toolkit.
+achievement.nm.journeyCistern=Making a Splash
+achievement.nm.journeyCistern.desc=Craft a cistern to begin fluid-based material processing.
+
+btw.soul_urn.info=Soul Urns are made in a stoked crucible using an urn, ground netherrack, soul sand, bone meal, gold nuggets, and a ghast tear. Throwing one releases its souls, feeding soul-based plants or returning a soul to a zombified villager. Released souls can possess nearby creatures.

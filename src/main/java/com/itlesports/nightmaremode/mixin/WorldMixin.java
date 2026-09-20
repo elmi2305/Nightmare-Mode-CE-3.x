@@ -29,6 +29,15 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 @Mixin(World.class)
 public abstract class WorldMixin implements WorldSkillExt {
 
+    @Inject(method = "spawnEntityInWorld", at = @At("HEAD"), cancellable = true)
+    private void destroyDroppedRecall(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (!this.isRemote && entity instanceof EntityItem item
+                && com.itlesports.nightmaremode.util.NetherRecall.isRecall(item.getEntityItem())) {
+            entity.setDead();
+            cir.setReturnValue(false);
+        }
+    }
+
     @Shadow public Random rand;
     @Shadow public WorldInfo worldInfo;
     @Shadow public abstract long getWorldTime();

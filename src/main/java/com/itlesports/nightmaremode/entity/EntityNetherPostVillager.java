@@ -1,6 +1,6 @@
 package com.itlesports.nightmaremode.entity;
 
-import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.NetherPostProgress;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.ChatMessageComponent;
@@ -17,6 +17,7 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
     private String postGroup = "";
     private int postSlot = -1;
     private boolean professionCompleted;
+    private boolean completionReconciled;
 
     protected EntityNetherPostVillager(World world, int profession) {
         super(world, profession);
@@ -70,6 +71,11 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
             this.buyingList = new MerchantRecipeList();
             this.checkForNewTrades(this.getCurrentMaxNumTrades());
         }
+        if (!this.worldObj.isRemote && !this.completionReconciled && this.getCurrentTradeLevel() >= 5) {
+            this.professionCompleted = true;
+            this.updatePostCompletion();
+            this.completionReconciled = true;
+        }
         super.onLivingUpdate();
         this.motionX = 0.0D;
         this.motionY = 0.0D;
@@ -102,9 +108,8 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
 
     @Override
     public boolean interact(EntityPlayer player) {
-        if (this.getPostTier() == 3 && this.getCurrentTradeLevel() >= 4) {
-            WorldSkillData data = SkillHandler.getWorldData(this.worldObj);
-            if (!data.netherVillagerTier1Complete || !data.netherVillagerTier2Complete) {
+        if (!this.worldObj.isRemote && this.getPostTier() == 3 && this.getCurrentTradeLevel() >= 4) {
+            if ((NetherPostProgress.completedTiers(player) & 3) != 3) {
                 if (!this.worldObj.isRemote) {
                     player.sendChatToPlayer(ChatMessageComponent.createFromText(
                             "This villager's final commission requires completed Tier 1 and Tier 2 posts."));
@@ -119,9 +124,9 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
         if (this.postSlot < 0) {
             this.postSlot = this.inferPostSlot();
         }
-        WorldSkillData data = SkillHandler.getWorldData(this.worldObj);
+        WorldSkillData data = NetherPostProgress.worldData(this.worldObj);
         int completionMask = data.markNetherPostVillagerComplete(this.getPostTier(), this.postGroup, this.postSlot);
-        this.worldObj.setData(btw.community.nightmaremode.NightmareMode.WORLD_SKILL_TREE, data);
+        NetherPostProgress.savedWorld(this.worldObj).setData(btw.community.nightmaremode.NightmareMode.WORLD_SKILL_TREE, data);
         if ((completionMask & 15) != 15) {
             return;
         }
@@ -137,11 +142,16 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
             data.netherVillagerTier3Complete = true;
         }
         EntityPlayer customer = this.getCustomer();
+        for (Object obj : this.worldObj.playerEntities) {
+            if (obj instanceof EntityPlayer player) {
+                NetherPostProgress.completedTiers(player);
+            }
+        }
         if (newlyCompleted && customer != null) {
             customer.sendChatToPlayer(ChatMessageComponent.createFromText(
                     "Nether villager post Tier " + this.getPostTier() + " complete: 4/4 villagers."));
         }
-        this.worldObj.setData(btw.community.nightmaremode.NightmareMode.WORLD_SKILL_TREE, data);
+        NetherPostProgress.savedWorld(this.worldObj).setData(btw.community.nightmaremode.NightmareMode.WORLD_SKILL_TREE, data);
     }
 
     public void debugNotifyTradeLevelChanged(int previousLevel) {

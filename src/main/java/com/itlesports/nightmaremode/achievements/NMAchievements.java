@@ -34,14 +34,18 @@ public class NMAchievements {
                     .icon(Item.fishingRod).displayLocation(12, 6)
                     .triggerCondition(data -> data.entity() instanceof EntityFishermanVillager villager
                             && villager.getCurrentTradeLevel() >= 5)
-                    .build().setHidden().registerAchievement(TAB_AUTOMATION);
+                    .build()
+//                    .setHidden()
+                    .registerAchievement(TAB_AUTOMATION);
 
     private static Achievement<ItemStack> journalAchievement(int index) {
         return AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                 .name(loc("journeyJournal" + (index + 1)))
                 .icon(NMItems.journeyJournals[index]).displayLocation(20 + index, -8)
                 .triggerCondition(stack -> stack.itemID == NMItems.journeyJournals[index].itemID)
-                .build().setSecret().registerAchievement(TAB_GETTING_STARTED);
+                .build()
+//                .setSecret()
+                .registerAchievement(TAB_GETTING_STARTED);
     }
 
     public static final Achievement<Long> MORNING_SECOND_DAY =

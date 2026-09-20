@@ -41,7 +41,7 @@ public final class NetherItemHelper {
         if (item instanceof INetherItem) {
             return true;
         }
-        if (player != null && SkillHandler.getWorldData(player.worldObj).netherVillagerTier1Complete) {
+        if (player != null && (NetherPostProgress.completedTiers(player) & 1) != 0) {
             return true;
         }
         int id = stack.itemID;

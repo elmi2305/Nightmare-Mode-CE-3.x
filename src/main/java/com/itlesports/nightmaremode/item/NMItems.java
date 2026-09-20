@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMItems {
+    public static Item limitedRecallPotion;
     public static final Item[] journeyJournals = {
             new ItemJourneyJournal(3457, 0),
             new ItemJourneyJournal(3458, 1),
@@ -1127,6 +1128,7 @@ public class NMItems {
         rareFishLureUpgrade = material(3413, "ifhyRareFishLureUpgrade");
         fishingEssence = material(3414, "ifhyFishingEssence");
 
+        limitedRecallPotion = new ItemLimitedRecallPotion(3418);
         stoneLeafRake = new ItemLeafRake(3415, EnumToolMaterial.STONE, 50, 0.4F, 0.08F, 1).setTextureName("nightmare:ifhyStoneRake").setUnlocalizedName("ifhyLeafRake").setCreativeTab(CreativeTabs.tabTools);
         ironLeafRake = new ItemLeafRake(3416, EnumToolMaterial.IRON, 250, 0.7F, 0.15F, 2).setTextureName("nightmare:ifhyIronRake").setUnlocalizedName("ifhyIronLeafRake").setCreativeTab(CreativeTabs.tabTools);
         diamondLeafRake = new ItemLeafRake(3417, EnumToolMaterial.EMERALD, 768, 1.0F, 0.50F, 3).setTextureName("nightmare:ifhyDiamondRake").setUnlocalizedName("ifhyDiamondLeafRake").setCreativeTab(CreativeTabs.tabTools);

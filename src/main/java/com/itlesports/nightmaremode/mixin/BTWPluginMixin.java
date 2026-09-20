@@ -36,6 +36,8 @@ public abstract class BTWPluginMixin {
 
     @Inject(method = "register", at = @At("TAIL"), remap = false)
     private void registerNightmareRecipes(EmiRegistry registry, CallbackInfo ci) {
+        registry.removeRecipes(recipe -> recipe instanceof emi.dev.emi.emi.recipe.btw.EmiHopperRecipe
+                && recipe.getId() != null && recipe.getId().getResourcePath().endsWith("/souls"));
         NightmareEmiRegistry.register(registry);
     }
 

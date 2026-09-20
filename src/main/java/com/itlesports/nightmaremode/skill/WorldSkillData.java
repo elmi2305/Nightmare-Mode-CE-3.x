@@ -40,6 +40,25 @@ public class WorldSkillData {
         return mask;
     }
 
+    public void mergeNetherPosts(WorldSkillData other) {
+        this.netherVillagerTier1Complete |= other.netherVillagerTier1Complete;
+        this.netherVillagerTier2Complete |= other.netherVillagerTier2Complete;
+        this.netherVillagerTier3Complete |= other.netherVillagerTier3Complete;
+        for (Map.Entry<String, Integer> entry : other.netherPostCompletionMasks.entrySet()) {
+            this.netherPostCompletionMasks.merge(entry.getKey(), entry.getValue(), (a, b) -> a | b);
+        }
+        this.restoreCompletedPostFlags();
+    }
+
+    private void restoreCompletedPostFlags() {
+        for (Map.Entry<String, Integer> entry : this.netherPostCompletionMasks.entrySet()) {
+            if ((entry.getValue() & 15) != 15) continue;
+            if (entry.getKey().startsWith("1@")) this.netherVillagerTier1Complete = true;
+            if (entry.getKey().startsWith("2@")) this.netherVillagerTier2Complete = true;
+            if (entry.getKey().startsWith("3@")) this.netherVillagerTier3Complete = true;
+        }
+    }
+
     public boolean isUnlocked(SkillNode node) {
         return node != null && this.unlockedWorldNodes.contains(node.id.toString());
     }
@@ -82,6 +101,7 @@ public class WorldSkillData {
             NBTTagCompound completion = (NBTTagCompound)postCompletions.tagAt(i);
             data.netherPostCompletionMasks.put(completion.getString("Key"), completion.getInteger("Mask"));
         }
+        data.restoreCompletedPostFlags();
         return data;
     }
 

@@ -240,7 +240,6 @@ public abstract class NMInitializer implements AchievementExt {
     public static void manipulateAchievements(){
 
 
-
         finishRecipes("Achievement Edits");
 
     }
@@ -1129,6 +1128,15 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCrucibleRecipes(){
         CrucibleStokedCraftingManager crucible = CrucibleStokedCraftingManager.getInstance();
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulUrn), new ItemStack[]{
+                new ItemStack(BTWItems.urn), new ItemStack(BTWItems.hellfireDust, 16),
+                new ItemStack(BTWItems.soulSandPile, 4), new ItemStack(Item.dyePowder, 4, 15),
+                new ItemStack(NMItems.nickelPlate, 2), new ItemStack(Item.ghastTear)
+        });
+
+        crucible.removeRecipe(new ItemStack(Item.ingotGold, 1), new ItemStack[]{new ItemStack(Item.goldNugget, 9)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.ingotGold, 1), new ItemStack[]{new ItemStack(Item.goldNugget, 9)});
+
 
         crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
 

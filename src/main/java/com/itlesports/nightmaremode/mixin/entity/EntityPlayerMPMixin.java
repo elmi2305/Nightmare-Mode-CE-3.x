@@ -7,12 +7,16 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillRewardActions;
+import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
+import com.itlesports.nightmaremode.util.NetherRecall;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
+import com.itlesports.nightmaremode.world.PhasePortalManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +42,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "travelToDimension", at = @At("HEAD"), cancellable = true)
     private void gateNetherAccessBehindSkill(int par1, CallbackInfo ci) {
+        if (PhasePortalManager.getTransferTarget() == null
+                && ((PhaseTransitEntity)this).nm$mustLeavePhasePortal()) {
+            ci.cancel();
+            return;
+        }
         if (par1 == -1 && !SkillHandler.hasNetherAccess((EntityPlayer)(Object)this)) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this,
                     "Nether access requires " + SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED + " Nether access progress nodes.");
@@ -50,6 +59,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     }
     @Inject(method = "clonePlayer", at = @At("TAIL"))
     private void retainPreHardmodeIfhyDeathInventory(EntityPlayer oldPlayer, boolean playerLeavingTheEnd, CallbackInfo ci) {
+        SkillTreeData progress = SkillHandler.getPlayerData(this);
+        progress.netherPostCompletedTiers |= com.itlesports.nightmaremode.util.NetherPostProgress.completedTiers(oldPlayer);
+        this.setData(NightmareMode.SKILL_TREE, progress);
         if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
             this.inventory.copyInventory(oldPlayer.inventory);
         }
@@ -99,6 +111,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void manageChickenRider(CallbackInfo ci){
+        NetherRecall.tick((EntityPlayerMP)(Object)this);
         if(this.ridingEntity instanceof EntityChicken chicken && NMUtils.getIsMobEclipsed(chicken)) {
             // Allow chicken to fly up if the player is holding jump
 

@@ -200,7 +200,18 @@ public final class ArmorSetHelper {
         return isWearingCompleteHeatResistantSet(wearer)
                 || isWearingCompleteDeadzoneSet(wearer)
                 || isWearingCompleteSunSet(wearer)
-                || isWearingCompleteCoresteelSet(wearer) && getCoresteelRemainingHeatCapacity(wearer) > 0;
+                || isWearingCompleteCoresteelSet(wearer)
+                || isWearingCompleteTungstenSet(wearer)
+                || isWearingCompleteDarkSet(wearer)
+                || isWearingCompleteRefinedPrismaSet(wearer)
+                || isWearingCompleteQuicksilverSet(wearer)
+                || isWearingCompleteBlackglassSet(wearer)
+                || isWearingCompleteQuartzglassSet(wearer)
+                || hasSet(wearer, NMItems.endstoneHelmet, NMItems.endstoneChest, NMItems.endstoneLeggings, NMItems.endstoneBoots)
+                || hasSet(wearer, NMItems.enderHelmet, NMItems.enderChestplate, NMItems.enderLeggings, NMItems.enderBoots)
+                || hasSet(wearer, NMItems.sunHelmet, NMItems.sunChestplate, NMItems.sunLeggings, NMItems.sunBoots)
+                || hasSet(wearer, btw.item.BTWItems.plateHelmet, btw.item.BTWItems.plateBreastplate,
+                        btw.item.BTWItems.plateLeggings, btw.item.BTWItems.plateBoots);
     }
 
     public static boolean isWearingClearVisionMask(EntityLivingBase wearer) {

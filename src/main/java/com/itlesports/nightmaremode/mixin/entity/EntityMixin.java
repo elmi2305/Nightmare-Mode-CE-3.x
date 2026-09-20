@@ -51,11 +51,22 @@ public abstract class EntityMixin implements PhaseTransitEntity {
         int maxZ = MathHelper.floor_double(box.maxZ - 1.0E-7D);
 
         for (int x = minX; x <= maxX; ++x) for (int y = minY; y <= maxY; ++y) for (int z = minZ; z <= maxZ; ++z) {
-            if (entity.worldObj.getBlockId(x, y, z) == NMBlocks.phasePortal.blockID) return;
+            int id = entity.worldObj.getBlockId(x, y, z);
+            if (id == NMBlocks.phasePortal.blockID || (Block.blocksList[id] != null
+                    && Block.blocksList[id].blockMaterial == Material.portal)) return;
         }
         this.nm$mustLeavePhasePortal = false;
     }
 
+
+    @Inject(method = "setInPortal", at = @At("HEAD"), cancellable = true)
+    private void preventPortalReentry(CallbackInfo ci) {
+        if (this.nm$mustLeavePhasePortal) {
+            Entity entity = (Entity)(Object)this;
+            entity.timeUntilPortal = entity.getPortalCooldown();
+            ci.cancel();
+        }
+    }
 
     @Inject(method = "tryToSetFireToBlocksInContact", at = @At("HEAD"), cancellable = true)
     private void manageFireSpreadFromBurningEntities(CallbackInfo ci){

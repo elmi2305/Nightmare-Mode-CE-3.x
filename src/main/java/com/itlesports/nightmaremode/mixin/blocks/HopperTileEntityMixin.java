@@ -24,6 +24,15 @@ import java.util.Optional;
 
 @Mixin(HopperTileEntity.class)
 public abstract class HopperTileEntityMixin extends TileEntity {
+    @Redirect(method = "updateEntity", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;getBlockId(III)I"))
+    private int releaseFilteredSoulsInsteadOfFillingUrns(net.minecraft.src.World world, int x, int y, int z) {
+        int id = world.getBlockId(x, y, z);
+        // treat the urn as absent for soul filtering; leave the placed urn and normal filtering intact.
+        return id == BTWBlocks.aestheticNonOpaque.blockID && x == this.xCoord
+                && y == this.yCoord - 1 && z == this.zCoord ? 0 : id;
+    }
+
     @Shadow public abstract ItemStack decrStackSize(int iSlot, int iAmount);
     @Shadow public abstract ItemStack getStackInSlot(int iSlot);
     @Shadow public abstract boolean canCurrentFilterProcessItem(ItemStack stack);

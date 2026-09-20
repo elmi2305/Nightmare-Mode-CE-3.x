@@ -2,6 +2,9 @@ package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.mixin.interfaces.TeleporterAccess;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NetherRecall;
+import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
+import net.minecraft.src.NBTTagCompound;
 import com.itlesports.nightmaremode.util.NetherItemHelper;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
@@ -26,25 +29,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
+    @Unique private final java.util.Map<EntityPlayerMP, ItemStack> pendingRecalls = new java.util.IdentityHashMap<>();
+
 
     @Inject(method = "transferEntityToWorld", at = @At("HEAD"), cancellable = true)
     private void transferPhaseEntityToWorld(Entity entity, int sourceDimension, WorldServer sourceWorld,
                                             WorldServer destinationWorld, CallbackInfo ci) {
         PhasePortalData.Endpoint phaseTarget = PhasePortalManager.getTransferTarget();
-        if (phaseTarget == null) return;
+        NBTTagCompound recall = NetherRecall.getTransferTarget();
+        if (phaseTarget == null && recall == null) return;
 
         // vanilla skips placement entirely when the source is the end.
         // phase portals have an explicit destination, so bypass its coordinate scaling,
         // end-return handling, and portal generation for every source dimension.
-        double x = phaseTarget.x + (phaseTarget.axis == 0 ? 1.0D : 0.5D);
-        double y = phaseTarget.y + 0.1D;
-        double z = phaseTarget.z + (phaseTarget.axis == 1 ? 1.0D : 0.5D);
+        double x = recall != null ? recall.getDouble("X") : phaseTarget.x + (phaseTarget.axis == 0 ? 1.0D : 0.5D);
+        double y = recall != null ? recall.getDouble("Y") : phaseTarget.y + 0.1D;
+        double z = recall != null ? recall.getDouble("Z") : phaseTarget.z + (phaseTarget.axis == 1 ? 1.0D : 0.5D);
         int chunkX = MathHelper.floor_double(x / 16.0D);
         int chunkZ = MathHelper.floor_double(z / 16.0D);
 
         destinationWorld.theChunkProviderServer.loadChunk(chunkX, chunkZ);
         destinationWorld.addChunkRangeToCheckForUnloadList(chunkX - 9, chunkZ - 9, chunkX + 9, chunkZ + 9);
-        entity.setLocationAndAngles(x, y, z, entity.rotationYaw, entity.rotationPitch);
+        entity.setLocationAndAngles(x, y, z, recall != null ? recall.getFloat("Yaw") : entity.rotationYaw,
+                recall != null ? recall.getFloat("Pitch") : entity.rotationPitch);
         entity.motionX = 0.0D;
         entity.motionY = 0.0D;
         entity.motionZ = 0.0D;
@@ -93,12 +100,18 @@ public class ServerConfigurationManagerMixin {
         entity.motionZ = 0.0D;
     }
 
-    @Inject(method = "transferPlayerToDimension", at = @At("HEAD"))
+    @Inject(method = "transferPlayerToDimension", at = @At("HEAD"), cancellable = true)
     private void incinerateInventoryOnNetherEntry(EntityPlayerMP player, int dimensionID, CallbackInfo ci) {
-        if (PhasePortalManager.getTransferTarget() != null) return;
+        if (NetherRecall.getTransferTarget() == null && PhasePortalManager.getTransferTarget() == null
+                && ((PhaseTransitEntity)player).nm$mustLeavePhasePortal()) {
+            ci.cancel();
+            return;
+        }
+        if (PhasePortalManager.getTransferTarget() != null || NetherRecall.getTransferTarget() != null) return;
         if (player.dimension != 0 || dimensionID != -1) {
             return;
         }
+        this.pendingRecalls.put(player, NetherRecall.create(player));
         for (int slot = 0; slot < player.inventory.mainInventory.length; ++slot) {
             ItemStack stack = player.inventory.mainInventory[slot];
             if (stack != null && !NetherItemHelper.survivesNetherEntry(stack, player)) {
@@ -122,6 +135,16 @@ public class ServerConfigurationManagerMixin {
     }
     @Inject(method = "transferPlayerToDimension", at = @At("TAIL"))
     private void sendFoodPacketToDimensionChangedPlayer(EntityPlayerMP player, int dimensionID, CallbackInfo ci){
+        ItemStack recall = this.pendingRecalls.remove(player);
+        if (recall != null && player.dimension == -1) {
+            recall.getTagCompound().setLong("Expires", System.currentTimeMillis() + 15000L);
+            int slot = player.inventory.currentItem;
+            ItemStack displaced = player.inventory.mainInventory[slot];
+            player.inventory.mainInventory[slot] = recall;
+            if (displaced != null && !player.inventory.addItemStackToInventory(displaced)) player.dropPlayerItem(displaced);
+            player.inventory.onInventoryChanged();
+            player.inventoryContainer.detectAndSendChanges();
+        }
         if (player instanceof EntityPlayerExt ext){
             ext.nightmareMode$setFoodMax(((FoodStatsExt)player.getFoodStats()).nightmareMode$getMaxFoodLevel());
         }
