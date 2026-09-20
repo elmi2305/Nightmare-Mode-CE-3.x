@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
+import com.itlesports.nightmaremode.util.interfaces.WorldSkylightSyncAccess;
+import net.minecraft.src.EnumSkyBlock;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ExtendedBlockStorage;
 import net.minecraft.src.World;
@@ -11,12 +13,46 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Chunk.class)
 public class ChunkMixin implements ChunkAttributesAccess {
     @Shadow private ExtendedBlockStorage[] storageArrays;
+    @Shadow public World worldObj;
+    @Shadow public boolean sendUpdates;
     @Unique private ChunkAttributes nightmareMode$chunkAttributes;
+
+    @ModifyArg(method = "updateSkylight_do", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;doChunksNearChunkExist(IIII)Z"), index = 3)
+    private int requireCompleteSkylightNeighborhood(int radius) {
+        // gap checks reach local -1..16; propagation needs another 17 blocks.
+        // radius 26 from local 8 covers -18..34 before any pending flags are cleared.
+        return 26;
+    }
+
+    @Inject(method = "updateSkylight_do", at = @At("HEAD"))
+    private void beginDeferredSkylightSync(CallbackInfo ci) {
+        if (this.worldObj instanceof WorldSkylightSyncAccess access) {
+            access.nm$getSkylightSync().begin();
+        }
+    }
+
+    @Inject(method = "updateSkylight_do", at = @At("RETURN"))
+    private void endDeferredSkylightSync(CallbackInfo ci) {
+        if (this.worldObj instanceof WorldSkylightSyncAccess access) {
+            access.nm$getSkylightSync().end();
+        }
+    }
+
+    @Inject(method = "setLightValue", at = @At("HEAD"))
+    private void captureDeferredSkylightChange(EnumSkyBlock type, int x, int y, int z, int value,
+                                              CallbackInfo ci) {
+        if (type == EnumSkyBlock.Sky && this.sendUpdates
+                && this.worldObj instanceof WorldSkylightSyncAccess access) {
+            access.nm$getSkylightSync().beforeChange((Chunk)(Object)this, x, y, z, value);
+        }
+    }
 
     @Override
     public ChunkAttributes nightmareMode$getChunkAttributes() {

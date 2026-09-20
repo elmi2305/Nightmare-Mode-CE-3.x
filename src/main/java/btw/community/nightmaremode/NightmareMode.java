@@ -268,6 +268,7 @@ public class NightmareMode extends BTWAddon {
 
         SteelLockerNet.register(this);
         PollutionVisualNet.register(this);
+        com.itlesports.nightmaremode.network.SkylightSync.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

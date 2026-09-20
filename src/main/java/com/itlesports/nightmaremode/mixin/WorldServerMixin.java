@@ -9,6 +9,8 @@ import com.itlesports.nightmaremode.util.interfaces.WorldServerExt;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.world.ChunkLoaderManager;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.network.SkylightSync;
+import com.itlesports.nightmaremode.util.interfaces.WorldSkylightSyncAccess;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +21,19 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldServer.class)
-public abstract class WorldServerMixin extends World implements WorldServerExt {
+public abstract class WorldServerMixin extends World implements WorldServerExt, WorldSkylightSyncAccess {
+    @Unique private final SkylightSync skylightSync = new SkylightSync();
+
+    @Override
+    public SkylightSync nm$getSkylightSync() {
+        return this.skylightSync;
+    }
+
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void sendDeferredSkylightChanges(CallbackInfo ci) {
+        this.skylightSync.flush((WorldServer)(Object)this);
+    }
+
     @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> entry, T value);
 
     @Unique private boolean oldBlueMoon;
