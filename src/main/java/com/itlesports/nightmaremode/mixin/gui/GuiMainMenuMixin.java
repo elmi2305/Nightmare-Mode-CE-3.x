@@ -49,6 +49,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private static final int BROWSER_ROW_HEIGHT = 80;
     @Unique private float browserScroll;
     @Unique private float browserScrollVelocity;
+    @Unique private long browserLastScrollUpdate;
     @Unique private boolean browserDraggingScrollbar;
     @Unique private int browserLastDragY;
     @Unique private long browserLastClick;
@@ -102,7 +103,6 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     /** Retain the existing title-screen anti-xray safeguard without depending on button-list indices. */
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void journeyMode$disableForXray(CallbackInfo ci) {
-        updateBrowserScroll();
         if(NightmareMode.devMode) return;
         if (AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")) {
             this.splashText = "Probably Shouldn't Xray!";
@@ -114,12 +114,12 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     private void journeyMode$handleBrowserActions(GuiButton button, CallbackInfo ci) {
         if (button.id == 1 && !this.mc.isDemo() && canShowBrowser()) {
-            openBrowser(JourneyBrowserMode.WORLDS);
+            if (this.browserMode != JourneyBrowserMode.WORLDS) openBrowser(JourneyBrowserMode.WORLDS);
             ci.cancel();
             return;
         }
         if (button.id == 2 && !this.mc.isDemo() && canShowBrowser()) {
-            openBrowser(JourneyBrowserMode.SERVERS);
+            if (this.browserMode != JourneyBrowserMode.SERVERS) openBrowser(JourneyBrowserMode.SERVERS);
             ci.cancel();
             return;
         }
@@ -279,6 +279,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "drawScreen", at = @At("HEAD"), cancellable = true)
     private void journeyMode$drawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         ci.cancel();
+        updateBrowserScroll();
         this.renderSkybox(mouseX, mouseY, partialTicks);
         JourneyTitleTheme theme = this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme;
         if (isCompactBrowser()) {
@@ -315,6 +316,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.browserSelected = -1;
         this.browserScroll = 0.0F;
         this.browserScrollVelocity = 0.0F;
+        this.browserLastScrollUpdate = Minecraft.getSystemTime();
         if (mode == JourneyBrowserMode.WORLDS) refreshWorldBrowser(); else refreshServerBrowser();
         rebuildJourneyLayout();
     }
@@ -325,6 +327,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.browserSelected = -1;
         this.browserScroll = 0.0F;
         this.browserScrollVelocity = 0.0F;
+        this.browserLastScrollUpdate = 0L;
         rebuildJourneyLayout();
     }
 
@@ -569,9 +572,16 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     }
 
     @Unique private void updateBrowserScroll() {
+        long now = Minecraft.getSystemTime();
+        if (this.browserLastScrollUpdate == 0L) {
+            this.browserLastScrollUpdate = now;
+            return;
+        }
+        float elapsedTicks = Math.min(now - this.browserLastScrollUpdate, 100L) / 50.0F;
+        this.browserLastScrollUpdate = now;
         if (this.browserMode == JourneyBrowserMode.NONE || this.browserDraggingScrollbar || Math.abs(this.browserScrollVelocity) < 0.15F) return;
-        this.browserScroll += this.browserScrollVelocity;
-        this.browserScrollVelocity *= 0.78F;
+        this.browserScroll += this.browserScrollVelocity * elapsedTicks;
+        this.browserScrollVelocity *= (float)Math.pow(0.78F, elapsedTicks);
         clampBrowserScroll(getBrowserBounds());
     }
 
