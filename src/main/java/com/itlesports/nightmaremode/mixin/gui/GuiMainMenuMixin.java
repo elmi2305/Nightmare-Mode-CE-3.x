@@ -51,6 +51,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private float browserScrollVelocity;
     @Unique private long browserLastScrollUpdate;
     @Unique private boolean browserDraggingScrollbar;
+    @Unique private GuiTextField browserSearchField;
+    @Unique private String browserSearchText = "";
     @Unique private int browserLastDragY;
     @Unique private long browserLastClick;
     @Unique private int browserLastClicked = -1;
@@ -98,11 +100,13 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
             this.buttonList.add(new GuiJourneySmallButton(33, x + 4, this.worldCardBottom - 24, 72, "Jump In"));
         }
         if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) addBrowserButtons();
+        rebuildWorldSearchField();
     }
 
     /** Retain the existing title-screen anti-xray safeguard without depending on button-list indices. */
     @Inject(method = "updateScreen", at = @At("TAIL"))
     private void journeyMode$disableForXray(CallbackInfo ci) {
+        if (this.browserSearchField != null) this.browserSearchField.updateCursorCounter();
         if(NightmareMode.devMode) return;
         if (AddonHandler.modList.keySet().toString().toLowerCase().contains("xray")) {
             this.splashText = "Probably Shouldn't Xray!";
@@ -132,6 +136,14 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void journeyMode$clickBrowserRow(int mouseX, int mouseY, int mouseButton, CallbackInfo ci) {
         if (this.browserMode == JourneyBrowserMode.NONE || mouseButton != 0 || !canShowBrowser()) return;
+        if (this.browserSearchField != null) {
+            this.browserSearchField.mouseClicked(mouseX, mouseY, mouseButton);
+            if (this.browserSearchField.isFocused()) {
+                if (this.renamingWorldIndex >= 0) cancelInlineRename();
+                ci.cancel();
+                return;
+            }
+        }
         JourneyBrowserBounds bounds = getBrowserBounds();
         if (mouseX >= bounds.right - 13 && mouseX < bounds.right && mouseY >= bounds.listTop && mouseY < bounds.listBottom && browserCanScroll(bounds)) {
             this.browserDraggingScrollbar = true;
@@ -148,14 +160,18 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
             return;
         }
         if (this.browserMode == JourneyBrowserMode.WORLDS && mouseX < bounds.x + 24) {
-            toggleBrowserFavorite(this.browserWorlds.get(row).getFileName());
+            int worldIndex = browserWorldIndexAt(row);
+            if (worldIndex < 0) return;
+            toggleBrowserFavorite(this.browserWorlds.get(worldIndex).getFileName());
             refreshWorldBrowser();
             ci.cancel();
             return;
         }
-        boolean doubleClick = this.browserLastClicked == row && Minecraft.getSystemTime() - this.browserLastClick < 250L;
-        this.browserSelected = row;
-        this.browserLastClicked = row;
+        int selectedIndex = this.browserMode == JourneyBrowserMode.WORLDS ? browserWorldIndexAt(row) : row;
+        if (selectedIndex < 0) return;
+        boolean doubleClick = this.browserLastClicked == selectedIndex && Minecraft.getSystemTime() - this.browserLastClick < 250L;
+        this.browserSelected = selectedIndex;
+        this.browserLastClicked = selectedIndex;
         this.browserLastClick = Minecraft.getSystemTime();
         updateBrowserButtonState();
         if (doubleClick) performBrowserAction(this.browserMode == JourneyBrowserMode.WORLDS ? 101 : 201);
@@ -198,6 +214,19 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
             else if (keyCode == 28 || keyCode == 156) commitInlineRename();
             else if (keyCode == 14 && !this.inlineWorldName.isEmpty()) this.inlineWorldName = this.inlineWorldName.substring(0, this.inlineWorldName.length() - 1);
             else if (typedChar >= 32 && typedChar != 127 && ChatAllowedCharacters.allowedCharacters.indexOf(typedChar) >= 0 && this.inlineWorldName.length() < 64) this.inlineWorldName += typedChar;
+            ci.cancel();
+            return;
+        }
+        if (this.browserSearchField != null && this.browserSearchField.isFocused()) {
+            String previous = this.browserSearchField.getText();
+            this.browserSearchField.textboxKeyTyped(typedChar, keyCode);
+            this.browserSearchText = this.browserSearchField.getText();
+            if (!previous.equals(this.browserSearchText)) {
+                this.browserSelected = -1;
+                this.browserLastClicked = -1;
+                this.browserScroll = 0.0F;
+                this.browserScrollVelocity = 0.0F;
+            }
             ci.cancel();
             return;
         }
@@ -323,6 +352,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
 
     @Unique private void closeBrowser() {
         cancelInlineRename();
+        this.browserSearchField = null;
+        this.browserSearchText = "";
         this.browserMode = JourneyBrowserMode.NONE;
         this.browserSelected = -1;
         this.browserScroll = 0.0F;
@@ -355,6 +386,39 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.browserSelected = -1;
     }
 
+    @Unique private void rebuildWorldSearchField() {
+        if (this.browserMode != JourneyBrowserMode.WORLDS || !canShowBrowser()) {
+            this.browserSearchField = null;
+            return;
+        }
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        int width = isCompactBrowser() ? 84 : 96;
+        int x = isCompactBrowser() ? this.width - 102 - width - 6 : bounds.right - width - 8;
+        this.browserSearchField = new GuiTextField(this.fontRenderer, x + 2, 15 + 4, width, 16);
+        this.browserSearchField.setMaxStringLength(10);
+        this.browserSearchField.setText(this.browserSearchText);
+        this.browserSearchField.setEnableBackgroundDrawing(false);
+        this.browserSearchField.setTextColor((this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme).text);
+    }
+
+    @Unique private boolean browserWorldMatchesSearch(SaveFormatComparator save) {
+        if (this.browserSearchText.isEmpty()) return true;
+        String query = this.browserSearchText.toLowerCase(java.util.Locale.ROOT);
+        String name = save.getDisplayName();
+        if (name == null) name = "";
+        name = name.toLowerCase(java.util.Locale.ROOT);
+        return name.contains(query) || save.getFileName().toLowerCase(java.util.Locale.ROOT).contains(query);
+    }
+
+    @Unique private int browserWorldIndexAt(int displayedIndex) {
+        int matchingIndex = 0;
+        for (int index = 0; index < this.browserWorlds.size(); index++) {
+            if (!browserWorldMatchesSearch(this.browserWorlds.get(index))) continue;
+            if (matchingIndex++ == displayedIndex) return index;
+        }
+        return -1;
+    }
+
     @Unique private void addBrowserButtons() {
         JourneyBrowserBounds bounds = getBrowserBounds();
         int width = bounds.right - bounds.x;
@@ -380,7 +444,9 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private void addBrowserButton(int id, int x, int y, int width, String text) { this.buttonList.add(new GuiJourneySmallButton(id, x, y, Math.max(42, width), text)); }
 
     @Unique private void updateBrowserButtonState() {
-        boolean selected = this.browserSelected >= 0 && this.browserSelected < browserSize();
+        boolean selected = this.browserMode == JourneyBrowserMode.WORLDS
+                ? this.browserSelected >= 0 && this.browserSelected < this.browserWorlds.size()
+                : this.browserSelected >= 0 && this.browserSelected < browserSize();
         for (Object object : this.buttonList) {
             GuiButton button = (GuiButton) object;
             if (button.id == 101 || button.id == 103 || button.id == 104 || button.id == 105 || button.id == 201 || button.id == 204 || button.id == 205) button.enabled = selected;
@@ -478,6 +544,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         String title = this.browserMode == JourneyBrowserMode.WORLDS ? "Your Worlds" : "Multiplayer Servers";
         this.drawString(this.fontRenderer, title, bounds.x + 9, 18, theme.textHighlight);
         this.drawString(this.fontRenderer, this.browserMode == JourneyBrowserMode.WORLDS ? "Favorites rise to the top" : "Saved servers", bounds.x + 9, 30, theme.textMuted);
+        drawWorldSearchField(theme);
         int size = browserSize();
         beginBrowserListClip(bounds);
         for (int index = 0; index < size; index++) {
@@ -502,12 +569,14 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     }
 
     @Unique private void drawWorldBrowserRow(int index, JourneyBrowserBounds bounds, int y, JourneyTitleTheme theme) {
-        SaveFormatComparator save = this.browserWorlds.get(index);
+        int worldIndex = browserWorldIndexAt(index);
+        if (worldIndex < 0) return;
+        SaveFormatComparator save = this.browserWorlds.get(worldIndex);
         boolean favorite = this.browserFavorites.contains(save.getFileName());
         drawScaledString(favorite ? "★" : "☆", bounds.x + 11, y + 25, 3.0F, favorite ? theme.textHighlight : theme.textMuted);
         drawTexture(theme.worldIcon, bounds.x + 48, y + 10, 56, 56);
         int textX = bounds.x + 114;
-        String name = this.renamingWorldIndex == index ? this.inlineWorldName + "_" : browserWorldName(save, index);
+        String name = this.renamingWorldIndex == worldIndex ? this.inlineWorldName + "_" : browserWorldName(save, worldIndex);
         drawScaledString(trimToWidth(name, (int) ((bounds.right - textX - 16) / 1.25F)), textX, y + 13, 1.25F, theme.text);
         this.drawString(this.fontRenderer, trimToWidth(save.getFileName() + " (" + formatDate(save.getLastTimePlayed()) + ")", bounds.right - textX - 16), textX, y + 32, theme.textMuted);
         String mode = save.isHardcoreModeEnabled() ? "Hardcore" : save.getEnumGameType().getName();
@@ -553,7 +622,25 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         return new JourneyBrowserBounds(x, this.width - 12, 44, this.height - 62);
     }
 
-    @Unique private int browserSize() { return this.browserMode == JourneyBrowserMode.WORLDS ? this.browserWorlds.size() : this.browserServers == null ? 0 : this.browserServers.countServers(); }
+    @Unique private void drawWorldSearchField(JourneyTitleTheme theme) {
+        if (this.browserSearchField == null) return;
+        JourneyBrowserBounds bounds = getBrowserBounds();
+        int width = isCompactBrowser() ? 84 : 96;
+        int x = isCompactBrowser() ? this.width - 102 - width - 6 : bounds.right - width - 8;
+        drawRect(x - 1, 14, x + width + 1, 32, theme.edge);
+        drawRect(x, 15, x + width, 31, 0xB0000000 | (theme.panelRgb & 0x00FFFFFF));
+        if (this.browserSearchText.isEmpty() && !this.browserSearchField.isFocused()) {
+            this.drawString(this.fontRenderer, "Search", x + 4, 19, theme.textMuted);
+        }
+        this.browserSearchField.drawTextBox();
+    }
+
+    @Unique private int browserSize() {
+        if (this.browserMode != JourneyBrowserMode.WORLDS) return this.browserServers == null ? 0 : this.browserServers.countServers();
+        int matches = 0;
+        for (SaveFormatComparator save : this.browserWorlds) if (browserWorldMatchesSearch(save)) matches++;
+        return matches;
+    }
     @Unique private void clampBrowserScroll(JourneyBrowserBounds bounds) {
         int max = browserMaximumScroll(bounds);
         this.browserScroll = Math.max(0.0F, Math.min(this.browserScroll, max));
