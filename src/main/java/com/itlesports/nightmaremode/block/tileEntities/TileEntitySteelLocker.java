@@ -1,11 +1,14 @@
 package com.itlesports.nightmaremode.block.tileEntities;
 
 import btw.util.BTWSounds;
+import api.block.TileEntityDataPacketHandler;
 import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
+import com.itlesports.nightmaremode.util.StorageColor;
+import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
 import net.minecraft.src.*;
 
-public class TileEntitySteelLocker extends TileEntity implements IInventory {
+public class TileEntitySteelLocker extends TileEntity implements IInventory, IDyeableStorage, TileEntityDataPacketHandler {
 
     public static final int SLOT_COLS = 19;
     public static final int SLOT_ROWS = 7;
@@ -18,6 +21,20 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory {
     private int cachedChestType = -1;
     private String customName;
     private ItemStack[] chestContents = new ItemStack[SLOT_TOTAL];
+    private int storageColor = StorageColor.BROWN;
+
+    @Override
+    public int nm$getStorageColor() {
+        return storageColor;
+    }
+
+    @Override
+    public void nm$setStorageColor(int color) {
+        storageColor = color & 15;
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
 
     @Override public int getSizeInventory() { return SLOT_TOTAL; }
     @Override public ItemStack getStackInSlot(int i) { return chestContents[i]; }
@@ -89,6 +106,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory {
         chestContents = new ItemStack[SLOT_TOTAL];
         if (nbt.hasKey("CustomName"))
             customName = nbt.getString("CustomName");
+        storageColor = nbt.hasKey("nmStorageColor") ? nbt.getByte("nmStorageColor") & 15 : StorageColor.BROWN;
 
         NBTTagList list = nbt.getTagList("Items");
         for (int i=0;i<list.tagCount();i++) {
@@ -114,6 +132,19 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory {
         }
         nbt.setTag("Items", list);
         if (isInvNameLocalized()) nbt.setString("CustomName", customName);
+        if (storageColor != StorageColor.BROWN) nbt.setByte("nmStorageColor", (byte) storageColor);
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setByte("nmStorageColor", (byte) storageColor);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+    }
+
+    public void readNBTFromPacket(NBTTagCompound tag) {
+        storageColor = tag.getByte("nmStorageColor") & 15;
+        worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
     }
 
     @Override

@@ -1,0 +1,44 @@
+package com.itlesports.nightmaremode.mixin.render;
+
+import com.itlesports.nightmaremode.util.StorageColor;
+import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import net.minecraft.src.TileEntityChest;
+import net.minecraft.src.TileEntityChestRenderer;
+import net.minecraft.src.ResourceLocation;
+import net.minecraft.src.TileEntitySpecialRenderer;
+import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(TileEntityChestRenderer.class)
+public class TileEntityChestRendererMixin {
+    @Unique private TileEntityChest nightmareMode$renderingChest;
+
+    @Inject(method = "renderTileEntityChestAt", at = @At("HEAD"))
+    private void captureRenderedChest(TileEntityChest chest, double x, double y, double z, float partialTicks, CallbackInfo ci) {
+        this.nightmareMode$renderingChest = chest;
+    }
+
+    @Redirect(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TileEntityChestRenderer;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
+    private void bindDyedChestTexture(TileEntityChestRenderer renderer, ResourceLocation original) {
+        TileEntityChest chest = this.nightmareMode$renderingChest;
+        int color = StorageColor.getRenderColor(((IDyeableStorage) chest).nm$getStorageColor());
+        boolean doubleChest = chest.adjacentChestXPos != null || chest.adjacentChestZPosition != null;
+        ((TileEntitySpecialRendererAccessor) renderer).nightmareMode$bindTexture(
+                StorageColor.getChestTexture(chest.getChestType(), doubleChest, color, original));
+    }
+
+    @Inject(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ModelChest;renderAll()V"))
+    private void clearChestTint(TileEntityChest chest, double x, double y, double z, float partialTicks, CallbackInfo ci) {
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    @Inject(method = "renderTileEntityChestAt", at = @At("TAIL"))
+    private void resetChestTint(TileEntityChest chest, double x, double y, double z, float partialTicks, CallbackInfo ci) {
+        this.nightmareMode$renderingChest = null;
+    }
+}

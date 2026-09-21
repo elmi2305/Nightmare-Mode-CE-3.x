@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import com.itlesports.nightmaremode.client.EnderArmorClient;
 import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
 import com.itlesports.nightmaremode.integration.emi.RecipeCardExporter;
+import com.itlesports.nightmaremode.network.StorageColorNet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import api.item.items.PlaceAsBlockItem;
@@ -33,6 +34,7 @@ public abstract class MinecraftMixin {
     @Shadow public WorldClient theWorld;
     @Shadow public MovingObjectPosition objectMouseOver;
     @Shadow public PlayerControllerMP playerController;
+    @Shadow private int rightClickDelayTimer;
     @Shadow private IntegratedServer theIntegratedServer;
 
     @Unique private boolean wasZooming = false;
@@ -148,6 +150,12 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "clickMouse", at = @At("HEAD"), cancellable = true)
     private void startOrBlockCarcassHarvest(int mouseButton, CallbackInfo ci) {
+        if (mouseButton == 1 && StorageColorNet.tryDyeTarget((Minecraft) (Object) this)) {
+            this.thePlayer.swingItem();
+            this.rightClickDelayTimer = 4;
+            ci.cancel();
+            return;
+        }
         if (mouseButton == 1 && !this.nightmareMode$automatedRailClick && GuiScreen.isCtrlKeyDown()
                 && this.nightmareMode$isRailTarget()) {
             this.nightmareMode$railExtensionActive = !this.nightmareMode$railExtensionActive;

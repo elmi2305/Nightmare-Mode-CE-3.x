@@ -365,7 +365,9 @@
     "render.RenderWitherMixin",
     "render.RenderWitherSkullMixin",
     "render.RenderZombieMixin",
-    "render.SquidRendererMixin"
+    "render.SquidRendererMixin",
+    "render.TileEntityChestRendererMixin",
+    "render.TileEntitySpecialRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

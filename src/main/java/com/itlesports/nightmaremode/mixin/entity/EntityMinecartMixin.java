@@ -4,6 +4,8 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.IFurnaceMinecartEngine;
 import com.itlesports.nightmaremode.util.interfaces.IHighSpeedMinecart;
 import com.itlesports.nightmaremode.util.interfaces.ITrainMinecart;
+import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.StorageColor;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockRailBase;
@@ -27,9 +29,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(EntityMinecart.class)
-public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainMinecart {
+public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainMinecart, IDyeableStorage {
     @Unique
     private static final int NIGHTMARE_MODE_HIGH_SPEED_WATCHER = 23;
+    @Unique
+    private static final int NIGHTMARE_MODE_STORAGE_COLOR_WATCHER = 24;
 
     @Shadow
     protected Item minecartItemToDrop;
@@ -39,6 +43,8 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
 
     @Unique
     private boolean nightmareMode$highSpeed;
+    @Unique
+    private int nightmareMode$storageColor = StorageColor.BROWN;
 
     @Unique
     private UUID nightmareMode$trainEngineId;
@@ -56,6 +62,8 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
     private void initializeHighSpeedWatcher(CallbackInfo ci) {
         ((EntityMinecart) (Object) this).getDataWatcher()
                 .addObject(NIGHTMARE_MODE_HIGH_SPEED_WATCHER, (byte) 0);
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .addObject(NIGHTMARE_MODE_STORAGE_COLOR_WATCHER, (byte) StorageColor.BROWN);
     }
 
     @Override
@@ -70,6 +78,19 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
         this.nightmareMode$highSpeed = highSpeed;
         ((EntityMinecart) (Object) this).getDataWatcher()
                 .updateObject(NIGHTMARE_MODE_HIGH_SPEED_WATCHER, (byte) (highSpeed ? 1 : 0));
+    }
+
+    @Override
+    public int nm$getStorageColor() {
+        return ((EntityMinecart) (Object) this).getDataWatcher()
+                .getWatchableObjectByte(NIGHTMARE_MODE_STORAGE_COLOR_WATCHER) & 15;
+    }
+
+    @Override
+    public void nm$setStorageColor(int color) {
+        this.nightmareMode$storageColor = color & 15;
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .updateObject(NIGHTMARE_MODE_STORAGE_COLOR_WATCHER, (byte) this.nightmareMode$storageColor);
     }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 0.4D))
@@ -88,6 +109,19 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
     private void readHighSpeedState(NBTTagCompound tag, CallbackInfo ci) {
         this.nightmareMode$setHighSpeed(tag.getBoolean("nmHighSpeed"));
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void writeStorageColor(NBTTagCompound tag, CallbackInfo ci) {
+        if (this.nightmareMode$storageColor != StorageColor.BROWN) {
+            tag.setByte("nmStorageColor", (byte) this.nightmareMode$storageColor);
+        }
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void readStorageColor(NBTTagCompound tag, CallbackInfo ci) {
+        this.nm$setStorageColor(tag.hasKey("nmStorageColor")
+                ? tag.getByte("nmStorageColor") & 15 : StorageColor.BROWN);
     }
 
     @Inject(method = "killMinecart", at = @At("HEAD"))

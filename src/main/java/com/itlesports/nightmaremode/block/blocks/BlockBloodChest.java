@@ -44,49 +44,18 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemStack) {
-        int blockIdNorth = world.getBlockId(x, y, z - 1);
-        int blockIdSouth = world.getBlockId(x, y, z + 1);
-        int blockIdWest = world.getBlockId(x - 1, y, z);
-        int blockIdEast = world.getBlockId(x + 1, y, z);
-
-        byte facing = 0;
-
-        // Determine block facing based on player rotation
+        byte facing;
         int rotation = MathHelper.floor_double((double) (placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         if (rotation == 0) {
-            facing = 2; // North
+            facing = 2;
         } else if (rotation == 1) {
-            facing = 5; // East
+            facing = 5;
         } else if (rotation == 2) {
-            facing = 3; // South
-        } else if (rotation == 3) {
-            facing = 4; // West
-        }
-
-        if (blockIdNorth != this.blockID && blockIdSouth != this.blockID &&
-                blockIdWest != this.blockID && blockIdEast != this.blockID) {
-            world.setBlockMetadataWithNotify(x, y, z, facing, 3);
+            facing = 3;
         } else {
-            // Handle double chest linking along Z axis
-            if ((blockIdNorth == this.blockID || blockIdSouth == this.blockID) && (facing == 4 || facing == 5)) {
-                if (blockIdNorth == this.blockID) {
-                    world.setBlockMetadataWithNotify(x, y, z - 1, facing, 3);
-                } else {
-                    world.setBlockMetadataWithNotify(x, y, z + 1, facing, 3);
-                }
-                world.setBlockMetadataWithNotify(x, y, z, facing, 3);
-            }
-
-            // Handle double chest linking along X axis
-            if ((blockIdWest == this.blockID || blockIdEast == this.blockID) && (facing == 2 || facing == 3)) {
-                if (blockIdWest == this.blockID) {
-                    world.setBlockMetadataWithNotify(x - 1, y, z, facing, 3);
-                } else {
-                    world.setBlockMetadataWithNotify(x + 1, y, z, facing, 3);
-                }
-                world.setBlockMetadataWithNotify(x, y, z, facing, 3);
-            }
+            facing = 4;
         }
+        world.setBlockMetadataWithNotify(x, y, z, facing, 3);
 
         // Set custom name from item stack, if present
         if (itemStack.hasDisplayName()) {
@@ -178,15 +147,7 @@ public class BlockBloodChest extends BlockContainer {
     }
 
     public AxisAlignedBB getBlockBoundsFromPoolBasedOnState(IBlockAccess blockAccess, int i, int j, int k) {
-        if (blockAccess.getBlockId(i, j, k - 1) == this.blockID) {
-            return AxisAlignedBB.getAABBPool().getAABB((double) 0.0625F, (double) 0.0F, (double) 0.0F, (double) 0.9375F, (double) 0.875F, (double) 0.9375F);
-        } else if (blockAccess.getBlockId(i, j, k + 1) == this.blockID) {
-            return AxisAlignedBB.getAABBPool().getAABB((double) 0.0625F, (double) 0.0F, (double) 0.0625F, (double) 0.9375F, (double) 0.875F, (double) 1.0F);
-        } else if (blockAccess.getBlockId(i - 1, j, k) == this.blockID) {
-            return AxisAlignedBB.getAABBPool().getAABB((double) 0.0F, (double) 0.0F, (double) 0.0625F, (double) 0.9375F, (double) 0.875F, (double) 0.9375F);
-        } else {
-            return blockAccess.getBlockId(i + 1, j, k) == this.blockID ? AxisAlignedBB.getAABBPool().getAABB((double) 0.0625F, (double) 0.0F, (double) 0.0625F, (double) 1.0F, (double) 0.875F, (double) 0.9375F) : AxisAlignedBB.getAABBPool().getAABB((double) 0.0625F, (double) 0.0F, (double) 0.0625F, (double) 0.9375F, (double) 0.875F, (double) 0.9375F);
-        }
+        return AxisAlignedBB.getAABBPool().getAABB(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
     }
 
     protected boolean canSilkHarvest(int iMetadata) {

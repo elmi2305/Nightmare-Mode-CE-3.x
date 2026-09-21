@@ -35,11 +35,6 @@ public class BlockSteelLocker extends BlockContainer {
 
     @Override
     public void onBlockPlacedBy(World world,int x,int y,int z,EntityLivingBase placer,ItemStack stack){
-        int north = world.getBlockId(x,y,z-1);
-        int south = world.getBlockId(x,y,z+1);
-        int west  = world.getBlockId(x-1,y,z);
-        int east  = world.getBlockId(x+1,y,z);
-
         byte facing;
         int rot = MathHelper.floor_double(placer.rotationYaw * 4.0D / 360.0D + 0.5D) & 3;
         if (rot==0) facing=2;
@@ -47,20 +42,7 @@ public class BlockSteelLocker extends BlockContainer {
         else if (rot==2) facing=3;
         else facing=4;
 
-        if (north != blockID && south != blockID && west != blockID && east != blockID){
-            world.setBlockMetadataWithNotify(x,y,z,facing,3);
-        } else {
-            if ((north==blockID || south==blockID) && (facing==4 || facing==5)){
-                if (north==blockID) world.setBlockMetadataWithNotify(x,y,z-1,facing,3);
-                else world.setBlockMetadataWithNotify(x,y,z+1,facing,3);
-                world.setBlockMetadataWithNotify(x,y,z,facing,3);
-            }
-            if ((west==blockID || east==blockID) && (facing==2 || facing==3)){
-                if (west==blockID) world.setBlockMetadataWithNotify(x-1,y,z,facing,3);
-                else world.setBlockMetadataWithNotify(x+1,y,z,facing,3);
-                world.setBlockMetadataWithNotify(x,y,z,facing,3);
-            }
-        }
+        world.setBlockMetadataWithNotify(x,y,z,facing,3);
 
         if (stack.hasDisplayName()){
             TileEntity te = world.getBlockTileEntity(x,y,z);

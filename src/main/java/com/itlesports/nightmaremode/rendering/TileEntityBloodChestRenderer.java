@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.rendering;
 
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
+import com.itlesports.nightmaremode.util.StorageColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -31,7 +32,7 @@ public class TileEntityBloodChestRenderer extends TileEntitySpecialRenderer {
         lidProgress = 1.0f - lidProgress;
         lidProgress = 1.0f - lidProgress * lidProgress * lidProgress;
 
-        this.bindTexture(RES_NORMAL);
+        this.bindTexture(StorageColor.getBloodChestTexture(chest.nm$getStorageColor(), RES_NORMAL));
 
         GL11.glPushMatrix();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
