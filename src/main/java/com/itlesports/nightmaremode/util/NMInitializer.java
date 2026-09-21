@@ -1276,6 +1276,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{
                 new ItemStack(BTWItems.diamondIngot),
                 new ItemStack(Item.netherQuartz, 4),
+                new ItemStack(BTWItems.coalDust, 2),
                 new ItemStack(NMItems.denseNetherrackCore),
                 new ItemStack(NMItems.nickelHeatComponent),
                 new ItemStack(NMItems.crystalPrecisionGear)
