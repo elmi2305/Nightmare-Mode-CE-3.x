@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.util.interfaces.ZoomStateAccessor;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
 import com.itlesports.nightmaremode.client.EnderArmorClient;
 import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
+import com.itlesports.nightmaremode.integration.emi.RecipeCardExporter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import api.item.items.PlaceAsBlockItem;
@@ -167,8 +168,10 @@ public abstract class MinecraftMixin {
     private void tickCarcassHarvest(CallbackInfo ci) {
         CarcassHarvestClient.tick((Minecraft)(Object)this);
         this.nightmareMode$tickAutomaticRailExtension();
-        if (RecipeIndexExporter.consumeDevelopmentStopRequest()
-                || RecipeIndexExporter.consumeAutomatedStopRequest()) {
+        boolean stopRequested = RecipeIndexExporter.consumeDevelopmentStopRequest()
+                || RecipeIndexExporter.consumeAutomatedStopRequest();
+        RecipeCardExporter.exportPending();
+        if (stopRequested) {
             ((Minecraft)(Object)this).shutdown();
         }
     }

@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.integration.emi.RecipeIndexExporter;
+import com.itlesports.nightmaremode.integration.emi.RecipeCardExporter;
 import emi.dev.emi.emi.api.recipe.EmiRecipeManager;
 import emi.dev.emi.emi.registry.EmiRecipes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +16,7 @@ public abstract class EmiRecipesMixin {
 
     @Inject(method = "bake", at = @At("TAIL"), remap = false)
     private static void exportRecipeIndex(CallbackInfo ci) {
+        RecipeCardExporter.queue(manager);
         RecipeIndexExporter.exportDevelopmentIndex(manager);
     }
 }
