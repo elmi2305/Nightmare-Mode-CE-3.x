@@ -246,7 +246,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
                 player.dropPlayerItem(refund);
             }
         }
-        if (this.getProfession() >= 0 && this.getProfession() <= 4 && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
+        if (this.nightmareMode$canChangeProfession() && player != null && this.getCurrentTradeLevel() > this.nightmareMode$levelBeforeTrade
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(player).villagerProfessionChangeChance) {
             int oldProfession = this.getProfession();
             int newProfession = this.rand.nextInt(4);
@@ -342,6 +342,14 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Override
     public boolean nightmareMode$isHungry() {
         return this.nightmareMode$getHungerLevel() <= HUNGRY_THRESHOLD;
+    }
+
+    @Unique
+    private boolean nightmareMode$canChangeProfession() {
+        return !((Object)this instanceof EntityNetherPostVillager)
+                && !((Object)this instanceof NightmareVillager)
+                && !((Object)this instanceof EntityFishermanVillager)
+                && this.getProfession() >= 0 && this.getProfession() <= 4;
     }
 
     @Unique

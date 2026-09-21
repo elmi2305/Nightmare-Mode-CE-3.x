@@ -634,7 +634,7 @@ public class NMItems {
         sandfish = createRawFish(2679, "nmSandfish");
         tilapia = createRawFish(2680, "nmTilapia");
         duneKoi = createRawFish(2681, "nmDuneKoi");
-        debonedRawFish = createRawFish(2682, "nmDebonedRawFish");
+        debonedRawFish = createRawFish(2682, "ifhyDebonedRawFish");
         fishFlesh = (NMProgressiveItem) new NMProgressiveItem(2683, debonedRawFish.itemID).setTargetDurability(100).setSoundID("mob.chicken.hurt").setTextureName("fish_raw").setUnlocalizedName("nmFishFlesh").setCreativeTab(CreativeTabs.tabFood);
         rawFish = new Item[]{mackerel, cod, tuna, swordfish, bass, trout, carp, goldenCarp, mudfish, catfish, swampEel, alligatorGar, piranha, neonTetra, jungleCatfish, arapaima, salmon, perch, icefish, frostfish, desertMinnow, sandfish, tilapia, duneKoi, debonedRawFish};
 

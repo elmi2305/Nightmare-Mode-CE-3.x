@@ -18,6 +18,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.EnderAssemblerRecipeManager;
+import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
@@ -55,6 +56,130 @@ public abstract class NMInitializer implements AchievementExt {
     private static IRecipe ultimateEyeOfEnderRecipe;
 
     private static void finishRecipes(String type){System.out.println("Finished initializing: [" + type + "]");}
+
+    // use these VERY sparingly: each helper removes every recipe that can create the item.
+    public static void killCraftingRecipe(Item item) {
+        CraftingManager.getInstance().getRecipeList().removeIf(recipe -> creates(((IRecipe)recipe).getRecipeOutput(), item));
+    }
+
+    public static void killSoulforgeRecipe(Item item) {
+        SoulforgeCraftingManager.getInstance().getRecipeList().removeIf(recipe -> creates(recipe.getRecipeOutput(), item));
+    }
+
+    public static void killCauldronRecipe(Item item) {
+        killBulkRecipe(CauldronCraftingManager.getInstance(), item);
+    }
+
+    public static void killStokedCauldronRecipe(Item item) {
+        killBulkRecipe(CauldronStokedCraftingManager.getInstance(), item);
+    }
+
+    public static void killCrucibleRecipe(Item item) {
+        killBulkRecipe(CrucibleCraftingManager.getInstance(), item);
+    }
+
+    public static void killStokedCrucibleRecipe(Item item) {
+        killBulkRecipe(CrucibleStokedCraftingManager.getInstance(), item);
+    }
+
+    public static void killMillstoneRecipe(Item item) {
+        killBulkRecipe(MillStoneCraftingManager.getInstance(), item);
+    }
+
+    public static void killLoomRecipe(Item item) {
+        killBulkRecipe(LoomCraftingManager.getInstance(), item);
+    }
+
+    public static void killHopperRecipe(Item item) {
+        HopperFilteringCraftingManager.instance.getRecipes().removeIf(recipe ->
+                creates(recipe.getHopperOutput(), item) || creates(recipe.getFilteredOutput(), item));
+    }
+
+    public static void killCampfireRecipe(Item item) {
+        CampfireCraftingManager.instance.getRecipeMap().values().removeIf(output -> creates((ItemStack)output, item));
+    }
+
+    public static void killKilnRecipe(Item item) {
+        KilnCraftingManager.instance.getRecipes().removeIf(recipe -> createsAny(recipe.getOutput(), item));
+    }
+
+    public static void killFurnaceRecipe(Item item) {
+        FurnaceRecipes.smelting().getSmeltingList().values().removeIf(output -> creates((ItemStack)output, item));
+    }
+
+    public static void killSawRecipe(Item item) {
+        SawCraftingManager.instance.getRecipes().removeIf(recipe -> createsAny(recipe.getOutput(), item));
+    }
+
+    public static void killTurntableRecipe(Item item) {
+        TurntableCraftingManager.instance.getRecipes().removeIf(recipe ->
+                createsBlock(recipe.getOutputBlock(), item) || createsAny(recipe.getItemsEjected(), item));
+    }
+
+    public static void killPistonPackingRecipe(Item item) {
+        PistonPackingCraftingManager.instance.getRecipes().removeIf(recipe -> createsBlock(recipe.getOutput(), item));
+    }
+
+    public static void killPistonPackingRecipe(Block block) {
+        PistonPackingCraftingManager.instance.getRecipes().removeIf(recipe -> recipe.getOutput() == block);
+    }
+
+    public static void killHammerRecipe(Item item) {
+        HammerCraftingManager.instance.getRecipes().removeIf(recipe -> createsAny(recipe.getOutput(), item));
+    }
+
+    public static void killWashingRecipe(Item item) {
+        WashingRecipeManager.instance.getRecipes().removeIf(recipe -> creates(recipe.getOutput(), item));
+    }
+
+    public static void killMiscRecipe(Item item) {
+        MiscRecipeManager.instance.getRecipes().removeIf(recipe -> creates(recipe.getOutput(), item));
+    }
+
+    public static void killCisternRecipe(Item item) {
+        CisternRecipeManager.instance.getRecipes().removeIf(recipe -> createsAny(recipe.getPotentialOutputs(), item));
+    }
+
+    public static void killBrewingStandRecipe(Item item) {
+        BrewingStandRecipeManager.instance.getRecipes().removeIf(recipe -> creates(recipe.getOutput(), item));
+    }
+
+    public static void killEnderAssemblerRecipe(Item item) {
+        EnderAssemblerRecipeManager.instance.getRecipes().removeIf(recipe -> creates(recipe.getOutput(), item));
+    }
+
+    private static void killBulkRecipe(BulkCraftingManager manager, Item item) {
+        manager.getRecipeList().removeIf(recipe -> createsAny(recipe.getCraftingOutputList(), item));
+    }
+
+    private static boolean createsAny(Iterable<ItemStack> outputs, Item item) {
+        for (ItemStack output : outputs) {
+            if (creates(output, item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean createsAny(ItemStack[] outputs, Item item) {
+        if (outputs == null) {
+            return false;
+        }
+        for (ItemStack output : outputs) {
+            if (creates(output, item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean creates(ItemStack output, Item item) {
+        return output != null && item != null && output.itemID == item.itemID;
+    }
+
+    private static boolean createsBlock(Block output, Item item) {
+        return output != null && item != null && output.blockID == item.itemID;
+    }
 
     public static void initIFHYRecipes(){
         validateUltimateItemRegistrations();
@@ -298,8 +423,8 @@ public abstract class NMInitializer implements AchievementExt {
         tweakInput(10, 16, "btw:buy_spider_eyes");
         tweakInput(28, 42, "btw:buy_mysterious_glands", "btw:buy_fermented_spider_eyes");
         tweakInput(24, 36, "btw:buy_ghast_tears", "btw:buy_magma_cream", "btw:buy_blaze_powder");
-        tweakInput(32, 46, "btw:buy_brimstone", "btw:buy_blood_wood_saplings");
-        tweakInput(6, 10, "btw:buy_nether_groth_spores");
+        tweakInput(32, 46, "btw:buy_brimstone");
+        tweakInput(48, 64, "btw:buy_blood_wood_saplings", "btw:buy_nether_groth_spores");
         tweakInput(42, 58, "btw:sell_power_scroll");
 
         // Priest
@@ -1238,10 +1363,10 @@ public abstract class NMInitializer implements AchievementExt {
         removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 8), Item.plateDiamond);
         removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 7), Item.legsDiamond);
         removeCrucibleRecipe(crucible, new ItemStack(NMItems.refinedDiamondIngot, 4), Item.bootsDiamond);
-        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 2), Item.helmetDiamond);
-        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 4), Item.plateDiamond);
-        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 3), Item.legsDiamond);
-        addCrucibleRecovery(new ItemStack(NMItems.refinedDiamondIngot, 2), Item.bootsDiamond);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 2), Item.helmetDiamond);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 4), Item.plateDiamond);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 3), Item.legsDiamond);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 2), Item.bootsDiamond);
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack[]{new ItemStack(NMItems.bloodOrb, 4), new ItemStack(BTWItems.steelNugget, 18)}, new ItemStack[]{new ItemStack(NMBlocks.steelLocker)});
 
@@ -1273,7 +1398,7 @@ public abstract class NMInitializer implements AchievementExt {
         // Returning both materials lets the armor be recrafted and melted for a net iron gain.
         addArmorSetRecovery(NMItems.reinforcedIronIngot, 1, 3, 2, 1,
                 NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate, NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots);
-        addScaledDualArmorSetRecovery(NMItems.refinedDiamondIngot, NMItems.nickelIngot,
+        addScaledDualArmorSetRecovery(BTWItems.diamondIngot, NMItems.nickelIngot,
                 NMItems.heatResistantHelmet, NMItems.heatResistantChestplate, NMItems.heatResistantLeggings, NMItems.heatResistantBoots);
         addScaledDualArmorSetRecovery(NMItems.tungstenIngot, NMItems.coresteelIngot,
                 NMItems.coresteelHelmet, NMItems.coresteelChestplate, NMItems.coresteelLeggings, NMItems.coresteelBoots);
@@ -1298,10 +1423,10 @@ public abstract class NMInitializer implements AchievementExt {
         addDarkArmorRecovery(NMItems.darkChestplate, 1, 3);
         addDarkArmorRecovery(NMItems.darkLeggings, 1, 2);
         addDarkArmorRecovery(NMItems.darkBoots, 1, 1);
-        addArmorRecovery(NMItems.sunHelmet, new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.deadzoneAlloyIngot), new ItemStack(NMItems.blackglassIngot));
-        addArmorRecovery(NMItems.sunChestplate, new ItemStack(NMItems.refinedDiamondIngot, 4), new ItemStack(NMItems.nickelIngot, 3), new ItemStack(NMItems.deadzoneAlloyIngot, 3), new ItemStack(NMItems.verdantIngot));
-        addArmorRecovery(NMItems.sunLeggings, new ItemStack(NMItems.refinedDiamondIngot, 3), new ItemStack(NMItems.nickelIngot, 2), new ItemStack(NMItems.deadzoneAlloyIngot, 2), new ItemStack(NMItems.quartzglassIngot));
-        addArmorRecovery(NMItems.sunBoots, new ItemStack(NMItems.refinedDiamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.coresteelIngot), new ItemStack(NMItems.tungstenIngot));
+        addArmorRecovery(NMItems.sunHelmet, new ItemStack(BTWItems.diamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.deadzoneAlloyIngot), new ItemStack(NMItems.blackglassIngot));
+        addArmorRecovery(NMItems.sunChestplate, new ItemStack(BTWItems.diamondIngot, 4), new ItemStack(NMItems.nickelIngot, 3), new ItemStack(NMItems.deadzoneAlloyIngot, 3), new ItemStack(NMItems.verdantIngot));
+        addArmorRecovery(NMItems.sunLeggings, new ItemStack(BTWItems.diamondIngot, 3), new ItemStack(NMItems.nickelIngot, 2), new ItemStack(NMItems.deadzoneAlloyIngot, 2), new ItemStack(NMItems.quartzglassIngot));
+        addArmorRecovery(NMItems.sunBoots, new ItemStack(BTWItems.diamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.coresteelIngot), new ItemStack(NMItems.tungstenIngot));
         addArmorRecovery(NMItems.endstoneHelmet, new ItemStack(NMItems.endstoneIngot), new ItemStack(NMItems.blackglassIngot), new ItemStack(NMItems.darkIngot));
         addArmorRecovery(NMItems.endstoneChest, new ItemStack(NMItems.endstoneIngot, 3), new ItemStack(NMItems.blackglassIngot, 2), new ItemStack(NMItems.darkIngot));
         addArmorRecovery(NMItems.endstoneLeggings, new ItemStack(NMItems.endstoneIngot, 2), new ItemStack(NMItems.blackglassIngot, 2), new ItemStack(NMItems.darkIngot));
@@ -1405,7 +1530,51 @@ public abstract class NMInitializer implements AchievementExt {
         // dung tanning bath.
         CauldronCraftingManager cauldron = CauldronCraftingManager.getInstance();
         CauldronStokedCraftingManager cauldronStoked = CauldronStokedCraftingManager.getInstance();
+
+
+        // replacing some BTW recipes
+        killCauldronRecipe(BTWItems.element);
+        cauldron.addRecipe(new ItemStack(BTWItems.element), new TagOrStack[]{
+                new ItemStack(BTWItems.hellfireDust, 4),
+                new ItemStack(NMItems.bloodOrb, 4),
+                TagInstance.of(BTWTags.strings, 3),
+                new ItemStack(Item.blazePowder, 2),
+                new ItemStack(NMItems.signalAlloyPlate, 2),
+                new ItemStack(NMItems.nickelMachinePart)
+        });
+
+        killCauldronRecipe(BTWItems.concentratedHellfire);
+
+        cauldron.addRecipe(new ItemStack(BTWItems.concentratedHellfire), new TagOrStack[]{
+                new ItemStack(BTWItems.hellfireDust, 16),
+                new ItemStack(BTWItems.netherSludge, 4),
+                new ItemStack(Item.blazePowder),
+                new ItemStack(BTWItems.netherBrick)
+        });
+
+        killCauldronRecipe(Item.gunpowder);
+
+        cauldron.addRecipe(new ItemStack(Item.gunpowder), new TagOrStack[]{
+                new ItemStack(BTWItems.brimstone, 4),
+                new ItemStack(BTWItems.nitre, 4),
+                new ItemStack(BTWItems.hellfireDust, 2),
+                new ItemStack(BTWItems.coalDust, 2)
+        });
+
+        killCauldronRecipe(BTWItems.blastingOil); // added as a cistern recipe
+        killCauldronRecipe(BTWItems.fuse);
+        cauldron.addRecipe(new ItemStack(BTWItems.fuse), new TagOrStack[]{
+                new ItemStack(BTWItems.nitre, 8),
+                new ItemStack(Item.gunpowder, 4),
+                TagInstance.of(BTWTags.strings)
+        });
+
+        killCauldronRecipe(BTWItems.nethercoal); // added to cistern
+
+
+
         removeLegacyGlueRecipes(cauldronStoked);
+
         int[] barkCounts = {8, 5, 3, 2};
         Tag[] barkTags = {
                 BTWTags.lowTanninBarks,
@@ -1479,6 +1648,12 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(Item.ingotIron), new ItemStack(NMItems.lithiumStabilizer), new ItemStack(NMItems.lithiumStabilizer)},
                 CisternTileEntity.FLUID_BRINE, 2, 24, 700,
                 new ItemStack[]{new ItemStack(NMItems.lithiumTreatedIronBlank, 2)})
+                .setConsumesFluid());
+
+        manager.addRecipe(new CisternRecipe(
+                    new ItemStack[]{new ItemStack(BTWItems.tallow, 4), new ItemStack(BTWItems.hellfireDust, 3), new ItemStack(NMItems.lithiumStabilizer, 2), new ItemStack(BTWItems.brimstone)},
+                CisternTileEntity.FLUID_ACIDIC_WASH, 3, 30, 900,
+                new ItemStack[]{new ItemStack(BTWItems.blastingOil)})
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
@@ -2090,6 +2265,7 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('H'), BTWItems.haft});
 
         int recipeIndex = soulforge.getRecipeList().size();
+        killSoulforgeRecipe(Item.eyeOfEnder);
         RecipeManager.addShapelessSoulforgeRecipe(
                 new ItemStack(Item.eyeOfEnder),
                 new Object[]{
@@ -3409,11 +3585,26 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.saw), new Object[]{"YYY", "XZX", "#X#", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), Item.ingotIron, Character.valueOf('Z'), BTWItems.belt});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.saw), new Object[]{"III", "GBG", "SPS", Character.valueOf('I'), NMTags.ironTungstenIngots, Character.valueOf('G'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('B'), BTWItems.belt, Character.valueOf('S'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('P'), NMItems.nickelMachinePart}),
-                NMSkillNodes.BRING_WOODEN_GEAR_12, NMSkillNodes.BRING_LEATHER_16);
+                NMSkillNodes.BRING_WOODEN_GEAR_12, NMSkillNodes.BRING_LEATHER_16,
+                NMSkillNodes.BRING_SAWDUST_16, NMSkillNodes.BRING_LITHIUM_SALT_16,
+                NMSkillNodes.BRING_WINDMILL_4, NMSkillNodes.BRING_TANNED_LEATHER_16
+        );
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.gearBox), new Object[]{"#X#", "XYX", "#X#", Character.valueOf('#'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), BTWBlocks.axle});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.gearBox), new Object[]{"SGS", "GAG", "SGS", Character.valueOf('S'), BTWTags.highEfficiencyWoodSidings, Character.valueOf('G'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('A'), BTWBlocks.axle}),
                 NMSkillNodes.BRING_WOODEN_GEAR_12);
+
+        killCraftingRecipe(BTWItems.woodenBlade);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(
+                new ItemStack(BTWItems.woodenBlade),
+                        new Object[]{
+                                "BN ",
+                                "BGB",
+                                "BN ",
+                                Character.valueOf('B'), BTWTags.highEfficiencyWoodSidings,
+                                Character.valueOf('G'), BTWItems.glue,
+                                Character.valueOf('N'), NMItems.nickelBinding}),
+                NMSkillNodes.BRING_WINDMILL_BLADE_8, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2, NMSkillNodes.BRING_REDSTONE_256);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.waterWheel), new Object[]{"###", "# #", "###", Character.valueOf('#'), BTWItems.woodenBlade});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWItems.waterWheel), new Object[]{"BPB", "B B", "BNB", Character.valueOf('B'), BTWItems.woodenBlade, Character.valueOf('P'), NMItems.crystalPrecisionGear, Character.valueOf('N'), NMItems.nickelMachinePart}),
@@ -3596,15 +3787,15 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.dynamite, 2), new Object[]{"PF", "PN", "PS", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('N'), BTWItems.blastingOil, Character.valueOf('S'), BTWTags.sawdusts});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWItems.dynamite), new Object[]{"PFC", "PON", "PSL", Character.valueOf('P'), Item.paper, Character.valueOf('F'), BTWItems.fuse, Character.valueOf('C'), NMItems.crystalPolishedShard, Character.valueOf('O'), BTWItems.blastingOil, Character.valueOf('N'), BTWItems.nitre, Character.valueOf('S'), BTWTags.sawdusts, Character.valueOf('L'), NMItems.lithiumSalt}),
-                NMSkillNodes.BRING_GUNPOWDER_256, NMSkillNodes.BRING_GUNPOWDER_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+                NMSkillNodes.BRING_GUNPOWDER_256, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt), new Object[]{"GFG", "GBG", "GGG", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('F'), BTWItems.fuse});
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.tnt), new Object[]{"GFG", "GBG", "NGN", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('N'), BTWItems.nitre, Character.valueOf('F'), BTWItems.fuse});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Block.tnt), new Object[]{"GFG", "DBD", "NGN", Character.valueOf('B'), new ItemStack(BTWBlocks.aestheticOpaque, 1, 11), Character.valueOf('G'), Item.gunpowder, Character.valueOf('D'), BTWItems.dynamite, Character.valueOf('N'), BTWItems.nitre, Character.valueOf('F'), BTWItems.fuse}),
-                NMSkillNodes.BRING_GUNPOWDER_256, NMSkillNodes.BRING_GUNPOWDER_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+                NMSkillNodes.BRING_GUNPOWDER_256, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.infernalEnchanter), new Object[]{"CBC", "SES", "SSS", Character.valueOf('S'), BTWItems.soulforgedSteelIngot, Character.valueOf('C'), new ItemStack(BTWItems.candle, 1, 0), Character.valueOf('E'), Block.enchantmentTable, Character.valueOf('B'), Item.bone});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.infernalEnchanter), new Object[]{"CAC", "SES", "NPN", Character.valueOf('C'), NMItems.crystalLens, Character.valueOf('A'), NMItems.azureCeramicPlate, Character.valueOf('S'), BTWItems.soulforgedSteelIngot, Character.valueOf('E'), Block.enchantmentTable, Character.valueOf('N'), NMItems.deadzoneShard, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.infernalEnchanter), new Object[]{"CAC", "SES", "NPN", Character.valueOf('C'), BTWItems.redstoneEye, Character.valueOf('A'), NMItems.azureCeramicPlate, Character.valueOf('S'), BTWItems.soulforgedSteelIngot, Character.valueOf('E'), Block.enchantmentTable, Character.valueOf('N'), NMItems.deadzoneShard, Character.valueOf('P'), NMItems.crystalPrecisionGear}),
                 NMSkillNodes.BRING_ANCIENT_MANUSCRIPT_16, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8, NMSkillNodes.BRING_DEADZONE_SHARD_64, NMSkillNodes.BRING_ANCIENT_MANUSCRIPT_10);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetLeather), new Object[]{"###", "# #", Character.valueOf('#'), BTWTags.rawLeathers});
@@ -3664,6 +3855,8 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_WOODEN_CLUB_4,
                 NMSkillNodes.BRING_STONE_STICK_64,
                 NMSkillNodes.KILL_MOB_250);
+
+        killCraftingRecipe(Item.boat);
 
         RecipeManager.addRecipe(new ItemStack(Item.boat, 1), new Object[]{"#P#", "###", "S S",
                 Character.valueOf('P'), Item.shovelWood,
@@ -3770,7 +3963,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"XXX", "XYX", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{
                         "IXI", "IYI","N N",
-                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
+                        Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('Y'), NMItems.crystalLens}),
@@ -3780,7 +3973,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{
                         "NLN", "IXI", "III",
                         Character.valueOf('N'), NMItems.nickelBinding,
-                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
+                        Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4);
@@ -3788,7 +3981,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsDiamond), new Object[]{"XXX", "Y Y", "Y Y", Character.valueOf('X'), BTWItems.diamondIngot, Character.valueOf('Y'), BTWItems.diamondArmorPlate});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{
                         "IXI", "NLN", "ILI",
-                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
+                        Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('X'), BTWItems.diamondArmorPlate,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
@@ -3797,7 +3990,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), BTWItems.diamondIngot});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.bootsDiamond), new Object[]{
                         "I I", "ILI", "N N",
-                        Character.valueOf('I'), NMItems.refinedDiamondIngot,
+                        Character.valueOf('I'), BTWItems.diamondIngot,
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4);
@@ -3852,13 +4045,14 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.hopper), new Object[]{"# #", "XYX", " Z ", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), BTWTags.woodenPressurePlates, Character.valueOf('Z'), BTWTags.woodenCorners});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.hopper), new Object[]{
-                        "S S", "PNP", " C ",
+                        "SGS", "PNP", "MCM",
                         Character.valueOf('S'), BTWTags.woodenSidings,
                         Character.valueOf('P'), NMItems.nickelPlate,
+                        Character.valueOf('G'), BTWItems.gear,
+                        Character.valueOf('M'), BTWTags.highEfficiencyWoodMouldings,
                         Character.valueOf('N'), NMItems.nickelMachinePart,
                         Character.valueOf('C'), NMItems.crystalLens}),
                 NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2, NMSkillNodes.BRING_REDSTONE_256, NMSkillNodes.BRING_GLASS_64);
-
 
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.hopper), new Object[]{
                         "S S", "PNP", " C ",
@@ -3888,6 +4082,13 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('L'), NMItems.lithiumHeatCompound,
                         Character.valueOf('P'), NMItems.crystalPrecisionGear}),
                 NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2, NMSkillNodes.BRING_REDSTONE_256, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR);
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.pistonShovel), new Object[]{
+                "#  ", "## ", "###", Character.valueOf('#'), Item.ingotIron});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWBlocks.pistonShovel), new Object[]{
+                        "#  ", "## ", "###", Character.valueOf('#'), NMTags.reinforcedIronIngots}),
+                NMSkillNodes.BRING_IRON_SHOVEL, NMSkillNodes.BRING_CARBON_RICH_IRON_MIX_16,
+                NMSkillNodes.BRING_REINFORCED_IRON_INGOT_32);
 
         // nickel and lithium are consumed by the machines that create and survive stoked heat.
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.bellows), new Object[]{"###", "XXX", "YZY", Character.valueOf('#'), BTWTags.woodenSidings, Character.valueOf('X'), BTWTags.tannedLeathers, Character.valueOf('Y'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Z'), BTWItems.belt});
@@ -4762,6 +4963,11 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addPistonPackingRecipes() {
+        killPistonPackingRecipe(BTWBlocks.aestheticEarth);
+        RecipeManager.addPistonPackingRecipe(BTWBlocks.aestheticEarth, 6, new ItemStack(BTWBlocks.looseDirt, 4));
+        killPistonPackingRecipe(Block.sandStone);
+        RecipeManager.addPistonPackingRecipe(Block.sandStone, new ItemStack(Block.sand, 4));
+
         RecipeManager.addPistonPackingRecipe(NMBlocks.blockBloodIngot, new ItemStack(NMItems.bloodIngot, 9));
         RecipeManager.addPistonPackingRecipe(NMBlocks.blockRefinedDiamondIngot, new ItemStack(NMItems.refinedDiamondIngot, 9));
 

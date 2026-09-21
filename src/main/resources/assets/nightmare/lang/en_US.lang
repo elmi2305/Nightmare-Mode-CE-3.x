@@ -85,7 +85,7 @@ item.nmSandfish.name=Sandfish
 item.nmTilapia.name=Tilapia
 item.nmDuneKoi.name=Dune Koi
 item.nmFishFlesh.name=Fish Flesh
-item.nmDebonedRawFish.name=Deboned Raw Fish
+item.ifhyDebonedRawFish.name=Deboned Raw Fish
 
 # IFHY
 item.bonusChestLoot.name=Garbage
@@ -583,6 +583,8 @@ achievement.nm.killRunningAnimal.desc=Kill a running Animal with your Club
 
 achievement.btw.craft_hamper=Hampter
 achievement.btw.craft_hamper.desc=Craft a Hamper
+
+achievement.btw.craft_soul_urn.desc=Craft a Soul Urn in a stoked crucible
 
 achievement.nm.ironNeedles=Turbo Granny
 achievement.nm.ironNeedles.desc=Craft upgraded Knitting Needles!

@@ -41,10 +41,10 @@ public class NMAchievements {
     private static Achievement<ItemStack> journalAchievement(int index) {
         return AchievementProvider.getBuilder(AchievementEvents.ItemEvent.class)
                 .name(loc("journeyJournal" + (index + 1)))
-                .icon(NMItems.journeyJournals[index]).displayLocation(20 + index, -8)
+                .icon(NMItems.journeyJournals[index]).displayLocation(10 + index, -5)
                 .triggerCondition(stack -> stack.itemID == NMItems.journeyJournals[index].itemID)
                 .build()
-//                .setSecret()
+                .setSecret()
                 .registerAchievement(TAB_GETTING_STARTED);
     }
 

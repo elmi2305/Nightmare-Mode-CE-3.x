@@ -1215,7 +1215,7 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), NMItems.refinedDiamondIngot});
 
         // road
-        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockRoad, 2), new Object[]{"XY", "YX", 'X', Block.gravel, 'Y', BTWBlocks.looseCobblestone});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.blockRoad, 2), new Object[]{"XYX", "YXY", "XYX", 'X', Block.gravel, 'Y', BTWBlocks.looseCobblestone});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.blockAsphalt, 8), new Object[]{"XXX", "XYX", "XXX", 'X', NMBlocks.blockRoad, 'Y', BTWItems.soulUrn});
         // ladders
         RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), Item.silk});
