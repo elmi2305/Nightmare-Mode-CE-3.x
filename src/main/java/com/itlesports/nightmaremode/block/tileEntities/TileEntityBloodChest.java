@@ -16,7 +16,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
     private int ticksSinceSync;
     private int cachedChestType;
     private String customName;
-    private int storageColor = StorageColor.BROWN;
+    private int storageColor = StorageColor.RED;
 
     @Override
     public int nm$getStorageColor() {
@@ -107,7 +107,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
             this.customName = par1NBTTagCompound.getString("CustomName");
         }
         storageColor = par1NBTTagCompound.hasKey("nmStorageColor")
-                ? par1NBTTagCompound.getByte("nmStorageColor") & 15 : StorageColor.BROWN;
+                ? par1NBTTagCompound.getByte("nmStorageColor") & 15 : StorageColor.RED;
 
         for(int var3 = 0; var3 < var2.tagCount(); ++var3) {
             NBTTagCompound var4 = (NBTTagCompound)var2.tagAt(var3);
@@ -136,7 +136,7 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
         if (this.isInvNameLocalized()) {
             par1NBTTagCompound.setString("CustomName", this.customName);
         }
-        if (storageColor != StorageColor.BROWN) {
+        if (storageColor != StorageColor.RED) {
             par1NBTTagCompound.setByte("nmStorageColor", (byte) storageColor);
         }
 

@@ -36,7 +36,7 @@ public class TileEntityBloodChestRenderer extends TileEntitySpecialRenderer {
 
         GL11.glPushMatrix();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glColor4f(1f, 1f, 1f, 1f);
+        StorageColor.applyTint(chest.nm$getStorageColor(), StorageColor.RED);
 
         // Position and flip
         GL11.glTranslatef((float) x, (float) y + 1.0f, (float) z + 1.0f);
@@ -59,7 +59,11 @@ public class TileEntityBloodChestRenderer extends TileEntitySpecialRenderer {
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
         chestModel.chestLid.rotateAngleX = -(lidProgress * (float) Math.PI / 2f);
-        chestModel.renderAll();
+        chestModel.chestLid.render(0.0625F);
+        chestModel.chestBelow.render(0.0625F);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
+        chestModel.chestKnob.rotateAngleX = chestModel.chestLid.rotateAngleX;
+        chestModel.chestKnob.render(0.0625F);
 
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         GL11.glPopMatrix();

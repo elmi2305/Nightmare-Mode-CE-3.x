@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import net.minecraft.src.ModelChest;
 import net.minecraft.src.TileEntityChest;
 import net.minecraft.src.TileEntityChestRenderer;
 import net.minecraft.src.ResourceLocation;
@@ -29,12 +30,18 @@ public class TileEntityChestRendererMixin {
         int color = StorageColor.getRenderColor(((IDyeableStorage) chest).nm$getStorageColor());
         boolean doubleChest = chest.adjacentChestXPos != null || chest.adjacentChestZPosition != null;
         ((TileEntitySpecialRendererAccessor) renderer).nightmareMode$bindTexture(
-                StorageColor.getChestTexture(chest.getChestType(), doubleChest, color, original));
+                StorageColor.getTintableChestTexture(chest.getChestType(), doubleChest, color, original));
     }
 
-    @Inject(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ModelChest;renderAll()V"))
-    private void clearChestTint(TileEntityChest chest, double x, double y, double z, float partialTicks, CallbackInfo ci) {
+    @Redirect(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ModelChest;renderAll()V"))
+    private void renderTintedChest(ModelChest model) {
+        StorageColor.applyTint(StorageColor.getRenderColor(((IDyeableStorage) this.nightmareMode$renderingChest).nm$getStorageColor()), StorageColor.BROWN);
+        model.chestLid.render(0.0625F);
+        model.chestBelow.render(0.0625F);
+
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        model.chestKnob.rotateAngleX = model.chestLid.rotateAngleX;
+        model.chestKnob.render(0.0625F);
     }
 
     @Inject(method = "renderTileEntityChestAt", at = @At("TAIL"))

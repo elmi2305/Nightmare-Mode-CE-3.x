@@ -21,7 +21,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
     private int cachedChestType = -1;
     private String customName;
     private ItemStack[] chestContents = new ItemStack[SLOT_TOTAL];
-    private int storageColor = StorageColor.BROWN;
+    private int storageColor = StorageColor.GRAY;
 
     @Override
     public int nm$getStorageColor() {
@@ -106,7 +106,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
         chestContents = new ItemStack[SLOT_TOTAL];
         if (nbt.hasKey("CustomName"))
             customName = nbt.getString("CustomName");
-        storageColor = nbt.hasKey("nmStorageColor") ? nbt.getByte("nmStorageColor") & 15 : StorageColor.BROWN;
+        storageColor = nbt.hasKey("nmStorageColor") ? nbt.getByte("nmStorageColor") & 15 : StorageColor.GRAY;
 
         NBTTagList list = nbt.getTagList("Items");
         for (int i=0;i<list.tagCount();i++) {
@@ -132,7 +132,7 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
         }
         nbt.setTag("Items", list);
         if (isInvNameLocalized()) nbt.setString("CustomName", customName);
-        if (storageColor != StorageColor.BROWN) nbt.setByte("nmStorageColor", (byte) storageColor);
+        if (storageColor != StorageColor.GRAY) nbt.setByte("nmStorageColor", (byte) storageColor);
     }
 
     @Override

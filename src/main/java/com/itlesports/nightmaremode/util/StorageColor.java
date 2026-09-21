@@ -13,17 +13,21 @@ import net.minecraft.src.World;
 
 public final class StorageColor {
     public static final int BROWN = 3;
+    public static final int RED = 1;
+    public static final int GRAY = 8;
 
-    private static final String[] COLOR_NAMES = {
-            "black", "red", "green", "brown", "blue", "purple", "cyan", "light_gray",
-            "gray", "pink", "lime", "yellow", "light_blue", "magenta", "orange", "white"
+    private static final float[][] TINTS = {
+            {0.12F, 0.12F, 0.12F}, {0.66F, 0.20F, 0.20F}, {0.25F, 0.37F, 0.12F}, {0.46F, 0.32F, 0.20F},
+            {0.22F, 0.32F, 0.70F}, {0.52F, 0.25F, 0.72F}, {0.27F, 0.55F, 0.62F}, {0.62F, 0.62F, 0.62F},
+            {0.30F, 0.30F, 0.30F}, {0.95F, 0.52F, 0.66F}, {0.50F, 0.80F, 0.12F}, {0.90F, 0.90F, 0.12F},
+            {0.34F, 0.62F, 0.80F}, {0.72F, 0.32F, 0.86F}, {0.90F, 0.50F, 0.12F}, {1.00F, 1.00F, 1.00F}
     };
-    private static final ResourceLocation[] NORMAL_CHEST_TEXTURES = createTextures("normal", false);
-    private static final ResourceLocation[] NORMAL_DOUBLE_CHEST_TEXTURES = createTextures("normal", true);
-    private static final ResourceLocation[] TRAPPED_CHEST_TEXTURES = createTextures("trapped", false);
-    private static final ResourceLocation[] TRAPPED_DOUBLE_CHEST_TEXTURES = createTextures("trapped", true);
-    private static final ResourceLocation[] BLOOD_CHEST_TEXTURES = createTextures("blood", false);
-    private static final ResourceLocation[] STEEL_LOCKER_TEXTURES = createTextures("steel_locker", false);
+    private static final ResourceLocation NORMAL_CHEST_TEXTURE = texture("normal_tintable");
+    private static final ResourceLocation NORMAL_DOUBLE_CHEST_TEXTURE = texture("normal_tintable_double");
+    private static final ResourceLocation TRAPPED_CHEST_TEXTURE = texture("trapped_tintable");
+    private static final ResourceLocation TRAPPED_DOUBLE_CHEST_TEXTURE = texture("trapped_tintable_double");
+    private static final ResourceLocation BLOOD_CHEST_TEXTURE = texture("blood_tintable");
+    private static final ResourceLocation STEEL_LOCKER_TEXTURE = texture("steel_locker_tintable");
     private static int renderColorOverride = -1;
 
     private StorageColor() {}
@@ -75,23 +79,22 @@ public final class StorageColor {
         }
     }
 
-    public static ResourceLocation getChestTexture(int chestType, boolean doubleChest, int color, ResourceLocation fallback) {
-        int index = normalize(color);
-        if (index == BROWN) {
+    public static ResourceLocation getTintableChestTexture(int chestType, boolean doubleChest, int color, ResourceLocation fallback) {
+        if (normalize(color) == BROWN) {
             return fallback;
         }
         if (chestType == 1) {
-            return (doubleChest ? TRAPPED_DOUBLE_CHEST_TEXTURES : TRAPPED_CHEST_TEXTURES)[index];
+            return doubleChest ? TRAPPED_DOUBLE_CHEST_TEXTURE : TRAPPED_CHEST_TEXTURE;
         }
-        return (doubleChest ? NORMAL_DOUBLE_CHEST_TEXTURES : NORMAL_CHEST_TEXTURES)[index];
+        return doubleChest ? NORMAL_DOUBLE_CHEST_TEXTURE : NORMAL_CHEST_TEXTURE;
     }
 
     public static ResourceLocation getBloodChestTexture(int color, ResourceLocation fallback) {
-        return textureOrFallback(BLOOD_CHEST_TEXTURES, color, fallback);
+        return normalize(color) == RED ? fallback : BLOOD_CHEST_TEXTURE;
     }
 
     public static ResourceLocation getSteelLockerTexture(int color, ResourceLocation fallback) {
-        return textureOrFallback(STEEL_LOCKER_TEXTURES, color, fallback);
+        return normalize(color) == GRAY ? fallback : STEEL_LOCKER_TEXTURE;
     }
 
     public static void setRenderColorOverride(int color) {
@@ -103,24 +106,24 @@ public final class StorageColor {
     }
 
     public static int getRenderColor(int storageColor) {
-        return renderColorOverride >= 0 ? renderColorOverride : storageColor;
+        return normalize(renderColorOverride >= 0 ? renderColorOverride : storageColor);
+    }
+
+    public static void applyTint(int color, int defaultColor) {
+        int normalized = normalize(color);
+        if (normalized == defaultColor) {
+            org.lwjgl.opengl.GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            return;
+        }
+        float[] tint = TINTS[normalized];
+        org.lwjgl.opengl.GL11.glColor4f(tint[0], tint[1], tint[2], 1.0F);
     }
 
     private static int normalize(int color) {
-        return color >= 0 && color < COLOR_NAMES.length ? color : BROWN;
+        return color >= 0 && color < TINTS.length ? color : BROWN;
     }
 
-    private static ResourceLocation textureOrFallback(ResourceLocation[] textures, int color, ResourceLocation fallback) {
-        int index = normalize(color);
-        return index == BROWN ? fallback : textures[index];
-    }
-
-    private static ResourceLocation[] createTextures(String type, boolean doubleChest) {
-        ResourceLocation[] textures = new ResourceLocation[COLOR_NAMES.length];
-        for (int i = 0; i < textures.length; ++i) {
-            String suffix = doubleChest ? "_double" : "";
-            textures[i] = new ResourceLocation("nightmare:textures/blocks/chests/" + type + "_" + COLOR_NAMES[i] + suffix + ".png");
-        }
-        return textures;
+    private static ResourceLocation texture(String name) {
+        return new ResourceLocation("nightmare:textures/blocks/chests/" + name + ".png");
     }
 }
