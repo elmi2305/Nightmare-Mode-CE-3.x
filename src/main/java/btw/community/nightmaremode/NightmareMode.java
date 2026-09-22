@@ -78,6 +78,7 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator crystalPocketGen;
 
     // events
+    public static boolean scaryEvents = true;
     public static boolean isBloodMoon;
     public static boolean isEclipse;
     public int activeEventsInt;
@@ -232,6 +233,7 @@ public class NightmareMode extends BTWAddon {
         }
         AddonHandler.registerCommand(new WorldStateCommand(), false);
         AddonHandler.registerCommand(new EventCommand(), false);
+        AddonHandler.registerCommand(new ScaryCommand(), false);
         AddonHandler.registerCommand(new DayCommand(), false);
         AddonHandler.registerCommand(new NightCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
@@ -271,6 +273,7 @@ public class NightmareMode extends BTWAddon {
         PollutionVisualNet.register(this);
         StorageColorNet.register(this);
         com.itlesports.nightmaremode.network.SkylightSync.register(this);
+        com.itlesports.nightmaremode.network.ScaryEventNet.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

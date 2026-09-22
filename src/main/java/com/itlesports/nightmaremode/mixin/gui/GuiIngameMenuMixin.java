@@ -14,6 +14,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiIngameMenu.class)
 public class GuiIngameMenuMixin extends GuiScreen {
+    @Override
+    public void onGuiClosed() {
+        com.itlesports.nightmaremode.client.ScaryEvents.closeMenu((GuiIngameMenu)(Object)this);
+        super.onGuiClosed();
+    }
+
+    @Override
+    protected void mouseClicked(int x, int y, int button) {
+        GuiButton exit = button == 0 ? com.itlesports.nightmaremode.client.ScaryEvents.clickedFake(x, y) : null;
+        if (exit != null) {
+            // dispatch once through the real quit action, even where several fake buttons overlap.
+            this.actionPerformed(exit);
+            return;
+        }
+        super.mouseClicked(x, y, button);
+    }
+
+    @Inject(method = "drawScreen", at = @At("HEAD"))
+    private void validateScaryMenu(int x, int y, float partialTicks, CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.ScaryEvents.active();
+    }
+
+    @Inject(method = "drawScreen", at = @At("TAIL"))
+    private void drawScaryMenu(int x, int y, float partialTicks, CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.ScaryEvents.renderMenu(x, y);
+    }
     @Inject(method = "updateScreen", at = @At("HEAD"))
     private void setWhetherCanLeave(CallbackInfo ci){
         ((GuiButton)this.buttonList.get(0)).enabled = NightmareMode.getInstance().getCanLeaveGame();
@@ -21,6 +47,7 @@ public class GuiIngameMenuMixin extends GuiScreen {
     @Inject(method = "initGui", at = @At("TAIL"))
     private void setWhetherCanLeaveOnFirstTick(CallbackInfo ci){
         ((GuiButton)this.buttonList.get(0)).enabled = NightmareMode.getInstance().getCanLeaveGame();
+        com.itlesports.nightmaremode.client.ScaryEvents.openMenu((GuiIngameMenu)(Object)this, this.buttonList);
     }
     @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;", ordinal = 0))
     private String manageTextOnCannotEscapeClient(String string){

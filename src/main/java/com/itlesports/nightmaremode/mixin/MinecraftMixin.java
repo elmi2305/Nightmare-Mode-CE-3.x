@@ -27,6 +27,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
+    @Inject(method = "runTick", at = @At("TAIL"))
+    private void tickScaryEvents(CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.ScaryEvents.tick();
+    }
+
+    @Inject(method = "displayGuiScreen", at = @At("HEAD"))
+    private void clearScaryScreenState(GuiScreen next, CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.ScaryEvents.screenChanging(next);
+    }
+
+    @Inject(method = "loadWorld(Lnet/minecraft/src/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
+    private void unloadScaryEvents(WorldClient next, String message, CallbackInfo ci) {
+        if (next == null) com.itlesports.nightmaremode.client.ScaryEvents.unload();
+        else com.itlesports.nightmaremode.client.ScaryEvents.clear();
+    }
+
+    @Inject(method = "shutdownMinecraftApplet", at = @At("HEAD"))
+    private void shutdownScaryEvents(CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.ScaryEvents.unload();
+    }
     @Shadow public GameSettings gameSettings;
     @Shadow public GuiScreen currentScreen;
     @Shadow public EntityRenderer entityRenderer;

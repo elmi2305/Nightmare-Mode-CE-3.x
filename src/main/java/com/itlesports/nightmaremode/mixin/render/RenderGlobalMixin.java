@@ -2,6 +2,9 @@ package com.itlesports.nightmaremode.mixin.render;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.client.ScaryEvents;
+import com.itlesports.nightmaremode.client.ScaryRenderer;
+import com.itlesports.nightmaremode.network.ScaryEventNet;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -18,6 +21,66 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderGlobal.class)
 public abstract class RenderGlobalMixin {
+    @Unique private SkyboxObject[] scaryEyes;
+    @Unique private boolean scarySkyVisible;
+
+    @Inject(method = "renderEntities", at = @At("TAIL"))
+    private void renderScaryFigure(Vec3 cameraPosition, ICamera camera, float partialTicks, CallbackInfo ci) {
+        ScaryRenderer.figure(partialTicks);
+    }
+
+    @Inject(method = {"renderClouds", "renderCloudsFancy"}, at = @At("HEAD"), cancellable = true)
+    private void hideCloudsForScarySky(float partialTicks, CallbackInfo ci) {
+        if (ScaryEvents.skyActive()) ci.cancel();
+    }
+
+    @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
+    private void renderScarySky(float partialTicks, CallbackInfo ci) {
+        if (!ScaryEvents.skyActive()) {
+            scarySkyVisible = false;
+            scaryEyes = null;
+            return;
+        }
+        if (!scarySkyVisible) {
+            scaryEyes = new SkyboxObject[EYES.length];
+            for (int i = 0; i < EYES.length; i++) {
+                scaryEyes[i] = new SkyboxObject(EYES[i].yaw, EYES[i].pitch);
+                scaryEyes[i].state = SkyboxObject.EyeState.OPEN;
+            }
+            scarySkyVisible = true;
+        }
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glPushMatrix();
+        try {
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_FOG);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glDepthMask(false);
+            GL11.glColor4f(0, 0, 0, 1);
+            for (int face = 0; face < 6; face++) {
+                GL11.glPushMatrix();
+                if (face < 4) GL11.glRotatef(face * 90, 0, 1, 0);
+                else GL11.glRotatef(face == 4 ? 90 : -90, 1, 0, 0);
+                Tessellator t = Tessellator.instance;
+                t.startDrawingQuads();
+                t.addVertex(-100, -100, -100);
+                t.addVertex(100, -100, -100);
+                t.addVertex(100, 100, -100);
+                t.addVertex(-100, 100, -100);
+                t.draw();
+                GL11.glPopMatrix();
+            }
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            renderSkyboxObjects(scaryEyes, 1f);
+        } finally {
+            GL11.glPopMatrix();
+            GL11.glPopAttrib();
+        }
+        ci.cancel();
+    }
     @Shadow private Minecraft mc;
     @Shadow private int glSkyList;
     @Shadow @Final private TextureManager renderEngine;
@@ -1034,6 +1097,11 @@ public abstract class RenderGlobalMixin {
 
     @Unique
     private void renderSkyboxObjects() {
+        renderSkyboxObjects(EYES, this.horrorSkyIntensity);
+    }
+
+    @Unique
+    private void renderSkyboxObjects(SkyboxObject[] eyes, float intensity) {
         if (this.mc.renderEngine == null) return;
 
         try {
@@ -1046,7 +1114,7 @@ public abstract class RenderGlobalMixin {
         Vec3 lookVec = player.getLookVec();
 
         final float eyeRadius = 100.0f;
-        final float eyeSize   = 8.0f + 4.0f * this.horrorSkyIntensity;
+        final float eyeSize   = 8.0f + 4.0f * intensity;
         final float pulse     = 1.0f + 0.03f * (float)Math.sin(System.currentTimeMillis() * 0.003);
 
         Tessellator tess = Tessellator.instance;
@@ -1055,7 +1123,7 @@ public abstract class RenderGlobalMixin {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDepthMask(false);
 
-        for (SkyboxObject eye : EYES) {
+        for (SkyboxObject eye : eyes) {
 
             float yawRad   = (float)Math.toRadians(eye.yaw);
             float pitchRad = (float)Math.toRadians(eye.pitch);
@@ -1140,7 +1208,7 @@ public abstract class RenderGlobalMixin {
                     brightness,
                     brightness,
                     brightness,
-                    (this.horrorSkyIntensity / 9.0F)
+                    (intensity / 9.0F)
             );
 
             // billboard quad

@@ -32,6 +32,23 @@ import static com.itlesports.nightmaremode.util.NMFields.MAX_SANITY;
 
 @Mixin(GuiIngame.class)
 public abstract class GuiIngameMixin extends Gui {
+    @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;isIntegratedServerRunning()Z"))
+    private boolean unlockSingleplayerTabList(Minecraft minecraft) {
+        return false;
+    }
+
+    @Redirect(method = "renderGameOverlay", at = @At(value = "FIELD", target = "Lnet/minecraft/src/NetClientHandler;playerInfoList:Ljava/util/List;"))
+    private List showCosmeticPlayerNames(NetClientHandler connection) {
+        return com.itlesports.nightmaremode.client.ScaryEvents.playerList(connection);
+    }
+
+    @Redirect(method = "renderGameOverlay", at = @At(value = "FIELD", target = "Lnet/minecraft/src/NetClientHandler;currentServerMaxPlayers:I"))
+    private int sizeCosmeticPlayerList(NetClientHandler connection) {
+        if (com.itlesports.nightmaremode.client.ScaryEvents.eyePanelActive()) {
+            return com.itlesports.nightmaremode.client.ScaryRenderer.EYE_PANEL_ROWS;
+        }
+        return Math.max(connection.currentServerMaxPlayers, com.itlesports.nightmaremode.client.ScaryEvents.playerList(connection).size());
+    }
     @Final @Shadow private Minecraft mc;
     @Shadow @Final private Random rand;
     @Shadow protected abstract void renderVignette(float par1, int par2, int par3);
@@ -44,6 +61,7 @@ public abstract class GuiIngameMixin extends Gui {
     @Inject(method = "renderGameOverlay", at = @At("RETURN"))
     private void renderCarcassHarvestProgress(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
         CarcassHarvestClient.renderProgress(this.mc);
+        com.itlesports.nightmaremode.client.ScaryRenderer.overlay();
     }
 
     @Inject(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
@@ -703,9 +721,12 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private static final float BLINK_OPEN_SECS  = 0.9f;
     @Unique private static final float BLINK_TOTAL_SECS = BLINK_CLOSE_SECS + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
     @Unique private void renderBlink(int width, int height) {
-        if (this.mc.getIsGamePaused()) return;
-
         int blinkLength = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getBlinkLength();
+        if (blinkLength <= 0) {
+            blinkStartNano = -1L;
+            return;
+        }
+        if (this.mc.getIsGamePaused()) return;
 
         if (blinkLength > 0 && blinkStartNano < 0) {
             blinkStartNano = System.nanoTime();

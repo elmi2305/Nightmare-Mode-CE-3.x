@@ -33,6 +33,15 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
+    @Unique private Boolean lastScaryEventsState;
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void syncScaryEventsState(CallbackInfo ci) {
+        if (lastScaryEventsState == null || lastScaryEventsState != NightmareMode.scaryEvents) {
+            com.itlesports.nightmaremode.network.ScaryEventNet.sendState((EntityPlayerMP)(Object)this);
+            lastScaryEventsState = NightmareMode.scaryEvents;
+        }
+    }
     @Shadow public MinecraftServer mcServer;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 

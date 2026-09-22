@@ -322,6 +322,7 @@
     "gui.GuiCreateWorldMixin",
     "gui.GuiGameOverMixin",
     "gui.GuiIngameMenuMixin",
+    "gui.GuiAchievementScaryMixin",
     "gui.GuiIngameMixin",
     "gui.GuiMainMenuMixin",
     "gui.GuiOptionsMixin",
