@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.util.interfaces.IFurnaceMinecartEngine;
 import com.itlesports.nightmaremode.util.interfaces.IHighSpeedMinecart;
 import com.itlesports.nightmaremode.util.interfaces.ITrainMinecart;
 import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import com.itlesports.nightmaremode.util.StorageColor;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Block;
@@ -29,11 +30,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(EntityMinecart.class)
-public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainMinecart, IDyeableStorage {
+public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainMinecart, IDyeableStorage, IColoredChest {
     @Unique
     private static final int NIGHTMARE_MODE_HIGH_SPEED_WATCHER = 23;
     @Unique
     private static final int NIGHTMARE_MODE_STORAGE_COLOR_WATCHER = 24;
+    @Unique
+    private static final int NIGHTMARE_MODE_CHEST_COLOR_WATCHER = 25;
+    @Unique
+    private static final int NIGHTMARE_MODE_HAS_CHEST_COLOR_WATCHER = 26;
 
     @Shadow
     protected Item minecartItemToDrop;
@@ -45,6 +50,10 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
     private boolean nightmareMode$highSpeed;
     @Unique
     private int nightmareMode$storageColor = StorageColor.BROWN;
+    @Unique
+    private int nightmareMode$chestColor = StorageColor.DEFAULT_CHEST_COLOR;
+    @Unique
+    private boolean nightmareMode$hasChestColor;
 
     @Unique
     private UUID nightmareMode$trainEngineId;
@@ -64,6 +73,10 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
                 .addObject(NIGHTMARE_MODE_HIGH_SPEED_WATCHER, (byte) 0);
         ((EntityMinecart) (Object) this).getDataWatcher()
                 .addObject(NIGHTMARE_MODE_STORAGE_COLOR_WATCHER, (byte) StorageColor.BROWN);
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .addObject(NIGHTMARE_MODE_CHEST_COLOR_WATCHER, StorageColor.DEFAULT_CHEST_COLOR);
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .addObject(NIGHTMARE_MODE_HAS_CHEST_COLOR_WATCHER, (byte) 0);
     }
 
     @Override
@@ -91,6 +104,28 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
         this.nightmareMode$storageColor = color & 15;
         ((EntityMinecart) (Object) this).getDataWatcher()
                 .updateObject(NIGHTMARE_MODE_STORAGE_COLOR_WATCHER, (byte) this.nightmareMode$storageColor);
+    }
+
+    @Override
+    public boolean nm$hasChestColor() {
+        return this.nightmareMode$hasChestColor || ((EntityMinecart) (Object) this).getDataWatcher()
+                .getWatchableObjectByte(NIGHTMARE_MODE_HAS_CHEST_COLOR_WATCHER) != 0;
+    }
+
+    @Override
+    public int nm$getChestColor() {
+        return ((EntityMinecart) (Object) this).getDataWatcher()
+                .getWatchableObjectInt(NIGHTMARE_MODE_CHEST_COLOR_WATCHER) & 0xFFFFFF;
+    }
+
+    @Override
+    public void nm$setChestColor(int color) {
+        this.nightmareMode$chestColor = color & 0xFFFFFF;
+        this.nightmareMode$hasChestColor = true;
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .updateObject(NIGHTMARE_MODE_CHEST_COLOR_WATCHER, this.nightmareMode$chestColor);
+        ((EntityMinecart) (Object) this).getDataWatcher()
+                .updateObject(NIGHTMARE_MODE_HAS_CHEST_COLOR_WATCHER, (byte) 1);
     }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(doubleValue = 0.4D))
@@ -122,6 +157,28 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
     private void readStorageColor(NBTTagCompound tag, CallbackInfo ci) {
         this.nm$setStorageColor(tag.hasKey("nmStorageColor")
                 ? tag.getByte("nmStorageColor") & 15 : StorageColor.BROWN);
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void writeChestColor(NBTTagCompound tag, CallbackInfo ci) {
+        if (this.nm$hasChestColor()) {
+            tag.setInteger("nmMinecartChestColor", this.nm$getChestColor());
+        }
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void readChestColor(NBTTagCompound tag, CallbackInfo ci) {
+        if (tag.hasKey("nmMinecartChestColor")) {
+            this.nm$setChestColor(tag.getInteger("nmMinecartChestColor"));
+        } else if (this.nightmareMode$storageColor != StorageColor.BROWN) {
+            this.nm$setChestColor(StorageColor.getLegacyStorageColor(this.nightmareMode$storageColor));
+        } else {
+            this.nightmareMode$hasChestColor = false;
+            ((EntityMinecart) (Object) this).getDataWatcher()
+                    .updateObject(NIGHTMARE_MODE_CHEST_COLOR_WATCHER, StorageColor.DEFAULT_CHEST_COLOR);
+            ((EntityMinecart) (Object) this).getDataWatcher()
+                    .updateObject(NIGHTMARE_MODE_HAS_CHEST_COLOR_WATCHER, (byte) 0);
+        }
     }
 
     @Inject(method = "killMinecart", at = @At("HEAD"))

@@ -2,8 +2,8 @@ package com.itlesports.nightmaremode.network;
 
 import api.BTWAddon;
 import api.network.CustomPacketHandler;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.StorageColor;
-import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.Entity;
@@ -26,6 +26,7 @@ import java.io.IOException;
 public final class StorageColorNet {
     private static final byte BLOCK = 0;
     private static final byte MINECART = 1;
+    private static final int SOAP = 16;
     public static String CHANNEL;
 
     private StorageColorNet() {}
@@ -51,7 +52,7 @@ public final class StorageColorNet {
         }
 
         ItemStack dye = minecraft.thePlayer.inventory.getCurrentItem();
-        if (dye == null || dye.itemID != Item.dyePowder.itemID) {
+        if (dye == null || (dye.itemID != Item.dyePowder.itemID && dye.itemID != BTWItems.soap.itemID)) {
             return false;
         }
 
@@ -59,10 +60,12 @@ public final class StorageColorNet {
         Packet250CustomPayload packet = null;
         if (target.typeOfHit == net.minecraft.src.EnumMovingObjectType.TILE
                 && StorageColor.isStorageBlock(minecraft.theWorld.getBlockId(target.blockX, target.blockY, target.blockZ))) {
-            packet = createBlockPacket(target.blockX, target.blockY, target.blockZ, dye.getItemDamage());
+            packet = createBlockPacket(target.blockX, target.blockY, target.blockZ,
+                    dye.itemID == BTWItems.soap.itemID ? SOAP : dye.getItemDamage());
         } else if (target.typeOfHit == net.minecraft.src.EnumMovingObjectType.ENTITY
                 && target.entityHit instanceof EntityMinecartChest) {
-            packet = createMinecartPacket(target.entityHit.entityId, dye.getItemDamage());
+            packet = createMinecartPacket(target.entityHit.entityId,
+                    dye.itemID == BTWItems.soap.itemID ? SOAP : dye.getItemDamage());
         }
 
         if (packet == null) {
@@ -77,7 +80,9 @@ public final class StorageColorNet {
             byte targetType = input.readByte();
             int color = input.readUnsignedByte();
             ItemStack dye = player.inventory.getCurrentItem();
-            if (dye == null || dye.itemID != Item.dyePowder.itemID || dye.getItemDamage() != color) {
+            boolean applyingSoap = color == SOAP;
+            if (dye == null || (applyingSoap ? dye.itemID != BTWItems.soap.itemID
+                    : dye.itemID != Item.dyePowder.itemID || dye.getItemDamage() != color)) {
                 return;
             }
 
@@ -86,13 +91,20 @@ public final class StorageColorNet {
                 int y = input.readInt();
                 int z = input.readInt();
                 if (player.getDistanceSq(x + 0.5D, y + 0.5D, z + 0.5D) <= 64.0D) {
-                    StorageColor.dyeStorage(player.worldObj, x, y, z, player, dye);
+                    if (applyingSoap) {
+                        StorageColor.washChest(player.worldObj, x, y, z, player, dye);
+                    } else {
+                        StorageColor.dyeStorage(player.worldObj, x, y, z, player, dye);
+                    }
                 }
             } else if (targetType == MINECART) {
                 Entity entity = player.worldObj.getEntityByID(input.readInt());
                 if (entity instanceof EntityMinecartChest chest && player.getDistanceSqToEntity(chest) <= 64.0D) {
-                    ((IDyeableStorage) chest).nm$setStorageColor(color);
-                    consumeDye(player, dye);
+                    if (applyingSoap) {
+                        StorageColor.washMinecart(chest, player, dye);
+                    } else {
+                        StorageColor.dyeMinecart(chest, player, dye);
+                    }
                 }
             }
         } catch (IOException ignored) {

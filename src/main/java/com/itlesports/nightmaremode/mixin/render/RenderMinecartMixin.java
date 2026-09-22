@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.interfaces.IHighSpeedMinecart;
-import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import com.itlesports.nightmaremode.util.StorageColor;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityMinecart;
@@ -39,14 +39,15 @@ public class RenderMinecartMixin {
 
     @Inject(method = "renderBlockInMinecart", at = @At("HEAD"))
     private void tintChestMinecart(EntityMinecart minecart, float partialTicks, Block block, int metadata, CallbackInfo ci) {
-        if (minecart instanceof EntityMinecartChest && minecart instanceof IDyeableStorage storage) {
-            int color = storage.nm$getStorageColor();
-            StorageColor.setRenderColorOverride(color);
+        if (minecart instanceof EntityMinecartChest && minecart instanceof IColoredChest chest
+                && chest.nm$hasChestColor()) {
+            StorageColor.setChestRenderColorOverride(chest.nm$getChestColor());
         }
     }
 
     @Inject(method = "renderBlockInMinecart", at = @At("TAIL"))
     private void resetChestMinecartTint(EntityMinecart minecart, float partialTicks, Block block, int metadata, CallbackInfo ci) {
+        StorageColor.clearChestRenderColorOverride();
         StorageColor.clearRenderColorOverride();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }

@@ -25,6 +25,7 @@ import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.QuestToolRepairRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.ChestDyeRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
@@ -3120,6 +3121,7 @@ public abstract class NMInitializer implements AchievementExt {
                 "fishing_auto_reel_upgrade", NMItems.fishingAutoReelUpgrade, "IfhyFishingAutoReel"));
         CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
                 "rare_fish_lure_upgrade", NMItems.rareFishLureUpgrade, "IfhyRareFishLure"));
+        CraftingManager.getInstance().getRecipeList().add(new ChestDyeRecipe());
 
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.moistureFertilizer, 4), new Object[]{Item.bucketWater, BTWItems.dirtPile});

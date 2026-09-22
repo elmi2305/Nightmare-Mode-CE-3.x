@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 
 import com.itlesports.nightmaremode.item.items.ItemDivingGear;
 import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
+import com.itlesports.nightmaremode.util.StorageColor;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,5 +70,29 @@ public class RenderItemMixin {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    @Inject(method = "renderItemIntoGUI", at = @At("HEAD"))
+    private void beginChestGuiRender(FontRenderer font, TextureManager textures, ItemStack stack, int x, int y,
+                                     CallbackInfo ci) {
+        StorageColor.beginChestItemRender(stack);
+    }
+
+    @Inject(method = "renderItemIntoGUI", at = @At("TAIL"))
+    private void endChestGuiRender(FontRenderer font, TextureManager textures, ItemStack stack, int x, int y,
+                                   CallbackInfo ci) {
+        StorageColor.endChestItemRender();
+    }
+
+    @Inject(method = "doRenderItem", at = @At("HEAD"))
+    private void beginChestEntityRender(EntityItem item, double x, double y, double z, float yaw, float partialTicks,
+                                        CallbackInfo ci) {
+        StorageColor.beginChestItemRender(item.getEntityItem());
+    }
+
+    @Inject(method = "doRenderItem", at = @At("TAIL"))
+    private void endChestEntityRender(EntityItem item, double x, double y, double z, float yaw, float partialTicks,
+                                      CallbackInfo ci) {
+        StorageColor.endChestItemRender();
     }
 }

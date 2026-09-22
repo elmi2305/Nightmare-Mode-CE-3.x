@@ -10,6 +10,7 @@ import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
@@ -184,6 +185,19 @@ public class ItemInWorldManagerMixin {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.hempSeeds), side);
         }
         return converted;
+    }
+
+    @Inject(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemInWorldManager;removeBlock(III)Z"))
+    private void captureStorageColorBeforeRemovingBlock(int x, int y, int z, int fromSide,
+                                                        CallbackInfoReturnable<Boolean> cir) {
+        StorageColor.captureStorageColorBeforeHarvest(this.theWorld, x, y, z);
+    }
+
+    @Inject(method = "survivalTryHarvestBlock", at = @At("TAIL"))
+    private void clearCapturedStorageColorAfterHarvest(int x, int y, int z, int fromSide,
+                                                       CallbackInfoReturnable<Boolean> cir) {
+        StorageColor.clearCapturedStorageColor();
     }
 
 }

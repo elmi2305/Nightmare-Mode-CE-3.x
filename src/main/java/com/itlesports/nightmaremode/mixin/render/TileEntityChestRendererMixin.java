@@ -1,7 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.util.StorageColor;
-import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import net.minecraft.src.ModelChest;
 import net.minecraft.src.TileEntityChest;
 import net.minecraft.src.TileEntityChestRenderer;
@@ -27,15 +27,24 @@ public class TileEntityChestRendererMixin {
     @Redirect(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TileEntityChestRenderer;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private void bindDyedChestTexture(TileEntityChestRenderer renderer, ResourceLocation original) {
         TileEntityChest chest = this.nightmareMode$renderingChest;
-        int color = StorageColor.getRenderColor(((IDyeableStorage) chest).nm$getStorageColor());
+        IColoredChest coloredChest = (IColoredChest) chest;
+        boolean dyed = coloredChest.nm$hasChestColor() || StorageColor.hasChestItemRenderColor()
+                || StorageColor.hasChestRenderColorOverride();
         boolean doubleChest = chest.adjacentChestXPos != null || chest.adjacentChestZPosition != null;
         ((TileEntitySpecialRendererAccessor) renderer).nightmareMode$bindTexture(
-                StorageColor.getTintableChestTexture(chest.getChestType(), doubleChest, color, original));
+                StorageColor.getTintableChestTexture(chest.getChestType(), doubleChest,
+                        dyed, original));
     }
 
     @Redirect(method = "renderTileEntityChestAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ModelChest;renderAll()V"))
     private void renderTintedChest(ModelChest model) {
-        StorageColor.applyTint(StorageColor.getRenderColor(((IDyeableStorage) this.nightmareMode$renderingChest).nm$getStorageColor()), StorageColor.BROWN);
+        IColoredChest chest = (IColoredChest) this.nightmareMode$renderingChest;
+        boolean dyed = chest.nm$hasChestColor() || StorageColor.hasChestItemRenderColor()
+                || StorageColor.hasChestRenderColorOverride();
+        int color = chest.nm$hasChestColor() ? chest.nm$getChestColor()
+                : StorageColor.hasChestItemRenderColor() ? StorageColor.getChestItemRenderColor()
+                : StorageColor.getChestRenderColorOverride();
+        StorageColor.applyChestTint(color, dyed);
         model.chestLid.render(0.0625F);
         model.chestBelow.render(0.0625F);
 
