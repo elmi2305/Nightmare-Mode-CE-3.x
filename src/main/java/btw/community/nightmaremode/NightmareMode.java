@@ -55,7 +55,7 @@ public class NightmareMode extends BTWAddon {
     public static boolean disableFatigue = true;
     public static boolean benchmarkPerformance = true;
     public static volatile double MSPT = 0.0;
-    public static boolean showBetaOverlay = true;
+    public static boolean showBetaOverlay = false;
     public static String betaEnvironmentLine = "Dev Environment";
     public static String betaBuildLine = "Build 1709";
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
