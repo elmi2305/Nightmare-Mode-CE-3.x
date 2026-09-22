@@ -4,6 +4,7 @@ package com.itlesports.nightmaremode.block.blocks;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
+import com.itlesports.nightmaremode.util.StorageColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -61,6 +62,12 @@ public class BlockBloodChest extends BlockContainer {
         if (itemStack.hasDisplayName()) {
             TileEntityBloodChest tile = (TileEntityBloodChest) world.getBlockTileEntity(x, y, z);
             tile.setChestGuiName(itemStack.getDisplayName());
+        }
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (tile instanceof TileEntityBloodChest chest && StorageColor.hasChestItemColor(itemStack)) {
+            chest.nm$setChestColor(StorageColor.getChestItemColor(itemStack));
+        } else if (tile instanceof TileEntityBloodChest chest && StorageColor.hasStorageItemColor(itemStack)) {
+            chest.nm$setStorageColor(StorageColor.getStorageItemColor(itemStack));
         }
     }
 

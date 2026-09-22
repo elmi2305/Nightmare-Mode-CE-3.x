@@ -12,6 +12,10 @@ import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockColoredChest;
+import com.itlesports.nightmaremode.util.StorageColor;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
+import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,6 +41,8 @@ public abstract class BlockMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){
         Item.itemsList[obsidian.blockID] = new ObsidianItemBlock(obsidian.blockID - 256);
+        Item.itemsList[Block.chest.blockID] = new ItemBlockColoredChest(Block.chest.blockID - 256);
+        Item.itemsList[Block.chestTrapped.blockID] = new ItemBlockColoredChest(Block.chestTrapped.blockID - 256);
     }
 
     @Inject(method = "harvestBlock", at = @At("HEAD"), cancellable = true)
@@ -111,6 +117,27 @@ public abstract class BlockMixin {
             ItemStack held = player.getCurrentEquippedItem();
             if (held == null || held.getItem() != NMItems.enderPickaxe) cir.setReturnValue(0.0F);
         }
+    }
+
+
+    @Inject(method = "dropBlockAsItem_do", at = @At("HEAD"))
+    private void preserveColoredChestDrop(World world, int x, int y, int z, ItemStack stack, CallbackInfo ci) {
+        if (!StorageColor.isStorageBlock(this.blockID) || stack.itemID != this.blockID) return;
+        if (StorageColor.applyCapturedStorageColor(world, x, y, z, this.blockID, stack)) return;
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (tile instanceof IColoredChest chest && chest.nm$hasChestColor()) {
+            StorageColor.setChestItemColor(stack, chest.nm$getChestColor());
+        } else if (tile instanceof IDyeableStorage storage
+                && storage.nm$getStorageColor() != this.getStorageDefaultColor()) {
+            StorageColor.setStorageItemColor(stack, storage.nm$getStorageColor());
+        }
+    }
+
+    @Unique
+    private int getStorageDefaultColor() {
+        if (this.blockID == NMBlocks.bloodChest.blockID) return StorageColor.RED;
+        if (this.blockID == NMBlocks.steelLocker.blockID) return StorageColor.GRAY;
+        return StorageColor.BROWN;
     }
 
     @Inject(method = "idPicked", at = @At("HEAD"), cancellable = true)

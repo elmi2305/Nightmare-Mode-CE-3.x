@@ -30,11 +30,14 @@ public class TileEntitySteelLockerRenderer extends TileEntitySpecialRenderer {
         lidProgress = 1.0f - lidProgress;
         lidProgress = 1.0f - lidProgress * lidProgress * lidProgress;
 
-        this.bindTexture(StorageColor.getSteelLockerTexture(chest.nm$getStorageColor(), RES_NORMAL));
+        boolean dyed = chest.nm$hasChestColor() || StorageColor.hasChestItemRenderColor();
+        int color = StorageColor.hasChestItemRenderColor() ? StorageColor.getChestItemRenderColor()
+                : chest.nm$getChestColor();
+        this.bindTexture(StorageColor.getSteelLockerTexture(dyed, RES_NORMAL));
 
         GL11.glPushMatrix();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        StorageColor.applyTint(chest.nm$getStorageColor(), StorageColor.GRAY);
+        StorageColor.applyChestTint(color, dyed);
 
         GL11.glTranslatef((float) x, (float) y + 1.0f, (float) z + 1.0f);
         GL11.glScalef(1f, -1f, -1f);

@@ -4,6 +4,7 @@ import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
 import com.itlesports.nightmaremode.network.SteelLockerNet;
 import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
+import com.itlesports.nightmaremode.util.StorageColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -49,6 +50,12 @@ public class BlockSteelLocker extends BlockContainer {
             if (te instanceof TileEntitySteelLocker chest){
                 chest.setChestGuiName(stack.getDisplayName());
             }
+        }
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (tile instanceof TileEntitySteelLocker chest && StorageColor.hasChestItemColor(stack)) {
+            chest.nm$setChestColor(StorageColor.getChestItemColor(stack));
+        } else if (tile instanceof TileEntitySteelLocker chest && StorageColor.hasStorageItemColor(stack)) {
+            chest.nm$setStorageColor(StorageColor.getStorageItemColor(stack));
         }
     }
 

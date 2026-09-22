@@ -6,9 +6,10 @@ import com.itlesports.nightmaremode.block.blocks.BlockSteelLocker;
 import com.itlesports.nightmaremode.nmgui.ContainerSteelLocker;
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import net.minecraft.src.*;
 
-public class TileEntitySteelLocker extends TileEntity implements IInventory, IDyeableStorage, TileEntityDataPacketHandler {
+public class TileEntitySteelLocker extends TileEntity implements IInventory, IDyeableStorage, IColoredChest, TileEntityDataPacketHandler {
 
     public static final int SLOT_COLS = 19;
     public static final int SLOT_ROWS = 7;
@@ -22,6 +23,8 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
     private String customName;
     private ItemStack[] chestContents = new ItemStack[SLOT_TOTAL];
     private int storageColor = StorageColor.GRAY;
+    private int chestColor = StorageColor.DEFAULT_STEEL_LOCKER_COLOR;
+    private boolean hasChestColor;
 
     @Override
     public int nm$getStorageColor() {
@@ -31,6 +34,25 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
     @Override
     public void nm$setStorageColor(int color) {
         storageColor = color & 15;
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public boolean nm$hasChestColor() {
+        return hasChestColor;
+    }
+
+    @Override
+    public int nm$getChestColor() {
+        return chestColor;
+    }
+
+    @Override
+    public void nm$setChestColor(int color) {
+        chestColor = color & 0xFFFFFF;
+        hasChestColor = true;
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -107,6 +129,10 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
         if (nbt.hasKey("CustomName"))
             customName = nbt.getString("CustomName");
         storageColor = nbt.hasKey("nmStorageColor") ? nbt.getByte("nmStorageColor") & 15 : StorageColor.GRAY;
+        hasChestColor = nbt.hasKey("nmChestColor") || storageColor != StorageColor.GRAY;
+        chestColor = hasChestColor ? nbt.hasKey("nmChestColor")
+                ? nbt.getInteger("nmChestColor") & 0xFFFFFF
+                : StorageColor.getLegacyStorageColor(storageColor) : StorageColor.DEFAULT_STEEL_LOCKER_COLOR;
 
         NBTTagList list = nbt.getTagList("Items");
         for (int i=0;i<list.tagCount();i++) {
@@ -133,17 +159,23 @@ public class TileEntitySteelLocker extends TileEntity implements IInventory, IDy
         nbt.setTag("Items", list);
         if (isInvNameLocalized()) nbt.setString("CustomName", customName);
         if (storageColor != StorageColor.GRAY) nbt.setByte("nmStorageColor", (byte) storageColor);
+        if (hasChestColor) nbt.setInteger("nmChestColor", chestColor);
     }
 
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setByte("nmStorageColor", (byte) storageColor);
+        tag.setBoolean("nmHasChestColor", hasChestColor);
+        if (hasChestColor) tag.setInteger("nmChestColor", chestColor);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
     public void readNBTFromPacket(NBTTagCompound tag) {
         storageColor = tag.getByte("nmStorageColor") & 15;
+        hasChestColor = tag.getBoolean("nmHasChestColor");
+        chestColor = hasChestColor ? tag.getInteger("nmChestColor") & 0xFFFFFF
+                : StorageColor.DEFAULT_STEEL_LOCKER_COLOR;
         worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
     }
 

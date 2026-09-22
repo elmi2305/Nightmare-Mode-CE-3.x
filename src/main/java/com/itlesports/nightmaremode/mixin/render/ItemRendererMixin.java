@@ -1,11 +1,12 @@
 package com.itlesports.nightmaremode.mixin.render;
 
-import net.minecraft.src.EntityClientPlayerMP;
-import net.minecraft.src.ItemRenderer;
-import net.minecraft.src.Potion;
+import com.itlesports.nightmaremode.util.StorageColor;
+import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
@@ -15,5 +16,15 @@ public class ItemRendererMixin {
             return false;
         }
         return player.isBurning();
+    }
+
+    @Inject(method = "renderItem", at = @At("HEAD"))
+    private void beginChestHeldRender(EntityLivingBase entity, ItemStack stack, int pass, CallbackInfo ci) {
+        StorageColor.beginChestItemRender(stack);
+    }
+
+    @Inject(method = "renderItem", at = @At("TAIL"))
+    private void endChestHeldRender(EntityLivingBase entity, ItemStack stack, int pass, CallbackInfo ci) {
+        StorageColor.endChestItemRender();
     }
 }

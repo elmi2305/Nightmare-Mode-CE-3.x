@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockColoredChest;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTerrainExtractor;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockPhasePortalFrame;
@@ -389,10 +390,10 @@ public class NMBlocks {
         Item.itemsList[underworldPortal.blockID] = new NMItemBlock(NMBlocks.underworldPortal.blockID - 256);
 
         bloodChest = (BlockBloodChest) new BlockBloodChest(2310, 1).setTextureName("nightmare:chestBlood").setUnlocalizedName("nmBloodChest");
-        Item.itemsList[bloodChest.blockID] = new NMItemBlock(NMBlocks.bloodChest.blockID - 256);
+        Item.itemsList[bloodChest.blockID] = new ItemBlockColoredChest(NMBlocks.bloodChest.blockID - 256);
 
         steelLocker = (BlockSteelLocker) new BlockSteelLocker(2355, 1).setTextureName("nightmare:lockerSteel").setUnlocalizedName("nmSteelLocker");
-        Item.itemsList[steelLocker.blockID] = new NMItemBlock(NMBlocks.steelLocker.blockID - 256);
+        Item.itemsList[steelLocker.blockID] = new ItemBlockColoredChest(NMBlocks.steelLocker.blockID - 256);
 
         steelFrame = (BlockSteelFrame) new BlockSteelFrame(2360).setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[steelFrame.blockID] = new NMItemBlock(NMBlocks.steelFrame.blockID - 256);

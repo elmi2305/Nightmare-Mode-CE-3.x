@@ -32,11 +32,14 @@ public class TileEntityBloodChestRenderer extends TileEntitySpecialRenderer {
         lidProgress = 1.0f - lidProgress;
         lidProgress = 1.0f - lidProgress * lidProgress * lidProgress;
 
-        this.bindTexture(StorageColor.getBloodChestTexture(chest.nm$getStorageColor(), RES_NORMAL));
+        boolean dyed = chest.nm$hasChestColor() || StorageColor.hasChestItemRenderColor();
+        int color = StorageColor.hasChestItemRenderColor() ? StorageColor.getChestItemRenderColor()
+                : chest.nm$getChestColor();
+        this.bindTexture(StorageColor.getBloodChestTexture(dyed, RES_NORMAL));
 
         GL11.glPushMatrix();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        StorageColor.applyTint(chest.nm$getStorageColor(), StorageColor.RED);
+        StorageColor.applyChestTint(color, dyed);
 
         // Position and flip
         GL11.glTranslatef((float) x, (float) y + 1.0f, (float) z + 1.0f);

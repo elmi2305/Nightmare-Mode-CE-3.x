@@ -98,6 +98,7 @@
     "blocks.AxleBlockStressMixin",
     "blocks.BlockClayMixin",
     "blocks.BlockContainerMixin",
+    "blocks.BlockChestMixin",
     "blocks.BlockCropsMixin",
     "blocks.BlockEndPortalMixin",
     "blocks.BlockFenceGateMixin",

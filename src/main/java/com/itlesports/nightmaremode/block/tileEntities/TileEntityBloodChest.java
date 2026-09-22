@@ -5,9 +5,10 @@ import api.block.TileEntityDataPacketHandler;
 import com.itlesports.nightmaremode.block.blocks.BlockBloodChest;
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import net.minecraft.src.*;
 
-public class TileEntityBloodChest extends TileEntity implements IInventory, IDyeableStorage, TileEntityDataPacketHandler {
+public class TileEntityBloodChest extends TileEntity implements IInventory, IDyeableStorage, IColoredChest, TileEntityDataPacketHandler {
     private ItemStack[] chestContents = new ItemStack[54];
     public boolean adjacentChestChecked;
     public float lidAngle;
@@ -17,6 +18,8 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
     private int cachedChestType;
     private String customName;
     private int storageColor = StorageColor.RED;
+    private int chestColor = StorageColor.DEFAULT_BLOOD_CHEST_COLOR;
+    private boolean hasChestColor;
 
     @Override
     public int nm$getStorageColor() {
@@ -26,6 +29,25 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
     @Override
     public void nm$setStorageColor(int color) {
         storageColor = color & 15;
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+
+    @Override
+    public boolean nm$hasChestColor() {
+        return hasChestColor;
+    }
+
+    @Override
+    public int nm$getChestColor() {
+        return chestColor;
+    }
+
+    @Override
+    public void nm$setChestColor(int color) {
+        chestColor = color & 0xFFFFFF;
+        hasChestColor = true;
         if (worldObj != null) {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -108,6 +130,10 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
         }
         storageColor = par1NBTTagCompound.hasKey("nmStorageColor")
                 ? par1NBTTagCompound.getByte("nmStorageColor") & 15 : StorageColor.RED;
+        hasChestColor = par1NBTTagCompound.hasKey("nmChestColor") || storageColor != StorageColor.RED;
+        chestColor = hasChestColor ? par1NBTTagCompound.hasKey("nmChestColor")
+                ? par1NBTTagCompound.getInteger("nmChestColor") & 0xFFFFFF
+                : StorageColor.getLegacyStorageColor(storageColor) : StorageColor.DEFAULT_BLOOD_CHEST_COLOR;
 
         for(int var3 = 0; var3 < var2.tagCount(); ++var3) {
             NBTTagCompound var4 = (NBTTagCompound)var2.tagAt(var3);
@@ -139,6 +165,9 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
         if (storageColor != StorageColor.RED) {
             par1NBTTagCompound.setByte("nmStorageColor", (byte) storageColor);
         }
+        if (hasChestColor) {
+            par1NBTTagCompound.setInteger("nmChestColor", chestColor);
+        }
 
     }
 
@@ -146,11 +175,16 @@ public class TileEntityBloodChest extends TileEntity implements IInventory, IDye
     public Packet getDescriptionPacket() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setByte("nmStorageColor", (byte) storageColor);
+        tag.setBoolean("nmHasChestColor", hasChestColor);
+        if (hasChestColor) tag.setInteger("nmChestColor", chestColor);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
     public void readNBTFromPacket(NBTTagCompound tag) {
         storageColor = tag.getByte("nmStorageColor") & 15;
+        hasChestColor = tag.getBoolean("nmHasChestColor");
+        chestColor = hasChestColor ? tag.getInteger("nmChestColor") & 0xFFFFFF
+                : StorageColor.DEFAULT_BLOOD_CHEST_COLOR;
         worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
     }
 
