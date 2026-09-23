@@ -238,6 +238,7 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerCommand(new NightCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
         AddonHandler.registerCommand(new WarpCommand(), false);
+        if (devMode) AddonHandler.registerCommand(new WitherStructureCommand(), false);
 
         NMBlocks.initNightmareBlocks();
         NMItems.runItemInit();
