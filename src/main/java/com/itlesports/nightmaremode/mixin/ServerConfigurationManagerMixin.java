@@ -126,6 +126,7 @@ public class ServerConfigurationManagerMixin {
         if (!player.worldObj.isRemote) {
             JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
             profile.joins++;
+            com.itlesports.nightmaremode.world.SandboxRules.inheritSkills(player);
             profile.recordSkillState(player, player.worldObj);
             player.worldObj.setData(btw.community.nightmaremode.NightmareMode.JOURNEY_PROFILE, profile);
         }

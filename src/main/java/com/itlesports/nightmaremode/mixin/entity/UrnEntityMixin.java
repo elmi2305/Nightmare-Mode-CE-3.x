@@ -57,7 +57,8 @@ public class UrnEntityMixin {
 
     @Unique
     private static boolean canSummon(World world, int x, int y, int z) {
-        if (!NightmareMode.allSkillsUnlocked && !SkillHandler.getWorldData(world).witherSummoningUnlocked) {
+        if ((!NightmareMode.allSkillsUnlocked || NightmareMode.lockDownCreative)
+                && !SkillHandler.getWorldData(world).witherSummoningUnlocked) {
             EntityPlayer player = world.getClosestPlayer(x, y, z, -1);
             if (player != null) SkillHandler.sendStatus(player, "Wither summoning requires all five ritual contributions.");
             return false;

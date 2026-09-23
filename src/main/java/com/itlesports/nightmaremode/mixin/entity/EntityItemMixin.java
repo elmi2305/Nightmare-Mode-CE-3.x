@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.world.SandboxRules;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +35,18 @@ public abstract class EntityItemMixin extends Entity {
 
     public EntityItemMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "onCollideWithPlayer", at = @At("HEAD"), cancellable = true)
+    private void nightmareMode$rejectSandboxPickup(EntityPlayer player, CallbackInfo ci) {
+        if ((player.capabilities.isCreativeMode || SandboxRules.isSandbox(this.worldObj))
+                && !SandboxRules.mayCreate(this.worldObj, this.getEntityItem())) ci.cancel();
+    }
+
+    @Inject(method = "onCollideWithPlayer", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityPlayer;onItemPickup(Lnet/minecraft/src/Entity;I)V"))
+    private void nightmareMode$recordSurvivalPickup(EntityPlayer player, CallbackInfo ci) {
+        SandboxRules.recordAcquisition(player, this.getEntityItem());
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)

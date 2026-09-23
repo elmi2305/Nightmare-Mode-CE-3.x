@@ -61,7 +61,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
                     "Nether access requires " + SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED + " Nether access progress nodes.");
             ci.cancel();
         }
-        if (par1 == 1 && !NightmareMode.allSkillsUnlocked && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
+        if (par1 == 1 && (!NightmareMode.allSkillsUnlocked || NightmareMode.lockDownCreative)
+                && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the Beacon Offering skill.");
             ci.cancel();
         }

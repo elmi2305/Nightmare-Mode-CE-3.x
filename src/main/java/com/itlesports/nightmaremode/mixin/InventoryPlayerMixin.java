@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.world.SandboxRules;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,7 +63,7 @@ public class InventoryPlayerMixin {
         }
 
 
-        if (NightmareMode.devMode) {
+        if (NightmareMode.devMode && !NightmareMode.lockDownCreative) {
             inv.addItemStackToInventory(new ItemStack(NMBlocks.underworldPortal));
 //            inv.addItemStackToInventory(new ItemStack(397, 64, 5));
 //            inv.addItemStackToInventory(new ItemStack(NMBlocks.underStones.blockID, 64, 0));
@@ -91,6 +92,18 @@ public class InventoryPlayerMixin {
 //            inv.addItemStackToInventory(new ItemStack(Item.appleGold, 64, 1));
 //            inv.addItemStackToInventory(new ItemStack(373, 64, 16421));
         }
+    }
+
+    @Inject(method = "addItemStackToInventory*", at = @At("HEAD"), cancellable = true)
+    private void nightmareMode$rejectLockedInventoryAddition(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (this.player != null && this.player.worldObj != null && this.player.capabilities != null
+                && (this.player.capabilities.isCreativeMode || SandboxRules.isSandbox(this.player.worldObj))
+                && !SandboxRules.mayCreate(this.player.worldObj, stack)) cir.setReturnValue(false);
+    }
+
+    @Inject(method = "addItemStackToInventory*", at = @At("RETURN"))
+    private void nightmareMode$recordInventoryAddition(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) SandboxRules.recordAcquisition(this.player, stack);
     }
 
     @Inject(method = "getCurrentItem", at = @At("HEAD"), cancellable = true)

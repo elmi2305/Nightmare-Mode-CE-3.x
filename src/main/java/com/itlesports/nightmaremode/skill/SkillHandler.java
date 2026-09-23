@@ -4,6 +4,7 @@ import api.world.data.DataSyncManager;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.world.JourneyProfile;
+import com.itlesports.nightmaremode.world.SandboxRules;
 import net.minecraft.src.*;
 
 public class SkillHandler {
@@ -11,7 +12,8 @@ public class SkillHandler {
 
     public static SkillTreeData getPlayerData(EntityPlayer player) {
         SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
-        if (NightmareMode.allSkillsUnlocked && !Boolean.TRUE.equals(APPLYING_ALL_SKILLS.get())) {
+        if (NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative
+                && !Boolean.TRUE.equals(APPLYING_ALL_SKILLS.get())) {
             unlockAllSkills(player, data);
         }
         return data;
@@ -36,7 +38,7 @@ public class SkillHandler {
     }
 
     public static boolean isWorldUnlocked(World world, SkillNode node) {
-        return world != null && (NightmareMode.allSkillsUnlocked || getWorldData(world).isUnlocked(node));
+        return world != null && ((NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative) || getWorldData(world).isUnlocked(node));
     }
 
     private static void unlockAllSkills(EntityPlayer player, SkillTreeData playerData) {
@@ -77,15 +79,22 @@ public class SkillHandler {
     }
 
     public static boolean isEligible(EntityPlayer player, SkillNode node) {
-        return node != null
+        return player != null && (!NightmareMode.lockDownCreative || !player.capabilities.isCreativeMode)
+                && !SandboxRules.isSandbox(player.worldObj) && node != null
                 && !isUnlocked(player, node)
                 && hasUnlockedAllParents(player, node)
                 && node.triggerCondition.test(player, player.worldObj);
     }
 
     public static boolean tryUnlock(EntityPlayerMP player, String nodeId) {
+        if (SandboxRules.isSandbox(player.worldObj)
+                || NightmareMode.lockDownCreative && player.capabilities.isCreativeMode) {
+            sendStatus(player, "Skills cannot be unlocked in Sandbox.");
+            return false;
+        }
         SkillNode node = SkillRegistry.getNode(nodeId);
-        if (!isEligible(player, node) && !NightmareMode.unlockSkillsWithClick) {
+        if (!isEligible(player, node)
+                && !(NightmareMode.unlockSkillsWithClick && !NightmareMode.lockDownCreative)) {
             sendStatus(player, "Skill is not ready to unlock.");
             return false;
         }
@@ -324,11 +333,13 @@ public class SkillHandler {
     }
 
     public static boolean hasNetherAccess(EntityPlayer player) {
-        return player != null && (NightmareMode.allSkillsUnlocked || getWorldData(player.worldObj).netherAccessUnlocked);
+        return player != null && ((NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative)
+                || getWorldData(player.worldObj).netherAccessUnlocked);
     }
 
     public static boolean woodBlocksIgnoreSkybaseGravity(World world) {
-        return world != null && (NightmareMode.allSkillsUnlocked || getWorldData(world).woodBlocksIgnoreSkybaseGravity);
+        return world != null && ((NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative)
+                || getWorldData(world).woodBlocksIgnoreSkybaseGravity);
     }
 
     public static void sync(EntityPlayerMP player) {

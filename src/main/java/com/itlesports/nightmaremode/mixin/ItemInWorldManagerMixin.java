@@ -6,8 +6,10 @@ import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.items.ChiselItem;
 import btw.item.BTWItems;
+import btw.block.BTWBlocks;
 import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.world.SandboxRules;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.StorageColor;
@@ -45,6 +47,49 @@ public class ItemInWorldManagerMixin {
                 && ItemMechanicalWrench.inspect(player, world, x, y, z)) {
             cir.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "activateBlockOrUseItem", at = @At("HEAD"), cancellable = true)
+    private void nightmareMode$limitSandboxUse(EntityPlayer player, World world, ItemStack stack,
+                                               int x, int y, int z, int side,
+                                               float clickX, float clickY, float clickZ,
+                                               CallbackInfoReturnable<Boolean> cir) {
+        if (!NightmareMode.lockDownCreative || !(player.capabilities.isCreativeMode || SandboxRules.isSandbox(world))) return;
+        int blockId = world.getBlockId(x, y, z);
+        Block block = blockId > 0 ? Block.blocksList[blockId] : null;
+        if (block != null && nightmareMode$isStation(block)
+                && !SandboxRules.mayCreate(world, new ItemStack(nightmareMode$stationItemId(blockId), 1, 0))) {
+            cir.setReturnValue(false);
+            return;
+        }
+        if (stack != null && !SandboxRules.mayCreate(world, stack)) cir.setReturnValue(false);
+    }
+
+    @Unique private boolean nightmareMode$isStation(Block block) {
+        if (block.blockID == Block.workbench.blockID || block.blockID == Block.furnaceIdle.blockID
+                || block.blockID == Block.furnaceBurning.blockID || block.blockID == Block.brewingStand.blockID
+                || block.blockID == Block.enchantmentTable.blockID) return true;
+        if (block == BTWBlocks.workbench || block == BTWBlocks.workStump || block == BTWBlocks.cauldron
+                || block == BTWBlocks.crucible || block == BTWBlocks.millstone
+                || block == BTWBlocks.soulforge || block == BTWBlocks.dormandSoulforge
+                || block == BTWBlocks.kiln || block == BTWBlocks.idleOven
+                || block == BTWBlocks.burningOven || block == BTWBlocks.idleLooseOven
+                || block == BTWBlocks.burningLooseOven || block == BTWBlocks.infernalEnchanter
+                || block == NMBlocks.netherWorkbench || block == NMBlocks.obsidianMillstone
+                || block == NMBlocks.cistern || block == NMBlocks.disenchantmentTable) return true;
+        String name = block.getClass().getSimpleName().toLowerCase(java.util.Locale.ROOT);
+        return name.contains("workbench") || name.contains("craftingtable")
+                || name.contains("cauldron") || name.contains("crucible")
+                || name.contains("millstone") || name.contains("soulforge")
+                || name.contains("oven") || name.contains("kiln")
+                || name.contains("cistern") || name.contains("enchanter");
+    }
+
+    @Unique private int nightmareMode$stationItemId(int blockId) {
+        if (blockId == Block.furnaceBurning.blockID) return Block.furnaceIdle.blockID;
+        if (blockId == BTWBlocks.burningOven.blockID) return BTWBlocks.idleOven.blockID;
+        if (blockId == BTWBlocks.burningLooseOven.blockID) return BTWBlocks.idleLooseOven.blockID;
+        return blockId;
     }
 
     @Inject(method = "survivalTryHarvestBlock", at = @At("HEAD"), cancellable = true)

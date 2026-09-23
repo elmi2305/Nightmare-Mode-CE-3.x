@@ -5,6 +5,7 @@ import btw.client.gui.LockButton;
 import com.itlesports.nightmaremode.nmgui.GuiJourneyActionButton;
 import com.itlesports.nightmaremode.nmgui.JourneyTitleTheme;
 import com.itlesports.nightmaremode.util.interfaces.JourneyMenuBackdrop;
+import com.itlesports.nightmaremode.world.SandboxRules;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiCreateWorld;
 import net.minecraft.src.GuiScreen;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiCreateWorld.class)
@@ -29,6 +31,9 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Shadow private GuiTextField textboxSeed;
     @Shadow private String folderName;
     @Shadow private String seed;
+    @Shadow private String gameMode;
+    @Shadow private String gameModeDescriptionLine1;
+    @Shadow private String gameModeDescriptionLine2;
     @Shadow private boolean moreOptions;
     @Shadow private GuiButton buttonGameMode;
     @Shadow private GuiButton buttonDifficultyLevel;
@@ -112,6 +117,19 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private void lockButtonCannotBeClicked(CallbackInfo ci){
         // this fixes the issue TdL had right at the start, where he clicked the lock button thinking it'd make any difference
         this.buttonLockDifficulty.enabled = false;
+        if ("creative".equals(this.gameMode)) {
+            this.buttonGameMode.displayString = I18n.getString("selectWorld.gameMode") + " Sandbox";
+            if (btw.community.nightmaremode.NightmareMode.lockDownCreative) {
+                this.gameModeDescriptionLine1 = "Use items you have collected in Survival.";
+                this.gameModeDescriptionLine2 = "Your most developed Survival skills carry over.";
+            }
+        }
+    }
+
+    @ModifyArg(method = "actionPerformed", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/WorldSettings;<init>(JLnet/minecraft/src/EnumGameType;ZZLnet/minecraft/src/WorldType;Lapi/world/difficulty/Difficulty;Z)V"), index = 0)
+    private long nightmareMode$avoidRepeatedSeed(long seed) {
+        return SandboxRules.uniqueSeed(this.mc.getSaveLoader(), seed);
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/I18n;getString(Ljava/lang/String;)Ljava/lang/String;",ordinal = 10))

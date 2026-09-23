@@ -9,18 +9,24 @@ import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import net.minecraft.src.Achievement;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.Item;
+import net.minecraft.src.Block;
+import com.itlesports.nightmaremode.item.items.ItemVillagerDebugTool;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.NBTTagList;
 import net.minecraft.src.NBTTagString;
 import net.minecraft.src.World;
 
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /** Compact, root-level world metadata used by the Journey Mode title card. */
 public final class JourneyProfile {
     public static final String TAG = "NightmareJourneyProfile";
-    private static final int FORMAT = 2;
+    private static final int FORMAT = 4;
     private static final Achievement<?>[] PROGRESSION = new Achievement<?>[] {
             NMAchievements.MORNING_SECOND_DAY,
             BTWAchievements.SMELT_IRON,
@@ -49,6 +55,8 @@ public final class JourneyProfile {
     public int progressIndex;
     public int worldState;
     private final Set<String> completedSkillNodes = new HashSet<String>();
+    private final Set<String> collectedItems = new HashSet<String>();
+    private final Map<String, Set<NBTTagCompound>> collectedTags = new HashMap<String, Set<NBTTagCompound>>();
 
     private JourneyProfile(boolean valid) { this.valid = valid; }
 
@@ -81,6 +89,19 @@ public final class JourneyProfile {
             for (int i = 0; i < skills.tagCount(); ++i) {
                 profile.completedSkillNodes.add(((NBTTagString)skills.tagAt(i)).data);
             }
+            NBTTagList items = tag.getTagList("CollectedItems");
+            for (int i = 0; i < items.tagCount(); ++i) {
+                profile.collectedItems.add(((NBTTagString)items.tagAt(i)).data);
+            }
+            NBTTagList tags = tag.getTagList("CollectedItemTags");
+            for (int i = 0; i < tags.tagCount(); ++i) {
+                NBTTagCompound entry = (NBTTagCompound)tags.tagAt(i);
+                String key = entry.getString("Item");
+                if (!key.isEmpty() && entry.hasKey("Tag")) {
+                    profile.collectedTags.computeIfAbsent(key, ignored -> new HashSet<NBTTagCompound>())
+                            .add(entry.getCompoundTag("Tag"));
+                }
+            }
             return profile;
         } catch (Throwable ignored) {
             return missing();
@@ -101,6 +122,19 @@ public final class JourneyProfile {
         NBTTagList skills = new NBTTagList("CompletedSkillNodes");
         for (String id : this.completedSkillNodes) skills.appendTag(new NBTTagString("", id));
         tag.setTag("CompletedSkillNodes", skills);
+        NBTTagList items = new NBTTagList("CollectedItems");
+        for (String key : this.collectedItems) items.appendTag(new NBTTagString("", key));
+        tag.setTag("CollectedItems", items);
+        NBTTagList tags = new NBTTagList("CollectedItemTags");
+        for (Map.Entry<String, Set<NBTTagCompound>> item : this.collectedTags.entrySet()) {
+            for (NBTTagCompound itemTag : item.getValue()) {
+                NBTTagCompound entry = new NBTTagCompound();
+                entry.setString("Item", item.getKey());
+                entry.setTag("Tag", itemTag.copy());
+                tags.appendTag(entry);
+            }
+        }
+        tag.setTag("CollectedItemTags", tags);
         root.setCompoundTag(TAG, tag);
     }
 
@@ -127,6 +161,46 @@ public final class JourneyProfile {
     }
 
     public int getCompletedSkillCount() { return this.completedSkillNodes.size(); }
+    public boolean hasCompletedSkill(String id) { return this.completedSkillNodes.contains(id); }
+
+    public boolean recordItem(ItemStack stack) {
+        if (!this.valid || !isAllowedItem(stack)) return false;
+        String key = itemKey(stack);
+        boolean changed = this.collectedItems.add(key);
+        if (stack.getTagCompound() != null) {
+            changed |= this.collectedTags.computeIfAbsent(key, ignored -> new HashSet<NBTTagCompound>())
+                    .add((NBTTagCompound)stack.getTagCompound().copy());
+        }
+        return changed;
+    }
+
+    public boolean hasItem(ItemStack stack) {
+        if (!this.valid || !isAllowedItem(stack)) return false;
+        String key = itemKey(stack);
+        if (!this.collectedItems.contains(key)) return false;
+        return stack.getTagCompound() == null || this.collectedTags.containsKey(key)
+                && this.collectedTags.get(key).contains(stack.getTagCompound());
+    }
+
+    public boolean addItemsFrom(JourneyProfile other) {
+        if (other == null || !this.valid) return false;
+        boolean changed = this.collectedItems.addAll(other.collectedItems);
+        for (Map.Entry<String, Set<NBTTagCompound>> item : other.collectedTags.entrySet()) {
+            changed |= this.collectedTags.computeIfAbsent(item.getKey(), ignored -> new HashSet<NBTTagCompound>())
+                    .addAll(item.getValue());
+        }
+        return changed;
+    }
+
+    private static String itemKey(ItemStack stack) {
+        return stack.itemID + ":" + (stack.isItemStackDamageable() ? 0 : stack.getItemDamage());
+    }
+
+    private static boolean isAllowedItem(ItemStack stack) {
+        return stack != null && stack.itemID != Block.commandBlock.blockID
+                && stack.itemID != Item.monsterPlacer.itemID
+                && !(stack.getItem() instanceof ItemVillagerDebugTool);
+    }
     public int getSkillTotal() {
         int total = 0;
         for (SkillNode ignored : SkillRegistry.getNodes()) ++total;
