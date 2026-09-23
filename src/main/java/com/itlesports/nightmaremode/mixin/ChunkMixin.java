@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
@@ -28,19 +29,19 @@ public class ChunkMixin implements ChunkAttributesAccess {
     private int requireCompleteSkylightNeighborhood(int radius) {
         // gap checks reach local -1..16; propagation needs another 17 blocks.
         // radius 26 from local 8 covers -18..34 before any pending flags are cleared.
-        return 26;
+        return NightmareMode.enableLightingFix ? 26 : radius;
     }
 
     @Inject(method = "updateSkylight_do", at = @At("HEAD"))
     private void beginDeferredSkylightSync(CallbackInfo ci) {
-        if (this.worldObj instanceof WorldSkylightSyncAccess access) {
+        if (NightmareMode.enableLightingFix && this.worldObj instanceof WorldSkylightSyncAccess access) {
             access.nm$getSkylightSync().begin();
         }
     }
 
     @Inject(method = "updateSkylight_do", at = @At("RETURN"))
     private void endDeferredSkylightSync(CallbackInfo ci) {
-        if (this.worldObj instanceof WorldSkylightSyncAccess access) {
+        if (NightmareMode.enableLightingFix && this.worldObj instanceof WorldSkylightSyncAccess access) {
             access.nm$getSkylightSync().end();
         }
     }
@@ -48,7 +49,7 @@ public class ChunkMixin implements ChunkAttributesAccess {
     @Inject(method = "setLightValue", at = @At("HEAD"))
     private void captureDeferredSkylightChange(EnumSkyBlock type, int x, int y, int z, int value,
                                               CallbackInfo ci) {
-        if (type == EnumSkyBlock.Sky && this.sendUpdates
+        if (NightmareMode.enableLightingFix && type == EnumSkyBlock.Sky && this.sendUpdates
                 && this.worldObj instanceof WorldSkylightSyncAccess access) {
             access.nm$getSkylightSync().beforeChange((Chunk)(Object)this, x, y, z, value);
         }

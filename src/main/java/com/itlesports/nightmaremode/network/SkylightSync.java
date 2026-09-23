@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.network;
 
 import api.BTWAddon;
 import api.network.CustomPacketHandler;
+import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
 
 import java.io.*;
@@ -24,7 +25,7 @@ public final class SkylightSync {
         addon.registerPacketHandler(channel, new CustomPacketHandler() {
             @Override
             public void handleCustomPacket(Packet250CustomPayload packet, EntityPlayer player) {
-                if (player.worldObj.isRemote && !player.worldObj.provider.hasNoSky) {
+                if (NightmareMode.enableLightingFix && player.worldObj.isRemote && !player.worldObj.provider.hasNoSky) {
                     apply(player.worldObj, packet.data);
                 }
             }
@@ -51,6 +52,11 @@ public final class SkylightSync {
     }
 
     public void flush(WorldServer world) {
+        if (!NightmareMode.enableLightingFix) {
+            this.pending.clear();
+            this.depth = 0;
+            return;
+        }
         if (this.pending.isEmpty()) return;
         for (Map.Entry<Chunk, Changes> entry : this.pending.entrySet()) {
             Chunk chunk = entry.getKey();
