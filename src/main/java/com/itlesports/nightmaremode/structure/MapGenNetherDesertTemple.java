@@ -92,8 +92,8 @@ public class MapGenNetherDesertTemple extends MapGenStructure {
                 if (!NetherTierHelper.isChunkEntirelyTierZero(world, chunkX, chunkZ)) {
                     continue;
                 }
-                int templeX = chunkX * 16 + 8;
-                int templeZ = chunkZ * 16 + 8;
+                int templeX = chunkX * 16 + 10;
+                int templeZ = chunkZ * 16 + 10;
                 double distance = (double) (templeX - x) * (templeX - x)
                         + (double) (templeZ - z) * (templeZ - z);
                 if (distance < nearestDistance) {

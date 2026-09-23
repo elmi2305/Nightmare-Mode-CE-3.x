@@ -28,6 +28,7 @@ import java.util.Random;
 
 @Mixin(ChunkProviderHell.class)
 public class ChunkProviderHellMixin {
+    @Unique private static final double NETHER_TEMPLE_CHUNK_RADIUS = 1032.0D;
     @Shadow private Random hellRNG;
     @Shadow private World worldObj;
 
@@ -134,7 +135,8 @@ public class ChunkProviderHellMixin {
                 this.hellRNG.nextInt(128),
                 baseZ + this.hellRNG.nextInt(16) + 8);
 
-        if (NetherTierHelper.isChunkEntirelyTierZero(this.worldObj, chunkX, chunkZ)) {
+        if (NetherTierHelper.getDistanceFromSpawn(this.worldObj, baseX + 8, baseZ + 8)
+                < NETHER_TEMPLE_CHUNK_RADIUS) {
             netherDesertTempleGenerator.generateStructuresInChunk(this.worldObj, this.hellRNG, chunkX, chunkZ);
         }
         netherVillagerPostGenerator.generateStructuresInChunk(this.worldObj, this.hellRNG, chunkX, chunkZ);
@@ -153,7 +155,9 @@ public class ChunkProviderHellMixin {
 
     @Inject(method = "provideChunk", at = @At("TAIL"))
     private void prepareNetherDesertTemples(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> cir) {
-        if (NetherTierHelper.isChunkEntirelyTierZero(this.worldObj, chunkX, chunkZ)) {
+        // a temple can cross the inner-nether boundary even when its start cannot.
+        if (NetherTierHelper.getDistanceFromSpawn(this.worldObj, chunkX * 16 + 8, chunkZ * 16 + 8)
+                < NETHER_TEMPLE_CHUNK_RADIUS) {
             netherDesertTempleGenerator.generate((ChunkProviderHell) (Object) this, this.worldObj, chunkX, chunkZ, null, null);
         }
         netherVillagerPostGenerator.generate((ChunkProviderHell) (Object) this, this.worldObj, chunkX, chunkZ, null, null);

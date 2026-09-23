@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
+import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -20,7 +21,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
     private boolean[] field_74940_h = new boolean[4];
     private static final WeightedRandomChestContent[] lootListArray = new WeightedRandomChestContent[]{
 
-//          new WeightedRandomChestContent(Item.helmetGold.itemID, metadata, minChanceToGen, maxChanceToGen, itemWeightHigherMeansMoreLikely),
+//          new WeightedRandomChestContent(Item.helmetGold.itemID, metadata, minAmount, maxAmount, itemWeightHigherMeansMoreLikely),
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
             new WeightedRandomChestContent(Item.plateGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.legsGold.itemID, 0, 1, 1, 5),
@@ -37,7 +38,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(NMItems.boneShard.itemID, 0, 8, 12, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
             new WeightedRandomChestContent(Item.skull.itemID, 0, 1, 1, 5),
-            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 1, 2), // blood sapling
+            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 3, 4), // blood sapling
             new WeightedRandomChestContent(BTWItems.soulUrn.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.horseArmorGold.itemID, 0, 1, 1, 1)
         };
@@ -52,16 +53,6 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
 
     public ComponentNetherDesertTemple(Random random, int x, int z) {
         super(random, x, 64, z, 21, 15, 21);
-        this.expandSpawnBounds();
-    }
-
-    private void expandSpawnBounds() {
-        this.boundingBox.minX -= 64;
-        this.boundingBox.maxX += 64;
-        this.boundingBox.minY -= 48;
-        this.boundingBox.maxY += 48;
-        this.boundingBox.minZ -= 64;
-        this.boundingBox.maxZ += 64;
     }
 
     @Override
@@ -89,6 +80,9 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             return false;
         }
         boolean bIsLooted = HardcoreSpawnUtils.isInLootedTempleRadius(world, boundingBox.getCenterX(), boundingBox.getCenterZ());
+        if (NightmareMode.devMode) {
+            System.out.println("GENERATINNNNNN at " + boundingBox.getCenterX() + " " + boundingBox.getCenterZ());
+        }
 
         int sandstoneBlockID = Block.netherBrick.blockID;
         int stairBlockId = Block.stairsNetherBrick.blockID;

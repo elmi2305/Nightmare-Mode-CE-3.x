@@ -56,9 +56,9 @@ public class NightmareMode extends BTWAddon {
     public static boolean benchmarkPerformance = true;
     public static boolean enableLightingFix = false;
     public static volatile double MSPT = 0.0;
-    public static boolean showBetaOverlay = false;
-    public static String betaEnvironmentLine = "Dev Environment";
-    public static String betaBuildLine = "Build 1709";
+    public static boolean showBetaOverlay = true;
+    public static String betaEnvironmentLine = "Testing Environment";
+    public static String betaBuildLine = "Build 2309";
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = true;
     public static boolean alwaysShowRewards = true;
