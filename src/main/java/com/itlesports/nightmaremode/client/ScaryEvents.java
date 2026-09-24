@@ -75,6 +75,7 @@ public final class ScaryEvents {
         lastEnabled = enabled;
         synchronizedState = true;
         if (event != null) {
+            // only /scary sends a forced event; natural events do not print test guidance.
             String failure = start(event, true);
             if (failure != null) chat("Cannot run " + event.id + ": " + failure);
             else if (event.isMenu()) chat("Open the pause menu to test " + event.id + ". Esc dismisses it.");

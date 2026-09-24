@@ -52,17 +52,18 @@ public class NightmareMode extends BTWAddon {
 
     // dev
     public static boolean devMode = true;
-    public static boolean disableFatigue = true;
-    public static boolean benchmarkPerformance = true;
-    public static boolean enableLightingFix = false;
+    public static boolean disableFatigue = false;
+    public static boolean benchmarkPerformance = false;
+    public static boolean enableLightingFix = true;
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 2309";
+    public static String betaBuildLine = "Build 2409";
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
-    public static boolean allSkillsUnlocked = true;
-    public static boolean alwaysShowRewards = true;
-    public static boolean unlockSkillsWithClick = true;
+    public static boolean allSkillsUnlocked = false;
+    public static boolean alwaysShowRewards = false;
+    public static boolean unlockSkillsWithClick = false;
+    public static boolean fullInventoryCapacity = false;
     public static boolean lockDownCreative = false;
     public static boolean spawnKnowledgeBooksInStructures = false;
 
@@ -240,7 +241,12 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerCommand(new NightCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
         AddonHandler.registerCommand(new WarpCommand(), false);
-        if (devMode) {
+        if (showBetaOverlay) {
+            for (String name : TestToolsCommand.NAMES) {
+                AddonHandler.registerCommand(new TestToolsCommand(name), false);
+            }
+        }
+        if (devMode || showBetaOverlay) {
             AddonHandler.registerCommand(new WitherStructureCommand(), false);
             AddonHandler.registerCommand(new ToggleSandboxCommand(), false);
         }
@@ -280,6 +286,7 @@ public class NightmareMode extends BTWAddon {
         StorageColorNet.register(this);
         com.itlesports.nightmaremode.network.SkylightSync.register(this);
         com.itlesports.nightmaremode.network.ScaryEventNet.register(this);
+        com.itlesports.nightmaremode.network.TesterSettingsNet.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

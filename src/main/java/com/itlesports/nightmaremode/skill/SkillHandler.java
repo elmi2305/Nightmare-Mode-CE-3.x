@@ -41,6 +41,11 @@ public class SkillHandler {
         return world != null && ((NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative) || getWorldData(world).isUnlocked(node));
     }
 
+    public static void unlockAllSkillsForTester(EntityPlayerMP player) {
+        unlockAllSkills(player, player.getData(NightmareMode.SKILL_TREE));
+        sync(player);
+    }
+
     private static void unlockAllSkills(EntityPlayer player, SkillTreeData playerData) {
         if (player.worldObj == null) {
             return;

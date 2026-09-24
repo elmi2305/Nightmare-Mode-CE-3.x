@@ -14,7 +14,8 @@ public final class NMInventoryLocks {
     }
 
     public static int getUnlockedHotbarSlots(EntityPlayer player) {
-        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode || NightmareMode.devMode) {
+        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
+                || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) {
             return 9;
         }
 
@@ -28,7 +29,8 @@ public final class NMInventoryLocks {
     }
 
     public static int getUnlockedBackpackSlots(EntityPlayer player) {
-        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode || NightmareMode.devMode) {
+        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
+                || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) {
             return 27;
         }
 
