@@ -27,6 +27,7 @@ import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
 import emi.dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
+import emi.dev.emi.emi.data.EmiData;
 import emi.dev.emi.emi.data.EmiRemoveFromIndex;
 import emi.dev.emi.emi.recipe.EmiBrewingRecipe;
 import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
@@ -36,6 +37,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class NightmareEmiRegistry {
@@ -56,6 +58,7 @@ public final class NightmareEmiRegistry {
     public static void register(EmiRegistry registry) {
         unhideWoodenTools();
         allowIngredientInRecipes(BTWItems.ancientProphecy);
+        registerAliases();
 
         registry.addCategory(HAMMERING);
         registry.addCategory(CISTERN);
@@ -132,6 +135,38 @@ public final class NightmareEmiRegistry {
         return new EmiCraftingRecipe(List.of(EmiStack.of(rod),
                 EmiIngredient.of(new TagInstance(BTWTags.fishingBait, 1))),
                 EmiStack.of(baitedRod), new ResourceLocation(NMFields.modID, "baiting/" + name), null);
+    }
+
+    private static void registerAliases() {
+        addAliases(List.of("alias.nightmare.journal"), NMItems.journeyJournals);
+        addAliases(List.of("alias.nightmare.gimp"), BTWItems.gimpHelmet, BTWItems.gimpChest,
+                BTWItems.gimpLeggings, BTWItems.gimpBoots);
+        addAliases(List.of("alias.nightmare.ender", "alias.nightmare.phase"),
+                NMItems.enderSword, NMItems.enderPickaxe, NMItems.enderAxe, NMItems.enderShovel,
+                NMItems.enderHoe, NMItems.enderHelmet, NMItems.enderChestplate,
+                NMItems.enderLeggings, NMItems.enderBoots, NMItems.phaseSteelHorseArmor);
+        addAliases(List.of("alias.nightmare.emerald", "alias.nightmare.verdant"),
+                NMItems.verdantPickaxe, NMItems.verdantSword, NMItems.verdantHelmet,
+                NMItems.verdantChestplate, NMItems.verdantLeggings, NMItems.verdantBoots);
+        addAliases(List.of("alias.nightmare.oxygen"), NMItems.oxygenMask, NMItems.oxygenTank,
+                NMItems.nickelWorkLeggings, NMItems.nickelWorkBoots,
+                NMItems.divingMask, NMItems.divingTank, NMItems.sunHelmet,
+                NMItems.sunChestplate, NMItems.sunLeggings, NMItems.sunBoots,
+                NMItems.sunVisor, NMItems.sunReservoir);
+        addAliases(List.of("alias.nightmare.solar", "alias.nightmare.radiation"),
+                NMItems.sunHelmet, NMItems.sunChestplate, NMItems.sunLeggings,
+                NMItems.sunBoots, NMItems.sunVisor, NMItems.sunReservoir);
+        addAliases(List.of("alias.nightmare.nether"), NMItems.heatResistantHelmet,
+                NMItems.heatResistantChestplate, NMItems.heatResistantLeggings,
+                NMItems.heatResistantBoots);
+    }
+
+    private static void addAliases(List<String> keys, Item... items) {
+        List<EmiIngredient> stacks = new ArrayList<>(items.length);
+        for (Item item : items) {
+            stacks.add(EmiStack.of(item));
+        }
+        EmiData.addAliases(stacks, keys);
     }
 
     private static void unhideWoodenTools() {

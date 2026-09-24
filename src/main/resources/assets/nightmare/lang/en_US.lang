@@ -307,6 +307,16 @@ emi.trade.EntityTier1NetherVillager=Rank %s Nether Merchant
 emi.trade.EntityTier2NetherVillager=Rank %s Hell Merchant
 emi.trade.EntityTier3NetherVillager=Rank %s Deadzone Merchant
 emi.trade.EntityFishermanVillager=Rank %s Fisherman
+alias.nightmare.journal=journal
+alias.nightmare.gimp=gimp
+alias.nightmare.ender=ender
+alias.nightmare.phase=phase
+alias.nightmare.emerald=emerald
+alias.nightmare.verdant=verdant
+alias.nightmare.oxygen=oxygen
+alias.nightmare.nether=nether
+alias.nightmare.solar=solar
+alias.nightmare.radiation=radiation
 
 status.health.NoHit=No Hit
 
