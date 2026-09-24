@@ -63,6 +63,10 @@ public final class CarcassHarvesting {
         if (secondary != null && animal.getRNG().nextBoolean()) {
             drop(animal, secondary.copy());
         }
+        if (animal instanceof EntityCow && animal.worldObj.getWorldTime() < 120000L) {
+            drop(animal, new ItemStack(Item.leather));
+            drop(animal, new ItemStack(Item.leather));
+        }
 
         if (harvestTier == ItemKnife.TIER_STONE) {
             dropIfPresent(animal, meat, 1);
@@ -104,6 +108,10 @@ public final class CarcassHarvesting {
     }
 
     private static ItemStack getSecondary(EntityAnimal animal) {
+        if (animal instanceof EntityPig && NMUtils.getWorldProgress() >= NMFields.HARDMODE
+                && animal.getRNG().nextInt(4) == 0) {
+            return new ItemStack(NMItems.pigHide);
+        }
         if (animal instanceof EntityCow) {
             return new ItemStack(Item.leather);
         }

@@ -80,14 +80,16 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
-        if (this.rand.nextInt(NMUtils.divByNiteMultiplier(8 - progress * 2, 2)) == 0 && isHostile) {
+        if (progress > HARDMODE && this.rand.nextInt(NMUtils.divByNiteMultiplier(12 - progress, 4)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }
         if (this.rand.nextInt(NMUtils.divByNiteMultiplier(3, 2)) == 0 && eclipseModifier > 1) {
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
         double niteMultiplier = NMUtils.getNiteMultiplier();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 6) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                NMUtils.getBalancedMobFollowRange(this.worldObj, 14, progress, NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));
     }
@@ -295,7 +297,15 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
                     ordinal = 1), index = 4)
     private float modifyExplosionSize(float par8) {
-        return getExplosionSize();
+        return getExplosionSize() * 0.75F;
+    }
+
+    @ModifyArg(method = "onUpdate",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/src/World;createExplosion(Lnet/minecraft/src/Entity;DDDFZ)Lnet/minecraft/src/Explosion;",
+                    ordinal = 0), index = 4)
+    private float lowerChargedExplosionSize(float original) {
+        return original * 0.75F;
     }
 
 

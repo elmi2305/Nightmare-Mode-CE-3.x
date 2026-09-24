@@ -20,16 +20,35 @@ import net.minecraft.src.MathHelper;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.Teleporter;
 import net.minecraft.src.WorldServer;
+import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
     @Unique private final java.util.Map<EntityPlayerMP, ItemStack> pendingRecalls = new java.util.IdentityHashMap<>();
+    @Unique private long deathWorldTime;
+
+    @Inject(method = "respawnPlayer", at = @At("HEAD"))
+    private void rememberDeathWorldTime(EntityPlayerMP oldPlayer, int dimension, boolean leavingEnd,
+                                        CallbackInfoReturnable<EntityPlayerMP> cir) {
+        if (!leavingEnd) deathWorldTime = MinecraftServer.getServer().worldServerForDimension(0).getWorldTime();
+    }
+
+    @Inject(method = "respawnPlayer", at = @At("RETURN"))
+    private void setMorningAfterDeath(EntityPlayerMP oldPlayer, int dimension, boolean leavingEnd,
+                                      CallbackInfoReturnable<EntityPlayerMP> cir) {
+        if (leavingEnd) return;
+        WorldServer world = MinecraftServer.getServer().worldServerForDimension(0);
+        long time = world.getWorldTime();
+        world.setWorldTime(deathWorldTime < 120000L ? 0L
+                : ((time / 24000L) + (time % 24000L == 0L ? 0L : 1L)) * 24000L);
+    }
 
 
     @Inject(method = "transferEntityToWorld", at = @At("HEAD"), cancellable = true)

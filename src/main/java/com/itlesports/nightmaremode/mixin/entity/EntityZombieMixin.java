@@ -496,7 +496,8 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                    NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
             this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * niteMultiplier);
             double bloodMoonHealthBonus = isBloodMoon ? (NMUtils.isPreHardmodeBloodMoon() ? 1 : 4) : 0;
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + bloodMoonHealthBonus + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);

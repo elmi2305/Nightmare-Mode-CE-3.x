@@ -13,7 +13,6 @@ import com.itlesports.nightmaremode.underworld.biomes.BiomeGenShadowRealm;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.entity.EntityBurningArrow;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import net.minecraft.src.*;
@@ -40,6 +39,14 @@ public abstract class EntitySkeletonMixin extends EntityMob{
 
     @Shadow
     private SkeletonArrowAttackBehavior aiRangedAttack;
+    @Shadow private EntityAIAttackOnCollide aiMeleeAttack;
+
+    @Inject(method = "setCombatTask", at = @At("TAIL"))
+    private void limitMeleeUntilHardmode(CallbackInfo ci) {
+        if (NMUtils.getWorldProgress() < NMFields.HARDMODE) {
+            this.tasks.removeTask(this.aiMeleeAttack);
+        }
+    }
 
     public EntitySkeletonMixin(World par1World) {
         super(par1World);
@@ -197,35 +204,28 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
-            if (isHostile) {
-                if(isBloodMoon || isEclipse){
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24d);
-                } else {
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(MathHelper.floor_double(20.0d + progress * 1.5));
-                    // 20 -> 21 -> 22 -> 23
-                }
-            }
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                    NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
             int id = this.getSkeletonType().id();
 
             if(id == NMFields.SKELETON_WITHER){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * niteMultiplier)));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
             if(id == NMFields.SKELETON_ENDER){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
             }
 
             if(id == NMFields.SKELETON_LIGHTNING){
                 this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
             }
 
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 + (progress + 1) + (isEclipse ? 1 : 0)) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 + Math.min(progress, 2) + (isEclipse ? 1 : 0)) * niteMultiplier);
             // 3.0 -> 4.0 -> 5.0 -> 6.0
             // 4.5 -> 6.0 -> 7.5 -> 9.0
         }
@@ -445,11 +445,12 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     }
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
     private float reduceArrowSpread(float constant){
-        if (this.worldObj != null) {
-            return NMUtils.divByNiteMultiplier((int) (8.0f - NMUtils.getWorldProgress()*2), 2);
-        }
         return constant;
-        // 8.0 -> 6.0 -> 4.0 -> 2.0
+    }
+
+    @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 0.3f))
+    private float removeRandomFireArrows(float constant) {
+        return 0.0f;
     }
 
     @Inject(method = "attackEntityFrom", at = @At(value = "HEAD"), cancellable = true)
@@ -517,17 +518,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
         if (this.worldObj != null) {
             Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             int progress = NMUtils.getWorldProgress();
-            int skeletonType = this.getSkeletonType().id();
-
-            if(isHostile && (this.rand.nextInt(NMUtils.divByNiteMultiplier(60, 20)) < 3 + (progress *2) && skeletonType != NMFields.SKELETON_ENDER && skeletonType != NMFields.SKELETON_ICE)){
-                EntityBurningArrow newArrow = new EntityBurningArrow(this.worldObj, arrow);
-                this.worldObj.spawnEntityInWorld(newArrow);
-                arrow.setDead();
-                arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
-            } else{
-                arrow.setDamage(MathHelper.floor_double((1.0 + (progress * 2 - (isHostile ? 0 : 1)))) * NMUtils.getNiteMultiplier());
-                // 4 -> 6 -> 8 -> 10
-            }
+            arrow.setDamage(Math.max(1, 1 + progress - (isHostile ? 0 : 1)) * NMUtils.getNiteMultiplier());
         }
     }
 
@@ -554,9 +545,9 @@ public abstract class EntitySkeletonMixin extends EntityMob{
             // cannot read variants here
             return switch (NMUtils.getWorldProgress()) {
                 case 0 -> NMUtils.divByNiteMultiplier(60, 20);
-                case 1 -> NMUtils.divByNiteMultiplier(50, 20);
-                case 2 -> NMUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
-                case 3 -> NMUtils.divByNiteMultiplier(40 + rand.nextInt(5), 20);
+                case 1 -> NMUtils.divByNiteMultiplier(55, 20);
+                case 2 -> NMUtils.divByNiteMultiplier(50 + rand.nextInt(5), 20);
+                case 3 -> NMUtils.divByNiteMultiplier(45 + rand.nextInt(5), 20);
                 default -> constant;
             };
         }
@@ -565,7 +556,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 15.0f))
     private float modifyAttackRange(float constant){
         if (this.worldObj != null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            return (float) ((18.0f + NMUtils.getWorldProgress() * 3) * Math.min(NMUtils.getNiteMultiplier(), 1.3f));
+            return constant;
         }
         return constant;
         // 18 -> 21 -> 24 -> 27
@@ -627,19 +618,20 @@ public abstract class EntitySkeletonMixin extends EntityMob{
 
 
         if(id == NMFields.SKELETON_WITHER){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? 4 : 2) + (isEclipse ? 15 : 0 )) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
             // 24.0 -> 28.0 -> 32.0 -> 36.0
         } else{
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 7 : 3)) * bloodMoonModifier + (isEclipse ? 15 : 0) * niteMultiplier)));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
             // 16.0 -> 23.0 -> 30.0 -> 37.0
         }
         if(id == NMFields.SKELETON_ENDER){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * (isHostile ? (isEclipse ? 8 : 6) : 2)) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
         }
 
         if(id == NMFields.SKELETON_LIGHTNING){
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(16 * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                    NMUtils.getBalancedMobFollowRange(this.worldObj, 16, progress, bloodMoonModifier > 1, isEclipse));
         }
 
         this.setHealth((float) this.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue());

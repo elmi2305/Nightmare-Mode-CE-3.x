@@ -177,8 +177,8 @@ public final class ChunkPollutionManager {
         }
         if (tile instanceof TerrainExtractorTileEntity) return "Pollution: 70 / extraction completed";
         if (tile instanceof CisternDrainTileEntity) return "Pollution: 2-50 / fluid drain";
-        if (block == Block.fire) return "Pollution: 8 / flammable block burned (18 on hibachi)";
-        if (block == BTWBlocks.stokedFire) return "Pollution: 30 / flammable block burned";
+        if (block == Block.fire) return "Pollution: 0.4 / flammable block burned (0.6 on hibachi)";
+        if (block == BTWBlocks.stokedFire) return "Pollution: 1 / flammable block burned";
         return null;
     }
 

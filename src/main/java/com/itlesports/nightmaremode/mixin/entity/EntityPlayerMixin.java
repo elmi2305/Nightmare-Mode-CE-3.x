@@ -552,20 +552,20 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
         float prog = NMUtils.getWorldProgress() * 0.08f;
-        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+        double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
         return (float) ((constant + prog + 0.1f) * mult);
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
         float prog = NMUtils.getWorldProgress() * 0.2f;
-        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+        double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
 
         return (float) ((constant + prog + 0.5f) * mult);
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
         float prog = NMUtils.getWorldProgress() * 0.05f;
-        double mult = NMUtils.getFirstFiveDaysMultiplier(worldObj);
+        double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
 
         return (float) ((constant + prog + 0.2f) * mult);
     }
@@ -1048,10 +1048,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         int fatigue = this.getData(FATIGUE);
         if (this.isPlayerSleeping()) {
-            if (this.ticksExisted % 10 == 0 && fatigue > 0) {
+            if (this.ticksExisted % 8 == 0 && fatigue > 0) {
                 this.setData(FATIGUE, --fatigue);
             }
-        } else if (this.ticksExisted % 600 == 0 && fatigue < 100) {
+        } else if (this.ticksExisted % (900 + NMUtils.getWorldProgress() * 150) == 0 && fatigue < 100) {
             int previousFatigue = fatigue;
             this.setData(FATIGUE, ++fatigue);
             if (previousFatigue < 60 && fatigue >= 60) {
@@ -1060,13 +1060,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
 
         if (this.ticksExisted % 20 == 0) {
-            if (fatigue >= 100) {
-                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 2));
-                this.addPotionEffect(new PotionEffect(Potion.blindness.id, 40, 0));
-            } else if (fatigue >= 80) {
+            if (fatigue >= 95) {
                 this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 1));
-                this.addPotionEffect(new PotionEffect(Potion.weakness.id, 40, 0));
-            } else if (fatigue >= 60) {
+            } else if (fatigue >= 75) {
                 this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 0));
             }
         }

@@ -143,12 +143,12 @@ public abstract class EntityItemMixin extends Entity {
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void polluteBurnedItem(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
-        if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(2.0F);
+        if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(0.2F);
     }
 
     @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 5, shift = At.Shift.BEFORE))
     private void polluteNaturalItemDespawn(CallbackInfo ci) {
-        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 2.0F : 1.0F);
+        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 0.2F : 1.0F);
     }
 
     @Unique

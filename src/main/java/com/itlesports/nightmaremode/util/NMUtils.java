@@ -94,8 +94,22 @@ public class NMUtils {
         return !(victim instanceof EntityVillager && attacker instanceof EntityZombie);
     }
 
-    public static double getFirstFiveDaysMultiplier(World world){
-        return Math.min((double) world.getWorldTime() / (120000), 1.0);
+    public static double getFirstFiveDaysMultiplier(World world) {
+        return Math.min((double) world.getWorldTime() / 120000.0, 1.0);
+    }
+
+    public static double getFirstSevenDaysMultiplier(World world){
+        return Math.min((double) world.getWorldTime() / 168000.0, 1.0);
+    }
+
+    public static double getBalancedMobFollowRange(World world, double baseRange, int progress,
+                                                   boolean bloodMoon, boolean eclipse) {
+        double range = baseRange + progress + (bloodMoon ? 2 : 0) + (eclipse ? 2 : 0);
+        if (world.getDifficultyParameter(com.itlesports.nightmaremode.util.elements.NMDifficultyParam.ShouldMobsBeBuffed.class)
+                && progress >= NMFields.HARDMODE) {
+            range += 2 + (progress - NMFields.HARDMODE) * 2;
+        }
+        return world.getWorldTime() < 120000L ? Math.max(6, range - 10) : range;
     }
 
     public static boolean canBecomeCarcass(EntityLivingBase entity) {

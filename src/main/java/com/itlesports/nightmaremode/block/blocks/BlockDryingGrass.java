@@ -46,6 +46,23 @@ public class BlockDryingGrass extends BlockContainer {
         return true;
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+        if (world.getBlockMetadata(x, y, z) == META_DRYING && random.nextInt(12) == 0) {
+            world.spawnParticle("smoke", x + 0.2 + random.nextDouble() * 0.6,
+                    y + 0.15, z + 0.2 + random.nextDouble() * 0.6, 0, 0.008, 0);
+        }
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+        if (!world.isRemote && entity instanceof EntityLivingBase && world.getBlockId(x, y, z) == this.blockID) {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+        }
+    }
+
     @Override public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         return null;
     }

@@ -100,6 +100,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityNetherrackAnvil.class, "NmNetherrackAnvil");
         TileEntity.addMapping(UnfiredNetherBrickTileEntity.class, "NmUnfiredNetherBrick");
         TileEntity.addMapping(DryingGrassTileEntity.class, "NmDryingGrass");
+        TileEntity.addMapping(CrudeBedrollTileEntity.class, "NmCrudeBedroll");
         TileEntity.addMapping(ObsidianMillstoneTileEntity.class, "NmObsidianMillstone");
         TileEntity.addMapping(ChuteHopperTileEntity.class, "NmChuteHopper");
         TileEntity.addMapping(OreNodeTileEntity.class, "NmOreNode");

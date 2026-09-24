@@ -80,6 +80,9 @@ public abstract class EntityPigMixin extends EntityAnimal {
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+        if (NMUtils.getWorldProgress() >= 1 && this.rand.nextInt(Math.max(4 - lootingLevel, 1)) == 0) {
+            this.dropItem(NMItems.pigHide.itemID, 1);
+        }
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {

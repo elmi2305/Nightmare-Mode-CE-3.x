@@ -125,6 +125,7 @@ public class NMBlocks {
     public static Block stoneAnvil;
     public static Block diamondAnvil;
     public static Block dryingGrass;
+    public static Block crudeBedroll;
     public static Block tungstenOre;
     public static Block netherWorkbench;
     public static Block netherShrub;
@@ -224,6 +225,9 @@ public class NMBlocks {
 
         dryingGrass = new BlockDryingGrass(NMFields.BLOCK_DRYING_GRASS);
         Item.itemsList[dryingGrass.blockID] = new NMItemBlock(NMBlocks.dryingGrass.blockID - 256).hideFromEMI();
+
+        crudeBedroll = new BlockCrudeBedroll(NMFields.BLOCK_CRUDE_BEDROLL);
+        Item.itemsList[crudeBedroll.blockID] = new NMItemBlock(crudeBedroll.blockID - 256).hideFromEMI();
 
         tungstenOre = new BlockTungstenOre(NMFields.BLOCK_TUNGSTEN_ORE);
         Item.itemsList[tungstenOre.blockID] = new NMNetherItemBlock(tungstenOre.blockID - 256);

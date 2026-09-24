@@ -47,7 +47,6 @@ public final class TestToolsCommand extends CommandBase {
                 reply(sender, "/testfreeskills: toggle unlocking skills by clicking without requirements.");
                 reply(sender, "/testdisableplayerfatigue: toggle fatigue suppression.");
                 reply(sender, "/testfullinventorycapacity: toggle 9 hotbar and 27 backpack slots.");
-                reply(sender, "/scary <on|off|event>: toggle scary events or force one event for testing.");
                 reply(sender, "Current: dev mode " + state(NightmareMode.devMode)
                         + ", rewards " + state(NightmareMode.alwaysShowRewards)
                         + ", free skills " + state(NightmareMode.unlockSkillsWithClick)

@@ -195,6 +195,7 @@ public class NMItems {
     public static ItemOxygenGear oxygenTank;
     public static Item plantFiber;
     public static Item driedPlantFiber;
+    public static Item crudeBedroll;
     public static Item skillBook;
     public static Item flintAxe;
     public static NMProgressiveItem flintAxeCrafting;
@@ -543,6 +544,10 @@ public class NMItems {
 
     static {
         doNightmareModeItems();
+        ((api.item.items.ToolItem) Item.shovelWood).setDamageVsEntity(0);
+        ((api.item.items.ToolItem) Item.pickaxeWood).setDamageVsEntity(0);
+        ((api.item.items.ToolItem) Item.axeWood).setDamageVsEntity(0);
+        ((api.item.items.ToolItem) Item.hoeWood).setDamageVsEntity(0);
         // info: due to the order of initialization, NMBlocks fields are null at this time, so NMPlaceAsBlockItem or other initializers that require NMBlocks must be passed a copy of the block ID int registered in NMFields
         // instead of getting the block id from the NMBlocks field. attempting to do so crashes the game with a nullptr
 
@@ -610,6 +615,7 @@ public class NMItems {
         oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
+        crudeBedroll = new ItemCrudeBedroll(3462, NMFields.BLOCK_CRUDE_BEDROLL);
         skillBook = new ItemSkillBook(2655).setUnlocalizedName("ifhySkillBook").setTextureName("nightmare:ifhySkillBook");
 
         mackerel = createRawFish(2658, "nmMackerel");

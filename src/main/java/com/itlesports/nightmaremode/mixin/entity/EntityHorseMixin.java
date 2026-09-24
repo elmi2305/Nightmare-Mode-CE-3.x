@@ -532,7 +532,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
 
         // timeout mechanic
         rideTimeTicks++;
-        if (rideTimeTicks >= 700) {
+        if (rideTimeTicks >= 780) {
             player.mountEntity(null);
             this.onNearbyPlayerStartles(player);
             this.resetTamingFields();

@@ -212,6 +212,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         }
     }
 
+    @Inject(method = "onDeath", at = @At("TAIL"))
+    private void clearFatigueOnDeath(DamageSource source, CallbackInfo ci) {
+        this.setData(NightmareMode.FATIGUE, 0);
+    }
+
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
     private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
         if (!this.worldObj.isRemote) {

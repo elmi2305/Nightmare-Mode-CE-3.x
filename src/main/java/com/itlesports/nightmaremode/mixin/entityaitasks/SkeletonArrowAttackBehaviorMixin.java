@@ -72,6 +72,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
     }
     @Inject(method = "continueExecuting", at = @At("TAIL"), cancellable = true)
     private void addBowSlapBehavior(CallbackInfoReturnable<Boolean> cir){
+        if (NMUtils.getWorldProgress() < NMFields.HARDMODE) return;
         EntityLivingBase target = this.entityAttackTarget;
         EntityLivingBase owner = this.entityOwner;
         if (target != null && owner.ticksExisted % 20 == 0 && owner.getDistanceSqToEntity(target) <= 2 && target instanceof EntityPlayer && owner.getHeldItem() != null && owner.getHeldItem().getItem() == Item.bow){

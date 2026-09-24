@@ -33,7 +33,9 @@ public class EntityLightningCreeper extends EntityCreeperVariant{
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                NMUtils.getBalancedMobFollowRange(this.worldObj, 14, NMUtils.getWorldProgress(),
+                        NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
     }
 
     @Override

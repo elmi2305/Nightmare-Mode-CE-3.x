@@ -57,8 +57,9 @@ public abstract class EntitySpiderMixin extends EntityMob{
             range = 32;
             return instance.getClosestVulnerablePlayerToEntity(entity,range);
         }
-        range += NMUtils.getWorldProgress() * 4;
-        return instance.getClosestVulnerablePlayerToEntity(entity,range);
+        range = NMUtils.getBalancedMobFollowRange(instance, range, NMUtils.getWorldProgress(),
+                NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this));
+        return instance.getClosestVulnerablePlayerToEntity(entity, range);
     }
     @Redirect(method = "findPlayerToAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySpider;getBrightness(F)F"))
     private float alwaysAggressiveOnEclipse(EntitySpider instance, float v){
@@ -294,7 +295,8 @@ public abstract class EntitySpiderMixin extends EntityMob{
             boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             boolean isBloodMoon = bloodMoonModifier > 1;
 
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
+                    NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
             if(spiderRainModifier > 0){
                 this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32d);
             }

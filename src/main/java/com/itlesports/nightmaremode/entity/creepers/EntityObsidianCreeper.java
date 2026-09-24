@@ -36,7 +36,7 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
 
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((24 + progress * 6) * bloodMoonModifier + eclipseModifier) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((24 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.18f);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(6f + NMUtils.getWorldProgress() * 2);
     }

@@ -1,23 +1,16 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
-import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
-import btw.entity.mob.BTWSquidEntity;
-import btw.entity.mob.JungleSpiderEntity;
 import btw.item.BTWItems;
-import com.itlesports.nightmaremode.AITasks.EntityAIWitchLightningStrike;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -27,8 +20,6 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(EntityWitch.class)
 public abstract class EntityWitchMixin extends EntityMob {
-    @Shadow private int witchAttackTimer;
-
     @Unique private int minionCountdown = 0;
     public EntityWitchMixin(World par1World) {
         super(par1World);
@@ -55,96 +46,14 @@ public abstract class EntityWitchMixin extends EntityMob {
         NMUtils.manageEclipseChance(this,10);
     }
 
-    @Unique private void summonMinion(EntityWitch witch, EntityPlayer player){
-        if(this.timesSummoned > 3) return;
-        this.timesSummoned++;
-        for(int i = 0; i < 3; i++){
-            if(NMUtils.getIsMobEclipsed(this)){
-                int xValue = MathHelper.floor_double(this.posX) + this.rand.nextInt(-7, 8);
-                int zValue = MathHelper.floor_double(this.posZ) + this.rand.nextInt(-7, 8);
-                int yValue = this.worldObj.getPrecipitationHeight(MathHelper.floor_double(xValue), MathHelper.floor_double(zValue));
-
-                if(this.posY + 5 < yValue){
-                    yValue = (int) (this.posY + 2);
-                    xValue = (int) this.posX;
-                    zValue = (int) this.posZ;
-                }
-
-                int minionIndex = rand.nextInt(4);
-                EntityLiving minion = null;
-                switch(minionIndex){
-                    case 0:
-                        minion = new EntitySkeleton(this.worldObj);
-                        ((EntitySkeleton)minion).setSkeletonType(1);
-                        minion.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        minion.setCurrentItemOrArmor(0, new ItemStack(Item.bow));
-                        this.worldObj.spawnEntityInWorld(minion);
-                        break;
-                    case 1:
-                        minion = new EntitySlime(this.worldObj);
-                        minion.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        ((EntitySlimeAccessor)minion).invokeSetSlimeSize(this.rand.nextInt(4) * 2 + 2);
-                        this.worldObj.spawnEntityInWorld(minion);
-                        break;
-                    case 2:
-                        minion = new EntitySpider(this.worldObj);
-                        EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
-                        skeleton.setSkeletonType(1);
-                        skeleton.setCurrentItemOrArmor(0,new ItemStack(Item.swordStone));
-                        BTWSquidEntity squid = new BTWSquidEntity(this.worldObj);
-
-                        minion.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        skeleton.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        squid.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-
-                        this.worldObj.spawnEntityInWorld(squid);
-                        this.worldObj.spawnEntityInWorld(skeleton);
-                        this.worldObj.spawnEntityInWorld(minion);
-
-                        squid.mountEntity(skeleton);
-                        skeleton.mountEntity(minion);
-                        break;
-                    case 3:
-                        minion = new EntityBlaze(this.worldObj);
-                        minion.setLocationAndAngles(xValue, yValue, zValue, this.rotationYaw, this.rotationPitch);
-                        minion.motionY = (rand.nextFloat() + 0.5) / 4;
-                        this.worldObj.spawnEntityInWorld(minion);
-                        break;
-                }
-
-                if (this.getAttackTarget() != null) {
-                    minion.setAttackTarget(this.getAttackTarget());
-                }
-                minion.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE));
-            } else {
-                if (!WorldUtils.gameProgressHasNetherBeenAccessedServerOnly() || this.dimension == 1) {
-                    EntitySilverfish tempMinion = new EntitySilverfish(this.worldObj);
-                    tempMinion.copyLocationAndAnglesFrom(witch);
-                    tempMinion.entityToAttack = player;
-                    this.worldObj.spawnEntityInWorld(tempMinion);
-                    // silverfish pre nether and in the end
-                } else {
-                    boolean summonCreeper = false;
-                    EntitySpider tempMinion = new EntitySpider(this.worldObj);
-                    if(this.rand.nextInt(4) == 0){
-                        tempMinion = new JungleSpiderEntity(this.worldObj);
-                    } else{
-                        if(this.rand.nextInt(16) == 0){
-                            summonCreeper = true;
-                        }
-                    }
-                    tempMinion.entityToAttack = player;
-                    tempMinion.copyLocationAndAnglesFrom(witch);
-                    this.worldObj.spawnEntityInWorld(tempMinion);
-                    if(summonCreeper){
-                        EntityCreeper creeper = new EntityCreeper(this.worldObj);
-                        creeper.entityToAttack = player;
-                        creeper.copyLocationAndAnglesFrom(witch);
-                        this.worldObj.spawnEntityInWorld(creeper);
-                    }
-                    break;
-                }
-            }
+    @Unique private void summonMinion(EntityWitch witch, EntityPlayer player) {
+        if (NMUtils.getWorldProgress() < 1 || this.timesSummoned >= 3) return;
+        ++this.timesSummoned;
+        for (int i = 0; i < 2; ++i) {
+            EntitySilverfish minion = new EntitySilverfish(this.worldObj);
+            minion.copyLocationAndAnglesFrom(witch);
+            minion.entityToAttack = player;
+            this.worldObj.spawnEntityInWorld(minion);
         }
     }
     @Unique private int timesSummoned = 0;
@@ -277,35 +186,22 @@ public abstract class EntityWitchMixin extends EntityMob {
             2, 4
     };
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void addWitchSpecificAITasks(World par1World, CallbackInfo ci){
-        this.targetTasks.addTask(1, new EntityAIWitchLightningStrike(this));
-    }
-
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
         if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             int progress = NMUtils.getWorldProgress();
             double bloodMoonModifier = NMUtils.getBloodMoonModifier(1.5);
-            int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 30 : 0;
+            int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 10 : 0;
 
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 4) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
-            // 20 -> 24 -> 28 -> 32
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.4 * (1 + (niteMultiplier - 1) / 20));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 2) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.3 * (1 + (niteMultiplier - 1) / 20));
         }
     }
 
-    @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityWitch;setAggressive(Z)V",ordinal = 1,shift = At.Shift.AFTER))
-    private void healFast(CallbackInfo ci){
-        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            this.witchAttackTimer = NMUtils.getIsMobEclipsed(this) ? 5 : 10;
-        }
-    }
     @Inject(method = "dropFewItems", at = @At("TAIL"))
     private void chanceToDropSpecialItems(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
         for(int i = 0; i < 1 + iLootingModifier * 2; i++){
@@ -316,63 +212,6 @@ public abstract class EntityWitchMixin extends EntityMob {
 
         if(this.rand.nextInt(NMUtils.getIsBloodMoon() ? 2 : 6) == 0){
             this.dropItem(BTWItems.witchWart.itemID, this.rand.nextInt(2));
-        }
-    }
-
-    @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 8.0f))
-    private float increaseThrowingRange(float constant){
-        return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 16f : constant;
-    }
-
-    @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 8.0f))
-    private float lookAtPlayer(float constant){
-        return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 16f : constant;
-    }
-
-    @ModifyConstant(method = "<init>", constant = @Constant(floatValue = 10.0f))
-    private float increaseThrowingRange1(float constant){
-        return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 20f : constant;
-    }
-
-    @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 0.75f))
-    private float modifyPotionVelocity(float constant){
-        if(!this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            return constant;
-        }
-        Entity target = this.getAttackTarget();
-        if (target != null) {
-            double distSq = this.getDistanceSqToEntity(target);
-
-            if (distSq > 225) {
-                float dist = (float)Math.sqrt(distSq);
-                return 0.6f + dist / 27f;
-            }
-
-            if (distSq > 64) {
-                float dist = (float)Math.sqrt(distSq);
-                return 0.6f + dist / 30f;
-            }
-
-            if (distSq < 25) {
-                return 0.6f;
-            }
-
-            return 0.75f;
-        }
-        return constant;
-    }
-
-    @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
-    private void chanceToTeleport(EntityLivingBase par1EntityLivingBase, float par2, CallbackInfo ci){
-        if(this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.getAttackTarget() instanceof EntityPlayer targetPlayer && getDistanceSqToEntity(targetPlayer)>256){
-            EntityEnderPearl pearl = new EntityEnderPearl(this.worldObj, this);
-            this.worldObj.spawnEntityInWorld(pearl);
-            double var1 = targetPlayer.posX - this.posX;
-            double var2 = targetPlayer.posZ - this.posZ;
-            Vec3 vector = Vec3.createVectorHelper(var1, 0, var2);
-            vector.normalize();
-            pearl.motionX = vector.xCoord * 0.1;
-            pearl.motionZ = vector.zCoord * 0.1;
         }
     }
 

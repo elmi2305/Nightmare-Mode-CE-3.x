@@ -158,7 +158,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "updateHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceSquidDamageInterval(int constant){
-        return (int) (20 / NMUtils.getBuffedSquidBonus());
+        return constant;
     }
 
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
@@ -166,7 +166,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return 2000;
     }
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Entity;inWater:Z", opcode = Opcodes.GETFIELD))
-    private boolean attackUnderwaterPlayers(Entity instance){return false;}
+    private boolean attackUnderwaterPlayers(Entity instance){return instance.inWater;}
 
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
@@ -174,15 +174,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if ((Object)this instanceof EntityAngelSquid) {
             return 8.0D;
         }
-        if(NMUtils.getIsEclipse()){
-            return 16;
-        }
-        if(this.posY < 40){
-            return 5;
-        } else if(this.posY < 50){
-            return 10;
-        }
-        return (dRange + (NMUtils.getWorldProgress() > PREHARDMODE ? 4 : 0)) * (NightmareMode.buffedSquids ? 1.5f : 1);
+        return Math.min(dRange, 6.0D);
         // 20 max
     }
 
@@ -220,7 +212,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "checkForHeadCrab", constant = @Constant(intValue = 40),remap = false)
     private int reduceDamageInterval(int constant){
-        return (int) (15 / NMUtils.getBuffedSquidBonus());
+        return constant;
     }
     @Inject(method = "attackEntityFrom", at = @At("HEAD"))
     private void storeLastHit(DamageSource damageSource, float iDamageAmount, CallbackInfoReturnable<Boolean> cir){
@@ -230,32 +222,10 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     private double modifySquidHP(double d) {
         if(this.worldObj == null) return d;
         if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            return (NMUtils.getWorldProgress() > PREHARDMODE ? 12 * (NMUtils.getWorldProgress()+1) : 18) * NMUtils.getBuffedSquidBonus() * NMUtils.getNiteMultiplier();
-            // pre nether 18, hardmode 24, post wither 36, post dragon 48
-            // if BS is on, 36 -> 48 -> 72 -> 96
+            return (14 + Math.max(0, NMUtils.getWorldProgress()) * 4) * NMUtils.getNiteMultiplier();
         }
         return d;
     }
-    // TENTACLES
-    @Inject(method = "updateEntityActionState", at = @At("HEAD"))
-    private void lowerTentacleCooldown(CallbackInfo ci) {
-        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            --this.tentacleAttackCooldownTimer;
-            if (NMUtils.getWorldProgress() > HARDMODE) {
-                this.tentacleAttackCooldownTimer -= (int) (2 * NMUtils.getBuffedSquidBonus());
-            }
-        }
-    }
-    @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(intValue = 100),remap = false)
-    private int lowerTentacleAttackCooldownTimer(int constant){
-        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            return 100 - (NMUtils.getWorldProgress() * 10);
-        }
-        return constant;
-        // cooldown has a degree of randomness, so it's not like it'll fire every 10 ticks post dragon. it has some variance.
-        // this purely insures the cooldown condition is true whenever it is checked
-    }
-
     @ModifyArg(method = "getValidHeadCrabTargetInRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getEntitiesWithinAABB(Ljava/lang/Class;Lnet/minecraft/src/AxisAlignedBB;)Ljava/util/List;"),index = 0)
     private Class avoidAttackingAnimalsIfEclipsed(Class par1Class){
         return NMUtils.getIsMobEclipsed(this) ? EntityPlayer.class : par1Class;
@@ -293,7 +263,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;ridingEntity:Lnet/minecraft/src/Entity;", opcode = Opcodes.GETFIELD))
     private Entity treatPlayersAsAlwaysNotBeingBoated(EntityPlayer instance){
         // TODO: BTW FIXES THIS IN THE NEW VERSION, REMOVE
-        return null; // not riding anything
+        return instance.ridingEntity;
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;inWater:Z", opcode = Opcodes.GETFIELD))
@@ -305,7 +275,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "launchTentacleAttackInDirection", constant = @Constant(doubleValue = 6.0d),remap = false)
     private double increaseCalculatedTentacleRange(double constant){
-        return (NMUtils.getIsMobEclipsed(this) ? 12.0d : 7.0d) * NMUtils.getBuffedSquidBonus();
+        return constant;
     }
     @Inject(method = "attemptTentacleAttackOnTarget", at = @At("HEAD"),cancellable = true,remap = false)
     private void squidAvoidAttackingHeadcrabbedPlayer(CallbackInfo ci){
@@ -316,7 +286,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyConstant(method = "attemptTentacleAttackOnTarget", constant = @Constant(doubleValue = 36.0),remap = false)
     private double manageRange(double constant){
-        return (NMUtils.getIsMobEclipsed(this) ? 144.0 : 64) * (NMUtils.getBuffedSquidBonus() * NMUtils.getBuffedSquidBonus());
+        return constant;
     }
     // let squid see through walls
     @Redirect(method = "attemptTentacleAttackOnTarget", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
@@ -328,26 +298,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         return this.nightmareMode$isLostOcean() || instance.canEntityCenterOfMassBeSeen(entity);
     }
 
-    // sets the squid to be permanently in darkness if post nether. this is so the squids are always hostile
     @ModifyVariable(method = "updateEntityActionState", at = @At(value = "STORE"), name = "bIsInDarkness")
     private boolean hostilePostNether(boolean bIsInDarkness) {
         if ((Object)this instanceof EntityAngelSquid) return true;
-        if (NMUtils.getWorldProgress() > PREHARDMODE && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-            return true;
-        }
         return bIsInDarkness;
     }
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isDaytime()Z"))
     private boolean squidAlwaysNightPostNether(World instance){
-        if((Object)this instanceof EntityAngelSquid || NMUtils.getWorldProgress() > PREHARDMODE){
+        if((Object)this instanceof EntityAngelSquid){
             return false;
         } else return this.worldObj.isDaytime();
     }
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayer;getBrightness(F)F"))
     private float playerPermanentlyInDarknessAfterNether(EntityPlayer instance, float v){
-        if((Object)this instanceof EntityAngelSquid
-                || NMUtils.getWorldProgress() > PREHARDMODE && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+        if((Object)this instanceof EntityAngelSquid){
             return 0f;
         }
         return instance.getBrightness(v);

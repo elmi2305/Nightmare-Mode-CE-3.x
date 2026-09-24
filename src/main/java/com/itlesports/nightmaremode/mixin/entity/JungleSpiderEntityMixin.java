@@ -1,16 +1,15 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.entity.mob.JungleSpiderEntity;
-import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
 
 @Mixin(JungleSpiderEntity.class)
 public class JungleSpiderEntityMixin extends EntitySpider{
@@ -18,16 +17,11 @@ public class JungleSpiderEntityMixin extends EntitySpider{
         super(par1World);
     }
 
-    @Inject(method = "attackEntityAsMob", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V",ordinal = 0))
-    private void addAdditionalEffects(Entity targetEntity, CallbackInfoReturnable<Boolean> cir){
-        if(targetEntity instanceof EntityPlayer targetPlayer && targetPlayer.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            if(NMUtils.getWorldProgress() >= HARDMODE){
-                targetPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100,1));
-                targetPlayer.addPotionEffect(new PotionEffect(Potion.poison.id,100,1));
-            }
-            targetPlayer.addPotionEffect(new PotionEffect(Potion.blindness.id,60,0));
-        }
+    @Redirect(method = "attackEntityAsMob", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V", ordinal = 1))
+    private void skipExtraHungerEffect(EntityLivingBase target, PotionEffect effect) {
     }
+
     @Inject(method = "dropsSpiderEyes", at = @At("RETURN"), cancellable = true)
     private void dropSpiderEyes(CallbackInfoReturnable<Boolean> cir){
         cir.setReturnValue(true);
@@ -38,13 +32,9 @@ public class JungleSpiderEntityMixin extends EntitySpider{
         if (this.worldObj != null) {
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + NMUtils.getWorldProgress() * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)11.0F + NMUtils.getWorldProgress() * 4);
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, NMUtils.getWorldProgress(), isBloodMoon, isEclipse));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(11.0 + NMUtils.getWorldProgress() * 2);
         }
     }
 
-    @Inject(method = "isAlwaysNeutral", at = @At("HEAD"),cancellable = true)
-    private void bugFixNeutralSpiders(CallbackInfoReturnable<Boolean> cir){
-        cir.setReturnValue(false);
-    }
 }

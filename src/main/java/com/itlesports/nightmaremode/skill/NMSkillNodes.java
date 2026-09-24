@@ -98,7 +98,7 @@ public final class NMSkillNodes {
             -1, 1,
             "Bring 64 raw lithium.",
             NMItems.lithiumRaw.itemID, 0, false, 64,
-            "+5% average crafted-item durability.", SkillRewardActions.addCraftingDurability(0.05F),
+            "+5% iron-pile chance.", SkillRewardActions.addIronPileChance(0.05F),
             MINING, false);
 
     public static final SkillNode BRING_REFINED_LITHIUM_256 = deferred(bring(
@@ -842,13 +842,13 @@ public final class NMSkillNodes {
             HUSBANDRY, false);
 
 
-    public static final SkillNode BRING_DRIED_PLANT_FIBER_64 = bring(
+    public static final SkillNode BRING_DRIED_PLANT_FIBER_16 = bring(
             "dried_fiber_hemp",
             "Fiber Seed Lore",
             NMItems.driedPlantFiber,
             0, 1,
-            "Bring 64 dried plant fibers.",
-            NMItems.driedPlantFiber.itemID, 0, false, 64,
+            "Bring 16 dried plant fibers.",
+            NMItems.driedPlantFiber.itemID, 0, false, 16,
             "+2% hemp-seed chance.", SkillRewardActions.addHempSeedChance(0.02F),
             HUSBANDRY, false);
 
@@ -1002,7 +1002,7 @@ public final class NMSkillNodes {
             2, 5,
             "Breed 50 animals.",
             (p, w) -> SkillHandler.getPlayerData(p).animalsBred >= 50,
-            "+10% average crafting durability.", SkillRewardActions.addCraftingDurability(0.1f),
+            "+10% mob drops.", SkillRewardActions.addMobLootChance(0.1f),
             HUSBANDRY, false);
 
     public static final SkillNode BRING_SUGAR_CANE_256 = bring(
@@ -1204,10 +1204,10 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_RED_MUSHROOM_32 = bring(
             "mushroom_hotbar",
             "Mushroom Foraging",
-            Block.mushroomRed,
+            BTWItems.redMushroom,
             1, 1,
             "Bring 32 red mushrooms.",
-            Block.mushroomRed.blockID, 0, false, 32,
+            BTWItems.redMushroom.itemID, 0, false, 32,
             "+1 hotbar slot.", SkillRewardActions.addHotbarSlots(1),
             HUSBANDRY, false);
 
@@ -1260,7 +1260,7 @@ public final class NMSkillNodes {
             3, 3,
             "Bring 16 bone carvings.",
             BTWItems.boneCarving.itemID, 0, false, 16,
-            "+10% more durability when crafting.", SkillRewardActions.addCraftingDurability(0.1f),
+            "+10% rare fish chance.", SkillRewardActions.addRareFishChance(0.1f),
             HUSBANDRY, false);
 
     public static final SkillNode BRING_BONE_FISH_HOOK_8 = deferred(bring(
@@ -2885,7 +2885,7 @@ public final class NMSkillNodes {
             "Practical Bludgeoning",
             BTWItems.woodenClub,
             3, 2,
-            "Kill 16 mobs.",
+            "Land the final hit on 16 hostile mobs; a final hit that leaves a carcass counts.",
             (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 16,
             "Unlocks Additional Recipes.", none(),
             COMBAT, false);

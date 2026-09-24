@@ -15,7 +15,10 @@ public class ItemSwordMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void adjustVanillaSwordDamage(int id, EnumToolMaterial material, CallbackInfo ci) {
-        if (id == 11) { // iron sword
+        if (material == EnumToolMaterial.WOOD) {
+            this.weaponDamage = 0.0F;
+        }
+        else if (id == 11) { // iron sword
             this.weaponDamage -= 1.0F;
         }
         else if (id == 20) { // diamond sword

@@ -2876,6 +2876,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(BTWItems.wickerWeaving, 1, 299), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.washedSugarCane});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pileOfSticks), new Object[]{Item.stick, Item.stick, Item.stick, Item.stick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulFlint), new Object[]{NMItems.soulChip, NMItems.soulChip, NMItems.soulChip, NMItems.soulChip});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulChip, 4), new Object[]{NMItems.soulFlint});
         RecipeManager.addShapelessRecipe(
                 new ItemStack(NMItems.pighideStringCrafting, 1, NMItems.pighideStringCrafting.getMaxDamage() - 1),
                 new Object[]{NMItems.pigHide, new ItemStack(NMItems.soulFlint, 1, 0)});
@@ -3071,6 +3072,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addShapelessRecipe(new ItemStack(Item.clay), new Object[]{BTWItems.clayPile, BTWItems.clayPile, BTWItems.clayPile, BTWItems.clayPile});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.flint), new Object[]{NMItems.flintChip, NMItems.flintChip, NMItems.flintChip, NMItems.flintChip});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.flintChip, 4), new Object[]{Item.flint});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.snowball), new Object[]{NMItems.snowPile, NMItems.snowPile, NMItems.snowPile, NMItems.snowPile});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unshapedWetClayBrick, 1, NMItems.unshapedWetClayBrick.getMaxDamage() - 1), new Object[]{Item.clay, BTWItems.gravelPile, BTWItems.dirtPile, BTWItems.sandPile});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.cauldron), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron}), NMSkillNodes.BRING_IRON_INGOT_16);
@@ -3649,6 +3651,9 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_IRON_SWORD);
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.crudeBedroll),
+                new Object[]{BTWTags.wools, BTWTags.wools,
+                        NMItems.crudeString, NMItems.driedPlantFiber});
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.bedroll), new Object[]{BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools,BTWTags.knitWools, BTWTags.knitWools, BTWTags.strings, BTWItems.padding, BTWItems.padding}),
                 NMSkillNodes.BRING_WOOL_128);
 
@@ -4594,7 +4599,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_GRAVEL_PILE_32);
         SkillRecipeGates.crafting(NMItems.sharpTwigBarkWrapping.itemID, NMSkillNodes.BRING_BARK_16);
         SkillRecipeGates.crafting(NMItems.scrapedBark.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
-        SkillRecipeGates.crafting(NMItems.crudeStringCrafting.itemID, NMSkillNodes.BRING_DRIED_PLANT_FIBER_64);
+        SkillRecipeGates.crafting(NMItems.crudeStringCrafting.itemID, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
         SkillRecipeGates.crafting(NMItems.primitiveGlue.itemID, NMSkillNodes.BRING_COAL_DUST_32);
         SkillRecipeGates.crafting(NMItems.woodCupCrafting.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
         SkillRecipeGates.crafting(NMItems.reedPeeling.itemID, NMSkillNodes.BRING_SUGAR_CANE);

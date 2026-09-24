@@ -99,6 +99,7 @@ public class NMFields {
     public static final int BLOCK_STONE_ANVIL = 2404;
     public static final int BLOCK_DIAMOND_ANVIL = 2405;
     public static final int BLOCK_DRYING_GRASS = 2410;
+    public static final int BLOCK_CRUDE_BEDROLL = 2460;
     public static final int BLOCK_TUNGSTEN_ORE = 2411;
     public static final int BLOCK_NETHER_WORKBENCH = 2412;
     public static final int BLOCK_NETHER_SHRUB = 2413;
