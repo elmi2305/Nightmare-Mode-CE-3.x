@@ -10,9 +10,10 @@ import net.minecraft.src.*;
 import static btw.achievement.BTWAchievements.*;
 
 public final class JourneyJournals {
-    public static final int COUNT = 3;
+    public static final int COUNT = 5;
     private static final String[] TITLES = {
-            "A Thousand Steps Below", "Where the World Wears Thin", "The Last Shore"
+            "A Thousand Steps Below", "Where the World Wears Thin", "The Last Shore",
+            "The Wither Rite", "The Blood Wither Rite"
     };
     private static final String[][] PAGES = {
             {
@@ -37,6 +38,18 @@ public final class JourneyJournals {
                     "It was a ring of stone. Empty places looked back at me.\n\nAll that distance, and the Eye had led me to something that was still waiting.\n\nI cannot tell you whether its builders meant to enter, or whether they hoped to keep something on the other side.",
                     "I did not cross.\n\nFor a long while I was ashamed to write that. Then I remembered the first time I saw the red caverns, and how certain I was that I had seen everything.\n\nPerhaps the land we know is only the first room.",
                     "I have hidden this last account underground, among things that may outlive me. My other pages have gone their own ways.\n\nIf you find this one first, know that there was a road, and that someone returned along it.\n\nWhat lies beyond the ring must be your story."
+            },
+            {
+                    "The Wither is not called by a bare T of bone. Prepare a clear 11 by 11 site in the Overworld. The rite rises five blocks above its floor. Keep the space around it empty.",
+                    "Set forty obsidian blocks in the pattern shown on the next page. Add four glowstone, four dragon vessels, four purple gems, four red gems and one black gem in their marked positions.",
+                    "At the center, make the T from four bone blocks. Set three wither skeleton skulls across its top. The skulls must be between Y 60 and Y 200. Turn the entire design together if the ground demands it.",
+                    "Every block and every required opening must match the diagram. Place the final skull only after the surrounding rite is ready."
+            },
+            {
+                    "The Blood Wither requires a greater foundation: a clear 19 by 19 site in the Overworld, five blocks high. This rite has its own pattern; the smaller Wither foundation will not serve.",
+                    "Set 149 soulforged steel blocks as shown. The diagram also calls for twenty black gems, eight red gems, eight purple gems and four beacons.",
+                    "Form the central T from four blood bone blocks and crown it with three wither skeleton skulls. Keep the skulls between Y 60 and Y 200.",
+                    "Leave the spaces shown in the drawing clear. The entire pattern can be rotated in quarter turns. Complete the foundation before placing the last skull."
             }
     };
 

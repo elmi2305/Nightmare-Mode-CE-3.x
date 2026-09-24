@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import com.itlesports.nightmaremode.util.JourneyJournals;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.skill.gui.GuiJourneyJournal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +15,12 @@ public class ItemJourneyJournal extends ItemEditableBook {
         this.journalIndex = journalIndex;
         this.setCreativeTab(CreativeTabs.tabMisc);
         this.setUnlocalizedName("journeyJournal" + (journalIndex + 1));
-        this.setTextureName("nightmare:journeyJournal" + (journalIndex + 1));
+        this.setTextureName(NMFields.modID + ":journeyJournal" + (journalIndex + 1));
+    }
+
+    @Override
+    public String getModId() {
+        return NMFields.modID;
     }
 
     @Override

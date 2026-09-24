@@ -60,6 +60,8 @@ public class BlockCisternInterface extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player,
                                     int side, float hitX, float hitY, float hitZ) {
+        if (player.getCurrentEquippedItem() == null
+                || !(player.getCurrentEquippedItem().getItem() instanceof com.itlesports.nightmaremode.item.items.ItemMechanicalWrench)) return true;
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if (!world.isRemote && tile instanceof CisternInterfaceTileEntity) {
             CisternTileEntity cistern = ((CisternInterfaceTileEntity)tile).getCistern();

@@ -241,8 +241,8 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public void dropItemsOnDestroyedByExplosion(World world, int i, int j, int k, Explosion explosion) {
-        if (!world.isRemote && this.shouldDropDust) {
-            this.dropItemsIndividually(world, i, j, k, BTWItems.groundNetherrack.itemID, 4, 0, 0.75f);
+        if (!world.isRemote && this.shouldDropDust && world.rand.nextInt(8) == 0) {
+            this.dropItemsIndividually(world, i, j, k, BTWItems.groundNetherrack.itemID, 1, 0, 1.0f);
         }
     }
 

@@ -47,6 +47,8 @@ public class BlockCisternDrain extends BlockCustomHopperModel {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player,
                                     int side, float hitX, float hitY, float hitZ) {
+        if (player.getCurrentEquippedItem() == null
+                || !(player.getCurrentEquippedItem().getItem() instanceof com.itlesports.nightmaremode.item.items.ItemMechanicalWrench)) return true;
         if (!world.isRemote) {
             CisternTileEntity above = this.resolveCistern(world, x, y + 1, z);
             CisternTileEntity below = this.resolveCistern(world, x, y - 1, z);

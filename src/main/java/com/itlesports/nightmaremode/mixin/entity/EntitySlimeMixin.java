@@ -67,11 +67,6 @@ public abstract class EntitySlimeMixin extends EntityLiving{
     @Unique private float streakModifier = 1;
     @Unique private float splitCounter = 0;
 
-    @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
-    private void noScrollDrops(CallbackInfo ci){
-        ci.cancel();
-    }
-
     @Inject(method = "updateEntityActionState",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntitySlime;faceEntity(Lnet/minecraft/src/Entity;FF)V",

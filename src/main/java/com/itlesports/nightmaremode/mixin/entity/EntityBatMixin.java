@@ -27,8 +27,4 @@ public class EntityBatMixin extends EntityAmbientCreature {
         return this.rand.nextInt(4) == 0 ? 3 : 2;
     }
 
-    @Inject(method = "checkForScrollDrop", at = @At(value = "HEAD"), cancellable = true)
-    private void reduceScrollDrops(CallbackInfo ci){
-        ci.cancel();
-    }
 }

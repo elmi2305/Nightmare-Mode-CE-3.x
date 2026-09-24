@@ -1157,23 +1157,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.magicArrow, 4), new Object[]{new ItemStack(NMItems.magicFeather), new ItemStack(Item.stick), new ItemStack(BTWItems.soulFlux), new ItemStack(BTWItems.broadheadArrowHead)});
         // done adding misc recipes
 
-        // tasty sandwich
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), BTWTags.cookedMeats});
-
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), new ItemStack(BTWItems.hamAndEggs)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 3), new Object[]{new ItemStack(Item.bread), new ItemStack(Item.bread), new ItemStack(BTWItems.cookedKebab)});
-
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.tastySandwich, 2), new Object[]{new ItemStack(Item.bread), NMTags.sandwichMeats});
-        // tasty sandwich end
-
-        // remove sinew recipes, add custom ones
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.sinewExtractingBeef, 1, 600), new Object[]{new ItemStack(Item.beefCooked), new ItemStack(Item.beefCooked), new ItemStack(BTWItems.sharpStone)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.sinewExtractingWolf, 1, 600), new Object[]{new ItemStack(BTWItems.cookedWolfChop), new ItemStack(BTWItems.cookedWolfChop), new ItemStack(BTWItems.sharpStone)});
-
-        NMUtils.logTodo(); // add sinew recipes
-
-        // done with sinew
-
         // add blood recipes
 
 
@@ -1193,8 +1176,9 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.elementalRod, 1), new Object[]{NMItems.shadowRod, Item.blazeRod, NMItems.fireRod, NMItems.waterRod});
         // done adding blaze rod recipes
 
-        NMUtils.logTodo(); // make books expensive
-//        RecipeManager.addRecipe(new ItemStack(Item.book), new Object[]{"###", "XXX", Character.valueOf('#'), NMTags.bookLeather, Character.valueOf('X'), new ItemStack(Item.paper, 1, Short.MAX_VALUE)});
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.book), new Object[]{Item.paper, Item.paper, Item.paper, BTWTags.rawLeathers});
+
+        RecipeManager.addRecipe(new ItemStack(Item.book), new Object[]{"###", "XXX", Character.valueOf('#'), NMTags.bookLeather, Character.valueOf('X'), new ItemStack(Item.paper, 1, Short.MAX_VALUE)});
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.gunpowder), new Object[]{new ItemStack(BTWItems.nitre), new ItemStack(BTWItems.brimstone), new ItemStack(BTWItems.coalDust)});
 
@@ -1208,7 +1192,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.legsDiamond), new Object[]{"XXX", "Y Y", "Y Y", 'X', BTWItems.diamondIngot, 'Y', BTWItems.diamondArmorPlate});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.bootsDiamond), new Object[]{"X X", "X X", Character.valueOf('X'), BTWItems.diamondIngot});
 
-        NMUtils.logTodo(); // incorporate diamond plates into the recipe
         RecipeManager.addRecipe(new ItemStack(Item.helmetDiamond), new Object[]{"###", "# #", "   ", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
         RecipeManager.addRecipe(new ItemStack(Item.plateDiamond), new Object[]{"# #", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
         RecipeManager.addRecipe(new ItemStack(Item.legsDiamond), new Object[]{"###", "# #", "# #", Character.valueOf('#'), new ItemStack(NMItems.refinedDiamondIngot)});
@@ -1229,8 +1212,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.birchBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk, 1, 0)});
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.jungleBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk, 1, 0)});
 
-
-        NMUtils.logTodo(); // every mob should drop its scrolls, or something else should be thought of
 
         // hide all baskets from EMI
         NMBlocks.customWickerBasket.hideFromEMI();
@@ -1318,7 +1299,6 @@ public abstract class OldNMInitializer implements AchievementExt {
 
 
         // crimson bottle
-        NMUtils.logTodo(); // recipe for bm bottle
         RecipeManager.addRecipe(new ItemStack(NMPostItems.bloodMoonBottle), new Object[]{
                 "HSH",
                 "BEB",

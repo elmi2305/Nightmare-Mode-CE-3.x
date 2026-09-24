@@ -354,9 +354,6 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
     }
 
-    @Override
-    public void checkForScrollDrop() {}
-
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
     private int lowerAttackCooldownOnFire(int constant){
         EntityGhast thisObj = (EntityGhast)(Object)this;

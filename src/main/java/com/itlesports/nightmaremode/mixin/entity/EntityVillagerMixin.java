@@ -63,6 +63,17 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         if (eligible && !found) recipes.add(com.itlesports.nightmaremode.util.NMInitializer.createExpeditionJournalTrade());
     }
 
+    @Inject(method = "getRecipes", at = @At("RETURN"))
+    private void offerWitherJournal(EntityPlayer player, CallbackInfoReturnable<MerchantRecipeList> cir) {
+        if (this.worldObj.isRemote || this.getProfession() != 2 || this.getCurrentTradeLevel() < 5) return;
+        MerchantRecipeList recipes = cir.getReturnValue();
+        if (recipes == null) return;
+        for (Object entry : recipes) {
+            if (((MerchantRecipe)entry).getItemToSell().itemID == JourneyJournals.item(3).itemID) return;
+        }
+        recipes.add(new MerchantRecipe(new ItemStack(Item.emerald, 4), JourneyJournals.create(3), 5));
+    }
+
     @Inject(method = "useRecipe", at = @At("HEAD"))
     private void collectTradedJournal(MerchantRecipe recipe, CallbackInfo ci) {
         EntityPlayer player = this.getCustomer();

@@ -25,7 +25,8 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 public class NMAchievements {
     public static final Achievement[] JOURNEY_JOURNALS = {
-            journalAchievement(0), journalAchievement(1), journalAchievement(2)
+            journalAchievement(0), journalAchievement(1), journalAchievement(2),
+            journalAchievement(3), journalAchievement(4)
     };
 
     public static final Achievement<AchievementEvents.EntityInteractedEventData> JOURNEY_MASTER_FISHERMAN =

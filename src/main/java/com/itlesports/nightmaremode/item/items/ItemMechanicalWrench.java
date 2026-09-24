@@ -2,6 +2,11 @@ package com.itlesports.nightmaremode.item.items;
 
 import api.block.MechanicalBlock;
 import btw.block.blocks.GearBoxBlock;
+import btw.block.blocks.MillstoneBlock;
+import com.itlesports.nightmaremode.block.blocks.CisternBlock;
+import com.itlesports.nightmaremode.block.blocks.BlockCisternInterface;
+import com.itlesports.nightmaremode.block.blocks.BlockCisternDrain;
+import com.itlesports.nightmaremode.block.blocks.BlockCisternStirrer;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mechanical.MechanicalStressManager;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
@@ -25,6 +30,12 @@ public class ItemMechanicalWrench extends NMItem {
     public static boolean inspect(EntityPlayer player, World world, int x, int y, int z) {
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
         if (block == null) return false;
+
+        if (block instanceof CisternBlock || block instanceof BlockCisternInterface
+                || block instanceof BlockCisternDrain || block instanceof BlockCisternStirrer) {
+            if (!world.isRemote) block.onBlockActivated(world, x, y, z, player, 1, 0.5F, 0.5F, 0.5F);
+            return true;
+        }
 
         String pollution = ChunkPollutionManager.getSourceDescription(world, x, y, z);
         if (pollution != null && !world.isRemote) {
@@ -61,6 +72,9 @@ public class ItemMechanicalWrench extends NMItem {
         }
 
         if (pollution != null) return true;
+
+        // always consume wrench clicks on millstones so the tool cannot be inserted
+        if (block instanceof MillstoneBlock) return true;
 
         if (block instanceof MechanicalBlock) {
             if (!world.isRemote) {

@@ -25,6 +25,7 @@ import com.itlesports.nightmaremode.crafting.recipe.HammerRecipeList;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.QuestToolRepairRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
+import com.itlesports.nightmaremode.crafting.recipe.types.CustomFishingRodBaitingRecipe;
 import com.itlesports.nightmaremode.crafting.recipe.types.ChestDyeRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
@@ -2376,26 +2377,6 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('N'), BTWTags.strings,
                 Character.valueOf('S'), BTWItems.ironNugget
         });
-        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpHelmet), new Object[]{
-                "###", "#I#",
-                Character.valueOf('#'), BTWTags.tannedLeathers,
-                Character.valueOf('I'), Item.ingotIron
-        });
-        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpChest), new Object[]{
-                "# #", "I#I", "###",
-                Character.valueOf('#'), BTWTags.tannedLeathers,
-                Character.valueOf('I'), Item.ingotIron
-        });
-        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpLeggings), new Object[]{
-                "#I#", "# #", "# #",
-                Character.valueOf('#'), BTWTags.tannedLeathers,
-                Character.valueOf('I'), Item.ingotIron
-        });
-        RecipeManager.addRecipe(new ItemStack(BTWItems.gimpBoots), new Object[]{
-                "# #", "I I",
-                Character.valueOf('#'), BTWTags.tannedLeathers,
-                Character.valueOf('I'), Item.ingotIron
-        });
         RecipeManager.addRecipe(new ItemStack(NMItems.carbonIronIngot), new Object[]{
                 "NNN", "NYN", "NNN", Character.valueOf('N'), NMItems.carbonIronNugget, Character.valueOf('Y'), BTWItems.stoneBrick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.wetGasket), new Object[]{
@@ -3121,6 +3102,14 @@ public abstract class NMInitializer implements AchievementExt {
                 "fishing_auto_reel_upgrade", NMItems.fishingAutoReelUpgrade, "IfhyFishingAutoReel"));
         CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
                 "rare_fish_lure_upgrade", NMItems.rareFishLureUpgrade, "IfhyRareFishLure"));
+        CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
+                "iron", NMItems.ironFishingPole, NMItems.ironFishingPoleBaited));
+        CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
+                "diamond", NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited));
+        CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
+                "steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));
+        CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
+                "nether", NMItems.netherFishingRod, NMItems.netherFishingRodBaited));
         CraftingManager.getInstance().getRecipeList().add(new ChestDyeRecipe());
 
 
@@ -4311,14 +4300,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.tannedLeatherChest.itemID, NMSkillNodes.BRING_TANNED_LEATHER_16);
         SkillRecipeGates.crafting(BTWItems.tannedLeatherLeggings.itemID, NMSkillNodes.BRING_TANNED_LEATHER_16);
         SkillRecipeGates.crafting(BTWItems.tannedLeatherBoots.itemID, NMSkillNodes.BRING_TANNED_LEATHER_16);
-        SkillRecipeGates.crafting(BTWItems.gimpHelmet.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpChest.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpLeggings.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpBoots.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpHelmet.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpChest.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpLeggings.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
-        SkillRecipeGates.crafting(BTWItems.gimpBoots.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(BTWItems.gimpHelmet.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(BTWItems.gimpChest.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(BTWItems.gimpLeggings.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET, NMSkillNodes.BRING_PADDED_ARMOR_SET);
+        SkillRecipeGates.crafting(BTWItems.gimpBoots.itemID, NMSkillNodes.BRING_TANNED_LEATHER_ARMOR_SET, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(BTWBlocks.aestheticVegetation.blockID, 0, NMSkillNodes.BRING_VINE_256);
         SkillRecipeGates.crafting(Item.helmetChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(Item.plateChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);

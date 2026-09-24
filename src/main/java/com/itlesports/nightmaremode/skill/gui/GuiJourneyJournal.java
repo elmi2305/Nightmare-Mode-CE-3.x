@@ -1,18 +1,30 @@
 package com.itlesports.nightmaremode.skill.gui;
 
 import com.itlesports.nightmaremode.util.JourneyJournals;
+import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.mixin.gui.GuiScreenBookAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
 public class GuiJourneyJournal extends GuiScreenBook {
     private final GuiScreen parent;
+    private final ResourceLocation image;
+    private final int imagePage;
 
     public GuiJourneyJournal(EntityPlayer player, int index, GuiScreen parent) {
-        super(player, readableCopy(index), false);
+        this(player, index, parent, readableCopy(index));
+    }
+
+    private GuiJourneyJournal(EntityPlayer player, int index, GuiScreen parent, ItemStack stack) {
+        super(player, stack, false);
         this.parent = parent;
+        this.image = index == 3 ? new ResourceLocation(NMFields.modID, "textures/gui/journals/wither_ritual.png")
+                : index == 4 ? new ResourceLocation(NMFields.modID, "textures/gui/journals/blood_wither_ritual.png") : null;
+        this.imagePage = this.image == null ? -1 : stack.getTagCompound().getTagList("pages").tagCount() - 1;
     }
 
     private static ItemStack readableCopy(int index) {
@@ -40,8 +52,26 @@ public class GuiJourneyJournal extends GuiScreenBook {
             }
             if (!pending.isEmpty()) pages.appendTag(new NBTTagString("", pending));
         }
+        if (index >= 3) pages.appendTag(new NBTTagString("", ""));
         stack.getTagCompound().setTag("pages", pages);
         return stack;
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        if (this.image == null || ((GuiScreenBookAccessor)this).nm$getCurrentPage() != this.imagePage) return;
+        this.mc.getTextureManager().bindTexture(this.image);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        double left = (this.width - 192) / 2.0D + 36;
+        double top = 34;
+        Tessellator draw = Tessellator.instance;
+        draw.startDrawingQuads();
+        draw.addVertexWithUV(left, top + 118, this.zLevel, 0, 1);
+        draw.addVertexWithUV(left + 116, top + 118, this.zLevel, 1, 1);
+        draw.addVertexWithUV(left + 116, top, this.zLevel, 1, 0);
+        draw.addVertexWithUV(left, top, this.zLevel, 0, 0);
+        draw.draw();
     }
 
     @Override

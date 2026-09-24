@@ -16,7 +16,9 @@ public class NMItems {
     public static final Item[] journeyJournals = {
             new ItemJourneyJournal(3457, 0),
             new ItemJourneyJournal(3458, 1),
-            new ItemJourneyJournal(3459, 2)
+            new ItemJourneyJournal(3459, 2),
+            new ItemJourneyJournal(3460, 3),
+            new ItemJourneyJournal(3461, 4)
     };
     public static ItemAlloyHorseArmor nickelHorseArmor;
     public static ItemAlloyHorseArmor carbonIronHorseArmor;
@@ -1135,11 +1137,11 @@ public class NMItems {
     }
 
     private static Item material(int id, String name) {
-        return new NMItem(id).setTextureName("nightmare:" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+        return new NMItem(id).setTextureName(NMFields.modID + ":" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
     }
 
     private static Item netherMaterial(int id, String name) {
-        return new NetherItem(id).setTextureName("nightmare:" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
+        return new NetherItem(id).setTextureName(NMFields.modID + ":" + name).setUnlocalizedName(name).setCreativeTab(CreativeTabs.tabMaterials);
     }
 
     private static ItemAlloyArmor alloyArmor(int id, int armorType, int protection, int weight, int maxUses, int enchantability, double knockbackResistance, Item repairItem, String wornTexture, String bonusKey, String name) {

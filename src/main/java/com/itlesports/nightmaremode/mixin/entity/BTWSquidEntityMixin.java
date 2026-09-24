@@ -163,7 +163,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @ModifyArg(method = "checkForScrollDrop", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"))
     private int reduceScrollDropChance(int bound){
-        return 100;
+        return 2000;
     }
     @Redirect(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Entity;inWater:Z", opcode = Opcodes.GETFIELD))
     private boolean attackUnderwaterPlayers(Entity instance){return false;}

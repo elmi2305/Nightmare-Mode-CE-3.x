@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.integration.emi;
 
 import btw.item.BTWItems;
+import btw.item.BTWTags;
+import api.item.tag.TagInstance;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.crafting.manager.BrewingStandRecipeManager;
@@ -22,6 +24,7 @@ import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
+import emi.dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.data.EmiRemoveFromIndex;
@@ -33,6 +36,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
+import java.util.List;
 
 public final class NightmareEmiRegistry {
     public static final EmiRecipeCategory HAMMERING = new EmiRecipeCategory(
@@ -69,6 +73,10 @@ public final class NightmareEmiRegistry {
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));
 
         registry.addDeferredRecipes(addRecipe -> {
+            addRecipe.accept(baiting("iron", NMItems.ironFishingPole, NMItems.ironFishingPoleBaited));
+            addRecipe.accept(baiting("diamond", NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited));
+            addRecipe.accept(baiting("steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));
+            addRecipe.accept(baiting("nether", NMItems.netherFishingRod, NMItems.netherFishingRodBaited));
             int index = 0;
             for (HammerRecipe recipe : HammerCraftingManager.instance.getRecipes()) {
                 addRecipe.accept(new EmiHammerRecipe(recipe, index++));
@@ -118,6 +126,12 @@ public final class NightmareEmiRegistry {
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "reed_peeling"), new ItemStack(NMItems.reedPeeling), new ItemStack(NMItems.reedStem)));
         BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(new ResourceLocation(NMFields.modID, "pighide_string_crafting"), new ItemStack(NMItems.pighideStringCrafting), new ItemStack(NMItems.pighideString)));
 
+    }
+
+    private static EmiCraftingRecipe baiting(String name, Item rod, Item baitedRod) {
+        return new EmiCraftingRecipe(List.of(EmiStack.of(rod),
+                EmiIngredient.of(new TagInstance(BTWTags.fishingBait, 1))),
+                EmiStack.of(baitedRod), new ResourceLocation(NMFields.modID, "baiting/" + name), null);
     }
 
     private static void unhideWoodenTools() {

@@ -525,7 +525,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
                 arrow.setDead();
                 arrow.playSound("fire.fire", 1.0f, this.rand.nextFloat() * 0.4f + 0.8f);
             } else{
-                arrow.setDamage(MathHelper.floor_double((2.0 + (progress * 2 - (isHostile ? 0 : 1)))) * NMUtils.getNiteMultiplier());
+                arrow.setDamage(MathHelper.floor_double((1.0 + (progress * 2 - (isHostile ? 0 : 1)))) * NMUtils.getNiteMultiplier());
                 // 4 -> 6 -> 8 -> 10
             }
         }

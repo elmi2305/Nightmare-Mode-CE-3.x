@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.blocks;
 import btw.item.items.BucketItem;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -48,6 +49,13 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        ItemStack held = player.inventory.getCurrentItem();
+        if (held != null && held.getItem() instanceof ItemMechanicalWrench) {
+            if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof CisternTileEntity cistern) {
+                this.sendCisternStatus(player, cistern);
+            }
+            return true;
+        }
         if (!SkillHandler.getPlayerData(player).canUseCistern) {
             if (!world.isRemote) {
                 SkillHandler.sendStatus(player, "Requires skill: Redstone Hydraulics - Bring 16 redstone.");
@@ -63,7 +71,6 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             return true;
         }
 
-        ItemStack held = player.inventory.getCurrentItem();
         if (player.isSneaking()) {
             cistern.stir(player);
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.splash", 0.2F, 1.2F + world.rand.nextFloat() * 0.2F);
@@ -74,14 +81,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             ItemStack output = cistern.removeFirstOutput();
             if (output != null) {
                 givePlayerStackOrDrop(world, player, output);
-            } else {
-                this.sendCisternStatus(player, cistern);
             }
-            return true;
-        }
-
-        if (held.itemID == Item.paper.itemID) {
-            this.sendCisternStatus(player, cistern);
             return true;
         }
 

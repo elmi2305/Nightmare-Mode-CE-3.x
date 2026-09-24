@@ -11,7 +11,6 @@ import btw.entity.mob.BTWSquidEntity;
 import btw.item.BTWItems;
 import btw.util.status.BTWPlayerStatuses;
 import com.itlesports.nightmaremode.NightmareModeAddon;
-import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.MiscRecipeManager;
@@ -863,9 +862,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         this.addonStuff();
 
-        if (devMode && !this.worldObj.isRemote && this.ticksExisted % 20 == 0 && this.isSneaking()) {
-            ((EntityPlayer)(Object)this).addChatMessage(ChunkAttributeManager.getDebugText((EntityPlayer)(Object)this));
-        }
 
         if(this.worldObj.isRemote && this.ticksExisted % 2 == 0){
             float fear = this.nightmareMode$getFear();
@@ -1013,9 +1009,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
                 }
             }
 
-            if(this.ticksExisted % 20 == 0 && this.isSneaking()){
-                System.out.println("current sanity is: " + this.getData(SANITY));
-            }
         }
 
 
@@ -1064,10 +1057,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             if (previousFatigue < 60 && fatigue >= 60) {
                 ((EntityPlayer)(Object)this).sendChatToPlayer(ChatMessageComponent.createFromText("I feel tired"));
             }
-        }
-
-        if (devMode && this.ticksExisted % 100 == 0) {
-            System.out.println("Fatigue: " + fatigue);
         }
 
         if (this.ticksExisted % 20 == 0) {

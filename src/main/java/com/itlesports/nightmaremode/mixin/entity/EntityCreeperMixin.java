@@ -47,11 +47,6 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
     }
 
-    @Inject(method = "checkForScrollDrop", at = @At("HEAD"),cancellable = true)
-    private void noScrollDrops(CallbackInfo ci){
-        ci.cancel();
-    }
-
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {

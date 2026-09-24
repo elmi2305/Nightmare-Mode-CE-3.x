@@ -16,6 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BTWItems.class)
 public class BTWItemsMixin {
+    @Redirect(method = "instantiateModItems", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Item;hideFromEMI()Lnet/minecraft/src/Item;"), remap = false)
+    private static Item showGimpArmorInEmi(Item item) {
+        if (item.itemID >= 277 + 256 && item.itemID <= 280 + 256) return item;
+        return item.hideFromEMI();
+    }
+
     @Shadow public static Item carrot;
     @Shadow public static Item cookedCarrot;
     @Shadow public static Item boiledPotato;

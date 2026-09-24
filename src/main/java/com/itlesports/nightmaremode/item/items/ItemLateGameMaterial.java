@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.util.NMFields;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.CreativeTabs;
@@ -80,6 +81,10 @@ public class ItemLateGameMaterial extends Item {
         this.setMaxDamage(0);
         this.setCreativeTab(CreativeTabs.tabMaterials);
         this.setUnlocalizedName("ifhyLateGameMaterial");
+    }
+    @Override
+    public String getModId() {
+        return NMFields.modID;
     }
 
     @Override public String getUnlocalizedName(ItemStack stack) {
