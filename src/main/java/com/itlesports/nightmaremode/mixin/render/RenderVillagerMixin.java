@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.render;
 
+import com.itlesports.nightmaremode.entity.EntityFishermanVillager;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.RenderVillager;
 import net.minecraft.src.ResourceLocation;
@@ -19,6 +20,8 @@ public class RenderVillagerMixin {
     @Unique private static final ResourceLocation HUNGRY_SMITH = new ResourceLocation("nightmare:textures/entity/villager_hungry_smith.png");
     @Unique private static final ResourceLocation HUNGRY_BUTCHER = new ResourceLocation("nightmare:textures/entity/villager_hungry_butcher.png");
     @Unique private static final ResourceLocation HUNGRY_NIGHTMARE = new ResourceLocation("nightmare:textures/entity/nmVillagerHungry.png");
+    @Unique private static final ResourceLocation FISHERMAN_VILLAGER = new ResourceLocation("nightmare:textures/entity/fishermanVillager.png");
+    @Unique private static final ResourceLocation HUNGRY_FISHERMAN = new ResourceLocation("nightmare:textures/entity/fishermanVillagerHungry.png");
     @Unique private static final ResourceLocation TIER_ONE_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier1NetherVillager.png");
     @Unique private static final ResourceLocation TIER_TWO_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier2NetherVillager.png");
     @Unique private static final ResourceLocation TIER_THREE_NETHER_VILLAGER = new ResourceLocation("nightmare:textures/entity/tier3NetherVillager.png");
@@ -39,11 +42,15 @@ public class RenderVillagerMixin {
                 case 3: cir.setReturnValue(HUNGRY_SMITH); return;
                 case 4: cir.setReturnValue(HUNGRY_BUTCHER); return;
                 case 5: cir.setReturnValue(HUNGRY_NIGHTMARE); return;
+                case EntityFishermanVillager.PROFESSION_ID: cir.setReturnValue(HUNGRY_FISHERMAN); return;
                 default: break;
             }
         }
         if(par1EntityVillager.getProfession() == 5){
             cir.setReturnValue(NIGHTMARE_VILLAGER);
+        }
+        if (par1EntityVillager.getProfession() == EntityFishermanVillager.PROFESSION_ID) {
+            cir.setReturnValue(FISHERMAN_VILLAGER);
         }
     }
 }
