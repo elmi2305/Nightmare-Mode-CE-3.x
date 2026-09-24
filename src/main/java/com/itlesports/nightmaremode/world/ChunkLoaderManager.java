@@ -38,9 +38,9 @@ public final class ChunkLoaderManager {
         ChunkLoaderData data = getCanonicalDataWorld(world).getData(NightmareMode.CHUNK_LOADERS);
         for (ChunkLoaderData.LoaderPosition loader : data.getLoaders()) {
             if (loader.dimension == world.provider.dimensionId) {
-                System.out.println("[ChunkLoader] dimension " + loader.dimension
-                        + " loading chunk (" + loader.chunkX + ", " + loader.chunkZ + ")"
-                        + " from block (" + loader.x + ", " + loader.y + ", " + loader.z + ")");
+//                System.out.println("[ChunkLoader] dimension " + loader.dimension
+//                        + " loading chunk (" + loader.chunkX + ", " + loader.chunkZ + ")"
+//                        + " from block (" + loader.x + ", " + loader.y + ", " + loader.z + ")");
                 world.theChunkProviderServer.loadChunk(loader.chunkX, loader.chunkZ);
             }
         }

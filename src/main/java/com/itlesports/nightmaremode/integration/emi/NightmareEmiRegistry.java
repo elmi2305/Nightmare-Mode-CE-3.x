@@ -57,6 +57,7 @@ public final class NightmareEmiRegistry {
 
     public static void register(EmiRegistry registry) {
         unhideWoodenTools();
+        unhideGimpArmor();
         allowIngredientInRecipes(BTWItems.ancientProphecy);
         registerAliases();
 
@@ -176,6 +177,13 @@ public final class NightmareEmiRegistry {
         unhideItem(Item.axeWood);
         unhideItem(Item.hoeWood);
         unhideItem(Item.minecartPowered);
+    }
+
+    private static void unhideGimpArmor() {
+        unhideItem(BTWItems.gimpHelmet);
+        unhideItem(BTWItems.gimpChest);
+        unhideItem(BTWItems.gimpLeggings);
+        unhideItem(BTWItems.gimpBoots);
     }
 
     private static EmiIngredient createBrewingIngredient(ItemStack stack) {
