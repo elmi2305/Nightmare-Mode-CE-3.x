@@ -93,8 +93,28 @@ public final class SkillRewardActions {
         return worldReward(data -> data.globalIronPileChanceBonus += amount);
     }
 
-    public static SkillUnlockAction addCraftingDurability(float amount) {
-        return playerReward(data -> data.craftingDurabilityBonus += amount);
+    public static SkillUnlockAction addKilnSpeed(float amount) {
+        return playerReward(data -> data.kilnSpeedBonus += amount);
+    }
+
+    public static SkillUnlockAction addMovementSpeed(float amount) {
+        return playerReward(data -> data.movementSpeedBonus += amount);
+    }
+
+    public static SkillUnlockAction addHeatDamageReduction(float amount) {
+        return playerReward(data -> data.heatDamageReduction += amount);
+    }
+
+    public static SkillUnlockAction addArmorDurabilitySaveChance(float amount) {
+        return playerReward(data -> data.armorDurabilitySaveChance += amount);
+    }
+
+    public static SkillUnlockAction addRangedDamage(float amount) {
+        return playerReward(data -> data.rangedDamageBonus += amount);
+    }
+
+    public static SkillUnlockAction addMachineSpeed(float amount) {
+        return playerReward(data -> data.machineSpeedBonus += amount);
     }
 
     public static SkillUnlockAction doubleLithiumDrops() {

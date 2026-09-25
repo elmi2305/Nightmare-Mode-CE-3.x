@@ -7,6 +7,9 @@ public class NMPlaceAsBlockItem extends PlaceAsBlockItem {
     public NMPlaceAsBlockItem(int iItemID, int iBlockID) {
         super(iItemID, iBlockID);
     }
+    public NMPlaceAsBlockItem(int iItemID, int iBlockID, int metadata) {
+        super(iItemID, iBlockID, metadata);
+    }
     @Override
     public String getModId() {
         return NMFields.modID;

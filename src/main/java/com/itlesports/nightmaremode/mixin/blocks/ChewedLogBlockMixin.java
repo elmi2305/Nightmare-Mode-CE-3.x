@@ -23,7 +23,7 @@ public abstract class ChewedLogBlockMixin extends Block {
 
     @ModifyArg(method = "convertBlock", at = @At(value = "INVOKE", target = "Lapi/item/util/ItemUtils;ejectStackFromBlockTowardsFacing(Lnet/minecraft/src/World;IIILnet/minecraft/src/ItemStack;I)V", ordinal = 2), index = 4)
     private ItemStack aVoid(ItemStack stack){
-        return new ItemStack(NMItems.woodClump, 1, 199);
+        return new ItemStack(NMItems.woodClump, 1, 119);
     }
     @Override
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {

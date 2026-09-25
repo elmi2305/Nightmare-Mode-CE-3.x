@@ -7,6 +7,8 @@ import com.itlesports.nightmaremode.block.tileEntities.ObsidianMillstoneTileEnti
 import net.minecraft.src.Block;
 import btw.crafting.manager.MillStoneCraftingManager;
 import com.itlesports.nightmaremode.skill.SkillLockedBulkCrafting;
+import com.itlesports.nightmaremode.skill.SkillHandler;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Potion;
 import net.minecraft.src.TileEntity;
@@ -36,7 +38,10 @@ public abstract class MillstoneTileEntityMixin extends TileEntity {
 
     @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 200))
     private int fasterMillstones(int constant){
-        return constant * 8;
+        EntityPlayer player = this.worldObj.getClosestPlayer(this.xCoord + 0.5D, this.yCoord + 0.5D,
+                this.zCoord + 0.5D, 16.0D);
+        float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
+        return Math.max(1, Math.round(constant * 8 / (1.0F + bonus)));
     }
 
     @Redirect(

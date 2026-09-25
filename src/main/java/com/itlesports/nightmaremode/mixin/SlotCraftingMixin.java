@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.skill.SkillHandler;
-import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.world.SandboxRules;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,9 +43,7 @@ public class SlotCraftingMixin extends Slot {
         if (NightmareMode.isAprilFools) {
             double gaussian = this.thePlayer.rand.nextGaussian(); // Mean = 0, Std Dev = 1
             double normalized = (gaussian + 3) / 6; // Shifting and scaling to [0,1]
-            float durabilityBonus = SkillHandler.getPlayerData(this.thePlayer).craftingDurabilityBonus;
-            int damage = (int) ((Math.max(0, Math.min(1, normalized)) * par1ItemStack.getMaxDamage() - 1)
-                    * Math.max(0.0F, 1.0F - durabilityBonus));
+            int damage = (int) (Math.max(0, Math.min(1, normalized)) * par1ItemStack.getMaxDamage() - 1);
 
             par1ItemStack.attemptDamageItem(damage, this.thePlayer.rand);
         }
@@ -56,9 +53,7 @@ public class SlotCraftingMixin extends Slot {
         if (stack == null || !stack.isItemStackDamageable()) {
             return;
         }
-        SkillTreeData data = SkillHandler.getPlayerData(this.thePlayer);
-        int damage = (int)((Math.abs(this.thePlayer.rand.nextGaussian() * 0.5F) * stack.getMaxDamage() - 1)
-                * Math.max(0.0F, 1.0F - data.craftingDurabilityBonus));
+        int damage = (int)(Math.abs(this.thePlayer.rand.nextGaussian() * 0.5F) * stack.getMaxDamage() - 1);
         stack.attemptDamageItem(Math.max(0, damage), this.thePlayer.rand);
     }
 }

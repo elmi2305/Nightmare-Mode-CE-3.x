@@ -12,22 +12,19 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(WorldClient.class)
 public abstract class WorldClientMixin extends World {
 
+    @Unique private int earlyDayTick;
 
-    @Unique private int subTick = 0;
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldClient;setWorldTime(J)V"))
-    private long realTime(long par1){
-        if(NightmareMode.realTime){
-            this.subTick++;
-            if(this.subTick % 36 != 0){
-                return par1 - 1L;
-            } else{
-                this.subTick = 0;
-                return par1;
-            }
+    private long extendFirstTwoDays(long worldTime) {
+        long currentTime = this.getWorldTime();
+        if (this.provider.dimensionId == 0 && currentTime < 48000L
+                && currentTime % 24000L < 12000L
+                && ++this.earlyDayTick % 2 != 0) {
+            return worldTime - 1L;
         }
-
-        return par1;
+        return worldTime;
     }
+
     public WorldClientMixin(ISaveHandler par1ISaveHandler, String par2Str, WorldProvider par3WorldProvider, WorldSettings par4WorldSettings, Profiler par5Profiler, ILogAgent par6ILogAgent) {
         super(par1ISaveHandler, par2Str, par3WorldProvider, par4WorldSettings, par5Profiler, par6ILogAgent);
     }

@@ -1,6 +1,5 @@
 package com.itlesports.nightmaremode.mixin;
 
-import api.world.WorldUtils;
 import api.world.data.DataEntry;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -37,7 +36,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExt, 
     @Shadow public abstract <T> void setData(DataEntry.WorldDataEntry<T> entry, T value);
 
     @Unique private boolean oldBlueMoon;
-    @Unique private int subTick = 0;
+    @Unique private int earlyDayTick;
 
 
 
@@ -113,41 +112,12 @@ public abstract class WorldServerMixin extends World implements WorldServerExt, 
 
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;setWorldTime(J)V"))
-    private long realTime(long worldTime){
-        if(NightmareMode.realTime) {
-
-            // each amount is adjusted by 200 ticks
-            // morning of day 5 becomes endgame, morning of day 3 becomes hardmode
-            if (this.getWorldTime() > 96000 && !WorldUtils.gameProgressHasWitherBeenSummonedServerOnly()) {
-                WorldUtils.gameProgressSetWitherHasBeenSummonedServerOnly();
-                ChatMessageComponent text1 = new ChatMessageComponent();
-                text1.addKey("world.endgameBegin");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                for (Object player : this.playerEntities) {
-                    if (!(player instanceof EntityPlayer p)) continue;
-                    p.sendChatToPlayer(text1);
-                    p.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
-                    this.playSoundEffect(p.posX, p.posY, p.posZ, "mob.wither.death", 1f, 0.5f);
-                }
-            } else if (this.getWorldTime() > 47600 && !WorldUtils.gameProgressHasNetherBeenAccessedServerOnly()) {
-                WorldUtils.gameProgressSetNetherBeenAccessedServerOnly();
-                ChatMessageComponent text1 = new ChatMessageComponent();
-                text1.addKey("world.hardmodeBegin");
-                text1.setColor(EnumChatFormatting.DARK_RED);
-                for (Object player : this.playerEntities) {
-                    if (!(player instanceof EntityPlayer p)) continue;
-                    p.sendChatToPlayer(text1);
-                    p.addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 0));
-                    this.playSoundEffect(p.posX, p.posY, p.posZ, "mob.wither.death", 1f, 0.5f);
-                }
-            }
-            this.subTick++;
-            if (this.subTick % 36 != 0) {
-                return worldTime - 1L;
-            } else {
-                this.subTick = 0;
-                return worldTime;
-            }
+    private long extendFirstTwoDays(long worldTime){
+        long currentTime = this.getWorldTime();
+        if (this.provider.dimensionId == 0 && currentTime < 48000L
+                && currentTime % 24000L < 12000L
+                && ++this.earlyDayTick % 2 != 0) {
+            return worldTime - 1L;
         }
         return worldTime;
     }

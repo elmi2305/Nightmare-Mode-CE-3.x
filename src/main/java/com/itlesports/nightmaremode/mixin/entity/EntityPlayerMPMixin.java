@@ -10,7 +10,6 @@ import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.NetherRecall;
-import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
 import com.itlesports.nightmaremode.world.JourneyProfile;
@@ -214,22 +213,11 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
-    private void smitePlayer(DamageSource par1DamageSource, CallbackInfo ci){
+    private void recordPlayerDeath(DamageSource par1DamageSource, CallbackInfo ci){
         if (!this.worldObj.isRemote) {
             JourneyProfile profile = JourneyProfile.getOrCreate(this.worldObj);
             profile.deaths++;
             this.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
-        }
-        if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && !MinecraftServer.getIsServer()) {
-            Entity lightningbolt = new EntityLightningBolt(this.getEntityWorld(), this.posX, this.posY-0.5, this.posZ);
-            getEntityWorld().addWeatherEffect(lightningbolt);
-
-            // SUMMONS EXPLOSION. explosion does tile and entity damage. effectively kills all dropped items.
-            double par2 = this.posX;
-            double par4 = this.posY;
-            double par6 = this.posZ;
-            float par8 = 3.0f;
-            this.worldObj.createExplosion(null, par2, par4, par6, par8, true);
         }
     }
 

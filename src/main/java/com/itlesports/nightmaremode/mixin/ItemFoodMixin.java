@@ -38,8 +38,11 @@ public class ItemFoodMixin implements FoodItemExt {
     @Inject(method = "onFoodEaten", at = @At(value = "HEAD"), cancellable = true)
     private void manageFoodPoisoningAchievement(ItemStack stack, World world, EntityPlayer player, CallbackInfo ci){
         boolean wasPoisoned = false;
-        if (!world.isRemote && this.potionId > 0 && world.rand.nextFloat() < this.potionEffectProbability) {
-            player.addPotionEffect(new PotionEffect(this.potionId, this.potionDuration * 20, this.potionAmplifier));
+        float probability = (Object)this == BTWItems.redMushroom ? 0.25f : this.potionEffectProbability;
+        if (!world.isRemote && this.potionId > 0 && world.rand.nextFloat() < probability) {
+            int duration = this.potionId == Potion.hunger.id && world.getWorldTime() < 168000L
+                    ? 30 : this.potionDuration;
+            player.addPotionEffect(new PotionEffect(this.potionId, duration * 20, this.potionAmplifier));
             wasPoisoned = true;
         }
         if(this.potionId == Potion.hunger.id){

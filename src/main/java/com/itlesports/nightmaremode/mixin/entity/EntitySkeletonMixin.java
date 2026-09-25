@@ -15,6 +15,7 @@ import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
+import com.itlesports.nightmaremode.util.interfaces.ZombieSkeletonExt;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,8 +28,26 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static com.itlesports.nightmaremode.util.NMFields.*;
 
 @Mixin(EntitySkeleton.class)
-public abstract class EntitySkeletonMixin extends EntityMob{
+public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSkeletonExt {
     @Unique int jumpCooldown = 0;
+    @Unique private boolean zombieRemains;
+
+    @Override
+    public void nm$setZombieRemains(boolean zombieRemains) {
+        this.zombieRemains = zombieRemains;
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void readZombieRemains(NBTTagCompound tag, CallbackInfo ci) {
+        this.zombieRemains = tag.getBoolean("nmZombieRemains");
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void writeZombieRemains(NBTTagCompound tag, CallbackInfo ci) {
+        if (this.zombieRemains) {
+            tag.setBoolean("nmZombieRemains", true);
+        }
+    }
 
 
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
@@ -41,6 +60,7 @@ public abstract class EntitySkeletonMixin extends EntityMob{
     private SkeletonArrowAttackBehavior aiRangedAttack;
     @Inject(method = "setCombatTask", at = @At("TAIL"))
     private void useBowUntilHardmode(CallbackInfo ci) {
+        if (this.zombieRemains) return;
         if (NMUtils.getWorldProgress() >= NMFields.HARDMODE) return;
         ItemStack held = this.getHeldItem();
         if (held == null || held.itemID != Item.bow.itemID) {

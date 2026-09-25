@@ -5,6 +5,7 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.integration.emi.NightmareEmiRegistry;
+import com.itlesports.nightmaremode.util.NMFields;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.EmiRegistry;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
@@ -12,6 +13,7 @@ import emi.dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import emi.dev.emi.emi.api.stack.EmiIngredient;
 import emi.dev.emi.emi.api.stack.EmiStack;
 import emi.dev.emi.emi.api.plugin.BTWPlugin;
+import emi.dev.emi.emi.recipe.btw.EmiProgressiveRecipe;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -38,7 +40,11 @@ public abstract class BTWPluginMixin {
     private void registerNightmareRecipes(EmiRegistry registry, CallbackInfo ci) {
         registry.removeRecipes(recipe -> recipe instanceof emi.dev.emi.emi.recipe.btw.EmiHopperRecipe
                 && recipe.getId() != null && recipe.getId().getResourcePath().endsWith("/souls"));
+        registry.removeRecipes(recipe -> new ResourceLocation("btw", "web_untangling").equals(recipe.getId()));
         NightmareEmiRegistry.register(registry);
+        BTWPlugin.addRecipeSafe(registry, () -> new EmiProgressiveRecipe(
+                new ResourceLocation(NMFields.modID, "web_untangling"),
+                new ItemStack(BTWItems.webUntangling), new ItemStack(NMItems.spiderSilk)));
     }
 
     @Inject(method = "addWorldRecipes", at = @At("TAIL"), remap = false)
@@ -91,7 +97,7 @@ public abstract class BTWPluginMixin {
                 "emi.world_interaction.btw.bark_from_chiseling");
         registry.addRecipe(EmiWorldInteractionRecipe.builder().id(worldRecipeId("wood_clump_from_chiseling"))
                 .leftInput(EmiIngredient.of(logTools)).rightInput(EmiIngredient.of(logs), false)
-                .output(EmiStack.of(new ItemStack(NMItems.woodClump, 1, 199))).supportsRecipeTree(true).build());
+                .output(EmiStack.of(new ItemStack(NMItems.woodClump, 1, 119))).supportsRecipeTree(true).build());
 
         replaceStoneBrickRecipe(registry, "stone_brick_from_chiseling", EmiIngredient.of(List.of(
                 EmiStack.of(BTWItems.ironChisel), EmiStack.of(BTWItems.diamondChisel))), 0);

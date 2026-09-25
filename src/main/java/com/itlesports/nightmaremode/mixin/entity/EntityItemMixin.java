@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.world.SandboxRules;
@@ -154,12 +155,13 @@ public abstract class EntityItemMixin extends Entity {
 
     @Inject(method = "attackEntityFrom", at = @At("TAIL"))
     private void polluteBurnedItem(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
-        if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(0.2F);
+        if(this.worldObj != null && NMUtils.isGracePeriodServer(this.worldObj)) return;
+        if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(0.1F);
     }
 
     @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 5, shift = At.Shift.BEFORE))
     private void polluteNaturalItemDespawn(CallbackInfo ci) {
-        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 0.2F : 1.0F);
+        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 0.02F : 0.2F);
     }
 
     @Unique

@@ -1143,7 +1143,13 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.eclipseBow,1), new Object[]{"###", "#X#", "###", Character.valueOf('#'), new ItemStack(NMItems.darksunFragment, 1), Character.valueOf('X'), new ItemStack(BTWItems.compositeBow)});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironKnittingNeedles,1), new Object[]{"# #", "# #", "#X#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('X'), Item.silk});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.wickerPane,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),Item.reed,Item.reed,Item.reed,Item.reed});
-        RecipeManager.addShapelessRecipe(new ItemStack(Item.silk,1), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),BTWItems.tangledWeb});
+        CraftingManager.getInstance().getRecipeList().removeIf(recipe ->
+                recipe instanceof ShapelessRecipes shapeless
+                        && shapeless.getRecipeOutput().itemID == Item.silk.itemID
+                        && shapeless.getRecipeItems().stream().anyMatch(input ->
+                        input instanceof ItemStack stack && stack.itemID == BTWItems.tangledWeb.itemID));
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.spiderSilk), new Object[]{BTWItems.tangledWeb, BTWTags.shears});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.spiderSilk), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),BTWItems.tangledWeb});
         for (int i = 0; i < 16; i++) {
             RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.woolKnit,1, i), new Object[]{new ItemStack(NMItems.ironKnittingNeedles,1,Short.MAX_VALUE),new ItemStack(BTWItems.wool, 1, i),new ItemStack(BTWItems.wool, 1, i)});
         }

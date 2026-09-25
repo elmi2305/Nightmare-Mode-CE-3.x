@@ -58,7 +58,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 2509";
+    public static String betaBuildLine = "Build 2509a";
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
     public static boolean alwaysShowRewards = false;
@@ -118,7 +118,6 @@ public class NightmareMode extends BTWAddon {
     public static Boolean fullBright;
     public static Boolean fastVillagers;
     public static Boolean bloodMoonHelper;
-    public static Boolean realTime;
     private boolean griefLogging;
     public static boolean renderFancyClouds;
     public static boolean renderVignette;
@@ -1007,7 +1006,6 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("FullBright", false);
         config.registerBoolean("FastVillagers", false);
         config.registerBoolean("BloodMoonHelper", false);
-        config.registerBoolean("RealTime", false);
         config.registerString("WorldInfoString", "STDHF");
         config.registerBoolean("GriefLogging", false, "Enables logging of Tile Entity destruction and signs, including who placed them & where they were placed.", "Useful for detecting griefers.", "Also logs TNT ignited", "MULTIPLAYER ONLY!");
         config.registerInt("GriefLoggingLevel", 1, "First two bits decide logging level", "1 = only log Chests.", "2 = only log Container tile entities", "3 = log ALL tile entity destruction", "Add 4 to any of those values = whether to log items being taken out of chests", "Add 8 to any of those values = whether to log items being destroyed indirectly (not by players mining them)");
@@ -1044,7 +1042,6 @@ public class NightmareMode extends BTWAddon {
         fullBright = config.getBoolean("FullBright");
         fastVillagers = config.getBoolean("FastVillagers");
         bloodMoonHelper = config.getBoolean("BloodMoonHelper");
-        realTime = config.getBoolean("RealTime");
         renderFancyClouds = config.getBoolean("RenderFancyClouds");
         renderVignette = config.getBoolean("RenderVignette");
         if (MinecraftServer.getIsServer()) {

@@ -14,6 +14,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.interfaces.EntityZombieExt;
+import com.itlesports.nightmaremode.util.interfaces.ZombieSkeletonExt;
 import net.minecraft.src.*;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -116,16 +117,10 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     ? 2
                     : 6)) < 2 - niteMultiplier) {
                 EntitySkeleton skeleton = new EntitySkeleton(this.worldObj);
+                ((ZombieSkeletonExt) skeleton).nm$setZombieRemains(true);
                 skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                int health = (int) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * niteMultiplier,
-                        skeleton.getMaxHealth() * niteMultiplier);
-                skeleton.setHealth((float) health);
 
-                // Set equipment drop chance to -1f to prevent dropping items
-                for (int i = 0; i < 5; i++) {
-                    skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
-                    skeleton.setEquipmentDropChance(i, -1f);
-                }
+                copyZombieEquipment(skeleton, true);
                 skeleton.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30d);
 
                 if (this.getAttackTarget() != null) {
@@ -158,6 +153,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     skeleton.setSkeletonType(this.rand.nextInt(5));
                 }
 
+                finalizeZombieSkeleton(skeleton);
                 this.worldObj.spawnEntityInWorld(skeleton);
                 this.setDead();
             }
@@ -188,14 +184,14 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                 }
             } else if(NMUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote && this.isValidForEventLoot){
                 summonSilverfish(this);
-            } else if(par1DamageSource == DamageSource.drown || par1DamageSource == DamageSource.lava){
+            } else if((par1DamageSource == DamageSource.drown || par1DamageSource == DamageSource.lava)
+                    && this.rand.nextInt(4) == 0){
                 this.transformToVariant(par1DamageSource == DamageSource.lava);
                 cir.setReturnValue(true);
             }
         }
     }
     @Unique private void transformToVariant(boolean wasFireDamage){
-        int progress = NMUtils.getWorldProgress();
         EntitySkeleton skeleton;
         if (wasFireDamage) {
             skeleton = new EntitySkeletonMelted(this.worldObj);
@@ -210,13 +206,10 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             skeleton = new EntitySkeletonDrowned(this.worldObj);
         }
 
+        ((ZombieSkeletonExt) skeleton).nm$setZombieRemains(true);
         skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-        double niteMultiplier = NMUtils.getNiteMultiplier();
-        skeleton.setHealth((float) Math.min((skeleton.getMaxHealth() - this.rand.nextInt(7) - 2 + progress * 2) * niteMultiplier, skeleton.getMaxHealth() * niteMultiplier));
-        for (int i = 0; i < 5; i++) {
-            skeleton.setCurrentItemOrArmor(i, this.getCurrentItemOrArmor(i));
-            skeleton.setEquipmentDropChance(i,this.equipmentDropChances[i]);
-        }
+        copyZombieEquipment(skeleton, false);
+        finalizeZombieSkeleton(skeleton);
         skeleton.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30d);
 
         if (this.hasAttackTarget()) {
@@ -227,6 +220,26 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             this.worldObj.spawnEntityInWorld(skeleton);
         }
         this.setDead();
+    }
+
+    @Unique private void copyZombieEquipment(EntitySkeleton skeleton, boolean suppressDrops) {
+        for (int i = 0; i < 5; i++) {
+            ItemStack equipment = this.getCurrentItemOrArmor(i);
+            if (i == 0 && equipment != null && equipment.itemID == Item.bow.itemID) {
+                equipment = null;
+            }
+            skeleton.setCurrentItemOrArmor(i, equipment);
+            skeleton.setEquipmentDropChance(i, suppressDrops ? -1f : this.equipmentDropChances[i]);
+        }
+    }
+
+    @Unique private void finalizeZombieSkeleton(EntitySkeleton skeleton) {
+        ItemStack held = skeleton.getHeldItem();
+        if (held != null && held.itemID == Item.bow.itemID) {
+            skeleton.setCurrentItemOrArmor(0, null);
+        }
+        skeleton.setHealth(Math.max(1f, skeleton.getMaxHealth() * 0.5f));
+        skeleton.setCombatTask();
     }
 
     @Unique private static void summonSilverfish(EntityMob zombie){

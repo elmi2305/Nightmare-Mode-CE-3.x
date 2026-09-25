@@ -3,10 +3,12 @@ package com.itlesports.nightmaremode.item;
 import btw.item.BTWTags;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
+import com.itlesports.nightmaremode.block.blocks.BlockDryingGrass;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
 import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
+import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.skill.item.ItemSkillBook;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
@@ -198,6 +200,7 @@ public class NMItems {
     public static Item crudeBedroll;
     public static Item skillBook;
     public static Item grassSeeds;
+    public static FoodItem mash;
     public static Item flintAxe;
     public static NMProgressiveItem flintAxeCrafting;
     public static Item crudeString;
@@ -556,7 +559,7 @@ public class NMItems {
         twig = new NMItem(2601).setTextureName("nightmare:ifhyTwig").setUnlocalizedName("ifhyTwig").setCreativeTab(CreativeTabs.tabMaterials);
         sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("ifhyTwigSharp");
         sharpBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("ifhyTwigSharpBark");
-        woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("ifhyWoodClump").setCreativeTab(CreativeTabs.tabMaterials);
+        woodClump = new NMProgressiveItem(2604, Item.stick.itemID).setTargetDurability(120).setTextureName("nightmare:ifhyWoodClump").setUnlocalizedName("ifhyWoodClump").setCreativeTab(CreativeTabs.tabMaterials);
         leaf = new NMItem(2605).setTextureName("nightmare:ifhyLeaf").setUnlocalizedName("ifhyLeaf").setCreativeTab(CreativeTabs.tabMaterials);
         twigSharpening = new NMProgressiveItem(2606, NMItems.sharpTwig.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyTwigSharpen").setUnlocalizedName("ifhyTwigSharpen").setCreativeTab(CreativeTabs.tabMaterials);
         sharpTwigBarkWrapping = new NMProgressiveItem(2607, NMItems.sharpBarkTwig.itemID).setTargetDurability(50).setTextureName("nightmare:ifhyTwigWrap").setUnlocalizedName("ifhyTwigWrap").setCreativeTab(CreativeTabs.tabMaterials);
@@ -568,6 +571,7 @@ public class NMItems {
         ironHammer = new ItemHammer(2612, EnumToolMaterial.IRON).setUnlocalizedName("ifhyIronHammer").setTextureName("nightmare:ifhyIronHammer").setCreativeTab(CreativeTabs.tabTools);
         steelHammer = new ItemHammer(2613, EnumToolMaterial.SOULFORGED_STEEL).setUnlocalizedName("ifhySteelHammer").setTextureName("nightmare:ifhySteelHammer").setCreativeTab(CreativeTabs.tabTools);
         woodHammer = new ItemHammer(2614, EnumToolMaterial.WOOD).setUnlocalizedName("ifhyWoodHammer").setTextureName("nightmare:ifhyWoodHammer").setCreativeTab(CreativeTabs.tabTools);
+        ((ItemAccessor) woodHammer).invSetMaxDamage(96);
         stoneHammer = new ItemHammer(2615, EnumToolMaterial.STONE).setUnlocalizedName("ifhyStoneHammer").setTextureName("nightmare:ifhyStoneHammer").setCreativeTab(CreativeTabs.tabTools);
 
         ironBloom = new NMPlaceAsBlockItem(2616, NMFields.BLOCK_IRON_BLOOM).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
@@ -615,10 +619,15 @@ public class NMItems {
                 .setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
         oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
-        driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
+        driedPlantFiber = new NMPlaceAsBlockItem(2657, NMFields.BLOCK_DRYING_GRASS, BlockDryingGrass.META_DRIED).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         crudeBedroll = new ItemCrudeBedroll(3462, NMFields.BLOCK_CRUDE_BEDROLL);
         skillBook = new ItemSkillBook(2655).setUnlocalizedName("ifhySkillBook").setTextureName("nightmare:ifhySkillBook");
         grassSeeds = new ItemGrassSeeds(2776).setMaxStackSize(16).setUnlocalizedName("ifhyGrassSeeds").setTextureName("nightmare:ifhyGrassSeeds").setCreativeTab(CreativeTabs.tabFood);
+        mash = (FoodItem) new NMFoodItem(2777, 2, 0f, false, "ifhyMash", false)
+                .setPotionEffect(Potion.hunger.id, 15, 0, 0.05f)
+                .setMaxStackSize(16)
+                .setTextureName("nightmare:ifhyMash")
+                .setCreativeTab(CreativeTabs.tabFood);
 
         mackerel = createRawFish(2658, "nmMackerel");
         cod = createRawFish(2659, "nmCod");
@@ -1382,6 +1391,7 @@ public class NMItems {
         BTWTags.foods.add(creeperChop);
         BTWTags.foods.add(dungApple);
         BTWTags.foods.add(creeperBallSoup);
+        BTWTags.foods.add(mash);
     }
 
 }

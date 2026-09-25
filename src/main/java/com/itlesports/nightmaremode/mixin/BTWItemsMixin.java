@@ -33,7 +33,7 @@ public class BTWItemsMixin {
 
         ((ItemAccessor)pointyStick).invSetMaxDamage(1);
         ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
-        ((ItemAccessor)Item.shovelWood).invSetMaxDamage(3);
+        ((ItemAccessor)Item.shovelWood).invSetMaxDamage(32);
         Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)
                 .setUnlocalizedName("netherrack");
     }

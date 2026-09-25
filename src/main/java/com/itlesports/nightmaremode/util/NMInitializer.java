@@ -185,6 +185,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void initIFHYRecipes(){
         validateUltimateItemRegistrations();
+        validateItemRegistration("Rough Mushroom Mash", NMItems.mash);
         addCraftingRecipes();
         addAlloyToolRecipes();
         validateUltimateCraftingRecipeRegistrations();
@@ -2697,7 +2698,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('R'), BTWItems.rope,
                         Character.valueOf('I'), BTWItems.ironNugget,
                         Character.valueOf('S'), BTWItems.screw}),
-                NMSkillNodes.JUMP_1000, NMSkillNodes.BRING_SLAB_1000, NMSkillNodes.BRING_SAW);
+                NMSkillNodes.JUMP_500, NMSkillNodes.BRING_SLAB_1000, NMSkillNodes.BRING_SAW);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), Item.silk});
         RecipeManager.removeVanillaRecipe(new ItemStack(NMBlocks.stoneLadder, 3), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWBlocks.looseCobblestone, Character.valueOf('S'), BTWItems.hempFibers});
@@ -2870,6 +2871,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.scrapedBark), new Object[]{BTWTags.barks, new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.crudeStringCrafting, 1, NMItems.crudeStringCrafting.getMaxDamage() - 1), new Object[]{NMItems.driedPlantFiber,NMItems.driedPlantFiber,NMItems.driedPlantFiber, BTWTags.flowers});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
+        IRecipe mashRecipe = RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mash), new Object[]{BTWItems.redMushroom, NMItems.grassSeeds, NMItems.grassSeeds});
+        validateShapelessRecipeRegistration("Rough Mushroom Mash", mashRecipe, NMItems.mash);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodCupCrafting, 1, NMItems.woodCupCrafting.getMaxDamage() - 1), new Object[]{new ItemStack(NMItems.woodClump, 1, Short.MAX_VALUE), new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.reedPeeling, 1, NMItems.reedPeeling.getMaxDamage() - 1), new Object[]{Item.reed});
         RecipeManager.addRecipe(new ItemStack(Item.paper), new Object[]{"###", Character.valueOf('#'), NMItems.plantSheet});
@@ -3531,7 +3534,7 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addRecipe(
                         new ItemStack(BTWBlocks.dirtSlab, 4),
                         new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.dirt)}),
-                NMSkillNodes.JUMP_1000);
+                NMSkillNodes.JUMP_500);
 
         RecipeManager.removeVanillaShapelessRecipe(
                 new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 0),
@@ -3540,7 +3543,7 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addShapelessRecipe(
                         new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 0),
                         new Object[]{new ItemStack(BTWItems.gravelPile), new ItemStack(BTWItems.gravelPile), new ItemStack(BTWItems.gravelPile), new ItemStack(BTWItems.gravelPile)}),
-                NMSkillNodes.JUMP_1000);
+                NMSkillNodes.JUMP_500);
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWBlocks.sandAndGravelSlab, 4, 0),
                 new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.gravel)});
@@ -3548,7 +3551,7 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addRecipe(
                         new ItemStack(BTWBlocks.sandAndGravelSlab, 4, 0),
                         new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.gravel)}),
-                NMSkillNodes.JUMP_1000);
+                NMSkillNodes.JUMP_500);
 
         RecipeManager.removeVanillaShapelessRecipe(
                 new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1),
@@ -3557,7 +3560,7 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addShapelessRecipe(
                         new ItemStack(BTWBlocks.sandAndGravelSlab, 1, 1),
                         new Object[]{new ItemStack(BTWItems.sandPile), new ItemStack(BTWItems.sandPile), new ItemStack(BTWItems.sandPile), new ItemStack(BTWItems.sandPile)}),
-                NMSkillNodes.JUMP_1000);
+                NMSkillNodes.JUMP_500);
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWBlocks.sandAndGravelSlab, 4, 1),
                 new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.sand)});
@@ -3565,7 +3568,7 @@ public abstract class NMInitializer implements AchievementExt {
                 RecipeManager.addRecipe(
                         new ItemStack(BTWBlocks.sandAndGravelSlab, 4, 1),
                         new Object[]{"##", Character.valueOf('#'), new ItemStack(Block.sand)}),
-                NMSkillNodes.JUMP_1000);
+                NMSkillNodes.JUMP_500);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.handCrank), new Object[]{"  Y", " Y ", "#X#", Character.valueOf('#'), BTWTags.stoneBrickItems, Character.valueOf('X'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('Y'), Item.stick});
         SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(BTWBlocks.handCrank), new Object[]{" G ", "SGS", "###", Character.valueOf('G'), new ItemStack(BTWItems.gear, 1, Short.MAX_VALUE), Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('#'), NMTags.netherKilnMasonry}),
@@ -4235,7 +4238,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.spruceBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
         SkillRecipeGates.crafting(BTWBlocks.birchBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
         SkillRecipeGates.crafting(BTWBlocks.jungleBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
-        SkillRecipeGates.crafting(BTWBlocks.looseDirtSlab.blockID, NMSkillNodes.JUMP_1000);
+        SkillRecipeGates.crafting(BTWBlocks.looseDirtSlab.blockID, NMSkillNodes.JUMP_500);
 
         SkillRecipeGates.crafting(Item.arrow.itemID, NMSkillNodes.BRING_FLINT_64, NMSkillNodes.BRING_FEATHER_32, NMSkillNodes.BRING_STRING_32);
         SkillRecipeGates.crafting(Item.bow.itemID, NMSkillNodes.BRING_ARROW_64);
@@ -4598,7 +4601,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.dyePowder.itemID, 15, NMSkillNodes.BRING_NITROGEN_CRYSTAL_16);
 
         SkillRecipeGates.crafting(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_GRAVEL_PILE_32);
-        SkillRecipeGates.crafting(NMItems.sharpTwigBarkWrapping.itemID, NMSkillNodes.BRING_BARK_16);
+        SkillRecipeGates.crafting(NMItems.sharpTwigBarkWrapping.itemID, NMSkillNodes.BRING_FLINT_CHIP);
         SkillRecipeGates.crafting(NMItems.scrapedBark.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
         SkillRecipeGates.crafting(NMItems.crudeStringCrafting.itemID, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
         SkillRecipeGates.crafting(NMItems.primitiveGlue.itemID, NMSkillNodes.BRING_COAL_DUST_32);
@@ -4713,6 +4716,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_SUGAR_CANE_16, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
         SkillRecipeGates.crafting(Item.book.itemID, NMSkillNodes.BRING_PAPER_64);
         SkillRecipeGates.crafting(Item.silk.itemID, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
+        SkillRecipeGates.crafting(NMItems.spiderSilk.itemID, NMSkillNodes.BRING_KNITTING_NEEDLE_4);
         SkillRecipeGates.crafting(Item.spiderEye.itemID, NMSkillNodes.KILL_SPIDER_100);
 
         // Cauldrons, crucibles, millstones, and cisterns have no initiating player: hoppers

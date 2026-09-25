@@ -1,11 +1,13 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.entity.InfiniteArrowEntity;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -15,6 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(EntityArrow.class)
 public abstract class EntityArrowMixin extends Entity{
     @Shadow public Entity shootingEntity;
+    @Unique private boolean nightmareMode$skillDamageApplied;
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void nightmareMode$applyRangedSkillDamage(CallbackInfo ci) {
+        if (this.nightmareMode$skillDamageApplied || this.worldObj.isRemote || !(this.shootingEntity instanceof EntityPlayer player)) {
+            return;
+        }
+        this.nightmareMode$skillDamageApplied = true;
+        EntityArrow arrow = (EntityArrow)(Object)this;
+        arrow.setDamage(arrow.getDamage() * (1.0D + SkillHandler.getPlayerData(player).rangedDamageBonus));
+    }
 
     public EntityArrowMixin(World par1World) {
         super(par1World);

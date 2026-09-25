@@ -43,7 +43,6 @@ public class GuiConfig extends GuiScreen {
 
     public enum ConfigOption {
         MORE_VARIANTS(1, "moreVariants", "MoreVariants", "gui.config.more_variants", "gui.config.tooltip.more_variants", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
-        REAL_TIME(13, "realTime", "RealTime", "gui.config.real_time", "gui.config.tooltip.real_time", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
         BUFFED_SQUIDS(3, "buffedSquids", "BuffedSquids", "gui.config.buffed_squids", "gui.config.tooltip.buffed_squids", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
 
         UNKILLABLE_MOBS(11, "unkillableMobs", "UnkillableMobs", "gui.config.unkillable_mobs", "gui.config.tooltip.unkillable_mobs", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT),
@@ -137,7 +136,6 @@ public class GuiConfig extends GuiScreen {
 
     private static final List<ConfigOption> PAGE_ONE_LEFT = Arrays.asList(
             ConfigOption.MORE_VARIANTS,
-            ConfigOption.REAL_TIME,
             ConfigOption.BUFFED_SQUIDS,
             ConfigOption.UNKILLABLE_MOBS,
             ConfigOption.BLOODMARE,

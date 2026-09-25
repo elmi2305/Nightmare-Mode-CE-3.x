@@ -58,6 +58,8 @@ public final class NightmareEmiRegistry {
     public static void register(EmiRegistry registry) {
         unhideWoodenTools();
         unhideGimpArmor();
+        unhideItem(NMItems.grassSeeds);
+        unhideItem(NMItems.mash);
         allowIngredientInRecipes(BTWItems.ancientProphecy);
         registerAliases();
 

@@ -73,6 +73,13 @@ public class BlockDryingGrass extends BlockContainer {
     @Override public int getHarvestToolLevel(IBlockAccess blockAccess, int i, int j, int k) {return 0;}
 
     @Override
+    public void onPostBlockPlaced(World world, int x, int y, int z, int metadata) {
+        if (metadata == META_DRIED) {
+            world.removeBlockTileEntity(x, y, z);
+        }
+    }
+
+    @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborBlockID) {
         if (!this.canPlaceBlockAt(world, x, y, z)) {
             this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
@@ -99,7 +106,8 @@ public class BlockDryingGrass extends BlockContainer {
     @Override
     @Environment(EnvType.CLIENT)
     public int idPicked(World world, int x, int y, int z) {
-        return NMItems.plantFiber.itemID;
+        return world.getBlockMetadata(x, y, z) == META_DRIED
+                ? NMItems.driedPlantFiber.itemID : NMItems.plantFiber.itemID;
     }
 
     public void onFinishedDrying(World world, int x, int y, int z) {

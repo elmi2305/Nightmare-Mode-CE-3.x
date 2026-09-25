@@ -2,21 +2,25 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.SawBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.Block;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(SawBlock.class)
 public class SawBlockMixin {
 
-    @ModifyArg(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;scheduleBlockUpdate(IIIII)V", ordinal = 1), index = 4)
-    private int lowerSawCuttingTime(int par1){
-        return 120;
+    @Redirect(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;scheduleBlockUpdate(IIIII)V", ordinal = 1))
+    private void nightmareMode$applySawSkillSpeed(World world, int x, int y, int z, int blockId, int ticks) {
+        EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 16.0D);
+        float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
+        world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(120.0F / (1.0F + bonus))));
     }
 
     @Redirect(method = "sawBlockToFront", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Block;onBlockSawed(Lnet/minecraft/src/World;IIIIII)Z"))

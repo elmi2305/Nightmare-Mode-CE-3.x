@@ -95,6 +95,21 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private float lastMeleeDamage;
     @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
     @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
+    @Unique private static final UUID SKILL_MOVEMENT_SPEED_ID = UUID.fromString("d4b548c6-c2ee-4d22-a714-d95095210c50");
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void nightmareMode$applySkillMovementSpeed(CallbackInfo ci) {
+        AttributeInstance speed = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+        if (speed == null) return;
+        float bonus = this.nightmareMode$getSkillData().movementSpeedBonus;
+        AttributeModifier previous = speed.getModifier(SKILL_MOVEMENT_SPEED_ID);
+        if (previous != null && previous.getAmount() == bonus) return;
+        if (previous != null) speed.removeModifier(previous);
+        if (bonus > 0.0F) {
+            speed.applyModifier(new AttributeModifier(SKILL_MOVEMENT_SPEED_ID,
+                    "skill movement speed", bonus, 2).setSaved(false));
+        }
+    }
     ;
 
     public void nightmareMode$setBlinkLength(int target) {
@@ -343,6 +358,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
         if (src == DamageSource.inFire || src == DamageSource.onFire) {
             amount *= 1.0F - ArmorSetHelper.getFireTimeReduction(this);
+        }
+        if (fireDamage) {
+            amount *= Math.max(0.0F, 1.0F - this.nightmareMode$getSkillData().heatDamageReduction);
         }
         this.entityAge = 0;
         if (this.getHealth() <= 0.0f) {
@@ -729,6 +747,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Unique private int awakeFatigueTicks;
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageFatigue(CallbackInfo ci) {
         if (this.worldObj.isRemote || !this.isEntityAlive() || disableFatigue) {
@@ -737,14 +757,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         int fatigue = this.getData(FATIGUE);
         if (this.isPlayerSleeping()) {
+            this.awakeFatigueTicks = 0;
             if (this.ticksExisted % 8 == 0 && fatigue > 0) {
                 this.setData(FATIGUE, --fatigue);
             }
-        } else if (this.ticksExisted % (1200 + NMUtils.getWorldProgress() * 150) == 0 && fatigue < 100) {
-            int previousFatigue = fatigue;
-            this.setData(FATIGUE, ++fatigue);
-            if (previousFatigue < 60 && fatigue >= 60) {
-                ((EntityPlayer)(Object)this).sendChatToPlayer(ChatMessageComponent.createFromText("I feel tired"));
+        } else {
+            int interval = 1200 + NMUtils.getWorldProgress() * 150;
+            if (this.worldObj.getWorldTime() < 72000L) {
+                interval *= 2;
+            }
+            if (++this.awakeFatigueTicks >= interval) {
+                this.awakeFatigueTicks = 0;
+                if (fatigue < 100) {
+                    fatigue++;
+                    this.setData(FATIGUE, fatigue);
+                    if (fatigue == 60) {
+                        ((EntityPlayer)(Object)this).sendChatToPlayer(ChatMessageComponent.createFromText("I feel tired"));
+                    }
+                }
             }
         }
 

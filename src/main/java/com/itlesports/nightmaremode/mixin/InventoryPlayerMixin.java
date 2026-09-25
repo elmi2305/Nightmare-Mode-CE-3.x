@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -28,6 +29,15 @@ public class InventoryPlayerMixin {
     @Shadow public ItemStack[] armorInventory;
     @Shadow public int currentItem;
     @Shadow public EntityPlayer player;
+
+    @ModifyArg(method = "damageArmor", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemStack;damageItem(ILnet/minecraft/src/EntityLivingBase;)V"), index = 0)
+    private int nightmareMode$preserveArmorDurability(int damage) {
+        float chance = Math.min(1.0F, SkillHandler.getPlayerData(this.player).armorDurabilitySaveChance);
+        float adjusted = damage * (1.0F - chance);
+        int whole = (int) adjusted;
+        return whole + (this.player.rand.nextFloat() < adjusted - whole ? 1 : 0);
+    }
 
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
     private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {

@@ -30,7 +30,7 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Override
     public int quantityDropped(Random par1Random) {
-        return par1Random.nextInt(12) == 0 ? 1 : 0;
+        return par1Random.nextInt(8) == 0 ? 1 : 0;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
