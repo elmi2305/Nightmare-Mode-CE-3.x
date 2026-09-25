@@ -2,14 +2,10 @@ package com.itlesports.nightmaremode.nmgui;
 
 import api.config.AddonConfig;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.NMConfUtils;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.I18n;
-import net.minecraft.src.Tessellator;
-import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
@@ -46,39 +42,37 @@ public class GuiConfig extends GuiScreen {
 
 
     public enum ConfigOption {
-        MORE_VARIANTS(1, "moreVariants", "MoreVariants", "gui.config.more_variants", "gui.config.tooltip.more_variants", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.MORE_VARIANTS),
-        REAL_TIME(13, "realTime", "RealTime", "gui.config.real_time", "gui.config.tooltip.real_time", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.REAL_TIME),
-        BUFFED_SQUIDS(3, "buffedSquids", "BuffedSquids", "gui.config.buffed_squids", "gui.config.tooltip.buffed_squids", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.BUFFED_SQUIDS),
+        MORE_VARIANTS(1, "moreVariants", "MoreVariants", "gui.config.more_variants", "gui.config.tooltip.more_variants", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
+        REAL_TIME(13, "realTime", "RealTime", "gui.config.real_time", "gui.config.tooltip.real_time", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
+        BUFFED_SQUIDS(3, "buffedSquids", "BuffedSquids", "gui.config.buffed_squids", "gui.config.tooltip.buffed_squids", EASY_BASE, EASY_ACTIVE, Page.ONE, Column.LEFT),
 
-        NO_SKYBASES(6, "noSkybases", "NoSkybases", "gui.config.no_skybases", "gui.config.tooltip.no_skybases", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.NO_SKYBASES),
-        UNKILLABLE_MOBS(11, "unkillableMobs", "UnkillableMobs", "gui.config.unkillable_mobs", "gui.config.tooltip.unkillable_mobs", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.UNKILLABLE_MOBS),
-        BLOODMARE(9, "bloodmare", "Bloodmare", "gui.config.bloodmare", "gui.config.tooltip.bloodmare", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.BLOODMARE),
-        MAGIC_MONSTERS(10, "magicMonsters", "MagicMonsters", "gui.config.magic_monsters", "gui.config.tooltip.magic_monsters", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT, NMConfUtils.CONFIG.MAGIC_MONSTERS),
+        UNKILLABLE_MOBS(11, "unkillableMobs", "UnkillableMobs", "gui.config.unkillable_mobs", "gui.config.tooltip.unkillable_mobs", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT),
+        BLOODMARE(9, "bloodmare", "Bloodmare", "gui.config.bloodmare", "gui.config.tooltip.bloodmare", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT),
+        MAGIC_MONSTERS(10, "magicMonsters", "MagicMonsters", "gui.config.magic_monsters", "gui.config.tooltip.magic_monsters", MED_BASE, MED_ACTIVE, Page.ONE, Column.LEFT),
 
-        NITE(4, "nite", "NITE", "gui.config.nite", "gui.config.tooltip.nite", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.NITE),
-        TOTAL_ECLIPSE(8, "totalEclipse", "TotalEclipse", "gui.config.total_eclipse", "gui.config.tooltip.total_eclipse", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.TOTAL_ECLIPSE),
-        CANCER_MODE(7, "isAprilFools", "AprilFoolsPatch", "gui.config.cancer_mode", "gui.config.tooltip.cancer_mode", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.CANCER_MODE),
-        DARK_STORMY_NIGHTMARE(5, "darkStormyNightmare", "DarkStormyNightmare", "gui.config.dark_stormy_night", "gui.config.tooltip.dark_stormy_night", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.DARK_STORMY_NIGHTMARE),
+        NITE(4, "nite", "NITE", "gui.config.nite", "gui.config.tooltip.nite", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT),
+        TOTAL_ECLIPSE(8, "totalEclipse", "TotalEclipse", "gui.config.total_eclipse", "gui.config.tooltip.total_eclipse", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT),
+        CANCER_MODE(7, "isAprilFools", "AprilFoolsPatch", "gui.config.cancer_mode", "gui.config.tooltip.cancer_mode", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT),
+        DARK_STORMY_NIGHTMARE(5, "darkStormyNightmare", "DarkStormyNightmare", "gui.config.dark_stormy_night", "gui.config.tooltip.dark_stormy_night", HARD_BASE, HARD_ACTIVE, Page.ONE, Column.RIGHT),
 
-        EVOLVED_MOBS(2, "evolvedMobs", "EvolvedMobs", "gui.config.evolved_mobs", "gui.config.tooltip.evolved_mobs", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.EVOLVED_MOBS),
-        NO_HIT(12, "noHit", "NoHit", "gui.config.no_hit", "gui.config.tooltip.no_hit", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT, NMConfUtils.CONFIG.NO_HIT),
+        EVOLVED_MOBS(2, "evolvedMobs", "EvolvedMobs", "gui.config.evolved_mobs", "gui.config.tooltip.evolved_mobs", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT),
+        NO_HIT(12, "noHit", "NoHit", "gui.config.no_hit", "gui.config.tooltip.no_hit", IMPOSSIBLE_BASE, IMPOSSIBLE_ACTIVE, Page.ONE, Column.RIGHT),
 
 
-        SHOULD_SHOW_DATE_TIMER(15, "shouldShowDateTimer", "NmMinecraftDayTimer", "gui.config.date_timer", "gui.config.tooltip.date_timer", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        SHOULD_SHOW_REAL_TIMER(16, "shouldShowRealTimer", "NmTimer", "gui.config.real_timer", "gui.config.tooltip.real_timer", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        BLOODMOON_COLORS(17, "bloodmoonColors", "BloodmoonColors", "gui.config.bloodmoon_colors", "gui.config.tooltip.bloodmoon_colors", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        CRIMSON(18, "crimson", "Crimson", "gui.config.crimson", "gui.config.tooltip.crimson", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        CONFIG_ON_HUD(19, "configOnHud", "ConfigOnHUD", "gui.config.config_on_hud", "gui.config.tooltip.config_on_hud", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        POTION_PARTICLES(20, "potionParticles", "PotionParticles", "gui.config.potion_particles", "gui.config.tooltip.potion_particles", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        SHOULD_DISPLAY_FISHING_ANNOUNCEMENTS(21, "shouldDisplayFishingAnnouncements", "FishingAnnouncements", "gui.config.fishing_alerts", "gui.config.tooltip.fishing_alerts", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT, null),
-        APRIL_FOOLS_RENDERING(22, "aprilFoolsRendering", "AprilFoolsWarpedRendering", "gui.config.cm_rendering", "gui.config.tooltip.cm_rendering", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.RIGHT, null),
-        PERFECT_START(23, "perfectStart", "PerfectStart", "gui.config.perfect_start", "gui.config.tooltip.perfect_start", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        EXTRA_ARMOR(24, "extraArmor", "ExtraArmor", "gui.config.extra_armor", "gui.config.tooltip.extra_armor", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        FULL_BRIGHT(26, "fullBright", "FullBright", "gui.config.full_bright", "gui.config.tooltip.full_bright", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        FAST_VILLAGERS(27, "fastVillagers", "FastVillagers", "gui.config.fast_villagers", "gui.config.tooltip.fast_villagers", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT, null),
-        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.RIGHT, null),
-        RENDER_VIGNETTE(30, "renderVignette", "RenderVignette", "gui.config.render_vignette", "gui.config.tooltip.render_vignette", AMBIENT_BASE, AMBIENT_ACTIVE, Page.THREE, Column.LEFT, null);
+        SHOULD_SHOW_DATE_TIMER(15, "shouldShowDateTimer", "NmMinecraftDayTimer", "gui.config.date_timer", "gui.config.tooltip.date_timer", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        SHOULD_SHOW_REAL_TIMER(16, "shouldShowRealTimer", "NmTimer", "gui.config.real_timer", "gui.config.tooltip.real_timer", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        BLOODMOON_COLORS(17, "bloodmoonColors", "BloodmoonColors", "gui.config.bloodmoon_colors", "gui.config.tooltip.bloodmoon_colors", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        CRIMSON(18, "crimson", "Crimson", "gui.config.crimson", "gui.config.tooltip.crimson", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        POTION_PARTICLES(20, "potionParticles", "PotionParticles", "gui.config.potion_particles", "gui.config.tooltip.potion_particles", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        SHOULD_DISPLAY_FISHING_ANNOUNCEMENTS(21, "shouldDisplayFishingAnnouncements", "FishingAnnouncements", "gui.config.fishing_alerts", "gui.config.tooltip.fishing_alerts", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.LEFT),
+        APRIL_FOOLS_RENDERING(22, "aprilFoolsRendering", "AprilFoolsWarpedRendering", "gui.config.cm_rendering", "gui.config.tooltip.cm_rendering", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.RIGHT),
+        PERFECT_START(23, "perfectStart", "PerfectStart", "gui.config.perfect_start", "gui.config.tooltip.perfect_start", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT),
+        EXTRA_ARMOR(24, "extraArmor", "ExtraArmor", "gui.config.extra_armor", "gui.config.tooltip.extra_armor", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT),
+        FULL_BRIGHT(26, "fullBright", "FullBright", "gui.config.full_bright", "gui.config.tooltip.full_bright", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT),
+        FAST_VILLAGERS(27, "fastVillagers", "FastVillagers", "gui.config.fast_villagers", "gui.config.tooltip.fast_villagers", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT),
+        BLOOD_MOON_HELPER(28, "bloodMoonHelper", "BloodMoonHelper", "gui.config.blood_moon_helper", "gui.config.tooltip.blood_moon_helper", HELPFUL_BASE, HELPFUL_ACTIVE, Page.TWO, Column.RIGHT),
+        DRAW_FANCY_CLOUDS(29, "renderFancyClouds", "RenderFancyClouds", "gui.config.render_fancy_clouds", "gui.config.tooltip.render_fancy_clouds", AMBIENT_BASE, AMBIENT_ACTIVE, Page.TWO, Column.RIGHT),
+        RENDER_VIGNETTE(30, "renderVignette", "RenderVignette", "gui.config.render_vignette", "gui.config.tooltip.render_vignette", AMBIENT_BASE, AMBIENT_ACTIVE, Page.THREE, Column.LEFT);
 
         private final int id;
         private final String fieldName;
@@ -89,9 +83,8 @@ public class GuiConfig extends GuiScreen {
         private final int activeColor;
         private final Page page;
         private final Column column;
-        private final NMConfUtils.CONFIG configEnum;
 
-        ConfigOption(int id, String fieldName, String configKey, String displayKey, String tooltipKey, int baseColor, int activeColor, Page page, Column column, NMConfUtils.CONFIG configEnum) {
+        ConfigOption(int id, String fieldName, String configKey, String displayKey, String tooltipKey, int baseColor, int activeColor, Page page, Column column) {
             this.id = id;
             this.fieldName = fieldName;
             this.configKey = configKey;
@@ -101,16 +94,11 @@ public class GuiConfig extends GuiScreen {
             this.activeColor = activeColor;
             this.page = page;
             this.column = column;
-            this.configEnum = configEnum;
         }
 
         public int getId() {
             return this.id;
         }
-        public NMConfUtils.CONFIG getConfigEnum() {
-            return this.configEnum;
-        }
-
         public String getFieldName() {
             return fieldName;
         }
@@ -151,7 +139,6 @@ public class GuiConfig extends GuiScreen {
             ConfigOption.MORE_VARIANTS,
             ConfigOption.REAL_TIME,
             ConfigOption.BUFFED_SQUIDS,
-            ConfigOption.NO_SKYBASES,
             ConfigOption.UNKILLABLE_MOBS,
             ConfigOption.BLOODMARE,
             ConfigOption.MAGIC_MONSTERS
@@ -171,7 +158,6 @@ public class GuiConfig extends GuiScreen {
             ConfigOption.SHOULD_SHOW_REAL_TIMER,
             ConfigOption.BLOODMOON_COLORS,
             ConfigOption.CRIMSON,
-            ConfigOption.CONFIG_ON_HUD,
             ConfigOption.POTION_PARTICLES,
             ConfigOption.SHOULD_DISPLAY_FISHING_ANNOUNCEMENTS
     );
@@ -207,41 +193,6 @@ public class GuiConfig extends GuiScreen {
         this.drawPageText(currentPage);
 
 
-        int fillColor = 0;
-        int outlineColor = 0xFFFFFF;
-        float starRadius = 8.0f;
-
-        for (Object button : this.buttonList) {
-            if (button instanceof GuiColoredButton tempButton) {
-                if (tempButton.drawButton) {
-                    float starX = tempButton.xPosition + tempButton.width + 60;
-                    float starY = tempButton.yPosition + 10; // center vertically in 20px button
-
-                    int[] arr = NMConfUtils.getCompletedConfigs();
-                    NMConfUtils.CONFIG configValue = tempButton.getConfigValue();
-
-
-                    if(configValue != null && tempButton.id < 14 && arr[configValue.getId() - 1] == 1){
-                        fillColor = 0xDFCF00;
-                    } else{
-                        fillColor = 0;
-                    }
-                    if (tempButton.id < 14) { // hardcoded for first page buttons and real time button
-                        this.drawStar(starX, starY, starRadius, fillColor, outlineColor);
-                    }
-                }
-
-
-            }
-            else if (button instanceof GuiInvisibleTooltipArea tooltipArea) {
-
-                if (tooltipArea.getHover() && tooltipArea.drawButton) {
-                    tooltipArea.drawTooltip(this.mc, tooltipArea.xPosition, tooltipArea.yPosition, tooltipArea.width,tooltipArea.height,
-                            tooltipArea.getTooltipText()
-                    );
-                }
-            }
-        }
         for (Object button : this.buttonList) {
             if (button instanceof GuiColoredButton tempButton) {
                 if (tempButton.drawButton) {
@@ -254,22 +205,6 @@ public class GuiConfig extends GuiScreen {
     }
 
 
-
-    private void setConfigValues() {
-        buttons.get(ConfigOption.MORE_VARIANTS).setConfigValue(NMConfUtils.CONFIG.MORE_VARIANTS);
-        buttons.get(ConfigOption.EVOLVED_MOBS).setConfigValue(NMConfUtils.CONFIG.EVOLVED_MOBS);
-        buttons.get(ConfigOption.BUFFED_SQUIDS).setConfigValue(NMConfUtils.CONFIG.BUFFED_SQUIDS);
-        buttons.get(ConfigOption.NITE).setConfigValue(NMConfUtils.CONFIG.NITE);
-        buttons.get(ConfigOption.DARK_STORMY_NIGHTMARE).setConfigValue(NMConfUtils.CONFIG.DARK_STORMY_NIGHTMARE);
-        buttons.get(ConfigOption.NO_SKYBASES).setConfigValue(NMConfUtils.CONFIG.NO_SKYBASES);
-        buttons.get(ConfigOption.CANCER_MODE).setConfigValue(NMConfUtils.CONFIG.CANCER_MODE);
-        buttons.get(ConfigOption.TOTAL_ECLIPSE).setConfigValue(NMConfUtils.CONFIG.TOTAL_ECLIPSE);
-        buttons.get(ConfigOption.BLOODMARE).setConfigValue(NMConfUtils.CONFIG.BLOODMARE);
-        buttons.get(ConfigOption.MAGIC_MONSTERS).setConfigValue(NMConfUtils.CONFIG.MAGIC_MONSTERS);
-        buttons.get(ConfigOption.UNKILLABLE_MOBS).setConfigValue(NMConfUtils.CONFIG.UNKILLABLE_MOBS);
-        buttons.get(ConfigOption.NO_HIT).setConfigValue(NMConfUtils.CONFIG.NO_HIT);
-        buttons.get(ConfigOption.REAL_TIME).setConfigValue(NMConfUtils.CONFIG.REAL_TIME);
-    }
 
     private void drawPageText(Page page) {
         List<List<ConfigOption>> pageLists = (page == Page.ONE)
@@ -295,107 +230,6 @@ public class GuiConfig extends GuiScreen {
         }
     }
 
-    public static int getRainbowColor(float speed, float offset, float saturation, float brightness) {
-        float time = (System.currentTimeMillis() % (long)(360 * speed)) / (speed * 360f);
-        float hue = (time + offset) % 1.0f;
-        return Color.HSBtoRGB(hue, saturation, brightness);
-    }
-
-
-
-    private void drawStar(float centerX, float centerY, float radius, int fillColor, int outlineColor) {
-        // Outer radius (tips), inner radius (valleys) for a nice star shape
-        float outerR = radius;
-        float innerR = radius * 0.382f; // golden ratio-ish proportion ~0.382
-
-        Tessellator tessellator = Tessellator.instance;
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        GL11.glDisable(GL11.GL_CULL_FACE);
-
-        // 1. Draw filled black star
-        GL11.glColor4f(
-                (fillColor >> 16 & 255) / 255f,
-                (fillColor >> 8 & 255) / 255f,
-                (fillColor & 255) / 255f,
-                1.0f
-        );
-        tessellator.startDrawing(GL11.GL_TRIANGLE_FAN);
-//        tessellator.setColorOpaque_I(fillColor); // didn't help
-        tessellator.addVertex(centerX, centerY, 0); // center
-
-
-        for (int i = 0; i <= 10; i++) { // 5 points + closing
-             float angle = (float) (Math.PI * 2 * i / 10.0 - Math.PI / 2);
-             float r = (i % 2 == 0) ? outerR: innerR;
-             float x = centerX + (float) Math.cos(angle) * r;
-             float y = centerY + (float) Math.sin(angle) * r;
-             tessellator.addVertex(x, y, 0);
-
-        }
-        tessellator.draw();
-
-        // 2. Draw white outline (slightly larger)
-        GL11.glLineWidth(1.5f);
-        GL11.glColor4f(
-                (outlineColor >> 16 & 255) / 255f,
-                (outlineColor >> 8 & 255) / 255f,
-                (outlineColor & 255) / 255f,
-                1.0f
-        );
-
-        tessellator.startDrawing(GL11.GL_LINE_LOOP);
-        for (int i = 0; i < 10; i++) {
-            float angle = (float) (Math.PI * 2 * i / 10.0 - Math.PI / 2);
-            float r = (i % 2 == 0) ? outerR : innerR;
-            float x = centerX + (float) Math.cos(angle) * r;
-            float y = centerY + (float) Math.sin(angle) * r;
-            tessellator.addVertex(x, y, 0);
-        }
-        tessellator.draw();
-
-        // Restore state
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_CULL_FACE);
-
-    }
-
-    private void drawStarFill(
-            float cx, float cy,
-            float outerR, float innerR,
-            int color
-    ) {
-        Tessellator t = Tessellator.instance;
-
-        // Precompute star points
-        float[] xs = new float[10];
-        float[] ys = new float[10];
-
-        for (int i = 0; i < 10; i++) {
-            float angle = (float)(Math.PI * 2 * i / 10.0 - Math.PI / 2);
-            float r = (i % 2 == 0) ? outerR : innerR;
-            xs[i] = cx + (float)Math.cos(angle) * r;
-            ys[i] = cy + (float)Math.sin(angle) * r;
-        }
-
-        t.startDrawing(GL11.GL_TRIANGLES);
-        t.setColorOpaque_I(color);
-
-        for (int i = 0; i < 10; i++) {
-            int next = (i + 1) % 10;
-
-            t.addVertex(cx, cy, 0);
-            t.addVertex(xs[i], ys[i], 0);
-            t.addVertex(xs[next], ys[next], 0);
-        }
-
-        t.draw();
-    }
-
-
     private void setButtonSettings(int pageNumber) {
         List<List<ConfigOption>> showLists = pageNumber == 1 ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT) : (pageNumber == 2 ? Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT) : Arrays.asList(PAGE_THREE_LEFT));
         List<List<ConfigOption>> hideLists = pageNumber == 1 ? Arrays.asList(PAGE_TWO_LEFT, PAGE_TWO_RIGHT, PAGE_THREE_LEFT) : (pageNumber == 2 ? Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT) : Arrays.asList(PAGE_ONE_LEFT, PAGE_ONE_RIGHT,PAGE_TWO_LEFT, PAGE_TWO_RIGHT));
@@ -419,12 +253,6 @@ public class GuiConfig extends GuiScreen {
         }
 
 
-        for(Object button : this.buttonList){
-            if(button instanceof GuiInvisibleTooltipArea b){
-                b.drawButton = pageNumber == 1;
-            }
-        }
-
         this.onPage = pageNumber;
 
 //        this.isOnSecondPage = !showFirst;
@@ -443,17 +271,16 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.add(new GuiButton(14, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 //        this.buttonList.add(new GuiButton(40, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 
-        this.createButtonsForList(PAGE_ONE_LEFT, baseX, heightMultiplier, 1);
-        this.createButtonsForList(PAGE_ONE_RIGHT, rightColumnX, heightMultiplier, 1);
-        this.createButtonsForList(PAGE_TWO_LEFT, baseX, heightMultiplier, 2);
-        this.createButtonsForList(PAGE_TWO_RIGHT, rightColumnX, heightMultiplier, 2);
-        this.createButtonsForList(PAGE_THREE_LEFT, baseX, heightMultiplier, 3);
+        this.createButtonsForList(PAGE_ONE_LEFT, baseX, heightMultiplier);
+        this.createButtonsForList(PAGE_ONE_RIGHT, rightColumnX, heightMultiplier);
+        this.createButtonsForList(PAGE_TWO_LEFT, baseX, heightMultiplier);
+        this.createButtonsForList(PAGE_TWO_RIGHT, rightColumnX, heightMultiplier);
+        this.createButtonsForList(PAGE_THREE_LEFT, baseX, heightMultiplier);
 
         this.initializeButtonStates();
-        this.setConfigValues();
     }
 
-    private void createButtonsForList(List<ConfigOption> list, int x, int heightMultiplier, int page) {
+    private void createButtonsForList(List<ConfigOption> list, int x, int heightMultiplier) {
         for (int i = 0; i < list.size(); i++) {
             ConfigOption option = list.get(i);
             int y = (i + 1) * heightMultiplier;
@@ -470,40 +297,10 @@ public class GuiConfig extends GuiScreen {
                     option.getActiveColor()
             );
             button.setTooltipText(I18n.getString(option.getTooltipKey()));
-            if (option.getConfigEnum() != null) {
-//                System.out.println("set: "+ option.getConfigEnum());
-                button.setConfigValue(option.getConfigEnum());
-            }
             this.buttonList.add(button);
             this.buttons.put(option, button);
 
 
-            // tooltip
-//            System.out.println(isFirstPage);
-            if (page == 1) {
-                int starX = x + 130;
-                int starY = y + 2;
-                int hitboxSize = 20;
-
-                NMConfUtils.CONFIG.ClearCondition clearCondition = option.getConfigEnum().getClearCondition();
-
-                String clearConditionText;
-                if(clearCondition == NMConfUtils.CONFIG.ClearCondition.CLEAR_GET_ITEM){
-                    clearConditionText = I18n.getString(clearCondition.getNameUnlocalized()) + ": " + I18n.getString(option.configEnum.getItemStack().getDisplayName());
-                } else {
-                    clearConditionText = I18n.getString(clearCondition.getNameUnlocalized());
-                }
-
-                GuiInvisibleTooltipArea starTooltipArea = new GuiInvisibleTooltipArea(
-                        200 + option.getId(),
-                        starX - 2,
-                        starY - 2,
-                        hitboxSize + 4,
-                        hitboxSize + 4,
-                        clearConditionText
-                );
-                this.buttonList.add(starTooltipArea);
-            }
         }
     }
 

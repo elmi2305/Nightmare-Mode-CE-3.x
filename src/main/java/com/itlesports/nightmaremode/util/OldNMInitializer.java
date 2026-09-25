@@ -600,7 +600,6 @@ public abstract class OldNMInitializer implements AchievementExt {
             NMItems.templeLocator.setItemRightClickCooldown( NMItems.templeLocator.getItemRightClickCooldown() / 6);
         }
         finishRecipes("Miscellaneous");
-        NMConfUtils.initConfigFile();
         finishRecipes("Config");
 
     }

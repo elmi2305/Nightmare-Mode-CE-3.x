@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
-import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -454,11 +453,6 @@ public abstract class GuiIngameMixin extends Gui {
             renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
         }
 
-        if (NightmareMode.configOnHud) {
-            textToShow = NMConfUtils.getTextForActiveConfig(NMConfUtils.getClientConfigData());
-            stringWidth = fontRenderer.getStringWidth(textToShow);
-            renderText(textToShow, stringWidth, screenX, screenY, fontRenderer, activeStatuses);
-        }
     }
 
     @Unique private float vignetteTarget = 0.5f;

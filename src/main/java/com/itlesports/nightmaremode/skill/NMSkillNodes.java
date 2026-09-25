@@ -657,7 +657,7 @@ public final class NMSkillNodes {
             4, 1,
             "Bring 32 clay balls.",
             Item.clay.itemID, 0, false, 32,
-            "Unlocks Additional Recipes.", none(),
+            "Unlock Experience gain", SkillRewardActions.unlockExperienceGain(),
             MINING, false),
             () -> NMSkillNodes.BRING_CLAY_PILE_16);
 
@@ -1959,7 +1959,7 @@ public final class NMSkillNodes {
             1, 1,
             "Bring 1 book.",
             Item.book.itemID, 0, false, 1,
-            "Experience points can be gained.", SkillRewardActions.unlockExperienceGain(),
+            "+10% Experience gained.", SkillRewardActions.addXpGain(0.1f),
             KNOWLEDGE, false);
 
     public static final SkillNode BRING_BOOK_16 = deferred(bring(
@@ -2877,7 +2877,7 @@ public final class NMSkillNodes {
             3, 1,
             "Bring 16 sticks.",
             Item.stick.itemID, 0, false, 16,
-            "Unlocks Additional Recipes.", none(),
+            "Food spoils 10% slower.", SkillRewardActions.multiplyFoodSpoilageRate(0.9f),
             COMBAT, false);
 
     public static final SkillNode KILL_MOB_16 = counter(
@@ -2885,9 +2885,9 @@ public final class NMSkillNodes {
             "Practical Bludgeoning",
             BTWItems.woodenClub,
             3, 2,
-            "Land the final hit on 16 hostile mobs; a final hit that leaves a carcass counts.",
+            "Kill 16 Hostile mobs (Land the final hit)",
             (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 16,
-            "Unlocks Additional Recipes.", none(),
+            "+10% Experience Gained.", SkillRewardActions.addXpGain(0.1f),
             COMBAT, false);
 
     public static final SkillNode BRING_BONE_CLUB_4 = bring(

@@ -98,7 +98,6 @@ public class NightmareMode extends BTWAddon {
     public static Boolean bloodmoonColors;
     public static Boolean crimson;
     public static Boolean bloodmare;
-    public static Boolean configOnHud;
     public static Boolean totalEclipse;
     public static Boolean buffedSquids;
     public static Boolean evolvedMobs;
@@ -106,7 +105,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean noHit;
     public static Boolean perfectStart;
     public static Boolean nite;
-    public static Boolean noSkybases = true;
+    public static final boolean noSkybases = true;
     public static Boolean unkillableMobs;
     public static Boolean potionParticles;
     public static Boolean moreVariants;
@@ -953,31 +952,6 @@ public class NightmareMode extends BTWAddon {
                     .sync()
                     .build();
 
-    public static final DataEntry.WorldDataEntry<int[]> CONFIGS_CREATED =
-            DataProvider.getBuilder(int[].class)
-                    .name("ConfigsInit")
-                    .defaultSupplier(() -> new int[]{
-                                    0, // NightmareMode.moreVariants
-                                    0, // NightmareMode.bloodmare
-                                    0, // NightmareMode.totalEclipse
-                                    0, // NightmareMode.buffedSquids
-                                    0, // NightmareMode.evolvedMobs
-                                    0, // NightmareMode.magicMonsters
-                                    0, // NightmareMode.noHit
-                                    0, // NightmareMode.nite
-                                    0, // NightmareMode.noSkybases
-                                    0, // NightmareMode.unkillableMobs
-                                    0, // NightmareMode.darkStormyNightmare
-                                    0, // NightmareMode.realTime
-                                    0  // NightmareMode.isAprilFools
-                            }
-
-                    )
-                    .readNBT(nbt -> nbt.getIntArray("ConfigsInit"))
-                    .writeNBT((nbt, v) -> nbt.setIntArray("ConfigsInit", v))
-                    .global()
-                    .build();
-
     public void setCanLeaveGame(boolean par1){
         this.canAccessMenu = par1;
     }
@@ -997,7 +971,6 @@ public class NightmareMode extends BTWAddon {
         CHUNK_LOADERS.register();
         PHASE_PORTALS.register();
         APPLE_COOLDOWN.register();
-        CONFIGS_CREATED.register();
         SANITY.register();
         FATIGUE.register();
         DEFEATED_BM.register();
@@ -1014,7 +987,6 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("NmTimer", true);
         config.registerBoolean("BloodmoonColors", true);
         config.registerBoolean("Crimson", false);
-        config.registerBoolean("ConfigOnHUD", true);
         config.registerBoolean("PotionParticles", true);
         config.registerBoolean("FishingAnnouncements", true);
         config.registerBoolean("PerfectStart", false);
@@ -1025,7 +997,6 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("NoHit", false);
         config.registerBoolean("TotalEclipse", false);
         config.registerBoolean("NITE", false);
-        config.registerBoolean("NoSkybases", true);
         config.registerBoolean("UnkillableMobs", false);
         config.registerBoolean("MoreVariants", false);
         config.registerBoolean("AprilFoolsPatch", false);
@@ -1056,7 +1027,6 @@ public class NightmareMode extends BTWAddon {
         bloodmoonColors = config.getBoolean("BloodmoonColors");
         potionParticles = config.getBoolean("PotionParticles");
         crimson = config.getBoolean("Crimson");
-        configOnHud = config.getBoolean("ConfigOnHUD");
         bloodmare = config.getBoolean("Bloodmare");
         buffedSquids = config.getBoolean("BuffedSquids");
         evolvedMobs = config.getBoolean("EvolvedMobs");

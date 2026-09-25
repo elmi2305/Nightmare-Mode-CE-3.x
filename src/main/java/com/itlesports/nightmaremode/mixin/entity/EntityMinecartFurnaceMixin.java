@@ -1,7 +1,9 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.util.interfaces.IHighSpeedMinecart;
 import com.itlesports.nightmaremode.util.interfaces.IFurnaceMinecartEngine;
+import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityMinecartFurnace;
 import net.minecraft.src.EntityPlayer;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -25,6 +28,12 @@ public abstract class EntityMinecartFurnaceMixin implements IFurnaceMinecartEngi
     @Shadow public double pushZ;
 
     private boolean nightmareMode$hadFuel;
+
+    @ModifyArg(method = "killMinecart", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Block;I)V"), index = 0)
+    private Block dropLooseBrickOven(Block furnace) {
+        return BTWBlocks.idleLooseOven;
+    }
 
     @Override
     public boolean nightmareMode$hasEngineFuel() {

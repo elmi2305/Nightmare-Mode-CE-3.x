@@ -1,13 +1,9 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.mixin.interfaces.GuiScreenAccess;
-import com.itlesports.nightmaremode.mixin.interfaces.GuiSelectWorldAccess;
 import com.itlesports.nightmaremode.mixin.interfaces.GuiSlotAccess;
-import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.interfaces.GuiSelectWorldExt;
 import com.itlesports.nightmaremode.util.interfaces.GuiWorldSlotExt;
-import com.itlesports.nightmaremode.util.interfaces.SaveFormatExt;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -19,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +33,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
     }
 
     @Inject(method = "drawSlot", at = @At(value = "TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void captureConfigAndDrawAccordingText(int worldTextIndex, int xPos, int yPos, int par5, Tessellator tess, CallbackInfo ci, SaveFormatComparator sfc){
-        SaveFormatExt sfcExt = (SaveFormatExt) (sfc);
-
+    private void drawWorldSlotDecorations(int worldTextIndex, int xPos, int yPos, int par5, Tessellator tess, CallbackInfo ci, SaveFormatComparator sfc){
         int starX = xPos - 60;
         int starY = yPos + 10;
         int starSize = 12;
@@ -81,10 +74,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         }
 
 
-        int[] confArray = sfcExt.nightmareMode$getConfArray();
-
-        GuiWorldSlot self = (GuiWorldSlot) (Object)this;
-
 
         // draw world icon
         int size = 32;
@@ -102,125 +91,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         tess.addVertexWithUV(x, yPos, 0, 0, 0);
         tess.draw();
 
-        if (Arrays.stream(confArray).noneMatch(a -> a == 1)) return;
-
-        // build the existing game-mode text (var9) exactly like vanilla so spacing matches
-        String var9 = "";
-        if (sfc.requiresConversion()) {
-            var9 = GuiSelectWorldAccess.functionI(this.parentWorldGui) + " " + var9;
-        } else {
-            var9 = GuiSelectWorldAccess.functionJ(this.parentWorldGui)[sfc.getEnumGameType().getID()];
-            if (sfc.isHardcoreModeEnabled()) {
-                var9 = EnumChatFormatting.DARK_RED + I18n.getString("gameMode.hardcore") + EnumChatFormatting.RESET;
-            }
-
-            if (sfc.getCheatsEnabled()) {
-                var9 = var9 + ", " + I18n.getString("selectWorld.cheats");
-            }
-        }
-
-        // config string to render (e.g. BM+TE+BS)
-        String confString = NMConfUtils.getTextForActiveConfig(confArray);
-        FontRenderer font = ((GuiScreenAccess)(this.parentWorldGui)).getFontRenderer();
-
-        // draw the comma after the existing text (same position as before)
-        int baseTextX = xPos + 2 + font.getStringWidth(var9);
-        int textX = baseTextX + 5;
-        int textY = yPos + 12 + 10;
-        this.parentWorldGui.drawString(font, ",", baseTextX, textY, 8421504);
-
-        final int LIST_CONTENT_WIDTH = 220;
-        final int SCROLLBAR_PADDING = 6;
-
-        int listRight = xPos + LIST_CONTENT_WIDTH - SCROLLBAR_PADDING;
-        int maxWidth = listRight - textX;
-
-        // if there's essentially no room, draw the text normally (no scroll)
-        if (maxWidth <= 4) {
-            this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
-            return;
-        }
-
-        int textWidth = font.getStringWidth(confString);
-
-        // If it fits, draw normally
-        if (textWidth <= maxWidth) {
-            this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
-            return;
-        }
-
-        // scrolling parameters
-        final int paddingBetweenLoops = 20;
-        final float speedPixelsPerSecond = 40f;
-        final int pauseMs = 2000;
-
-        int totalScrollPixels = textWidth + paddingBetweenLoops;
-        long scrollDurationMs = (long) ((totalScrollPixels / speedPixelsPerSecond) * 1000.0);
-        long cycleMs = pauseMs + scrollDurationMs + pauseMs;
-
-        long now = System.currentTimeMillis();
-        long t = now % cycleMs;
-
-        int scrollOffsetPx;
-        if (t < pauseMs) {
-            scrollOffsetPx = 0;
-        } else if (t >= (pauseMs + scrollDurationMs)) {
-            scrollOffsetPx = totalScrollPixels;
-        } else {
-            long scrollTime = t - pauseMs;
-            scrollOffsetPx = (int) ((scrollTime / 1000.0) * speedPixelsPerSecond);
-            if (scrollOffsetPx < 0) scrollOffsetPx = 0;
-            if (scrollOffsetPx > totalScrollPixels) scrollOffsetPx = totalScrollPixels;
-        }
-
-        int drawX = textX - scrollOffsetPx;
-
-        ScaledResolution sr;
-        int scaleFactor;
-        try {
-            sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
-            scaleFactor = Math.max(1, sr.getScaleFactor());
-        } catch (Throwable e) {
-            // if anything odd happens, fall back to a safe scale of 1
-            scaleFactor = 1;
-        }
-
-        int scissorX = textX * scaleFactor;
-        int scissorW = Math.max(1, maxWidth * scaleFactor);
-        int scissorH = Math.max(1, font.FONT_HEIGHT * scaleFactor);
-        int scissorY = mc.displayHeight - ((textY + font.FONT_HEIGHT) * scaleFactor);
-
-        if (scissorX < 0) scissorX = 0;
-        if (scissorY < 0) scissorY = 0;
-        if (scissorW > mc.displayWidth - scissorX) scissorW = mc.displayWidth - scissorX;
-        if (scissorH > mc.displayHeight - scissorY) scissorH = mc.displayHeight - scissorY;
-
-        if (scissorW <= 0 || scissorH <= 0) {
-            this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
-            return;
-        }
-
-        boolean scissorWasEnabled = GL11.glIsEnabled(GL11.GL_SCISSOR_TEST);
-        try {
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GL11.glScissor(scissorX, scissorY, scissorW, scissorH);
-
-            // primary copy
-            this.parentWorldGui.drawString(font, confString, drawX, textY, 0xFF0000);
-
-            int secondCopyX = drawX + textWidth + paddingBetweenLoops;
-            if (secondCopyX < textX + maxWidth && secondCopyX + textWidth > textX) {
-                this.parentWorldGui.drawString(font, confString, secondCopyX, textY, 0xFF0000);
-            }
-        } catch (Throwable e) {
-            try {
-                this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
-            } catch (Throwable ignored) {}
-        } finally {
-            if (!scissorWasEnabled) {
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
-            }
-        }
     }
 
     @Unique private void drawLayer(Tessellator tess, int x, int yPos){

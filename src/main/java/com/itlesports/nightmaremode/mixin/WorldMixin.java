@@ -6,7 +6,6 @@ import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.entity.underworld.EntityVoidSquid;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
-import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.WorldSkillExt;
@@ -104,11 +103,6 @@ public abstract class WorldMixin implements WorldSkillExt {
 
         // normalize RGB values (0-255) to 0-1 range
         return Vec3.createVectorHelper(color.getRed() / 255.0, color.getGreen() / 255.0, color.getBlue() / 255.0);
-    }
-
-    @Inject(method = "initialize", at = @At("TAIL"))
-    private void setDataOnInit(WorldSettings par1WorldSettings, CallbackInfo ci){
-        this.setData(NightmareMode.CONFIGS_CREATED, NMConfUtils.getClientConfigData());
     }
 
     @Inject(method = "getFogColor", at = @At("RETURN"), cancellable = true)

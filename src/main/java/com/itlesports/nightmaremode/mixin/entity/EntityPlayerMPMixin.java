@@ -8,7 +8,6 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
-import com.itlesports.nightmaremode.util.NMConfUtils;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.NetherRecall;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -26,9 +25,6 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Arrays;
-
-import static btw.community.nightmaremode.NightmareMode.CONFIGS_CREATED;
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityPlayerMP.class)
@@ -234,13 +230,6 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             double par6 = this.posZ;
             float par8 = 3.0f;
             this.worldObj.createExplosion(null, par2, par4, par6, par8, true);
-        }
-        if(this.worldObj.isRemote) return;
-        int[] zeroConfigs = new int[NMConfUtils.CONFIG_COUNT];
-        Arrays.fill(zeroConfigs, 0);
-
-        for(WorldServer serv : MinecraftServer.getServer().worldServers){
-            serv.setData(CONFIGS_CREATED, zeroConfigs);
         }
     }
 
