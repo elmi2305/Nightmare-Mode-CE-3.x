@@ -51,7 +51,18 @@ public abstract class EntityItemMixin extends Entity {
 
     @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
     private void destroyRecallEntity(CallbackInfo ci) {
-        if (!this.worldObj.isRemote && com.itlesports.nightmaremode.util.NetherRecall.isRecall(this.getEntityItem())) {
+        ItemStack stack = this.getEntityItem();
+        if (stack == null || stack.itemID < 0 || stack.itemID >= Item.itemsList.length
+                || Item.itemsList[stack.itemID] == null) {
+            if (!this.worldObj.isRemote) {
+                this.worldObj.getWorldLogAgent().logSevere("Discarding item entity " + this.entityId
+                        + " with unregistered item ID " + (stack == null ? "null" : stack.itemID));
+            }
+            this.setDead();
+            ci.cancel();
+            return;
+        }
+        if (!this.worldObj.isRemote && com.itlesports.nightmaremode.util.NetherRecall.isRecall(stack)) {
             this.setDead();
             ci.cancel();
         }

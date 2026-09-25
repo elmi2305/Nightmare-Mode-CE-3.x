@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import api.achievement.AchievementEventDispatcher;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import net.minecraft.src.*;
 import com.itlesports.nightmaremode.util.interfaces.FoodItemExt;
@@ -17,6 +18,11 @@ public class ItemFoodMixin implements FoodItemExt {
     @Shadow private float potionEffectProbability;
     @Shadow private int potionDuration;
     @Shadow private int potionAmplifier;
+
+    @Inject(method = "getHungerRestored", at = @At("HEAD"), cancellable = true)
+    private void increaseCuredMeatYield(CallbackInfoReturnable<Integer> cir) {
+        if ((Object)this == BTWItems.curedMeat) cir.setReturnValue(4);
+    }
 
     @Override
     public boolean nightmareMode$causesFoodPoisoning() {

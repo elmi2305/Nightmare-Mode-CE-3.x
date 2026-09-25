@@ -39,12 +39,12 @@ public abstract class EntitySkeletonMixin extends EntityMob{
 
     @Shadow
     private SkeletonArrowAttackBehavior aiRangedAttack;
-    @Shadow private EntityAIAttackOnCollide aiMeleeAttack;
-
     @Inject(method = "setCombatTask", at = @At("TAIL"))
-    private void limitMeleeUntilHardmode(CallbackInfo ci) {
-        if (NMUtils.getWorldProgress() < NMFields.HARDMODE) {
-            this.tasks.removeTask(this.aiMeleeAttack);
+    private void useBowUntilHardmode(CallbackInfo ci) {
+        if (NMUtils.getWorldProgress() >= NMFields.HARDMODE) return;
+        ItemStack held = this.getHeldItem();
+        if (held == null || held.itemID != Item.bow.itemID) {
+            this.setCurrentItemOrArmor(0, new ItemStack(Item.bow));
         }
     }
 

@@ -71,6 +71,9 @@ public class ItemMixin {
         if ((Object) this instanceof INetherItem) {
             tooltip.add(EnumChatFormatting.DARK_AQUA + "Fireproof");
         }
+        if ((Object)this == NMItems.skillBook) {
+            tooltip.add(EnumChatFormatting.DARK_AQUA + "Soulbound");
+        }
     }
 
     @Inject(method = "onItemUse", at = @At("HEAD"), cancellable = true)

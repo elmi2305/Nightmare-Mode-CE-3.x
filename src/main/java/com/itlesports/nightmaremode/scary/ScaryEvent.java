@@ -9,7 +9,8 @@ public enum ScaryEvent {
     BLINK("blink"), ACHIEVEMENT("achievement"), SKY_EYES("sky-eyes"), SKY_NIGHT("sky-night"),
     MENU_LABELS("menu-labels"), MENU_BLACKOUT("menu-blackout"), MENU_EXIT_SPAM("menu-exit-spam"),
     CHAT_ACHIEVEMENT("chat-achievement"), CHAT_COMMAND("chat-command"), CHAT_TIME("chat-time"),
-    CHAT_SCREENSHOT("chat-screenshot"), CHAT_GAMEMODE("chat-gamemode");
+    CHAT_SCREENSHOT("chat-screenshot"), CHAT_GAMEMODE("chat-gamemode"),
+    DISCORD_NOTIFICATION("discord-notification"), STEAM_NOTIFICATION("steam-notification");
 
     public final String id;
 

@@ -213,6 +213,7 @@
     "entity.EntityEndermanMixin",
     "entity.EntityEnderPearlMixin",
     "entity.EntityFireballMixin",
+    "entity.EntityFallingSandMixin",
     "entity.EntityFishHookAccessor",
     "entity.EntityFishHookMixin",
     "entity.EntityGhastMixin",

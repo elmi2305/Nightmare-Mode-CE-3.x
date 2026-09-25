@@ -378,6 +378,11 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     }
 
     @Override
+    public boolean isBurning() {
+        return !this.nm$isCarcass() && super.isBurning();
+    }
+
+    @Override
     public int nm$getHarvesterId() {
         return this.nm$isCarcass() ? this.dataWatcher.getWatchableObjectInt(HARVESTER_WATCHER_ID) : -1;
     }
@@ -405,6 +410,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
 
         self.setHealth(1.0F);
         this.dataWatcher.updateObject(CARCASS_WATCHER_ID, (byte)1);
+        this.extinguish();
         this.dataWatcher.updateObject(HARVESTER_WATCHER_ID, -1);
         this.dataWatcher.updateObject(HARVEST_PROGRESS_WATCHER_ID, 0);
         this.carcassDamageSource = source;
@@ -471,6 +477,8 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         if (!this.nm$isCarcass()) {
             return;
         }
+
+        this.extinguish();
 
         EntityLivingBase self = (EntityLivingBase)(Object)this;
         if (!this.carcassPositionInitialized) {
@@ -558,6 +566,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         this.dataWatcher.updateObject(HARVESTER_WATCHER_ID, -1);
         this.dataWatcher.updateObject(HARVEST_PROGRESS_WATCHER_ID, 0);
         this.carcassAge = tag.getInteger("nmCarcassAge");
+        this.extinguish();
         this.carcassDamageSource = DamageSource.generic;
         self.deathTime = 20;
         self.setHealth(1.0F);

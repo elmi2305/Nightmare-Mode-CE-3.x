@@ -109,7 +109,7 @@ public class NMUtils {
                 && progress >= NMFields.HARDMODE) {
             range += 2 + (progress - NMFields.HARDMODE) * 2;
         }
-        return world.getWorldTime() < 120000L ? Math.max(6, range - 10) : range;
+        return range;
     }
 
     public static boolean canBecomeCarcass(EntityLivingBase entity) {

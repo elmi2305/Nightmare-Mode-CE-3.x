@@ -216,13 +216,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         super(par1World);
     }
 
-    // can't jump if you have slowness
-    @Inject(method = "canJump", at = @At("RETURN"), cancellable = true)
-    private void cantJumpIfSlowness(CallbackInfoReturnable<Boolean> cir){
-        if(this.isPotionActive(Potion.moveSlowdown) && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
-            cir.setReturnValue(false);
-        }
-    }
     @Inject(method = "fall", at = @At("HEAD"))
     private void crushBlocksBelow(float fallDistance, CallbackInfo ci){
         if (this.worldObj.isRemote || fallDistance <= 0.9F) {
@@ -458,7 +451,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "jump", at = @At("TAIL"))
     private void aprilFoolsJumpHeight(CallbackInfo ci){
-        SkillHandler.incrementJumps((EntityPlayer)(Object)this);
         if(isAprilFools){
             if (this.rand.nextInt(6) == 0) {
                 this.motionY += this.rand.nextFloat() * 0.2f * (this.rand.nextBoolean() ? 1 : -1);
@@ -1051,7 +1043,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             if (this.ticksExisted % 8 == 0 && fatigue > 0) {
                 this.setData(FATIGUE, --fatigue);
             }
-        } else if (this.ticksExisted % (900 + NMUtils.getWorldProgress() * 150) == 0 && fatigue < 100) {
+        } else if (this.ticksExisted % (1200 + NMUtils.getWorldProgress() * 150) == 0 && fatigue < 100) {
             int previousFatigue = fatigue;
             this.setData(FATIGUE, ++fatigue);
             if (previousFatigue < 60 && fatigue >= 60) {
@@ -1061,9 +1053,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         if (this.ticksExisted % 20 == 0) {
             if (fatigue >= 95) {
-                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 1));
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
             } else if (fatigue >= 75) {
-                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 0));
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
             }
         }
     }
@@ -1699,7 +1691,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Inject(method = "addHarvestBlockExhaustion", at = @At("HEAD"))
     private void manageBlockBrokenAchievements(int iBlockID, int iBlockI, int iBlockJ, int iBlockK, int iBlockMetadata, CallbackInfo ci){
         EntityPlayer self = (EntityPlayer)(Object)this;
-        SkillHandler.incrementBlocksMined(self, iBlockID, iBlockMetadata);
         AchievementEventDispatcher.triggerEvent(NMAchievementEvents.BlockBrokenEvent.class, self, new NMAchievementEvents.BlockBrokenEvent.BlockBrokenData(iBlockID, iBlockMetadata));
     }
 

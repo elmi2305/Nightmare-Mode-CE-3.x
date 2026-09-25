@@ -7,6 +7,8 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockGrass;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
+import net.minecraft.src.ItemStack;
+import com.itlesports.nightmaremode.item.NMItems;
 import java.util.Random;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.network.PollutionVisualNet;
@@ -24,6 +26,14 @@ public class BlockGrassMixin extends Block {
 
     protected BlockGrassMixin(int par1, Material par2Material) {
         super(par1, par2Material);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {
+        super.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+        if (!world.isRemote && world.rand.nextFloat() < chance * 0.01F) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.grassSeeds));
+        }
     }
 
     @Environment(value= EnvType.CLIENT)

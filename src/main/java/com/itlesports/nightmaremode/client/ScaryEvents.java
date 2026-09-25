@@ -31,7 +31,23 @@ public final class ScaryEvents {
     private static final int SCARY_BLINK_LENGTH = 55;
     private static final String SOUND_SOURCE = "nm_scary_event";
     private static final String[] TITLES = {"Memories", "Something's Watching", "Not Alone", "It Remembers", "You Looked Back"};
-    private static final String[] NAMES = {"Player 2", "Alex_37", "stone981", "James_12"};
+    private static final String[] NAMES = {"Player 2", "Alex_37", "stone981", "James_12", "Herobrine"};
+    // add more message previews here.
+    private static final ArrayList<String> STEAM_MESSAGES = new ArrayList<>(List.of(
+            "hi",
+            "hop on",
+            "you here?",
+            "hello",
+            "hop on",
+            "wya",
+            "im at spawn",
+            "oh i see u",
+            "is that u?",
+            "it's late",
+            "had enough?",
+            "hey",
+            "yo"
+            ));
     private static final String[] SOUNDS = {"dig.stone", "random.eat", "random.chestopen", "random.door_close", "step.gravel", "liquid.splash"};
     private static WorldClient world;
     private static EntityClientPlayerMP player;
@@ -60,6 +76,8 @@ public final class ScaryEvents {
     private static Vec3 figure;
     private static float figureYaw;
     private static String title;
+    private static String steamSender;
+    private static String steamMessage;
     private static int lastTitle = -1;
     private static ScaryMenu menu;
 
@@ -134,6 +152,8 @@ public final class ScaryEvents {
         active = null;
         forced = false;
         source = figure = null;
+        steamSender = null;
+        steamMessage = null;
         tabStarted = stepDue = 0;
         tabSoundPlaying = false;
         stepsLeft = 0;
@@ -157,6 +177,8 @@ public final class ScaryEvents {
     public static long elapsed() { return now() - started; }
     public static long tabElapsed() { return tabStarted == 0 ? -1 : now() - tabStarted; }
     public static String title() { return title; }
+    public static String steamSender() { return steamSender; }
+    public static String steamMessage() { return steamMessage; }
     public static Vec3 figure() { return figure; }
     public static float figureYaw() { return figureYaw; }
 
@@ -202,7 +224,8 @@ public final class ScaryEvents {
         if (due && active == null && dimension == 0 && time >= busyUntil) {
             // one weighted choice per opportunity; contextual events never get a separate frequency budget.
             int roll = RANDOM.nextInt(1000);
-            ScaryEvent event = roll < 160 ? ScaryEvent.FOOTSTEPS : roll < 350 ? ScaryEvent.SOUND
+            ScaryEvent event = roll < 30 ? ScaryEvent.DISCORD_NOTIFICATION : roll < 60 ? ScaryEvent.STEAM_NOTIFICATION
+                    : roll < 160 ? ScaryEvent.FOOTSTEPS : roll < 350 ? ScaryEvent.SOUND
                     : roll < 465 ? ScaryEvent.CHAT_LAN : roll < 540 ? ScaryEvent.CHAT_CRASH
                     : roll < 650 ? ScaryEvent.CHAT_WHEEL : roll < 770 ? ScaryEvent.CHAT_JOIN
                     : roll < 905 ? ScaryEvent.ACHIEVEMENT : roll < 960 ? ScaryEvent.FIGURE
@@ -251,6 +274,16 @@ public final class ScaryEvents {
                 source = behind(12, 18);
                 sound(SOUNDS[RANDOM.nextInt(SOUNDS.length)], source, .65f, 1f, 24f);
                 deadline = started + 2500;
+            }
+            case DISCORD_NOTIFICATION -> {
+                Minecraft.getMinecraft().sndManager.playSoundFX("nightmare:nmDiscordNotification", 1.0f, 1.0f);
+                deadline = started + 2500;
+            }
+            case STEAM_NOTIFICATION -> {
+                steamSender = NAMES[RANDOM.nextInt(NAMES.length)];
+                steamMessage = STEAM_MESSAGES.isEmpty() ? "..." : STEAM_MESSAGES.get(RANDOM.nextInt(STEAM_MESSAGES.size()));
+                Minecraft.getMinecraft().sndManager.playSoundFX("nightmare:nmSteamNotification", 1.0f, 1.0f);
+                deadline = started + 5000;
             }
             case CHAT_LAN -> { chat("Local game hosted on port " + (49152 + RANDOM.nextInt(16384))); deadline = started + 1000; }
             case CHAT_CRASH -> {

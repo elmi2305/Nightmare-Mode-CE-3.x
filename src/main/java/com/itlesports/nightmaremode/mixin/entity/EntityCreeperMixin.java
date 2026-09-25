@@ -88,7 +88,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
         double niteMultiplier = NMUtils.getNiteMultiplier();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
-                NMUtils.getBalancedMobFollowRange(this.worldObj, 14, progress, NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
+                NMUtils.getBalancedMobFollowRange(this.worldObj, 16, progress, NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));

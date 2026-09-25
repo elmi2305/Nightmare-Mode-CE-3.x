@@ -2014,7 +2014,7 @@ public abstract class NMInitializer implements AchievementExt {
         // brewing stand recipes are registered here as they are added
         BrewingStandRecipeManager manager = BrewingStandRecipeManager.instance;
 
-        manager.addRecipe(new ItemStack(Item.beefCooked), new ItemStack(Item.magmaCream), new ItemStack(Item.stick));
+//        manager.addRecipe(new ItemStack(Item.beefCooked), new ItemStack(Item.magmaCream), new ItemStack(Item.stick));
         finishRecipes("Brewing Stand Recipes");
     }
 
@@ -2875,6 +2875,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(Item.paper), new Object[]{"###", Character.valueOf('#'), NMItems.plantSheet});
         RecipeManager.addRecipe(new ItemStack(BTWItems.wickerWeaving, 1, 299), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.washedSugarCane});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pileOfSticks), new Object[]{Item.stick, Item.stick, Item.stick, Item.stick});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.plantFiber), new Object[]{NMItems.leaf, NMItems.leaf, NMItems.leaf, NMItems.leaf});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulFlint), new Object[]{NMItems.soulChip, NMItems.soulChip, NMItems.soulChip, NMItems.soulChip});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulChip, 4), new Object[]{NMItems.soulFlint});
         RecipeManager.addShapelessRecipe(

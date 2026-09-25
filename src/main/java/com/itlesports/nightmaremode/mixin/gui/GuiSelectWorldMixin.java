@@ -32,6 +32,7 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
     @Shadow private List saveList;
     @Shadow private int selectedWorld;
     @Shadow private GuiWorldSlot worldSlotContainer;
+    @Shadow private String[] localizedGameModeText;
     @Shadow protected abstract void loadSaves() throws AnvilConverterException;
     @Shadow public abstract void initGui();
     @Shadow private boolean selected;
@@ -41,6 +42,11 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
 
     @Unique private static int num = 0;
     @Unique private static boolean chaos = false;
+
+    @Inject(method = "initGui", at = @At("TAIL"))
+    private void labelCreativeWorldsSandbox(CallbackInfo ci) {
+        this.localizedGameModeText[EnumGameType.CREATIVE.getID()] = "Sandbox";
+    }
 
 
     @Inject(method = "actionPerformed", at = @At("TAIL"))

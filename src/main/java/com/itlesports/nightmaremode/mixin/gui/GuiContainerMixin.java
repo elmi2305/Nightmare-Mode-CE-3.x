@@ -40,6 +40,14 @@ public class GuiContainerMixin {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        int lockedSlotColor = 0xFFC6C6C6;
+        if (mc.currentScreen instanceof GuiInventory) {
+            int progress = Math.max(mc.thePlayer.inGloomCounter + (mc.thePlayer.getGloomLevel() - 1) * 200, 0);
+            float darkness = Math.min(progress / 250.0F, 1.0F) * 0.95F;
+            int shade = Math.round(198.0F * (1.0F - darkness));
+            lockedSlotColor = 0xFF000000 | shade << 16 | shade << 8 | shade;
+        }
+
         for (Object slotObj : this.inventorySlots.inventorySlots) {
             Slot slot = (Slot)slotObj;
             if (slot.inventory instanceof InventoryPlayer inv && !NMInventoryLocks.isMainInventorySlotUnlocked(inv.player, slot.getSlotIndex())) {
@@ -48,7 +56,7 @@ public class GuiContainerMixin {
                         slot.yDisplayPosition - 1,
                         slot.xDisplayPosition + 16 + 1,
                         slot.yDisplayPosition + 16 + 1,
-                        0xFFC6C6C6 // the color of the inventory. if a TP is used that changes this, oh well, it will look weird
+                        lockedSlotColor
                 );
             }
         }

@@ -106,7 +106,7 @@ public class NightmareMode extends BTWAddon {
     public static Boolean noHit;
     public static Boolean perfectStart;
     public static Boolean nite;
-    public static Boolean noSkybases;
+    public static Boolean noSkybases = true;
     public static Boolean unkillableMobs;
     public static Boolean potionParticles;
     public static Boolean moreVariants;
@@ -1025,7 +1025,7 @@ public class NightmareMode extends BTWAddon {
         config.registerBoolean("NoHit", false);
         config.registerBoolean("TotalEclipse", false);
         config.registerBoolean("NITE", false);
-        config.registerBoolean("NoSkybases", false);
+        config.registerBoolean("NoSkybases", true);
         config.registerBoolean("UnkillableMobs", false);
         config.registerBoolean("MoreVariants", false);
         config.registerBoolean("AprilFoolsPatch", false);
@@ -1064,7 +1064,6 @@ public class NightmareMode extends BTWAddon {
         noHit = config.getBoolean("NoHit");
         totalEclipse = config.getBoolean("TotalEclipse");
         nite = config.getBoolean("NITE");
-        noSkybases = config.getBoolean("NoSkybases");
         unkillableMobs = config.getBoolean("UnkillableMobs");
         moreVariants = config.getBoolean("MoreVariants");
         extraArmor = config.getBoolean("ExtraArmor");

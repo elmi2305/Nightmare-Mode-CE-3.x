@@ -27,6 +27,17 @@ public class GuiGameOverMixin extends GuiScreen {
     // Get tips from lang file
     @Unique private static String[] tips = new String[32];
 
+    @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
+    private void ignoreClicksAfterWorldUnload(GuiButton button, CallbackInfo ci) {
+        if (this.mc.theWorld != null) return;
+
+        // queued mouse events can still reach this screen after the first click unloads the world.
+        if (this.mc.currentScreen == (GuiScreen)(Object)this) {
+            this.mc.displayGuiScreen(new GuiMainMenu());
+        }
+        ci.cancel();
+    }
+
     @Inject(method = "initGui", at = @At("HEAD"))
     private void declareChosenTipAndDeathMessage(CallbackInfo ci){
         this.selectRandomTip();

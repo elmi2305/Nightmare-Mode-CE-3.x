@@ -45,6 +45,7 @@ public class GuiSkillTree extends GuiScreen {
     private boolean dragging;
     private boolean movedWhileDragging;
     private SkillBranch hoveredBranch;
+    private boolean hoveredStats;
     private int hoveredJournal = -1;
     private SkillNode hoveredNode;
     private SkillNode focusedNode;
@@ -76,6 +77,7 @@ public class GuiSkillTree extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.hoveredBranch = null;
+        this.hoveredStats = false;
         this.hoveredJournal = -1;
         this.hoveredNode = null;
         this.drawDefaultBackground();
@@ -102,6 +104,8 @@ public class GuiSkillTree extends GuiScreen {
             this.drawTooltip(JourneyJournals.title(this.hoveredJournal), mouseX, mouseY);
         } else if (this.hoveredBranch != null) {
             this.drawTooltip(this.hoveredBranch.getName(), mouseX, mouseY);
+        } else if (this.hoveredStats) {
+            this.drawTooltip("Statistics", mouseX, mouseY);
         }
         GL11.glEnable(2929);
     }
@@ -146,6 +150,15 @@ public class GuiSkillTree extends GuiScreen {
                 this.hoveredBranch = branch;
             }
         }
+        int x = left + 12 + SkillRegistry.getBranches().size() * 30;
+        int y = top - 7;
+        this.mc.renderEngine.bindTexture(TAB_OUTLINE_TEXTURE);
+        this.drawFullTexturedRect(x, y, 26, 26);
+        RenderHelper.enableGUIStandardItemLighting();
+        renderItem.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine,
+                new net.minecraft.src.ItemStack(net.minecraft.src.Item.paper), x + 5, y + 5);
+        RenderHelper.disableStandardItemLighting();
+        this.hoveredStats = mouseX >= x && mouseX < x + 26 && mouseY >= y && mouseY < y + 26;
     }
 
     private void drawJournalTabs(int left, int top, int mouseX, int mouseY) {
@@ -328,9 +341,9 @@ public class GuiSkillTree extends GuiScreen {
     }
 
     private void drawSearchBar(int left, int top) {
-        int x = left + 166;
+        int x = left + 198;
         int y = top + 3;
-        int width = 138;
+        int width = 106;
         drawRect(x, y, x + width, y + 15, 0xFF111111);
         drawRect(x + 1, y + 1, x + width - 1, y + 14, 0xFF303030);
         String text = "Search: " + this.searchText;
@@ -452,6 +465,12 @@ public class GuiSkillTree extends GuiScreen {
             }
             int left = (this.width - PANE_WIDTH) / 2;
             int top = (this.height - PANE_HEIGHT) / 2;
+            int statsX = left + 12 + SkillRegistry.getBranches().size() * 30;
+            if (mouseX >= statsX && mouseX < statsX + 26
+                    && mouseY >= top - 7 && mouseY < top + 19) {
+                this.mc.displayGuiScreen(new GuiSkillStats(this));
+                return;
+            }
             for (int index = 0; index < JourneyJournals.COUNT; ++index) {
                 int x = left + PANE_WIDTH + 3;
                 int y = top + 34 + index * 30;
@@ -484,6 +503,12 @@ public class GuiSkillTree extends GuiScreen {
             }
         }
         super.mouseMovedOrUp(mouseX, mouseY, state);
+    }
+
+    void selectBranch(int index) {
+        this.branchIndex = index;
+        this.mapX = -80.0D;
+        this.mapY = -48.0D;
     }
 
     private SkillNode getNodeAt(int mouseX, int mouseY) {

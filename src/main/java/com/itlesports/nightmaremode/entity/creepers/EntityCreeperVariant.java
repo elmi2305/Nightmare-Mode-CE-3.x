@@ -87,7 +87,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
         boolean isBloodMoon = NMUtils.getIsBloodMoon();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
-                NMUtils.getBalancedMobFollowRange(this.worldObj, 14.0d, progress, isBloodMoon, isEclipse));
+                NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
         if (progress > NMFields.HARDMODE && this.rand.nextInt(NMUtils.divByNiteMultiplier(12 - progress, 4)) == 0 && isHostile) {
             this.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 10000000,0));
         }

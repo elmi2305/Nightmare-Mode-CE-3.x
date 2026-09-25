@@ -7,7 +7,6 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.structure.MapGenOceanDesertTemple;
 import com.itlesports.nightmaremode.structure.MapGenSkyZiggurath;
 import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
-import com.itlesports.nightmaremode.worldgen.WorldGenOreNode;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ChunkProviderGenerate;
@@ -98,7 +97,20 @@ public class ChunkProviderGenerateMixin {
         if (random.nextInt(10) != 0) return;
         int x = chunkX * 16 + 2 + random.nextInt(12);
         int z = chunkZ * 16 + 2 + random.nextInt(12);
-        new WorldGenOreNode(blockId, Block.stone.blockID, 1, 1).generate(this.worldObj, random, x, 8 + random.nextInt(48), z);
+        // keep single-node placement here to avoid loading the generator through asm delta.
+        int preferredY = 8 + random.nextInt(48);
+        for (int distance = 0; distance < 56; ++distance) {
+            int above = preferredY + distance;
+            if (above < 60 && this.worldObj.getBlockId(x, above, z) == Block.stone.blockID) {
+                this.worldObj.setBlock(x, above, z, blockId, 0, 2);
+                return;
+            }
+            int below = preferredY - distance;
+            if (below >= 4 && this.worldObj.getBlockId(x, below, z) == Block.stone.blockID) {
+                this.worldObj.setBlock(x, below, z, blockId, 0, 2);
+                return;
+            }
+        }
     }
 
     @Redirect(method = "populate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldGenLakes;generate(Lnet/minecraft/src/World;Ljava/util/Random;III)Z"))

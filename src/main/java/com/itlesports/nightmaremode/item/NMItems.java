@@ -197,6 +197,7 @@ public class NMItems {
     public static Item driedPlantFiber;
     public static Item crudeBedroll;
     public static Item skillBook;
+    public static Item grassSeeds;
     public static Item flintAxe;
     public static NMProgressiveItem flintAxeCrafting;
     public static Item crudeString;
@@ -617,6 +618,7 @@ public class NMItems {
         driedPlantFiber = new NMItem(2657).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         crudeBedroll = new ItemCrudeBedroll(3462, NMFields.BLOCK_CRUDE_BEDROLL);
         skillBook = new ItemSkillBook(2655).setUnlocalizedName("ifhySkillBook").setTextureName("nightmare:ifhySkillBook");
+        grassSeeds = new ItemGrassSeeds(2776).setMaxStackSize(16).setUnlocalizedName("ifhyGrassSeeds").setTextureName("nightmare:ifhyGrassSeeds").setCreativeTab(CreativeTabs.tabFood);
 
         mackerel = createRawFish(2658, "nmMackerel");
         cod = createRawFish(2659, "nmCod");

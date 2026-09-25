@@ -60,6 +60,9 @@ public class BlockTallGrassMixin extends BlockFlower {
         if (!world.isRemote && (guaranteed || world.rand.nextFloat() <= 0.08F + bonus)) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
         }
+        if (!world.isRemote && world.rand.nextInt(16) == 0) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.grassSeeds));
+        }
     }
     @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
     private void declareVariables(World world, int i, int j, int k, Random rand, CallbackInfo ci){

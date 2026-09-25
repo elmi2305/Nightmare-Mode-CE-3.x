@@ -38,6 +38,16 @@ public class ItemInWorldManagerMixin {
     @Shadow
     public EntityPlayerMP thisPlayerMP;
 
+    @Redirect(method = "removeBlock", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;setBlockToAir(III)Z"))
+    private boolean countRemovedBlock(World world, int x, int y, int z) {
+        int blockId = world.getBlockId(x, y, z);
+        int metadata = world.getBlockMetadata(x, y, z);
+        boolean removed = world.setBlockToAir(x, y, z);
+        if (removed && blockId > 0) SkillHandler.incrementBlocksMined(this.thisPlayerMP, blockId, metadata);
+        return removed;
+    }
+
     @Inject(method = "activateBlockOrUseItem", at = @At("HEAD"), cancellable = true)
     private void inspectMechanicalPowerBeforeBlockGui(EntityPlayer player, World world, ItemStack stack,
                                                        int x, int y, int z, int side,

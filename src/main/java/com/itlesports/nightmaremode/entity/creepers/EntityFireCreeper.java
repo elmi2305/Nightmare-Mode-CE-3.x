@@ -21,7 +21,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.29 * (1 + (NMUtils.getNiteMultiplier() - 1) / 20));
         if (this.worldObj != null) {
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
-                    NMUtils.getBalancedMobFollowRange(this.worldObj, 14, NMUtils.getWorldProgress(),
+                    NMUtils.getBalancedMobFollowRange(this.worldObj, 16, NMUtils.getWorldProgress(),
                             NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
         }
     }

@@ -12,6 +12,7 @@ public final class ScaryRenderer extends Gui {
     private static final ScaryRenderer INSTANCE = new ScaryRenderer();
     private static final ResourceLocation TAB_EYE = new ResourceLocation("nightmare:textures/effects/scary_tab_eye.png");
     private static final ResourceLocation ACHIEVEMENT = new ResourceLocation("textures/gui/achievement/achievement_background.png");
+    private static final ResourceLocation STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final RenderItem ITEM_RENDERER = new RenderItem();
 
     private ScaryRenderer() {}
@@ -78,9 +79,53 @@ public final class ScaryRenderer extends Gui {
                 RenderHelper.enableGUIStandardItemLighting();
                 ITEM_RENDERER.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), new ItemStack(Item.eyeOfEnder), x + 8, y + 8);
             }
+            if (event == ScaryEvent.STEAM_NOTIFICATION) renderSteamNotification(mc, width, height);
         } finally {
             GL11.glPopAttrib();
         }
+    }
+
+    private static void renderSteamNotification(Minecraft mc, int width, int height) {
+        double elapsed = ScaryEvents.elapsed();
+        double entry = Math.min(1, elapsed / 320.0);
+        double exit = Math.min(1, Math.max(0, (elapsed - 4400.0) / 450.0));
+        double visible = Math.min(entry, 1 - exit);
+        visible = visible * visible * (3 - 2 * visible);
+        int x = width - 210;
+        int y = height - 50 + (int)((1 - visible) * 52);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        drawRect(x, y, x + 210, y + 50, 0xF010151C);
+        drawRect(x + 1, y + 1, x + 209, y + 47, 0xF01B222C);
+        drawRect(x, y + 48, x + 210, y + 50, 0xFF4B5862);
+        drawRect(x + 7, y + 7, x + 42, y + 42, 0xFF52616D);
+        drawRect(x + 8, y + 8, x + 41, y + 41, 0xFF2C4150);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        mc.getTextureManager().bindTexture(STEVE);
+        GL11.glColor4f(1, 1, 1, 1);
+        INSTANCE.drawSkinFace(x + 9, y + 9, 31, 8, 8);
+        String sender = ScaryEvents.steamSender();
+        mc.fontRenderer.drawStringWithShadow(sender == null ? "Herobrine" : sender, x + 51, y + 13, 0xECEEF0);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        drawRect(x + 52, y + 29, x + 59, y + 35, 0xFF9AA4AF);
+        drawRect(x + 53, y + 35, x + 55, y + 37, 0xFF9AA4AF);
+        drawRect(x + 54, y + 32, x + 55, y + 33, 0xFF202731);
+        drawRect(x + 56, y + 32, x + 57, y + 33, 0xFF202731);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        String message = ScaryEvents.steamMessage();
+        mc.fontRenderer.drawStringWithShadow(mc.fontRenderer.trimStringToWidth(message == null ? "..." : message, 140),
+                x + 64, y + 28, 0xD1D4D8);
+    }
+
+    private void drawSkinFace(int x, int y, int size, int u, int v) {
+        Tessellator t = Tessellator.instance;
+        t.startDrawingQuads();
+        t.addVertexWithUV(x, y + size, 0, u / 64.0, (v + 8) / 64.0);
+        t.addVertexWithUV(x + size, y + size, 0, (u + 8) / 64.0, (v + 8) / 64.0);
+        t.addVertexWithUV(x + size, y, 0, (u + 8) / 64.0, v / 64.0);
+        t.addVertexWithUV(x, y, 0, u / 64.0, v / 64.0);
+        t.draw();
     }
 
     private static void renderStareVignette(int width, int height, float intensity) {

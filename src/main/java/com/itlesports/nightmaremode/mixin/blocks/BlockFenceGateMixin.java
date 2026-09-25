@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
-import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.FenceGateShape;
-import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.BlockDirectional;
 import net.minecraft.src.BlockFenceGate;
@@ -19,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.Random;
 
 @Mixin(BlockFenceGate.class)
 public class BlockFenceGateMixin extends BlockDirectional {
@@ -89,35 +86,8 @@ public class BlockFenceGateMixin extends BlockDirectional {
                 x + box.maxX(), y + box.maxY(), z + box.maxZ());
     }
 
+    @Override
     public boolean isFallingBlock() {
-        return NightmareMode.noSkybases || super.isFallingBlock();
-    }
-
-    public void onBlockAdded(World world, int i, int j, int k) {
-        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world)) {
-            this.scheduleCheckForFall(world, i, j, k);
-        }
-        super.onBlockAdded(world,i,j,k);
-    }
-
-    public void onNeighborBlockChange(World world, int i, int j, int k, int iNeighborBlockID) {
-        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world)) {
-            this.scheduleCheckForFall(world, i, j, k);
-        }
-        super.onNeighborBlockChange(world,i,j,k,iNeighborBlockID);
-    }
-
-    public void updateTick(World world, int i, int j, int k, Random rand) {
-        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world)) {
-            this.checkForFall(world, i, j, k);
-        }
-        super.updateTick(world,i,j,k,rand);
-    }
-
-    public int tickRate(World par1World) {
-        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(par1World)) {
-            return 4;
-        }
-        return super.tickRate(par1World);
+        return false;
     }
 }
