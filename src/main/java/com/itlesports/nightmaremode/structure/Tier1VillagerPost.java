@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.Block;
 
@@ -11,10 +12,10 @@ public class Tier1VillagerPost extends NetherVillagerPost {
     public static final int MIN_CHUNKS_APART = 24;
     public static final int MAX_CHUNKS_APART = 28;
     private static final VillagerOffset[] VILLAGER_OFFSETS = {
-            new VillagerOffset(5.0D, 0.0D, 5.0D),
-            new VillagerOffset(5.0D, 0.0D, -4.0D),
-            new VillagerOffset(-4.0D, 0.0D, 5.0D),
-            new VillagerOffset(-4.0D, 0.0D, -4.0D)
+            new VillagerOffset(5.0D, 2.5D, 5.0D),
+            new VillagerOffset(5.0D, 2.5D, -4.0D),
+            new VillagerOffset(-4.0D, 2.5D, 5.0D),
+            new VillagerOffset(-4.0D, 2.5D, -4.0D)
     };
     private static PaletteEntry[] tierOneBlocks;
 
@@ -31,16 +32,17 @@ public class Tier1VillagerPost extends NetherVillagerPost {
     }
     private static PaletteEntry[] createPalette() {
         tierOneBlocks = new PaletteEntry[21];
-        tierOneBlocks[1] = block(0, 0);
+        tierOneBlocks[0] = block(0, 0);
+        tierOneBlocks[1] = block(Block.netherrack.blockID, 2);
         tierOneBlocks[2] = block(Block.netherBrick.blockID, 0);
-        tierOneBlocks[3] = block(Block.obsidian.blockID, 0);
-        tierOneBlocks[4] = block(Block.glowStone.blockID, 0);
-        tierOneBlocks[0] = block(Block.netherrack.blockID, 2);
+        tierOneBlocks[3] = block(Block.glowStone.blockID, 0);
+        tierOneBlocks[4] = block(Block.obsidian.blockID, 0);
+        tierOneBlocks[5] = block(NMBlocks.netherProgressionGems.blockID, NMBlocks.META_RED_GEM);
         return tierOneBlocks;
     }
 
     public Tier1VillagerPost(Random random, int x, int z) {
-        super(random, x, z, 17, 6, 17);
+        super(random, x, z, 21, 9, 21);
     }
 
     @Override
