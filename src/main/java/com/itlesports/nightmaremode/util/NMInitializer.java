@@ -4725,7 +4725,7 @@ public abstract class NMInitializer implements AchievementExt {
         // world-reward nodes; no personal node is promoted to a world reward to fit it.
 
         SkillRecipeGates.crafting(NMBlocks.enderCeramic.blockID, NMSkillNodes.BRING_EYE_OF_ENDER_ECLIPSE);
-        SkillRecipeGates.soulforge(NMBlocks.enderAssembler.blockID, NMSkillNodes.BRING_EYE_OF_ENDER_ECLIPSE);
+        SkillRecipeGates.soulforge(NMBlocks.enderAssembler.blockID, NMSkillNodes.BRING_EYE_OF_ENDER_ECLIPSE, NMSkillNodes.BRING_ENDER_SHELL_POWDER_16, NMSkillNodes.BRING_RAW_MERCURY_16);
         SkillRecipeGates.soulforge(NMBlocks.minerDrillTier4.blockID, NMSkillNodes.BRING_PHASE_STEEL_8);
         SkillRecipeGates.soulforge(NMItems.enderSword.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
         SkillRecipeGates.soulforge(NMItems.enderPickaxe.itemID, NMSkillNodes.BRING_PHASE_STEEL_8);
