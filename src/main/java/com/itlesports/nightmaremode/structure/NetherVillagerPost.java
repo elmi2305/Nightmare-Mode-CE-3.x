@@ -52,12 +52,12 @@ public abstract class NetherVillagerPost extends NMStructure {
             this.loggedGeneration = true;
         }
 
-        int gemY = this.boundingBox.minY + 1;
+        /*int gemY = this.boundingBox.minY + 1;
         if (!this.progressionGemPlaced && box.isVecInside(centerX, gemY, centerZ)) {
             world.setBlockAndMetadataWithNotify(centerX, gemY, centerZ,
                     NMBlocks.netherProgressionGems.blockID, this.getTier() - 1);
             this.progressionGemPlaced = true;
-        }
+        }*/
 
         VillagerOffset[] villagerOffsets = getVillagerOffsets();
         for (int index = 0; index < villagerOffsets.length; ++index) {
