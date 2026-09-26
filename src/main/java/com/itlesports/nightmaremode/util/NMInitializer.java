@@ -637,9 +637,6 @@ public abstract class NMInitializer implements AchievementExt {
         buy("ifhy:farmer_chicken_feed", 0, 3, BTWItems.chickenFeed.itemID, 0, 34, 47);
 
         // Husbandry products, including the leather wet-processing chain.
-        buy("ifhy:farmer_raw_pork", 0, 2, Item.porkRaw.itemID, 0, 10, 16);
-        buy("ifhy:farmer_raw_beef", 0, 2, Item.beefRaw.itemID, 0, 9, 15);
-        buy("ifhy:farmer_raw_chicken", 0, 2, Item.chickenRaw.itemID, 0, 12, 16);
         buy("ifhy:farmer_feathers", 0, 2, Item.feather.itemID, 0, 39, 54);
         buy("ifhy:farmer_dung", 0, 3, BTWItems.dung.itemID, 0, 46, 61);
         buy("ifhy:farmer_scoured_leather", 0, 3, BTWItems.scouredLeather.itemID, 0, 30, 44);
@@ -839,6 +836,9 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addButcherTrades(){
 
+        buy("ifhy:farmer_raw_pork", 0, 1, Item.porkRaw.itemID, 0, 10, 16);
+        buy("ifhy:farmer_raw_beef", 0, 1, Item.beefRaw.itemID, 0, 9, 15);
+        buy("ifhy:farmer_raw_chicken", 0, 1, Item.chickenRaw.itemID, 0, 12, 16);
         buy("ifhy:butcher_raw_mutton", 4, 1, BTWItems.rawMutton.itemID, 0, 10, 16);
         buy("ifhy:butcher_raw_cheval", 4, 1, BTWItems.rawCheval.itemID, 0, 9, 15);
         buy("ifhy:butcher_raw_eggs", 4, 1, Item.egg.itemID, 0, 12, 16);
@@ -1161,7 +1161,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1GlowstoneDust", profession, 3, Item.glowstone.itemID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1Glowstone", profession, 4, Block.glowStone.blockID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1Wart", profession, 4, Item.netherStalkSeeds.itemID, 0, 48, 64, 0.35F);
-        buy("nmNetherTier1Brick", profession, 4, Item.netherrackBrick.itemID, 0, 48, 64, 0.35F);
+        buy("nmNetherTier1Brick", profession, 4, BTWItems.netherBrick.itemID, 0, 48, 64, 0.35F);
 
         sell("nmNetherTier2HempSeeds", profession, 1, BTWItems.hempSeeds.itemID, 0, 2, 4, 0.8F, false, 6, 10);
         sell("nmNetherTier2FertileNetherrack", profession, 1, NMBlocks.fertileNetherrack.blockID, 0, 4, 8, 0.8F, false, 8, 14);
