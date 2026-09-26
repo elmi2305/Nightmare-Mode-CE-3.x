@@ -19,6 +19,7 @@ public class TradeBuilderMixin {
     @Inject(method = "build", at = @At("HEAD"), cancellable = true, remap = false)
     private void onAddToTradeList(CallbackInfoReturnable<VillagerTrade> cir) {
         ApplyAction action = TradeTweaks.applyEditIfPresent(this);
+        if (action == ApplyAction.KEEP) TradeTweaks.discountEmeraldCosts(this);
         if (action == ApplyAction.DROP) {
             // removed the trade
             cir.cancel();

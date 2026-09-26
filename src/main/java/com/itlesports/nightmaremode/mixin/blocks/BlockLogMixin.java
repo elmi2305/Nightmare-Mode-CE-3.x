@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Random;
 
@@ -16,6 +17,9 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(BlockLog.class)
 public abstract class BlockLogMixin extends BlockRotatedPillar {
+    @Unique private static final int[] LEAF_DX = {-1, 1, 0, 0, 0, 0};
+    @Unique private static final int[] LEAF_DY = {0, 0, -1, 1, 0, 0};
+    @Unique private static final int[] LEAF_DZ = {0, 0, 0, 0, -1, 1};
     @Shadow public abstract boolean getIsStump(int iMetadata);
 
     protected BlockLogMixin(int i, Material material) {
@@ -64,6 +68,20 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
             this.checkForFall(world, i, j, k);
         }
         super.updateTick(world,i,j,k,rand);
+    }
+
+    @Override
+    protected boolean checkForFall(World world, int x, int y, int z) {
+        for (int side = 0; side < 6; ++side) {
+            int leafX = x + LEAF_DX[side];
+            int leafY = y + LEAF_DY[side];
+            int leafZ = z + LEAF_DZ[side];
+            if (world.getBlockId(leafX, leafY, leafZ) == Block.leaves.blockID
+                    && (world.getBlockMetadata(leafX, leafY, leafZ) & 4) == 0) {
+                return false;
+            }
+        }
+        return super.checkForFall(world, x, y, z);
     }
 
     public int tickRate(World par1World) {

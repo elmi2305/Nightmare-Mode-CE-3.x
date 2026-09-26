@@ -2,13 +2,11 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.item.BTWItems;
 import btw.entity.item.FloatingItemEntity;
-import btw.item.items.ArcaneScrollItem;
 import com.itlesports.nightmaremode.crafting.manager.WashingRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.WashingRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.item.items.template.NMItem;
+import com.itlesports.nightmaremode.util.NMFireproofItems;
 import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.world.SandboxRules;
 import net.minecraft.src.*;
@@ -20,9 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Mixin(EntityItem.class)
 public abstract class EntityItemMixin extends Entity {
@@ -142,7 +137,8 @@ public abstract class EntityItemMixin extends Entity {
     @Inject(method = "attackEntityFrom", at = @At("HEAD"),cancellable = true)
     private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (this.getEntityItem() != null
-                && this.isItemIndestructible(this.getEntityItem())
+                && (NMFireproofItems.isIndestructible(this.getEntityItem())
+                    || par1DamageSource.isFireDamage() && NMFireproofItems.isFireproof(this.getEntityItem()))
                 && par1DamageSource != DamageSource.lava) {
             cir.setReturnValue(false);
         }
@@ -171,35 +167,5 @@ public abstract class EntityItemMixin extends Entity {
         if (stack == null) return;
         this.nightmareMode$pollutionReported = true;
         ChunkPollutionManager.pollute(this.worldObj, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), stack.stackSize * 5.0F * multiplier);
-    }
-    @Unique private static Set<Integer> nonFlammableItems = null;
-
-    @Unique private Set<Integer> getNonFlammableItems() {
-        if(nonFlammableItems != null) return nonFlammableItems;
-        nonFlammableItems = new HashSet<>(Arrays.asList(
-                NMItems.bloodOrb.itemID,
-                Item.netherStar.itemID,
-                NMItems.starOfTheBloodGod.itemID,
-                Item.blazeRod.itemID,
-                Item.blazePowder.itemID,
-                Block.obsidian.blockID,
-                NMItems.obsidianShard.itemID
-        ));
-        return nonFlammableItems;
-    }
-
-    @Unique
-    private boolean isItemIndestructible(ItemStack item){
-        if(item == null) return false;
-
-        if(getNonFlammableItems().contains(item.itemID)) return true;
-
-        if(item.getItem() instanceof ArcaneScrollItem) return true;
-
-        if(item.getItem() instanceof INetherItem) return true;
-
-        if(item.getItem() instanceof NMItem && ((NMItem) item.getItem()).isIndestructible()) return true;
-
-        return false;
     }
 }

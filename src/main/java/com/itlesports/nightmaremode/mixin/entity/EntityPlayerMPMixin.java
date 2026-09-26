@@ -6,6 +6,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
@@ -62,9 +63,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
                     "Nether access requires " + SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED + " Nether access progress nodes.");
             ci.cancel();
         }
-        if (par1 == 1 && (!NightmareMode.allSkillsUnlocked || NightmareMode.lockDownCreative)
-                && !SkillHandler.getWorldData(this.worldObj).endAccessUnlocked) {
-            SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the Beacon Offering skill.");
+        if (par1 == 1 && !SkillHandler.isUnlocked((EntityPlayer)(Object)this, NMSkillNodes.BRING_END_ACCORD)) {
+            SkillHandler.sendStatus((EntityPlayer)(Object)this, "End access requires the End Accord skill.");
             ci.cancel();
         }
     }

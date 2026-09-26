@@ -6,7 +6,7 @@ import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
 import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.util.NMFoodSpoilage;
-import com.itlesports.nightmaremode.util.interfaces.INetherItem;
+import com.itlesports.nightmaremode.util.NMFireproofItems;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
@@ -68,7 +68,7 @@ public class ItemMixin {
     @Inject(method = "addInformation", at = @At("TAIL"))
     private void addNetherItemTooltip(ItemStack stack, EntityPlayer player, List tooltip,
                                       boolean advanced, CallbackInfo ci) {
-        if ((Object) this instanceof INetherItem) {
+        if (NMFireproofItems.isFireproof(stack)) {
             tooltip.add(EnumChatFormatting.DARK_AQUA + "Fireproof");
         }
         if ((Object)this == NMItems.skillBook) {

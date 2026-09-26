@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.util;
 
 import btw.item.BTWItems;
 import btw.block.BTWBlocks;
-import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.NMSkillNodes;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -37,8 +36,7 @@ public final class NetherItemHelper {
         if (stack == null) {
             return false;
         }
-        Item item = stack.getItem();
-        if (item instanceof INetherItem) {
+        if (NMFireproofItems.isFireproof(stack)) {
             return true;
         }
         if (player != null && (NetherPostProgress.completedTiers(player) & 1) != 0) {

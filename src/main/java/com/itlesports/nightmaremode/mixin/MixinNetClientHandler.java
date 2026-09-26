@@ -8,13 +8,29 @@ import com.itlesports.nightmaremode.network.PollutionVisualNet;
 import com.itlesports.nightmaremode.nmgui.*;
 import com.itlesports.nightmaremode.nmgui.GuiLocker;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(NetClientHandler.class)
 public abstract class MixinNetClientHandler {
+    @Inject(method = "handleMobSpawn", at = @At(value = "FIELD",
+            target = "Lnet/minecraft/src/EntityLivingBase;serverPosX:I", opcode = Opcodes.PUTFIELD),
+            locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void skipUnconstructibleMob(Packet24MobSpawn packet, CallbackInfo ci,
+                                        double x, double y, double z, float yaw, float pitch,
+                                        EntityLivingBase entity) {
+        if (entity == null) {
+            Minecraft.getMinecraft().getLogAgent().logWarning(
+                    "Skipping mob spawn packet for unknown or unconstructible entity type "
+                            + packet.type + " (entity " + packet.entityId + ")");
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "handleMapChunk", at = @At("TAIL"))
     private void requestPollutionVisualBand(Packet51MapChunk packet, CallbackInfo ci) {
         PollutionVisualNet.requestBand(packet.xCh, packet.zCh);

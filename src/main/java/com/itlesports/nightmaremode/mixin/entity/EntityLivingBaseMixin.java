@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.util.MeleeKnockback;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemScythe;
 import com.itlesports.nightmaremode.item.items.template.ItemKnife;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.CarcassHarvesting;
@@ -62,6 +63,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     @Unique private double carcassZ;
     @Unique private boolean carcassPositionInitialized;
     @Unique private DamageSource carcassDamageSource;
+    @Unique private boolean scytheDeathLocationSaved;
+    @Unique private double scytheDeathX;
+    @Unique private double scytheDeathY;
+    @Unique private double scytheDeathZ;
 
     @Shadow public abstract boolean isEntityAlive();
     @Shadow public abstract AttributeInstance getEntityAttribute(Attribute attribute);
@@ -150,6 +155,13 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
 
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     private void manageBloodMoonKills(DamageSource source, CallbackInfo ci){
+        if (!this.worldObj.isRemote && source.getEntity() instanceof EntityPlayer player
+                && player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemScythe) {
+            this.scytheDeathLocationSaved = true;
+            this.scytheDeathX = this.posX;
+            this.scytheDeathY = this.posY;
+            this.scytheDeathZ = this.posZ;
+        }
         if(source.getEntity() instanceof EntityPlayer player && Objects.equals(source.damageType, "player")){
             if(NMUtils.isWearingFullBloodArmor(player)){
                 int chance = NMUtils.getIsBloodMoon() ? 2 : 3;
@@ -377,6 +389,15 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
                 && this.dataWatcher.getWatchableObjectByte(CARCASS_WATCHER_ID) != 0;
     }
 
+    @Redirect(method = "onDeathUpdate", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
+    private boolean spawnExperienceAtScytheDeathLocation(World world, Entity entity) {
+        if (this.scytheDeathLocationSaved && entity instanceof EntityXPOrb) {
+            entity.setPosition(this.scytheDeathX, this.scytheDeathY, this.scytheDeathZ);
+        }
+        return world.spawnEntityInWorld(entity);
+    }
+
     @Override
     public boolean isBurning() {
         return !this.nm$isCarcass() && super.isBurning();
@@ -541,7 +562,12 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         if (this.harvestTicks >= this.harvestRequiredTicks) {
             DamageSource source = this.carcassDamageSource == null ? DamageSource.generic : this.carcassDamageSource;
             CarcassHarvesting.completeHarvest(self, player, this.harvestTier, source);
-            player.addExperience(Math.max(0, this.getExperiencePoints(player)));
+            int experience = Math.max(1, this.getExperiencePoints(player));
+            while (experience > 0) {
+                int orbValue = EntityXPOrb.getXPSplit(experience);
+                this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, orbValue));
+                experience -= orbValue;
+            }
             this.nm$spawnCarcassPoof();
             this.setDead();
         }

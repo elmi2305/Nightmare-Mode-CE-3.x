@@ -4,12 +4,17 @@ import api.item.items.ProgressiveCraftingItem;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
+import java.util.function.IntSupplier;
 
 public class NMProgressiveItem extends ProgressiveCraftingItem {
     private int damage = 600;
     private String soundID = "mob.zombie.woodbreak";
-    private final int returnID;
+    private final IntSupplier returnID;
     public NMProgressiveItem(int iItemID, int returnID) {
+        this(iItemID, () -> returnID);
+    }
+
+    public NMProgressiveItem(int iItemID, IntSupplier returnID) {
         super(iItemID);
         this.returnID = returnID;
         this.setMaxDamage(damage);
@@ -36,7 +41,7 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
         player.playSound(soundID, 0.1f, 1.25f + world.rand.nextFloat() * 0.25f);
-        return new ItemStack(returnID, 1, 0);
+        return new ItemStack(returnID.getAsInt(), 1, 0);
     }
 
     public NMProgressiveItem setSoundID(String soundID) {

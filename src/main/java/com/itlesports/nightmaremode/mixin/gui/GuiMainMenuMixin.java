@@ -579,7 +579,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         String name = this.renamingWorldIndex == worldIndex ? this.inlineWorldName + "_" : browserWorldName(save, worldIndex);
         drawScaledString(trimToWidth(name, (int) ((bounds.right - textX - 16) / 1.25F)), textX, y + 13, 1.25F, theme.text);
         this.drawString(this.fontRenderer, trimToWidth(save.getFileName() + " (" + formatDate(save.getLastTimePlayed()) + ")", bounds.right - textX - 16), textX, y + 32, theme.textMuted);
-        String mode = save.isHardcoreModeEnabled() ? "Hardcore" : save.getEnumGameType().getName();
+        String mode = save.isHardcoreModeEnabled() ? "Hardcore"
+                : save.getEnumGameType() == EnumGameType.CREATIVE ? "Sandbox" : save.getEnumGameType().getName();
         this.drawString(this.fontRenderer, mode, textX, y + 46, save.isHardcoreModeEnabled() ? 0xFFD86C64 : theme.textMuted);
     }
 

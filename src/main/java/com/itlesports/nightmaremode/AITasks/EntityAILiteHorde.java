@@ -168,7 +168,7 @@ public class EntityAILiteHorde extends EntityAIBase {
 
         int id = heldItem.itemID;
         if (getLongRangeItems().contains(id)) {
-            return getLesserRangeItems().contains(id) ? 5 : 10;
+            return getLesserRangeItems().contains(id) ? 4 : 6;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
     }

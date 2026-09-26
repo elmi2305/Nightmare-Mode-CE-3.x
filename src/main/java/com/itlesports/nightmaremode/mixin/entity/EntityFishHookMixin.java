@@ -93,18 +93,30 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
     private int increaseLavaFishingBiteChance(int odds) {
-        if (this.hasRodUpgrade("IfhyFishingLure")) {
-            return Math.max(1, odds / 2);
-        }
         if (this.isNetherFishing()) {
-            return Math.max(1, odds / 6);
+            odds = Math.max(1, odds / 6);
+        } else {
+            float availability = ChunkAttributeManager.getFishAvailability(
+                    this.worldObj,
+                    MathHelper.floor_double(this.posX),
+                    MathHelper.floor_double(this.posZ)
+            );
+            odds = Math.max(1, Math.round(odds * (1.0F + (1.0F - availability) * 7.0F)));
         }
-        float availability = ChunkAttributeManager.getFishAvailability(
-                this.worldObj,
-                MathHelper.floor_double(this.posX),
-                MathHelper.floor_double(this.posZ)
-        );
-        return Math.max(1, Math.round(odds * (1.0F + (1.0F - availability) * 7.0F)));
+        odds = Math.max(1, Math.round(odds * this.rodBiteOddsMultiplier()));
+        return this.hasRodUpgrade("IfhyFishingLure") ? Math.max(1, odds / 2) : odds;
+    }
+
+    @Unique
+    private float rodBiteOddsMultiplier() {
+        if (this.angler == null) return 1.0F;
+        ItemStack held = this.angler.getCurrentEquippedItem();
+        if (held == null) return 1.0F;
+        Item item = held.getItem();
+        if (item == NMItems.ironFishingPole || item == NMItems.ironFishingPoleBaited) return 0.95F;
+        if (item == NMItems.diamondFishingPole || item == NMItems.diamondFishingPoleBaited) return 0.90F;
+        if (item == NMItems.steelFishingPole || item == NMItems.steelFishingPoleBaited) return 0.85F;
+        return 1.0F;
     }
 
     @Inject(method = "checkForBite", at = @At("HEAD"), cancellable = true)
@@ -245,6 +257,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private FishingCatch selectCatch() {
         if (this.isNetherFishing()) {
             this.selectedCatchIsFish = false;
+            if (this.isBaited && this.hasRodUpgrade("IfhyRareFishLure") && this.rand.nextFloat() < 0.20F) {
+                return BAITED_NETHER_CATCHES[2];
+            }
             FishingCatch[] catches = this.isBaited ? BAITED_NETHER_CATCHES : NETHER_CATCHES;
             int roll = this.rand.nextInt(totalWeight(catches));
             for (FishingCatch catchEntry : catches) {

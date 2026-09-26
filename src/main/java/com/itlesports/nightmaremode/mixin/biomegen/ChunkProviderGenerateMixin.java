@@ -85,13 +85,16 @@ public class ChunkProviderGenerateMixin {
 
     @Unique
     private void generateOuterOreNode(int chunkX, int chunkZ, OverworldTierHelper.Region region) {
-        int blockId = switch (region) {
-            case DEADZONE -> NMBlocks.gravititeNode.blockID;
-            case CRUEL_DESERT -> NMBlocks.solarQuartzNode.blockID;
-            case LOST_OCEAN -> NMBlocks.abyssNode.blockID;
-            case FROZEN_WASTES -> NMBlocks.cryoliteNode.blockID;
-            default -> 0;
-        };
+        int blockId = 0;
+        if (region == OverworldTierHelper.Region.DEADZONE) {
+            blockId = NMBlocks.gravititeNode.blockID;
+        } else if (region == OverworldTierHelper.Region.CRUEL_DESERT) {
+            blockId = NMBlocks.solarQuartzNode.blockID;
+        } else if (region == OverworldTierHelper.Region.LOST_OCEAN) {
+            blockId = NMBlocks.abyssNode.blockID;
+        } else if (region == OverworldTierHelper.Region.FROZEN_WASTES) {
+            blockId = NMBlocks.cryoliteNode.blockID;
+        }
         if (blockId == 0) return;
         Random random = new Random(this.worldObj.getSeed() ^ (chunkX * 341873128712L) ^ (chunkZ * 132897987541L) ^ blockId);
         if (random.nextInt(10) != 0) return;

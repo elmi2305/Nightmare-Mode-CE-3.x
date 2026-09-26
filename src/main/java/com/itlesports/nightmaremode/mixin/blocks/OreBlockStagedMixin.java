@@ -3,8 +3,8 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.block.blocks.OreBlock;
 import api.block.blocks.OreBlockStaged;
 import api.item.items.PickaxeItem;
+import api.item.util.ItemUtils;
 import btw.block.blocks.RoughStoneBlock;
-import btw.entity.item.FloatingItemEntity;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -44,11 +44,11 @@ public class OreBlockStagedMixin extends OreBlock {
             if(stack.getItem() instanceof PickaxeItem pi){
                 int dropCount = pi.toolMaterial.getHarvestLevel();
                 for(int i = 0; i < dropCount && world.rand.nextBoolean(); i++){
-                    summonEntity(world,x,y,z, BTWItems.coalDust);
+                    summonEntity(world,x,y,z, side, BTWItems.coalDust);
                 }
             }
             if(stack.itemID == BTWItems.sharpStone.itemID && world.rand.nextBoolean()){
-                summonEntity(world,x,y,z, BTWItems.coalDust);
+                summonEntity(world,x,y,z, side, BTWItems.coalDust);
 
             }
 
@@ -60,12 +60,12 @@ public class OreBlockStagedMixin extends OreBlock {
             if(stack.getItem() instanceof PickaxeItem pi){
                 int dropCount = pi.toolMaterial.getHarvestLevel() - 1;
                 for(int i = 0; i < dropCount; i++){
-                    summonEntity(world,x,y,z, BTWItems.ironOrePile);
+                    summonEntity(world,x,y,z, side, BTWItems.ironOrePile);
                 }
             } else if(stack.getItem() instanceof ChiselItem ch){
                 float pileChance = 0.10F + SkillHandler.getWorldData(world).globalIronPileChanceBonus
                         + (closestPlayer == null ? 0.0F : SkillHandler.getPlayerData(closestPlayer).ironPileChanceBonus);
-                summonEntity(world,x,y,z,
+                summonEntity(world,x,y,z,side,
                         world.rand.nextFloat() < pileChance
                                 ? BTWItems.ironOrePile : (world.rand.nextBoolean()
                                                           ? BTWItems.gravelPile : (world.rand.nextInt(3) == 0
@@ -104,12 +104,12 @@ public class OreBlockStagedMixin extends OreBlock {
     }
 
     @Unique
-    private static void summonEntity(World world, int x, int y, int z, Item item){
+    private static void summonEntity(World world, int x, int y, int z, int side, Item item){
         int meta = 0;
         if(world.isRemote) return;
         if(item.itemID == BTWItems.sharpStone.itemID){
             meta = world.rand.nextInt(3) + 3;
         }
-        world.spawnEntityInWorld(new FloatingItemEntity(world, x, y, z, new ItemStack(item, 1, meta)));
+        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(item, 1, meta), side);
     }
 }

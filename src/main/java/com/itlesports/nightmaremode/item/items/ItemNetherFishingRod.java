@@ -5,16 +5,12 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import net.minecraft.src.EntityFishHook;
 import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemFishingRod;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 
-public class ItemNetherFishingRod extends ItemFishingRod implements INetherItem {
-    private final boolean baited;
-
+public class ItemNetherFishingRod extends ItemUpgradeableFishingRod implements INetherItem {
     public ItemNetherFishingRod(int id, boolean baited) {
-        super(id);
-        this.baited = baited;
+        super(id, baited ? 2717 : 2718, baited, 256);
     }
 
     @Override
@@ -29,13 +25,13 @@ public class ItemNetherFishingRod extends ItemFishingRod implements INetherItem 
             return stack;
         }
 
-        if (!this.baited && this.tryApplyBait(world, player)) {
+        if (!this.isBaited() && this.tryApplyBait(world, player)) {
             return stack;
         }
 
         world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         if (!world.isRemote) {
-            world.spawnEntityInWorld(this.baited
+            world.spawnEntityInWorld(this.isBaited()
                     ? new EntityFishHook(world, player, true)
                     : new EntityFishHook(world, player));
         }

@@ -9,6 +9,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockLog;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.Icon;
 import net.minecraft.src.IconRegister;
@@ -109,6 +110,9 @@ public class BlockSapTap extends Block {
                     this.getPlacementFacingFromAttachment(this.getAttachmentFromMetadata(world.getBlockMetadata(x, y, z)))));
             if (!player.inventory.addItemStackToInventory(sapStack)) {
                 player.dropPlayerItem(sapStack);
+            }
+            if (player instanceof EntityPlayerMP serverPlayer) {
+                serverPlayer.sendContainerToPlayer(player.inventoryContainer);
             }
 
             world.playSoundEffect((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, "random.pop", 0.25f, 1.0f);

@@ -565,6 +565,15 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
         return (float) ((constant + prog + 0.1f) * mult);
     }
+    @ModifyConstant(method = "addMovementStat", constant = @Constant(floatValue = 0.025f))
+    private float scaleSwimmingExhaustion(float constant) {
+        return (float)(constant * 0.5F * NMUtils.getFirstSevenDaysMultiplier(worldObj));
+    }
+
+    @ModifyConstant(method = "addMovementStat", constant = @Constant(floatValue = 0.015f))
+    private float scaleWaterTravelExhaustion(float constant) {
+        return (float)(constant * 0.5F * NMUtils.getFirstSevenDaysMultiplier(worldObj));
+    }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
         float prog = NMUtils.getWorldProgress() * 0.2f;

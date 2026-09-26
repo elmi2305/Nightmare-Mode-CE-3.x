@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.mixin.interfaces.TeleporterAccess;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NetherRecall;
+import com.itlesports.nightmaremode.util.NetherPostProgress;
 import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
 import net.minecraft.src.NBTTagCompound;
 import com.itlesports.nightmaremode.util.NetherItemHelper;
@@ -128,6 +129,10 @@ public class ServerConfigurationManagerMixin {
         }
         if (PhasePortalManager.getTransferTarget() != null || NetherRecall.getTransferTarget() != null) return;
         if (player.dimension != 0 || dimensionID != -1) {
+            return;
+        }
+        if ((NetherPostProgress.completedTiers(player) & 1) != 0) {
+            this.pendingRecalls.remove(player);
             return;
         }
         this.pendingRecalls.put(player, NetherRecall.create(player));

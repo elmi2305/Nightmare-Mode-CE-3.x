@@ -6,6 +6,7 @@ import api.entity.mob.villager.VillagerTrade;
 import com.itlesports.nightmaremode.mixin.interfaces.TradeBuilderAccessor;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.ResourceLocation;
+import net.minecraft.src.Item;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,24 @@ public final class TradeTweaks {
 
     public static void dropTrade(String name) {
         edits.computeIfAbsent(name, k -> new Edit()).drop = true;
+    }
+
+    public static void discountEmeraldCosts(Object tradeBuilder) {
+        TradeBuilderAccessor acc = (TradeBuilderAccessor) tradeBuilder;
+        TradeItem input = acc.getInput();
+        if (input != null && input.id() == Item.emerald.itemID && input.maxCount() >= 6) {
+            acc.setInput(discount(input));
+        }
+        TradeItem secondary = acc.getSecondaryInput();
+        if (secondary != null && secondary.id() == Item.emerald.itemID && secondary.maxCount() >= 6) {
+            acc.setSecondaryInput(discount(secondary));
+        }
+    }
+
+    private static TradeItem discount(TradeItem cost) {
+        return TradeItem.fromIDAndMetadata(cost.id(), cost.metadata(),
+                Math.max(1, cost.minCount() * 3 / 4),
+                Math.max(1, cost.maxCount() * 3 / 4));
     }
 
     public static ApplyAction applyEditIfPresent(Object tradeBuilder) {
@@ -193,6 +212,7 @@ public final class TradeTweaks {
     }
 
     private static int tryExtractItemID(TradeItem t) {
+        if (t != null) return t.id();
         try {
             Field f = findField(t.getClass(), "itemID");
             f.setAccessible(true);
@@ -207,6 +227,7 @@ public final class TradeTweaks {
     }
 
     private static int tryExtractMeta(TradeItem t) {
+        if (t != null) return t.metadata();
         try { Field f = findField(t.getClass(), "metadata"); f.setAccessible(true); return ((Number) f.get(t)).intValue(); } catch (Throwable ignored) {}
         try { Field f = findField(t.getClass(), "meta"); f.setAccessible(true); return ((Number) f.get(t)).intValue(); } catch (Throwable ignored) {}
         return 0;

@@ -127,9 +127,9 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){
         if (heldItem != null && getLongRangeItems().contains(heldItem.itemID)) {
             if(getLesserRangeItems().contains(heldItem.itemID)){
-                return 5;
+                return 4;
             }
-            return 10;
+            return 6;
         }
         return NightmareMode.isAprilFools ? 7 : 2;
         // this method is mirrored in EntityAIAttackOnCollideMixin. So are all the lists used in this method. Updating one means you need to update the other too

@@ -236,6 +236,9 @@ public class SkillTreeData {
         for (int i = 0; i < unlocked.tagCount(); ++i) {
             data.unlockedNodes.add(((NBTTagString)unlocked.tagAt(i)).data);
         }
+        if (data.isUnlocked(NMSkillNodes.BRING_CLAY_BALL_32)) {
+            data.canGainExperience = true;
+        }
         return data;
     }
 

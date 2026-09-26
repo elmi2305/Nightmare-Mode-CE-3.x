@@ -54,6 +54,15 @@ public final class NMInventoryLocks {
         return true;
     }
 
+    public static boolean isMainInventorySlotUnlockedAfterDeath(EntityPlayer player, int slotIndex) {
+        if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
+                || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) return true;
+        if (slotIndex < 0) return false;
+        if (slotIndex < 9) return slotIndex < Math.min(9, 1 + SkillHandler.getPlayerData(player).extraHotbarSlots);
+        if (slotIndex < 36) return slotIndex - 9 < (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked ? 27 : 9);
+        return true;
+    }
+
     public static boolean isPlayerInventorySlotLocked(Slot slot, EntityPlayer player) {
         return slot != null
                 && slot.inventory instanceof InventoryPlayer

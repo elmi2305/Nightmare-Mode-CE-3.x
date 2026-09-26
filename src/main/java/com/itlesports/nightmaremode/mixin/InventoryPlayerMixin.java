@@ -45,8 +45,8 @@ public class InventoryPlayerMixin {
             return;
         }
 
-        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory);
-        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory);
+        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
+        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
         ci.cancel();
     }
 
@@ -270,12 +270,14 @@ public class InventoryPlayerMixin {
     }
 
     @Unique
-    private void nightmareMode$dropItemsWithPreHardmodeRetention(ItemStack[] inventory) {
+    private void nightmareMode$dropItemsWithPreHardmodeRetention(ItemStack[] inventory, boolean checkLocks) {
         for (int slot = 0; slot < inventory.length; ++slot) {
             ItemStack stack = inventory[slot];
-            if (stack == null || stack.itemID == NMItems.skillBook.itemID || this.player.worldObj.rand.nextFloat() >= 0.75F) {
+            if (stack == null || stack.itemID == NMItems.skillBook.itemID) {
                 continue;
             }
+            boolean willBeLocked = checkLocks && !NMInventoryLocks.isMainInventorySlotUnlockedAfterDeath(this.player, slot);
+            if (!willBeLocked && this.player.worldObj.rand.nextFloat() >= 0.75F) continue;
             this.player.dropPlayerItemWithRandomChoice(stack, true);
             inventory[slot] = null;
         }
