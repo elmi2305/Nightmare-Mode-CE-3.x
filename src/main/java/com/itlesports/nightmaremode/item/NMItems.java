@@ -566,6 +566,7 @@ public class NMItems {
         twig.setfurnaceburntime(8);
         sharpTwig.setfurnaceburntime(8);
         sharpBarkTwig.setfurnaceburntime(10);
+        woodClump.setfurnaceburntime(40);
         leaf.setfurnaceburntime(4);
         Item.itemsList[Block.leaves.blockID].setfurnaceburntime(4);
         twigSharpening = new NMProgressiveItem(2606, NMItems.sharpTwig.itemID).setTargetDurability(200).setTextureName("nightmare:ifhyTwigSharpen").setUnlocalizedName("ifhyTwigSharpen").setCreativeTab(CreativeTabs.tabMaterials);
@@ -586,9 +587,12 @@ public class NMItems {
 
         ironBloom = new NMPlaceAsBlockItem(2616, NMFields.BLOCK_IRON_BLOOM).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
         scrapedBark = new NMItem(2617).setUnlocalizedName("ifhyScrapedBark").setTextureName("nightmare:ifhyScrapedBark").setCreativeTab(CreativeTabs.tabMaterials);
-        woodCup = new NMItem(2618).setUnlocalizedName("ifhyWoodCup").setTextureName("nightmare:ifhyWoodCup").setCreativeTab(CreativeTabs.tabMaterials);
-        cupOfSap = new NMItem(2619).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
-        thickenedSap = new NMItem(2620).setUnlocalizedName("ifhyThickenedSap").setTextureName("nightmare:ifhyThickenedSap").setCreativeTab(CreativeTabs.tabMaterials);
+        woodCup = new NMItem(2618).setMaxStackSize(16).setUnlocalizedName("ifhyWoodCup").setTextureName("nightmare:ifhyWoodCup").setCreativeTab(CreativeTabs.tabMaterials);
+        cupOfSap = new NMItem(2619).setMaxStackSize(16).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
+        thickenedSap = new NMItem(2620).setMaxStackSize(16).setUnlocalizedName("ifhyThickenedSap").setTextureName("nightmare:ifhyThickenedSap").setCreativeTab(CreativeTabs.tabMaterials);
+        scrapedBark.setfurnaceburntime(25);
+        woodCup.setfurnaceburntime(40);
+        thickenedSap.setfurnaceburntime(15);
         ovenPart = new NMItem(2621).setMaxStackSize(4).setUnlocalizedName("ifhyOvenPart").setTextureName("nightmare:ifhyOvenPart").setCreativeTab(CreativeTabs.tabMaterials);
         drill = new ItemDrill(2622).setUnlocalizedName("ifhyDrill").setTextureName("nightmare:ifhyDrill").setCreativeTab(CreativeTabs.tabTools);
 
@@ -691,6 +695,11 @@ public class NMItems {
         plantSheet = new NMItem(2697).setTextureName("nightmare:ifhyPlantSheet").setUnlocalizedName("ifhyPlantSheet").setCreativeTab(CreativeTabs.tabMaterials);
         washedSugarCane = new NMItem(2698).setTextureName("nightmare:ifhyWashedSugarCane").setUnlocalizedName("ifhyWashedSugarCane").setCreativeTab(CreativeTabs.tabMaterials);
         pileOfSticks = new NMItem(2699).setTextureName("nightmare:ifhyPileOfSticks").setUnlocalizedName("ifhyPileOfSticks").setCreativeTab(CreativeTabs.tabMaterials);
+        reedStem.setfurnaceburntime(20);
+        washedPith.setfurnaceburntime(15);
+        plantSheet.setfurnaceburntime(15);
+        washedSugarCane.setfurnaceburntime(20);
+        pileOfSticks.setfurnaceburntime(180);
         boneShard = new NetherItem(2700).setTextureName("nightmare:ifhyBoneShard").setUnlocalizedName("ifhyBoneShard").setCreativeTab(CreativeTabs.tabMaterials);
         stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setDamageVsEntity(3).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
@@ -710,6 +719,7 @@ public class NMItems {
         netherrackChunk = new NetherItem(2713).setTextureName("nightmare:ifhyNetherrackChunk").setUnlocalizedName("ifhyNetherrackChunk").setCreativeTab(CreativeTabs.tabMaterials);
         netherWorkbenchPart = new NetherItem(2714).setTextureName("nightmare:ifhyNetherWorkbenchPart").setUnlocalizedName("ifhyNetherWorkbenchPart").setCreativeTab(CreativeTabs.tabMaterials);
         netherStick = new NetherItem(2715).setTextureName("nightmare:ifhyNetherStick").setUnlocalizedName("ifhyNetherStick").setCreativeTab(CreativeTabs.tabMaterials);
+        netherStick.setfurnaceburntime(50);
         netherrackPickaxe = new ItemNetherrackPickaxe(2716).setTextureName("nightmare:ifhyNetherrackPickaxe").setUnlocalizedName("ifhyNetherrackPickaxe").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("nightmare:ifhyNetherFishingRodBaited").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
