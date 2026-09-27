@@ -8,7 +8,7 @@ import net.minecraft.src.ItemStack;
 public class ItemEnderArmor extends ArmorItemMod {
     public ItemEnderArmor(int id, int armorType, int weight) {
         super(id, EnumArmorMaterial.DIAMOND, 5, armorType, weight, 0.08D);
-        this.setMaxDamage(3200);
+        this.setMaxDamage(72000);
         this.setInfernalMaxEnchantmentCost(50);
         this.setInfernalMaxNumEnchants(4);
     }

@@ -964,10 +964,10 @@ public class NMItems {
         reinforcedIronBoots = alloyArmor(3281, 3, 2, 3, 720, 8, 0.025D,
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronBoots");
 
-        nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 560, 10, 0.0D,
-                nickelPlate, "ifhyNickelArmor","ifhyNickelWorkLeggings");
-        nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 400, 10, 0.0D,
-                nickelPlate, "ifhyNickelArmor", "ifhyNickelWorkBoots");
+        nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 780, 10, 0.0D,
+                nickelPlate, "oxygenGear","ifhyNickelWorkLeggings");
+        nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 700, 10, 0.0D,
+                nickelPlate, "oxygenGear", "ifhyNickelWorkBoots");
 
         heatResistantHelmet = heatArmor(3284, 0, 3, 4, EnumArmorMaterial.DIAMOND.getDurability(0),
                 "ifhyHeatResistantHelmet");

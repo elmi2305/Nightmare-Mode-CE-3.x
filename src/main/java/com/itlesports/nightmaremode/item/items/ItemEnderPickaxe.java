@@ -8,7 +8,7 @@ import net.minecraft.src.ItemStack;
 
 public class ItemEnderPickaxe extends PickaxeItem {
     public ItemEnderPickaxe(int id) {
-        super(id, EnumToolMaterial.SOULFORGED_STEEL, 3200);
+        super(id, EnumToolMaterial.SOULFORGED_STEEL, 72000);
         this.efficiencyOnProperMaterial = 16.0F;
         this.setDamageVsEntity(6);
         this.setCreativeTab(CreativeTabs.tabTools);

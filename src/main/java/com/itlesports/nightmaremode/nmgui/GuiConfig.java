@@ -32,7 +32,7 @@ public class GuiConfig extends GuiScreen {
 
 
     private boolean isOnSecondPage = false;
-    private int onPage = 1;
+    private int onPage = 2;
 
     private enum Page { ONE, TWO, THREE }
 
@@ -269,8 +269,6 @@ public class GuiConfig extends GuiScreen {
         this.buttonList.add(new GuiButton(14, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 //        this.buttonList.add(new GuiButton(40, baseX + 200, this.height - 30, 100, 20, I18n.getString("gui.config.switch_pages")));
 
-        this.createButtonsForList(PAGE_ONE_LEFT, baseX, heightMultiplier);
-        this.createButtonsForList(PAGE_ONE_RIGHT, rightColumnX, heightMultiplier);
         this.createButtonsForList(PAGE_TWO_LEFT, baseX, heightMultiplier);
         this.createButtonsForList(PAGE_TWO_RIGHT, rightColumnX, heightMultiplier);
         this.createButtonsForList(PAGE_THREE_LEFT, baseX, heightMultiplier);
@@ -309,7 +307,7 @@ public class GuiConfig extends GuiScreen {
                 button.updateState(this.getValue(option));
             }
         }
-        this.setButtonSettings(1); // Start with first page visible
+        this.setButtonSettings(2);
     }
 
     private static String cap(String str) {
@@ -358,7 +356,7 @@ public class GuiConfig extends GuiScreen {
             this.mc.displayGuiScreen(this.parentGuiScreen);
         } else if (par1GuiButton.id == 14) {
             int pageToSelect = this.onPage + 1;
-            if(pageToSelect > 3) pageToSelect = 1;
+            if(pageToSelect > 3) pageToSelect = 2;
             this.setButtonSettings(pageToSelect);
         } else {
             ConfigOption option = this.getOptionById(par1GuiButton.id);

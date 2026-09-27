@@ -382,6 +382,13 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         }
     }
 
+    @Inject(method = "canBeCollidedWith", at = @At("HEAD"), cancellable = true)
+    private void preventProjectileCollisionWithCarcass(CallbackInfoReturnable<Boolean> cir) {
+        if (this.nm$isCarcass()) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @Override
     public boolean nm$isCarcass() {
         EntityLivingBase self = (EntityLivingBase)(Object)this;

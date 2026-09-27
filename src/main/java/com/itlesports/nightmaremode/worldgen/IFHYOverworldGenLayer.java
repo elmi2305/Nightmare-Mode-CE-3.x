@@ -3,12 +3,11 @@ package com.itlesports.nightmaremode.worldgen;
 import net.minecraft.src.*;
 
 /**
- * IFHY's intentionally conservative overworld topology change.
+ * ifhy's overworld biome pipeline.
  *
- * The vanilla biome roster, biome assignment, terrain noise, and decorators
- * remain untouched. Two extra AddIsland passes happen before mushroom islands
- * are considered, so land coalesces and mushroom-island frequency naturally
- * follows the smaller remaining ocean field.
+ * the vanilla biome roster, terrain noise, and decorators remain untouched.
+ * cold regions allow some plains and forest, breaking up broad snow fields.
+ * the ocean breakup pass runs before mushroom islands are considered.
  */
 public final class IFHYOverworldGenLayer {
     private IFHYOverworldGenLayer() {}
@@ -39,7 +38,7 @@ public final class IFHYOverworldGenLayer {
         riverLayer = new GenLayerSmooth(1000L, riverLayer);
 
         GenLayer biomeLayer = GenLayerZoom.magnify(1000L, continents, 0);
-        biomeLayer = new GenLayerBiome(200L, biomeLayer, worldType);
+        biomeLayer = new IFHYGenLayerBiome(200L, biomeLayer, worldType);
         biomeLayer = GenLayerZoom.magnify(1000L, biomeLayer, 2);
         biomeLayer = new GenLayerHills(1000L, biomeLayer);
 

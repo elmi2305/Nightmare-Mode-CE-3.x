@@ -9,7 +9,7 @@ import net.minecraft.src.ItemStack;
 public class ItemEnderAxe extends AxeItem {
     public ItemEnderAxe(int id) {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
-        this.setMaxDamage(3200);
+        this.setMaxDamage(72000);
         this.efficiencyOnProperMaterial = 16.0F;
         this.setDamageVsEntity(8);
         this.setCreativeTab(CreativeTabs.tabTools);

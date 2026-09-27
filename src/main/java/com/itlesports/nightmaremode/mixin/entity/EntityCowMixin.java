@@ -5,6 +5,7 @@ import api.world.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,6 +33,10 @@ public abstract class EntityCowMixin extends KickingAnimal {
     @Inject(method = "interact", at = @At("HEAD"),cancellable = true)
     private void manageGatheringBloodMilk(EntityPlayer player, CallbackInfoReturnable<Boolean> cir){
         EntityCow thisObj = (EntityCow)(Object)this;
+        if (thisObj instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            cir.setReturnValue(false);
+            return;
+        }
         if(NMUtils.getIsMobEclipsed(thisObj)){
             ItemStack stack = player.inventory.getCurrentItem();
             if (stack != null && stack.itemID == Item.bucketEmpty.itemID) {

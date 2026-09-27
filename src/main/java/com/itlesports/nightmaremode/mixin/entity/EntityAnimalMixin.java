@@ -3,9 +3,11 @@ package com.itlesports.nightmaremode.mixin.entity;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityAgeable;
 import net.minecraft.src.EntityAnimal;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +23,27 @@ public abstract class EntityAnimalMixin extends EntityAgeable {
 
     public EntityAnimalMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
+    private void preventCarcassInteraction(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
+    private void preventCarcassStartle(DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "onNearbyAnimalAttacked", at = @At("HEAD"), cancellable = true)
+    private void preventNearbyCarcassStartle(EntityAnimal attackedAnimal, EntityLivingBase attacker, CallbackInfo ci) {
+        if ((Object)this instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "isSecondaryTargetForSquid", at = @At("HEAD"),cancellable = true)

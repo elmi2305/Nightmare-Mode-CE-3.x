@@ -10,6 +10,7 @@ import com.itlesports.nightmaremode.entity.variants.EntityBlackWidowSpider;
 import com.itlesports.nightmaremode.entity.variants.EntityFireSpider;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
+import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +38,29 @@ public abstract class EntitySpiderMixin extends EntityMob{
 
             carcass.nm$tickCarcass();
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void harvestNearbyChickenCarcasses(CallbackInfo ci) {
+        if (this.worldObj.isRemote || (Object)this instanceof CarcassAnimal self && self.nm$isCarcass()) {
+            return;
+        }
+        if (this.entityToAttack instanceof CarcassAnimal target && target.nm$isCarcass()) {
+            this.entityToAttack = null;
+        }
+        if (this.ticksExisted % 20 != 0) {
+            return;
+        }
+        for (Object candidate : this.worldObj.getEntitiesWithinAABB(EntityChicken.class, this.boundingBox.expand(1.0D, 0.5D, 1.0D))) {
+            if (candidate instanceof EntityChicken chicken && chicken instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
+                chicken.dropItem(Item.chickenRaw.itemID, 1);
+                if (this.rand.nextBoolean()) {
+                    chicken.dropItem(Item.feather.itemID, 1);
+                }
+                chicken.setDead();
+                break;
+            }
         }
     }
 
@@ -198,7 +222,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
 
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            if (!(thisObj instanceof EntityFireSpider)) {
+            if (!(thisObj instanceof EntityFireSpider) && !(thisObj instanceof JungleSpiderEntity)) {
                 if (NMUtils.getWorldProgress() <= NMFields.HARDMODE) {
                     target.addPotionEffect(new PotionEffect(Potion.poison.id, (int) (50 * niteMultiplier),0));
                 } else if (target.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){

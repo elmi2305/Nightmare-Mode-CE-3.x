@@ -11,7 +11,7 @@ import net.minecraft.src.World;
 public class ItemEnderHoe extends HoeItem {
     public ItemEnderHoe(int id) {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
-        this.setMaxDamage(3200);
+        this.setMaxDamage(72000);
         this.efficiencyOnProperMaterial = 16.0F;
         this.setDamageVsEntity(4);
         this.setCreativeTab(CreativeTabs.tabTools);

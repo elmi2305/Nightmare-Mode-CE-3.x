@@ -7,21 +7,21 @@ import java.util.Locale;
 
 public class ItemAlloyHorseArmor extends ItemAdvancedHorseArmor {
     public enum Material {
-        NICKEL            (480 , 8 , 192, 0.08f, 1.05f, 6 , 0xCCC578),
-        CARBON_IRON       (840 , 12, 192, 0.07f, 1.15f, 8 , 0x5f6169),
-        REINFORCED_IRON   (1600, 16, 256, 0.06f, 1.25f, 11, 0xA9B5C1),
-        TUNGSTEN          (1600, 24, 320, 0.04f, 1.40f, 16, 0x9AB4B5),
-        QUARTZGLASS       (560 , 4 , 128, 0.19f, 0.90f, 5 , 0xFFF7F2),
-        VERDANT           (910 , 6 , 384, 0.16f, 0.80f, 7 , 0x80D96C),
-        BLACKGLASS        (1100, 18, 256, 0.08f, 1.20f, 14, 0x312236),
-        CORESTEEL         (1800, 20, 448, 0.15f, 1.25f, 18, 0x59C4DD),
-        DEADZONE_ALLOY    (2200, 22, 512, 0.22f, 1.35f, 20, 0x9C1010),
-        SIGNAL_ALLOY      (680 , 8 , 256, 0.28f, 1.10f, 8 , 0xFF004C),
-        AZURE_CERAMIC     (560 , 5 , 256, 0.15f, 0.90f, 9 , 0x1409E0),
-        PRISMATIC         (1400, 7 , 320, 0.32f, 1.00f, 12, 0xDE9AED),
-        PHASE_STEEL       (3200, 10, 640, 0.40f, 1.10f, 19, 0x8B0AA8),
-        SEALED_QUICKSILVER(1550, 3 , 384, 0.43f, 1.30f, 10, 0xC9C9C9),
-        ENDSTONE          (2200, 30, 768, 0.05f, 1.50f, 22, 0xD5D99B);
+        NICKEL            (1500 , 8 , 192, 0.08f, 1.05f, 6 , 0xCCC578),
+        CARBON_IRON       (2500 , 12, 192, 0.07f, 1.15f, 8 , 0x5f6169),
+        REINFORCED_IRON   (4000, 16, 256, 0.06f, 1.25f, 11, 0xA9B5C1),
+        TUNGSTEN          (6500, 24, 320, 0.04f, 1.40f, 16, 0x9AB4B5),
+        QUARTZGLASS       (3000 , 4 , 128, 0.19f, 0.90f, 5 , 0xFFF7F2),
+        VERDANT           (5000 , 6 , 384, 0.16f, 0.80f, 7 , 0x80D96C),
+        BLACKGLASS        (7500, 18, 256, 0.08f, 1.20f, 14, 0x312236),
+        CORESTEEL         (24000, 20, 448, 0.15f, 1.25f, 18, 0x59C4DD),
+        DEADZONE_ALLOY    (42000, 22, 512, 0.22f, 1.35f, 20, 0x9C1010),
+        SIGNAL_ALLOY      (6000 , 8 , 256, 0.28f, 1.10f, 8 , 0xFF004C),
+        AZURE_CERAMIC     (7000 , 5 , 256, 0.15f, 0.90f, 9 , 0x1409E0),
+        PRISMATIC         (30000, 7 , 320, 0.32f, 1.00f, 12, 0xDE9AED),
+        PHASE_STEEL       (72000, 10, 640, 0.40f, 1.10f, 19, 0x8B0AA8),
+        SEALED_QUICKSILVER(24000, 3 , 384, 0.43f, 1.30f, 10, 0xC9C9C9),
+        ENDSTONE          (20000, 30, 768, 0.05f, 1.50f, 22, 0xD5D99B);
 
         public final int durability, weight, capacity, protection, color;
         public final float mobility, hunger;

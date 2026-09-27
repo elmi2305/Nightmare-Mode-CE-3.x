@@ -1274,6 +1274,7 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.steelNugget, 9)});
+        crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(Item.ingotIron), new ItemStack(BTWItems.coalDust), new ItemStack(BTWItems.soulUrn), new ItemStack(BTWItems.enderSlag)});
 
         crucible.removeRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(Item.ingotIron, 1), new ItemStack(BTWItems.coalDust, 1), new ItemStack(BTWItems.soulUrn, 1), new ItemStack(BTWItems.soulFlux, 1)});
 
@@ -1695,6 +1696,9 @@ public abstract class NMInitializer implements AchievementExt {
                 CisternTileEntity.FLUID_LAVA, 3, 6, 300,
                 new ItemStack[]{new ItemStack(NMItems.moltenQuartzCompound)})
                 .setConsumesFluid());
+
+        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.ironNugget, 9), new Object[]{new ItemStack(Item.ingotIron)});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.ironNugget, 8), new Object[]{new ItemStack(Item.ingotIron)});
 
         // Nether lava washing replaces the unavailable water-and-brine hemp route.
         // The washed hemp still has to be fired and milled into fibres.
@@ -2866,6 +2870,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.unfiredCrudeBrick), new Object[]{Item.clay});
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.steelNugget, 9), new Object[]{new ItemStack(BTWItems.soulforgedSteelIngot)});
+        SkillRecipeGates.exemptCrafting(RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.steelNugget, 8), new Object[]{BTWItems.soulforgedSteelIngot}));
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", "S# ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks, Character.valueOf('S'), BTWTags.strings});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.pickaxeStone), new Object[]{"XXX", " # ", " # ", Character.valueOf('#'), BTWTags.lowQualityToolHandles, Character.valueOf('X'), BTWTags.looseRocks});
@@ -2879,6 +2884,9 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
         IRecipe mashRecipe = RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mash), new Object[]{BTWItems.redMushroom, NMItems.grassSeeds, NMItems.grassSeeds});
         validateShapelessRecipeRegistration("Rough Mushroom Mash", mashRecipe, NMItems.mash);
+        SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.dandelionMush),
+                new Object[]{Block.plantYellow, Block.plantYellow, Block.plantYellow, NMItems.grassSeeds}),
+                NMSkillNodes.BRING_ANOTHER_DANDELION_16);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodCupCrafting, 1, NMItems.woodCupCrafting.getMaxDamage() - 1), new Object[]{new ItemStack(NMItems.woodClump, 1, Short.MAX_VALUE), new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.reedPeeling, 1, NMItems.reedPeeling.getMaxDamage() - 1), new Object[]{Item.reed});
         RecipeManager.addRecipe(new ItemStack(Item.paper), new Object[]{"###", Character.valueOf('#'), NMItems.plantSheet});
@@ -3718,8 +3726,6 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_4, NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.soulforgedSteelIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.steelNugget)});
-        SkillLockedCrafting.requireSkill(RecipeManager.addRecipe(new ItemStack(BTWItems.soulforgedSteelIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), new ItemStack(BTWItems.steelNugget)}),
-                NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.steelArmorPlate), new Object[]{"#X#", " Y ", Character.valueOf('#'), BTWItems.leatherStrap, Character.valueOf('X'), BTWItems.soulforgedSteelIngot, Character.valueOf('Y'), BTWItems.padding});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(BTWItems.steelArmorPlate), new Object[]{"#X#", "NYL", Character.valueOf('#'), BTWItems.leatherStrap, Character.valueOf('X'), BTWItems.soulforgedSteelIngot, Character.valueOf('Y'), BTWItems.padding, Character.valueOf('N'), NMItems.nickelPlate, Character.valueOf('L'), NMItems.lithiumHeatCompound}),

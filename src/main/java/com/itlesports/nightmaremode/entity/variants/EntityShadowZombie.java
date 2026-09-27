@@ -225,7 +225,7 @@ public class EntityShadowZombie extends EntityZombie {
 
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
-        if(NMUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
+        if(NMUtils.getIsEclipse() && attackedEntity instanceof EntityPlayer){
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.weakness.id, 60, 0));
             ((EntityPlayer)attackedEntity).addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 0));

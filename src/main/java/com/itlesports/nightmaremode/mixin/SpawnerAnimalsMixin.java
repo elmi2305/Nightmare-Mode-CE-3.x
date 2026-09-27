@@ -48,8 +48,8 @@ public class SpawnerAnimalsMixin {
 
     @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EnumCreatureType;getMaxNumberOfCreature()I"))
     private int increaseSquidMobCap(EnumCreatureType instance){
-        if(instance == EnumCreatureType.waterCreature && NMUtils.getIsEclipse()){
-            return 8;
+        if(instance == EnumCreatureType.waterCreature){
+            return NMUtils.getIsEclipse() ? 8 : 14;
         }
         return instance.getMaxNumberOfCreature();
     }

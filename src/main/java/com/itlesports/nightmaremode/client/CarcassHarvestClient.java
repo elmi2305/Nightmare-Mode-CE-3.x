@@ -14,6 +14,9 @@ import net.minecraft.src.I18n;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.ScaledResolution;
+import net.minecraft.src.AxisAlignedBB;
+import net.minecraft.src.MovingObjectPosition;
+import net.minecraft.src.Vec3;
 
 @Environment(EnvType.CLIENT)
 public final class CarcassHarvestClient {
@@ -26,11 +29,8 @@ public final class CarcassHarvestClient {
         if (activeEntityId != -1) {
             return true;
         }
-        if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != EnumMovingObjectType.ENTITY) {
-            return false;
-        }
-
-        Entity target = mc.objectMouseOver.entityHit;
+        Entity target = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == EnumMovingObjectType.ENTITY
+                ? mc.objectMouseOver.entityHit : findLookedAtCarcass(mc);
         if (!(target instanceof EntityLivingBase) || !(target instanceof CarcassAnimal carcass) || !carcass.nm$isCarcass()) {
             return false;
         }
@@ -41,6 +41,32 @@ public final class CarcassHarvestClient {
             CarcassHarvestNet.sendContinue(activeEntityId);
         }
         return true;
+    }
+
+    private static Entity findLookedAtCarcass(Minecraft mc) {
+        if (mc.thePlayer == null || mc.theWorld == null) {
+            return null;
+        }
+        Vec3 start = mc.thePlayer.getPosition(1.0F);
+        Vec3 look = mc.thePlayer.getLook(1.0F);
+        Vec3 end = start.addVector(look.xCoord * 5.0D, look.yCoord * 5.0D, look.zCoord * 5.0D);
+        MovingObjectPosition blockHit = mc.theWorld.clip(start, end);
+        double closest = blockHit == null ? 25.0D : start.squareDistanceTo(blockHit.hitVec);
+        Entity closestCarcass = null;
+        AxisAlignedBB area = mc.thePlayer.boundingBox.addCoord(look.xCoord * 5.0D,
+                look.yCoord * 5.0D, look.zCoord * 5.0D).expand(1.0D, 1.0D, 1.0D);
+        for (Object candidate : mc.theWorld.getEntitiesWithinAABB(EntityLivingBase.class, area)) {
+            if (!(candidate instanceof EntityLivingBase entity) || !(entity instanceof CarcassAnimal carcass)
+                    || !carcass.nm$isCarcass()) {
+                continue;
+            }
+            MovingObjectPosition hit = entity.boundingBox.expand(0.1D, 0.1D, 0.1D).calculateIntercept(start, end);
+            if (hit != null && start.squareDistanceTo(hit.hitVec) < closest) {
+                closest = start.squareDistanceTo(hit.hitVec);
+                closestCarcass = entity;
+            }
+        }
+        return closestCarcass;
     }
 
     public static void tick(Minecraft mc) {

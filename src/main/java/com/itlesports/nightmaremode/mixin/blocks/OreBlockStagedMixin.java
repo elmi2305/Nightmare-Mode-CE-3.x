@@ -8,6 +8,11 @@ import btw.block.blocks.RoughStoneBlock;
 import btw.item.BTWItems;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemAlloyPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemEnderPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemQuestPickaxe;
+import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
+import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,10 +62,26 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
         } else
         if(blockID == Block.oreIron.blockID){
-            if(stack.getItem() instanceof PickaxeItem pi){
-                int dropCount = pi.toolMaterial.getHarvestLevel() - 1;
-                for(int i = 0; i < dropCount; i++){
-                    summonEntity(world,x,y,z, side, BTWItems.ironOrePile);
+            if (stack.getItem() instanceof ItemQuestPickaxe) {
+                summonEntity(world, x, y, z, side, BTWItems.ironOreChunk);
+            } else if(stack.getItem() instanceof PickaxeItem pi){
+                Item pick = stack.getItem();
+                if (pick instanceof ItemAlloyPickaxe || pick instanceof ItemEnderPickaxe
+                        || pick instanceof ItemBloodPickaxe || pick instanceof ItemTungstenPickaxe) {
+                    summonEntity(world, x, y, z, side, BTWItems.ironOreChunk);
+                } else if (pick == Item.pickaxeStone || pick == Item.pickaxeIron || pick == Item.pickaxeDiamond) {
+                    int guaranteedPiles = pick == Item.pickaxeIron ? 1 : pick == Item.pickaxeDiamond ? 1 : 0;
+                    for (int i = 0; i < guaranteedPiles; i++) {
+                        summonEntity(world, x, y, z, side, BTWItems.ironOrePile);
+                    }
+                    if (world.rand.nextFloat() < 0.75F) {
+                        summonEntity(world, x, y, z, side, BTWItems.ironOrePile);
+                    }
+                } else {
+                    int dropCount = Math.max(0, pi.toolMaterial.getHarvestLevel() - 1);
+                    for (int i = 0; i < dropCount; i++) {
+                        summonEntity(world, x, y, z, side, BTWItems.ironOrePile);
+                    }
                 }
             } else if(stack.getItem() instanceof ChiselItem ch){
                 float pileChance = 0.10F + SkillHandler.getWorldData(world).globalIronPileChanceBonus

@@ -10,6 +10,7 @@ import net.minecraft.src.*;
 public class ItemTungstenPickaxe extends PickaxeItem implements INetherItem {
     public ItemTungstenPickaxe(int id) {
         super(id, EnumToolMaterial.IRON);
+        this.setMaxDamage(3200);
     }
 
     @Override

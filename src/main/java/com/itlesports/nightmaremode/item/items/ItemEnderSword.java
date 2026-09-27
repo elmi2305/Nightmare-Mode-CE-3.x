@@ -14,7 +14,7 @@ import net.minecraft.src.SharedMonsterAttributes;
 public class ItemEnderSword extends SwordItem {
     public ItemEnderSword(int id) {
         super(id, EnumToolMaterial.SOULFORGED_STEEL);
-        this.setMaxDamage(3200);
+        this.setMaxDamage(72000);
         this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
