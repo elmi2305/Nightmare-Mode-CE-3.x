@@ -202,6 +202,7 @@ public class NMItems {
     public static Item skillBook;
     public static Item grassSeeds;
     public static FoodItem mash;
+    public static FoodItem dandelionMush;
     public static Item flintAxe;
     public static NMProgressiveItem flintAxeCrafting;
     public static Item crudeString;
@@ -580,6 +581,7 @@ public class NMItems {
         ((ItemAccessor) woodHammer).invSetMaxDamage(50);
         stoneHammer = new ItemHammer(2615, EnumToolMaterial.STONE).setUnlocalizedName("ifhyStoneHammer").setTextureName("nightmare:ifhyStoneHammer").setCreativeTab(CreativeTabs.tabTools);
         ((ItemAccessor) stoneHammer).invSetMaxDamage(150);
+        ((ItemAccessor) Item.pickaxeStone).invSetMaxDamage(100);
         ((ItemAccessor) ironHammer).invSetMaxDamage(250);
 
         ironBloom = new NMPlaceAsBlockItem(2616, NMFields.BLOCK_IRON_BLOOM).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
@@ -623,9 +625,9 @@ public class NMItems {
         diamondBearingMaterial = new NMItem(2650).setUnlocalizedName("ifhyDiamondBearingMaterial").setTextureName("nightmare:ifhyDiamondBearingMaterial").setCreativeTab(CreativeTabs.tabMaterials);
         failedDiamondRefinement = new NMItem(2651).setUnlocalizedName("ifhyFailedDiamondRefinement").setTextureName("nightmare:ifhyFailedDiamondRefinement").setCreativeTab(CreativeTabs.tabMaterials);
         refinementWaste = new NMItem(2652).setUnlocalizedName("ifhyRefinementWaste").setTextureName("nightmare:ifhyRefinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
-        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 320, 0.35F, 0.0D, "ifhyOxygenMask")
+        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 240, 0.35F, 0.0D, "ifhyOxygenMask")
                 .setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
-        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 480, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
+        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 360, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         driedPlantFiber = new NMPlaceAsBlockItem(2657, NMFields.BLOCK_DRYING_GRASS, BlockDryingGrass.META_DRIED).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         plantFiber.setfurnaceburntime(6);
@@ -637,6 +639,11 @@ public class NMItems {
                 .setPotionEffect(Potion.poison.id, 15, 0, 0.05f)
                 .setMaxStackSize(16)
                 .setTextureName("nightmare:ifhyMash")
+                .setCreativeTab(CreativeTabs.tabFood);
+        dandelionMush = (FoodItem) new NMFoodItem(3463, 1, 0f, false, "ifhyDandelionMush", false)
+                .setPotionEffect(Potion.poison.id, 4, 0, 0.05f)
+                .setMaxStackSize(16)
+                .setTextureName("nightmare:ifhyDandelionMush")
                 .setCreativeTab(CreativeTabs.tabFood);
 
         mackerel = createRawFish(2658, "nmMackerel");
@@ -689,7 +696,7 @@ public class NMItems {
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setDamageVsEntity(3).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
         diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 256).setDamageVsEntity(4).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
         goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
-        tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 256).setDamageVsEntity(3).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
+        tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 3200).setDamageVsEntity(3).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
 
         ash = new NetherItem(2704).setTextureName("nightmare:ifhyAsh").setUnlocalizedName("ifhyAsh").setCreativeTab(CreativeTabs.tabMaterials);
         ashClump = new NetherItem(2705).setTextureName("nightmare:ifhyAshClump").setUnlocalizedName("ifhyAshClump").setCreativeTab(CreativeTabs.tabMaterials);
@@ -728,7 +735,7 @@ public class NMItems {
         washedScouredLeather = new NMItem(2738).setTextureName("nightmare:ifhyWashedScouredLeather").setUnlocalizedName("ifhyWashedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         flintChip = new NMItem(2740).setTextureName("nightmare:ifhyFlintChip").setUnlocalizedName("ifhyFlintChip").setCreativeTab(CreativeTabs.tabMaterials);
-        tungstenShovel = new NMShovelItem(2741, EnumToolMaterial.IRON, 500, 0.7f).setTextureName("nightmare:ifhyTungstenShovel").setUnlocalizedName("ifhyTungstenShovel").setCreativeTab(CreativeTabs.tabTools);
+        tungstenShovel = new NMShovelItem(2741, EnumToolMaterial.IRON, 3200, 0.7f).setTextureName("nightmare:ifhyTungstenShovel").setUnlocalizedName("ifhyTungstenShovel").setCreativeTab(CreativeTabs.tabTools);
         ironScythe = new ItemScythe(2748, EnumToolMaterial.IRON, 3.5F).setTextureName("nightmare:ifhyIronScythe").setUnlocalizedName("ifhyIronScythe").setCreativeTab(CreativeTabs.tabCombat);
         diamondScythe = new ItemScythe(2749, EnumToolMaterial.EMERALD, 4.0F).setTextureName("nightmare:ifhyDiamondScythe").setUnlocalizedName("ifhyDiamondScythe").setCreativeTab(CreativeTabs.tabCombat);
         tungstenScythe = new ItemTungstenScythe(2750).setTextureName("nightmare:ifhyTungstenScythe").setUnlocalizedName("ifhyTungstenScythe").setCreativeTab(CreativeTabs.tabCombat);
@@ -946,36 +953,36 @@ public class NMItems {
         pressureRegulator = material(3272, "ifhyPressureRegulator");
         thermalLaminate = material(3273, "ifhyThermalLaminate");
 
-        carbonIronHelmet = carbonIronArmor(3274, 0, 2, 5, 480, 5, 0.0D,
+        carbonIronHelmet = carbonIronArmor(3274, 0, 2, 5, 2500, 5, 0.0D,
                 carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronHelmet");
-        carbonIronChestplate = carbonIronArmor(3275, 1, 7, 9, 480, 5, 0.0D,
+        carbonIronChestplate = carbonIronArmor(3275, 1, 7, 9, 2500, 5, 0.0D,
                 carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronChestplate");
-        carbonIronLeggings = carbonIronArmor(3276, 2, 5, 7, 480, 5, 0.0D,
+        carbonIronLeggings = carbonIronArmor(3276, 2, 5, 7, 2500, 5, 0.0D,
                 carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronLeggings");
-        carbonIronBoots = carbonIronArmor(3277, 3, 2, 4, 480, 5, 0.0D,
+        carbonIronBoots = carbonIronArmor(3277, 3, 2, 4, 2500, 5, 0.0D,
                 carbonIronNugget, "ifhyCarbonIronArmor", "item.ifhyCarbonIronArmor.bonus", "ifhyCarbonIronBoots");
 
-        reinforcedIronHelmet = alloyArmor(3278, 0, 2, 4, 720, 8, 0.025D,
+        reinforcedIronHelmet = alloyArmor(3278, 0, 2, 4, 4000, 8, 0.025D,
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronHelmet");
-        reinforcedIronChestplate = alloyArmor(3279, 1, 6, 7, 720, 8, 0.025D,
+        reinforcedIronChestplate = alloyArmor(3279, 1, 6, 7, 4000, 8, 0.025D,
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronChestplate");
-        reinforcedIronLeggings = alloyArmor(3280, 2, 5, 5, 720, 8, 0.025D,
+        reinforcedIronLeggings = alloyArmor(3280, 2, 5, 5, 4000, 8, 0.025D,
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronLeggings");
-        reinforcedIronBoots = alloyArmor(3281, 3, 2, 3, 720, 8, 0.025D,
+        reinforcedIronBoots = alloyArmor(3281, 3, 2, 3, 4000, 8, 0.025D,
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronBoots");
 
-        nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 780, 10, 0.0D,
+        nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 1500, 10, 0.0D,
                 nickelPlate, "oxygenGear","ifhyNickelWorkLeggings");
-        nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 700, 10, 0.0D,
+        nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 1500, 10, 0.0D,
                 nickelPlate, "oxygenGear", "ifhyNickelWorkBoots");
 
-        heatResistantHelmet = heatArmor(3284, 0, 3, 4, EnumArmorMaterial.DIAMOND.getDurability(0),
+        heatResistantHelmet = heatArmor(3284, 0, 3, 4, 5000,
                 "ifhyHeatResistantHelmet");
-        heatResistantChestplate = heatArmor(3285, 1, 8, 7, EnumArmorMaterial.DIAMOND.getDurability(1),
+        heatResistantChestplate = heatArmor(3285, 1, 8, 7, 5000,
                 "ifhyHeatResistantChestplate");
-        heatResistantLeggings = heatArmor(3286, 2, 6, 6, EnumArmorMaterial.DIAMOND.getDurability(2),
+        heatResistantLeggings = heatArmor(3286, 2, 6, 6, 5000,
                 "ifhyHeatResistantLeggings");
-        heatResistantBoots = heatArmor(3287, 3, 3, 3, EnumArmorMaterial.DIAMOND.getDurability(3),
+        heatResistantBoots = heatArmor(3287, 3, 3, 3, 5000,
                 "ifhyHeatResistantBoots");
 
         tungstenPlate = new NetherItem(3290).setTextureName("nightmare:ifhyTungstenPlate")
@@ -986,10 +993,10 @@ public class NMItems {
         moltenQuartzCompound = netherMaterial(3293, "ifhyMoltenQuartzCompound");
         quartzglassIngot = netherMaterial(3294, "ifhyQuartzglassIngot");
         quartzglassPlate = netherMaterial(3295, "ifhyQuartzglassPlate");
-        divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 600, 8, 0.0D,
+        divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 5000, 8, 0.0D,
                 quartzglassPlate.itemID, 0.50F, 0, "ifhyDivingMask", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingMask").setUnlocalizedName("ifhyDivingMask");
-        divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 900, 8, 0.0D,
+        divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 8000, 8, 0.0D,
                 tungstenPlate.itemID, 0.45F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingTank").setUnlocalizedName("ifhyDivingTank");
         crackedEmerald = material(3296, "ifhyCrackedEmerald");
@@ -1009,37 +1016,37 @@ public class NMItems {
         deadzoneAlloyPlate = netherMaterial(3310, "ifhyDeadzoneAlloyPlate");
         solarCloth = netherMaterial(3311, "ifhySolarBaffle");
 
-        tungstenHelmet = netherArmor(3312, 0, 3, 7, 1100, 6, 0.055D, tungstenIngot,
+        tungstenHelmet = netherArmor(3312, 0, 3, 7, 3200, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenHelmet");
-        tungstenChestplate = netherArmor(3313, 1, 8, 12, 1100, 6, 0.055D, tungstenIngot,
+        tungstenChestplate = netherArmor(3313, 1, 8, 12, 3200, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenChestplate");
-        tungstenLeggings = netherArmor(3314, 2, 6, 10, 1100, 6, 0.055D, tungstenIngot,
+        tungstenLeggings = netherArmor(3314, 2, 6, 10, 3200, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenLeggings");
-        tungstenBoots = netherArmor(3315, 3, 3, 6, 1100, 6, 0.055D, tungstenIngot,
+        tungstenBoots = netherArmor(3315, 3, 3, 6, 3200, 6, 0.055D, tungstenIngot,
                 "ifhyTungstenArmor", "item.ifhyTungstenArmor.bonus", "ifhyTungstenBoots");
 
-        coresteelHelmet = coresteelArmor(3316, 0, 3, 6, 1300, 4800, "ifhyCoresteelHelmet");
-        coresteelChestplate = coresteelArmor(3317, 1, 8, 10, 1300, 9600, "ifhyCoresteelChestplate");
-        coresteelLeggings = coresteelArmor(3318, 2, 6, 8, 1300, 7200, "ifhyCoresteelLeggings");
-        coresteelBoots = coresteelArmor(3319, 3, 3, 5, 1300, 4800, "ifhyCoresteelBoots");
+        coresteelHelmet = coresteelArmor(3316, 0, 3, 6, 24000, 4800, "ifhyCoresteelHelmet");
+        coresteelChestplate = coresteelArmor(3317, 1, 8, 10, 24000, 9600, "ifhyCoresteelChestplate");
+        coresteelLeggings = coresteelArmor(3318, 2, 6, 8, 24000, 7200, "ifhyCoresteelLeggings");
+        coresteelBoots = coresteelArmor(3319, 3, 3, 5, 24000, 4800, "ifhyCoresteelBoots");
 
-        deadzoneHelmet = netherArmor(3320, 0, 3, 4, 1500, 8, 0.05D, deadzoneAlloyIngot,
+        deadzoneHelmet = netherArmor(3320, 0, 3, 4, 42000, 8, 0.05D, deadzoneAlloyIngot,
                 "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneHelmet");
-        deadzoneChestplate = netherArmor(3321, 1, 9, 7, 1500, 8, 0.05D, deadzoneAlloyIngot,
+        deadzoneChestplate = netherArmor(3321, 1, 9, 7, 42000, 8, 0.05D, deadzoneAlloyIngot,
                 "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneChestplate");
-        deadzoneLeggings = netherArmor(3322, 2, 7, 6, 1500, 8, 0.05D, deadzoneAlloyIngot,
+        deadzoneLeggings = netherArmor(3322, 2, 7, 6, 42000, 8, 0.05D, deadzoneAlloyIngot,
                 "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneLeggings");
-        deadzoneBoots = netherArmor(3323, 3, 3, 3, 1500, 8, 0.05D, deadzoneAlloyIngot,
+        deadzoneBoots = netherArmor(3323, 3, 3, 3, 42000, 8, 0.05D, deadzoneAlloyIngot,
                 "ifhyDeadzoneArmor", "item.ifhyDeadzoneArmor.bonus", "ifhyDeadzoneBoots");
 
         sunHelmet = sunArmorPiece(3324, 0, 3, 3, "ifhySunHelmet");
         sunChestplate = sunArmorPiece(3325, 1, 8, 6, "ifhySunChestplate");
         sunLeggings = sunArmorPiece(3326, 2, 6, 5, "ifhySunLeggings");
         sunBoots = sunArmorPiece(3327, 3, 3, 3, "ifhySunBoots");
-        sunVisor = (ItemSunDivingGear)new ItemSunDivingGear(3328, 0, 3, 3, 1400, 10, 0.05D,
+        sunVisor = (ItemSunDivingGear)new ItemSunDivingGear(3328, 0, 3, 3, 40000, 10, 0.05D,
                 deadzoneAlloyIngot.itemID, 0.50F, 0, "ifhySunVisor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:ifhySunVisor").setUnlocalizedName("ifhySunVisor");
-        sunReservoir = (ItemSunDivingGear)new ItemSunDivingGear(3329, 1, 8, 6, 1400, 10, 0.05D,
+        sunReservoir = (ItemSunDivingGear)new ItemSunDivingGear(3329, 1, 8, 6, 40000, 10, 0.05D,
                 coresteelIngot.itemID, 0.45F, 20 * 60 * 6, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:ifhySunReservoir").setUnlocalizedName("ifhySunReservoir");
 
@@ -1061,84 +1068,84 @@ public class NMItems {
         endstonePlate = material(3345, "ifhyEndstonePlate");
         darkIngot = netherMaterial(3346, "ifhyDarkIngot");
 
-        signalHelmet = chargedArmor(3347, 0, 2, 2, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalHelmet");
-        signalChestplate = chargedArmor(3348, 1, 6, 4, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalChestplate");
-        signalLeggings = chargedArmor(3349, 2, 5, 3, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalLeggings");
-        signalBoots = chargedArmor(3350, 3, 2, 1, 430, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalBoots");
-        azureHelmet = alloyArmor(3351, 0, 2, 2, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureHelmet");
-        azureChestplate = alloyArmor(3352, 1, 5, 4, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureChestplate");
-        azureLeggings = alloyArmor(3353, 2, 4, 3, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureLeggings");
-        azureBoots = alloyArmor(3354, 3, 2, 1, 360, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureBoots");
-        prismaticHelmet = alloyArmor(3355, 0, 2, 1, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticHelmet");
-        prismaticChestplate = alloyArmor(3356, 1, 5, 3, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticChestplate");
-        prismaticLeggings = alloyArmor(3357, 2, 4, 2, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticLeggings");
-        prismaticBoots = alloyArmor(3358, 3, 2, 1, 440, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticBoots");
-        refinedPrismaHelmet = alloyArmor(3359, 0, 3, 3, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaHelmet");
-        refinedPrismaChestplate = alloyArmor(3360, 1, 8, 5, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaChestplate");
-        refinedPrismaLeggings = alloyArmor(3361, 2, 6, 4, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaLeggings");
-        refinedPrismaBoots = alloyArmor(3362, 3, 3, 2, 760, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaBoots");
-        verdantHelmet = alloyArmor(3363, 0, 2, 1, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantHelmet");
-        verdantChestplate = alloyArmor(3364, 1, 5, 3, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantChestplate");
-        verdantLeggings = alloyArmor(3365, 2, 3, 2, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantLeggings");
-        verdantBoots = alloyArmor(3366, 3, 1, 1, 300, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantBoots");
+        signalHelmet = chargedArmor(3347, 0, 2, 2, 6000, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalHelmet");
+        signalChestplate = chargedArmor(3348, 1, 6, 4, 6000, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalChestplate");
+        signalLeggings = chargedArmor(3349, 2, 5, 3, 6000, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalLeggings");
+        signalBoots = chargedArmor(3350, 3, 2, 1, 6000, signalAlloyIngot, "ifhySignalArmor", "item.ifhySignalArmor.bonus", "ifhySignalBoots");
+        azureHelmet = alloyArmor(3351, 0, 2, 2, 7000, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureHelmet");
+        azureChestplate = alloyArmor(3352, 1, 5, 4, 7000, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureChestplate");
+        azureLeggings = alloyArmor(3353, 2, 4, 3, 7000, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureLeggings");
+        azureBoots = alloyArmor(3354, 3, 2, 1, 7000, 22, 0.0D, azureCeramicIngot, "ifhyAzureArmor", "item.ifhyAzureArmor.bonus", "ifhyAzureBoots");
+        prismaticHelmet = alloyArmor(3355, 0, 2, 1, 5500, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticHelmet");
+        prismaticChestplate = alloyArmor(3356, 1, 5, 3, 5500, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticChestplate");
+        prismaticLeggings = alloyArmor(3357, 2, 4, 2, 5500, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticLeggings");
+        prismaticBoots = alloyArmor(3358, 3, 2, 1, 5500, 16, 0.0D, prismaticIngot, "ifhyPrismaticArmor", "item.ifhyPrismaticArmor.bonus", "ifhyPrismaticBoots");
+        refinedPrismaHelmet = alloyArmor(3359, 0, 3, 3, 30000, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaHelmet");
+        refinedPrismaChestplate = alloyArmor(3360, 1, 8, 5, 30000, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaChestplate");
+        refinedPrismaLeggings = alloyArmor(3361, 2, 6, 4, 30000, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaLeggings");
+        refinedPrismaBoots = alloyArmor(3362, 3, 3, 2, 30000, 24, 0.02D, prismaticIngot, "ifhyRefinedPrismaArmor", "item.ifhyRefinedPrismaArmor.bonus", "ifhyRefinedPrismaBoots");
+        verdantHelmet = alloyArmor(3363, 0, 2, 1, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantHelmet");
+        verdantChestplate = alloyArmor(3364, 1, 5, 3, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantChestplate");
+        verdantLeggings = alloyArmor(3365, 2, 3, 2, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantLeggings");
+        verdantBoots = alloyArmor(3366, 3, 1, 1, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantBoots");
         glassHelmet = glassArmor(3367, 0, 1, "ifhyGlassHelmet");
         glassChestplate = glassArmor(3368, 1, 3, "ifhyGlassChestplate");
         glassLeggings = glassArmor(3369, 2, 2, "ifhyGlassLeggings");
         glassBoots = glassArmor(3370, 3, 1, "ifhyGlassBoots");
-        blackglassHelmet = netherArmor(3371, 0, 3, 9, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassHelmet");
-        blackglassChestplate = netherArmor(3372, 1, 8, 15, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassChestplate");
-        blackglassLeggings = netherArmor(3373, 2, 6, 12, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassLeggings");
-        blackglassBoots = netherArmor(3374, 3, 3, 7, 1050, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassBoots");
-        quartzglassHelmet = netherArmor(3375, 0, 2, 1, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassHelmet");
-        quartzglassChestplate = netherArmor(3376, 1, 4, 2, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassChestplate");
-        quartzglassLeggings = netherArmor(3377, 2, 3, 2, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassLeggings");
-        quartzglassBoots = netherArmor(3378, 3, 1, 1, 300, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassBoots");
-        darkHelmet = netherArmor(3379, 0, 3, 2, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkHelmet");
-        darkChestplate = netherArmor(3380, 1, 9, 4, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkChestplate");
-        darkLeggings = netherArmor(3381, 2, 7, 3, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkLeggings");
-        darkBoots = netherArmor(3382, 3, 3, 2, 1200, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkBoots");
-        quicksilverHelmet = alloyArmor(3383, 0, 2, 0, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverHelmet");
-        quicksilverChestplate = alloyArmor(3384, 1, 5, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverChestplate");
-        quicksilverLeggings = alloyArmor(3385, 2, 4, 1, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverLeggings");
-        quicksilverBoots = alloyArmor(3386, 3, 2, 0, 500, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverBoots");
-        endstoneHelmet = alloyArmor(3387, 0, 3, 9, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorHelmet");
-        endstoneChest = alloyArmor(3388, 1, 8, 15, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
-        endstoneLeggings = alloyArmor(3389, 2, 6, 12, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
-        endstoneBoots = alloyArmor(3390, 3, 3, 7, 1300, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
+        blackglassHelmet = netherArmor(3371, 0, 3, 9, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassHelmet");
+        blackglassChestplate = netherArmor(3372, 1, 8, 15, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassChestplate");
+        blackglassLeggings = netherArmor(3373, 2, 6, 12, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassLeggings");
+        blackglassBoots = netherArmor(3374, 3, 3, 7, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassBoots");
+        quartzglassHelmet = netherArmor(3375, 0, 2, 1, 2500, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassHelmet");
+        quartzglassChestplate = netherArmor(3376, 1, 4, 2, 2500, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassChestplate");
+        quartzglassLeggings = netherArmor(3377, 2, 3, 2, 2500, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassLeggings");
+        quartzglassBoots = netherArmor(3378, 3, 1, 1, 2500, 14, 0.0D, quartzglassIngot, "ifhyQuartzglassArmor", "item.ifhyQuartzglassArmor.bonus", "ifhyQuartzglassBoots");
+        darkHelmet = netherArmor(3379, 0, 3, 2, 32000, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkHelmet");
+        darkChestplate = netherArmor(3380, 1, 9, 4, 32000, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkChestplate");
+        darkLeggings = netherArmor(3381, 2, 7, 3, 32000, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkLeggings");
+        darkBoots = netherArmor(3382, 3, 3, 2, 32000, 12, 0.06D, darkIngot, "ifhyDarkArmor", "item.ifhyDarkArmor.bonus", "ifhyDarkBoots");
+        quicksilverHelmet = alloyArmor(3383, 0, 2, 0, 24000, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverHelmet");
+        quicksilverChestplate = alloyArmor(3384, 1, 5, 1, 24000, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverChestplate");
+        quicksilverLeggings = alloyArmor(3385, 2, 4, 1, 24000, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverLeggings");
+        quicksilverBoots = alloyArmor(3386, 3, 2, 0, 24000, 18, 0.0D, sealedQuicksilverIngot, "ifhyQuicksilverArmor", "item.ifhyQuicksilverArmor.bonus", "ifhyQuicksilverBoots");
+        endstoneHelmet = alloyArmor(3387, 0, 3, 9, 20000, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorHelmet");
+        endstoneChest = alloyArmor(3388, 1, 8, 15, 20000, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorChestplate");
+        endstoneLeggings = alloyArmor(3389, 2, 6, 12, 20000, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorLeggings");
+        endstoneBoots = alloyArmor(3390, 3, 3, 7, 20000, 6, 0.10D, endstoneIngot, "ifhyAnchorArmor", "item.ifhyAnchorArmor.bonus", "ifhyAnchorBoots");
 
-        tungstenSword = new ItemAlloySword(3435, EnumToolMaterial.IRON, 500, 4.5D, 14, tungstenIngot.itemID, tungstenPlate.itemID)
+        tungstenSword = new ItemAlloySword(3435, EnumToolMaterial.IRON, 3200, 4.5D, 14, tungstenIngot.itemID, tungstenPlate.itemID)
                 .setTextureName("nightmare:ifhyTungstenSword").setUnlocalizedName("ifhyTungstenSword").setCreativeTab(CreativeTabs.tabCombat);
-        verdantPickaxe = new ItemAlloyPickaxe(3436, EnumToolMaterial.IRON, 650, 4, 1.0F, 30, verdantIngot.itemID, verdantPlate.itemID)
+        verdantPickaxe = new ItemAlloyPickaxe(3436, EnumToolMaterial.IRON, 4000, 4, 1.0F, 30, verdantIngot.itemID, verdantPlate.itemID)
                 .setTextureName("nightmare:ifhyVerdantPickaxe").setUnlocalizedName("ifhyVerdantPickaxe").setCreativeTab(CreativeTabs.tabTools);
-        verdantSword = new ItemAlloySword(3437, EnumToolMaterial.EMERALD, 650, 5.5D, 30, verdantIngot.itemID, verdantPlate.itemID)
+        verdantSword = new ItemAlloySword(3437, EnumToolMaterial.EMERALD, 4000, 5.5D, 30, verdantIngot.itemID, verdantPlate.itemID)
                 .setTextureName("nightmare:ifhyVerdantSword").setUnlocalizedName("ifhyVerdantSword").setCreativeTab(CreativeTabs.tabCombat);
-        blackglassSword = new ItemAlloySword(3438, EnumToolMaterial.EMERALD, 780, 5.5D, 6, blackglassIngot.itemID, blackglassPlate.itemID)
+        blackglassSword = new ItemAlloySword(3438, EnumToolMaterial.EMERALD, 7000, 5.5D, 6, blackglassIngot.itemID, blackglassPlate.itemID)
                 .setTextureName("nightmare:ifhyBlackglassSword").setUnlocalizedName("ifhyBlackglassSword").setCreativeTab(CreativeTabs.tabCombat);
-        blackglassScythe = new ItemAlloyScythe(3439, 6.5F, 720)
+        blackglassScythe = new ItemAlloyScythe(3439, 6.5F, 7000)
                 .setTextureName("nightmare:ifhyBlackglassScythe").setUnlocalizedName("ifhyBlackglassScythe").setCreativeTab(CreativeTabs.tabCombat);
-        blackglassKnife = (ItemKnife) new ItemKnife(3440, 48, ItemKnife.TIER_DIAMOND, 256).setDamageVsEntity(5)
+        blackglassKnife = (ItemKnife) new ItemKnife(3440, 48, ItemKnife.TIER_DIAMOND, 7000).setDamageVsEntity(5)
                 .setTextureName("nightmare:ifhyBlackglassKnife").setUnlocalizedName("ifhyBlackglassKnife");
-        coresteelSword = new ItemAlloySword(3441, EnumToolMaterial.EMERALD, 1600, 6, 10, coresteelIngot.itemID, coresteelPlate.itemID)
+        coresteelSword = new ItemAlloySword(3441, EnumToolMaterial.EMERALD, 18000, 6, 10, coresteelIngot.itemID, coresteelPlate.itemID)
                 .setTextureName("nightmare:ifhyCoresteelSword").setUnlocalizedName("ifhyCoresteelSword").setCreativeTab(CreativeTabs.tabCombat);
-        coresteelPickaxe = new ItemAlloyPickaxe(3442, EnumToolMaterial.EMERALD, 1600, 5, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
+        coresteelPickaxe = new ItemAlloyPickaxe(3442, EnumToolMaterial.EMERALD, 18000, 5, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
                 .setTextureName("nightmare:ifhyCoresteelPickaxe").setUnlocalizedName("ifhyCoresteelPickaxe").setCreativeTab(CreativeTabs.tabTools);
-        coresteelAxe = new ItemAlloyAxe(3443, 1600, 5, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
+        coresteelAxe = new ItemAlloyAxe(3443, 18000, 5, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
                 .setTextureName("nightmare:ifhyCoresteelAxe").setUnlocalizedName("ifhyCoresteelAxe").setCreativeTab(CreativeTabs.tabTools);
-        coresteelShovel = new ItemAlloyShovel(3444, 1600, 4, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
+        coresteelShovel = new ItemAlloyShovel(3444, 18000, 4, 1.0F, 10, coresteelIngot.itemID, coresteelPlate.itemID)
                 .setTextureName("nightmare:ifhyCoresteelShovel").setUnlocalizedName("ifhyCoresteelShovel").setCreativeTab(CreativeTabs.tabTools);
-        deadzoneSword = new ItemAlloySword(3445, EnumToolMaterial.EMERALD, 1200, 7.5D, 8, deadzoneAlloyIngot.itemID, deadzoneAlloyPlate.itemID)
+        deadzoneSword = new ItemAlloySword(3445, EnumToolMaterial.EMERALD, 42000, 7.5D, 8, deadzoneAlloyIngot.itemID, deadzoneAlloyPlate.itemID)
                 .setTextureName("nightmare:ifhyDeadzoneSword").setUnlocalizedName("ifhyDeadzoneSword").setCreativeTab(CreativeTabs.tabCombat);
-        deadzoneScythe = new ItemAlloyScythe(3446, 6.0F, 1200)
+        deadzoneScythe = new ItemAlloyScythe(3446, 6.0F, 42000)
                 .setTextureName("nightmare:ifhyDeadzoneScythe").setUnlocalizedName("ifhyDeadzoneScythe").setCreativeTab(CreativeTabs.tabCombat);
-        quicksilverPickaxe = new ItemAlloyPickaxe(3447, EnumToolMaterial.EMERALD, 420, 4, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
+        quicksilverPickaxe = new ItemAlloyPickaxe(3447, EnumToolMaterial.EMERALD, 24000, 4, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
                 .setTextureName("nightmare:ifhyQuicksilverPickaxe").setUnlocalizedName("ifhyQuicksilverPickaxe").setCreativeTab(CreativeTabs.tabTools);
-        quicksilverShovel = new ItemAlloyShovel(3448, 420, 5, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
+        quicksilverShovel = new ItemAlloyShovel(3448, 24000, 5, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
                 .setTextureName("nightmare:ifhyQuicksilverShovel").setUnlocalizedName("ifhyQuicksilverShovel").setCreativeTab(CreativeTabs.tabTools);
-        quicksilverAxe = new ItemAlloyAxe(3449, 420, 6, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
+        quicksilverAxe = new ItemAlloyAxe(3449, 24000, 6, 2.0F, 18, sealedQuicksilverIngot.itemID, sealedQuicksilverPlate.itemID)
                 .setTextureName("nightmare:ifhyQuicksilverAxe").setUnlocalizedName("ifhyQuicksilverAxe").setCreativeTab(CreativeTabs.tabTools);
-        endstoneSword = new ItemAlloySword(3450, EnumToolMaterial.EMERALD, 1550, 8.0D, 6, endstoneIngot.itemID, endstonePlate.itemID)
+        endstoneSword = new ItemAlloySword(3450, EnumToolMaterial.EMERALD, 20000, 8.0D, 6, endstoneIngot.itemID, endstonePlate.itemID)
                 .setTextureName("nightmare:ifhyEndstoneSword").setUnlocalizedName("ifhyEndstoneSword").setCreativeTab(CreativeTabs.tabCombat);
-        endstoneKnife = (ItemKnife) new ItemKnife(3451, 32, ItemKnife.TIER_DIAMOND, 640).setDamageVsEntity(6)
+        endstoneKnife = (ItemKnife) new ItemKnife(3451, 32, ItemKnife.TIER_DIAMOND, 20000).setDamageVsEntity(6)
                 .setTextureName("nightmare:ifhyEndstoneKnife").setUnlocalizedName("ifhyEndstoneKnife");
 
         ironFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3405, 2352, true, 250)
@@ -1224,7 +1231,7 @@ public class NMItems {
 
     private static ItemHeatResistantArmor sunArmorPiece(int id, int armorType, int protection, int weight,
                                                          String name) {
-        return (ItemHeatResistantArmor)new ItemHeatResistantArmor(id, armorType, protection, weight, 1400,
+        return (ItemHeatResistantArmor)new ItemHeatResistantArmor(id, armorType, protection, weight, 40000,
                 10, 0.05D, deadzoneAlloyIngot.itemID, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }
@@ -1402,6 +1409,9 @@ public class NMItems {
         BTWTags.foods.add(dungApple);
         BTWTags.foods.add(creeperBallSoup);
         BTWTags.foods.add(mash);
+        BTWTags.foods.add(dandelionMush);
+        BTWTags.lowQualityAxes.addIgnoringMeta(flintAxe);
+        BTWTags.highQualityAxes.addIgnoringMeta(bloodAxe, enderAxe, coresteelAxe, quicksilverAxe);
     }
 
 }

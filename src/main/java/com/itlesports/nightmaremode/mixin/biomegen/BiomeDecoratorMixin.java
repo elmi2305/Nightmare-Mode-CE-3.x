@@ -1,14 +1,8 @@
 package com.itlesports.nightmaremode.mixin.biomegen;
 
-import net.minecraft.src.BiomeDecorator;
-import net.minecraft.src.BiomeGenOcean;
-import net.minecraft.src.Block;
-import net.minecraft.src.Material;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldGenFlowers;
+import net.minecraft.src.*;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.worldgen.WorldGenAquamarineOre;
-import net.minecraft.src.WorldGenerator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,6 +18,9 @@ public class BiomeDecoratorMixin {
     @Shadow protected WorldGenerator mushroomBrownGen;
     @Shadow protected int treesPerChunk;
 
+    @Shadow
+    protected BiomeGenBase biome;
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         // removes brown mushrooms from the overworld
@@ -31,9 +28,10 @@ public class BiomeDecoratorMixin {
     }
 
     @Redirect(method = "decorate()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldGenerator;generate(Lnet/minecraft/src/World;Ljava/util/Random;III)Z", ordinal = 3))
-    private boolean addMushroomsBelowSparseTrees(WorldGenerator generator, World world, Random random, int x, int y, int z) {
+    private boolean addMushroomsBelowTrees(WorldGenerator generator, World world, Random random, int x, int y, int z) {
         boolean generated = generator.generate(world, random, x, y, z);
-        if (generated && world.provider.dimensionId == 0 && this.treesPerChunk <= 2 && random.nextInt(3) == 0) {
+        int mushroomChance = this.treesPerChunk > 2 ? this.treesPerChunk * this.treesPerChunk : 4;
+        if (generated && world.provider.dimensionId == 0 && random.nextInt(mushroomChance) == 0 && this.biome != BiomeGenBase.swampland) {
             for (int attempt = 0; attempt < 4; ++attempt) {
                 int mushroomX = x + random.nextInt(5) - 2;
                 int mushroomZ = z + random.nextInt(5) - 2;
