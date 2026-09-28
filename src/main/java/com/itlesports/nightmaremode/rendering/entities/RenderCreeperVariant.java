@@ -210,15 +210,9 @@ public class RenderCreeperVariant extends RenderLiving {
         return creeperTextures;
     }
 
-    /**
-     * Returns a model array that is equivalent to the provided entity
-     * @param entity Creeper entity
-     * @return An array of models
-     */
     protected ModelBase[] getCreeperModels(EntityCreeperVariant entity)
     {
-        // If we're using the legacy render flag, only use
-        // base creeper model
+
         if (RenderUtils.shouldRenderLegacyModel()) {
             return creeperModel;
         }

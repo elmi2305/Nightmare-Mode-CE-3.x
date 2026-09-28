@@ -28,7 +28,7 @@ public abstract class ArcaneVesselTileEntityMixin extends TileEntity {
     }
 
     /**
-     * @author nightmare mode
+     * @author elmi
      * @reason increase capacity and preserve the remainder of oversized xp orbs
      */
     @Overwrite

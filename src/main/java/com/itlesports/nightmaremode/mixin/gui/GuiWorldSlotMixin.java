@@ -25,8 +25,8 @@ import java.util.Map;
 
 @Mixin(GuiWorldSlot.class)
 public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotExt {
-    @Unique private Map<Integer, int[]> starHitboxes = new HashMap<>();  // Tracks star positions
-    @Unique private Map<Integer, int[]> folderPositions = new HashMap<>();  // Tracks folder positions
+    @Unique private Map<Integer, int[]> starHitboxes = new HashMap<>();
+    @Unique private Map<Integer, int[]> folderPositions = new HashMap<>();
 
     @Shadow @Final GuiSelectWorld parentWorldGui;
     @Unique private static final ResourceLocation WORLD_BASIC = new ResourceLocation("nightmare:textures/gui/world_basic.png");
@@ -45,7 +45,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         int starY = yPos + 10;
         int starSize = 12;
 
-        // we put the hitboxes here
         starHitboxes.put(worldTextIndex, new int[]{starX, starY, starSize, starSize});
 
         boolean isFavorited = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$isFavorited(sfc.getFileName());
@@ -56,7 +55,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
             drawStar(starX, starY, starSize, isFavorited);
         }
 
-        // when to draw it
         if (NightmareMode.devMode) {
             int x1 = xPos - 80;
             int y1 = starY - 2;
@@ -80,13 +78,10 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
             }
         }
 
-
         int[] confArray = sfcExt.nightmareMode$getConfArray();
 
         GuiWorldSlot self = (GuiWorldSlot) (Object)this;
 
-
-        // draw world icon
         int size = 32;
         int x = xPos - 35;
 
@@ -104,7 +99,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         if (Arrays.stream(confArray).noneMatch(a -> a == 1)) return;
 
-        // build the existing game-mode text (var9) exactly like vanilla so spacing matches
         String var9 = "";
         if (sfc.requiresConversion()) {
             var9 = GuiSelectWorldAccess.functionI(this.parentWorldGui) + " " + var9;
@@ -119,11 +113,9 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
             }
         }
 
-        // config string to render (e.g. BM+TE+BS)
         String confString = NMConfUtils.getTextForActiveConfig(confArray);
         FontRenderer font = ((GuiScreenAccess)(this.parentWorldGui)).getFontRenderer();
 
-        // draw the comma after the existing text (same position as before)
         int baseTextX = xPos + 2 + font.getStringWidth(var9);
         int textX = baseTextX + 5;
         int textY = yPos + 12 + 10;
@@ -135,7 +127,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         int listRight = xPos + LIST_CONTENT_WIDTH - SCROLLBAR_PADDING;
         int maxWidth = listRight - textX;
 
-        // if there's essentially no room, draw the text normally (no scroll)
         if (maxWidth <= 4) {
             this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
             return;
@@ -143,13 +134,11 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         int textWidth = font.getStringWidth(confString);
 
-        // If it fits, draw normally
         if (textWidth <= maxWidth) {
             this.parentWorldGui.drawString(font, confString, textX, textY, 0xFF0000);
             return;
         }
 
-        // scrolling parameters
         final int paddingBetweenLoops = 20;
         final float speedPixelsPerSecond = 40f;
         final int pauseMs = 2000;
@@ -181,7 +170,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
             sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             scaleFactor = Math.max(1, sr.getScaleFactor());
         } catch (Throwable e) {
-            // if anything odd happens, fall back to a safe scale of 1
+
             scaleFactor = 1;
         }
 
@@ -205,7 +194,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             GL11.glScissor(scissorX, scissorY, scissorW, scissorH);
 
-            // primary copy
             this.parentWorldGui.drawString(font, confString, drawX, textY, 0xFF0000);
 
             int secondCopyX = drawX + textWidth + paddingBetweenLoops;
@@ -232,7 +220,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
         tess.draw();
     }
 
-
     @Unique
     private boolean isMouseOverStar(int starX, int starY, int starSize) {
         int mouseX = ((GuiSelectWorldExt)(this.parentWorldGui)).nightmareMode$getLastMouseX();
@@ -254,8 +241,8 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
     @Unique
     private void drawStar(int textX, int textY, int size, boolean filled) {
-        // Use Unicode star character for simplicity
-        int color = filled ? 0xFFFFAA00 : 0xFF888888; // Gold for filled, gray for outline
+
+        int color = filled ? 0xFFFFAA00 : 0xFF888888;
         int outlineColor = 0xFFFFFFFF;
 
         int radius = 6;
@@ -272,7 +259,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         GL11.glDisable(GL11.GL_CULL_FACE);
 
-        // --- Fill (only if active) ---
         GL11.glColor4f(
                 ((color >> 16) & 255) / 255f,
                 ((color >> 8) & 255) / 255f,
@@ -293,7 +279,6 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         t.draw();
 
-        // --- Outline ---
         GL11.glLineWidth(1.5f);
         GL11.glColor4f(
                 ((outlineColor >> 16) & 255) / 255f,
@@ -314,19 +299,15 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
 
         t.draw();
 
-        // restore state
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_CULL_FACE);
 
-
-//        this.parentWorldGui.drawString(this.parentWorldGui.fontRenderer, starChar, textX, textY, color);
     }
-
 
     @Override
     public int nightmareMode$getStarClicked(double mouseX, double mouseY) {
-        // Check each tracked hitbox to see if the mouse click is within it
+
         for (Map.Entry<Integer, int[]> entry : starHitboxes.entrySet()) {
             int[] box = entry.getValue();
             if (mouseX >= box[0] && mouseX <= box[0] + box[2] &&
@@ -338,7 +319,7 @@ public abstract class GuiWorldSlotMixin extends GuiSlot implements GuiWorldSlotE
     }
     @Override
     public int nightmareMode$getFolderClicked(double mouseX, double mouseY) {
-        // Check each tracked hitbox to see if the mouse click is within it
+
         for (Map.Entry<Integer, int[]> entry : folderPositions.entrySet()) {
             int[] box = entry.getValue();
             if (mouseX >= box[0] && mouseX <= box[0] + box[2] &&

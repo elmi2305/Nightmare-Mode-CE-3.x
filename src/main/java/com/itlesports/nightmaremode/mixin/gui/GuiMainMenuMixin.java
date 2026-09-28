@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-
 @Mixin(GuiMainMenu.class)
 public class GuiMainMenuMixin extends GuiScreen {
     @Shadow private String splashText;
@@ -49,7 +48,7 @@ public class GuiMainMenuMixin extends GuiScreen {
     );
     @Unique private final ResourceLocation GEAR = new ResourceLocation("nightmare:textures/gui/gear.png");
 
-    @Unique private boolean createClicked; // used to make sure the Jump In dev mode button isn't activated twice
+    @Unique private boolean createClicked;
     @Unique private int heightMod;
 
     @ModifyConstant(method = "initGui",constant = @Constant(intValue = 72))
@@ -101,12 +100,11 @@ public class GuiMainMenuMixin extends GuiScreen {
             }
 
             this.createClicked = true;
-            long seed = rand.nextLong(); // par4 is whether structures are enabled. forced on because attempting to capture it just doesn't work for some reason
+            long seed = rand.nextLong();
 
             WorldSettings settings = NMUtils.decodeSettings(NightmareMode.getInstance().addonConfig.getString("WorldInfoString"), seed);
 
             ISaveFormat var1 = this.mc.getSaveLoader();
-
 
             List saveList = null;
             try {

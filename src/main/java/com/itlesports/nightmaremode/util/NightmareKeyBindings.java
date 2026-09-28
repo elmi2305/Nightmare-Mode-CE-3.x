@@ -4,10 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.KeyBinding;
 
-/**
- * Holds custom Nightmare Mode key bindings.
- * Appended once to GameSettings via GameSettingsMixin.
- */
 @Environment(EnvType.CLIENT)
 public final class NightmareKeyBindings {
 
@@ -18,9 +14,6 @@ public final class NightmareKeyBindings {
 
     private NightmareKeyBindings() {}
 
-    /**
-     * Returns true only the first time this is called (used to guard array expansion).
-     */
     public static boolean markRegistered() {
         if (!registered) {
             registered = true;
@@ -29,9 +22,6 @@ public final class NightmareKeyBindings {
         return false;
     }
 
-    /**
-     * All custom bindings to append.
-     */
     public static KeyBinding[] all() {
         return new KeyBinding[]{ nmZoomHold, nmZoomToggle };
     }

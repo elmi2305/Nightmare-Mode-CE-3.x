@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(AchievementHandler.class)
 public interface AchievementHandlerAccess {
-    @Invoker("triggerAchievement") // doesn't work
+    @Invoker("triggerAchievement")
     static void invokeAchievementTrigger(EntityPlayer player, Achievement achievement){};
 }

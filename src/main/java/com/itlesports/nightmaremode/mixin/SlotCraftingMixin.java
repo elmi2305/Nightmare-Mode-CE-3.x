@@ -29,8 +29,8 @@ public class SlotCraftingMixin extends Slot {
     @Inject(method = "onCrafting(Lnet/minecraft/src/ItemStack;I)V", at = @At("HEAD"))
     private void craft(ItemStack par1ItemStack, int par2, CallbackInfo ci){
         if (NightmareMode.isAprilFools) {
-            double gaussian = this.thePlayer.rand.nextGaussian(); // Mean = 0, Std Dev = 1
-            double normalized = (gaussian + 3) / 6; // Shifting and scaling to [0,1]
+            double gaussian = this.thePlayer.rand.nextGaussian();
+            double normalized = (gaussian + 3) / 6;
             int damage = (int) (Math.max(0, Math.min(1, normalized)) * par1ItemStack.getMaxDamage() - 1);
 
             par1ItemStack.attemptDamageItem(damage, this.thePlayer.rand);

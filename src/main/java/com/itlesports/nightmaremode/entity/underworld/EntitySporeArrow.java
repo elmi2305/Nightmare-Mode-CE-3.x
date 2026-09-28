@@ -8,9 +8,6 @@ import java.util.List;
 
 import static com.itlesports.nightmaremode.util.NMFields.VEHICLE_SPORE;
 
-/**
-* Explodes into a spore cloud on impact
- */
 public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPacket {
 
     private int ticksInAir;
@@ -28,14 +25,12 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
 
     public EntitySporeArrow(World world, EntityLivingBase shooter, float velocity) {
         super(world, shooter, velocity);
-        this.setIsCritical(this.rand.nextFloat() < 0.3F); // 30% chance for critical (nice green sparkle)
+        this.setIsCritical(this.rand.nextFloat() < 0.3F);
     }
 
     @Override
     public void onUpdate() {
         super.onEntityUpdate();
-
-
 
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
             float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
@@ -77,13 +72,12 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
             this.motionX *= 0.99D;
             this.motionY *= 0.99D;
             this.motionZ *= 0.99D;
-            this.motionY -= 0.05D; // gravity
+            this.motionY -= 0.05D;
 
             this.setPosition(this.posX, this.posY, this.posZ);
             this.doBlockCollisions();
         }
     }
-
 
     private void spawnSporeTrail() {
         for (int i = 0; i < 4; i++) {
@@ -93,11 +87,10 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
 
             this.worldObj.spawnParticle("happyVillager", px, py, pz, 0.0D, 0.05D, 0.0D);
             if (this.rand.nextInt(3) == 0) {
-                this.worldObj.spawnParticle("reddust", px, py, pz, 0.2D, 0.8D, 0.1D); // green poison tint
+                this.worldObj.spawnParticle("reddust", px, py, pz, 0.2D, 0.8D, 0.1D);
             }
         }
     }
-
 
     private MovingObjectPosition getEntityHit(Vec3 start, Vec3 end) {
         List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this,
@@ -125,7 +118,6 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
         return closest != null ? new MovingObjectPosition(closest) : null;
     }
 
-
     private void onSporeImpact(MovingObjectPosition mop) {
         if (mop.entityHit != null) {
             if (!mop.entityHit.isEntityInvulnerable()) {
@@ -136,7 +128,7 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
                 mop.entityHit.attackEntityFrom(src, damage);
 
                 if (mop.entityHit instanceof EntityLivingBase living) {
-                    living.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 1)); // Poison II for 6 seconds
+                    living.addPotionEffect(new PotionEffect(Potion.poison.id, 120, 1));
                 }
             }
         }
@@ -152,10 +144,7 @@ public class EntitySporeArrow extends EntityArrow implements EntityWithCustomPac
 
             this.worldObj.spawnEntityInWorld(cloud);
 
-//            System.out.println("DEBUG: SporeArrow exploded into pollen cloud at " + (int) this.posX + ", " + (int) this.posY + ", " + (int) this.posZ);
         }
-
-
 
         this.playSound("random.bowhit", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
         this.setDead();

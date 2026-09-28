@@ -16,21 +16,21 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TileEntityBloodBone extends TileEntity implements TileEntityDataPacketHandler {
-    private boolean activityState; // whether the ritual is going on or nah
-    private int ritualTicks; // counter that goes up once every 64 ticks. tends to overflow.
-    private Set<EntityLivingBase> livingEntities; // entities it summoned
-    private Set<UUID> livingEntityUUIDs; // UUIDs for persistent tracking across world loads
-    private boolean isAngry; // server and client anger state
-    public float xRot; // client only
-    public float yRot; // client only
-    public float zRot; // client only
-    private int successfulIncrements; // differs from ritual ticks because it only increments when conditions are valid
+    private boolean activityState;
+    private int ritualTicks;
+    private Set<EntityLivingBase> livingEntities;
+    private Set<UUID> livingEntityUUIDs;
+    private boolean isAngry;
+    public float xRot;
+    public float yRot;
+    public float zRot;
+    private int successfulIncrements;
     private final Random rand;
-    private float spinSpeed = 1.0F; // how fast to vroom
-    private ItemStack trackedItemStack; // the nether star item stack it's tracking
-    private EntityBloodAltar markerEntity; // displays the boss bar, also tracks corpses for sacrifice
-    private static final int threshHold = 128; // just for debug. how many successful ticks before finishing
-    private int sacrifices = 0; // how many sacrifices it wants right now
+    private float spinSpeed = 1.0F;
+    private ItemStack trackedItemStack;
+    private EntityBloodAltar markerEntity;
+    private static final int threshHold = 128;
+    private int sacrifices = 0;
 
     public TileEntityBloodBone() {
         super();
@@ -80,7 +80,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             }
         }
 
-        // rebuild livingEntities from UUIDs if world is available
         if(this.worldObj != null && !this.livingEntityUUIDs.isEmpty()) {
             this.livingEntities = new HashSet<>();
             for(UUID uuid : this.livingEntityUUIDs) {
@@ -169,7 +168,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if (client) {
             boolean mobsActive = !canIncrementRitual();
 
-            // Smoothly adjust spin speed
             if(mobsActive) {
                 this.spinSpeed = Math.max(0.0F, this.spinSpeed - 0.05F);
             } else {
@@ -208,7 +206,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
-
 
     private void spawnAngryParticles() {
         for(int i = 0; i < 6; i++) {
@@ -284,11 +281,11 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         if(this.isAngry && this.successfulIncrements >= 8) {
             this.setAngry(false);
             this.successfulIncrements = 0;
-            this.syncToClients(); // Fix: sync after reset
+            this.syncToClients();
         }
 
         if(this.getRitualTicks() % 4 == 0 && this.getRitualTicks() > 0){
-            sacrifices++; // hungry
+            sacrifices++;
             System.out.println("DEBUG: Hungry! Need " + sacrifices + " sacrifices");
         }
         if(this.getRitualTicks() % 8 == 0 && this.getRitualTicks() > 0) {
@@ -317,7 +314,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             }
         }
 
-        // Update the sets
         this.livingEntities = aliveEntities;
         this.livingEntityUUIDs = aliveUUIDs;
 
@@ -361,7 +357,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             double spawnY = this.worldObj.getTopSolidOrLiquidBlock((int)spawnX, (int)spawnZ);
 
             EntityLiving mob = createRandomMob();
-            if(mob == null) continue; // will ignore. not silently, because it will print a stacktrace
+            if(mob == null) continue;
             NMUtils.setMobEclipsed(mob);
             mob.setPosition(spawnX, spawnY, spawnZ);
             this.worldObj.spawnEntityInWorld(mob);
@@ -373,7 +369,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
         System.out.println("DEBUG: Now tracking " + this.livingEntities.size() + " entities");
     }
-
 
     private void completeRitual() {
         System.out.println("DEBUG: Ritual completed! Spawning item and removing block");
@@ -389,7 +384,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
                 this.zCoord + f2,
                 new ItemStack(Item.swordIron)
         );
-
 
         float f3 = 0.05F;
         entityitem.motionX = (float)this.rand.nextGaussian() * f3;
@@ -413,8 +407,8 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dz = -1; dz <= 1; dz++) {
-                    if (dx == 0 && dy == 0 && dz == 0) continue; // doesn't gaf about itself
-                    if (dx == 0 && dy == -1 && dz == 0) continue; // or the block below it
+                    if (dx == 0 && dy == 0 && dz == 0) continue;
+                    if (dx == 0 && dy == -1 && dz == 0) continue;
 
                     int neighborId = world.getBlockId(x + dx, y + dy, z + dz);
                     if (neighborId != 0) {
@@ -430,14 +424,10 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
             System.out.println("Nearby Blocks cannot see the sky: x" + fx + ", y" +y + ", z" + fz);
             return true;
         }
-        // randomly checks nearby blocks within a 8x8 square centered on itself (16 blocks wide, 16 blocks long) to see if they have blocked skylight. if they do, it will deem itself underground and get angry
+
         return false;
     }
 
-    /**
-     * Gets the ritual ticks
-     * @return Returns the ritual ticks + 1, a number that is between 1 and 128 inclusive
-     */
     private int getRitualTicks(){
         return this.ritualTicks + 1;
     }
@@ -469,7 +459,7 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
 
     public void setActive(boolean active){
         this.activityState = active;
-        // Only spawn on server - client will get it via normal entity sync
+
         if(active && markerEntity == null && !this.worldObj.isRemote) {
             markerEntity = new EntityBloodAltar(worldObj);
             markerEntity.bindToAltar(this);
@@ -502,7 +492,6 @@ public class TileEntityBloodBone extends TileEntity implements TileEntityDataPac
                     this.zCoord + f2,
                     this.trackedItemStack
             );
-
 
             float f3 = 0.05F;
             entityitem.motionX = (float)this.rand.nextGaussian() * f3;

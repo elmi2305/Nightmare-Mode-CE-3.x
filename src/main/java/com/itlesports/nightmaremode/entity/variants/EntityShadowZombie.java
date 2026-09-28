@@ -64,13 +64,13 @@ public class EntityShadowZombie extends EntityZombieVariant {
         }
 
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && bKilledByPlayer) {
+        if (bloodOrbID > 0 && bKilledByPlayer && this.hasValidEventLoot()) {
             int dropCount = this.rand.nextInt(3); // 0 - 2
             for (int i = 0; i < dropCount; ++i) {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= POSTWITHER)) {
+        if (bKilledByPlayer && this.hasValidEventLoot() && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER) && !(this.dimension == -1 && NMUtils.getWorldProgress() <= POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

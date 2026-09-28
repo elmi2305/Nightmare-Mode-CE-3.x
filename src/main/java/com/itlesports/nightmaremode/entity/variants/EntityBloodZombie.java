@@ -67,28 +67,22 @@ public class EntityBloodZombie extends EntityZombieVariant {
     @Override
     protected void checkForCatchFireInSun() {}
 
-    private boolean isValidForEventLoot = false;
-
-
-
-
-
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int lootingLevel) {
-        if(this.rand.nextBoolean() && isValidForEventLoot){
+        if(this.rand.nextBoolean() && bKilledByPlayer && this.hasValidEventLoot()){
             this.dropItem(Item.porkRaw.itemID,1);
         }
 
 
 
         int bloodOrbID = NMUtils.getIsBloodMoon() ? NMItems.bloodOrb.itemID : 0;
-        if (bloodOrbID > 0 && isValidForEventLoot) {
+        if (bloodOrbID > 0 && bKilledByPlayer && this.hasValidEventLoot()) {
             int dropCount = this.rand.nextInt(3) + 2; // 2 - 4
             for (int i = 0; i < dropCount; ++i) {
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if (isValidForEventLoot && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
+        if (bKilledByPlayer && this.hasValidEventLoot() && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);
@@ -142,8 +136,6 @@ public class EntityBloodZombie extends EntityZombieVariant {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
-
         if (this.worldObj.isRemote && this.hurtResistantTime == 0) {
             for(int i = 0; i < Math.min(par2 - 1, 3); i++) {
                 EntityXPOrb tempXPOrb = new EntityXPOrb(this.worldObj, this.posX, this.posY + this.height - this.rand.nextFloat(), this.posZ, 2, true);

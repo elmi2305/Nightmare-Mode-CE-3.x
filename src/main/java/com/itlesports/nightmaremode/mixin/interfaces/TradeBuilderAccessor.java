@@ -45,13 +45,11 @@ public interface TradeBuilderAccessor {
     @Accessor(value = "isMandatory",remap = false)
     void setMandatory(boolean m);
 
-    // if you want to change itemID/metadata directly:
     @Accessor(value = "itemID",remap = false) int getItemID();
     @Accessor(value = "itemID",remap = false) void setItemID(int id);
     @Accessor(value = "metadata",remap = false) int getMetadata();
     @Accessor(value = "metadata",remap = false) void setMetadata(int meta);
 
-    // tradeVariants if needed
     @Accessor(value = "tradeVariants",remap = false)
     ArrayList<VillagerTrade> getVariants();
     @Accessor(value = "tradeVariants",remap = false)

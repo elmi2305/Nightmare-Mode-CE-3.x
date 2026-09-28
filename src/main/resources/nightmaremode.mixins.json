@@ -16,7 +16,6 @@
     "DamageSourceMixin",
     "DifficultiesMixin",
     "EmiConfigMixin",
-    "EmiRecipesMixin",
     "EnchantmentDurabilityMixin",
     "EnchantmentHelperMixin",
     "EnchantmentProtectionMixin",
@@ -240,6 +239,7 @@
   ],
   "client": [
     "AnvilSaveConverterMixin",
+    "EmiRecipesMixin",
     "GameSettingsMixin",
     "MinecraftMixin",
     "MixinNetClientHandler",

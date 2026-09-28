@@ -25,6 +25,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
 
     @Unique
     private int flightTimer;
+    @Unique private boolean isValidForEventLoot = false;
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NMUtils.manageEclipseChance(this,32);
@@ -42,6 +43,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
 
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
         Entity attacker = par1DamageSource.getSourceOfDamage();
         if (attacker != null && NMUtils.getIsMobEclipsed(this)) {
             Entity lightningbolt = new EntityLightningBolt(this.worldObj, attacker.posX, attacker.posY, attacker.posZ);
@@ -119,7 +121,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
 
     @Inject(method = "dropFewItems", at = @At("HEAD"), cancellable = true)
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
+        if (bKilledByPlayer && isValidForEventLoot && NMUtils.getIsMobEclipsed(this) && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
                     this.dropItem(NMItems.darksunFragment.itemID, 1);

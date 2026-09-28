@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-
 @Mixin(RenderHorse.class)
 public abstract class RenderHorseMixin {
     @Unique private static final ResourceLocation HORSE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/horseEclipse.png");
@@ -21,8 +20,8 @@ public abstract class RenderHorseMixin {
     @Redirect(method = "func_110849_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityHorse;getHungerLevel()I"))
     private int baseHungerIfTamed(EntityHorse instance){
         if(instance.isTame() && instance.func_110241_cb() != 0){
-            return 0; // wearing armor
-            // hacky fix. other stuff I tried to do (like fixing the render itself) didn't work
+            return 0;
+
         }
         return instance.getHungerLevel();
     }

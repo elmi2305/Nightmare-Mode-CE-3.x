@@ -811,6 +811,8 @@ nm.withersoul.info=Uma Alma de Wither cai do Wither toda vez que ele é morto.
 nm.obsidianshard.info=Fragmentos de Obsidiana são obtidos minerando Obsidiana com uma Picareta de Diamante ou de Sangue. Picaretas de Aço podem ser usadas para minerar o bloco inteiro. Fragmentos de Obsidiana podem ser transformados em Obsidiana Bruta, que pode ser usada para construir um Portal do Nether.
 
 # NM BLOCK info
+nm.bloodIngotBlock.info=Blocos de Lingote de Sangue podem ser usados para construir Faróis de Sangue, que concedem Força. Um Farol de Sangue de nível 4 concede Força a todos os jogadores em sua dimensão.
+nm.refinedDiamondBlock.info=Blocos de Diamante Refinado podem ser usados para construir Faróis de Diamante Refinado, que concedem Velocidade. Um Farol de Diamante Refinado de nível 4 concede Velocidade a todos os jogadores em sua dimensão.
 nm.steelOre.info=Minério de Aço aparece nas Camadas 2 e 3, acima do nível do Diamante. Só pode ser minerado após derrotar o Wither ou usando uma Picareta de Aço.
 nm.bloodChest.info=O Baú de Sangue é uma unidade de armazenamento não inflamável com o dobro do espaço de um baú comum e resistência a explosões aumentada. Ele tem 54 slots de espaço.
 nm.steelLocker.info=O Armário de Aço é uma unidade de armazenamento resistente com 133 slots de espaço. É resistente à maioria das explosões e não pode queimar.

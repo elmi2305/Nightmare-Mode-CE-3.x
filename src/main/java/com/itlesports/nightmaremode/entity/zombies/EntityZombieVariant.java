@@ -237,7 +237,7 @@ public class EntityZombieVariant
         }
     }
 
-    @Unique private boolean isValidForEventLoot = false;
+    private boolean isValidForEventLoot = false;
 
     @Unique private static List<Integer> leatherArmorList = new ArrayList<>(4);
 
@@ -289,7 +289,7 @@ public class EntityZombieVariant
 
 
     @Unique
-    private void summonShadowZombieAtPos(EntityZombie zombie){
+    private void summonShadowZombieAtPos(EntityZombieVariant zombie){
         EntityShadowZombie shadowZombie = new EntityShadowZombie(this.worldObj);
         shadowZombie.setLocationAndAngles(zombie.posX, zombie.posY, zombie.posZ, zombie.rotationYaw, zombie.rotationPitch);
 
@@ -771,7 +771,7 @@ public class EntityZombieVariant
                 if((worldProgress >= 2 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(chance * (1 / niteMultiplier), 4)) == 0){
                     summonCrystalHeadAtPos();
                 } else if((worldProgress >= 1 || NightmareMode.evolvedMobs) && rand.nextInt((int) Math.max(4 * (1 / niteMultiplier), 2)) == 0){
-                    summonShadowZombieAtPos((EntityZombie)(Object)this);
+                    summonShadowZombieAtPos(this);
                 }
             }
         }
@@ -890,10 +890,6 @@ public class EntityZombieVariant
 
         if (bloodOrbID > 0 && par1 && isValidForEventLoot) {
             int dropCount = this.rand.nextInt(2); // 0 - 1
-            if(((EntityZombie)(Object)this) instanceof EntityPigZombie){
-                dropCount = this.rand.nextInt(6) == 0 ? 1 : 0;
-            }
-
             if (this.isCrystalHead(this)) {
                 dropCount += 3;
             } else if(this.getHeldItem() != null && (this.getHeldItem().itemID == Item.axeGold.itemID || this.getHeldItem().itemID == BTWItems.steelSword.itemID)){
@@ -935,6 +931,10 @@ public class EntityZombieVariant
             par2 /= 2.0f;
         }
         return super.attackEntityFrom(par1DamageSource, par2);
+    }
+
+    protected boolean hasValidEventLoot() {
+        return this.isValidForEventLoot;
     }
 
     @Override

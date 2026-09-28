@@ -39,7 +39,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "continueExecuting", at = @At("HEAD"))
     private void manageRunningAway(CallbackInfoReturnable<Boolean> cir){
-        if(NMUtils.getIsMobEclipsed(this.entityOwner) && this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType())){
+        if(NMUtils.getIsMobEclipsed(this.entityOwner) && this.entityAttackTarget instanceof EntityPlayer player && this.entityOwner.getEntitySenses().canSee(player) && typesThatShouldRun.contains(((EntitySkeleton)this.entityOwner).getSkeletonType().id())){
             double distToPlayer = this.entityOwner.getDistanceSqToEntity(player);
             int range = this.isExecuting ? 144 : 36;
 
@@ -61,9 +61,7 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
                 }
                 double x = (this.entityOwner.posX - player.posX)/2 + this.entityOwner.posX;
                 double z = (this.entityOwner.posZ - player.posZ)/2 + this.entityOwner.posZ;
-                for (int y = -3; y <= 3; y++) {
-                    this.entityOwner.getMoveHelper().setMoveTo(x,this.entityOwner.posY + y, z,this.entityMoveSpeed + 0.45);
-                }
+                this.entityOwner.getMoveHelper().setMoveTo(x, this.entityOwner.posY, z, this.entityMoveSpeed + 0.45);
                 if (this.attackCooldownCounter <= 4) {
                     this.entityOwner.faceEntity(player,100f,100f);
                 }

@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.List;
 
-
 public class EntityPollenCloud extends EntityLivingBase implements EntityWithCustomPacket {
 
     private int lifeTimer = 200;
@@ -51,8 +50,7 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.motionX = this.motionY = this.motionZ = 0.0D; // never moves
-
+        this.motionX = this.motionY = this.motionZ = 0.0D;
 
         if (--this.lifeTimer <= 0) {
             this.setDead();
@@ -79,16 +77,10 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
         super.onEntityUpdate();
     }
 
-    /**
-     * Beautiful floral pollen effect:
-     * • happyVillager = bright green/yellow sparkles (perfect pollen look)
-     * • reddust = subtle poison-green tint on some particles
-     */
     private void spawnPollenParticles() {
-        int amountOfParticles = MathHelper.floor_double(4.6d * radius); // 23 on 5 radius
+        int amountOfParticles = MathHelper.floor_double(4.6d * radius);
         for (int i = 0; i < amountOfParticles; i++) {
 
-            // generate a uniform random point inside a sphere
             double u = this.rand.nextDouble();
             double v = this.rand.nextDouble();
             double w = this.rand.nextDouble();
@@ -120,10 +112,6 @@ public class EntityPollenCloud extends EntityLivingBase implements EntityWithCus
         }
     }
 
-    /**
-     * Applies Poison II to everything inside the cloud every tick.
-     * Short duration + every-tick refresh = constant damage while inside.
-     */
     private void applyPoisonToNearby() {
         AxisAlignedBB box = this.boundingBox.expand(this.radius, this.radius * 0.7D, this.radius);
         List<EntityLivingBase> entities = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
