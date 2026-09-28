@@ -1,12 +1,16 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
+import btw.block.BTWBlocks;
 import btw.block.blocks.SawBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.Block;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityLivingBase;
+import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +30,14 @@ public class SawBlockMixin {
     @Redirect(method = "sawBlockToFront", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Block;onBlockSawed(Lnet/minecraft/src/World;IIIIII)Z"))
     private boolean polluteWhenSawingBlock(Block target, World world, int x, int y, int z, int sawX, int sawY, int sawZ) {
         boolean sawed = target.onBlockSawed(world, x, y, z, sawX, sawY, sawZ);
-        if (sawed) ChunkPollutionManager.pollute(world, sawX, sawY, sawZ, 6.0F);
+        if (sawed) {
+            ChunkPollutionManager.pollute(world, sawX, sawY, sawZ, 6.0F);
+            if (!world.isRemote && (target instanceof net.minecraft.src.BlockLog || target == BTWBlocks.bloodWoodLog)
+                    && world.rand.nextInt(4) == 0) {
+                world.spawnEntityInWorld(new EntityItem(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                        new ItemStack(NMItems.rawSap)));
+            }
+        }
         return sawed;
     }
 

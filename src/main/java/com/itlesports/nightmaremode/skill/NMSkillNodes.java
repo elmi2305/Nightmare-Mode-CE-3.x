@@ -3720,6 +3720,26 @@ public final class NMSkillNodes {
             "1% lower enchanting cost.", SkillRewardActions.addEnchantCostReduction(0.01F),
             RITUAL, false, BRING_ENDER_MECHANISM_4);
 
+    public static final SkillNode BRING_XP_LEVEL_1 = bringExperience(
+            "xp_offering_1", "First Offering", -2, -4, 1,
+            "+10% experience gained.", SkillRewardActions.addXpGain(0.1F), BRING_CLAY_BALL_32);
+
+    public static final SkillNode BRING_XP_LEVEL_3 = bringExperience(
+            "xp_offering_3", "Studied Offering", -1, -4, 3,
+            "Food spoils 20% slower.", SkillRewardActions.multiplyFoodSpoilageRate(0.8F), BRING_XP_LEVEL_1);
+
+    public static final SkillNode BRING_XP_LEVEL_10 = bringExperience(
+            "xp_offering_10", "Practiced Offering", 0, -4, 10,
+            "+10% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.1F), BRING_XP_LEVEL_3, BRING_BOOK);
+
+    public static final SkillNode BRING_XP_LEVEL_30 = bringExperience(
+            "xp_offering_30", "Master's Offering", 1, -4, 30,
+            "+30% experience gained.", SkillRewardActions.addXpGain(0.3F), BRING_XP_LEVEL_10, REACH_XP_LEVEL_30);
+
+    public static final SkillNode BRING_XP_LEVEL_60 = bringExperience(
+            "xp_offering_60", "Transcendent Offering", 2, -4, 60,
+            "+20% machine processing speed.", SkillRewardActions.addMachineSpeed(0.2F), BRING_XP_LEVEL_30, REMOVE_WEED_500);
+
     private NMSkillNodes() {
     }
 
@@ -4019,6 +4039,16 @@ public final class NMSkillNodes {
         step.reward(rewardText, reward);
         if (worldReward) step.worldReward();
         return step.build().register(branch);
+    }
+
+    private static SkillNode bringExperience(String id, String name, int x, int y, int levels,
+                                             String rewardText, SkillUnlockAction reward, SkillNode... parents) {
+        return getBuilder().id(loc(id)).name(name).icon(Item.expBottle).displayLocation(x, y)
+                .requirementText("Bring " + levels + " XP " + (levels == 1 ? "level." : "levels."))
+                .triggerCondition((player, world) -> player.experienceLevel >= levels)
+                .parents(parents)
+                .onUnlockConsume((player, world) -> player.addExperienceLevel(-levels))
+                .reward(rewardText, reward).build().register(KNOWLEDGE);
     }
 
     private static SkillNode specialBring(String id, String name, Object icon, int x, int y, String requirement,

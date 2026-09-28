@@ -7,6 +7,7 @@ import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.util.NMFoodSpoilage;
 import com.itlesports.nightmaremode.util.NMFireproofItems;
+import com.itlesports.nightmaremode.util.NMPlacedItemHelper;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
@@ -74,6 +75,13 @@ public class ItemMixin {
         if ((Object)this == NMItems.skillBook) {
             tooltip.add(EnumChatFormatting.DARK_AQUA + "Soulbound");
         }
+    }
+
+    @Inject(method = "onItemUse", at = @At("HEAD"), cancellable = true)
+    private void placeSmallItems(ItemStack stack, EntityPlayer player, World world,
+                                 int x, int y, int z, int side, float hitX, float hitY, float hitZ,
+                                 CallbackInfoReturnable<Boolean> cir) {
+        if (NMPlacedItemHelper.place(stack, player, world, x, y, z, side)) cir.setReturnValue(true);
     }
 
     @Inject(method = "onItemUse", at = @At("HEAD"), cancellable = true)

@@ -50,15 +50,15 @@ public class ItemScythe extends SwordItem {
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int i, int j, int k, int iFacing, float fClickX, float fClickY, float fClickZ) {
-        return false;
+        return super.onItemUse(stack, player, world, i, j, k, iFacing, fClickX, fClickY, fClickZ);
     }
 
     protected boolean canToolStickInBlock(ItemStack stack, Block block, World world, int i, int j, int k) {
-        return false;
+        return block.areShovelsEffectiveOn();
     }
 
     protected boolean getCanBePlacedAsBlock() {
-        return false;
+        return true;
     }
 
 }

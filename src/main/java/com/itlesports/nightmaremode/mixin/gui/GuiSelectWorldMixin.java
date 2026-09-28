@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.*;
@@ -98,13 +97,9 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
         }
         return bd.doubleValue();
     }
-    @Redirect(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiSelectWorld;loadSaves()V"))
-    private void loadSavesImproved (GuiSelectWorld instance) throws AnvilConverterException {
+    @Inject(method = "loadSaves", at = @At("TAIL"))
+    private void sortLoadedSaves(CallbackInfo ci) {
         loadFavoritedWorlds();
-
-        ISaveFormat var1 = this.mc.getSaveLoader();
-        this.saveList = var1.getSaveList();
-        // pretty much how the vanilla one does it, just sorts favorited ones first
         this.saveList.sort((Comparator<SaveFormatComparator>) (a, b) -> {
             boolean aFav = favoritedWorlds.contains(a.getFileName());
             boolean bFav = favoritedWorlds.contains(b.getFileName());
@@ -116,10 +111,9 @@ public abstract class GuiSelectWorldMixin extends GuiScreen implements GuiSelect
                 return 1;
             }
 
-            return a.compareTo(b);
+            int recency = Long.compare(b.getLastTimePlayed(), a.getLastTimePlayed());
+            return recency != 0 ? recency : a.getFileName().compareTo(b.getFileName());
         });
-
-        this.selectedWorld = -1;
     }
     @Inject(method = "drawScreen", at = @At("HEAD"))
     private void trackMousePos(int par1, int par2, float par3, CallbackInfo ci){

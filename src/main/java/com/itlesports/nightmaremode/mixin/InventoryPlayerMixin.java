@@ -41,13 +41,24 @@ public class InventoryPlayerMixin {
 
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
     private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {
-        if (NMUtils.getWorldProgress() != PREHARDMODE) {
-            return;
+        if (NMUtils.getWorldProgress() == PREHARDMODE) {
+            this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
+            this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
+        } else {
+            this.nightmareMode$dropItemsExceptSkillBook(this.mainInventory);
+            this.nightmareMode$dropItemsExceptSkillBook(this.armorInventory);
         }
-
-        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
-        this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
         ci.cancel();
+    }
+
+    @Unique
+    private void nightmareMode$dropItemsExceptSkillBook(ItemStack[] inventory) {
+        for (int slot = 0; slot < inventory.length; ++slot) {
+            ItemStack stack = inventory[slot];
+            if (stack == null || stack.itemID == NMItems.skillBook.itemID) continue;
+            this.player.dropPlayerItemWithRandomChoice(stack, true);
+            inventory[slot] = null;
+        }
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

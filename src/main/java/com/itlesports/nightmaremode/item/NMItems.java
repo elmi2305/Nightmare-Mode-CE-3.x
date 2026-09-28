@@ -208,6 +208,7 @@ public class NMItems {
     public static Item crudeString;
     public static NMProgressiveItem crudeStringCrafting;
     public static Item primitiveGlue;
+    public static Item rawSap;
     public static Item spiderSilk;
     public static NMProgressiveItem stringCrafting;
     public static NMProgressiveItem woodCupCrafting;
@@ -684,6 +685,7 @@ public class NMItems {
         crudeString = new NMItem(2686).setTextureName("nightmare:ifhyCrudeString").setUnlocalizedName("ifhyCrudeString").setCreativeTab(CreativeTabs.tabMaterials);
         crudeStringCrafting = (NMProgressiveItem) new NMProgressiveItem(2687, crudeString.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyCrudeStringCrafting").setUnlocalizedName("ifhyCrudeStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
         primitiveGlue = new NMItem(2688).setTextureName("nightmare:ifhyPrimitiveGlue").setUnlocalizedName("ifhyPrimitiveGlue").setCreativeTab(CreativeTabs.tabMaterials);
+        rawSap = new NMItem(3464).setTextureName("nightmare:ifhyRawSap").setUnlocalizedName("ifhyRawSap").setCreativeTab(CreativeTabs.tabMaterials);
         spiderSilk = new NMItem(2689).setTextureName("nightmare:ifhySpiderSilk").setUnlocalizedName("ifhySpiderSilk").setCreativeTab(CreativeTabs.tabMaterials);
         stringCrafting = (NMProgressiveItem) new NMProgressiveItem(2690, Item.silk.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyStringCrafting").setUnlocalizedName("ifhyStringCrafting").setCreativeTab(CreativeTabs.tabMaterials);
         woodCupCrafting = (NMProgressiveItem) new NMProgressiveItem(2691, woodCup.itemID).setTargetDurability(100).setTextureName("nightmare:ifhyWoodCup").setUnlocalizedName("ifhyWoodCupCrafting").setCreativeTab(CreativeTabs.tabMaterials);

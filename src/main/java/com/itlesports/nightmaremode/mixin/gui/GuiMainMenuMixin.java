@@ -373,7 +373,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
                     boolean aFavorite = browserFavorites.contains(a.getFileName());
                     boolean bFavorite = browserFavorites.contains(b.getFileName());
                     if (aFavorite != bFavorite) return aFavorite ? -1 : 1;
-                    return a.compareTo(b);
+                    int recency = Long.compare(b.getLastTimePlayed(), a.getLastTimePlayed());
+                    return recency != 0 ? recency : a.getFileName().compareTo(b.getFileName());
                 }
             });
         } catch (Throwable ignored) { }

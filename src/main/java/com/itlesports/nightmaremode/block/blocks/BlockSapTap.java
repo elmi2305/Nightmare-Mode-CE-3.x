@@ -78,6 +78,9 @@ public class BlockSapTap extends Block {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborBlockID) {
         if (!this.hasAttachedLog(world, x, y, z)) {
+            if (!world.isRemote) {
+                this.dropItemsIndividually(world, x, y, z, NMItems.rawSap.itemID, 1, 0, 1.0F);
+            }
             world.setBlockToAir(x, y, z);
         }
     }

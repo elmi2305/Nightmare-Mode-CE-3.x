@@ -1,9 +1,10 @@
 package com.itlesports.nightmaremode.item.items.template;
 
+import api.item.PlaceableAsItem;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
-public class NMToolItem extends ItemTool {
+public class NMToolItem extends ItemTool implements PlaceableAsItem {
     private final float strength;
 
     public NMToolItem(int id, EnumToolMaterial material, Block[] blocksEffectiveAgainst, int durability, float strMultiplier) {
@@ -35,4 +36,10 @@ public class NMToolItem extends ItemTool {
     public String getModId() {
         return NMFields.modID;
     }
+
+    @Override public float getVisualVerticalOffsetAsBlock() { return 0.75F; }
+    @Override public float getVisualHorizontalOffsetAsBlock() { return 0.5F; }
+    @Override public float getVisualRollOffsetAsBlock() { return 0.0F; }
+    @Override public float getBlockBoundingBoxHeight() { return 0.65F; }
+    @Override public float getBlockBoundingBoxWidth() { return 0.35F; }
 }

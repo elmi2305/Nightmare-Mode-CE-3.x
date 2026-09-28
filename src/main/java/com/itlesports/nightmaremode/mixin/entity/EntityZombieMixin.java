@@ -101,7 +101,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     }
 
 
-    @Unique public void onKilledBySun() {
+    @Unique public boolean onKilledBySun(DamageSource source) {
         if (!this.worldObj.isRemote) {
             final int SKULL_SLOT = 4;
 
@@ -155,9 +155,12 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
                 finalizeZombieSkeleton(skeleton);
                 this.worldObj.spawnEntityInWorld(skeleton);
+                dropZombieTransformationLoot(source);
                 this.setDead();
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -180,20 +183,22 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                                 !this.isInWater();
 
                 if (shouldBurn) {
-                    this.onKilledBySun();
+                    if (this.onKilledBySun(par1DamageSource)) {
+                        cir.setReturnValue(true);
+                    }
                 }
             } else if(NMUtils.getIsMobEclipsed(this) && !this.worldObj.isRemote && this.isValidForEventLoot){
                 summonSilverfish(this);
             } else if((par1DamageSource == DamageSource.drown || par1DamageSource == DamageSource.lava)
-                    && this.rand.nextInt(4) == 0){
-                this.transformToVariant(par1DamageSource == DamageSource.lava);
+                    && !this.worldObj.isRemote && this.rand.nextInt(4) == 0){
+                this.transformToVariant(par1DamageSource);
                 cir.setReturnValue(true);
             }
         }
     }
-    @Unique private void transformToVariant(boolean wasFireDamage){
+    @Unique private void transformToVariant(DamageSource source){
         EntitySkeleton skeleton;
-        if (wasFireDamage) {
+        if (source == DamageSource.lava) {
             skeleton = new EntitySkeletonMelted(this.worldObj);
             for (int i = 0; i < 10; i++) {
                 double offsetX = (this.rand.nextDouble() - 0.5D) * 2.5D;
@@ -208,7 +213,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
         ((ZombieSkeletonExt) skeleton).nm$setZombieRemains(true);
         skeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-        copyZombieEquipment(skeleton, false);
+        copyZombieEquipment(skeleton, true);
         finalizeZombieSkeleton(skeleton);
         skeleton.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30d);
 
@@ -219,7 +224,28 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         if (!this.worldObj.isRemote) {
             this.worldObj.spawnEntityInWorld(skeleton);
         }
+        dropZombieTransformationLoot(source);
         this.setDead();
+    }
+
+    @Unique private void dropZombieTransformationLoot(DamageSource source) {
+        if (this.worldObj.isRemote) return;
+        if (source.getEntity() instanceof EntityPlayer player) {
+            this.attackingPlayer = player;
+            this.recentlyHit = 100;
+        }
+        int experience = !this.isChild() ? this.getExperiencePoints(this.attackingPlayer) : 0;
+        this.entityLivingOnDeath(source);
+        if (experience <= 0) return;
+        if (this.recentlyHit > 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
+            while (experience > 0) {
+                int split = EntityXPOrb.getXPSplit(experience);
+                this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, split));
+                experience -= split;
+            }
+        } else {
+            this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, experience, true));
+        }
     }
 
     @Unique private void copyZombieEquipment(EntitySkeleton skeleton, boolean suppressDrops) {
@@ -228,7 +254,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             if (i == 0 && equipment != null && equipment.itemID == Item.bow.itemID) {
                 equipment = null;
             }
-            skeleton.setCurrentItemOrArmor(i, equipment);
+            skeleton.setCurrentItemOrArmor(i, equipment == null ? null : equipment.copy());
             skeleton.setEquipmentDropChance(i, suppressDrops ? -1f : this.equipmentDropChances[i]);
         }
     }

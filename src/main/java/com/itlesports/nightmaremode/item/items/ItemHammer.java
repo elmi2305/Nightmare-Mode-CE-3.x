@@ -33,6 +33,13 @@ public class ItemHammer extends ToolItem {
     }
 
     @Override
+    public boolean canToolStickInBlock(ItemStack stack, Block block, World world, int x, int y, int z) {
+        return this.toolMaterial == EnumToolMaterial.WOOD
+                ? block.areAxesEffectiveOn() || block.blockMaterial == Material.rock
+                : block.blockMaterial == Material.rock;
+    }
+
+    @Override
     public String getModId() {
         return NMFields.modID;
     }

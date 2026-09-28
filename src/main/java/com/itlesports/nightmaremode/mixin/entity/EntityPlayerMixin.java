@@ -183,7 +183,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "addExperience", at = @At("HEAD"), cancellable = true)
     private void gateExperienceGain(int amount, CallbackInfo ci) {
-        if (amount > 0 && !this.nightmareMode$getSkillData().canGainExperience) {
+        if (amount > 0 && (!this.nightmareMode$getSkillData().canGainExperience
+                || this.experienceLevel >= 30 && !this.nightmareMode$getSkillData().canExceedXpLevelThirty)) {
             ci.cancel();
         }
     }
@@ -198,7 +199,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "addExperience", at = @At("TAIL"))
     private void capExperienceAtThirty(int amount, CallbackInfo ci) {
-        if (amount > 0 && !this.nightmareMode$getSkillData().canExceedXpLevelThirty && this.experienceLevel > 30) {
+        if (amount > 0 && !this.nightmareMode$getSkillData().canExceedXpLevelThirty && this.experienceLevel >= 30) {
             this.experienceLevel = 30;
             this.experience = 0.0F;
         }

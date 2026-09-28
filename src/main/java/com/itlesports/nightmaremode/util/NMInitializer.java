@@ -1583,9 +1583,18 @@ public abstract class NMInitializer implements AchievementExt {
 
         killCauldronRecipe(BTWItems.nethercoal); // added to cistern
 
+        cauldron.addRecipe(new ItemStack(NMItems.thickenedSap), new TagOrStack[]{
+                new ItemStack(NMItems.cupOfSap)
+        });
+
 
 
         removeLegacyGlueRecipes(cauldronStoked);
+
+        TagOrStack[] logPotashInput = {TagInstance.of(BTWTags.logs, 1)};
+        cauldronStoked.removeRecipe(new ItemStack(BTWItems.potash), logPotashInput);
+        cauldronStoked.addRecipe(new ItemStack[]{new ItemStack(BTWItems.potash),
+                new ItemStack(NMItems.rawSap)}, logPotashInput);
 
         int[] barkCounts = {8, 5, 3, 2};
         Tag[] barkTags = {
@@ -1649,6 +1658,17 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCisternRecipes(){
         CisternRecipeManager manager = CisternRecipeManager.instance;
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.rawSap), new ItemStack(BTWItems.coalDust)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 100,
+                new ItemStack[]{new ItemStack(NMItems.primitiveGlue, 2)}));
+
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(Item.coal), new ItemStack(BTWItems.hellfireDust, 2),
+                        new ItemStack(BTWItems.brimstone)},
+                CisternTileEntity.FLUID_LAVA, 1, 4, 360,
+                new ItemStack[]{new ItemStack(BTWItems.nethercoal, 2)}));
 
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.GRAVITITE_INGOT,16),late(ItemLateGameMaterial.SHADOW_DUST,64),late(ItemLateGameMaterial.ENDER_BONE,48),late(ItemLateGameMaterial.VERTEBRAE,32),late(ItemLateGameMaterial.BLACKWIDOW_GLAND,32),late(ItemLateGameMaterial.DEADZONE_TEAR,24),late(ItemLateGameMaterial.VOID_POWDER,48),late(ItemLateGameMaterial.DISPLACED_PEARL,24)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.DEADZONE_ESSENCE,1)}).setConsumesFluid());
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.SOLAR_QUARTZ_INGOT,16),late(ItemLateGameMaterial.CHARRED_STRING,64),late(ItemLateGameMaterial.CINDER_BONE,48),late(ItemLateGameMaterial.DESICCATED_FLESH,64),new ItemStack(NMItems.darksunFragment,16)},CisternTileEntity.FLUID_LAVA,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.SOLAR_ESSENCE,1)}).setConsumesFluid());
@@ -2647,7 +2667,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMItems.stoneStick, 4), new Object[]{
                         "C", "C", Character.valueOf('C'), BTWTags.looseCobblestones}),
-                NMSkillNodes.MINE_STONE_1000, NMSkillNodes.BRING_LOOSE_STONE_64);
+                NMSkillNodes.MINE_BLOCK_1000, NMSkillNodes.BRING_LOOSE_STONE_64);
 
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMItems.ironStick, 8), new Object[]{
@@ -2880,6 +2900,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.shovelStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks});
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.scrapedBark), new Object[]{BTWTags.barks, new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.cupOfSap), new Object[]{NMItems.rawSap, NMItems.woodCup});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.crudeStringCrafting, 1, NMItems.crudeStringCrafting.getMaxDamage() - 1), new Object[]{NMItems.driedPlantFiber,NMItems.driedPlantFiber,NMItems.driedPlantFiber, BTWTags.flowers});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
         IRecipe mashRecipe = RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mash), new Object[]{BTWItems.redMushroom, NMItems.grassSeeds, NMItems.grassSeeds});

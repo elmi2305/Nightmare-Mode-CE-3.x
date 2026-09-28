@@ -8,6 +8,9 @@ import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.SharedMonsterAttributes;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.World;
+import com.itlesports.nightmaremode.util.NMPlacedItemHelper;
 import com.itlesports.nightmaremode.util.interfaces.NoMeleeKnockback;
 
 public class ItemKnife extends NMItem implements NoMeleeKnockback {
@@ -40,6 +43,18 @@ public class ItemKnife extends NMItem implements NoMeleeKnockback {
     public ItemKnife setDamageVsEntity(float damageVsEntity) {
         this.damageVsEntity = damageVsEntity - 1;
         return this;
+    }
+
+    @Override public float getVisualVerticalOffsetAsBlock() { return 0.75F; }
+    @Override public float getVisualRollOffsetAsBlock() { return 0.0F; }
+    @Override public float getBlockBoundingBoxHeight() { return 0.65F; }
+    @Override public float getBlockBoundingBoxWidth() { return 0.35F; }
+
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+                             int side, float hitX, float hitY, float hitZ) {
+        if (NMPlacedItemHelper.place(stack, player, world, x, y, z, side)) return true;
+        return super.onItemUse(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 
     @Override

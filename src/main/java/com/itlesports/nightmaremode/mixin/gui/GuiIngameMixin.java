@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
+import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -56,6 +58,32 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
     @Unique private int amountRendered = 0;
+
+    @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V", ordinal = 5))
+    private void tintLockedExperienceBarBackground(GuiIngame gui, int x, int y, int u, int v, int width, int height) {
+        this.nightmareMode$drawExperienceBar(gui, x, y, u, v, width, height);
+    }
+
+    @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V", ordinal = 6))
+    private void tintLockedExperienceBarFill(GuiIngame gui, int x, int y, int u, int v, int width, int height) {
+        this.nightmareMode$drawExperienceBar(gui, x, y, u, v, width, height);
+    }
+
+    @Unique private void nightmareMode$drawExperienceBar(GuiIngame gui, int x, int y, int u, int v, int width, int height) {
+        boolean xpBar = u == 0 && (v == 64 || v == 69) && height == 5;
+        if (xpBar && this.mc.thePlayer != null) {
+            SkillTreeData skills = SkillHandler.getPlayerData(this.mc.thePlayer);
+            if (!skills.canGainExperience || this.mc.thePlayer.experienceLevel >= 30 && !skills.canExceedXpLevelThirty) {
+                GL11.glColor4f(1.0F, 0.28F, 0.28F, 1.0F);
+                gui.drawTexturedModalRect(x, y, u, v, width, height);
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                return;
+            }
+        }
+        gui.drawTexturedModalRect(x, y, u, v, width, height);
+    }
 
     @Inject(method = "renderGameOverlay", at = @At("RETURN"))
     private void renderCarcassHarvestProgress(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {

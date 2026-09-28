@@ -56,7 +56,12 @@ public class ItemLeafRake extends ToolItem implements NoMeleeKnockback {
 
     @Override
     public boolean getCanBePlacedAsBlock() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean canToolStickInBlock(ItemStack stack, Block block, World world, int x, int y, int z) {
+        return block.areShovelsEffectiveOn();
     }
 
     @Override

@@ -45,6 +45,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         }
     }
     @Shadow public MinecraftServer mcServer;
+    @Shadow public NetServerHandler playerNetServerHandler;
     @Shadow public abstract void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent);
 
     public EntityPlayerMPMixin(World par1World, String par2Str) {
@@ -75,6 +76,12 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         this.setData(NightmareMode.SKILL_TREE, progress);
         if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
             this.inventory.copyInventory(oldPlayer.inventory);
+        } else if (!playerLeavingTheEnd) {
+            for (ItemStack stack : oldPlayer.inventory.mainInventory) {
+                if (stack != null && stack.itemID == NMItems.skillBook.itemID) {
+                    this.inventory.addItemStackToInventory(stack.copy());
+                }
+            }
         }
     }
 
@@ -210,6 +217,16 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     @Inject(method = "onDeath", at = @At("TAIL"))
     private void clearFatigueOnDeath(DamageSource source, CallbackInfo ci) {
         this.setData(NightmareMode.FATIGUE, 0);
+    }
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void dropCursorStackOnDeath(DamageSource source, CallbackInfo ci) {
+        if (this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory")) return;
+        ItemStack cursorStack = this.inventory.getItemStack();
+        if (cursorStack == null) return;
+        this.inventory.setItemStack(null);
+        this.dropPlayerItem(cursorStack);
+        this.playerNetServerHandler.sendPacketToPlayer(new Packet103SetSlot(-1, -1, null));
     }
 
     @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityPlayerMP;addStat(Lnet/minecraft/src/StatBase;I)V", shift = At.Shift.AFTER))
