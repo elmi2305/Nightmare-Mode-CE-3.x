@@ -46,6 +46,7 @@ import java.util.function.Predicate;
 import static btw.achievement.BTWAchievements.*;
 import static com.itlesports.nightmaremode.achievements.NMAchievements.*;
 
+@SuppressWarnings({"deprecation", "CommentedOutCode"})
 public abstract class NMInitializer implements AchievementExt {
     private static void finishRecipes(String type){System.out.println("Finished initializing: [" + type + "]");}
 
