@@ -13,18 +13,24 @@ import java.io.DataOutputStream;
 import static com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore.BLOB_SPAWN_HEIGHT;
 import static com.itlesports.nightmaremode.util.NMFields.UW_PORTAL_DURATION;
 
+/**
+ * Used as the tracker entity for TileEntityPortalCore
+ */
 public class EntityRitualPortal extends EntityLiving implements EntityWithCustomPacket {
 
     private TileEntityPortalCore altar;
 
+    // animation stuff
     public float rotationAngle = 0f;
     public float poleExtension = 0f;
     public float pulseScale = 1.0f;
     private int animationTimer = 0;
 
+    // cached altar position for client side rendering fallback
     private int cachedAltarX = 0;
     private int cachedAltarY = 0;
     private int cachedAltarZ = 0;
+
 
     public EntityRitualPortal(World world) {
         super(world);
@@ -75,7 +81,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
                 altar = (TileEntityPortalCore) te;
                 System.out.println("[RitualPortal] Deferred altar relink successful");
             } else {
-                System.out.println("[RitualPortal] No portal core at cached position - dying");
+                System.out.println("[RitualPortal] No portal core at cached position — dying");
                 setDead();
             }
         }
@@ -90,6 +96,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
 
         super.onEntityUpdate();
 
+        // update entity size based on ritual progress
         float growthScale = getGrowthScale();
         float newSize = 1.5f * growthScale * 4;
         if (this.width != newSize || this.height != newSize) {
@@ -100,6 +107,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         motionY = 0;
         motionZ = 0;
 
+        // animation
         animationTimer++;
         float volatility = getVolatility();
         float anger = getAngerLevel();
@@ -107,6 +115,10 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         rotationAngle = (rotationAngle + 2.0f * volatility) % 360f;
         poleExtension = (float) (Math.sin(animationTimer * 0.06 * volatility)) * 0.5f + 0.5f;
         pulseScale = (1.0f + getGrowthScale()) * (1.0f + (float) (Math.sin(animationTimer * 0.09 * volatility)) * 0.08f);
+
+        // positional wobble more erratic as ritual progresses
+        // adjust y position to account for models rotationpoint offsets
+        // model renders with core at 4 and socket at 2 so visual center is around 1
 
         double yOffset = BLOB_SPAWN_HEIGHT;
 
@@ -123,7 +135,7 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
             );
         } else if (cachedAltarX != 0 || cachedAltarY != 0 || cachedAltarZ != 0) {
             System.out.println("using cached altar");
-
+            // fallback use cached altar position for client side wobble
             float wobbleAmount = 0.02f + anger * 0.08f;
             double wobbleX = Math.sin(animationTimer * 0.05 * volatility) * wobbleAmount;
             double wobbleY = Math.cos(animationTimer * 0.07 * volatility) * wobbleAmount * 0.5f;
@@ -136,15 +148,18 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
             );
         }
 
+        // verify the altar core still exists
         if (!worldObj.isRemote && ticksExisted % 40 == 0) {
             if (!altarCoreExists()) {
-
+//                System.out.println("[RitualPortal] Altar core no longer exists - killing entity");
                 setDead();
             } else {
-
+//                System.out.println("[RitualPortal] Altar core still exists - entity alive");
             }
         }
     }
+
+
 
     private boolean altarCoreExists() {
         if (altar == null || altar.isInvalid()) {
@@ -162,6 +177,8 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         return exists;
     }
 
+
+
     @Override
     public void writeEntityToNBT(NBTTagCompound tag) {
         super.writeEntityToNBT(tag);
@@ -172,13 +189,14 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
             tag.setInteger("AltarZ", altar.zCoord);
             System.out.println("[RitualPortal] writing nbt altar " + altar.xCoord + "," + altar.yCoord + "," + altar.zCoord + ", animtick " + animationTimer);
         } else {
-
+            // write cached position as fallback
             tag.setInteger("AltarX", cachedAltarX);
             tag.setInteger("AltarY", cachedAltarY);
             tag.setInteger("AltarZ", cachedAltarZ);
         }
         tag.setInteger("AnimTick", animationTimer);
     }
+
 
     private boolean needsAltarLookup = false;
 
@@ -189,8 +207,9 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
         cachedAltarY = tag.getInteger("AltarY");
         cachedAltarZ = tag.getInteger("AltarZ");
         animationTimer = tag.getInteger("AnimTick");
-        needsAltarLookup = true;
+        needsAltarLookup = true; // defer - world is not fully ready yet
     }
+
 
     public int getAltarX() { return altar != null ? altar.xCoord : cachedAltarX; }
     public int getAltarY() { return altar != null ? altar.yCoord : cachedAltarY; }
@@ -244,56 +263,70 @@ public class EntityRitualPortal extends EntityLiving implements EntityWithCustom
     @Override
     public boolean shouldServerTreatAsOversized() {return false;}
 
+    // ritual progression
+
+    /** 0 to 1 progress through the ritual 0 calm start 1 maximum rage */
     public float getRitualProgress() {
         boolean client = this.worldObj.isRemote;
 
+        // try to get progress from altar if available server side or client with reference
         if (altar != null && altar.isActive()) {
             return altar.getRitualProgress();
         }
 
+        // fallback - use entity lifetime as proxy for ritual progress
+        // this works on both client and server when altar reference is unavailable
         if (!isRitualActive()) {
-            return 1.0f;
+            return 1.0f; // completed ritual
         }
         float progress = (float) ticksExisted / UW_PORTAL_DURATION;
-
+//        return progress;
         return Math.min(progress, 1.0f);
     }
 
+    /** returns the anger from 0.0f to 1.331f */
     public float getAngerLevel() {
         float progress = getRitualProgress() * 1.1f;
         return progress * progress * progress;
     }
 
+    /** base scale multiplier based on ritual progress grows from 1.0 to 2.5x */
     public float getGrowthScale() {
         return 1.0f + getAngerLevel() * 2.5f;
     }
 
+    /** movement volatility multiplier */
     public float getVolatility() {
         return 1.0f + getAngerLevel() * 1.2f;
     }
 
+    /** tendril extension multiplier */
     public float getTendrilExtension() {
         return 1.0f + getAngerLevel() * 2.0f;
     }
 
+    /** whether the blob should lunge at nearby players - visual only */
     public boolean shouldLunge() {
-
+        // TODO implement better and test
         return getAngerLevel() > 0.6f;
     }
 
+    /** lunge intensity based on anger 0 to 1 */
     public float getLungeIntensity() {
         if (!shouldLunge()) return 0f;
         return (getAngerLevel() - 0.6f) / 0.4f;
     }
 
+    /** check if ritual is active based on entity lifetime fallback for client */
     private boolean isRitualActive() {
         if (altar != null) {
             return altar.isActive();
         }
-
+        // fallback assume active if entity is young enough to be in ritual duration
         return ticksExisted < UW_PORTAL_DURATION;
     }
 
+    /** get debug info for troubleshooting client side issues */
     public String getDebugInfo() {
         return String.format("entity[id=%d, ticks=%d, altar=%s, cachedpos=(%d,%d,%d), progress=%.2f, anger=%.2f]",
             entityId, ticksExisted,
