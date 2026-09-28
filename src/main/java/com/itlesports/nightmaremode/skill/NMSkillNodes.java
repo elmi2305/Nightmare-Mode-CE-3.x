@@ -2022,7 +2022,7 @@ public final class NMSkillNodes {
             3, 0,
             "Reach 30 XP levels.",
             (p, w) -> p.experienceLevel >= 30,
-            "Permanently unlock the third inventory row.", SkillRewardActions.unlockThirdInventoryRow(),
+            "Permanently unlock the third inventory row. Reduce item loss on death to 50%.", combine(SkillRewardActions.unlockThirdInventoryRow(), SkillRewardActions.setDeathItemLossChance(0.50F)),
             KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_BOOK);
 

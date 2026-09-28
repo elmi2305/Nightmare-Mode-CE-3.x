@@ -60,7 +60,10 @@ public class BlockTallGrassMixin extends BlockFlower {
         if (!world.isRemote && (guaranteed || world.rand.nextFloat() <= 0.08F + bonus)) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
         }
-        if (!world.isRemote && world.rand.nextInt(16) == 0) {
+        boolean scythe = player != null && player.getCurrentEquippedItem() != null
+                && player.getCurrentEquippedItem().getItem() instanceof ItemScythe;
+        float seedChance = Math.min(0.25F, 1.0F / 16.0F + bonus * 0.25F + (scythe ? 0.10F : 0.0F));
+        if (!world.isRemote && world.rand.nextFloat() < seedChance) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.grassSeeds));
         }
     }

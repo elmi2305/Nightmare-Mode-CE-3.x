@@ -1156,8 +1156,8 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.bandage,2), new Object[]{BTWItems.wickerPane, new ItemStack(BTWItems.wool, 1, Short.MAX_VALUE), new ItemStack(BTWItems.wool, 1, Short.MAX_VALUE), Item.silk});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.bandage,2), new Object[]{new ItemStack(BTWItems.woolKnit, 1, Short.MAX_VALUE), new ItemStack(BTWItems.wool, 1, Short.MAX_VALUE), new ItemStack(BTWItems.wool, 1, Short.MAX_VALUE), Item.silk});
 
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.steelBunch,1), new Object[]{new ItemStack(BTWItems.steelNugget),new ItemStack(BTWItems.steelNugget),new ItemStack(BTWItems.steelNugget,4),new ItemStack(BTWItems.steelNugget)});
-        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.steelNugget, 4), new Object[]{new ItemStack(NMItems.steelBunch)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.steelBunch,1), new Object[]{new ItemStack(BTWItems.steelNugget), new ItemStack(BTWItems.steelNugget),new ItemStack(BTWItems.steelNugget),new ItemStack(BTWItems.steelNugget)});
+        RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.steelNugget, 8), new Object[]{new ItemStack(NMItems.steelBunch)});
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.magicArrow, 4), new Object[]{new ItemStack(NMItems.magicFeather), new ItemStack(Item.stick), new ItemStack(BTWItems.soulFlux), new ItemStack(BTWItems.broadheadArrowHead)});
         // done adding misc recipes

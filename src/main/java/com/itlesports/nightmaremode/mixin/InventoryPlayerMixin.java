@@ -288,7 +288,8 @@ public class InventoryPlayerMixin {
                 continue;
             }
             boolean willBeLocked = checkLocks && !NMInventoryLocks.isMainInventorySlotUnlockedAfterDeath(this.player, slot);
-            if (!willBeLocked && this.player.worldObj.rand.nextFloat() >= 0.75F) continue;
+            float lossChance = Math.max(0.0F, Math.min(1.0F, SkillHandler.getPlayerData(this.player).deathItemLossChance));
+            if (!willBeLocked && this.player.worldObj.rand.nextFloat() >= lossChance) continue;
             this.player.dropPlayerItemWithRandomChoice(stack, true);
             inventory[slot] = null;
         }

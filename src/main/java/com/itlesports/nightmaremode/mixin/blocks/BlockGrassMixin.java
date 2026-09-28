@@ -8,6 +8,8 @@ import net.minecraft.src.BlockGrass;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.EntityPlayer;
+import com.itlesports.nightmaremode.item.items.ItemScythe;
 import com.itlesports.nightmaremode.item.NMItems;
 import java.util.Random;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
@@ -26,6 +28,13 @@ public class BlockGrassMixin extends Block {
 
     protected BlockGrassMixin(int par1, Material par2Material) {
         super(par1, par2Material);
+    }
+
+    @Override
+    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int x, int y, int z) {
+        ItemStack held = player.getCurrentEquippedItem();
+        if (held != null && held.getItem() instanceof ItemScythe) return 10.0F;
+        return super.getPlayerRelativeBlockHardness(player, world, x, y, z);
     }
 
     @Override

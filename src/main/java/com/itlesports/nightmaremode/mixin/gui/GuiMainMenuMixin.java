@@ -43,6 +43,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private int worldCardBottom;
     @Unique private JourneyBrowserMode browserMode = JourneyBrowserMode.NONE;
     @Unique private final List<SaveFormatComparator> browserWorlds = new ArrayList<SaveFormatComparator>();
+    @Unique private boolean browserNeedsInitialRefresh;
     @Unique private ServerList browserServers;
     @Unique private final Set<String> browserFavorites = new HashSet<String>();
     @Unique private int browserSelected = -1;
@@ -308,6 +309,10 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "drawScreen", at = @At("HEAD"), cancellable = true)
     private void journeyMode$drawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         ci.cancel();
+        if (this.browserNeedsInitialRefresh && this.browserMode == JourneyBrowserMode.WORLDS) {
+            this.browserNeedsInitialRefresh = false;
+            refreshWorldBrowser();
+        }
         updateBrowserScroll();
         this.renderSkybox(mouseX, mouseY, partialTicks);
         JourneyTitleTheme theme = this.titleTheme == null ? JourneyTitleTheme.getActive(this.mc) : this.titleTheme;
@@ -346,7 +351,10 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.browserScroll = 0.0F;
         this.browserScrollVelocity = 0.0F;
         this.browserLastScrollUpdate = Minecraft.getSystemTime();
-        if (mode == JourneyBrowserMode.WORLDS) refreshWorldBrowser(); else refreshServerBrowser();
+        if (mode == JourneyBrowserMode.WORLDS) {
+            refreshWorldBrowser();
+            this.browserNeedsInitialRefresh = true;
+        } else refreshServerBrowser();
         rebuildJourneyLayout();
     }
 
@@ -355,6 +363,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.browserSearchField = null;
         this.browserSearchText = "";
         this.browserMode = JourneyBrowserMode.NONE;
+        this.browserNeedsInitialRefresh = false;
         this.browserSelected = -1;
         this.browserScroll = 0.0F;
         this.browserScrollVelocity = 0.0F;
