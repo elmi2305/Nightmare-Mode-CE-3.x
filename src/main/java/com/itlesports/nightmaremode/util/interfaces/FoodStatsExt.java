@@ -5,4 +5,5 @@ import net.minecraft.src.EntityPlayer;
 public interface FoodStatsExt {
     int nightmareMode$getMaxFoodLevel();
     void nightmareMode$setMaxFoodLevel(int foodLevel);
+    void nightmareMode$reduceExhaustion(float amount);
 }

@@ -41,6 +41,7 @@ public class InventoryPlayerMixin {
 
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
     private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {
+        NMInventoryLocks.dropLockedItems(this.player, true);
         if (NMUtils.getWorldProgress() == PREHARDMODE) {
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);

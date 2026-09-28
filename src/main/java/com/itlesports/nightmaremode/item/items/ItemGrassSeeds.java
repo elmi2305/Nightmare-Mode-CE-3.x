@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemFood;
 import net.minecraft.src.ItemStack;
@@ -14,7 +15,7 @@ public class ItemGrassSeeds extends ItemFood {
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
         ItemStack result = super.onEaten(stack, world, player);
-        player.getFoodStats().addExhaustion(-0.5F);
+        ((FoodStatsExt)player.getFoodStats()).nightmareMode$reduceExhaustion(0.5F);
         return result;
     }
 }

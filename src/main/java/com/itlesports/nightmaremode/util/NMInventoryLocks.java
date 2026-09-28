@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.util;
 import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
+import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 
@@ -61,6 +62,24 @@ public final class NMInventoryLocks {
         if (slotIndex < 9) return slotIndex < Math.min(9, 1 + SkillHandler.getPlayerData(player).extraHotbarSlots);
         if (slotIndex < 36) return slotIndex - 9 < (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked ? 27 : 9);
         return true;
+    }
+
+    public static void dropLockedItems(EntityPlayer player, boolean afterDeath) {
+        if (player == null || player.worldObj == null || player.worldObj.isRemote || player.inventory == null) return;
+
+        boolean changed = false;
+        ItemStack[] inventory = player.inventory.mainInventory;
+        for (int slot = 0; slot < inventory.length; slot++) {
+            ItemStack stack = inventory[slot];
+            if (stack == null || (afterDeath
+                    ? isMainInventorySlotUnlockedAfterDeath(player, slot)
+                    : isMainInventorySlotUnlocked(player, slot))) continue;
+
+            inventory[slot] = null;
+            player.dropPlayerItemWithRandomChoice(stack, true);
+            changed = true;
+        }
+        if (changed) player.inventory.onInventoryChanged();
     }
 
     public static boolean isPlayerInventorySlotLocked(Slot slot, EntityPlayer player) {

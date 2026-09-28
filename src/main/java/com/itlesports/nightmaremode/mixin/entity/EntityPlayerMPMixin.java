@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.skill.SkillRewardActions;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.util.NetherRecall;
+import com.itlesports.nightmaremode.util.NMInventoryLocks;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
 import com.itlesports.nightmaremode.world.JourneyProfile;
@@ -34,6 +35,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void syncScaryEventsState(CallbackInfo ci) {
+        NMInventoryLocks.dropLockedItems(this, false);
         if (lastScaryEventsState == null || lastScaryEventsState != NightmareMode.scaryEvents) {
             com.itlesports.nightmaremode.network.ScaryEventNet.sendState((EntityPlayerMP)(Object)this);
             lastScaryEventsState = NightmareMode.scaryEvents;

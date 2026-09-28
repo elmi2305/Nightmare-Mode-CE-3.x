@@ -213,6 +213,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
     }
 
+    @Inject(method = "addExperienceLevel", at = @At("TAIL"))
+    private void nightmareMode$dropItemsInLockedSlotsAfterExperienceChange(int amount, CallbackInfo ci) {
+        if (amount < 0) NMInventoryLocks.dropLockedItems((EntityPlayer)(Object)this, false);
+    }
+
     @ModifyVariable(method = "attackTargetEntityWithCurrentItem", at = @At(value = "STORE"), ordinal = 0)
     private float applySkillMeleeDamage(float damage) {
         float setMultiplier = ArmorSetHelper.isWearingCompleteDeadzoneSet(this)

@@ -9,12 +9,14 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.FoodStats;
 import net.minecraft.src.NBTTagCompound;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FoodStats.class)
 public class FoodStatsMixin implements FoodStatsExt {
+    @Shadow private float foodExhaustionLevel;
     @Unique private int foodCapChanged = 60;
     @Unique private EntityPlayer player;
 
@@ -62,5 +64,10 @@ public class FoodStatsMixin implements FoodStatsExt {
     @Override
     public void nightmareMode$setMaxFoodLevel(int foodLevel) {
         this.foodCapChanged = foodLevel;
+    }
+
+    @Override
+    public void nightmareMode$reduceExhaustion(float amount) {
+        this.foodExhaustionLevel = Math.max(0.0F, this.foodExhaustionLevel - amount);
     }
 }
