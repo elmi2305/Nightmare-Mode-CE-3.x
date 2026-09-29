@@ -11,8 +11,8 @@ public class SkillHandler {
     private static final ThreadLocal<Boolean> APPLYING_ALL_SKILLS = new ThreadLocal<>();
 
     public static SkillTreeData getPlayerData(EntityPlayer player) {
-        SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
-        if (NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative
+        SkillTreeData data = SkillRewardReload.validatePlayer(player);
+        if (!SkillRewardReload.isReplaying() && NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative
                 && !Boolean.TRUE.equals(APPLYING_ALL_SKILLS.get())) {
             unlockAllSkills(player, data);
         }
@@ -20,7 +20,7 @@ public class SkillHandler {
     }
 
     public static WorldSkillData getWorldData(World world) {
-        return world.getData(NightmareMode.WORLD_SKILL_TREE);
+        return SkillRewardReload.validateWorld(world, false);
     }
 
     public static boolean isUnlocked(EntityPlayer player, SkillNode node) {
@@ -335,6 +335,21 @@ public class SkillHandler {
 
     public static boolean canHarvestDiamondOre(EntityPlayer player) {
         return player != null && getPlayerData(player).canHarvestDiamondOre;
+    }
+
+    public static boolean canExplodeDiamondOre(World world) {
+        if (world == null) return false;
+        if (NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative) return true;
+        WorldSkillData worldData = getWorldData(world);
+        if (worldData.diamondExtractionUnlocked) return true;
+        for (Object entity : world.playerEntities) {
+            if (entity instanceof EntityPlayer player && canHarvestDiamondOre(player)) {
+                worldData.diamondExtractionUnlocked = true;
+                if (!world.isRemote) world.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean hasNetherAccess(EntityPlayer player) {

@@ -103,6 +103,7 @@ public final class EmiIconHelper {
                     }) {
                 @Override
                 public boolean mouseClicked(int mouseX, int mouseY, int button) {
+                    if (button == 1) return SkillRecipeBrowser.open(skill);
                     Minecraft mc = Minecraft.getMinecraft();
                     if (button != 0 || mc.thePlayer == null
                             || SkillHandler.isUnlocked(mc.thePlayer, skill)
@@ -118,7 +119,9 @@ public final class EmiIconHelper {
                             TooltipComponent.of(EmiPort.ordered(EmiPort.literal(
                                     "Required skill: " + skill.name))),
                             TooltipComponent.of(EmiPort.ordered(EmiPort.literal(
-                                    "Condition: " + skill.requirementText)))));
+                                    "Condition: " + skill.requirementText))),
+                            TooltipComponent.of(EmiPort.ordered(EmiPort.literal(
+                                    "Right-click: view recipes unlocked by this skill")))));
         }
     }
 

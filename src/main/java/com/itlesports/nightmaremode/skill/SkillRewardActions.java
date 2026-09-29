@@ -47,10 +47,17 @@ public final class SkillRewardActions {
     }
 
     public static SkillUnlockAction addDiamondHarvestProgress() {
-        return playerReward(data -> {
+        return (player, world) -> {
+            SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
             data.diamondHarvestProgress++;
             data.canHarvestDiamondOre = data.diamondHarvestProgress >= 5;
-        });
+            player.setData(NightmareMode.SKILL_TREE, data);
+            if (data.canHarvestDiamondOre) {
+                WorldSkillData worldData = world.getData(NightmareMode.WORLD_SKILL_TREE);
+                worldData.diamondExtractionUnlocked = true;
+                world.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+            }
+        };
     }
 
     public static SkillUnlockAction addLeatherArmorProgress() {
@@ -83,6 +90,14 @@ public final class SkillRewardActions {
 
     public static SkillUnlockAction addClayCookTimeReduction(int ticks) {
         return playerReward(data -> data.clayCookTimeReductionTicks += ticks);
+    }
+
+    public static SkillUnlockAction addIronDustDrops(int amount) {
+        return playerReward(data -> data.ironDustDropBonus += amount);
+    }
+
+    public static SkillUnlockAction addCoalDustDrops(int amount) {
+        return playerReward(data -> data.coalDustDropBonus += amount);
     }
 
     public static SkillUnlockAction addIronPileChance(float amount) {

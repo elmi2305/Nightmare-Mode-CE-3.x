@@ -10,11 +10,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class WorldSkillData {
+    public String rewardsVersion = SkillRewardReload.LEGACY_VERSION;
+    public int rewardsSchema;
+    public long rewardsRevision;
     public boolean woodBlocksIgnoreSkybaseGravity;
     public boolean netherAccessUnlocked;
     public boolean fireSpreadsSlower;
     public boolean witherSummoningUnlocked;
     public boolean endAccessUnlocked;
+    public boolean diamondExtractionUnlocked;
     public boolean netherVillagerTier1Complete;
     public boolean netherVillagerTier2Complete;
     public boolean netherVillagerTier3Complete;
@@ -73,13 +77,36 @@ public class WorldSkillData {
         }
     }
 
+    /** Reset derived rewards only; retain unlocks, counters and quest progress. */
+    public void resetRewards() {
+        WorldSkillData defaults = new WorldSkillData();
+        this.woodBlocksIgnoreSkybaseGravity = defaults.woodBlocksIgnoreSkybaseGravity;
+        this.netherAccessUnlocked = defaults.netherAccessUnlocked;
+        this.fireSpreadsSlower = defaults.fireSpreadsSlower;
+        this.witherSummoningUnlocked = defaults.witherSummoningUnlocked;
+        this.endAccessUnlocked = defaults.endAccessUnlocked;
+        this.woodGravityUnlockProgress = defaults.woodGravityUnlockProgress;
+        this.netherAccessUnlockProgress = defaults.netherAccessUnlockProgress;
+        this.witherSummonUnlockProgress = defaults.witherSummonUnlockProgress;
+        this.endAccessUnlockProgress = defaults.endAccessUnlockProgress;
+        this.globalIronPileChanceBonus = defaults.globalIronPileChanceBonus;
+        this.globalFoodSpoilageRateMultiplier = defaults.globalFoodSpoilageRateMultiplier;
+        this.globalVillagerHungerDrainRateMultiplier = defaults.globalVillagerHungerDrainRateMultiplier;
+        this.globalMobLootChanceBonus = defaults.globalMobLootChanceBonus;
+        this.globalXpGainBonus = defaults.globalXpGainBonus;
+    }
+
     public static WorldSkillData readFromNBT(NBTTagCompound tag) {
         WorldSkillData data = new WorldSkillData();
+        data.rewardsVersion = SkillRewardReload.savedVersion(tag.getString("RewardsVersion"));
+        data.rewardsSchema = tag.getInteger("RewardsSchema");
+        data.rewardsRevision = tag.getLong("RewardsRevision");
         data.woodBlocksIgnoreSkybaseGravity = tag.getBoolean("WoodBlocksIgnoreSkybaseGravity");
         data.netherAccessUnlocked = tag.getBoolean("NetherAccessUnlocked");
         data.fireSpreadsSlower = tag.getBoolean("FireSpreadsSlower");
         data.witherSummoningUnlocked = tag.getBoolean("WitherSummoningUnlocked");
         data.endAccessUnlocked = tag.getBoolean("EndAccessUnlocked");
+        data.diamondExtractionUnlocked = tag.getBoolean("DiamondExtractionUnlocked");
         data.netherVillagerTier1Complete = tag.getBoolean("NetherVillagerTier1Complete");
         data.netherVillagerTier2Complete = tag.getBoolean("NetherVillagerTier2Complete");
         data.netherVillagerTier3Complete = tag.getBoolean("NetherVillagerTier3Complete");
@@ -118,12 +145,16 @@ public class WorldSkillData {
     }
 
     public static void writeToNBT(NBTTagCompound tag, WorldSkillData data) {
+        tag.setString("RewardsVersion", SkillRewardReload.savedVersion(data.rewardsVersion));
+        tag.setInteger("RewardsSchema", data.rewardsSchema);
+        tag.setLong("RewardsRevision", data.rewardsRevision);
         tag.setInteger("NetherContributionVersion", 1);
         tag.setBoolean("WoodBlocksIgnoreSkybaseGravity", data.woodBlocksIgnoreSkybaseGravity);
         tag.setBoolean("NetherAccessUnlocked", data.netherAccessUnlocked);
         tag.setBoolean("FireSpreadsSlower", data.fireSpreadsSlower);
         tag.setBoolean("WitherSummoningUnlocked", data.witherSummoningUnlocked);
         tag.setBoolean("EndAccessUnlocked", data.endAccessUnlocked);
+        tag.setBoolean("DiamondExtractionUnlocked", data.diamondExtractionUnlocked);
         tag.setBoolean("NetherVillagerTier1Complete", data.netherVillagerTier1Complete);
         tag.setBoolean("NetherVillagerTier2Complete", data.netherVillagerTier2Complete);
         tag.setBoolean("NetherVillagerTier3Complete", data.netherVillagerTier3Complete);

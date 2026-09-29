@@ -489,20 +489,6 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness2(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
-        // draw mspt
-        FontRenderer fontRenderer = this.mc.fontRenderer;
-
-        if (NightmareMode.benchmarkPerformance) {
-            fontRenderer.drawStringWithShadow(
-                    String.format("MSPT: %.2f", NightmareMode.MSPT),
-                    2,
-                    2,
-                    0xFFFFFF
-            );
-        }
-
-        this.renderBetaOverlay(screenWidth, fontRenderer);
-
         if (NightmareMode.renderVignette) {
             this.renderVignetteNightmare(partialTicks,screenWidth,screenHeight);
         } else{
@@ -518,14 +504,40 @@ public abstract class GuiIngameMixin extends Gui {
 
     @Redirect(method = "renderGameOverlayWithGuiDisabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiIngame;renderVignette(FII)V"))
     private void modifyBrightness(GuiIngame instance, float partialTicks, int screenWidth, int screenHeight){
-        this.renderBetaOverlay(screenWidth, this.mc.fontRenderer);
-
         if (NightmareMode.renderVignette) {
             this.renderVignetteNightmare(partialTicks, screenWidth, screenHeight);
         } else{
             this.renderVignette(partialTicks, screenWidth, screenHeight);
         }
         this.renderBlink(screenWidth,screenHeight);
+    }
+
+    @Inject(method = "renderGameOverlay", at = @At("RETURN"))
+    private void renderCornerText(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
+        this.drawCornerText(true);
+    }
+
+    @Inject(method = "renderGameOverlayWithGuiDisabled", at = @At("RETURN"))
+    private void renderCornerTextWithoutGui(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
+        this.drawCornerText(false);
+    }
+
+    @Unique
+    private void drawCornerText(boolean showMspt) {
+        if (!NightmareMode.showBetaOverlay && (!showMspt || !NightmareMode.benchmarkPerformance)) return;
+        FontRenderer fontRenderer = this.mc.fontRenderer;
+        int screenWidth = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight).getScaledWidth();
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        if (showMspt && NightmareMode.benchmarkPerformance) {
+            fontRenderer.drawString(String.format("MSPT: %.2f", NightmareMode.MSPT), 2, 2, 0xFFFFFF);
+        }
+        this.renderBetaOverlay(screenWidth, fontRenderer);
+        GL11.glPopAttrib();
     }
 
     @Unique
@@ -541,7 +553,7 @@ public abstract class GuiIngameMixin extends Gui {
         for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
             String line = lines[lineIndex];
             if (line != null && !line.isEmpty()) {
-                fontRenderer.drawStringWithShadow(line, screenWidth - fontRenderer.getStringWidth(line) - 2, 2 + lineIndex * 10, 0xFFFFFF);
+                fontRenderer.drawString(line, screenWidth - fontRenderer.getStringWidth(line) - 2, 2 + lineIndex * 10, 0xFFFFFF);
             }
         }
     }
@@ -739,9 +751,9 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private long blinkStartNano = -1L;
 
     @Unique private static final float BLINK_CLOSE_SECS = 0.85f;
+    @Unique private static final float DROWNING_BLINK_CLOSE_SECS = 0.4f;
     @Unique private static final float BLINK_HOLD_SECS  = 1.0f;
     @Unique private static final float BLINK_OPEN_SECS  = 0.9f;
-    @Unique private static final float BLINK_TOTAL_SECS = BLINK_CLOSE_SECS + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
     @Unique private void renderBlink(int width, int height) {
         int blinkLength = ((EntityPlayerExt)this.mc.thePlayer).nightmareMode$getBlinkLength();
         if (blinkLength <= 0) {
@@ -757,16 +769,18 @@ public abstract class GuiIngameMixin extends Gui {
         if (blinkStartNano < 0) return;
 
         float elapsed = (System.nanoTime() - blinkStartNano) * 1.0E-9F;
+        float closeSecs = blinkLength == 80 ? DROWNING_BLINK_CLOSE_SECS : BLINK_CLOSE_SECS;
+        float totalSecs = closeSecs + BLINK_HOLD_SECS + BLINK_OPEN_SECS;
         float blinkAlpha;
 
-        if (elapsed < BLINK_CLOSE_SECS) {
-            blinkAlpha = smootherstep(elapsed / BLINK_CLOSE_SECS);
+        if (elapsed < closeSecs) {
+            blinkAlpha = smootherstep(elapsed / closeSecs);
 
-        } else if (elapsed < BLINK_CLOSE_SECS + BLINK_HOLD_SECS) {
+        } else if (elapsed < closeSecs + BLINK_HOLD_SECS) {
             blinkAlpha = 1.0f;
 
-        } else if (elapsed < BLINK_TOTAL_SECS) {
-            float t = (elapsed - BLINK_CLOSE_SECS - BLINK_HOLD_SECS) / BLINK_OPEN_SECS;
+        } else if (elapsed < totalSecs) {
+            float t = (elapsed - closeSecs - BLINK_HOLD_SECS) / BLINK_OPEN_SECS;
             blinkAlpha = 1.0f - smootherstep(t);
 
         } else {

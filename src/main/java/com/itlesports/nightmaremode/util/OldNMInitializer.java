@@ -1212,10 +1212,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.ironLadder, 4), new Object[]{"#S#", "###", "#S#", Character.valueOf('#'), BTWItems.ironNugget, Character.valueOf('S'), BTWItems.hempFibers});
 
         // bark boxes
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.oakBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(BTWItems.bark, 1, 0), new ItemStack(Item.silk, 1, 0)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.spruceBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(BTWItems.bark, 1, 1), new ItemStack(Item.silk, 1, 0)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.birchBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(BTWItems.bark, 1, 2), new ItemStack(Item.silk, 1, 0)});
-        RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWBlocks.jungleBarkBox), new Object[]{new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(BTWItems.bark, 1, 3), new ItemStack(Item.silk, 1, 0)});
 
 
         // hide all baskets from EMI

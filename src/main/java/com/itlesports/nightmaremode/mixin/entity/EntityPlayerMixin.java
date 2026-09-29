@@ -439,6 +439,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         this.setAir(0);
         if (++this.drowningUnconsciousTicks >= DROWNING_UNCONSCIOUS_DEATH_DELAY) {
             this.drowningUnconsciousTicks = -1;
+            if (!this.isInsideOfMaterial(Material.water)
+                    && !this.shouldLoseOxygenInDeepCave()
+                    && !this.shouldLoseOxygenAtAltitude()) {
+                this.setAir(300);
+                this.nightmareMode$setBlinkLength(0);
+                return;
+            }
             this.setHealth(0.0F);
             this.onDeath(DamageSource.drown);
         }

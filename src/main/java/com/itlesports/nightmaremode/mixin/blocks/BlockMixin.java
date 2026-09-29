@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -37,6 +38,25 @@ public abstract class BlockMixin {
 
     @Shadow protected abstract void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack);
     @Shadow protected abstract boolean checkForFall(World world, int x, int y, int z);
+
+    @Inject(method = "dropItemsOnDestroyedByExplosion", at = @At("HEAD"), cancellable = true)
+    private void diamondRockFromExplosion(World world, int x, int y, int z, Explosion explosion, CallbackInfo ci) {
+        if (this.blockID != Block.oreDiamond.blockID) return;
+        ci.cancel();
+        if (!world.isRemote && SkillHandler.canExplodeDiamondOre(world)
+                && (explosion == null || world.rand.nextFloat() < 1.0F / explosion.explosionSize)) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));
+        }
+    }
+
+    @Inject(method = "dropItemsOnDestroyedByMiningCharge", at = @At("HEAD"), cancellable = true)
+    private void diamondRockFromMiningCharge(World world, int x, int y, int z, int metadata, CallbackInfo ci) {
+        if (this.blockID != Block.oreDiamond.blockID) return;
+        ci.cancel();
+        if (!world.isRemote && SkillHandler.canExplodeDiamondOre(world)) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));
+        }
+    }
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void performObsidianRewrite(CallbackInfo ci){

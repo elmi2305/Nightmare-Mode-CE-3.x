@@ -233,13 +233,32 @@ public class ItemInWorldManagerMixin {
 
     @Redirect(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Block;convertBlock(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;IIII)Z"))
-    private boolean applySkillHempSeedChance(Block block, ItemStack stack, World world, int x, int y, int z, int side) {
+    private boolean applySkillConversionRewards(Block block, ItemStack stack, World world, int x, int y, int z, int side) {
         boolean converted = block.convertBlock(stack, world, x, y, z, side);
+        if (converted) {
+            com.itlesports.nightmaremode.skill.SkillMiningRewards.award(
+                    this.thisPlayerMP, block, stack, world, x, y, z, side);
+            if (block == Block.oreIron || block == Block.oreCoal) {
+                SkillHandler.incrementBlocksMined(this.thisPlayerMP, block.blockID, 0);
+            }
+        }
         if (converted && block.blockID == Block.grass.blockID && !world.isRemote
                 && world.rand.nextFloat() < SkillHandler.getPlayerData(this.thisPlayerMP).hempSeedChanceBonus) {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.hempSeeds), side);
         }
         return converted;
+    }
+
+    @Redirect(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Block;harvestBlock(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityPlayer;IIII)V"))
+    private void applySkillHarvestRewards(Block block, World world, EntityPlayer player,
+                                          int x, int y, int z, int metadata) {
+        block.harvestBlock(world, player, x, y, z, metadata);
+        // Silk Touch must not produce repeatable bonus dust from the same placed ore.
+        if (!EnchantmentHelper.getSilkTouchModifier(player)) {
+            com.itlesports.nightmaremode.skill.SkillMiningRewards.award(
+                    player, block, player.getCurrentEquippedItem(), world, x, y, z, 1);
+        }
     }
 
     @Inject(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",

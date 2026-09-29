@@ -23,7 +23,7 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         if (player.timesCraftedThisTick == 0 && world.isRemote) {
-            player.playSound(soundID, 1.0f, world.rand.nextFloat() * 0.1f + 0.9f);
+            player.playSound(soundID, 0.15f, world.rand.nextFloat() * 0.1f + 0.9f);
         }
         super.onCreated(stack, world, player);
     }

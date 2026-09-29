@@ -21,7 +21,11 @@ import net.minecraft.src.Icon;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ResourceLocation;
 
-public class EmiCisternRecipe implements EmiRecipe {
+public class EmiCisternRecipe implements EmiRecipe, SkillRecipeSource {
+    @Override
+    public java.util.List<com.itlesports.nightmaremode.skill.SkillNode> nightmareMode$getRequiredSkills() {
+        return SkillLockedCrafting.getRequiredSkills(this.recipe);
+    }
     private static final int BASE_HEIGHT = 78;
     private static final int SKILL_ROW_Y = 79;
 

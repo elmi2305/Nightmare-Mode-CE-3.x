@@ -19,7 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(value = EmiBulkRecipe.class, remap = false)
-public abstract class EmiBulkRecipeMixin {
+public abstract class EmiBulkRecipeMixin implements com.itlesports.nightmaremode.integration.emi.SkillRecipeSource {
+    @Override
+    public List<SkillNode> nightmareMode$getRequiredSkills() {
+        return SkillLockedCrafting.getRequiredSkills(this.nightmareMode$recipe);
+    }
     private static final int BASE_HEIGHT = 52;
     private static final int SKILL_ROW_Y = 53;
 

@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SkillTreeData {
+    public String rewardsVersion = SkillRewardReload.LEGACY_VERSION;
+    public int rewardsSchema;
+    public long rewardsRevision;
     public int netherPostCompletedTiers;
     public int blocksMined;
     public int coalOreMined;
@@ -51,6 +54,8 @@ public class SkillTreeData {
     private final Set<Integer> visitedBiomeIds = new HashSet<>();
     private final Set<Integer> craftedOutputIds = new HashSet<>();
 
+    public int ironDustDropBonus;
+    public int coalDustDropBonus;
     public float blockBreakSpeedBonus;
     public float mobLootChanceBonus;
     public float ironPileChanceBonus;
@@ -138,8 +143,68 @@ public class SkillTreeData {
         return this.craftedOutputIds.size();
     }
 
+    /** Reset derived rewards only; retain unlocks, counters and quest progress. */
+    public void resetRewards() {
+        SkillTreeData defaults = new SkillTreeData();
+        this.ironDustDropBonus = defaults.ironDustDropBonus;
+        this.coalDustDropBonus = defaults.coalDustDropBonus;
+        this.blockBreakSpeedBonus = defaults.blockBreakSpeedBonus;
+        this.mobLootChanceBonus = defaults.mobLootChanceBonus;
+        this.ironPileChanceBonus = defaults.ironPileChanceBonus;
+        this.kilnSpeedBonus = defaults.kilnSpeedBonus;
+        this.movementSpeedBonus = defaults.movementSpeedBonus;
+        this.heatDamageReduction = defaults.heatDamageReduction;
+        this.armorDurabilitySaveChance = defaults.armorDurabilitySaveChance;
+        this.rangedDamageBonus = defaults.rangedDamageBonus;
+        this.machineSpeedBonus = defaults.machineSpeedBonus;
+        this.diamondRockDropChanceBonus = defaults.diamondRockDropChanceBonus;
+        this.doubleNickelRockChance = defaults.doubleNickelRockChance;
+        this.hammerDurabilitySaveChance = defaults.hammerDurabilitySaveChance;
+        this.cisternSpeedBonus = defaults.cisternSpeedBonus;
+        this.oxygenLossReduction = defaults.oxygenLossReduction;
+        this.crystalDropChanceBonus = defaults.crystalDropChanceBonus;
+        this.meleeDamageBonus = defaults.meleeDamageBonus;
+        this.shovelSpeedBonus = defaults.shovelSpeedBonus;
+        this.blazeRodDropChanceBonus = defaults.blazeRodDropChanceBonus;
+        this.hempSeedChanceBonus = defaults.hempSeedChanceBonus;
+        this.twigDropChanceBonus = defaults.twigDropChanceBonus;
+        this.rareFishChanceBonus = defaults.rareFishChanceBonus;
+        this.tallGrassPlantFiberChanceBonus = defaults.tallGrassPlantFiberChanceBonus;
+        this.deathItemLossChance = defaults.deathItemLossChance;
+        this.enchantCostReduction = defaults.enchantCostReduction;
+        this.xpGainBonus = defaults.xpGainBonus;
+        this.brewingSpeedBonus = defaults.brewingSpeedBonus;
+        this.foodSpoilageRateMultiplier = defaults.foodSpoilageRateMultiplier;
+        this.villagerProfessionChangeChance = defaults.villagerProfessionChangeChance;
+        this.clayCookTimeReductionTicks = defaults.clayCookTimeReductionTicks;
+        this.diamondHarvestProgress = defaults.diamondHarvestProgress;
+        this.leatherArmorUnlockProgress = defaults.leatherArmorUnlockProgress;
+        this.ironIngotRecipeUnlockProgress = defaults.ironIngotRecipeUnlockProgress;
+        this.extraHotbarSlots = defaults.extraHotbarSlots;
+        this.canHarvestDiamondOre = defaults.canHarvestDiamondOre;
+        this.canCureVillagers = defaults.canCureVillagers;
+        this.grassBreaksInstantly = defaults.grassBreaksInstantly;
+        this.tallGrassAlwaysDropsPlantFiber = defaults.tallGrassAlwaysDropsPlantFiber;
+        this.doubleLithiumDrops = defaults.doubleLithiumDrops;
+        this.canMineStrataThreeOre = defaults.canMineStrataThreeOre;
+        this.canExceedXpLevelThirty = defaults.canExceedXpLevelThirty;
+        this.canFarmNetherWart = defaults.canFarmNetherWart;
+        this.canGainExperience = defaults.canGainExperience;
+        this.thirdInventoryRowUnlocked = defaults.thirdInventoryRowUnlocked;
+        this.canUseCistern = defaults.canUseCistern;
+        this.canUseEnchantmentTable = defaults.canUseEnchantmentTable;
+        this.canUseBrewingStand = defaults.canUseBrewingStand;
+        this.canMineCrystals = defaults.canMineCrystals;
+        this.canMineNetherrack = defaults.canMineNetherrack;
+    }
+
     public static SkillTreeData readFromNBT(NBTTagCompound tag) {
         SkillTreeData data = new SkillTreeData();
+        data.rewardsVersion = SkillRewardReload.savedVersion(tag.getString("RewardsVersion"));
+        data.rewardsSchema = tag.getInteger("RewardsSchema");
+        data.rewardsRevision = tag.getLong("RewardsRevision");
+        data.ironDustDropBonus = tag.getInteger("IronDustDropBonus");
+        data.coalDustDropBonus = tag.getInteger("CoalDustDropBonus");
         data.netherPostCompletedTiers = tag.getInteger("NetherPostCompletedTiers");
         data.blocksMined = tag.getInteger("BlocksMined");
         data.coalOreMined = tag.getInteger("CoalOreMined");
@@ -245,6 +310,11 @@ public class SkillTreeData {
     }
 
     public static void writeToNBT(NBTTagCompound tag, SkillTreeData data) {
+        tag.setString("RewardsVersion", SkillRewardReload.savedVersion(data.rewardsVersion));
+        tag.setInteger("RewardsSchema", data.rewardsSchema);
+        tag.setLong("RewardsRevision", data.rewardsRevision);
+        tag.setInteger("IronDustDropBonus", data.ironDustDropBonus);
+        tag.setInteger("CoalDustDropBonus", data.coalDustDropBonus);
         tag.setInteger("NetherPostCompletedTiers", data.netherPostCompletedTiers);
         tag.setInteger("BlocksMined", data.blocksMined);
         tag.setInteger("CoalOreMined", data.coalOreMined);

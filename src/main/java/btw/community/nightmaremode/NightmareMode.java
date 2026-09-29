@@ -58,7 +58,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 2809a";
+    public static String betaBuildLine = "Build 2909";
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
     public static boolean alwaysShowRewards = false;
@@ -232,6 +232,7 @@ public class NightmareMode extends BTWAddon {
             initServerPacketInfo();
             AddonHandler.registerCommand(new TPACommand(), false);
         }
+        AddonHandler.registerCommand(new com.itlesports.nightmaremode.util.command.ReloadSkillsCommand(), false);
         AddonHandler.registerCommand(new WorldStateCommand(), false);
         AddonHandler.registerCommand(new EventCommand(), false);
         AddonHandler.registerCommand(new ScaryCommand(), false);

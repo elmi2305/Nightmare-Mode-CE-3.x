@@ -30,6 +30,11 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void validateSkillRewardVersion(CallbackInfo ci) {
+        com.itlesports.nightmaremode.skill.SkillRewardReload.validatePlayer(this);
+    }
+
     @Unique private Boolean lastScaryEventsState;
     @Unique private int lastTesterSettings = -1;
 

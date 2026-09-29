@@ -2900,6 +2900,23 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(Item.shovelStone), new Object[]{BTWTags.lowQualityToolHandles, BTWTags.looseRocks});
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.scrapedBark), new Object[]{BTWTags.barks, new ItemStack(BTWItems.sharpStone, 1, Short.MAX_VALUE)});
+        for (int barkType = 0; barkType < 4; ++barkType) {
+            Block barkBox = switch (barkType) {
+                case 0 -> BTWBlocks.oakBarkBox;
+                case 1 -> BTWBlocks.spruceBarkBox;
+                case 2 -> BTWBlocks.birchBarkBox;
+                default -> BTWBlocks.jungleBarkBox;
+            };
+            Object[] originalIngredients = new Object[]{
+                    new ItemStack(BTWItems.bark, 1, barkType),
+                    new ItemStack(BTWItems.bark, 1, barkType),
+                    new ItemStack(BTWItems.bark, 1, barkType), BTWTags.strings};
+            RecipeManager.removeVanillaShapelessRecipe(new ItemStack(barkBox), originalIngredients);
+            RecipeManager.addShapelessRecipe(new ItemStack(barkBox), new Object[]{
+                    new ItemStack(BTWItems.bark, 1, barkType),
+                    new ItemStack(BTWItems.bark, 1, barkType),
+                    new ItemStack(BTWItems.bark, 1, barkType), NMItems.crudeString});
+        }
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.cupOfSap), new Object[]{NMItems.rawSap, NMItems.woodCup});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.crudeStringCrafting, 1, NMItems.crudeStringCrafting.getMaxDamage() - 1), new Object[]{NMItems.driedPlantFiber,NMItems.driedPlantFiber,NMItems.driedPlantFiber, BTWTags.flowers});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
@@ -4249,10 +4266,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestoneSlab.blockID, 4, NMSkillNodes.BRING_STRATA_TWO_LOOSE_STONE_128);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestone.blockID, 8, NMSkillNodes.BRING_STRATA_THREE_LOOSE_STONE_256);
         SkillRecipeGates.crafting(BTWBlocks.looseCobblestoneSlab.blockID, 8, NMSkillNodes.BRING_STRATA_THREE_LOOSE_STONE_256);
-        SkillRecipeGates.crafting(BTWBlocks.oakBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
-        SkillRecipeGates.crafting(BTWBlocks.spruceBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
-        SkillRecipeGates.crafting(BTWBlocks.birchBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
-        SkillRecipeGates.crafting(BTWBlocks.jungleBarkBox.blockID, NMSkillNodes.BRING_BARK_16);
+        SkillRecipeGates.crafting(BTWBlocks.oakBarkBox.blockID, NMSkillNodes.BRING_BARK_16, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
+        SkillRecipeGates.crafting(BTWBlocks.spruceBarkBox.blockID, NMSkillNodes.BRING_BARK_16, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
+        SkillRecipeGates.crafting(BTWBlocks.birchBarkBox.blockID, NMSkillNodes.BRING_BARK_16, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
+        SkillRecipeGates.crafting(BTWBlocks.jungleBarkBox.blockID, NMSkillNodes.BRING_BARK_16, NMSkillNodes.BRING_DRIED_PLANT_FIBER_16);
+        SkillRecipeGates.crafting(Item.shears.itemID, NMSkillNodes.BRING_FLINT_4, NMSkillNodes.BRING_IRON_INGOT);
         SkillRecipeGates.crafting(BTWBlocks.looseDirtSlab.blockID, NMSkillNodes.JUMP_500);
 
         SkillRecipeGates.crafting(Item.arrow.itemID, NMSkillNodes.BRING_FLINT_64, NMSkillNodes.BRING_FEATHER_32, NMSkillNodes.BRING_STRING_32);

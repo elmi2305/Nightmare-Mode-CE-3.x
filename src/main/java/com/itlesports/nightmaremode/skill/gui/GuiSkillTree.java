@@ -280,6 +280,7 @@ public class GuiSkillTree extends GuiScreen {
         };
         String reward = (state == NodeVisualState.UNLOCKED || NightmareMode.alwaysShowRewards) ? node.reward.getText() : "?";
         String body = (status == null ? "" : (status + "\n")) + (state != NodeVisualState.PARENT_LOCKED ? (node.requirementText + "\n" + "Reward: " + reward) : "");
+        body += "\nRight-click: view unlocked recipes";
         String parents = this.getMissingParentNames(node);
         if (!parents.isEmpty()) {
             body += (body.isEmpty() || body.endsWith("\n") ? "" : "\n") + parents;
@@ -449,6 +450,13 @@ public class GuiSkillTree extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
+        if (button == 1) {
+            SkillNode clicked = this.getNodeAt(mouseX, mouseY);
+            if (clicked != null) {
+                com.itlesports.nightmaremode.integration.emi.SkillRecipeBrowser.open(clicked);
+                return;
+            }
+        }
         if (button == 0) {
             this.ignoreOpeningMouseRelease = false;
         }
@@ -492,9 +500,6 @@ public class GuiSkillTree extends GuiScreen {
             }
             if (!this.movedWhileDragging) {
                 SkillNode clicked = this.getNodeAt(mouseX, mouseY);
-                if (clicked != null) {
-                    System.out.println("x:"+ clicked.displayColumn + " y:"+ clicked.displayRow);
-                }
                 if (clicked != null && this.getNodeVisualState(clicked) == NodeVisualState.PARENT_LOCKED) {
                     this.focusFirstLockedParent(clicked);
                 } else if (clicked != null && !SkillHandler.isUnlocked(this.mc.thePlayer, clicked)) {
@@ -518,6 +523,8 @@ public class GuiSkillTree extends GuiScreen {
         }
         int left = (this.width - PANE_WIDTH) / 2 + 14;
         int top = (this.height - PANE_HEIGHT) / 2 + 34;
+        if (mouseX < left || mouseX >= left + VIEW_WIDTH
+                || mouseY < top || mouseY >= top + VIEW_HEIGHT) return null;
         int windowX = MathHelper.floor_double(this.mapX);
         int windowY = MathHelper.floor_double(this.mapY);
         for (SkillNode node : branch.getNodes()) {

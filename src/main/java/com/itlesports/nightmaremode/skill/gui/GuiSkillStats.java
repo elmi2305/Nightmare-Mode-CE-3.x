@@ -86,6 +86,8 @@ public class GuiSkillStats extends GuiScreen {
         add(lines, "Stone mined", data.stoneMined);
         add(lines, "Clay mined", data.clayMined);
         add(lines, "Dirt mined", data.dirtMined);
+        add(lines, "Bonus coal dust per ore (pickaxe)", data.coalDustDropBonus);
+        add(lines, "Bonus iron dust per ore (pickaxe)", data.ironDustDropBonus);
         add(lines, "Coal ore mined", data.coalOreMined);
         add(lines, "Iron ore mined", data.ironOreMined);
         add(lines, "Diamond ore mined", data.diamondOreMined);
@@ -115,6 +117,7 @@ public class GuiSkillStats extends GuiScreen {
         add(lines, "Withers killed", data.withersKilled);
         add(lines, "Arrows fired", data.arrowsFired);
         add(lines, "Trades completed", data.tradesCompleted);
+        lines.add("Unique recipe outputs crafted: " + data.getUniqueCraftedOutputCount());
         add(lines, "Turntable rotations", data.turntableRotations);
         add(lines, "Food cooked", data.foodCooked);
         add(lines, "Potions brewed", data.potionsBrewed);
