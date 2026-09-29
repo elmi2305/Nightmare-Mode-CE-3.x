@@ -2472,6 +2472,11 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('P'), NMItems.reinforcedIronPlate,
                 Character.valueOf('C'), new ItemStack(Item.bootsIron, 1, Short.MAX_VALUE)});
 
+
+        RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.screw), new Object[]{"n# ", " #n", "n# ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.screw, 2), new Object[]{"nn ", " #n", "nn ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
+
+
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkLeggings), new Object[]{
                 "PPP", "PBP", "N N",
                 Character.valueOf('P'), NMItems.nickelPlate,
