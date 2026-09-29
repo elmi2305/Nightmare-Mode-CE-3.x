@@ -768,14 +768,14 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F),
             MINING, false);
 
-    public static final SkillNode BRING_IRON_INGOT_16 = bring(
+    public static final SkillNode BRING_IRON_INGOT_8 = bring(
             "iron_ingots_16",
             "Iron Toolmaking",
             Item.ingotIron,
             3, -1,
-            "Bring 16 iron ingots.",
-            Item.ingotIron.itemID, 0, false, 16,
-            "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F),
+            "Bring 8 iron ingots.",
+            Item.ingotIron.itemID, 0, false, 8,
+            "Unlocks Additional Recipes. +5% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.05F),
             MINING, false);
 
     public static final SkillNode BRING_DIAMOND_INGOT_8 = bring(
@@ -828,7 +828,7 @@ public final class NMSkillNodes {
             (p, w) -> SkillHandler.getPlayerData(p).ironNuggetsKilned >= 128,
             "Unlocks Additional Recipes. +5% kiln processing speed.", SkillRewardActions.addKilnSpeed(0.05F),
             MINING, false),
-            () -> NMSkillNodes.BRING_IRON_INGOT_16);
+            () -> NMSkillNodes.BRING_IRON_INGOT_8);
 
     // Husbandry
 
@@ -3773,14 +3773,14 @@ public final class NMSkillNodes {
         BRING_IRON_BLOOM_8.addParents(BRING_BRICK_32, BRING_IRON_ORE_PILE_32);
         BRING_IRON_NUGGET_32.addParents(BRING_IRON_BLOOM_8);
         BRING_IRON_INGOT.addParents(BRING_IRON_NUGGET_32);
-        BRING_IRON_INGOT_16.addParents(BRING_IRON_INGOT);
-        MINE_COAL_ORE_256.addParents(BRING_IRON_INGOT_16);
-        MINE_IRON_ORE_256.addParents(BRING_IRON_INGOT_16);
-        MINE_STONE_1000.addParents(BRING_IRON_INGOT_16);
+        BRING_IRON_INGOT_8.addParents(BRING_IRON_INGOT);
+        MINE_COAL_ORE_256.addParents(BRING_IRON_INGOT_8);
+        MINE_IRON_ORE_256.addParents(BRING_IRON_INGOT_8);
+        MINE_STONE_1000.addParents(BRING_IRON_INGOT_8);
 
         // Mining: iron tools unlock the specialty-ore and wet-processing branch.
-        BRING_RAW_LITHIUM_64.addParents(BRING_IRON_INGOT_16);
-        BRING_NICKEL_BEARING_ROCK_64.addParents(BRING_IRON_INGOT_16);
+        BRING_RAW_LITHIUM_64.addParents(BRING_IRON_INGOT_8);
+        BRING_NICKEL_BEARING_ROCK_64.addParents(BRING_IRON_INGOT_8);
         BRING_NICKEL_PLATE_4.addParents(BRING_IRON_BLOOM_8, BRING_NICKEL_BEARING_ROCK_64);
         BRING_UNCLEANED_CRYSTAL_SHARD_32.addParents(KILL_WITCH_4);
         BRING_CRYSTAL_POWDER_32.addParents(BRING_POLISHED_CRYSTAL_SHARD_4);
@@ -3862,29 +3862,29 @@ public final class NMSkillNodes {
         BRING_STONE_BRICK_64.addParents(BRING_STONE_BRICK_32);
 
         // Husbandry: tools, farming, food processing, and animal husbandry.
-        HARVEST_TALL_GRASS_1000.addParents(BRING_IRON_INGOT_16);
-        PLANT_SAPLING_100.addParents(BRING_IRON_INGOT_16);
-        REMOVE_WEED_500.addParents(BRING_IRON_INGOT_16);
+        HARVEST_TALL_GRASS_1000.addParents(BRING_IRON_INGOT_8);
+        PLANT_SAPLING_100.addParents(BRING_IRON_INGOT_8);
+        REMOVE_WEED_500.addParents(BRING_IRON_INGOT_8);
         CATCH_FISH_50.addParents(BRING_BONE_FISH_HOOK_8, BRING_STRING_32);
         COOK_FOOD_200.addParents(BRING_BRICK_32);
-        BREAK_DIRT_1000.addParents(BRING_IRON_INGOT_16);
+        BREAK_DIRT_1000.addParents(BRING_IRON_INGOT_8);
         BRING_CALAMARI_16.addParents(CATCH_FISH_50);
-        PLANT_CROP_200.addParents(BRING_IRON_INGOT_16);
+        PLANT_CROP_200.addParents(BRING_IRON_INGOT_8);
         BRING_WOOL_128.addParents(BRING_BONE_CLUB_4);
         BREED_ANIMAL_50.addParents(BRING_CHOCOLATE_16);
-        MILK_COW_100.addParents(BRING_IRON_INGOT_16);
-        BRING_PUMPKIN_16.addParents(BRING_IRON_INGOT_16);
-        BRING_PUMPKIN_64.addParents(BRING_IRON_INGOT_16);
-        BRING_MELON_BLOCK_64.addParents(BRING_IRON_INGOT_16);
+        MILK_COW_100.addParents(BRING_IRON_INGOT_8);
+        BRING_PUMPKIN_16.addParents(BRING_IRON_INGOT_8);
+        BRING_PUMPKIN_64.addParents(BRING_IRON_INGOT_8);
+        BRING_MELON_BLOCK_64.addParents(BRING_IRON_INGOT_8);
         BRING_BONEMEAL_256.addParents(BRING_BONE_128, BRING_WINDMILL_4);
         BRING_BONE_CARVING_16.addParents(BRING_BONE_16);
-        BRING_HEMP_32.addParents(PLANT_CROP_200, BRING_IRON_INGOT_16);
+        BRING_HEMP_32.addParents(PLANT_CROP_200, BRING_IRON_INGOT_8);
         BRING_HEMP_FIBER_32.addParents(HARVEST_MATURE_CROP_500, BRING_REDSTONE_16);
         BRING_SCOURED_LEATHER_16.addParents(BRING_LEATHER_16, CRAFT_CAULDRON);
-        BRING_CUT_SCOURED_LEATHER_16.addParents(BRING_SCOURED_LEATHER_16, BRING_IRON_INGOT_16);
+        BRING_CUT_SCOURED_LEATHER_16.addParents(BRING_SCOURED_LEATHER_16, BRING_IRON_INGOT_8);
         BRING_TANNED_LEATHER_16.addParents(BRING_CUT_SCOURED_LEATHER_16);
         BRING_LEATHER_STRAP_16.addParents(BRING_TANNED_LEATHER_16);
-        BRING_STRAW_32.addParents(BRING_IRON_INGOT_16);
+        BRING_STRAW_32.addParents(BRING_IRON_INGOT_8);
         BRING_POTASH_16.addParents(BRING_BRICK_32);
         BRING_DUNG_16.addParents(TAME_ANIMAL_1);
         BRING_TALLOW_16.addParents(CRAFT_CAULDRON);
@@ -3892,7 +3892,7 @@ public final class NMSkillNodes {
         BRING_RAW_EGG_16.addParents(BRING_FEATHER_64);
         BRING_FEATHER_64.addParents(BRING_FEATHER_32);
         BRING_BEDROLL.addParents(BRING_FABRIC_16);
-        BRING_VINE_256.addParents(BRING_IRON_INGOT_16);
+        BRING_VINE_256.addParents(BRING_IRON_INGOT_8);
         BRING_VINE_TRAP_16.addParents(BRING_VINE_256);
         BRING_COCOA_POWDER_256.addParents(BRING_COCOA_BEAN_16, BRING_WINDMILL_4);
         BRING_GLUE_SLURRY_16.addParents(BRING_COAL_DUST_32, BRING_CUT_SCOURED_LEATHER_16,
@@ -3904,9 +3904,9 @@ public final class NMSkillNodes {
         // Ritual: portal access, difficult mob drops, and cauldron chemistry.
         BRING_WITCH_WART_64.addParents(KILL_WITCH_4);
         BRING_ENCHANTMENT_TABLE.addParents(MINE_DIAMOND_ORE_100);
-        BRING_BLOOD_ORB_64.addParents(BRING_IRON_INGOT_16);
+        BRING_BLOOD_ORB_64.addParents(BRING_IRON_INGOT_8);
         BRING_VESSEL_OF_THE_DRAGON.addParents(BRING_DIAMOND_INGOT_8);
-        CRAFT_CAULDRON.addParents(BRING_IRON_INGOT_16);
+        CRAFT_CAULDRON.addParents(BRING_IRON_INGOT_8);
         BRING_SPIDER_EYE_64.addParents(KILL_SPIDER_100);
         BRING_END_ACCORD.addParents(KILL_WITHER, BRING_END_ACCORD_FRAGMENT_4);
         BRING_NETHER_INVOCATION_SEAL.addParents(BRING_INVOCATION_FRAGMENT_4);
@@ -3916,7 +3916,7 @@ public final class NMSkillNodes {
         BRING_RUNED_WITHER_SKELETON_SKULL.addParents(BRING_NETHERRACK_TIER_ONE_64);
         BRING_SILK_16.addParents(KILL_SPIDER_100);
         BRING_UNFIRED_NETHER_BRICK_16.addParents(BRING_NETHERRACK_TIER_ONE_64);
-        BRING_SOUL_URN_16.addParents(BRING_SOUL_SAND_PILE_32, BRING_IRON_INGOT_16);
+        BRING_SOUL_URN_16.addParents(BRING_SOUL_SAND_PILE_32, BRING_IRON_INGOT_8);
         BRING_ENDER_PEARL_16.addParents(KILL_ENDERMAN_50);
         BRING_GUNPOWDER_16.addParents(CRAFT_CAULDRON, BRING_BRIMSTONE_16);
         BRING_BLASTING_OIL_16.addParents(BRING_GUNPOWDER_16);
@@ -3925,28 +3925,28 @@ public final class NMSkillNodes {
 
         // Knowledge: written records, machinery, mineral processing, and trade.
         BRING_BOOK.addParents(BRING_PAPER_64, BRING_LEATHER_16);
-        BRING_REDSTONE_16.addParents(BRING_IRON_INGOT_16);
+        BRING_REDSTONE_16.addParents(BRING_IRON_INGOT_8);
         BRING_PRECISION_CRYSTAL_GEAR.addParents(BRING_POLISHED_CRYSTAL_SHARD_4,
                 BRING_NICKEL_PLATE_4, BRING_CRYSTAL_POWDER_32);
         TRADE_100.addParents(BRING_SOUL_URN_16);
         BRING_BOTTLE_OF_ENCHANTING_64.addParents(KILL_WITCH_4);
         CRAFT_BOOKSHELF_64.addParents(BRING_SAW);
-        BRING_LAPIS_LAZULI_64.addParents(BRING_REDSTONE_16, BRING_IRON_INGOT_16);
+        BRING_LAPIS_LAZULI_64.addParents(BRING_REDSTONE_16, BRING_IRON_INGOT_8);
         BRING_GOLDEN_APPLE_4.addParents(BRING_GOLD_INGOT_16);
         BRING_ENCHANTED_GOLDEN_APPLE.addParents(BRING_GOLDEN_APPLE_4);
-        BRING_GLASS_64.addParents(BRING_IRON_INGOT_16);
+        BRING_GLASS_64.addParents(BRING_IRON_INGOT_8);
         BRING_ITEM_FRAME_27.addParents(BRING_LEATHER_16);
         BRING_WRITTEN_BOOK_3.addParents(BRING_BOOK, BRING_DYE_64, BRING_FEATHER_32);
         BRING_PAPER_64.addParents(BRING_SUGAR_CANE);
         BRING_GLUE_16.addParents(BRING_GLUE_SLURRY_16);
         BRING_GEAR_64.addParents(BRING_WOODEN_GEAR_12);
-        BRING_GOLD_NUGGET_32.addParents(BRING_IRON_INGOT_16);
+        BRING_GOLD_NUGGET_32.addParents(BRING_IRON_INGOT_8);
         BRING_GOLD_INGOT_16.addParents(BRING_GOLD_NUGGET_32);
         BRING_DIAMOND_8.addParents(BRING_DIAMOND_16);
         BRING_STEEL_PRESSURE_PLATE_8.addParents(BRING_SOULFORGED_STEEL_INGOT_16);
         BRING_REDSTONE_LATCH_16.addParents(BRING_REDSTONE_BLOCK_16);
         BRING_POCKET_SUNDIAL_8.addParents(BRING_GOLD_INGOT_16, BRING_REDSTONE_16);
-        BRING_COMPASS_8.addParents(BRING_IRON_INGOT_16, BRING_REDSTONE_16);
+        BRING_COMPASS_8.addParents(BRING_IRON_INGOT_8, BRING_REDSTONE_16);
         BRING_RAIL_32.addParents(BRING_IRON_NUGGET_32);
         BRING_WOODEN_SIDING_32.addParents(BRING_SAW);
         BRING_SOAP_16.addParents(BRING_TALLOW_16);
@@ -3958,7 +3958,7 @@ public final class NMSkillNodes {
         BRING_SAW.addParents(BRING_WINDMILL_4);
         BRING_LADDER_64.addParents(BRING_WOODEN_SIDING_32);
         BRING_STATION_RAIL_16.addParents(BRING_RAIL_32, BRING_REDSTONE_LATCH_16);
-        BRING_AQUAMARINE_16.addParents(BRING_IRON_INGOT_16);
+        BRING_AQUAMARINE_16.addParents(BRING_IRON_INGOT_8);
         BRING_REDSTONE_BLOCK_16.addParents(BRING_REDSTONE_16);
         BRING_LAPIS_BLOCK_16.addParents(BRING_LAPIS_LAZULI_64);
         CRAFT_BOOK_64.addParents(BRING_BOOK_16);
@@ -3978,7 +3978,7 @@ public final class NMSkillNodes {
         BRING_PADDED_ARMOR_SET.addParents(BRING_LEATHER_ARMOR_SET);
         BRING_GIMP_ARMOR_SET.addParents(BRING_PADDED_ARMOR_SET);
         BRING_CHAIN_ARMOR_SET.addParents(BRING_PADDED_ARMOR_SET);
-        BRING_IRON_ARMOR_SET.addParents(BRING_IRON_INGOT_16, BRING_CHAIN_ARMOR_SET);
+        BRING_IRON_ARMOR_SET.addParents(BRING_IRON_INGOT_8, BRING_CHAIN_ARMOR_SET);
         BRING_GOLD_ARMOR_SET.addParents(BRING_IRON_ARMOR_SET, BRING_GOLD_INGOT_16);
         BRING_DIAMOND_ARMOR_SET.addParents(BRING_GOLD_ARMOR_SET, BRING_DIAMOND_8);
         BRING_STEEL_ARMOR_SET.addParents(BRING_BLOOD_ARMOR_SET, BRING_SOULFORGED_STEEL_INGOT_16);

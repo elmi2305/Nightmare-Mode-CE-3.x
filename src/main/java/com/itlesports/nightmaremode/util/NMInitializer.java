@@ -2672,7 +2672,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMItems.ironStick, 8), new Object[]{
                         "I", "I", Character.valueOf('I'), Item.ingotIron}),
-                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64,
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64,
                 NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.KILL_MOB_250);
 
         SkillLockedCrafting.requireSkill(
@@ -3106,7 +3106,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.flintChip, 4), new Object[]{Item.flint});
         RecipeManager.addShapelessRecipe(new ItemStack(Item.snowball), new Object[]{NMItems.snowPile, NMItems.snowPile, NMItems.snowPile, NMItems.snowPile});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unshapedWetClayBrick, 1, NMItems.unshapedWetClayBrick.getMaxDamage() - 1), new Object[]{Item.clay, BTWItems.gravelPile, BTWItems.dirtPile, BTWItems.sandPile});
-        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.cauldron), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron}), NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.cauldron), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron}), NMSkillNodes.BRING_IRON_INGOT_8);
         RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SSS", " S ", "SSS", Character.valueOf('S'), BTWTags.looseCobblestones});
         NMFoodSpoilage.addSnowRefreshRecipes();
 
@@ -3837,7 +3837,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('C'), Item.clay,
                         Character.valueOf('N'), NMItems.primitiveGlue,
                         Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16,
+                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_8,
                 NMSkillNodes.KILL_MOB_250);
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.axeIron), new Object[]{
                 "XXN", "X#L", "G#L",
@@ -3846,7 +3846,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('N'), NMItems.nickelBinding,
                         Character.valueOf('L'), NMItems.lithiumStabilizer,
                         Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.MINE_BLOCK_1000);
+                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.MINE_BLOCK_1000);
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.shovelIron), new Object[]{
                 "CXC", "B#B", "S#S",
                         Character.valueOf('#'), NMItems.stoneStick,
@@ -3856,14 +3856,14 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('X'), Item.ingotIron}),
                 NMSkillNodes.BRING_IRON_SHOVEL, NMSkillNodes.BRING_STONE_STICK_64,
                 NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_STONE_BRICK_32,
-                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_LITHIUM_SALT_16);
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_LITHIUM_SALT_16);
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.hoeIron), new Object[]{
                 "X#G", "S#S", "S#S",
                         Character.valueOf('#'), NMItems.stoneStick,
                         Character.valueOf('S'), NMItems.lithiumStabilizer,
                         Character.valueOf('G'), BTWItems.glue,
                         Character.valueOf('X'), Item.ingotIron}),
-                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_LITHIUM_SALT_16);
+                NMSkillNodes.BRING_STONE_STICK_64, NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_LITHIUM_SALT_16);
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(Item.swordIron), new Object[]{
                         "X", "X", "#",
@@ -4143,7 +4143,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_WINDMILL_4, NMSkillNodes.BRING_STEEL_HAMMER,
                 NMSkillNodes.KILL_MOB_1000, NMSkillNodes.KILL_ENDERMAN_50,
                 NMSkillNodes.MINE_STRATA_ONE_COBBLESTONE_3000, NMSkillNodes.KILL_WITHER,
-                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.SMELT_IRON_NUGGET_128,
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.SMELT_IRON_NUGGET_128,
                 NMSkillNodes.CRAFT_CAULDRON, NMSkillNodes.BRING_ANCIENT_MANUSCRIPT_16
         );
 
@@ -4279,7 +4279,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.loom.blockID, NMSkillNodes.BRING_BELT_8);
         SkillRecipeGates.crafting(BTWItems.woodenBlade.itemID, 
                 NMSkillNodes.BRING_GLUE_16, NMSkillNodes.BRING_GLUE_SLURRY_16,
-                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_WINDMILL_4,
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_WINDMILL_4,
                 NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_256, NMSkillNodes.BRING_NETHER_WART_64);
         SkillRecipeGates.crafting(BTWItems.waterWheel.itemID, NMSkillNodes.BRING_WOODEN_BLADE_16);
         SkillRecipeGates.crafting(BTWBlocks.screwPump.blockID, NMSkillNodes.BRING_GEAR_64, NMSkillNodes.BRING_SCREW_16);
@@ -4298,7 +4298,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.infernalEssence.itemID, NMSkillNodes.BRING_OCULAR_OF_ENDER_8, NMSkillNodes.BRING_ENDER_PEARL_16,
                 NMSkillNodes.BRING_HELLFIRE_DUST_32, NMSkillNodes.BRING_SOUL_URN_16);
 
-        SkillRecipeGates.crafting(Item.horseArmorIron.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.horseArmorIron.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(Item.horseArmorGold.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_GOLD_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.horseArmorDiamond.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_DIAMOND_ARMOR_SET, NMSkillNodes.BRING_DIAMOND_INGOT_8);
 
@@ -4333,10 +4333,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Item.plateChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(Item.legsChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
         SkillRecipeGates.crafting(Item.bootsChain.itemID, NMSkillNodes.BRING_PADDED_ARMOR_SET);
-        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(Item.helmetIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.plateIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.legsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.bootsIron.itemID, NMSkillNodes.BRING_CHAIN_ARMOR_SET, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(Item.helmetGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.plateGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
         SkillRecipeGates.crafting(Item.legsGold.itemID, NMSkillNodes.BRING_IRON_ARMOR_SET, NMSkillNodes.BRING_GOLD_INGOT_16);
@@ -4382,12 +4382,12 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(Block.railActivator.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.crafting(NMBlocks.stationRail.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
 
-        SkillRecipeGates.crafting(BTWBlocks.anchor.blockID, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.pickaxeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.axeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.shovelIron.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.hoeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
-        SkillRecipeGates.crafting(Item.swordIron.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(BTWBlocks.anchor.blockID, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.pickaxeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.axeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.shovelIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.hoeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
+        SkillRecipeGates.crafting(Item.swordIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(BTWItems.redstoneLatch.itemID, NMSkillNodes.BRING_GOLD_NUGGET_32);
         SkillRecipeGates.crafting(BTWItems.ocularOfEnder.itemID, NMSkillNodes.BRING_GOLD_NUGGET_32, NMSkillNodes.BRING_ENDER_PEARL_16);
         SkillRecipeGates.crafting(Item.pocketSundial.itemID, NMSkillNodes.BRING_GOLD_NUGGET_32);
@@ -4552,7 +4552,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.diamondHammer.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8, NMSkillNodes.BRING_IRON_STICK_64);
         SkillRecipeGates.crafting(NMItems.steelHammer.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
         SkillRecipeGates.crafting(NMItems.goldHammer.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STICK_16);
-        SkillRecipeGates.crafting(NMItems.ironHammer.itemID, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_STONE_STICK_64);
+        SkillRecipeGates.crafting(NMItems.ironHammer.itemID, NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_STONE_STICK_64);
 
         SkillRecipeGates.crafting(Block.netherrack.blockID, 2, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
@@ -4600,10 +4600,10 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_NETHERRACK_TIER_THREE_256, NMSkillNodes.BRING_DEADZONE_SHARD_64);
 
         SkillRecipeGates.crafting(NMItems.stoneKnife.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
-        SkillRecipeGates.crafting(NMItems.ironKnife.itemID, NMSkillNodes.BRING_IRON_INGOT_16);
+        SkillRecipeGates.crafting(NMItems.ironKnife.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(NMItems.diamondKnife.itemID, NMSkillNodes.BRING_DIAMOND_INGOT_8);
         SkillRecipeGates.crafting(NMItems.goldKnife.itemID, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(NMItems.ironScythe.itemID, NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_IRON_SWORD,
+        SkillRecipeGates.crafting(NMItems.ironScythe.itemID, NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_IRON_SWORD,
                 NMSkillNodes.BRING_BONE_CLUB_4,
                 NMSkillNodes.BRING_WOODEN_CLUB_4,
                 NMSkillNodes.BRING_STONE_STICK_64,
@@ -4667,7 +4667,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_POTASSIUM_CRYSTAL_16);
         SkillRecipeGates.crafting(NMItems.nickelBinding.itemID, NMSkillNodes.BRING_NICKEL_PLATE_4);
         SkillRecipeGates.crafting(NMItems.oxygenTank.itemID,
-                NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_INGOT_16);
+                NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(NMItems.seededDiamondMatrix.itemID,
                 NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
         SkillRecipeGates.crafting(NMItems.nickelBoundDiamondMatrix.itemID,
@@ -4711,7 +4711,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.tastySandwich.itemID, NMSkillNodes.COOK_FOOD_200);
         SkillRecipeGates.crafting(NMItems.dungApple.itemID, NMSkillNodes.BRING_DUNG_16);
         SkillRecipeGates.crafting(NMItems.ironFishingPole.itemID,
-                NMSkillNodes.BRING_IRON_INGOT_16, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
         SkillRecipeGates.crafting(NMBlocks.stoneLadder.blockID, NMSkillNodes.BRING_LADDER_64);
         SkillRecipeGates.crafting(NMBlocks.ironLadder.blockID, NMSkillNodes.BRING_STONE_LADDER_64);
         SkillRecipeGates.crafting(NMBlocks.bloodSaw.blockID,
