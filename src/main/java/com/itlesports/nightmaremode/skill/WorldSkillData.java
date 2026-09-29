@@ -96,6 +96,18 @@ public class WorldSkillData {
         for (int i = 0; i < unlocked.tagCount(); ++i) {
             data.unlockedWorldNodes.add(((NBTTagString)unlocked.tagAt(i)).data);
         }
+        if (tag.getInteger("NetherContributionVersion") < 1) {
+            // move the legacy hammer contribution to iron sample without replaying other rewards.
+            boolean ironSample = data.isUnlocked("nightmare:skill/iron_sample");
+            boolean diamondHammer = data.isUnlocked("nightmare:skill/nether_diamond_hammer");
+            data.netherAccessUnlockProgress = Math.max(0, data.netherAccessUnlockProgress
+                    + (ironSample ? 1 : 0) - (diamondHammer ? 1 : 0));
+            if (diamondHammer) {
+                data.globalIronPileChanceBonus += 0.05F;
+            }
+            // never revoke access from a world that already opened the nether.
+            data.netherAccessUnlocked |= data.netherAccessUnlockProgress >= SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED;
+        }
         NBTTagList postCompletions = tag.getTagList("NetherPostCompletions");
         for (int i = 0; i < postCompletions.tagCount(); ++i) {
             NBTTagCompound completion = (NBTTagCompound)postCompletions.tagAt(i);
@@ -106,6 +118,7 @@ public class WorldSkillData {
     }
 
     public static void writeToNBT(NBTTagCompound tag, WorldSkillData data) {
+        tag.setInteger("NetherContributionVersion", 1);
         tag.setBoolean("WoodBlocksIgnoreSkybaseGravity", data.woodBlocksIgnoreSkybaseGravity);
         tag.setBoolean("NetherAccessUnlocked", data.netherAccessUnlocked);
         tag.setBoolean("FireSpreadsSlower", data.fireSpreadsSlower);

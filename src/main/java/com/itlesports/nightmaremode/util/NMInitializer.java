@@ -4152,10 +4152,8 @@ public abstract class NMInitializer implements AchievementExt {
                         "ABA", " A ", "AAA",
                         Character.valueOf('A'), Item.ingotIron,
                         Character.valueOf('B'), Block.blockIron}),
-                NMSkillNodes.BRING_DIAMOND_16, NMSkillNodes.BRING_DIAMOND_HAMMER,
-                NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16, NMSkillNodes.CRAFT_CAULDRON,
-                NMSkillNodes.BRING_WOODEN_BLADE_16, NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_64,
-                NMSkillNodes.KILL_MOB_250, NMSkillNodes.BRING_ENCHANTMENT_TABLE,
+                NMSkillNodes.CRAFT_CAULDRON, NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_64,
+                NMSkillNodes.KILL_MOB_250,
                 NMSkillNodes.MINE_STONE_1000, NMSkillNodes.KILL_WITCH_4
         );
 

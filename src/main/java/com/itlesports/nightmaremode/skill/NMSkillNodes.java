@@ -77,7 +77,8 @@ public final class NMSkillNodes {
             0, 0,
             "Bring 1 iron ingot.",
             Item.ingotIron.itemID, 0, false, 1,
-            "+5% global iron-pile chance and +1 to Wood Gravity unlock.", combine(SkillRewardActions.addGlobalIronPileChance(0.05F), SkillRewardActions.addWoodGravityProgress()),
+            "+5% global iron-pile chance, +1 to Wood Gravity unlock, and +1 to Nether Access unlock.",
+            combine(SkillRewardActions.addGlobalIronPileChance(0.05F), SkillRewardActions.addWoodGravityProgress(), SkillRewardActions.addNetherAccessProgress()),
             MINING, true);
 
     public static final SkillNode BRING_IRON_ORE_PILE_8 = deferred(bring(
@@ -272,12 +273,12 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_DIAMOND_HAMMER = bring(
             "nether_diamond_hammer",
-            "Portal Hammer",
+            "Diamond Metalworking",
             NMItems.diamondHammer,
             -3, 0,
             "Bring 1 diamond hammer.",
             NMItems.diamondHammer.itemID, 0, false, 1,
-            "+1 to Nether Access unlock.", SkillRewardActions.addNetherAccessProgress(),
+            "+5% global iron-pile chance.", SkillRewardActions.addGlobalIronPileChance(0.05F),
             MINING, true);
 
     public static final SkillNode BRING_UNCLEANED_CRYSTAL_SHARD_32 = bring(
@@ -3770,7 +3771,8 @@ public final class NMSkillNodes {
         BRING_STONE_STICK_64.addParents(BRING_LOOSE_STONE_64, MINE_STONE_1000);
         BRING_IRON_ORE_PILE_32.addParents(BRING_IRON_ORE_PILE_8);
         BRING_IRON_BLOOM_8.addParents(BRING_BRICK_32, BRING_IRON_ORE_PILE_32);
-        BRING_IRON_INGOT.addParents(BRING_IRON_BLOOM_8);
+        BRING_IRON_NUGGET_32.addParents(BRING_IRON_BLOOM_8);
+        BRING_IRON_INGOT.addParents(BRING_IRON_NUGGET_32);
         BRING_IRON_INGOT_16.addParents(BRING_IRON_INGOT);
         MINE_COAL_ORE_256.addParents(BRING_IRON_INGOT_16);
         MINE_IRON_ORE_256.addParents(BRING_IRON_INGOT_16);
@@ -3818,9 +3820,9 @@ public final class NMSkillNodes {
                 BRING_ENDER_SHELL_POWDER_16, BRING_PHASE_STEEL_8);
         BRING_ENDER_MECHANISM_4.addParents(BRING_SEALED_QUICKSILVER_PLATE_4);
 
-        // Diamond extraction. Iron Anvil is intentionally not a parent of
-        // BRING_DIAMOND_16: its crafting recipe already requires that node.
+        // all five extraction contributions must precede the first diamond rock.
         BRING_DIAMOND_BEARING_ROCK_64.addParents(
+                BRING_IRON_ANVIL,
                 BRING_REFINED_LITHIUM,
                 BRING_POLISHED_CRYSTAL_SHARD_4,
                 BRING_BLOOD_ORB,
@@ -3839,10 +3841,8 @@ public final class NMSkillNodes {
                 BRING_REDSTONE_16);
         BRING_IRON_ANVIL.addParents(
                 CRAFT_CAULDRON,
-                BRING_WOODEN_BLADE_16,
                 CRAFT_UNIQUE_RECIPE_OUTPUT_64,
                 KILL_MOB_250,
-                BRING_ENCHANTMENT_TABLE,
                 MINE_STONE_1000,
                 KILL_WITCH_4);
         MINE_DIAMOND_ORE_100.addParents(BRING_DIAMOND_BEARING_ROCK_64);
@@ -3940,7 +3940,6 @@ public final class NMSkillNodes {
         BRING_PAPER_64.addParents(BRING_SUGAR_CANE);
         BRING_GLUE_16.addParents(BRING_GLUE_SLURRY_16);
         BRING_GEAR_64.addParents(BRING_WOODEN_GEAR_12);
-        BRING_IRON_NUGGET_32.addParents(BRING_IRON_INGOT_16);
         BRING_GOLD_NUGGET_32.addParents(BRING_IRON_INGOT_16);
         BRING_GOLD_INGOT_16.addParents(BRING_GOLD_NUGGET_32);
         BRING_DIAMOND_8.addParents(BRING_DIAMOND_16);
@@ -4001,7 +4000,7 @@ public final class NMSkillNodes {
         BRING_SOUL_CHIP_16.addParents(BRING_CRUDE_OBSIDIAN_16);
         BRING_PIG_HIDE_16.addParents(BRING_CRUDE_OBSIDIAN_16);
         BRING_QUARTZ_DUST_32.addParents(BRING_SOUL_FLINT_4);
-        BRING_OBSIDIAN_SHARD_16.addParents(BRING_DIAMOND_HAMMER, BRING_BLOOD_ORB_64, BRING_VESSEL_OF_THE_DRAGON,
+        BRING_OBSIDIAN_SHARD_16.addParents(BRING_DIAMOND_INGOT_2, BRING_BLOOD_ORB_64, BRING_VESSEL_OF_THE_DRAGON,
                 BRING_ENCHANTMENT_TABLE, KILL_MOB_250);
         BRING_SOUL_FLINT_4.addParents(BRING_SOUL_CHIP_16);
 
