@@ -23,10 +23,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class GuiSkillStats extends GuiScreen {
     private static final int PANE_WIDTH = 320;
     private static final int PANE_HEIGHT = 220;
+    private static final SkillTreeData DEFAULT_PLAYER_STATS = new SkillTreeData();
     private static final ResourceLocation BORDER_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/border.png");
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/background.png");
     private static final ResourceLocation TAB_OUTLINE_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/tab_outline.png");
@@ -61,6 +63,8 @@ public class GuiSkillStats extends GuiScreen {
         SkillTreeData data = SkillHandler.getPlayerData(this.mc.thePlayer);
         WorldSkillData world = SkillHandler.getWorldData(this.mc.theWorld);
         List<String> lines = new ArrayList<>();
+        lines.add("PLAYER STATS");
+        addPlayerStats(lines, data, world);
         lines.add("PROGRESSION");
         int worldProgress = NMUtils.getWorldProgress();
         if (worldProgress >= NMFields.HARDMODE) {
@@ -86,8 +90,6 @@ public class GuiSkillStats extends GuiScreen {
         add(lines, "Stone mined", data.stoneMined);
         add(lines, "Clay mined", data.clayMined);
         add(lines, "Dirt mined", data.dirtMined);
-        add(lines, "Bonus coal dust per ore (pickaxe)", data.coalDustDropBonus);
-        add(lines, "Bonus iron dust per ore (pickaxe)", data.ironDustDropBonus);
         add(lines, "Coal ore mined", data.coalOreMined);
         add(lines, "Iron ore mined", data.ironOreMined);
         add(lines, "Diamond ore mined", data.diamondOreMined);
@@ -181,6 +183,73 @@ public class GuiSkillStats extends GuiScreen {
 
     private static String progress(String name, int count, int required, boolean unlocked) {
         return name + ": " + (unlocked ? "Unlocked" : Math.min(count, required) + " / " + required);
+    }
+
+    private static void addPlayerStats(List<String> lines, SkillTreeData data, WorldSkillData world) {
+        addPercentBonus(lines, "Block breaking speed", data.blockBreakSpeedBonus);
+        addPercentBonus(lines, "Shovel speed", data.shovelSpeedBonus);
+        addPercentBonus(lines, "Movement speed", data.movementSpeedBonus);
+        addPercentBonus(lines, "Mechanical block speed", data.machineSpeedBonus);
+        addPercentBonus(lines, "Kiln processing speed", data.kilnSpeedBonus);
+        addPercentBonus(lines, "Cistern processing speed", data.cisternSpeedBonus);
+        addPercentBonus(lines, "Brewing speed", data.brewingSpeedBonus);
+        if (data.clayCookTimeReductionTicks > 0) {
+            lines.add("Clay cooking time: " + ((36000 - data.clayCookTimeReductionTicks) / 20) + " seconds");
+        }
+        float spoilageRate = Math.max(0.05F,
+                data.foodSpoilageRateMultiplier * world.globalFoodSpoilageRateMultiplier);
+        if (spoilageRate < DEFAULT_PLAYER_STATS.foodSpoilageRateMultiplier) {
+            lines.add("Food spoils: " + percent(1.0F - spoilageRate) + " slower");
+        }
+        addPercentBonus(lines, "Melee damage", data.meleeDamageBonus);
+        addPercentBonus(lines, "Ranged damage", data.rangedDamageBonus);
+        addPercent(lines, "Heat damage reduction", Math.min(1.0F, data.heatDamageReduction));
+        addPercent(lines, "Oxygen loss reduction", Math.min(1.0F, data.oxygenLossReduction));
+        addPercent(lines, "Armor durability save chance", data.armorDurabilitySaveChance);
+        addPercent(lines, "Hammer durability save chance", data.hammerDurabilitySaveChance);
+        addPercent(lines, "Mob bonus loot chance", data.mobLootChanceBonus + world.globalMobLootChanceBonus);
+        addPercentBonus(lines, "Experience gain", data.xpGainBonus + world.globalXpGainBonus);
+        addPercent(lines, "Enchanting cost reduction", data.enchantCostReduction);
+        if (data.deathItemLossChance < DEFAULT_PLAYER_STATS.deathItemLossChance) {
+            lines.add("Item loss chance on death: " + percent(data.deathItemLossChance));
+        }
+        add(lines, "Extra hotbar slots", data.extraHotbarSlots);
+        add(lines, "Bonus coal dust per ore (pickaxe)", data.coalDustDropBonus);
+        add(lines, "Bonus iron dust per ore (pickaxe)", data.ironDustDropBonus);
+        addPercentBonus(lines, "Iron pile drop chance", data.ironPileChanceBonus + world.globalIronPileChanceBonus);
+        addPercentBonus(lines, "Diamond rock drop chance", data.diamondRockDropChanceBonus);
+        addPercent(lines, "Double nickel rock chance", data.doubleNickelRockChance);
+        if (data.doubleLithiumDrops) lines.add("Lithium drops: +100%");
+        addPercentBonus(lines, "Crystal drop chance", data.crystalDropChanceBonus);
+        addPercentBonus(lines, "Blaze rod drop chance", data.blazeRodDropChanceBonus);
+        addPercentBonus(lines, "Hemp seed drop chance", data.hempSeedChanceBonus);
+        addPercentBonus(lines, "Twig drop chance", data.twigDropChanceBonus);
+        addPercentBonus(lines, "Rare fish chance", data.rareFishChanceBonus);
+        if (data.tallGrassAlwaysDropsPlantFiber) {
+            lines.add("Tall grass plant fiber chance: 100%");
+        } else {
+            addPercentBonus(lines, "Tall grass plant fiber chance", data.tallGrassPlantFiberChanceBonus);
+        }
+        if (data.villagerProfessionChangeChance < DEFAULT_PLAYER_STATS.villagerProfessionChangeChance) {
+            lines.add("Villager profession change chance: " + percent(data.villagerProfessionChangeChance));
+        }
+        if (world.globalVillagerHungerDrainRateMultiplier < 1.0F) {
+            lines.add("Villager starvation: " + percent(1.0F - world.globalVillagerHungerDrainRateMultiplier) + " slower");
+        }
+    }
+
+    private static void addPercentBonus(List<String> lines, String name, float bonus) {
+        if (bonus > 0.0F) lines.add(name + ": +" + percent(bonus));
+    }
+
+    private static void addPercent(List<String> lines, String name, float value) {
+        if (value > 0.0F) lines.add(name + ": " + percent(value));
+    }
+
+    private static String percent(float value) {
+        String formatted = String.format(Locale.ROOT, "%.1f", value * 100.0F);
+        if (formatted.endsWith(".0")) formatted = formatted.substring(0, formatted.length() - 2);
+        return formatted + "%";
     }
 
     private static void add(List<String> lines, String name, int count) {

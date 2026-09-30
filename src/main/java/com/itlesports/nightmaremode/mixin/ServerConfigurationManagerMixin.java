@@ -2,6 +2,9 @@ package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.mixin.interfaces.TeleporterAccess;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.NMDeathTimeRules;
+import com.itlesports.nightmaremode.util.NMHardcoreSpawnContext;
+import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.util.NetherRecall;
 import com.itlesports.nightmaremode.util.NetherPostProgress;
 import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
@@ -35,6 +38,12 @@ public class ServerConfigurationManagerMixin {
     @Unique private final java.util.Map<EntityPlayerMP, ItemStack> pendingRecalls = new java.util.IdentityHashMap<>();
     @Unique private long deathWorldTime;
 
+    @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lbtw/util/hardcorespawn/HardcoreSpawnUtils;handleHardcoreSpawn(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/src/EntityPlayerMP;Lnet/minecraft/src/EntityPlayerMP;)V"))
+    private void respawnAroundDeathLocation(MinecraftServer server, EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer) {
+        NMHardcoreSpawnContext.runWithDeathOrigin(oldPlayer, newPlayer,
+                () -> HardcoreSpawnUtils.handleHardcoreSpawn(server, oldPlayer, newPlayer));
+    }
+
     @Inject(method = "respawnPlayer", at = @At("HEAD"))
     private void rememberDeathWorldTime(EntityPlayerMP oldPlayer, int dimension, boolean leavingEnd,
                                         CallbackInfoReturnable<EntityPlayerMP> cir) {
@@ -47,8 +56,8 @@ public class ServerConfigurationManagerMixin {
         if (leavingEnd) return;
         WorldServer world = MinecraftServer.getServer().worldServerForDimension(0);
         long time = world.getWorldTime();
-        world.setWorldTime(deathWorldTime < 120000L ? 0L
-                : ((time / 24000L) + (time % 24000L == 0L ? 0L : 1L)) * 24000L);
+        world.setWorldTime(NMDeathTimeRules.getRespawnTime(deathWorldTime, time,
+                JourneyProfile.getOrCreate(world).deaths));
     }
 
 

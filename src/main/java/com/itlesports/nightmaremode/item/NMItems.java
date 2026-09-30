@@ -588,9 +588,9 @@ public class NMItems {
 
         ironBloom = new NMPlaceAsBlockItem(2616, NMFields.BLOCK_IRON_BLOOM).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
         scrapedBark = new NMItem(2617).setUnlocalizedName("ifhyScrapedBark").setTextureName("nightmare:ifhyScrapedBark").setCreativeTab(CreativeTabs.tabMaterials);
-        woodCup = new NMItem(2618).setMaxStackSize(16).setUnlocalizedName("ifhyWoodCup").setTextureName("nightmare:ifhyWoodCup").setCreativeTab(CreativeTabs.tabMaterials);
-        cupOfSap = new NMItem(2619).setMaxStackSize(16).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
-        thickenedSap = new NMItem(2620).setMaxStackSize(16).setUnlocalizedName("ifhyThickenedSap").setTextureName("nightmare:ifhyThickenedSap").setCreativeTab(CreativeTabs.tabMaterials);
+        woodCup = new ItemWoodCup(2618, NMFields.BLOCK_WOOD_CUP).setMaxStackSize(4).setUnlocalizedName("ifhyWoodCup").setTextureName("nightmare:ifhyWoodCup").setCreativeTab(CreativeTabs.tabMaterials);
+        cupOfSap = new ItemWoodCup(2619, NMFields.BLOCK_CUP_OF_SAP).setMaxStackSize(4).setUnlocalizedName("ifhyCupOfSap").setTextureName("nightmare:ifhyCupOfSap").setCreativeTab(CreativeTabs.tabMaterials);
+        thickenedSap = new ItemWoodCup(2620, NMFields.BLOCK_THICKENED_SAP).setMaxStackSize(4).setUnlocalizedName("ifhyThickenedSap").setTextureName("nightmare:ifhyThickenedSap").setCreativeTab(CreativeTabs.tabMaterials);
         scrapedBark.setfurnaceburntime(25);
         woodCup.setfurnaceburntime(40);
         thickenedSap.setfurnaceburntime(15);
@@ -616,7 +616,7 @@ public class NMItems {
         lithiumHeatCompound = new NMItem(2638).setUnlocalizedName("ifhyLithiumHeatCompound").setTextureName("nightmare:ifhyLithiumHeatCompound").setCreativeTab(CreativeTabs.tabMaterials);
 
         crystalUncleanedShard = new NMItem(2639).setUnlocalizedName("ifhyUncleanedCrystalShard").setTextureName("nightmare:ifhyUncleanedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
-        crystalCleanShard = new NMProgressiveItem(2640, 2641).setTargetDurability(80).setUnlocalizedName("ifhyCleanCrystalShard").setTextureName("nightmare:ifhyCleanCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
+        crystalCleanShard = new NMProgressiveItem(2640, () -> crystalPolishedShard.itemID).setTargetDurability(80).setUnlocalizedName("ifhyCleanCrystalShard").setTextureName("nightmare:ifhyCleanCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
         crystalPolishedShard = new NMItem(2641).setUnlocalizedName("ifhyPolishedCrystalShard").setTextureName("nightmare:ifhyPolishedCrystalShard").setCreativeTab(CreativeTabs.tabMaterials);
         crystalLens = new NMItem(2642).setUnlocalizedName("ifhyCrystalLens").setTextureName("nightmare:ifhyCrystalLens").setCreativeTab(CreativeTabs.tabMaterials);
         crystalPrecisionGear = new NMItem(2643).setUnlocalizedName("ifhyPrecisionCrystalGear").setTextureName("nightmare:ifhyPrecisionCrystalGear").setCreativeTab(CreativeTabs.tabMaterials);

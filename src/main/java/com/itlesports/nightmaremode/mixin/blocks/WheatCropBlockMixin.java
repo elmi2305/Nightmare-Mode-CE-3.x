@@ -23,7 +23,7 @@ public abstract class  WheatCropBlockMixin extends DailyGrowthCropsBlock {
 
     public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int x, int y, int z) {
         ItemStack heldStack = player.getCurrentEquippedItem();
-        return heldStack != null && heldStack.getItem() instanceof ItemScythe ? 10.0F : 0.0F;
+        return heldStack != null && heldStack.getItem() instanceof ItemScythe ? 10.0F : 1.0F;
     }
 
     @Inject(method = "incrementGrowthLevel", at = @At("HEAD"), cancellable = true)

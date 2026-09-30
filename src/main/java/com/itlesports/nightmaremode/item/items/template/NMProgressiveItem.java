@@ -41,6 +41,10 @@ public class NMProgressiveItem extends ProgressiveCraftingItem {
     @Override
     public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
         player.playSound(soundID, 0.1f, 1.25f + world.rand.nextFloat() * 0.25f);
+        return getCraftingOutput();
+    }
+
+    public ItemStack getCraftingOutput() {
         return new ItemStack(returnID.getAsInt(), 1, 0);
     }
 

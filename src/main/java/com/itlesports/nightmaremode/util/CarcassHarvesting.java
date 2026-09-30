@@ -144,6 +144,10 @@ public final class CarcassHarvesting {
         ItemStack held = player.getHeldItem();
         if (harvestTier > ItemKnife.TIER_FISTS && ItemKnife.fromStack(held) != null) {
             held.damageItem(1, player);
+            // damageItem consumes the stack, but custom harvesting must clear the inventory slot.
+            if (held.stackSize <= 0) {
+                player.destroyCurrentEquippedItem();
+            }
         }
     }
 

@@ -21,24 +21,22 @@ public final class NMPlacedItemHelper {
         return item == Item.flint || item == NMItems.flintChip || item == NMItems.soulFlint
                 || item == BTWItems.sharpStone
                 || item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
-                || item instanceof ItemKnife
-                || item == NMItems.woodCup || item == NMItems.cupOfSap || item == NMItems.thickenedSap;
+                || item instanceof ItemKnife;
     }
 
     public static boolean place(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
                                 int side) {
+        if (stack == null || stack.stackSize <= 0) return false;
         if (!player.isUsingSpecialKey() || !isSupported(stack.getItem())
                 || !player.canPlayerEdit(x, y, z, side, stack)) return false;
 
         int placeX = x;
         int placeY = y;
         int placeZ = z;
-        boolean cup = isCup(stack.getItem());
         if (WorldUtils.isReplaceableBlock(world, x, y, z)) {
             --y;
             side = 1;
         } else {
-            if (cup && side != 1) return false;
             switch (side) {
                 case 0: --placeY; break;
                 case 1: ++placeY; break;
@@ -72,7 +70,6 @@ public final class NMPlacedItemHelper {
     }
 
     private static boolean canStick(Item item, Block block, World world, int x, int y, int z) {
-        if (isCup(item)) return true;
         if (!block.canToolsStickInBlock(world, x, y, z)) return false;
         if (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig || item instanceof ItemKnife)
             return block.areAxesEffectiveOn() || block.areShovelsEffectiveOn();

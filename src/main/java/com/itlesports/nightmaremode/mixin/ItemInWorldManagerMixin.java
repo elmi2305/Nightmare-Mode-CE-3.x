@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.world.SandboxRules;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
@@ -38,12 +39,19 @@ public class ItemInWorldManagerMixin {
     @Shadow
     public EntityPlayerMP thisPlayerMP;
 
+    @Redirect(method = {"onBlockClicked", "updateBlockRemoving", "uncheckedTryHarvestBlock"}, at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Block;getPlayerRelativeBlockHardness(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/World;III)F"))
+    private float enforceBreakingRules(Block block, EntityPlayer player, World world, int x, int y, int z) {
+        return NMBlockBreakingRules.getBreakingSpeed(block, player, world, x, y, z);
+    }
+
     @Redirect(method = "removeBlock", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/World;setBlockToAir(III)Z"))
     private boolean countRemovedBlock(World world, int x, int y, int z) {
         int blockId = world.getBlockId(x, y, z);
         int metadata = world.getBlockMetadata(x, y, z);
-        boolean removed = world.setBlockToAir(x, y, z);
+        boolean removed = NMBlockBreakingRules.removeBlock(world, this.thisPlayerMP,
+                Block.blocksList[blockId], x, y, z);
         if (removed && blockId > 0) SkillHandler.incrementBlocksMined(this.thisPlayerMP, blockId, metadata);
         return removed;
     }
@@ -104,6 +112,11 @@ public class ItemInWorldManagerMixin {
 
     @Inject(method = "survivalTryHarvestBlock", at = @At("HEAD"), cancellable = true)
     private void minePersistentOreNode(int x, int y, int z, int fromSide, CallbackInfoReturnable<Boolean> cir) {
+        if (!NMBlockBreakingRules.canAttemptBreak(this.thisPlayerMP,
+                Block.blocksList[this.theWorld.getBlockId(x, y, z)], this.theWorld, x, y, z)) {
+            cir.setReturnValue(false);
+            return;
+        }
         if (this.theWorld.getBlockId(x, y, z) == Block.whiteStone.blockID
                 && this.theWorld.getBlockMetadata(x, y, z) == 1) {
             ItemStack tool = this.thisPlayerMP.getCurrentEquippedItem();
@@ -253,6 +266,7 @@ public class ItemInWorldManagerMixin {
             target = "Lnet/minecraft/src/Block;harvestBlock(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityPlayer;IIII)V"))
     private void applySkillHarvestRewards(Block block, World world, EntityPlayer player,
                                           int x, int y, int z, int metadata) {
+        if (!NMBlockBreakingRules.canHarvestPlant(player, block)) return;
         block.harvestBlock(world, player, x, y, z, metadata);
         // Silk Touch must not produce repeatable bonus dust from the same placed ore.
         if (!EnchantmentHelper.getSilkTouchModifier(player)) {

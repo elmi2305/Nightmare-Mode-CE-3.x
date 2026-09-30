@@ -72,6 +72,6 @@ public class ItemKnife extends NMItem implements NoMeleeKnockback {
     }
 
     public static ItemKnife fromStack(ItemStack stack) {
-        return stack != null && stack.getItem() instanceof ItemKnife knife ? knife : null;
+        return stack != null && stack.stackSize > 0 && stack.getItem() instanceof ItemKnife knife ? knife : null;
     }
 }

@@ -32,14 +32,6 @@ public abstract class BlockLogMixin extends BlockRotatedPillar {
     }
 
     @Override
-    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int i, int j, int k) {
-        if(player.getHeldItem() == null || !(player.getHeldItem().getItem() instanceof ItemTool || player.getHeldItem().getItem() instanceof ToolItem)){
-            return 0.0F;
-        }
-        return super.getPlayerRelativeBlockHardness(player, world, i, j, k);
-    }
-
-    @Override
     public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
         // drops nothing
         return true;

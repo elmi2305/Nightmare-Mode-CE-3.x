@@ -31,6 +31,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.NMPostItems;
 import com.itlesports.nightmaremode.item.NMTags;
 import com.itlesports.nightmaremode.item.items.ItemLateGameMaterial;
+import com.itlesports.nightmaremode.item.items.template.NMProgressiveItem;
 import com.itlesports.nightmaremode.mixin.interfaces.TradeBuilderAccessor;
 import com.itlesports.nightmaremode.entity.EntityTier1NetherVillager;
 import com.itlesports.nightmaremode.entity.EntityTier2NetherVillager;
@@ -200,6 +201,7 @@ public abstract class NMInitializer implements AchievementExt {
         addCisternRecipes();
         addBrewingStandRecipes();
         addMillstoneRecipes();
+        addLoomRecipes();
         addTurntableRecipes();
         addEnderAssemblerRecipes();
         addOvenRecipes();
@@ -1543,6 +1545,8 @@ public abstract class NMInitializer implements AchievementExt {
         CauldronCraftingManager cauldron = CauldronCraftingManager.getInstance();
         CauldronStokedCraftingManager cauldronStoked = CauldronStokedCraftingManager.getInstance();
 
+        addSaplingTransmutationRecipes(cauldron);
+
 
         // replacing some BTW recipes
         killCauldronRecipe(BTWItems.element);
@@ -1656,6 +1660,19 @@ public abstract class NMInitializer implements AchievementExt {
         cauldron.removeRecipe(new ItemStack(BTWItems.glue, 2), new TagOrStack[]{new ItemStack(BTWItems.tannedLeatherBoots, 1, Short.MAX_VALUE)});
     }
 
+    private static void addSaplingTransmutationRecipes(CauldronCraftingManager cauldron) {
+        Block[] saplings = {BTWBlocks.oakSapling, BTWBlocks.spruceSapling,
+                BTWBlocks.birchSapling, BTWBlocks.jungleSapling};
+        for (int type = 0; type < saplings.length; ++type) {
+            cauldron.addRecipe(new ItemStack(saplings[type]), saplingTransmutationInputs(type));
+        }
+    }
+
+    private static ItemStack[] saplingTransmutationInputs(int type) {
+        return new ItemStack[]{new ItemStack(BTWBlocks.aestheticVegetation, 1, 2),
+                new ItemStack(BTWItems.bark, 4, type), new ItemStack(Item.dyePowder, 1, 15)};
+    }
+
     private static void addCisternRecipes(){
         CisternRecipeManager manager = CisternRecipeManager.instance;
 
@@ -1663,6 +1680,14 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{new ItemStack(NMItems.rawSap), new ItemStack(BTWItems.coalDust)},
                 CisternTileEntity.FLUID_WATER, 0, 1, 100,
                 new ItemStack[]{new ItemStack(NMItems.primitiveGlue, 2)}));
+
+        Block[] saplings = {BTWBlocks.oakSapling, BTWBlocks.spruceSapling,
+                BTWBlocks.birchSapling, BTWBlocks.jungleSapling};
+        for (int type = 0; type < saplings.length; ++type) {
+            manager.addRecipe(new CisternRecipe(saplingTransmutationInputs(type),
+                    CisternTileEntity.FLUID_WATER, 1, 4, 240,
+                    new ItemStack[]{new ItemStack(saplings[type])}));
+        }
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(Item.coal), new ItemStack(BTWItems.hellfireDust, 2),
@@ -2330,6 +2355,17 @@ public abstract class NMInitializer implements AchievementExt {
 
         finishRecipes("Campfire Recipes");
 
+    }
+
+    private static void addLoomRecipes() {
+        // Use the same outputs as hand crafting and accept any remaining progress.
+        for (Item item : Item.itemsList) {
+            if (item instanceof NMProgressiveItem progressive) {
+                RecipeManager.addLoomRecipe(progressive.getCraftingOutput(),
+                        new ItemStack(progressive, 1, progressive.getMaxDamage() - 1).setIgnoreMeta());
+            }
+        }
+        finishRecipes("Loom");
     }
 
     private static void addMillstoneRecipes(){

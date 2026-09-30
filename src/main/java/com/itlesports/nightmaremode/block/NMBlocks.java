@@ -122,6 +122,9 @@ public class NMBlocks {
     public static Block blockWashedIronLayer;
     public static Block ironBloom;
     public static Block sapTap;
+    public static Block woodCup;
+    public static Block cupOfSap;
+    public static Block thickenedSap;
     public static Block stoneAnvil;
     public static Block diamondAnvil;
     public static Block dryingGrass;
@@ -195,6 +198,10 @@ public class NMBlocks {
 
         sapTap = new BlockSapTap(2402);
         Item.itemsList[sapTap.blockID] = new NMItemBlock(NMBlocks.sapTap.blockID - 256);
+
+        woodCup = new BlockWoodCup(NMFields.BLOCK_WOOD_CUP, NMItems.woodCup.itemID, "ifhyWoodCup", null);
+        cupOfSap = new BlockWoodCup(NMFields.BLOCK_CUP_OF_SAP, NMItems.cupOfSap.itemID, "ifhyCupOfSap", "nightmare:ifhyCupOfSap");
+        thickenedSap = new BlockWoodCup(NMFields.BLOCK_THICKENED_SAP, NMItems.thickenedSap.itemID, "ifhyThickenedSap", "nightmare:ifhyThickenedSap");
 
         ironBloom = new BlockIronBloom(NMFields.BLOCK_IRON_BLOOM);
         Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256).hideFromEMI();

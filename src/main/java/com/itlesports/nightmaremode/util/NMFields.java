@@ -107,6 +107,9 @@ public class NMFields {
     public static final int BLOCK_IRON_ANVIL = 2436;
     public static final int BLOCK_TERRAIN_EXTRACTOR = 2438;
     public static final int BLOCK_CARBURIZED_IRON_BLOOM = 2447;
+    public static final int BLOCK_WOOD_CUP = 2461;
+    public static final int BLOCK_CUP_OF_SAP = 2462;
+    public static final int BLOCK_THICKENED_SAP = 2463;
     // icons - registered in TextureMapMixin
     public static Icon ICON_SLURRY;
     public static Icon ICON_BRINE;

@@ -97,7 +97,7 @@ public class BlockSapTap extends Block {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int facing, float clickX, float clickY, float clickZ) {
         ItemStack heldStack = player.getHeldItem();
-        if (heldStack == null || heldStack.itemID != NMItems.woodCup.itemID) {
+        if (heldStack == null || heldStack.itemID != NMItems.woodCup.itemID || player.isUsingSpecialKey()) {
             return false;
         }
 

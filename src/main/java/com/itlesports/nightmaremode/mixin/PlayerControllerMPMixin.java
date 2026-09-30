@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerControllerMP.class)
 public class PlayerControllerMPMixin {
+    @Redirect(method = {"clickBlock", "onPlayerDamageBlock"}, at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Block;getPlayerRelativeBlockHardness(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/World;III)F"))
+    private float enforceBreakingRules(Block block, EntityPlayer player, World world, int x, int y, int z) {
+        return NMBlockBreakingRules.getBreakingSpeed(block, player, world, x, y, z);
+    }
+
     @Redirect(method = "onPlayerRightClick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Block;onBlockActivated(Lnet/minecraft/src/World;IIILnet/minecraft/src/EntityPlayer;IFFF)Z"))
     private boolean letMechanicalWrenchInspectBeforeOpeningGui(Block block, World world,

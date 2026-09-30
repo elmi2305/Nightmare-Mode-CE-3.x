@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import com.itlesports.nightmaremode.item.itemblock.ObsidianItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockColoredChest;
 import com.itlesports.nightmaremode.util.StorageColor;
@@ -128,6 +129,19 @@ public abstract class BlockMixin {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(BTWItems.potash),
                     MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
         }
+    }
+
+    @Inject(method = "getPlayerRelativeBlockHardness", at = @At("HEAD"), cancellable = true)
+    private void requireEffectiveToolForHardBlocks(EntityPlayer player, World world, int x, int y, int z,
+                                                   CallbackInfoReturnable<Float> cir) {
+        if (!NMBlockBreakingRules.canAttemptBreak(player, (Block)(Object)this, world, x, y, z)) {
+            cir.setReturnValue(0.0F);
+        }
+    }
+
+    @Inject(method = "dropBlockAsItem_do", at = @At("HEAD"), cancellable = true)
+    private void suppressWrongToolPlantDrops(World world, int x, int y, int z, ItemStack stack, CallbackInfo ci) {
+        if (NMBlockBreakingRules.arePlantDropsSuppressed()) ci.cancel();
     }
 
     @Inject(method = "getPlayerRelativeBlockHardness", at = @At("HEAD"), cancellable = true)
