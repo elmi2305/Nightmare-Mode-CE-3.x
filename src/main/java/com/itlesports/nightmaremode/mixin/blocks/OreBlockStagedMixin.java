@@ -74,7 +74,7 @@ public class OreBlockStagedMixin extends OreBlock {
                     for (int i = 0; i < guaranteedPiles; i++) {
                         summonEntity(world, x, y, z, side, BTWItems.ironOrePile);
                     }
-                    if (world.rand.nextFloat() < 0.85F) {
+                    if (world.rand.nextFloat() < 0.5F) {
                         summonEntity(world, x, y, z, side, BTWItems.ironOrePile);
                     }
                 } else {
