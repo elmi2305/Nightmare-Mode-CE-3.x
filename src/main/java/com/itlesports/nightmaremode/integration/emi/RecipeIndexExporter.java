@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.skill.SkillNode;
+import com.itlesports.nightmaremode.util.NMOvenCookTimes;
+import emi.dev.emi.emi.recipe.EmiCookingRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
 import emi.dev.emi.emi.api.recipe.EmiRecipeManager;
@@ -307,6 +309,10 @@ public final class RecipeIndexExporter {
 
     private static JsonObject details(EmiRecipe recipe) {
         JsonObject details = new JsonObject();
+        if (recipe instanceof EmiCookingRecipe && !recipe.getInputs().isEmpty()) {
+            details.addProperty("duration_ticks", NMOvenCookTimes.getCookTime(
+                    recipe.getInputs().get(0).getEmiStacks().get(0).getItemStack()));
+        }
         reflect(details, recipe, "hits", "hits");
         reflect(details, recipe, "experienceCost", "experience_cost");
         reflect(details, recipe, "blockRecipe", "placed_block");

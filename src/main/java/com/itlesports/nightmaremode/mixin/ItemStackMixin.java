@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.item.items.ItemGlassArmor;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.NMItemStackUtils;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
@@ -16,6 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
+    @Inject(method = {"shouldApplyAttributesWhenHeld", "shouldApplyAttributesWhenWorn"},
+            at = @At("HEAD"), cancellable = true)
+    private void ignoreAttributesForUnregisteredItem(CallbackInfoReturnable<Boolean> cir) {
+        if (!NMItemStackUtils.isValid((ItemStack)(Object)this)) cir.setReturnValue(false);
+    }
+
     @Inject(method = "writeToNBT", at = @At("RETURN"))
     private void writeExtendedDamage(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> cir) {
         ItemStack stack = (ItemStack)(Object)this;

@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
+import com.itlesports.nightmaremode.util.NMItemStackUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.world.SandboxRules;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
@@ -29,6 +30,25 @@ public class InventoryPlayerMixin {
     @Shadow public ItemStack[] armorInventory;
     @Shadow public int currentItem;
     @Shadow public EntityPlayer player;
+
+    @Inject(method = {"getCurrentItem", "getStackInSlot"}, at = @At("RETURN"), cancellable = true)
+    private void ignoreUnregisteredStacks(CallbackInfoReturnable<ItemStack> cir) {
+        if (!NMItemStackUtils.isValid(cir.getReturnValue())) cir.setReturnValue(null);
+    }
+
+    @Inject(method = "decrementAnimations", at = @At("HEAD"))
+    private void clearUnregisteredStacksBeforeTick(CallbackInfo ci) {
+        this.clearUnregisteredStacks(this.mainInventory);
+        this.clearUnregisteredStacks(this.armorInventory);
+    }
+
+    @Unique
+    private void clearUnregisteredStacks(ItemStack[] inventory) {
+        for (int slot = 0; slot < inventory.length; ++slot) {
+            ItemStack stack = inventory[slot];
+            if (stack != null && !NMItemStackUtils.isValid(stack)) inventory[slot] = null;
+        }
+    }
 
     @ModifyArg(method = "damageArmor", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/ItemStack;damageItem(ILnet/minecraft/src/EntityLivingBase;)V"), index = 0)

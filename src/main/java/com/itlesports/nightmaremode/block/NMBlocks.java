@@ -202,6 +202,9 @@ public class NMBlocks {
         woodCup = new BlockWoodCup(NMFields.BLOCK_WOOD_CUP, NMItems.woodCup.itemID, "ifhyWoodCup", null);
         cupOfSap = new BlockWoodCup(NMFields.BLOCK_CUP_OF_SAP, NMItems.cupOfSap.itemID, "ifhyCupOfSap", "nightmare:ifhyCupOfSap");
         thickenedSap = new BlockWoodCup(NMFields.BLOCK_THICKENED_SAP, NMItems.thickenedSap.itemID, "ifhyThickenedSap", "nightmare:ifhyThickenedSap");
+        Item.itemsList[woodCup.blockID] = new NMItemBlock(woodCup.blockID - 256).hideFromEMI();
+        Item.itemsList[cupOfSap.blockID] = new NMItemBlock(cupOfSap.blockID - 256).hideFromEMI();
+        Item.itemsList[thickenedSap.blockID] = new NMItemBlock(thickenedSap.blockID - 256).hideFromEMI();
 
         ironBloom = new BlockIronBloom(NMFields.BLOCK_IRON_BLOOM);
         Item.itemsList[ironBloom.blockID] = new NMItemBlock(NMBlocks.ironBloom.blockID - 256).hideFromEMI();

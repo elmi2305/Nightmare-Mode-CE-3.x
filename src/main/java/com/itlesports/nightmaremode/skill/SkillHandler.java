@@ -153,8 +153,8 @@ public class SkillHandler {
         if (NMBlocks.nickelOre != null && blockId == NMBlocks.nickelOre.blockID) {
             data.nickelOreMined++;
         }
-        if (blockId == Block.cobblestone.blockID && metadata == 0) {
-            data.strataOneCobblestoneMined++;
+        if (blockId == Block.stone.blockID && (metadata & 3) == 0) {
+            data.strataOneStoneMined++;
         }
         if (blockId == Block.dirt.blockID) {
             data.dirtMined++;

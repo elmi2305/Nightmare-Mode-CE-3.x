@@ -2146,7 +2146,7 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(Block.oreDiamond.blockID);
-        FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 3);
+        FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 4);
         FurnaceRecipes.smelting().addSmelting(NMItems.carbonRichIronMix.itemID, new ItemStack(NMItems.carburizedIronBloom), 0.0F, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.lithiumTreatedIronBlank.itemID, new ItemStack(NMItems.reinforcedIronIngot), 0.2F, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.wetGasket.itemID, new ItemStack(NMItems.waxedGasket), 0.0F, 1);
@@ -4200,7 +4200,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_256, NMSkillNodes.CRAFT_CAULDRON,
                 NMSkillNodes.BRING_WINDMILL_4, NMSkillNodes.BRING_STEEL_HAMMER,
                 NMSkillNodes.KILL_MOB_1000, NMSkillNodes.KILL_ENDERMAN_50,
-                NMSkillNodes.MINE_STRATA_ONE_COBBLESTONE_3000, NMSkillNodes.KILL_WITHER,
+                NMSkillNodes.MINE_STRATA_ONE_STONE_3000, NMSkillNodes.KILL_WITHER,
                 NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.SMELT_IRON_NUGGET_128,
                 NMSkillNodes.CRAFT_CAULDRON, NMSkillNodes.BRING_ANCIENT_MANUSCRIPT_16
         );
@@ -4288,7 +4288,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_PRISMATIC_INGOT_8, NMSkillNodes.BRING_REFINED_PRISMA_ARMOR, NMSkillNodes.BRING_BLOOD_ARMOR_SET, NMSkillNodes.BRING_STEEL_ARMOR_SET, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_2,
                 NMSkillNodes.BRING_HEAT_RESISTANT_NICKEL_COMPONENT_2, NMSkillNodes.BRING_REFINED_REDSTONE_16, NMSkillNodes.BRING_GUNPOWDER_256, NMSkillNodes.BRING_DARK_INGOT_8, NMSkillNodes.BRING_GLASS_64, NMSkillNodes.BRING_BLACKGLASS_PLATE_4,
                 NMSkillNodes.BRING_BLACKSTONE_64, NMSkillNodes.BRING_OBSIDIAN_BRICK_16, NMSkillNodes.BRING_WINDMILL_BLADE_8, NMSkillNodes.BRING_GOLD_ORE_PILE_32, NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.KILL_WITHER,
-                NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.MINE_CLAY_BLOCK_1500, NMSkillNodes.MINE_NICKEL_ORE_500, NMSkillNodes.MINE_STRATA_ONE_COBBLESTONE_3000, NMSkillNodes.KILL_ZOMBIE_1000, NMSkillNodes.KILL_WITCH_30,
+                NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.MINE_CLAY_BLOCK_1500, NMSkillNodes.MINE_NICKEL_ORE_500, NMSkillNodes.MINE_STRATA_ONE_STONE_3000, NMSkillNodes.KILL_ZOMBIE_1000, NMSkillNodes.KILL_WITCH_30,
                 NMSkillNodes.BRING_BLOOD_ORB_128_II, NMSkillNodes.BRING_GIMP_ARMOR_SET, NMSkillNodes.BRING_WOODEN_BLADE_16, NMSkillNodes.BRING_HEMP_32, NMSkillNodes.BRING_PLANT_FIBER_1024, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_1024,
                 NMSkillNodes.BRING_NETHERRACK_TIER_TWO_1024, NMSkillNodes.BRING_NETHERRACK_TIER_THREE_1024, NMSkillNodes.BRING_ENDER_PEARL_16, NMSkillNodes.BRING_BOOK_128, NMSkillNodes.BRING_RARE_FISH_32, NMSkillNodes.BRING_DRIED_PLANT_FIBER_300,
                 NMSkillNodes.VISIT_UNIQUE_BIOME_10, NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_256);

@@ -94,7 +94,7 @@ public class GuiSkillStats extends GuiScreen {
         add(lines, "Iron ore mined", data.ironOreMined);
         add(lines, "Diamond ore mined", data.diamondOreMined);
         add(lines, "Nickel ore mined", data.nickelOreMined);
-        add(lines, "Strata one cobble mined", data.strataOneCobblestoneMined);
+        add(lines, "Strata one stone mined", data.strataOneStoneMined);
         add(lines, "Leaves mined", data.leavesMined);
         add(lines, "Tall grass harvested", data.tallGrassMined);
         lines.add("FARMING & EXPLORATION");

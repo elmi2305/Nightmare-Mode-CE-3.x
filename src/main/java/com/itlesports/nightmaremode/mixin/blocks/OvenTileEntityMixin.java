@@ -5,6 +5,7 @@ import btw.block.tileentity.OvenTileEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.util.NMOvenCookTimes;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntityFurnace;
@@ -53,10 +54,8 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     }
 
     @Inject(method = "getCookTimeForCurrentItem", at = @At("HEAD"), cancellable = true)
-    private void setChocolateCakeCookTime(CallbackInfoReturnable<Integer> cir) {
-        if (this.furnaceItemStacks[0] != null && this.furnaceItemStacks[0].itemID == NMItems.unbakedChocolateCake.itemID) {
-            cir.setReturnValue(2400);
-        }
+    private void setJourneyCookTime(CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(NMOvenCookTimes.getCookTime(this.furnaceItemStacks[0]));
     }
 
     @Inject(method = "writeToNBT", at = @At("TAIL"))

@@ -247,12 +247,16 @@ public class ItemInWorldManagerMixin {
     @Redirect(method = "survivalTryHarvestBlock", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Block;convertBlock(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;IIII)Z"))
     private boolean applySkillConversionRewards(Block block, ItemStack stack, World world, int x, int y, int z, int side) {
+        int metadata = world.getBlockMetadata(x, y, z);
         boolean converted = block.convertBlock(stack, world, x, y, z, side);
         if (converted) {
             com.itlesports.nightmaremode.skill.SkillMiningRewards.award(
                     this.thisPlayerMP, block, stack, world, x, y, z, side);
             if (block == Block.oreIron || block == Block.oreCoal) {
                 SkillHandler.incrementBlocksMined(this.thisPlayerMP, block.blockID, 0);
+            } else if (block == Block.stone && world.getBlockId(x, y, z) != block.blockID) {
+                // count the stone once when mined into rough stone, not when merely cracked.
+                SkillHandler.incrementBlocksMined(this.thisPlayerMP, block.blockID, metadata);
             }
         }
         if (converted && block.blockID == Block.grass.blockID && !world.isRemote

@@ -914,6 +914,8 @@ public abstract class GuiIngameMixin extends Gui {
         if (slot >= unlockedSlots) {
             return;
         }
+        ItemStack stack = this.mc.thePlayer.inventory.mainInventory[slot];
+        if (!com.itlesports.nightmaremode.util.NMItemStackUtils.isValid(stack)) return;
         int offset = 3;
 
         this.renderInventorySlot(slot, this.nightmareMode$getHotbarLeft(unlockedSlots) + slot * 20 + offset, y, partialTicks);
@@ -933,11 +935,12 @@ public abstract class GuiIngameMixin extends Gui {
     private void drawTamingArrow(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (!(mc.thePlayer.ridingEntity instanceof EntityHorse horse)) return;
+        if (mc.thePlayer == null || mc.theWorld == null
+                || !(mc.thePlayer.ridingEntity instanceof EntityHorse horse)) return;
 
 
         // only show for untamed horses while riding
-        if (!horse.isTame() && horse.riddenByEntity instanceof EntityPlayer) {
+        if (!horse.isDead && !horse.isTame() && horse.riddenByEntity == mc.thePlayer) {
             // read the required direction stored by the horse (updated from packets)
             byte ordinal = ((IHorseTamingClient) horse).nm$getRequiredDirection();
             if (ordinal < 0 || ordinal >= EnumFacing.values().length) return;
@@ -1084,13 +1087,11 @@ public abstract class GuiIngameMixin extends Gui {
 
 
         float angleDeg;
-        switch (dir) {
-            case NORTH: angleDeg = 0f; break;
-            case SOUTH: angleDeg = 180f; break;
-            case EAST:  angleDeg = 90f; break;
-            case WEST:  angleDeg = -90f; break;
-            default:    angleDeg = 0f; break;
-        }
+        // enum switches in mixins create a helper class that the production loader cannot load.
+        if (dir == EnumFacing.SOUTH) angleDeg = 180f;
+        else if (dir == EnumFacing.EAST) angleDeg = 90f;
+        else if (dir == EnumFacing.WEST) angleDeg = -90f;
+        else angleDeg = 0f;
 
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);

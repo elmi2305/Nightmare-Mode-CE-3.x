@@ -188,13 +188,13 @@ public final class NMSkillNodes {
             "+1 to Diamond Extraction unlock.", SkillRewardActions.addDiamondHarvestProgress(),
             MINING, false);
 
-    public static final SkillNode MINE_STRATA_ONE_COBBLESTONE_3000 = deferred(counter(
+    public static final SkillNode MINE_STRATA_ONE_STONE_3000 = deferred(counter(
             "hammer_preservation",
             "Hammer Preservation",
-            Block.cobblestone,
+            Block.stone,
             4, 4,
-            "Mine 3,000 strata-one cobblestone.",
-            (p, w) -> SkillHandler.getPlayerData(p).strataOneCobblestoneMined >= 3000,
+            "Mine 3,000 strata-one stone.",
+            (p, w) -> SkillHandler.getPlayerData(p).strataOneStoneMined >= 3000,
             "10% chance not to consume hammer durability.", SkillRewardActions.addHammerDurabilitySaveChance(0.10F),
             MINING, false),
             () -> NMSkillNodes.MINE_STONE_1000);
@@ -4131,7 +4131,7 @@ public final class NMSkillNodes {
         BRING_CLAY_BLOCK_32.addParents(BRING_CLAY_BALL_32, CRAFT_UNIQUE_RECIPE_OUTPUT_64);
         BRING_FLINT_4.addParents(BRING_FLINT_CHIP);
         BRING_GRAVEL_64.addParents(BRING_GRAVEL_PILE_32);
-        BRING_STONE_STICK_64.addParents(BRING_LOOSE_STONE_64, MINE_STONE_1000);
+        BRING_STONE_STICK_64.addParents(BRING_LOOSE_STONE_64, MINE_BLOCK_1000);
         BRING_IRON_ORE_PILE_32.addParents(BRING_IRON_ORE_PILE_8);
         BRING_IRON_BLOOM_8.addParents(BRING_BRICK_32, BRING_IRON_ORE_PILE_32);
         BRING_IRON_NUGGET_32.addParents(BRING_IRON_BLOOM_8);

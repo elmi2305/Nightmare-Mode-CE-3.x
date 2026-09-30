@@ -32,7 +32,7 @@ public class SkillTreeData {
     public int clayMined;
     public int stoneMined;
     public int nickelOreMined;
-    public int strataOneCobblestoneMined;
+    public int strataOneStoneMined;
     public int dirtMined;
     public int leavesMined;
     public int saplingsPlanted;
@@ -224,7 +224,8 @@ public class SkillTreeData {
         data.clayMined = tag.getInteger("ClayMined");
         data.stoneMined = tag.getInteger("StoneMined");
         data.nickelOreMined = tag.getInteger("NickelOreMined");
-        data.strataOneCobblestoneMined = tag.getInteger("StrataOneCobblestoneMined");
+        data.strataOneStoneMined = tag.hasKey("StrataOneStoneMined")
+                ? tag.getInteger("StrataOneStoneMined") : tag.getInteger("StrataOneCobblestoneMined");
         data.dirtMined = tag.getInteger("DirtMined");
         data.leavesMined = tag.getInteger("LeavesMined");
         data.saplingsPlanted = tag.getInteger("SaplingsPlanted");
@@ -334,7 +335,7 @@ public class SkillTreeData {
         tag.setInteger("ClayMined", data.clayMined);
         tag.setInteger("StoneMined", data.stoneMined);
         tag.setInteger("NickelOreMined", data.nickelOreMined);
-        tag.setInteger("StrataOneCobblestoneMined", data.strataOneCobblestoneMined);
+        tag.setInteger("StrataOneStoneMined", data.strataOneStoneMined);
         tag.setInteger("DirtMined", data.dirtMined);
         tag.setInteger("LeavesMined", data.leavesMined);
         tag.setInteger("SaplingsPlanted", data.saplingsPlanted);
