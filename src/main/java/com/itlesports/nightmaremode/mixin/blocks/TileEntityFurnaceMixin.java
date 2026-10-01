@@ -16,25 +16,4 @@ import java.util.List;
 
 @Mixin(TileEntityFurnace.class)
 public class TileEntityFurnaceMixin {
-    @Shadow protected ItemStack[] furnaceItemStacks;
-
-    @Unique
-    private static final List<Integer> UNIQUE_ITEMS = new ArrayList<>(Arrays.asList(
-            BTWItems.unfiredCrudeBrick.itemID,
-            BTWItems.unfiredNetherBrick.itemID
-    ));
-
-    @Inject(method = "getCookTimeForCurrentItem", at = @At("HEAD"), cancellable = true)
-    private void makeClayCookEarly(CallbackInfoReturnable<Integer> cir) {
-        ItemStack stack = this.furnaceItemStacks[0];
-        if (getIsSpecial(stack)){
-            cir.setReturnValue(150);
-        }
-    }
-
-
-    @Unique private boolean getIsSpecial(ItemStack stack){
-        if(stack == null) return false;
-        return UNIQUE_ITEMS.contains(stack.itemID);
-    }
 }
