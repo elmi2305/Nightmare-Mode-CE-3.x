@@ -200,6 +200,10 @@ public final class SkillRewardActions {
         return playerReward(data -> data.deathItemLossChance = Math.max(0.0F, Math.min(1.0F, chance)));
     }
 
+    public static SkillUnlockAction addDeathItemLossChance(float chance) {
+        return playerReward(data -> data.deathItemLossChance = Math.max(0.0F, Math.min(1.0F, data.deathItemLossChance + chance)));
+    }
+
     public static SkillUnlockAction alwaysDropPlantFiberFromTallGrass() {
         return playerReward(data -> data.tallGrassAlwaysDropsPlantFiber = true);
     }

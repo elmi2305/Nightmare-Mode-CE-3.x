@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.PhaseTransitEntity;
+import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,6 +42,11 @@ public abstract class EntityMixin implements PhaseTransitEntity {
     @Inject(method = "onEntityUpdate", at = @At("TAIL"))
     private void releasePhasePortalExitLock(CallbackInfo ci) {
         Entity entity = (Entity)(Object)this;
+        // retain the birthplace of deadzone endermen and ghasts after they travel.
+        if (!entity.worldObj.isRemote && this.nm$phaseOrigin < 0
+                && (entity.getClass() == EntityEnderman.class || entity.getClass() == EntityGhast.class)) {
+            this.nm$phaseOrigin = OverworldTierHelper.getRegion(entity.worldObj, entity.posX, entity.posZ).ordinal();
+        }
         if (entity.worldObj.isRemote || !this.nm$mustLeavePhasePortal) return;
         AxisAlignedBB box = entity.boundingBox;
         int minX = MathHelper.floor_double(box.minX);

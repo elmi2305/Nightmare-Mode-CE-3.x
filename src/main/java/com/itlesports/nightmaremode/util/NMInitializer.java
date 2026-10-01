@@ -1025,34 +1025,23 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmEclipseMerchantFrozenEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.FROZEN_ESSENCE, 2, 4, 1.0F);
         buy("nmEclipseMerchantEnderMechanismFinal", profession, 5, NMItems.enderMechanism.itemID, 0, 1, 2, 1.1F);
         buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 16, 32, 1.0F);
-        convert("nmEclipseMerchantBloodBone1", profession, 5,
-                TradeItem.fromID(Item.emerald.itemID, 24, 32),
-                TradeItem.fromID(NMItems.automationEssence.itemID),
-                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
-        convert("nmEclipseMerchantBloodBone2", profession, 5,
-                TradeItem.fromID(Item.emerald.itemID, 28, 36),
-                TradeItem.fromID(NMItems.artisanEssence.itemID),
-                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
-        convert("nmEclipseMerchantBloodBone3", profession, 5,
-                TradeItem.fromID(Item.emerald.itemID, 32, 40),
-                TradeItem.fromID(NMItems.husbandryEssence.itemID),
-                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
-        convert("nmEclipseMerchantBloodBone4", profession, 5,
-                TradeItem.fromID(Item.emerald.itemID, 36, 44),
-                TradeItem.fromID(NMItems.infernalEssence.itemID),
-                TradeItem.fromID(NMBlocks.bloodBones.blockID), 1.0F, false, true);
+        // the covenant is the endpoint: one exchange supplies the complete altar.
+        convert("nmEclipseMerchantBloodBoneCovenant", profession, 5,
+                TradeItem.fromID(Item.emerald.itemID, 32, 32),
+                TradeItem.fromIDAndMetadata(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.NIGHTMARE_COVENANT_ESSENCE),
+                TradeItem.fromID(NMBlocks.bloodBones.blockID, 4), 1.0F, false, true);
         convert("nmEclipseMerchantSteelBlockAutomation", profession, 5,
                 TradeItem.fromID(BTWBlocks.soulforgedSteelBlock.blockID, 30, 48), TradeItem.EMPTY,
                 TradeItem.fromID(Item.emerald.itemID, 2, 2), 1.0F, false, true);
 
         TradeProvider.getBuilder().name("nmEclipseMerchantRank2").profession(profession).level(1)
-                .buy().item(NMItems.enderCrystal.itemID).itemCount(16, 16).mandatory().addAsLevelUpTrade();
+                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.END_HARVEST_ESSENCE).itemCount(2, 2).mandatory().addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmEclipseMerchantRank3").profession(profession).level(2)
-                .buy().item(NMItems.mercuryAmalgam.itemID).itemCount(8, 8).mandatory().addAsLevelUpTrade();
+                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.PHASE_ATTUNEMENT_ESSENCE).itemCount(2, 2).mandatory().addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmEclipseMerchantRank4").profession(profession).level(3)
-                .buy().item(NMItems.phaseSteelIngot.itemID).itemCount(8, 8).mandatory().addAsLevelUpTrade();
+                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.OUTER_CONCORD_ESSENCE).itemCount(1, 1).mandatory().addAsLevelUpTrade();
         TradeProvider.getBuilder().name("nmEclipseMerchantRank5").profession(profession).level(4)
-                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.CONVERGENCE_ESSENCE)
+                .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.NIGHTMARE_COVENANT_ESSENCE)
                 .itemCount(1, 1).mandatory().addAsLevelUpTrade();
 
         EntityVillager.defaultTradeByProfessionList.put(profession,
@@ -2346,6 +2335,7 @@ public abstract class NMInitializer implements AchievementExt {
                       BTWItems.verticalWindMill,
                       BTWItems.ocularOfEnder});
         ultimateEyeOfEnderRecipe = (IRecipe)soulforge.getRecipeList().get(recipeIndex);
+        addPostDragonSoulforgeRecipes();
         finishRecipes("Soulforge Recipes");
 
     }
@@ -4922,6 +4912,69 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('R'), NMItems.paleRootResin}),
                 NMSkillNodes.BRING_ENDSTONE_CERAMIC_PLATE_8, NMSkillNodes.BRING_DARK_INGOT_8, NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_PALE_ROOT_RESIN_8);
 
+    }
+
+    private static void addPostDragonSoulforgeRecipes() {
+        RecipeManager.addSoulforgeRecipe(late(ItemLateGameMaterial.END_HARVEST_ESSENCE, 1), new Object[]{
+                "EMRE", "CDSC", "RPPR", "BQOB",
+                'E', NMItems.endstonePowder, 'M', NMItems.mercuryPowder, 'R', NMItems.paleRootResin,
+                'C', NMItems.enderCrystal, 'D', NMItems.enderDust, 'S', NMItems.enderShellPowder,
+                'P', new ItemStack(Block.obsidian, 1, 0), 'B', new ItemStack(Block.cobblestoneMossy, 1, 0),
+                'Q', new ItemStack(Block.stoneBrick, 1, 1), 'O', new ItemStack(Block.stoneBrick, 1, 2)});
+        SkillRecipeGates.soulforge(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.END_HARVEST_ESSENCE,
+                NMSkillNodes.BRING_ENDSTONE_64, NMSkillNodes.BRING_MERCURY_POWDER_32,
+                NMSkillNodes.BRING_ENDER_DUST_16, NMSkillNodes.BRING_ENDER_SHELL_POWDER_16,
+                NMSkillNodes.BRING_PALE_ROOT_RESIN_8, NMSkillNodes.BRING_MOSSY_COBBLESTONE_32,
+                NMSkillNodes.BRING_MOSSY_STONE_BRICKS_32, NMSkillNodes.BRING_CRACKED_STONE_BRICKS_32);
+
+        RecipeManager.addSoulforgeRecipe(late(ItemLateGameMaterial.PHASE_ATTUNEMENT_ESSENCE, 1), new Object[]{
+                "PEMP", "RCGR", "RCGR", "PESP",
+                'P', NMItems.phaseSteelPlate, 'E', NMItems.enderCrystal, 'M', NMItems.enderMechanism,
+                'R', NMItems.paleRootResin, 'C', NMItems.mercuryAmalgam,
+                'G', NMItems.crystalPolishedShard, 'S', NMItems.sealedQuicksilverPlate});
+        SkillRecipeGates.soulforge(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.PHASE_ATTUNEMENT_ESSENCE,
+                NMSkillNodes.BRING_END_HARVEST_ESSENCE_1, NMSkillNodes.BRING_PHASE_CELL_2,
+                NMSkillNodes.BRING_PHASE_STEEL_PLATE_8, NMSkillNodes.BRING_ENDER_MECHANISM_4,
+                NMSkillNodes.BRING_SEALED_QUICKSILVER_PLATE_4);
+
+        RecipeManager.addSoulforgeRecipe(late(ItemLateGameMaterial.OUTER_CONCORD_ESSENCE, 1), new Object[]{
+                "DSVA", "FCHP", "EMQR", "GITU",
+                'D', late(ItemLateGameMaterial.DEADZONE_ESSENCE, 1),
+                'S', late(ItemLateGameMaterial.SOLAR_ESSENCE, 1),
+                'V', late(ItemLateGameMaterial.VOID_ESSENCE, 1),
+                'A', late(ItemLateGameMaterial.ABYSSAL_ESSENCE, 1),
+                'F', late(ItemLateGameMaterial.FROZEN_ESSENCE, 1),
+                'C', late(ItemLateGameMaterial.CONVERGENCE_ESSENCE, 1),
+                'H', late(ItemLateGameMaterial.END_HARVEST_ESSENCE, 1),
+                'P', late(ItemLateGameMaterial.PHASE_ATTUNEMENT_ESSENCE, 1),
+                'E', NMItems.endAccordFragment, 'M', NMItems.enderMechanism,
+                'Q', NMItems.sealedQuicksilverPlate, 'R', NMItems.paleRootResin,
+                'G', late(ItemLateGameMaterial.GRAVITITE_INGOT, 1),
+                'I', late(ItemLateGameMaterial.SOLAR_QUARTZ_INGOT, 1),
+                'T', late(ItemLateGameMaterial.ABYSS_INGOT, 1),
+                'U', late(ItemLateGameMaterial.CRYOLITE_INGOT, 1)});
+        SkillRecipeGates.soulforge(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.OUTER_CONCORD_ESSENCE,
+                NMSkillNodes.BRING_DEADZONE_ESSENCE_1, NMSkillNodes.BRING_SOLAR_ESSENCE_1,
+                NMSkillNodes.BRING_VOID_ESSENCE_1, NMSkillNodes.BRING_ABYSSAL_ESSENCE_1,
+                NMSkillNodes.BRING_FROZEN_ESSENCE_1, NMSkillNodes.BRING_CONVERGENCE_ESSENCE_1,
+                NMSkillNodes.BRING_PHASE_ATTUNEMENT_ESSENCE_1, NMSkillNodes.BRING_END_HARVEST_ESSENCE_1);
+
+        RecipeManager.addSoulforgeRecipe(late(ItemLateGameMaterial.NIGHTMARE_COVENANT_ESSENCE, 1), new Object[]{
+                "OCNS", "PHRE", "MQBM", "DVAQ",
+                'O', late(ItemLateGameMaterial.OUTER_CONCORD_ESSENCE, 1),
+                'C', late(ItemLateGameMaterial.CONVERGENCE_ESSENCE, 1),
+                'N', Item.netherStar, 'S', NMItems.witherSoul,
+                'P', late(ItemLateGameMaterial.PHASE_ATTUNEMENT_ESSENCE, 1),
+                'H', late(ItemLateGameMaterial.END_HARVEST_ESSENCE, 1),
+                'R', NMItems.paleRootResin, 'E', NMItems.endAccordFragment,
+                'M', NMItems.enderMechanism, 'Q', NMItems.phaseSteelPlate,
+                'B', NMItems.bloodIngot, 'D', NMItems.darkIngot,
+                'V', NMItems.enderCrystal, 'A', NMItems.mercuryAmalgam});
+        SkillRecipeGates.soulforge(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.NIGHTMARE_COVENANT_ESSENCE,
+                NMSkillNodes.BRING_OUTER_CONCORD_ESSENCE_1, NMSkillNodes.BRING_CONVERGENCE_ESSENCE_1,
+                NMSkillNodes.BRING_NETHER_STAR_1, NMSkillNodes.BRING_WITHER_SOUL_1,
+                NMSkillNodes.BRING_ENDSTONE_CLAY_32, NMSkillNodes.BRING_OBSIDIAN_BLOCK_16,
+                NMSkillNodes.BRING_END_HARVEST_ESSENCE_1, NMSkillNodes.BRING_PHASE_ATTUNEMENT_ESSENCE_1);
     }
 
     private static void addEnderAssemblerRecipes() {

@@ -56,7 +56,7 @@ public final class PhasePortalManager {
     public static void teleport(Entity entity, PhasePortalData.Endpoint target) {
         if (entity.worldObj.isRemote || entity.timeUntilPortal > 0) return;
         if (entity instanceof PhaseTransitEntity transit && transit.nm$mustLeavePhasePortal()) return;
-        if (entity instanceof PhaseTransitEntity transit && entity.dimension == 0) {
+        if (entity instanceof PhaseTransitEntity transit && entity.dimension == 0 && transit.nightmareMode$getPhaseOrigin() < 0) {
             OverworldTierHelper.Region region = OverworldTierHelper.getRegion(entity.worldObj, entity.posX, entity.posZ);
             if (region != OverworldTierHelper.Region.INNER && region != OverworldTierHelper.Region.GREAT_VOID
                     && region != OverworldTierHelper.Region.BEYOND) transit.nightmareMode$setPhaseOrigin(region.ordinal());

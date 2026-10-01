@@ -7,9 +7,25 @@ import net.minecraft.src.*;
 import java.util.HashSet;
 
 public class NightmareVillager extends EntityVillager {
+    private static final int TRADE_SCHEMA = 1;
     public NightmareVillager(World par1World) {
         super(par1World, 5);
         this.setPersistent(true);
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound tag) {
+        super.writeEntityToNBT(tag);
+        tag.setInteger("NmMerchantTradeSchema", TRADE_SCHEMA);
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound tag) {
+        super.readEntityFromNBT(tag);
+        // rebuild old offers while retaining the merchant's rank and reputation.
+        if (tag.getInteger("NmMerchantTradeSchema") < TRADE_SCHEMA) {
+            this.buyingList = null;
+        }
     }
     @Override
     public int getProfessionFromClass() {

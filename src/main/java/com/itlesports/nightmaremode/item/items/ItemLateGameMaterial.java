@@ -49,6 +49,10 @@ public class ItemLateGameMaterial extends Item {
     public static final int ABYSSAL_ESSENCE = 35;
     public static final int FROZEN_ESSENCE = 36;
     public static final int CONVERGENCE_ESSENCE = 37;
+    public static final int END_HARVEST_ESSENCE = 38;
+    public static final int PHASE_ATTUNEMENT_ESSENCE = 39;
+    public static final int OUTER_CONCORD_ESSENCE = 40;
+    public static final int NIGHTMARE_COVENANT_ESSENCE = 41;
 
     private static final String[] NAMES = {
             "GravititeChunk", "GravititeNugget", "GravititeIngot",
@@ -60,20 +64,23 @@ public class ItemLateGameMaterial extends Item {
             "VoidPowder", "DisplacedPearl", "CharredString", "CinderBone", "DesiccatedFlesh",
             "LuminousInkSac", "HaloTear", "AngelBreath", "CausticTear", "AcidInkSac",
             "FrozenBone", "FrozenFlesh", "DeadzoneEssence", "SolarEssence", "VoidEssence",
-            "AbyssalEssence", "FrozenEssence", "ConvergenceEssence"
+            "AbyssalEssence", "FrozenEssence", "ConvergenceEssence",
+            "EndHarvestEssence", "PhaseAttunementEssence", "OuterConcordEssence", "NightmareCovenantEssence"
     };
     private static final int[] COLORS = {
             0x7866A8,0xA18FC7,0xC0AFE8, 0xD8832D,0xF0B95A,0xFFD87A,
             0xFFFFFF,0xFFFFFF,0xFFFFFF, 0x16445A,0x2B718A,0x49A7BA,
             0x76CFE8,0xA7E8F6,0xD4F7FF, 0x302746,0x7456A0,0x3B3337,0x8E1E31,0x4A3B67,
             0x15131E,0x7D4DA4,0xB64620,0xE15A26,0xA8895A, 0xE8E5FF,0xE0C9FF,0xFFF4D0,
-            0x74B929,0x84D33D,0xBDEEFF,0x96D7EF, 0x594472,0xCF812E,0xE7E7FF,0x25647A,0x8FDFF2,0xD6B4FF
+            0x74B929,0x84D33D,0xBDEEFF,0x96D7EF, 0x594472,0xCF812E,0xE7E7FF,0x25647A,0x8FDFF2,0xD6B4FF,
+            0xFFFFFF,0xFFFFFF,0xFFFFFF,0xFFFFFF
     };
     @Environment(EnvType.CLIENT) private Icon chunkIcon;
     @Environment(EnvType.CLIENT) private Icon nuggetIcon;
     @Environment(EnvType.CLIENT) private Icon ingotIcon;
     @Environment(EnvType.CLIENT) private Icon[] dropIcons;
     @Environment(EnvType.CLIENT) private Icon essenceIcon;
+    @Environment(EnvType.CLIENT) private Icon[] merchantEssenceIcons;
 
     public ItemLateGameMaterial(int id) {
         super(id);
@@ -102,11 +109,16 @@ public class ItemLateGameMaterial extends Item {
             this.dropIcons[metadata - SHADOW_DUST] = register.registerIcon("nightmare:" + name);
         }
         this.essenceIcon = register.registerIcon("nightmare:ifhyAutomationEssence");
+        this.merchantEssenceIcons = new Icon[NAMES.length - END_HARVEST_ESSENCE];
+        for (int metadata = END_HARVEST_ESSENCE; metadata < NAMES.length; ++metadata) {
+            this.merchantEssenceIcons[metadata - END_HARVEST_ESSENCE] = register.registerIcon("nightmare:ifhy" + NAMES[metadata]);
+        }
         this.itemIcon = this.dropIcons[0];
     }
 
     @Override @Environment(EnvType.CLIENT)
     public Icon getIconFromDamage(int metadata) {
+        if (metadata >= END_HARVEST_ESSENCE && metadata < NAMES.length) return this.merchantEssenceIcons[metadata - END_HARVEST_ESSENCE];
         if (metadata >= DEADZONE_ESSENCE) return this.essenceIcon;
         if (metadata < SHADOW_DUST) return switch (metadata % 3) {
             case 0 -> this.chunkIcon;

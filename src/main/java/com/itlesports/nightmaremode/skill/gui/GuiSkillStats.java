@@ -199,7 +199,7 @@ public class GuiSkillStats extends GuiScreen {
         float spoilageRate = Math.max(0.05F,
                 data.foodSpoilageRateMultiplier * world.globalFoodSpoilageRateMultiplier);
         if (spoilageRate < DEFAULT_PLAYER_STATS.foodSpoilageRateMultiplier) {
-            lines.add("Food spoils: " + percent(1.0F - spoilageRate) + " slower");
+            lines.add("Food spoil rate: " + percent(1.0F - spoilageRate));
         }
         addPercentBonus(lines, "Melee damage", data.meleeDamageBonus);
         addPercentBonus(lines, "Ranged damage", data.rangedDamageBonus);

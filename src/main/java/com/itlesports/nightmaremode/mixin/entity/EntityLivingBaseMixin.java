@@ -210,12 +210,12 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     }
 
     @Inject(method = "onDeath", at = @At("HEAD"))
-    private void dropPhaseTransitMaterials(DamageSource source, CallbackInfo ci) {
+    private void dropOuterOverworldMaterials(DamageSource source, CallbackInfo ci) {
         if (this.worldObj.isRemote) return;
         EntityLivingBase entity = (EntityLivingBase)(Object)this;
         OverworldTierHelper.Region current = this.dimension == 0
                 ? OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) : OverworldTierHelper.Region.INNER;
-        if (current == OverworldTierHelper.Region.GREAT_VOID) {
+        if (entity instanceof EntityAngelSquid || entity instanceof EntityAngelGhast || entity instanceof EntityAngelDragon) {
             if (entity instanceof EntityAngelSquid) this.dropLateMaterial(ItemLateGameMaterial.LUMINOUS_INK_SAC, 1, 2);
             else if (entity instanceof EntityAngelGhast) this.dropLateMaterial(ItemLateGameMaterial.HALO_TEAR, 1, 1);
             else if (entity instanceof EntityAngelDragon) this.dropLateMaterial(ItemLateGameMaterial.ANGEL_BREATH, 2, 3);
@@ -223,16 +223,17 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             this.entityDropItem(new ItemStack(NMItems.aetherChunk, 1 + this.rand.nextInt(3)), 0.0F);
             return;
         }
-        if (this.dimension != 0 || current != OverworldTierHelper.Region.INNER
-                || !(entity instanceof PhaseTransitEntity transit) || transit.nightmareMode$getPhaseOrigin() < 0) return;
+        boolean deadzoneOrigin = current == OverworldTierHelper.Region.DEADZONE
+                || entity instanceof PhaseTransitEntity transit
+                && transit.nightmareMode$getPhaseOrigin() == OverworldTierHelper.Region.DEADZONE.ordinal();
         int material = -1;
         if (entity instanceof EntityShadowZombie) material = ItemLateGameMaterial.SHADOW_DUST;
         else if (entity instanceof EntityEnderSkeleton) material = ItemLateGameMaterial.ENDER_BONE;
         else if (entity instanceof EntityWitherSkeletonOuter) material = ItemLateGameMaterial.VERTEBRAE;
         else if (entity instanceof EntityBlackWidowSpider) material = ItemLateGameMaterial.BLACKWIDOW_GLAND;
         else if (entity instanceof EntityVoidCreeper) material = ItemLateGameMaterial.VOID_POWDER;
-        else if (entity.getClass() == EntityEnderman.class) material = ItemLateGameMaterial.DISPLACED_PEARL;
-        else if (entity.getClass() == EntityGhast.class) material = ItemLateGameMaterial.DEADZONE_TEAR;
+        else if (deadzoneOrigin && entity.getClass() == EntityEnderman.class) material = ItemLateGameMaterial.DISPLACED_PEARL;
+        else if (deadzoneOrigin && entity.getClass() == EntityGhast.class) material = ItemLateGameMaterial.DEADZONE_TEAR;
         else if (entity instanceof EntityFireSpider) material = ItemLateGameMaterial.CHARRED_STRING;
         else if (entity instanceof EntityInfernoSkeleton) material = ItemLateGameMaterial.CINDER_BONE;
         else if (entity instanceof EntityMummyZombie) material = ItemLateGameMaterial.DESICCATED_FLESH;
