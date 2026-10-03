@@ -600,7 +600,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "clonePlayer", at = @At("TAIL"))
     private void retainPreHardmodeIfhyDeathInventory(EntityPlayer oldPlayer, boolean playerLeavingTheEnd, CallbackInfo ci) {
-        if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
+        if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
         }
     }

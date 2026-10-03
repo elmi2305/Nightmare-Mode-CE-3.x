@@ -8,7 +8,7 @@ public class OreNodeTileEntity extends TileEntity {
 
     public void initializeCapacity() {
         if (this.remainingCapacity <= 0 && this.worldObj != null) {
-            this.remainingCapacity = 250 + this.worldObj.rand.nextInt(751);
+            this.remainingCapacity = com.itlesports.nightmaremode.util.EasyBalance.resourceCount(250 + this.worldObj.rand.nextInt(751));
             this.onInventoryChanged();
         }
     }

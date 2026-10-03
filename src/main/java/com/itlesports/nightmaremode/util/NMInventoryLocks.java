@@ -11,6 +11,13 @@ public final class NMInventoryLocks {
     private static final int[] HOTBAR_SLOT_LEVELS = {0, 3, 6, 9, 12, 15, 18};
     private static final int SECOND_BACKPACK_ROW_LEVEL = 10;
 
+    private static int getInventoryLevel(EntityPlayer player) {
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return player.experienceLevel;
+        com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(player);
+        data.easyInventoryLevel = Math.max(data.easyInventoryLevel, player.experienceLevel);
+        return data.easyInventoryLevel;
+    }
+
     private NMInventoryLocks() {
     }
 
@@ -22,7 +29,7 @@ public final class NMInventoryLocks {
 
         int unlocked = 1;
         for (int i = 1; i < HOTBAR_SLOT_LEVELS.length; i++) {
-            if (player.experienceLevel >= HOTBAR_SLOT_LEVELS[i]) {
+            if (getInventoryLevel(player) >= HOTBAR_SLOT_LEVELS[i]) {
                 unlocked = i + 1;
             }
         }
@@ -35,7 +42,7 @@ public final class NMInventoryLocks {
             return 27;
         }
 
-        int unlockedRows = player.experienceLevel >= SECOND_BACKPACK_ROW_LEVEL ? 2 : 1;
+        int unlockedRows = getInventoryLevel(player) >= SECOND_BACKPACK_ROW_LEVEL ? 2 : 1;
         if (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked) {
             unlockedRows = 3;
         }
@@ -58,6 +65,7 @@ public final class NMInventoryLocks {
     public static boolean isMainInventorySlotUnlockedAfterDeath(EntityPlayer player, int slotIndex) {
         if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
                 || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) return true;
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return isMainInventorySlotUnlocked(player, slotIndex);
         if (slotIndex < 0) return false;
         if (slotIndex < 9) return slotIndex < Math.min(9, 1 + SkillHandler.getPlayerData(player).extraHotbarSlots);
         if (slotIndex < 36) return slotIndex - 9 < (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked ? 27 : 9);

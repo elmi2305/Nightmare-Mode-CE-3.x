@@ -5,6 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "blocks.HammerAnvilDropsMixin",
+    "ProgressiveCraftingItemMixin",
+    "EasyWoodDropsMixin",
+    "EasyGravelFilteringMixin",
+    "blocks.EasyNaturalDropsMixin",
     "AchievementHandlerMixin",
     "AchievementMixin",
     "AddonConfigMixin",

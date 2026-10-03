@@ -35,7 +35,11 @@ public class ProcessingOreBlock extends NMBlockOre {
 
     @Override
     public int quantityDropped(Random random) {
-        return 1;
+        return com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1);
+    }
+
+    @Override public int quantityDroppedOnConversion(Random random) {
+        return com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1);
     }
 
     @Override

@@ -36,7 +36,36 @@ import com.itlesports.nightmaremode.worldgen.OverworldTierHelper;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 
 @Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin extends Entity implements CarcassAnimal {
+public abstract class EntityLivingBaseMixin extends Entity implements CarcassAnimal, com.itlesports.nightmaremode.util.interfaces.EasyMobLoot {
+    @Unique private int deathKnifeTier;
+    @Unique private int harvestKnifeTier = -1;
+    @Unique private final java.util.Set<Integer> easyDeathDrops = new java.util.HashSet<>();
+
+    @Override public void nm$setHarvestKnifeTier(int tier) { this.harvestKnifeTier = tier; }
+    @Override public void nm$recordDeathDrop(int itemId) { this.easyDeathDrops.add(itemId); }
+    @Override public int nm$getDeathLootMultiplier() {
+        if (this.getHealth() > 0.0F && this.harvestKnifeTier < 0) return 1;
+        return com.itlesports.nightmaremode.util.EasyBalance.hostileMultiplier(this.harvestKnifeTier >= 0 ? this.harvestKnifeTier : this.deathKnifeTier);
+    }
+
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void rememberDeathKnife(DamageSource source, CallbackInfo ci) {
+        ItemKnife knife = source.getEntity() instanceof EntityPlayer player ? ItemKnife.fromStack(player.getHeldItem()) : null;
+        this.deathKnifeTier = knife == null ? 0 : knife.getHarvestTier();
+    }
+
+    @Inject(method = "entityLivingOnDeath", at = @At("HEAD"))
+    private void resetEasyDeathDropTracking(DamageSource source, CallbackInfo ci) { this.easyDeathDrops.clear(); }
+
+    @Inject(method = "entityLivingOnDeath", at = @At("TAIL"))
+    private void guaranteeEasyRareMaterials(DamageSource source, CallbackInfo ci) {
+        if (this.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+                || !this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) return;
+        EntityLivingBase self = (EntityLivingBase)(Object)this;
+        int itemId = self instanceof EntityBlaze ? Item.blazeRod.itemID : self instanceof EntityGhast ? Item.ghastTear.itemID
+                : self instanceof EntitySpider ? Item.spiderEye.itemID : self instanceof EntityEnderman ? Item.enderPearl.itemID : -1;
+        if (itemId >= 0 && !this.easyDeathDrops.contains(itemId)) this.dropItem(itemId, 1);
+    }
     @Unique private static final UUID OUTER_HEALTH = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f101");
     @Unique private static final UUID OUTER_SPEED = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f102");
     @Unique private static final UUID OUTER_DAMAGE = UUID.fromString("8b95d877-fb98-4d76-82be-60a542a6f103");

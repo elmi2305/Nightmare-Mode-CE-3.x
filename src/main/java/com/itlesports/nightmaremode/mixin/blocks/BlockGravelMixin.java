@@ -20,6 +20,7 @@ import java.util.Random;
 public abstract class BlockGravelMixin {
     @ModifyConstant(method = {"idDropped", "onBlockDestroyedWithImproperTool"}, constant = @Constant(intValue = 10))
     private int increaseFlintChance(int original) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return 1;
         MinecraftServer server = MinecraftServer.getServer();
         WorldServer world = server == null ? null : server.worldServerForDimension(0);
         return world != null && NMUtils.getWorldProgress() >= NMFields.HARDMODE ? 6 : 8;

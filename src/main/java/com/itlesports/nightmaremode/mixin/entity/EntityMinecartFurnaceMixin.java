@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityMinecartFurnace.class)
 public abstract class EntityMinecartFurnaceMixin implements IFurnaceMinecartEngine {
-    private static final int FUEL_PER_COAL = 3600;
+    private static final int FUEL_PER_COAL = com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 7200 : 3600;
     private static final int STANDARD_FUEL_CAPACITY = 28800;
     private static final int HIGH_SPEED_FUEL_CAPACITY = 43200;
 

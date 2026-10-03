@@ -183,7 +183,7 @@ public class ItemInWorldManagerMixin {
             return false;
         }
 
-        if (block.blockID != Block.oreDiamond.blockID && ore.getStrata(this.theWorld, x, y, z) == 2
+        if (com.itlesports.nightmaremode.util.NMBlockBreakingRules.requiresBlackstoneAuthority(block) && ore.getStrata(this.theWorld, x, y, z) == 2
                 && !SkillHandler.getPlayerData(this.thisPlayerMP).canMineStrataThreeOre) {
             return true;
         }

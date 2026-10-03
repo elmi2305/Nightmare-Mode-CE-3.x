@@ -12,6 +12,12 @@ public final class NMBlockBreakingRules {
 
     private NMBlockBreakingRules() {}
 
+    public static boolean requiresBlackstoneAuthority(Block block) {
+        return block != null && block != Block.oreDiamond && block != Block.oreRedstone && block != Block.oreRedstoneGlowing
+                && block != com.itlesports.nightmaremode.block.NMBlocks.nickelOre
+                && block != com.itlesports.nightmaremode.block.NMBlocks.lithiumOre;
+    }
+
     public static boolean isSoftBlock(Block block, World world, int x, int y, int z) {
         float hardness = block.getBlockHardness(world, x, y, z);
         if (hardness < 0.0F) return false;
@@ -41,7 +47,7 @@ public final class NMBlockBreakingRules {
         // a tool with zero strength (such as an unrelated hammer) can still clear soft blocks.
         if (!(speed > 0.0F) && isSoftBlock(block, world, x, y, z)) {
             float hardness = block.getBlockHardness(world, x, y, z);
-            return hardness == 0.0F ? 1.0F : 1.0F / (hardness * 200.0F);
+            return hardness == 0.0F ? 1.0F : (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2.0F : 1.0F) / (hardness * 200.0F);
         }
         return speed;
     }

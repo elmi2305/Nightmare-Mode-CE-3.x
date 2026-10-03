@@ -28,7 +28,7 @@ public class SkillNode {
               SkillNode[] parents, SkillCondition triggerCondition, SkillUnlockAction onUnlockConsume, SkillReward reward, boolean worldReward) {
         this.id = id;
         this.name = name;
-        this.requirementText = requirementText;
+        this.requirementText = com.itlesports.nightmaremode.util.EasyBalance.skillRequirement(id, requirementText);
         this.icon = icon;
         this.displayColumn = displayColumn;
         this.displayRow = displayRow;

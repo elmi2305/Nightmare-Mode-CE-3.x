@@ -170,7 +170,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         if (this.getProfession() == 1) this.nightmareMode$refreshLibrarianLockout();
 
         this.nightmareMode$hungerDrainProgress += HUNGER_DRAIN_PER_TICK
-                * SkillHandler.getWorldData(this.worldObj).globalVillagerHungerDrainRateMultiplier;
+                * com.itlesports.nightmaremode.util.EasyBalance.exhaustion(SkillHandler.getWorldData(this.worldObj).globalVillagerHungerDrainRateMultiplier);
         while (this.nightmareMode$hungerDrainProgress >= 1.0F) {
             this.nightmareMode$hungerDrainProgress -= 1.0F;
             this.nightmareMode$setHungerLevel(this.nightmareMode$getHungerLevel() - 1);

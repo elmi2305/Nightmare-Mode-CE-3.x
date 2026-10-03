@@ -88,7 +88,7 @@ public class BlockOreNode extends BlockContainer {
             return 0.0F;
         }
         float normalSpeed = player.getCurrentPlayerStrVsBlock(this, x, y, z) / this.blockHardness / 30.0F;
-        return held.getItem() == NMItems.tungstenPickaxe ? normalSpeed / 8.0F : normalSpeed;
+        return held.getItem() == NMItems.tungstenPickaxe && !com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? normalSpeed / 8.0F : normalSpeed;
     }
 
     public boolean isValidMiningTool(ItemStack held, World world, int x, int y, int z) {
@@ -108,7 +108,7 @@ public class BlockOreNode extends BlockContainer {
             return;
         }
 
-        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, 1, this.droppedItemMetadata));
+        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1), this.droppedItemMetadata));
         player.addStat(net.minecraft.src.StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, 0);
         if (node.consumeOne() <= 0) {
@@ -123,7 +123,7 @@ public class BlockOreNode extends BlockContainer {
         if (!(tileEntity instanceof OreNodeTileEntity node)) {
             return null;
         }
-        ItemStack result = new ItemStack(this.droppedItemId, 1, this.droppedItemMetadata);
+        ItemStack result = new ItemStack(this.droppedItemId, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1), this.droppedItemMetadata);
         if (node.consumeOne() <= 0) {
             world.setBlockToAir(x, y, z);
         } else {

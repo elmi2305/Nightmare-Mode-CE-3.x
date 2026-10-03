@@ -20,7 +20,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(EntityItem.class)
-public abstract class EntityItemMixin extends Entity {
+public abstract class EntityItemMixin extends Entity implements com.itlesports.nightmaremode.util.interfaces.LoadedItemAge {
+    @Unique private int loadedItemAge;
+    @Override public int nm$getLoadedItemAge() { return this.loadedItemAge; }
+    @Override public void nm$setLoadedItemAge(int ticks) { this.loadedItemAge = Math.max(0, Math.min(18000, ticks)); }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void countLoadedItemTime(CallbackInfo ci) {
+        if (!this.worldObj.isRemote) ++this.loadedItemAge;
+    }
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void saveLoadedItemTime(NBTTagCompound tag, CallbackInfo ci) { tag.setInteger("NmLoadedAge", this.loadedItemAge); }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void readLoadedItemTime(NBTTagCompound tag, CallbackInfo ci) {
+        this.nm$setLoadedItemAge(tag.hasKey("NmLoadedAge") ? tag.getInteger("NmLoadedAge") : this.age);
+    }
+
+    @Inject(method = "combineItems", at = @At("RETURN"))
+    private void preserveOldestLoadedTime(EntityItem other, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValueZ()) return;
+        com.itlesports.nightmaremode.util.interfaces.LoadedItemAge merged = (com.itlesports.nightmaremode.util.interfaces.LoadedItemAge)other;
+        int oldest = Math.max(this.loadedItemAge, merged.nm$getLoadedItemAge());
+        this.nm$setLoadedItemAge(oldest);
+        merged.nm$setLoadedItemAge(oldest);
+    }
     @Unique private int ticksInDesiredFluid;
     @Unique private int ticksNearLava;
     @Shadow public abstract ItemStack getEntityItem();
@@ -155,9 +180,22 @@ public abstract class EntityItemMixin extends Entity {
         if (this.nightmareMode$burned && this.isDead) this.nightmareMode$reportItemPollution(0.1F);
     }
 
-    @Inject(method = "checkForItemDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V", ordinal = 5, shift = At.Shift.BEFORE))
-    private void polluteNaturalItemDespawn(CallbackInfo ci) {
-        this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 0.02F : 0.2F);
+    @Inject(method = "checkForItemDespawn", at = @At("HEAD"), cancellable = true)
+    private void consistentLoadedTimeDespawn(CallbackInfo ci) {
+        if (!this.worldObj.isRemote) {
+            int id = this.getEntityItem().itemID;
+            boolean finiteTorch = id == btw.block.BTWBlocks.finiteBurningTorch.blockID;
+            boolean torch = finiteTorch || id == btw.block.BTWBlocks.infiniteBurningTorch.blockID;
+            if (torch && this.isInsideOfMaterial(Material.water)
+                    || finiteTorch && this.isBeingRainedOn() && this.rand.nextFloat() <= 0.025F) {
+                this.worldObj.playAuxSFX(1004, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
+                this.setDead();
+            } else if (this.loadedItemAge >= 18000) {
+                this.nightmareMode$reportItemPollution(this.nightmareMode$burned || this.isBurning() ? 0.02F : 0.2F);
+                this.setDead();
+            }
+        }
+        ci.cancel();
     }
 
     @Unique

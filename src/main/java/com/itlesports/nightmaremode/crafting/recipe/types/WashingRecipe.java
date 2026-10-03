@@ -64,7 +64,11 @@ public class WashingRecipe {
     }
 
     public ItemStack getOutput() {
-        return this.output.copy();
+        ItemStack result = this.output.copy();
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+                && (this.output.itemID == com.itlesports.nightmaremode.item.NMPostItems.washedIronMix.itemID
+                || this.output.itemID == com.itlesports.nightmaremode.item.NMItems.washedAzureSediment.itemID)) result.stackSize *= 3;
+        return result;
     }
 
     public Block getOutputBlock() {
@@ -76,7 +80,7 @@ public class WashingRecipe {
     }
 
     public int getDuration() {
-        return this.duration;
+        return com.itlesports.nightmaremode.util.EasyBalance.processingTicks(this.duration);
     }
 
     public int getChanceDivisor() {

@@ -123,7 +123,7 @@ public final class NMSkillNodes {
             -1, -4,
             "Bring 64 loose blackstone (strata-three cobblestone, mined with a diamond pickaxe).",
             BTWTags.looseCobblestones.getItems().get(2).itemID, 8, true, 64,
-            "Strata-three non-diamond ore can be mined. Diamond Extraction unlocks diamond ore separately.", SkillRewardActions.unlockStrataThreeOre(),
+            "Unlocks remaining strata-three ores (Iron, Lapis, Coal, Emerald)", SkillRewardActions.unlockStrataThreeOre(),
             MINING, false),
             () -> NMSkillNodes.MINE_STONE_1000,
             () -> NMSkillNodes.BRING_DIAMOND_INGOT_8,
@@ -1008,7 +1008,7 @@ public final class NMSkillNodes {
             Item.leather,
             -1, 5,
             "Breed 50 animals.",
-            (p, w) -> SkillHandler.getPlayerData(p).animalsBred >= 50,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).animalsBred) >= 50,
             "+10% mob drops.", SkillRewardActions.addMobLootChance(0.1f),
             HUSBANDRY, false);
 
@@ -2113,7 +2113,7 @@ public final class NMSkillNodes {
             Block.bookShelf,
             3, 5,
             "Craft 64 bookshelves.",
-            (p, w) -> SkillHandler.getPlayerData(p).bookshelvesCrafted >= 64,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).bookshelvesCrafted) >= 64,
             "+10% experience gained.", SkillRewardActions.addXpGain(0.10F),
             KNOWLEDGE, false);
 
@@ -2637,7 +2637,7 @@ public final class NMSkillNodes {
             BTWBlocks.turntable,
             2, -3,
             "Complete 128 turntable rotations.",
-            (p, w) -> SkillHandler.getPlayerData(p).turntableRotations >= 128,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).turntableRotations) >= 128,
             "+10% XP gain.", SkillRewardActions.addXpGain(0.10F),
             KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_CLAY_BALL_32);
@@ -3173,7 +3173,7 @@ public final class NMSkillNodes {
     public static final SkillNode MINE_COAL_ORE_256 = counter(
             "mine_coal_ore_256", "Coal Survey", Block.oreCoal, 5, 1,
             "Mine 256 coal ore.",
-            (p, w) -> SkillHandler.getPlayerData(p).coalOreMined >= 256,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).coalOreMined) >= 256,
             "+1 coal dust per coal ore mined with a stone-or-better pickaxe.", SkillRewardActions.addCoalDustDrops(1), MINING, false);
 
     public static final SkillNode MINE_IRON_ORE_256 = counter(
@@ -3185,7 +3185,7 @@ public final class NMSkillNodes {
     public static final SkillNode MINE_IRON_ORE_1000 = counter(
             "mine_iron_ore_1000", "Iron Census", Block.oreIron, -1, -1,
             "Mine 1,000 iron ore.",
-            (p, w) -> SkillHandler.getPlayerData(p).ironOreMined >= 1000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).ironOreMined) >= 1000,
             "+1 iron dust per iron ore mined with a stone-or-better pickaxe.", SkillRewardActions.addIronDustDrops(1), MINING, false,
             MINE_IRON_ORE_256);
 
@@ -3284,7 +3284,7 @@ public final class NMSkillNodes {
     public static final SkillNode CATCH_RARE_ITEM_16 = counter(
             "catch_rare_items_16", "Rare Catch Ledger", Item.fishingRod, 5, 2,
             "Catch 16 rare fishing items.",
-            (p, w) -> SkillHandler.getPlayerData(p).rareItemsCaught >= 16,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).rareItemsCaught) >= 16,
             "+1% rare-fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false);
 
     // knowledge!!
@@ -3360,7 +3360,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode CRAFT_BOOK_256 = counter(
             "craft_books_256", "Archive Binder", Item.book, 5, 1,
-            "Craft 256 books.", (p, w) -> SkillHandler.getPlayerData(p).booksCrafted >= 256,
+            "Craft 256 books.", (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).booksCrafted) >= 256,
             "+10% XP gain.", SkillRewardActions.addXpGain(0.10F), KNOWLEDGE, false, CRAFT_BOOK_64);
 
 
@@ -3374,7 +3374,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BREW_POTION_256 = counter(
             "brew_potions_256", "Master Brewer", Item.potion, 5, 2,
-            "Brew 256 potions.", (p, w) -> SkillHandler.getPlayerData(p).potionsBrewed >= 256,
+            "Brew 256 potions.", (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).potionsBrewed) >= 256,
             "+1% brewing speed.", SkillRewardActions.addBrewingSpeed(0.01F), RITUAL, false, BREW_POTION_64);
 
 
@@ -3896,7 +3896,7 @@ public final class NMSkillNodes {
     public static final SkillNode BREAK_LEAF_25000 = counter(
             "activity_break_leaf_25000", "Forest Veteran", Block.leaves, 7, -1,
             "Break 25,000 leaves.",
-            (p, w) -> SkillHandler.getPlayerData(p).leavesMined >= 25000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).leavesMined) >= 25000,
             "+3% twig drop chance.", SkillRewardActions.addTwigDropChance(0.03F), HUSBANDRY, false,
             BREAK_LEAF_10000);
 
@@ -3938,7 +3938,7 @@ public final class NMSkillNodes {
     public static final SkillNode MINE_BLOCK_250000 = counter(
             "activity_mine_block_250000", "World Sculptor", Item.pickaxeIron, 7, -5,
             "Mine 250,000 blocks.",
-            (p, w) -> SkillHandler.getPlayerData(p).blocksMined >= 250000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).blocksMined) >= 250000,
             "+7% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.07F), MINING, false,
             MINE_BLOCK_100000);
 
@@ -3980,14 +3980,14 @@ public final class NMSkillNodes {
     public static final SkillNode JUMP_100000 = counter(
             "activity_jump_100000", "Endless Stride", Item.bootsLeather, 8, -5,
             "Jump 100,000 times.",
-            (p, w) -> SkillHandler.getPlayerData(p).jumps >= 100000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).jumps) >= 100000,
             "+4% movement speed.", SkillRewardActions.addMovementSpeed(0.04F), MINING, false,
             JUMP_50000);
 
     public static final SkillNode KILL_MOB_64 = counter(
             "activity_kill_mob_64", "Seasoned Defender", Item.swordIron, 0, 3,
             "Kill 64 hostile mobs (land the final hit).",
-            (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 64,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).mobsKilled) >= 64,
             "+2% XP gained.", SkillRewardActions.addXpGain(0.02F), COMBAT, false,
             KILL_MOB_16);
 
@@ -4015,7 +4015,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_MOB_25000 = counter(
             "activity_kill_mob_25000", "Last One Standing", Item.swordIron, 7, 2,
             "Kill 25,000 hostile mobs (land the final hit).",
-            (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 25000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).mobsKilled) >= 25000,
             "+5% melee damage.", SkillRewardActions.addMeleeDamage(0.05F), COMBAT, false,
             KILL_HOSTILE_MOB_10000, KILL_MOB_5000);
 
@@ -4029,7 +4029,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_ZOMBIE_5000 = counter(
             "activity_kill_zombie_5000", "Graveyard Veteran", Item.rottenFlesh, 6, 2,
             "Kill 5,000 zombies.",
-            (p, w) -> SkillHandler.getPlayerData(p).zombiesKilled >= 5000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).zombiesKilled) >= 5000,
             "+3% melee damage.", SkillRewardActions.addMeleeDamage(0.03F), COMBAT, false,
             KILL_ZOMBIE_1000, KILL_ZOMBIE_500);
 
@@ -4043,7 +4043,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_SKELETON_5000 = counter(
             "activity_kill_skeleton_5000", "Bonebreaker Veteran", Item.bone, 6, 3,
             "Kill 5,000 skeletons.",
-            (p, w) -> SkillHandler.getPlayerData(p).skeletonsKilled >= 5000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).skeletonsKilled) >= 5000,
             "+3% ranged damage.", SkillRewardActions.addRangedDamage(0.03F), COMBAT, false,
             KILL_SKELETON_1000, KILL_SKELETON_500);
 
@@ -4064,7 +4064,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_SPIDER_5000 = counter(
             "activity_kill_spider_5000", "Arachnid Nemesis", Item.spiderEye, 6, 4,
             "Kill 5,000 spiders.",
-            (p, w) -> SkillHandler.getPlayerData(p).spidersKilled >= 5000,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).spidersKilled) >= 5000,
             "+5% mob drops.", SkillRewardActions.addMobLootChance(0.05F), COMBAT, false,
             KILL_SPIDER_1000);
 
@@ -4078,7 +4078,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_WITCH_250 = counter(
             "activity_kill_witch_250", "Coven Nemesis", BTWItems.witchWart, 6, 5,
             "Kill 250 witches.",
-            (p, w) -> SkillHandler.getPlayerData(p).witchesKilled >= 250,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).witchesKilled) >= 250,
             "+15% brewing speed.", SkillRewardActions.addBrewingSpeed(0.15F), COMBAT, false,
             KILL_WITCH_100);
 
@@ -4092,7 +4092,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_SLIME_1024 = counter(
             "activity_kill_slime_1024", "Slime Veteran", Item.slimeBall, 4, 5,
             "Kill 1,024 slimes.",
-            (p, w) -> SkillHandler.getPlayerData(p).slimesKilled >= 1024,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).slimesKilled) >= 1024,
             "+10% shovel speed.", SkillRewardActions.addShovelSpeed(0.10F), COMBAT, false,
             KILL_SLIME_256);
 
@@ -4106,7 +4106,7 @@ public final class NMSkillNodes {
     public static final SkillNode KILL_ENDERMAN_250 = counter(
             "activity_kill_enderman_250", "Rift Veteran", Item.enderPearl, 2, 5,
             "Kill 250 endermen.",
-            (p, w) -> SkillHandler.getPlayerData(p).endermenKilled >= 250,
+            (p, w) -> com.itlesports.nightmaremode.util.EasyBalance.statCount(SkillHandler.getPlayerData(p).endermenKilled) >= 250,
             "+10% XP gained.", SkillRewardActions.addXpGain(0.10F), COMBAT, false,
             KILL_ENDERMAN_100);
 

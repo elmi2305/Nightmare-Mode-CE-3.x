@@ -10,7 +10,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 @Mixin(DiamondOreBlock.class)
-public abstract class DiamondOreBlockMixin {
+public abstract class DiamondOreBlockMixin extends api.block.blocks.OreBlockStaged {
+    protected DiamondOreBlockMixin(int id) { super(id); }
+    @Override public int quantityDropped(Random random) {
+        return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + random.nextInt(2) : super.quantityDropped(random);
+    }
     @Inject(method = "idDropped", at = @At("HEAD"), cancellable = true)
     private void dropDiamondBearingRock(int metadata, Random random, int fortune,
                                         CallbackInfoReturnable<Integer> cir) {

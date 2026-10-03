@@ -25,6 +25,16 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
+    @Redirect(method = "loadAllWorlds", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ISaveHandler;loadWorldInfo()Lnet/minecraft/src/WorldInfo;"))
+    private WorldInfo validateBalanceBeforeLoading(ISaveHandler handler) {
+        WorldInfo info = handler.loadWorldInfo();
+        if (info != null) {
+            String profile = ((com.itlesports.nightmaremode.util.interfaces.BalanceWorldInfo)info).nm$getBalanceProfile();
+            if (!com.itlesports.nightmaremode.world.BalanceProfile.active().equals(profile))
+                throw new IllegalStateException(com.itlesports.nightmaremode.world.BalanceProfile.mismatch(profile));
+        }
+        return info;
+    }
     @Mutable @Shadow public WorldServer[] worldServers;
     @Shadow @Final public Profiler theProfiler;
     @Shadow public abstract ILogAgent getLogAgent();

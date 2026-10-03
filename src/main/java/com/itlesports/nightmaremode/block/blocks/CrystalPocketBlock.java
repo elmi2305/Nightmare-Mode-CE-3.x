@@ -53,9 +53,9 @@ public class CrystalPocketBlock extends NMBlock {
         }
 
         float chance = Math.min(1.0F, 0.5F + SkillHandler.getPlayerData(player).crystalDropChanceBonus);
-        if (world.rand.nextFloat() < chance) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() || world.rand.nextFloat() < chance) {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.crystalUncleanedShard), fromSide);
+                    new ItemStack(NMItems.crystalUncleanedShard, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1)), fromSide);
         }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, 0);

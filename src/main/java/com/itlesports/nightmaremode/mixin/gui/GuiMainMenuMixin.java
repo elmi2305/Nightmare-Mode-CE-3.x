@@ -81,6 +81,8 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         int rowWidth = compactLayout ? panelWidth - 120 : panelWidth - 24;
         int iconX = isCompactBrowser() ? this.width - 102 : compactLayout ? panelWidth - 96 : x;
         this.buttonList.clear();
+        if (this.browserMode == JourneyBrowserMode.NONE) this.buttonList.add(new GuiJourneySmallButton(91, this.width - 122 + 20, 2, 120 - 20,
+                com.itlesports.nightmaremode.world.BalanceProfile.buttonText()));
         if (this.mc.isDemo() && !isCompactBrowser()) {
             this.buttonList.add(new GuiJourneyRowButton(11, x, 150, rowWidth, "Play Demo", "Begin your journey"));
             GuiButton resetDemo = new GuiJourneyRowButton(12, x, 185, rowWidth, "Reset Demo", "Start the demo anew");
@@ -95,7 +97,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.buttonList.add(new GuiJourneyIconButton(5, iconX + 30, iconY, GuiJourneyIconButton.Icon.LANGUAGE));
         this.buttonList.add(new GuiJourneyIconButton(4, iconX + 60, iconY, GuiJourneyIconButton.Icon.QUIT));
         this.refreshRecentWorld();
-        this.worldCardTop = 225;
+        this.worldCardTop = 250;
         this.worldCardBottom = iconY - 8;
         if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
             this.buttonList.add(new GuiJourneySmallButton(33, x + 4, this.worldCardBottom - 24, 72, "Jump In"));
@@ -118,6 +120,14 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     /** Keep world/server selection in this screen whenever the resolution can support the browser. */
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     private void journeyMode$handleBrowserActions(GuiButton button, CallbackInfo ci) {
+        if (button.id == 91) {
+            com.itlesports.nightmaremode.world.BalanceProfile.togglePending();
+            this.mc.displayGuiScreen(new com.itlesports.nightmaremode.nmgui.GuiBalanceMessage(
+                    com.itlesports.nightmaremode.world.BalanceProfile.buttonText()
+                            + ". Restart the game for difficulty changes to take effect. Existing worlds keep their original difficulty."));
+            ci.cancel();
+            return;
+        }
         if (button.id == 1 && !this.mc.isDemo() && canShowBrowser()) {
             if (this.browserMode != JourneyBrowserMode.WORLDS) openBrowser(JourneyBrowserMode.WORLDS);
             ci.cancel();
@@ -339,6 +349,9 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", 12, this.height - 12, theme.textMuted);
         if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) drawEmbeddedBrowser(mouseX, mouseY, theme);
         super.drawScreen(mouseX, mouseY, partialTicks);
+        if (this.browserMode == JourneyBrowserMode.NONE && com.itlesports.nightmaremode.world.BalanceProfile.restartRequired()) {
+            this.drawCenteredString(this.fontRenderer, "restart required", this.width - 62 + 10, 26, theme.textHighlight);
+        }
     }
 
     // GuiScreen dimensions are scaled: the 856x512 default window commonly arrives here as about 427x240.

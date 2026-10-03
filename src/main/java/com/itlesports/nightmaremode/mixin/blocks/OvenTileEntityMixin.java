@@ -55,7 +55,7 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
 
     @Inject(method = "getCookTimeForCurrentItem", at = @At("HEAD"), cancellable = true)
     private void setJourneyCookTime(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(NMOvenCookTimes.getCookTime(this.furnaceItemStacks[0]));
+        cir.setReturnValue(com.itlesports.nightmaremode.util.EasyBalance.processingTicks(NMOvenCookTimes.getCookTime(this.furnaceItemStacks[0])));
     }
 
     @Inject(method = "writeToNBT", at = @At("TAIL"))

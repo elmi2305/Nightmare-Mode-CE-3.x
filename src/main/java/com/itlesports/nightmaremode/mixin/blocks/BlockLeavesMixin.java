@@ -30,7 +30,7 @@ public class BlockLeavesMixin extends BlockLeavesBase {
 
     @Override
     public int quantityDropped(Random par1Random) {
-        return par1Random.nextInt(8) == 0 ? 1 : 0;
+        return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + par1Random.nextInt(2) : par1Random.nextInt(8) == 0 ? 1 : 0;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -57,6 +57,8 @@ public class BlockLeavesMixin extends BlockLeavesBase {
     @Override
     public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {
         super.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+        if (!world.isRemote && com.itlesports.nightmaremode.world.BalanceProfile.isEasy())
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.twig, 2 + world.rand.nextInt(2)));
         EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
         float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).twigDropChanceBonus;
         if (!world.isRemote && bonus > 0.0F && world.rand.nextFloat() < bonus) {

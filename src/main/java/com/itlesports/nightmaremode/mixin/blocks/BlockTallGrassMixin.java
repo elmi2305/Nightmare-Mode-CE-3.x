@@ -57,8 +57,12 @@ public class BlockTallGrassMixin extends BlockFlower {
         boolean guaranteed = player != null
                 && (SkillHandler.getPlayerData(player).tallGrassAlwaysDropsPlantFiber
                 || player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemScythe);
-        if (!world.isRemote && (guaranteed || world.rand.nextFloat() <= 0.08F + bonus)) {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber));
+
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()){
+            bonus = Math.min(1.0f, bonus + 0.45f);
+        }
+        if (!world.isRemote && guaranteed || world.rand.nextFloat() <= 0.08F + bonus) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.plantFiber, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + world.rand.nextInt(2) : 1));
         }
         boolean scythe = player != null && player.getCurrentEquippedItem() != null
                 && player.getCurrentEquippedItem().getItem() instanceof ItemScythe;

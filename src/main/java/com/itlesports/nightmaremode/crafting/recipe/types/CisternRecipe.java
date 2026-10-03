@@ -155,7 +155,7 @@ public class CisternRecipe {
     }
 
     public int getDuration() {
-        return this.duration;
+        return com.itlesports.nightmaremode.util.EasyBalance.processingTicks(this.duration);
     }
 
     public int getResultingFluid(int currentFluid) {

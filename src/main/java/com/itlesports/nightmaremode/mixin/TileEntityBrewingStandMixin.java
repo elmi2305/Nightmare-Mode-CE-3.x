@@ -39,7 +39,7 @@ public class TileEntityBrewingStandMixin {
             this.nightmareMode$customIngredientMetadata = this.brewingItemStacks[3].getItemDamage();
             this.nightmareMode$customBrewTimeMultiplier = multiplier;
         }
-        return BrewingStandRecipeHelper.getBrewTime((TileEntityBrewingStand)(Object)this, multiplier);
+        return com.itlesports.nightmaremode.util.EasyBalance.processingTicks(BrewingStandRecipeHelper.getBrewTime((TileEntityBrewingStand)(Object)this, multiplier));
     }
 
     @Inject(method = "updateEntity", at = @At("HEAD"))

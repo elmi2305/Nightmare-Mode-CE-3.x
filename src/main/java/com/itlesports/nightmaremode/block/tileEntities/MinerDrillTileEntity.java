@@ -61,7 +61,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
 
         this.setActive(true);
         if (this.machineTier < 4) --this.fuelTicks;
-        if (++this.processingTicks < this.getProcessingTicksPerItem()) {
+        if (++this.processingTicks < com.itlesports.nightmaremode.util.EasyBalance.processingTicks(this.getProcessingTicksPerItem())) {
             return;
         }
 
@@ -90,7 +90,7 @@ public class MinerDrillTileEntity extends TileEntity implements IInventory {
     }
 
     public int getFuelTicksPerCoal() {
-        return this.getBaseFuelTicksPerCoal();
+        return this.getBaseFuelTicksPerCoal() * (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 : 1);
     }
 
     public int getProcessingProgress() {

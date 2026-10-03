@@ -62,7 +62,7 @@ public class InventoryPlayerMixin {
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
     private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {
         NMInventoryLocks.dropLockedItems(this.player, true);
-        if (NMUtils.getWorldProgress() == PREHARDMODE) {
+        if (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
         } else {
@@ -193,11 +193,16 @@ public class InventoryPlayerMixin {
     @Inject(method = "getStrVsBlock", at = @At("RETURN"), cancellable = true)
     private void applySkillBlockBreakSpeed(World world, Block block, int x, int y, int z, CallbackInfoReturnable<Float> cir) {
         if (this.player instanceof EntityPlayerExt ext) {
-            float adjustedBlockBreakSpeed = cir.getReturnValueF() * (1.0F + ext.nightmareMode$getSkillBlockBreakSpeedBonus());
+            float adjustedBlockBreakSpeed = cir.getReturnValueF() * (1.0F + com.itlesports.nightmaremode.util.EasyBalance.miningBonus(ext.nightmareMode$getSkillBlockBreakSpeedBonus()));
             ItemStack held = this.mainInventory[this.currentItem];
             if (held != null && held.getItem() instanceof ShovelItem) {
                 adjustedBlockBreakSpeed *= 1.0F + SkillHandler.getPlayerData(this.player).shovelSpeedBonus;
             }
+            if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() && (block instanceof api.block.blocks.OreBlock
+                    || block instanceof net.minecraft.src.BlockOre || block instanceof net.minecraft.src.BlockRedstoneOre
+                    || block instanceof com.itlesports.nightmaremode.block.blocks.BlockOreNode
+                    || block instanceof com.itlesports.nightmaremode.block.blocks.CrystalPocketBlock
+                    || block instanceof com.itlesports.nightmaremode.block.blocks.BlockTungstenOre)) adjustedBlockBreakSpeed *= 1.5F;
             cir.setReturnValue(adjustedBlockBreakSpeed);
         }
     }
@@ -309,7 +314,7 @@ public class InventoryPlayerMixin {
                 continue;
             }
             boolean willBeLocked = checkLocks && !NMInventoryLocks.isMainInventorySlotUnlockedAfterDeath(this.player, slot);
-            float lossChance = Math.max(0.0F, Math.min(1.0F, SkillHandler.getPlayerData(this.player).deathItemLossChance));
+            float lossChance = com.itlesports.nightmaremode.util.EasyBalance.deathLoss(SkillHandler.getPlayerData(this.player).deathItemLossChance);
             if (!willBeLocked && this.player.worldObj.rand.nextFloat() >= lossChance) continue;
             this.player.dropPlayerItemWithRandomChoice(stack, true);
             inventory[slot] = null;

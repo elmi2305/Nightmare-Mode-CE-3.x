@@ -55,5 +55,5 @@ public final class EnderAssemblerRecipe {
         for (int i = 0; i < this.ingredients.length; ++i) copy[i] = this.ingredients[i].copy();
         return copy;
     }
-    public int getDuration() { return this.duration; }
+    public int getDuration() { return com.itlesports.nightmaremode.util.EasyBalance.processingTicks(this.duration); }
 }

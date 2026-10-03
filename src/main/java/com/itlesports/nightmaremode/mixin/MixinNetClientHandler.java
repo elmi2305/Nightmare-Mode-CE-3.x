@@ -17,6 +17,37 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(NetClientHandler.class)
 public abstract class MixinNetClientHandler {
+    @org.spongepowered.asm.mixin.Unique private boolean balanceProfileAccepted;
+    @org.spongepowered.asm.mixin.Unique private String balanceRejectionMessage;
+
+    @Inject(method = "handleCustomPayload", at = @At("HEAD"), cancellable = true)
+    private void receiveBalanceBeforeLogin(Packet250CustomPayload packet, CallbackInfo ci) {
+        if (!"NM|Balance1".equals(packet.channel)) return;
+        this.balanceProfileAccepted = com.itlesports.nightmaremode.world.BalanceProfile.acceptsWireProfile(packet.data);
+        if (!this.balanceProfileAccepted) {
+            this.balanceRejectionMessage = com.itlesports.nightmaremode.world.BalanceProfile.mismatch(
+                    com.itlesports.nightmaremode.world.BalanceProfile.decodeWireProfile(packet.data));
+            ((NetClientHandler)(Object)this).handleKickDisconnect(new Packet255KickDisconnect(
+                    this.balanceRejectionMessage));
+        }
+        ci.cancel();
+    }
+
+    @Inject(method = "handleLogin", at = @At("HEAD"), cancellable = true)
+    private void rejectUnverifiedBalance(Packet1Login packet, CallbackInfo ci) {
+        if (!this.balanceProfileAccepted) {
+            ((NetClientHandler)(Object)this).handleKickDisconnect(new Packet255KickDisconnect(
+                    this.balanceRejectionMessage != null ? this.balanceRejectionMessage
+                            : "Server difficulty could not be verified. Matching Journey versions and difficulty are required."));
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "handleLogin", at = @At("TAIL"))
+    private void acknowledgeBalance(Packet1Login packet, CallbackInfo ci) {
+        if (this.balanceProfileAccepted) ((NetClientHandler)(Object)this).addToSendQueue(
+                new Packet250CustomPayload("NM|Balance1", com.itlesports.nightmaremode.world.BalanceProfile.wireProfile()));
+    }
     @Inject(method = "handleMobSpawn", at = @At(value = "FIELD",
             target = "Lnet/minecraft/src/EntityLivingBase;serverPosX:I", opcode = Opcodes.PUTFIELD),
             locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

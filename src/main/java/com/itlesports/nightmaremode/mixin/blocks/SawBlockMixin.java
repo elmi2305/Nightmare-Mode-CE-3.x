@@ -24,7 +24,7 @@ public class SawBlockMixin {
     private void nightmareMode$applySawSkillSpeed(World world, int x, int y, int z, int blockId, int ticks) {
         EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 16.0D);
         float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
-        world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(120.0F / (1.0F + bonus))));
+        world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(120.0F / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus)))));
     }
 
     @Redirect(method = "sawBlockToFront", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Block;onBlockSawed(Lnet/minecraft/src/World;IIIIII)Z"))

@@ -36,7 +36,7 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
             this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4, this.zCoord >> 4).setChunkModified();
             this.fieldMilli = Math.round(fields.get(attribute) * 1000.0F);
         }
-        if (this.processTicks >= PROCESS_TICKS) {
+        if (this.processTicks >= com.itlesports.nightmaremode.util.EasyBalance.processingTicks(PROCESS_TICKS)) {
             this.processTicks = 0;
             this.produce(attribute);
         }
@@ -93,7 +93,7 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
         ItemStack fuel = this.inventory[0];
         if (fuel == null || fuel.itemID != Item.coal.itemID) return false;
         if (--fuel.stackSize <= 0) this.inventory[0] = null;
-        this.fuelTicks = 1600;
+        this.fuelTicks = com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 3200 : 1600;
         this.onInventoryChanged();
         return true;
     }

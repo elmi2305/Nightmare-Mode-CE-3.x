@@ -26,7 +26,7 @@ public abstract class KilnBlockMixin {
     private void nightmareMode$applyKilnSkillSpeed(World world, int x, int y, int z, int blockId, int ticks) {
         EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 16.0D);
         float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).kilnSpeedBonus;
-        world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(ticks / (1.0F + bonus))));
+        world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(ticks / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus)))));
     }
     @ModifyConstant(method = "updateTick", constant = @Constant(intValue = 15))
     private int reduceCookTime(int constant) {

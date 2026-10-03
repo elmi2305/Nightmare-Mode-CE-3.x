@@ -17,6 +17,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
+    @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
+    private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
+        if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return amount;
+        Item item = ((ItemStack)(Object)this).getItem();
+        if (!(item instanceof net.minecraft.src.ItemTool || item instanceof net.minecraft.src.ItemArmor
+                || item instanceof net.minecraft.src.ItemSword || item instanceof net.minecraft.src.ItemBow || item instanceof net.minecraft.src.ItemFishingRod || item instanceof net.minecraft.src.ItemShears
+                || item instanceof com.itlesports.nightmaremode.item.items.ItemSoulFlint
+                || item instanceof btw.item.items.ChiselItem || item instanceof com.itlesports.nightmaremode.item.items.template.ItemKnife
+                || item instanceof ItemHammer || item instanceof com.itlesports.nightmaremode.item.items.ItemScythe
+                || item instanceof com.itlesports.nightmaremode.item.items.ItemLeafRake)) return amount;
+        return amount / 2 + (amount % 2 != 0 && user.getRNG().nextBoolean() ? 1 : 0);
+    }
     @Inject(method = {"shouldApplyAttributesWhenHeld", "shouldApplyAttributesWhenWorn"},
             at = @At("HEAD"), cancellable = true)
     private void ignoreAttributesForUnregisteredItem(CallbackInfoReturnable<Boolean> cir) {

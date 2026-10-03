@@ -87,7 +87,7 @@ public final class ChunkAttributeManager {
             if (contains(requirements, attribute)) {
                 amount += PREFERRED_GROWTH_COST;
             }
-            attributes.consume(attribute, amount);
+            attributes.consume(attribute, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? amount * 0.5F : amount);
         }
         world.getChunkFromChunkCoords(x >> 4, z >> 4).setChunkModified();
     }
@@ -99,9 +99,9 @@ public final class ChunkAttributeManager {
 
         FarmlandPosition farmland = findFarmland(world, x, y, z);
         if (farmland == null || world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.fertilizedFarmland.blockID) {
-            return baseChance;
+            return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? Math.min(1.0F, baseChance * 2.0F) : baseChance;
         }
-        return baseChance;
+        return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? Math.min(1.0F, baseChance * 2.0F) : baseChance;
     }
 
     public static boolean hasEffectiveFertilizer(World world, int x, int y, int z, Block crop) {

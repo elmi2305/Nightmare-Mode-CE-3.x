@@ -16,4 +16,13 @@ import java.util.List;
 
 @Mixin(TileEntityFurnace.class)
 public class TileEntityFurnaceMixin {
+    @Inject(method = "getItemBurnTime", at = @At("RETURN"), cancellable = true)
+    private void economicalEasyFuel(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) cir.setReturnValue(cir.getReturnValueI() * 2);
+    }
+
+    @Inject(method = "getCookTimeForCurrentItem", at = @At("RETURN"), cancellable = true)
+    private void fasterEasySmelting(CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(com.itlesports.nightmaremode.util.EasyBalance.processingTicks(cir.getReturnValueI()));
+    }
 }

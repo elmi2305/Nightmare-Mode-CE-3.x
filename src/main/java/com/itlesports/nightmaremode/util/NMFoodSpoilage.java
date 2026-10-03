@@ -91,7 +91,7 @@ public final class NMFoodSpoilage {
     private static void damageFoodStack(ItemStack stack, World world, EntityPlayer player, int inventorySlot, int interval, ItemStack expiredStack) {
         float spoilageRate = Math.max(0.05F, SkillHandler.getPlayerData(player).foodSpoilageRateMultiplier
                 * SkillHandler.getWorldData(world).globalFoodSpoilageRateMultiplier);
-        interval = Math.max(1, Math.round(interval / spoilageRate));
+        interval = Math.max(1, Math.round(interval / EasyBalance.spoilage(spoilageRate)));
         long staggeredTime = world.getTotalWorldTime() + (long)inventorySlot * 37L + stack.itemID;
         if (staggeredTime % interval != 0L) {
             return;

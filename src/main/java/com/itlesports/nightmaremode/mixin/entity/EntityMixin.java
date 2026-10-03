@@ -16,6 +16,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements PhaseTransitEntity {
+    @Unique private boolean expandingEasyLoot;
+
+    @Inject(method = "entityDropItem", at = @At("HEAD"), cancellable = true)
+    private void improveEasyMobDrops(ItemStack stack, float offset, CallbackInfoReturnable<EntityItem> cir) {
+        Entity entity = (Entity)(Object)this;
+        if (this.expandingEasyLoot || stack == null || entity.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+                || !(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer || entity instanceof EntityAnimal
+                || !(entity instanceof IMob || entity instanceof EntitySquid || entity instanceof EntityDragon)
+                || stack.getItem().getMaxDamage() > 0 && !(stack.getItem() instanceof ItemFood) || stack.getItem() instanceof ItemBlock) return;
+        com.itlesports.nightmaremode.util.interfaces.EasyMobLoot loot = (com.itlesports.nightmaremode.util.interfaces.EasyMobLoot)entity;
+        int multiplier = loot.nm$getDeathLootMultiplier();
+        if (multiplier <= 1) return;
+        int remaining = stack.stackSize * multiplier;
+        loot.nm$recordDeathDrop(stack.itemID);
+        EntityItem firstDrop = null;
+        this.expandingEasyLoot = true;
+        try {
+            while (remaining > 0) {
+                ItemStack result = stack.copy();
+                result.stackSize = Math.min(remaining, stack.getMaxStackSize());
+                remaining -= result.stackSize;
+                EntityItem dropped = entity.entityDropItem(result, offset);
+                if (firstDrop == null) firstDrop = dropped;
+            }
+        } finally {
+            this.expandingEasyLoot = false;
+        }
+        cir.setReturnValue(firstDrop);
+    }
 
     @Unique private int nm$phaseOrigin = -1;
     @Unique private boolean nm$mustLeavePhasePortal;

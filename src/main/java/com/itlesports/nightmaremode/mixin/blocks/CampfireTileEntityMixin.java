@@ -12,6 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CampfireTileEntity.class)
 public class CampfireTileEntityMixin {
+    @ModifyVariable(method = "addBurnTime", at = @At("HEAD"), argsOnly = true, remap = false)
+    private int economicalEasyCampfires(int burnTime) {
+        return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? burnTime * 2 : burnTime;
+    }
     @Shadow(remap = false) private int cookBurningCounter;
     @Shadow(remap = false) private ItemStack cookStack;
 
@@ -43,6 +47,6 @@ public class CampfireTileEntityMixin {
 
     @ModifyConstant(method = "updateCookState", constant = @Constant(intValue = 4800), remap = false)
     private int increaseCookTime(int constant) {
-        return 7000;
+        return com.itlesports.nightmaremode.util.EasyBalance.processingTicks(7000);
     }
 }

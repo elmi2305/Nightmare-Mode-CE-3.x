@@ -41,7 +41,7 @@ public abstract class MillstoneTileEntityMixin extends TileEntity {
         EntityPlayer player = this.worldObj.getClosestPlayer(this.xCoord + 0.5D, this.yCoord + 0.5D,
                 this.zCoord + 0.5D, 16.0D);
         float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
-        return Math.max(1, Math.round(constant * 8 / (1.0F + bonus)));
+        return Math.max(1, Math.round(constant * 8 / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus))));
     }
 
     @Redirect(

@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FoodStats.class)
 public class FoodStatsMixin implements FoodStatsExt {
+    @ModifyVariable(method = "addExhaustion", at = @At("HEAD"), argsOnly = true)
+    private float easyExhaustion(float amount) { return com.itlesports.nightmaremode.util.EasyBalance.exhaustion(amount); }
     @Shadow private float foodExhaustionLevel;
     @Unique private int foodCapChanged = 60;
     @Unique private EntityPlayer player;

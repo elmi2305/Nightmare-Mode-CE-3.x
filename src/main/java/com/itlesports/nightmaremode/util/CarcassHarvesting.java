@@ -28,7 +28,7 @@ public final class CarcassHarvesting {
 
     public static int getProcessingTicks(ItemStack stack) {
         ItemKnife knife = ItemKnife.fromStack(stack);
-        return knife == null ? FIST_PROCESSING_TICKS : knife.getProcessingTicks();
+        return EasyBalance.processingTicks(knife == null ? FIST_PROCESSING_TICKS : knife.getProcessingTicks());
     }
 
     public static int getHarvestTier(ItemStack stack) {
@@ -42,8 +42,14 @@ public final class CarcassHarvesting {
 
     public static void completeHarvest(EntityLivingBase entity, EntityPlayer player, int harvestTier, DamageSource source) {
         if (!(entity instanceof EntityAnimal animal)) {
-            entity.entityLivingOnDeath(source);
-            dropCreeperRecord(entity, source);
+            com.itlesports.nightmaremode.util.interfaces.EasyMobLoot loot = (com.itlesports.nightmaremode.util.interfaces.EasyMobLoot)entity;
+            loot.nm$setHarvestKnifeTier(harvestTier);
+            try {
+                entity.entityLivingOnDeath(source);
+                dropCreeperRecord(entity, source);
+            } finally {
+                loot.nm$setHarvestKnifeTier(-1);
+            }
             damageKnife(player, harvestTier);
             return;
         }
@@ -137,6 +143,7 @@ public final class CarcassHarvesting {
     }
 
     private static void drop(EntityAnimal animal, ItemStack stack) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) stack.stackSize *= 2;
         animal.entityDropItem(stack, 0.3F);
     }
 

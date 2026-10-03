@@ -55,13 +55,13 @@ public class BlockTungstenOre extends Block {
         ItemStack held = player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.tungstenDust),
+                    new ItemStack(NMItems.tungstenDust, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 3 + world.rand.nextInt(2) : 1),
                     MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
             held.damageItem(1, player);
             world.setBlock(x, y, z, Block.netherrack.blockID, 0, 3);
         } else if (held != null && held.getItem() instanceof PickaxeItem) {
             ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.tungstenChunk),
+                    new ItemStack(NMItems.tungstenChunk, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 3 + world.rand.nextInt(2) : 1),
                     MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
         }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);

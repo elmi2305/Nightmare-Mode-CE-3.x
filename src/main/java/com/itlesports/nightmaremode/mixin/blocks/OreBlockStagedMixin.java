@@ -28,6 +28,21 @@ public class OreBlockStagedMixin extends OreBlock {
         super(iBlockID);
     }
 
+    @Override
+    public int quantityDropped(java.util.Random random) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            if (this.blockID == Block.oreIron.blockID) return 1 + random.nextInt(3);
+            if (this.blockID == Block.oreGold.blockID) return 3;
+        }
+        return super.quantityDropped(random);
+    }
+
+    @Inject(method = "quantityDroppedOnConversion", at = @At("RETURN"), cancellable = true, remap = false)
+    private void improveEasyGoldConversion(java.util.Random random, CallbackInfoReturnable<Integer> cir) {
+        if (this.blockID == Block.oreGold.blockID && com.itlesports.nightmaremode.world.BalanceProfile.isEasy())
+            cir.setReturnValue(cir.getReturnValueI() * 3);
+    }
+
     @Inject(method = "convertBlock", at = @At("HEAD"), cancellable = true)
     private void convertBlock(ItemStack stack, World world, int x, int y, int z, int side, CallbackInfoReturnable<Boolean> cir){
 
@@ -37,7 +52,8 @@ public class OreBlockStagedMixin extends OreBlock {
         int iOldMetadata = world.getBlockMetadata(x, y, z);
         int iStrata = this.getStrata(iOldMetadata);
         EntityPlayer closestPlayer = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
-        if (iStrata == 2 && blockID != Block.oreDiamond.blockID && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
+        if (iStrata == 2 && com.itlesports.nightmaremode.util.NMBlockBreakingRules.requiresBlackstoneAuthority(this)
+                && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
             if (!world.isRemote) {
                 SkillHandler.sendStatus(closestPlayer, "Requires skill: Blackstone Authority - Bring 64 blackstone.");
             }
@@ -46,6 +62,13 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
         }
         if(blockID == Block.oreCoal.blockID){
+            if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+                int count = stack.itemID == BTWItems.sharpStone.itemID ? 1 + world.rand.nextInt(2) : 3 + world.rand.nextInt(3);
+                for (int i = 0; i < count; i++) summonEntity(world, x, y, z, side, BTWItems.coalDust);
+                world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+                cir.setReturnValue(true);
+                return;
+            }
             if(stack.getItem() instanceof PickaxeItem pi){
                 int dropCount = pi.toolMaterial.getHarvestLevel();
                 for(int i = 0; i < dropCount && world.rand.nextBoolean(); i++){
@@ -62,6 +85,15 @@ public class OreBlockStagedMixin extends OreBlock {
             return;
         } else
         if(blockID == Block.oreIron.blockID){
+            if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+                boolean sharp = stack.itemID == BTWItems.sharpStone.itemID;
+                boolean wholeChunks = stack.getItem() instanceof PickaxeItem && stack.getItem() != Item.pickaxeStone;
+                int count = sharp ? 1 + world.rand.nextInt(2) : wholeChunks ? 1 + world.rand.nextInt(3) : 2 + world.rand.nextInt(3);
+                for (int i = 0; i < count; i++) summonEntity(world, x, y, z, side, wholeChunks ? BTWItems.ironOreChunk : BTWItems.ironOrePile);
+                world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+                cir.setReturnValue(true);
+                return;
+            }
             if (stack.getItem() instanceof ItemQuestPickaxe) {
                 summonEntity(world, x, y, z, side, BTWItems.ironOreChunk);
             } else if(stack.getItem() instanceof PickaxeItem pi){
@@ -109,8 +141,9 @@ public class OreBlockStagedMixin extends OreBlock {
             }
 
             float rockChance = 0.90F + (closestPlayer == null ? 0.0F : SkillHandler.getPlayerData(closestPlayer).diamondRockDropChanceBonus);
-            if (!world.isRemote && world.rand.nextFloat() <= Math.min(1.0F, rockChance)) {
-                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock));
+            if (!world.isRemote && (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() || world.rand.nextFloat() <= Math.min(1.0F, rockChance))) {
+                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock,
+                        com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + world.rand.nextInt(2) : 1));
             }
             world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
             cir.setReturnValue(true);

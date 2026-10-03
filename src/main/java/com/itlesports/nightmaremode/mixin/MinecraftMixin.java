@@ -83,11 +83,34 @@ public abstract class MinecraftMixin {
     @Inject(method = "launchIntegratedServer", at = @At("HEAD"), cancellable = true)
     private void nightmareMode$preventOverlappingIntegratedServers(String folderName, String worldName,
                                                                      WorldSettings settings, CallbackInfo ci) {
+        WorldInfo info = ((Minecraft)(Object)this).getSaveLoader().getWorldInfo(folderName);
+        if (info != null) {
+            String profile = ((com.itlesports.nightmaremode.util.interfaces.BalanceWorldInfo)info).nm$getBalanceProfile();
+            if (!com.itlesports.nightmaremode.world.BalanceProfile.active().equals(profile)) {
+                ((Minecraft)(Object)this).displayGuiScreen(new com.itlesports.nightmaremode.nmgui.GuiBalanceMessage(
+                        com.itlesports.nightmaremode.world.BalanceProfile.mismatch(profile)));
+                ci.cancel();
+                return;
+            }
+        }
         if (!this.nightmareMode$waitForIntegratedServerShutdown()) {
             // starting a second server after a failed shutdown corrupts the singleton used by login and packet handling.
             // returning to the menu is preferable to starting a server that will inevitably crash.
             // some call it code, I call it a cry for help
             ((Minecraft) (Object) this).displayGuiScreen(new GuiMainMenu());
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "launchIntegratedServerHostile", at = @At("HEAD"), cancellable = true)
+    private void rejectGlobalWorldDifficultyMismatch(String folderName, String worldName, WorldSettings settings, CallbackInfo ci) {
+        Minecraft minecraft = (Minecraft)(Object)this;
+        WorldInfo info = minecraft.getSaveLoader().getSaveLoader2(folderName, false).loadWorldInfo();
+        if (info == null) return;
+        String profile = ((com.itlesports.nightmaremode.util.interfaces.BalanceWorldInfo)info).nm$getBalanceProfile();
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.matches(profile)) {
+            minecraft.displayGuiScreen(new com.itlesports.nightmaremode.nmgui.GuiBalanceMessage(
+                    com.itlesports.nightmaremode.world.BalanceProfile.mismatch(profile)));
             ci.cancel();
         }
     }

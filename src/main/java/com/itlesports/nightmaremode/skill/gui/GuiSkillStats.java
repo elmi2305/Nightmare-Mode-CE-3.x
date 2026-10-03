@@ -186,18 +186,29 @@ public class GuiSkillStats extends GuiScreen {
     }
 
     private static void addPlayerStats(List<String> lines, SkillTreeData data, WorldSkillData world) {
-        addPercentBonus(lines, "Block breaking speed", data.blockBreakSpeedBonus);
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            lines.add("Difficulty: Easy");
+            lines.add("Ore mining speed: +200% before skills");
+            lines.add("Hostile drops: 2x (knives: 3x / 4x / 5x)");
+            lines.add("Tool and armor wear: 50% less");
+            lines.add("Fuel duration: +100%");
+            lines.add("Crop yield: +100%");
+            lines.add("Hunger exhaustion: 65% less");
+            lines.add("Optional stat counters: 2x credit");
+            lines.add("Earned inventory capacity survives death");
+        }
+        addPercentBonus(lines, "Block breaking speed", com.itlesports.nightmaremode.util.EasyBalance.miningBonus(data.blockBreakSpeedBonus));
         addPercentBonus(lines, "Shovel speed", data.shovelSpeedBonus);
         addPercentBonus(lines, "Movement speed", data.movementSpeedBonus);
-        addPercentBonus(lines, "Mechanical block speed", data.machineSpeedBonus);
-        addPercentBonus(lines, "Kiln processing speed", data.kilnSpeedBonus);
-        addPercentBonus(lines, "Cistern processing speed", data.cisternSpeedBonus);
-        addPercentBonus(lines, "Brewing speed", data.brewingSpeedBonus);
+        addPercentBonus(lines, "Mechanical block speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.machineSpeedBonus));
+        addPercentBonus(lines, "Kiln processing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.kilnSpeedBonus));
+        addPercentBonus(lines, "Cistern processing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.cisternSpeedBonus));
+        addPercentBonus(lines, "Brewing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.brewingSpeedBonus));
         if (data.clayCookTimeReductionTicks > 0) {
             lines.add("Clay cooking time: " + ((36000 - data.clayCookTimeReductionTicks) / 20) + " seconds");
         }
-        float spoilageRate = Math.max(0.05F,
-                data.foodSpoilageRateMultiplier * world.globalFoodSpoilageRateMultiplier);
+        float spoilageRate = com.itlesports.nightmaremode.util.EasyBalance.spoilage(Math.max(0.05F,
+                data.foodSpoilageRateMultiplier * world.globalFoodSpoilageRateMultiplier));
         if (spoilageRate < DEFAULT_PLAYER_STATS.foodSpoilageRateMultiplier) {
             lines.add("Food spoil rate: " + percent(1.0F - spoilageRate));
         }
@@ -210,8 +221,8 @@ public class GuiSkillStats extends GuiScreen {
         addPercent(lines, "Mob bonus loot chance", data.mobLootChanceBonus + world.globalMobLootChanceBonus);
         addPercentBonus(lines, "Experience gain", data.xpGainBonus + world.globalXpGainBonus);
         addPercent(lines, "Enchanting cost reduction", data.enchantCostReduction);
-        if (data.deathItemLossChance < DEFAULT_PLAYER_STATS.deathItemLossChance) {
-            lines.add("Item loss chance on death: " + percent(data.deathItemLossChance));
+        if (com.itlesports.nightmaremode.util.EasyBalance.deathLoss(data.deathItemLossChance) < DEFAULT_PLAYER_STATS.deathItemLossChance) {
+            lines.add("Item loss chance on death: " + percent(com.itlesports.nightmaremode.util.EasyBalance.deathLoss(data.deathItemLossChance)));
         }
         add(lines, "Extra hotbar slots", data.extraHotbarSlots);
         add(lines, "Bonus coal dust per ore (pickaxe)", data.coalDustDropBonus);

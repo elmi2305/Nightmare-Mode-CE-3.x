@@ -16,7 +16,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(WorldInfo.class)
-public abstract class WorldInfoMixin implements WorldInfoAccessor {
+public abstract class WorldInfoMixin implements WorldInfoAccessor, com.itlesports.nightmaremode.util.interfaces.BalanceWorldInfo {
+    @Unique private String balanceProfile = com.itlesports.nightmaremode.world.BalanceProfile.active();
+
+    @Override public String nm$getBalanceProfile() { return this.balanceProfile; }
+
+    @Inject(method = "<init>(Lnet/minecraft/src/NBTTagCompound;)V", at = @At("TAIL"))
+    private void readBalanceProfile(NBTTagCompound tag, CallbackInfo ci) {
+        this.balanceProfile = com.itlesports.nightmaremode.world.BalanceProfile.fromSave(tag);
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/src/WorldInfo;)V", at = @At("TAIL"))
+    private void copyBalanceProfile(WorldInfo info, CallbackInfo ci) {
+        this.balanceProfile = ((com.itlesports.nightmaremode.util.interfaces.BalanceWorldInfo)info).nm$getBalanceProfile();
+    }
+
+    @Inject(method = "updateTagCompound", at = @At("TAIL"))
+    private void saveBalanceProfile(NBTTagCompound tag, NBTTagCompound playerTag, CallbackInfo ci) {
+        tag.setString(com.itlesports.nightmaremode.world.BalanceProfile.TAG, this.balanceProfile);
+    }
     @Shadow public abstract Difficulty getDifficulty();
     @Shadow private GameRules theGameRules;
     @Shadow private boolean allowCommands;

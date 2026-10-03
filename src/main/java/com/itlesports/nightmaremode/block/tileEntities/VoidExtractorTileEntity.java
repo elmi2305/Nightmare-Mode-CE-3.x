@@ -18,7 +18,7 @@ public class VoidExtractorTileEntity extends TileEntity implements IInventory {
                 != OverworldTierHelper.Region.GREAT_VOID || !this.canProcess()) { this.processTicks = 0; return; }
         if (this.fuelTicks <= 0 && !this.consumeFuel()) { this.processTicks = 0; return; }
         --this.fuelTicks;
-        if (++this.processTicks >= this.getProcessTicksRequired()) { this.processTicks = 0; this.process(); }
+        if (++this.processTicks >= com.itlesports.nightmaremode.util.EasyBalance.processingTicks(this.getProcessTicksRequired())) { this.processTicks = 0; this.process(); }
     }
 
     private ItemStack result() {
@@ -53,7 +53,7 @@ public class VoidExtractorTileEntity extends TileEntity implements IInventory {
         ItemStack fuel = this.inventory[0];
         if (fuel == null || fuel.itemID != Item.coal.itemID) return false;
         if (--fuel.stackSize <= 0) this.inventory[0] = null;
-        this.fuelTicks = 1600; this.onInventoryChanged(); return true;
+        this.fuelTicks = com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 3200 : 1600; this.onInventoryChanged(); return true;
     }
     public int getFuelTicks(){return fuelTicks;} public int getProcessTicks(){return processTicks;}
     public void setFuelTicks(int value){fuelTicks=value;} public void setProcessTicks(int value){processTicks=value;}

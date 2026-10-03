@@ -35,6 +35,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
+    @Inject(method = "initializeConnectionToPlayer", at = @At("HEAD"))
+    private void announceBalanceBeforeLogin(net.minecraft.src.INetworkManager connection, EntityPlayerMP player, CallbackInfo ci) {
+        connection.addToSendQueue(new net.minecraft.src.Packet250CustomPayload("NM|Balance1",
+                com.itlesports.nightmaremode.world.BalanceProfile.wireProfile()));
+    }
     @Unique private final java.util.Map<EntityPlayerMP, ItemStack> pendingRecalls = new java.util.IdentityHashMap<>();
     @Unique private long deathWorldTime;
 
