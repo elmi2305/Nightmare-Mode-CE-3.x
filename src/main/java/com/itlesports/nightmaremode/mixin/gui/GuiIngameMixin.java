@@ -545,7 +545,7 @@ public abstract class GuiIngameMixin extends Gui {
         if (!NightmareMode.showBetaOverlay) return;
 
         String[] lines = {
-                NightmareMode.betaEnvironmentLine,
+                NightmareMode.betaEnvironmentLine + " - " + NightmareMode.betaBuildLineDifficulty,
                 NightmareMode.betaBuildLine,
                 NightmareMode.betaDateLine
         };

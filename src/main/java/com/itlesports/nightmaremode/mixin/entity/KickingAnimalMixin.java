@@ -1,8 +1,10 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import api.entity.mob.KickingAnimal;
+import com.itlesports.nightmaremode.util.EasyBalance;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
+import com.itlesports.nightmaremode.world.BalanceProfile;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,10 +29,11 @@ public abstract class KickingAnimalMixin extends EntityAnimal {
             return AxisAlignedBB.getAABBPool().getAABB(kickCenter.xCoord - 1.45, kickCenter.yCoord - 1.2, kickCenter.zCoord - 1.45, kickCenter.xCoord + 1.45, kickCenter.yCoord + 1.2, kickCenter.zCoord + 1.45);
         } else if (self instanceof EntityCow){
             Vec3 kickCenter = this.computeKickAttackCenter();
-            double horizontalOffsetMin = 0.6;
-            double verticalOffsetMin = 0.65;
-            double verticalOffsetMax = 1.2;
-            double horizontalOffsetMax = 1.45;
+            float easyModeReduction = BalanceProfile.isEasy() ? 0.3f : 0f;
+            double horizontalOffsetMin = 0.6 - easyModeReduction;
+            double verticalOffsetMin = 0.65 - easyModeReduction;
+            double verticalOffsetMax = 1.2 - easyModeReduction;
+            double horizontalOffsetMax = 1.45 - easyModeReduction;
 
             double worldTimeReach = NMUtils.getFirstFiveDaysMultiplier(worldObj);
 

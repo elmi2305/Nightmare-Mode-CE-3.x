@@ -21,6 +21,7 @@ import com.itlesports.nightmaremode.skill.SkillNet;
 import com.itlesports.nightmaremode.util.CarcassHarvestNet;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.skill.WorldSkillData;
+import com.itlesports.nightmaremode.world.BalanceProfile;
 import com.itlesports.nightmaremode.world.ChunkLoaderData;
 import com.itlesports.nightmaremode.world.JourneyProfile;
 import com.itlesports.nightmaremode.tpa.TPACommand;
@@ -58,13 +59,14 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 3109";
+    public static String betaBuildLine = "Build 3209";
+    public static String betaBuildLineDifficulty = BalanceProfile.active();
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
     public static boolean alwaysShowRewards = false;
     public static boolean unlockSkillsWithClick = false;
     public static boolean fullInventoryCapacity = false;
-    public static boolean lockDownCreative = false;
+    public static boolean lockDownCreative = true;
     public static boolean spawnKnowledgeBooksInStructures = false;
 
 
