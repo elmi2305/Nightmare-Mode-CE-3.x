@@ -12,6 +12,8 @@ public final class SkillRewardActions {
 
     private static SkillUnlockAction playerReward(Consumer<SkillTreeData> reward) {
         return (player, world) -> {
+            // world replay has no player; personal bonuses are rebuilt on that player's join.
+            if (player == null) return;
             SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
             reward.accept(data);
             player.setData(NightmareMode.SKILL_TREE, data);
@@ -20,6 +22,8 @@ public final class SkillRewardActions {
 
     private static SkillUnlockAction worldReward(Consumer<WorldSkillData> reward) {
         return (player, world) -> {
+            // mixed rewards must not apply their global bonuses again during player replay.
+            if (SkillRewardReload.isReplayingPlayer()) return;
             WorldSkillData data = world.getData(NightmareMode.WORLD_SKILL_TREE);
             reward.accept(data);
             world.setData(NightmareMode.WORLD_SKILL_TREE, data);
@@ -48,6 +52,7 @@ public final class SkillRewardActions {
 
     public static SkillUnlockAction addDiamondHarvestProgress() {
         return (player, world) -> {
+            if (player == null) return;
             SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
             data.diamondHarvestProgress++;
             data.canHarvestDiamondOre = data.diamondHarvestProgress >= 5;

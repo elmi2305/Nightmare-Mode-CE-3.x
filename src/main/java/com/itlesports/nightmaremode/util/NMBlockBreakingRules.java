@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.util;
 
 import api.block.blocks.CropsBlock;
+import api.item.items.PickaxeItem;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemScythe;
@@ -30,6 +31,7 @@ public final class NMBlockBreakingRules {
 
     public static boolean canAttemptBreak(EntityPlayer player, Block block, World world, int x, int y, int z) {
         if (block == null || player.capabilities.isCreativeMode) return true;
+        if (block == Block.oreDiamond) return isValidDiamondMiningTool(player.getCurrentEquippedItem());
         if (isSoftBlock(block, world, x, y, z)) return true;
         ItemStack held = player.getCurrentEquippedItem();
         if (held == null) return false;
@@ -39,6 +41,15 @@ public final class NMBlockBreakingRules {
                 || item instanceof ItemTool && ((ItemTool)item).getStrVsBlock(held, block) > 1.0F
                 || (item instanceof ChiselItem || item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig)
                 && block.canConvertBlock(held, world, x, y, z);
+    }
+
+    public static boolean isValidDiamondMiningTool(ItemStack stack) {
+        if (stack == null) return false;
+        Item item = stack.getItem();
+        int requiredLevel = EnumToolMaterial.IRON.getHarvestLevel();
+        if (item instanceof PickaxeItem pick) return pick.toolMaterial.getHarvestLevel() >= requiredLevel;
+        if (item instanceof ChiselItem chisel) return chisel.toolMaterial.getHarvestLevel() >= requiredLevel;
+        return item instanceof ItemPickaxe pick && pick.getToolMaterial().getHarvestLevel() >= requiredLevel;
     }
 
     public static float getBreakingSpeed(Block block, EntityPlayer player, World world, int x, int y, int z) {

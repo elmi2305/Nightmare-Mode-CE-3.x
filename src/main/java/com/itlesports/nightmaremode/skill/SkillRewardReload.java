@@ -8,13 +8,18 @@ import java.util.*;
 /** Rebuild derived rewards without replaying unlock costs or changing progress. */
 public final class SkillRewardReload {
     static final String LEGACY_VERSION = "legacy";
-    private static final int SCHEMA = 4;
-    private static final ThreadLocal<Boolean> REPLAYING = new ThreadLocal<>();
+    private static final int SCHEMA = 5;
+    private enum ReplayScope { WORLD, PLAYER }
+    private static final ThreadLocal<ReplayScope> REPLAYING = new ThreadLocal<>();
 
     private SkillRewardReload() {}
 
     public static boolean isReplaying() {
-        return Boolean.TRUE.equals(REPLAYING.get());
+        return REPLAYING.get() != null;
+    }
+
+    static boolean isReplayingPlayer() {
+        return REPLAYING.get() == ReplayScope.PLAYER;
     }
 
     /** Missing versions must remain distinguishable from a completed migration. */
@@ -38,7 +43,7 @@ public final class SkillRewardReload {
         WorldSkillData.writeToNBT(saved, old);
         WorldSkillData rebuilt = WorldSkillData.readFromNBT(saved);
         rebuilt.resetRewards();
-        REPLAYING.set(true);
+        REPLAYING.set(ReplayScope.WORLD);
         try {
             world.setData(NightmareMode.WORLD_SKILL_TREE, rebuilt);
             for (SkillNode node : orderedNodes()) {
@@ -69,11 +74,12 @@ public final class SkillRewardReload {
         SkillTreeData.writeToNBT(saved, old);
         SkillTreeData rebuilt = SkillTreeData.readFromNBT(saved);
         rebuilt.resetRewards();
-        REPLAYING.set(true);
+        REPLAYING.set(ReplayScope.PLAYER);
         try {
             player.setData(NightmareMode.SKILL_TREE, rebuilt);
             for (SkillNode node : orderedNodes()) {
-                if (!node.worldReward && rebuilt.isUnlocked(node)) {
+                // world nodes can also grant personal bonuses to the player who unlocked them.
+                if (rebuilt.isUnlocked(node)) {
                     node.reward.getAction().apply(player, player.worldObj);
                 }
             }

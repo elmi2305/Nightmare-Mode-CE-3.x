@@ -123,7 +123,7 @@ public final class NMSkillNodes {
             -1, -4,
             "Bring 64 loose blackstone (strata-three cobblestone, mined with a diamond pickaxe).",
             BTWTags.looseCobblestones.getItems().get(2).itemID, 8, true, 64,
-            "Unlocks remaining strata-three ores (Iron, Lapis, Coal, Emerald)", SkillRewardActions.unlockStrataThreeOre(),
+            "Unlocks remaining strata-three ores (Iron, Lapis, Gold, Coal, Emerald)", SkillRewardActions.unlockStrataThreeOre(),
             MINING, false),
             () -> NMSkillNodes.MINE_STONE_1000,
             () -> NMSkillNodes.BRING_DIAMOND_INGOT_8,

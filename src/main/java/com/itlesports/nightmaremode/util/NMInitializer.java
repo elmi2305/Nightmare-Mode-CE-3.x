@@ -4986,7 +4986,7 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack(NMItems.phaseSteelPlate, 4), new ItemStack(NMItems.crystalPrecisionGear),
                 new ItemStack(NMItems.enderCrystal, 8), new ItemStack(NMItems.nickelMachinePart, 2),
                 new ItemStack(NMItems.endAccordFragment), new ItemStack(NMItems.sealedQuicksilverPlate));
-        manager.addRecipe(new ItemStack(NMBlocks.phasePortalFrame, 8, 15), 900,
+        manager.addRecipe(new ItemStack(NMBlocks.phasePortalFrame, 14, 15), 900,
                 new ItemStack(NMItems.phaseSteelIngot, 16), new ItemStack(NMItems.enderMechanism, 4),
                 new ItemStack(NMItems.enderShellPowder, 32), new ItemStack(NMItems.paleRootResin, 32),
                 new ItemStack(NMItems.mercuryAmalgam, 32), new ItemStack(Block.obsidian, 64));

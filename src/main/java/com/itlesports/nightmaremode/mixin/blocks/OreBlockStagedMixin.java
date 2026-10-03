@@ -14,6 +14,7 @@ import com.itlesports.nightmaremode.item.items.ItemQuestPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,6 +46,11 @@ public class OreBlockStagedMixin extends OreBlock {
 
     @Inject(method = "convertBlock", at = @At("HEAD"), cancellable = true)
     private void convertBlock(ItemStack stack, World world, int x, int y, int z, int side, CallbackInfoReturnable<Boolean> cir){
+
+        if (this.blockID == Block.oreDiamond.blockID && !NMBlockBreakingRules.isValidDiamondMiningTool(stack)) {
+            cir.setReturnValue(false);
+            return;
+        }
 
         if(stack == null) return;
 
