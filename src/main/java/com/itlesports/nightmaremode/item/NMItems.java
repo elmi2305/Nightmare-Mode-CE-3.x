@@ -630,9 +630,9 @@ public class NMItems {
         diamondBearingMaterial = new NMItem(2650).setUnlocalizedName("ifhyDiamondBearingMaterial").setTextureName("nightmare:ifhyDiamondBearingMaterial").setCreativeTab(CreativeTabs.tabMaterials);
         failedDiamondRefinement = new NMItem(2651).setUnlocalizedName("ifhyFailedDiamondRefinement").setTextureName("nightmare:ifhyFailedDiamondRefinement").setCreativeTab(CreativeTabs.tabMaterials);
         refinementWaste = new NMItem(2652).setUnlocalizedName("ifhyRefinementWaste").setTextureName("nightmare:ifhyRefinementWaste").setCreativeTab(CreativeTabs.tabMaterials);
-        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 240, 0.35F, 0.0D, "ifhyOxygenMask")
+        oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 240, 0.50F, 0.0D, "ifhyOxygenMask")
                 .setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
-        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 360, 0.45F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
+        oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 360, 0.75F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         driedPlantFiber = new NMPlaceAsBlockItem(2657, NMFields.BLOCK_DRYING_GRASS, BlockDryingGrass.META_DRIED).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         plantFiber.setfurnaceburntime(6);

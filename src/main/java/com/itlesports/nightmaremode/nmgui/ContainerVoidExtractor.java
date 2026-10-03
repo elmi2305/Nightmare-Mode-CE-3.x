@@ -5,7 +5,7 @@ import com.itlesports.nightmaremode.block.tileEntities.VoidExtractorTileEntity;
 import net.minecraft.src.*;
 
 public class ContainerVoidExtractor extends Container {
-    public static final int ID=53; private final VoidExtractorTileEntity extractor; private int lastFuel=-1,lastProcess=-1;
+    public static final int ID=54; private final VoidExtractorTileEntity extractor; private int lastFuel=-1,lastProcess=-1;
     public ContainerVoidExtractor(InventoryPlayer playerInventory,VoidExtractorTileEntity extractor){this.extractor=extractor;addSlotToContainer(new Slot(extractor,0,44,35));addSlotToContainer(new Slot(extractor,1,80,35));addSlotToContainer(new Slot(extractor,2,116,35){@Override public boolean isItemValid(ItemStack s){return false;}});for(int r=0;r<3;r++)for(int c=0;c<9;c++)addSlotToContainer(new Slot(playerInventory,c+r*9+9,8+c*18,84+r*18));for(int c=0;c<9;c++)addSlotToContainer(new Slot(playerInventory,c,8+c*18,142));}
     @Override public void onCraftGuiOpened(ICrafting c){super.onCraftGuiOpened(c);c.sendProgressBarUpdate(this,0,extractor.getFuelTicks());c.sendProgressBarUpdate(this,1,extractor.getProcessTicks());}
     @Override public void detectAndSendChanges(){super.detectAndSendChanges();int f=extractor.getFuelTicks(),p=extractor.getProcessTicks();for(Object o:crafters){ICrafting c=(ICrafting)o;if(f!=lastFuel)c.sendProgressBarUpdate(this,0,f);if(p!=lastProcess)c.sendProgressBarUpdate(this,1,p);}lastFuel=f;lastProcess=p;}

@@ -4,6 +4,7 @@ import net.minecraft.src.Icon;
 
 // a collection of static fields used around the codebase
 public class NMFields {
+    public static final double SOLAR_RADIATION_HEIGHT = 140.0D;
 
     // mod ID
     public static final String modID = "nightmare";

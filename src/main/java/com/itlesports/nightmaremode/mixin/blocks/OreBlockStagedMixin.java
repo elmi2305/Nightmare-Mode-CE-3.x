@@ -37,7 +37,7 @@ public class OreBlockStagedMixin extends OreBlock {
         int iOldMetadata = world.getBlockMetadata(x, y, z);
         int iStrata = this.getStrata(iOldMetadata);
         EntityPlayer closestPlayer = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
-        if (iStrata == 2 && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
+        if (iStrata == 2 && blockID != Block.oreDiamond.blockID && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
             if (!world.isRemote) {
                 SkillHandler.sendStatus(closestPlayer, "Requires skill: Blackstone Authority - Bring 64 blackstone.");
             }

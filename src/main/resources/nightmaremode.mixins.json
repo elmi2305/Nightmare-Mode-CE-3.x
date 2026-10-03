@@ -4,6 +4,7 @@
   "package": "com.itlesports.nightmaremode.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "blocks.HammerAnvilDropsMixin",
     "AchievementHandlerMixin",
     "AchievementMixin",
     "AddonConfigMixin",
@@ -143,6 +144,7 @@
     "blocks.CookingVesselTileEntityMixin",
     "blocks.CropsBlockMixin",
     "blocks.DailyGrowthCropsBlockMixin",
+    "blocks.DiamondOreBlockMixin",
     "blocks.DoorBlockMixin",
     "blocks.EnderChestBlockMixin",
     "blocks.FarmlandBlockBaseMixin",

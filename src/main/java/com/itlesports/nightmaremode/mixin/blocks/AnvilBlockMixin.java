@@ -25,6 +25,16 @@ public class AnvilBlockMixin extends Block implements ITileEntityProvider {
         return new TileEntityHammerAnvil();
     }
 
+    @Override
+    public boolean hasTileEntity() {
+        return true;
+    }
+
+    @Inject(method = "canSilkHarvest", at = @At("HEAD"), cancellable = true)
+    private void preventSilkTouchWearReset(int metadata, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(false);
+    }
+
     @Inject(method = "onBlockActivated", at = @At("HEAD"), cancellable = true)
     private void vanillaAnvilFunctionality(World world, int i, int j, int k, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick, CallbackInfoReturnable<Boolean> cir){
         if (!world.isRemote && !WorldUtils.doesBlockHaveLargeCenterHardpointToFacing(world, i, j + 1, k, 0)) {

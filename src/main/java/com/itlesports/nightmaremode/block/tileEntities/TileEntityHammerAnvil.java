@@ -21,6 +21,8 @@ public class TileEntityHammerAnvil extends TileEntity {
     private int queuedHammerSounds;
     private int soundDelay;
     private boolean breakWhenSoundsFinish;
+    private boolean hasBeenUsed;
+    private boolean removalHandled;
 
     public TileEntityHammerAnvil() {
     }
@@ -102,10 +104,11 @@ public class TileEntityHammerAnvil extends TileEntity {
     }
 
     public boolean canSpendHits(int hits) {
-        return !this.isBusy() && (this.maxUses < 0 || (!this.breakWhenSoundsFinish && this.usesRemaining >= hits));
+        return !this.isBusy() && (this.maxUses < 0 || (!this.breakWhenSoundsFinish && this.usesRemaining > 0));
     }
 
     public void spendHits(int hits) {
+        this.hasBeenUsed = true;
         if (this.maxUses >= 0) {
             this.usesRemaining = Math.max(0, this.usesRemaining - hits);
             if (this.usesRemaining <= 0) {
@@ -126,6 +129,16 @@ public class TileEntityHammerAnvil extends TileEntity {
 
     public boolean isLimited() {
         return this.maxUses >= 0;
+    }
+
+    public boolean isPristine() {
+        return !this.hasBeenUsed && (this.maxUses < 0 || this.usesRemaining >= this.maxUses);
+    }
+
+    public boolean claimRemoval() {
+        if (this.removalHandled) return false;
+        this.removalHandled = true;
+        return true;
     }
 
     public boolean isBusy() {
@@ -209,6 +222,7 @@ public class TileEntityHammerAnvil extends TileEntity {
 
     protected void syncState() {
         if (this.worldObj != null && !this.worldObj.isRemote) {
+            this.onInventoryChanged();
             this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
@@ -225,6 +239,7 @@ public class TileEntityHammerAnvil extends TileEntity {
         this.queuedHammerSounds = tag.getInteger("QueuedHammerSounds");
         this.soundDelay = tag.getInteger("SoundDelay");
         this.breakWhenSoundsFinish = tag.getBoolean("BreakWhenSoundsFinish");
+        this.hasBeenUsed = tag.getBoolean("HasBeenUsed") || this.maxUses >= 0 && this.usesRemaining < this.maxUses;
     }
 
     @Override
@@ -235,5 +250,6 @@ public class TileEntityHammerAnvil extends TileEntity {
         tag.setInteger("QueuedHammerSounds", this.queuedHammerSounds);
         tag.setInteger("SoundDelay", this.soundDelay);
         tag.setBoolean("BreakWhenSoundsFinish", this.breakWhenSoundsFinish);
+        tag.setBoolean("HasBeenUsed", this.hasBeenUsed);
     }
 }

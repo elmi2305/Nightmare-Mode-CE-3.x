@@ -5,6 +5,7 @@ import api.achievement.AchievementEventDispatcher;
 import api.item.items.ToolItem;
 import api.util.status.StatusEffect;
 import api.world.data.DataEntry;
+import api.world.BeaconStatus;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
@@ -574,9 +575,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 0.2f))
     private float reduceExhaustion(float constant) {
-        float prog = NMUtils.getWorldProgress() * 0.08f;
         double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
-        return (float) ((constant + prog + 0.1f) * mult);
+        return (float) (constant * mult);
     }
     @ModifyConstant(method = "addMovementStat", constant = @Constant(floatValue = 0.025f))
     private float scaleSwimmingExhaustion(float constant) {
@@ -589,17 +589,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @ModifyConstant(method = "addExhaustionForJump", constant = @Constant(floatValue = 1.0f))
     private float reduceExhaustion1(float constant){
-        float prog = NMUtils.getWorldProgress() * 0.2f;
         double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
-
-        return (float) ((constant + prog + 0.5f) * mult);
+        return (float) (constant * mult);
     }
     @ModifyConstant(method = "attackTargetEntityWithCurrentItem", constant = @Constant(floatValue = 0.3f))
     private float reduceExhaustion2(float constant){
-        float prog = NMUtils.getWorldProgress() * 0.05f;
         double mult = NMUtils.getFirstSevenDaysMultiplier(worldObj);
-
-        return (float) ((constant + prog + 0.2f) * mult);
+        return (float) (constant * mult);
     }
 
     @Inject(method = "clonePlayer", at = @At("TAIL"))
@@ -1075,6 +1071,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "decreaseAirSupply", at = @At("HEAD"), cancellable = true)
     private void breatheFromDivingTankUnderwater(int currentAir, CallbackInfoReturnable<Integer> cir) {
+        float earlyReduction = this.getEarlyOxygenGearReduction();
+        if (earlyReduction > 0.0F && this.rand.nextFloat() < earlyReduction) {
+            cir.setReturnValue(currentAir);
+            return;
+        }
         ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
         if (tank == null || !(tank.getItem() instanceof ItemDivingGear gear) || gear.getStoredAir(tank) <= 0) {
             return;
@@ -1122,7 +1123,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         double y = Math.max(24.0D, this.posY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
         int baseInterval = Math.max(1, (int)Math.round(8.0D - depthRatio * 7.0D));
-        float cap = ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
+        float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F
+                : ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
         float reduction = Math.min(this.getOxygenGearReduction(), cap);
         return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction)));
     }
@@ -1139,6 +1141,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             reduction += ((ItemOxygenGear)tank.getItem()).getOxygenDrainReduction();
         }
         return reduction;
+    }
+
+    @Unique
+    private float getEarlyOxygenGearReduction() {
+        float reduction = 0.0F;
+        ItemStack mask = this.getCurrentArmor(3);
+        ItemStack tank = this.getCurrentArmor(2);
+        if (mask != null && mask.getItem() == NMItems.oxygenMask) reduction += NMItems.oxygenMask.getOxygenDrainReduction();
+        if (tank != null && tank.getItem() == NMItems.oxygenTank) reduction += NMItems.oxygenTank.getOxygenDrainReduction();
+        return Math.min(0.95F, reduction);
+    }
+
+    @Inject(method = "getValidatedRespawnCoordinates", at = @At("RETURN"), cancellable = true)
+    private void rejectHighBoundSpawn(World world, ChunkCoordinates spawn, CallbackInfoReturnable<BeaconStatus> cir) {
+        if (world.provider.dimensionId == 0 && cir.getReturnValue() == BeaconStatus.VALID
+                && spawn.posY + 0.1D > NMFields.SOLAR_RADIATION_HEIGHT) {
+            cir.setReturnValue(BeaconStatus.INVALID);
+        }
     }
 
 
@@ -1318,6 +1338,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
         if (this.shouldLoseOxygenAtAltitude()) {
             int interval = Math.max(2, 20 - MathHelper.floor_double((this.posY - 120.0D) / 5.0D));
+            interval = Math.max(1, (int)Math.ceil(interval / (1.0F - this.getEarlyOxygenGearReduction())));
             if (this.ticksExisted % interval == 0 && !this.consumeDivingTankAir()) {
                 this.setAir(this.getAir() - 1);
                 if (this.getAir() <= -20) {
@@ -1330,7 +1351,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         int x = MathHelper.floor_double(this.posX);
         int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
         int z = MathHelper.floor_double(this.posZ);
-        boolean exposed = this.posY > 140.0D && this.worldObj.canBlockSeeTheSky(x, y, z);
+        boolean exposed = this.posY > NMFields.SOLAR_RADIATION_HEIGHT && this.worldObj.canBlockSeeTheSky(x, y, z);
         if (!exposed || ArmorSetHelper.hasSuppliedSunSet(this)) {
             this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 12);
             return;

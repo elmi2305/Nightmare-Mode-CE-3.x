@@ -2135,7 +2135,7 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(Block.oreDiamond.blockID);
-        FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 4);
+        FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.carbonRichIronMix.itemID, new ItemStack(NMItems.carburizedIronBloom), 0.0F, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.lithiumTreatedIronBlank.itemID, new ItemStack(NMItems.reinforcedIronIngot), 0.2F, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.wetGasket.itemID, new ItemStack(NMItems.waxedGasket), 0.0F, 1);
@@ -2703,7 +2703,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMItems.ironStick, 8), new Object[]{
                         "I", "I", Character.valueOf('I'), Item.ingotIron}),
-                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64,
+                NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_16,
                 NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.KILL_MOB_250);
 
         SkillLockedCrafting.requireSkill(
@@ -4712,13 +4712,12 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_LOOSE_STONE_64);
         SkillRecipeGates.crafting(NMItems.lithiumSalt.itemID, NMSkillNodes.BRING_RAW_LITHIUM_64);
         SkillRecipeGates.crafting(NMItems.lithiumHeatCompound.itemID,
-                NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_NICKEL_PLATE_4,
-                NMSkillNodes.BRING_POTASSIUM_CRYSTAL_16);
+                NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.BRING_NICKEL_PLATE_4);
         SkillRecipeGates.crafting(NMItems.nickelBinding.itemID, NMSkillNodes.BRING_NICKEL_PLATE_4);
         SkillRecipeGates.crafting(NMItems.oxygenTank.itemID,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(NMItems.seededDiamondMatrix.itemID,
-                NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_64, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+                NMSkillNodes.BRING_DIAMOND_BEARING_ROCK_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
         SkillRecipeGates.crafting(NMItems.nickelBoundDiamondMatrix.itemID,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_RAW_LITHIUM_64);
         SkillRecipeGates.crafting(NMItems.fishFlesh.itemID, NMSkillNodes.CATCH_FISH_50);
