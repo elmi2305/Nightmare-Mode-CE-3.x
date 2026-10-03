@@ -1024,15 +1024,15 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmEclipseMerchantAbyssalEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.ABYSSAL_ESSENCE, 2, 4, 1.0F);
         buy("nmEclipseMerchantFrozenEssence", profession, 4, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.FROZEN_ESSENCE, 2, 4, 1.0F);
         buy("nmEclipseMerchantEnderMechanismFinal", profession, 5, NMItems.enderMechanism.itemID, 0, 1, 2, 1.1F);
-        buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 16, 32, 1.0F);
+        buy("nmEclipseMerchantDarksunFinal", profession, 5, NMItems.darksunFragment.itemID, 0, 2, 4, 1.0F);
         // the covenant is the endpoint: one exchange supplies the complete altar.
         convert("nmEclipseMerchantBloodBoneCovenant", profession, 5,
                 TradeItem.fromID(Item.emerald.itemID, 32, 32),
                 TradeItem.fromIDAndMetadata(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.NIGHTMARE_COVENANT_ESSENCE),
                 TradeItem.fromID(NMBlocks.bloodBones.blockID, 4), 1.0F, false, true);
         convert("nmEclipseMerchantSteelBlockAutomation", profession, 5,
-                TradeItem.fromID(BTWBlocks.soulforgedSteelBlock.blockID, 30, 48), TradeItem.EMPTY,
-                TradeItem.fromID(Item.emerald.itemID, 2, 2), 1.0F, false, true);
+                TradeItem.fromID(BTWBlocks.soulforgedSteelBlock.blockID, 16, 24), TradeItem.EMPTY,
+                TradeItem.fromID(Item.emerald.itemID, 8, 12), 1.0F, false, true);
 
         TradeProvider.getBuilder().name("nmEclipseMerchantRank2").profession(profession).level(1)
                 .buy().item(NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.END_HARVEST_ESSENCE).itemCount(2, 2).mandatory().addAsLevelUpTrade();
