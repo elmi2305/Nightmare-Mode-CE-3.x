@@ -96,7 +96,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private float lastMeleeDamage;
     @Unique private static final int DROWNING_UNCONSCIOUS_BLINK_LENGTH = 80;
     @Unique private static final int DROWNING_UNCONSCIOUS_DEATH_DELAY = 28;
-    @Unique private static final UUID SKILL_MOVEMENT_SPEED_ID = UUID.fromString("d4b548c6-c2ee-4d22-a714-d95095210c50");
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void nightmareMode$applySkillMovementSpeed(CallbackInfo ci) {

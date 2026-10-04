@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.NightmareModeAddon;
 import com.itlesports.nightmaremode.util.interfaces.IPlayerDirectionTracker;
 import net.minecraft.src.*;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
@@ -18,6 +20,15 @@ public abstract class EntityPlayerSPMixin extends EntityPlayer implements IPlaye
 
     public EntityPlayerSPMixin(World par1World, String par2Str) {
         super(par1World, par2Str);
+    }
+
+    @Redirect(method = "getFOVMultiplier", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/AttributeInstance;getAttributeValue()D"), require = 1)
+    private double excludeSkillSpeedFromFov(AttributeInstance speed) {
+        double value = speed.getAttributeValue();
+        AttributeModifier skillSpeed = speed.getModifier(NMFields.SKILL_MOVEMENT_SPEED_ID);
+        // skill speed uses operation 2, so remove only its multiplicative contribution to fov.
+        return skillSpeed == null ? value : value / (1.0D + skillSpeed.getAmount());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
