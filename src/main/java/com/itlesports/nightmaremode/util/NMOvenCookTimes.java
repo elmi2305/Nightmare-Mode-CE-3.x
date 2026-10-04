@@ -12,7 +12,7 @@ public final class NMOvenCookTimes {
     public static int getCookTime(ItemStack stack) {
         if (!NMItemStackUtils.isValid(stack)) return 1600;
         Item item = stack.getItem();
-        if (item == BTWItems.unfiredCrudeBrick) return 1200;
+        if (item == BTWItems.unfiredCrudeBrick) return 24000;
         if (item == BTWItems.unfiredNetherBrick) return 2400;
         if (item == NMItems.unbakedChocolateCake) return 2400;
 

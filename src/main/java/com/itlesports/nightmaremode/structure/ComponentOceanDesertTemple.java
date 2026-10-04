@@ -9,8 +9,10 @@ import net.minecraft.src.*;
 
 import java.util.Random;
 
-/** Underwater desert-temple layout, anchored at Y=35 for a prismarine palette. */
+/** underwater desert-temple layout anchored to the ocean floor. */
 public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
+    private static final int SPAWN_RADIUS_XZ = 64;
+    private static final int SPAWN_RADIUS_Y = 48;
     private boolean[] field_74940_h = new boolean[4];
     private static final WeightedRandomChestContent[] lootListArray = new WeightedRandomChestContent[]{
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
@@ -39,12 +41,52 @@ public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
     }
 
     private void expandSpawnBounds() {
-        this.boundingBox.minX -= 64;
-        this.boundingBox.maxX += 64;
-        this.boundingBox.minY -= 48;
-        this.boundingBox.maxY += 48;
-        this.boundingBox.minZ -= 64;
-        this.boundingBox.maxZ += 64;
+        this.boundingBox.minX -= SPAWN_RADIUS_XZ;
+        this.boundingBox.maxX += SPAWN_RADIUS_XZ;
+        this.boundingBox.minY -= SPAWN_RADIUS_Y;
+        this.boundingBox.maxY += SPAWN_RADIUS_Y;
+        this.boundingBox.minZ -= SPAWN_RADIUS_XZ;
+        this.boundingBox.maxZ += SPAWN_RADIUS_XZ;
+    }
+
+    @Override
+    protected int getXWithOffset(int x, int z) {
+        return super.getXWithOffset(x, z) + (this.coordBaseMode == 1 ? -SPAWN_RADIUS_XZ : SPAWN_RADIUS_XZ);
+    }
+
+    @Override
+    protected int getYWithOffset(int y) {
+        return super.getYWithOffset(y) + SPAWN_RADIUS_Y;
+    }
+
+    @Override
+    protected int getZWithOffset(int x, int z) {
+        return super.getZWithOffset(x, z) + (this.coordBaseMode == 2 ? -SPAWN_RADIUS_XZ : SPAWN_RADIUS_XZ);
+    }
+
+    private boolean anchorToOceanFloor(World world, StructureBoundingBox generationBounds) {
+        if (this.field_74936_d >= 0) return true;
+
+        int totalHeight = 0;
+        int columns = 0;
+        for (int z = this.boundingBox.minZ + SPAWN_RADIUS_XZ; z <= this.boundingBox.maxZ - SPAWN_RADIUS_XZ; ++z) {
+            for (int x = this.boundingBox.minX + SPAWN_RADIUS_XZ; x <= this.boundingBox.maxX - SPAWN_RADIUS_XZ; ++x) {
+                // only sample the terrain in the chunk currently being populated.
+                if (!generationBounds.isVecInside(x, 64, z)) continue;
+                for (int y = world.getHeight() - 1; y > 0; --y) {
+                    if (world.getBlockMaterial(x, y, z).isSolid()) {
+                        totalHeight += y + 1;
+                        ++columns;
+                        break;
+                    }
+                }
+            }
+        }
+        if (columns == 0) return false;
+
+        this.field_74936_d = totalHeight / columns;
+        this.boundingBox.offset(0, this.field_74936_d - this.getYWithOffset(0), 0);
+        return true;
     }
 
     @Override
@@ -65,12 +107,12 @@ public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
 
     @Override
     public boolean addComponentParts(World world, Random generatorRand, StructureBoundingBox boundingBox) {
-//        System.out.println("generating");
         int var10;
         int var5;
         int var4;
-        if (world.getWorldInfo().getTerrainType() == WorldType.FLAT && !this.func_74935_a(world, boundingBox, 0)) {
-            return false;
+        if (!this.anchorToOceanFloor(world, boundingBox)) {
+            // spawn bounds can overlap a chunk before the actual temple footprint does.
+            return true;
         }
         boolean bIsLooted = HardcoreSpawnUtils.isInLootedTempleRadius(world, boundingBox.getCenterX(), boundingBox.getCenterZ());
 

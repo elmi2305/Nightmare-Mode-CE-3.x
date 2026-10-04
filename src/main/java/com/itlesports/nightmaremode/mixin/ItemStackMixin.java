@@ -4,6 +4,7 @@ import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.item.items.ItemGlassArmor;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMItemStackUtils;
+import com.itlesports.nightmaremode.util.NMFoodSpoilage;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
@@ -17,6 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
+    @Inject(method = "isStackable", at = @At("HEAD"), cancellable = true)
+    private void allowPerishableFoodStacking(CallbackInfoReturnable<Boolean> cir) {
+        ItemStack stack = (ItemStack)(Object)this;
+        if (NMFoodSpoilage.isPerishable(stack)) cir.setReturnValue(stack.getMaxStackSize() > 1);
+    }
+
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
     private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
         if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return amount;

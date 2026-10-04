@@ -26,6 +26,21 @@ public final class SkillRecipeGates {
         crafting(outputId, -1, skills);
     }
 
+    // additive progression gates preserve the recipe's existing ingredients and yield.
+    public static void requireCraftingSkills(int outputId, SkillNode... skills) {
+        requireCraftingSkills(outputId, -1, skills);
+    }
+
+    public static void requireCraftingSkills(int outputId, int metadata, SkillNode... skills) {
+        for (Object object : CraftingManager.getInstance().getRecipeList()) {
+            IRecipe recipe = (IRecipe)object;
+            if (!EXEMPT_CRAFTING_RECIPES.contains(recipe)
+                    && matches(recipe.getRecipeOutput(), outputId, metadata)) {
+                SkillLockedCrafting.requireSkills(recipe, skills);
+            }
+        }
+    }
+
     public static void crafting(int outputId, int metadata, SkillNode... skills) {
         for (Object object : CraftingManager.getInstance().getRecipeList()) {
             IRecipe recipe = (IRecipe)object;

@@ -8,6 +8,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
+import com.itlesports.nightmaremode.util.NMFoodSpoilage;
 import com.itlesports.nightmaremode.util.NMItemStackUtils;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.world.SandboxRules;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -262,6 +264,11 @@ public class InventoryPlayerMixin {
             }
         }
         cir.setReturnValue(-1);
+    }
+
+    @Redirect(method = "addItemStackToInventory*", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;isItemDamaged()Z"))
+    private boolean useNormalStackingForPerishableFood(ItemStack stack) {
+        return !NMFoodSpoilage.isPerishable(stack) && stack.isItemDamaged();
     }
 
     @Inject(method = "getFirstEmptyStack", at = @At("HEAD"), cancellable = true)

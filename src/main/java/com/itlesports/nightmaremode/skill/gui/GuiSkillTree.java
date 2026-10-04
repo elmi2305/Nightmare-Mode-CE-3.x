@@ -37,9 +37,12 @@ public class GuiSkillTree extends GuiScreen {
     private static final ResourceLocation BORDER_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/border.png");
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/background.png");
     private static final ResourceLocation TAB_OUTLINE_TEXTURE = new ResourceLocation(NMFields.modID, "textures/gui/skill/tab_outline.png");
+    private static int lastBranchIndex;
+    private static double lastMapX = -80.0D;
+    private static double lastMapY = -48.0D;
     private int branchIndex;
-    private double mapX = -80.0D;
-    private double mapY = -48.0D;
+    private double mapX;
+    private double mapY;
     private int lastMouseX;
     private int lastMouseY;
     private boolean dragging;
@@ -62,6 +65,9 @@ public class GuiSkillTree extends GuiScreen {
     public GuiSkillTree(GuiScreen parentScreen, SkillNode node) {
         this.parentScreen = parentScreen;
         this.ignoreOpeningMouseRelease = parentScreen != null;
+        this.branchIndex = lastBranchIndex;
+        this.mapX = lastMapX;
+        this.mapY = lastMapY;
         if (node != null) {
             this.focusNode(node);
         }
@@ -444,6 +450,9 @@ public class GuiSkillTree extends GuiScreen {
 
     @Override
     public void onGuiClosed() {
+        lastBranchIndex = this.branchIndex;
+        lastMapX = this.mapX;
+        lastMapY = this.mapY;
         this.searchText = "";
         this.searchResultIndex = 0;
     }

@@ -9,4 +9,6 @@ public interface ItemInvoker {
     Item invokeSetMaxStackSize(int par1);
     @Invoker("setMaxDamage")
     Item invokeSetMaxDamage(int par1);
+    @Invoker("setHasSubtypes")
+    Item invokeSetHasSubtypes(boolean hasSubtypes);
 }

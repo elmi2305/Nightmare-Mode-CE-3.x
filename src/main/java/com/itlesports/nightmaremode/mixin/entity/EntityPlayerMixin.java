@@ -739,30 +739,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
 
 
-        // manage blight effects
-        if(false && (this.ticksExisted & 16) == 0) {
-            if (!this.capabilities.isCreativeMode && this.worldObj.getBlockId(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY - 1), MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID) {
-                EntityPlayer thisObj = (EntityPlayer) (Object) this;
-
-                int i = MathHelper.floor_double(this.posX);
-                int j = MathHelper.floor_double(this.posY - 1);
-                int k = MathHelper.floor_double(this.posZ);
-
-                if (this.worldObj.getBlockMetadata(i, j, k) == 0) {
-                    this.addPlayerPotionEffect(thisObj, Potion.weakness.id);
-                } else if (this.worldObj.getBlockMetadata(i, j, k) == 1) {
-                    this.addPlayerPotionEffect(thisObj, Potion.poison.id);
-                } else if (this.worldObj.getBlockMetadata(i, j, k) == 2) {
-                    this.addPlayerPotionEffect(thisObj, Potion.wither.id);
-                    this.addPlayerPotionEffect(thisObj, Potion.moveSlowdown.id);
-                } else if (this.worldObj.getBlockMetadata(i, j, k) == 4) {
-                    this.addPlayerPotionEffect(thisObj, Potion.wither.id);
-                    this.addPlayerPotionEffect(thisObj, Potion.moveSlowdown.id);
-                    this.addPlayerPotionEffect(thisObj, Potion.blindness.id);
-                    this.addPlayerPotionEffect(thisObj, Potion.weakness.id);
-                }
-            }
-        }
     }
 
     @Unique private int awakeFatigueTicks;
@@ -963,12 +939,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
 
-
-    @Unique private void addPlayerPotionEffect(EntityPlayer player, int potionID){
-        if(!player.isPotionActive(potionID) || potionID == Potion.blindness.id){
-            player.addPotionEffect(new PotionEffect(potionID,81,0));
-        }
-    }
 
     @Unique private static final Collection<StatusEffect> collection = List.of(
             BTWPlayerStatuses.PECKISH,

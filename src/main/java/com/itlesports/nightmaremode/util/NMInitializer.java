@@ -1972,8 +1972,7 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{
                         new ItemStack(NMItems.crystalPowder, 2),
                         new ItemStack(BTWItems.sandPile, 4),
-                        new ItemStack(BTWItems.potash),
-                        new ItemStack(NMItems.dyeBlend)
+                        new ItemStack(BTWItems.potash)
                 },
                 CisternTileEntity.FLUID_WATER, 2, 8, 480,
                 new ItemStack[]{new ItemStack(NMItems.glassBatch, 2)})
@@ -2135,6 +2134,9 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.ironOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.goldOreChunk.itemID);
         FurnaceRecipes.smelting().getSmeltingList().remove(Block.oreDiamond.blockID);
+        FurnaceRecipes.smelting().getSmeltingList().remove(BTWItems.unfiredCrudeBrick.itemID);
+        FurnaceRecipes.smelting().addSmelting(BTWItems.unfiredCrudeBrick.itemID, new ItemStack(Item.brick),
+                FurnaceRecipes.smelting().getExperience(Item.brick.itemID), 4);
         FurnaceRecipes.smelting().addSmelting(NMPostItems.washedIronMix.itemID, new ItemStack(NMItems.ironBloom), 0.0f, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.carbonRichIronMix.itemID, new ItemStack(NMItems.carburizedIronBloom), 0.0F, 3);
         FurnaceRecipes.smelting().addSmelting(NMItems.lithiumTreatedIronBlank.itemID, new ItemStack(NMItems.reinforcedIronIngot), 0.2F, 3);
@@ -4804,7 +4806,56 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.soulforge(NMItems.enderLeggings.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
         SkillRecipeGates.soulforge(NMItems.enderBoots.itemID, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
 
+        addShallowWorkshopRecipeGates();
         finishRecipes("Skill Gates");
+    }
+
+    private static void addShallowWorkshopRecipeGates() {
+        // workshop hand-ins precede the equipment they unlock, including the glass route.
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.idleLooseOven.blockID, NMSkillNodes.BRING_SUGAR_CANE);
+        SkillRecipeGates.requireCraftingSkills(NMItems.ironHammer.itemID,
+                NMSkillNodes.BRING_LOOSE_BRICK_OVEN_4, NMSkillNodes.BRING_IRON_ORE_CHUNK_8,
+                NMSkillNodes.BRING_STRATA_ONE_LOOSE_COBBLESTONE_32, NMSkillNodes.BRING_BONE_CLUB_4);
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.cauldron.blockID,
+                NMSkillNodes.BRING_IRON_ORE_CHUNK_8, NMSkillNodes.BRING_STRATA_ONE_LOOSE_COBBLESTONE_128,
+                NMSkillNodes.BRING_BARK_BOX_16, NMSkillNodes.BRING_SUGAR_CANE_16);
+
+        SkillRecipeGates.requireCraftingSkills(Item.cauldron.itemID,
+                NMSkillNodes.BRING_LOOSE_BRICK_OVEN_4, NMSkillNodes.BRING_BARK_BOX_16,
+                NMSkillNodes.BRING_IRON_ORE_CHUNK_32, NMSkillNodes.BRING_IRON_ORE_PILE_32,
+                NMSkillNodes.BRING_STRATA_ONE_LOOSE_COBBLESTONE_32,
+                NMSkillNodes.BRING_SUGAR_CANE_16, NMSkillNodes.BRING_BONE_CLUB_4);
+
+        // a hand-cranked millstone supplies crystal powder without powered machinery.
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.millstone.blockID,
+                NMSkillNodes.BRING_LOOSE_BRICK_OVEN_1, NMSkillNodes.BRING_STRATA_ONE_LOOSE_COBBLESTONE_32,
+                NMSkillNodes.BRING_SUGAR_CANE_16);
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.handCrank.blockID,
+                NMSkillNodes.BRING_BARK_BOX_16, NMSkillNodes.BRING_LOOSE_STONE_64,
+                NMSkillNodes.BRING_SUGAR_CANE_16);
+        SkillRecipeGates.requireCraftingSkills(NMItems.nickelBinding.itemID,
+                NMSkillNodes.BRING_NICKEL_BEARING_ROCK_16, NMSkillNodes.BRING_SUGAR_CANE_16,
+                NMSkillNodes.BRING_STRING_32);
+        SkillRecipeGates.requireCraftingSkills(NMItems.oxygenMask.itemID,
+                NMSkillNodes.MINE_STRATA_ONE_STONE_1000,
+                NMSkillNodes.BRING_BONE_CLUB_4, NMSkillNodes.BRING_SUGAR_CANE_16);
+        SkillRecipeGates.requireCraftingSkills(NMItems.oxygenTank.itemID,
+                NMSkillNodes.MINE_STRATA_ONE_STONE_1000, NMSkillNodes.BRING_IRON_ORE_CHUNK_32);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.ironAnvil.blockID,
+                NMSkillNodes.BRING_STRATA_ONE_LOOSE_COBBLESTONE_128, NMSkillNodes.BRING_IRON_ORE_CHUNK_32);
+
+        // bulk iron and blackstone hand-ins belong only to machinery after diamond ingots.
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.hopper.blockID, NMSkillNodes.BRING_IRON_NUGGET_128);
+        SkillRecipeGates.requireCraftingSkills(NMItems.ironKnittingNeedles.itemID, NMSkillNodes.BRING_IRON_NUGGET_128);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.minerDrill.blockID,
+                NMSkillNodes.BRING_IRON_NUGGET_128, NMSkillNodes.BRING_BLACKSTONE_64);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.obsidianMillstone.blockID,
+                NMSkillNodes.BRING_STRATA_THREE_LOOSE_COBBLESTONE_128);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.chuteHopper.blockID,
+                NMSkillNodes.BRING_IRON_NUGGET_512, NMSkillNodes.BRING_STRATA_THREE_LOOSE_COBBLESTONE_128);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.cisternStirrer.blockID,
+                NMSkillNodes.BRING_IRON_NUGGET_512, NMSkillNodes.BRING_STRATA_THREE_LOOSE_COBBLESTONE_128);
+        SkillRecipeGates.requireCraftingSkills(NMBlocks.cisternDrain.blockID, NMSkillNodes.BRING_IRON_NUGGET_512);
     }
 
     private static void addHammerRecipes(){

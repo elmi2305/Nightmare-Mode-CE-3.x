@@ -8,7 +8,7 @@ import net.minecraft.src.Slot;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 
 public final class NMInventoryLocks {
-    private static final int[] HOTBAR_SLOT_LEVELS = {0, 3, 6, 9, 12, 15, 18};
+    private static final int[] HOTBAR_SLOT_LEVELS = {0, 3, 6, 9, 12, 15};
     private static final int SECOND_BACKPACK_ROW_LEVEL = 10;
 
     private static int getInventoryLevel(EntityPlayer player) {

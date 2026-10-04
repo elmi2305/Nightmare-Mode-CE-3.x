@@ -230,7 +230,7 @@ public final class SkillRewardActions {
     }
 
     public static SkillUnlockAction addHotbarSlots(int amount) {
-        return playerReward(data -> data.extraHotbarSlots = Math.min(2, data.extraHotbarSlots + amount));
+        return playerReward(data -> data.extraHotbarSlots = Math.min(3, data.extraHotbarSlots + amount));
     }
 
     public static SkillUnlockAction unlockThirdInventoryRow() {

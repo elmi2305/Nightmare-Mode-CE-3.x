@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import api.world.WorldUtils;
-import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.LocatorPileEntity;
 import btw.entity.RottenArrowEntity;
@@ -25,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-import static com.itlesports.nightmaremode.util.NMFields.HARDMODE;
 import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 
@@ -406,42 +404,4 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         }
     }
 
-    @Inject(method = "entityMobOnLivingUpdate", at = @At("TAIL"))
-    private void manageBlightPowerUp(CallbackInfo ci){
-
-        // Blight is now environmental only; pollution drives its danger rather than mob buffs.
-        if (false && NMUtils.getWorldProgress() > HARDMODE && this.ticksExisted % 40 == 0) {
-            if(this.worldObj.getBlockId(MathHelper.floor_double(this.posX),MathHelper.floor_double(this.posY-1),MathHelper.floor_double(this.posZ)) == BTWBlocks.aestheticEarth.blockID){
-                int i = MathHelper.floor_double(this.posX);
-                int j = MathHelper.floor_double(this.posY - 1);
-                int k = MathHelper.floor_double(this.posZ);
-
-
-                int meta = this.worldObj.getBlockMetadata(i, j, k);
-
-                if(meta == 3){
-                    this.addBlightPotionEffect(this,Potion.moveSpeed.id);
-                    this.addBlightPotionEffect(this,Potion.damageBoost.id);
-                    this.addBlightPotionEffect(this,Potion.resistance.id);
-                    this.addBlightPotionEffect(this,Potion.invisibility.id);
-                }
-                else if (meta == 2) {
-                    this.addBlightPotionEffect(this, Potion.moveSpeed.id);
-                    this.addBlightPotionEffect(this, Potion.damageBoost.id);
-                    this.addBlightPotionEffect(this, Potion.resistance.id);
-                } else if (meta == 1){
-                    this.addBlightPotionEffect(this,Potion.regeneration.id);
-                    this.addBlightPotionEffect(this,Potion.resistance.id);
-                } else if(meta == 0){
-                    this.addBlightPotionEffect(this,Potion.regeneration.id);
-                }
-            }
-        }
-    }
-
-    @Unique private void addBlightPotionEffect(EntityCreature mob, int potionID){
-        if(!mob.isPotionActive(potionID)){
-            mob.addPotionEffect(new PotionEffect(potionID,100,0));
-        }
-    }
 }

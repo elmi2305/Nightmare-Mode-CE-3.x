@@ -58,7 +58,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         }
         if (!SkillHandler.getPlayerData(player).canUseCistern) {
             if (!world.isRemote) {
-                SkillHandler.sendStatus(player, "Requires skill: Redstone Hydraulics - Bring 16 redstone.");
+                SkillHandler.sendStatus(player, "Requires skill: Shallow Hydraulics - Mine 1,000 strata-one stone.");
             }
             return true;
         }

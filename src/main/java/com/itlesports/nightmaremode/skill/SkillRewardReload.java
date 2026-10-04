@@ -8,7 +8,7 @@ import java.util.*;
 /** Rebuild derived rewards without replaying unlock costs or changing progress. */
 public final class SkillRewardReload {
     static final String LEGACY_VERSION = "legacy";
-    private static final int SCHEMA = 5;
+    private static final int SCHEMA = 7;
     private enum ReplayScope { WORLD, PLAYER }
     private static final ThreadLocal<ReplayScope> REPLAYING = new ThreadLocal<>();
 

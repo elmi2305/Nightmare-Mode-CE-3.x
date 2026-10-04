@@ -41,6 +41,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Unique private NMUtils.JourneyWorldSummary recentWorld;
     @Unique private int worldCardTop;
     @Unique private int worldCardBottom;
+    @Unique private static final int WORLD_CARD_MIN_HEIGHT = 72;
     @Unique private JourneyBrowserMode browserMode = JourneyBrowserMode.NONE;
     @Unique private final List<SaveFormatComparator> browserWorlds = new ArrayList<SaveFormatComparator>();
     @Unique private boolean browserNeedsInitialRefresh;
@@ -97,9 +98,9 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         this.buttonList.add(new GuiJourneyIconButton(5, iconX + 30, iconY, GuiJourneyIconButton.Icon.LANGUAGE));
         this.buttonList.add(new GuiJourneyIconButton(4, iconX + 60, iconY, GuiJourneyIconButton.Icon.QUIT));
         this.refreshRecentWorld();
-        this.worldCardTop = 250;
+        this.worldCardTop = 225;
         this.worldCardBottom = iconY - 8;
-        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) {
+        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= WORLD_CARD_MIN_HEIGHT) {
             this.buttonList.add(new GuiJourneySmallButton(33, x + 4, this.worldCardBottom - 24, 72, "Jump In"));
         }
         if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) addBrowserButtons();
@@ -344,7 +345,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         int journeyY = 18 + btwHeight + 3;
         drawTexture(theme.journeyMode, 12, journeyY, journeyWidth, journeyHeight);
         drawTypedSplash(12, journeyY + journeyHeight + 10);
-        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= 100) drawRecentWorldCard(panelWidth);
+        if (!isCompactBrowser() && this.recentWorld != null && this.worldCardBottom - this.worldCardTop >= WORLD_CARD_MIN_HEIGHT) drawRecentWorldCard(panelWidth);
         this.drawString(this.fontRenderer, "Minecraft 1.6.4 - BTW CE V" + BTWMod.instance.getVersionString(), 12, this.height - 22, theme.textMuted);
         this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", 12, this.height - 12, theme.textMuted);
         if (this.browserMode != JourneyBrowserMode.NONE && canShowBrowser()) drawEmbeddedBrowser(mouseX, mouseY, theme);
@@ -772,21 +773,23 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
         drawRect(x, this.worldCardTop, x + width, this.worldCardTop + 1, theme.edge);
         drawRect(x, this.worldCardTop, x + 1, this.worldCardBottom, theme.edge);
         drawRect(x + width - 1, this.worldCardTop, x + width, this.worldCardBottom, 0x803C2918);
-        int iconSize = 56;
+        boolean compactCard = height < 88;
+        int iconSize = compactCard ? 40 : 56;
         int iconX = x + 7;
         int iconY = this.worldCardTop + 7;
         drawTexture(theme.worldIcon, iconX, iconY, iconSize, iconSize);
         int detailsX = iconX + iconSize + 7;
-        drawScaledString(trimToWidth(this.recentWorld.displayName(), (int) ((x + width - detailsX - 7) / 1.25F)), detailsX, iconY + 2, 1.25F, theme.textHighlight);
+        int titleRight = x + width - (compactCard ? 29 : 7);
+        drawScaledString(trimToWidth(this.recentWorld.displayName(), (int) ((titleRight - detailsX) / 1.25F)), detailsX, iconY + 2, 1.25F, theme.textHighlight);
         JourneyProfile data = this.recentWorld.profile();
         if (!data.valid) {
             this.drawString(this.fontRenderer, "World records: N/A", detailsX, iconY + 16, theme.textMuted);
             return;
         }
-        // This four-part stack remains within the 56px high world art: title, state, total, then the achievement icon.
+        // move the progress icon beside the title when the card needs a shorter header.
         this.drawString(this.fontRenderer, worldStateName(data.worldState), detailsX, iconY + 17, theme.text);
         this.drawString(this.fontRenderer, "Total completion: " + formatTotalCompletion(data) + "%", detailsX, iconY + 28, theme.textMuted);
-        drawProgressIcon(detailsX, iconY + 40, data.progressIndex, theme);
+        drawProgressIcon(compactCard ? x + width - 23 : detailsX, compactCard ? iconY : iconY + 40, data.progressIndex, theme);
         int statsY = iconY + iconSize + 6;
         int actionY = this.worldCardBottom - 24;
         if (statsY + 8 <= actionY) this.drawString(this.fontRenderer, "Playtime " + formatPlaytime(data.playTicks) + "  |  Created " + formatDate(data.createdAt), x + 8, statsY, theme.textMuted);

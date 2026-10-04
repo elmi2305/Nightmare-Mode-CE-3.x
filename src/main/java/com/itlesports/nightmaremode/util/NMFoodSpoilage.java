@@ -29,6 +29,11 @@ public final class NMFoodSpoilage {
     private NMFoodSpoilage() {
     }
 
+    public static boolean isPerishable(ItemStack stack) {
+        return stack != null && (RAW_FOODS.contains(stack.itemID) || FAST_SPOILING_FISH.contains(stack.itemID)
+                || COOKED_MEATS.contains(stack.itemID));
+    }
+
     public static void init() {
         registerRawFood(Item.beefRaw);
         registerRawFood(Item.chickenRaw);
@@ -111,6 +116,7 @@ public final class NMFoodSpoilage {
         }
 
         RAW_FOODS.add(item.itemID);
+        ((ItemInvoker)item).invokeSetHasSubtypes(true);
         ((ItemInvoker)item).invokeSetMaxDamage(RAW_FOOD_MAX_FRESHNESS_DAMAGE);
     }
 
@@ -120,6 +126,7 @@ public final class NMFoodSpoilage {
         }
 
         FAST_SPOILING_FISH.add(item.itemID);
+        ((ItemInvoker)item).invokeSetHasSubtypes(true);
         ((ItemInvoker)item).invokeSetMaxDamage(4);
     }
 
@@ -129,6 +136,7 @@ public final class NMFoodSpoilage {
         }
 
         COOKED_MEATS.add(item.itemID);
+        ((ItemInvoker)item).invokeSetHasSubtypes(true);
         ((ItemInvoker)item).invokeSetMaxDamage(COOKED_MEAT_MAX_DRYING_DAMAGE);
     }
 

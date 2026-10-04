@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.item.util.ItemUtils;
+import api.item.items.ShovelItem;
 import api.util.MiscUtils;
 import btw.item.BTWItems;
 import btw.block.BTWBlocks;
@@ -18,6 +19,7 @@ import com.itlesports.nightmaremode.item.itemblock.ItemBlockColoredChest;
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.util.interfaces.IColoredChest;
 import com.itlesports.nightmaremode.util.interfaces.IDyeableStorage;
+import com.itlesports.nightmaremode.world.BalanceProfile;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -72,7 +74,8 @@ public abstract class BlockMixin {
         if (this.blockID == Block.blockClay.blockID && !this.canHarvestClayBall(heldStack)) {
             player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
             player.addHarvestBlockExhaustion(this.blockID, x, y, z, meta);
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(BTWItems.clayPile));
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(BTWItems.clayPile,
+                    BalanceProfile.isEasy() ? 1 + world.rand.nextInt(2) : 1));
             for (int i = 0; i < 6; ++i) {
                 this.dropBlockAsItem_do(world, x, y, z, new ItemStack(BTWItems.dirtPile));
             }
@@ -233,6 +236,10 @@ public abstract class BlockMixin {
 
     @Unique
     private boolean canHarvestClayBall(ItemStack heldStack) {
+        if (BalanceProfile.isEasy()) {
+            return heldStack != null && heldStack.getItem() instanceof ShovelItem shovel
+                    && shovel.toolMaterial != EnumToolMaterial.WOOD;
+        }
         return heldStack != null && (heldStack.itemID == Item.shovelDiamond.itemID
                 || heldStack.itemID == NMItems.bloodShovel.itemID
                 || heldStack.itemID == BTWItems.steelShovel.itemID);
