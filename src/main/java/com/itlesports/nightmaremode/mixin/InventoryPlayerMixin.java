@@ -266,7 +266,7 @@ public class InventoryPlayerMixin {
         cir.setReturnValue(-1);
     }
 
-    @Redirect(method = "addItemStackToInventory*", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;isItemDamaged()Z"))
+    @Redirect(method = "addItemStackToInventory(Lnet/minecraft/src/ItemStack;I)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;isItemDamaged()Z"))
     private boolean useNormalStackingForPerishableFood(ItemStack stack) {
         return !NMFoodSpoilage.isPerishable(stack) && stack.isItemDamaged();
     }
