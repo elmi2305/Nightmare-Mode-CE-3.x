@@ -194,6 +194,7 @@ public class GuiSkillStats extends GuiScreen {
             lines.add("Fuel duration: +100%");
             lines.add("Crop yield: +100%");
             lines.add("Hunger exhaustion: 65% less");
+            lines.add("Pollution gain: " + percent(com.itlesports.nightmaremode.util.EasyBalance.pollution(1.0F)));
             lines.add("Optional stat counters: 2x credit");
             lines.add("Earned inventory capacity survives death");
         }

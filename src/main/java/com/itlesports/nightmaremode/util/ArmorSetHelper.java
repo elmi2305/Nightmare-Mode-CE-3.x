@@ -29,6 +29,15 @@ public final class ArmorSetHelper {
         return count;
     }
 
+    public static boolean isProtectedFromDesertHeat(EntityLivingBase wearer) {
+        for (int slot = 1; slot <= 4; ++slot) {
+            ItemStack stack = wearer.getCurrentItemOrArmor(slot);
+            if (!isIntact(stack) || !(stack.getItem() instanceof IHeatResistantArmor
+                    || stack.getItem() instanceof ItemCoresteelArmor)) return false;
+        }
+        return true;
+    }
+
     public static float getFireTimeReduction(EntityLivingBase wearer) {
         float reduction = 0.0F;
         for (int slot = 1; slot <= 4; ++slot) {

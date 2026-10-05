@@ -31,6 +31,7 @@ public final class NMBlockBreakingRules {
 
     public static boolean canAttemptBreak(EntityPlayer player, Block block, World world, int x, int y, int z) {
         if (block == null || player.capabilities.isCreativeMode) return true;
+        if (block == Block.anvil) return isSteelMiningTool(player.getCurrentEquippedItem());
         if (block == Block.oreDiamond) return isValidDiamondMiningTool(player.getCurrentEquippedItem());
         if (isSoftBlock(block, world, x, y, z)) return true;
         ItemStack held = player.getCurrentEquippedItem();
@@ -50,6 +51,14 @@ public final class NMBlockBreakingRules {
         if (item instanceof PickaxeItem pick) return pick.toolMaterial.getHarvestLevel() >= requiredLevel;
         if (item instanceof ChiselItem chisel) return chisel.toolMaterial.getHarvestLevel() >= requiredLevel;
         return item instanceof ItemPickaxe pick && pick.getToolMaterial().getHarvestLevel() >= requiredLevel;
+    }
+
+    public static boolean isSteelMiningTool(ItemStack stack) {
+        if (stack == null) return false;
+        if (stack.getItem() == NMItems.coresteelPickaxe || stack.getItem() == NMItems.quicksilverPickaxe) return true;
+        int requiredLevel = EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel();
+        if (stack.getItem() instanceof PickaxeItem pick) return pick.toolMaterial.getHarvestLevel() >= requiredLevel;
+        return stack.getItem() instanceof ItemPickaxe pick && pick.getToolMaterial().getHarvestLevel() >= requiredLevel;
     }
 
     public static float getBreakingSpeed(Block block, EntityPlayer player, World world, int x, int y, int z) {

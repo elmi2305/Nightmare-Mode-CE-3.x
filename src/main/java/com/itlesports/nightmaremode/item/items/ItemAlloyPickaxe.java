@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.item.items;
 
 import api.item.items.PickaxeItem;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import net.minecraft.src.Block;
 import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.ItemStack;
@@ -25,7 +26,22 @@ public class ItemAlloyPickaxe extends PickaxeItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
+        if (block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)) {
+            return this.efficiencyOnProperMaterial * this.speedMultiplier;
+        }
         return super.getStrVsBlock(stack, world, block, x, y, z) * this.speedMultiplier;
+    }
+
+    @Override
+    public boolean canHarvestBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
+        return block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)
+                || super.canHarvestBlock(stack, world, block, x, y, z);
+    }
+
+    @Override
+    public boolean isEfficientVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
+        return block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)
+                || super.isEfficientVsBlock(stack, world, block, x, y, z);
     }
 
     @Override

@@ -103,7 +103,13 @@ public class ItemMixin {
             if (!player.capabilities.isCreativeMode && --stack.stackSize <= 0) {
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
             }
-            player.dropPlayerItem(sample);
+            if (!player.inventory.addItemStackToInventory(sample)) {
+                player.dropPlayerItem(sample);
+            }
+            player.inventory.onInventoryChanged();
+            if (player instanceof EntityPlayerMP serverPlayer) {
+                serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
+            }
         }
         cir.setReturnValue(true);
     }

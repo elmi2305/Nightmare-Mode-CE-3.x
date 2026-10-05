@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -52,13 +51,17 @@ public class InventoryPlayerMixin {
         }
     }
 
-    @ModifyArg(method = "damageArmor", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/ItemStack;damageItem(ILnet/minecraft/src/EntityLivingBase;)V"), index = 0)
-    private int nightmareMode$preserveArmorDurability(int damage) {
+    @Redirect(method = "damageArmor", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemStack;damageItem(ILnet/minecraft/src/EntityLivingBase;)V"))
+    private void preserveArmorDurability(ItemStack stack, int damage, EntityLivingBase user) {
+        if (NMItemStackUtils.shouldBreakOnUse(stack, damage)) {
+            stack.damageItem(damage, user);
+            return;
+        }
         float chance = Math.min(1.0F, SkillHandler.getPlayerData(this.player).armorDurabilitySaveChance);
         float adjusted = damage * (1.0F - chance);
         int whole = (int) adjusted;
-        return whole + (this.player.rand.nextFloat() < adjusted - whole ? 1 : 0);
+        stack.damageItem(whole + (this.player.rand.nextFloat() < adjusted - whole ? 1 : 0), user);
     }
 
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
@@ -161,24 +164,8 @@ public class InventoryPlayerMixin {
     @Inject(method = "changeCurrentItem", at = @At("HEAD"), cancellable = true)
     private void cycleOnlyUnlockedHotbarSlots(int direction, CallbackInfo ci) {
         int hotbarSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.player);
-        if (hotbarSlots >= 9) {
-            return;
-        }
-
-        if (direction > 0) {
-            direction = 1;
-        }
-        if (direction < 0) {
-            direction = -1;
-        }
-
-        this.currentItem -= direction;
-        while (this.currentItem < 0) {
-            this.currentItem += hotbarSlots;
-        }
-        while (this.currentItem >= hotbarSlots) {
-            this.currentItem -= hotbarSlots;
-        }
+        // assign only the final unlocked slot so inventory readers never see a temporary invalid selection.
+        this.currentItem = Math.floorMod(this.currentItem - Integer.signum(direction), hotbarSlots);
         ci.cancel();
     }
 

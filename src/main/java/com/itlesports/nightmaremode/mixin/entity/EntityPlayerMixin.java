@@ -1208,7 +1208,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ);
 
         if (!this.worldObj.isRemote && region == OverworldTierHelper.Region.CRUEL_DESERT
-                && !ArmorSetHelper.isWearingCompleteHeatResistantSet(this) && this.ticksExisted % 20 == 0) {
+                && !ArmorSetHelper.isProtectedFromDesertHeat(this) && this.ticksExisted % 20 == 0) {
             this.setFire(3);
         }
 

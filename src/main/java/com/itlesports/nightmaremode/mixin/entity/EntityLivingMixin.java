@@ -75,6 +75,12 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
         }
     }
 
+    @Redirect(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"))
+    private EntityItem preventSkeletonBowDrop(EntityLiving entity, ItemStack stack, float offset) {
+        if (entity instanceof EntitySkeleton && stack != null && stack.itemID == Item.bow.itemID) return null;
+        return entity.entityDropItem(stack, offset);
+    }
+
     @Inject(method = "despawnEntity", at = @At(value = "TAIL"))
     private void manageDespawnDuringBloodMoon(CallbackInfo ci){
         if (this.canDespawn() && !this.persistenceRequired && this.ticksExisted % 300 == 299 && NMUtils.getIsBloodMoon()) {

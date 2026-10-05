@@ -35,6 +35,12 @@ public abstract class EntityMobMixin extends EntityCreature implements EntityLiv
         super(par1World);
     }
 
+    @Inject(method = "checkForCatchFireInSun", at = @At("HEAD"), cancellable = true)
+    private void protectOuterMobsFromSunlight(CallbackInfo ci) {
+        if (com.itlesports.nightmaremode.worldgen.OverworldTierHelper.isOuterOverworld(
+                this.worldObj, this.posX, this.posZ)) ci.cancel();
+    }
+
     @Override
     public void onDeath(DamageSource dmgSource) {
 //        System.out.println(this.worldObj.isRemote + " " + this.getEntityName());

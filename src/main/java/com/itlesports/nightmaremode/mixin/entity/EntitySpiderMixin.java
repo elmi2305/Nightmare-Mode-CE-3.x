@@ -27,6 +27,7 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 public abstract class EntitySpiderMixin extends EntityMob{
     @Shadow protected abstract void entityInit();
     @Shadow protected int timeToNextWeb;
+    @Unique private EntityLivingBase chickenCorpse;
 
     public EntitySpiderMixin(World par1World) {
         super(par1World);
@@ -46,21 +47,20 @@ public abstract class EntitySpiderMixin extends EntityMob{
         if (this.worldObj.isRemote || (Object)this instanceof CarcassAnimal self && self.nm$isCarcass()) {
             return;
         }
-        if (this.entityToAttack instanceof CarcassAnimal target && target.nm$isCarcass()) {
-            this.entityToAttack = null;
-        }
-        if (this.ticksExisted % 20 != 0) {
+        if (this.entityToAttack != null || this.getAttackTarget() != null) {
+            this.chickenCorpse = null;
             return;
         }
-        for (Object candidate : this.worldObj.getEntitiesWithinAABB(EntityChicken.class, this.boundingBox.expand(1.0D, 0.5D, 1.0D))) {
-            if (candidate instanceof EntityChicken chicken && chicken instanceof CarcassAnimal carcass && carcass.nm$isCarcass()) {
-                chicken.dropItem(Item.chickenRaw.itemID, 1);
-                if (this.rand.nextBoolean()) {
-                    chicken.dropItem(Item.feather.itemID, 1);
-                }
-                chicken.setDead();
-                break;
+        if (this.ticksExisted % 20 == 0) {
+            this.chickenCorpse = com.itlesports.nightmaremode.AITasks.EntityAIHarvestCarcass.findNearbyCorpse(this, EntityChicken.class);
+            if (this.chickenCorpse != null) {
+                this.setPathToEntity(this.worldObj.getPathEntityToEntity(this, this.chickenCorpse, 16.0F, true, false, false, true));
             }
+        }
+        if (com.itlesports.nightmaremode.AITasks.EntityAIHarvestCarcass.isHarvestable(this.chickenCorpse)
+                && this.getDistanceSqToEntity(this.chickenCorpse) <= 4.0D) {
+            com.itlesports.nightmaremode.util.CarcassHarvesting.harvestByMob(this.chickenCorpse);
+            this.chickenCorpse = null;
         }
     }
 

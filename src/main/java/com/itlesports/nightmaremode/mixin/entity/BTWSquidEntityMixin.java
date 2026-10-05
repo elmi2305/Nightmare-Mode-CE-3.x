@@ -49,6 +49,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
     }
+
+    @Inject(method = "isValidZombieSecondaryTarget", at = @At("HEAD"), cancellable = true)
+    private void excludeIceZombieTargets(EntityZombie zombie, CallbackInfoReturnable<Boolean> cir) {
+        if (zombie instanceof com.itlesports.nightmaremode.entity.outer.EntityIceZombie) cir.setReturnValue(false);
+    }
     @Inject(method = "<init>", at = @At("TAIL"))
     private void manageEclipseChance(World world, CallbackInfo ci){
         NMUtils.manageEclipseChance(this,24);

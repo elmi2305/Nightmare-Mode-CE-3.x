@@ -26,6 +26,7 @@ public class ItemStackMixin {
 
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
     private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
+        if (NMItemStackUtils.shouldBreakOnUse((ItemStack)(Object)this, amount)) return amount;
         if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return amount;
         Item item = ((ItemStack)(Object)this).getItem();
         if (!(item instanceof net.minecraft.src.ItemTool || item instanceof net.minecraft.src.ItemArmor
@@ -35,6 +36,15 @@ public class ItemStackMixin {
                 || item instanceof ItemHammer || item instanceof com.itlesports.nightmaremode.item.items.ItemScythe
                 || item instanceof com.itlesports.nightmaremode.item.items.ItemLeafRake)) return amount;
         return amount / 2 + (amount % 2 != 0 && user.getRNG().nextBoolean() ? 1 : 0);
+    }
+
+    @Inject(method = "attemptDamageItem", at = @At("HEAD"), cancellable = true)
+    private void breakOnFinalDurabilityUse(int amount, java.util.Random random, CallbackInfoReturnable<Boolean> cir) {
+        ItemStack stack = (ItemStack)(Object)this;
+        if (NMItemStackUtils.shouldBreakOnUse(stack, amount)) {
+            stack.setItemDamage(stack.getMaxDamage());
+            cir.setReturnValue(true);
+        }
     }
     @Inject(method = {"shouldApplyAttributesWhenHeld", "shouldApplyAttributesWhenWorn"},
             at = @At("HEAD"), cancellable = true)
@@ -63,7 +73,8 @@ public class ItemStackMixin {
     @Inject(method = "damageItem", at = @At("HEAD"), cancellable = true)
     private void preserveHammerDurability(int amount, EntityLivingBase user, CallbackInfo ci) {
         ItemStack stack = (ItemStack)(Object)this;
-        if (amount > 0 && stack.getItem() instanceof ItemHammer && user instanceof EntityPlayer player
+        if (amount > 0 && !NMItemStackUtils.shouldBreakOnUse(stack, amount)
+                && stack.getItem() instanceof ItemHammer && user instanceof EntityPlayer player
                 && player.rand.nextFloat() < SkillHandler.getPlayerData(player).hammerDurabilitySaveChance) {
             ci.cancel();
         }

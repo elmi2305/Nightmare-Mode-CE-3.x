@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.world.WorldUtils;
 import btw.block.blocks.AnvilBlock;
+import btw.item.BTWItems;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil;
 import com.itlesports.nightmaremode.util.HammerAnvilHelper;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
@@ -18,6 +20,27 @@ public class AnvilBlockMixin extends Block implements ITileEntityProvider {
 
     protected AnvilBlockMixin(int par1, Material par2Material) {
         super(par1, par2Material);
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void strengthenSteelAnvil(int id, CallbackInfo ci) {
+        this.setHardness(100.0F);
+        this.setResistance(2000.0F);
+    }
+
+    @Inject(method = "idDropped", at = @At("HEAD"), cancellable = true)
+    private void recoverSteelNuggets(int metadata, Random random, int fortune, CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(BTWItems.steelNugget.itemID);
+    }
+
+    @Override
+    public int getEfficientToolLevel(IBlockAccess world, int x, int y, int z) {
+        return EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel();
+    }
+
+    @Override
+    public int getHarvestToolLevel(IBlockAccess world, int x, int y, int z) {
+        return EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel();
     }
 
     @Override
