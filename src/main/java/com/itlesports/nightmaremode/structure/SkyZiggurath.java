@@ -59,7 +59,7 @@ public class SkyZiggurath extends NMStructure {
         entries[0] = block(0, 0);
         entries[1] = block(Block.dirt.blockID, 0);
         entries[2] = block(Block.stone.blockID, 0);
-        entries[3] = block(Block.stoneBrick.blockID, 8);
+        entries[3] = block(NMBlocks.ziggurathBrick.blockID, 0);
         entries[4] = block(Block.mobSpawner.blockID, 0);
         entries[5] = block(BTWBlocks.stoneBrickSlab.blockID, 2);
         entries[6] = block(BTWBlocks.stoneBrickSlab.blockID, 10);

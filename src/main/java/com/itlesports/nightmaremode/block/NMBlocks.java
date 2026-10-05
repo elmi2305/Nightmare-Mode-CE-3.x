@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.block;
 
+import api.block.blocks.MouldingAndDecorativeWallBlock;
 import api.item.items.PlaceAsBlockItem;
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
@@ -178,6 +179,7 @@ public class NMBlocks {
     public static Block abyssNode;
     public static Block cryoliteNode;
     public static Block voidExtractor;
+    public static Block ziggurathBrick;
 
 
 
@@ -381,6 +383,8 @@ public class NMBlocks {
         voidExtractor = new BlockVoidExtractor(2457);
         Item.itemsList[voidExtractor.blockID] = new NMItemBlock(voidExtractor.blockID - 256);
 
+        ziggurathBrick = new BlockZiggurathBrick(2458);
+        Item.itemsList[ziggurathBrick.blockID] = new NMItemBlock(NMBlocks.ziggurathBrick.blockID - 256);
 
 
 
