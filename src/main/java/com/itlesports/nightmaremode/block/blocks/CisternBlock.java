@@ -110,8 +110,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
             cistern.ejectInputsAbove();
             cistern.drainFluid();
             if (!player.capabilities.isCreativeMode) {
-                player.inventory.setInventorySlotContents(
-                        player.inventory.currentItem, new ItemStack(NMItems.tungstenLavaBucket));
+                consumeOneAndGive(world, player, new ItemStack(NMItems.tungstenLavaBucket));
             }
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D,
                     "liquid.lavapop", 0.4F, 0.8F);
@@ -121,7 +120,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         if (held.itemID == Item.bucketEmpty.itemID && cistern.getFluid() == CisternTileEntity.FLUID_WATER) {
             cistern.drainFluid();
             if (!player.capabilities.isCreativeMode) {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Item.bucketWater));
+                consumeOneAndGive(world, player, new ItemStack(Item.bucketWater));
             }
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.splash", 0.4F, 0.8F);
             return true;
@@ -146,6 +145,23 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         }
 
         return true;
+    }
+
+    private static void consumeOneAndGive(World world, EntityPlayer player, ItemStack replacement) {
+        ItemStack held = player.inventory.getCurrentItem();
+        if (held == null) {
+            return;
+        }
+        if (held.stackSize > 1) {
+            --held.stackSize;
+            if (!player.inventory.addItemStackToInventory(replacement)) {
+                player.dropPlayerItem(replacement);
+            } else if (player instanceof EntityPlayerMP) {
+                ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+            }
+        } else {
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, replacement);
+        }
     }
 
     @Override
