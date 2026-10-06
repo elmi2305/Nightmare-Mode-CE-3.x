@@ -134,10 +134,10 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_CLAY_BLOCK_32 = bring(
             "clay_bulk",
             "Clay Stockpile",
-            Block.blockClay,
+            BTWBlocks.unfiredClay,
             5, 0,
             "Bring 32 clay blocks.",
-            Block.blockClay.blockID, 0, false, 32,
+            BTWBlocks.unfiredClay.blockID, 0, false, 32,
             "Clay cooks 12,000 ticks faster.", SkillRewardActions.addClayCookTimeReduction(12000),
             MINING, false);
 
