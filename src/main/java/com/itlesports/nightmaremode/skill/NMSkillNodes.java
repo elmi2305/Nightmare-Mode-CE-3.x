@@ -992,7 +992,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode TAME_ANIMAL_8 = counter(
             "nether_tamer_8",
-            "Dimensional Tamer",
+            "Portal Animal Offering",
             Item.leash,
             2, -2,
             "Tame 8 animals.",
@@ -1329,7 +1329,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode VISIT_UNIQUE_BIOME_10 = deferred(counter(
             "biome_nether_progress",
-            "Wide-Ranging Survey",
+            "Portal Site Survey",
             Item.map,
             6, 3,
             "Visit 10 unique biomes.",
@@ -1662,7 +1662,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_ENCHANTMENT_TABLE = bring(
             "nether_enchant_table",
-            "Portal Enchantment",
+            "Portal Enchantment Experimentation",
             Block.enchantmentTable,
             5, 4,
             "Bring 1 enchantment table.",
@@ -1672,7 +1672,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_BLOOD_ORB_64 = bring(
             "nether_blood_orbs",
-            "Blood Portal",
+            "Blood Portal Offering",
             NMItems.bloodOrb,
             1, 1,
             "Bring 64 blood orbs.",
@@ -1703,7 +1703,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_VESSEL_OF_THE_DRAGON = bring(
             "nether_dragon_vessel",
-            "Vessel Portal",
+            "Vessel Portal Offering",
             BTWBlocks.dragonVessel,
             -1, 2,
             "Bring 1 Vessel of the Dragon.",
@@ -1837,7 +1837,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_VESSEL_OF_THE_DRAGON_2 = deferred(bring(
             "wither_vessels",
-            "Twin Vessels",
+            "Twin Vessel Invocation",
             BTWBlocks.dragonVessel,
             -1, 1,
             "Bring 2 Vessels of the Dragon.",
@@ -2165,7 +2165,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_BOTTLE_OF_ENCHANTING_64 = bring(
             "wither_xp_bottles",
-            "Bottled Invocation",
+            "Bottle Invocation",
             Item.expBottle,
             5, 0,
             "Bring 64 bottles of enchanting.",
@@ -2175,7 +2175,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode REACH_XP_LEVEL_50 = deferred(counter(
             "wither_xp_levels",
-            "Experienced Invocation",
+            "Experience Invocation",
             Item.expBottle,
             5, 2,
             "Reach 50 XP levels.",
@@ -2884,7 +2884,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode KILL_MOB_250 = counter(
             "nether_mob_kills",
-            "Portal Slayer",
+            "Portal Soul Harvest",
             Item.swordIron,
             0, 2,
             "Kill 250 mobs.",
