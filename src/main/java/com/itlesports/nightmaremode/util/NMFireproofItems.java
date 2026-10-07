@@ -26,8 +26,6 @@ public final class NMFireproofItems {
                 || id == NMItems.starOfTheBloodGod.itemID
                 || id == Item.blazeRod.itemID
                 || id == Item.blazePowder.itemID
-                || id == Block.obsidian.blockID
-                || id == NMItems.obsidianShard.itemID
                 || item instanceof ArcaneScrollItem
                 || item instanceof INetherItem
                 || item instanceof NMItem && ((NMItem)item).isIndestructible();
