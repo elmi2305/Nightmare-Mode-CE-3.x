@@ -19,16 +19,18 @@ public abstract class OreBlockMixin extends BlockOre implements OreBlockAccessor
         super(iBlockID);
     }
 
-    // this gets the proper icons
+    // register steel icons before the base class adds its own btw namespace.
     @Environment(EnvType.CLIENT)
-    @Inject(method = "registerIcons", at = @At("TAIL"))
+    @Inject(method = "registerIcons", at = @At("HEAD"), cancellable = true)
     private void registerSteelIcons(IconRegister register, CallbackInfo ci){
         if (this.blockID == NMBlocks.steelOre.blockID) {
+            this.blockIcon = register.registerIcon(this.getTextureName());
             this.setIconArray(this.getSteelIconArray(register));
+            ci.cancel();
         }
     }
 
-    // icons are in resources/assets/minecraft/textures/blocks
+    // icons are in resources/assets/nightmare/textures/blocks.
     @Unique
     private Icon[] getSteelIconArray(IconRegister register){
         Icon[] array = new Icon[16];

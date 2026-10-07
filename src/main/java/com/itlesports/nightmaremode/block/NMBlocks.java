@@ -347,7 +347,7 @@ public class NMBlocks {
         underforge = new BlockUnderforge(2354);
         Item.itemsList[underforge.blockID] = new NMItemBlock(underforge.blockID - 256);
 
-        soulTorch = new BlockSoulLight(2356, 0.85F, "nmSoulTorch");
+        soulTorch = new BlockSoulTorch(2356);
         Item.itemsList[soulTorch.blockID] = new NMItemBlock(soulTorch.blockID - 256);
 
         soulLantern = new BlockSoulLight(2357, 1.0F, "nmSoulLantern");
