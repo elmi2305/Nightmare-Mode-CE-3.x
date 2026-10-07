@@ -67,23 +67,15 @@ public class GuiSkillStats extends GuiScreen {
         addPlayerStats(lines, data, world);
         lines.add("PROGRESSION");
         int worldProgress = NMUtils.getWorldProgress();
-        if (worldProgress >= NMFields.HARDMODE) {
-            lines.add(progress("Nether access", world.netherAccessUnlockProgress,
+        lines.add(progress("Nether access", world.netherAccessUnlockProgress,
                     SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED, world.netherAccessUnlocked));
-        }
         lines.add(progress("Diamond ore mining", data.diamondHarvestProgress, 5, data.canHarvestDiamondOre));
-        if (world.netherAccessUnlocked) {
-            lines.add(progress("Wither summoning", world.witherSummonUnlockProgress,
+        lines.add(progress("Wither summoning", world.witherSummonUnlockProgress,
                     SkillRewardActions.WITHER_SUMMON_PROGRESS_REQUIRED, world.witherSummoningUnlocked));
-        }
-        if (worldProgress >= NMFields.POSTWITHER) {
-            lines.add(progress("End access", world.endAccessUnlockProgress, 1, world.endAccessUnlocked));
-        }
-        if (NightmareMode.noSkybases) {
-            lines.add(progress("Stable logs", world.woodGravityUnlockProgress, 4,
+        lines.add(progress("End access", world.endAccessUnlockProgress, 1, world.endAccessUnlocked));
+        lines.add(progress("Stable logs", world.woodGravityUnlockProgress, 4,
                     world.woodBlocksIgnoreSkybaseGravity));
-        }
-        if (world.netherAccessUnlocked) add(lines, "Nether post tiers", data.netherPostCompletedTiers);
+        add(lines, "Nether post tiers", data.netherPostCompletedTiers);
         lines.add("MOVEMENT & MINING");
         add(lines, "Jumps", data.jumps);
         add(lines, "Blocks mined", data.blocksMined);
