@@ -40,6 +40,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void syncScaryEventsState(CallbackInfo ci) {
+        if (this.ticksExisted % 20 == 0) {
+            com.itlesports.nightmaremode.world.SandboxRules.recordSurvivalInventory(this);
+        }
         NMInventoryLocks.dropLockedItems(this, false);
         if (lastScaryEventsState == null || lastScaryEventsState != NightmareMode.scaryEvents) {
             com.itlesports.nightmaremode.network.ScaryEventNet.sendState((EntityPlayerMP)(Object)this);

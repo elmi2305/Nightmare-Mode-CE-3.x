@@ -209,6 +209,7 @@ public abstract class NMInitializer implements AchievementExt {
         addPistonPackingRecipes();
 //        addBloodSawRecipes();
         addMultiplayerRecipes();
+        addAccessibleStorageRecipes();
         addSkillLockedRecipes();
         finishRecipes("All Recipes");
     }
@@ -229,6 +230,31 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Baited Diamond Fishing Rod", NMItems.diamondFishingPoleBaited);
         validateItemRegistration("Steel Fishing Rod", NMItems.steelFishingPole);
         validateItemRegistration("Baited Steel Fishing Rod", NMItems.steelFishingPoleBaited);
+    }
+
+    private static void addAccessibleStorageRecipes() {
+        killCraftingRecipe(BTWItems.gear);
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gear), new Object[]{
+                "SSS", "SLS", "SSS", 'S', Item.stick, 'L', BTWTags.logs});
+        RecipeManager.addRecipe(new ItemStack(BTWItems.gear, 2), new Object[]{
+                " S ", "SPS", " S ", 'S', Item.stick, 'P', BTWTags.planks});
+
+        addStorageRecipe(Block.blockDiamond, new ItemStack(Item.diamond));
+        addStorageRecipe(BTWBlocks.diamondIngot, new ItemStack(BTWItems.diamondIngot));
+        addStorageRecipe(NMBlocks.blockRefinedDiamondIngot, new ItemStack(NMItems.refinedDiamondIngot));
+        addStorageRecipe(Block.blockGold, new ItemStack(Item.ingotGold));
+        addStorageRecipe(Block.blockIron, new ItemStack(Item.ingotIron));
+        addStorageRecipe(Block.blockEmerald, new ItemStack(Item.emerald));
+        addStorageRecipe(Block.blockRedstone, new ItemStack(Item.redstone));
+        addStorageRecipe(Block.coalBlock, new ItemStack(Item.coal, 1, 0));
+        addStorageRecipe(Block.blockLapis, new ItemStack(Item.dyePowder, 1, 4));
+        addStorageRecipe(BTWBlocks.charcoalBlock, new ItemStack(Item.coal, 1, 1));
+        addStorageRecipe(BTWBlocks.nethercoalBlock, new ItemStack(BTWItems.nethercoal));
+    }
+
+    private static void addStorageRecipe(Block block, ItemStack material) {
+        killCraftingRecipe(Item.itemsList[block.blockID]);
+        RecipeManager.addRecipe(new ItemStack(block), new Object[]{"MMM", "MMM", "MMM", 'M', material});
     }
 
     private static void validateItemRegistration(String name, Item expected) {
@@ -501,6 +527,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     public static void miscInit(){
         NMFoodSpoilage.init();
+        NMFoodRecipes.replaceFreshnessSensitiveRecipes();
 
         finishRecipes("Miscellaneous");
 
@@ -1254,6 +1281,10 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCrucibleRecipes(){
         CrucibleStokedCraftingManager crucible = CrucibleStokedCraftingManager.getInstance();
+        crucible.removeRecipe(new ItemStack(BTWItems.ironNugget, 42),
+                new ItemStack[]{new ItemStack(Block.anvil)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 7),
+                new ItemStack[]{new ItemStack(Block.anvil, 1, Short.MAX_VALUE)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulUrn), new ItemStack[]{
                 new ItemStack(BTWItems.urn), new ItemStack(BTWItems.hellfireDust, 16),
                 new ItemStack(BTWItems.soulSandPile, 4), new ItemStack(Item.dyePowder, 4, 15),
@@ -1950,8 +1981,7 @@ public abstract class NMInitializer implements AchievementExt {
                 new ItemStack[]{
                         new ItemStack(NMItems.hammeredStoneBrick),
                         new ItemStack(BTWItems.clayPile, 2),
-                        new ItemStack(BTWItems.sandPile),
-                        new ItemStack(NMItems.dyeBlend)
+                        new ItemStack(BTWItems.sandPile)
                 },
                 CisternTileEntity.FLUID_WATER, 1, 5, 360,
                 new ItemStack[]{new ItemStack(NMItems.mortaredStoneBrick)})
@@ -4733,7 +4763,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.creeperOysterBlock.blockID, NMSkillNodes.BRING_CREEPER_OYSTER_64);
         SkillRecipeGates.crafting(BTWBlocks.rottenFleshBlock.blockID, NMSkillNodes.BRING_ROTTEN_FLESH_BLOCK_64);
         SkillRecipeGates.crafting(BTWBlocks.spiderEyeBlock.blockID, NMSkillNodes.BRING_SPIDER_EYE_64);
-        SkillRecipeGates.crafting(BTWItems.gear.itemID, NMSkillNodes.BRING_STICK_16);
+        SkillRecipeGates.requireCraftingSkills(BTWItems.gear.itemID, NMSkillNodes.BRING_STICK_16);
         SkillRecipeGates.crafting(BTWItems.steelNugget.itemID, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8);
         SkillRecipeGates.crafting(NMItems.eclipseBow.itemID, NMSkillNodes.FIRE_ARROW_256);
         SkillRecipeGates.crafting(NMItems.ironKnittingNeedles.itemID,
@@ -4758,7 +4788,12 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWBlocks.planter.blockID, NMSkillNodes.BRING_CLAY_BLOCK_32);
         SkillRecipeGates.crafting(BTWItems.curedMeat.itemID, NMSkillNodes.COOK_FOOD_200);
         SkillRecipeGates.crafting(BTWItems.rawMysteryMeat.itemID, NMSkillNodes.BRING_BLOOD_ORB_64);
-        SkillRecipeGates.crafting(BTWItems.tastySandwich.itemID, NMSkillNodes.COOK_FOOD_200);
+        SkillRecipeGates.crafting(BTWItems.tastySandwich.itemID, NMSkillNodes.BRING_BRICK_32);
+        SkillRecipeGates.crafting(BTWItems.steakAndPotatoes.itemID, NMSkillNodes.BRING_BRICK_32);
+        SkillRecipeGates.crafting(BTWItems.hamAndEggs.itemID, NMSkillNodes.BRING_RAW_EGG_16);
+        SkillRecipeGates.crafting(BTWItems.steakDinner.itemID, NMSkillNodes.BRING_BRICK_32);
+        SkillRecipeGates.crafting(BTWItems.porkDinner.itemID, NMSkillNodes.BRING_BRICK_32);
+        SkillRecipeGates.crafting(BTWItems.wolfDinner.itemID, NMSkillNodes.BRING_BRICK_32);
         SkillRecipeGates.crafting(NMItems.dungApple.itemID, NMSkillNodes.BRING_DUNG_16);
         SkillRecipeGates.crafting(NMItems.ironFishingPole.itemID,
                 NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_BONE_FISH_HOOK_8);

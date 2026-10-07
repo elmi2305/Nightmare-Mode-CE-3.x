@@ -61,7 +61,7 @@ public class OreBlockStagedMixin extends OreBlock {
         if (iStrata == 2 && com.itlesports.nightmaremode.util.NMBlockBreakingRules.requiresBlackstoneAuthority(this)
                 && closestPlayer != null && !SkillHandler.getPlayerData(closestPlayer).canMineStrataThreeOre) {
             if (!world.isRemote) {
-                SkillHandler.sendStatus(closestPlayer, "Requires skill: Blackstone Authority - Bring 64 blackstone.");
+                SkillHandler.sendStatus(closestPlayer, "Requires skill: Deep Foundations - Bring 128 deepslate (strata two) cobblestone.");
             }
             this.chipLockedOre(world, x, y, z, iStrata);
             cir.setReturnValue(true);

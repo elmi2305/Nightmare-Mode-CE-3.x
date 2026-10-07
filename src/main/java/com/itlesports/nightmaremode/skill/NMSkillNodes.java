@@ -75,7 +75,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_STRATA_TWO_LOOSE_COBBLESTONE_128 = deferred(bring(
             "bring_strata_two_loose_cobblestone_128", "Deep Foundations", new ItemStack(BTWBlocks.looseCobblestone, 1, 4), -1, 2,
             "Bring 128 strata-two loose cobblestone.", BTWBlocks.looseCobblestone.blockID, 4, true, 128,
-            "Unlocks Additional Recipes. +2% hammer durability preservation chance.", SkillRewardActions.addHammerDurabilitySaveChance(0.02F), MINING, false),
+            "Unlocks remaining strata-three ores (Iron, Lapis, Gold, Coal, Emerald). +2% hammer durability preservation chance.", combine(SkillRewardActions.unlockStrataThreeOre(), SkillRewardActions.addHammerDurabilitySaveChance(0.02F)), MINING, false),
             () -> NMSkillNodes.BRING_STRATA_TWO_LOOSE_COBBLESTONE_32);
 
     public static final SkillNode BRING_STRATA_THREE_LOOSE_COBBLESTONE_128 = deferred(bring(
@@ -222,7 +222,7 @@ public final class NMSkillNodes {
             8, -1,
             "Bring 64 loose blackstone (strata-three cobblestone, mined with a diamond pickaxe).",
             BTWTags.looseCobblestones.getItems().get(2).itemID, 8, true, 64,
-            "Unlocks remaining strata-three ores (Iron, Lapis, Gold, Coal, Emerald)", SkillRewardActions.unlockStrataThreeOre(),
+            "+5% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.05F),
             MINING, false),
             () -> NMSkillNodes.MINE_STONE_1000,
             () -> NMSkillNodes.BRING_DIAMOND_INGOT_8,

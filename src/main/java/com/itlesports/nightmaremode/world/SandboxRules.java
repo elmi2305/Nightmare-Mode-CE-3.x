@@ -40,6 +40,17 @@ public final class SandboxRules {
         if (profile.recordItem(stack)) player.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
     }
 
+    public static void recordSurvivalInventory(EntityPlayer player) {
+        if (!NightmareMode.lockDownCreative || player == null || player.worldObj == null
+                || player.worldObj.isRemote || player.capabilities.isCreativeMode
+                || isSandbox(player.worldObj) || !isPrivateSingleplayer()) return;
+        JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
+        boolean changed = false;
+        for (ItemStack stack : player.inventory.mainInventory) changed |= profile.recordItem(stack);
+        for (ItemStack stack : player.inventory.armorInventory) changed |= profile.recordItem(stack);
+        if (changed) player.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
+    }
+
     public static long uniqueSeed(ISaveFormat saves, long proposed) {
         if (!NightmareMode.lockDownCreative) return proposed;
         try {

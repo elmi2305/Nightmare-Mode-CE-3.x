@@ -65,9 +65,13 @@ public class WashingRecipe {
 
     public ItemStack getOutput() {
         ItemStack result = this.output.copy();
-        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
-                && (this.output.itemID == com.itlesports.nightmaremode.item.NMPostItems.washedIronMix.itemID
-                || this.output.itemID == com.itlesports.nightmaremode.item.NMItems.washedAzureSediment.itemID)) result.stackSize *= 3;
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            if (this.output.itemID == com.itlesports.nightmaremode.item.NMPostItems.washedIronMix.itemID) {
+                result.stackSize *= 2;
+            } else if (this.output.itemID == com.itlesports.nightmaremode.item.NMItems.washedAzureSediment.itemID) {
+                result.stackSize *= 3;
+            }
+        }
         return result;
     }
 

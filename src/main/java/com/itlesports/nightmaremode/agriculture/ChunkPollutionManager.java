@@ -13,6 +13,7 @@ import com.itlesports.nightmaremode.block.tileEntities.MinerDrillTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.ObsidianMillstoneTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.TerrainExtractorTileEntity;
 import com.itlesports.nightmaremode.network.PollutionVisualNet;
+import com.itlesports.nightmaremode.util.EasyBalance;
 import com.itlesports.nightmaremode.util.interfaces.ChunkAttributesAccess;
 import net.minecraft.src.Block;
 import net.minecraft.src.Chunk;
@@ -61,6 +62,7 @@ public final class ChunkPollutionManager {
     /** Adds pollution only when the source can reach the surface in the overworld. */
     public static void pollute(World world, int x, int y, int z, float amount) {
         if (world == null || world.isRemote || amount <= 0.0F || !canReachSurface(world, x, y, z)) return;
+        amount = EasyBalance.pollution(amount);
         addToChunk(world, x >> 4, z >> 4, amount);
         float spill = amount * NEIGHBOR_SHARE;
         if (spill <= 0.0F) return;

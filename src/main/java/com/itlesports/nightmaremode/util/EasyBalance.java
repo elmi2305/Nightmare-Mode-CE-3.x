@@ -35,6 +35,7 @@ public final class EasyBalance {
     public static int processingTicks(int hardTicks) { return BalanceProfile.isEasy() ? Math.max(1, (hardTicks + 2) / 3) : hardTicks; }
     public static float exhaustion(float hardCost) { return BalanceProfile.isEasy() ? hardCost * 0.35F : hardCost; }
     public static float spoilage(float hardRate) { return BalanceProfile.isEasy() ? hardRate * 0.5F : hardRate; }
+    public static float pollution(float hardAmount) { return BalanceProfile.isEasy() ? hardAmount * 0.25F : hardAmount; }
     public static float deathLoss(float skillLoss) { return Math.max(0.0F, Math.min(1.0F, skillLoss - (BalanceProfile.isEasy() ? 0.5F : 0.0F))); }
     public static int hostileMultiplier(int knifeTier) { return BalanceProfile.isEasy() ? 2 + Math.max(0, knifeTier) : 1; }
 }

@@ -40,6 +40,15 @@ public final class CarcassHarvesting {
         return stack == null || ItemKnife.fromStack(stack) != null;
     }
 
+    public static void harvestByMob(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote || !com.itlesports.nightmaremode.AITasks.EntityAIHarvestCarcass.isHarvestable(entity)) return;
+        if (entity.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
+            completeHarvest(entity, null, ItemKnife.TIER_FISTS, DamageSource.generic);
+        }
+        ((com.itlesports.nightmaremode.util.interfaces.CarcassAnimal)entity).nm$spawnCarcassPoof();
+        entity.setDead();
+    }
+
     public static void completeHarvest(EntityLivingBase entity, EntityPlayer player, int harvestTier, DamageSource source) {
         if (!(entity instanceof EntityAnimal animal)) {
             com.itlesports.nightmaremode.util.interfaces.EasyMobLoot loot = (com.itlesports.nightmaremode.util.interfaces.EasyMobLoot)entity;
@@ -148,6 +157,7 @@ public final class CarcassHarvesting {
     }
 
     private static void damageKnife(EntityPlayer player, int harvestTier) {
+        if (player == null) return;
         ItemStack held = player.getHeldItem();
         if (harvestTier > ItemKnife.TIER_FISTS && ItemKnife.fromStack(held) != null) {
             held.damageItem(1, player);

@@ -10,4 +10,9 @@ public final class NMItemStackUtils {
         return stack != null && stack.stackSize > 0 && stack.itemID >= 0
                 && stack.itemID < Item.itemsList.length && Item.itemsList[stack.itemID] != null;
     }
+
+    public static boolean shouldBreakOnUse(ItemStack stack, int damage) {
+        return damage > 0 && isValid(stack) && stack.isItemStackDamageable()
+                && stack.getItemDamage() >= stack.getMaxDamage() - damage;
+    }
 }

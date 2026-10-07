@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 3309";
+    public static String betaBuildLine = "Build 3409";
     public static String betaBuildLineDifficulty = BalanceProfile.active();
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
@@ -1100,7 +1100,7 @@ public class NightmareMode extends BTWAddon {
             }
         }
         if (isDesertBiome(biome)) {
-            for(int var5 = 0; var5 < 5; ++var5) {
+            for(int var5 = 0; var5 < 7; ++var5) {
                 int var6 = x + rand.nextInt(16);
                 int var7 = rand.nextInt(32) + 12;
                 int var8 = z + rand.nextInt(16);
@@ -1108,7 +1108,7 @@ public class NightmareMode extends BTWAddon {
             }
         }
         if (biome == BiomeGenBase.swampland) {
-            for(int var5 = 0; var5 < 4; ++var5) {
+            for(int var5 = 0; var5 < 7; ++var5) {
                 int var6 = x + rand.nextInt(16);
                 int var7 = rand.nextInt(32) + 16;
                 int var8 = z + rand.nextInt(16);

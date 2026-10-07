@@ -38,7 +38,7 @@ public class NMItems {
     public static ItemAlloyHorseArmor phaseSteelHorseArmor;
     public static ItemAlloyHorseArmor sealedQuicksilverHorseArmor;
     public static ItemAlloyHorseArmor endstoneHorseArmor;
-    public static final int BLOOD_MOON_DURABILITY = 1200;
+    public static final int BLOOD_MOON_DURABILITY = 3400;
 
 
     public static ItemRPG rpg;
@@ -1133,7 +1133,7 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyVerdantSword").setUnlocalizedName("ifhyVerdantSword").setCreativeTab(CreativeTabs.tabCombat);
         blackglassSword = new ItemAlloySword(3438, EnumToolMaterial.EMERALD, 7000, 5.5D, 6, blackglassIngot.itemID, blackglassPlate.itemID)
                 .setTextureName("nightmare:ifhyBlackglassSword").setUnlocalizedName("ifhyBlackglassSword").setCreativeTab(CreativeTabs.tabCombat);
-        blackglassScythe = new ItemAlloyScythe(3439, 6.5F, 7000)
+        blackglassScythe = new ItemAlloyScythe(3439, 6F, 7000)
                 .setTextureName("nightmare:ifhyBlackglassScythe").setUnlocalizedName("ifhyBlackglassScythe").setCreativeTab(CreativeTabs.tabCombat);
         blackglassKnife = (ItemKnife) new ItemKnife(3440, 48, ItemKnife.TIER_DIAMOND, 7000).setDamageVsEntity(5)
                 .setTextureName("nightmare:ifhyBlackglassKnife").setUnlocalizedName("ifhyBlackglassKnife");

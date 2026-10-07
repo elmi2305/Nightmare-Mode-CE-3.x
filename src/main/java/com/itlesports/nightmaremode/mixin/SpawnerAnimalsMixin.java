@@ -19,6 +19,30 @@ public class SpawnerAnimalsMixin {
     @Unique
     private static Random rand = new Random();
 
+    @Inject(method = "getRandomSpawningPointInChunk", at = @At("RETURN"), cancellable = true)
+    private static void sampleAirAboveAcidOcean(World world, int chunkX, int chunkZ,
+                                               CallbackInfoReturnable<ChunkPosition> cir) {
+        ChunkPosition position = cir.getReturnValue();
+        if (com.itlesports.nightmaremode.worldgen.OverworldTierHelper.getRegion(world, position.x, position.z)
+                == com.itlesports.nightmaremode.worldgen.OverworldTierHelper.Region.LOST_OCEAN
+                && world.rand.nextInt(4) == 0) {
+            int surface = world.getTopSolidOrLiquidBlock(position.x, position.z);
+            cir.setReturnValue(new ChunkPosition(position.x,
+                    Math.min(world.getActualHeight() - 8, surface + 8 + world.rand.nextInt(25)), position.z));
+        }
+    }
+
+    @Inject(method = "canCreatureTypeSpawnAtLocation", at = @At("HEAD"), cancellable = true)
+    private static void allowAcidOceanAerialSpawns(EnumCreatureType type, World world, int x, int y, int z,
+                                                  CallbackInfoReturnable<Boolean> cir) {
+        if (type == EnumCreatureType.monster
+                && com.itlesports.nightmaremode.worldgen.OverworldTierHelper.getRegion(world, x, z)
+                == com.itlesports.nightmaremode.worldgen.OverworldTierHelper.Region.LOST_OCEAN
+                && y >= world.getTopSolidOrLiquidBlock(x, z) + 4) {
+            cir.setReturnValue(!world.isBlockNormalCube(x, y, z) && !world.getBlockMaterial(x, y, z).isLiquid());
+        }
+    }
+
     @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"))
     private EntityPlayer allowSpawningCloseToPlayerInBloodMoon(WorldServer worldServer, double spawnPosX, double spawnPosY, double spawnPosZ, double exclusionRadius){
         if(NMUtils.getIsBloodMoon()){

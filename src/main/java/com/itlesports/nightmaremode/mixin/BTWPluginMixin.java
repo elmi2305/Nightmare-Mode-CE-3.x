@@ -222,7 +222,13 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMItems.witherSoul, 0, "nm.withersoul.info");
         this.info(registry, NMItems.obsidianShard, 0, "nm.obsidianshard.info");
         this.info(registry, NMItems.heatResistantHelmet, 0, "nm.heatResistantArmor.info");
+        this.info(registry, BTWItems.potash, 0, "nm.potash.info");
+        this.info(registry, NMItems.oxygenMask, 0, "nm.oxygenMask.info");
+        this.info(registry, NMItems.oxygenTank, 0, "nm.oxygenTank.info");
+        this.info(registry, NMItems.divingMask, 0, "nm.divingMask.info");
         this.info(registry, NMItems.divingTank, 0, "nm.divingTank.info");
+        this.info(registry, NMItems.sunVisor, 0, "nm.sunVisor.info");
+        this.info(registry, NMItems.sunReservoir, 0, "nm.sunReservoir.info");
         this.info(registry, NMItems.saturatedCoresteelCharge, 0, "nm.coresteelCooling.info");
         this.info(registry, NMItems.coresteelChestplate, 0, "nm.coresteelArmor.info");
         this.info(registry, NMItems.deadzoneChestplate, 0, "nm.deadzoneArmor.info");
@@ -239,6 +245,8 @@ public abstract class BTWPluginMixin {
         // blocks
 
         this.info(registry, NMBlocks.steelOre, 0, "nm.steelOre.info");
+        this.info(registry, NMBlocks.blockBloodIngot, 0, "nm.bloodIngotBlock.info");
+        this.info(registry, NMBlocks.blockRefinedDiamondIngot, 0, "nm.refinedDiamondBlock.info");
         this.info(registry, NMBlocks.bloodChest, 0, "nm.bloodChest.info");
         this.info(registry, NMBlocks.steelLocker, 0, "nm.steelLocker.info");
         this.info(registry, NMBlocks.blockRoad, 0, "nm.blockRoad.info");
@@ -274,6 +282,7 @@ public abstract class BTWPluginMixin {
         this.info(registry, Item.horseArmorIron, 0, "nm.horseArmor.info");
         this.info(registry, Item.appleGold, 0, "nm.goldenApple.info");
         this.info(registry, Item.appleGold, 1, "nm.goldenAppleEnchanted.info");
+        this.info(registry, Item.goldenCarrot, 0, "nm.goldenCarrot.info");
         this.info(registry, BTWItems.brownMushroom, 0, "nm.brownMushroom.info");
 
     }
