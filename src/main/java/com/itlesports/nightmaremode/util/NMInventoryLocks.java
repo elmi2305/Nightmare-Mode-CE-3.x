@@ -83,6 +83,8 @@ public final class NMInventoryLocks {
                     ? isMainInventorySlotUnlockedAfterDeath(player, slot)
                     : isMainInventorySlotUnlocked(player, slot))) continue;
 
+            if (afterDeath && stack.itemID == com.itlesports.nightmaremode.item.NMItems.skillBook.itemID) continue;
+
             inventory[slot] = null;
             player.dropPlayerItemWithRandomChoice(stack, true);
             changed = true;
@@ -94,5 +96,17 @@ public final class NMInventoryLocks {
         return slot != null
                 && slot.inventory instanceof InventoryPlayer
                 && !isMainInventorySlotUnlocked(player, slot.getSlotIndex());
+    }
+
+    public static void relocateSkillBooks(EntityPlayer player) {
+        ItemStack[] inventory = player.inventory.mainInventory;
+        for (int slot = 0; slot < inventory.length; slot++) {
+            ItemStack stack = inventory[slot];
+            if (stack == null || stack.itemID != com.itlesports.nightmaremode.item.NMItems.skillBook.itemID
+                    || isMainInventorySlotUnlocked(player, slot)) continue;
+            inventory[slot] = null;
+            if (!player.inventory.addItemStackToInventory(stack)) player.dropPlayerItem(stack);
+        }
+        player.inventory.onInventoryChanged();
     }
 }

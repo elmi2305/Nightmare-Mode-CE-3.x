@@ -59,6 +59,18 @@ public class ServerConfigurationManagerMixin {
     private void setMorningAfterDeath(EntityPlayerMP oldPlayer, int dimension, boolean leavingEnd,
                                       CallbackInfoReturnable<EntityPlayerMP> cir) {
         if (leavingEnd) return;
+        EntityPlayerMP respawned = cir.getReturnValue();
+        if (com.itlesports.nightmaremode.util.NMUtils.getWorldProgress() != NMFields.PREHARDMODE
+                && !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            for (ItemStack stack : oldPlayer.inventory.mainInventory) {
+                if (stack != null && stack.itemID == NMItems.skillBook.itemID) {
+                    ItemStack retained = stack.copy();
+                    if (!respawned.inventory.addItemStackToInventory(retained)) respawned.dropPlayerItem(retained);
+                }
+            }
+        }
+        com.itlesports.nightmaremode.util.NMInventoryLocks.relocateSkillBooks(respawned);
+        respawned.inventoryContainer.detectAndSendChanges();
         WorldServer world = MinecraftServer.getServer().worldServerForDimension(0);
         long time = world.getWorldTime();
         world.setWorldTime(NMDeathTimeRules.getRespawnTime(deathWorldTime, time,
@@ -119,9 +131,21 @@ public class ServerConfigurationManagerMixin {
         int centerZ = MathHelper.floor_double(entity.posZ);
         WorldServer world = ((TeleporterAccess)teleporter).getWorld();
 
+        for (int cx = (centerX - 34) >> 4; cx <= (centerX + 34) >> 4; cx++) {
+            for (int cz = (centerZ - 34) >> 4; cz <= (centerZ + 34) >> 4; cz++) {
+                world.theChunkProviderServer.loadChunk(cx, cz);
+            }
+        }
+        int[] arrival = com.itlesports.nightmaremode.util.NetherArrivalSearch.find(world, centerX, platformY + 1, centerZ);
+        if (arrival != null) {
+            centerX = arrival[0];
+            platformY = arrival[1];
+            centerZ = arrival[2];
+        }
+
         for (int x = centerX - 2; x <= centerX + 2; ++x) {
             for (int z = centerZ - 2; z <= centerZ + 2; ++z) {
-                world.setBlock(x, platformY, z, Block.netherrack.blockID, 0, 2);
+                if (arrival == null) world.setBlock(x, platformY, z, Block.netherrack.blockID, 0, 2);
                 for (int y = platformY + 1; y <= platformY + 3; ++y) {
                     world.setBlockToAir(x, y, z);
                 }
@@ -175,6 +199,8 @@ public class ServerConfigurationManagerMixin {
     }
     @Inject(method = "transferPlayerToDimension", at = @At("TAIL"))
     private void sendFoodPacketToDimensionChangedPlayer(EntityPlayerMP player, int dimensionID, CallbackInfo ci){
+        player.playerNetServerHandler.sendPacketToPlayer(new net.minecraft.src.Packet43Experience(
+                player.experience, player.experienceTotal, player.experienceLevel));
         ItemStack recall = this.pendingRecalls.remove(player);
         if (recall != null && player.dimension == -1) {
             recall.getTagCompound().setLong("Expires", System.currentTimeMillis() + 15000L);

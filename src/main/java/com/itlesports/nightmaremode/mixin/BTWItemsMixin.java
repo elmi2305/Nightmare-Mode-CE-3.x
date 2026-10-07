@@ -27,6 +27,9 @@ public class BTWItemsMixin {
 
     @Inject(method = "instantiateModItems", at = @At("TAIL"), remap = false)
     private static void replaceItems(CallbackInfo ci){
+        int netherBrickID = BTWItems.netherBrick.itemID;
+        Item.itemsList[netherBrickID] = null;
+        BTWItems.netherBrick = new com.itlesports.nightmaremode.item.items.ItemPlaceableNetherBrick(netherBrickID - 256);
         carrot = new SeedFoodItem(22341, 1, 0.0f, BTWBlocks.floweringCarrotCrop.blockID).setAsBasicPigFood().setUnlocalizedName("fcItemCarrot").setTextureName("carrot");
         cookedCarrot = new FoodItem(22246, 1, 0.0f, false, "fcItemCarrotCooked").setAsBasicPigFood().setTextureName("btw:cooked_carrot");
         boiledPotato = new FoodItem(22242, 1, 0.0f, false, "fcItemPotatoBoiled").setAsBasicPigFood().setTextureName("btw:boiled_potato");

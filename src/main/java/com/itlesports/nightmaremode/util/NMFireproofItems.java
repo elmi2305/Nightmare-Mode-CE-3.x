@@ -14,7 +14,8 @@ public final class NMFireproofItems {
     }
 
     public static boolean isFireproof(ItemStack stack) {
-        return isIndestructible(stack) || stack != null && stack.itemID == BTWItems.creeperOysters.itemID;
+        return isIndestructible(stack) || stack != null
+                && (stack.itemID == BTWItems.creeperOysters.itemID || stack.itemID == Item.magmaCream.itemID);
     }
 
     public static boolean isIndestructible(ItemStack stack) {

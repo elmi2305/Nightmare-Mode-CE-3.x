@@ -2405,6 +2405,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.paleRootPulp, 2), new ItemStack(NMItems.paleRoot));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.emeraldGrit, 4), new ItemStack(NMItems.crackedEmerald));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.endstonePowder, 2), new ItemStack(Block.whiteStone));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.quartzDust, 2), new ItemStack(Item.netherQuartz));
 
 
         finishRecipes("Millstone Recipes");
@@ -3014,7 +3015,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherWorkbench), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherWorkbenchPart});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackPickaxe), new Object[]{"CCC", "TST", " S ", Character.valueOf('C'), NMItems.netherrackChunk, Character.valueOf('T'), NMItems.pighideString, Character.valueOf('S'), NMTags.netherCompatibleSticks});
-        RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('B'), NMItems.boneShard, Character.valueOf('T'), NMItems.pighideString});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('T'), BTWTags.fishingHooks, Character.valueOf('B'), NMItems.pighideString});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump, BTWItems.gravelPile});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{"##", "##", Character.valueOf('#'), BTWBlocks.looseNetherBrickSlab});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherrackAnvil), new Object[]{"###", " # ", "###", Character.valueOf('#'), Block.netherrack});
@@ -3604,13 +3605,18 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWItems.woodenClub),
                 new Object[]{"X", "X", Character.valueOf('X'), Item.stick});
-        SkillLockedCrafting.requireSkills(
-                RecipeManager.addRecipe(
-                        new ItemStack(BTWItems.woodenClub),
-                        new Object[]{"XY", "X", Character.valueOf('X'), Item.stick, Character.valueOf('Y'), Item.silk}),
-                NMSkillNodes.BRING_STICK_16,
-                NMSkillNodes.KILL_MOB_16,
-                NMSkillNodes.BRING_LOG_64);
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            RecipeManager.addRecipe(new ItemStack(BTWItems.woodenClub),
+                    new Object[]{"X", "X", Character.valueOf('X'), Item.stick});
+        } else {
+            SkillLockedCrafting.requireSkills(
+                    RecipeManager.addRecipe(
+                            new ItemStack(BTWItems.woodenClub),
+                            new Object[]{"XY", "X", Character.valueOf('X'), Item.stick, Character.valueOf('Y'), Item.silk}),
+                    NMSkillNodes.BRING_STICK_16,
+                    NMSkillNodes.KILL_MOB_16,
+                    NMSkillNodes.BRING_LOG_64);
+        }
 
         RecipeManager.removeVanillaShapelessRecipe(new ItemStack(BTWItems.boneCarving, 1, 599), new Object[]{new ItemStack(Item.bone)});
         SkillLockedCrafting.requireSkills(
@@ -3626,13 +3632,18 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWItems.boneClub),
                 new Object[]{"X", "X", Character.valueOf('X'), Item.bone});
-        SkillLockedCrafting.requireSkills(
-                RecipeManager.addRecipe(
-                        new ItemStack(BTWItems.boneClub),
-                        new Object[]{"X", "X", Character.valueOf('X'), Item.bone}),
-                NMSkillNodes.BRING_STICK_16,
-                NMSkillNodes.KILL_MOB_16,
-                NMSkillNodes.BRING_BONE_128);
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+            RecipeManager.addRecipe(new ItemStack(BTWItems.boneClub),
+                    new Object[]{"X", "X", Character.valueOf('X'), Item.bone});
+        } else {
+            SkillLockedCrafting.requireSkills(
+                    RecipeManager.addRecipe(
+                            new ItemStack(BTWItems.boneClub),
+                            new Object[]{"X", "X", Character.valueOf('X'), Item.bone}),
+                    NMSkillNodes.BRING_STICK_16,
+                    NMSkillNodes.KILL_MOB_16,
+                    NMSkillNodes.BRING_BONE_128);
+        }
 
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWBlocks.dirtSlab, 4),

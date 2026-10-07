@@ -1522,8 +1522,10 @@ achievement.nm.journeyMasterFisherman=Master of the Waters
 achievement.nm.journeyMasterFisherman.desc=Meet a level-five fisherman.
 
 item.ifhyLimitedRecallPotion.name=Fleeting Recall Potion
-item.ifhyLimitedRecallPotion.desc=Drink to return to your entry portal. Expires after 15 seconds.
-item.ifhyLimitedRecallPotion.warning=Destroyed if dropped or stored outside your inventory.
+item.ifhyLimitedRecallPotion.desc=Return to entry portal. Expires in 15s.
+item.ifhyLimitedRecallPotion.warning=Keep in inventory; dropping destroys it.
+nm.quartzDust.info=Mine Nether quartz ore with Soul Flint to obtain Quartz Dust. A millstone also grinds 1 Nether Quartz into 2 Quartz Dust.
+tile.ifhyPlacedNetherBrick.name=Placed Nether Brick
 achievement.nm.journeyLithium=Light Metal, Heavy Industry
 achievement.nm.journeyLithium.desc=Obtain refined lithium to begin advanced material processing.
 achievement.nm.journeyNickel=Nickel and Dime

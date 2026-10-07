@@ -42,8 +42,6 @@ public final class NetherRecall {
             stack.stackSize = 0;
             return;
         }
-        long remaining = stack.getTagCompound().getLong("Expires") - System.currentTimeMillis();
-        stack.setItemDamage((int)Math.max(0, 20 - (remaining + 999) / 1000));
     }
 
     public static NBTTagCompound getTransferTarget() { return TRANSFER_TARGET.get(); }
@@ -88,14 +86,16 @@ public final class NetherRecall {
             if (!isRecall(stack)) continue;
             age(stack, player);
             if (stack.stackSize <= 0) player.inventory.setInventorySlotContents(i, null);
-            changed = true;
+            changed |= stack.stackSize <= 0;
         }
         ItemStack cursor = player.inventory.getItemStack();
         if (isRecall(cursor)) {
             age(cursor, player);
-            if (cursor.stackSize <= 0) player.inventory.setItemStack(null);
-            player.updateHeldItem();
-            changed = true;
+            if (cursor.stackSize <= 0) {
+                player.inventory.setItemStack(null);
+                player.updateHeldItem();
+                changed = true;
+            }
         }
         for (Object obj : player.openContainer.inventorySlots) {
             Slot slot = (Slot)obj;

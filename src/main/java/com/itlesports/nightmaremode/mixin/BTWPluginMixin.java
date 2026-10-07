@@ -178,6 +178,7 @@ public abstract class BTWPluginMixin {
 
     @Inject(method = "addInfoRecipes", at = @At("TAIL"),remap = false)
     private void addNightmareInfo(EmiRegistry registry, CallbackInfo ci){
+        this.info(registry, NMItems.quartzDust, 0, "nm.quartzDust.info");
         this.info(registry, NMItems.rpg, 0, "nm.rpg.info");
         this.info(registry, NMItems.rifle, 0, "nm.rifle.info");
         this.info(registry, NMItems.bandage, 0, "nm.bandage.info");

@@ -24,6 +24,7 @@ import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMBlocks {
+    public static Block placedNetherBrick;
     public static Block steelOre;
     public static Block bloodBones;
     public static Block bloodBonesUpgraded;
@@ -385,6 +386,9 @@ public class NMBlocks {
 
         ziggurathBrick = new BlockZiggurathBrick(2458);
         Item.itemsList[ziggurathBrick.blockID] = new NMItemBlock(NMBlocks.ziggurathBrick.blockID - 256);
+
+        placedNetherBrick = new BlockPlacedNetherBrick(2464);
+        Item.itemsList[placedNetherBrick.blockID] = new NMNetherItemBlock(placedNetherBrick.blockID - 256);
 
 
 

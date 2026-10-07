@@ -29,15 +29,16 @@ public class SlotMixin {
     @Inject(method = "putStack", at = @At("HEAD"), cancellable = true)
     private void destroyStoredRecall(ItemStack stack, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
         if (!(this.inventory instanceof InventoryPlayer) && com.itlesports.nightmaremode.util.NetherRecall.isRecall(stack)) {
-            stack.stackSize = 0;
-            this.inventory.setInventorySlotContents(this.slotIndex, null);
-            this.inventory.onInventoryChanged();
             ci.cancel();
         }
     }
 
     @Inject(method = "isItemValid", at = @At("HEAD"), cancellable = true)
     private void lockUnavailablePlayerSlots(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        if (!(this.inventory instanceof InventoryPlayer) && com.itlesports.nightmaremode.util.NetherRecall.isRecall(stack)) {
+            cir.setReturnValue(false);
+            return;
+        }
         if (this.inventory instanceof InventoryPlayer inv
                 && !NMInventoryLocks.isMainInventorySlotUnlocked(inv.player, this.slotIndex)) {
             cir.setReturnValue(false);

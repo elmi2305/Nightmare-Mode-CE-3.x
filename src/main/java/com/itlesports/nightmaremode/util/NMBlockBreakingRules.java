@@ -37,6 +37,10 @@ public final class NMBlockBreakingRules {
         ItemStack held = player.getCurrentEquippedItem();
         if (held == null) return false;
         Item item = held.getItem();
+        if (item instanceof com.itlesports.nightmaremode.item.items.ItemSoulFlint
+                || item instanceof com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe) {
+            return item.canHarvestBlock(held, world, block, x, y, z);
+        }
         // conversion tools must still be able to strip bark and perform staged progression actions.
         return item.isEfficientVsBlock(held, world, block, x, y, z)
                 || item instanceof ItemTool && ((ItemTool)item).getStrVsBlock(held, block) > 1.0F

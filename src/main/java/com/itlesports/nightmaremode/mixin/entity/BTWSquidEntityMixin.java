@@ -175,12 +175,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
 
     @ModifyArg(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;findClosestValidAttackTargetWithinRange(D)Lnet/minecraft/src/Entity;"))
-    private double increaseSquidRange(double dRange){
+    private double preserveSquidAggressionRange(double dRange){
         if ((Object)this instanceof EntityAngelSquid) {
             return 8.0D;
         }
-        return Math.min(dRange, 6.0D);
-        // 20 max
+        return dRange;
     }
 
 

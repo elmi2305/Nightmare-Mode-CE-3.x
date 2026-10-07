@@ -10,6 +10,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
+    @Inject(method = "renderInsideOfBlock", at = @At("HEAD"), cancellable = true)
+    private void skipMissingBlockOverlay(float partialTicks, Icon icon, CallbackInfo ci) {
+        if (icon == null) ci.cancel();
+    }
+
     @Redirect(method = "renderOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityClientPlayerMP;isBurning()Z"))
     private boolean avoidRenderingFireOverlayIfImmuneToFire(EntityClientPlayerMP player){
         if(player.isPotionActive(Potion.fireResistance)){

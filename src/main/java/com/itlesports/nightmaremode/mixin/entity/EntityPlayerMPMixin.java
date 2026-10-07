@@ -69,6 +69,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
             ci.cancel();
             return;
         }
+        if (NightmareMode.devMode) return;
         if (par1 == -1 && !SkillHandler.hasNetherAccess((EntityPlayer)(Object)this)) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this,
                     "Nether access requires " + SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED + " Nether access progress nodes.");
@@ -84,14 +85,9 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         SkillTreeData progress = SkillHandler.getPlayerData(this);
         progress.netherPostCompletedTiers |= com.itlesports.nightmaremode.util.NetherPostProgress.completedTiers(oldPlayer);
         this.setData(NightmareMode.SKILL_TREE, progress);
-        if (!playerLeavingTheEnd && NMUtils.getWorldProgress() == PREHARDMODE) {
+        if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE
+                || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
-        } else if (!playerLeavingTheEnd) {
-            for (ItemStack stack : oldPlayer.inventory.mainInventory) {
-                if (stack != null && stack.itemID == NMItems.skillBook.itemID) {
-                    this.inventory.addItemStackToInventory(stack.copy());
-                }
-            }
         }
     }
 
