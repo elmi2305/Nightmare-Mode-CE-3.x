@@ -1109,7 +1109,7 @@ public class NightmareMode extends BTWAddon {
                 this.lithiumOreGen.generate(world, rand, var6, var7, var8);
             }
         }
-        for (int attempt = 0; attempt < 7; ++attempt) {
+        for (int attempt = 0; attempt < 4; ++attempt) {
             this.potashOreGen.generate(world, rand, x + rand.nextInt(16), 54 + rand.nextInt(26), z + rand.nextInt(16));
         }
         if (biome == BiomeGenBase.swampland) {
