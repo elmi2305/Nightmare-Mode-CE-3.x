@@ -62,7 +62,8 @@ public final class ChunkPollutionManager {
     /** Adds pollution only when the source can reach the surface in the overworld. */
     public static void pollute(World world, int x, int y, int z, float amount) {
         if (world == null || world.isRemote || amount <= 0.0F || !canReachSurface(world, x, y, z)) return;
-        amount = EasyBalance.pollution(amount);
+        amount = EasyBalance.pollution(amount) * (1.0F - Math.max(0.0F, Math.min(0.50F,
+                com.itlesports.nightmaremode.skill.SkillHandler.getWorldData(world).globalPollutionReduction)));
         addToChunk(world, x >> 4, z >> 4, amount);
         float spill = amount * NEIGHBOR_SHARE;
         if (spill <= 0.0F) return;

@@ -4,6 +4,7 @@ import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.ArmorSetHelper;
 import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.outer.EntityAcidSquid;
 import com.itlesports.nightmaremode.entity.outer.EntityAngelSquid;
@@ -45,6 +46,21 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Unique private float angelWanderX;
     @Unique private float angelWanderY;
     @Unique private float angelWanderZ;
+    @Unique private int provokedPlayerId = -1;
+    @Unique private long provokedUntil;
+
+    @Unique
+    private boolean shouldIgnoreDiver(Entity entity) {
+        return !((Object)this instanceof EntityAngelSquid || (Object)this instanceof EntityAcidSquid)
+                && entity instanceof EntityPlayer player && ArmorSetHelper.isProtectedFromOrdinarySquids(player)
+                && !(player.entityId == this.provokedPlayerId && this.worldObj.getTotalWorldTime() < this.provokedUntil);
+    }
+
+    @Redirect(method = "getValidHeadCrabTargetInRange", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityLivingBase;getCanBeHeadCrabbed(Z)Z"))
+    private boolean avoidHeadCrabbingDiver(EntityLivingBase target, boolean inWater) {
+        return !this.shouldIgnoreDiver(target) && target.getCanBeHeadCrabbed(inWater);
+    }
 
     public BTWSquidEntityMixin(World par1World) {
         super(par1World);
@@ -134,6 +150,8 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
         if (!this.worldObj.isRemote) {
             if(damageSource.getSourceOfDamage() instanceof EntityPlayer){
                 this.calamariDropCountdown = 40;
+                this.provokedPlayerId = damageSource.getSourceOfDamage().entityId;
+                this.provokedUntil = this.worldObj.getTotalWorldTime() + 20 * 30;
             }
         }
     }
@@ -148,6 +166,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
             at = @At(value = "INVOKE",
                     target = "Lbtw/entity/mob/BTWSquidEntity;tentacleAttackFlingTarget(Lnet/minecraft/src/Entity;Z)V"))
     private void manageOuterSquidFling(BTWSquidEntity instance, Entity targetEntity, boolean bPrimary){
+        if (this.shouldIgnoreDiver(targetEntity)) return;
         if (instance instanceof EntityAngelSquid) {
             double motionX = targetEntity.motionX;
             double motionY = targetEntity.motionY;
@@ -186,6 +205,12 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     @Inject(method = "updateHeadCrab",
             at = @At("HEAD"),remap = false, cancellable = true)
     private void doScaryThingsOnHead(CallbackInfo ci) {
+
+        if (this.shouldIgnoreDiver(this.ridingEntity)) {
+            this.mountEntity(null);
+            ci.cancel();
+            return;
+        }
 
         this.squidOnHeadTimer++;
         if (rand.nextInt(60) == 0) {
@@ -272,7 +297,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;inWater:Z", opcode = Opcodes.GETFIELD))
     private boolean letAngelSquidsHuntDryPlayers(EntityPlayer player) {
-        return (Object)this instanceof EntityAngelSquid || player.inWater;
+        return !this.shouldIgnoreDiver(player) && ((Object)this instanceof EntityAngelSquid || player.inWater);
     }
 
     // increasing the squid range
@@ -283,6 +308,11 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
     }
     @Inject(method = "attemptTentacleAttackOnTarget", at = @At("HEAD"),cancellable = true,remap = false)
     private void squidAvoidAttackingHeadcrabbedPlayer(CallbackInfo ci){
+        if (this.shouldIgnoreDiver(this.entityToAttack)) {
+            this.entityToAttack = null;
+            ci.cancel();
+            return;
+        }
         if ((Object)this instanceof EntityAcidSquid || this.entityToAttack == null || this.entityToAttack.hasHeadCrabbedSquid()) {
             ci.cancel();
         }
@@ -359,7 +389,7 @@ public abstract class BTWSquidEntityMixin extends EntityWaterMob{
 
     @Redirect(method = "findClosestValidAttackTargetWithinRange", at = @At(value = "INVOKE", target = "Lbtw/entity/mob/BTWSquidEntity;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughObstacles(BTWSquidEntity instance, Entity entity){
-        return this.nightmareMode$isLostOcean() || instance.canEntityBeSeen(entity);
+        return !this.shouldIgnoreDiver(entity) && (this.nightmareMode$isLostOcean() || instance.canEntityBeSeen(entity));
     }
 
     // making the squid launch tentacles even if it cannot see the player, even if its on land, even if the player is not in water

@@ -12,7 +12,7 @@ public final class SkillRewardActions {
 
     private static SkillUnlockAction playerReward(Consumer<SkillTreeData> reward) {
         return (player, world) -> {
-            // world replay has no player; personal bonuses are rebuilt on that player's join.
+            // world replay has no player; personal bonuses are rebuilt for each player.
             if (player == null) return;
             SkillTreeData data = player.getData(NightmareMode.SKILL_TREE);
             reward.accept(data);
@@ -28,6 +28,22 @@ public final class SkillRewardActions {
             reward.accept(data);
             world.setData(NightmareMode.WORLD_SKILL_TREE, data);
         };
+    }
+
+    public static SkillUnlockAction addCarcassHarvestSpeed(float amount) {
+        return playerReward(data -> data.carcassHarvestSpeedBonus += amount);
+    }
+
+    public static SkillUnlockAction addGlobalPollutionReduction(float amount) {
+        return worldReward(data -> data.globalPollutionReduction += amount);
+    }
+
+    public static SkillUnlockAction addPermanentXpHotbarSlots(int amount) {
+        return playerReward(data -> data.permanentXpHotbarSlots = Math.min(5, data.permanentXpHotbarSlots + amount));
+    }
+
+    public static SkillUnlockAction unlockSecondInventoryRow() {
+        return playerReward(data -> data.secondInventoryRowUnlocked = true);
     }
 
     public static SkillUnlockAction addBlockBreakSpeed(float amount) {

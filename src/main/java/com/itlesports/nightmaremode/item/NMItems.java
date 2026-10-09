@@ -196,6 +196,10 @@ public class NMItems {
     public static Item refinementWaste;
     public static ItemOxygenGear oxygenMask;
     public static ItemOxygenGear oxygenTank;
+    public static Item airFlask;
+    public static Item emptyAirFlask;
+    public static Item handBellows;
+    public static Item crystalTorch;
     public static Item plantFiber;
     public static Item driedPlantFiber;
     public static Item crudeBedroll;
@@ -633,6 +637,11 @@ public class NMItems {
         oxygenMask = (ItemOxygenGear) new ItemOxygenGear(2653, 0, 3, 240, 0.50F, 0.0D, "ifhyOxygenMask")
                 .setUnlocalizedName("ifhyOxygenMask").setTextureName("nightmare:ifhyOxygenMask");
         oxygenTank = (ItemOxygenGear) new ItemOxygenGear(2654, 1, 7, 360, 0.75F).setUnlocalizedName("ifhyOxygenTank").setTextureName("nightmare:ifhyOxygenTank");
+        airFlask = new ItemAirFlask(3465);
+        emptyAirFlask = new NMItem(3466).setMaxStackSize(1).setCreativeTab(CreativeTabs.tabTools)
+                .setUnlocalizedName("ifhyEmptyAirFlask").setTextureName("nightmare:ifhyEmptyAirFlask");
+        handBellows = new ItemHandBellows(3467);
+        crystalTorch = new ItemCrystalTorch(3468);
         plantFiber = new NMPlaceAsBlockItem(2656, NMFields.BLOCK_DRYING_GRASS).setUnlocalizedName("ifhyPlantFiber").setTextureName("nightmare:ifhyPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         driedPlantFiber = new NMPlaceAsBlockItem(2657, NMFields.BLOCK_DRYING_GRASS, BlockDryingGrass.META_DRIED).setUnlocalizedName("ifhyDriedPlantFiber").setTextureName("nightmare:ifhyDriedPlantFiber").setCreativeTab(CreativeTabs.tabMaterials);
         plantFiber.setfurnaceburntime(6);

@@ -33,7 +33,8 @@ public final class NMInventoryLocks {
                 unlocked = i + 1;
             }
         }
-        return Math.min(9, unlocked + SkillHandler.getPlayerData(player).extraHotbarSlots);
+        com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(player);
+        return Math.min(9, Math.max(unlocked, 1 + data.permanentXpHotbarSlots) + data.extraHotbarSlots);
     }
 
     public static int getUnlockedBackpackSlots(EntityPlayer player) {
@@ -42,7 +43,8 @@ public final class NMInventoryLocks {
             return 27;
         }
 
-        int unlockedRows = getInventoryLevel(player) >= SECOND_BACKPACK_ROW_LEVEL ? 2 : 1;
+        int unlockedRows = getInventoryLevel(player) >= SECOND_BACKPACK_ROW_LEVEL
+                || SkillHandler.getPlayerData(player).secondInventoryRowUnlocked ? 2 : 1;
         if (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked) {
             unlockedRows = 3;
         }
@@ -67,8 +69,9 @@ public final class NMInventoryLocks {
                 || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) return true;
         if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return isMainInventorySlotUnlocked(player, slotIndex);
         if (slotIndex < 0) return false;
-        if (slotIndex < 9) return slotIndex < Math.min(9, 1 + SkillHandler.getPlayerData(player).extraHotbarSlots);
-        if (slotIndex < 36) return slotIndex - 9 < (SkillHandler.getPlayerData(player).thirdInventoryRowUnlocked ? 27 : 9);
+        com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(player);
+        if (slotIndex < 9) return slotIndex < Math.min(9, 1 + data.permanentXpHotbarSlots + data.extraHotbarSlots);
+        if (slotIndex < 36) return slotIndex - 9 < (data.thirdInventoryRowUnlocked ? 27 : data.secondInventoryRowUnlocked ? 18 : 9);
         return true;
     }
 

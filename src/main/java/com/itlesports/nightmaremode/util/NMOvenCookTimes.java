@@ -4,10 +4,21 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemFood;
 import net.minecraft.src.ItemStack;
 
 public final class NMOvenCookTimes {
     private NMOvenCookTimes() {}
+
+    public static boolean canOvercookToMeat(ItemStack stack) {
+        if (!NMItemStackUtils.isValid(stack) || !(stack.getItem() instanceof ItemFood)) return false;
+        Item item = stack.getItem();
+        return item == Item.beefCooked || item == Item.porkCooked || item == Item.chickenCooked
+                || item == Item.fishCooked || item == BTWItems.cookedMutton || item == BTWItems.cookedWolfChop
+                || item == BTWItems.cookedMysteryMeat || item == BTWItems.cookedLiver || item == BTWItems.cookedCheval
+                || item == BTWItems.cookedKebab || item == BTWItems.friedEgg || item == BTWItems.cookedMushroomOmelet
+                || item == BTWItems.cookedScrambledEggs || item == NMItems.calamariRoast || item == NMItems.friedCalamari;
+    }
 
     public static int getCookTime(ItemStack stack) {
         if (!NMItemStackUtils.isValid(stack)) return 1600;

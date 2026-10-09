@@ -198,6 +198,10 @@ public class GuiSkillStats extends GuiScreen {
         }
         addPercentBonus(lines, "Block breaking speed", com.itlesports.nightmaremode.util.EasyBalance.miningBonus(data.blockBreakSpeedBonus));
         addPercentBonus(lines, "Shovel speed", data.shovelSpeedBonus);
+        addPercentBonus(lines, "Carcass harvesting speed", data.carcassHarvestSpeedBonus);
+        if (world.globalPollutionReduction > 0.0F) {
+            lines.add("Pollution produced (world): -" + percent(world.globalPollutionReduction));
+        }
         addPercentBonus(lines, "Movement speed", data.movementSpeedBonus);
         addPercentBonus(lines, "Mechanical block speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.machineSpeedBonus));
         addPercentBonus(lines, "Kiln processing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.kilnSpeedBonus));
@@ -224,6 +228,8 @@ public class GuiSkillStats extends GuiScreen {
             lines.add("Item loss chance on death: " + percent(com.itlesports.nightmaremode.util.EasyBalance.deathLoss(data.deathItemLossChance)));
         }
         add(lines, "Extra hotbar slots", data.extraHotbarSlots);
+        add(lines, "Permanent XP hotbar slots", data.permanentXpHotbarSlots);
+        if (data.secondInventoryRowUnlocked) lines.add("Second inventory row: permanent");
         add(lines, "Bonus coal dust per ore (pickaxe)", data.coalDustDropBonus);
         add(lines, "Bonus iron dust per ore (pickaxe)", data.ironDustDropBonus);
         addPercentBonus(lines, "Iron pile drop chance", data.ironPileChanceBonus + world.globalIronPileChanceBonus);

@@ -2740,13 +2740,27 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_RAW_LITHIUM_64, NMSkillNodes.KILL_MOB_250);
 
         SkillLockedCrafting.requireSkill(
-                RecipeManager.addShapelessRecipe(new ItemStack(NMItems.dyeBlend), new Object[]{
+                RecipeManager.addShapelessRecipe(new ItemStack(NMItems.dyeBlend, 4), new Object[]{
                         new ItemStack(Item.dyePowder, 1, 0), new ItemStack(Item.dyePowder, 1, 1),
                         new ItemStack(Item.dyePowder, 1, 2), new ItemStack(Item.dyePowder, 1, 3),
                         new ItemStack(Item.dyePowder, 1, 4), new ItemStack(Item.dyePowder, 1, 5),
                         new ItemStack(Item.dyePowder, 1, 6), new ItemStack(Item.dyePowder, 1, 7),
                         new ItemStack(Item.dyePowder, 1, 15)}),
                 NMSkillNodes.BRING_DYE_64);
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.emptyAirFlask), new Object[]{
+                "GNG",
+                "G G",
+                "GGG",
+                Character.valueOf('N'), NMItems.nickelBinding,
+                Character.valueOf('G'), Block.glass
+        });
+        RecipeManager.addRecipe(new ItemStack(NMItems.handBellows), new Object[]{
+                " S ", "LNL", " S ", Character.valueOf('S'), Item.stick,
+                Character.valueOf('L'), Item.leather, Character.valueOf('N'), NMItems.nickelBinding});
+        RecipeManager.addRecipe(new ItemStack(NMItems.crystalTorch, 4), new Object[]{
+                "C", "N", "S", Character.valueOf('C'), NMItems.crystalCleanShard,
+                Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('S'), Item.stick});
 
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.chocolate, 2), new Object[]{
@@ -4588,6 +4602,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.verdantPickaxe.itemID, NMSkillNodes.BRING_VERDANT_PLATE_4);
 
         SkillRecipeGates.crafting(Block.pistonBase.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16, NMSkillNodes.BRING_SOUL_URN_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
+        SkillRecipeGates.requireCraftingSkills(Block.pistonStickyBase.blockID, NMSkillNodes.BRING_PISTON_1);
         SkillRecipeGates.crafting(Block.music.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16);
         SkillRecipeGates.crafting(Item.comparator.itemID, NMSkillNodes.BRING_REDSTONE_EYE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.crafting(BTWItems.corpseEye.itemID, NMSkillNodes.BRING_SOUL_URN_16);

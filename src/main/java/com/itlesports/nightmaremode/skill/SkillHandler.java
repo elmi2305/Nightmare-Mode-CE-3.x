@@ -15,6 +15,7 @@ public class SkillHandler {
         if (!SkillRewardReload.isReplaying() && NightmareMode.allSkillsUnlocked && !NightmareMode.lockDownCreative
                 && !Boolean.TRUE.equals(APPLYING_ALL_SKILLS.get())) {
             unlockAllSkills(player, data);
+            data = player.getData(NightmareMode.SKILL_TREE);
         }
         return data;
     }
@@ -51,20 +52,30 @@ public class SkillHandler {
             return;
         }
 
+        boolean changed = false;
         APPLYING_ALL_SKILLS.set(true);
         try {
             WorldSkillData worldData = getWorldData(player.worldObj);
             for (SkillNode node : SkillRegistry.getNodes()) {
                 if (node.worldReward) {
-                    playerData.unlock(node);
+                    if (!playerData.isUnlocked(node)) {
+                        playerData.unlock(node);
+                        changed = true;
+                    }
                     if (!worldData.isUnlocked(node)) {
                         worldData.unlock(node);
+                        changed = true;
                         node.reward.getAction().apply(player, player.worldObj);
                     }
                 } else if (!playerData.isUnlocked(node)) {
                     playerData.unlock(node);
+                    changed = true;
                     node.reward.getAction().apply(player, player.worldObj);
                 }
+            }
+            if (changed) {
+                playerData.rewardsSchema = 0;
+                worldData.rewardsRevision++;
             }
             player.setData(NightmareMode.SKILL_TREE, playerData);
             player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
@@ -72,6 +83,7 @@ public class SkillHandler {
         } finally {
             APPLYING_ALL_SKILLS.remove();
         }
+        if (changed) SkillRewardReload.validatePlayer(player);
     }
 
     public static boolean hasUnlockedAllParents(EntityPlayer player, SkillNode node) {
@@ -112,10 +124,16 @@ public class SkillHandler {
         playerData.unlock(node);
         if (node.worldReward) {
             worldData.unlock(node);
+            worldData.rewardsRevision++;
         }
         node.reward.getAction().apply(player, player.worldObj);
         player.setData(NightmareMode.SKILL_TREE, playerData);
         player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+        if (node.worldReward) {
+            for (Object entity : player.mcServer.getConfigurationManager().playerEntityList) {
+                if (entity instanceof EntityPlayer online) SkillRewardReload.validatePlayer(online);
+            }
+        }
         recordJourneySkillProgress(player);
         sync(player);
         sendStatus(player, "Unlocked skill: " + node.name);

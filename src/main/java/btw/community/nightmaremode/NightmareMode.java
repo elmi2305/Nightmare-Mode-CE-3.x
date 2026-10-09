@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Build 3509";
+    public static String betaBuildLine = "Build 3609a";
     public static String betaBuildLineDifficulty = BalanceProfile.active();
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
@@ -80,6 +80,7 @@ public class NightmareMode extends BTWAddon {
     public WorldGenerator steelOreGen;
     public WorldGenerator nickelOreGen;
     public WorldGenerator lithiumOreGen;
+    public WorldGenerator potashOreGen;
     public WorldGenerator crystalPocketGen;
 
     // events
@@ -297,7 +298,8 @@ public class NightmareMode extends BTWAddon {
         this.steelOreGenExposedToAir = new WorldGenMinable(NMBlocks.steelOre.blockID,6).setNeedsAirExposure();
         this.steelOreGen = new WorldGenMinable(NMBlocks.steelOre.blockID,6);
         this.nickelOreGen = new WorldGenMinable(NMBlocks.nickelOre.blockID, 7);
-        this.lithiumOreGen = new WorldGenMinable(NMBlocks.lithiumOre.blockID, 6);
+        this.lithiumOreGen = new WorldGenMinable(NMBlocks.lithiumOre.blockID, 8);
+        this.potashOreGen = new WorldGenMinable(NMBlocks.potashOre.blockID, 5);
         this.crystalPocketGen = new WorldGenMinable(NMBlocks.crystalPocket.blockID, 5);
 
 //        BiomeGenBase.biomeList[24] = new BiomeGenBlightlands(24).setBiomeName("UnderworldPlains").setMinMaxHeight(1.1F, 1.4F);
@@ -1100,12 +1102,15 @@ public class NightmareMode extends BTWAddon {
             }
         }
         if (isDesertBiome(biome)) {
-            for(int var5 = 0; var5 < 7; ++var5) {
+            for(int var5 = 0; var5 < 9; ++var5) {
                 int var6 = x + rand.nextInt(16);
-                int var7 = rand.nextInt(32) + 12;
+                int var7 = rand.nextInt(40) + 12;
                 int var8 = z + rand.nextInt(16);
                 this.lithiumOreGen.generate(world, rand, var6, var7, var8);
             }
+        }
+        for (int attempt = 0; attempt < 7; ++attempt) {
+            this.potashOreGen.generate(world, rand, x + rand.nextInt(16), 54 + rand.nextInt(26), z + rand.nextInt(16));
         }
         if (biome == BiomeGenBase.swampland) {
             for(int var5 = 0; var5 < 7; ++var5) {

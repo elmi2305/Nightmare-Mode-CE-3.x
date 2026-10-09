@@ -1020,7 +1020,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageDeepCaveOxygenLoss(CallbackInfo ci) {
-        if (!this.shouldLoseOxygenInDeepCave()) {
+        if (this.worldObj.isRemote || !this.shouldLoseOxygenInDeepCave()) {
             return;
         }
 
@@ -1091,7 +1091,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private int getDeepCaveOxygenDrainInterval() {
         double y = Math.max(24.0D, this.posY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
-        int baseInterval = Math.max(1, (int)Math.round(8.0D - depthRatio * 7.0D));
+        int baseInterval = Math.max(3, (int)Math.round(8.0D - depthRatio * 5.0D));
         float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F
                 : ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
         float reduction = Math.min(this.getOxygenGearReduction(), cap);
@@ -1102,11 +1102,11 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private float getOxygenGearReduction() {
         float reduction = this.nightmareMode$getSkillData().oxygenLossReduction;
         ItemStack mask = this.getCurrentArmor(3);
-        if (mask != null && mask.getItem() instanceof ItemOxygenGear) {
+        if (ArmorSetHelper.isIntact(mask) && mask.getItem() instanceof ItemOxygenGear) {
             reduction += ((ItemOxygenGear)mask.getItem()).getOxygenDrainReduction();
         }
         ItemStack tank = this.getCurrentArmor(2);
-        if (tank != null && tank.getItem() instanceof ItemOxygenGear) {
+        if (ArmorSetHelper.isIntact(tank) && tank.getItem() instanceof ItemOxygenGear) {
             reduction += ((ItemOxygenGear)tank.getItem()).getOxygenDrainReduction();
         }
         return reduction;
@@ -1117,8 +1117,8 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         float reduction = 0.0F;
         ItemStack mask = this.getCurrentArmor(3);
         ItemStack tank = this.getCurrentArmor(2);
-        if (mask != null && mask.getItem() == NMItems.oxygenMask) reduction += NMItems.oxygenMask.getOxygenDrainReduction();
-        if (tank != null && tank.getItem() == NMItems.oxygenTank) reduction += NMItems.oxygenTank.getOxygenDrainReduction();
+        if (ArmorSetHelper.isIntact(mask) && mask.getItem() == NMItems.oxygenMask) reduction += NMItems.oxygenMask.getOxygenDrainReduction();
+        if (ArmorSetHelper.isIntact(tank) && tank.getItem() == NMItems.oxygenTank) reduction += NMItems.oxygenTank.getOxygenDrainReduction();
         return Math.min(0.95F, reduction);
     }
 

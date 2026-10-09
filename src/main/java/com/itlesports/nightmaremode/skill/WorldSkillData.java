@@ -31,6 +31,7 @@ public class WorldSkillData {
     public float globalVillagerHungerDrainRateMultiplier = 1.0F;
     public float globalMobLootChanceBonus;
     public float globalXpGainBonus;
+    public float globalPollutionReduction;
     private final Set<String> unlockedWorldNodes = new HashSet<>();
     private final Map<String, Integer> netherPostCompletionMasks = new HashMap<>();
 
@@ -94,6 +95,7 @@ public class WorldSkillData {
         this.globalVillagerHungerDrainRateMultiplier = defaults.globalVillagerHungerDrainRateMultiplier;
         this.globalMobLootChanceBonus = defaults.globalMobLootChanceBonus;
         this.globalXpGainBonus = defaults.globalXpGainBonus;
+        this.globalPollutionReduction = defaults.globalPollutionReduction;
     }
 
     public static WorldSkillData readFromNBT(NBTTagCompound tag) {
@@ -119,6 +121,7 @@ public class WorldSkillData {
         data.globalVillagerHungerDrainRateMultiplier = tag.hasKey("GlobalVillagerHungerDrainRateMultiplier") ? tag.getFloat("GlobalVillagerHungerDrainRateMultiplier") : 1.0F;
         data.globalMobLootChanceBonus = tag.getFloat("GlobalMobLootChanceBonus");
         data.globalXpGainBonus = tag.getFloat("GlobalXpGainBonus");
+        data.globalPollutionReduction = tag.getFloat("GlobalPollutionReduction");
         NBTTagList unlocked = tag.getTagList("UnlockedWorldNodes");
         for (int i = 0; i < unlocked.tagCount(); ++i) {
             data.unlockedWorldNodes.add(((NBTTagString)unlocked.tagAt(i)).data);
@@ -167,6 +170,7 @@ public class WorldSkillData {
         tag.setFloat("GlobalVillagerHungerDrainRateMultiplier", data.globalVillagerHungerDrainRateMultiplier);
         tag.setFloat("GlobalMobLootChanceBonus", data.globalMobLootChanceBonus);
         tag.setFloat("GlobalXpGainBonus", data.globalXpGainBonus);
+        tag.setFloat("GlobalPollutionReduction", data.globalPollutionReduction);
         NBTTagList unlocked = new NBTTagList("UnlockedWorldNodes");
         for (String id : data.unlockedWorldNodes) {
             unlocked.appendTag(new NBTTagString("", id));

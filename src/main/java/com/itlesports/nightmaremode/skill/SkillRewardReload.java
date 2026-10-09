@@ -8,7 +8,7 @@ import java.util.*;
 /** Rebuild derived rewards without replaying unlock costs or changing progress. */
 public final class SkillRewardReload {
     static final String LEGACY_VERSION = "legacy";
-    private static final int SCHEMA = 8;
+    private static final int SCHEMA = 9;
     private enum ReplayScope { WORLD, PLAYER }
     private static final ThreadLocal<ReplayScope> REPLAYING = new ThreadLocal<>();
 
@@ -68,6 +68,20 @@ public final class SkillRewardReload {
         SkillTreeData old = player.getData(NightmareMode.SKILL_TREE);
         if (player.worldObj == null || player.worldObj.isRemote || isReplaying()) return old;
         WorldSkillData world = validateWorld(player.worldObj, false);
+        boolean promotedUnlock = false;
+        if (old.rewardsSchema != SCHEMA || !version().equals(old.rewardsVersion)) {
+            for (SkillNode node : SkillRegistry.getNodes()) {
+                // preserve personal unlocks whose rewards have become world-shared.
+                if (node.worldReward && old.isUnlocked(node) && !world.isUnlocked(node)) {
+                    world.unlock(node);
+                    promotedUnlock = true;
+                }
+            }
+        }
+        if (promotedUnlock) {
+            player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, world);
+            world = validateWorld(player.worldObj, true);
+        }
         if (old.rewardsSchema == SCHEMA && version().equals(old.rewardsVersion)
                 && old.rewardsRevision == world.rewardsRevision) return old;
         NBTTagCompound saved = new NBTTagCompound();
@@ -78,8 +92,8 @@ public final class SkillRewardReload {
         try {
             player.setData(NightmareMode.SKILL_TREE, rebuilt);
             for (SkillNode node : orderedNodes()) {
-                // world nodes can also grant personal bonuses to the player who unlocked them.
-                if (rebuilt.isUnlocked(node)) {
+                // world unlocks grant their personal components to every player exactly once per rebuild.
+                if (rebuilt.isUnlocked(node) || node.worldReward && world.isUnlocked(node)) {
                     node.reward.getAction().apply(player, player.worldObj);
                 }
             }

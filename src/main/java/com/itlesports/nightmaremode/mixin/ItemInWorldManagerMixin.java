@@ -18,6 +18,7 @@ import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
 import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.blocks.BlockOreNode;
 import com.itlesports.nightmaremode.block.blocks.CrystalPocketBlock;
+import com.itlesports.nightmaremode.block.blocks.LithiumOreBlock;
 import com.itlesports.nightmaremode.item.items.ItemMechanicalWrench;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
@@ -126,6 +127,19 @@ public class ItemInWorldManagerMixin {
             }
         }
         Block block = Block.blocksList[this.theWorld.getBlockId(x, y, z)];
+        if (block instanceof LithiumOreBlock lithium) {
+            ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
+            int metadata = this.theWorld.getBlockMetadata(x, y, z);
+            if (!lithium.mineDeposit(this.theWorld, this.thisPlayerMP, x, y, z, fromSide)) {
+                cir.setReturnValue(false);
+                return;
+            }
+            this.theWorld.playAuxSFXAtEntity(this.thisPlayerMP, 2001, x, y, z, block.blockID + (metadata << 12));
+            held.onBlockDestroyed(this.theWorld, block.blockID, x, y, z, this.thisPlayerMP);
+            if (held.stackSize <= 0) this.thisPlayerMP.destroyCurrentEquippedItem();
+            cir.setReturnValue(true);
+            return;
+        }
         if (this.isSkillLockedOre(block, x, y, z)) {
             ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
             block.convertBlock(held, this.theWorld, x, y, z, fromSide);

@@ -26,9 +26,11 @@ public class ItemStackMixin {
 
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
     private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
-        if (NMItemStackUtils.shouldBreakOnUse((ItemStack)(Object)this, amount)) return amount;
         if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return amount;
-        Item item = ((ItemStack)(Object)this).getItem();
+        ItemStack stack = (ItemStack)(Object)this;
+        if (!NMItemStackUtils.isValid(stack) || !stack.isItemStackDamageable()
+                || stack.getItemDamage() >= stack.getMaxDamage() - Math.max(10, amount)) return amount;
+        Item item = stack.getItem();
         if (!(item instanceof net.minecraft.src.ItemTool || item instanceof net.minecraft.src.ItemArmor
                 || item instanceof net.minecraft.src.ItemSword || item instanceof net.minecraft.src.ItemBow || item instanceof net.minecraft.src.ItemFishingRod || item instanceof net.minecraft.src.ItemShears
                 || item instanceof com.itlesports.nightmaremode.item.items.ItemSoulFlint

@@ -112,5 +112,6 @@ public class NMEntityMapper {
         TileEntity.addMapping(TerrainExtractorTileEntity.class, "NmTerrainExtractor");
         TileEntity.addMapping(EnderAssemblerTileEntity.class, "NmEnderAssembler");
         TileEntity.addMapping(VoidExtractorTileEntity.class, "NmVoidExtractor");
+        TileEntity.addMapping(CrystalTorchTileEntity.class, "NmCrystalTorch");
     }
 }

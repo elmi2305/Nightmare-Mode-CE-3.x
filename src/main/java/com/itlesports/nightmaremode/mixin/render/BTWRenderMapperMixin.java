@@ -80,6 +80,7 @@ public class BTWRenderMapperMixin {
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityDisenchantmentTable.class, new RenderDisenchantmentTable());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityBloodBone.class, new TileEntityBloodBoneRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityPortalCore.class, new TileEntityPortalCoreRenderer());
+        TileEntityRenderer.instance.addSpecialRendererForClass(CrystalTorchTileEntity.class, new CrystalTorchRenderer());
 
     }
 }

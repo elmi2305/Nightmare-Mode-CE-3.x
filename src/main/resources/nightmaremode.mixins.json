@@ -119,6 +119,7 @@
     "blocks.BlockFiniteTorchTileEntityMixin",
     "blocks.BlockFireMixin",
     "blocks.BlockFluidMixin",
+    "blocks.BlockFlowingMixin",
     "blocks.BlockGrassMixin",
     "blocks.BlockGravelMixin",
     "blocks.BlockLeavesMixin",

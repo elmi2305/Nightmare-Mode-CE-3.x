@@ -35,6 +35,9 @@ public class BTWItemsMixin {
         boiledPotato = new FoodItem(22242, 1, 0.0f, false, "fcItemPotatoBoiled").setAsBasicPigFood().setTextureName("btw:boiled_potato");
 
         ((ItemAccessor)pointyStick).invSetMaxDamage(1);
+        ((ItemAccessor)Item.shovelStone).invSetMaxDamage(128);
+        ((ToolItem) Item.shovelWood).addCustomEfficiencyMultiplier(0.5f);
+        ((ToolItem) Item.shovelStone).addCustomEfficiencyMultiplier(1.3f);
         ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
         ((ItemAccessor)Item.shovelWood).invSetMaxDamage(32);
         Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)

@@ -508,7 +508,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
             }
 
             this.harvestTier = CarcassHarvesting.getHarvestTier(held);
-            this.harvestRequiredTicks = CarcassHarvesting.getProcessingTicks(held);
+            this.harvestRequiredTicks = CarcassHarvesting.getProcessingTicks(player, held);
             this.harvestToolItemId = held == null ? -1 : held.itemID;
             this.harvestTicks = 0;
             this.harvestStartX = player.posX;

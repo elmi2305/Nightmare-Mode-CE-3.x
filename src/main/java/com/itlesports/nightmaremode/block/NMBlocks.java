@@ -115,6 +115,9 @@ public class NMBlocks {
     public static CisternBlock cistern;
     public static Block nickelOre;
     public static Block lithiumOre;
+    public static Block potashOre;
+    public static CrystalTorchBlock crystalTorch;
+    public static SubmergedCrystalTorchBlock submergedCrystalTorch;
     public static Block crystalPocket;
 
 
@@ -225,7 +228,7 @@ public class NMBlocks {
         nickelOre = new ProcessingOreBlock(2406, NMItems.nickelRawRock.itemID, 2).setHardness(4.0F).setResistance(8.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyNickelOre").setTextureName("nightmare:ifhyNickelOre");
         Item.itemsList[nickelOre.blockID] = new NMItemBlock(nickelOre.blockID - 256);
 
-        lithiumOre = new ProcessingOreBlock(2407, NMItems.lithiumRaw.itemID, 1).setHardness(2.5F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyLithiumOre").setTextureName("nightmare:ifhyLithiumOre");
+        lithiumOre = new LithiumOreBlock(2407).setHardness(2.5F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyLithiumOre").setTextureName("nightmare:ifhyLithiumOre");
         Item.itemsList[lithiumOre.blockID] = new NMItemBlock(lithiumOre.blockID - 256);
 
         crystalPocket = new CrystalPocketBlock(2408).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyCrystalPocket").setTextureName("nightmare:ifhyCrystalPocket");
@@ -263,7 +266,7 @@ public class NMBlocks {
         prismarineStairs = new BlockPrismarineStairs(2417, prismarine).setTextureName("nightmare:ifhyPrismarine");
         Item.itemsList[prismarineStairs.blockID] = new NMItemBlock(prismarineStairs.blockID - 256);
 
-        aquamarineOre = new ProcessingOreBlock(2418, NMItems.aquamarine.itemID, 2).setHardness(3.0F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyAquamarineOre").setTextureName("nightmare:ifhyAquamarineOre");
+        aquamarineOre = new AquamarineOreBlock(2418).setHardness(3.0F).setResistance(5.0F).setStepSound(BTWBlocks.oreStepSound).setUnlocalizedName("ifhyAquamarineOre").setTextureName("nightmare:ifhyAquamarineOre");
         Item.itemsList[aquamarineOre.blockID] = new NMItemBlock(aquamarineOre.blockID - 256);
 
         chunkLoader = new BlockChunkLoader(2419);
@@ -389,6 +392,11 @@ public class NMBlocks {
 
         placedNetherBrick = new BlockPlacedNetherBrick(2464);
         Item.itemsList[placedNetherBrick.blockID] = new NMNetherItemBlock(placedNetherBrick.blockID - 256);
+
+        potashOre = new PotashOreBlock(2465).setStepSound(BTWBlocks.oreStepSound);
+        Item.itemsList[potashOre.blockID] = new NMItemBlock(potashOre.blockID - 256);
+        crystalTorch = new CrystalTorchBlock(2466);
+        submergedCrystalTorch = new SubmergedCrystalTorchBlock(2467);
 
 
 

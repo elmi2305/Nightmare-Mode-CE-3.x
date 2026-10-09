@@ -22,13 +22,17 @@ import net.minecraft.src.ItemStack;
 
 public final class CarcassHarvesting {
     public static final int FIST_PROCESSING_TICKS = 600;
+    public static final int MIN_PROCESSING_TICKS = 5;
 
     private CarcassHarvesting() {
     }
 
-    public static int getProcessingTicks(ItemStack stack) {
+    public static int getProcessingTicks(EntityPlayer player, ItemStack stack) {
         ItemKnife knife = ItemKnife.fromStack(stack);
-        return EasyBalance.processingTicks(knife == null ? FIST_PROCESSING_TICKS : knife.getProcessingTicks());
+        int baseTicks = EasyBalance.processingTicks(knife == null ? FIST_PROCESSING_TICKS : knife.getProcessingTicks());
+        float bonus = player == null ? 0.0F
+                : com.itlesports.nightmaremode.skill.SkillHandler.getPlayerData(player).carcassHarvestSpeedBonus;
+        return Math.max(MIN_PROCESSING_TICKS, (int)Math.ceil(baseTicks / (1.0F + Math.max(0.0F, bonus))));
     }
 
     public static int getHarvestTier(ItemStack stack) {

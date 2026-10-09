@@ -65,6 +65,16 @@ public final class ArmorSetHelper {
                 && isIntact(wearer.getCurrentItemOrArmor(1), NMItems.nickelWorkBoots);
     }
 
+    public static boolean isWearingOxygenPair(EntityLivingBase wearer) {
+        return isIntact(wearer.getCurrentItemOrArmor(4), NMItems.oxygenMask)
+                && isIntact(wearer.getCurrentItemOrArmor(3), NMItems.oxygenTank);
+    }
+
+    public static boolean isProtectedFromOrdinarySquids(EntityLivingBase wearer) {
+        return isWearingOxygenPair(wearer) || getSealedDivingTank(wearer) != null
+                || isWearingCompleteQuartzglassSet(wearer);
+    }
+
     public static ItemStack getDivingTank(EntityLivingBase wearer) {
         ItemStack chest = wearer.getCurrentItemOrArmor(3);
         return isIntact(chest) && chest.getItem() instanceof ItemDivingGear gear

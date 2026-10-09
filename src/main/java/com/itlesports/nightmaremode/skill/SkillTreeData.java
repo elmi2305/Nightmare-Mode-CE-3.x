@@ -57,6 +57,7 @@ public class SkillTreeData {
     public int ironDustDropBonus;
     public int coalDustDropBonus;
     public float blockBreakSpeedBonus;
+    public float carcassHarvestSpeedBonus;
     public float mobLootChanceBonus;
     public float ironPileChanceBonus;
     public float kilnSpeedBonus;
@@ -91,6 +92,7 @@ public class SkillTreeData {
     public int leatherArmorUnlockProgress;
     public int ironIngotRecipeUnlockProgress;
     public int extraHotbarSlots;
+    public int permanentXpHotbarSlots;
 
     public boolean canHarvestDiamondOre;
     public boolean canCureVillagers;
@@ -102,6 +104,7 @@ public class SkillTreeData {
     public boolean canFarmNetherWart;
     public boolean canGainExperience;
     public boolean thirdInventoryRowUnlocked;
+    public boolean secondInventoryRowUnlocked;
     public boolean canUseCistern;
     public boolean canUseEnchantmentTable;
     public boolean canUseBrewingStand;
@@ -150,6 +153,7 @@ public class SkillTreeData {
         this.ironDustDropBonus = defaults.ironDustDropBonus;
         this.coalDustDropBonus = defaults.coalDustDropBonus;
         this.blockBreakSpeedBonus = defaults.blockBreakSpeedBonus;
+        this.carcassHarvestSpeedBonus = defaults.carcassHarvestSpeedBonus;
         this.mobLootChanceBonus = defaults.mobLootChanceBonus;
         this.ironPileChanceBonus = defaults.ironPileChanceBonus;
         this.kilnSpeedBonus = defaults.kilnSpeedBonus;
@@ -182,6 +186,7 @@ public class SkillTreeData {
         this.leatherArmorUnlockProgress = defaults.leatherArmorUnlockProgress;
         this.ironIngotRecipeUnlockProgress = defaults.ironIngotRecipeUnlockProgress;
         this.extraHotbarSlots = defaults.extraHotbarSlots;
+        this.permanentXpHotbarSlots = defaults.permanentXpHotbarSlots;
         this.canHarvestDiamondOre = defaults.canHarvestDiamondOre;
         this.canCureVillagers = defaults.canCureVillagers;
         this.grassBreaksInstantly = defaults.grassBreaksInstantly;
@@ -192,6 +197,7 @@ public class SkillTreeData {
         this.canFarmNetherWart = defaults.canFarmNetherWart;
         this.canGainExperience = defaults.canGainExperience;
         this.thirdInventoryRowUnlocked = defaults.thirdInventoryRowUnlocked;
+        this.secondInventoryRowUnlocked = defaults.secondInventoryRowUnlocked;
         this.canUseCistern = defaults.canUseCistern;
         this.canUseEnchantmentTable = defaults.canUseEnchantmentTable;
         this.canUseBrewingStand = defaults.canUseBrewingStand;
@@ -254,6 +260,7 @@ public class SkillTreeData {
             data.craftedOutputIds.add(((NBTTagInt)craftedOutputs.tagAt(i)).data);
         }
         data.blockBreakSpeedBonus = tag.getFloat("BlockBreakSpeedBonus");
+        data.carcassHarvestSpeedBonus = tag.getFloat("CarcassHarvestSpeedBonus");
         data.mobLootChanceBonus = tag.getFloat("MobLootChanceBonus");
         data.ironPileChanceBonus = tag.getFloat("IronPileChanceBonus");
         data.kilnSpeedBonus = tag.getFloat("KilnSpeedBonus");
@@ -287,6 +294,7 @@ public class SkillTreeData {
         data.leatherArmorUnlockProgress = tag.getInteger("LeatherArmorUnlockProgress");
         data.ironIngotRecipeUnlockProgress = tag.getInteger("IronIngotRecipeUnlockProgress");
         data.extraHotbarSlots = tag.getInteger("ExtraHotbarSlots");
+        data.permanentXpHotbarSlots = tag.getInteger("PermanentXpHotbarSlots");
         data.canHarvestDiamondOre = tag.getBoolean("CanHarvestDiamondOre");
         data.canCureVillagers = tag.getBoolean("CanCureVillagers");
         data.grassBreaksInstantly = tag.getBoolean("GrassBreaksInstantly");
@@ -297,6 +305,7 @@ public class SkillTreeData {
         data.canFarmNetherWart = tag.getBoolean("CanFarmNetherWart");
         data.canGainExperience = tag.getBoolean("CanGainExperience");
         data.thirdInventoryRowUnlocked = tag.getBoolean("ThirdInventoryRowUnlocked");
+        data.secondInventoryRowUnlocked = tag.getBoolean("SecondInventoryRowUnlocked");
         data.canUseCistern = tag.getBoolean("CanUseCistern");
         data.canUseEnchantmentTable = tag.getBoolean("CanUseEnchantmentTable");
         data.canUseBrewingStand = tag.getBoolean("CanUseBrewingStand");
@@ -367,6 +376,7 @@ public class SkillTreeData {
         }
         tag.setTag("CraftedOutputIds", craftedOutputs);
         tag.setFloat("BlockBreakSpeedBonus", data.blockBreakSpeedBonus);
+        tag.setFloat("CarcassHarvestSpeedBonus", data.carcassHarvestSpeedBonus);
         tag.setFloat("MobLootChanceBonus", data.mobLootChanceBonus);
         tag.setFloat("IronPileChanceBonus", data.ironPileChanceBonus);
         tag.setFloat("KilnSpeedBonus", data.kilnSpeedBonus);
@@ -400,6 +410,7 @@ public class SkillTreeData {
         tag.setInteger("LeatherArmorUnlockProgress", data.leatherArmorUnlockProgress);
         tag.setInteger("IronIngotRecipeUnlockProgress", data.ironIngotRecipeUnlockProgress);
         tag.setInteger("ExtraHotbarSlots", data.extraHotbarSlots);
+        tag.setInteger("PermanentXpHotbarSlots", data.permanentXpHotbarSlots);
         tag.setBoolean("CanHarvestDiamondOre", data.canHarvestDiamondOre);
         tag.setBoolean("CanCureVillagers", data.canCureVillagers);
         tag.setBoolean("GrassBreaksInstantly", data.grassBreaksInstantly);
@@ -410,6 +421,7 @@ public class SkillTreeData {
         tag.setBoolean("CanFarmNetherWart", data.canFarmNetherWart);
         tag.setBoolean("CanGainExperience", data.canGainExperience);
         tag.setBoolean("ThirdInventoryRowUnlocked", data.thirdInventoryRowUnlocked);
+        tag.setBoolean("SecondInventoryRowUnlocked", data.secondInventoryRowUnlocked);
         tag.setBoolean("CanUseCistern", data.canUseCistern);
         tag.setBoolean("CanUseEnchantmentTable", data.canUseEnchantmentTable);
         tag.setBoolean("CanUseBrewingStand", data.canUseBrewingStand);

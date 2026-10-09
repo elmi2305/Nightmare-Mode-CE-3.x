@@ -64,11 +64,13 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
     private void improveDivingMaskVisibility(int fogMode, float partialTicks, CallbackInfo ci) {
         EntityLivingBase viewer = this.mc.renderViewEntity;
         if (!(viewer instanceof EntityPlayer) || viewer.isPotionActive(Potion.blindness)
-                || !ArmorSetHelper.isWearingClearVisionMask(viewer)) return;
+                || !(ArmorSetHelper.isWearingClearVisionMask(viewer)
+                || ArmorSetHelper.isIntact(viewer.getCurrentItemOrArmor(4))
+                && viewer.getCurrentItemOrArmor(4).getItem() == com.itlesports.nightmaremode.item.NMItems.oxygenMask)) return;
         int blockID = ActiveRenderInfo.getBlockIdAtEntityViewpoint(this.mc.theWorld, viewer, partialTicks);
         if (blockID > 0 && Block.blocksList[blockID].blockMaterial == Material.water) {
             GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP2);
-            GL11.glFogf(GL11.GL_FOG_DENSITY, 0.02F);
+            GL11.glFogf(GL11.GL_FOG_DENSITY, ArmorSetHelper.isWearingClearVisionMask(viewer) ? 0.02F : 0.05F);
         }
     }
 

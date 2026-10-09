@@ -25,31 +25,31 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     @Shadow public abstract int getItemBurnTime(ItemStack stack);
     @Unique private int burnCounter;
 
+    @Unique private int burnItemId = -1;
+    @Unique private int burnItemMetadata;
+
     @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;isBurning()Z", ordinal = 1))
-    private void checkIfItemShouldBurn(CallbackInfo ci){
-        if (this.furnaceItemStacks[2] != null && this.furnaceItemStacks[2].itemID == NMItems.chocolateCake.itemID) {
-            if (this.furnaceBurnTime > 0 && ++this.burnCounter >= 40) {
-                this.burnCounter = 0;
-                this.furnaceItemStacks[2] = new ItemStack(NMItems.burnedChocolateCake);
-                this.onInventoryChanged();
-            } else if (this.furnaceBurnTime <= 0) {
-                this.burnCounter = 0;
-            }
+    private void checkIfItemShouldBurn(CallbackInfo ci) {
+        if (this.worldObj.isRemote) return;
+        ItemStack output = this.furnaceItemStacks[2];
+        boolean cake = output != null && output.getItem() == NMItems.chocolateCake;
+        boolean food = NMOvenCookTimes.canOvercookToMeat(output)
+                && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
+        if (output == null || this.furnaceBurnTime <= 0 || (!cake && !food)) {
+            this.burnCounter = 0;
+            this.burnItemId = -1;
             return;
         }
-        if (this.furnaceItemStacks[2] != null && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.furnaceBurnTime > 0) {
-            String cookName = this.furnaceItemStacks[2].toString();
-            if(cookName.contains("Cooked") || cookName.contains("Fried") || cookName.contains("Roast")){
-                if(cookName.contains("Carrot")) return;
-                this.burnCounter++;
-                if(this.burnCounter >= 1600) {
-                    this.burnCounter = 0;
-                    ItemStack var2 = new ItemStack(BTWItems.burnedMeat);
-                    this.furnaceItemStacks[2] = var2.copy();
-                }
-            }
-        } else{
+        if (output.itemID != this.burnItemId || output.getItemDamage() != this.burnItemMetadata) {
             this.burnCounter = 0;
+            this.burnItemId = output.itemID;
+            this.burnItemMetadata = output.getItemDamage();
+        }
+        if (++this.burnCounter >= (cake ? 40 : 1600)) {
+            this.burnCounter = 0;
+            this.burnItemId = -1;
+            this.furnaceItemStacks[2] = new ItemStack(cake ? NMItems.burnedChocolateCake : BTWItems.burnedMeat, output.stackSize);
+            this.onInventoryChanged();
         }
     }
 
@@ -61,11 +61,16 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     @Inject(method = "writeToNBT", at = @At("TAIL"))
     private void writeCakeBurnTime(NBTTagCompound tag, CallbackInfo ci) {
         tag.setInteger("NmCakeBurnTime", this.burnCounter);
+        tag.setInteger("NmBurnItemId", this.burnItemId);
+        tag.setInteger("NmBurnItemMetadata", this.burnItemMetadata);
     }
 
     @Inject(method = "readFromNBT", at = @At("TAIL"))
     private void readCakeBurnTime(NBTTagCompound tag, CallbackInfo ci) {
         this.burnCounter = tag.getInteger("NmCakeBurnTime");
+        ItemStack output = this.furnaceItemStacks[2];
+        this.burnItemId = tag.hasKey("NmBurnItemId") ? tag.getInteger("NmBurnItemId") : output == null ? -1 : output.itemID;
+        this.burnItemMetadata = tag.hasKey("NmBurnItemMetadata") ? tag.getInteger("NmBurnItemMetadata") : output == null ? 0 : output.getItemDamage();
     }
 
     @ModifyConstant(method = "updateEntity", constant = @Constant(floatValue = 0.01f, ordinal = 0))
