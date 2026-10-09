@@ -729,7 +729,7 @@ public class NMItems {
         tungstenDust = new NetherItem(2712).setTextureName("nightmare:ifhyTungstenDust").setUnlocalizedName("ifhyTungstenDust").setCreativeTab(CreativeTabs.tabMaterials);
         netherrackChunk = new NetherItem(2713).setTextureName("nightmare:ifhyNetherrackChunk").setUnlocalizedName("ifhyNetherrackChunk").setCreativeTab(CreativeTabs.tabMaterials);
         netherWorkbenchPart = new NetherItem(2714).setTextureName("nightmare:ifhyNetherWorkbenchPart").setUnlocalizedName("ifhyNetherWorkbenchPart").setCreativeTab(CreativeTabs.tabMaterials);
-        netherStick = new NetherItem(2715).setTextureName("nightmare:ifhyNetherStick").setUnlocalizedName("ifhyNetherStick").setCreativeTab(CreativeTabs.tabMaterials);
+        netherStick = new ItemNetherStick(2715).setTextureName("nightmare:ifhyNetherStick").setUnlocalizedName("ifhyNetherStick").setCreativeTab(CreativeTabs.tabMaterials);
         netherStick.setfurnaceburntime(50);
         netherrackPickaxe = new ItemNetherrackPickaxe(2716).setTextureName("nightmare:ifhyNetherrackPickaxe").setUnlocalizedName("ifhyNetherrackPickaxe").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
@@ -829,15 +829,15 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyArtificeEssence")
                 .setUnlocalizedName("ifhyArtisanEssence")
                 .setCreativeTab(CreativeTabs.tabMaterials);
-        stoneStick = new NMItem(3205)
+        stoneStick = new ItemPlaceableStick(3205)
                 .setTextureName("nightmare:ifhyStoneStick")
                 .setUnlocalizedName("ifhyStoneStick")
                 .setCreativeTab(CreativeTabs.tabMaterials);
-        ironStick = new NMItem(3206)
+        ironStick = new ItemPlaceableStick(3206)
                 .setTextureName("nightmare:ifhyIronStick")
                 .setUnlocalizedName("ifhyIronStick")
                 .setCreativeTab(CreativeTabs.tabMaterials);
-        diamondStick = new NMItem(3207)
+        diamondStick = new ItemPlaceableStick(3207)
                 .setTextureName("nightmare:ifhyDiamondStick")
                 .setUnlocalizedName("ifhyDiamondStick")
                 .setCreativeTab(CreativeTabs.tabMaterials);

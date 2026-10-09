@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import btw.block.BTWBlocks;
 import btw.block.blocks.CampfireBlock;
 import api.block.TileEntityDataPacketHandler;
+import api.item.items.FireStarterItem;
+import api.item.items.ToolItem;
 import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
@@ -122,7 +124,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     }
 
     public boolean insertInput(ItemStack stack) {
-        if (stack == null) {
+        if (!this.isItemValidForSlot(FIRST_INPUT_SLOT, stack)) {
             return false;
         }
         ItemStack one = stack.copy();
@@ -137,7 +139,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
      * preserve a partially accepted EntityItem stack.
      */
     private int insertInputStack(ItemStack stack) {
-        if (this.fluid == FLUID_EMPTY || stack == null || stack.stackSize <= 0) {
+        if (!this.isItemValidForSlot(FIRST_INPUT_SLOT, stack)) {
             return 0;
         }
 
@@ -488,7 +490,13 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return this.fluid != FLUID_EMPTY && slot >= FIRST_INPUT_SLOT && slot <= LAST_INPUT_SLOT;
+        if (this.fluid == FLUID_EMPTY || slot < FIRST_INPUT_SLOT || slot > LAST_INPUT_SLOT
+                || stack == null || stack.stackSize <= 0) return false;
+        Item item = stack.getItem();
+        return item != null && item.getCreativeTab() != CreativeTabs.tabTools
+                && !(item instanceof ToolItem || item instanceof ItemTool || item instanceof ItemHoe
+                || item instanceof ItemSword || item instanceof ItemBow || item instanceof ItemFishingRod
+                || item instanceof ItemShears || item instanceof ItemFlintAndSteel || item instanceof FireStarterItem);
     }
 
     @Override

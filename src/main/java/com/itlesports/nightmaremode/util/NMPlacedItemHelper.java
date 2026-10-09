@@ -3,9 +3,11 @@ package com.itlesports.nightmaremode.util;
 import api.util.MiscUtils;
 import api.world.WorldUtils;
 import btw.block.BTWBlocks;
+import btw.block.blocks.PlacedShaftBlock;
 import btw.block.tileentity.PlacedToolTileEntity;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.ItemPlaceableStick;
 import com.itlesports.nightmaremode.item.items.template.ItemKnife;
 import net.minecraft.src.Block;
 import net.minecraft.src.EntityPlayer;
@@ -21,13 +23,13 @@ public final class NMPlacedItemHelper {
         return item == Item.flint || item == NMItems.flintChip || item == NMItems.soulFlint
                 || item == BTWItems.sharpStone
                 || item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig
-                || item instanceof ItemKnife;
+                || item instanceof ItemKnife || item instanceof ItemPlaceableStick;
     }
 
     public static boolean place(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
                                 int side) {
         if (stack == null || stack.stackSize <= 0) return false;
-        if (!player.isUsingSpecialKey() || !isSupported(stack.getItem())
+        if ((!player.isUsingSpecialKey() && !(stack.getItem() instanceof ItemPlaceableStick)) || !isSupported(stack.getItem())
                 || !player.canPlayerEdit(x, y, z, side, stack)) return false;
 
         int placeX = x;
@@ -65,11 +67,13 @@ public final class NMPlacedItemHelper {
             world.playSoundEffect(placeX + 0.5D, placeY + 0.5D, placeZ + 0.5D,
                     support.getPlaceSoundName(world, x, y, z), 1.0F, 0.8F);
         }
-        --stack.stackSize;
+        if (!(stack.getItem() instanceof ItemPlaceableStick) || !player.capabilities.isCreativeMode) --stack.stackSize;
         return true;
     }
 
     private static boolean canStick(Item item, Block block, World world, int x, int y, int z) {
+        if (item instanceof ItemPlaceableStick)
+            return ((PlacedShaftBlock)BTWBlocks.placedShaft).canStickInBlockType(block.blockID);
         if (!block.canToolsStickInBlock(world, x, y, z)) return false;
         if (item == NMItems.sharpTwig || item == NMItems.sharpBarkTwig || item instanceof ItemKnife)
             return block.areAxesEffectiveOn() || block.areShovelsEffectiveOn();
