@@ -1789,7 +1789,7 @@ public abstract class NMInitializer implements AchievementExt {
                 .setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
-                new ItemStack[]{new ItemStack(BTWItems.hemp)},
+                new ItemStack[]{new ItemStack(NMItems.rettedHemp)},
                 CisternTileEntity.FLUID_WATER, 2, 4, 360,
                 new ItemStack[]{new ItemStack(NMItems.washedHemp)}));
 
@@ -1956,9 +1956,8 @@ public abstract class NMInitializer implements AchievementExt {
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(BTWItems.hemp)},
-                CisternTileEntity.FLUID_BRINE, 0, 2, 240,
-                new ItemStack[]{new ItemStack(NMItems.rettedHemp)})
-                .setConsumesFluid());
+                CisternTileEntity.FLUID_BRINE, 0, 2, 200,
+                new ItemStack[]{new ItemStack(NMItems.rettedHemp)}));
 
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(BTWItems.scouredLeather)},
