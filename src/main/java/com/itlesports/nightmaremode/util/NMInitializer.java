@@ -3004,7 +3004,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_ANOTHER_DANDELION_16);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.woodCupCrafting, 1, NMItems.woodCupCrafting.getMaxDamage() - 1), new Object[]{new ItemStack(NMItems.woodClump, 1, Short.MAX_VALUE), new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE)});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.reedPeeling, 1, NMItems.reedPeeling.getMaxDamage() - 1), new Object[]{Item.reed});
-        RecipeManager.addRecipe(new ItemStack(Item.paper), new Object[]{"###", Character.valueOf('#'), NMItems.plantSheet});
+        RecipeManager.addRecipe(new ItemStack(Item.paper, 2), new Object[]{"###", Character.valueOf('#'), NMItems.plantSheet});
         RecipeManager.addRecipe(new ItemStack(BTWItems.wickerWeaving, 1, 299), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.washedSugarCane});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pileOfSticks), new Object[]{Item.stick, Item.stick, Item.stick, Item.stick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.plantFiber), new Object[]{NMItems.leaf, NMItems.leaf, NMItems.leaf, NMItems.leaf});

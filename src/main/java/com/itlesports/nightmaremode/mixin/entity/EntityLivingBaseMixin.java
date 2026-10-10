@@ -39,12 +39,13 @@ import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 public abstract class EntityLivingBaseMixin extends Entity implements CarcassAnimal, com.itlesports.nightmaremode.util.interfaces.EasyMobLoot {
     @Unique private int deathKnifeTier;
     @Unique private int harvestKnifeTier = -1;
+    @Unique private boolean deathLootReady;
     @Unique private final java.util.Set<Integer> easyDeathDrops = new java.util.HashSet<>();
 
     @Override public void nm$setHarvestKnifeTier(int tier) { this.harvestKnifeTier = tier; }
     @Override public void nm$recordDeathDrop(int itemId) { this.easyDeathDrops.add(itemId); }
     @Override public int nm$getDeathLootMultiplier() {
-        if (this.getHealth() > 0.0F && this.harvestKnifeTier < 0) return 1;
+        if (!this.deathLootReady && this.getHealth() > 0.0F && this.harvestKnifeTier < 0) return 1;
         return com.itlesports.nightmaremode.util.EasyBalance.hostileMultiplier(this.harvestKnifeTier >= 0 ? this.harvestKnifeTier : this.deathKnifeTier);
     }
 
@@ -55,7 +56,10 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     }
 
     @Inject(method = "entityLivingOnDeath", at = @At("HEAD"))
-    private void resetEasyDeathDropTracking(DamageSource source, CallbackInfo ci) { this.easyDeathDrops.clear(); }
+    private void resetEasyDeathDropTracking(DamageSource source, CallbackInfo ci) {
+        this.deathLootReady = true;
+        this.easyDeathDrops.clear();
+    }
 
     @Inject(method = "entityLivingOnDeath", at = @At("TAIL"))
     private void guaranteeEasyRareMaterials(DamageSource source, CallbackInfo ci) {

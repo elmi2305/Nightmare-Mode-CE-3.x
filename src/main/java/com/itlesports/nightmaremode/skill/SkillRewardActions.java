@@ -149,6 +149,10 @@ public final class SkillRewardActions {
         return playerReward(data -> data.rangedDamageBonus += amount);
     }
 
+    public static SkillUnlockAction addMillstoneSpeed(float amount) {
+        return playerReward(data -> data.millstoneSpeedBonus += amount);
+    }
+
     public static SkillUnlockAction addMachineSpeed(float amount) {
         return playerReward(data -> data.machineSpeedBonus += amount);
     }

@@ -72,6 +72,17 @@ public abstract class EntityDragonMixin extends EntityLiving implements IBossDis
         }
     }
 
+    @Inject(method = "createEnderPortal", at = @At("TAIL"))
+    private void dropEasyBonusEgg(int x, int z, CallbackInfo ci) {
+        if (!this.worldObj.isRemote && com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+                && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
+            // the first egg is placed on the exit portal; drop its bonus separately.
+            EntityItem egg = new EntityItem(this.worldObj, x + 0.5D, 69.0D, z + 0.5D, new ItemStack(Block.dragonEgg));
+            egg.delayBeforeCanPickup = 10;
+            this.worldObj.spawnEntityInWorld(egg);
+        }
+    }
+
 //    @Inject(method = "createEnderPortal", at = @At("TAIL"))
 //    private void manageNBT(int par1, int par2, CallbackInfo ci){
 //        this.worldObj.setData(NightmareMode.DRAGON_DEFEATED, true);

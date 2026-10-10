@@ -204,6 +204,7 @@ public class GuiSkillStats extends GuiScreen {
         }
         addPercentBonus(lines, "Movement speed", data.movementSpeedBonus);
         addPercentBonus(lines, "Mechanical block speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.machineSpeedBonus));
+        addPercentBonus(lines, "Millstone processing speed", data.millstoneSpeedBonus);
         addPercentBonus(lines, "Kiln processing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.kilnSpeedBonus));
         addPercentBonus(lines, "Cistern processing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.cisternSpeedBonus));
         addPercentBonus(lines, "Brewing speed", com.itlesports.nightmaremode.util.EasyBalance.processingBonus(data.brewingSpeedBonus));

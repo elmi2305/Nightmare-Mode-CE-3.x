@@ -1018,16 +1018,18 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             this.addPotionEffect(new PotionEffect(potion.id,10,amplifier));
         }
     }
+    @Unique private double deepCaveOxygenDrainProgress;
+
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageDeepCaveOxygenLoss(CallbackInfo ci) {
         if (this.worldObj.isRemote || !this.shouldLoseOxygenInDeepCave()) {
+            this.deepCaveOxygenDrainProgress = 0.0D;
             return;
         }
 
-        int drainInterval = this.getDeepCaveOxygenDrainInterval();
-        if (drainInterval <= 0 || this.ticksExisted % drainInterval != 0) {
-            return;
-        }
+        this.deepCaveOxygenDrainProgress += 1.0D / this.getDeepCaveOxygenDrainInterval();
+        if (this.deepCaveOxygenDrainProgress < 1.0D) return;
+        this.deepCaveOxygenDrainProgress -= 1.0D;
 
         if (this.consumeDivingTankAir()) return;
 
@@ -1088,14 +1090,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique
-    private int getDeepCaveOxygenDrainInterval() {
+    private double getDeepCaveOxygenDrainInterval() {
         double y = Math.max(24.0D, this.posY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
         int baseInterval = Math.max(3, (int)Math.round(8.0D - depthRatio * 5.0D));
         float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F
                 : ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
         float reduction = Math.min(this.getOxygenGearReduction(), cap);
-        return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction)));
+        return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction))) / (1.0D + depthRatio * 0.25D);
     }
 
     @Unique

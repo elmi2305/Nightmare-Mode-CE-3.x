@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.skill.gui.GuiJourneyJournal;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +16,12 @@ public abstract class GuiScreenBookMixin extends GuiScreen {
 
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiScreen;drawScreen(IIF)V"))
+    private void drawJournalImage(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        if ((Object)this instanceof GuiJourneyJournal journal) journal.drawPageImage();
     }
 
     @Inject(method = "drawScreen", at = @At("TAIL"))

@@ -156,16 +156,14 @@ public class InventoryPlayerMixin {
     @Inject(method = "getCurrentItem", at = @At("HEAD"), cancellable = true)
     private void useOnlyUnlockedHotbarSlots(CallbackInfoReturnable<ItemStack> cir) {
         if (!NMInventoryLocks.isMainInventorySlotUnlocked(this.player, this.currentItem)) {
-            this.currentItem = 0;
-            cir.setReturnValue(this.mainInventory[0]);
+            this.nightmareMode$clampCurrentItem();
+            cir.setReturnValue(this.mainInventory[this.currentItem]);
         }
     }
 
     @Inject(method = "changeCurrentItem", at = @At("HEAD"), cancellable = true)
     private void cycleOnlyUnlockedHotbarSlots(int direction, CallbackInfo ci) {
-        int hotbarSlots = NMInventoryLocks.getUnlockedHotbarSlots(this.player);
-        // assign only the final unlocked slot so inventory readers never see a temporary invalid selection.
-        this.currentItem = Math.floorMod(this.currentItem - Integer.signum(direction), hotbarSlots);
+        NMInventoryLocks.cycleHotbar((InventoryPlayer)(Object)this, direction);
         ci.cancel();
     }
 

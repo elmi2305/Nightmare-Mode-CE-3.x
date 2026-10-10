@@ -8,12 +8,14 @@ import net.minecraft.src.Block;
 import btw.crafting.manager.MillStoneCraftingManager;
 import com.itlesports.nightmaremode.skill.SkillLockedBulkCrafting;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.skill.SkillTreeData;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Potion;
 import net.minecraft.src.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
@@ -38,9 +40,20 @@ public abstract class MillstoneTileEntityMixin extends TileEntity {
 
     @ModifyConstant(method = "updateEntity", constant = @Constant(intValue = 200))
     private int fasterMillstones(int constant){
+        return millstoneProcessingTicks(constant);
+    }
+
+    @ModifyConstant(method = "getGrindProgressScaled", constant = @Constant(intValue = 200), remap = false)
+    private int scaledMillstoneProgress(int constant) {
+        return millstoneProcessingTicks(constant);
+    }
+
+    @Unique
+    private int millstoneProcessingTicks(int constant) {
         EntityPlayer player = this.worldObj.getClosestPlayer(this.xCoord + 0.5D, this.yCoord + 0.5D,
                 this.zCoord + 0.5D, 16.0D);
-        float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
+        SkillTreeData data = player == null ? null : SkillHandler.getPlayerData(player);
+        float bonus = data == null ? 0.0F : data.machineSpeedBonus + data.millstoneSpeedBonus;
         return Math.max(1, Math.round(constant * 8 / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus))));
     }
 

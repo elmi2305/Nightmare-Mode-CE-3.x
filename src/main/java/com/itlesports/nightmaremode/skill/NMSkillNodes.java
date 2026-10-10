@@ -1221,7 +1221,7 @@ public final class NMSkillNodes {
             0, 5,
             "Bring 256 bonemeal.",
             Item.dyePowder.itemID, 15, true, 256,
-            "+10% tall-grass plant-fiber chance.", SkillRewardActions.addTallGrassPlantFiberChance(0.10F),
+            "+10% tall-grass plant-fiber chance. +12% millstone processing speed.", combine(SkillRewardActions.addTallGrassPlantFiberChance(0.10F), SkillRewardActions.addMillstoneSpeed(0.12F)),
             HUSBANDRY, false);
 
     public static final SkillNode REMOVE_WEED_1000 = deferred(counter(
@@ -1562,7 +1562,7 @@ public final class NMSkillNodes {
             2, 5,
             "Bring 32 flour.",
             BTWItems.flour.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. 1% slower food spoilage.", SkillRewardActions.multiplyFoodSpoilageRate(0.99F),
+            "Unlocks Additional Recipes. 1% slower food spoilage. +16% millstone processing speed.", combine(SkillRewardActions.multiplyFoodSpoilageRate(0.99F), SkillRewardActions.addMillstoneSpeed(0.16F)),
             HUSBANDRY, false);
 
     public static final SkillNode BRING_BREAD_DOUGH_16 = deferred(bring(
@@ -2033,7 +2033,7 @@ public final class NMSkillNodes {
             0, 1,
             "Bring 32 hellfire dust.",
             BTWItems.hellfireDust.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. +1% brewing speed.", SkillRewardActions.addBrewingSpeed(0.01F),
+            "Unlocks Additional Recipes. +1% brewing speed. +20% millstone processing speed.", combine(SkillRewardActions.addBrewingSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)),
             RITUAL, false);
 
     public static final SkillNode BRING_GROUND_NETHERRACK_32 = bring(
@@ -2043,7 +2043,7 @@ public final class NMSkillNodes {
             0, 0,
             "Bring 32 ground netherrack.",
             BTWItems.groundNetherrack.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. +1% brewing speed.", SkillRewardActions.addBrewingSpeed(0.01F),
+            "Unlocks Additional Recipes. +1% brewing speed. +20% millstone processing speed.", combine(SkillRewardActions.addBrewingSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)),
             RITUAL, false);
 
     public static final SkillNode BRING_CANDLE_16 = bring(
@@ -2364,7 +2364,7 @@ public final class NMSkillNodes {
             -1, 3,
             "Bring 12 wooden gears.",
             BTWItems.gear.itemID, 0, false, 12,
-            "Unlocks Additional Recipes. +2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F),
+            "Unlocks Additional Recipes. +2% machine processing speed. +20% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.20F)),
             KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_FLINT_4);
 
@@ -2375,7 +2375,7 @@ public final class NMSkillNodes {
             -1, -1,
             "Bring 8 windmill blades.",
             BTWItems.windMillBlade.itemID, 0, false, 8,
-            "Unlocks Additional Recipes. +2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F),
+            "Unlocks Additional Recipes. +2% machine processing speed. +16% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.16F)),
             KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_WOODEN_GEAR_12);
 
@@ -2499,7 +2499,7 @@ public final class NMSkillNodes {
             0, -2,
             "Bring 64 gears.",
             BTWItems.gear.itemID, 0, false, 64,
-            "Unlocks Additional Recipes. +2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F),
+            "Unlocks Additional Recipes. +2% machine processing speed. +16% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.16F)),
             KNOWLEDGE, false);
 
     public static final SkillNode BRING_SCREW_16 = deferred(bring(
@@ -2531,7 +2531,7 @@ public final class NMSkillNodes {
             -1, -2,
             "Bring 4 windmills.",
             BTWItems.windMill.itemID, 0, false, 4,
-            "Unlocks Additional Recipes. +2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F),
+            "Unlocks Additional Recipes. +2% machine processing speed. +20% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.20F)),
             KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_WINDMILL_BLADE_8);
 
@@ -3330,7 +3330,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_CRYSTAL_POWDER_32 = bring(
             "crystal_powder_32", "Crystal Frit", NMItems.crystalPowder, -2, -1,
             "Bring 32 crystal powder.", NMItems.crystalPowder.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. +1% crystal drop chance.", SkillRewardActions.addCrystalDropChance(0.01F), MINING, false);
+            "Unlocks Additional Recipes. +1% crystal drop chance. +12% millstone processing speed.", combine(SkillRewardActions.addCrystalDropChance(0.01F), SkillRewardActions.addMillstoneSpeed(0.12F)), MINING, false);
 
     public static final SkillNode BRING_GLASS_BATCH_32 = bring(
             "glass_batch_32", "Glass Batch", NMItems.glassBatch, 5, -3,
@@ -3368,7 +3368,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_COCOA_POWDER_256 = bring(
             "cocoa_powder_256", "Cocoa Milling", new ItemStack(Item.dyePowder, 1, 3), -1, 5,
             "Bring 256 cocoa powder.", Item.dyePowder.itemID, 3, true, 256,
-            "Unlocks Additional Recipes. 1% slower food spoilage.", SkillRewardActions.multiplyFoodSpoilageRate(0.99F), HUSBANDRY, false);
+            "Unlocks Additional Recipes. 1% slower food spoilage. +16% millstone processing speed.", combine(SkillRewardActions.multiplyFoodSpoilageRate(0.99F), SkillRewardActions.addMillstoneSpeed(0.16F)), HUSBANDRY, false);
 
     public static final SkillNode BRING_GLUE_SLURRY_16 = bring(
             "glue_slurry_16", "Adhesive Slurry", NMItems.glueSlurry, 7, 0,
@@ -3609,7 +3609,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_QUARTZ_DUST_32 = bring(
             "quartz_dust_32", "Quartz Refining", NMItems.quartzDust, -3, 4,
             "Bring 32 quartz dust.", NMItems.quartzDust.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. +1% crystal drop chance.", SkillRewardActions.addCrystalDropChance(0.01F), MINING, false);
+            "Unlocks Additional Recipes. +1% crystal drop chance. +20% millstone processing speed.", combine(SkillRewardActions.addCrystalDropChance(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)), MINING, false);
 
     public static final SkillNode BRING_QUARTZ_16 = bring(
             "nether_quartz_16", "Quartz Survey", Item.netherQuartz, -3, 3,
@@ -3814,7 +3814,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ENDER_DUST_16 = bring(
             "ender_dust_16", "Crystal Milling", NMItems.enderDust, -3, -2,
             "Bring 16 Ender Dust.", NMItems.enderDust.itemID, 0, false, 16,
-            "+10% XP gain.", SkillRewardActions.addXpGain(0.10F), KNOWLEDGE, false, BRING_ENDER_CRYSTAL_16);
+            "+10% XP gain. +20% millstone processing speed.", combine(SkillRewardActions.addXpGain(0.10F), SkillRewardActions.addMillstoneSpeed(0.20F)), KNOWLEDGE, false, BRING_ENDER_CRYSTAL_16);
 
     public static final SkillNode BRING_ENDER_SHELL_POWDER_16 = bring(
             "ender_shell_powder_16", "Shell Milling", NMItems.enderShellPowder, -3, -3,
@@ -4667,7 +4667,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ENDSTONE_POWDER_64 = deferred(bring(
             "bring_endstone_powder_64", "Ashes of Another World", NMItems.endstonePowder, 6, 8,
             "Bring 64 endstone powder.", NMItems.endstonePowder.itemID, 0, false, 64,
-            "+3% kiln speed.", SkillRewardActions.addKilnSpeed(0.030F), MINING, false),
+            "+3% kiln speed. +20% millstone processing speed.", combine(SkillRewardActions.addKilnSpeed(0.030F), SkillRewardActions.addMillstoneSpeed(0.20F)), MINING, false),
             () -> NMSkillNodes.BRING_ENDSTONE_64);
 
     public static final SkillNode BRING_ENDSTONE_CLAY_32 = deferred(bring(
@@ -4801,7 +4801,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_MILLSTONE_1 = deferred(bring(
             "bring_millstone_1", "First Grind", BTWBlocks.millstone, -1, 0,
             "Bring 1 millstone.", BTWBlocks.millstone.blockID, 0, false, 1,
-            "+1% machine processing speed.", SkillRewardActions.addMachineSpeed(0.01F), KNOWLEDGE, false),
+            "+1% machine processing speed. +20% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)), KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_WOODEN_GEAR_12);
 
     public static final SkillNode BRING_MILLSTONE_64 = deferred(bring(
@@ -4813,19 +4813,19 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_HAND_CRANK_1 = deferred(bring(
             "bring_hand_crank_1", "Hands in Motion", BTWBlocks.handCrank, -1, 2,
             "Bring 1 hand crank.", BTWBlocks.handCrank.blockID, 0, false, 1,
-            "+1% machine processing speed.", SkillRewardActions.addMachineSpeed(0.01F), KNOWLEDGE, false),
+            "+1% machine processing speed. +12% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.12F)), KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_WOODEN_GEAR_12);
 
     public static final SkillNode BRING_HAND_CRANK_4 = deferred(bring(
             "bring_hand_crank_4", "Crank Workshop", BTWBlocks.handCrank, -1, 1,
             "Bring 4 hand cranks.", BTWBlocks.handCrank.blockID, 0, false, 4,
-            "+2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F), KNOWLEDGE, false),
+            "+2% machine processing speed. +12% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.12F)), KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_HAND_CRANK_1);
 
     public static final SkillNode BRING_GEARBOX_8 = deferred(bring(
             "bring_gearbox_8", "Power Distribution", BTWBlocks.gearBox, -2, 3,
             "Bring 8 gearboxes.", BTWBlocks.gearBox.blockID, 0, false, 8,
-            "+2% machine processing speed.", SkillRewardActions.addMachineSpeed(0.02F), KNOWLEDGE, false),
+            "+2% machine processing speed. +16% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.16F)), KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_AXLE_1);
 
     public static final SkillNode BRING_GEARBOX_64 = deferred(bring(
@@ -4855,7 +4855,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_AXLE_1 = deferred(bring(
             "bring_axle_1", "Hydraulic Drive", BTWBlocks.axle, -2, 4,
             "Bring 1 axle.", BTWBlocks.axle.blockID, 0, false, 1,
-            "+10% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.10F), KNOWLEDGE, false),
+            "+10% cistern processing speed. +12% millstone processing speed.", combine(SkillRewardActions.addCisternSpeed(0.10F), SkillRewardActions.addMillstoneSpeed(0.12F)), KNOWLEDGE, false),
             () -> NMSkillNodes.BRING_ROPE_8);
 
     public static final SkillNode BRING_AXLE_64 = deferred(bring(
@@ -5117,7 +5117,7 @@ public final class NMSkillNodes {
         BRING_BONEMEAL_256.addParents(BRING_BONE_128, BRING_WINDMILL_4);
         BRING_BONE_CARVING_16.addParents(BRING_BONE_16);
         BRING_HEMP_32.addParents(PLANT_CROP_200, BRING_IRON_INGOT_8);
-        BRING_HEMP_FIBER_32.addParents(HARVEST_MATURE_CROP_500, BRING_REDSTONE_16);
+        BRING_HEMP_FIBER_32.addParents(PLANT_CROP_200, BRING_REDSTONE_16);
         BRING_SCOURED_LEATHER_16.addParents(BRING_LEATHER_16, CRAFT_CAULDRON);
         BRING_CUT_SCOURED_LEATHER_16.addParents(BRING_SCOURED_LEATHER_16, BRING_IRON_INGOT_8);
         BRING_TANNED_LEATHER_16.addParents(BRING_CUT_SCOURED_LEATHER_16);

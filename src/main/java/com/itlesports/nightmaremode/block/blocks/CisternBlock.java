@@ -68,6 +68,10 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         }
         CisternTileEntity cistern = (CisternTileEntity) tile;
         if (world.isRemote) {
+            if (player.isSneaking() && !player.capabilities.disableDamage
+                    && player instanceof EntityClientPlayerMP clientPlayer) {
+                clientPlayer.exhaustionAddedSinceLastGuiUpdate = true;
+            }
             return true;
         }
 

@@ -22,9 +22,11 @@ public abstract class EntityMixin implements PhaseTransitEntity {
     private void improveEasyMobDrops(ItemStack stack, float offset, CallbackInfoReturnable<EntityItem> cir) {
         Entity entity = (Entity)(Object)this;
         if (this.expandingEasyLoot || stack == null || entity.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
-                || !(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer || entity instanceof EntityAnimal
-                || !(entity instanceof IMob || entity instanceof EntitySquid || entity instanceof EntityDragon)
-                || stack.getItem().getMaxDamage() > 0 && !(stack.getItem() instanceof ItemFood) || stack.getItem() instanceof ItemBlock) return;
+                || !(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer
+                || !(entity instanceof IMob || entity instanceof EntityAnimal || entity instanceof EntitySquid || entity instanceof IBossDisplayData)
+                || stack.getItem().getMaxDamage() > 0 && !(stack.getItem() instanceof ItemFood)
+                    && stack.getItem() != Item.netherStar
+                || stack.getItem() instanceof ItemBlock && !(entity instanceof IBossDisplayData)) return;
         com.itlesports.nightmaremode.util.interfaces.EasyMobLoot loot = (com.itlesports.nightmaremode.util.interfaces.EasyMobLoot)entity;
         int multiplier = loot.nm$getDeathLootMultiplier();
         if (multiplier <= 1) return;

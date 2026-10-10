@@ -167,6 +167,12 @@ public abstract class MinecraftMixin {
         return Mouse.getEventDWheel();
     }
 
+    @Redirect(method = "runTick", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/InventoryPlayer;changeCurrentItem(I)V"))
+    private void scrollUnlockedHotbar(InventoryPlayer inventory, int direction) {
+        com.itlesports.nightmaremode.util.NMInventoryLocks.cycleHotbar(inventory, direction);
+    }
+
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))
     private String changeWindowText(String newTitle){
         return newTitle + " | Journey Mode v"+ AddonHandler.getModByID(NMFields.modID).getVersionString();

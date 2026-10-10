@@ -51,9 +51,14 @@ public class ItemInWorldManagerMixin {
     private boolean countRemovedBlock(World world, int x, int y, int z) {
         int blockId = world.getBlockId(x, y, z);
         int metadata = world.getBlockMetadata(x, y, z);
+        ItemStack held = this.thisPlayerMP.getCurrentEquippedItem();
+        boolean matureCrop = !this.thisPlayerMP.capabilities.isCreativeMode && held != null
+                && held.getItem() instanceof com.itlesports.nightmaremode.item.items.ItemScythe
+                && SkillHandler.isMatureCrop(world, Block.blocksList[blockId], x, y, z, metadata);
         boolean removed = NMBlockBreakingRules.removeBlock(world, this.thisPlayerMP,
                 Block.blocksList[blockId], x, y, z);
         if (removed && blockId > 0) SkillHandler.incrementBlocksMined(this.thisPlayerMP, blockId, metadata);
+        if (removed && matureCrop) SkillHandler.incrementMatureCropsHarvested(this.thisPlayerMP);
         return removed;
     }
 

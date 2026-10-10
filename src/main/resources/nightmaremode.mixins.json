@@ -44,6 +44,7 @@
     "HardcoreSpawnUtilsMixin",
     "IntegratedServerMixin",
     "InventoryPlayerMixin",
+    "ItemShearsMixin",
     "ItemAppleGoldMixin",
     "ItemBowMixin",
     "ItemDyeMixin",

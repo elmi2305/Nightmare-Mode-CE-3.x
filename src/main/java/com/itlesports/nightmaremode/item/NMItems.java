@@ -588,7 +588,7 @@ public class NMItems {
         stoneHammer = new ItemHammer(2615, EnumToolMaterial.STONE).setUnlocalizedName("ifhyStoneHammer").setTextureName("nightmare:ifhyStoneHammer").setCreativeTab(CreativeTabs.tabTools);
         ((ItemAccessor) stoneHammer).invSetMaxDamage(150);
         ((ItemAccessor) Item.pickaxeStone).invSetMaxDamage(100);
-        ((ItemAccessor) ironHammer).invSetMaxDamage(250);
+        ((ItemAccessor) ironHammer).invSetMaxDamage(1536);
 
         ironBloom = new NMPlaceAsBlockItem(2616, NMFields.BLOCK_IRON_BLOOM).setUnlocalizedName("ifhyIronBloom").setTextureName("nightmare:ifhyIronBloom").setCreativeTab(CreativeTabs.tabMaterials);
         scrapedBark = new NMItem(2617).setUnlocalizedName("ifhyScrapedBark").setTextureName("nightmare:ifhyScrapedBark").setCreativeTab(CreativeTabs.tabMaterials);

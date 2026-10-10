@@ -5,6 +5,7 @@ import api.item.items.ToolItem;
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import btw.item.items.FoodItem;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.NetherrackItemBlock;
 import com.itlesports.nightmaremode.item.items.ItemPlaceableStick;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
@@ -12,6 +13,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -44,7 +46,25 @@ public class BTWItemsMixin {
         ((ToolItem) Item.shovelStone).addCustomEfficiencyMultiplier(1.3f);
         ((ToolItem) BTWItems.pointyStick).addCustomEfficiencyMultiplier(0.7f);
         ((ItemAccessor)Item.shovelWood).invSetMaxDamage(32);
+        multiplyDurability(3, Item.swordIron, Item.pickaxeIron, Item.axeIron, Item.shovelIron, Item.hoeIron,
+                Item.helmetIron, Item.plateIron, Item.legsIron, Item.bootsIron, Item.shears, BTWItems.ironChisel,
+                NMItems.ironScythe, NMItems.ironKnife, NMItems.ironLeafRake, NMItems.ironFishingPole,
+                NMItems.ironFishingPoleBaited, NMItems.ironKnittingNeedles, NMItems.farmersFavoriteHoe);
+        multiplyDurability(2, Item.swordDiamond, Item.pickaxeDiamond, Item.axeDiamond, Item.shovelDiamond, Item.hoeDiamond,
+                Item.helmetDiamond, Item.plateDiamond, Item.legsDiamond, Item.bootsDiamond, BTWItems.diamondShears, BTWItems.diamondChisel,
+                NMItems.diamondHammer, NMItems.diamondScythe, NMItems.diamondKnife, NMItems.diamondLeafRake,
+                NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited);
+        multiplyDurability(2, BTWItems.steelSword, BTWItems.steelPickaxe, BTWItems.steelAxe, BTWItems.steelShovel, BTWItems.steelHoe,
+                BTWItems.battleaxe, BTWItems.mattock,
+                BTWItems.plateHelmet, BTWItems.plateBreastplate, BTWItems.plateLeggings, BTWItems.plateBoots,
+                NMItems.steelHammer, NMItems.steelFishingPole, NMItems.steelFishingPoleBaited);
+        multiplyDurability(2, Item.helmetChain, Item.plateChain, Item.legsChain, Item.bootsChain);
         Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)
                 .setUnlocalizedName("netherrack");
+    }
+
+    @Unique
+    private static void multiplyDurability(int multiplier, Item... items) {
+        for (Item item : items) ((ItemAccessor)item).invSetMaxDamage(item.getMaxDamage() * multiplier);
     }
 }

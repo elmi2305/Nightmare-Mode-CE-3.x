@@ -180,11 +180,21 @@ public class SkillHandler {
         if (blockId == Block.leaves.blockID) {
             data.leavesMined++;
         }
-        if (Block.blocksList[blockId] instanceof BlockCrops && (metadata & 7) >= 7) {
-            data.fullyGrownCropsHarvested++;
-        }
-
         player.setData(NightmareMode.SKILL_TREE, data);
+    }
+
+    public static boolean isMatureCrop(World world, Block block, int x, int y, int z, int metadata) {
+        if (block instanceof btw.block.blocks.HempCropBlock) return (metadata & 8) != 0 || (metadata & 7) >= 7;
+        if (block instanceof btw.block.blocks.WheatCropTopBlock) return (metadata & 7) >= 3;
+        if (block instanceof btw.block.blocks.WheatCropBlock) {
+            return world.getBlockId(x, y + 1, z) == btw.block.BTWBlocks.wheatCropTop.blockID
+                    && (world.getBlockMetadata(x, y + 1, z) & 7) >= 3;
+        }
+        return (block instanceof api.block.blocks.CropsBlock || block instanceof BlockCrops) && (metadata & 7) >= 7;
+    }
+
+    public static void incrementMatureCropsHarvested(EntityPlayer player) {
+        increment(player, 1, data -> data.fullyGrownCropsHarvested++);
     }
 
     public static void incrementMobKill(EntityPlayer player, net.minecraft.src.EntityLivingBase killed) {

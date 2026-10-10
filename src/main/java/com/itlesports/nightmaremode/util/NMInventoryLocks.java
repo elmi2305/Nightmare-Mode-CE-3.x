@@ -21,6 +21,12 @@ public final class NMInventoryLocks {
     private NMInventoryLocks() {
     }
 
+    public static void cycleHotbar(InventoryPlayer inventory, int direction) {
+        int slots = getUnlockedHotbarSlots(inventory.player);
+        int current = Math.max(0, Math.min(inventory.currentItem, slots - 1));
+        inventory.currentItem = Math.floorMod(current - Integer.signum(direction), slots);
+    }
+
     public static int getUnlockedHotbarSlots(EntityPlayer player) {
         if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
                 || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) {

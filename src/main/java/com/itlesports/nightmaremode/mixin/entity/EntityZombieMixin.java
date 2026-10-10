@@ -357,9 +357,6 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                 this.dropItem(bloodOrbID, 1);
             }
         }
-        if(this.isWearingAnyDiamondArmor(this)){
-            this.dropItem(Item.diamond.itemID, 1);
-        }
         super.entityLivingDropFewItems(par1, par2);
     }
 

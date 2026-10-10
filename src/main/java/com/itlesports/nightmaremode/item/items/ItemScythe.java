@@ -21,6 +21,22 @@ public class ItemScythe extends SwordItem {
     }
 
     @Override
+    public boolean isEfficientVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
+        return block.blockMaterial == Material.plants || block.blockMaterial == Material.vine
+                || super.isEfficientVsBlock(stack, world, block, x, y, z);
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack stack, World world, int blockId, int x, int y, int z, EntityLivingBase user) {
+        Block block = Block.blocksList[blockId];
+        if (block.blockMaterial == Material.plants || block.blockMaterial == Material.vine) {
+            if (block.getBlockHardness(world, x, y, z) != 0.0F) stack.damageItem(1, user);
+            return true;
+        }
+        return super.onBlockDestroyed(stack, world, blockId, x, y, z, user);
+    }
+
+    @Override
     public boolean isEnchantmentApplicable(Enchantment enchantment) {
         return enchantment == Enchantment.sharpness
                 || enchantment == Enchantment.smite

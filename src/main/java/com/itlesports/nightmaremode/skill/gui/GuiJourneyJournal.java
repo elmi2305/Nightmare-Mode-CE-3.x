@@ -57,9 +57,7 @@ public class GuiJourneyJournal extends GuiScreenBook {
         return stack;
     }
 
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void drawPageImage() {
         if (this.image == null || ((GuiScreenBookAccessor)this).nm$getCurrentPage() != this.imagePage) return;
         this.mc.getTextureManager().bindTexture(this.image);
         GL11.glColor4f(1F, 1F, 1F, 1F);

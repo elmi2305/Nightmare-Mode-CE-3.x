@@ -45,6 +45,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
             return;
         }
         this.ticksExisted++;
+        this.absorbFluidAbove();
         this.absorbItemEntitiesAbove();
         if(this.stirProgress > 0 && this.ticksExisted % 64 == 0){
             this.stirProgress--;
@@ -92,6 +93,19 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.processingTime = 0;
         this.syncState();
         return true;
+    }
+
+    private void absorbFluidAbove() {
+        if (this.fluid != FLUID_EMPTY) return;
+        Material material = this.worldObj.getBlockMaterial(this.xCoord, this.yCoord + 1, this.zCoord);
+        int dimension = this.worldObj.provider.dimensionId;
+        boolean hardmode = com.itlesports.nightmaremode.util.NMUtils.getWorldProgress()
+                > com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
+        if (material == Material.water && dimension == 0) {
+            this.addFluid(FLUID_WATER);
+        } else if (material == Material.lava && (dimension == -1 || dimension == 0 && hardmode)) {
+            this.addFluid(FLUID_LAVA);
+        }
     }
 
     public int drainFluid() {
@@ -332,9 +346,6 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         this.insertOutputs(recipe.getOutputs(this.worldObj.rand));
         this.fluid = recipe.consumesFluid() ? FLUID_EMPTY : recipe.getResultingFluid(this.fluid);
         this.processingTime = 0;
-        if (this.stirProgress > 0) {
-            this.stirProgress /= 4;
-        }
         this.currentRecipe = null;
         this.onInventoryChanged();
     }

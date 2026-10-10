@@ -285,6 +285,15 @@ public abstract class BTWPluginMixin {
         this.info(registry, Item.appleGold, 1, "nm.goldenAppleEnchanted.info");
         this.info(registry, Item.goldenCarrot, 0, "nm.goldenCarrot.info");
         this.info(registry, BTWItems.brownMushroom, 0, "nm.brownMushroom.info");
+        this.info(registry, BTWItems.carrot, 0, "nm.carrotGrowing.info");
+        this.info(registry, BTWItems.carrotSeeds, 0, "nm.carrotGrowing.info");
+        this.info(registry, BTWItems.wheatSeeds, 0, "nm.wheatGrowing.info");
+        this.info(registry, BTWItems.hempSeeds, 0, "nm.hempGrowing.info");
+        this.info(registry, Item.potato, 0, "nm.potatoGrowing.info");
+        this.info(registry, Item.melonSeeds, 0, "nm.fruitStemGrowing.info");
+        this.info(registry, Item.pumpkinSeeds, 0, "nm.fruitStemGrowing.info");
+        this.info(registry, NMItems.paleRootSeeds, 0, "nm.paleRootGrowing.info");
+        this.info(registry, NMItems.paleRoot, 0, "nm.paleRootGrowing.info");
 
     }
 }

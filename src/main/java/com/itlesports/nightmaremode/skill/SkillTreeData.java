@@ -66,6 +66,7 @@ public class SkillTreeData {
     public float armorDurabilitySaveChance;
     public float rangedDamageBonus;
     public float machineSpeedBonus;
+    public float millstoneSpeedBonus;
     public float diamondRockDropChanceBonus;
     public float doubleNickelRockChance;
     public float hammerDurabilitySaveChance;
@@ -162,6 +163,7 @@ public class SkillTreeData {
         this.armorDurabilitySaveChance = defaults.armorDurabilitySaveChance;
         this.rangedDamageBonus = defaults.rangedDamageBonus;
         this.machineSpeedBonus = defaults.machineSpeedBonus;
+        this.millstoneSpeedBonus = defaults.millstoneSpeedBonus;
         this.diamondRockDropChanceBonus = defaults.diamondRockDropChanceBonus;
         this.doubleNickelRockChance = defaults.doubleNickelRockChance;
         this.hammerDurabilitySaveChance = defaults.hammerDurabilitySaveChance;
@@ -269,6 +271,7 @@ public class SkillTreeData {
         data.armorDurabilitySaveChance = tag.getFloat("ArmorDurabilitySaveChance");
         data.rangedDamageBonus = tag.getFloat("RangedDamageBonus");
         data.machineSpeedBonus = tag.getFloat("MachineSpeedBonus");
+        data.millstoneSpeedBonus = tag.getFloat("MillstoneSpeedBonus");
         data.diamondRockDropChanceBonus = tag.getFloat("DiamondRockDropChanceBonus");
         data.doubleNickelRockChance = tag.getFloat("DoubleNickelRockChance");
         data.hammerDurabilitySaveChance = tag.getFloat("HammerDurabilitySaveChance");
@@ -385,6 +388,7 @@ public class SkillTreeData {
         tag.setFloat("ArmorDurabilitySaveChance", data.armorDurabilitySaveChance);
         tag.setFloat("RangedDamageBonus", data.rangedDamageBonus);
         tag.setFloat("MachineSpeedBonus", data.machineSpeedBonus);
+        tag.setFloat("MillstoneSpeedBonus", data.millstoneSpeedBonus);
         tag.setFloat("DiamondRockDropChanceBonus", data.diamondRockDropChanceBonus);
         tag.setFloat("DoubleNickelRockChance", data.doubleNickelRockChance);
         tag.setFloat("HammerDurabilitySaveChance", data.hammerDurabilitySaveChance);
