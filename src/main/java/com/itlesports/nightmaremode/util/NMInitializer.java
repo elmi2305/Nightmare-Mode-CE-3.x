@@ -2759,7 +2759,7 @@ public abstract class NMInitializer implements AchievementExt {
                 " S ", "LNL", " S ", Character.valueOf('S'), Item.stick,
                 Character.valueOf('L'), Item.leather, Character.valueOf('N'), NMItems.nickelBinding});
         RecipeManager.addRecipe(new ItemStack(NMItems.crystalTorch, 4), new Object[]{
-                "C", "N", "S", Character.valueOf('C'), NMItems.crystalCleanShard,
+                "C", "N", "S", Character.valueOf('C'), NMItems.crystalPolishedShard,
                 Character.valueOf('N'), NMItems.nickelBinding, Character.valueOf('S'), Item.stick});
 
         SkillLockedCrafting.requireSkills(
