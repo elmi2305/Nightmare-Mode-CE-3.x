@@ -1898,7 +1898,7 @@ public final class NMSkillNodes {
             "Stake Binding",
             Item.silk,
             3, 1,
-            "Bring 16 silk.",
+            "Bring 16 string.",
             Item.silk.itemID, 0, false, 16,
             "Unlocks Additional Recipes. 1% lower enchanting cost.", SkillRewardActions.addEnchantCostReduction(0.01F),
             RITUAL, false);
