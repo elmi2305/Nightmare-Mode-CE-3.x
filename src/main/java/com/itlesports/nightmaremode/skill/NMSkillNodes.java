@@ -3455,7 +3455,7 @@ public final class NMSkillNodes {
     public static final SkillNode CRAFT_BOOK_64 = counter(
             "craft_books_64", "Bookbinder", Item.book, 0, -1,
             "Craft 64 books.", (p, w) -> SkillHandler.getPlayerData(p).booksCrafted >= 64,
-            "Unlocks Additional Recipes. +10% XP gain.", SkillRewardActions.addXpGain(0.10F), KNOWLEDGE, false);
+            "Dirt contents be tested with empty glass bottles. +10% XP gain.", SkillRewardActions.addXpGain(0.10F), KNOWLEDGE, false);
 
     public static final SkillNode CRAFT_BOOK_256 = counter(
             "craft_books_256", "Archive Binder", Item.book, 5, 1,
