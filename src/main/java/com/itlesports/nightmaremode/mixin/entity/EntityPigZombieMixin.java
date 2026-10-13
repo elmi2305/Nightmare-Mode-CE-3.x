@@ -230,6 +230,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
             illegalItemList.add(BTWItems.boneClub.itemID);
             illegalItemList.add(Item.swordWood.itemID);
+            illegalItemList.add(BTWItems.woodenClub.itemID);
             illegalItemList.add(Item.swordDiamond.itemID);
             illegalItemList.add(Item.axeGold.itemID);
             illegalItemList.add(Item.pickaxeStone.itemID);

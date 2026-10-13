@@ -1319,17 +1319,14 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
 
-        int x = MathHelper.floor_double(this.posX);
-        int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
-        int z = MathHelper.floor_double(this.posZ);
-        boolean exposed = this.posY > NMFields.SOLAR_RADIATION_HEIGHT && this.worldObj.canBlockSeeTheSky(x, y, z);
+        boolean exposed = this.posY > NMFields.SOLAR_RADIATION_HEIGHT;
         if (!exposed || ArmorSetHelper.hasSuppliedSunSet(this)) {
             this.outerSolarExposure = Math.max(0, this.outerSolarExposure - 12);
             return;
         }
 
         boolean day = this.worldObj.isDaytime();
-        boolean rain = this.worldObj.isRainingAtPos(x, y, z);
+        boolean rain = this.worldObj.isRaining();
         this.outerSolarExposure = Math.min(800, this.outerSolarExposure + (day ? rain ? 1 : 3 : 1));
         if (this.outerSolarExposure >= 100 && this.ticksExisted % 8 == 0) {
             this.applySolarRadiationEffects();

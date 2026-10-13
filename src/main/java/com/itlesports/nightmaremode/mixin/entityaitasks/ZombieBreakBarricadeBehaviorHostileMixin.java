@@ -153,6 +153,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
         longRangeItemList.add(BTWItems.boneClub.itemID);
         longRangeItemList.add(Item.swordWood.itemID);
+        longRangeItemList.add(BTWItems.woodenClub.itemID);
         longRangeItemList.add(Item.swordDiamond.itemID);
         longRangeItemList.add(Item.axeGold.itemID);
         longRangeItemList.add(Item.pickaxeStone.itemID);
@@ -164,6 +165,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         List<Integer> lesserRangeItemList = new ArrayList<>(14);
         lesserRangeItemList.add(BTWItems.boneClub.itemID);
         lesserRangeItemList.add(Item.swordWood.itemID);
+        lesserRangeItemList.add(BTWItems.woodenClub.itemID);
         lesserRangeItemList.add(Item.swordDiamond.itemID);
         lesserRangeItemList.add(Item.axeGold.itemID);
         return lesserRangeItemList;
@@ -186,6 +188,7 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
 
         fastItemList.add(BTWItems.boneClub.itemID);
         fastItemList.add(Item.swordWood.itemID);
+        fastItemList.add(BTWItems.woodenClub.itemID);
         fastItemList.add(Item.swordDiamond.itemID);
         fastItemList.add(Item.axeGold.itemID);
         return fastItemList;

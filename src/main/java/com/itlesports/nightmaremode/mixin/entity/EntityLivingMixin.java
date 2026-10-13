@@ -77,6 +77,7 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
 
     @Redirect(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLiving;entityDropItem(Lnet/minecraft/src/ItemStack;F)Lnet/minecraft/src/EntityItem;"))
     private EntityItem preventSkeletonBowDrop(EntityLiving entity, ItemStack stack, float offset) {
+        if (stack != null && stack.itemID == BTWItems.woodenClub.itemID) return null;
         if (entity instanceof EntitySkeleton && stack != null && stack.itemID == Item.bow.itemID) return null;
         return entity.entityDropItem(stack, offset);
     }
@@ -132,6 +133,7 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
             itemsNotDropped.add(Item.plateLeather.itemID);
             itemsNotDropped.add(Item.helmetLeather.itemID);
             itemsNotDropped.add(Item.swordWood.itemID);
+            itemsNotDropped.add(BTWItems.woodenClub.itemID);
             itemsNotDropped.add(Item.pickaxeStone.itemID);
             itemsNotDropped.add(BTWItems.steelSword.itemID);
             itemsNotDropped.add(BTWBlocks.carvedPumpkin.blockID);

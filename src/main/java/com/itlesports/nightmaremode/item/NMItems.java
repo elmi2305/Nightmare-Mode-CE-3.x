@@ -87,6 +87,8 @@ public class NMItems {
 
     public static ItemEclipseBow eclipseBow;
     public static ItemMagicArrow magicArrow;
+    public static ItemUpgradeableFishingRod nickelFishingPole;
+    public static ItemUpgradeableFishingRod nickelFishingPoleBaited;
     public static ItemUpgradeableFishingRod ironFishingPole;
     public static ItemUpgradeableFishingRod ironFishingPoleBaited;
     public static ItemUpgradeableFishingRod diamondFishingPole;
@@ -135,7 +137,7 @@ public class NMItems {
 
     // IFHY
 
-    public static final Item bonusChestLoot;
+    public static final Item seaweed;
     public static final Item twig;
     public static final Item sharpTwig;
     public static final Item sharpBarkTwig;
@@ -562,7 +564,9 @@ public class NMItems {
         // info: due to the order of initialization, NMBlocks fields are null at this time, so NMPlaceAsBlockItem or other initializers that require NMBlocks must be passed a copy of the block ID int registered in NMFields
         // instead of getting the block id from the NMBlocks field. attempting to do so crashes the game with a nullptr
 
-        bonusChestLoot = new NMItem(2600).setTextureName("nightmare:ifhyGarbage").setUnlocalizedName("ifhyGarbage");
+        // ovens multiply furnace fuel time by four, giving seaweed two seconds of oven fuel.
+        seaweed = new NMItem(2600).setTextureName("nightmare:ifhySeaweed").setUnlocalizedName("ifhySeaweed")
+                .setCreativeTab(CreativeTabs.tabMaterials).setBuoyant().setfurnaceburntime(10).setIncineratedInCrucible();
         twig = new NMItem(2601).setTextureName("nightmare:ifhyTwig").setUnlocalizedName("ifhyTwig").setCreativeTab(CreativeTabs.tabMaterials);
         sharpTwig = new NMToolItem(2602, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 1, 0.5f).setTextureName("nightmare:ifhyTwigSharp").setUnlocalizedName("ifhyTwigSharp");
         sharpBarkTwig = new NMToolItem(2603, EnumToolMaterial.WOOD, new Block[]{Block.wood}, 3, 0.75f).setTextureName("nightmare:ifhyTwigSharpBark").setUnlocalizedName("ifhyTwigSharpBark");
@@ -1110,9 +1114,9 @@ public class NMItems {
         verdantLeggings = alloyArmor(3365, 2, 3, 2, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantLeggings");
         verdantBoots = alloyArmor(3366, 3, 1, 1, 4000, 30, 0.0D, verdantIngot, "ifhyVerdantArmor", "item.ifhyVerdantArmor.bonus", "ifhyVerdantBoots");
         glassHelmet = glassArmor(3367, 0, 1, "ifhyGlassHelmet");
-        glassChestplate = glassArmor(3368, 1, 3, "ifhyGlassChestplate");
-        glassLeggings = glassArmor(3369, 2, 2, "ifhyGlassLeggings");
-        glassBoots = glassArmor(3370, 3, 1, "ifhyGlassBoots");
+        glassChestplate = glassArmor(3368, 1, 2, "ifhyGlassChestplate");
+        glassLeggings = glassArmor(3369, 2, 1, "ifhyGlassLeggings");
+        glassBoots = glassArmor(3370, 3, 0, "ifhyGlassBoots");
         blackglassHelmet = netherArmor(3371, 0, 3, 9, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassHelmet");
         blackglassChestplate = netherArmor(3372, 1, 8, 15, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassChestplate");
         blackglassLeggings = netherArmor(3373, 2, 6, 12, 7000, 6, 0.08D, blackglassIngot, "ifhyBlackglassArmor", "item.ifhyBlackglassArmor.bonus", "ifhyBlackglassLeggings");
@@ -1169,6 +1173,10 @@ public class NMItems {
         endstoneKnife = (ItemKnife) new ItemKnife(3451, 32, ItemKnife.TIER_DIAMOND, 20000).setDamageVsEntity(6)
                 .setTextureName("nightmare:ifhyEndstoneKnife").setUnlocalizedName("ifhyEndstoneKnife");
 
+        nickelFishingPole = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3469, 3470, false, 250)
+                .setTextureName("nightmare:ifhyNickelFishingRod").setUnlocalizedName("ifhyNickelFishingRod").setCreativeTab(CreativeTabs.tabTools);
+        nickelFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3470, 3469, true, 250)
+                .setTextureName("nightmare:ifhyNickelFishingRodBaited").setUnlocalizedName("ifhyNickelFishingRodBaited").setCreativeTab(null);
         ironFishingPoleBaited = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3405, 2352, true, 250)
                 .setTextureName("nightmare:ifhyIronFishingRodBaited").setUnlocalizedName("ifhyIronFishingRodBaited");
         diamondFishingPole = (ItemUpgradeableFishingRod) new ItemUpgradeableFishingRod(3406, 3407, false, 768)
@@ -1245,7 +1253,7 @@ public class NMItems {
     }
 
     private static ItemGlassArmor glassArmor(int id, int armorType, int protection, String name) {
-        return (ItemGlassArmor)new ItemGlassArmor(id, armorType, protection, 0, 90, 8, 0.0D,
+        return (ItemGlassArmor)new ItemGlassArmor(id, armorType, protection, 0, 75, 8, 0.0D,
                 Block.glass.blockID, "ifhyGlassArmor", "item.ifhyGlassArmor.bonus")
                 .setTextureName("nightmare:" + name).setUnlocalizedName(name);
     }

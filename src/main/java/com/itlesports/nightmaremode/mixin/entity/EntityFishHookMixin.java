@@ -8,6 +8,8 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemUpgradeableFishingRod;
 import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.NMFishingRates;
+import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.elements.FishingCatch;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +25,7 @@ import java.util.Locale;
 @Mixin(EntityFishHook.class)
 public abstract class EntityFishHookMixin extends Entity implements EntityFishHookAccessor {
     @Unique private static final FishingCatch[] JUNK_CATCHES = {
-            catchOf(NMItems.bonusChestLoot, 12, false),
+            catchOf(NMItems.seaweed, 12, false),
             catchOf(NMItems.scrapedBark, 5, false),
             catchOf(BTWItems.pointyStick, 3, false),
             catchOf(Item.stick, 4, false),
@@ -81,18 +83,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         super(world);
     }
 
-    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 8))
-    private int increaseBiteOdds(int constant) {
-        return 2;
-    }
-
-    @ModifyConstant(method = "checkForBite", constant = @Constant(intValue = 4))
-    private int biteChanceMultiplierDay(int constant) {
-        return 20;
-    }
-
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
-    private int increaseLavaFishingBiteChance(int odds) {
+    private int adjustFishingBiteChance(int odds) {
         if (this.isNetherFishing()) {
             odds = Math.max(1, odds / 6);
         } else {
@@ -101,7 +93,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                     MathHelper.floor_double(this.posX),
                     MathHelper.floor_double(this.posZ)
             );
-            odds = Math.max(1, Math.round(odds * (1.0F + (1.0F - availability) * 7.0F)));
+            return NMFishingRates.biteOdds(this.worldObj.getWorldTime(), this.worldObj.getMoonPhase(),
+                    NMUtils.getIsBloodMoon(), this.worldObj.isPrecipitatingAtPos(
+                            MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)),
+                    availability, this.rodBiteOddsMultiplier(), this.hasRodUpgrade("IfhyFishingLure"));
         }
         odds = Math.max(1, Math.round(odds * this.rodBiteOddsMultiplier()));
         return this.hasRodUpgrade("IfhyFishingLure") ? Math.max(1, odds / 2) : odds;
@@ -113,9 +108,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         ItemStack held = this.angler.getCurrentEquippedItem();
         if (held == null) return 1.0F;
         Item item = held.getItem();
-        if (item == NMItems.ironFishingPole || item == NMItems.ironFishingPoleBaited) return 0.95F;
-        if (item == NMItems.diamondFishingPole || item == NMItems.diamondFishingPoleBaited) return 0.90F;
-        if (item == NMItems.steelFishingPole || item == NMItems.steelFishingPoleBaited) return 0.85F;
+        if (item == NMItems.nickelFishingPole || item == NMItems.nickelFishingPoleBaited) return 0.80F;
+        if (item == NMItems.ironFishingPole || item == NMItems.ironFishingPoleBaited) return 0.65F;
+        if (item == NMItems.diamondFishingPole || item == NMItems.diamondFishingPoleBaited) return 0.50F;
+        if (item == NMItems.steelFishingPole || item == NMItems.steelFishingPoleBaited) return 0.40F;
         return 1.0F;
     }
 
@@ -280,7 +276,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.selectedCatchIsFish = true;
             return biomeCatches[biomeCatches.length - 1];
         }
-        int totalWeight = totalWeight(JUNK_CATCHES) + totalFishWeight(biomeCatches, localCapacity);
+        int fishMultiplier = NMFishingRates.fishWeightMultiplier(this.worldObj.getWorldTime(),
+                this.worldObj.getMoonPhase(), NMUtils.getIsBloodMoon());
+        int totalWeight = totalWeight(JUNK_CATCHES) + totalFishWeight(biomeCatches, localCapacity) * fishMultiplier;
         int roll = this.rand.nextInt(totalWeight);
 
         for (FishingCatch catchEntry : JUNK_CATCHES) {
@@ -290,7 +288,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             }
         }
         for (FishingCatch catchEntry : biomeCatches) {
-            if ((roll -= adjustedFishWeight(catchEntry, localCapacity)) < 0) {
+            if ((roll -= adjustedFishWeight(catchEntry, localCapacity) * fishMultiplier) < 0) {
                 this.selectedCatchIsFish = true;
                 return catchEntry;
             }

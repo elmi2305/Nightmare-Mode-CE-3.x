@@ -58,6 +58,7 @@ public final class NightmareEmiRegistry {
     public static void register(EmiRegistry registry) {
         unhideWoodenTools();
         unhideGimpArmor();
+        unhideItem(BTWItems.paddedBoots);
         unhideItem(NMItems.grassSeeds);
         unhideItem(NMItems.mash);
         allowIngredientInRecipes(BTWItems.ancientProphecy);
@@ -79,6 +80,7 @@ public final class NightmareEmiRegistry {
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));
 
         registry.addDeferredRecipes(addRecipe -> {
+            addRecipe.accept(baiting("nickel", NMItems.nickelFishingPole, NMItems.nickelFishingPoleBaited));
             addRecipe.accept(baiting("iron", NMItems.ironFishingPole, NMItems.ironFishingPoleBaited));
             addRecipe.accept(baiting("diamond", NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited));
             addRecipe.accept(baiting("steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));

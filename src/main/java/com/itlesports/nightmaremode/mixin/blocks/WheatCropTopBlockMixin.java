@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WheatCropTopBlock.class)
 public abstract class WheatCropTopBlockMixin extends DailyGrowthCropsBlock {
@@ -30,6 +31,11 @@ public abstract class WheatCropTopBlockMixin extends DailyGrowthCropsBlock {
     @Inject(method = "doesBlockDropAsItemOnSaw", at = @At("HEAD"), cancellable = true)
     private void preventSawHarvest(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(false);
+    }
+
+    @Inject(method = "updateFlagForGrownToday", at = @At("TAIL"))
+    private void allowMoreTopGrowthInGoodSoil(World world, int x, int y, int z, CallbackInfo ci) {
+        ChunkAttributeManager.allowExtraDailyGrowth(world, x, y, z, (Block)(Object)this);
     }
 
     @Redirect(

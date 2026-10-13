@@ -66,6 +66,10 @@ public class InventoryPlayerMixin {
 
     @Inject(method = "dropAllItems", at = @At("HEAD"), cancellable = true)
     private void retainSomeItemsOnPreHardmodeDeath(CallbackInfo ci) {
+        if (this.player.worldObj.isRemote) {
+            ci.cancel();
+            return;
+        }
         NMInventoryLocks.dropLockedItems(this.player, true);
         if (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
@@ -82,8 +86,8 @@ public class InventoryPlayerMixin {
         for (int slot = 0; slot < inventory.length; ++slot) {
             ItemStack stack = inventory[slot];
             if (stack == null || stack.itemID == NMItems.skillBook.itemID) continue;
-            this.player.dropPlayerItemWithRandomChoice(stack, true);
             inventory[slot] = null;
+            this.player.dropPlayerItemWithRandomChoice(stack, true);
         }
     }
 
@@ -308,8 +312,8 @@ public class InventoryPlayerMixin {
             boolean willBeLocked = checkLocks && !NMInventoryLocks.isMainInventorySlotUnlockedAfterDeath(this.player, slot);
             float lossChance = com.itlesports.nightmaremode.util.EasyBalance.deathLoss(SkillHandler.getPlayerData(this.player).deathItemLossChance);
             if (!willBeLocked && this.player.worldObj.rand.nextFloat() >= lossChance) continue;
-            this.player.dropPlayerItemWithRandomChoice(stack, true);
             inventory[slot] = null;
+            this.player.dropPlayerItemWithRandomChoice(stack, true);
         }
     }
 }

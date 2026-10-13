@@ -16,7 +16,7 @@ public class ItemSeedsMixin {
     private void trackCropPlanting(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
                                    int facing, float clickX, float clickY, float clickZ,
                                    CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ()) {
+        if (!world.isRemote && player != null && cir.getReturnValueZ()) {
             SkillHandler.incrementCropsPlanted(player);
         }
     }

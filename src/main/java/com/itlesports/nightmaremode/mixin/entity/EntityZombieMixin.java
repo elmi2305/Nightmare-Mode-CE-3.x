@@ -394,7 +394,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     // 3.0 -> 4.0 -> 6.0 -> 7.0
                     wasVariantSelected = true;
                 } else if (rand.nextInt(Math.max(MathHelper.floor_double((isHostile ? 18 : 20) * bloodMoonModifier * (1 / niteMultiplier)), 2)) == 0) {
-                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
+                    this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.woodenClub));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
                     // 2.0 -> 3.0 -> 4.0 -> 5.0
@@ -472,7 +472,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(3.0 + progress*1.5));
                     // 3.0 -> 4.0 -> 6.0 -> 7.0
                 } else if (rand.nextInt((int) Math.max(8 * (1 / niteMultiplier), 2)) == 0) {
-                    this.setCurrentItemOrArmor(0, new ItemStack(Item.swordWood));
+                    this.setCurrentItemOrArmor(0, new ItemStack(BTWItems.woodenClub));
                     this.equipmentDropChances[0] = -1f;
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0 + progress);
                     // 2.0 -> 3.0 -> 4.0 -> 5.0

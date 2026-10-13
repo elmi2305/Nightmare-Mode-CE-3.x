@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -84,17 +83,17 @@ public class BlockTallGrassMixin extends BlockFlower {
         this.zPos = k;
         this.worldObj = world;
     }
-    @ModifyArg(method = "updateTick", at = @At(
+    @Redirect(method = "updateTick", at = @At(
             value = "INVOKE",
             target = "Ljava/util/Random;nextInt(I)I",
             ordinal = 0
-    ), index = 0
     )
-    private int boostGrassSpreadWithCorrectFertilizer(int bound) {
-        if(this.worldObj == null || (this.xPos == 0 && this.yPos == 0 && this.zPos == 0)) return bound;
-        return ChunkAttributeManager.hasEffectiveFertilizer(this.worldObj, this.xPos,this.yPos,this.zPos, (Block)(Object)this)
-                ? 1
-                : bound;
+    )
+    private int scaleGrassSpreadWithSoil(Random random, int bound) {
+        float chance = ChunkAttributeManager.hasEffectiveFertilizer(this.worldObj, this.xPos, this.yPos, this.zPos, (Block)(Object)this)
+                ? 1.0F : 1.0F / bound;
+        chance *= ChunkAttributeManager.getGrowthMultiplier(this.worldObj, this.xPos, this.zPos, (Block)(Object)this);
+        return random.nextFloat() < Math.min(1.0F, chance) ? 0 : 1;
     }
 
     @Redirect(method = "updateTick", at = @At(
@@ -109,9 +108,6 @@ public class BlockTallGrassMixin extends BlockFlower {
             int blockId,
             int metadata
     ) {
-        if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
-            return false;
-        }
         boolean changed = world.setBlockAndMetadataWithNotify(x, y, z, blockId, metadata);
         if (changed) {
             ChunkAttributeManager.consumeForGrowth(world, x, z, (Block)(Object)this);

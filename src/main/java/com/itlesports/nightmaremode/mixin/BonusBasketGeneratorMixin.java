@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class BonusBasketGeneratorMixin {
     @ModifyArg(method = "generate", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/BarkBoxTileEntity;setStorageStack(Lnet/minecraft/src/ItemStack;)V"))
     private ItemStack makeSpecialDrop(ItemStack stack){
-        return new ItemStack(NMItems.bonusChestLoot);
+        return new ItemStack(NMItems.seaweed);
     }
 }

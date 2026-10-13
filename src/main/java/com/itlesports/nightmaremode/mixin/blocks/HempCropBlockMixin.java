@@ -68,9 +68,6 @@ public abstract class HempCropBlockMixin extends BlockCrops {
             int blockId,
             int metadata
     ) {
-        if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
-            return false;
-        }
         boolean changed = world.setBlockAndMetadataWithNotify(x, y, z, blockId, metadata);
         if (changed) {
             ChunkAttributeManager.consumeForGrowth(world, x, z, (Block)(Object)this);

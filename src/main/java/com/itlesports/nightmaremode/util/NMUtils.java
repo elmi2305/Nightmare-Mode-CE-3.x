@@ -169,6 +169,7 @@ public class NMUtils {
             Item.shovelDiamond.itemID,
             BTWItems.boneClub.itemID,
             Item.swordWood.itemID,
+            BTWItems.woodenClub.itemID,
             Item.swordDiamond.itemID,
             Item.axeGold.itemID,
             Item.pickaxeStone.itemID
@@ -177,6 +178,7 @@ public class NMUtils {
     public static final Set<Integer> LESSER_RANGE_ITEMS = new HashSet<>(Arrays.asList(
             BTWItems.boneClub.itemID,
             Item.swordWood.itemID,
+            BTWItems.woodenClub.itemID,
             Item.swordDiamond.itemID,
             Item.axeGold.itemID
     ));

@@ -25,9 +25,8 @@ import java.util.Random;
 public final class ChunkAttributeManager {
     public static final float GENERAL_GROWTH_COST = 0.05F;
     public static final float PREFERRED_GROWTH_COST = 0.45F;
-    public static final float MIN_PREFERRED_RESOURCE_TO_GROW = 2.5F;
     public static final float FERTILIZER_GAIN = 0.25F;
-    public static final float FERTILIZER_PENALTY = 0.35F;
+    public static final float FERTILIZER_PENALTY = 0.25F;
     public static final long FERTILIZER_DURATION = 24000L;
 
     private ChunkAttributeManager() {
@@ -62,18 +61,42 @@ public final class ChunkAttributeManager {
         }
     }
 
-    public static boolean canGrow(World world, int x, int z, Block crop) {
+    public static float getGrowthMultiplier(World world, int x, int z, Block crop) {
         ChunkAttributes attributes = get(world, x, z);
         ChunkAttribute[] requirements = getRequirements(crop);
         if (requirements.length == 0) {
-            return true;
+            return 1.0F;
         }
-        for (ChunkAttribute requirement : requirements) {
-            if (attributes.get(requirement) < MIN_PREFERRED_RESOURCE_TO_GROW) {
-                return false;
+        float preferred = 0.0F;
+        float other = 0.0F;
+        for (ChunkAttribute attribute : ChunkAttribute.values()) {
+            if (contains(requirements, attribute)) {
+                preferred += attributes.get(attribute);
+            } else {
+                other += attributes.get(attribute);
             }
         }
-        return true;
+        return SoilGrowthRates.multiplier(preferred / requirements.length,
+                other / (ChunkAttribute.values().length - requirements.length));
+    }
+
+    public static boolean isCropGrowthDay(World world, int x, int z, Block crop) {
+        return SoilGrowthRates.permitsDay(getGrowthMultiplier(world, x, z, crop),
+                get(world, x, z).getRollSeed(), SoilGrowthRates.growthDay(world.getWorldTime()), x, z);
+    }
+
+    public static void allowExtraDailyGrowth(World world, int x, int y, int z, Block crop) {
+        if (world.isRemote || !isSupportedPlant(crop)) return;
+        // carry the allowance into the newly created wheat top instead of its mature base.
+        if (crop instanceof WheatCropBlock && (world.getBlockMetadata(x, y, z) & 7) == 7) {
+            if (!(Block.blocksList[world.getBlockId(x, y + 1, z)] instanceof WheatCropTopBlock)) return;
+            ++y;
+        }
+        int metadata = world.getBlockMetadata(x, y, z);
+        if ((metadata & 8) != 0 && world.rand.nextFloat()
+                < SoilGrowthRates.continuationChance(getGrowthMultiplier(world, x, z, crop))) {
+            world.setBlockMetadata(x, y, z, metadata & ~8);
+        }
     }
 
     public static void consumeForGrowth(World world, int x, int z, Block crop) {
@@ -93,15 +116,8 @@ public final class ChunkAttributeManager {
     }
 
     public static float adjustGrowthChance(float baseChance, World world, int x, int y, int z, Block crop) {
-        if (!canGrow(world, x, z, crop)) {
-            return 0.0F;
-        }
-
-        FarmlandPosition farmland = findFarmland(world, x, y, z);
-        if (farmland == null || world.getBlockId(farmland.x, farmland.y, farmland.z) != BTWBlocks.fertilizedFarmland.blockID) {
-            return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? Math.min(1.0F, baseChance * 2.0F) : baseChance;
-        }
-        return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? Math.min(1.0F, baseChance * 2.0F) : baseChance;
+        float chance = baseChance * getGrowthMultiplier(world, x, z, crop);
+        return Math.min(1.0F, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? chance * 2.0F : chance);
     }
 
     public static boolean hasEffectiveFertilizer(World world, int x, int y, int z, Block crop) {

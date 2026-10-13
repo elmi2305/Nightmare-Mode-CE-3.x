@@ -33,9 +33,6 @@ public abstract class  WheatCropBlockMixin extends DailyGrowthCropsBlock {
             ci.cancel();
             return;
         }
-        if (!ChunkAttributeManager.canGrow(world, x, z, (Block)(Object)this)) {
-            ci.cancel();
-        }
     }
 
     @Inject(method = "incrementGrowthLevel", at = @At("TAIL"))

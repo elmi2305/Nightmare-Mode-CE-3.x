@@ -90,7 +90,9 @@ public class ItemMixin {
                                    CallbackInfoReturnable<Boolean> cir) {
         if ((Object)this != Item.glassBottle || !SkillHandler.isUnlocked(player, NMSkillNodes.CRAFT_BOOK_64)) return;
         int blockId = world.getBlockId(x, y, z);
-        if (blockId != Block.grass.blockID && blockId != Block.dirt.blockID && blockId != Block.gravel.blockID) return;
+        if (blockId != Block.grass.blockID && blockId != Block.dirt.blockID && blockId != Block.gravel.blockID
+                && blockId != Block.netherrack.blockID && blockId != Block.sand.blockID
+                && blockId != Block.slowSand.blockID && blockId != Block.whiteStone.blockID) return;
         if (!world.isRemote) {
             ChunkAttributes attributes = ChunkAttributeManager.get(world, x, z);
             ItemStack sample = new ItemStack(NMItems.soilSample);

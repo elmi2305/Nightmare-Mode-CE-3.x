@@ -5,7 +5,7 @@ import java.util.UUID;
 
 // a collection of static fields used around the codebase
 public class NMFields {
-    public static final double SOLAR_RADIATION_HEIGHT = 140.0D;
+    public static final double SOLAR_RADIATION_HEIGHT = 120.0D;
     public static final UUID SKILL_MOVEMENT_SPEED_ID = UUID.fromString("d4b548c6-c2ee-4d22-a714-d95095210c50");
 
     // mod ID
