@@ -47,9 +47,8 @@ public class NMTags {
             Item.silk,
             NMItems.pighideString
     );
-    public static final Tag netherCompatibleStrings = Tag.of(loc("nether_compatible_strings"),
-            BTWTags.strings
-    ).add(NMItems.pighideString);
+    public static final Tag netherCompatibleStrings = Tag.of(loc("nether_compatible_strings")
+    ).add(NMItems.pighideString).add(Item.silk).add(BTWItems.sinew);
     public static final Tag netherCompatibleSticks = Tag.of(loc("nether_compatible_sticks"),
             Item.stick,
             NMItems.netherStick
