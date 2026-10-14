@@ -11,6 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockCrops.class)
 public class BlockCropsMixin {
+    @Inject(method = {"incrementGrowthLevel", "fertilize"}, at = @At("HEAD"), cancellable = true)
+    private void requireChunkResources(World world, int x, int y, int z, CallbackInfo ci) {
+        if (!ChunkAttributeManager.canPlantGrow(world, x, z, (Block)(Object)this)) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "incrementGrowthLevel", at = @At("TAIL"))
     private void consumeChunkResources(World world, int x, int y, int z, CallbackInfo ci) {
         Block crop = (Block)(Object)this;

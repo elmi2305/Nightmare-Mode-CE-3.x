@@ -10,7 +10,6 @@ import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemAlloyPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemEnderPickaxe;
-import com.itlesports.nightmaremode.item.items.ItemQuestPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -100,9 +99,7 @@ public class OreBlockStagedMixin extends OreBlock {
                 cir.setReturnValue(true);
                 return;
             }
-            if (stack.getItem() instanceof ItemQuestPickaxe) {
-                summonEntity(world, x, y, z, side, BTWItems.ironOreChunk);
-            } else if(stack.getItem() instanceof PickaxeItem pi){
+            if(stack.getItem() instanceof PickaxeItem pi){
                 Item pick = stack.getItem();
                 if (pick instanceof ItemAlloyPickaxe || pick instanceof ItemEnderPickaxe
                         || pick instanceof ItemBloodPickaxe || pick instanceof ItemTungstenPickaxe) {

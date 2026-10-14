@@ -9,6 +9,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.NetherrackItemBlock;
 import com.itlesports.nightmaremode.item.items.ItemPlaceableStick;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
+import com.itlesports.nightmaremode.util.ArmorBalance;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,7 +50,12 @@ public class BTWItemsMixin {
         multiplyDurability(3, Item.swordIron, Item.pickaxeIron, Item.axeIron, Item.shovelIron, Item.hoeIron,
                 Item.helmetIron, Item.plateIron, Item.legsIron, Item.bootsIron, Item.shears, BTWItems.ironChisel,
                 NMItems.ironScythe, NMItems.ironKnife, NMItems.ironLeafRake, NMItems.ironFishingPole,
-                NMItems.ironFishingPoleBaited, NMItems.ironKnittingNeedles, NMItems.farmersFavoriteHoe);
+                NMItems.ironFishingPoleBaited, NMItems.ironKnittingNeedles);
+        ArmorBalance.setProtection(Item.helmetIron, 2);
+        ArmorBalance.setProtection(Item.plateIron, 5);
+        ArmorBalance.setProtection(Item.legsIron, 3);
+        ArmorBalance.setProtection(Item.bootsIron, 1);
+        ArmorBalance.setProtection(NMItems.oxygenTank, 3);
         multiplyDurability(2, Item.swordDiamond, Item.pickaxeDiamond, Item.axeDiamond, Item.shovelDiamond, Item.hoeDiamond,
                 Item.helmetDiamond, Item.plateDiamond, Item.legsDiamond, Item.bootsDiamond, BTWItems.diamondShears, BTWItems.diamondChisel,
                 NMItems.diamondHammer, NMItems.diamondScythe, NMItems.diamondKnife, NMItems.diamondLeafRake,

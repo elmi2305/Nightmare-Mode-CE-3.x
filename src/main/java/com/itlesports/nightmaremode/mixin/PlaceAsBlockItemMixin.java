@@ -4,9 +4,11 @@ import api.item.items.PlaceAsBlockItem;
 import btw.block.blocks.SaplingBlock;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.RailPlacementConfig;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockRailBase;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.World;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayDeque;
@@ -25,6 +28,14 @@ public abstract class PlaceAsBlockItemMixin {
     @Shadow public abstract int getBlockIDToPlace(World world, int damage, int facing, float clickX, float clickY, float clickZ);
 
     @Shadow protected int blockID;
+
+    @Redirect(method = "onItemUse", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Block;onBlockPlacedBy(Lnet/minecraft/src/World;IIILnet/minecraft/src/EntityLivingBase;Lnet/minecraft/src/ItemStack;)V"))
+    private void rememberPlacedMachineSpeed(Block block, World world, int x, int y, int z,
+                                            EntityLivingBase placer, ItemStack stack) {
+        block.onBlockPlacedBy(world, x, y, z, placer, stack);
+        if (placer instanceof EntityPlayer player) MachineSpeedBonuses.interact(world, x, y, z, player);
+    }
 
     @Inject(method = "getMetadata", at = @At("HEAD"), cancellable = true)
     private void preserveNetherrackItemMetadata(int itemDamage, CallbackInfoReturnable<Integer> cir) {

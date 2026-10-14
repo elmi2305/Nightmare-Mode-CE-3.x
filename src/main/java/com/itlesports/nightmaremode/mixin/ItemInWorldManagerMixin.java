@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.world.SandboxRules;
 import com.itlesports.nightmaremode.util.elements.LogSettings;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import com.itlesports.nightmaremode.util.StorageColor;
 import com.itlesports.nightmaremode.achievements.NMAchievementEvents;
@@ -29,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
@@ -39,6 +41,19 @@ public class ItemInWorldManagerMixin {
 
     @Shadow
     public EntityPlayerMP thisPlayerMP;
+
+    @Inject(method = "onBlockClicked", at = @At("HEAD"))
+    private void rememberClickedMachineSpeed(int x, int y, int z, int side, CallbackInfo ci) {
+        MachineSpeedBonuses.interact(this.theWorld, x, y, z, this.thisPlayerMP);
+    }
+
+    @Inject(method = "activateBlockOrUseItem", at = @At("HEAD"))
+    private void rememberMachineSkillSpeed(EntityPlayer player, World world, ItemStack stack,
+                                           int x, int y, int z, int side,
+                                           float clickX, float clickY, float clickZ,
+                                           CallbackInfoReturnable<Boolean> cir) {
+        MachineSpeedBonuses.interact(world, x, y, z, player);
+    }
 
     @Redirect(method = {"onBlockClicked", "updateBlockRemoving", "uncheckedTryHarvestBlock"}, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Block;getPlayerRelativeBlockHardness(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/World;III)F"))

@@ -4,12 +4,11 @@ import btw.block.BTWBlocks;
 import btw.block.blocks.SawBlock;
 import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.item.NMItems;
-import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import net.minecraft.src.Block;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.EntityLivingBase;
 import net.minecraft.src.EntityItem;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,9 +20,8 @@ public class SawBlockMixin {
 
     @Redirect(method = "scheduleUpdateIfRequired", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/World;scheduleBlockUpdate(IIIII)V", ordinal = 1))
-    private void nightmareMode$applySawSkillSpeed(World world, int x, int y, int z, int blockId, int ticks) {
-        EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 16.0D);
-        float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
+    private void applySawSkillSpeed(World world, int x, int y, int z, int blockId, int ticks) {
+        float bonus = MachineSpeedBonuses.get(world, x, y, z);
         world.scheduleBlockUpdate(x, y, z, blockId, Math.max(1, Math.round(120.0F / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus)))));
     }
 

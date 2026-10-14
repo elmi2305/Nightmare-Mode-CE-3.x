@@ -85,6 +85,7 @@ public class NMEntityMapper {
     }
 
     public static void createTileEntityMappings(){
+        TileEntity.addMapping(MachineSpeedTileEntity.class, "NmMachineSpeed");
         TileEntity.addMapping(TileEntityBloodChest.class, "BloodChest");
         TileEntity.addMapping(TileEntitySteelLocker.class, "SteelLocker");
         TileEntity.addMapping(HellforgeTileEntity.class, "Hellforge");

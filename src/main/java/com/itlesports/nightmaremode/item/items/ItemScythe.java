@@ -10,6 +10,8 @@ import btw.block.BTWBlocks;
 import btw.block.tileentity.PlacedToolTileEntity;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.itlesports.nightmaremode.item.NMItems;
+import com.itlesports.nightmaremode.item.items.template.ItemKnife;
 import net.minecraft.src.*;
 
 public class ItemScythe extends SwordItem {
@@ -18,6 +20,14 @@ public class ItemScythe extends SwordItem {
     public ItemScythe(int id, EnumToolMaterial material, float weaponDamage) {
         super(id, material);
         this.weaponDamage = weaponDamage;
+    }
+
+    public ItemKnife getHarvestKnife() {
+        if (this == NMItems.ironScythe) return NMItems.ironKnife;
+        if (this == NMItems.tungstenScythe) return NMItems.tungstenKnife;
+        if (this == NMItems.blackglassScythe) return NMItems.blackglassKnife;
+        if (this == NMItems.deadzoneScythe) return NMItems.endstoneKnife;
+        return NMItems.diamondKnife;
     }
 
     @Override

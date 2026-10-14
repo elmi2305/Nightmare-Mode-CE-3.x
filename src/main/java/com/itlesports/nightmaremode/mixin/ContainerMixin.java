@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import com.itlesports.nightmaremode.mixin.accessor.SlotCraftingAccessor;
 import com.itlesports.nightmaremode.util.NMInventoryLocks;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.InventoryPlayer;
@@ -10,6 +11,7 @@ import net.minecraft.src.IRecipe;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Slot;
 import net.minecraft.src.SlotCrafting;
+import net.minecraft.src.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,6 +24,17 @@ import java.util.List;
 @Mixin(Container.class)
 public class ContainerMixin {
     @Shadow public List inventorySlots;
+
+    @Inject(method = "slotClick", at = @At("HEAD"))
+    private void rememberInteractingMachineSpeed(int slotId, int mouseButton, int modifier,
+                                                 EntityPlayer player, CallbackInfoReturnable<ItemStack> cir) {
+        if (player == null || player.worldObj.isRemote) return;
+        // include shift-clicks from the player inventory and drag operations across slots.
+        for (Object entry : this.inventorySlots) {
+            Slot slot = (Slot)entry;
+            if (slot.inventory instanceof TileEntity tile) MachineSpeedBonuses.interact(tile, player);
+        }
+    }
 
     @Inject(method = "slotClick", at = @At("HEAD"), cancellable = true)
     private void blockNumberKeySwapToLockedHotbar(int slotId, int mouseButton, int modifier, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir) {

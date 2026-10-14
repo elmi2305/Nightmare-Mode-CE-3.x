@@ -19,6 +19,9 @@ public class CropsBlockMixin {
             ci.cancel();
             return;
         }
+        if (!ChunkAttributeManager.canPlantGrow(world, x, z, (Block)(Object)this)) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "incrementGrowthLevel", at = @At("TAIL"))

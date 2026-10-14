@@ -8,7 +8,8 @@ import api.item.items.ToolItem;
 import api.item.util.ItemUtils;
 import com.itlesports.nightmaremode.crafting.manager.CisternRecipeManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.CisternRecipe;
-import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
+import com.itlesports.nightmaremode.util.interfaces.MachineSpeedAccess;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -70,9 +71,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
         }
 
         ++this.processingTime;
-        EntityPlayer nearbyPlayer = this.worldObj.getClosestPlayer(
-                this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, 8.0D);
-        if (nearbyPlayer != null && this.worldObj.rand.nextFloat() < SkillHandler.getPlayerData(nearbyPlayer).cisternSpeedBonus) {
+        if (this.worldObj.rand.nextFloat() < MachineSpeedBonuses.get(this)) {
             ++this.processingTime;
         }
 
@@ -578,6 +577,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
 
     @Override
     public void readNBTFromPacket(NBTTagCompound tag) {
+        ((MachineSpeedAccess)this).nm$getMachineSpeedState().read(tag);
         this.fluid = tag.getInteger("Fluid");
         this.heatLevel = tag.getInteger("Heat");
         this.processingTime = tag.getInteger("Process");
@@ -588,6 +588,7 @@ public class CisternTileEntity extends TileEntity implements IInventory, TileEnt
     }
 
     private void writePacketNBT(NBTTagCompound tag) {
+        ((MachineSpeedAccess)this).nm$getMachineSpeedState().write(tag);
         tag.setInteger("Fluid", this.fluid);
         tag.setInteger("Heat", this.heatLevel);
         tag.setInteger("Process", this.processingTime);

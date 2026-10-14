@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import api.item.items.PickaxeItem;
 import api.item.util.ItemUtils;
+import btw.block.blocks.RoughStoneBlock;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.fabricmc.api.EnvType;
@@ -31,14 +32,26 @@ public class LithiumOreBlock extends ProcessingOreBlock {
     public boolean mineDeposit(World world, EntityPlayer player, int x, int y, int z, int side) {
         if (world.isRemote || !this.isValidMiningTool(player.getCurrentEquippedItem(), world, x, y, z)) return false;
         int metadata = world.getBlockMetadata(x, y, z);
-        int count = 1 + world.rand.nextInt(2);
+        Item tool = player.getCurrentEquippedItem().getItem();
+        int toolLevel = tool instanceof PickaxeItem pick ? pick.toolMaterial.getHarvestLevel()
+                : ((ItemPickaxe)tool).getToolMaterial().getHarvestLevel();
+        boolean crackStone = toolLevel < this.getRequiredToolLevelForStrata(world, x, y, z);
+        // old saves may still contain deposits that have already been mined three times.
+        int count = (metadata >> 2) >= 3 ? 0 : 1 + world.rand.nextInt(2);
         if (SkillHandler.getPlayerData(player).doubleLithiumDrops) count *= 2;
-        ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                new ItemStack(NMItems.lithiumRaw, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(count)), side);
+        if (count > 0) {
+            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
+                    new ItemStack(NMItems.lithiumRaw, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(count)), side);
+        }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, metadata);
-        if ((metadata >> 2) >= 3) {
-            world.setBlockToAir(x, y, z);
+        if (crackStone || (metadata >> 2) >= 2) {
+            if (crackStone) {
+                world.setBlockAndMetadataWithNotify(x, y, z,
+                        RoughStoneBlock.strataLevelBlockArray[metadata & 3].blockID, 4);
+            } else {
+                world.setBlockToAir(x, y, z);
+            }
             SkillHandler.incrementBlocksMined(player, this.blockID, metadata & 3);
         } else world.setBlockMetadataWithNotify(x, y, z, metadata + 4, 3);
         return true;

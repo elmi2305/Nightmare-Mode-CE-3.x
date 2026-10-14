@@ -1,10 +1,10 @@
 package com.itlesports.nightmaremode.item;
 
-import api.item.items.HoeItem;
 import btw.item.BTWTags;
 import btw.item.BTWItems;
 import btw.item.items.*;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
+import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.block.blocks.BlockDryingGrass;
 import com.itlesports.nightmaremode.block.blocks.templates.NMPlaceAsBlockItem;
 import com.itlesports.nightmaremode.item.items.*;
@@ -281,6 +281,11 @@ public class NMItems {
     public static ItemChunkFertilizer potassiumFertilizer;
     public static ItemChunkFertilizer acidityFertilizer;
     public static ItemChunkFertilizer porosityFertilizer;
+    public static ItemChunkFertilizer upgradedNitrogenFertilizer;
+    public static ItemChunkFertilizer upgradedMoistureFertilizer;
+    public static ItemChunkFertilizer upgradedPotassiumFertilizer;
+    public static ItemChunkFertilizer upgradedAcidityFertilizer;
+    public static ItemChunkFertilizer upgradedPorosityFertilizer;
     public static Item highSpeedMinecart;
     public static Item highSpeedChestMinecart;
     public static Item highSpeedFurnaceMinecart;
@@ -785,6 +790,26 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyPorosityFertilizer")
                 .setUnlocalizedName("ifhyPorosityFertilizer")
                 .setCreativeTab(CreativeTabs.tabMaterials);
+        upgradedNitrogenFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(3471, ChunkAttribute.NITROGEN,
+                ChunkAttributeManager.UPGRADED_FERTILIZER_GAIN, ChunkAttributeManager.UPGRADED_FERTILIZER_PENALTY)
+                .setTextureName("nightmare:ifhyUpgradedNitrogenFertilizer").setUnlocalizedName("ifhyUpgradedNitrogenFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        upgradedMoistureFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(3472, ChunkAttribute.MOISTURE,
+                ChunkAttributeManager.UPGRADED_FERTILIZER_GAIN, ChunkAttributeManager.UPGRADED_FERTILIZER_PENALTY)
+                .setTextureName("nightmare:ifhyUpgradedMoistureFertilizer").setUnlocalizedName("ifhyUpgradedMoistureFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        upgradedPotassiumFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(3473, ChunkAttribute.POTASSIUM,
+                ChunkAttributeManager.UPGRADED_FERTILIZER_GAIN, ChunkAttributeManager.UPGRADED_FERTILIZER_PENALTY)
+                .setTextureName("nightmare:ifhyUpgradedPotassiumFertilizer").setUnlocalizedName("ifhyUpgradedPotassiumFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        upgradedAcidityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(3474, ChunkAttribute.ACIDITY,
+                ChunkAttributeManager.UPGRADED_FERTILIZER_GAIN, ChunkAttributeManager.UPGRADED_FERTILIZER_PENALTY)
+                .setTextureName("nightmare:ifhyUpgradedAcidityFertilizer").setUnlocalizedName("ifhyUpgradedAcidityFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
+        upgradedPorosityFertilizer = (ItemChunkFertilizer)new ItemChunkFertilizer(3475, ChunkAttribute.POROSITY,
+                ChunkAttributeManager.UPGRADED_FERTILIZER_GAIN, ChunkAttributeManager.UPGRADED_FERTILIZER_PENALTY)
+                .setTextureName("nightmare:ifhyUpgradedPorosityFertilizer").setUnlocalizedName("ifhyUpgradedPorosityFertilizer")
+                .setCreativeTab(CreativeTabs.tabMaterials);
 
         redstoneCrystal = new NMItem(2754).setTextureName("nightmare:ifhyRedstoneCrystal").setUnlocalizedName("ifhyRedstoneCrystal").setCreativeTab(CreativeTabs.tabMaterials);
         refinedRedstone = new NMItem(2755).setTextureName("nightmare:ifhyRefinedRedstone").setUnlocalizedName("ifhyRefinedRedstone").setCreativeTab(CreativeTabs.tabMaterials);
@@ -899,8 +924,8 @@ public class NMItems {
         brokenHoeFragment = new ItemQuestFragment(3223, 8)
                 .setTextureName("nightmare:ifhyBrokenHoeFragment").setUnlocalizedName("ifhyBrokenHoeFragment")
                 .setCreativeTab(CreativeTabs.tabTools);
-        farmersFavoriteHoe = new HoeItem(3224, EnumToolMaterial.IRON).setTextureName("nightmare:ifhyFarmersFavoriteHoe")
-                .setUnlocalizedName("ifhyFarmersFavoriteHoe").setCreativeTab(CreativeTabs.tabTools);
+        farmersFavoriteHoe = new NMItem(3224).setMaxStackSize(1).setTextureName("nightmare:ifhyFarmersFavoriteHoe")
+                .setUnlocalizedName("ifhyFarmersFavoriteHoe").setCreativeTab(CreativeTabs.tabMaterials);
         unbakedChocolateCake = new NMItem(3225).setMaxStackSize(1).setTextureName("nightmare:ifhyUnbakedChocolateCake")
                 .setUnlocalizedName("ifhyUnbakedChocolateCake").setCreativeTab(CreativeTabs.tabFood);
         chocolateCake = new NMItem(3226).setMaxStackSize(1).setTextureName("nightmare:ifhyChocolateCake")
@@ -910,8 +935,8 @@ public class NMItems {
         brokenPickaxeFragment = new ItemQuestFragment(3228, 4)
                 .setTextureName("nightmare:ifhyBrokenPickaxeFragment").setUnlocalizedName("ifhyBrokenPickaxeFragment")
                 .setCreativeTab(CreativeTabs.tabTools);
-        blacksmithFavoritePickaxe = new ItemQuestPickaxe(3229).setTextureName("nightmare:ifhyBlacksmithFavoritePickaxe")
-                .setUnlocalizedName("ifhyBlacksmithFavoritePickaxe").setCreativeTab(CreativeTabs.tabTools);
+        blacksmithFavoritePickaxe = new NMItem(3229).setMaxStackSize(1).setTextureName("nightmare:ifhyBlacksmithFavoritePickaxe")
+                .setUnlocalizedName("ifhyBlacksmithFavoritePickaxe").setCreativeTab(CreativeTabs.tabMaterials);
         mechanicalWrench = new ItemMechanicalWrench(3230).setTextureName("nightmare:ifhyMechanicalWrench")
                 .setUnlocalizedName("ifhyMechanicalWrench").setCreativeTab(CreativeTabs.tabTools);
 

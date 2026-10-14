@@ -37,7 +37,10 @@ public class FarmlandBlockBaseMixin {
         } else if (stack.getItem() instanceof ItemChunkFertilizer fertilizer) {
             attribute = fertilizer.getAttribute();
         }
-        if (attribute == null || !ChunkAttributeManager.applyFertilizer(world, x, y, z, attribute)) {
+        boolean applied = stack.getItem() instanceof ItemChunkFertilizer fertilizer
+                ? fertilizer.apply(world, x, y, z)
+                : attribute != null && ChunkAttributeManager.applyFertilizer(world, x, y, z, attribute);
+        if (!applied) {
             return;
         }
 

@@ -16,10 +16,22 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
+
 @Mixin(HempCropBlock.class)
 public abstract class HempCropBlockMixin extends BlockCrops {
     protected HempCropBlockMixin(int blockId) {
         super(blockId);
+    }
+
+    @Inject(method = "attemptToGrow", at = @At("HEAD"), cancellable = true)
+    private void requireChunkResources(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (!ChunkAttributeManager.canPlantGrow(world, x, z, (Block)(Object)this)) {
+            if (ChunkPollutionManager.isAtLeast(world, x, z, ChunkPollutionManager.BIOLOGICAL_DAMAGE)) {
+                world.setBlockToAir(x, y, z);
+            }
+            ci.cancel();
+        }
     }
 
     @Inject(method = "harvestBlock", at = @At("HEAD"), cancellable = true)
@@ -70,7 +82,7 @@ public abstract class HempCropBlockMixin extends BlockCrops {
     ) {
         boolean changed = world.setBlockAndMetadataWithNotify(x, y, z, blockId, metadata);
         if (changed) {
-            ChunkAttributeManager.consumeForGrowth(world, x, z, (Block)(Object)this);
+            ChunkAttributeManager.consumeForHempTopGrowth(world, x, z, (Block)(Object)this);
         }
         return changed;
     }

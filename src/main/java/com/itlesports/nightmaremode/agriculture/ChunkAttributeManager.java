@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.agriculture;
 import btw.block.BTWBlocks;
 import btw.block.blocks.CarrotBlockBase;
 import btw.block.blocks.HempCropBlock;
+import btw.block.blocks.HempCropBlockRoots;
 import btw.block.blocks.PotatoBlock;
 import btw.block.blocks.WheatCropBlock;
 import btw.block.blocks.WheatCropTopBlock;
@@ -23,10 +24,12 @@ import java.util.Locale;
 import java.util.Random;
 
 public final class ChunkAttributeManager {
-    public static final float GENERAL_GROWTH_COST = 0.05F;
-    public static final float PREFERRED_GROWTH_COST = 0.45F;
+    public static final float GENERAL_GROWTH_COST = 0.0005F;
+    public static final float PREFERRED_GROWTH_COST = 0.0045F;
     public static final float FERTILIZER_GAIN = 0.25F;
     public static final float FERTILIZER_PENALTY = 0.25F;
+    public static final float UPGRADED_FERTILIZER_GAIN = 0.4F;
+    public static final float UPGRADED_FERTILIZER_PENALTY = 0.1F;
     public static final long FERTILIZER_DURATION = 24000L;
 
     private ChunkAttributeManager() {
@@ -71,6 +74,9 @@ public final class ChunkAttributeManager {
         float other = 0.0F;
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
             if (contains(requirements, attribute)) {
+                if (!SoilGrowthRates.meetsPreferredMinimum(attributes.get(attribute))) {
+                    return 0.0F;
+                }
                 preferred += attributes.get(attribute);
             } else {
                 other += attributes.get(attribute);
@@ -78,6 +84,10 @@ public final class ChunkAttributeManager {
         }
         return SoilGrowthRates.multiplier(preferred / requirements.length,
                 other / (ChunkAttribute.values().length - requirements.length));
+    }
+
+    public static boolean canPlantGrow(World world, int x, int z, Block crop) {
+        return getGrowthMultiplier(world, x, z, crop) > 0.0F;
     }
 
     public static boolean isCropGrowthDay(World world, int x, int z, Block crop) {
@@ -100,6 +110,14 @@ public final class ChunkAttributeManager {
     }
 
     public static void consumeForGrowth(World world, int x, int z, Block crop) {
+        consumeForGrowth(world, x, z, crop, isHemp(crop) ? 0.5F : 1.0F);
+    }
+
+    public static void consumeForHempTopGrowth(World world, int x, int z, Block crop) {
+        consumeForGrowth(world, x, z, crop, 0.25F);
+    }
+
+    private static void consumeForGrowth(World world, int x, int z, Block crop, float costMultiplier) {
         if (world.isRemote) {
             return;
         }
@@ -110,6 +128,7 @@ public final class ChunkAttributeManager {
             if (contains(requirements, attribute)) {
                 amount += PREFERRED_GROWTH_COST;
             }
+            amount *= costMultiplier;
             attributes.consume(attribute, com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? amount * 0.5F : amount);
         }
         world.getChunkFromChunkCoords(x >> 4, z >> 4).setChunkModified();
@@ -128,6 +147,10 @@ public final class ChunkAttributeManager {
     }
 
     public static boolean applyFertilizer(World world, int x, int y, int z, ChunkAttribute fertilizer) {
+        return applyFertilizer(world, x, y, z, fertilizer, FERTILIZER_GAIN, FERTILIZER_PENALTY);
+    }
+
+    public static boolean applyFertilizer(World world, int x, int y, int z, ChunkAttribute fertilizer, float gain, float penalty) {
         FarmlandPosition farmland = findFarmlandForApplication(world, x, y, z);
         if (farmland == null) {
             return false;
@@ -160,7 +183,7 @@ public final class ChunkAttributeManager {
         ChunkAttributes attributes = get(chunk);
         for (ChunkAttribute attribute : ChunkAttribute.values()) {
             float before = attributes.get(attribute);
-            attributes.add(attribute, attribute == fertilizer ? FERTILIZER_GAIN : -FERTILIZER_PENALTY);
+            attributes.add(attribute, attribute == fertilizer ? gain : -penalty);
             System.out.printf(
                     Locale.ROOT,
                     "%s: %.2f%% -> %.2f%%%n",
@@ -458,7 +481,7 @@ public final class ChunkAttributeManager {
         if (crop instanceof CarrotBlockBase) {
             return new ChunkAttribute[]{ChunkAttribute.MOISTURE, ChunkAttribute.POTASSIUM};
         }
-        if (crop instanceof HempCropBlock) {
+        if (isHemp(crop)) {
             return new ChunkAttribute[]{ChunkAttribute.MOISTURE, ChunkAttribute.ACIDITY};
         }
         if (crop instanceof WheatCropBlock || crop instanceof WheatCropTopBlock) {
@@ -471,6 +494,10 @@ public final class ChunkAttributeManager {
             return new ChunkAttribute[]{ChunkAttribute.NITROGEN, ChunkAttribute.POROSITY};
         }
         return new ChunkAttribute[0];
+    }
+
+    private static boolean isHemp(Block crop) {
+        return crop instanceof HempCropBlock || crop instanceof HempCropBlockRoots;
     }
 
     private static boolean contains(ChunkAttribute[] attributes, ChunkAttribute target) {

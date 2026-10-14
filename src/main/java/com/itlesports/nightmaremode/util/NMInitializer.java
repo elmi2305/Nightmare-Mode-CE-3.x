@@ -1864,8 +1864,7 @@ public abstract class NMInitializer implements AchievementExt {
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.nickelCrushedRock)},
                 CisternTileEntity.FLUID_SLURRY, 0, 2, 280,
-                new ItemStack[]{new ItemStack(NMItems.nickelWashedConcentrate)})
-                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F));
+                new ItemStack[]{new ItemStack(NMItems.nickelWashedConcentrate)}));
 
         // The water route remains for the overworld; lava provides the native wash.
         manager.addRecipe(new CisternRecipe(
@@ -2089,6 +2088,39 @@ public abstract class NMInitializer implements AchievementExt {
                 CisternTileEntity.FLUID_WATER, 0, 4, 360,
                 new ItemStack[]{new ItemStack(NMBlocks.fertileNetherrack, 4)})
                 .setConsumesFluid());
+
+        // split bulk drops across slots to respect their 16-item stack limits.
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(Item.dyePowder, 8, 15),
+                        new ItemStack(Item.rottenFlesh, 32),
+                        new ItemStack(Item.bone, 32), new ItemStack(Item.blazePowder, 8)},
+                CisternTileEntity.FLUID_SLURRY, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.upgradedNitrogenFertilizer, 8)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.moistureFertilizer, 8),
+                        new ItemStack(Item.slimeBall, 32),
+                        new ItemStack(Item.silk, 32), new ItemStack(Item.blazePowder, 8)},
+                CisternTileEntity.FLUID_BRINE, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.upgradedMoistureFertilizer, 8)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.potassiumFertilizer, 8),
+                        new ItemStack(BTWItems.nitre, 32), new ItemStack(Item.rottenFlesh, 32),
+                        new ItemStack(Item.blazePowder, 8)},
+                CisternTileEntity.FLUID_BRINE, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.upgradedPotassiumFertilizer, 8)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.acidityFertilizer, 8),
+                        new ItemStack(Item.rottenFlesh, 32),
+                        new ItemStack(Item.spiderEye, 8), new ItemStack(Item.blazePowder, 8)},
+                CisternTileEntity.FLUID_ACIDIC_WASH, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.upgradedAcidityFertilizer, 8)}).setConsumesFluid());
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.porosityFertilizer, 8),
+                        new ItemStack(Item.bone, 32),
+                        new ItemStack(Item.silk, 32),
+                        new ItemStack(Item.blazePowder, 8)},
+                CisternTileEntity.FLUID_SLURRY, 3, 8, 600,
+                new ItemStack[]{new ItemStack(NMItems.upgradedPorosityFertilizer, 8)}).setConsumesFluid());
 
         finishRecipes("Cistern Recipes");
     }
@@ -3073,7 +3105,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('R'), NMItems.refinedRedstone,
                         Character.valueOf('N'), NMItems.nickelPlate,
                         Character.valueOf('L'), NMItems.crystalLens}),
-                NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16,
+                NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_12,
                 NMSkillNodes.BRING_DYE_BLEND_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
 
         // netherrack compression is performed through piston packing.
@@ -3103,7 +3135,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('G'), NMItems.crystalPrecisionGear,
                         Character.valueOf('D'), NMItems.diamondStick,
                         Character.valueOf('L'), NMItems.lithiumHeatCompound}),
-                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_NICKEL_PLATE_4,
+                NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_NICKEL_PLATE_4,
                 NMSkillNodes.BRING_DIAMOND_STICK_16, NMSkillNodes.BRING_RAW_LITHIUM_64);
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.cisternInterface), new Object[]{
@@ -3114,7 +3146,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('F'), NMItems.fluidGauge,
                         Character.valueOf('B'), Block.netherBrick,
                         Character.valueOf('A'), NMItems.aquamarine}),
-                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_AQUAMARINE_16,
+                NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_AQUAMARINE_16,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.cisternStirrer), new Object[]{
@@ -3126,7 +3158,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('N'), NMItems.nickelPlate,
                         Character.valueOf('R'), NMItems.refinedRedstone}),
                 NMSkillNodes.BRING_SCREW_16, NMSkillNodes.BRING_GEAR_64,
-                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
+                NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_NICKEL_PLATE_4);
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(new ItemStack(NMBlocks.cisternDrain), new Object[]{
                         "NIN", "TRT", "SGS",
@@ -3136,7 +3168,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('R'), NMItems.refinedRedstone,
                         Character.valueOf('S'), BTWItems.screw,
                         Character.valueOf('G'), NMItems.glueSlurry}),
-                NMSkillNodes.BRING_SCREW_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16,
+                NMSkillNodes.BRING_SCREW_16, NMSkillNodes.BRING_REDSTONE_BLOCK_12,
                 NMSkillNodes.BRING_GLUE_SLURRY_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.invocationSeal), new Object[]{NMItems.invocationFragment, NMItems.invocationFragment, NMItems.invocationFragment, NMItems.invocationFragment});
@@ -3177,7 +3209,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('R'), NMItems.refinedRedstone,
                         Character.valueOf('I'), NMItems.ironBrick,
                         Character.valueOf('G'), BTWItems.glue}),
-                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_IRON_BRICK_64,
+                NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_IRON_BRICK_64,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_SCREW_16);
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.minecartPowered), new Object[]{"A", "B", Character.valueOf('A'), Block.furnaceIdle, Character.valueOf('B'), Item.minecartEmpty});
         RecipeManager.addRecipe(new ItemStack(Item.minecartPowered), new Object[]{"F", "C", Character.valueOf('F'), NMTags.netherCartFurnaces, Character.valueOf('C'), Item.minecartEmpty});
@@ -4422,8 +4454,8 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.verticalWindMill.itemID, NMSkillNodes.BRING_WINDMILL_4);
 
         SkillRecipeGates.crafting(Item.saddle.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_ROPE_8, NMSkillNodes.BRING_LEATHER_16);
-        SkillRecipeGates.crafting(BTWBlocks.woodenDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
-        SkillRecipeGates.crafting(BTWBlocks.steelDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
+        SkillRecipeGates.crafting(BTWBlocks.woodenDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_12);
+        SkillRecipeGates.crafting(BTWBlocks.steelDetectorRail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_8, NMSkillNodes.BRING_REDSTONE_BLOCK_12);
         SkillRecipeGates.crafting(Block.beacon.blockID, NMSkillNodes.KILL_WITHER, NMSkillNodes.BRING_OBSIDIAN_BRICK_16);
         SkillRecipeGates.crafting(NMItems.husbandryEssence.itemID, NMSkillNodes.TAME_ANIMAL_8, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_FABRIC_16,
                 NMSkillNodes.BRING_FLOUR_32, NMSkillNodes.PLANT_CROP_200, NMSkillNodes.PLANT_SAPLING_100, NMSkillNodes.BRING_HEMP_32,
@@ -4527,10 +4559,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.screw.itemID, NMSkillNodes.BRING_IRON_NUGGET_32);
         SkillRecipeGates.crafting(Block.rail.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_IRON_BRICK_64);
         SkillRecipeGates.crafting(BTWBlocks.ironSpike.blockID, NMSkillNodes.BRING_IRON_NUGGET_32);
-        SkillRecipeGates.crafting(Block.railDetector.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
-        SkillRecipeGates.crafting(Block.railPowered.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_GOLD_INGOT_16);
-        SkillRecipeGates.crafting(Block.railActivator.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
-        SkillRecipeGates.crafting(NMBlocks.stationRail.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_REDSTONE_BLOCK_16);
+        SkillRecipeGates.crafting(Block.railDetector.blockID, NMSkillNodes.BRING_IRON_NUGGET_32, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_12);
+        SkillRecipeGates.crafting(Block.railPowered.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_GOLD_INGOT_16);
+        SkillRecipeGates.crafting(Block.railActivator.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_DYE_BLEND_16);
+        SkillRecipeGates.crafting(NMBlocks.stationRail.blockID, NMSkillNodes.BRING_IRON_BRICK_64, NMSkillNodes.BRING_COMPARATOR_8, NMSkillNodes.BRING_REDSTONE_BLOCK_12);
 
         SkillRecipeGates.crafting(BTWBlocks.anchor.blockID, NMSkillNodes.BRING_IRON_INGOT_8);
         SkillRecipeGates.crafting(Item.pickaxeIron.itemID, NMSkillNodes.BRING_IRON_INGOT_8);
@@ -4645,14 +4677,14 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.verdantSword.itemID, NMSkillNodes.BRING_VERDANT_PLATE_4);
         SkillRecipeGates.crafting(NMItems.verdantPickaxe.itemID, NMSkillNodes.BRING_VERDANT_PLATE_4);
 
-        SkillRecipeGates.crafting(Block.pistonBase.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16, NMSkillNodes.BRING_SOUL_URN_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
+        SkillRecipeGates.crafting(Block.pistonBase.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16, NMSkillNodes.BRING_SOUL_URN_16, NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.requireCraftingSkills(Block.pistonStickyBase.blockID, NMSkillNodes.BRING_PISTON_1);
         SkillRecipeGates.crafting(Block.music.blockID, NMSkillNodes.BRING_REDSTONE_LATCH_16);
-        SkillRecipeGates.crafting(Item.comparator.itemID, NMSkillNodes.BRING_REDSTONE_EYE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
+        SkillRecipeGates.crafting(Item.comparator.itemID, NMSkillNodes.BRING_REDSTONE_EYE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.crafting(BTWItems.corpseEye.itemID, NMSkillNodes.BRING_SOUL_URN_16);
         SkillRecipeGates.crafting(BTWItems.goldenDung.itemID, NMSkillNodes.BRING_DUNG_16);
         SkillRecipeGates.crafting(BTWItems.enderSpectacles.itemID, NMSkillNodes.BRING_OCULAR_OF_ENDER_8);
-        SkillRecipeGates.crafting(Item.redstoneRepeater.itemID, NMSkillNodes.BRING_POCKET_SUNDIAL_8, NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_DYE_BLEND_16);
+        SkillRecipeGates.crafting(Item.redstoneRepeater.itemID, NMSkillNodes.BRING_POCKET_SUNDIAL_8, NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_DYE_BLEND_16);
         SkillRecipeGates.crafting(Item.map.itemID, NMSkillNodes.BRING_COMPASS_8, NMSkillNodes.VISIT_UNIQUE_BIOME_4);
         SkillRecipeGates.crafting(Item.minecartEmpty.itemID, NMSkillNodes.BRING_RAIL_32);
         SkillRecipeGates.crafting(Item.minecartCrate.itemID, NMSkillNodes.BRING_MINECART_8);
@@ -4782,7 +4814,7 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_NETHER_BRICK_32, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(Block.obsidian.blockID, NMSkillNodes.BRING_OBSIDIAN_SHARD_16);
         SkillRecipeGates.crafting(NMItems.refinedRedstone.itemID,
-                NMSkillNodes.BRING_REDSTONE_BLOCK_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
+                NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
         SkillRecipeGates.crafting(NMItems.hydraulicLens.itemID,
                 NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);
         SkillRecipeGates.crafting(NMItems.fluidGauge.itemID,

@@ -1,7 +1,13 @@
 package com.itlesports.nightmaremode.agriculture;
 
 public final class SoilGrowthRates {
+    public static final float MIN_PREFERRED_ATTRIBUTE = 5.0F;
+
     private SoilGrowthRates() {}
+
+    public static boolean meetsPreferredMinimum(float value) {
+        return value >= MIN_PREFERRED_ATTRIBUTE;
+    }
 
     public static float multiplier(float preferredAverage, float otherAverage) {
         float quality = preferredAverage * 0.75F + otherAverage * 0.25F;

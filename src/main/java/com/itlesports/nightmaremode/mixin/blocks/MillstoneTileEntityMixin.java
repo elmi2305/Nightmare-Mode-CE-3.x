@@ -7,9 +7,7 @@ import com.itlesports.nightmaremode.block.tileEntities.ObsidianMillstoneTileEnti
 import net.minecraft.src.Block;
 import btw.crafting.manager.MillStoneCraftingManager;
 import com.itlesports.nightmaremode.skill.SkillLockedBulkCrafting;
-import com.itlesports.nightmaremode.skill.SkillHandler;
-import com.itlesports.nightmaremode.skill.SkillTreeData;
-import net.minecraft.src.EntityPlayer;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Potion;
 import net.minecraft.src.TileEntity;
@@ -50,10 +48,7 @@ public abstract class MillstoneTileEntityMixin extends TileEntity {
 
     @Unique
     private int millstoneProcessingTicks(int constant) {
-        EntityPlayer player = this.worldObj.getClosestPlayer(this.xCoord + 0.5D, this.yCoord + 0.5D,
-                this.zCoord + 0.5D, 16.0D);
-        SkillTreeData data = player == null ? null : SkillHandler.getPlayerData(player);
-        float bonus = data == null ? 0.0F : data.machineSpeedBonus + data.millstoneSpeedBonus;
+        float bonus = MachineSpeedBonuses.get(this);
         return Math.max(1, Math.round(constant * 8 / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus))));
     }
 

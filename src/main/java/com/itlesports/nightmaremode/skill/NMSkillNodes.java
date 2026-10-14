@@ -3442,10 +3442,10 @@ public final class NMSkillNodes {
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), KNOWLEDGE, false,
             BRING_AQUAMARINE_16);
 
-    public static final SkillNode BRING_REDSTONE_BLOCK_16 = bring(
+    public static final SkillNode BRING_REDSTONE_BLOCK_12 = bring(
             "redstone_blocks_16", "Compressed Signal", Block.blockRedstone, 2, 4,
-            "Bring 16 redstone blocks.", Block.blockRedstone.blockID, 0, false, 16,
-            "Unlocks Additional Recipes. 1% lower enchanting cost.", SkillRewardActions.addEnchantCostReduction(0.01F), KNOWLEDGE, false);
+            "Bring 16 redstone blocks.", Block.blockRedstone.blockID, 0, false, 12,
+            "Unlocks Additional Recipes. 5% lower enchanting cost.", SkillRewardActions.addEnchantCostReduction(0.05F), KNOWLEDGE, false);
 
     public static final SkillNode BRING_LAPIS_BLOCK_16 = bring(
             "lapis_blocks_16", "Compressed Azure", Block.blockLapis, -1, -3,
@@ -5182,7 +5182,7 @@ public final class NMSkillNodes {
         BRING_GOLD_INGOT_16.addParents(BRING_GOLD_NUGGET_32);
         BRING_DIAMOND_8.addParents(BRING_DIAMOND_16);
         BRING_STEEL_PRESSURE_PLATE_8.addParents(BRING_SOULFORGED_STEEL_INGOT_16);
-        BRING_REDSTONE_LATCH_16.addParents(BRING_REDSTONE_BLOCK_16);
+        BRING_REDSTONE_LATCH_16.addParents(BRING_REDSTONE_BLOCK_12);
         BRING_POCKET_SUNDIAL_8.addParents(BRING_GOLD_INGOT_16, BRING_REDSTONE_16);
         BRING_COMPASS_8.addParents(BRING_IRON_INGOT_8, BRING_REDSTONE_16);
         BRING_RAIL_32.addParents(BRING_IRON_NUGGET_32);
@@ -5197,7 +5197,7 @@ public final class NMSkillNodes {
         BRING_LADDER_64.addParents(BRING_WOODEN_SIDING_32);
         BRING_STATION_RAIL_16.addParents(BRING_RAIL_32, BRING_REDSTONE_LATCH_16);
         BRING_AQUAMARINE_16.addParents(BRING_IRON_INGOT_8);
-        BRING_REDSTONE_BLOCK_16.addParents(BRING_REDSTONE_16);
+        BRING_REDSTONE_BLOCK_12.addParents(BRING_REDSTONE_16);
         BRING_LAPIS_BLOCK_16.addParents(BRING_LAPIS_LAZULI_64);
         CRAFT_BOOK_64.addParents(BRING_BOOK_16);
 

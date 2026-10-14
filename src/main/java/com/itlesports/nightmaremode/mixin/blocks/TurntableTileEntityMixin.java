@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.tileentity.TurntableTileEntity;
 import com.itlesports.nightmaremode.skill.SkillHandler;
+import com.itlesports.nightmaremode.util.MachineSpeedBonuses;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,10 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TurntableTileEntity.class)
 public abstract class TurntableTileEntityMixin extends TileEntity {
     @Inject(method = "getTicksToRotate", at = @At("RETURN"), cancellable = true, remap = false)
-    private void nightmareMode$applyMachineSkillSpeed(CallbackInfoReturnable<Integer> cir) {
-        EntityPlayer player = this.worldObj.getClosestPlayer(this.xCoord + 0.5D, this.yCoord + 0.5D,
-                this.zCoord + 0.5D, 16.0D);
-        float bonus = player == null ? 0.0F : SkillHandler.getPlayerData(player).machineSpeedBonus;
+    private void applyMachineSkillSpeed(CallbackInfoReturnable<Integer> cir) {
+        float bonus = MachineSpeedBonuses.get(this);
         cir.setReturnValue(Math.max(1, Math.round(cir.getReturnValue() / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus)))));
     }
     @Inject(method = "rotateTurntable", at = @At("TAIL"), remap = false)

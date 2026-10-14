@@ -52,6 +52,12 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void rememberDeathKnife(DamageSource source, CallbackInfo ci) {
         ItemKnife knife = source.getEntity() instanceof EntityPlayer player ? ItemKnife.fromStack(player.getHeldItem()) : null;
+        // animal knife bonuses are applied by completeHarvest instead of a second multiplier.
+        if (knife == null && !((Object)this instanceof EntityAnimal)
+                && source.getEntity() instanceof EntityPlayer player
+                && player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemScythe scythe) {
+            knife = scythe.getHarvestKnife();
+        }
         this.deathKnifeTier = knife == null ? 0 : knife.getHarvestTier();
     }
 
@@ -133,8 +139,20 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         return effect;
     }
 
-    @ModifyArg(method = "entityLivingOnDeath", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/EntityLivingBase;dropFewItems(ZI)V"), index = 1)
+    @Shadow protected abstract void dropFewItems(boolean killedByPlayer, int lootingModifier);
+
+    @Redirect(method = "entityLivingOnDeath", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityLivingBase;dropFewItems(ZI)V"))
+    private void harvestAnimalsWithScythe(EntityLivingBase entity, boolean killedByPlayer, int lootingModifier, DamageSource source) {
+        if (entity instanceof EntityAnimal && source.getEntity() instanceof EntityPlayer player
+                && player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemScythe scythe) {
+            CarcassHarvesting.completeHarvest(entity, player, scythe.getHarvestKnife().getHarvestTier(), source);
+        } else {
+            this.dropFewItems(killedByPlayer, this.applySkillMobLootChance(lootingModifier));
+        }
+    }
+
+    @Unique
     private int applySkillMobLootChance(int lootingModifier) {
         if (this.attackingPlayer != null
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(this.attackingPlayer).mobLootChanceBonus
