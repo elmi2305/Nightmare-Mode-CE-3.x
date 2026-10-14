@@ -151,6 +151,8 @@
     "blocks.CobblestoneBlockMixin",
     "blocks.CobblestoneStairsBlockMixin",
     "blocks.CookingVesselTileEntityMixin",
+    "blocks.CauldronTileEntityMixin",
+    "accessor.BulkRecipeAccessor",
     "blocks.CropsBlockMixin",
     "blocks.DailyGrowthCropsBlockMixin",
     "blocks.DiamondOreBlockMixin",
