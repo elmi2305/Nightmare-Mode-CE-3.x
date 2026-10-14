@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item;
 
+import api.item.items.HoeItem;
 import btw.item.BTWTags;
 import btw.item.BTWItems;
 import btw.item.items.*;
@@ -898,7 +899,7 @@ public class NMItems {
         brokenHoeFragment = new ItemQuestFragment(3223, 8)
                 .setTextureName("nightmare:ifhyBrokenHoeFragment").setUnlocalizedName("ifhyBrokenHoeFragment")
                 .setCreativeTab(CreativeTabs.tabTools);
-        farmersFavoriteHoe = new ItemHoe(3224, EnumToolMaterial.IRON).setTextureName("nightmare:ifhyFarmersFavoriteHoe")
+        farmersFavoriteHoe = new HoeItem(3224, EnumToolMaterial.IRON).setTextureName("nightmare:ifhyFarmersFavoriteHoe")
                 .setUnlocalizedName("ifhyFarmersFavoriteHoe").setCreativeTab(CreativeTabs.tabTools);
         unbakedChocolateCake = new NMItem(3225).setMaxStackSize(1).setTextureName("nightmare:ifhyUnbakedChocolateCake")
                 .setUnlocalizedName("ifhyUnbakedChocolateCake").setCreativeTab(CreativeTabs.tabFood);
