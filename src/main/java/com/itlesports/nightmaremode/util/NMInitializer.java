@@ -1857,6 +1857,12 @@ public abstract class NMInitializer implements AchievementExt {
                 .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F)
                 .setResultingFluid(CisternTileEntity.FLUID_SLURRY));
 
+        manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.nickelCrushedRock)},
+                CisternTileEntity.FLUID_SLURRY, 0, 2, 270,
+                new ItemStack[]{new ItemStack(NMItems.nickelWashedConcentrate)})
+                .addRandomOutput(new ItemStack(NMItems.refinementWaste), 0.25F));
+
         // The water route remains for the overworld; lava provides the native wash.
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.nickelCrushedRock)},
@@ -2405,6 +2411,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.emeraldGrit, 4), new ItemStack(NMItems.crackedEmerald));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.endstonePowder, 2), new ItemStack(Block.whiteStone));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.quartzDust, 2), new ItemStack(Item.netherQuartz));
+        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.diamondPile, 1), new ItemStack(Item.diamond));
 
 
         finishRecipes("Millstone Recipes");
