@@ -1242,7 +1242,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier3Rank4PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.8F);
 
         // tier three keeps basic supplies as rare bulk exchanges rather than easy currency.
-        buy("nmNetherTier1BrickBlock", profession, 1, Block.netherBrick.blockID, 0, 56, 64, 0.35F);
+        buy("nmNetherTier1BrickBlock", profession, 1, BTWBlocks.looseNetherBrick.blockID, 0, 56, 64, 0.35F);
         buy("nmNetherTier1Saddle", profession, 1, Item.saddle.itemID, 0, 1, 1, 0.25F);
         buy("nmNetherTier1SilverScale", profession, 2, NMItems.searingSilverScale.itemID, 0, 48, 64, 0.35F);
         sell("nmNetherTier1Rails", profession, 2, Block.rail.blockID, 0, 32, 48, 0.35F, false, 2, 4);
