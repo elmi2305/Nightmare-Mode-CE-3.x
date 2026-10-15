@@ -43,13 +43,12 @@ public class NMTags {
             new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 13),
             new ItemStack(BTWBlocks.aestheticOpaque.blockID, 1, 12)
     );
-    public static final Tag toolStrings = Tag.of(loc("tool_strings"),
+    public static final Tag knifeStrings = Tag.of(loc("knife_strings"),
             Item.silk,
-            NMItems.crudeString,
-            BTWItems.hempFibers,
-            NMItems.pighideString,
-            BTWItems.sinew
+            NMItems.pighideString
     );
+    public static final Tag netherCompatibleStrings = Tag.of(loc("nether_compatible_strings")
+    ).add(NMItems.pighideString).add(Item.silk).add(BTWItems.sinew);
     public static final Tag netherCompatibleSticks = Tag.of(loc("nether_compatible_sticks"),
             Item.stick,
             NMItems.netherStick
@@ -114,7 +113,5 @@ public class NMTags {
     }
 
 
-    public static void initTags(){
-//        BTWTags.lowQualityToolHandles.add(NMItems.netherStick);
-    }
+    public static void initTags(){}
 }
