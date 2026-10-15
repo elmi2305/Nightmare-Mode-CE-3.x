@@ -34,6 +34,16 @@ public class NMTags {
             NMItems.shadowRod,
             NMItems.speedCoil
     );
+
+    public static final Tag toolStrings = Tag.of(loc("tool_strings"),
+            Item.silk,
+            BTWItems.hempFibers,
+            NMItems.pighideString,
+            BTWItems.sinew
+    );
+    public static final Tag toolStringsWithCrude = Tag.of(loc("tool_strings_with_crude"),
+            toolStrings
+    ).add(NMItems.crudeString);
     public static final Tag bookLeather = Tag.of(loc("book_leather"),
             BTWItems.cutTannedLeather,
             BTWItems.cutScouredLeather
@@ -103,6 +113,7 @@ public class NMTags {
     public static final Tag anvils = Tag.of(loc("anvils"),
             net.minecraft.src.Block.anvil,
             NMBlocks.stoneAnvil,
+            NMBlocks.lithiumAnvil,
             NMBlocks.ironAnvil,
             NMBlocks.diamondAnvil,
             NMBlocks.netherrackAnvil

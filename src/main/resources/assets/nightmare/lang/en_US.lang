@@ -219,6 +219,8 @@ tile.ifhySapTap.name=Sap Tap
 tile.ifhyStoneAnvil.name=Stone Anvil
 tile.ifhyDiamondAnvil.name=Diamond Anvil
 tile.ifhyIronAnvil.name=Iron Anvil
+tile.ifhyLithiumAnvil.name=Lithium Anvil
+tile.ifhyLithiumBlock.name=Block of Lithium
 tile.ifhyDryingGrass.name=Drying Grass
 
 tile.nmSteelOre.name=Steel Ore
@@ -925,6 +927,7 @@ tag.nightmare.eclipse_drops=Eclipse Items
 tag.nightmare.book_leather=Book Covers
 tag.nightmare.chopping_blocks=Chopping Blocks
 tag.nightmare.tool_strings=Tool Strings
+tag.nightmare.tool_strings_with_crude=Crude Tool Strings
 tag.nightmare.nether_compatible_sticks=Nether-Compatible Sticks
 tag.nightmare.reinforced_iron_ingots=Reinforced Iron Ingots
 tag.nightmare.nether_kiln_masonry=Kiln Masonry

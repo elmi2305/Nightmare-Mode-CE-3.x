@@ -98,6 +98,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityHammerAnvil.class, "NmHammerAnvil");
         TileEntity.addMapping(TileEntityStoneAnvil.class, "NmStoneAnvil");
         TileEntity.addMapping(TileEntityIronAnvil.class, "NmIronAnvil");
+        TileEntity.addMapping(TileEntityLithiumAnvil.class, "NmLithiumAnvil");
         TileEntity.addMapping(TileEntityDiamondAnvil.class, "NmDiamondAnvil");
         TileEntity.addMapping(TileEntityNetherrackAnvil.class, "NmNetherrackAnvil");
         TileEntity.addMapping(UnfiredNetherBrickTileEntity.class, "NmUnfiredNetherBrick");

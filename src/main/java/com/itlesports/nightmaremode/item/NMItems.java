@@ -1023,9 +1023,9 @@ public class NMItems {
                 reinforcedIronIngot, "ifhyReinforcedIronArmor", "item.ifhyReinforcedIronArmor.bonus", "ifhyReinforcedIronBoots");
 
         nickelWorkLeggings = alloyArmor(3282, 2, 3, 4, 1500, 10, 0.0D,
-                nickelPlate, "oxygenGear","ifhyNickelWorkLeggings");
+                nickelPlate, "ifhyNickelArmor","ifhyNickelWorkLeggings");
         nickelWorkBoots = alloyArmor(3283, 3, 1, 2, 1500, 10, 0.0D,
-                nickelPlate, "oxygenGear", "ifhyNickelWorkBoots");
+                nickelPlate, "ifhyNickelArmor", "ifhyNickelWorkBoots");
 
         heatResistantHelmet = heatArmor(3284, 0, 3, 4, 5000,
                 "ifhyHeatResistantHelmet");
@@ -1045,10 +1045,10 @@ public class NMItems {
         quartzglassIngot = netherMaterial(3294, "ifhyQuartzglassIngot");
         quartzglassPlate = netherMaterial(3295, "ifhyQuartzglassPlate");
         divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 5000, 8, 0.0D,
-                quartzglassPlate.itemID, 0.50F, 0, "ifhyDivingMask", "item.ifhyDivingGear.bonus")
+                quartzglassPlate.itemID, 0.60F, 0, "ifhyDivingMask", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingMask").setUnlocalizedName("ifhyDivingMask");
         divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 8000, 8, 0.0D,
-                tungstenPlate.itemID, 0.45F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
+                tungstenPlate.itemID, 0.75F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingTank").setUnlocalizedName("ifhyDivingTank");
         crackedEmerald = material(3296, "ifhyCrackedEmerald");
         emeraldGrit = material(3297, "ifhyEmeraldGrit");

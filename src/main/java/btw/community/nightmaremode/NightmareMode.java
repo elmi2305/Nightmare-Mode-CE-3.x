@@ -286,6 +286,7 @@ public class NightmareMode extends BTWAddon {
         SteelLockerNet.register(this);
         PollutionVisualNet.register(this);
         StorageColorNet.register(this);
+        com.itlesports.nightmaremode.network.HammerAnvilNet.register(this);
         com.itlesports.nightmaremode.network.SkylightSync.register(this);
         com.itlesports.nightmaremode.network.ScaryEventNet.register(this);
         com.itlesports.nightmaremode.network.TesterSettingsNet.register(this);

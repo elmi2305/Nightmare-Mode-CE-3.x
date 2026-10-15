@@ -523,9 +523,9 @@ public final class NMSkillNodes {
             "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false,
             BRING_CARBON_RICH_IRON_MIX_16);
 
-    public static final SkillNode BRING_REINFORCED_IRON_PLATE_64 = bring(
+    public static final SkillNode BRING_REINFORCED_IRON_PLATE_32 = bring(
             "reinforced_iron_lamination", "Reinforced Iron Lamination", NMItems.reinforcedIronPlate, 9, -3,
-            "Bring 64 Reinforced Iron plates.", NMItems.reinforcedIronPlate.itemID, 0, false, 64,
+            "Bring 32 Reinforced Iron plates.", NMItems.reinforcedIronPlate.itemID, 0, false, 32,
             "Unlocks Additional Recipes. +2% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.02F), MINING, false,
             BRING_REINFORCED_IRON_INGOT_32);
 
@@ -3889,7 +3889,7 @@ public final class NMSkillNodes {
                     NMItems.reinforcedIronHelmet, NMItems.reinforcedIronChestplate,
                     NMItems.reinforcedIronLeggings, NMItems.reinforcedIronBoots},
             "Unlocks Additional Recipes. +2% armor durability preservation.", SkillRewardActions.addArmorDurabilitySaveChance(0.02F), MINING, false,
-            BRING_REINFORCED_IRON_PLATE_64, BRING_CARBON_IRON_ARMOR_SET);
+            BRING_REINFORCED_IRON_PLATE_32, BRING_CARBON_IRON_ARMOR_SET);
 
     public static final SkillNode BRING_NICKEL_WORKWEAR_SET = itemSet(
             "nickel_workwear_set", "Nickel Workwear", NMItems.nickelWorkLeggings, 1, -3,

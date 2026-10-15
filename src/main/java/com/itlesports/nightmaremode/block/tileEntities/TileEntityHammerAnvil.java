@@ -3,6 +3,8 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import com.itlesports.nightmaremode.crafting.manager.HammerCraftingManager;
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
+import com.itlesports.nightmaremode.network.HammerAnvilNet;
+import com.itlesports.nightmaremode.util.HammerAnvilAnimation;
 import net.minecraft.src.ChatMessageComponent;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityPlayer;
@@ -10,6 +12,9 @@ import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class TileEntityHammerAnvil extends TileEntity {
     private static final int SOUND_INTERVAL_TICKS = 2;
@@ -23,6 +28,8 @@ public class TileEntityHammerAnvil extends TileEntity {
     private boolean breakWhenSoundsFinish;
     private boolean hasBeenUsed;
     private boolean removalHandled;
+    // transient, client-only visuals; never inventory or saved crafting state.
+    private final Deque<HammerAnvilAnimation> animations = new ArrayDeque<>();
 
     public TileEntityHammerAnvil() {
     }
@@ -65,6 +72,8 @@ public class TileEntityHammerAnvil extends TileEntity {
             return false;
         }
 
+        ItemStack visualInput = input.copy();
+        ItemStack visualHammer = player.inventory.mainInventory[hammerSlot].copy();
         this.consumeInputAndDamageHammer(player, input, recipe.getInput(), hammerSlot, hits);
         recipe.chargePlayerExperience(player);
         player.addExhaustion(EXHAUSTION_PER_HIT * hits);
@@ -72,12 +81,18 @@ public class TileEntityHammerAnvil extends TileEntity {
         this.spendHits(hits);
         player.inventoryContainer.detectAndSendChanges();
         player.inventory.onInventoryChanged();
+        HammerAnvilNet.send(player, this, visualInput, visualHammer, hits);
         return true;
     }
 
     @Override
     public void updateEntity() {
-        if (this.worldObj == null || this.worldObj.isRemote) {
+        if (this.worldObj == null) {
+            return;
+        }
+        if (this.worldObj.isRemote) {
+            HammerAnvilAnimation animation = this.animations.peekFirst();
+            if (animation != null && animation.tick()) this.animations.removeFirst();
             return;
         }
 
@@ -105,6 +120,22 @@ public class TileEntityHammerAnvil extends TileEntity {
 
     public boolean canSpendHits(int hits) {
         return !this.isBusy() && (this.maxUses < 0 || (!this.breakWhenSoundsFinish && this.usesRemaining > 0));
+    }
+
+    public void queueAnimation(HammerAnvilAnimation animation) {
+        if (this.worldObj != null && this.worldObj.isRemote && !this.isInvalid()) {
+            this.animations.addLast(animation);
+        }
+    }
+
+    public HammerAnvilAnimation getAnimation() {
+        return this.animations.peekFirst();
+    }
+
+    @Override
+    public void invalidate() {
+        this.animations.clear();
+        super.invalidate();
     }
 
     public void spendHits(int hits) {

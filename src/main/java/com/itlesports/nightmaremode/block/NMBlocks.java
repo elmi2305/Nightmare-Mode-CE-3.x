@@ -165,6 +165,8 @@ public class NMBlocks {
     public static Block nickelOreNode;
     public static Block lithiumOreNode;
     public static Block ironAnvil;
+    public static Block lithiumAnvil;
+    public static Block lithiumBlock;
     public static BlockStationRail stationRail;
     public static Block terrainExtractor;
     public static DualInputGearBoxBlock dualInputGearBox;
@@ -397,6 +399,11 @@ public class NMBlocks {
         Item.itemsList[potashOre.blockID] = new NMItemBlock(potashOre.blockID - 256);
         crystalTorch = new CrystalTorchBlock(2466);
         submergedCrystalTorch = new SubmergedCrystalTorchBlock(2467);
+
+        lithiumBlock = new BlockLithium(2468);
+        Item.itemsList[lithiumBlock.blockID] = new NMItemBlock(lithiumBlock.blockID - 256);
+        lithiumAnvil = new BlockLithiumAnvil(2469);
+        Item.itemsList[lithiumAnvil.blockID] = new NMItemBlock(lithiumAnvil.blockID - 256);
 
 
 

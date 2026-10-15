@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodBone;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil;
+import com.itlesports.nightmaremode.rendering.TileEntityHammerAnvilRenderer;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityBloodChest;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntityPortalCore;
 import com.itlesports.nightmaremode.block.tileEntities.TileEntitySteelLocker;
@@ -31,6 +33,7 @@ public abstract class TileEntityRendererMixin {
     @Inject(method = "<init>",at = @At("TAIL"))
     private void addCustomNightmareRendering(CallbackInfo ci){
         this.specialRendererMap.put(TileEntityBloodChest.class, new TileEntityBloodChestRenderer());
+        this.specialRendererMap.put(TileEntityHammerAnvil.class, new TileEntityHammerAnvilRenderer());
         this.specialRendererMap.put(TileEntitySteelLocker.class, new TileEntitySteelLockerRenderer());
         this.specialRendererMap.put(TileEntityBloodBone.class, new TileEntityBloodBoneRenderer());
         this.specialRendererMap.put(TileEntityPortalCore.class, new TileEntityPortalCoreRenderer());

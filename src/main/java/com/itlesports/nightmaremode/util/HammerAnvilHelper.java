@@ -16,6 +16,7 @@ public abstract class HammerAnvilHelper {
     public static boolean isAnvil(int id) {
         return id == Block.anvil.blockID || NMBlocks.stoneAnvil != null && id == NMBlocks.stoneAnvil.blockID
                 || NMBlocks.ironAnvil != null && id == NMBlocks.ironAnvil.blockID
+                || NMBlocks.lithiumAnvil != null && id == NMBlocks.lithiumAnvil.blockID
                 || NMBlocks.diamondAnvil != null && id == NMBlocks.diamondAnvil.blockID
                 || NMBlocks.netherrackAnvil != null && id == NMBlocks.netherrackAnvil.blockID;
     }
@@ -38,10 +39,12 @@ public abstract class HammerAnvilHelper {
             int count;
             if (id == NMBlocks.stoneAnvil.blockID) material = BTWItems.stone;
             else if (id == NMBlocks.ironAnvil.blockID) material = BTWItems.ironNugget;
+            else if (id == NMBlocks.lithiumAnvil.blockID) material = NMItems.lithiumRefined;
             else if (id == NMBlocks.netherrackAnvil.blockID) material = NMItems.netherrackChunk;
             else if (id == NMBlocks.diamondAnvil.blockID) material = BTWItems.diamondIngot;
             else material = BTWItems.soulforgedSteelIngot;
-            count = id == NMBlocks.diamondAnvil.blockID || id == Block.anvil.blockID
+            if (id == NMBlocks.lithiumAnvil.blockID) count = 3 + world.rand.nextInt(3);
+            else count = id == NMBlocks.diamondAnvil.blockID || id == Block.anvil.blockID
                     ? 5 + world.rand.nextInt(5) : 16 + world.rand.nextInt(9);
             drop = new ItemStack(material, count);
         }
