@@ -3444,7 +3444,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_REDSTONE_BLOCK_12 = bring(
             "redstone_blocks_16", "Compressed Signal", Block.blockRedstone, 2, 4,
-            "Bring 16 redstone blocks.", Block.blockRedstone.blockID, 0, false, 12,
+            "Bring 12 redstone blocks.", Block.blockRedstone.blockID, 0, false, 12,
             "Unlocks Additional Recipes. 5% lower enchanting cost.", SkillRewardActions.addEnchantCostReduction(0.05F), KNOWLEDGE, false);
 
     public static final SkillNode BRING_LAPIS_BLOCK_16 = bring(

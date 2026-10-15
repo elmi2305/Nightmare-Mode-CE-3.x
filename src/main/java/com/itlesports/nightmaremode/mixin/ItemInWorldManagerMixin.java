@@ -288,8 +288,9 @@ public class ItemInWorldManagerMixin {
                     this.thisPlayerMP, block, stack, world, x, y, z, side);
             if (block == Block.oreIron || block == Block.oreCoal) {
                 SkillHandler.incrementBlocksMined(this.thisPlayerMP, block.blockID, 0);
-            } else if (block == Block.stone && world.getBlockId(x, y, z) != block.blockID) {
-                // count the stone once when mined into rough stone, not when merely cracked.
+            } else if ((block == Block.oreDiamond || block == Block.stone)
+                    && world.getBlockId(x, y, z) != block.blockID) {
+                // count ore and stone once when converted to rough stone, not when merely cracked.
                 SkillHandler.incrementBlocksMined(this.thisPlayerMP, block.blockID, metadata);
             }
         }

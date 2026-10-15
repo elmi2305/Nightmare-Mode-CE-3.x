@@ -234,7 +234,6 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
 
         if (cistern.hasOutputs()) {
             player.sendChatToPlayer(new ChatMessageComponent().addText("Recipe finished. Empty-hand interact to collect outputs."));
-            return;
         }
 
         int duration = cistern.getCurrentRecipeDuration();
