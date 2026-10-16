@@ -33,6 +33,14 @@ public class BTWContainersMixin {
         if(containerID == ContainerDisenchantment.ID){
             cir.setReturnValue(new ContainerDisenchantmentGui(p.inventory, new TileEntityDisenchantmentTable()));
         }
+        if (containerID == com.itlesports.nightmaremode.nmgui.ContainerAutoAnvil.ID) {
+            cir.setReturnValue(new com.itlesports.nightmaremode.nmgui.GuiAutoAnvil(p.inventory,
+                    new com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil()));
+        }
+        if (containerID == com.itlesports.nightmaremode.nmgui.ContainerPhaseAnvil.ID) {
+            cir.setReturnValue(new com.itlesports.nightmaremode.nmgui.GuiPhaseAnvil(p.inventory,
+                    new com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil()));
+        }
         if (containerID == ContainerMinerDrill.ID) {
             cir.setReturnValue(new GuiMinerDrill(p.inventory, new MinerDrillTileEntity()));
         }

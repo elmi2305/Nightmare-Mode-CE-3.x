@@ -133,6 +133,11 @@ public class BlockOreNode extends BlockContainer {
     }
 
     @Override
+    public ItemStack getStackRetrievedByBlockDispenser(World world, int x, int y, int z) {
+        return null;
+    }
+
+    @Override
     public int quantityDropped(Random random) {
         return 0;
     }

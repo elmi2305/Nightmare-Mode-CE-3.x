@@ -131,6 +131,7 @@ public class NMBlocks {
     public static Block cupOfSap;
     public static Block thickenedSap;
     public static Block stoneAnvil;
+    public static Block glassAnvil;
     public static Block diamondAnvil;
     public static Block dryingGrass;
     public static Block crudeBedroll;
@@ -223,6 +224,9 @@ public class NMBlocks {
 
         stoneAnvil = new BlockStoneAnvil(NMFields.BLOCK_STONE_ANVIL);
         Item.itemsList[stoneAnvil.blockID] = new NMItemBlock(NMBlocks.stoneAnvil.blockID - 256);
+
+        glassAnvil = new BlockGlassAnvil(2470);
+        Item.itemsList[glassAnvil.blockID] = new NMItemBlock(glassAnvil.blockID - 256);
 
         diamondAnvil = new BlockDiamondAnvil(NMFields.BLOCK_DIAMOND_ANVIL);
         Item.itemsList[diamondAnvil.blockID] = new NMItemBlock(NMBlocks.diamondAnvil.blockID - 256);

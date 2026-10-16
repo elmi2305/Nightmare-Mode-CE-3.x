@@ -62,7 +62,7 @@ public class OreBlockStagedMixin extends OreBlock {
             if (!world.isRemote) {
                 SkillHandler.sendStatus(closestPlayer, "Requires skill: Deep Foundations - Bring 128 deepslate (strata two) cobblestone.");
             }
-            this.chipLockedOre(world, x, y, z, iStrata);
+            this.crackOre(world, x, y, z, iStrata);
             cir.setReturnValue(true);
             return;
         }
@@ -70,7 +70,7 @@ public class OreBlockStagedMixin extends OreBlock {
             if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
                 int count = stack.itemID == BTWItems.sharpStone.itemID ? 1 + world.rand.nextInt(2) : 3 + world.rand.nextInt(3);
                 for (int i = 0; i < count; i++) summonEntity(world, x, y, z, side, BTWItems.coalDust);
-                world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+                this.crackOre(world, x, y, z, iStrata);
                 cir.setReturnValue(true);
                 return;
             }
@@ -85,7 +85,7 @@ public class OreBlockStagedMixin extends OreBlock {
 
             }
 
-            world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+            this.crackOre(world, x, y, z, iStrata);
             cir.setReturnValue(true);
             return;
         } else
@@ -95,7 +95,7 @@ public class OreBlockStagedMixin extends OreBlock {
                 boolean wholeChunks = stack.getItem() instanceof PickaxeItem && stack.getItem() != Item.pickaxeStone;
                 int count = sharp ? 1 + world.rand.nextInt(2) : wholeChunks ? 1 + world.rand.nextInt(3) : 2 + world.rand.nextInt(3);
                 for (int i = 0; i < count; i++) summonEntity(world, x, y, z, side, wholeChunks ? BTWItems.ironOreChunk : BTWItems.ironOrePile);
-                world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+                this.crackOre(world, x, y, z, iStrata);
                 cir.setReturnValue(true);
                 return;
             }
@@ -129,7 +129,7 @@ public class OreBlockStagedMixin extends OreBlock {
                                                                                    : BTWItems.stone)));
             }
 
-            world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+            this.crackOre(world, x, y, z, iStrata);
             cir.setReturnValue(true);
             return;
         }
@@ -138,17 +138,17 @@ public class OreBlockStagedMixin extends OreBlock {
                 if (!world.isRemote) {
                     SkillHandler.sendStatus(closestPlayer, "Requires all five Diamond Extraction contributions.");
                 }
-                this.chipLockedOre(world, x, y, z, iStrata);
+                this.crackOre(world, x, y, z, iStrata);
                 cir.setReturnValue(true);
                 return;
             }
 
             float rockChance = 0.90F + (closestPlayer == null ? 0.0F : SkillHandler.getPlayerData(closestPlayer).diamondRockDropChanceBonus);
             if (!world.isRemote && (com.itlesports.nightmaremode.world.BalanceProfile.isEasy() || world.rand.nextFloat() <= Math.min(1.0F, rockChance))) {
-                this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.diamondBearingRock,
-                        com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + world.rand.nextInt(2) : 1));
+                ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z, new ItemStack(NMItems.diamondBearingRock,
+                        com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? 2 + world.rand.nextInt(2) : 1), side);
             }
-            world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[iStrata].blockID, 4);
+            this.crackOre(world, x, y, z, iStrata);
             cir.setReturnValue(true);
             return;
 
@@ -156,7 +156,8 @@ public class OreBlockStagedMixin extends OreBlock {
     }
 
     @Unique
-    private void chipLockedOre(World world, int x, int y, int z, int strata) {
+    private void crackOre(World world, int x, int y, int z, int strata) {
+        if (!world.isRemote) world.playAuxSFX(2269, x, y, z, 0);
         world.setBlockAndMetadataWithNotify(x, y, z, RoughStoneBlock.strataLevelBlockArray[strata].blockID, 4);
     }
 

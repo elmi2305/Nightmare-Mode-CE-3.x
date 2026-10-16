@@ -2,6 +2,7 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import api.item.items.PickaxeItem;
 import api.item.util.ItemUtils;
+import btw.block.blocks.RoughStoneBlock;
 import btw.item.items.ChiselItem;
 import com.itlesports.nightmaremode.block.blocks.templates.NMBlock;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -47,6 +48,9 @@ public class CrystalPocketBlock extends NMBlock {
     }
 
     public boolean minePocket(World world, EntityPlayer player, int x, int y, int z, int fromSide) {
+        if (world.isRemote || !this.isValidMiningTool(player.getCurrentEquippedItem(), world, x, y, z)) {
+            return false;
+        }
         if (!SkillHandler.getPlayerData(player).canMineCrystals) {
             SkillHandler.sendStatus(player, "Requires skill: Witch Hunter - Kill 4 witches.");
             return false;
@@ -63,7 +67,16 @@ public class CrystalPocketBlock extends NMBlock {
         int metadata = world.getBlockMetadata(x, y, z);
         int attempts = metadata & ATTEMPT_MASK;
         if (attempts >= MAX_ATTEMPTS - 1) {
-            world.setBlockToAir(x, y, z);
+            int strata = (metadata & STRATA_MASK) >> 2;
+            Block stone = RoughStoneBlock.strataLevelBlockArray[strata];
+            Item tool = player.getCurrentEquippedItem().getItem();
+            int toolLevel = tool instanceof PickaxeItem pick ? pick.toolMaterial.getHarvestLevel()
+                    : ((ChiselItem)tool).toolMaterial.getHarvestLevel();
+            if (toolLevel < stone.getHarvestToolLevel(world, x, y, z)) {
+                world.setBlockAndMetadataWithNotify(x, y, z, stone.blockID, 4);
+            } else {
+                world.setBlockToAir(x, y, z);
+            }
         } else {
             world.setBlockMetadataWithNotify(x, y, z,
                     (metadata & STRATA_MASK) | (attempts + 1), 3);

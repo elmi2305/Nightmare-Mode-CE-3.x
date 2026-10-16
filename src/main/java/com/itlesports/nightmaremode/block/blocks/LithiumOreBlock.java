@@ -45,7 +45,7 @@ public class LithiumOreBlock extends ProcessingOreBlock {
         }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, metadata);
-        if (crackStone || (metadata >> 2) >= 2) {
+        if ((metadata >> 2) >= 2) {
             if (crackStone) {
                 world.setBlockAndMetadataWithNotify(x, y, z,
                         RoughStoneBlock.strataLevelBlockArray[metadata & 3].blockID, 4);

@@ -105,10 +105,10 @@ public final class MechanicalStressManager {
         if (block instanceof GearBoxBlock) return 8;
         if (block instanceof BlockBloodSaw) return 64;
         if (block instanceof BlockCisternStirrer) return 48;
-        if (block instanceof SawBlock) return 48;
+        if (block instanceof SawBlock) return 44;
         if (block instanceof ScrewPumpBlock) return 48;
         if (block instanceof PulleyBlock) return 48;
-        if (block instanceof LoomBlock) return 48;
+        if (block instanceof LoomBlock) return 16;
         if (block instanceof MillstoneBlock) return 32;
         if (block instanceof BellowsBlock) return 32;
         if (block instanceof TurntableBlock) return 32;

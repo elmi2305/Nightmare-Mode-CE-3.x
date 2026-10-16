@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import com.itlesports.nightmaremode.util.HammerAnvilHelper;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil;
+import api.item.items.PickaxeItem;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,6 +12,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public abstract class HammerAnvilDropsMixin {
+    @Inject(method = "onBlockHarvested", at = @At("HEAD"))
+    private void markProperAnvilHarvest(World world, int x, int y, int z, int metadata, EntityPlayer player, CallbackInfo ci) {
+        Block block = (Block)(Object)this;
+        if (!world.isRemote && HammerAnvilHelper.isAnvil(block.blockID)
+                && !player.capabilities.isCreativeMode && player.getHeldItem() != null
+                && (player.getHeldItem().getItem() instanceof PickaxeItem || player.getHeldItem().getItem() instanceof ItemPickaxe)
+                && player.canHarvestBlock(block, x, y, z)
+                && world.getBlockTileEntity(x, y, z) instanceof TileEntityHammerAnvil anvil) {
+            anvil.markHarvestedWithProperTool();
+        }
+    }
+
     @Inject(method = "canBlockBePushedByPiston", at = @At("HEAD"), cancellable = true)
     private void preventPistonWearReset(World world, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> cir) {
         if (HammerAnvilHelper.isAnvil(((Block)(Object)this).blockID)) cir.setReturnValue(false);

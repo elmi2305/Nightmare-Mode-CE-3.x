@@ -60,7 +60,12 @@ public class AnvilBlockMixin extends Block implements ITileEntityProvider {
 
     @Inject(method = "onBlockActivated", at = @At("HEAD"), cancellable = true)
     private void vanillaAnvilFunctionality(World world, int i, int j, int k, EntityPlayer player, int iFacing, float fXClick, float fYClick, float fZClick, CallbackInfoReturnable<Boolean> cir){
-        if (!world.isRemote && !WorldUtils.doesBlockHaveLargeCenterHardpointToFacing(world, i, j + 1, k, 0)) {
+        TileEntity existing = world.getBlockTileEntity(i, j, k);
+        boolean automatic = existing instanceof TileEntityHammerAnvil anvil && anvil.isAutomatic();
+        boolean upgrading = player.getHeldItem() != null && player.getHeldItem().getItem()
+                instanceof com.itlesports.nightmaremode.item.items.ItemAnvilUpgrade;
+        if (!world.isRemote && (automatic || upgrading
+                || !WorldUtils.doesBlockHaveLargeCenterHardpointToFacing(world, i, j + 1, k, 0))) {
             TileEntity tile = world.getBlockTileEntity(i, j, k);
             if (!(tile instanceof TileEntityHammerAnvil)) {
                 tile = new TileEntityHammerAnvil();

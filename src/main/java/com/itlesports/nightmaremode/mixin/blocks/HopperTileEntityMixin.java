@@ -7,6 +7,7 @@ import btw.block.blocks.HopperBlock;
 import btw.block.tileentity.HopperTileEntity;
 import btw.item.Filtering;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
+import com.itlesports.nightmaremode.block.tileEntities.TileEntityHammerAnvil;
 import net.minecraft.src.Block;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.IInventory;
@@ -37,6 +38,25 @@ public abstract class HopperTileEntityMixin extends TileEntity {
     @Shadow public abstract ItemStack getStackInSlot(int iSlot);
     @Shadow public abstract boolean canCurrentFilterProcessItem(ItemStack stack);
 
+    @Inject(method = "attemptToEjectStackFromInv", at = @At("HEAD"), cancellable = true, remap = false)
+    private void insertIntoAutomaticAnvil(CallbackInfo ci) {
+        TileEntity target = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+        if (!(target instanceof TileEntityHammerAnvil anvil)) return;
+        // btw's generic insertion does not honor inventory slot filters.
+        int first = this.worldObj.rand.nextInt(18);
+        for (int offset = 0; offset < 18; ++offset) {
+            int slot = (first + offset) % 18;
+            ItemStack stack = this.getStackInSlot(slot);
+            if (stack == null) continue;
+            int moved = anvil.insertFromHopper(stack, 8);
+            if (moved <= 0) continue;
+            this.decrStackSize(slot, moved);
+            this.worldObj.playAuxSFX(2231, this.xCoord, this.yCoord, this.zCoord, 0);
+            break;
+        }
+        ci.cancel();
+    }
+
 
     @Inject(method = "attemptToEjectStackFromInv", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockTileEntity(III)Lnet/minecraft/src/TileEntity;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void governHellforge(CallbackInfo ci, int iStackIndex, ItemStack invStack, int iEjectStackSize, ItemStack ejectStack, int iTargetI, int iTargetJ, int iTargetK, boolean bEjectIntoWorld, int iTargetBlockID, Block targetBlock) {
@@ -65,11 +85,14 @@ public abstract class HopperTileEntityMixin extends TileEntity {
 
         TileEntity tileAbove = this.worldObj.getBlockTileEntity(
                 this.xCoord, this.yCoord + 1, this.zCoord);
-        if (!(tileAbove instanceof HellforgeTileEntity hellforge)) {
+        if (!(tileAbove instanceof HellforgeTileEntity)
+                && !(tileAbove instanceof TileEntityHammerAnvil anvil && anvil.isAutomatic())) {
             return;
         }
 
-        ItemStack output = hellforge.getStackInSlot(2);
+        IInventory source = (IInventory)tileAbove;
+
+        ItemStack output = source.getStackInSlot(2);
         if (output == null || !this.canCurrentFilterProcessItem(output)) {
             return;
         }
@@ -81,7 +104,7 @@ public abstract class HopperTileEntityMixin extends TileEntity {
                 (IInventory)(Object)this, transfer, 0, 17);
         int transferred = fullyInserted ? transferLimit : transferLimit - transfer.stackSize;
         if (transferred > 0) {
-            hellforge.decrStackSize(2, transferred);
+            source.decrStackSize(2, transferred);
             this.worldObj.playAuxSFX(2231, this.xCoord, this.yCoord, this.zCoord, 0);
         }
     }

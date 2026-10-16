@@ -190,6 +190,7 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Rough Mushroom Mash", NMItems.mash);
         NMTags.initTags();
         addCraftingRecipes();
+        addAutoAnvilUpgradeRecipes();
         addAlloyToolRecipes();
         validateUltimateCraftingRecipeRegistrations();
         addWashingRecipes();
@@ -1307,6 +1308,20 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(Item.goldNugget, 6), new ItemStack[]{new ItemStack(NMItems.goldHammer, 1, Short.MAX_VALUE)});
         addMaterialRecoveryCrucibleRecipes(crucible);
+
+
+        crucible.removeRecipe(new ItemStack(BTWItems.ironNugget, 20), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.screw)});
+        crucible.removeRecipe(new ItemStack(BTWItems.ironNugget, 20), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.screwPump)});
+
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.screw)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.screwPump)});
+
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 8), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.ironScythe)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.diamondScythe)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.tungstenIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.tungstenScythe)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.blackglassIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.blackglassScythe)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.deadzoneAlloyIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.deadzoneScythe)});
 
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{
@@ -2431,6 +2446,24 @@ public abstract class NMInitializer implements AchievementExt {
         finishRecipes("Loom");
     }
 
+    private static void addAutoAnvilUpgradeRecipes() {
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.signalAnvilUpgrade), new Object[]{
+                "PRP", "IGI", "PRP", 'P', NMItems.signalAlloyPlate, 'R', Item.redstone,
+                'I', Item.ingotIron, 'G', NMItems.crystalPrecisionGear}), NMSkillNodes.BRING_SIGNAL_ALLOY_PLATE_8);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.bloodAnvilUpgrade), new Object[]{
+                "BRB", "NPN", "BRB", 'B', NMItems.bloodIngot, 'R', Item.blazeRod,
+                'N', NMItems.nickelPlate, 'P', NMItems.lithiumHeatCompound}),
+                NMSkillNodes.BRING_SIGNAL_ALLOY_PLATE_8, NMSkillNodes.BRING_BLOOD_INGOT_16);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.deadzoneAnvilUpgrade), new Object[]{
+                "DQD", "CPC", "DQD", 'D', NMItems.deadzoneAlloyPlate, 'Q', NMItems.quartzglassPlate,
+                'C', NMItems.coresteelPlate, 'P', NMItems.pressureRegulator}),
+                NMSkillNodes.BRING_BLOOD_INGOT_16, NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8);
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.phaseAnvilUpgrade), new Object[]{
+                "PEP", "RMR", "PEP", 'P', NMItems.phaseSteelPlate, 'E', NMItems.enderDust,
+                'R', NMItems.paleRootResin, 'M', NMItems.enderMechanism}),
+                NMSkillNodes.BRING_DEADZONE_ALLOY_PLATE_8, NMSkillNodes.BRING_PHASE_STEEL_PLATE_8);
+    }
+
     private static void addMillstoneRecipes(){
         // Remove the cut-hide bypass: every leather product begins with this one scouring pass.
         MillStoneCraftingManager millstone = MillStoneCraftingManager.getInstance();
@@ -2448,6 +2481,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.endstonePowder, 2), new ItemStack(Block.whiteStone));
         RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.quartzDust, 2), new ItemStack(Item.netherQuartz));
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.diamondPile, 4), new ItemStack(Item.diamond));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMPostItems.stompedCrushedIronStoneMix), new ItemStack(BTWItems.ironOreChunk));
 
 
         finishRecipes("Millstone Recipes");
@@ -3258,6 +3292,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unshapedWetClayBrick, 1, NMItems.unshapedWetClayBrick.getMaxDamage() - 1), new Object[]{Item.clay, BTWItems.gravelPile, BTWItems.dirtPile, BTWItems.sandPile});
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(Item.cauldron), new Object[]{"I I", "I I", "III", Character.valueOf('I'), Item.ingotIron}), NMSkillNodes.BRING_IRON_INGOT_8);
         RecipeManager.addRecipe(new ItemStack(NMBlocks.stoneAnvil), new Object[]{"SSS", " S ", "SSS", Character.valueOf('S'), BTWTags.looseCobblestones});
+        SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.glassAnvil),
+                new Object[]{"GGG", " G ", "GGG", Character.valueOf('G'), Block.glass}), NMSkillNodes.BRING_GLASS_64);
         NMFoodSpoilage.addSnowRefreshRecipes();
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lithiumSalt, 2), new Object[]{new ItemStack(NMItems.lithiumRefined), new ItemStack(Item.sugar)});

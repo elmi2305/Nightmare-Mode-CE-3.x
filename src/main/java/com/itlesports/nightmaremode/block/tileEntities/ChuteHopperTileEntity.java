@@ -91,6 +91,7 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
     }
 
     private boolean canExtractFrom(IInventory source, int sourceSlot, ItemStack stack) {
+        if (source instanceof TileEntityHammerAnvil anvil && !anvil.canExtractItem(sourceSlot, stack, 0)) return false;
         return !(source instanceof TerrainExtractorTileEntity)
                 || sourceSlot == 2
                 || stack.itemID == Item.bucketWater.itemID;
@@ -103,7 +104,7 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
                     && targetStack.isItemEqual(transferStack)
                     && ItemStack.areItemStackTagsEqual(targetStack, transferStack)
                     && targetStack.stackSize < Math.min(targetStack.getMaxStackSize(), target.getInventoryStackLimit())
-                    && target.isItemValidForSlot(targetSlot, transferStack)) {
+                    && this.canInsertInto(target, targetSlot, transferStack)) {
                 ++targetStack.stackSize;
                 return true;
             }
@@ -111,12 +112,17 @@ public class ChuteHopperTileEntity extends HopperTileEntity {
 
         for (int targetSlot = 0; targetSlot < targetLimit; ++targetSlot) {
             if (target.getStackInSlot(targetSlot) == null
-                    && target.isItemValidForSlot(targetSlot, transferStack)) {
+                    && this.canInsertInto(target, targetSlot, transferStack)) {
                 target.setInventorySlotContents(targetSlot, transferStack);
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean canInsertInto(IInventory target, int slot, ItemStack stack) {
+        return target.isItemValidForSlot(slot, stack)
+                && (!(target instanceof TileEntityHammerAnvil anvil) || anvil.canInsertItem(slot, stack, 1));
     }
 
     @Override

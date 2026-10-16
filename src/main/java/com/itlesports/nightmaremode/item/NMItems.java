@@ -12,6 +12,7 @@ import com.itlesports.nightmaremode.item.items.bloodItems.*;
 import com.itlesports.nightmaremode.item.items.template.*;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.skill.item.ItemSkillBook;
+import com.itlesports.nightmaremode.util.AutoAnvilUpgrade;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -480,6 +481,10 @@ public class NMItems {
     public static ItemSunDivingGear sunVisor;
     public static ItemSunDivingGear sunReservoir;
     public static Item signalConductiveCharge;
+    public static Item signalAnvilUpgrade;
+    public static Item bloodAnvilUpgrade;
+    public static Item deadzoneAnvilUpgrade;
+    public static Item phaseAnvilUpgrade;
     public static Item signalAlloyIngot;
     public static Item signalAlloyPlate;
     public static Item azureSlip;
@@ -1218,6 +1223,10 @@ public class NMItems {
         fishingAutoReelUpgrade = material(3412, "ifhyFishingAutoReelUpgrade");
         rareFishLureUpgrade = material(3413, "ifhyRareFishLureUpgrade");
         fishingEssence = material(3414, "ifhyFishingEssence");
+        signalAnvilUpgrade = new ItemAnvilUpgrade(3500, AutoAnvilUpgrade.SIGNAL);
+        bloodAnvilUpgrade = new ItemAnvilUpgrade(3501, AutoAnvilUpgrade.BLOOD);
+        deadzoneAnvilUpgrade = new ItemAnvilUpgrade(3502, AutoAnvilUpgrade.DEADZONE);
+        phaseAnvilUpgrade = new ItemAnvilUpgrade(3503, AutoAnvilUpgrade.PHASE);
 
         limitedRecallPotion = new ItemLimitedRecallPotion(3418);
         stoneLeafRake = new ItemLeafRake(3415, EnumToolMaterial.STONE, 50, 0.4F, 0.08F, 1).setTextureName("nightmare:ifhyStoneRake").setUnlocalizedName("ifhyLeafRake").setCreativeTab(CreativeTabs.tabTools);
