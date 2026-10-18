@@ -3,12 +3,12 @@ package com.itlesports.nightmaremode.block.tileEntities;
 import com.itlesports.nightmaremode.agriculture.ChunkAttribute;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributes;
-import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.*;
 
 public class TerrainExtractorTileEntity extends TileEntity implements IInventory {
     public static final int PROCESS_TICKS = 600;
+    private static final float ATTRIBUTE_DRAIN_PER_SECOND = 0.008F;
     private final ItemStack[] inventory = new ItemStack[3];
     private int fuelTicks;
     private int processTicks;
@@ -21,7 +21,7 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
         ChunkAttribute attribute = this.getAttribute();
         ChunkAttributes fields = ChunkAttributeManager.get(this.worldObj, this.xCoord, this.zCoord);
         this.fieldMilli = Math.round(fields.get(attribute) * 1000.0F);
-        if (!this.hasValidSubstrate() || fields.get(attribute) < 0.01F || !this.canOutput(attribute)) {
+        if (!this.hasValidSubstrate() || fields.get(attribute) < ATTRIBUTE_DRAIN_PER_SECOND || !this.canOutput(attribute)) {
             this.processTicks = 0;
             return;
         }
@@ -32,7 +32,7 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
         --this.fuelTicks;
         ++this.processTicks;
         if (this.processTicks % 20 == 0) {
-            fields.consume(attribute, 0.01F);
+            fields.consume(attribute, ATTRIBUTE_DRAIN_PER_SECOND);
             this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4, this.zCoord >> 4).setChunkModified();
             this.fieldMilli = Math.round(fields.get(attribute) * 1000.0F);
         }
@@ -85,7 +85,6 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
         ItemStack result = this.getResult(attribute);
         if (this.inventory[2] == null) this.inventory[2] = result;
         else this.inventory[2].stackSize += result.stackSize;
-        ChunkPollutionManager.pollute(this.worldObj, this.xCoord, this.yCoord, this.zCoord, 70.0F);
         this.onInventoryChanged();
     }
 

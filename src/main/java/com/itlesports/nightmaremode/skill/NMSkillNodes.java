@@ -331,7 +331,7 @@ public final class NMSkillNodes {
             7, 5,
             "Bring 16 diamond-bearing rock.",
             NMItems.diamondBearingRock.itemID, 0, false, 16,
-            "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F),
+            "10% less oxygen loss in caves. +5% second nickel-bearing rock chance.", combine(SkillRewardActions.addOxygenLossReduction(0.10F), SkillRewardActions.addDoubleNickelRockChance(0.05F)),
             MINING, false);
 
     public static final SkillNode BRING_NICKEL_PLATE_4 = bring(
@@ -341,7 +341,7 @@ public final class NMSkillNodes {
             2, 5,
             "Bring 4 nickel plates.",
             NMItems.nickelPlate.itemID, 0, false, 4,
-            "Unlocks Additional Recipes. +1% second nickel-bearing rock chance.", SkillRewardActions.addDoubleNickelRockChance(0.01F),
+            "Unlocks Additional Recipes. +5% second nickel-bearing rock chance.", SkillRewardActions.addDoubleNickelRockChance(0.05F),
             MINING, false);
 
     public static final SkillNode BRING_COAL_DUST_64 = deferred(bring(

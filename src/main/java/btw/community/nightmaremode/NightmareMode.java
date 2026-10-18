@@ -52,7 +52,7 @@ public class NightmareMode extends BTWAddon {
 
 
     // dev
-    public static boolean devMode = true;
+    public static boolean devMode = false;
     public static boolean disableFatigue = false;
     public static boolean benchmarkPerformance = false;
     public static boolean enableLightingFix = true;
@@ -66,7 +66,7 @@ public class NightmareMode extends BTWAddon {
     public static boolean alwaysShowRewards = false;
     public static boolean unlockSkillsWithClick = false;
     public static boolean fullInventoryCapacity = false;
-    public static boolean lockDownCreative = false;
+    public static boolean lockDownCreative = true;
     public static boolean spawnKnowledgeBooksInStructures = false;
 
 
