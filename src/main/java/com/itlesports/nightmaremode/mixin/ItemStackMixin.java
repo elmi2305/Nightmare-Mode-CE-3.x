@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.util.DivingTankAttachment;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.item.items.ItemGlassArmor;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -13,11 +14,58 @@ import net.minecraft.src.NBTTagCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
+    @ModifyArg(method = "getTooltip", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Item;addInformation(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/EntityPlayer;Ljava/util/List;Z)V"), index = 2)
+    private java.util.List addAttachedTankTooltip(java.util.List tooltip) {
+        DivingTankAttachment.addTooltip((ItemStack)(Object)this, tooltip);
+        return tooltip;
+    }
+
+    @Redirect(method = "getTooltip", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemStack;getAttributeModifiers()Lcom/google/common/collect/Multimap;"))
+    private com.google.common.collect.Multimap combineTankTooltipHunger(ItemStack stack) {
+        com.google.common.collect.Multimap attributes = stack.getAttributeModifiers();
+        return DivingTankAttachment.hasAttachment(stack)
+                ? DivingTankAttachment.combineTooltipHunger(attributes) : attributes;
+    }
+
+    @Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
+    private void addTankWeight(CallbackInfoReturnable<com.google.common.collect.Multimap> cir) {
+        if (!DivingTankAttachment.hasAttachment((ItemStack)(Object)this)) return;
+        com.google.common.collect.Multimap modifiers = com.google.common.collect.HashMultimap.create(cir.getReturnValue());
+        modifiers.put(btw.entity.attribute.BTWAttributes.armorWeight.getAttributeUnlocalizedName(),
+                new net.minecraft.src.AttributeModifier(java.util.UUID.fromString("94a960cb-a662-48af-a180-e70fb34f69cd"), "Diving Tank Weight", 7.0D, 0));
+        modifiers.put(btw.entity.attribute.BTWAttributes.hungerCost.getAttributeUnlocalizedName(),
+                new api.entity.attribute.CustomDisplayAttributeModifier(java.util.UUID.fromString("53b1eaac-e41b-44d0-93bb-fb04796ac5fb"),
+                        "Diving Tank Hunger", 0.16D, api.entity.attribute.AttributeOperation.ADDITIVE,
+                        modifier -> "attribute.name." + btw.entity.attribute.BTWAttributes.hungerCost.getAttributeUnlocalizedName() + ".medium"));
+        cir.setReturnValue(modifiers);
+    }
+
+    @Inject(method = "damageItem", at = @At("RETURN"))
+    private void damageAttachedTank(int amount, EntityLivingBase wearer, CallbackInfo ci) {
+        ItemStack host = (ItemStack)(Object)this;
+        if (amount <= 0 || wearer == null || wearer.worldObj.isRemote
+                || wearer instanceof EntityPlayer player && player.capabilities.isCreativeMode
+                || !DivingTankAttachment.hasAttachment(host)) return;
+        ItemStack tank = DivingTankAttachment.getTank(host);
+        if (tank == null) return;
+        if (host.stackSize <= 0) {
+            DivingTankAttachment.setTank(host, null);
+            wearer.entityDropItem(tank, 0.0F);
+        } else {
+            tank.setItemDamage(Math.min(tank.getMaxDamage(), tank.getItemDamage() + amount));
+            DivingTankAttachment.setTank(host, tank);
+        }
+    }
+
     @Inject(method = "isStackable", at = @At("HEAD"), cancellable = true)
     private void allowPerishableFoodStacking(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = (ItemStack)(Object)this;

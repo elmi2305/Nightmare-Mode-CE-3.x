@@ -8,7 +8,7 @@ import java.util.*;
 /** Rebuild derived rewards without replaying unlock costs or changing progress. */
 public final class SkillRewardReload {
     static final String LEGACY_VERSION = "legacy";
-    private static final int SCHEMA = 10;
+    private static final int SCHEMA = 11;
     private enum ReplayScope { WORLD, PLAYER }
     private static final ThreadLocal<ReplayScope> REPLAYING = new ThreadLocal<>();
 
@@ -68,8 +68,9 @@ public final class SkillRewardReload {
         SkillTreeData old = player.getData(NightmareMode.SKILL_TREE);
         if (player.worldObj == null || player.worldObj.isRemote || isReplaying()) return old;
         WorldSkillData world = validateWorld(player.worldObj, false);
+        boolean clearWorldNodes = old.worldNodeResetRevision != world.worldNodeResetRevision;
         boolean promotedUnlock = false;
-        if (old.rewardsSchema != SCHEMA || !version().equals(old.rewardsVersion)) {
+        if (!clearWorldNodes && (old.rewardsSchema != SCHEMA || !version().equals(old.rewardsVersion))) {
             for (SkillNode node : SkillRegistry.getNodes()) {
                 // preserve personal unlocks whose rewards have become world-shared.
                 if (node.worldReward && old.isUnlocked(node) && !world.isUnlocked(node)) {
@@ -82,11 +83,18 @@ public final class SkillRewardReload {
             player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, world);
             world = validateWorld(player.worldObj, true);
         }
-        if (old.rewardsSchema == SCHEMA && version().equals(old.rewardsVersion)
+        if (!clearWorldNodes && old.rewardsSchema == SCHEMA && version().equals(old.rewardsVersion)
                 && old.rewardsRevision == world.rewardsRevision) return old;
         NBTTagCompound saved = new NBTTagCompound();
         SkillTreeData.writeToNBT(saved, old);
         SkillTreeData rebuilt = SkillTreeData.readFromNBT(saved);
+        if (clearWorldNodes) {
+            // discard stale personal copies of shared unlocks, including those saved by offline players.
+            for (SkillNode node : SkillRegistry.getNodes()) {
+                if (node.worldReward) rebuilt.getUnlockedNodes().remove(node.id.toString());
+            }
+            rebuilt.worldNodeResetRevision = world.worldNodeResetRevision;
+        }
         rebuilt.resetRewards();
         REPLAYING.set(ReplayScope.PLAYER);
         try {

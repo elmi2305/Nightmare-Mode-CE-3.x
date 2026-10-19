@@ -25,7 +25,7 @@ import com.itlesports.nightmaremode.entity.EntityBloodWither;
 import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemCarbonIronArmor;
-import com.itlesports.nightmaremode.item.items.ItemDivingGear;
+import com.itlesports.nightmaremode.util.DivingTankAttachment;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -1042,35 +1042,25 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "decreaseAirSupply", at = @At("HEAD"), cancellable = true)
     private void breatheFromDivingTankUnderwater(int currentAir, CallbackInfoReturnable<Integer> cir) {
-        float earlyReduction = this.getEarlyOxygenGearReduction();
-        if (earlyReduction > 0.0F && this.rand.nextFloat() < earlyReduction) {
+        ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
+        if (DivingTankAttachment.getAir(tank) > 0) {
+            if (!this.worldObj.isRemote) DivingTankAttachment.consumeAir(tank);
             cir.setReturnValue(currentAir);
             return;
         }
-        ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
-        if (tank == null || !(tank.getItem() instanceof ItemDivingGear gear) || gear.getStoredAir(tank) <= 0) {
-            return;
-        }
-        if (!this.worldObj.isRemote) this.consumeDivingTankAir(tank, gear);
-        cir.setReturnValue(currentAir);
+        float earlyReduction = this.getEarlyOxygenGearReduction();
+        if (earlyReduction > 0.0F && this.rand.nextFloat() < earlyReduction) cir.setReturnValue(currentAir);
     }
 
     @Unique
     private boolean consumeDivingTankAir() {
-        ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
-        if (tank == null || !(tank.getItem() instanceof ItemDivingGear gear) || gear.getStoredAir(tank) <= 0) {
-            return false;
+        // surface air does not need a sealed mask; underwater breathing still does.
+        ItemStack tank = ArmorSetHelper.getDivingTank(this);
+        if (DivingTankAttachment.getAir(tank) <= 0) return false;
+        if (!this.worldObj.isRemote) {
+            DivingTankAttachment.consumeAir(tank);
         }
-        if (!this.worldObj.isRemote) this.consumeDivingTankAir(tank, gear);
         return true;
-    }
-
-    @Unique
-    private void consumeDivingTankAir(ItemStack tank, ItemDivingGear gear) {
-        float remaining = tank.getMaxDamage() <= 0 ? 1.0F
-                : 1.0F - (float)tank.getItemDamage() / (float)tank.getMaxDamage();
-        int airCost = remaining < 0.1F ? 4 : remaining < 0.5F ? 2 : 1;
-        gear.consumeAir(tank, airCost);
     }
 
     @Inject(method = "recoverAirSupply", at = @At(value = "HEAD"), cancellable = true)
@@ -1082,16 +1072,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique
     private boolean shouldLoseOxygenInDeepCave() {
-        return this.dimension == 0
-                && this.posY < 54.0D
-                && !this.capabilities.disableDamage
-                && this.isEntityAlive()
-                && !this.isInsideOfMaterial(Material.water);
+        return com.itlesports.nightmaremode.util.NMOxygenRules.isDeepCave((EntityPlayer)(Object)this);
     }
 
     @Unique
     private double getDeepCaveOxygenDrainInterval() {
-        double y = Math.max(24.0D, this.posY);
+        double y = Math.max(24.0D, this.boundingBox.minY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
         int baseInterval = Math.max(3, (int)Math.round(8.0D - depthRatio * 5.0D));
         float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F
@@ -1110,6 +1096,9 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         ItemStack tank = this.getCurrentArmor(2);
         if (ArmorSetHelper.isIntact(tank) && tank.getItem() instanceof ItemOxygenGear) {
             reduction += ((ItemOxygenGear)tank.getItem()).getOxygenDrainReduction();
+        }
+        if (DivingTankAttachment.hasAttachment(tank) && DivingTankAttachment.getGear(tank) != null) {
+            reduction += DivingTankAttachment.getGear(tank).getOxygenDrainReduction();
         }
         return reduction;
     }
@@ -1308,7 +1297,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         }
 
         if (this.shouldLoseOxygenAtAltitude()) {
-            int interval = Math.max(2, 20 - MathHelper.floor_double((this.posY - 120.0D) / 5.0D));
+            int interval = Math.max(2, 20 - MathHelper.floor_double((this.boundingBox.minY - 120.0D) / 5.0D));
             interval = Math.max(1, (int)Math.ceil(interval / (1.0F - this.getEarlyOxygenGearReduction())));
             if (this.ticksExisted % interval == 0 && !this.consumeDivingTankAir()) {
                 this.setAir(this.getAir() - 1);
@@ -1352,8 +1341,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique
     private boolean shouldLoseOxygenAtAltitude() {
-        return this.dimension == 0 && this.posY > 120.0D && !this.capabilities.disableDamage
-                && this.isEntityAlive() && !this.isInsideOfMaterial(Material.water);
+        return com.itlesports.nightmaremode.util.NMOxygenRules.isHighAltitude((EntityPlayer)(Object)this);
     }
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))

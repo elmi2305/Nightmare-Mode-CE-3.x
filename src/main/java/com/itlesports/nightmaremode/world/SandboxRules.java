@@ -52,7 +52,7 @@ public final class SandboxRules {
     }
 
     public static long uniqueSeed(ISaveFormat saves, long proposed) {
-        if (!NightmareMode.lockDownCreative) return proposed;
+        if (NightmareMode.showBetaOverlay || !NightmareMode.lockDownCreative) return proposed;
         try {
             List worlds = saves.getSaveList();
             Random random = new Random();

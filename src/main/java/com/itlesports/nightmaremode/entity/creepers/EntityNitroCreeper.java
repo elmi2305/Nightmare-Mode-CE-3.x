@@ -14,9 +14,12 @@ public class EntityNitroCreeper extends EntityCreeperVariant {
         this.explosionRadius = 6;
         this.patienceCounter = (byte)20;
         this.canLunge = false;
+        this.isImmuneToFire = par1World != null && par1World.provider.dimensionId == -1;
     }
     @Override
     public boolean getCanSpawnHere() {
-        return NightmareMode.moreVariants && super.getCanSpawnHere();
+        return (NightmareMode.moreVariants || this.dimension == -1
+                && com.itlesports.nightmaremode.worldgen.NetherTierHelper.getTier(this.worldObj, this.posX, this.posZ) >= 3)
+                && super.getCanSpawnHere();
     }
 }

@@ -4,6 +4,7 @@ import api.item.items.PickaxeItem;
 import btw.block.BTWBlocks;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,8 +25,12 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
         return false;
     }
 
-    @Inject(method = "shouldBreakBarricadeAtPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I"),cancellable = true)
+    @Inject(method = "shouldBreakBarricadeAtPos", at = @At("HEAD"), cancellable = true)
     private void manageBlockBreakingForHeldTool(World world, int i, int j, int k, boolean advancedBreaker, CallbackInfoReturnable<Block> cir){
+        if (world.getBlockId(i, j, k) == NMBlocks.steelOre.blockID) {
+            cir.setReturnValue(null);
+            return;
+        }
         if((this.associatedEntity.getHeldItem() != null && (this.associatedEntity.getHeldItem().getItem() instanceof PickaxeItem || this.associatedEntity.getHeldItem().getItem() instanceof ItemPickaxe) ) || NMUtils.getIsBloodMoon()){
             int iBlockID = world.getBlockId(i, j, k);
             if (iBlockID != 0) {

@@ -75,6 +75,7 @@ public final class OverworldOuterBiomes {
             this.spawnableMonsterList.add(new SpawnListEntry(com.itlesports.nightmaremode.entity.EntityFauxVillager.class, 5, 1, 1));
             this.spawnableMonsterList.add(new SpawnListEntry(EntityFireSpider.class, 12, 1, 3));
             this.spawnableMonsterList.add(new SpawnListEntry(EntityInfernoSkeleton.class, 14, 1, 2));
+            this.spawnableMonsterList.add(new SpawnListEntry(com.itlesports.nightmaremode.entity.creepers.EntityFireCreeper.class, 5, 1, 2));
             this.spawnableMonsterList.add(new SpawnListEntry(EntityMummyZombie.class, 18, 1, 4));
         }
 

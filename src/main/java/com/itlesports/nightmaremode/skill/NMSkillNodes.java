@@ -23,6 +23,7 @@ import static com.itlesports.nightmaremode.skill.SkillNodeProvider.getBuilder;
 
 public final class NMSkillNodes {
     private static final List<PendingParents> PENDING_PARENTS = new ArrayList<>();
+    private static volatile Item[] slabItems;
 
     public static final SkillBranch MINING = new SkillBranch("Mining", Item.pickaxeIron);
     public static final SkillBranch HUSBANDRY = new SkillBranch("Husbandry", Item.wheat);
@@ -269,7 +270,7 @@ public final class NMSkillNodes {
             4, 6,
             "Bring 16 crude obsidian.",
             Block.obsidian.blockID, 1, true, 16,
-            "+1 to Nether Access unlock.",
+            "+1 to Nether Access unlock",
             SkillRewardActions.addNetherAccessProgress(),
             MINING, true);
 
@@ -490,8 +491,8 @@ public final class NMSkillNodes {
             6, -3,
             "Bring 2 heat-resistant nickel components.",
             NMItems.nickelHeatComponent.itemID, 0, false, 2,
-            "Unlocks Additional Recipes. 1% less heat damage.", SkillRewardActions.addHeatDamageReduction(0.01F),
-            MINING, false),
+            "Unlocks Additional Recipes. 1% less heat damage. +1 to Nether Access unlock", combine(SkillRewardActions.addHeatDamageReduction(0.01F), SkillRewardActions.addNetherAccessProgress()),
+            MINING, true),
             () -> NMSkillNodes.BRING_NICKEL_PLATE_4,
             () -> NMSkillNodes.CRAFT_CAULDRON);
 
@@ -515,7 +516,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_REINFORCED_IRON_INGOT_32 = bring(
             "lithium_reinforcement", "Lithium Reinforcement", NMItems.reinforcedIronIngot, -1, -3,
             "Bring 32 reinforced iron ingots.", NMItems.reinforcedIronIngot.itemID, 0, false, 32,
-            "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
+            "Unlocks Additional Recipes. +1% block breaking speed. +1 to Nether Access unlock", combine(SkillRewardActions.addBlockBreakSpeed(0.01F), SkillRewardActions.addNetherAccessProgress()), MINING, true);
 
     public static final SkillNode BRING_CARBON_IRON_PLATE_8 = bring(
             "carbon_iron_lamination", "Carbon Iron Lamination", NMItems.carbonIronPlate, 4, -1,
@@ -1418,8 +1419,8 @@ public final class NMSkillNodes {
             1, -3,
             "Bring 16 leather straps.",
             BTWItems.leatherStrap.itemID, 0, false, 16,
-            "Unlocks Additional Recipes. +2% armor durability preservation.", SkillRewardActions.addArmorDurabilitySaveChance(0.02F),
-            HUSBANDRY, false);
+            "Unlocks Additional Recipes. +2% armor durability preservation. +1 to Nether Access unlock", combine(SkillRewardActions.addArmorDurabilitySaveChance(0.02F), SkillRewardActions.addNetherAccessProgress()),
+            HUSBANDRY, true);
 
     public static final SkillNode BRING_WOOL_16 = bring(
             "wool_16_needles",
@@ -1667,7 +1668,7 @@ public final class NMSkillNodes {
             5, 4,
             "Bring 1 enchantment table.",
             Block.enchantmentTable.blockID, 0, false, 1,
-            "+1 to Nether Access unlock.", SkillRewardActions.addNetherAccessProgress(),
+            "+1 to Nether Access unlock", SkillRewardActions.addNetherAccessProgress(),
             RITUAL, true);
 
     public static final SkillNode BRING_BLOOD_ORB_64 = bring(
@@ -1677,7 +1678,7 @@ public final class NMSkillNodes {
             1, 1,
             "Bring 64 blood orbs.",
             NMItems.bloodOrb.itemID, 0, false, 64,
-            "+1 to Nether Access unlock. -3% pollution produced globally.", combine(SkillRewardActions.addNetherAccessProgress(), SkillRewardActions.addGlobalPollutionReduction(0.03F)),
+            "+1 to Nether Access unlock -3% pollution produced globally.", combine(SkillRewardActions.addNetherAccessProgress(), SkillRewardActions.addGlobalPollutionReduction(0.03F)),
             RITUAL, true);
 
     public static final SkillNode BRING_POTION_8 = deferred(bring(
@@ -1708,7 +1709,7 @@ public final class NMSkillNodes {
             -1, 2,
             "Bring 1 Vessel of the Dragon.",
             BTWBlocks.dragonVessel.blockID, 0, false, 1,
-            "+1 to Nether Access unlock.", SkillRewardActions.addNetherAccessProgress(),
+            "+1 to Nether Access unlock", SkillRewardActions.addNetherAccessProgress(),
             RITUAL, true);
 
     public static final SkillNode BRING_NETHER_WART_64 = deferred(bring(
@@ -2275,8 +2276,8 @@ public final class NMSkillNodes {
             3, -2,
             "Bring 64 glass.",
             Block.glass.blockID, 0, false, 64,
-            "Unlocks Additional Recipes. +2% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.02F),
-            KNOWLEDGE, false);
+            "Unlocks Additional Recipes. +2% cistern processing speed. +1 to Nether Access unlock", combine(SkillRewardActions.addCisternSpeed(0.02F), SkillRewardActions.addNetherAccessProgress()),
+            KNOWLEDGE, true);
 
     public static final SkillNode BRING_PRECISION_CRYSTAL_GEAR_4 = deferred(bring(
             "calibrated_cistern",
@@ -2466,8 +2467,8 @@ public final class NMSkillNodes {
             -2, 0,
             "Bring 16 fabric.",
             BTWItems.fabric.itemID, 0, false, 16,
-            "Unlocks Additional Recipes. +2% hemp-seed chance.", SkillRewardActions.addHempSeedChance(0.02F),
-            HUSBANDRY, false),
+            "Unlocks Additional Recipes. +2% hemp-seed chance. +1 to Nether Access unlock", combine(SkillRewardActions.addHempSeedChance(0.02F), SkillRewardActions.addNetherAccessProgress()),
+            HUSBANDRY, true),
             () -> NMSkillNodes.BRING_HEMP_32);
 
     public static final SkillNode BRING_BELT_8 = deferred(bring(
@@ -2531,8 +2532,8 @@ public final class NMSkillNodes {
             -1, -2,
             "Bring 4 windmills.",
             BTWItems.windMill.itemID, 0, false, 4,
-            "Unlocks Additional Recipes. +2% machine processing speed. +20% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.20F)),
-            KNOWLEDGE, false),
+            "Unlocks Additional Recipes. +2% machine processing speed. +20% millstone processing speed. +1 to Nether Access unlock", combine(combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.20F)), SkillRewardActions.addNetherAccessProgress()),
+            KNOWLEDGE, true),
             () -> NMSkillNodes.BRING_WINDMILL_BLADE_8);
 
     public static final SkillNode BRING_IRON_NUGGET_32 = bring(
@@ -2889,7 +2890,7 @@ public final class NMSkillNodes {
             0, 2,
             "Kill 250 mobs.",
             (p, w) -> SkillHandler.getPlayerData(p).mobsKilled >= 250,
-            "+1 to Nether Access unlock.", SkillRewardActions.addNetherAccessProgress(),
+            "+1 to Nether Access unlock", SkillRewardActions.addNetherAccessProgress(),
             COMBAT, true);
 
     public static final SkillNode KILL_MOB_1000 = deferred(counter(
@@ -3290,8 +3291,8 @@ public final class NMSkillNodes {
 
     public static final SkillNode MINE_DIAMOND_ORE_100 = counter(
             "mine_diamond_ore_100", "Diamond Census", Block.oreDiamond, 8, 1,
-            "Mine 100 diamond ore.",
-            (p, w) -> SkillHandler.getPlayerData(p).diamondOreMined >= 100,
+            "Mine 64 diamond ore.",
+            (p, w) -> SkillHandler.getPlayerData(p).diamondOreMined >= 64,
             "+1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), MINING, false);
 
     public static final SkillNode BRING_STONE_STICK_64 = bring(
@@ -3397,19 +3398,18 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_DYE_BLEND_16 = bring(
             "dye_blends_16", "Chromatic Binder", NMItems.dyeBlend, 0, -3,
             "Bring 16 dye blends.", NMItems.dyeBlend.itemID, 0, false, 16,
-            "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), KNOWLEDGE, false, BRING_DYE_64);
+            "Unlocks Additional Recipes. +1% block breaking speed. +1 to Nether Access unlock", combine(SkillRewardActions.addBlockBreakSpeed(0.01F), SkillRewardActions.addNetherAccessProgress()), KNOWLEDGE, true, BRING_DYE_64);
 
     public static final SkillNode BRING_SLAB_1000 = bringAny(
             "slabs_1000", "Slab Logistics", Block.woodSingleSlab, 1, 5,
             "Bring 1,000 slabs of any kind.", 1000,
-            new Item[]{Item.itemsList[Block.woodSingleSlab.blockID], Item.itemsList[Block.stoneSingleSlab.blockID],
-                    Item.itemsList[BTWBlocks.stoneSlab.blockID], Item.itemsList[BTWBlocks.stoneBrickSlab.blockID]},
+            NMSkillNodes::getSlabItems,
             "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), KNOWLEDGE, false);
 
     public static final SkillNode BRING_SAW = bring(
             "saw_1", "Saw Ownership", BTWBlocks.saw, 2, 5,
             "Bring 1 saw.", BTWBlocks.saw.blockID, 0, false, 1,
-            "Unlocks Additional Recipes. +1% block breaking speed.", SkillRewardActions.addBlockBreakSpeed(0.01F), KNOWLEDGE, false);
+            "Unlocks Additional Recipes. +1% block breaking speed. +1 to Nether Access unlock", combine(SkillRewardActions.addBlockBreakSpeed(0.01F), SkillRewardActions.addNetherAccessProgress()), KNOWLEDGE, true);
 
     public static final SkillNode BRING_LADDER_64 = bring(
             "ladders_64", "Wooden Ascent", BTWBlocks.ladder, 3, -3,
@@ -3860,7 +3860,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_OXYGEN_APPARATUS = itemSet(
             "oxygen_apparatus", "Oxygen Apparatus", NMItems.oxygenMask, 2, -3,
             "Bring 1 oxygen mask and 1 oxygen tank.", new Item[]{NMItems.oxygenMask, NMItems.oxygenTank},
-            "10% less oxygen loss in caves.", SkillRewardActions.addOxygenLossReduction(0.10F), MINING, false,
+            "10% less oxygen loss in caves. +1 to Nether Access unlock", combine(SkillRewardActions.addOxygenLossReduction(0.10F), SkillRewardActions.addNetherAccessProgress()), MINING, true,
             BRING_NICKEL_PLATE_4, BRING_DRIED_PLANT_FIBER_300);
 
     public static final SkillNode BRING_DIVING_KIT = itemSet(
@@ -4801,7 +4801,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_MILLSTONE_1 = deferred(bring(
             "bring_millstone_1", "First Grind", BTWBlocks.millstone, -1, 0,
             "Bring 1 millstone.", BTWBlocks.millstone.blockID, 0, false, 1,
-            "+1% machine processing speed. +20% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)), KNOWLEDGE, false),
+            "+1% machine processing speed. +20% millstone processing speed. +1 to Nether Access unlock", combine(combine(SkillRewardActions.addMachineSpeed(0.01F), SkillRewardActions.addMillstoneSpeed(0.20F)), SkillRewardActions.addNetherAccessProgress()), KNOWLEDGE, true),
             () -> NMSkillNodes.BRING_WOODEN_GEAR_12);
 
     public static final SkillNode BRING_MILLSTONE_64 = deferred(bring(
@@ -4825,7 +4825,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_GEARBOX_8 = deferred(bring(
             "bring_gearbox_8", "Power Distribution", BTWBlocks.gearBox, -2, 3,
             "Bring 8 gearboxes.", BTWBlocks.gearBox.blockID, 0, false, 8,
-            "+2% machine processing speed. +16% millstone processing speed.", combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.16F)), KNOWLEDGE, false),
+            "+2% machine processing speed. +16% millstone processing speed. +1 to Nether Access unlock", combine(combine(SkillRewardActions.addMachineSpeed(0.02F), SkillRewardActions.addMillstoneSpeed(0.16F)), SkillRewardActions.addNetherAccessProgress()), KNOWLEDGE, true),
             () -> NMSkillNodes.BRING_AXLE_1);
 
     public static final SkillNode BRING_GEARBOX_64 = deferred(bring(
@@ -4855,7 +4855,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_AXLE_1 = deferred(bring(
             "bring_axle_1", "Hydraulic Drive", BTWBlocks.axle, -2, 4,
             "Bring 1 axle.", BTWBlocks.axle.blockID, 0, false, 1,
-            "+10% cistern processing speed. +12% millstone processing speed.", combine(SkillRewardActions.addCisternSpeed(0.10F), SkillRewardActions.addMillstoneSpeed(0.12F)), KNOWLEDGE, false),
+            "+10% cistern processing speed. +12% millstone processing speed. +1 to Nether Access unlock", combine(combine(SkillRewardActions.addCisternSpeed(0.10F), SkillRewardActions.addMillstoneSpeed(0.12F)), SkillRewardActions.addNetherAccessProgress()), KNOWLEDGE, true),
             () -> NMSkillNodes.BRING_ROPE_8);
 
     public static final SkillNode BRING_AXLE_64 = deferred(bring(
@@ -5302,14 +5302,61 @@ public final class NMSkillNodes {
         return step.build().register(branch);
     }
 
+    public static java.util.List<SkillNode> getNetherAccessNodes() {
+        return java.util.List.of(
+                BRING_IRON_INGOT,
+                BRING_CRUDE_OBSIDIAN_16,
+                TAME_ANIMAL_8,
+                VISIT_UNIQUE_BIOME_10,
+                BRING_ENCHANTMENT_TABLE,
+                BRING_BLOOD_ORB_64,
+                BRING_VESSEL_OF_THE_DRAGON,
+                KILL_MOB_250,
+                BRING_MILLSTONE_1,
+                BRING_AXLE_1,
+                BRING_GEARBOX_8,
+                BRING_WINDMILL_4,
+                BRING_SAW,
+                BRING_FABRIC_16,
+                BRING_LEATHER_STRAP_16,
+                BRING_GLASS_64,
+                BRING_OXYGEN_APPARATUS,
+                BRING_HEAT_RESISTANT_NICKEL_COMPONENT_2,
+                BRING_DYE_BLEND_16,
+                BRING_REINFORCED_IRON_INGOT_32);
+    }
+
+    public static void refreshSlabItems() {
+        java.util.List<Item> slabs = new java.util.ArrayList<>();
+        for (Block block : Block.blocksList) {
+            if ((block instanceof api.block.blocks.SlabBlock || block instanceof net.minecraft.src.BlockHalfSlab && !block.isOpaqueCube()) && Item.itemsList[block.blockID] != null) {
+                slabs.add(Item.itemsList[block.blockID]);
+            }
+        }
+        slabItems = slabs.toArray(new Item[0]);
+    }
+
+    private static Item[] getSlabItems() {
+        if (slabItems == null) refreshSlabItems();
+        return slabItems;
+    }
+
     private static SkillNode bringAny(
             String id, String name, Object icon, int x, int y, String requirement, int count, Item[] items,
             String rewardText, SkillUnlockAction reward, SkillBranch branch, boolean worldReward,
             SkillNode... parents) {
+        return bringAny(id, name, icon, x, y, requirement, count, () -> items,
+                rewardText, reward, branch, worldReward, parents);
+    }
+
+    private static SkillNode bringAny(
+            String id, String name, Object icon, int x, int y, String requirement, int count, Supplier<Item[]> items,
+            String rewardText, SkillUnlockAction reward, SkillBranch branch, boolean worldReward,
+            SkillNode... parents) {
         SkillNodeProvider.BuildStep step = getBuilder().id(loc(id)).name(name).icon(stack(icon)).displayLocation(x, y)
                 .requirementText(requirement)
-                .triggerCondition((player, world) -> SkillInventory.hasAny(player, count, items))
-                .onUnlockConsume((player, world) -> SkillInventory.consumeAny(player, count, items));
+                .triggerCondition((player, world) -> SkillInventory.hasAny(player, count, items.get()))
+                .onUnlockConsume((player, world) -> SkillInventory.consumeAny(player, count, items.get()));
         if (parents.length > 0) step.parents(parents);
         step.reward(rewardText, reward);
         if (worldReward) step.worldReward();

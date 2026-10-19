@@ -433,7 +433,9 @@ public abstract class GuiIngameMixin extends Gui {
 
         int airBarY = screenY - amountRendered * 10;
 
-        if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.thePlayer.getAir() < 300) {
+        if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.thePlayer.getAir() < 300
+                || com.itlesports.nightmaremode.util.NMOxygenRules.isDeepCave(this.mc.thePlayer)
+                || com.itlesports.nightmaremode.util.NMOxygenRules.isHighAltitude(this.mc.thePlayer)) {
             int air = this.mc.thePlayer.getAir();
 
             int fullBubbles = MathHelper.ceiling_double_int((double)(air - 2) * 10.0D / 300.0D);

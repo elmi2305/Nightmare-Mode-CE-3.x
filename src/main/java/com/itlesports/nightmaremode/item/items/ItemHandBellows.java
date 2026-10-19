@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
+import com.itlesports.nightmaremode.util.DivingTankAttachment;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.template.NMItem;
 import net.minecraft.src.*;
@@ -29,10 +30,20 @@ public class ItemHandBellows extends NMItem {
         return -1;
     }
 
+    private ItemStack findTank(EntityPlayer player) {
+        int slots = com.itlesports.nightmaremode.util.NMInventoryLocks.getUnlockedHotbarSlots(player);
+        for (int slot = 0; slot < slots; ++slot) {
+            ItemStack host = player.inventory.mainInventory[slot];
+            ItemDivingGear gear = DivingTankAttachment.getGear(host);
+            if (gear != null && DivingTankAttachment.getAir(host) < gear.getAirCapacity()) return host;
+        }
+        return null;
+    }
+
     @Override public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         if (!this.hasFreshAir(player, world)) {
             if (!world.isRemote) player.addChatMessage(I18n.getString("item.ifhyHandBellows.invalid"));
-        } else if (this.findEmptyFlask(player) >= 0) player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+        } else if (this.findTank(player) != null || this.findEmptyFlask(player) >= 0) player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
         return stack;
     }
 
@@ -40,6 +51,15 @@ public class ItemHandBellows extends NMItem {
     @Override public EnumAction getItemUseAction(ItemStack stack) { return EnumAction.block; }
 
     @Override public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+        ItemStack tank = this.findTank(player);
+        if (tank != null && this.hasFreshAir(player, world)) {
+            if (!world.isRemote) {
+                DivingTankAttachment.fill(tank, 200);
+                player.inventory.onInventoryChanged();
+                world.playSoundAtEntity(player, "random.breath", 0.6F, 1.3F);
+            }
+            return stack;
+        }
         int slot = this.findEmptyFlask(player);
         if (!world.isRemote && slot >= 0 && this.hasFreshAir(player, world)) {
             player.inventory.decrStackSize(slot, 1);

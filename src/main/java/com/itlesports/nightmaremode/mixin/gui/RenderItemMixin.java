@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.mixin.gui;
 
+import com.itlesports.nightmaremode.util.DivingTankAttachment;
 import com.itlesports.nightmaremode.item.items.ItemDivingGear;
 import com.itlesports.nightmaremode.util.interfaces.IArmorStatus;
 import com.itlesports.nightmaremode.util.StorageColor;
@@ -18,6 +19,28 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(RenderItem.class)
 public class RenderItemMixin {
     @Shadow private void renderQuad(Tessellator tessellator, int x, int y, int width, int height, int color) {}
+
+    @Inject(method = "renderItemOverlayIntoGUI(Lnet/minecraft/src/FontRenderer;Lnet/minecraft/src/TextureManager;Lnet/minecraft/src/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
+    private void renderAttachedOxygen(FontRenderer font, TextureManager textures, ItemStack stack,
+                                       int x, int y, String text, CallbackInfo ci) {
+        if (!DivingTankAttachment.hasAttachment(stack)) return;
+        ItemStack tank = DivingTankAttachment.getTank(stack);
+        if (tank == null) return;
+        ItemDivingGear gear = (ItemDivingGear)tank.getItem();
+        int barY = y + (stack.getItem() instanceof IArmorStatus ? 9 : 11);
+        int width = MathHelper.clamp_int(Math.round(13.0F * gear.getStoredAir(tank) / gear.getAirCapacity()), 0, 13);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        Tessellator tessellator = Tessellator.instance;
+        this.renderQuad(tessellator, x + 2, barY, 13, 2, 0);
+        this.renderQuad(tessellator, x + 2, barY, 12, 1, 0x12363B);
+        this.renderQuad(tessellator, x + 2, barY, width, 1, 0x32D7E6);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
 
     @ModifyArgs(method = "renderItemIntoGUI", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false))
     private void changeBrightnessItem(Args args){

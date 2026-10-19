@@ -20,6 +20,8 @@ public class JungleSpiderEntityMixin extends EntitySpider{
     @Redirect(method = "attackEntityAsMob", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/EntityLivingBase;addPotionEffect(Lnet/minecraft/src/PotionEffect;)V", ordinal = 1))
     private void skipExtraHungerEffect(EntityLivingBase target, PotionEffect effect) {
+        if (!this.worldObj.isRemote) target.addPotionEffect(new PotionEffect(Potion.hunger.id,
+                Math.min(600, effect.getDuration()), effect.getAmplifier()));
     }
 
     @Inject(method = "dropsSpiderEyes", at = @At("RETURN"), cancellable = true)

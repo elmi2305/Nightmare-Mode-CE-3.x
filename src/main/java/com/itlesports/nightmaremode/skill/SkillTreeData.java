@@ -13,6 +13,7 @@ public class SkillTreeData {
     public String rewardsVersion = SkillRewardReload.LEGACY_VERSION;
     public int rewardsSchema;
     public long rewardsRevision;
+    public long worldNodeResetRevision;
     public int netherPostCompletedTiers;
     public int blocksMined;
     public int coalOreMined;
@@ -212,6 +213,7 @@ public class SkillTreeData {
         data.rewardsVersion = SkillRewardReload.savedVersion(tag.getString("RewardsVersion"));
         data.rewardsSchema = tag.getInteger("RewardsSchema");
         data.rewardsRevision = tag.getLong("RewardsRevision");
+        data.worldNodeResetRevision = tag.getLong("WorldNodeResetRevision");
         data.ironDustDropBonus = tag.getInteger("IronDustDropBonus");
         data.coalDustDropBonus = tag.getInteger("CoalDustDropBonus");
         data.netherPostCompletedTiers = tag.getInteger("NetherPostCompletedTiers");
@@ -328,6 +330,7 @@ public class SkillTreeData {
         tag.setString("RewardsVersion", SkillRewardReload.savedVersion(data.rewardsVersion));
         tag.setInteger("RewardsSchema", data.rewardsSchema);
         tag.setLong("RewardsRevision", data.rewardsRevision);
+        tag.setLong("WorldNodeResetRevision", data.worldNodeResetRevision);
         tag.setInteger("IronDustDropBonus", data.ironDustDropBonus);
         tag.setInteger("CoalDustDropBonus", data.coalDustDropBonus);
         tag.setInteger("NetherPostCompletedTiers", data.netherPostCompletedTiers);

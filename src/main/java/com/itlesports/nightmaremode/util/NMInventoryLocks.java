@@ -23,8 +23,13 @@ public final class NMInventoryLocks {
 
     public static void cycleHotbar(InventoryPlayer inventory, int direction) {
         int slots = getUnlockedHotbarSlots(inventory.player);
-        int current = Math.max(0, Math.min(inventory.currentItem, slots - 1));
-        inventory.currentItem = Math.floorMod(current - Integer.signum(direction), slots);
+        inventory.currentItem = scrollHotbarIndex(inventory.currentItem, direction, slots);
+    }
+
+    public static int scrollHotbarIndex(int current, int direction, int slots) {
+        if (slots < 1 || slots > 9) throw new IllegalArgumentException("invalid hotbar size");
+        if (direction == 0) return Math.max(0, Math.min(current, slots - 1));
+        return Math.floorMod(current - Integer.signum(direction), slots);
     }
 
     public static int getUnlockedHotbarSlots(EntityPlayer player) {

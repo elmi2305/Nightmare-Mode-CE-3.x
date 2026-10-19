@@ -28,7 +28,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
 
     @Override
     protected void onVariantUpdate() {
-        if (NMUtils.getIsBloodMoon() && this.rangedAttackCooldown == 0) {
+        if (!this.worldObj.isRemote && NMUtils.getIsBloodMoon() && this.rangedAttackCooldown == 0) {
             EntityLivingBase target = this.getAttackTarget();
             if(target != null && this.getDistanceSqToEntity(target) > 64.0 && this.getEntitySenses().canSee(target)){
                 double dx = target.posX - this.posX;

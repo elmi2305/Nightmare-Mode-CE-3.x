@@ -251,16 +251,6 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
     }
 
     @Inject(method = "onDeath", at = @At("HEAD"))
-    private void countJourneyKills(DamageSource source, CallbackInfo ci) {
-        EntityLivingBase thisObj = (EntityLivingBase) (Object)(this);
-        if (!this.worldObj.isRemote && !(thisObj instanceof EntityPlayer) && source.getEntity() instanceof EntityPlayer) {
-            JourneyProfile profile = JourneyProfile.getOrCreate(this.worldObj);
-            profile.kills++;
-            this.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
-        }
-    }
-
-    @Inject(method = "onDeath", at = @At("HEAD"))
     private void dropOuterOverworldMaterials(DamageSource source, CallbackInfo ci) {
         if (this.worldObj.isRemote) return;
         EntityLivingBase entity = (EntityLivingBase)(Object)this;

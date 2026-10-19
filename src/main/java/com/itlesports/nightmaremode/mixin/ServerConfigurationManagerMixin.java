@@ -186,6 +186,7 @@ public class ServerConfigurationManagerMixin {
     @Inject(method = "playerLoggedIn", at = @At("TAIL"))
     private void sendFoodPacketToJoinedPlayer(EntityPlayerMP player, CallbackInfo ci){
         if (!player.worldObj.isRemote) {
+            com.itlesports.nightmaremode.skill.NMSkillNodes.refreshSlabItems();
             JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
             profile.joins++;
             com.itlesports.nightmaremode.world.SandboxRules.recordSurvivalInventory(player);

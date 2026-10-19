@@ -5,7 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import java.util.function.Consumer;
 
 public final class SkillRewardActions {
-    public static final int NETHER_ACCESS_PROGRESS_REQUIRED = 8;
+    public static final int NETHER_ACCESS_PROGRESS_REQUIRED = 20;
     public static final int WITHER_SUMMON_PROGRESS_REQUIRED = 6;
     private SkillRewardActions() {
     }

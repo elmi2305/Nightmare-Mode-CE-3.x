@@ -15,7 +15,7 @@ import net.minecraft.src.WrongUsageException;
 public final class TestToolsCommand extends CommandBase {
     public static final String[] NAMES = {
             "testhelp", "testdevmode", "testunlockallskills", "testalwaysshowskillrewards",
-            "testfreeskills", "testdisableplayerfatigue", "testfullinventorycapacity"
+            "testfreeskills", "testdisableplayerfatigue", "testfullinventorycapacity", "testclearskills"
     };
 
     private final String name;
@@ -25,8 +25,10 @@ public final class TestToolsCommand extends CommandBase {
     }
 
     @Override public String getCommandName() { return name; }
-    @Override public String getCommandUsage(ICommandSender sender) { return "/" + name; }
-    @Override public int getRequiredPermissionLevel() { return 0; }
+    @Override public String getCommandUsage(ICommandSender sender) {
+        return "/" + name + (name.equals("testclearskills") ? " yes imsure" : "");
+    }
+    @Override public int getRequiredPermissionLevel() { return name.equals("testclearskills") ? 2 : 0; }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
@@ -36,6 +38,15 @@ public final class TestToolsCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (!NightmareMode.showBetaOverlay) throw new CommandException("Tester commands require the beta overlay.");
+        if (name.equals("testclearskills")) {
+            if (!canCommandSenderUseCommand(sender)) throw new CommandException("commands.generic.permission");
+            if (args.length != 2 || !args[0].equals("yes") || !args[1].equals("imsure")) {
+                throw new WrongUsageException(getCommandUsage(sender));
+            }
+            SkillHandler.clearSkillsForTester(getCommandSenderAsPlayer(sender));
+            reply(sender, "Cleared your personal skill nodes and all shared world skill nodes. Skill rewards were reset; activity counters were preserved. Other players retain their personal nodes.");
+            return;
+        }
         if (args.length != 0) throw new WrongUsageException(getCommandUsage(sender));
 
         switch (name) {
@@ -43,6 +54,7 @@ public final class TestToolsCommand extends CommandBase {
                 reply(sender, "Tester commands (available while the beta overlay is enabled):");
                 reply(sender, "/testdevmode: toggle developer behavior, including full inventory, debug helpers, and altered mob/world checks.");
                 reply(sender, "/testunlockallskills: unlock every skill node for you, including world rewards.");
+                reply(sender, "/testclearskills yes imsure: operator-only; clear your personal and shared world nodes, preserving activity counters.");
                 reply(sender, "/testalwaysshowskillrewards: toggle hidden skill reward descriptions.");
                 reply(sender, "/testfreeskills: toggle unlocking skills by clicking without requirements.");
                 reply(sender, "/testdisableplayerfatigue: toggle fatigue suppression.");

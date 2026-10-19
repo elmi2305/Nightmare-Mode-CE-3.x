@@ -1052,7 +1052,7 @@ public class NMItems {
         divingMask = (ItemDivingGear)new ItemDivingGear(3288, 0, 2, 3, 5000, 8, 0.0D,
                 quartzglassPlate.itemID, 0.60F, 0, "ifhyDivingMask", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingMask").setUnlocalizedName("ifhyDivingMask");
-        divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 6, 8, 8000, 8, 0.0D,
+        divingTank = (ItemDivingGear)new ItemDivingGear(3289, 1, 0, 7, 8000, 8, 0.0D,
                 tungstenPlate.itemID, 0.75F, 20 * 60 * 4, "ifhyDivingGear", "item.ifhyDivingGear.bonus")
                 .setTextureName("nightmare:ifhyDivingTank").setUnlocalizedName("ifhyDivingTank");
         crackedEmerald = material(3296, "ifhyCrackedEmerald");

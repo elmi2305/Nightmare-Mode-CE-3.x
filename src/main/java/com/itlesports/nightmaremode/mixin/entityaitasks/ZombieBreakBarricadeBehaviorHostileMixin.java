@@ -125,6 +125,8 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     }
 
     @Unique private int computeRangeForHeldItem(ItemStack heldItem){
+        if (heldItem != null && (heldItem.getItem() instanceof api.item.items.PickaxeItem
+                || heldItem.getItem() instanceof ItemPickaxe)) return 5;
         if (heldItem != null && getLongRangeItems().contains(heldItem.itemID)) {
             if(getLesserRangeItems().contains(heldItem.itemID)){
                 return 4;

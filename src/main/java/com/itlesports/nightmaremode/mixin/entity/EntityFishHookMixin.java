@@ -36,26 +36,32 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     // Each biome table contains three regular fish and one deliberately scarce trophy fish.
     @Unique private static final FishingCatch[] OCEAN_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.mackerel, 26, false), catchOf(NMItems.cod, 22, false),
             catchOf(NMItems.tuna, 14, false), catchOf(NMItems.swordfish, 2, true)
     };
     @Unique private static final FishingCatch[] RIVER_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.bass, 26, false), catchOf(NMItems.trout, 22, false),
             catchOf(NMItems.carp, 14, false), catchOf(NMItems.goldenCarp, 2, true)
     };
     @Unique private static final FishingCatch[] SWAMP_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.mudfish, 26, false), catchOf(NMItems.catfish, 22, false),
             catchOf(NMItems.swampEel, 14, false), catchOf(NMItems.alligatorGar, 2, true)
     };
     @Unique private static final FishingCatch[] JUNGLE_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.piranha, 26, false), catchOf(NMItems.neonTetra, 22, false),
             catchOf(NMItems.jungleCatfish, 14, false), catchOf(NMItems.arapaima, 2, true)
     };
     @Unique private static final FishingCatch[] COLD_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.salmon, 26, false), catchOf(NMItems.perch, 22, false),
             catchOf(NMItems.icefish, 14, false), catchOf(NMItems.frostfish, 2, true)
     };
     @Unique private static final FishingCatch[] DESERT_CATCHES = {
+            catchOf(Item.fishRaw, 2, false),
             catchOf(NMItems.desertMinnow, 26, false), catchOf(NMItems.sandfish, 22, false),
             catchOf(NMItems.tilapia, 14, false), catchOf(NMItems.duneKoi, 2, true)
     };

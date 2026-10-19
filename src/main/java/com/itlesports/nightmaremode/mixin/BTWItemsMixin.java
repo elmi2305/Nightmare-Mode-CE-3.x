@@ -60,6 +60,13 @@ public class BTWItemsMixin {
                 Item.helmetDiamond, Item.plateDiamond, Item.legsDiamond, Item.bootsDiamond, BTWItems.diamondShears, BTWItems.diamondChisel,
                 NMItems.diamondHammer, NMItems.diamondScythe, NMItems.diamondKnife, NMItems.diamondLeafRake,
                 NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited);
+        ((ItemAccessor)Item.helmetDiamond).invSetMaxDamage(Item.helmetDiamond.getMaxDamage() * 4);
+        ((ItemAccessor)Item.plateDiamond).invSetMaxDamage(Item.plateDiamond.getMaxDamage() * 4);
+        ((ItemAccessor)Item.legsDiamond).invSetMaxDamage(Item.legsDiamond.getMaxDamage() * 4);
+        ((ItemAccessor)Item.bootsDiamond).invSetMaxDamage(Item.bootsDiamond.getMaxDamage() * 4);
+        ((ItemAccessor)Item.horseArmorDiamond).invSetMaxDamage(Item.bootsDiamond.getMaxDamage());
+        ((ItemAccessor)Item.horseArmorGold).invSetMaxDamage(256);
+        ((ItemAccessor)Item.horseArmorIron).invSetMaxDamage(Item.bootsIron.getMaxDamage());
         multiplyDurability(2, BTWItems.steelSword, BTWItems.steelPickaxe, BTWItems.steelAxe, BTWItems.steelShovel, BTWItems.steelHoe,
                 BTWItems.battleaxe, BTWItems.mattock,
                 BTWItems.plateHelmet, BTWItems.plateBreastplate, BTWItems.plateLeggings, BTWItems.plateBoots,

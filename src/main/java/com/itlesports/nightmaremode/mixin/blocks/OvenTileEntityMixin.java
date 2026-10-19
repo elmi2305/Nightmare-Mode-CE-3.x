@@ -6,6 +6,8 @@ import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.NMOvenCookTimes;
+import com.itlesports.nightmaremode.util.NMCookedFoodTracking;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntityFurnace;
@@ -23,6 +25,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class OvenTileEntityMixin extends TileEntityFurnace implements TileEntityDataPacketHandler {
 
     @Shadow public abstract int getItemBurnTime(ItemStack stack);
+
+    @Inject(method = "givePlayerCookStack", at = @At("HEAD"), remap = false)
+    private void creditCookedFoodPickup(EntityPlayer player, int facing, CallbackInfo ci) {
+        if (!this.worldObj.isRemote) NMCookedFoodTracking.creditOvenPickup(player, this.furnaceItemStacks[2]);
+    }
     @Unique private int burnCounter;
 
     @Unique private int burnItemId = -1;

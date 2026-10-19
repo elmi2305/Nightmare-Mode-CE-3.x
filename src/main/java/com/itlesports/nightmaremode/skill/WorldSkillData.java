@@ -13,6 +13,7 @@ public class WorldSkillData {
     public String rewardsVersion = SkillRewardReload.LEGACY_VERSION;
     public int rewardsSchema;
     public long rewardsRevision;
+    public long worldNodeResetRevision;
     public boolean woodBlocksIgnoreSkybaseGravity;
     public boolean netherAccessUnlocked;
     public boolean fireSpreadsSlower;
@@ -78,6 +79,11 @@ public class WorldSkillData {
         }
     }
 
+    public void clearUnlockedNodes() {
+        this.unlockedWorldNodes.clear();
+        this.worldNodeResetRevision++;
+    }
+
     /** Reset derived rewards only; retain unlocks, counters and quest progress. */
     public void resetRewards() {
         WorldSkillData defaults = new WorldSkillData();
@@ -103,6 +109,7 @@ public class WorldSkillData {
         data.rewardsVersion = SkillRewardReload.savedVersion(tag.getString("RewardsVersion"));
         data.rewardsSchema = tag.getInteger("RewardsSchema");
         data.rewardsRevision = tag.getLong("RewardsRevision");
+        data.worldNodeResetRevision = tag.getLong("WorldNodeResetRevision");
         data.woodBlocksIgnoreSkybaseGravity = tag.getBoolean("WoodBlocksIgnoreSkybaseGravity");
         data.netherAccessUnlocked = tag.getBoolean("NetherAccessUnlocked");
         data.fireSpreadsSlower = tag.getBoolean("FireSpreadsSlower");
@@ -151,6 +158,7 @@ public class WorldSkillData {
         tag.setString("RewardsVersion", SkillRewardReload.savedVersion(data.rewardsVersion));
         tag.setInteger("RewardsSchema", data.rewardsSchema);
         tag.setLong("RewardsRevision", data.rewardsRevision);
+        tag.setLong("WorldNodeResetRevision", data.worldNodeResetRevision);
         tag.setInteger("NetherContributionVersion", 1);
         tag.setBoolean("WoodBlocksIgnoreSkybaseGravity", data.woodBlocksIgnoreSkybaseGravity);
         tag.setBoolean("NetherAccessUnlocked", data.netherAccessUnlocked);

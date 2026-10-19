@@ -30,6 +30,14 @@ public class ItemOxygenGear extends ArmorItemMod {
     }
 
     @Override
+    public void addInformation(net.minecraft.src.ItemStack stack, net.minecraft.src.EntityPlayer player,
+                               java.util.List tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(net.minecraft.src.EnumChatFormatting.BLUE + net.minecraft.src.I18n.getStringParams(
+                "item.ifhyOxygenReduction", Math.round(this.oxygenDrainReduction * 100.0F)));
+    }
+
+    @Override
     public String getModId() {
         return "nightmare";
     }

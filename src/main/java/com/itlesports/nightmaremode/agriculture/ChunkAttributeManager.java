@@ -110,7 +110,8 @@ public final class ChunkAttributeManager {
     }
 
     public static void consumeForGrowth(World world, int x, int z, Block crop) {
-        consumeForGrowth(world, x, z, crop, isHemp(crop) ? 0.5F : 1.0F);
+        consumeForGrowth(world, x, z, crop, crop instanceof PotatoBlock
+                ? PotatoHarvestRates.GROWTH_COST_MULTIPLIER : isHemp(crop) ? 0.5F : 1.0F);
     }
 
     public static void consumeForHempTopGrowth(World world, int x, int z, Block crop) {

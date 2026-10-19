@@ -88,6 +88,8 @@ public abstract class EntityAIAttackOnCollideMixin {
         if (heldItem == null) return NightmareMode.isAprilFools ? 7 : 2;
 
         int itemId = heldItem.itemID;
+        if (this.attacker instanceof EntityZombie && (heldItem.getItem() instanceof api.item.items.PickaxeItem
+                || heldItem.getItem() instanceof ItemPickaxe)) return 5;
         if (NMUtils.LONG_RANGE_ITEMS.contains(itemId)) {
             return (NMUtils.LESSER_RANGE_ITEMS.contains(itemId) || this.attacker.isChild()) ? 4 : 6;
         }

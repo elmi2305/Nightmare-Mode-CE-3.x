@@ -390,6 +390,14 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
     }
     @Inject(method = "onSpawnWithEgg", at = @At("TAIL"))
     private void giveItemsForVariant(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
+        if (((Object)this).getClass() == EntitySkeleton.class && this.dimension == -1
+                && com.itlesports.nightmaremode.worldgen.NetherTierHelper.getTier(this.worldObj, this.posX, this.posZ) >= 3
+                && this.rand.nextInt(3) == 0) {
+            this.setSuperCriticalSkeleton();
+            this.isImmuneToFire = true;
+            this.setCurrentItemOrArmor(0, new ItemStack(Item.bow));
+            this.equipmentDropChances[0] = -1.0F;
+        }
         int id = this.getSkeletonType().id();
         if(id == NMFields.SKELETON_ICE){
             this.setHelmet(13260, BTWItems.woolHelmet);
@@ -448,6 +456,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
 
     @Inject(method = "onLivingUpdate", at = @At("TAIL"))
     private void manageVariantEffects(CallbackInfo ci){
+        if (this.dimension == -1 && this.getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL) this.isImmuneToFire = true;
         if(this.getSkeletonType().id() == NMFields.SKELETON_FIRE){
             if (!this.isInWater() && this.ticksExisted % 20 == 0) {
                 this.setFire(2000);

@@ -213,6 +213,8 @@ public abstract class NMInitializer implements AchievementExt {
         addMultiplayerRecipes();
         addAccessibleStorageRecipes();
         addSkillLockedRecipes();
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(false));
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(true));
         finishRecipes("All Recipes");
     }
 
@@ -885,7 +887,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("ifhy:butcher_wool", 4, 1, BTWItems.wool.itemID, 0, 42, 58);
         buy("ifhy:butcher_tallow", 4, 2, BTWItems.tallow.itemID, 0, 34, 47);
         buy("ifhy:butcher_cured_meat", 4, 2, BTWItems.curedMeat.itemID, 0, 10, 16);
-        buy("ifhy:butcher_raw_fish", 4, 2, Item.fishRaw.itemID, 0, 12, 16);
+        buy("ifhy:butcher_raw_fish", 4, 2, Item.fishRaw.itemID, 0, 2, 4);
         buy("ifhy:butcher_deboned_fish", 4, 2, NMItems.debonedRawFish.itemID, 0, 10, 16);
         buy("ifhy:butcher_fish_flesh", 4, 3, NMItems.fishFlesh.itemID, 0, 1, 1);
         buy("ifhy:butcher_calamari", 4, 3, NMItems.calamari.itemID, 0, 10, 16);
@@ -905,7 +907,7 @@ public abstract class NMInitializer implements AchievementExt {
                 TradeItem.fromID(Item.emerald.itemID, 8, 12),
                 TradeItem.fromID(BTWItems.soap.itemID, 4, 8));
         convert("ifhy:butcher_fish_to_hooks", 4, 3,
-                TradeItem.fromID(Item.fishRaw.itemID, 12, 16),
+                TradeItem.fromID(Item.fishRaw.itemID, 1, 2),
                 TradeItem.fromID(Item.emerald.itemID, 5, 9),
                 TradeItem.fromID(BTWItems.boneFishHook.itemID, 2, 4));
 
@@ -920,7 +922,7 @@ public abstract class NMInitializer implements AchievementExt {
         // catches into the emeralds needed for his useful stock.
         buy("ifhy:fisherman_string", profession, 1, Item.silk.itemID, 0, 20, 32);
         buy("ifhy:fisherman_bone_hooks", profession, 1, BTWItems.boneFishHook.itemID, 0, 8, 16);
-        buy("ifhy:fisherman_raw_fish", profession, 1, Item.fishRaw.itemID, 0, 12, 16);
+        buy("ifhy:fisherman_raw_fish", profession, 1, Item.fishRaw.itemID, 0, 2, 4);
         buy("ifhy:fisherman_mackerel", profession, 1, NMItems.mackerel.itemID, 0, 12, 16);
         buy("ifhy:fisherman_cod", profession, 1, NMItems.cod.itemID, 0, 12, 16);
         buy("ifhy:fisherman_calamari", profession, 2, NMItems.calamari.itemID, 0, 8, 16);
@@ -968,19 +970,19 @@ public abstract class NMInitializer implements AchievementExt {
         // Every offer consumes a catch as well as emeralds, so the fisherman cannot turn
         // an emerald surplus into unrestricted valuable stock.
         convert("ifhy:fisherman_rotten_flesh_bait", profession, 1,
-                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.fishRaw.itemID, 1, 2),
                 TradeItem.fromID(Item.emerald.itemID, 1, 2),
                 TradeItem.fromID(Item.rottenFlesh.itemID, 8, 16));
         convert("ifhy:fisherman_fish_to_sticks", profession, 1,
-                TradeItem.fromID(Item.fishRaw.itemID, 6, 10),
+                TradeItem.fromID(Item.fishRaw.itemID, 1, 2),
                 TradeItem.fromID(Item.emerald.itemID, 1, 2),
                 TradeItem.fromID(Item.stick.itemID, 8, 16));
         convert("ifhy:fisherman_fish_to_string", profession, 1,
-                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.fishRaw.itemID, 1, 2),
                 TradeItem.fromID(Item.emerald.itemID, 2, 3),
                 TradeItem.fromID(Item.silk.itemID, 4, 8));
         convert("ifhy:fisherman_fish_to_bones", profession, 1,
-                TradeItem.fromID(Item.fishRaw.itemID, 8, 12),
+                TradeItem.fromID(Item.fishRaw.itemID, 1, 2),
                 TradeItem.fromID(Item.emerald.itemID, 2, 3),
                 TradeItem.fromID(Item.bone.itemID, 4, 8));
         convert("ifhy:fisherman_creeper_oyster_bait", profession, 2,
@@ -1802,7 +1804,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         // tungsten makes nether masonry a limited alternative instead of a replacement for quarrying stone.
         manager.addRecipe(new CisternRecipe(
-                new ItemStack[]{new ItemStack(BTWItems.netherBrick, 32), new ItemStack(NMItems.tungstenIngot)},
+                new ItemStack[]{new ItemStack(BTWItems.netherBrick, 16), new ItemStack(NMItems.tungstenIngot)},
                 CisternTileEntity.FLUID_BRINE, 2, 12, 600,
                 new ItemStack[]{new ItemStack(BTWItems.stoneBrick, 4)})
                 .setConsumesFluid());
@@ -2467,6 +2469,7 @@ public abstract class NMInitializer implements AchievementExt {
     private static void addMillstoneRecipes(){
         // Remove the cut-hide bypass: every leather product begins with this one scouring pass.
         MillStoneCraftingManager millstone = MillStoneCraftingManager.getInstance();
+        RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.clayPile, 4), new ItemStack(Item.clay));
         millstone.removeRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
         millstone.removeRecipe(new ItemStack(BTWItems.cutScouredLeather), new ItemStack(BTWItems.cutLeather));
         RecipeManager.addMillStoneRecipe(new ItemStack(Item.leather), new ItemStack(NMItems.pigHide));
@@ -3250,7 +3253,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedMinecart), new Object[]{Item.minecartEmpty, NMTags.highSpeedCartReinforcements});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedChestMinecart), new Object[]{Item.minecartCrate, NMTags.highSpeedCartReinforcements});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.highSpeedFurnaceMinecart), new Object[]{Item.minecartPowered, NMTags.highSpeedCartReinforcements});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), NMTags.netherCompatibleSticks, NMTags.toolStrings, BTWItems.sawDust});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.drill), new Object[]{new ItemStack(BTWItems.pointyStick, 1, Short.MAX_VALUE), NMTags.netherCompatibleSticks, NMTags.toolStringsWithCrude, BTWItems.sawDust});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.stoneLeafRake), new Object[]{BTWTags.looseCobblestones, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ironLeafRake), new Object[]{Item.ingotIron, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.diamondLeafRake), new Object[]{BTWItems.diamondIngot, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks, NMTags.netherCompatibleSticks});
@@ -3694,7 +3697,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(
                 RecipeManager.addRecipe(
                         new ItemStack(BTWItems.bowDrill),
-                        new Object[]{"ST", "SD", Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('T'), NMTags.toolStrings, Character.valueOf('D'), NMItems.drill}),
+                        new Object[]{"ST", "SD", Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('T'), NMTags.toolStringsWithCrude, Character.valueOf('D'), NMItems.drill}),
                 NMSkillNodes.BRING_BURNING_CRUDE_TORCH, NMSkillNodes.BRING_DRILL_1, NMSkillNodes.BRING_FLINT_4);
 
         SkillLockedCrafting.requireSkill(

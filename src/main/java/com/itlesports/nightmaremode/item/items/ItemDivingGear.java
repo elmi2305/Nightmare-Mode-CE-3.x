@@ -69,35 +69,7 @@ public class ItemDivingGear extends ItemOxygenGear implements INetherItem, IArmo
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (!this.storesAir() || this.getStoredAir(stack) >= this.airCapacity) return stack;
-
-        int x = MathHelper.floor_double(player.posX);
-        int y = MathHelper.floor_double(player.posY + player.getEyeHeight());
-        int z = MathHelper.floor_double(player.posZ);
-        boolean surface = player.dimension == 0 && y >= 43 && y <= 120
-                && !player.isInsideOfMaterial(Material.water) && world.canBlockSeeTheSky(x, y, z);
-        if (!surface) {
-            if (!world.isRemote) player.addChatMessage(I18n.getString("item.ifhyDivingFill.invalid"));
-            return stack;
-        }
-
-        float efficiency = y <= 63 ? (y - 43) / 20.0F : (120 - y) / 57.0F;
-        int amount = Math.max(0, Math.round(200.0F * efficiency));
-        if (amount <= 0) {
-            if (!world.isRemote) player.addChatMessage(I18n.getString("item.ifhyDivingFill.noPressure"));
-            return stack;
-        }
-
-        if (!world.isRemote) {
-            this.setStoredAir(stack, this.getStoredAir(stack) + amount);
-            world.playSoundAtEntity(player, "random.breath", 0.6F, 1.1F);
-        }
         return stack;
-    }
-
-    @Override
-    public long getItemRightClickCooldown() {
-        return this.storesAir() ? 20L : 0L;
     }
 
     @Override

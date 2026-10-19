@@ -1,5 +1,6 @@
 package com.itlesports.nightmaremode.rendering.armor;
 
+import com.itlesports.nightmaremode.util.DivingTankAttachment;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.rendering.entities.models.ModelBackTank;
 import net.minecraft.src.EntityLivingBase;
@@ -24,7 +25,8 @@ public final class BackTankRenderer {
 
     public static void render(EntityLivingBase entity, ModelBiped bipedModel, float scale) {
         ItemStack chest = entity.getCurrentItemOrArmor(3);
-        ResourceLocation texture = getTexture(chest);
+        ItemStack attached = DivingTankAttachment.getTank(chest);
+        ResourceLocation texture = getTexture(attached != null ? attached : chest);
         if (texture == null) {
             return;
         }

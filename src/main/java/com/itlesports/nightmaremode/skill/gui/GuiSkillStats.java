@@ -69,6 +69,11 @@ public class GuiSkillStats extends GuiScreen {
         int worldProgress = NMUtils.getWorldProgress();
         lines.add(progress("Nether access", world.netherAccessUnlockProgress,
                     SkillRewardActions.NETHER_ACCESS_PROGRESS_REQUIRED, world.netherAccessUnlocked));
+        if (!world.netherAccessUnlocked) {
+            for (com.itlesports.nightmaremode.skill.SkillNode node : com.itlesports.nightmaremode.skill.NMSkillNodes.getNetherAccessNodes()) {
+                if (!world.isUnlocked(node)) lines.add("Nether access needs: " + node.name);
+            }
+        }
         lines.add(progress("Diamond ore mining", data.diamondHarvestProgress, 5, data.canHarvestDiamondOre));
         if (world.netherAccessUnlocked) {
             lines.add(progress("Wither summoning", world.witherSummonUnlockProgress,

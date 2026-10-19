@@ -77,15 +77,15 @@ public final class ArmorSetHelper {
 
     public static ItemStack getDivingTank(EntityLivingBase wearer) {
         ItemStack chest = wearer.getCurrentItemOrArmor(3);
-        return isIntact(chest) && chest.getItem() instanceof ItemDivingGear gear
-                && gear.getAirCapacity() > 0 ? chest : null;
+        return isIntact(chest) && DivingTankAttachment.getGear(chest) != null ? chest : null;
     }
 
     public static ItemStack getSealedDivingTank(EntityLivingBase wearer) {
         ItemStack mask = wearer.getCurrentItemOrArmor(4);
         ItemStack tank = getDivingTank(wearer);
         if (tank == null) return null;
-        boolean divingPair = isIntact(mask, NMItems.divingMask) && isIntact(tank, NMItems.divingTank);
+        boolean divingPair = isIntact(mask, NMItems.divingMask)
+                && DivingTankAttachment.getTank(tank).getItem() == NMItems.divingTank;
         boolean sunPair = isIntact(mask, NMItems.sunVisor) && isIntact(tank, NMItems.sunReservoir);
         return divingPair || sunPair ? tank : null;
     }

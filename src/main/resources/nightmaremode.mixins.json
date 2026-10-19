@@ -4,6 +4,7 @@
   "package": "com.itlesports.nightmaremode.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "entityaitasks.EntityAITemptMixin",
     "blocks.HammerAnvilDropsMixin",
     "ProgressiveCraftingItemMixin",
     "EasyWoodDropsMixin",
@@ -146,6 +147,7 @@
     "blocks.BlockWebMixin",
     "blocks.BlockWoodMixin",
     "blocks.CampfireTileEntityMixin",
+    "blocks.CampfireBlockMixin",
     "blocks.CementBlockMixin",
     "blocks.ChewedLogBlockMixin",
     "blocks.CobblestoneBlockMixin",

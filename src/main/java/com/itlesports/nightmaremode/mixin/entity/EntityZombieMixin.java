@@ -85,8 +85,9 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
         EntityZombie thisObj =(EntityZombie)(Object)this;
 
         boolean willBeBaby = this.rand.nextInt(32) == 0 && !(thisObj instanceof EntityCinderPigman || thisObj instanceof EntityDeadzonePigman);
-        if(willBeBaby && !this.worldObj.isRemote){
+        if ((willBeBaby || this.isChild()) && !this.worldObj.isRemote) {
             this.setChild(true);
+            this.clearBabyEquipment();
             this.setSize(this.width, 1.0f);
             return;
         }
@@ -374,7 +375,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Inject(method = "addRandomArmor", at = @At("TAIL"))
     private void manageZombieVariants(CallbackInfo ci) {
-        if (this.worldObj != null && !this.isVillager()) {
+        if (this.worldObj != null && !this.isVillager() && !this.isChild()) {
             boolean wasVariantSelected = false;
 
             int progress = NMUtils.getWorldProgress();
@@ -411,7 +412,8 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                             this.equipmentDropChances[i] = -1f;
                         }
                     }
-                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
+                    this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(28.0d);
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((2.5D + (progress > 0 ? 1.0D : 0.0D)) * niteMultiplier);
                     wasVariantSelected = true;
                 }
 
@@ -423,7 +425,8 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                         this.setCurrentItemOrArmor(4, new ItemStack(Item.helmetGold));
                         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6.0);
                         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((isHostile ? 0.34f : 0.29f) * ((niteMultiplier - 1) / 20 + 1));
-                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(32.0d);
+                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(28.0d);
+                    this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((2.5D + (progress > 0 ? 1.0D : 0.0D)) * niteMultiplier);
                         this.equipmentDropChances[0] = -1f;
                         this.equipmentDropChances[4] = -1f;
                         wasVariantSelected = true;
@@ -482,7 +485,8 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     if (this.posY <= 45) {
                         this.setCurrentItemOrArmor(0, new ItemStack(Item.pickaxeStone));
                         this.equipmentDropChances[0] = -1f;
-                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0d);
+                        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(22.0d);
+                        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((2.5D + (progress > 0 ? 1.0D : 0.0D)) * niteMultiplier);
                     } else{
                         this.setCurrentItemOrArmor(0, new ItemStack(Item.swordStone));
                         this.equipmentDropChances[0] = -1f;
@@ -647,8 +651,22 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             this.timeSpentBreaking--;
         }
     }
+    @Override
+    public boolean canPickUpLoot() {
+        return !this.isChild() && super.canPickUpLoot();
+    }
+
+    @Unique
+    private void clearBabyEquipment() {
+        this.setCurrentItemOrArmor(0, null);
+        ItemStack helmet = this.getCurrentItemOrArmor(4);
+        if (helmet != null && (helmet.itemID == Block.pumpkin.blockID || helmet.itemID == Block.pumpkinLantern.blockID
+                || helmet.itemID == BTWBlocks.carvedPumpkin.blockID)) this.setCurrentItemOrArmor(4, null);
+    }
+
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
     private void updateBabyZombies(CallbackInfo ci){
+        if (!this.worldObj.isRemote && this.isChild()) this.clearBabyEquipment();
         if(this.worldObj.isRemote){
             if(this.isChild()){
                 this.setSize(this.width, 1.0f);

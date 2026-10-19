@@ -179,7 +179,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
             this.lastActiveTime = this.timeSinceIgnited;
             int var1 = this.getCreeperState();
-            if (var1 > 0 && this.timeSinceIgnited == 0) {
+            if (!this.worldObj.isRemote && var1 > 0 && this.timeSinceIgnited == 0) {
                 this.playSound("random.fuse", 1.0f, 0.5f + soundPitchModifier);
             }
             if (((Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue() && this.variantType != NMFields.PACKET_CREEPER_LIGHTNING) {

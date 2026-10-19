@@ -47,6 +47,24 @@ public class SkillHandler {
         sync(player);
     }
 
+    public static void clearSkillsForTester(EntityPlayerMP player) {
+        if (player.worldObj == null || player.worldObj.isRemote) return;
+        NightmareMode.allSkillsUnlocked = false;
+        WorldSkillData worldData = getWorldData(player.worldObj);
+        worldData.clearUnlockedNodes();
+        player.worldObj.setData(NightmareMode.WORLD_SKILL_TREE, worldData);
+        SkillTreeData playerData = player.getData(NightmareMode.SKILL_TREE);
+        playerData.getUnlockedNodes().clear();
+        playerData.rewardsSchema = 0;
+        player.setData(NightmareMode.SKILL_TREE, playerData);
+        SkillRewardReload.validateWorld(player.worldObj, true);
+        SkillRewardReload.validatePlayer(player);
+        for (Object entry : player.mcServer.getConfigurationManager().playerEntityList) {
+            if (entry instanceof EntityPlayerMP online && online != player) SkillRewardReload.validatePlayer(online);
+        }
+        sync(player);
+    }
+
     private static void unlockAllSkills(EntityPlayer player, SkillTreeData playerData) {
         if (player.worldObj == null) {
             return;
@@ -203,6 +221,9 @@ public class SkillHandler {
         }
         SkillTreeData data = getPlayerData(player);
         data.mobsKilled++;
+        JourneyProfile profile = JourneyProfile.getOrCreate(player.worldObj);
+        profile.recordMobKills(player, data.mobsKilled);
+        player.worldObj.setData(NightmareMode.JOURNEY_PROFILE, profile);
         if (killed instanceof net.minecraft.src.EntityZombie) {
             data.zombiesKilled++;
         } else if (killed instanceof net.minecraft.src.EntitySkeleton) {

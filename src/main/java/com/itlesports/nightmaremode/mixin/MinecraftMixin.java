@@ -39,6 +39,7 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "loadWorld(Lnet/minecraft/src/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
     private void unloadScaryEvents(WorldClient next, String message, CallbackInfo ci) {
+        if (next != null) com.itlesports.nightmaremode.skill.NMSkillNodes.refreshSlabItems();
         if (next == null) com.itlesports.nightmaremode.client.ScaryEvents.unload();
         else com.itlesports.nightmaremode.client.ScaryEvents.clear();
     }
@@ -164,13 +165,12 @@ public abstract class MinecraftMixin {
                 return 0;
             }
         }
-        return Mouse.getEventDWheel();
-    }
-
-    @Redirect(method = "runTick", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/src/InventoryPlayer;changeCurrentItem(I)V"))
-    private void scrollUnlockedHotbar(InventoryPlayer inventory, int direction) {
-        com.itlesports.nightmaremode.util.NMInventoryLocks.cycleHotbar(inventory, direction);
+        int wheel = Mouse.getEventDWheel();
+        if (wheel != 0 && this.thePlayer != null) {
+            com.itlesports.nightmaremode.util.NMInventoryLocks.cycleHotbar(this.thePlayer.inventory, wheel);
+        }
+        // consume the wheel once, before downstream nine-slot scrolling can clamp the result.
+        return 0;
     }
 
     @ModifyArg(method = "startGame", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V"))

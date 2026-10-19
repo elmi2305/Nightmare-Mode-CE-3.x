@@ -26,7 +26,7 @@ import java.util.Set;
 /** Compact, root-level world metadata used by the Journey Mode title card. */
 public final class JourneyProfile {
     public static final String TAG = "NightmareJourneyProfile";
-    private static final int FORMAT = 4;
+    private static final int FORMAT = 5;
     private static final Achievement<?>[] PROGRESSION = new Achievement<?>[] {
             NMAchievements.MORNING_SECOND_DAY,
             BTWAchievements.SMELT_IRON,
@@ -52,6 +52,7 @@ public final class JourneyProfile {
     public int deaths;
     public int joins;
     public long kills;
+    private final Map<String, Integer> playerMobKills = new HashMap<>();
     public int progressIndex;
     public int worldState;
     private final Set<String> completedSkillNodes = new HashSet<String>();
@@ -82,7 +83,13 @@ public final class JourneyProfile {
             profile.playTicks = Math.max(0L, tag.getLong("PlayTicks"));
             profile.deaths = Math.max(0, tag.getInteger("Deaths"));
             profile.joins = Math.max(0, tag.getInteger("Joins"));
-            profile.kills = Math.max(0L, tag.getLong("Kills"));
+            NBTTagCompound killCounts = tag.getCompoundTag("PlayerMobKills");
+            NBTTagList killPlayers = tag.getTagList("KillPlayers");
+            for (int i = 0; i < killPlayers.tagCount(); ++i) {
+                String name = ((NBTTagString)killPlayers.tagAt(i)).data;
+                profile.playerMobKills.put(name, Math.max(0, killCounts.getInteger(name)));
+            }
+            for (int count : profile.playerMobKills.values()) profile.kills += count;
             profile.progressIndex = clamp(tag.getInteger("Progress"), 0, PROGRESSION.length - 1);
             profile.worldState = clamp(tag.getInteger("WorldState"), 0, 3);
             NBTTagList skills = tag.getTagList("CompletedSkillNodes");
@@ -117,6 +124,14 @@ public final class JourneyProfile {
         tag.setInteger("Deaths", Math.max(0, this.deaths));
         tag.setInteger("Joins", Math.max(0, this.joins));
         tag.setLong("Kills", Math.max(0L, this.kills));
+        NBTTagCompound killCounts = new NBTTagCompound();
+        NBTTagList killPlayers = new NBTTagList("KillPlayers");
+        for (Map.Entry<String, Integer> entry : this.playerMobKills.entrySet()) {
+            killCounts.setInteger(entry.getKey(), entry.getValue());
+            killPlayers.appendTag(new NBTTagString("", entry.getKey()));
+        }
+        tag.setCompoundTag("PlayerMobKills", killCounts);
+        tag.setTag("KillPlayers", killPlayers);
         tag.setInteger("Progress", clamp(this.progressIndex, 0, PROGRESSION.length - 1));
         tag.setInteger("WorldState", clamp(this.worldState, 0, 3));
         NBTTagList skills = new NBTTagList("CompletedSkillNodes");
@@ -149,6 +164,7 @@ public final class JourneyProfile {
         if (!this.valid || player == null || world == null) return;
         try {
             SkillTreeData playerData = player.getData(NightmareMode.SKILL_TREE);
+            if (playerData != null) this.recordMobKills(player, playerData.mobsKilled);
             WorldSkillData worldData = world.getData(NightmareMode.WORLD_SKILL_TREE);
             for (SkillNode node : SkillRegistry.getNodes()) {
                 boolean unlocked = node.worldReward ? worldData != null && worldData.isUnlocked(node)
@@ -158,6 +174,13 @@ public final class JourneyProfile {
         } catch (Throwable ignored) {
             // The profile must remain usable while optional player/world data is still being initialized.
         }
+    }
+
+    public void recordMobKills(EntityPlayer player, int count) {
+        String name = player.getCommandSenderName().toLowerCase(java.util.Locale.ROOT);
+        this.playerMobKills.put(name, Math.max(0, count));
+        this.kills = 0;
+        for (int kills : this.playerMobKills.values()) this.kills += kills;
     }
 
     public int getCompletedSkillCount() { return this.completedSkillNodes.size(); }

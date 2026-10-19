@@ -230,6 +230,8 @@ public class ChunkProviderHellMixin {
         result.add(new SpawnListEntry(EntityAshGhast.class, 5, 1, 1));
         if (tier >= 3) {
             result.add(new SpawnListEntry(EntityDeadzonePigman.class, 20, 1, 3));
+            result.add(new SpawnListEntry(com.itlesports.nightmaremode.entity.creepers.EntityNitroCreeper.class, 6, 1, 1));
+            result.add(new SpawnListEntry(EntitySkeleton.class, 8, 1, 2));
             result.add(new SpawnListEntry(EntityHellfireBlaze.class, 8, 1, 2));
             result.add(new SpawnListEntry(EntitySiegeGhast.class, 3, 1, 1));
         }
