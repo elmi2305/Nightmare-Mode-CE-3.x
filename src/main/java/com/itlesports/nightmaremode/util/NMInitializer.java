@@ -1743,7 +1743,7 @@ public abstract class NMInitializer implements AchievementExt {
         manager.addRecipe(new CisternRecipe(new ItemStack[]{late(ItemLateGameMaterial.CRYOLITE_INGOT,16),late(ItemLateGameMaterial.FROZEN_BONE,64),late(ItemLateGameMaterial.FROZEN_FLESH,64),new ItemStack(NMItems.paleRootResin,16)},CisternTileEntity.FLUID_BRINE,3,40,1800,new ItemStack[]{late(ItemLateGameMaterial.FROZEN_ESSENCE,1)}).setConsumesFluid());
 
         manager.addRecipe(new CisternRecipe(
-                new ItemStack[]{new ItemStack(Item.ingotIron), new ItemStack(NMItems.lithiumStabilizer), new ItemStack(NMItems.lithiumStabilizer)},
+                new ItemStack[]{new ItemStack(Item.ingotIron), new ItemStack(NMItems.lithiumStabilizer, 2)},
                 CisternTileEntity.FLUID_BRINE, 2, 24, 700,
                 new ItemStack[]{new ItemStack(NMItems.lithiumTreatedIronBlank, 2)})
                 .setConsumesFluid());
@@ -2613,6 +2613,7 @@ public abstract class NMInitializer implements AchievementExt {
 
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.screw), new Object[]{"n# ", " #n", "n# ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
         RecipeManager.addRecipe(new ItemStack(BTWItems.screw, 2), new Object[]{"nn ", " #n", "nn ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
+        RecipeManager.removeVanillaRecipe(new ItemStack(Block.fenceGate, 1), new Object[]{"#X#", Character.valueOf('#'), BTWTags.woodenMouldings, Character.valueOf('X'), BTWTags.woodenSidings});
 
 
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMItems.nickelWorkLeggings), new Object[]{
