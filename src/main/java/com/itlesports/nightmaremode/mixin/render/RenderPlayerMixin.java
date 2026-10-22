@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin.render;
 
 import com.itlesports.nightmaremode.rendering.armor.BackTankRenderer;
+import com.itlesports.nightmaremode.rendering.armor.DivingMaskRenderer;
 import net.minecraft.src.AbstractClientPlayer;
 import net.minecraft.src.ModelBiped;
 import net.minecraft.src.RenderPlayer;
@@ -17,5 +18,6 @@ public abstract class RenderPlayerMixin {
     @Inject(method = "renderSpecials", at = @At("RETURN"))
     private void renderBackTank(AbstractClientPlayer player, float partialTicks, CallbackInfo ci) {
         BackTankRenderer.render(player, this.modelBipedMain, 0.0625F);
+        DivingMaskRenderer.render(player, this.modelBipedMain, 0.0625F);
     }
 }

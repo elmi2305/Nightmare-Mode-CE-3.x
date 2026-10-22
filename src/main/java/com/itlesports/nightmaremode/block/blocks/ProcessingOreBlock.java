@@ -43,21 +43,34 @@ public class ProcessingOreBlock extends NMBlockOre {
     }
 
     @Override
-    public void dropBlockAsItemWithChance(World world, int x, int y, int z, int metadata, float chance, int fortune) {
-        super.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
-        if (world.isRemote) {
-            return;
-        }
-        EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 8.0D);
-        if (player == null) {
-            return;
-        }
+    protected void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack) {
+        super.dropBlockAsItem_do(world, x, y, z, this.withMiningBonus(world, x, y, z, stack));
+    }
+
+    @Override
+    protected void ejectItemsOnGoodPickConversion(ItemStack tool, World world, int x, int y, int z,
+                                                   int metadata, int side) {
+        if (world.isRemote) return;
+        ItemStack result = new ItemStack(this.dropItemID, this.quantityDropped(world.rand), this.damageDropped(metadata));
+        api.item.util.ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
+                this.withMiningBonus(world, x, y, z, result), side);
+    }
+
+    private ItemStack withMiningBonus(World world, int x, int y, int z, ItemStack stack) {
+        if (world.isRemote || stack == null || stack.itemID != this.dropItemID) return stack;
+        EntityPlayer player = com.itlesports.nightmaremode.util.OreMiningContext.miner(world, x, y, z);
+        if (player == null || player.capabilities.isCreativeMode) return stack;
+        ItemStack tool = player.getCurrentEquippedItem();
+        if (tool == null || !tool.getItem().canHarvestBlock(tool, world, this, x, y, z)
+                || EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, tool) > 0) return stack;
+        ItemStack result = stack.copy();
         if (this == NMBlocks.lithiumOre && SkillHandler.getPlayerData(player).doubleLithiumDrops) {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.dropItemID, 1, 0));
-        } else if (this == NMBlocks.nickelOre
-                && world.rand.nextFloat() < SkillHandler.getPlayerData(player).doubleNickelRockChance) {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.dropItemID, 1, 0));
+            result.stackSize *= 2;
+        } else if (this == NMBlocks.nickelOre) {
+            result.stackSize = com.itlesports.nightmaremode.util.NickelMiningDrops.count(result.stackSize,
+                    SkillHandler.getPlayerData(player).doubleNickelRockChance, tool.getItem() == Item.pickaxeDiamond, world.rand);
         }
+        return result;
     }
 
     @Override

@@ -37,7 +37,7 @@ public abstract class EasyNaturalDropsMixin {
         boolean cropProduce = stack.getItem() instanceof ItemFood || stack.itemID == Item.wheat.itemID
                 || stack.itemID == btw.item.BTWItems.hemp.itemID;
         boolean gravel = block == Block.gravel && stack.itemID == NMItems.flintChip.itemID;
-        if (!(ore && !(stack.getItem() instanceof ItemBlock) || crop && cropProduce || gravel)) return stack;
+        if (!(ore && com.itlesports.nightmaremode.util.EasyBalance.easyOres() && !(stack.getItem() instanceof ItemBlock) || crop && cropProduce || gravel)) return stack;
         ItemStack result = stack.copy();
         result.stackSize *= ore || gravel ? 3 : 2;
         return result;

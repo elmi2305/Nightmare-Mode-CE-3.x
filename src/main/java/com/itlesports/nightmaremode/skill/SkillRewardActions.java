@@ -98,7 +98,11 @@ public final class SkillRewardActions {
     }
 
     public static SkillUnlockAction slowFoodSpoilageGlobally() {
-        return worldReward(data -> data.globalFoodSpoilageRateMultiplier *= 0.95F);
+        return multiplyFoodSpoilageRateGlobally(0.95F);
+    }
+
+    public static SkillUnlockAction multiplyFoodSpoilageRateGlobally(float multiplier) {
+        return worldReward(data -> data.globalFoodSpoilageRateMultiplier *= multiplier);
     }
 
     public static SkillUnlockAction slowVillagerStarvationGlobally(float multiplier) {

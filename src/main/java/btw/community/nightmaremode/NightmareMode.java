@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Beta Build 4000";
+    public static String betaBuildLine = "Beta Build 4010";
     public static String betaBuildLineDifficulty = BalanceProfile.active();
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
@@ -96,6 +96,10 @@ public class NightmareMode extends BTWAddon {
     public static float[] skyColors;
 
     // configs
+    public static boolean testEasyPollution;
+    public static boolean testEasyHungerDrain;
+    public static boolean testEasyOreQuantities;
+    public static boolean testEasyDurability;
     public static Boolean shouldShowDateTimer;
     public static Boolean shouldShowRealTimer;
     public static Boolean bloodmoonColors;
@@ -243,6 +247,9 @@ public class NightmareMode extends BTWAddon {
         AddonHandler.registerCommand(new NightCommand(), false);
         AddonHandler.registerCommand(new RevertEventTimeCommand(), false);
         AddonHandler.registerCommand(new WarpCommand(), false);
+        for (String name : com.itlesports.nightmaremode.util.command.TestEasyBalanceCommand.NAMES) {
+            AddonHandler.registerCommand(new com.itlesports.nightmaremode.util.command.TestEasyBalanceCommand(name), false);
+        }
         if (showBetaOverlay) {
             for (String name : TestToolsCommand.NAMES) {
                 AddonHandler.registerCommand(new TestToolsCommand(name), false);
@@ -988,6 +995,10 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void registerConfigProperties(AddonConfig config) {
         super.registerConfigProperties(config);
+        config.registerBoolean("TestEasyPollution", false);
+        config.registerBoolean("TestEasyHungerDrain", false);
+        config.registerBoolean("TestEasyOreQuantities", false);
+        config.registerBoolean("TestEasyDurability", false);
         config.registerBoolean("NmMinecraftDayTimer", true);
         config.registerBoolean("NmTimer", true);
         config.registerBoolean("BloodmoonColors", true);
@@ -1023,6 +1034,10 @@ public class NightmareMode extends BTWAddon {
     @Override
     public void handleConfigProperties(AddonConfig config) {
         super.handleConfigProperties(config);
+        testEasyPollution = config.getBoolean("TestEasyPollution");
+        testEasyHungerDrain = config.getBoolean("TestEasyHungerDrain");
+        testEasyOreQuantities = config.getBoolean("TestEasyOreQuantities");
+        testEasyDurability = config.getBoolean("TestEasyDurability");
 
         shouldShowDateTimer = config.getBoolean("NmMinecraftDayTimer");
         shouldShowRealTimer = config.getBoolean("NmTimer");

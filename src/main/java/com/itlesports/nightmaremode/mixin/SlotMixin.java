@@ -47,13 +47,6 @@ public class SlotMixin {
 
     @Inject(method = "canTakeStack", at = @At("HEAD"), cancellable = true)
     private void preventTakingFromUnavailablePlayerSlots(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
-        if (NightmareMode.lockDownCreative
-                && (player.capabilities.isCreativeMode || SandboxRules.isSandbox(player.worldObj))
-                && !(this.inventory instanceof InventoryPlayer)
-                && !SandboxRules.mayCreate(player.worldObj, this.inventory.getStackInSlot(this.slotIndex))) {
-            cir.setReturnValue(false);
-            return;
-        }
         if (this.inventory instanceof InventoryPlayer inv
                 && !NMInventoryLocks.isMainInventorySlotUnlocked(inv.player, this.slotIndex)) {
             cir.setReturnValue(false);

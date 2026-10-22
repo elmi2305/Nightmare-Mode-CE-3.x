@@ -6,7 +6,7 @@ import net.minecraft.src.*;
 import java.util.Arrays;
 
 public abstract class ContainerAutomaticAnvil extends Container {
-    private static final int PROPERTY_COUNT = 7;
+    private static final int PROPERTY_COUNT = 8;
     private final TileEntityHammerAnvil anvil;
     private final int[] previous = new int[PROPERTY_COUNT];
     private final boolean phase;

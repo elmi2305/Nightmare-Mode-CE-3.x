@@ -76,7 +76,7 @@ public class CisternBlock extends BlockCauldron implements ITileEntityProvider {
         }
 
         if (player.isSneaking()) {
-            if(player.getFoodStats().getFoodLevel() == 0)
+            if(!player.capabilities.isCreativeMode && player.getFoodStats().getFoodLevel() == 0)
             {
                 return true;
             }

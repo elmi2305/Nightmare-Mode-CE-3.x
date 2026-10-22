@@ -189,6 +189,7 @@ public abstract class NMInitializer implements AchievementExt {
         validateUltimateItemRegistrations();
         validateItemRegistration("Rough Mushroom Mash", NMItems.mash);
         NMTags.initTags();
+        BTWItems.straw.setfurnaceburntime(5);
         addCraftingRecipes();
         addAutoAnvilUpgradeRecipes();
         addAlloyToolRecipes();
@@ -213,9 +214,27 @@ public abstract class NMInitializer implements AchievementExt {
         addMultiplayerRecipes();
         addAccessibleStorageRecipes();
         addSkillLockedRecipes();
-        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(false));
-        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(true));
+        addApprovedHandInRecipeGates();
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(false).hideFromEMI());
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(true).hideFromEMI());
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingMaskAttachmentRecipe(false).hideFromEMI());
+        CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingMaskAttachmentRecipe(true).hideFromEMI());
         finishRecipes("All Recipes");
+    }
+
+    private static void addApprovedHandInRecipeGates() {
+        SkillRecipeGates.requireCraftingSkills(NMItems.twigSharpening.itemID, NMSkillNodes.BRING_TWIG_1);
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.hamper.blockID, NMSkillNodes.BRING_WICKER_BASKET_1);
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.chest.blockID, NMSkillNodes.BRING_WICKER_BASKET_4);
+        SkillRecipeGates.requireCraftingSkills(NMItems.cupOfSap.itemID, NMSkillNodes.BRING_WOOD_CUP_1);
+        SkillRecipeGates.requireCraftingSkills(BTWBlocks.unlitCampfire.blockID, NMSkillNodes.BRING_PILE_OF_STICKS_4);
+        for (btw.crafting.recipe.types.BulkRecipe recipe : CauldronCraftingManager.getInstance().getRecipeList()) {
+            if (recipe.getCraftingOutputList().stream().anyMatch(output -> output.itemID == NMItems.thickenedSap.itemID)) {
+                SkillLockedCrafting.requireWorldSkills(recipe, NMSkillNodes.BRING_CUP_OF_SAP_4);
+            }
+        }
+        com.itlesports.nightmaremode.skill.CampfireSkillGates.require(NMItems.cupOfSap.itemID, NMSkillNodes.BRING_CUP_OF_SAP_4);
+
     }
 
     private static void validateUltimateItemRegistrations() {
@@ -2470,6 +2489,7 @@ public abstract class NMInitializer implements AchievementExt {
         // Remove the cut-hide bypass: every leather product begins with this one scouring pass.
         MillStoneCraftingManager millstone = MillStoneCraftingManager.getInstance();
         RecipeManager.addMillStoneRecipe(new ItemStack(BTWItems.clayPile, 4), new ItemStack(Item.clay));
+        RecipeManager.addMillStoneRecipe(new ItemStack(NMItems.witchLocator, 4), new ItemStack(BTWItems.witchWart));
         millstone.removeRecipe(new ItemStack(BTWItems.scouredLeather), new ItemStack(Item.leather));
         millstone.removeRecipe(new ItemStack(BTWItems.cutScouredLeather), new ItemStack(BTWItems.cutLeather));
         RecipeManager.addMillStoneRecipe(new ItemStack(Item.leather), new ItemStack(NMItems.pigHide));
@@ -2924,6 +2944,10 @@ public abstract class NMInitializer implements AchievementExt {
                 Block.stairsWoodOak, Block.stairsWoodSpruce, Block.stairsWoodBirch,
                 Block.stairsWoodJungle, BTWBlocks.bloodWoodStairs};
         for (int woodType = 0; woodType < woodStairs.length; ++woodType) {
+            RecipeManager.removeVanillaRecipe(
+                    new ItemStack(BTWItems.woodSidingDecorativeStubID, 2,
+                            WoodSidingDecorativeStubBlockItem.getItemDamageForType(woodType, 1)),
+                    new Object[]{"###", Character.valueOf('#'), new ItemStack(BTWItems.woodMouldingStubID, 1, woodType)});
             RecipeManager.removeVanillaRecipe(new ItemStack(woodStairs[woodType], 6), new Object[]{
                     "#  ", "## ", "###", Character.valueOf('#'), new ItemStack(Block.planks, 1, woodType)});
             RecipeManager.removeVanillaRecipe(new ItemStack(Block.woodSingleSlab, 6, woodType), new Object[]{
@@ -4340,7 +4364,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('A'), BTWItems.soulforgedSteelIngot,
                         Character.valueOf('B'), BTWBlocks.soulforgedSteelBlock}),
                 NMSkillNodes.BRING_SOULFORGED_STEEL_INGOT_16, NMSkillNodes.BRING_BROADHEAD_ARROWHEAD_16,
-                NMSkillNodes.BRING_DIAMOND_16, NMSkillNodes.BRING_REFINED_DIAMOND_INGOT_AFTER_WITHER,
+                NMSkillNodes.BRING_DIAMOND_8, NMSkillNodes.BRING_REFINED_DIAMOND_INGOT_AFTER_WITHER,
                 NMSkillNodes.CRAFT_UNIQUE_RECIPE_OUTPUT_256, NMSkillNodes.CRAFT_CAULDRON,
                 NMSkillNodes.BRING_WINDMILL_4, NMSkillNodes.BRING_STEEL_HAMMER,
                 NMSkillNodes.KILL_MOB_1000, NMSkillNodes.KILL_ENDERMAN_50,
@@ -4754,11 +4778,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(BTWItems.breadDough.itemID, NMSkillNodes.BRING_FLOUR_32);
         SkillRecipeGates.crafting(BTWItems.rawMushroomOmelet.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_BROWN_MUSHROOM_32);
         SkillRecipeGates.crafting(BTWItems.rawScrambledEggs.itemID, NMSkillNodes.BRING_RAW_EGG_16);
-        SkillRecipeGates.crafting(BTWItems.unbakedPumpkinPie.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_PUMPKIN_16);
+        SkillRecipeGates.crafting(BTWItems.unbakedPumpkinPie.itemID, NMSkillNodes.BRING_RAW_EGG_16, NMSkillNodes.BRING_PUMPKIN_8);
         SkillRecipeGates.crafting(Item.cake.itemID, NMSkillNodes.BRING_RAW_EGG_16);
         SkillRecipeGates.crafting(BTWItems.unbakedCookies.itemID, NMSkillNodes.BRING_CHOCOLATE_16);
-        SkillRecipeGates.crafting(BTWBlocks.carvedPumpkin.blockID, NMSkillNodes.BRING_PUMPKIN_16);
-        SkillRecipeGates.crafting(Block.pumpkinLantern.blockID, NMSkillNodes.BRING_PUMPKIN_16);
+        SkillRecipeGates.crafting(BTWBlocks.carvedPumpkin.blockID, NMSkillNodes.BRING_PUMPKIN_8);
+        SkillRecipeGates.crafting(Block.pumpkinLantern.blockID, NMSkillNodes.BRING_PUMPKIN_8);
         SkillRecipeGates.crafting(Item.bowlSoup.itemID, NMSkillNodes.BRING_BROWN_MUSHROOM_32);
         SkillRecipeGates.crafting(BTWItems.rawKebab.itemID, NMSkillNodes.BRING_BROWN_MUSHROOM_32, NMSkillNodes.BRING_RAW_MUTTON_16);
 

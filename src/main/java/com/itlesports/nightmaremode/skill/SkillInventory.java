@@ -4,7 +4,30 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
+import java.util.function.BiPredicate;
+
 public class SkillInventory {
+    public static boolean hasMatching(EntityPlayer player, int count, BiPredicate<EntityPlayer, ItemStack> matches) {
+        int total = 0;
+        for (ItemStack stack : player.inventory.mainInventory) {
+            if (stack != null && matches.test(player, stack)) total += stack.stackSize;
+        }
+        return total >= count;
+    }
+
+    public static void consumeMatching(EntityPlayer player, int count, BiPredicate<EntityPlayer, ItemStack> matches) {
+        if (player.worldObj.isRemote || !hasMatching(player, count, matches)) return;
+        for (int slot = 0; slot < player.inventory.mainInventory.length && count > 0; slot++) {
+            ItemStack stack = player.inventory.mainInventory[slot];
+            if (stack == null || !matches.test(player, stack)) continue;
+            int removed = Math.min(count, stack.stackSize);
+            count -= removed;
+            stack.stackSize -= removed;
+            if (stack.stackSize == 0) player.inventory.mainInventory[slot] = null;
+        }
+        player.inventory.onInventoryChanged();
+    }
+
     public static boolean has(EntityPlayer player, Item item, int count) {
         return count(player, item.itemID, 0, false) >= count;
     }

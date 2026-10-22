@@ -314,6 +314,11 @@ public final class RecipeIndexExporter {
                     recipe.getInputs().get(0).getEmiStacks().get(0).getItemStack()));
         }
         reflect(details, recipe, "hits", "hits");
+        if (recipe instanceof EmiHammerRecipe hammer && !hammer.getAnvilHits().isEmpty()) {
+            JsonObject anvilHits = new JsonObject();
+            hammer.getAnvilHits().forEach(anvilHits::addProperty);
+            details.add("anvil_hits", anvilHits);
+        }
         reflect(details, recipe, "experienceCost", "experience_cost");
         reflect(details, recipe, "blockRecipe", "placed_block");
         reflect(details, recipe, "duration", "duration_ticks");

@@ -11,6 +11,7 @@ public final class DivingTankAttachment {
 
     public static boolean isChestplate(ItemStack stack) {
         return stack != null && stack.getItem() instanceof ItemArmor armor && armor.armorType == 1
+                && stack.getItem() != NMItems.sunReservoir && stack.getItem() != NMItems.sunChestplate
                 && !(stack.getItem() instanceof ItemDivingGear gear && gear.storesAir());
     }
 

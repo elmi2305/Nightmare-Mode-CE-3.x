@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.tileentity.CampfireTileEntity;
+import btw.crafting.manager.CampfireCraftingManager;
+import com.itlesports.nightmaremode.skill.CampfireSkillGates;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import net.minecraft.src.ItemStack;
@@ -12,6 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CampfireTileEntity.class)
 public class CampfireTileEntityMixin {
+    @Redirect(method = {"updateCookState", "getIsCooking"}, at = @At(value = "INVOKE",
+            target = "Lbtw/crafting/manager/CampfireCraftingManager;getRecipeResult(I)Lnet/minecraft/src/ItemStack;"))
+    private ItemStack enforceWorldCookingSkill(CampfireCraftingManager manager, int inputId) {
+        return CampfireSkillGates.isLocked(((CampfireTileEntity)(Object)this).worldObj, inputId)
+                ? null : manager.getRecipeResult(inputId);
+    }
+
     @ModifyVariable(method = "addBurnTime", at = @At("HEAD"), argsOnly = true, remap = false)
     private int economicalEasyCampfires(int burnTime) {
         return com.itlesports.nightmaremode.world.BalanceProfile.isEasy() ? burnTime * 2 : burnTime;

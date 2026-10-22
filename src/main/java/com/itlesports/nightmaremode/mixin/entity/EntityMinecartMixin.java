@@ -192,7 +192,7 @@ public abstract class EntityMinecartMixin implements IHighSpeedMinecart, ITrainM
         }
         this.minecartItemToDrop = switch (minecart.getMinecartType()) {
             case 1 -> NMItems.highSpeedChestMinecart;
-            case 2 -> NMItems.highSpeedFurnaceMinecart;
+            case 2 -> NMItems.highSpeedMinecart;
             default -> NMItems.highSpeedMinecart;
         };
     }

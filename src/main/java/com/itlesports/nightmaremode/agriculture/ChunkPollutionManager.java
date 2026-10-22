@@ -178,7 +178,10 @@ public final class ChunkPollutionManager {
             float amount = switch (drill.getMachineTier()) { case 1 -> 90.0F; case 2 -> 55.0F; case 3 -> 25.0F; default -> 0.0F; };
             return String.format("Pollution: %.0f / coal consumed", amount);
         }
-        if (tile instanceof TerrainExtractorTileEntity) return "Pollution: 0 / extraction completed";
+        if (tile instanceof TerrainExtractorTileEntity extractor) {
+            return String.format(java.util.Locale.ROOT, "%s in chunk: %.3f",
+                    extractor.getFieldName(), extractor.getMonitoredValue());
+        }
         if (tile instanceof CisternDrainTileEntity) return "Pollution: 2-50 / fluid drain";
         if (block == Block.fire) return "Pollution: 0.4 / flammable block burned (0.6 on hibachi)";
         if (block == BTWBlocks.stokedFire) return "Pollution: 1 / flammable block burned";

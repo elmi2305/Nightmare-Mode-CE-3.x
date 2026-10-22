@@ -31,6 +31,12 @@ public final class SandboxRules {
         return profile != null && profile.hasItem(stack);
     }
 
+    public static boolean mayUseStation(World world, int itemID) {
+        if (!NightmareMode.lockDownCreative || world == null) return true;
+        JourneyProfile profile = world.getData(NightmareMode.JOURNEY_PROFILE);
+        return profile != null && profile.hasItemType(itemID);
+    }
+
     public static void recordAcquisition(EntityPlayer player, ItemStack stack) {
         if (!NightmareMode.lockDownCreative || player == null || stack == null
                 || player.worldObj == null || player.worldObj.isRemote

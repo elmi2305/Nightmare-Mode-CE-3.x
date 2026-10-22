@@ -53,6 +53,10 @@ public class ItemInWorldManagerMixin {
                                            float clickX, float clickY, float clickZ,
                                            CallbackInfoReturnable<Boolean> cir) {
         MachineSpeedBonuses.interact(world, x, y, z, player);
+        Block station = Block.blocksList[world.getBlockId(x, y, z)];
+        if (station != null && this.nightmareMode$isStation(station)) {
+            SandboxRules.recordAcquisition(player, new ItemStack(this.nightmareMode$stationItemId(station.blockID), 1, 0));
+        }
     }
 
     @Redirect(method = {"onBlockClicked", "updateBlockRemoving", "uncheckedTryHarvestBlock"}, at = @At(value = "INVOKE",
@@ -97,11 +101,13 @@ public class ItemInWorldManagerMixin {
         int blockId = world.getBlockId(x, y, z);
         Block block = blockId > 0 ? Block.blocksList[blockId] : null;
         if (block != null && nightmareMode$isStation(block)
-                && !SandboxRules.mayCreate(world, new ItemStack(nightmareMode$stationItemId(blockId), 1, 0))) {
+                && !SandboxRules.mayUseStation(world, nightmareMode$stationItemId(blockId))) {
             cir.setReturnValue(false);
             return;
         }
-        if (stack != null && !SandboxRules.mayCreate(world, stack)) cir.setReturnValue(false);
+        if (block instanceof com.itlesports.nightmaremode.block.blocks.CisternBlock && player.isSneaking()) {
+            cir.setReturnValue(block.onBlockActivated(world, x, y, z, player, side, clickX, clickY, clickZ));
+        }
     }
 
     @Unique private boolean nightmareMode$isStation(Block block) {
@@ -125,6 +131,9 @@ public class ItemInWorldManagerMixin {
     }
 
     @Unique private int nightmareMode$stationItemId(int blockId) {
+        if (blockId == NMBlocks.cistern.blockID) return Item.cauldron.itemID;
+        if (blockId == BTWBlocks.soulforge.blockID) return BTWBlocks.dormandSoulforge.blockID;
+        if (blockId == Block.brewingStand.blockID) return Item.brewingStand.itemID;
         if (blockId == Block.furnaceBurning.blockID) return Block.furnaceIdle.blockID;
         if (blockId == BTWBlocks.burningOven.blockID) return BTWBlocks.idleOven.blockID;
         if (blockId == BTWBlocks.burningLooseOven.blockID) return BTWBlocks.idleLooseOven.blockID;
@@ -325,6 +334,16 @@ public class ItemInWorldManagerMixin {
     private void clearCapturedStorageColorAfterHarvest(int x, int y, int z, int fromSide,
                                                        CallbackInfoReturnable<Boolean> cir) {
         StorageColor.clearCapturedStorageColor();
+    }
+
+    @Inject(method = "tryHarvestBlock(IIII)Z", at = @At("HEAD"))
+    private void rememberOreMiner(int x, int y, int z, int side, CallbackInfoReturnable<Boolean> cir) {
+        com.itlesports.nightmaremode.util.OreMiningContext.begin(this.thisPlayerMP, this.theWorld, x, y, z);
+    }
+
+    @Inject(method = "tryHarvestBlock(IIII)Z", at = @At("RETURN"))
+    private void clearOreMiner(int x, int y, int z, int side, CallbackInfoReturnable<Boolean> cir) {
+        com.itlesports.nightmaremode.util.OreMiningContext.clear();
     }
 
 }

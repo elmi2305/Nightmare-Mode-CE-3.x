@@ -26,6 +26,7 @@ import com.itlesports.nightmaremode.entity.outer.*;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemCarbonIronArmor;
 import com.itlesports.nightmaremode.util.DivingTankAttachment;
+import com.itlesports.nightmaremode.util.DivingMaskAttachment;
 import com.itlesports.nightmaremode.item.items.ItemOxygenGear;
 import com.itlesports.nightmaremode.mixin.interfaces.EntityAnimalInvoker;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -84,6 +85,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     public abstract EntityItem dropPlayerItemWithRandomChoice(ItemStack par1ItemStack, boolean par2);
 
     @Unique private int ticksInWater;
+    @Unique private boolean finishedProgressiveCraft;
+
+    @Redirect(method = "onItemUseFinish", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/ItemStack;onFoodEaten(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityPlayer;)Lnet/minecraft/src/ItemStack;"))
+    private ItemStack mergeProgressiveOutput(ItemStack input, World world, EntityPlayer player) {
+        ItemStack output = input.onFoodEaten(world, player);
+        this.finishedProgressiveCraft = !world.isRemote && input.getItem() instanceof api.item.items.ProgressiveCraftingItem;
+        return this.finishedProgressiveCraft ? ProgressiveCraftingInventory.finish(player, input, output) : output;
+    }
+
+    @Inject(method = "onItemUseFinish", at = @At("TAIL"))
+    private void syncProgressiveCraft(CallbackInfo ci) {
+        if (!this.finishedProgressiveCraft) return;
+        this.finishedProgressiveCraft = false;
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        if (player instanceof EntityPlayerMP serverPlayer) serverPlayer.sendContainerToPlayer(player.inventoryContainer);
+    }
     @Unique private int ticksSleeping;
     @Unique private int noArmorTicks;
     @Unique private int blinkLength = 0;
@@ -1044,7 +1062,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     private void breatheFromDivingTankUnderwater(int currentAir, CallbackInfoReturnable<Integer> cir) {
         ItemStack tank = ArmorSetHelper.getSealedDivingTank(this);
         if (DivingTankAttachment.getAir(tank) > 0) {
-            if (!this.worldObj.isRemote) DivingTankAttachment.consumeAir(tank);
+            if (!this.worldObj.isRemote && this.rand.nextFloat() < this.getSunOxygenDrainMultiplier()) DivingTankAttachment.consumeAir(tank);
             cir.setReturnValue(currentAir);
             return;
         }
@@ -1058,7 +1076,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         ItemStack tank = ArmorSetHelper.getDivingTank(this);
         if (DivingTankAttachment.getAir(tank) <= 0) return false;
         if (!this.worldObj.isRemote) {
-            DivingTankAttachment.consumeAir(tank);
+            if (this.rand.nextFloat() < this.getSunOxygenDrainMultiplier()) DivingTankAttachment.consumeAir(tank);
         }
         return true;
     }
@@ -1083,18 +1101,23 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F
                 : ArmorSetHelper.isWearingCompleteNickelWorkSet(this) ? 0.9F : 0.8F;
         float reduction = Math.min(this.getOxygenGearReduction(), cap);
-        return Math.max(1, (int)Math.ceil(baseInterval / (1.0F - reduction))) / (1.0D + depthRatio * 0.25D);
+        return Math.max(1, (int)Math.ceil(baseInterval / ((1.0F - reduction) * this.getSunOxygenDrainMultiplier()))) / (1.0D + depthRatio * 0.25D);
     }
 
     @Unique
     private float getOxygenGearReduction() {
         float reduction = this.nightmareMode$getSkillData().oxygenLossReduction;
         ItemStack mask = this.getCurrentArmor(3);
-        if (ArmorSetHelper.isIntact(mask) && mask.getItem() instanceof ItemOxygenGear) {
+        if (ArmorSetHelper.isIntact(mask) && mask.getItem() instanceof ItemOxygenGear
+                && mask.getItem() != NMItems.sunVisor) {
             reduction += ((ItemOxygenGear)mask.getItem()).getOxygenDrainReduction();
         }
+        if (DivingMaskAttachment.hasAttachment(mask) && DivingMaskAttachment.isActive(mask)) {
+            reduction += NMItems.divingMask.getOxygenDrainReduction();
+        }
         ItemStack tank = this.getCurrentArmor(2);
-        if (ArmorSetHelper.isIntact(tank) && tank.getItem() instanceof ItemOxygenGear) {
+        if (ArmorSetHelper.isIntact(tank) && tank.getItem() instanceof ItemOxygenGear
+                && tank.getItem() != NMItems.sunReservoir) {
             reduction += ((ItemOxygenGear)tank.getItem()).getOxygenDrainReduction();
         }
         if (DivingTankAttachment.hasAttachment(tank) && DivingTankAttachment.getGear(tank) != null) {
@@ -1109,8 +1132,19 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         ItemStack mask = this.getCurrentArmor(3);
         ItemStack tank = this.getCurrentArmor(2);
         if (ArmorSetHelper.isIntact(mask) && mask.getItem() == NMItems.oxygenMask) reduction += NMItems.oxygenMask.getOxygenDrainReduction();
+        if (DivingMaskAttachment.isActive(mask)) reduction += NMItems.divingMask.getOxygenDrainReduction();
         if (ArmorSetHelper.isIntact(tank) && tank.getItem() == NMItems.oxygenTank) reduction += NMItems.oxygenTank.getOxygenDrainReduction();
-        return Math.min(0.95F, reduction);
+        return 1.0F - (1.0F - Math.min(0.95F, reduction)) * this.getSunOxygenDrainMultiplier();
+    }
+
+    @Unique
+    private float getSunOxygenDrainMultiplier() {
+        float remaining = 1.0F;
+        ItemStack mask = this.getCurrentArmor(3);
+        ItemStack tank = this.getCurrentArmor(2);
+        if (ArmorSetHelper.isIntact(mask) && mask.getItem() == NMItems.sunVisor) remaining *= 1.0F - NMItems.sunVisor.getOxygenDrainReduction();
+        if (ArmorSetHelper.isIntact(tank) && tank.getItem() == NMItems.sunReservoir) remaining *= 1.0F - NMItems.sunReservoir.getOxygenDrainReduction();
+        return remaining;
     }
 
     @Inject(method = "getValidatedRespawnCoordinates", at = @At("RETURN"), cancellable = true)

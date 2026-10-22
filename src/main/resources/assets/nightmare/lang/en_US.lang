@@ -1345,7 +1345,7 @@ item.ifhyAirFlask.name=Air Flask
 item.ifhyEmptyAirFlask.name=Empty Air Flask
 item.ifhyHandBellows.name=Hand Bellows
 item.ifhyHandBellows.invalid=Air flasks must be filled outdoors in fresh Overworld air, above deep caves and below high altitude.
-nm.divingMask.info=Slows oxygen loss while worn. Pair it with a filled diving tank to use the tank's stored air.
+nm.divingMask.info=Slows oxygen loss while worn. Craft with any helmet to attach it; craft the helmet alone to detach it. Keeps its own durability. Pair it with a filled diving tank to use the tank's stored air while preserving your armor set bonuses.
 nm.divingTank.info=Can be attached and detached to any chestplate. Adds 7 weight and no protection. A diving mask is required underwater, underground air does not need a mask. Use hand bellows with the tank chestplate in your hotbar to refill in open surface air.
 nm.sunVisor.info=Slows oxygen loss while worn. Pair with a Sun Reservoir to use stored air and protect against high altitude solar radiation. Counts as heat-resistant armor in the Cruel Desert.
 nm.sunReservoir.info=Stores air when filled on the surface and slows oxygen loss while worn. Pair with a Sun Visor to use stored air and block solar radiation. Counts as heat-resistant armor in the Cruel Desert.
@@ -1421,8 +1421,8 @@ item.ifhyAnchorBoots.name=Endstone Boots
 item.ifhySignalArmor.bonus=Charges when standing on a powered block. Water drains the power source. Attacks use charge to deal additional armor-piercing damage.
 item.ifhySignalCharge=Redstone Charge: %s / %s
 item.ifhyAzureArmor.bonus=Increased damage reduction against magic. Set bonus: Halves the duration of harmful potion effects.
-item.ifhyPrismaticArmor.bonus=Increased projectile protection. Loses extra durability to explosions.
-item.ifhyRefinedPrismaArmor.bonus=Projectile protection with improved blast resistance.
+item.ifhyPrismaticArmor.bonus=Increased projectile protection. Loses extra durability to explosions. Reveals nearby rare ores through blocks within 6 blocks in every direction.
+item.ifhyRefinedPrismaArmor.bonus=Projectile protection with improved blast resistance. Reveals nearby rare ores through blocks within 6 blocks in every direction.
 item.ifhyVerdantArmor.bonus=Increases Experience dropped by mobs. Set bonus: chance for small refunds when trading.
 item.ifhyGlassArmor.bonus=Set bonus: Speed I. Broken pieces deal 1 heart of damage to the wearer.
 item.ifhyBlackglassArmor.bonus=Heavy armor with knockback & blast resistance. Set bonus: shortens burning duration.
@@ -1581,5 +1581,7 @@ nm.deadzoneAnvilUpgrade.info=Requires the Blood Anvil Upgrade to be installed. I
 nm.phaseAnvilUpgrade.info=Requires the Deadzone Anvil Upgrade to be installed. Further increases processing speed, removes the need for a hammer.
 
 item.ifhyDivingTank.durability=Tank durability: %s / %s
+item.ifhyDivingMask.attached=Attached diving mask
+item.ifhyDivingMask.durability=Mask durability: %s / %s
 
 item.ifhyOxygenReduction=-%s%% Oxygen Loss

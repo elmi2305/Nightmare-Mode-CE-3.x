@@ -1100,10 +1100,10 @@ public class NMItems {
         sunLeggings = sunArmorPiece(3326, 2, 6, 5, "ifhySunLeggings");
         sunBoots = sunArmorPiece(3327, 3, 3, 3, "ifhySunBoots");
         sunVisor = (ItemSunDivingGear)new ItemSunDivingGear(3328, 0, 3, 3, 40000, 10, 0.05D,
-                deadzoneAlloyIngot.itemID, 0.50F, 0, "ifhySunVisor", "item.ifhySunArmor.bonus", 0.15F)
+                deadzoneAlloyIngot.itemID, 0.90F, 0, "ifhySunVisor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:ifhySunVisor").setUnlocalizedName("ifhySunVisor");
         sunReservoir = (ItemSunDivingGear)new ItemSunDivingGear(3329, 1, 8, 6, 40000, 10, 0.05D,
-                coresteelIngot.itemID, 0.45F, 20 * 60 * 6, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
+                coresteelIngot.itemID, 0.90F, 20 * 60 * 6, "ifhySunArmor", "item.ifhySunArmor.bonus", 0.15F)
                 .setTextureName("nightmare:ifhySunReservoir").setUnlocalizedName("ifhySunReservoir");
 
         signalConductiveCharge = material(3330, "ifhySignalConductiveCharge");

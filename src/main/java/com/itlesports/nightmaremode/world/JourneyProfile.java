@@ -197,6 +197,13 @@ public final class JourneyProfile {
         return changed;
     }
 
+    public boolean hasItemType(int itemID) {
+        if (!this.valid) return false;
+        String prefix = itemID + ":";
+        for (String key : this.collectedItems) if (key.startsWith(prefix)) return true;
+        return false;
+    }
+
     public boolean hasItem(ItemStack stack) {
         if (!this.valid || !isAllowedItem(stack)) return false;
         String key = itemKey(stack);

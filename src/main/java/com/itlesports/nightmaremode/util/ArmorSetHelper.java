@@ -84,7 +84,7 @@ public final class ArmorSetHelper {
         ItemStack mask = wearer.getCurrentItemOrArmor(4);
         ItemStack tank = getDivingTank(wearer);
         if (tank == null) return null;
-        boolean divingPair = isIntact(mask, NMItems.divingMask)
+        boolean divingPair = DivingMaskAttachment.isActive(mask)
                 && DivingTankAttachment.getTank(tank).getItem() == NMItems.divingTank;
         boolean sunPair = isIntact(mask, NMItems.sunVisor) && isIntact(tank, NMItems.sunReservoir);
         return divingPair || sunPair ? tank : null;
@@ -235,7 +235,7 @@ public final class ArmorSetHelper {
 
     public static boolean isWearingClearVisionMask(EntityLivingBase wearer) {
         ItemStack helmet = wearer.getCurrentItemOrArmor(4);
-        return isIntact(helmet, NMItems.divingMask) || isIntact(helmet, NMItems.sunVisor)
+        return DivingMaskAttachment.isActive(helmet) || isIntact(helmet, NMItems.sunVisor)
                 || ArmorSetHelper.isWearingCompleteQuartzglassSet(wearer);
     }
 

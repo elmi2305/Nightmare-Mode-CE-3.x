@@ -100,6 +100,9 @@ public class TerrainExtractorTileEntity extends TileEntity implements IInventory
     public int getFuelTicks() { return this.fuelTicks; }
     public int getProcessTicks() { return this.processTicks; }
     public int getFieldMilli() { return this.fieldMilli; }
+    public float getMonitoredValue() {
+        return ChunkAttributeManager.get(this.worldObj, this.xCoord, this.zCoord).get(this.getAttribute());
+    }
     public void setFuelTicks(int value) { this.fuelTicks = value; }
     public void setProcessTicks(int value) { this.processTicks = value; }
     public void setFieldMilli(int value) { this.fieldMilli = value; }

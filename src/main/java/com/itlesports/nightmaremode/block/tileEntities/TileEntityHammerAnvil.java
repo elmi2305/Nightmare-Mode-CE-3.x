@@ -6,6 +6,7 @@ import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.network.HammerAnvilNet;
 import com.itlesports.nightmaremode.util.AutoAnvilUpgrade;
 import com.itlesports.nightmaremode.util.HammerAnvilAnimation;
+import com.itlesports.nightmaremode.util.HammerAnvilMaterials;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import net.minecraft.src.ISidedInventory;
 import net.minecraft.src.NBTTagList;
@@ -44,6 +45,7 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
     private boolean soundMuted;
     private boolean hammerHidden;
     private ItemStack workInput;
+    private int guiAnvilBlockID;
     // transient, client-only visuals; never inventory or saved crafting state.
     private final Deque<HammerAnvilAnimation> animations = new ArrayDeque<>();
 
@@ -81,7 +83,7 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
             return false;
         }
 
-        int hits = recipe.getHitsRequired();
+        int hits = this.getHitsRequired(recipe);
         if (!this.canSpendHits(hits)) {
             if (!this.isWaitingToBreak()) {
                 this.sendStatus(player, "The anvil is too worn for this recipe.");
@@ -377,7 +379,16 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
 
     public int getProcessTicksRequired() {
         HammerRecipe recipe = HammerCraftingManager.instance.getRecipe(this.inventory[INPUT_SLOT]);
-        return recipe == null || !this.isAutomatic() ? 0 : recipe.getHitsRequired() * this.getUpgrade().ticksPerHit;
+        return recipe == null || !this.isAutomatic() ? 0 : this.getHitsRequired(recipe) * this.getUpgrade().ticksPerHit;
+    }
+
+    public int getHitsRequired(HammerRecipe recipe) {
+        return HammerAnvilMaterials.getHitsRequired(this.getAnvilBlockID(), recipe);
+    }
+
+    private int getAnvilBlockID() {
+        return this.worldObj == null ? this.guiAnvilBlockID
+                : this.worldObj.getBlockId(this.xCoord, this.yCoord, this.zCoord);
     }
 
     // gui properties use a separate client inventory, never the server's tile.
@@ -389,6 +400,7 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
         if (property == 4) this.automaticActive = value != 0;
         if (property == 5) this.soundMuted = value != 0;
         if (property == 6) this.hammerHidden = value != 0;
+        if (property == 7) this.guiAnvilBlockID = value;
     }
 
     public int getGuiProperty(int property) {
@@ -400,6 +412,7 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
             case 4 -> this.automaticActive ? 1 : 0;
             case 5 -> this.soundMuted ? 1 : 0;
             case 6 -> this.hammerHidden ? 1 : 0;
+            case 7 -> this.getAnvilBlockID();
             default -> 0;
         };
     }
@@ -427,17 +440,18 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
         if (this.processTicks < this.getProcessTicksRequired()) return;
 
         // commit only when the entire output fits; stalls never spend inputs or durability.
+        int hits = this.getHitsRequired(recipe);
         this.inventory[INPUT_SLOT].stackSize -= recipeInput.stackSize;
         if (this.inventory[INPUT_SLOT].stackSize <= 0) this.inventory[INPUT_SLOT] = null;
         if (this.inventory[OUTPUT_SLOT] == null) this.inventory[OUTPUT_SLOT] = result;
         else this.inventory[OUTPUT_SLOT].stackSize += result.stackSize;
         if (this.getUpgrade().needsHammer()
-                && this.inventory[HAMMER_SLOT].attemptDamageItem(recipe.getHitsRequired(), this.worldObj.rand)) {
+                && this.inventory[HAMMER_SLOT].attemptDamageItem(hits, this.worldObj.rand)) {
             this.inventory[HAMMER_SLOT] = null;
         }
         this.hasBeenUsed = true;
         if (!this.getUpgrade().preventsAnvilWear() && this.maxUses >= 0) {
-            this.usesRemaining = Math.max(0, this.usesRemaining - recipe.getHitsRequired());
+            this.usesRemaining = Math.max(0, this.usesRemaining - hits);
         }
         this.resetAutomaticProgress();
         this.syncState();

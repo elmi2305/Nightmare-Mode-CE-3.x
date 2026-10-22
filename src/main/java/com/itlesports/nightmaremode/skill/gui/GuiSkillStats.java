@@ -193,10 +193,11 @@ public class GuiSkillStats extends GuiScreen {
             lines.add("Difficulty: Easy");
             lines.add("Ore mining speed: +200% before skills");
             lines.add("Hostile drops: 2x (knives: 3x / 4x / 5x)");
-            lines.add("Tool and armor wear: 50% less");
+            lines.add("Tool and armor wear: " + (btw.community.nightmaremode.NightmareMode.testEasyDurability ? "Hard rules" : "50% less"));
+            lines.add("Ore quantities: " + (com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? "Easy rules" : "Hard rules"));
             lines.add("Fuel duration: +100%");
             lines.add("Crop yield: +100%");
-            lines.add("Hunger exhaustion: 65% less");
+            lines.add("Hunger exhaustion: " + percent(com.itlesports.nightmaremode.util.EasyBalance.exhaustion(1.0F)));
             lines.add("Pollution gain: " + percent(com.itlesports.nightmaremode.util.EasyBalance.pollution(1.0F)));
             lines.add("Optional stat counters: 2x credit");
             lines.add("Earned inventory capacity survives death");

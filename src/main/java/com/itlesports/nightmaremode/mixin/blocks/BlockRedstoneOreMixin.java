@@ -52,7 +52,7 @@ public abstract class BlockRedstoneOreMixin extends OreBlockStaged {
                 ? pick.toolMaterial.getHarvestLevel()
                 : stack != null && stack.getItem() instanceof ItemPickaxe pick
                 ? pick.getToolMaterial().getHarvestLevel() : -1;
-        int base = BalanceProfile.isEasy() || toolLevel >= EnumToolMaterial.EMERALD.getHarvestLevel()
+        int base = com.itlesports.nightmaremode.util.EasyBalance.easyOres() || toolLevel >= EnumToolMaterial.EMERALD.getHarvestLevel()
                 ? 2 : 1 + (toolLevel >= EnumToolMaterial.IRON.getHarvestLevel() && random.nextInt(4) == 0 ? 1 : 0);
         return this.applyFortune(base, fortune, random);
     }
@@ -69,13 +69,13 @@ public abstract class BlockRedstoneOreMixin extends OreBlockStaged {
 
     @Inject(method = "quantityDropped", at = @At("HEAD"), cancellable = true)
     private void dropRedstoneCrystalAmount(Random random, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(BalanceProfile.isEasy() ? 2 : 1);
+        cir.setReturnValue(com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 2 : 1);
     }
 
     @Inject(method = "quantityDroppedWithBonus", at = @At("HEAD"), cancellable = true)
     private void applyFortuneToRedstoneCrystal(int fortune, Random random,
                                                  CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(this.applyFortune(BalanceProfile.isEasy() ? 2 : 1, fortune, random));
+        cir.setReturnValue(this.applyFortune(com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 2 : 1, fortune, random));
     }
 
     @Inject(method = "idDroppedOnConversion", at = @At("HEAD"), cancellable = true, remap = false)
@@ -86,6 +86,6 @@ public abstract class BlockRedstoneOreMixin extends OreBlockStaged {
 
     @Inject(method = "quantityDroppedOnConversion", at = @At("HEAD"), cancellable = true, remap = false)
     private void convertRedstoneCrystalAmount(Random random, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(BalanceProfile.isEasy() ? 2 : 1);
+        cir.setReturnValue(com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 2 : 1);
     }
 }

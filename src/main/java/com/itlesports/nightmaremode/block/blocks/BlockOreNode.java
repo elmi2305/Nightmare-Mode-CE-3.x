@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.block.blocks;
 import api.item.items.PickaxeItem;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.OreNodeTileEntity;
+import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockContainer;
@@ -103,12 +104,21 @@ public class BlockOreNode extends BlockContainer {
     }
 
     public void mineNode(World world, EntityPlayer player, int x, int y, int z) {
+        if (world.isRemote || player == null || !this.isValidMiningTool(player.getCurrentEquippedItem(), world, x, y, z)) return;
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
         if (!(tileEntity instanceof OreNodeTileEntity node)) {
             return;
         }
 
-        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1), this.droppedItemMetadata));
+        int count = com.itlesports.nightmaremode.util.EasyBalance.resourceCount(1);
+        ItemStack tool = player.getCurrentEquippedItem();
+        if (this == NMBlocks.nickelOreNode && !player.capabilities.isCreativeMode
+                && net.minecraft.src.EnchantmentHelper.getEnchantmentLevel(net.minecraft.src.Enchantment.silkTouch.effectId, tool) == 0) {
+            count = com.itlesports.nightmaremode.util.NickelMiningDrops.count(count,
+                    com.itlesports.nightmaremode.skill.SkillHandler.getPlayerData(player).doubleNickelRockChance,
+                    tool.getItem() == net.minecraft.src.Item.pickaxeDiamond, world.rand);
+        }
+        this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.droppedItemId, count, this.droppedItemMetadata));
         player.addStat(net.minecraft.src.StatList.mineBlockStatArray[this.blockID], 1);
         player.addHarvestBlockExhaustion(this.blockID, x, y, z, 0);
         if (node.consumeOne() <= 0) {

@@ -59,13 +59,10 @@ public abstract class EntityItemMixin extends Entity implements com.itlesports.n
     }
 
     @Inject(method = "onCollideWithPlayer", at = @At("HEAD"), cancellable = true)
-    private void nightmareMode$rejectSandboxPickup(EntityPlayer player, CallbackInfo ci) {
+    private void preventInvalidPickup(EntityPlayer player, CallbackInfo ci) {
         if (this.isDead || !player.isEntityAlive()) {
             ci.cancel();
-            return;
         }
-        if ((player.capabilities.isCreativeMode || SandboxRules.isSandbox(this.worldObj))
-                && !SandboxRules.mayCreate(this.worldObj, this.getEntityItem())) ci.cancel();
     }
 
     @Inject(method = "onCollideWithPlayer", at = @At(value = "INVOKE",

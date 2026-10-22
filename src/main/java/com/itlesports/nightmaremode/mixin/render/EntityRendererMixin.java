@@ -34,6 +34,12 @@ import static com.itlesports.nightmaremode.util.NMFields.*;
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin implements ZoomStateAccessor {
     @Shadow private Minecraft mc;
+
+    @Inject(method = "renderWorld", at = @At(value = "INVOKE_STRING",
+            target = "Lnet/minecraft/src/Profiler;endStartSection(Ljava/lang/String;)V", args = "ldc=hand"))
+    private void revealPrismaticOres(float partialTicks, long timeSlice, CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.PrismaticOreVision.render(this.mc, partialTicks);
+    }
     @Shadow private double cameraZoom;
     @Shadow private float farPlaneDistance;
     @Shadow public ItemRenderer itemRenderer;

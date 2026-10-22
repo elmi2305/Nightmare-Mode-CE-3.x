@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.util.DivingTankAttachment;
+import com.itlesports.nightmaremode.util.DivingMaskAttachment;
 import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.item.items.ItemGlassArmor;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -25,6 +26,7 @@ public class ItemStackMixin {
             target = "Lnet/minecraft/src/Item;addInformation(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/EntityPlayer;Ljava/util/List;Z)V"), index = 2)
     private java.util.List addAttachedTankTooltip(java.util.List tooltip) {
         DivingTankAttachment.addTooltip((ItemStack)(Object)this, tooltip);
+        DivingMaskAttachment.addTooltip((ItemStack)(Object)this, tooltip);
         return tooltip;
     }
 
@@ -32,7 +34,7 @@ public class ItemStackMixin {
             target = "Lnet/minecraft/src/ItemStack;getAttributeModifiers()Lcom/google/common/collect/Multimap;"))
     private com.google.common.collect.Multimap combineTankTooltipHunger(ItemStack stack) {
         com.google.common.collect.Multimap attributes = stack.getAttributeModifiers();
-        return DivingTankAttachment.hasAttachment(stack)
+        return DivingTankAttachment.hasAttachment(stack) || DivingMaskAttachment.hasAttachment(stack)
                 ? DivingTankAttachment.combineTooltipHunger(attributes) : attributes;
     }
 
@@ -49,9 +51,23 @@ public class ItemStackMixin {
         cir.setReturnValue(modifiers);
     }
 
+    @Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
+    private void addMaskWeight(CallbackInfoReturnable<com.google.common.collect.Multimap> cir) {
+        if (!DivingMaskAttachment.hasAttachment((ItemStack)(Object)this)) return;
+        com.google.common.collect.Multimap modifiers = com.google.common.collect.HashMultimap.create(cir.getReturnValue());
+        modifiers.put(btw.entity.attribute.BTWAttributes.armorWeight.getAttributeUnlocalizedName(),
+                new net.minecraft.src.AttributeModifier(java.util.UUID.fromString("bdfc25f0-f82d-4e86-9572-6193cf5df416"), "Diving Mask Weight", 3.0D, 0));
+        modifiers.put(btw.entity.attribute.BTWAttributes.hungerCost.getAttributeUnlocalizedName(),
+                new api.entity.attribute.CustomDisplayAttributeModifier(java.util.UUID.fromString("3cb2051f-20a2-4e2d-8ed9-e8fb4bb72109"),
+                        "Diving Mask Hunger", 0.07D, api.entity.attribute.AttributeOperation.ADDITIVE,
+                        modifier -> "attribute.name." + btw.entity.attribute.BTWAttributes.hungerCost.getAttributeUnlocalizedName() + ".tiny"));
+        cir.setReturnValue(modifiers);
+    }
+
     @Inject(method = "damageItem", at = @At("RETURN"))
     private void damageAttachedTank(int amount, EntityLivingBase wearer, CallbackInfo ci) {
         ItemStack host = (ItemStack)(Object)this;
+        DivingMaskAttachment.damage(host, amount, wearer);
         if (amount <= 0 || wearer == null || wearer.worldObj.isRemote
                 || wearer instanceof EntityPlayer player && player.capabilities.isCreativeMode
                 || !DivingTankAttachment.hasAttachment(host)) return;
@@ -74,7 +90,8 @@ public class ItemStackMixin {
 
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
     private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
-        if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return amount;
+        if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+                || btw.community.nightmaremode.NightmareMode.testEasyDurability) return amount;
         ItemStack stack = (ItemStack)(Object)this;
         if (!NMItemStackUtils.isValid(stack) || !stack.isItemStackDamageable()
                 || stack.getItemDamage() >= stack.getMaxDamage() - Math.max(10, amount)) return amount;

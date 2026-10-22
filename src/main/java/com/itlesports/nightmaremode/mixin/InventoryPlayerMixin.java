@@ -145,13 +145,6 @@ public class InventoryPlayerMixin {
         }
     }
 
-    @Inject(method = "addItemStackToInventory*", at = @At("HEAD"), cancellable = true)
-    private void nightmareMode$rejectLockedInventoryAddition(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (this.player != null && this.player.worldObj != null && this.player.capabilities != null
-                && (this.player.capabilities.isCreativeMode || SandboxRules.isSandbox(this.player.worldObj))
-                && !SandboxRules.mayCreate(this.player.worldObj, stack)) cir.setReturnValue(false);
-    }
-
     @Inject(method = "addItemStackToInventory*", at = @At("RETURN"))
     private void nightmareMode$recordInventoryAddition(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) SandboxRules.recordAcquisition(this.player, stack);
