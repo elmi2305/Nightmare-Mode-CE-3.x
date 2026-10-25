@@ -957,7 +957,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         } else if (!this.worldObj.isRemote && this.dimension != UNDERWORLD_DIMENSION && this.ticksExisted % 4 == 0) {
             NMSanityUtils.restore((EntityPlayer)(Object)this, 1.0);
         }
-        if(this.ticksExisted % 20 == 0 && devMode && this.dimension == UNDERWORLD_DIMENSION){
+        if(this.ticksExisted % 20 == 0 && devMode && this.dimension == UNDERWORLD_DIMENSION && this.isSneaking()){
             System.out.println(NMSanityUtils.getDebugSummary((EntityPlayer)(Object)this));
         }
 
