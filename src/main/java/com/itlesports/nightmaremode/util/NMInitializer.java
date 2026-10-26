@@ -2611,6 +2611,7 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('C'), new ItemStack(Item.bootsIron, 1, Short.MAX_VALUE)});
 
 
+
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWItems.screw), new Object[]{"n# ", " #n", "n# ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
         RecipeManager.addRecipe(new ItemStack(BTWItems.screw, 2), new Object[]{"nn ", " #n", "nn ", Character.valueOf('#'), new ItemStack(Item.ingotIron), Character.valueOf('n'), new ItemStack(BTWItems.ironNugget)});
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.fenceGate, 1), new Object[]{"#X#", Character.valueOf('#'), BTWTags.woodenMouldings, Character.valueOf('X'), BTWTags.woodenSidings});
@@ -2678,6 +2679,12 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('R'), NMItems.pressureRegulator,
                 Character.valueOf('C'), NMItems.tankReinforcementCradle,
                 Character.valueOf('L'), NMItems.lithiumHeatCompound});
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ashClump), new Object[]{
+                NMItems.ash, NMItems.ash, NMItems.ash, NMItems.ash}), NMSkillNodes.BRING_ASH_CLUMP_16);
+
+        SkillLockedCrafting.requireSkills(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.ash, 4), new Object[]{
+                NMItems.ashClump}), NMSkillNodes.BRING_ASH_CLUMP_16);
 
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.unstableDeadzoneCharge), new Object[]{
                 NMItems.coresteelIngot, NMItems.deadzoneShard, NMItems.deadzoneShard, BTWItems.soulFlux});
