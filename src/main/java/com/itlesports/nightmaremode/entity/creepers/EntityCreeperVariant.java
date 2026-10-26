@@ -361,6 +361,10 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int iLootingModifier) {
+        if (bKilledByPlayer && this.attackingPlayer != null
+                && this.dimension == -1) {
+            this.dropItem(NMItems.ash.itemID, this.rand.nextInt(4));
+        }
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
         // ghast tear for charged
         if(isCharged()) {
