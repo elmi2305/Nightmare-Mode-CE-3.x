@@ -22,6 +22,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
+    @Inject(method = "getTooltip", at = @At("RETURN"))
+    private void addItemPropertiesTooltip(EntityPlayer player, boolean advanced,
+                                          CallbackInfoReturnable<java.util.List<String>> cir) {
+        ItemStack stack = (ItemStack)(Object)this;
+        java.util.List<String> tooltip = cir.getReturnValue();
+        if (stack.itemID == com.itlesports.nightmaremode.block.NMBlocks.hellforge.blockID) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY
+                    + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.fuel"));
+            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY
+                    + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.preferredFuel"));
+        }
+        if (com.itlesports.nightmaremode.util.NMFireproofItems.isFireproof(stack)) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.DARK_AQUA + "Fireproof");
+        }
+        if (stack.getItem() == com.itlesports.nightmaremode.item.NMItems.skillBook) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.DARK_AQUA + "Soulbound");
+        }
+        if (stack.itemID == net.minecraft.src.Block.netherrack.blockID
+                && stack.getItemDamage() >= 2 && stack.getItemDamage() <= 4) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.DARK_AQUA + "Tier " + (stack.getItemDamage() - 1));
+        }
+    }
+
     @ModifyArg(method = "getTooltip", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/Item;addInformation(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/EntityPlayer;Ljava/util/List;Z)V"), index = 2)
     private java.util.List addAttachedTankTooltip(java.util.List tooltip) {

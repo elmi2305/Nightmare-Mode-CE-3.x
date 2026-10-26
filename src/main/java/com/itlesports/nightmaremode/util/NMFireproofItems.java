@@ -14,12 +14,29 @@ public final class NMFireproofItems {
     }
 
     public static boolean isFireproof(ItemStack stack) {
+        if (stack == null || stack.getItem() == Item.pickaxeDiamond) return false;
         return isIndestructible(stack) || stack != null
-                && (stack.itemID == BTWItems.creeperOysters.itemID || stack.itemID == Item.magmaCream.itemID);
+                && (stack.itemID == BTWItems.creeperOysters.itemID || stack.itemID == Item.magmaCream.itemID
+                    || stack.itemID == Block.netherrack.blockID || stack.getItem() == BTWItems.netherSludge
+                    || stack.getItem() == BTWItems.diamondPile
+                    || isNetherEquipment(stack.getItem()));
+    }
+
+    private static boolean isNetherEquipment(Item item) {
+        return item == NMItems.netherrackSword
+                || item == NMItems.tungstenSword || item == NMItems.tungstenShovel
+                || item == NMItems.blackglassSword || item == NMItems.blackglassScythe || item == NMItems.blackglassKnife
+                || item == NMItems.coresteelSword || item == NMItems.coresteelPickaxe
+                || item == NMItems.coresteelAxe || item == NMItems.coresteelShovel
+                || item == NMItems.deadzoneSword || item == NMItems.deadzoneScythe
+                || item == BTWItems.steelSword || item == BTWItems.steelPickaxe || item == BTWItems.steelAxe
+                || item == BTWItems.steelShovel || item == BTWItems.steelHoe
+                || item == BTWItems.battleaxe || item == BTWItems.mattock || item == NMItems.steelHammer
+                || item == NMItems.steelFishingPole || item == NMItems.steelFishingPoleBaited;
     }
 
     public static boolean isIndestructible(ItemStack stack) {
-        if (stack == null) return false;
+        if (stack == null || stack.getItem() == Item.pickaxeDiamond) return false;
         Item item = stack.getItem();
         int id = stack.itemID;
         return id == NMItems.bloodOrb.itemID

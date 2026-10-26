@@ -217,23 +217,27 @@ public class ChunkProviderHellMixin {
     @Inject(method = "getPossibleCreatures", at = @At("RETURN"), cancellable = true)
     private void addTieredNetherAmbientSpawns(EnumCreatureType creatureType, int x, int y, int z,
                                               CallbackInfoReturnable<List> cir) {
-        if (creatureType != EnumCreatureType.monster || netherDesertTempleGenerator.hasTempleAt(x, y, z)) {
+        if (creatureType != EnumCreatureType.monster) {
             return;
         }
         int tier = NetherTierHelper.getTier(this.worldObj, x, z);
-        if (tier < 2) {
+        boolean temple = netherDesertTempleGenerator.hasTempleAt(x, y, z);
+        List result = new ArrayList(cir.getReturnValue());
+        if (tier >= 2 && !temple || com.itlesports.nightmaremode.util.NMUtils.getIsBloodMoon()) {
+            result.add(new SpawnListEntry(EntityCinderPigman.class, 30, 2, 4));
+        }
+        if (temple || tier < 2) {
+            cir.setReturnValue(result);
             return;
         }
-        List result = new ArrayList(cir.getReturnValue());
-        result.add(new SpawnListEntry(EntityCinderPigman.class, 30, 2, 4));
         result.add(new SpawnListEntry(EntityCinderBlaze.class, 10, 1, 2));
-        result.add(new SpawnListEntry(EntityAshGhast.class, 5, 1, 1));
+        result.add(new SpawnListEntry(EntityAshGhast.class, 3, 1, 1));
         if (tier >= 3) {
             result.add(new SpawnListEntry(EntityDeadzonePigman.class, 20, 1, 3));
             result.add(new SpawnListEntry(com.itlesports.nightmaremode.entity.creepers.EntityNitroCreeper.class, 6, 1, 1));
             result.add(new SpawnListEntry(EntitySkeleton.class, 8, 1, 2));
             result.add(new SpawnListEntry(EntityHellfireBlaze.class, 8, 1, 2));
-            result.add(new SpawnListEntry(EntitySiegeGhast.class, 3, 1, 1));
+            result.add(new SpawnListEntry(EntitySiegeGhast.class, 2, 1, 1));
         }
         cir.setReturnValue(result);
     }

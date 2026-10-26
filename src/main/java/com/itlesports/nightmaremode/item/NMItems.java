@@ -247,6 +247,7 @@ public class NMItems {
     public static Item netherWorkbenchPart;
     public static Item netherStick;
     public static Item netherrackPickaxe;
+    public static Item netherrackSword;
     public static Item tungstenPickaxe;
     public static Item tungstenShovel;
     public static Item ironScythe;
@@ -260,6 +261,7 @@ public class NMItems {
     public static Item netherFishingRodBaited;
     public static Item lavafish;
     public static Item netherrackHammer;
+    public static Item tungstenHammer;
     public static Item tungstenChunk;
     public static Item crushedTungsten;
     public static Item tungstenConcentrate;
@@ -730,7 +732,7 @@ public class NMItems {
         stoneKnife = (ItemKnife) new ItemKnife(2701, 300, ItemKnife.TIER_STONE, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyStoneKnife").setUnlocalizedName("ifhyStoneKnife");
         ironKnife = (ItemKnife) new ItemKnife(2702, 160, ItemKnife.TIER_IRON, 96).setDamageVsEntity(3).setTextureName("nightmare:ifhyIronKnife").setUnlocalizedName("ifhyIronKnife");
         diamondKnife = (ItemKnife) new ItemKnife(2703, 80, ItemKnife.TIER_DIAMOND, 350).setDamageVsEntity(4).setTextureName("nightmare:ifhyDiamondKnife").setUnlocalizedName("ifhyDiamondKnife");
-        goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 32).setDamageVsEntity(2).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
+        goldKnife = (ItemKnife) new ItemKnife(2742, 60, ItemKnife.TIER_DIAMOND, 128).setDamageVsEntity(2).setTextureName("nightmare:ifhyGoldKnife").setUnlocalizedName("ifhyGoldKnife");
         tungstenKnife = (ItemKnife) new ItemNetherKnife(2743, 80, ItemKnife.TIER_DIAMOND, 3200).setDamageVsEntity(3).setTextureName("nightmare:ifhyTungstenKnife").setUnlocalizedName("ifhyTungstenKnife");
 
         ash = new NetherItem(2704).setTextureName("nightmare:ifhyAsh").setUnlocalizedName("ifhyAsh").setCreativeTab(CreativeTabs.tabMaterials);
@@ -747,11 +749,15 @@ public class NMItems {
         netherStick = new ItemNetherStick(2715).setTextureName("nightmare:ifhyNetherStick").setUnlocalizedName("ifhyNetherStick").setCreativeTab(CreativeTabs.tabMaterials);
         netherStick.setfurnaceburntime(50);
         netherrackPickaxe = new ItemNetherrackPickaxe(2716).setTextureName("nightmare:ifhyNetherrackPickaxe").setUnlocalizedName("ifhyNetherrackPickaxe").setCreativeTab(CreativeTabs.tabTools);
+        netherrackSword = new ItemAlloySword(3477, EnumToolMaterial.STONE, 64, 2.0D, 5, netherrackChunk.itemID)
+                .setTextureName("nightmare:ifhyNetherrackSword").setUnlocalizedName("ifhyNetherrackSword").setCreativeTab(CreativeTabs.tabCombat);
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("nightmare:ifhyNetherFishingRodBaited").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
         lavafish = new ItemLavafish(2719).setTextureName("nightmare:ifhyLavafish").setCreativeTab(CreativeTabs.tabFood);
         tungstenPickaxe = new ItemTungstenPickaxe(2720).setTextureName("nightmare:ifhyTungstenPickaxe").setUnlocalizedName("ifhyTungstenPickaxe").setCreativeTab(CreativeTabs.tabTools);
         netherrackHammer = new ItemNetherrackHammer(2721).setTextureName("nightmare:ifhyNetherrackHammer").setUnlocalizedName("ifhyNetherrackHammer").setCreativeTab(CreativeTabs.tabTools);
+        tungstenHammer = new ItemTungstenHammer(3478).setTextureName("nightmare:ifhyTungstenHammer")
+                .setUnlocalizedName("ifhyTungstenHammer").setCreativeTab(CreativeTabs.tabTools);
         tungstenChunk = new NetherItem(2722).setTextureName("nightmare:ifhyTungstenChunk").setUnlocalizedName("ifhyTungstenChunk").setCreativeTab(CreativeTabs.tabMaterials);
         crushedTungsten = new NetherItem(2723).setTextureName("nightmare:ifhyCrushedTungsten").setUnlocalizedName("ifhyCrushedTungsten").setCreativeTab(CreativeTabs.tabMaterials);
         tungstenConcentrate = new NetherItem(2724).setTextureName("nightmare:ifhyTungstenConcentrate").setUnlocalizedName("ifhyTungstenConcentrate").setCreativeTab(CreativeTabs.tabMaterials);

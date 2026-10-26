@@ -112,10 +112,7 @@ public class EntityShadowZombie extends EntityZombie {
     @Override
     public boolean getCanSpawnHere() {
         if(this.dimension == -1){
-            if (!this.worldObj.isRemote) {
-                this.addPotionEffect(new PotionEffect(Potion.field_76443_y.id, Integer.MAX_VALUE,0));
-            }
-            return NMUtils.getIsBloodMoon() && super.getCanSpawnHere();
+            return false;
         }
 
         return super.getCanSpawnHere();

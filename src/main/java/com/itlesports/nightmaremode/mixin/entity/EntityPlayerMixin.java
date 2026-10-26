@@ -87,6 +87,17 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private int ticksInWater;
     @Unique private boolean finishedProgressiveCraft;
 
+    @Inject(method = "onItemUseFinish", at = @At("HEAD"), cancellable = true)
+    private void awaitServerProgressiveOutput(CallbackInfo ci) {
+        EntityPlayer player = (EntityPlayer)(Object)this;
+        ItemStack input = player.getItemInUse();
+        if (this.worldObj.isRemote && input != null
+                && input.getItem() instanceof api.item.items.ProgressiveCraftingItem) {
+            player.clearItemInUse();
+            ci.cancel();
+        }
+    }
+
     @Redirect(method = "onItemUseFinish", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/ItemStack;onFoodEaten(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityPlayer;)Lnet/minecraft/src/ItemStack;"))
     private ItemStack mergeProgressiveOutput(ItemStack input, World world, EntityPlayer player) {
@@ -620,6 +631,12 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
         }
+        if (!playerLeavingTheEnd && oldPlayer.dimension == -1) {
+            for (int slot = 0; slot < this.inventory.armorInventory.length; ++slot) {
+                ItemStack armor = oldPlayer.inventory.armorInventory[slot];
+                this.inventory.armorInventory[slot] = armor == null ? null : armor.copy();
+            }
+        }
     }
 
     @Inject(method = "onItemUseFinish", at = @At("HEAD"))
@@ -759,10 +776,31 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Unique private int awakeFatigueTicks;
+    @Unique private boolean fatigueSlowdownApplied;
+
+    @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
+    private void saveFatigueEffect(NBTTagCompound tag, CallbackInfo ci) {
+        tag.setBoolean("nmFatigueSlowdown", this.fatigueSlowdownApplied);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void loadFatigueEffect(NBTTagCompound tag, CallbackInfo ci) {
+        this.fatigueSlowdownApplied = tag.hasKey("nmFatigueSlowdown")
+                ? tag.getBoolean("nmFatigueSlowdown") : this.getData(FATIGUE) >= 75;
+    }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageFatigue(CallbackInfo ci) {
         if (this.worldObj.isRemote || !this.isEntityAlive() || disableFatigue) {
+            return;
+        }
+        if (this.dimension == -1) {
+            PotionEffect slowdown = this.getActivePotionEffect(Potion.moveSlowdown);
+            if (this.fatigueSlowdownApplied && slowdown != null
+                    && slowdown.getDuration() <= 60 && slowdown.getAmplifier() <= 1) {
+                this.removePotionEffect(Potion.moveSlowdown.id);
+            }
+            this.fatigueSlowdownApplied = false;
             return;
         }
 
@@ -792,8 +830,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
         if (this.ticksExisted % 20 == 0) {
             if (fatigue >= 95) {
                 this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
+                this.fatigueSlowdownApplied = true;
             } else if (fatigue >= 75) {
                 this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
+                this.fatigueSlowdownApplied = true;
             }
         }
     }

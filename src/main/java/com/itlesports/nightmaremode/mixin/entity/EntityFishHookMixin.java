@@ -66,9 +66,9 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             catchOf(NMItems.tilapia, 14, false), catchOf(NMItems.duneKoi, 2, true)
     };
     @Unique private static final FishingCatch[] NETHER_CATCHES = {
-            catchOf(NMItems.obsidianShard, 2, false),
+            catchOf(NMItems.obsidianShard, 4, false),
             catchOf(NMItems.ashClump, 8, false),
-            catchOf(NMItems.netherrackChunk, 12, false)
+            catchOf(NMItems.netherrackChunk, 10, false)
     };
     @Unique private static final FishingCatch[] BAITED_NETHER_CATCHES = {
             catchOf(NMItems.obsidianShard, 2, false),
@@ -91,8 +91,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
     private int adjustFishingBiteChance(int odds) {
-        if (this.isNetherFishing()) {
-            odds = Math.max(1, odds / 6);
+        if (this.dimension == -1 || this.isNetherFishing()) {
+            return NMFishingRates.netherBiteOdds(this.rodBiteOddsMultiplier(), this.hasRodUpgrade("IfhyFishingLure"));
         } else {
             float availability = ChunkAttributeManager.getFishAvailability(
                     this.worldObj,
@@ -104,8 +104,6 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                             MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)),
                     availability, this.rodBiteOddsMultiplier(), this.hasRodUpgrade("IfhyFishingLure"));
         }
-        odds = Math.max(1, Math.round(odds * this.rodBiteOddsMultiplier()));
-        return this.hasRodUpgrade("IfhyFishingLure") ? Math.max(1, odds / 2) : odds;
     }
 
     @Unique
@@ -282,7 +280,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             this.selectedCatchIsFish = true;
             return biomeCatches[biomeCatches.length - 1];
         }
-        int fishMultiplier = NMFishingRates.fishWeightMultiplier(this.worldObj.getWorldTime(),
+        int fishMultiplier = this.dimension == -1 ? 3 : NMFishingRates.fishWeightMultiplier(this.worldObj.getWorldTime(),
                 this.worldObj.getMoonPhase(), NMUtils.getIsBloodMoon());
         int totalWeight = totalWeight(JUNK_CATCHES) + totalFishWeight(biomeCatches, localCapacity) * fishMultiplier;
         int roll = this.rand.nextInt(totalWeight);

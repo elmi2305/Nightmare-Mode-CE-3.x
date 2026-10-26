@@ -3,6 +3,10 @@ package com.itlesports.nightmaremode.util;
 public final class NMFishingRates {
     private NMFishingRates() {}
 
+    public static int netherBiteOdds(float rodMultiplier, boolean lure) {
+        return Math.max(1, Math.round(150.0F * rodMultiplier * (lure ? 0.5F : 1.0F)));
+    }
+
     public static int biteOdds(long worldTime, int moonPhase, boolean bloodMoon, boolean raining,
                                float availability, float rodMultiplier, boolean lure) {
         int time = (int)Math.floorMod(worldTime, 24000L);

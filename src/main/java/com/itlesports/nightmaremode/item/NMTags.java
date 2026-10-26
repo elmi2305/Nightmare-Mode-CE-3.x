@@ -108,7 +108,8 @@ public class NMTags {
             NMItems.diamondHammer,
             NMItems.goldHammer,
             NMItems.steelHammer,
-            NMItems.netherrackHammer
+            NMItems.netherrackHammer,
+            NMItems.tungstenHammer
     );
     public static final Tag anvils = Tag.of(loc("anvils"),
             net.minecraft.src.Block.anvil,

@@ -50,9 +50,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
-        if (bKilledByPlayer && this.attackingPlayer != null
-                && this.dimension == -1) {
-            this.dropItem(NMItems.ash.itemID, this.rand.nextInt(4));
+        if (bKilledByPlayer && this.attackingPlayer != null && this.dimension == -1 && this.rand.nextInt(4) == 0) {
+            this.dropItem(NMItems.ash.itemID, this.rand.nextInt(2) + 1);
         }
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {

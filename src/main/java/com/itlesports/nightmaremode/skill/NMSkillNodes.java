@@ -2975,7 +2975,8 @@ public final class NMSkillNodes {
             Item.swordIron.itemID, 0, false, 1,
             "Unlocks Additional Recipes. +0.5% melee damage.", SkillRewardActions.addMeleeDamage(0.005F),
             COMBAT, false);
-
+    // INTENTIONAL: iron armor and ingots are locked behind bringing the armor, sword and shovel
+    // the armor, sword and shovel are dropped by zombies and do not need to be crafted in order to be redeemed
     public static final SkillNode BRING_IRON_HELMET = bring(
             "iron_helmet_progress",
             "Helmet Metallurgy",
@@ -4981,7 +4982,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_TWIG_64 = deferred(bring(
             "bring_twig_64", "Branch Manager", NMItems.twig, 2, -1,
             "Bring 64 twigs.", NMItems.twig.itemID, 0, false, 64,
-            "+2 percentage points twig drop chance.", SkillRewardActions.addTwigDropChance(0.02F), HUSBANDRY, false),
+            "+2% twig drop chance.", SkillRewardActions.addTwigDropChance(0.02F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_TWIG_1);
 
     public static final SkillNode BRING_TWIG_256 = deferred(bring(
@@ -5033,7 +5034,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_LEAF_64 = deferred(bring(
             "bring_leaf_64", "Green Pages", NMItems.leaf, 3, -1,
             "Bring 64 leaf items.", NMItems.leaf.itemID, 0, false, 64,
-            "+2 percentage points twig drop chance.", SkillRewardActions.addTwigDropChance(0.02F), HUSBANDRY, false),
+            "+2% twig drop chance.", SkillRewardActions.addTwigDropChance(0.02F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_LEAF_16);
 
     public static final SkillNode BRING_LEAF_256 = deferred(bring(
@@ -5051,7 +5052,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_LEAVES_BLOCK_16 = deferred(bring(
             "bring_leaves_block_16", "Borrowed Canopy", Block.leaves, -3, 6,
             "Bring 16 leaf blocks.", Block.leaves.blockID, 0, false, 16,
-            "+1 percentage point twig drop chance.", SkillRewardActions.addTwigDropChance(0.01F), HUSBANDRY, false),
+            "+1% twig drop chance.", SkillRewardActions.addTwigDropChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_SHEARS_1);
 
     public static final SkillNode BRING_LEAVES_BLOCK_64 = deferred(bring(
@@ -5157,7 +5158,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_RAW_FISH_4 = deferred(filteredBring(
             "bring_raw_fish_4", "The First Catch", Item.fishRaw, 5, -1,
             "Bring 4 raw fish (unspoiled).", 4, SkillHandIns.freshFood(Item.fishRaw.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_RAW_FISH_16 = deferred(filteredBring(
@@ -5209,7 +5210,7 @@ public final class NMSkillNodes {
 
     public static final SkillNode BRING_CUP_OF_SAP_4 = deferred(bring(
             "bring_cup_of_sap_4", "Amber Offering", NMItems.cupOfSap, 5, 0,
-            "Bring 4 cups of sap.", NMItems.cupOfSap.itemID, 0, false, 4,
+            "Bring 1 cup of sap.", NMItems.cupOfSap.itemID, 0, false, 1,
             "Unlock Thickened Sap in the campfire and unstoked cauldron.", (player, world) -> {}, HUSBANDRY, true),
             () -> NMSkillNodes.BRING_WOOD_CUP_1, () -> NMSkillNodes.BRING_DRILL_1);
 
@@ -5270,7 +5271,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_GRASS_SEEDS_1 = bring(
             "bring_grass_seeds_1", "Seeds of Possibility", NMItems.grassSeeds, 4, 3,
             "Bring 1 grass seeds.", NMItems.grassSeeds.itemID, 0, false, 1,
-            "+1 percentage point tall grass plant fiber chance.", SkillRewardActions.addTallGrassPlantFiberChance(0.01F), HUSBANDRY, false);
+            "+1% tall grass plant fiber chance.", SkillRewardActions.addTallGrassPlantFiberChance(0.01F), HUSBANDRY, false);
 
     public static final SkillNode BRING_GRASS_SEEDS_16 = deferred(bring(
             "bring_grass_seeds_16", "Meadow in the Making", NMItems.grassSeeds, 5, 2,
@@ -5321,7 +5322,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_LILY_PAD_32 = deferred(bring(
             "bring_lily_pad_32", "The Quiet Pond", Block.waterlily, 3, 5,
             "Bring 32 lily pads.", Block.waterlily.blockID, 0, false, 32,
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_LILY_PAD_4);
 
     public static final SkillNode BRING_MYSTERIOUS_GLAND_1 = deferred(bring(
@@ -5471,7 +5472,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_SWORDFISH_1 = deferred(filteredBring(
             "bring_swordfish_1", "Point Taken", NMItems.swordfish, -3, 1,
             "Bring 1 swordfish (unspoiled).", 1, SkillHandIns.freshFood(NMItems.swordfish.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_SWORDFISH_4 = deferred(filteredBring(
@@ -5519,7 +5520,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_GOLDEN_CARP_1 = deferred(filteredBring(
             "bring_golden_carp_1", "A Flash of Fortune", NMItems.goldenCarp, -3, 0,
             "Bring 1 golden carp (unspoiled).", 1, SkillHandIns.freshFood(NMItems.goldenCarp.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_GOLDEN_CARP_4 = deferred(filteredBring(
@@ -5567,7 +5568,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ALLIGATOR_GAR_1 = deferred(filteredBring(
             "bring_alligator_gar_1", "Living Fossil", NMItems.alligatorGar, -3, -1,
             "Bring 1 alligator gar (unspoiled).", 1, SkillHandIns.freshFood(NMItems.alligatorGar.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_ALLIGATOR_GAR_4 = deferred(filteredBring(
@@ -5615,7 +5616,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_ARAPAIMA_1 = deferred(filteredBring(
             "bring_arapaima_1", "River Giant", NMItems.arapaima, -3, -2,
             "Bring 1 arapaima (unspoiled).", 1, SkillHandIns.freshFood(NMItems.arapaima.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_ARAPAIMA_4 = deferred(filteredBring(
@@ -5663,7 +5664,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_FROSTFISH_1 = deferred(filteredBring(
             "bring_frostfish_1", "The Frozen Prize", NMItems.frostfish, -3, -3,
             "Bring 1 frostfish (unspoiled).", 1, SkillHandIns.freshFood(NMItems.frostfish.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_FROSTFISH_4 = deferred(filteredBring(
@@ -5711,7 +5712,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_DUNE_KOI_1 = deferred(filteredBring(
             "bring_dune_koi_1", "Mirage Made Real", NMItems.duneKoi, -3, -4,
             "Bring 1 dune koi (unspoiled).", 1, SkillHandIns.freshFood(NMItems.duneKoi.itemID),
-            "+1 percentage point rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
+            "+1% rare fish chance.", SkillRewardActions.addRareFishChance(0.01F), HUSBANDRY, false),
             () -> NMSkillNodes.BRING_BONE_FISH_HOOK_8);
 
     public static final SkillNode BRING_DUNE_KOI_4 = deferred(filteredBring(

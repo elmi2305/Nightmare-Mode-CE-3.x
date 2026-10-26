@@ -30,6 +30,11 @@ import static com.itlesports.nightmaremode.util.NMFields.PREHARDMODE;
 
 @Mixin(EntityPlayerMP.class)
 public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlayerDirectionTracker {
+    @Inject(method = "onItemPickup", at = @At("TAIL"))
+    private void syncPickupIntoProgressiveRefillSlot(Entity item, int amount, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.ProgressiveCraftingInventory.syncRefilledSlots((EntityPlayerMP)(Object)this);
+    }
+
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void validateSkillRewardVersion(CallbackInfo ci) {
         com.itlesports.nightmaremode.skill.SkillRewardReload.validatePlayer(this);
@@ -88,6 +93,12 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE
                 || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
+        }
+        if (!playerLeavingTheEnd && oldPlayer.dimension == -1) {
+            for (int slot = 0; slot < this.inventory.armorInventory.length; ++slot) {
+                ItemStack armor = oldPlayer.inventory.armorInventory[slot];
+                this.inventory.armorInventory[slot] = armor == null ? null : armor.copy();
+            }
         }
     }
 

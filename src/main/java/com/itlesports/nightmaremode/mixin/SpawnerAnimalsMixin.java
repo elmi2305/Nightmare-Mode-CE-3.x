@@ -46,6 +46,10 @@ public class SpawnerAnimalsMixin {
     @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"))
     private EntityPlayer allowSpawningCloseToPlayerInBloodMoon(WorldServer worldServer, double spawnPosX, double spawnPosY, double spawnPosZ, double exclusionRadius){
         if(NMUtils.getIsBloodMoon()){
+            if (worldServer.provider.dimensionId == -1) {
+                return worldServer.getClosestPlayer(spawnPosX, spawnPosY + 0.01F, spawnPosZ,
+                        Math.max(16.0D, exclusionRadius));
+            }
             return worldServer.getClosestPlayer(spawnPosX,spawnPosY + 0.01f, spawnPosZ, NMUtils.getWorldProgress() == NMFields.PREHARDMODE ? exclusionRadius : 9);
         }
         return worldServer.getClosestPlayer(spawnPosX,spawnPosY + 0.01f, spawnPosZ,exclusionRadius);

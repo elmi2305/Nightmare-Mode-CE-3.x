@@ -28,10 +28,10 @@ public class SlotCraftingMixin extends Slot {
     private void craft(ItemStack par1ItemStack, CallbackInfo ci){
         SkillHandler.recordCraftedOutput(this.thePlayer, par1ItemStack);
         if (par1ItemStack != null && par1ItemStack.itemID == Item.book.itemID) {
-            SkillHandler.incrementBooksCrafted(this.thePlayer, Math.max(1, this.amountCrafted));
+            SkillHandler.incrementBooksCrafted(this.thePlayer, this.amountCrafted);
         }
         if (par1ItemStack != null && par1ItemStack.itemID == Block.bookShelf.blockID) {
-            SkillHandler.incrementBookshelvesCrafted(this.thePlayer, Math.max(1, this.amountCrafted));
+            SkillHandler.incrementBookshelvesCrafted(this.thePlayer, this.amountCrafted);
         }
         if (NightmareMode.isAprilFools) {
             this.damageCraftedItem(par1ItemStack);

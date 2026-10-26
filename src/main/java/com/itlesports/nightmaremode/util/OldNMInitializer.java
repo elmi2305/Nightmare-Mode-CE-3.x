@@ -93,7 +93,6 @@ public abstract class OldNMInitializer implements AchievementExt {
         addMobToNether(EntityCreeper.class, 15,1,1);
         addMobToNether(EntityFireCreeper.class, 40,1,1);
         addMobToNether(EntityBloodMoonSkeleton.class, 30,1,3);
-        addMobToNether(EntityShadowZombie.class, 20,1,1);
         addMobToNether(EntityObsidianCreeper.class, 4,1,1);
 
 

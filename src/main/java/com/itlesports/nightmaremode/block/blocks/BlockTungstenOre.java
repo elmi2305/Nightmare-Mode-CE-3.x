@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.block.blocks;
 
 import api.item.items.PickaxeItem;
 import api.item.util.ItemUtils;
-import api.util.MiscUtils;
 import btw.block.BTWBlocks;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemNetherrackPickaxe;
@@ -54,15 +53,13 @@ public class BlockTungstenOre extends Block {
         }
         ItemStack held = player.getCurrentEquippedItem();
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
-            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.tungstenDust, com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 3 + world.rand.nextInt(2) : 1),
-                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+            com.itlesports.nightmaremode.util.SoulFlintDrops.eject(world, player, x, y, z,
+                    new ItemStack(NMItems.tungstenDust, com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 3 + world.rand.nextInt(2) : 1));
             held.damageItem(1, player);
             world.setBlock(x, y, z, Block.netherrack.blockID, 0, 3);
         } else if (held != null && held.getItem() instanceof PickaxeItem) {
-            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.tungstenChunk, com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 3 + world.rand.nextInt(2) : 1),
-                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+            com.itlesports.nightmaremode.util.SoulFlintDrops.eject(world, player, x, y, z,
+                    new ItemStack(NMItems.tungstenChunk, com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? 3 + world.rand.nextInt(2) : 1));
         }
         player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
     }

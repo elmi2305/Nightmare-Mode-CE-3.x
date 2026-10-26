@@ -6,5 +6,6 @@ import net.minecraft.src.EnumToolMaterial;
 public class ItemNetherrackHammer extends ItemHammer implements INetherItem {
     public ItemNetherrackHammer(int id) {
         super(id, EnumToolMaterial.STONE);
+        this.setMaxDamage(64);
     }
 }

@@ -73,10 +73,10 @@ public class InventoryPlayerMixin {
         NMInventoryLocks.dropLockedItems(this.player, true);
         if (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
-            this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
+            if (this.player.dimension != -1) this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
         } else {
             this.nightmareMode$dropItemsExceptSkillBook(this.mainInventory);
-            this.nightmareMode$dropItemsExceptSkillBook(this.armorInventory);
+            if (this.player.dimension != -1) this.nightmareMode$dropItemsExceptSkillBook(this.armorInventory);
         }
         ci.cancel();
     }

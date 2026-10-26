@@ -219,6 +219,7 @@ public abstract class NMInitializer implements AchievementExt {
         CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingTankAttachmentRecipe(true).hideFromEMI());
         CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingMaskAttachmentRecipe(false).hideFromEMI());
         CraftingManager.getInstance().getRecipeList().add(new com.itlesports.nightmaremode.crafting.recipe.types.DivingMaskAttachmentRecipe(true).hideFromEMI());
+        NMRecipeDurability.allowWornIngredients();
         finishRecipes("All Recipes");
     }
 
@@ -1737,6 +1738,11 @@ public abstract class NMInitializer implements AchievementExt {
         CisternRecipeManager manager = CisternRecipeManager.instance;
 
         manager.addRecipe(new CisternRecipe(
+                new ItemStack[]{new ItemStack(NMItems.reedStem)},
+                CisternTileEntity.FLUID_WATER, 0, 1, 400,
+                new ItemStack[]{new ItemStack(NMItems.washedPith)}));
+
+        manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.rawSap), new ItemStack(BTWItems.coalDust)},
                 CisternTileEntity.FLUID_WATER, 0, 1, 100,
                 new ItemStack[]{new ItemStack(NMItems.primitiveGlue, 2)}));
@@ -2457,7 +2463,8 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addLoomRecipes() {
-        // Use the same outputs as hand crafting and accept any remaining progress.
+        RecipeManager.addLoomRecipe(new ItemStack(NMItems.reedStem), new ItemStack(Item.reed));
+        // use the same outputs as hand crafting and accept any remaining progress.
         for (Item item : Item.itemsList) {
             if (item instanceof NMProgressiveItem progressive) {
                 RecipeManager.addLoomRecipe(progressive.getCraftingOutput(),
@@ -3143,12 +3150,17 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('M'), BTWTags.woodenMouldings, Character.valueOf('G'), BTWItems.glue,
                 Character.valueOf('S'), NMTags.toolStrings});
         IRecipe netherCompositeBowRecipe = RecipeManager.addRecipe(new ItemStack(BTWItems.compositeBow), new Object[]{
-                "BGS", "BTS", "BGS",
-                Character.valueOf('B'), Item.bone,
+                "BTG",
+                "SBT",
+                "BTG",
+                Character.valueOf('B'), NMItems.boneShard,
                 Character.valueOf('G'), BTWItems.glue,
-                Character.valueOf('S'), NMTags.toolStrings,
-                Character.valueOf('T'), NMTags.netherCompatibleSticks});
+                Character.valueOf('S'), NMItems.pighideString,
+                Character.valueOf('T'), NMItems.netherStick});
         SkillRecipeGates.exemptCrafting(netherCompositeBowRecipe);
+        SkillLockedCrafting.requireSkills(netherCompositeBowRecipe,
+                NMSkillNodes.BRING_BONE_SHARD_16, NMSkillNodes.BRING_PIGHIDE_STRING_16,
+                NMSkillNodes.BRING_NETHER_STICK_16);
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.netherWorkbenchPart), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.tungstenDust, NMItems.quartzDust});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherWorkbench), new Object[]{"##", "##", Character.valueOf('#'), NMItems.netherWorkbenchPart});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherrackChunk), new Object[]{"###", "###", "###", Character.valueOf('#'), BTWItems.groundNetherrack});
@@ -3177,7 +3189,16 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_AQUAMARINE_16, NMSkillNodes.BRING_REDSTONE_BLOCK_12,
                 NMSkillNodes.BRING_DYE_BLEND_16, NMSkillNodes.BRING_NICKEL_PLATE_4);
 
-        // netherrack compression is performed through piston packing.
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherrackSword), new Object[]{
+                "C", "C", "S", Character.valueOf('C'), new ItemStack(Block.netherrack, 1, Short.MAX_VALUE),
+                Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        for (int tier = 0; tier < 3; ++tier) {
+            int inputMetadata = tier == 0 ? 0 : tier + 1;
+            RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, tier + 2), new Object[]{
+                    "###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, inputMetadata)});
+        }
+        killCraftingRecipe(BTWItems.netherBrick);
+        killCraftingRecipe(Item.netherrackBrick);
 
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.rail, 12), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick});
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('S'), Item.stick, Character.valueOf('R'), BTWItems.redstoneLatch});
@@ -3303,6 +3324,12 @@ public abstract class NMInitializer implements AchievementExt {
                 Character.valueOf('C'), Item.ingotIron,
                 Character.valueOf('S'), NMItems.stoneStick,
                 Character.valueOf('L'), BTWItems.glue});
+
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenHammer), new Object[]{
+                "III", "ISI", "TST",
+                Character.valueOf('I'), NMItems.tungstenIngot,
+                Character.valueOf('S'), NMItems.netherStick,
+                Character.valueOf('T'), NMItems.pighideString});
 
         RecipeManager.addRecipe(new ItemStack(NMItems.diamondHammer), new Object[]{
                 "CCC", "CSC", "LSL",
@@ -4821,22 +4848,14 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.goldHammer.itemID, NMSkillNodes.BRING_GOLD_INGOT_16, NMSkillNodes.BRING_STICK_16);
         SkillRecipeGates.crafting(NMItems.ironHammer.itemID, NMSkillNodes.BRING_IRON_INGOT_8, NMSkillNodes.BRING_STONE_STICK_64);
 
-        SkillRecipeGates.crafting(Block.netherrack.blockID, 2, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
-        SkillRecipeGates.crafting(Block.netherrack.blockID, 3, NMSkillNodes.BRING_NETHERRACK_TIER_TWO_64);
-        SkillRecipeGates.crafting(Block.netherrack.blockID, 4, NMSkillNodes.BRING_NETHERRACK_TIER_THREE_64);
-        SkillRecipeGates.crafting(NMItems.netherrackChunk.itemID,
-                NMSkillNodes.BRING_NETHER_WORKBENCH_PART_4, NMSkillNodes.BRING_QUARTZ_DUST_32);
-        SkillRecipeGates.crafting(NMItems.netherStick.itemID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(NMItems.netherWorkbenchPart.itemID,
                 NMSkillNodes.BRING_QUARTZ_DUST_32, NMSkillNodes.BRING_TUNGSTEN_CHUNK_16);
         SkillRecipeGates.crafting(NMBlocks.netherWorkbench.blockID,
                 NMSkillNodes.BRING_NETHER_WORKBENCH_PART_4, NMSkillNodes.BRING_QUARTZ_DUST_32);
-        SkillRecipeGates.crafting(NMBlocks.netherrackAnvil.blockID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(NMItems.netherrackHammer.itemID,
-                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
+                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_NETHERRACK_CHUNK_16);
         SkillRecipeGates.crafting(NMItems.netherrackPickaxe.itemID,
-                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_NETHERRACK_CHUNK_16,
-                NMSkillNodes.BRING_PIGHIDE_STRING_16);
+                NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_PIGHIDE_STRING_16);
         SkillRecipeGates.crafting(NMItems.netherFishingRod.itemID,
                 NMSkillNodes.BRING_NETHER_STICK_16, NMSkillNodes.BRING_BONE_SHARD_16,
                 NMSkillNodes.BRING_PIGHIDE_STRING_16);
@@ -4844,10 +4863,11 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.tungstenChunk.itemID, NMSkillNodes.BRING_TUNGSTEN_DUST_32);
         SkillRecipeGates.crafting(NMItems.tungstenConcentrate.itemID,
                 NMSkillNodes.BRING_CRUSHED_TUNGSTEN_16, NMSkillNodes.BRING_QUARTZ_16);
-        SkillRecipeGates.crafting(NMItems.pureTungstenChunk.itemID, NMSkillNodes.BRING_TUNGSTEN_POWDER_32);
         SkillRecipeGates.crafting(NMItems.tungstenIngot.itemID, NMSkillNodes.BRING_TUNGSTEN_NUGGET_32);
         SkillRecipeGates.crafting(NMItems.tungstenBucket.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMItems.tungstenPickaxe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenHammer.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenSword.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
@@ -4891,11 +4911,10 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.reedPeeling.itemID, NMSkillNodes.BRING_SUGAR_CANE);
         SkillRecipeGates.crafting(NMItems.pileOfSticks.itemID, NMSkillNodes.BRING_STICK_4);
         SkillRecipeGates.crafting(NMItems.soulFlint.itemID, NMSkillNodes.BRING_SOUL_CHIP_16);
+        SkillRecipeGates.crafting(NMBlocks.hellforge.blockID, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(NMItems.pighideStringCrafting.itemID, NMSkillNodes.BRING_PIG_HIDE_16);
         SkillRecipeGates.crafting(BTWItems.netherSludge.itemID,
                 NMSkillNodes.BRING_GROUND_NETHERRACK_32, NMSkillNodes.BRING_ASH_CLUMP_16);
-        SkillRecipeGates.crafting(NMBlocks.hellforge.blockID,
-                NMSkillNodes.BRING_NETHER_BRICK_32, NMSkillNodes.BRING_NETHERRACK_TIER_ONE_64);
         SkillRecipeGates.crafting(Block.obsidian.blockID, NMSkillNodes.BRING_OBSIDIAN_SHARD_16);
         SkillRecipeGates.crafting(NMItems.refinedRedstone.itemID,
                 NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_POLISHED_CRYSTAL_SHARD_4);

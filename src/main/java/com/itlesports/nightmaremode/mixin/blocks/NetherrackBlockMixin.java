@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin.blocks;
 import api.block.blocks.FullBlock;
 import api.item.items.PickaxeItem;
 import api.item.util.ItemUtils;
-import api.util.MiscUtils;
 import api.world.difficulty.DifficultyParam;
 import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
@@ -57,9 +56,8 @@ public class NetherrackBlockMixin extends FullBlock {
         }
         if (held != null && held.getItem() instanceof ItemSoulFlint) {
             if (!world.isRemote) {
-                ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                        new ItemStack(BTWItems.groundNetherrack),
-                        MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+                com.itlesports.nightmaremode.util.SoulFlintDrops.eject(world, player, x, y, z,
+                        new ItemStack(BTWItems.groundNetherrack));
                 held.damageItem(1, player);
                 player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
             }
@@ -148,12 +146,13 @@ public class NetherrackBlockMixin extends FullBlock {
 
     @Override
     public int getEfficientToolLevel(IBlockAccess blockAccess, int i, int j, int k) {
-        return 4;
+        return this.getHarvestToolLevel(blockAccess, i, j, k);
     }
 
     @Override
     public int getHarvestToolLevel(IBlockAccess blockAccess, int i, int j, int k) {
-        return 4;
+        int metadata = blockAccess.getBlockMetadata(i, j, k);
+        return metadata >= 2 && metadata <= 4 ? metadata : 1;
     }
 
     @Override

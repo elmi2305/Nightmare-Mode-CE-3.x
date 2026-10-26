@@ -8,6 +8,7 @@ import net.minecraft.src.*;
 public class ItemNetherrackPickaxe extends PickaxeItem implements INetherItem {
     public ItemNetherrackPickaxe(int id) {
         super(id, EnumToolMaterial.STONE);
+        this.setMaxDamage(64);
     }
 
     @Override

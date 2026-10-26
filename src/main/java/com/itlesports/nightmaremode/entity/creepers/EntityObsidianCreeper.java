@@ -53,8 +53,8 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         super.dropFewItems(bKilledByPlayer, iLootingModifier);
 
         if (this.getNeuteredState() == 0) {
-            this.dropItem(Block.obsidian.blockID, this.rand.nextInt(2) + 1);
-            this.dropItem(NMItems.obsidianShard.itemID, this.rand.nextInt(4) + 2);
+            if (this.dimension != -1) this.dropItem(Block.obsidian.blockID, this.rand.nextInt(2) + 1);
+            this.dropItem(NMItems.obsidianShard.itemID, this.dimension == -1 ? 6 + this.rand.nextInt(5) : this.rand.nextInt(4) + 2);
         }
     }
     @Override

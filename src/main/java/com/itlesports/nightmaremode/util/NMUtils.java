@@ -131,7 +131,8 @@ public class NMUtils {
                 || entity instanceof EntityGhast
                 || entity instanceof EntityWitch
                 || entity instanceof EntityEnderman
-                || entity instanceof EntitySpider;
+                || entity instanceof EntitySpider
+                || entity instanceof EntitySilverfish;
     }
 
     public static boolean shouldWoodBlocksHaveSkybaseGravity(World world) {

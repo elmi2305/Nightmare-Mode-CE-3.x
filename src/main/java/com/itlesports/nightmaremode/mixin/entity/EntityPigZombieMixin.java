@@ -66,6 +66,14 @@ public class EntityPigZombieMixin extends EntityZombie {
             cir.setReturnValue(false);
         }
     }
+    @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
+    private void tickPigmanCarcass(CallbackInfo ci) {
+        if ((Object)this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
         if (this.entityToAttack == null && (this.ticksExisted + this.entityId) % 20 == 0) { // using entityID to throttle the checks so all pigmen don't check on the same tick
@@ -112,11 +120,8 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "dropFewItems", at = @At("HEAD"), cancellable = true)
     private void allowBloodOrbDrops(boolean bKilledByPlayer, int iLootingModifier, CallbackInfo ci){
-        if (bKilledByPlayer && this.rand.nextFloat() < 0.25F) {
-            int hideCount = this.rand.nextInt(2);
-            if (hideCount > 0) {
-                this.dropItem(NMItems.pigHide.itemID, hideCount);
-            }
+        if (bKilledByPlayer && this.rand.nextFloat() < 0.85F) {
+            this.dropItem(NMItems.pigHide.itemID, 1 + this.rand.nextInt(iLootingModifier + 1));
         }
         if(NMEvents.SimpleEvent.HELL.isActive()) {
             if (!this.isValidForEventLoot) {
@@ -163,6 +168,14 @@ public class EntityPigZombieMixin extends EntityZombie {
                     this.dropItem(itemID, 1);
                 }
             }
+        }
+    }
+
+    @Inject(method = "dropFewItems", at = @At("TAIL"))
+    private void increaseNetherPigmanDrops(boolean killedByPlayer, int looting, CallbackInfo ci) {
+        if (this.dimension == -1) {
+            this.dropItem(Item.rottenFlesh.itemID, 1);
+            this.dropItem(Item.goldNugget.itemID, 1);
         }
     }
 

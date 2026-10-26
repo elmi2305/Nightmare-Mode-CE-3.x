@@ -4,15 +4,24 @@ import btw.community.nightmaremode.NightmareMode;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.BlockVine;
+import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.itlesports.nightmaremode.util.NMFields.CRIMSON_COLOR;
 
 @Mixin(BlockVine.class)
 public class BlockVineMixin {
+    @Redirect(method = "updateTick", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/World;setBlockAndMetadataWithNotify(IIIII)Z"))
+    private boolean limitVineLength(World world, int x, int y, int z, int blockId, int metadata) {
+        return com.itlesports.nightmaremode.util.VineGrowthRules.canGrowAt(world, x, y, z)
+                && world.setBlockAndMetadataWithNotify(x, y, z, blockId, metadata);
+    }
+
     @Environment(value= EnvType.CLIENT)
     @Inject(method = "getBlockColor", at = @At(value = "RETURN"), cancellable = true)
     private void redLeaves0(CallbackInfoReturnable<Integer> cir){

@@ -164,8 +164,7 @@ public abstract class EntityItemMixin extends Entity implements com.itlesports.n
     private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (this.getEntityItem() != null
                 && (NMFireproofItems.isIndestructible(this.getEntityItem())
-                    || par1DamageSource.isFireDamage() && NMFireproofItems.isFireproof(this.getEntityItem()))
-                && par1DamageSource != DamageSource.lava) {
+                    || par1DamageSource.isFireDamage() && NMFireproofItems.isFireproof(this.getEntityItem()))) {
             cir.setReturnValue(false);
         }
     }

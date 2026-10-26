@@ -6,7 +6,7 @@ public final class PotatoHarvestRates {
     private PotatoHarvestRates() {}
 
     public static float bonusChance(float potassium) {
-        return 0.2F + Math.max(0.0F, Math.min(100.0F, potassium)) * 0.004F;
+        return 0.08F + Math.max(0.0F, Math.min(100.0F, potassium)) * 0.004F;
     }
 
     public static float thirdPotatoChance(float potassium) {

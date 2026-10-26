@@ -40,7 +40,9 @@ public abstract class EntityNetherPigZombieVariant extends EntityPigZombie {
 
     @Override
     public boolean getCanSpawnHere() {
-        return NetherTierHelper.getTier(this.worldObj, this.posX, this.posZ) >= this.getMinimumNetherTier()
+        boolean bloodMoonCinder = this instanceof EntityCinderPigman && this.dimension == -1
+                && com.itlesports.nightmaremode.util.NMUtils.getIsBloodMoon();
+        return (bloodMoonCinder || NetherTierHelper.getTier(this.worldObj, this.posX, this.posZ) >= this.getMinimumNetherTier())
                 && super.getCanSpawnHere();
     }
 

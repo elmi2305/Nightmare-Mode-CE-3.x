@@ -49,19 +49,22 @@ public abstract class BlockSoulSandMixin extends Block {
     @Override
     public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int metadata) {
         super.harvestBlock(world, player, x, y, z, metadata);
-        this.tryDropSoulChip(world, x, y, z);
+        this.tryDropSoulChip(world, player, x, y, z);
     }
 
     @Override
     public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int x, int y, int z, int metadata) {
         super.onBlockDestroyedWithImproperTool(world, player, x, y, z, metadata);
-        this.tryDropSoulChip(world, x, y, z);
+        this.tryDropSoulChip(world, player, x, y, z);
     }
 
     @Unique
-    private void tryDropSoulChip(World world, int x, int y, int z) {
-        if (!world.isRemote && world.rand.nextFloat() < 0.08F) {
+    private void tryDropSoulChip(World world, EntityPlayer player, int x, int y, int z) {
+        if (!world.isRemote && !player.capabilities.isCreativeMode
+                && !net.minecraft.src.EnchantmentHelper.getSilkTouchModifier(player)
+                && world.rand.nextFloat() < com.itlesports.nightmaremode.util.SoulSandDrops.chipChance(player.getCurrentEquippedItem())) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.soulChip));
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(btw.item.BTWItems.soulSandPile, 2 + world.rand.nextInt(3)));
         }
     }
 }

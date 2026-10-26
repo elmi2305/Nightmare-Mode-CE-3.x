@@ -21,6 +21,7 @@ abstract class EntityTieredNetherGhast extends EntityGhast {
 
     @Override
     protected void updateEntityActionState() {
+        if (this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) return;
         ++this.entityAge;
         this.despawnEntity();
         this.prevAttackCounter = this.attackCounter;
@@ -39,7 +40,8 @@ abstract class EntityTieredNetherGhast extends EntityGhast {
             double dy = this.tieredTarget.posY + this.tieredTarget.getEyeHeight() - (this.posY + this.height * 0.5D);
             double dz = this.tieredTarget.posZ - this.posZ;
             this.renderYawOffset = this.rotationYaw = -((float)(Math.atan2(dx, dz) * 180.0D / Math.PI));
-            if (this.canEntityBeSeen(this.tieredTarget)) {
+            double range = com.itlesports.nightmaremode.util.NMGhastRules.attackRange();
+            if (this.getDistanceSqToEntity(this.tieredTarget) <= range * range && this.canEntityBeSeen(this.tieredTarget)) {
                 if (this.attackCounter == 10) {
                     this.worldObj.playAuxSFXAtEntity(null, 1007, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
                 }

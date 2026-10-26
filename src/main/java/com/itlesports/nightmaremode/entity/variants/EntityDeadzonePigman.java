@@ -15,6 +15,10 @@ public class EntityDeadzonePigman extends EntityNetherPigZombieVariant {
 
     @Override
     public void onUpdate() {
+        if (this instanceof com.itlesports.nightmaremode.util.interfaces.CarcassAnimal carcass && carcass.nm$isCarcass()) {
+            carcass.nm$tickCarcass();
+            return;
+        }
         super.onUpdate();
         if (this.entityToAttack == null && (this.ticksExisted + this.entityId) % 20 == 0) {
             EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 32.0D);

@@ -1,8 +1,6 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
-import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
-import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
@@ -26,7 +24,6 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Shadow
     private Entity entityTargeted;
-    @Unique int rageTimer = 0;
     @Unique boolean firstAttack = true;
 
     public EntityGhastMixin(World world) {
@@ -54,36 +51,16 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = 1))
     private int increaseExplosionSize(int constant){
         if(NMUtils.getIsBloodMoon()){
-            return constant + 2;
+            return constant + (this.dimension == -1 ? 1 : 2);
         }
         return constant + NMUtils.getWorldProgress() > PREHARDMODE ? 1 : 0;
     }
 
-    @ModifyArg(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestVulnerablePlayerToEntity(Lnet/minecraft/src/Entity;D)Lnet/minecraft/src/EntityPlayer;"), index = 1)
-    private double increaseHordeAttackRange(double par2){
-        return (this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? 140d : par2;
+    @ModifyConstant(method = {"updateAttackStateClient", "updateEntityActionState"}, constant = @Constant(doubleValue = 4096.0D))
+    private double limitAttackRange(double constant){
+        double range = com.itlesports.nightmaremode.util.NMGhastRules.attackRange();
+        return range * range;
     }
-    @Unique private boolean isTargetPlayerAndPumpkin(Entity target){
-        if(target instanceof EntityPlayer p){
-            ItemStack headStack = p.getCurrentItemOrArmor(4);
-            return headStack != null && headStack.getItem().itemID == BTWBlocks.carvedPumpkin.blockID;
-        }
-        return false;
-    }
-    @ModifyConstant(method = "updateAttackStateClient", constant = @Constant(doubleValue = 4096.0F))
-    private double increaseDetectionRangeHorde(double constant){
-        return (float) ((this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1)) ? constant * 4d : constant);
-    }
-    @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
-    private boolean allowShootingThroughWallsBloodMoon(EntityGhast instance, Entity entity){
-        if(this.isTargetPlayerAndPumpkin(this.entityTargeted) ||(NMUtils.getIsBloodMoon() && instance.dimension == -1)){return true;}
-        return instance.canEntityBeSeen(entity);
-    }
-    @Redirect(method = "updateAttackStateClient", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;canEntityBeSeen(Lnet/minecraft/src/Entity;)Z"))
-    private boolean seePlayerThroughWallsHorde(EntityGhast instance, Entity entity){
-        return this.isTargetPlayerAndPumpkin(this.entityTargeted) || (NMUtils.getIsBloodMoon() && this.dimension == -1) || instance.canEntityBeSeen(entity);
-    }
-
     @Override
     public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
         return super.onSpawnWithEgg(par1EntityLivingData);
@@ -152,43 +129,6 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
     }
 
-    @ModifyConstant(method = "attackEntityFrom", constant = @Constant(floatValue = 1000.0f))
-    private float ghastEnrageOnSelfHit(float constant){
-        if (!this.isCreeperVariant()) {
-            this.rageTimer = 1;
-        }
-        return 5f;
-    }
-    @Inject(method = "updateEntityActionState", at =@At("HEAD"))
-    private void manageRageState(CallbackInfo ci){
-        if(this.rageTimer > 0){
-            this.rageTimer++;
-            EntityPlayer entityTargeted = this.worldObj.getClosestVulnerablePlayerToEntity(this, 100.0);
-            if (entityTargeted != null && this.rageTimer % (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 4 : 8) == 0) {
-                Vec3 ghastLookVec = this.getLook(1.0f);
-                double dFireballX = this.posX + ghastLookVec.xCoord;
-                double dFireballY = this.posY + (double)(this.height / 2.0f);
-                double dFireballZ = this.posZ + ghastLookVec.zCoord;
-                double dDeltaX = entityTargeted.posX - dFireballX;
-                double dDeltaY = entityTargeted.posY + (double)entityTargeted.getEyeHeight() - dFireballY;
-                double dDeltaZ = entityTargeted.posZ - dFireballZ;
-                EntityLargeFireball fireball = new EntityLargeFireball(this.worldObj, this, dDeltaX, dDeltaY, dDeltaZ);
-                fireball.field_92057_e = 1;
-                double dDeltaLength = MathHelper.sqrt_double(dDeltaX * dDeltaX + dDeltaY * dDeltaY + dDeltaZ * dDeltaZ);
-                double dUnitDeltaX = dDeltaX / dDeltaLength;
-                double dUnitDeltaY = dDeltaY / dDeltaLength;
-                double dUnitDeltaZ = dDeltaZ / dDeltaLength;
-                fireball.posX = dFireballX + dUnitDeltaX * 4.0;
-                fireball.posY = dFireballY + dUnitDeltaY * 4.0 - (double)fireball.height / 2.0;
-                fireball.posZ = dFireballZ + dUnitDeltaZ * 4.0;
-                this.worldObj.spawnEntityInWorld(fireball);
-            }
-        }
-        if(this.rageTimer > 100){
-            this.rageTimer = 0;
-        }
-    }
-
     @Inject(method = "updateEntityActionState", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityGhast;attackCounter:I", ordinal = 2, opcode = Opcodes.GETFIELD),cancellable = true)
     private void manageCreeperEclipseVariant(CallbackInfo ci){
         if(this.isCreeperVariant()){
@@ -252,30 +192,16 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
 
 
-    @Inject(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityGhast;isCourseTraversable(DDDD)Z", shift = At.Shift.AFTER))
-    private void avoidGettingTooCloseToPlayer(CallbackInfo ci){
-        EntityGhast g = (EntityGhast)(Object)this;
+    @Inject(method = "updateEntityActionState", at = @At("TAIL"))
+    private void approachPlayerBeforeShooting(CallbackInfo ci) {
+        EntityGhast ghast = (EntityGhast)(Object)this;
         Entity target = this.entityTargeted;
-        if(target != null && target.isEntityAlive()){
-            double distSq = g.getDistanceSqToEntity(target);
-            if(distSq < 256.0){
-                // calculate direction away from player
-                double awayX = g.posX - target.posX;
-                double awayY = g.posY - target.posY;
-                double awayZ = g.posZ - target.posZ;
-                double length = MathHelper.sqrt_double(awayX * awayX + awayY * awayY + awayZ * awayZ);
-
-                if(length > 0){
-                    // set new waypoint further away from player
-                    double targetDist = 24.0; // try to maintain 24 blocks distance
-                    g.waypointX = g.posX + (awayX / length) * targetDist;
-                    g.waypointY = g.posY + (awayY / length) * targetDist + (g.rand.nextDouble() * 8.0 - 4.0); // add some vertical variation
-                    g.waypointZ = g.posZ + (awayZ / length) * targetDist;
-
-                    // clamp waypoint to reasonable bounds
-                    g.waypointY = Math.max(g.posY - 16.0, Math.min(g.posY + 16.0, g.waypointY));
-                }
-            }
+        if (target == null || !target.isEntityAlive()) return;
+        double preferred = com.itlesports.nightmaremode.util.NMGhastRules.attackRange() * 0.75D;
+        if (this.getDistanceSqToEntity(target) > preferred * preferred) {
+            ghast.waypointX = target.posX;
+            ghast.waypointY = target.posY + 3.0D;
+            ghast.waypointZ = target.posZ;
         }
     }
 
@@ -287,6 +213,10 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @Inject(method = "getCanSpawnHere", at = @At("HEAD"),cancellable = true)
     private void manageOverworldSpawn(CallbackInfoReturnable<Boolean> cir){
+        if (this.dimension == -1 && this.rand.nextInt(4) == 0) {
+            cir.setReturnValue(false);
+            return;
+        }
         if(this.dimension == 0){
             if (OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ) == OverworldTierHelper.Region.DEADZONE) {
                 cir.setReturnValue(this.getCanSpawnHereNoPlayerDistanceRestrictions()
@@ -303,8 +233,8 @@ public abstract class EntityGhastMixin extends EntityFlying{
         }
     }
     @ModifyArg(method = "getCanSpawnHere", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"),index = 3)
-    private double increaseGhastSpawnrateOnBloodMoon(double par1){
-        if(NMUtils.hasEmpoweredBloodMoonMobs() && this.dimension == -1){return 16.0;}
+    private double limitBloodMoonSpawnProximity(double par1){
+        if(NMUtils.hasEmpoweredBloodMoonMobs() && this.dimension == -1){return 32.0;}
         return par1;
     }
 

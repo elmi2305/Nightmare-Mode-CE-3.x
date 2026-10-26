@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.NetherQuartzOreBlock;
 import api.item.util.ItemUtils;
-import api.util.MiscUtils;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemSoulFlint;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
@@ -35,9 +34,8 @@ public abstract class NetherQuartzOreBlockMixin extends BlockOre {
             return;
         }
         if (!world.isRemote) {
-            ItemUtils.ejectStackFromBlockTowardsFacing(world, x, y, z,
-                    new ItemStack(NMItems.quartzDust),
-                    MiscUtils.convertOrientationToFlatBlockFacingReversed(player));
+            com.itlesports.nightmaremode.util.SoulFlintDrops.eject(world, player, x, y, z,
+                    new ItemStack(NMItems.quartzDust));
             held.damageItem(1, player);
             world.setBlock(x, y, z, Block.netherrack.blockID, 0, 3);
             player.addStat(StatList.mineBlockStatArray[this.blockID], 1);
