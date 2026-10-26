@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import api.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
+import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -49,6 +50,10 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Inject(method = "dropFewItems", at = @At("HEAD"))
     private void manageEclipseShardDrops(boolean bKilledByPlayer, int lootingLevel, CallbackInfo ci){
+        if (bKilledByPlayer && this.attackingPlayer != null
+                && this.dimension == -1) {
+            this.dropItem(NMItems.ash.itemID, this.rand.nextInt(4));
+        }
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {

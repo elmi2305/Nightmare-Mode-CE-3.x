@@ -254,6 +254,11 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
                 && this.rand.nextFloat() < SkillHandler.getPlayerData(this.attackingPlayer).blazeRodDropChanceBonus) {
             this.dropItem(Item.blazeRod.itemID, 1);
         }
+        if (bKilledByPlayer && this.attackingPlayer != null
+                && this.rand.nextFloat() < SkillHandler.getPlayerData(this.attackingPlayer).blazeRodDropChanceBonus
+        && this.dimension == -1) {
+            this.dropItem(NMItems.ash.itemID, this.rand.nextInt(4));
+        }
         if (bKilledByPlayer && NMUtils.getIsMobEclipsed(this) && isValidForEventLoot && (NightmareMode.totalEclipse || NMUtils.getWorldProgress() > POSTWITHER)) {
             for(int i = 0; i < (lootingLevel * 2) + 1; i++) {
                 if (this.rand.nextInt(8) == 0) {
