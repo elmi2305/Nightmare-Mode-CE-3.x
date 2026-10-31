@@ -1,8 +1,10 @@
 package com.itlesports.nightmaremode.structure;
 
 import btw.block.BTWBlocks;
+import btw.item.BTWItems;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.KnowledgeBookLoot;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
@@ -15,6 +17,13 @@ public class ComponentOceanDesertTemple extends ComponentScatteredFeature {
     private static final int SPAWN_RADIUS_Y = 48;
     private boolean[] field_74940_h = new boolean[4];
     private static final WeightedRandomChestContent[] lootListArray = new WeightedRandomChestContent[]{
+            new WeightedRandomChestContent(NMItems.aquamarine.itemID, 0, 1, 2, 1),
+            new WeightedRandomChestContent(NMItems.mackerel.itemID, 0, 1, 3, 4),
+            new WeightedRandomChestContent(NMItems.cod.itemID, 0, 1, 3, 4),
+            new WeightedRandomChestContent(NMItems.tuna.itemID, 0, 1, 2, 3),
+            new WeightedRandomChestContent(NMItems.swordfish.itemID, 0, 1, 1, 1),
+            new WeightedRandomChestContent(Item.clay.itemID, 0, 2, 5, 8),
+            new WeightedRandomChestContent(BTWItems.clayPile.itemID, 0, 4, 12, 8),
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
             new WeightedRandomChestContent(Item.plateGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.legsGold.itemID, 0, 1, 1, 5),

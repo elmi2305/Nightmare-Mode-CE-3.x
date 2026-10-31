@@ -6,7 +6,8 @@ public class EntityIceGolem extends EntityIronGolem {
     public EntityIceGolem(World world) {
         super(world);
         this.targetTasks.removeAllTasksOfClass(EntityAINearestAttackableTarget.class);
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, true, IMob.mobSelector));
+        this.targetTasks.removeAllTasksOfClass(EntityAIDefendVillage.class);
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     }
 
     @Override
@@ -14,7 +15,7 @@ public class EntityIceGolem extends EntityIronGolem {
 
     @Override
     public boolean canAttackClass(Class targetClass) {
-        return targetClass == EntityPlayer.class;
+        return EntityPlayer.class.isAssignableFrom(targetClass);
     }
 
     @Override
@@ -24,8 +25,8 @@ public class EntityIceGolem extends EntityIronGolem {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(140.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2D);
     }
 
     @Override

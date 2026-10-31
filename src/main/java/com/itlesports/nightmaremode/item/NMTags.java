@@ -97,6 +97,10 @@ public class NMTags {
             NMItems.carbonIronNugget,
             NMItems.tungstenNugget
     );
+    public static final Tag ironRailNuggets = Tag.of(loc("iron_rail_nuggets"),
+            BTWItems.ironNugget,
+            NMItems.carbonIronNugget
+    );
     public static final Tag netherSignalBinders = Tag.of(loc("nether_signal_binders"),
             NMItems.azureSalt,
             NMItems.searingSilverScale

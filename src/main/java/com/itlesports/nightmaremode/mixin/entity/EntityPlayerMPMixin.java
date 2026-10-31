@@ -227,7 +227,8 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void keepUnprotectedPlayerBurningInNether(CallbackInfo ci) {
         if (this.dimension == -1 && !ArmorSetHelper.isProtectedFromNetherAmbientHeat(this) && !NightmareMode.devMode) {
-            this.setFire(2);
+            // refreshing every tick pins shortened burn timers between damage ticks.
+            if (!this.isBurning()) this.setFire(2);
         }
     }
 

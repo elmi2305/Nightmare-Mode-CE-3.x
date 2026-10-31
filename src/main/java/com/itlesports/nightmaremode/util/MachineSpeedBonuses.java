@@ -4,7 +4,6 @@ import btw.block.blocks.KilnBlock;
 import btw.block.blocks.SawBlock;
 import btw.block.blocks.ScrewPumpBlock;
 import btw.block.tileentity.MillstoneTileEntity;
-import btw.block.tileentity.TurntableTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.CisternTileEntity;
 import com.itlesports.nightmaremode.block.tileEntities.MachineSpeedTileEntity;
 import com.itlesports.nightmaremode.skill.SkillHandler;
@@ -20,13 +19,13 @@ public final class MachineSpeedBonuses {
     private MachineSpeedBonuses() {}
 
     public static boolean isMachine(TileEntity tile) {
-        return tile instanceof MillstoneTileEntity || tile instanceof TurntableTileEntity
+        return tile instanceof MillstoneTileEntity
                 || tile instanceof CisternTileEntity || tile instanceof TileEntityBrewingStand
                 || tile instanceof MachineSpeedTileEntity;
     }
 
     public static float get(TileEntity tile) {
-        return tile == null ? 0.0F : ((MachineSpeedAccess)tile).nm$getMachineSpeedState().getBonus();
+        return !isMachine(tile) ? 0.0F : ((MachineSpeedAccess)tile).nm$getMachineSpeedState().getBonus();
     }
 
     public static float get(World world, int x, int y, int z) {
@@ -53,8 +52,6 @@ public final class MachineSpeedBonuses {
             bonus = data.cisternSpeedBonus;
         } else if (tile instanceof TileEntityBrewingStand) {
             bonus = data.brewingSpeedBonus;
-        } else if (tile instanceof TurntableTileEntity) {
-            bonus = data.machineSpeedBonus;
         } else {
             Block block = tile.getBlockType();
             if (block instanceof KilnBlock) bonus = data.kilnSpeedBonus;

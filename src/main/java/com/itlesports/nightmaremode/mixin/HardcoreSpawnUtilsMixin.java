@@ -5,6 +5,7 @@ import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMHardcoreSpawnContext;
+import com.itlesports.nightmaremode.util.OuterDeathRespawn;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -16,6 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HardcoreSpawnUtils.class)
 public abstract class HardcoreSpawnUtilsMixin{
+    @Shadow private static void countDeath(EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer) { throw new AssertionError(); }
+    @Shadow private static void returnPlayerToOriginalSpawn(World world, EntityPlayerMP player) { throw new AssertionError(); }
+
+    @Inject(method = "handleHardcoreSpawn", at = @At("HEAD"), cancellable = true)
+    private static void returnOuterDeathToSpawn(MinecraftServer server, EntityPlayerMP oldPlayer,
+                                               EntityPlayerMP newPlayer, CallbackInfo ci) {
+        if (!OuterDeathRespawn.returnsToSpawn(oldPlayer)) return;
+        countDeath(oldPlayer, newPlayer);
+        returnPlayerToOriginalSpawn(newPlayer.worldObj, newPlayer);
+        ci.cancel();
+    }
 
     @Redirect(method = {"assignNewHardcoreSpawnLocation", "assignPlayerNearbyExistingSpawnPos"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getTopSolidOrLiquidBlock(II)I"))

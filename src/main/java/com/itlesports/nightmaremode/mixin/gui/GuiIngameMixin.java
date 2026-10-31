@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.gui;
 import btw.community.nightmaremode.NightmareMode;
 import api.util.status.StatusEffect;
 import com.itlesports.nightmaremode.client.CarcassHarvestClient;
+import com.itlesports.nightmaremode.client.FrozenWastesHud;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.skill.SkillTreeData;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -58,6 +59,20 @@ public abstract class GuiIngameMixin extends Gui {
     @Unique private final static ResourceLocation vignette = new ResourceLocation("nightmare:textures/effects/nmVignette.png");
     @Unique private final static ResourceLocation crack = new ResourceLocation("nightmare:textures/effects/stare.png");
     @Unique private int amountRendered = 0;
+
+    @Inject(method = {"renderGameOverlay", "renderGameOverlayWithGuiDisabled"}, at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiIngame;renderModSpecificPlayerSightEffects()V"))
+    private void renderOuterColdOverlay(float partialTicks, boolean hasScreen, int mouseX, int mouseY, CallbackInfo ci) {
+        FrozenWastesHud.renderOverlay(this.mc);
+    }
+
+    @Redirect(method = "func_110327_a", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V"))
+    private void renderOuterColdHearts(GuiIngame gui, int x, int y, int u, int v, int width, int height) {
+        if (!FrozenWastesHud.drawFrozenHeart(this.mc, x, y, u, v, width, height, this.zLevel)) {
+            gui.drawTexturedModalRect(x, y, u, v, width, height);
+        }
+    }
 
     @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/GuiIngame;drawTexturedModalRect(IIIIII)V", ordinal = 5))

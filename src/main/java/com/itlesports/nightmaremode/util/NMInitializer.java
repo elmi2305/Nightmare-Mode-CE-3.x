@@ -188,6 +188,10 @@ public abstract class NMInitializer implements AchievementExt {
     public static void initIFHYRecipes(){
         validateUltimateItemRegistrations();
         validateItemRegistration("Rough Mushroom Mash", NMItems.mash);
+        validateItemRegistration("Mushroom Skewer", NMItems.mushroomSkewer);
+        validateItemRegistration("Mushroom Oysters", NMItems.mushroomOysters);
+        validateItemRegistration("Charred Brown Mushroom", NMItems.charredBrownMushroom);
+        validateItemRegistration("Lavafish and Mushroom Skewer", NMItems.lavafishMushroomSkewer);
         NMTags.initTags();
         BTWItems.straw.setfurnaceburntime(5);
         addCraftingRecipes();
@@ -1308,6 +1312,11 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addCrucibleRecipes(){
         CrucibleStokedCraftingManager crucible = CrucibleStokedCraftingManager.getInstance();
+        // rails do not retain which metal was used, so recycling would create other metals.
+        crucible.removeRecipe(new ItemStack(BTWItems.ironNugget),
+                new ItemStack[]{new ItemStack(Block.rail, 3)});
+        crucible.removeRecipe(new ItemStack[]{new ItemStack(Item.goldNugget), new ItemStack(BTWItems.ironNugget, 2)},
+                new ItemStack[]{new ItemStack(Block.railPowered, 3)});
         crucible.removeRecipe(new ItemStack(BTWItems.ironNugget, 42),
                 new ItemStack[]{new ItemStack(Block.anvil)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.soulforgedSteelIngot, 7),
@@ -1494,10 +1503,10 @@ public abstract class NMInitializer implements AchievementExt {
         addArmorRecovery(NMItems.glassChestplate, new ItemStack(Block.glass, 3));
         addArmorRecovery(NMItems.glassLeggings, new ItemStack(Block.glass, 2));
         addArmorRecovery(NMItems.glassBoots, new ItemStack(Block.glass));
-        addDarkArmorRecovery(NMItems.darkHelmet, 1, 2);
-        addDarkArmorRecovery(NMItems.darkChestplate, 1, 3);
-        addDarkArmorRecovery(NMItems.darkLeggings, 1, 2);
-        addDarkArmorRecovery(NMItems.darkBoots, 1, 1);
+        addDarkArmorRecovery(NMItems.darkHelmet, 1);
+        addDarkArmorRecovery(NMItems.darkChestplate, 1);
+        addDarkArmorRecovery(NMItems.darkLeggings, 1);
+        addDarkArmorRecovery(NMItems.darkBoots, 1);
         addArmorRecovery(NMItems.sunHelmet, new ItemStack(BTWItems.diamondIngot, 2), new ItemStack(NMItems.nickelIngot), new ItemStack(NMItems.deadzoneAlloyIngot), new ItemStack(NMItems.blackglassIngot));
         addArmorRecovery(NMItems.sunChestplate, new ItemStack(BTWItems.diamondIngot, 4), new ItemStack(NMItems.nickelIngot, 3), new ItemStack(NMItems.deadzoneAlloyIngot, 3), new ItemStack(NMItems.verdantIngot));
         addArmorRecovery(NMItems.sunLeggings, new ItemStack(BTWItems.diamondIngot, 3), new ItemStack(NMItems.nickelIngot, 2), new ItemStack(NMItems.deadzoneAlloyIngot, 2), new ItemStack(NMItems.quartzglassIngot));
@@ -1554,9 +1563,9 @@ public abstract class NMInitializer implements AchievementExt {
         addArmorRecovery(boots, new ItemStack(chassisMaterial, 2), new ItemStack(armorMaterial));
     }
 
-    private static void addDarkArmorRecovery(Item armor, int darkIngots, int coalDust) {
+    private static void addDarkArmorRecovery(Item armor, int darkIngots) {
         addArmorRecovery(armor, new ItemStack(NMItems.darkIngot, darkIngots), new ItemStack(NMItems.coresteelIngot),
-                new ItemStack(BTWItems.steelNugget, 3), new ItemStack(BTWItems.coalDust, coalDust),
+                new ItemStack(BTWItems.steelNugget, 3),
                 new ItemStack(NMItems.bloodOrb));
     }
 
@@ -2271,6 +2280,7 @@ public abstract class NMInitializer implements AchievementExt {
         FurnaceRecipes.smelting().addSmelting(NMItems.wetFusedPlantSheet.itemID, new ItemStack(NMItems.plantSheet), 0.0f);
         FurnaceRecipes.smelting().addSmelting(NMItems.tungstenConcentrate.itemID, new ItemStack(NMItems.brittleTungstenCake), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.pureTungstenChunk.itemID, new ItemStack(NMItems.tungstenNugget), 0.0F);
+        FurnaceRecipes.smelting().addSmelting(BTWItems.brownMushroom.itemID, new ItemStack(NMItems.charredBrownMushroom), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.obsidianPaste.itemID, new ItemStack(NMItems.obsidianBrick), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.washedHemp.itemID, new ItemStack(NMItems.driedHemp), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.azureSlag.itemID, new ItemStack(NMItems.brittleAzureCake), 0.0F);
@@ -3118,6 +3128,13 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.primitiveGlue), new Object[]{NMItems.thickenedSap, BTWItems.coalDust});
         IRecipe mashRecipe = RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mash), new Object[]{BTWItems.redMushroom, NMItems.grassSeeds, NMItems.grassSeeds});
         validateShapelessRecipeRegistration("Rough Mushroom Mash", mashRecipe, NMItems.mash);
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mushroomSkewer),
+                new Object[]{BTWItems.redMushroom, BTWItems.brownMushroom, NMTags.netherCompatibleSticks});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mushroomOysters),
+                new Object[]{BTWItems.creeperOysters, BTWItems.redMushroom, BTWItems.brownMushroom});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lavafishMushroomSkewer),
+                new Object[]{NMItems.lavafish, NMItems.charredBrownMushroom,
+                        NMItems.charredBrownMushroom, NMTags.netherCompatibleSticks});
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.dandelionMush),
                 new Object[]{Block.plantYellow, Block.plantYellow, Block.plantYellow, NMItems.grassSeeds}),
                 NMSkillNodes.BRING_ANOTHER_DANDELION_16);
@@ -3206,8 +3223,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(new ItemStack(Block.railDetector, 6), new Object[]{"X X", "X#X", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.stonePressurePlates});
         RecipeManager.removeVanillaRecipe(new ItemStack(BTWBlocks.steelDetectorRail, 6), new Object[]{"X X", "X#X", "XRX", Character.valueOf('X'), BTWItems.ironNugget, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.metalPressurePlates});
         RecipeManager.removeVanillaRecipe(new ItemStack(Item.minecartEmpty), new Object[]{"# #", "###", Character.valueOf('#'), Item.ingotIron});
-        RecipeManager.addRecipe(new ItemStack(Block.rail, 8), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('S'), NMTags.netherCompatibleSticks});
-        RecipeManager.addRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('R'), BTWItems.redstoneLatch});
+        RecipeManager.addRecipe(new ItemStack(Block.rail, 8), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), NMTags.ironRailNuggets, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(Block.railPowered, 6), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), NMTags.ironRailNuggets, Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('R'), BTWItems.redstoneLatch});
+        // the existing skill gates halve these yields to 16 rails and 8 powered rails.
+        RecipeManager.addRecipe(new ItemStack(Block.rail, 32), new Object[]{"X X", "XSX", "X X", Character.valueOf('X'), NMItems.tungstenNugget, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(Block.railPowered, 16), new Object[]{"X X", "XSX", "XRX", Character.valueOf('X'), NMItems.tungstenNugget, Character.valueOf('S'), NMTags.netherCompatibleSticks, Character.valueOf('R'), BTWItems.redstoneLatch});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.woodenDetectorRail, 6), new Object[]{"X X", "X#X", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.woodenPressurePlates});
         RecipeManager.addRecipe(new ItemStack(Block.railDetector, 6), new Object[]{"XFX", "X#X", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('F'), NMTags.netherSignalBinders, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), NMTags.netherRailPressurePlates});
         RecipeManager.addRecipe(new ItemStack(BTWBlocks.steelDetectorRail, 6), new Object[]{"X X", "X#X", "XRX", Character.valueOf('X'), NMTags.ironTungstenNuggets, Character.valueOf('R'), Item.redstone, Character.valueOf('#'), BTWTags.metalPressurePlates});

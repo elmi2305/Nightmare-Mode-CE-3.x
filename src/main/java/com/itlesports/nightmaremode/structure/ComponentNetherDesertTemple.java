@@ -25,7 +25,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(Item.helmetGold.itemID, 0, 1, 1, 5),
             new WeightedRandomChestContent(Item.plateGold.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.legsGold.itemID, 0, 1, 1, 5),
-            // these  hampers are the only renewable bootstrap source of Nether wood.
+            // these chests supply bootstrap nether wood and renewable saplings.
             new WeightedRandomChestContent(NMItems.netherStick.itemID, 0, 4, 13, 20),
             new WeightedRandomChestContent(Block.planks.blockID, 4, 4, 13, 20),
             new WeightedRandomChestContent(Item.bootsGold.itemID, 0, 1, 1, 2),
@@ -38,7 +38,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(NMItems.boneShard.itemID, 0, 8, 12, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
             new WeightedRandomChestContent(Item.skull.itemID, 0, 1, 1, 5),
-            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 3, 4), // blood sapling
+            new WeightedRandomChestContent(BTWBlocks.aestheticVegetation.blockID, 2, 1, 3, 24), // blood sapling
             new WeightedRandomChestContent(BTWItems.soulUrn.itemID, 0, 1, 1, 2),
             new WeightedRandomChestContent(Item.horseArmorGold.itemID, 0, 1, 1, 1)
         };
@@ -79,7 +79,9 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
         if (world.getWorldInfo().getTerrainType() == WorldType.FLAT && !this.func_74935_a(world, boundingBox, 0)) {
             return false;
         }
-        boolean bIsLooted = HardcoreSpawnUtils.isInLootedTempleRadius(world, boundingBox.getCenterX(), boundingBox.getCenterZ());
+        // the overworld looted radius must not strip inner-nether bootstrap supplies.
+        boolean bIsLooted = world.provider.dimensionId == 0
+                && HardcoreSpawnUtils.isInLootedTempleRadius(world, boundingBox.getCenterX(), boundingBox.getCenterZ());
         if (NightmareMode.devMode) {
             System.out.println("GENERATINNNNNN at " + boundingBox.getCenterX() + " " + boundingBox.getCenterZ());
         }
@@ -281,13 +283,13 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             int iXOffset = Direction.offsetX[var10] * 2;
             int iZOffset = Direction.offsetZ[var10] * 2;
             WeightedRandomChestContent[] lootList = lootListArray;
-            int iNumItems = 2 + generatorRand.nextInt(5);
+            int iNumItems = 6 + generatorRand.nextInt(7);
             if (bIsLooted) {
                 lootList = lootedLootListArray;
                 iNumItems /= 2;
             }
             WeightedRandomChestContent[] moddedLootList = WeightedRandomChestContent.func_92080_a(lootList, Item.enchantedBook.func_92114_b(generatorRand));
-            this.field_74940_h[var10] = this.generateStructureContainerContents(world, boundingBox, generatorRand, 10 + iXOffset, -11, 10 + iZOffset, BTWBlocks.hamper.blockID, Direction.directionToFacing[var10], moddedLootList, iNumItems, true);
+            this.field_74940_h[var10] = this.generateStructureContainerContents(world, boundingBox, generatorRand, 10 + iXOffset, -11, 10 + iZOffset, BTWBlocks.chest.blockID, Direction.directionToFacing[var10], moddedLootList, iNumItems, true);
         }
         if (bIsLooted) {
             this.fillWithBlocks(world, boundingBox, 9, 0, 9, 10, 0, 10, 0, 0, false);

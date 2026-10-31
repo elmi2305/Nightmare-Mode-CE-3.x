@@ -1,10 +1,12 @@
 package com.itlesports.nightmaremode.entity.outer;
 
 import net.minecraft.src.*;
+import com.itlesports.nightmaremode.util.GhastFlightNavigator;
 
 abstract class EntityOuterGhast extends EntityGhast {
     private EntityPlayer outerTarget;
     private int retargetCooldown;
+    private final GhastFlightNavigator flightNavigator = new GhastFlightNavigator();
 
     EntityOuterGhast(World world) {
         super(world);
@@ -64,21 +66,17 @@ abstract class EntityOuterGhast extends EntityGhast {
     }
 
     private void updateCourse() {
-        if (this.outerTarget != null && this.getDistanceSqToEntity(this.outerTarget) > 12.0D * 12.0D) {
-            this.waypointX = this.outerTarget.posX;
-            this.waypointY = this.outerTarget.posY + 5.0D;
-            this.waypointZ = this.outerTarget.posZ;
-        } else {
-            double dx = this.waypointX - this.posX;
-            double dy = this.waypointY - this.posY;
-            double dz = this.waypointZ - this.posZ;
-            double distanceSq = dx * dx + dy * dy + dz * dz;
-            if (distanceSq < 4.0D || distanceSq > 1600.0D) {
-                this.waypointX = this.posX + (this.rand.nextDouble() * 2.0D - 1.0D) * 14.0D;
-                this.waypointY = this.posY + (this.rand.nextDouble() * 2.0D - 1.0D) * 10.0D;
-                this.waypointZ = this.posZ + (this.rand.nextDouble() * 2.0D - 1.0D) * 14.0D;
-            }
+        double waypointDX = this.waypointX - this.posX;
+        double waypointDY = this.waypointY - this.posY;
+        double waypointDZ = this.waypointZ - this.posZ;
+        double distanceSq = waypointDX * waypointDX + waypointDY * waypointDY + waypointDZ * waypointDZ;
+        if (distanceSq < 4.0D || distanceSq > 1600.0D) {
+            this.waypointX = this.posX + (this.rand.nextDouble() * 2.0D - 1.0D) * 14.0D;
+            this.waypointY = this.posY + (this.rand.nextDouble() * 2.0D - 1.0D) * 10.0D;
+            this.waypointZ = this.posZ + (this.rand.nextDouble() * 2.0D - 1.0D) * 14.0D;
         }
+
+        this.flightNavigator.update(this, this.outerTarget, 12.0D);
 
         if (--this.courseChangeCooldown <= 0) {
             this.courseChangeCooldown = 3 + this.rand.nextInt(5);
@@ -86,7 +84,7 @@ abstract class EntityOuterGhast extends EntityGhast {
             double dy = this.waypointY - this.posY;
             double dz = this.waypointZ - this.posZ;
             double length = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
-            if (length > 0.001D) {
+            if (length > 0.001D && GhastFlightNavigator.canTravel(this, this.waypointX, this.waypointY, this.waypointZ)) {
                 this.motionX += dx / length * 0.075D;
                 this.motionY += dy / length * 0.075D;
                 this.motionZ += dz / length * 0.075D;

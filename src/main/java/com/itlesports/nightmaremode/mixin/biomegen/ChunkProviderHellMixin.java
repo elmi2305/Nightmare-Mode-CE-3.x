@@ -43,13 +43,13 @@ public class ChunkProviderHellMixin {
     @Unique private static WorldGenOreNode lithiumNodes = new WorldGenOreNode(
             NMBlocks.lithiumOreNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private static WorldGenMinable denseCoreOre = new WorldGenMinable(
-            NMBlocks.denseNetherrackCoreOre.blockID, 3, Block.netherrack.blockID);
+            NMBlocks.denseNetherrackCoreOre.blockID, 5, Block.netherrack.blockID);
     @Unique private static WorldGenOreNode denseCoreNodes = new WorldGenOreNode(
             NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private static WorldGenOreNode denseCoreExposedNodes = new WorldGenOreNode(
             NMBlocks.denseNetherrackCoreNode.blockID, Block.netherrack.blockID, 1, 1).setNeedsAirExposure();
     @Unique private static WorldGenMinable deadzoneShardOre = new WorldGenMinable(
-            NMBlocks.deadzoneShardOre.blockID, 2, Block.netherrack.blockID).setNeedsAirExposure();
+            NMBlocks.deadzoneShardOre.blockID, 5, Block.netherrack.blockID);
     @Unique private static WorldGenOreNode deadzoneShardNodes = new WorldGenOreNode(
             NMBlocks.deadzoneShardNode.blockID, Block.netherrack.blockID, 1, 1);
     @Unique private static WorldGenOreNode deadzoneShardExposedNodes = new WorldGenOreNode(
@@ -92,7 +92,7 @@ public class ChunkProviderHellMixin {
             this.generateNodeInChunk(coalNodes, baseX, baseZ, 12);
         }
         if (tier == 2) {
-            for (int attempt = 0; attempt < 3; ++attempt) {
+            for (int attempt = 0; attempt < 6; ++attempt) {
                 denseCoreOre.generate(this.worldObj, this.hellRNG,
                         baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
                         baseZ + this.hellRNG.nextInt(16));
@@ -104,7 +104,7 @@ public class ChunkProviderHellMixin {
                 this.generateNodeInChunk(denseCoreExposedNodes, baseX, baseZ, 12);
             }
         } else if (tier == 3) {
-            for (int attempt = 0; attempt < 2; ++attempt) {
+            for (int attempt = 0; attempt < 6; ++attempt) {
                 deadzoneShardOre.generate(this.worldObj, this.hellRNG,
                         baseX + this.hellRNG.nextInt(16), this.hellRNG.nextInt(56) + 4,
                         baseZ + this.hellRNG.nextInt(16));

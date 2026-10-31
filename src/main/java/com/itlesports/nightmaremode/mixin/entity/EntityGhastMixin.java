@@ -3,6 +3,7 @@ package com.itlesports.nightmaremode.mixin.entity;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
+import com.itlesports.nightmaremode.util.GhastFlightNavigator;
 import com.itlesports.nightmaremode.entity.variants.EntityCreeperGhast;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
@@ -25,6 +26,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Shadow
     private Entity entityTargeted;
     @Unique boolean firstAttack = true;
+    @Unique private final GhastFlightNavigator flightNavigator = new GhastFlightNavigator();
 
     public EntityGhastMixin(World world) {
         super(world);
@@ -192,17 +194,11 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
 
 
-    @Inject(method = "updateEntityActionState", at = @At("TAIL"))
+    @Inject(method = "updateEntityActionState", at = @At("HEAD"))
     private void approachPlayerBeforeShooting(CallbackInfo ci) {
-        EntityGhast ghast = (EntityGhast)(Object)this;
-        Entity target = this.entityTargeted;
-        if (target == null || !target.isEntityAlive()) return;
+        if (this.isCreeperVariant()) return;
         double preferred = com.itlesports.nightmaremode.util.NMGhastRules.attackRange() * 0.75D;
-        if (this.getDistanceSqToEntity(target) > preferred * preferred) {
-            ghast.waypointX = target.posX;
-            ghast.waypointY = target.posY + 3.0D;
-            ghast.waypointZ = target.posZ;
-        }
+        this.flightNavigator.update((EntityGhast)(Object)this, this.entityTargeted, preferred);
     }
 
     @Unique private boolean isCreeperVariant(){

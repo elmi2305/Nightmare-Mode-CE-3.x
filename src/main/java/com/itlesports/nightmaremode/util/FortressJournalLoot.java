@@ -10,6 +10,7 @@ public final class FortressJournalLoot {
 
     public static WeightedRandomChestContent[] add(WeightedRandomChestContent[] loot, World world,
                                                      StructureBoundingBox bounds) {
+        loot = FortressSupplyLoot.add(loot);
         int x = (bounds.minX + bounds.maxX) / 2;
         int z = (bounds.minZ + bounds.maxZ) / 2;
         if (NetherTierHelper.getDistanceFromSpawn(world, x, z) <= 1000.0D) return loot;

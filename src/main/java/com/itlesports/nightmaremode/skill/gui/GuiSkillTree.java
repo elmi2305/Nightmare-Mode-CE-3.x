@@ -286,7 +286,9 @@ public class GuiSkillTree extends GuiScreen {
         };
         String reward = (state == NodeVisualState.UNLOCKED || NightmareMode.alwaysShowRewards) ? node.reward.getText() : "?";
         String body = (status == null ? "" : (status + "\n")) + (state != NodeVisualState.PARENT_LOCKED ? (node.requirementText + "\n" + "Reward: " + reward) : "");
-        body += "\nRight-click: view unlocked recipes";
+        if (com.itlesports.nightmaremode.integration.emi.SkillRecipeBrowser.hasRecipes(node)) {
+            body += "\nRight-click: view unlocked recipes";
+        }
         String parents = this.getMissingParentNames(node);
         if (!parents.isEmpty()) {
             body += (body.isEmpty() || body.endsWith("\n") ? "" : "\n") + parents;

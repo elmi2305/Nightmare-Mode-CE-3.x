@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Beta Build 4010";
+    public static String betaBuildLine = "Beta Build 4012";
     public static String betaBuildLineDifficulty = BalanceProfile.active();
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
@@ -903,6 +903,16 @@ public class NightmareMode extends BTWAddon {
                     .syncPlayer()
                     .buildPlayer();
 
+    public static final DataEntry.PlayerDataEntry<Integer> OUTER_COLD_EXPOSURE =
+            DataProvider.getBuilder(Integer.class)
+                    .name("nmOuterColdExposure")
+                    .defaultSupplier(() -> 0)
+                    .readNBT(nbt -> Math.max(0, Math.min(1200, nbt.getInteger("nmOuterColdExposure"))))
+                    .writeNBT((nbt, v) -> nbt.setInteger("nmOuterColdExposure", v))
+                    .player()
+                    .syncPlayer()
+                    .buildPlayer();
+
     public static final DataEntry.PlayerDataEntry<Integer> FATIGUE =
             DataProvider.getBuilder(Integer.class)
                     .name("Fatigue")
@@ -984,6 +994,7 @@ public class NightmareMode extends BTWAddon {
         PHASE_PORTALS.register();
         APPLE_COOLDOWN.register();
         SANITY.register();
+        OUTER_COLD_EXPOSURE.register();
         FATIGUE.register();
         DEFEATED_BM.register();
         DEFEATED_BLOODWITHER.register();

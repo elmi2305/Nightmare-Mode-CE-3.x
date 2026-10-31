@@ -41,7 +41,13 @@ public class EnchantmentProtectionMixin {
                 adjustedTicks = MathHelper.ceiling_float_int(adjustedTicks * (1.0F - reduction));
                 changed = true;
             }
-            if (changed) cir.setReturnValue(Math.max(1, adjustedTicks));
+            // an incomplete suit must leave enough burn time for a nether heat damage tick.
+            if (wearer instanceof EntityPlayer && wearer.dimension == -1
+                    && !ArmorSetHelper.isProtectedFromNetherAmbientHeat(wearer)) {
+                cir.setReturnValue(Math.max(20, adjustedTicks));
+            } else if (changed) {
+                cir.setReturnValue(Math.max(1, adjustedTicks));
+            }
         }
     }
 

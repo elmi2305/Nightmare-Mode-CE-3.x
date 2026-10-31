@@ -11,22 +11,33 @@ import java.util.*;
 public final class SkillRecipeBrowser {
     private SkillRecipeBrowser() {}
 
+    public static boolean hasRecipes(SkillNode skill) {
+        if (skill == null) return false;
+        for (EmiRecipe recipe : EmiApi.getRecipeManager().getRecipes()) {
+            if (requiresSkill(recipe, skill)) return true;
+        }
+        return false;
+    }
+
+    private static boolean requiresSkill(EmiRecipe recipe, SkillNode skill) {
+        List<SkillNode> required = recipe instanceof SkillRecipeSource source
+                ? source.nightmareMode$getRequiredSkills()
+                : SkillLockedCrafting.getRequiredSkills(recipe.getId());
+        return required.contains(skill);
+    }
+
     public static boolean open(SkillNode skill) {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer == null || skill == null) return false;
         Map<EmiRecipeCategory, List<EmiRecipe>> categories = new LinkedHashMap<>();
-        // Query the current manager each time so EMI recipe reloads cannot leave stale results.
+        // query the current manager each time so EMI recipe reloads cannot leave stale results.
         for (EmiRecipe recipe : EmiApi.getRecipeManager().getRecipes()) {
-            List<SkillNode> required = recipe instanceof SkillRecipeSource source
-                    ? source.nightmareMode$getRequiredSkills()
-                    : SkillLockedCrafting.getRequiredSkills(recipe.getId());
-            if (required.contains(skill)) {
+            if (requiresSkill(recipe, skill)) {
                 categories.computeIfAbsent(recipe.getCategory(), ignored -> new ArrayList<>()).add(recipe);
             }
         }
         if (categories.isEmpty()) {
-            mc.thePlayer.addChatMessage("No recipes require " + skill.name + ".");
-            return true;
+            return false;
         }
         GuiScreen returnScreen = mc.currentScreen;
         GuiContainer inventory = EmiApi.getHandledScreen();

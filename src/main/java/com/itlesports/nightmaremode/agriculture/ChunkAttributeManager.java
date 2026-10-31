@@ -65,6 +65,7 @@ public final class ChunkAttributeManager {
     }
 
     public static float getGrowthMultiplier(World world, int x, int z, Block crop) {
+        if (isNetherHemp(world, crop)) return 1.0F;
         ChunkAttributes attributes = get(world, x, z);
         ChunkAttribute[] requirements = getRequirements(crop);
         if (requirements.length == 0) {
@@ -119,7 +120,7 @@ public final class ChunkAttributeManager {
     }
 
     private static void consumeForGrowth(World world, int x, int z, Block crop, float costMultiplier) {
-        if (world.isRemote) {
+        if (world.isRemote || isNetherHemp(world, crop)) {
             return;
         }
         ChunkAttributes attributes = get(world, x, z);
@@ -499,6 +500,11 @@ public final class ChunkAttributeManager {
 
     private static boolean isHemp(Block crop) {
         return crop instanceof HempCropBlock || crop instanceof HempCropBlockRoots;
+    }
+
+    private static boolean isNetherHemp(World world, Block crop) {
+        // nether hemp relies on its hydrated farmland instead of finite chunk moisture.
+        return world.provider.dimensionId == -1 && isHemp(crop);
     }
 
     private static boolean contains(ChunkAttribute[] attributes, ChunkAttribute target) {

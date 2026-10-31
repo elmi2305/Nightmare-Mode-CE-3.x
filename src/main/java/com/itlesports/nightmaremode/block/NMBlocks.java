@@ -296,7 +296,7 @@ public class NMBlocks {
                 "ifhyDenseNetherrackCoreOre", "nightmare:ifhyDenseNetherrackCoreOre");
         Item.itemsList[denseNetherrackCoreOre.blockID] = new NMNetherItemBlock(denseNetherrackCoreOre.blockID - 256);
 
-        denseNetherrackCoreNode = new BlockOreNode(2425, NMItems.denseNetherrackCore.itemID, Block.obsidian, 2,
+        denseNetherrackCoreNode = new BlockNetherOreNode(2425, NMItems.denseNetherrackCore.itemID, 2, 24.0F,
                 "ifhyDenseNetherrackCoreNode", "nightmare:ifhyDenseNetherrackCoreNode");
         Item.itemsList[denseNetherrackCoreNode.blockID] = new NMNetherItemBlock(denseNetherrackCoreNode.blockID - 256);
 
@@ -304,7 +304,7 @@ public class NMBlocks {
                 "ifhyDeadzoneShardOre", "nightmare:ifhyDeadzoneShardOre");
         Item.itemsList[deadzoneShardOre.blockID] = new NMNetherItemBlock(deadzoneShardOre.blockID - 256);
 
-        deadzoneShardNode = new BlockOreNode(2427, NMItems.deadzoneShard.itemID, Block.obsidian, 3,
+        deadzoneShardNode = new BlockNetherOreNode(2427, NMItems.deadzoneShard.itemID, 3, 48.0F,
                 "ifhyDeadzoneShardNode", "nightmare:ifhyDeadzoneShardNode");
         Item.itemsList[deadzoneShardNode.blockID] = new NMNetherItemBlock(deadzoneShardNode.blockID - 256);
 
@@ -350,7 +350,7 @@ public class NMBlocks {
         Item.itemsList[mercuryOre.blockID] = new NMItemBlock(mercuryOre.blockID - 256);
 
         mercuryOreNode = new BlockOreNode(2441, NMItems.rawMercuryCrystal.itemID, Block.whiteStone, 4,
-                "ifhyMercuryOreNode", "nightmare:ifhyMercuryOreNode");
+                "ifhyMercuryOreNode", "nightmare:ifhyMercuryOreNode").requireSteelPickaxe();
         Item.itemsList[mercuryOreNode.blockID] = new NMItemBlock(mercuryOreNode.blockID - 256);
 
         endFarmland = new BlockEndFarmland(2442);
@@ -379,13 +379,13 @@ public class NMBlocks {
         Item.itemsList[phasePortalFrame.blockID] = new ItemBlockPhasePortalFrame(phasePortalFrame.blockID - 256);
         phasePortal = new BlockPhasePortal(2452);
         gravititeNode = new BlockOreNode(2453, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.GRAVITITE_CHUNK, Block.whiteStone, 4,
-                "ifhyGravititeNode", "nightmare:ifhyMercuryOreNode", 0x7866A8);
+                "ifhyGravititeNode", "nightmare:ifhyMercuryOreNode", 0x7866A8).requireSteelPickaxe();
         solarQuartzNode = new BlockOreNode(2454, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK, Block.whiteStone, 4,
-                "ifhySolarQuartzNode", "nightmare:ifhyMercuryOreNode", 0xF0B95A);
+                "ifhySolarQuartzNode", "nightmare:ifhyMercuryOreNode", 0xF0B95A).requireSteelPickaxe();
         abyssNode = new BlockOreNode(2455, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.ABYSS_CHUNK, Block.whiteStone, 4,
-                "ifhyAbyssNode", "nightmare:ifhyMercuryOreNode", 0x204654);
+                "ifhyAbyssNode", "nightmare:ifhyMercuryOreNode", 0x204654).requireSteelPickaxe();
         cryoliteNode = new BlockOreNode(2456, NMItems.lateGameMaterial.itemID, ItemLateGameMaterial.CRYOLITE_CHUNK, Block.whiteStone, 4,
-                "ifhyCryoliteNode", "nightmare:ifhyMercuryOreNode", 0xA7E8F6);
+                "ifhyCryoliteNode", "nightmare:ifhyMercuryOreNode", 0xA7E8F6).requireSteelPickaxe();
         Item.itemsList[gravititeNode.blockID] = new NMItemBlock(gravititeNode.blockID - 256);
         Item.itemsList[solarQuartzNode.blockID] = new NMItemBlock(solarQuartzNode.blockID - 256);
         Item.itemsList[abyssNode.blockID] = new NMItemBlock(abyssNode.blockID - 256);

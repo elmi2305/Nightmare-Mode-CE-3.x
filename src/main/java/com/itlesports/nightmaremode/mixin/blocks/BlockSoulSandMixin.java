@@ -48,23 +48,34 @@ public abstract class BlockSoulSandMixin extends Block {
 
     @Override
     public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int metadata) {
-        super.harvestBlock(world, player, x, y, z, metadata);
-        this.tryDropSoulChip(world, player, x, y, z);
+        if (world.isRemote || player.capabilities.isCreativeMode) return;
+        if (this.tryDropSoulChip(world, player, x, y, z)) {
+            player.addStat(net.minecraft.src.StatList.mineBlockStatArray[this.blockID], 1);
+            player.addHarvestBlockExhaustion(this.blockID, x, y, z, metadata);
+        } else {
+            super.harvestBlock(world, player, x, y, z, metadata);
+        }
     }
 
     @Override
     public void onBlockDestroyedWithImproperTool(World world, EntityPlayer player, int x, int y, int z, int metadata) {
-        super.onBlockDestroyedWithImproperTool(world, player, x, y, z, metadata);
-        this.tryDropSoulChip(world, player, x, y, z);
+        if (world.isRemote || player != null && player.capabilities.isCreativeMode) return;
+        world.playAuxSFX(2272, x, y, z, this.blockID + (metadata << 12));
+        if (!this.tryDropSoulChip(world, player, x, y, z)) {
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this, 1, metadata));
+        }
     }
 
     @Unique
-    private void tryDropSoulChip(World world, EntityPlayer player, int x, int y, int z) {
-        if (!world.isRemote && !player.capabilities.isCreativeMode
-                && !net.minecraft.src.EnchantmentHelper.getSilkTouchModifier(player)
-                && world.rand.nextFloat() < com.itlesports.nightmaremode.util.SoulSandDrops.chipChance(player.getCurrentEquippedItem())) {
+    private boolean tryDropSoulChip(World world, EntityPlayer player, int x, int y, int z) {
+        if (!world.isRemote && (player == null || !player.capabilities.isCreativeMode
+                && !net.minecraft.src.EnchantmentHelper.getSilkTouchModifier(player))
+                && world.rand.nextFloat() < com.itlesports.nightmaremode.util.SoulSandDrops.chipChance(
+                        player == null ? null : player.getCurrentEquippedItem())) {
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(NMItems.soulChip));
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(btw.item.BTWItems.soulSandPile, 2 + world.rand.nextInt(3)));
+            return true;
         }
+        return false;
     }
 }

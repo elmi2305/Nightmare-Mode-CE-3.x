@@ -4,6 +4,7 @@ import com.itlesports.nightmaremode.mixin.interfaces.TeleporterAccess;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMDeathTimeRules;
 import com.itlesports.nightmaremode.util.NMHardcoreSpawnContext;
+import com.itlesports.nightmaremode.util.OuterDeathRespawn;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.util.NetherRecall;
 import com.itlesports.nightmaremode.util.NetherPostProgress;
@@ -45,8 +46,22 @@ public class ServerConfigurationManagerMixin {
 
     @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lbtw/util/hardcorespawn/HardcoreSpawnUtils;handleHardcoreSpawn(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/src/EntityPlayerMP;Lnet/minecraft/src/EntityPlayerMP;)V"))
     private void respawnAroundDeathLocation(MinecraftServer server, EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer) {
+        if (OuterDeathRespawn.returnsToSpawn(oldPlayer)) {
+            HardcoreSpawnUtils.handleHardcoreSpawn(server, oldPlayer, newPlayer);
+            return;
+        }
         NMHardcoreSpawnContext.runWithDeathOrigin(oldPlayer, newPlayer,
                 () -> HardcoreSpawnUtils.handleHardcoreSpawn(server, oldPlayer, newPlayer));
+    }
+
+    @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntityPlayerMP;getValidatedRespawnCoordinates(Lnet/minecraft/src/World;Lnet/minecraft/src/ChunkCoordinates;)Lapi/world/BeaconStatus;"))
+    private api.world.BeaconStatus validateOuterDeathAnchor(EntityPlayerMP player, net.minecraft.src.World world,
+                                                           net.minecraft.src.ChunkCoordinates coordinates) {
+        api.world.BeaconStatus status = player.getValidatedRespawnCoordinates(world, coordinates);
+        // a valid non-forced spawn is already checked against the steel beacon's spawn-anchor effect.
+        return OuterDeathRespawn.returnsToSpawn(player) && player.isSpawnForced()
+                ? api.world.BeaconStatus.INVALID : status;
     }
 
     @Inject(method = "respawnPlayer", at = @At("HEAD"))

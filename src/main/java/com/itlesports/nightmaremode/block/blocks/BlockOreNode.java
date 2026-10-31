@@ -9,6 +9,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockContainer;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.TileEntity;
@@ -22,6 +23,7 @@ public class BlockOreNode extends BlockContainer {
     private final Block requiredToolBlock;
     private final int requiredDrillTier;
     private final int tint;
+    private boolean requiresSteelPickaxe;
 
     public BlockOreNode(int id, int droppedItemId, Block requiredToolBlock, String name, String texture) {
         this(id, droppedItemId, requiredToolBlock, 1, name, texture);
@@ -54,6 +56,11 @@ public class BlockOreNode extends BlockContainer {
     @Override public int getRenderColor(int metadata) { return this.tint; }
     @Override public int colorMultiplier(IBlockAccess world, int x, int y, int z) { return this.tint; }
 
+    public BlockOreNode requireSteelPickaxe() {
+        this.requiresSteelPickaxe = true;
+        return this;
+    }
+
     public int getRequiredDrillTier() {
         return this.requiredDrillTier;
     }
@@ -74,12 +81,12 @@ public class BlockOreNode extends BlockContainer {
 
     @Override
     public int getHarvestToolLevel(IBlockAccess world, int x, int y, int z) {
-        return 2;
+        return this.requiresSteelPickaxe ? EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel() : 2;
     }
 
     @Override
     public int getEfficientToolLevel(IBlockAccess world, int x, int y, int z) {
-        return 3;
+        return this.requiresSteelPickaxe ? EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel() : 3;
     }
 
     @Override
@@ -95,6 +102,12 @@ public class BlockOreNode extends BlockContainer {
     public boolean isValidMiningTool(ItemStack held, World world, int x, int y, int z) {
         if (held == null) {
             return false;
+        }
+        if (this.requiresSteelPickaxe) {
+            int requiredLevel = EnumToolMaterial.SOULFORGED_STEEL.getHarvestLevel();
+            return held.getItem() instanceof PickaxeItem pickaxe && pickaxe.toolMaterial.getHarvestLevel() >= requiredLevel
+                    || held.getItem() instanceof net.minecraft.src.ItemPickaxe vanillaPickaxe
+                    && vanillaPickaxe.getToolMaterial().getHarvestLevel() >= requiredLevel;
         }
         if (held.getItem() == NMItems.tungstenPickaxe) {
             return true;

@@ -2,7 +2,6 @@ package com.itlesports.nightmaremode.mixin.blocks;
 
 import api.block.TileEntityDataPacketHandler;
 import btw.block.tileentity.MillstoneTileEntity;
-import btw.block.tileentity.TurntableTileEntity;
 import com.itlesports.nightmaremode.util.interfaces.MachineSpeedAccess;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet;
@@ -11,7 +10,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityBrewingStand;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin({MillstoneTileEntity.class, TurntableTileEntity.class, TileEntityBrewingStand.class})
+@Mixin({MillstoneTileEntity.class, TileEntityBrewingStand.class})
 public abstract class MachineSpeedPacketMixin extends TileEntity implements TileEntityDataPacketHandler {
     @Override
     public Packet getDescriptionPacket() {

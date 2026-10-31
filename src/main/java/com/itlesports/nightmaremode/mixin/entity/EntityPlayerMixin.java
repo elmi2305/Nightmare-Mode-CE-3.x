@@ -119,7 +119,6 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     @Unique private float fear = 0f;
     @Unique private int heartCrackLength = 0;
     @Unique private int drowningUnconsciousTicks = -1;
-    @Unique private int outerColdExposure;
     @Unique private int outerSolarExposure;
     @Unique private int carbonArmorWetTicks;
     @Unique private float lastMeleeDamage;
@@ -1266,8 +1265,10 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
     private void manageOuterOverworldHazards(CallbackInfo ci) {
+        if (this.worldObj.isRemote) return;
+        int outerColdExposure = this.getData(NightmareMode.OUTER_COLD_EXPOSURE);
         if (this.dimension != 0 || !this.isEntityAlive() || this.capabilities.disableDamage) {
-            this.outerColdExposure = Math.max(0, this.outerColdExposure - 4);
+            this.setData(NightmareMode.OUTER_COLD_EXPOSURE, Math.max(0, outerColdExposure - 4));
             return;
         }
         OverworldTierHelper.Region region = OverworldTierHelper.getRegion(this.worldObj, this.posX, this.posZ);
@@ -1287,23 +1288,24 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             int y = MathHelper.floor_double(this.posY + this.getEyeHeight());
             int z = MathHelper.floor_double(this.posZ);
             if (this.isNearOuterHeatSource(x, y, z)) {
-                this.outerColdExposure = Math.max(0, this.outerColdExposure - 20);
+                outerColdExposure = Math.max(0, outerColdExposure - 20);
             } else if (this.worldObj.canBlockSeeTheSky(x, y, z)) {
                 int reinforcedPieces = ArmorSetHelper.getReinforcedIronPieceCount(this);
                 if (this.ticksExisted % 8 >= reinforcedPieces) {
-                    this.outerColdExposure = Math.min(1200, this.outerColdExposure + 1);
+                    outerColdExposure = Math.min(1200, outerColdExposure + 1);
                 }
             } else {
-                this.outerColdExposure = Math.max(0, this.outerColdExposure - 2);
+                outerColdExposure = Math.max(0, outerColdExposure - 2);
             }
-            if (!this.worldObj.isRemote && this.outerColdExposure >= 600 && this.ticksExisted % 40 == 0) {
+            if (outerColdExposure >= 600 && this.ticksExisted % 40 == 0) {
                 this.attackEntityFrom(DamageSource.generic, 1.0F);
             }
         } else {
-            this.outerColdExposure = Math.max(0, this.outerColdExposure - 8);
+            outerColdExposure = Math.max(0, outerColdExposure - 8);
         }
 
-        if (!this.worldObj.isRemote) this.spawnOuterFlyingMobs(region);
+        this.setData(NightmareMode.OUTER_COLD_EXPOSURE, outerColdExposure);
+        this.spawnOuterFlyingMobs(region);
     }
 
     @Inject(method = "onUpdate", at = @At("TAIL"))
@@ -1419,14 +1421,16 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
     }
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
-    private void saveOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
-        tag.setInteger("nmOuterColdExposure", this.outerColdExposure);
+    private void saveOuterSolarExposure(NBTTagCompound tag, CallbackInfo ci) {
         tag.setInteger("nmOuterSolarExposure", this.outerSolarExposure);
     }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
-    private void loadOuterColdExposure(NBTTagCompound tag, CallbackInfo ci) {
-        this.outerColdExposure = tag.getInteger("nmOuterColdExposure");
+    private void loadOuterSolarExposure(NBTTagCompound tag, CallbackInfo ci) {
+        if (!tag.getCompoundTag("Data").hasKey("nmOuterColdExposure") && tag.hasKey("nmOuterColdExposure")) {
+            this.setData(NightmareMode.OUTER_COLD_EXPOSURE,
+                    MathHelper.clamp_int(tag.getInteger("nmOuterColdExposure"), 0, 1200));
+        }
         this.outerSolarExposure = tag.getInteger("nmOuterSolarExposure");
     }
 

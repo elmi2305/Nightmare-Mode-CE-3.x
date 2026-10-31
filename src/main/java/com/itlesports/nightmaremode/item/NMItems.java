@@ -211,6 +211,10 @@ public class NMItems {
     public static Item grassSeeds;
     public static FoodItem mash;
     public static FoodItem dandelionMush;
+    public static FoodItem mushroomSkewer;
+    public static FoodItem mushroomOysters;
+    public static FoodItem charredBrownMushroom;
+    public static FoodItem lavafishMushroomSkewer;
     public static Item flintAxe;
     public static NMProgressiveItem flintAxeCrafting;
     public static Item crudeString;
@@ -676,6 +680,16 @@ public class NMItems {
                 .setMaxStackSize(16)
                 .setTextureName("nightmare:ifhyDandelionMush")
                 .setCreativeTab(CreativeTabs.tabFood);
+        mushroomSkewer = (FoodItem) new NMFoodItem(3504, 5, 0.25F, false, "ifhyMushroomSkewer", false)
+                .setMaxStackSize(16)
+                .setTextureName("nightmare:ifhyMushroomSkewer")
+                .setCreativeTab(CreativeTabs.tabFood);
+        mushroomOysters = (FoodItem) new NMFoodItem(3505, 6, 0.30F, false, "ifhyMushroomOysters", false)
+                .setMaxStackSize(16).setTextureName("nightmare:ifhyMushroomOysters").setCreativeTab(CreativeTabs.tabFood);
+        charredBrownMushroom = (FoodItem) new NMFoodItem(3506, 1, 0.25F, false, "ifhyCharredBrownMushroom", false)
+                .setMaxStackSize(16).setTextureName("nightmare:ifhyCharredBrownMushroom").setCreativeTab(CreativeTabs.tabFood);
+        lavafishMushroomSkewer = (FoodItem) new NMFoodItem(3507, 8, 0.50F, false, "ifhyLavafishMushroomSkewer", false)
+                .setMaxStackSize(16).setTextureName("nightmare:ifhyLavafishMushroomSkewer").setCreativeTab(CreativeTabs.tabFood);
 
         mackerel = createRawFish(2658, "nmMackerel");
         cod = createRawFish(2659, "nmCod");
@@ -1183,7 +1197,7 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyVerdantSword").setUnlocalizedName("ifhyVerdantSword").setCreativeTab(CreativeTabs.tabCombat);
         blackglassSword = new ItemAlloySword(3438, EnumToolMaterial.EMERALD, 7000, 5.5D, 6, blackglassIngot.itemID, blackglassPlate.itemID)
                 .setTextureName("nightmare:ifhyBlackglassSword").setUnlocalizedName("ifhyBlackglassSword").setCreativeTab(CreativeTabs.tabCombat);
-        blackglassScythe = new ItemAlloyScythe(3439, 6F, 7000)
+        blackglassScythe = new ItemAlloyScythe(3439, 5F, 7000)
                 .setTextureName("nightmare:ifhyBlackglassScythe").setUnlocalizedName("ifhyBlackglassScythe").setCreativeTab(CreativeTabs.tabCombat);
         blackglassKnife = (ItemKnife) new ItemKnife(3440, 48, ItemKnife.TIER_DIAMOND, 7000).setDamageVsEntity(5)
                 .setTextureName("nightmare:ifhyBlackglassKnife").setUnlocalizedName("ifhyBlackglassKnife");
@@ -1480,6 +1494,10 @@ public class NMItems {
         BTWTags.foods.add(creeperBallSoup);
         BTWTags.foods.add(mash);
         BTWTags.foods.add(dandelionMush);
+        BTWTags.foods.add(mushroomSkewer);
+        BTWTags.foods.add(mushroomOysters);
+        BTWTags.foods.add(charredBrownMushroom);
+        BTWTags.foods.add(lavafishMushroomSkewer);
         BTWTags.lowQualityAxes.addIgnoringMeta(flintAxe);
         BTWTags.highQualityAxes.addIgnoringMeta(bloodAxe, enderAxe, coresteelAxe, quicksilverAxe);
     }
