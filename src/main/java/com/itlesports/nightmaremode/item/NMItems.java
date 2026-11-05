@@ -132,6 +132,9 @@ public class NMItems {
     public static final Item lucidBloomSeeds;
     public static final Item lucidPetal;
     public static final Item mycelialCore;
+    public static final FoodItem blightFruit;
+    public static final FoodItem rawGrubMeat;
+    public static final FoodItem cookedGrubMeat;
 
 
 
@@ -295,6 +298,13 @@ public class NMItems {
         lucidPetal = material(2429, "nmLucidPetal");
         mycelialCore = material(2430, "nmMycelialCore");
 
+        blightFruit = (FoodItem)new NMFoodItem(2431, 2, 0.1F, false, "nmBlightFruit", false)
+                .setTextureName("nightmare:nmBlightFruit").setCreativeTab(CreativeTabs.tabFood);
+        rawGrubMeat = (FoodItem)new NMFoodItem(2432, 2, 0.1F, true, "nmRawGrubMeat", true)
+                .setStandardFoodPoisoningEffect().setTextureName("nightmare:nmRawGrubMeat").setCreativeTab(CreativeTabs.tabFood);
+        cookedGrubMeat = (FoodItem)new NMFoodItem(2433, 6, 0.5F, true, "nmCookedGrubMeat", true)
+                .setTextureName("nightmare:nmCookedGrubMeat").setCreativeTab(CreativeTabs.tabFood);
+
 
     }
 
@@ -345,6 +355,9 @@ public class NMItems {
         BTWTags.foods.add(clarityDraught);
         BTWTags.foods.add(verdantHeart);
         BTWTags.foods.add(mycelialHeart);
+        BTWTags.foods.add(blightFruit);
+        BTWTags.foods.add(rawGrubMeat);
+        BTWTags.foods.add(cookedGrubMeat);
 
         BTWTags.swords.addIgnoringMeta(titaniumSword, tungstenSword);
         BTWTags.highQualityAxes.addIgnoringMeta(titaniumAxe, tungstenAxe);

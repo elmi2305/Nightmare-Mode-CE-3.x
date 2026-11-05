@@ -4,50 +4,31 @@ import net.minecraft.src.*;
 
 public class UnderworldGenLayerBiomes extends GenLayer {
     private static final BiomeGenBase[] underworldBiomes = new BiomeGenBase[] {
-            BiomeGenBase.biomeList[24], // Underworld Plains
-            BiomeGenBase.biomeList[25], // Underworld Desert
-            BiomeGenBase.biomeList[27], // Shadow Realm
-            BiomeGenBase.biomeList[28], // Hell
+            BiomeGenUnderworld.blightlands,
+            BiomeGenUnderworld.highlands,
+            BiomeGenUnderworld.flowerFields,
+            BiomeGenUnderworld.shadowRealm,
+            BiomeGenUnderworld.underHell
     };
 
+    public UnderworldGenLayerBiomes(long seed) {
+        super(seed);
+    }
+
     public UnderworldGenLayerBiomes(long par1, GenLayer par3GenLayer, WorldType par4WorldType) {
-        super(par1);
-        // TODO: check if this calls the right layer
-//        System.out.println(par3GenLayer.getClass().getName());
+        this(par1);
         this.parent = par3GenLayer;
     }
 
     @Override
     public int[] getInts(int areaX, int areaY, int areaWidth, int areaHeight) {
-        int[] ints = this.parent.getInts(areaX, areaY, areaWidth, areaHeight);
-        int[] intCache = IntCache.getIntCache(areaWidth * areaHeight);
-        for (int x = 0; x < areaHeight; ++x) {
-            for (int y = 0; y < areaWidth; ++y) {
-                this.initChunkSeed(y + areaX, x + areaY);
-                int currentBiomeId = ints[y + x * areaWidth];
-                if (currentBiomeId == 0) {
-                    intCache[y + x * areaWidth] = BiomeGenUnderworld.flowerFields.biomeID;
-//                    intCache[y + x * areaWidth] = 0;
-                }
-                else if (currentBiomeId == 1) {
-                    if (this.nextInt(32) == 0) {
-                        intCache[y + x * areaWidth] = underworldBiomes[2].biomeID; // shadow realm
-                    }
-                    else {
-                        intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID; // everything other than flower fields
-                    }
-                    // forces only biome if uncommented
-//                    intCache[y + x * areaWidth] = BiomeGenUnderworld.shadowRealm.biomeID;
-
-                }
-                else {
-                    intCache[y + x * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
-                }
-                // override all biome logic and force this biome
-//                intCache[y + x * areaWidth] = BiomeGenUnderworld.shadowRealm.biomeID;
-
+        int[] biomes = IntCache.getIntCache(areaWidth * areaHeight);
+        for (int z = 0; z < areaHeight; z++) {
+            for (int x = 0; x < areaWidth; x++) {
+                this.initChunkSeed(areaX + x, areaY + z);
+                biomes[x + z * areaWidth] = underworldBiomes[this.nextInt(underworldBiomes.length)].biomeID;
             }
         }
-        return intCache;
+        return biomes;
     }
 }

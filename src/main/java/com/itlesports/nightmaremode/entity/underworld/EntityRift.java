@@ -3,8 +3,9 @@ package com.itlesports.nightmaremode.entity.underworld;
 import api.entity.EntityWithCustomPacket;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.*;
 
 import java.io.ByteArrayOutputStream;
@@ -46,7 +47,7 @@ public class EntityRift extends EntityLiving implements EntityWithCustomPacket {
 
     @Override
     public void onCollideWithPlayer(EntityPlayer entityPlayer) {
-        if (!(entityPlayer instanceof EntityPlayerMP player) || worldObj.isRemote) return;
+        if (!(entityPlayer instanceof EntityPlayerMP player) || worldObj.isRemote || player.timeUntilPortal > 0) return;
         long now = worldObj.getTotalWorldTime();
         Long last = recentTransit.get(player.getUniqueID());
         if (last != null && now - last < 40L) return;
@@ -56,32 +57,45 @@ public class EntityRift extends EntityLiving implements EntityWithCustomPacket {
         int sourceX = MathHelper.floor_double(posX);
         int sourceY = MathHelper.floor_double(posY);
         int sourceZ = MathHelper.floor_double(posZ);
-        if (destinationDimension == Integer.MIN_VALUE) {
+        boolean unresolvedLanding = destinationDimension == Integer.MIN_VALUE;
+        if (unresolvedLanding) {
             destinationDimension = sourceDimension == NMFields.UNDERWORLD_DIMENSION ? 0 : NMFields.UNDERWORLD_DIMENSION;
-            linkId = UUID.randomUUID().toString();
-            if (destinationDimension == NMFields.UNDERWORLD_DIMENSION) {
-                int[] landing = findUnderworldLanding(player.mcServer.worldServerForDimension(destinationDimension), sourceX, sourceZ);
-                destinationX = landing[0];
-                destinationY = landing[1];
-                destinationZ = landing[2];
-            } else {
-                destinationX = sourceX;
-                destinationY = sourceY;
-                destinationZ = sourceZ;
+            destinationX = sourceX;
+            destinationY = sourceY;
+            destinationZ = sourceZ;
+        }
+        if (linkId.isEmpty()) linkId = UUID.randomUUID().toString();
+        WorldServer destinationWorld = player.mcServer.worldServerForDimension(destinationDimension);
+        if (destinationWorld == null || destinationWorld.provider.dimensionId != destinationDimension) return;
+        if (destinationDimension == NMFields.UNDERWORLD_DIMENSION
+                && (unresolvedLanding || !UWUtils.isBlightlandsLanding(destinationWorld, destinationX, destinationZ))) {
+            ChunkCoordinates landing = UWUtils.findBlightlandsLanding(destinationWorld, destinationX, destinationZ);
+            if (landing == null) {
+                player.sendChatToPlayer(new ChatMessageComponent().addText("The rift could not find a safe Blightlands landing."));
+                return;
             }
+            destinationX = landing.posX;
+            destinationY = landing.posY;
+            destinationZ = landing.posZ;
         }
 
-        player.mcServer.getConfigurationManager().transferPlayerToDimension(player, destinationDimension);
-        WorldServer destinationWorld = player.mcServer.worldServerForDimension(destinationDimension);
-        if (destinationDimension == NMFields.UNDERWORLD_DIMENSION) buildLanding(destinationWorld, destinationX, destinationY, destinationZ);
         EntityRift returnRift = findLinkedRift(destinationWorld, destinationX, destinationY, destinationZ);
+        if (returnRift == null && destinationDimension == NMFields.UNDERWORLD_DIMENSION) {
+            // prepare new landings only; returning through an established rift must not overwrite builds.
+            buildLanding(destinationWorld, destinationX, destinationY, destinationZ);
+        }
+        ChunkCoordinates exit = findExit(destinationWorld, destinationX, destinationY, destinationZ);
+        if (exit == null) {
+            player.sendChatToPlayer(new ChatMessageComponent().addText("The other end of the rift is obstructed."));
+            return;
+        }
+        UWUtils.transferPlayer(player, destinationDimension, exit.posX + 0.5, exit.posY, exit.posZ + 0.5);
         if (returnRift == null) {
-            returnRift = new EntityRift(destinationWorld, destinationX + .5, destinationY, destinationZ + .5);
+            returnRift = new EntityRift(destinationWorld, destinationX + 0.5, destinationY, destinationZ + 0.5);
             returnRift.setDestination(sourceDimension, sourceX, sourceY, sourceZ, linkId);
             destinationWorld.spawnEntityInWorld(returnRift);
         }
         returnRift.recentTransit.put(player.getUniqueID(), destinationWorld.getTotalWorldTime());
-        player.setPositionAndUpdate(destinationX + 2.5, destinationY, destinationZ + .5);
         if (NightmareMode.devMode) {
             System.out.println("[Underworld/Rift] " + player.username + " " + sourceDimension + " -> "
                     + destinationDimension + " destination=" + destinationX + "," + destinationY + "," + destinationZ
@@ -89,37 +103,33 @@ public class EntityRift extends EntityLiving implements EntityWithCustomPacket {
         }
     }
 
-    private int[] findUnderworldLanding(WorldServer world, int originX, int originZ) {
-        for (int radius = 0; radius <= 512; radius += 16) {
-            for (int dx = -radius; dx <= radius; dx += 16) {
-                for (int dz = -radius; dz <= radius; dz += 16) {
-                    if (radius > 0 && Math.abs(dx) != radius && Math.abs(dz) != radius) continue;
-                    int x = originX + dx;
-                    int z = originZ + dz;
-                    BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-                    if (!(biome instanceof BiomeGenBlightlands)) continue;
-                    int y = world.getTopSolidOrLiquidBlock(x, z) + 1;
-                    if (isSafe(world, x, y, z)) return new int[]{x, y, z};
+    private ChunkCoordinates findExit(World world, int x, int y, int z) {
+        if (isExitSafe(world, x + 2, y, z)) return new ChunkCoordinates(x + 2, y, z);
+        for (int dy = 0; dy <= 2; dy++) {
+            for (int dx = -3; dx <= 3; dx++) for (int dz = -3; dz <= 3; dz++) {
+                if (dx == 0 && dz == 0) continue;
+                if (isExitSafe(world, x + dx, y + dy, z + dz)) {
+                    return new ChunkCoordinates(x + dx, y + dy, z + dz);
                 }
             }
         }
-        return new int[]{originX, 100, originZ};
+        return null;
     }
 
-    private boolean isSafe(World world, int x, int y, int z) {
-        if (y < 2 || y >= world.getHeight() - 2) return false;
-        int ground = world.getBlockId(x, y - 1, z);
-        return world.isAirBlock(x, y, z) && world.isAirBlock(x, y + 1, z)
-                && ground > 0 && Block.blocksList[ground] != null && Block.blocksList[ground].blockMaterial.blocksMovement();
+    private boolean isExitSafe(World world, int x, int y, int z) {
+        return UWUtils.isSafeStandingPosition(world, x, y, z)
+                && (world.provider.dimensionId != NMFields.UNDERWORLD_DIMENSION
+                || world.getBiomeGenForCoords(x, z) == BiomeGenUnderworld.blightlands);
     }
+
+
 
     private void buildLanding(World world, int x, int y, int z) {
         for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++) {
             world.setBlock(x + dx, y - 1, z + dz, NMBlocks.underCobble.blockID, 0, 2);
         }
-        for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
-            world.setBlockToAir(x + dx, y, z + dz);
-            world.setBlockToAir(x + dx, y + 1, z + dz);
+        for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++) {
+            for (int dy = 0; dy < 5; dy++) world.setBlockToAir(x + dx, y + dy, z + dz);
         }
     }
 

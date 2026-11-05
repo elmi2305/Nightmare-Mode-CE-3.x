@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.underworld.worldgen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.BlockUnderworldLeaves;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
@@ -10,7 +12,7 @@ import java.util.Random;
 
 public class WorldGenTulip extends WorldGenerator {
 
-    private final int leafMeta = 0;
+    private final int leafMeta = BlockUnderworldLeaves.GOLD;
     private final int metaWood = 0;
 
     private static final int[][] HEAD_OFFSETS;
@@ -114,7 +116,7 @@ public class WorldGenTulip extends WorldGenerator {
 
     private boolean isReplaceable(World world, int x, int y, int z) {
         int id = world.getBlockId(x, y, z);
-        return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID
+        return id == 0 || id == Block.leaves.blockID || id == NMBlocks.underworldLeaves.blockID || id == Block.grass.blockID
                 || id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID
                 || (id == NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(x,y,z) == NMBlocks.META_FLOWER_GRASS);
     }
@@ -122,7 +124,7 @@ public class WorldGenTulip extends WorldGenerator {
     private void placeLeaf(World world, int x, int y, int z) {
         if (y < 0 || y >= 256) return;
         if (isReplaceable(world, x, y, z))
-            setBlockAndMetadata(world, x, y, z, NMBlocks.cryingObsidian.blockID, leafMeta);
+            setBlockAndMetadata(world, x, y, z, NMBlocks.underworldLeaves.blockID, leafMeta);
     }
 
     private void generateMiniBranch(World world, Random rand, int x, int y, int z) {

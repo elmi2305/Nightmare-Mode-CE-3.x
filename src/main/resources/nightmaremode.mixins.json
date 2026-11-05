@@ -67,6 +67,7 @@
     "blocks.ArcaneVesselBlockMixin",
     "blocks.ArcaneVesselTileEntityMixin",
     "blocks.BedBlockBaseMixin",
+    "blocks.BloodWoodLogBlockMixin",
     "blocks.BlockClayMixin",
     "blocks.BlockContainerMixin",
     "blocks.BlockEndPortalMixin",

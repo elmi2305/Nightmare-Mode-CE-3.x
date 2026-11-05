@@ -25,7 +25,7 @@ public class BigMushroom extends NMStructure {
     @Override
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         if (lootPool.isEmpty()) configureLoot();
-        verticalLootThreshold = BASE_HEIGHT + 30;
+        verticalLootThreshold = this.boundingBox.minY + 30;
         placeFromNBT(world, box, "structures/mushroom.nbt", palette);
         return true;
     }

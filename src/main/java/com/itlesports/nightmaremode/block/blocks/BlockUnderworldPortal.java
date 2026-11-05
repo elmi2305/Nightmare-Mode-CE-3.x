@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import btw.community.nightmaremode.NightmareMode;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.*;
 
 import static com.itlesports.nightmaremode.util.NMFields.UNDERWORLD_DIMENSION;
@@ -24,7 +25,14 @@ public class BlockUnderworldPortal extends BlockBreakable {
             player.timeUntilPortal = 100;
             // transfer:
             if (NightmareMode.devMode) {
-                player.mcServer.getConfigurationManager().transferPlayerToDimension(player, UNDERWORLD_DIMENSION);
+                WorldServer destination = player.mcServer.worldServerForDimension(UNDERWORLD_DIMENSION);
+                ChunkCoordinates landing = UWUtils.findBlightlandsLanding(destination,
+                        MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posZ));
+                if (landing == null) {
+                    player.sendChatToPlayer(new ChatMessageComponent().addText("The rift could not find a safe Blightlands landing."));
+                    return;
+                }
+                UWUtils.transferPlayer(player, UNDERWORLD_DIMENSION, landing.posX + 0.5, landing.posY, landing.posZ + 0.5);
             } else {
                 ChatMessageComponent text = new ChatMessageComponent();
                 text.addText("<???> Nice try. ");

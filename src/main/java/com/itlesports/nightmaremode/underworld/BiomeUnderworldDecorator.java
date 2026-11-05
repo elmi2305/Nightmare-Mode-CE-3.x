@@ -59,6 +59,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         int numPerChunk;
         this.generateOres();
         this.generateProgressionOres();
+        if (this.biome instanceof BiomeGenBlightlands && this.randomGenerator.nextInt(10) == 0) {
+            generateBlightFruitPatch();
+        }
         for (numPerChunk = 0; numPerChunk < this.sandPerChunk2; ++numPerChunk) {
             var2 = this.chunk_X + this.randomGenerator.nextInt(16) + 8;
             var3 = this.chunk_Z + this.randomGenerator.nextInt(16) + 8;
@@ -235,6 +238,23 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
         AddonHandler.decorateWorld(this, this.currentWorld, forkedRand, this.chunk_X, this.chunk_Z, this.biome);
     }
 
+    private void generateBlightFruitPatch() {
+        int centerX = chunk_X + 3 + randomGenerator.nextInt(10);
+        int centerZ = chunk_Z + 3 + randomGenerator.nextInt(10);
+        int plants = 6 + randomGenerator.nextInt(5);
+        for (int attempt = 0, placed = 0; attempt < 48 && placed < plants; attempt++) {
+            int x = centerX + randomGenerator.nextInt(9) - 4;
+            int z = centerZ + randomGenerator.nextInt(9) - 4;
+            // keep the patch in this chunk and biome without forcing neighboring terrain.
+            if (x < chunk_X || x >= chunk_X + 16 || z < chunk_Z || z >= chunk_Z + 16) continue;
+            if (currentWorld.getBiomeGenForCoords(x, z) != BiomeGenUnderworld.blightlands) continue;
+            int y = currentWorld.getHeightValue(x, z);
+            if (!NMBlocks.blightFruitBush.canBlockStayDuringGenerate(currentWorld, x, y, z)) continue;
+            int growth = randomGenerator.nextInt(4) == 0 ? randomGenerator.nextInt(3) : BlockTallFlower.RIPE_BLIGHT_FRUIT;
+            if (currentWorld.setBlock(x, y, z, NMBlocks.blightFruitBush.blockID, growth, 2)) placed++;
+        }
+    }
+
     private void generateProgressionOres() {
         int titaniumVeins = 0;
         int tungstenVeins = 0;
@@ -265,9 +285,9 @@ public class BiomeUnderworldDecorator extends BiomeDecorator {
             }
         }
         if (NightmareMode.devMode && (titaniumBiome || tungstenBiome)) {
-            System.out.println("[Underworld/Ores] chunk=" + (chunk_X >> 4) + "," + (chunk_Z >> 4)
-                    + " biome=" + biome.biomeName + " titaniumVeins=" + titaniumVeins
-                    + " tungstenVeins=" + tungstenVeins);
+//            System.out.println("[Underworld/Ores] chunk=" + (chunk_X >> 4) + "," + (chunk_Z >> 4)
+//                    + " biome=" + biome.biomeName + " titaniumVeins=" + titaniumVeins
+//                    + " tungstenVeins=" + tungstenVeins);
         }
     }
 

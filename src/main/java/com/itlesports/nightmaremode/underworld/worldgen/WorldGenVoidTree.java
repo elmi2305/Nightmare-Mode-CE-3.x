@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.underworld.worldgen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.BlockUnderworldLeaves;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
@@ -39,12 +40,12 @@ public class WorldGenVoidTree extends WorldGenerator {
                 for (int ly = 0; ly <= 1; ly++)
                     for (int lz = -1; lz <= 1; lz++)
                         if (rand.nextInt(2) == 0 && world.isAirBlock(bx + lx, tipY + 1 + ly, bz + lz))
-                            this.setBlockAndMetadata(world, bx + lx, tipY + 1 + ly, bz + lz, NMBlocks.cryingObsidian.blockID, 0);
+                            this.setBlockAndMetadata(world, bx + lx, tipY + 1 + ly, bz + lz, NMBlocks.underworldLeaves.blockID, BlockUnderworldLeaves.SHADOW);
         }
         for (int dx = -1; dx <= 1; dx++)
             for (int dz = -1; dz <= 1; dz++)
                 if (world.isAirBlock(x + dx, y + trunkHeight, z + dz))
-                    this.setBlockAndMetadata(world, x + dx, y + trunkHeight, z + dz, NMBlocks.cryingObsidian.blockID, 0);
+                    this.setBlockAndMetadata(world, x + dx, y + trunkHeight, z + dz, NMBlocks.underworldLeaves.blockID, BlockUnderworldLeaves.SHADOW);
         return true;
     }
 }

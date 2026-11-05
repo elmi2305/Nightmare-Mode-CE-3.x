@@ -912,6 +912,20 @@ achievement.nm.findMycelialCore.desc=Claim a Mycelial Core from a Big Mushroom d
 achievement.nm.mycelialHeart=Second Nature
 achievement.nm.mycelialHeart.desc=Consume a Mycelial Heart
 
+# UNDERWORLD LEAVES
+tile.nmUnderworldLeaves.name=Underworld Leaves
+tile.nmBlightFruitBush.name=Blight Fruit Bush
+item.nmBlightFruit.name=Blight Fruit
+item.nmRawGrubMeat.name=Raw Grub Meat
+item.nmCookedGrubMeat.name=Cooked Grub Meat
+entity.NmBlightGrub.name=Blight Grub
+tile.nmUnderworldLeaves.green.name=Green Underworld Leaves
+tile.nmUnderworldLeaves.purple.name=Purple Underworld Leaves
+tile.nmUnderworldLeaves.gold.name=Golden Underworld Leaves
+tile.nmUnderworldLeaves.pink.name=Pink Underworld Leaves
+tile.nmUnderworldLeaves.blood.name=Bloodwood Underworld Leaves
+tile.nmUnderworldLeaves.shadow.name=Shadow Underworld Leaves
+
 # PORTAL CORE
 nm.portal.invalid=The altar is incomplete.
 nm.portal.valid_idle=The altar waits for a Wither Soul.

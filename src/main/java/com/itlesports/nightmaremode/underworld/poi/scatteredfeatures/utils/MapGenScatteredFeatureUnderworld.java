@@ -2,6 +2,8 @@ package com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils;
 
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
+import com.itlesports.nightmaremode.underworld.ChunkProviderGenerateUnderworld.TerrainGenerator;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.MapGenStructure;
@@ -16,6 +18,8 @@ import java.util.Random;
  * progression role and placement are explicit instead of inferred from a biome.
  */
 public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
+    private TerrainGenerator terrainSampler;
+    private long terrainSeed;
     public enum Feature {
         BIG_MUSHROOM(true, true, 28, 20, 0x5B17A91L),
         RIBCAGE_CLOSED(false, true, 12, 8, 0x19C4D31L),
@@ -42,7 +46,7 @@ public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
                     return biome == BiomeGenUnderworld.flowerFields;
                 case RIBCAGE_CLOSED:
                 case RIBCAGE_OPEN:
-                    return biome == BiomeGenUnderworld.highlands || biome == BiomeGenUnderworld.blightlands;
+                    return biome == BiomeGenUnderworld.highlands;
                 case OBSIDIAN_SPIKE:
                     return biome == BiomeGenUnderworld.underHell || biome == BiomeGenUnderworld.shadowRealm;
                 default:
@@ -112,7 +116,21 @@ public class MapGenScatteredFeatureUnderworld extends MapGenStructure {
             System.out.println("[Underworld/Features] " + feature.name() + " at chunk " + chunkX + "," + chunkZ
                     + " dungeon=" + feature.dungeon);
         }
-        return new StructureScatteredFeatureStartUnderworld(this.rand, chunkX, chunkZ, feature);
+        StructureScatteredFeatureStartUnderworld start = new StructureScatteredFeatureStartUnderworld(this.rand, chunkX, chunkZ, feature);
+        start.alignToTerrain(this::getTerrainSurfaceHeight, feature == Feature.BIG_MUSHROOM ? 2 : 10);
+        return start;
+    }
+
+    private int getTerrainSurfaceHeight(int blockX, int blockZ) {
+        long seed = this.worldObj.getSeed();
+        if (terrainSampler == null || terrainSeed != seed) {
+            terrainSampler = TerrainGenerator.forSeed(seed);
+            terrainSeed = seed;
+        }
+        int chunkX = blockX >> 4;
+        int chunkZ = blockZ >> 4;
+        UWUtils.sampleTerrain(this.worldObj, terrainSampler, chunkX, chunkZ);
+        return terrainSampler.getSurfaceHeight(blockX & 15, blockZ & 15);
     }
 
     @Override

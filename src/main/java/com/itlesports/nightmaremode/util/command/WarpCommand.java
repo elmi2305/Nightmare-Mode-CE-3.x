@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.util.command;
 
+import com.itlesports.nightmaremode.util.NMFields;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 
@@ -7,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 import java.util.List;
+import java.util.Locale;
 
 public class WarpCommand extends CommandBase {
 
@@ -17,7 +20,7 @@ public class WarpCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/warp <nether|overworld|end|dimensionId> <player(optional)>";
+        return "/warp <nether|overworld|end|underworld|dimensionId> <player(optional)>";
     }
 
     @Override
@@ -51,7 +54,7 @@ public class WarpCommand extends CommandBase {
 
         int targetDimension;
 
-        String dimensionArg = args[0].toLowerCase();
+        String dimensionArg = args[0].toLowerCase(Locale.ROOT);
 
         switch (dimensionArg) {
             case "overworld":
@@ -62,6 +65,11 @@ public class WarpCommand extends CommandBase {
 
             case "nether":
                 targetDimension = -1;
+                break;
+
+            case "underworld":
+            case "uw":
+                targetDimension = NMFields.UNDERWORLD_DIMENSION;
                 break;
 
             case "end":
@@ -77,8 +85,8 @@ public class WarpCommand extends CommandBase {
                 break;
         }
 
-        if (targetDimension != -1 && targetDimension != 0 && targetDimension != 1) {
-            throw new WrongUsageException("Only dimensions -1, 0, and 1 are supported.");
+        if (targetDimension != -1 && targetDimension != 0 && targetDimension != 1 && targetDimension != NMFields.UNDERWORLD_DIMENSION) {
+            throw new WrongUsageException("Unsupported dimension.");
         }
 
         int currentDimension = player.dimension;
@@ -93,10 +101,10 @@ public class WarpCommand extends CommandBase {
         double targetZ = player.posZ;
 
         // nether coordinate scaling
-        if (currentDimension == 0 && targetDimension == -1) {
+        if (currentDimension != -1 && targetDimension == -1) {
             targetX /= 8.0D;
             targetZ /= 8.0D;
-        } else if (currentDimension == -1 && targetDimension == 0) {
+        } else if (currentDimension == -1 && targetDimension != -1) {
             targetX *= 8.0D;
             targetZ *= 8.0D;
         }
@@ -110,73 +118,24 @@ public class WarpCommand extends CommandBase {
         MinecraftServer server = MinecraftServer.getServer();
         WorldServer targetWorld = server.worldServerForDimension(targetDimension);
 
-        int safeY = findSafeY(
-                targetWorld,
-                MathHelper.floor_double(targetX),
-                MathHelper.floor_double(targetY),
-                MathHelper.floor_double(targetZ)
-        );
-
-        player.travelToDimension(targetDimension);
-        player.setPositionAndUpdate(targetX, safeY, targetZ);
-
-//        player.playerNetServerHandler.setPlayerLocation(
-//                targetX,
-//                safeY,
-//                targetZ,
-//                player.rotationYaw,
-//                player.rotationPitch
-//        );
+        if (targetWorld == null || targetWorld.provider.dimensionId != targetDimension) {
+            throw new CommandException("The requested dimension is not available.");
+        }
+        int x = MathHelper.clamp_int(MathHelper.floor_double(targetX), -29995000, 29995000);
+        int z = MathHelper.clamp_int(MathHelper.floor_double(targetZ), -29995000, 29995000);
+        ChunkCoordinates landing = targetDimension == NMFields.UNDERWORLD_DIMENSION
+                ? UWUtils.findBlightlandsLanding(targetWorld, x, z)
+                : UWUtils.findSafePosition(targetWorld, x, MathHelper.floor_double(targetY), z);
+        if (landing == null) throw new CommandException("No safe landing was found in the requested dimension.");
+        if (targetDimension == NMFields.UNDERWORLD_DIMENSION) {
+            UWUtils.transferPlayer(player, targetDimension, landing.posX + 0.5, landing.posY, landing.posZ + 0.5);
+        } else {
+            UWUtils.travelPlayer(player, targetDimension, landing.posX + 0.5, landing.posY, landing.posZ + 0.5);
+        }
 
         player.sendChatToPlayer(new ChatMessageComponent().addText("Warped to dimension " + targetDimension));
     }
-    private int findSafeY(World world, int x, int preferredY, int z) {
 
-        // is current Y safe
-        if (isSafe(world, x, preferredY, z)) {
-            return preferredY;
-        }
 
-        // search up/down for 2 empty spaces
-        for (int offset = 0; offset < 128; offset++) {
 
-            int upY = preferredY + offset;
-
-            if (upY < world.getHeight() && isSafe(world, x, upY, z)) {
-                return upY;
-            }
-
-            int downY = preferredY - offset;
-
-            if (downY > 1 && isSafe(world, x, downY, z)) {
-                return downY;
-            }
-        }
-
-        // fallback search entire column
-        for (int y = world.getHeight() - 2; y >= 1; y--) {
-            if (isSafe(world, x, y, z)) {
-                return y;
-            }
-        }
-
-        return world.getTopSolidOrLiquidBlock(x, z) + 1;
-    }
-
-    private boolean isSafe(World world, int x, int y, int z) {
-
-        if (y <= 0 || y >= world.getHeight() - 1) {
-            return false;
-        }
-
-        int feetBlock = world.getBlockId(x, y, z);
-        int headBlock = world.getBlockId(x, y + 1, z);
-        int groundBlock = world.getBlockId(x, y - 1, z);
-
-        boolean feetAir = feetBlock == 0;
-        boolean headAir = headBlock == 0;
-        boolean solidGround = Block.blocksList[groundBlock] != null && Block.blocksList[groundBlock].blockMaterial.blocksMovement();
-
-        return feetAir && headAir && solidGround;
-    }
 }

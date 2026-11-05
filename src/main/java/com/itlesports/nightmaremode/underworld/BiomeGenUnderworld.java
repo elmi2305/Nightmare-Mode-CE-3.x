@@ -17,6 +17,7 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
      * Less than 1.0 means the player becomes enlightened in this biome
      **/
     private float drainMultiplier = 1.0f;
+    private TerrainProfile terrainProfile = TerrainProfile.BLIGHTLANDS;
 
     // the min/max
     private static final float BLIGHT_MIN = 0.5f;
@@ -48,10 +49,10 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
 
 
     public static final BiomeGenUnderworld blightlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                           new BiomeGenBlightlands(24) .setDrainMultiplier(1.0f).setBiomeName("UnderworldPlains"))         .invokeSetMinMaxHeight(BLIGHT_MIN, BLIGHT_MAX);
-    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)      new BiomeGenHighlands(25)   .setDrainMultiplier(1.1f).setBiomeName("UnderworldDesert"))         .invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
-    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                          new BiomeGenFlowerFields(26).setDrainMultiplier(2.8f).setBiomeName("UnderworldFlowerFields"))   .invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
-    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)    new BiomeGenShadowRealm(27) .setDrainMultiplier(2.3f).setBiomeName("UnderworldVoid"))           .invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
-    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                             new BiomeGenUnderHell(28)   .setDrainMultiplier(1.5f).setBiomeName("UnderworldHell"))           .invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
+    public static final BiomeGenUnderworld highlands = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)      new BiomeGenHighlands(25)   .setTerrainProfile(TerrainProfile.HIGHLANDS).setDrainMultiplier(1.1f).setBiomeName("UnderworldDesert"))         .invokeSetMinMaxHeight(HIGH_MIN, HIGH_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld flowerFields = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                          new BiomeGenFlowerFields(26).setTerrainProfile(TerrainProfile.FLOWER_FIELDS).setDrainMultiplier(2.8f).setBiomeName("UnderworldFlowerFields"))   .invokeSetMinMaxHeight(FLOWER_MIN, FLOWER_MAX);
+    public static final BiomeGenUnderworld shadowRealm = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)((BiomeGenBaseAccessor)    new BiomeGenShadowRealm(27) .setTerrainProfile(TerrainProfile.SHADOW_REALM).setDrainMultiplier(2.3f).setBiomeName("UnderworldVoid"))           .invokeSetMinMaxHeight(VOID_MIN, VOID_MAX)).invokeSetDisableRain();
+    public static final BiomeGenUnderworld underHell = (BiomeGenUnderworld) ((BiomeGenBaseAccessor)                             new BiomeGenUnderHell(28)   .setTerrainProfile(TerrainProfile.UNDERHELL).setDrainMultiplier(1.5f).setBiomeName("UnderworldHell"))           .invokeSetMinMaxHeight(DEFAULT_MIN, DEFAULT_MAX);
 
     public static List biomelist = new ArrayList<>();
     static{
@@ -93,6 +94,15 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
         return drainMultiplier;
     }
 
+    public TerrainProfile getTerrainProfile() {
+        return terrainProfile;
+    }
+
+    protected BiomeGenUnderworld setTerrainProfile(TerrainProfile profile) {
+        this.terrainProfile = profile;
+        return this;
+    }
+
     /**
      * Higher than 1.0 means the player loses sanity in this biome
      * <br>
@@ -101,5 +111,23 @@ public abstract class BiomeGenUnderworld extends BiomeGenBase {
     public BiomeGenUnderworld setDrainMultiplier(float drainMultiplier) {
         this.drainMultiplier = drainMultiplier;
         return this;
+    }
+    // initial terrain shapes in block units, independent of biome placement.
+    public enum TerrainProfile {
+        BLIGHTLANDS(104.0, 12.0, 8.0),
+        HIGHLANDS(152.0, 48.0, 64.0),
+        FLOWER_FIELDS(88.0, 8.0, 6.0),
+        SHADOW_REALM(96.0, 12.0, 12.0),
+        UNDERHELL(112.0, 24.0, 28.0);
+
+        public final double baseHeight;
+        public final double relief;
+        public final double roughness;
+
+        TerrainProfile(double baseHeight, double relief, double roughness) {
+            this.baseHeight = baseHeight;
+            this.relief = relief;
+            this.roughness = roughness;
+        }
     }
 }

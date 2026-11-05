@@ -38,6 +38,7 @@ public class BTWRenderMapperMixin {
         RenderManager.addEntityRenderer(EntitySkeletonMelted.class, new RenderCustomSkeleton());
         RenderManager.addEntityRenderer(EntityObsidianFish.class, new RenderObsidianFish());
         RenderManager.addEntityRenderer(EntityMushWorm.class, new RenderMushWorm());
+        RenderManager.addEntityRenderer(EntityBlightGrub.class, new RenderMushWorm());
         RenderManager.addEntityRenderer(EntityPhantomZombie.class, new RenderPhantom());
         RenderManager.addEntityRenderer(EntityCreeperGhast.class, new RenderGhast());
         RenderManager.addEntityRenderer(FlowerZombie.class, new RenderEntityZombieVariant());

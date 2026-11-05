@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.underworld.biomes;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.entity.underworld.EntityBlightGrub;
 import com.itlesports.nightmaremode.mixin.interfaces.BiomeDecoratorAccess;
 import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld;
 import net.minecraft.src.EntityHorse;
@@ -20,6 +21,7 @@ public class BiomeGenBlightlands extends BiomeGenUnderworld {
         this.fillerBlockMetadata = (short) NMBlocks.META_FLOWER_DIRT;
 
         this.spawnableCreatureList.add(new SpawnListEntry(EntityHorse.class, 5, 2, 6));
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityBlightGrub.class, 10, 1, 2));
 
     }
 

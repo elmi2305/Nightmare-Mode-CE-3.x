@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemVillagerContainer;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockTallFlower;
 import com.itlesports.nightmaremode.item.itemblock.ItemBlockUnderworldOre;
+import com.itlesports.nightmaremode.item.itemblock.ItemBlockUnderworldLeaves;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlock;
 import com.itlesports.nightmaremode.item.itemblock.NMItemBlockMeta;
 import com.itlesports.nightmaremode.util.underworld.UnderworldToolTier;
@@ -49,7 +50,9 @@ public class NMBlocks {
     public static BlockUnderGrass underGrass;
 
     public static Block yellowFlowerRoots;
+    public static BlockTallFlower blightFruitBush;
     public static Block plantMatter;
+    public static BlockUnderworldLeaves underworldLeaves;
     public static Block disenchantmentTable;
     public static Block portalCore;
     public static Block honeyCover;
@@ -209,6 +212,9 @@ public class NMBlocks {
         plantMatter = new NMBlock(2329, Material.wood).setTextureName("nightmare:nmPlantMatter").setUnlocalizedName("nmPlantMatter").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[plantMatter.blockID] = new NMItemBlock(NMBlocks.plantMatter.blockID - 256);
 
+        underworldLeaves = new BlockUnderworldLeaves(2359);
+        Item.itemsList[underworldLeaves.blockID] = new ItemBlockUnderworldLeaves(underworldLeaves.blockID - 256);
+
         disenchantmentTable = new BlockDisenchantmentTable(2330).setTextureName("nightmare:nmDisenchantmentTable").setUnlocalizedName("nmDisenchantmentTable").setCreativeTab(CreativeTabs.tabBlock);
         Item.itemsList[disenchantmentTable.blockID] = new NMItemBlock(NMBlocks.disenchantmentTable.blockID - 256);
 
@@ -355,6 +361,9 @@ public class NMBlocks {
 
         riftWorkbench = new BlockRiftWorkbench(2358);
         Item.itemsList[riftWorkbench.blockID] = new NMItemBlock(riftWorkbench.blockID - 256);
+
+        blightFruitBush = new BlockTallFlower(2361, true);
+        Item.itemsList[blightFruitBush.blockID] = new NMItemBlock(blightFruitBush.blockID - 256);
 
 
     }

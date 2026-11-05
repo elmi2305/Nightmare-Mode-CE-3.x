@@ -115,7 +115,7 @@ public class WorldGenSimpleTree extends WorldGenerator {
      */
     private boolean isReplaceableByTree(int blockId) {
         return blockId == 0                        // air
-                || blockId == Block.leaves.blockID
+                || blockId == Block.leaves.blockID || blockId == NMBlocks.underworldLeaves.blockID
                 || blockId == Block.grass.blockID
                 || blockId == Block.dirt.blockID
                 || blockId == Block.wood.blockID;
@@ -157,12 +157,12 @@ public class WorldGenSimpleTree extends WorldGenerator {
                     }
 
                     int existingBlock = world.getBlockId(leafX, leafY, leafZ);
-                    boolean canReplace = existingBlock == 0 || existingBlock == Block.leaves.blockID;
+                    boolean canReplace = existingBlock == 0 || existingBlock == Block.leaves.blockID || existingBlock == NMBlocks.underworldLeaves.blockID;
                     if (!canReplace) {
                         continue;
                     }
 
-                    this.setBlockAndMetadata(world, leafX, leafY, leafZ, Block.leaves.blockID, this.metaLeaves);
+                    this.setBlockAndMetadata(world, leafX, leafY, leafZ, NMBlocks.underworldLeaves.blockID, this.metaLeaves);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class WorldGenSimpleTree extends WorldGenerator {
     private void placeTrunk(World world, Random rand, int x, int y, int z, int treeHeight) {
         for (int i = 0; i < treeHeight; i++) {
             int existingBlock = world.getBlockId(x, y + i, z);
-            boolean canPlace = existingBlock == 0 || existingBlock == Block.leaves.blockID;
+            boolean canPlace = existingBlock == 0 || existingBlock == Block.leaves.blockID || existingBlock == NMBlocks.underworldLeaves.blockID;
             if (!canPlace) {
                 continue;
             }
@@ -239,7 +239,7 @@ public class WorldGenSimpleTree extends WorldGenerator {
 
             for (int leafX = x - scanRadius; leafX <= x + scanRadius; leafX++) {
                 for (int leafZ = z - scanRadius; leafZ <= z + scanRadius; leafZ++) {
-                    if (world.getBlockId(leafX, leafY, leafZ) != Block.leaves.blockID) {
+                    if (world.getBlockId(leafX, leafY, leafZ) != NMBlocks.underworldLeaves.blockID) {
                         continue;
                     }
                     if (rand.nextInt(4) == 0 && world.getBlockId(leafX - 1, leafY, leafZ) == 0) {

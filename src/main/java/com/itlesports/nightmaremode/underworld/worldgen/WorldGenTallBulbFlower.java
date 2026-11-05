@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.underworld.worldgen;
 
 import com.itlesports.nightmaremode.block.NMBlocks;
+import com.itlesports.nightmaremode.block.blocks.BlockUnderworldLeaves;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenerator;
@@ -10,7 +11,7 @@ import java.util.Random;
 
 public class WorldGenTallBulbFlower extends WorldGenerator {
 
-    private int leafMeta = 0;
+    private final int leafMeta = BlockUnderworldLeaves.GOLD;
     private int metaWood = 0;
 
     private static final int[][] BULB_SMALL;
@@ -60,7 +61,7 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
         }
 
         for (int[] o : bulb) {
-            setBlockAndMetadata(world, baseX + o[0], bulbCY + o[1], baseZ + o[2], NMBlocks.cryingObsidian.blockID, leafMeta);
+            setBlockAndMetadata(world, baseX + o[0], bulbCY + o[1], baseZ + o[2], NMBlocks.underworldLeaves.blockID, leafMeta);
         }
 
 //        System.out.println(System.nanoTime() - nanoTime + " to generate one flower");
@@ -71,7 +72,7 @@ public class WorldGenTallBulbFlower extends WorldGenerator {
 
     private boolean isReplaceable(World world, int x, int y, int z) {
         int id = world.getBlockId(x, y, z);
-        return id == 0 || id == Block.leaves.blockID || id == Block.grass.blockID
+        return id == 0 || id == Block.leaves.blockID || id == NMBlocks.underworldLeaves.blockID || id == Block.grass.blockID
                 || id == Block.dirt.blockID || id == NMBlocks.plantMatter.blockID
                 || (id == NMBlocks.underFlowerDirts.blockID && world.getBlockMetadata(x,y,z) == NMBlocks.META_FLOWER_GRASS);
     }

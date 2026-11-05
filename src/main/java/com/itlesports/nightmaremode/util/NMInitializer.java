@@ -1121,6 +1121,7 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addOvenRecipes(){
+        FurnaceRecipes.smelting().addSmelting(NMItems.rawGrubMeat.itemID, new ItemStack(NMItems.cookedGrubMeat), 0.0F);
         FurnaceRecipes.smelting().addSmelting(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast), 0.0f);
         finishRecipes("Oven Recipes");
 
@@ -1157,6 +1158,7 @@ public abstract class NMInitializer implements AchievementExt {
 
     }
     private static void addCampfireRecipes(){
+        RecipeManager.addCampfireRecipe(NMItems.rawGrubMeat.itemID, new ItemStack(NMItems.cookedGrubMeat));
         RecipeManager.addCampfireRecipe(NMItems.calamari.itemID, new ItemStack(NMItems.calamariRoast));
         finishRecipes("Campfire Recipes");
 

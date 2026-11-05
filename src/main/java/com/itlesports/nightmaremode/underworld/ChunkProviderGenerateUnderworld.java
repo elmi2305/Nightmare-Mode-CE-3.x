@@ -5,6 +5,7 @@ import com.itlesports.nightmaremode.underworld.biomes.BiomeGenBlightlands;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenFlowerFields;
 import com.itlesports.nightmaremode.underworld.biomes.BiomeGenHighlands;
 import com.itlesports.nightmaremode.underworld.poi.scatteredfeatures.utils.MapGenScatteredFeatureUnderworld;
+import com.itlesports.nightmaremode.underworld.BiomeGenUnderworld.TerrainProfile;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
@@ -13,15 +14,11 @@ import java.util.Random;
 
 public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     private final Random rand;
-    private final NoiseGeneratorOctaves noiseGen1;
-    private final NoiseGeneratorOctaves noiseGen2;
-    private final NoiseGeneratorOctaves noiseGen3;
     private final NoiseGeneratorOctaves noiseGen4;
-//    public NoiseGeneratorOctaves noiseGen5;
     public NoiseGeneratorOctaves noiseGen6;
     public NoiseGeneratorOctaves mobSpawnerNoise;
     private final World worldObj;
-    private double[] noiseArray;
+    private final TerrainGenerator terrainGenerator;
     private double[] stoneNoise = new double[256];
     private final MapGenBase caveGenerator = new com.itlesports.nightmaremode.underworld.worldgen.MapGenCavesUnderworld();
     private final MapGenStronghold strongholdGenerator = new MapGenStronghold();
@@ -31,13 +28,6 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     private final WorldGenFlowers mushroomBrownGen = new WorldGenFlowers(Block.mushroomBrown.blockID);
     private final MapGenBase ravineGenerator = new com.itlesports.nightmaremode.underworld.worldgen.MapGenRavineUnderworld();
     private BiomeGenBase[] biomesForGeneration;
-    double[] noise3;
-    double[] noise1;
-    double[] noise2;
-    double[] noise5;
-    double[] noise6;
-    float[] parabolicField;
-    int[][] field_73219_j = new int[32][32];
     private final Random structureRand;
     private final boolean mineshaftsEnabled = false;
     private final boolean villagesEnabled = false;
@@ -49,101 +39,30 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         this.worldObj = par1World;
         this.rand = new Random(par2);
         this.structureRand = new Random(par2);
-        this.noiseGen1 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen2 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen3 = new NoiseGeneratorOctaves(this.rand, 8);
+        NoiseGeneratorOctaves lowerNoise = new NoiseGeneratorOctaves(this.rand, 16);
+        NoiseGeneratorOctaves upperNoise = new NoiseGeneratorOctaves(this.rand, 16);
+        NoiseGeneratorOctaves selectorNoise = new NoiseGeneratorOctaves(this.rand, 8);
         this.noiseGen4 = new NoiseGeneratorOctaves(this.rand, 4);
-//        this.noiseGen5 = new NoiseGeneratorOctaves(this.rand, 10);
         this.noiseGen6 = new NoiseGeneratorOctaves(this.rand, 6);
         this.mobSpawnerNoise = new NoiseGeneratorOctaves(this.rand, 8);
+        this.terrainGenerator = new TerrainGenerator(lowerNoise, upperNoise, selectorNoise, this.noiseGen6);
     }
 
-    private final int seaLevel = 10; // unused
-
     public void generateTerrain(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata) {
-        byte noiseScaleXZ = 4;
-        byte noiseScaleY = 32;
-        byte noiseSizeX = (byte)(noiseScaleXZ + 1); // 5
-        byte noiseSizeY = 33;
-        byte noiseSizeZ = (byte)(noiseScaleXZ + 1); // 5
-
-        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, noiseSizeX + 5, noiseSizeZ + 5);
-
-        this.noiseArray = this.initializeNoiseFieldInLayers(this.noiseArray, chunkX * noiseScaleXZ, 0, chunkZ * noiseScaleXZ, noiseSizeX, noiseSizeY, noiseSizeZ);
-
-        int blockStride = 256; // CHANGED: was 128
-        double horizontalInterpStep = 0.25;
-        double depthInterpStep = 0.25;
-
-        for (byte noiseX = 0; noiseX < noiseScaleXZ; ++noiseX) {
-            for (byte noiseZ = 0; noiseZ < noiseScaleXZ; ++noiseZ) {
-                short xNoiseStride = (short)(noiseSizeZ * noiseSizeY);
-                short noiseBase = (short)((noiseX * noiseSizeZ + noiseZ) * noiseSizeY);
-                int xBaseShift = noiseX * 4 << 12;
-                int zShift = noiseZ * 4 << 8;
-                for (byte noiseY = 0; noiseY < noiseScaleY; ++noiseY) {
-                    double verticalInterpStep = 0.125;
-
-                    double noise000 = this.noiseArray[noiseBase + noiseY];
-                    double noise001 = this.noiseArray[noiseBase + (short) noiseSizeY + noiseY];
-                    double noise100 = this.noiseArray[noiseBase + xNoiseStride + noiseY];
-                    double noise101 = this.noiseArray[noiseBase + xNoiseStride + (short) noiseSizeY + noiseY];
-
-                    double noise000Step = (this.noiseArray[noiseBase + noiseY + 1] - noise000) * verticalInterpStep;
-                    double noise001Step = (this.noiseArray[noiseBase + (short) noiseSizeY + noiseY + 1] - noise001) * verticalInterpStep;
-                    double noise100Step = (this.noiseArray[noiseBase + xNoiseStride + noiseY + 1] - noise100) * verticalInterpStep;
-                    double noise101Step = (this.noiseArray[noiseBase + xNoiseStride + (short) noiseSizeY + noiseY + 1] - noise101) * verticalInterpStep;
-
-                    for (byte subY = 0; subY < 8; ++subY) {  // unchanged (still 8 sub-steps per noise slice)
-
-                        double noiseX0 = noise000;
-                        double noiseX1 = noise001;
-
-                        double noiseXStep0 = (noise100 - noise000) * horizontalInterpStep;
-                        double noiseXStep1 = (noise101 - noise001) * horizontalInterpStep;
-
-                        short yPart = (short)(noiseY * 8 + subY);
-                        int baseBlockIndex = xBaseShift + zShift + yPart;
-                        for (byte subX = 0; subX < 4; ++subX) {
-                            // CHANGED indexing + stride for 256 height
-//                            int xPart = subX + noiseX * 4;                    // world x 0-15
-//                            int zPartBase = noiseZ * 4;                       // base z before subZ
-//                            int yPart = noiseY * 8 + subY;                    // world y 0-255
-//                            int blockIndex = (xPart << 12) | (zPartBase << 8) | yPart;
-                            int blockIndex = baseBlockIndex + (subX << 12); // Fixed bit shifts for 256 height
-
-
-                            blockIndex -= blockStride;
-
-                            double noiseZStep = (noiseX1 - noiseX0) * depthInterpStep;
-                            double noiseZValue = noiseX0 - noiseZStep;
-
-                            for (byte subZ = 0; subZ < 4; ++subZ) {
-                                if ((noiseZValue += noiseZStep) > 0.0D) {
-                                    blockIDs[blockIndex += blockStride] = (short) NMBlocks.underCobble.blockID;
-                                }
-//                                else if(noiseY * 8 + subX < seaLevel){
-//                                    blockIDs[blockIndex += blockStride] = (short) Block.waterStill.blockID;
-//
-//                                }
-
-                                else {
-                                    blockIDs[blockIndex += blockStride] = 0;
-                                }
-                            }
-
-                            noiseX0 += noiseXStep0;
-                            noiseX1 += noiseXStep1;
-                        }
-
-                        noise000 += noise000Step;
-                        noise001 += noise001Step;
-                        noise100 += noise100Step;
-                        noise101 += noise101Step;
-                    }
-                }
-            }
+        int sampleCount = TerrainGenerator.HORIZONTAL_SAMPLES;
+        int radius = TerrainGenerator.BIOME_BLEND_RADIUS;
+        int biomeSamples = TerrainGenerator.BIOME_SAMPLES;
+        int sampleX = chunkX * (sampleCount - 1);
+        int sampleZ = chunkZ * (sampleCount - 1);
+        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(
+                this.biomesForGeneration, sampleX - radius, sampleZ - radius, biomeSamples, biomeSamples);
+        TerrainProfile[] profiles = new TerrainProfile[biomeSamples * biomeSamples];
+        for (int i = 0; i < profiles.length; i++) {
+            BiomeGenBase biome = this.biomesForGeneration[i];
+            profiles[i] = biome instanceof BiomeGenUnderworld
+                    ? ((BiomeGenUnderworld)biome).getTerrainProfile() : TerrainProfile.BLIGHTLANDS;
         }
+        this.terrainGenerator.generate(chunkX, chunkZ, profiles, blockIDs, (short)NMBlocks.underCobble.blockID);
     }
 
     public void replaceBlocksForBiome(int chunkX, int chunkZ, short[] blockIDs, byte[] metadata, BiomeGenBase[] biomes) {
@@ -153,7 +72,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         for (int localX = 0; localX < 16; ++localX) {
             for (int localZ = 0; localZ < 16; ++localZ) {
 
-                BiomeGenBase biome = biomes[localZ + localX * 16];
+                BiomeGenBase biome = biomes[localX + localZ * 16];
                 int surfaceDepth = (int)(this.stoneNoise[localX + localZ * 16] / 3.0 + 5.0 + this.rand.nextDouble() * 0.5); // slightly thicker dirt for nicer look
 
                 short topBlock = biome.topBlock;
@@ -181,7 +100,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                 int bedrockCutoff = this.rand.nextInt(5);
 
                 for (int y = 255; y >= 0; --y) {
-                    int blockIndex = (localZ * 16 + localX) * 256 + y;
+                    int blockIndex = (localX * 16 + localZ) * TerrainGenerator.WORLD_HEIGHT + y;
                     if (y <= bedrockCutoff) {
                         blockIDs[blockIndex] = (short) Block.bedrock.blockID;
                         continue;
@@ -203,7 +122,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
                     if (remainingDepth == -1) {
                         if (surfaceDepth <= 0) {
                             topBlock = 0;
-                            fillerBlock = (short) Block.stone.blockID;
+                            fillerBlock = (short) NMBlocks.underCobble.blockID;
                         }
 
                         remainingDepth = surfaceDepth;
@@ -241,8 +160,6 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         short[] blockIDs = new short[65536];
         byte[] metadata = new byte[65536];
         this.generateTerrain(chunkX, chunkZ, blockIDs, metadata);
-        // For radius 4: sample 4 (chunk scale) + 2*radius + 1 extra padding → 13 minimum, use 14
-    //        this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 6, chunkZ * 4 - 6, 16,16);
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
         this.replaceBlocksForBiome(chunkX, chunkZ, blockIDs, metadata, this.biomesForGeneration);
         this.caveGenerator.generate(this, this.worldObj, chunkX, chunkZ, blockIDs, metadata);
@@ -268,129 +185,7 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
         return var4;
     }
 
-    private double[] initializeNoiseFieldInLayers(double[] theNoiseArray, int par2x, int zero, int par4z, int noiseSizeX, int noiseSizeY, int noiseSizeZ) {
-        if (theNoiseArray == null) {
-            theNoiseArray = new double[noiseSizeX * noiseSizeY * noiseSizeZ];
-        }
-        if (this.parabolicField == null) {
-            this.parabolicField = new float[25]; // 5x5, only region ever read
-            for (int dx = -2; dx <= 2; ++dx) {
-                for (int dy = -2; dy <= 2; ++dy) {
-                    float dist = MathHelper.sqrt_float((float)(dx * dx + dy * dy)) + 0.2F;
-                    this.parabolicField[(dx + 2) + (dy + 2) * 5] = 10.0F / dist;
-                }
-            }
-        }
 
-        double var44 = 684.412;  // XZ scale
-        double var45 = 684.412;  // Y scale
-
-        // tune both of them
-        var44 *= 0.55D;   // xz
-        var45 *= 1.8D;    // y
-
-        this.noise6 = this.noiseGen6.generateNoiseOctaves(this.noise6, par2x, par4z, noiseSizeX, noiseSizeZ, 200.0, 200.0, 0.5);
-        // noise5 is generated but unused in vanilla. can remove it for performance
-//        this.noise5 = this.noiseGen5.generateNoiseOctaves(this.noise5, par2x, par4z, noiseSizeX, noiseSizeZ, 1.121, 1.121, 0.5);
-        this.noise3 = this.noiseGen3.generateNoiseOctaves(this.noise3, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44 / 160.0, var45 / 320.0, var44 / 160.0); // SLOWER selector = huge smooth ranges
-        this.noise2 = this.noiseGen2.generateNoiseOctaves(this.noise2, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
-        this.noise1 = this.noiseGen1.generateNoiseOctaves(this.noise1, par2x, zero, par4z, noiseSizeX, noiseSizeY, noiseSizeZ, var44, var45, var44);
-
-        short var12 = 0;
-        short var13 = 0;
-        int biomeStride = noiseSizeX + 5;
-        double noiseYDiv32 = (double)noiseSizeY / 32.0;
-        double noiseYDiv4 = (double)noiseSizeY / 4.0D;
-        byte yTopLimit = (byte)(noiseSizeY - 4);
-
-        for (byte var14 = 0; var14 < noiseSizeX; ++var14) {
-            for (byte var15 = 0; var15 < noiseSizeZ; ++var15) {
-                float var16 = 0.0f;
-                float var17 = 0.0f;
-                float var18 = 0.0f;
-
-                int biomeBase = var14 + 2 + (var15 + 2) * biomeStride;
-                BiomeGenBase var20 = this.biomesForGeneration[biomeBase];
-
-                for (byte var21 = -2; var21 <= 2; ++var21) {
-                    for (byte var22 = -2; var22 <= 2; ++var22) {
-                        BiomeGenBase var23 = this.biomesForGeneration[biomeBase + var21 + var22 * biomeStride];
-                        float minH = var23.minHeight;
-                        float maxH = var23.maxHeight;
-
-                        // amplifying mountains, though this applies for everything. CAN TUNE
-                        if (minH > 0.0F) {
-                            minH = 1.0F + minH * 4.0F;   // stronger mountains
-                            maxH = 1.0F + maxH * 3.0F;
-                        }
-
-                        float var24 = this.parabolicField[var21 + 2 + (var22 + 2) * 5] / (minH + 2.0F);
-                        if (var23.minHeight > var20.minHeight) var24 /= 2.0F;
-
-                        var16 += maxH * var24;
-                        var17 += minH * var24;
-                        var18 += var24;
-                    }
-                }
-                var16 /= var18;
-                var17 /= var18;
-                var16 = var16 * 0.9f + 0.1f;
-                var17 = (var17 * 4.0f - 1.0f) / 8.0f;
-
-
-                double var47 = this.noise6[var13] / 8000.0D;
-                var47 = var47 * 5.0D - 2.0D;          // simplified
-                var47 = Math.max(-1.0D, Math.min(1.0D, var47)); // clean clamp
-
-                ++var13;
-
-                for (byte var46 = 0; var46 < noiseSizeY; ++var46) {
-                    double var48 = var17;
-
-                    var48 += var47; // much stronger low-freq for huge ranges
-                    var48 = var48 * noiseYDiv32;
-
-                    double var28 = noiseYDiv4 + var48 * 5.0D; // higher multiplier = taller base mountains
-
-                    double var30;
-                    if (false) {
-//                    if (var20.biomeID == BiomeGenUnderworld.flowerFields.biomeID) {
-//                        double flatY = 35.0D;
-//                        var30 = (flatY - (double)var46) ;
-//                        double var32 = ((double) var46 - var28) * 12.0 * 128 / 128.0 / var26;
-//                        if (var32 < 0.0) var32 *= 4.0;
-//                        var30 -= var32;
-
-
-                    } else {
-                        double var32 = ((double) var46 - var28) * 12.0 * 128 / 128.0 / (double) var16;
-                        if (var32 < 0.0) var32 *= 4.0;
-
-                        double var34 = this.noise1[var12] / 512.0;
-                        double var36 = this.noise2[var12] / 512.0;
-
-                        // smooth selector (no more abrupt spikes/islands)
-                        double var38 = (this.noise3[var12] / 25.0 + 1.0) / 2.0; // div by 25 instead of by 10 || slower changes
-                        var38 = MathHelper.clamp_float((float) var38, 0.0F, 1.0F);     // force clean blend
-                        var30 = var34 + (var36 - var34) * var38;                // always smooth blend, no hard if-snap
-
-                        var30 -= var32;
-
-
-                    }
-                    // stronger roof pull-down (kills any remaining floaters)
-                    if (var46 > yTopLimit) {
-                        double var40 = (float) (var46 - yTopLimit) / 3.0f;
-                        var30 = var30 * (1.0 - var40) + -15.0 * var40;   // -15 instead of -10
-                    }
-
-                    theNoiseArray[var12] = var30;
-                    ++var12;
-                }
-            }
-        }
-        return theNoiseArray;
-    }
 
     @Override
     public boolean chunkExists(int par1, int par2) {
@@ -563,11 +358,11 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
     }
 
     private void generateAdditionalBrownMushrooms(World worldObj, int chunkBlockX, int chunkBlockZ) {
-        if (worldObj.rand.nextInt(4) == 0) {
-            int x = chunkBlockX + worldObj.rand.nextInt(16) + 8;
-            int y = worldObj.rand.nextInt(25);
-            int z = chunkBlockZ + worldObj.rand.nextInt(16) + 8;
-            mushroomBrownGen.generate(worldObj, worldObj.rand, x, y, z);
+        if (this.rand.nextInt(4) == 0) {
+            int x = chunkBlockX + this.rand.nextInt(16) + 8;
+            int y = this.rand.nextInt(25);
+            int z = chunkBlockZ + this.rand.nextInt(16) + 8;
+            mushroomBrownGen.generate(worldObj, this.rand, x, y, z);
         }
     }
 
@@ -586,8 +381,169 @@ public class ChunkProviderGenerateUnderworld implements IChunkProvider {
 //    public CustomMapGenSF getScatteredFeatureGenerator() {
 //        return this.scatteredFeatureGenerator;
 //    }
+    // instance-owned noise and buffers shared by terrain generation and structure-height sampling.
+    public static final class TerrainGenerator {
+        public static final int WORLD_HEIGHT = 256;
+        public static final int CHUNK_SIZE = 16;
+        public static final int HORIZONTAL_STEP = 4;
+        public static final int VERTICAL_STEP = 8;
+        public static final int HORIZONTAL_SAMPLES = CHUNK_SIZE / HORIZONTAL_STEP + 1;
+        public static final int VERTICAL_SAMPLES = WORLD_HEIGHT / VERTICAL_STEP + 1;
+        public static final int BIOME_BLEND_RADIUS = 2;
+        public static final int BIOME_SAMPLES = HORIZONTAL_SAMPLES + BIOME_BLEND_RADIUS * 2;
+
+        private final NoiseGeneratorOctaves lowerNoise;
+        private final NoiseGeneratorOctaves upperNoise;
+        private final NoiseGeneratorOctaves selectorNoise;
+        private final NoiseGeneratorOctaves reliefNoise;
+        private final double[] blendWeights = new double[25];
+        private double[] lowerValues;
+        private double[] upperValues;
+        private double[] selectorValues;
+        private double[] reliefValues;
+        private final double[] density = new double[HORIZONTAL_SAMPLES * HORIZONTAL_SAMPLES * VERTICAL_SAMPLES];
+
+        public static TerrainGenerator forSeed(long seed) {
+            Random random = new Random(seed);
+            NoiseGeneratorOctaves lower = new NoiseGeneratorOctaves(random, 16);
+            NoiseGeneratorOctaves upper = new NoiseGeneratorOctaves(random, 16);
+            NoiseGeneratorOctaves selector = new NoiseGeneratorOctaves(random, 8);
+            // match the chunk provider's surface-noise allocation before its relief generator.
+            new NoiseGeneratorOctaves(random, 4);
+            return new TerrainGenerator(lower, upper, selector, new NoiseGeneratorOctaves(random, 6));
+        }
+
+        public TerrainGenerator(NoiseGeneratorOctaves lowerNoise, NoiseGeneratorOctaves upperNoise,
+                                         NoiseGeneratorOctaves selectorNoise, NoiseGeneratorOctaves reliefNoise) {
+            this.lowerNoise = lowerNoise;
+            this.upperNoise = upperNoise;
+            this.selectorNoise = selectorNoise;
+            this.reliefNoise = reliefNoise;
+            for (int z = -BIOME_BLEND_RADIUS; z <= BIOME_BLEND_RADIUS; z++) {
+                for (int x = -BIOME_BLEND_RADIUS; x <= BIOME_BLEND_RADIUS; x++) {
+                    blendWeights[x + BIOME_BLEND_RADIUS + (z + BIOME_BLEND_RADIUS) * 5]
+                            = 1.0 / Math.sqrt(x * x + z * z + 0.2);
+                }
+            }
+        }
+
+        public void generate(int chunkX, int chunkZ, TerrainProfile[] profiles,
+                             short[] blocks, short terrainBlock) {
+            sampleDensity(chunkX, chunkZ, profiles);
+            int cells = HORIZONTAL_SAMPLES - 1;
+            for (int x = 0; x < cells; x++) {
+                for (int z = 0; z < cells; z++) {
+                    int base = (x * HORIZONTAL_SAMPLES + z) * VERTICAL_SAMPLES;
+                    int nextX = base + HORIZONTAL_SAMPLES * VERTICAL_SAMPLES;
+                    for (int y = 0; y < VERTICAL_SAMPLES - 1; y++) {
+                        for (int dy = 0; dy < VERTICAL_STEP; dy++) {
+                            double fy = (double)dy / VERTICAL_STEP;
+                            double d00 = lerp(density[base + y], density[base + y + 1], fy);
+                            double d01 = lerp(density[base + VERTICAL_SAMPLES + y], density[base + VERTICAL_SAMPLES + y + 1], fy);
+                            double d10 = lerp(density[nextX + y], density[nextX + y + 1], fy);
+                            double d11 = lerp(density[nextX + VERTICAL_SAMPLES + y], density[nextX + VERTICAL_SAMPLES + y + 1], fy);
+                            for (int dx = 0; dx < HORIZONTAL_STEP; dx++) {
+                                double fx = (double)dx / HORIZONTAL_STEP;
+                                double near = lerp(d00, d10, fx);
+                                double far = lerp(d01, d11, fx);
+                                int localX = x * HORIZONTAL_STEP + dx;
+                                int blockY = y * VERTICAL_STEP + dy;
+                                for (int dz = 0; dz < HORIZONTAL_STEP; dz++) {
+                                    int localZ = z * HORIZONTAL_STEP + dz;
+                                    int index = (localX * CHUNK_SIZE + localZ) * WORLD_HEIGHT + blockY;
+                                    blocks[index] = lerp(near, far, (double)dz / HORIZONTAL_STEP) > 0.0
+                                            ? terrainBlock : 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // the returned buffer is reused by the next sample or generation call.
+        public double[] sampleDensity(int chunkX, int chunkZ, TerrainProfile[] profiles) {
+            if (profiles.length != BIOME_SAMPLES * BIOME_SAMPLES) {
+                throw new IllegalArgumentException("expected a padded 9x9 Underworld terrain profile grid");
+            }
+            int sampleX = chunkX * (HORIZONTAL_SAMPLES - 1);
+            int sampleZ = chunkZ * (HORIZONTAL_SAMPLES - 1);
+            double scale = 684.412;
+            lowerValues = lowerNoise.generateNoiseOctaves(lowerValues, sampleX, 0, sampleZ,
+                    HORIZONTAL_SAMPLES, VERTICAL_SAMPLES, HORIZONTAL_SAMPLES, scale, scale, scale);
+            upperValues = upperNoise.generateNoiseOctaves(upperValues, sampleX, 0, sampleZ,
+                    HORIZONTAL_SAMPLES, VERTICAL_SAMPLES, HORIZONTAL_SAMPLES, scale, scale, scale);
+            selectorValues = selectorNoise.generateNoiseOctaves(selectorValues, sampleX, 0, sampleZ,
+                    HORIZONTAL_SAMPLES, VERTICAL_SAMPLES, HORIZONTAL_SAMPLES,
+                    scale / 80.0, scale / 160.0, scale / 80.0);
+            // six octaves have a combined amplitude of 63; use block-scale relief rather than a 128-height offset.
+            reliefValues = reliefNoise.generateNoiseOctaves(reliefValues, sampleX, sampleZ,
+                    HORIZONTAL_SAMPLES, HORIZONTAL_SAMPLES, 1.0, 1.0, 0.5);
+
+            for (int x = 0; x < HORIZONTAL_SAMPLES; x++) {
+                for (int z = 0; z < HORIZONTAL_SAMPLES; z++) {
+                    double baseHeight = 0.0;
+                    double relief = 0.0;
+                    double roughness = 0.0;
+                    double totalWeight = 0.0;
+                    for (int dz = -BIOME_BLEND_RADIUS; dz <= BIOME_BLEND_RADIUS; dz++) {
+                        for (int dx = -BIOME_BLEND_RADIUS; dx <= BIOME_BLEND_RADIUS; dx++) {
+                            int profileIndex = x + BIOME_BLEND_RADIUS + dx
+                                    + (z + BIOME_BLEND_RADIUS + dz) * BIOME_SAMPLES;
+                            TerrainProfile profile = profiles[profileIndex];
+                            double weight = blendWeights[dx + BIOME_BLEND_RADIUS + (dz + BIOME_BLEND_RADIUS) * 5];
+                            baseHeight += profile.baseHeight * weight;
+                            relief += profile.relief * weight;
+                            roughness += profile.roughness * weight;
+                            totalWeight += weight;
+                        }
+                    }
+                    baseHeight /= totalWeight;
+                    relief /= totalWeight;
+                    roughness /= totalWeight;
+                    double height = baseHeight + clamp(reliefValues[x * HORIZONTAL_SAMPLES + z] / 63.0, -1.0, 1.0) * relief;
+                    int column = (x * HORIZONTAL_SAMPLES + z) * VERTICAL_SAMPLES;
+                    for (int y = 0; y < VERTICAL_SAMPLES; y++) {
+                        int index = column + y;
+                        double selector = clamp(selectorValues[index] / 128.0 * 0.5 + 0.5, 0.0, 1.0);
+                        double detail = clamp(lerp(lowerValues[index], upperValues[index], selector) / 32768.0, -1.0, 1.0);
+                        int blockY = y * VERTICAL_STEP;
+                        double value = height - blockY + detail * roughness;
+                        double topFade = clamp((blockY - (WORLD_HEIGHT - 24.0)) / 24.0, 0.0, 1.0);
+                        density[index] = lerp(value, -64.0, topFade);
+                    }
+                }
+            }
+            return density;
+        }
+
+        private static double lerp(double from, double to, double fraction) {
+            return from + (to - from) * fraction;
+        }
+
+        // sampleDensity must be called for the containing chunk before reading a local column.
+        public int getSurfaceHeight(int localX, int localZ) {
+            if (localX < 0 || localX >= CHUNK_SIZE || localZ < 0 || localZ >= CHUNK_SIZE) {
+                throw new IllegalArgumentException("surface column must be inside its sampled chunk");
+            }
+            int column = (localX / HORIZONTAL_STEP * HORIZONTAL_SAMPLES + localZ / HORIZONTAL_STEP) * VERTICAL_SAMPLES;
+            int nextX = column + HORIZONTAL_SAMPLES * VERTICAL_SAMPLES;
+            double fx = (double)(localX % HORIZONTAL_STEP) / HORIZONTAL_STEP;
+            double fz = (double)(localZ % HORIZONTAL_STEP) / HORIZONTAL_STEP;
+            for (int y = WORLD_HEIGHT - 1; y >= 0; y--) {
+                int sampleY = y / VERTICAL_STEP;
+                double fy = (double)(y % VERTICAL_STEP) / VERTICAL_STEP;
+                double near = lerp(lerp(density[column + sampleY], density[column + sampleY + 1], fy),
+                        lerp(density[nextX + sampleY], density[nextX + sampleY + 1], fy), fx);
+                double far = lerp(lerp(density[column + VERTICAL_SAMPLES + sampleY], density[column + VERTICAL_SAMPLES + sampleY + 1], fy),
+                        lerp(density[nextX + VERTICAL_SAMPLES + sampleY], density[nextX + VERTICAL_SAMPLES + sampleY + 1], fy), fx);
+                if (lerp(near, far, fz) > 0.0) return y;
+            }
+            return 0;
+        }
+
+        private static double clamp(double value, double min, double max) {
+            return Math.max(min, Math.min(max, value));
+        }
+    }
 }
-
-
-
-

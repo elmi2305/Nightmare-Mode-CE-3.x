@@ -4,10 +4,12 @@ import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.interfaces.EntityPlayerExt;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import com.itlesports.nightmaremode.util.interfaces.UnderworldInventoryExt;
+import com.itlesports.nightmaremode.util.underworld.UWUtils;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.Teleporter;
+import net.minecraft.src.WorldServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,6 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
+
+    @Inject(method = "transferEntityToWorld", at = @At("HEAD"), cancellable = true)
+    private void placeExplicitDimensionTransfer(Entity entity, int sourceDimension, WorldServer sourceWorld, WorldServer targetWorld, CallbackInfo ci) {
+        if (UWUtils.placeDirectTransfer(entity, targetWorld)) ci.cancel();
+    }
 
     @Redirect(method = "transferEntityToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Teleporter;placeInPortal(Lnet/minecraft/src/Entity;DDDF)V"))
     private void doNotGenerateNetherPortalForUnderworld(Teleporter instance, Entity d, double e, double f, double g, float v){
