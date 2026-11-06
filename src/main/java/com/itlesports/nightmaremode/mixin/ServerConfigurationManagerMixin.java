@@ -2,9 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import com.itlesports.nightmaremode.mixin.interfaces.TeleporterAccess;
 import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.NMDeathTimeRules;
-import com.itlesports.nightmaremode.util.NMHardcoreSpawnContext;
-import com.itlesports.nightmaremode.util.OuterDeathRespawn;
+import com.itlesports.nightmaremode.util.NMRespawn;
 import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import com.itlesports.nightmaremode.util.NetherRecall;
 import com.itlesports.nightmaremode.util.NetherPostProgress;
@@ -38,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ServerConfigurationManagerMixin {
     @Inject(method = "initializeConnectionToPlayer", at = @At("HEAD"))
     private void announceBalanceBeforeLogin(net.minecraft.src.INetworkManager connection, EntityPlayerMP player, CallbackInfo ci) {
-        connection.addToSendQueue(new net.minecraft.src.Packet250CustomPayload("NM|Balance1",
+        connection.addToSendQueue(new net.minecraft.src.Packet250CustomPayload(com.itlesports.nightmaremode.world.BalanceProfile.CHANNEL,
                 com.itlesports.nightmaremode.world.BalanceProfile.wireProfile()));
     }
     @Unique private final java.util.Map<EntityPlayerMP, ItemStack> pendingRecalls = new java.util.IdentityHashMap<>();
@@ -46,11 +44,11 @@ public class ServerConfigurationManagerMixin {
 
     @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lbtw/util/hardcorespawn/HardcoreSpawnUtils;handleHardcoreSpawn(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/src/EntityPlayerMP;Lnet/minecraft/src/EntityPlayerMP;)V"))
     private void respawnAroundDeathLocation(MinecraftServer server, EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer) {
-        if (OuterDeathRespawn.returnsToSpawn(oldPlayer)) {
+        if (NMRespawn.returnsToSpawn(oldPlayer)) {
             HardcoreSpawnUtils.handleHardcoreSpawn(server, oldPlayer, newPlayer);
             return;
         }
-        NMHardcoreSpawnContext.runWithDeathOrigin(oldPlayer, newPlayer,
+        NMRespawn.runWithDeathOrigin(oldPlayer, newPlayer,
                 () -> HardcoreSpawnUtils.handleHardcoreSpawn(server, oldPlayer, newPlayer));
     }
 
@@ -60,7 +58,7 @@ public class ServerConfigurationManagerMixin {
                                                            net.minecraft.src.ChunkCoordinates coordinates) {
         api.world.BeaconStatus status = player.getValidatedRespawnCoordinates(world, coordinates);
         // a valid non-forced spawn is already checked against the steel beacon's spawn-anchor effect.
-        return OuterDeathRespawn.returnsToSpawn(player) && player.isSpawnForced()
+        return NMRespawn.returnsToSpawn(player) && player.isSpawnForced()
                 ? api.world.BeaconStatus.INVALID : status;
     }
 
@@ -76,7 +74,7 @@ public class ServerConfigurationManagerMixin {
         if (leavingEnd) return;
         EntityPlayerMP respawned = cir.getReturnValue();
         if (com.itlesports.nightmaremode.util.NMUtils.getWorldProgress() != NMFields.PREHARDMODE
-                && !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+                && !com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) {
             for (ItemStack stack : oldPlayer.inventory.mainInventory) {
                 if (stack != null && stack.itemID == NMItems.skillBook.itemID) {
                     ItemStack retained = stack.copy();
@@ -88,7 +86,7 @@ public class ServerConfigurationManagerMixin {
         respawned.inventoryContainer.detectAndSendChanges();
         WorldServer world = MinecraftServer.getServer().worldServerForDimension(0);
         long time = world.getWorldTime();
-        world.setWorldTime(NMDeathTimeRules.getRespawnTime(deathWorldTime, time,
+        world.setWorldTime(NMRespawn.getRespawnTime(deathWorldTime, time,
                 JourneyProfile.getOrCreate(world).deaths));
     }
 
@@ -206,6 +204,7 @@ public class ServerConfigurationManagerMixin {
             profile.joins++;
             com.itlesports.nightmaremode.world.SandboxRules.recordSurvivalInventory(player);
             com.itlesports.nightmaremode.world.SandboxRules.inheritSkills(player);
+            com.itlesports.nightmaremode.util.EasyCombatStarter.giveBook(player);
             profile.recordSkillState(player, player.worldObj);
             player.worldObj.setData(btw.community.nightmaremode.NightmareMode.JOURNEY_PROFILE, profile);
         }

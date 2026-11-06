@@ -83,6 +83,7 @@ public class SkillTreeData {
     public float tallGrassPlantFiberChanceBonus;
     public float deathItemLossChance = 0.75F;
     public int easyInventoryLevel;
+    public boolean easyStarterBookGranted;
     public float enchantCostReduction;
     public float xpGainBonus;
     public float brewingSpeedBonus;
@@ -288,6 +289,7 @@ public class SkillTreeData {
         data.rareFishChanceBonus = tag.getFloat("RareFishChanceBonus");
         data.tallGrassPlantFiberChanceBonus = tag.getFloat("TallGrassPlantFiberChanceBonus");
         data.easyInventoryLevel = Math.max(0, tag.getInteger("EasyInventoryLevel"));
+        data.easyStarterBookGranted = tag.getBoolean("EasyStarterBookGranted");
         data.deathItemLossChance = tag.hasKey("DeathItemLossChance") ? tag.getFloat("DeathItemLossChance") : 0.75F;
         data.enchantCostReduction = tag.getFloat("EnchantCostReduction");
         data.xpGainBonus = tag.getFloat("XpGainBonus");
@@ -407,6 +409,7 @@ public class SkillTreeData {
         tag.setFloat("TallGrassPlantFiberChanceBonus", data.tallGrassPlantFiberChanceBonus);
         tag.setFloat("DeathItemLossChance", data.deathItemLossChance);
         tag.setInteger("EasyInventoryLevel", data.easyInventoryLevel);
+        tag.setBoolean("EasyStarterBookGranted", data.easyStarterBookGranted);
         tag.setFloat("EnchantCostReduction", data.enchantCostReduction);
         tag.setFloat("XpGainBonus", data.xpGainBonus);
         tag.setFloat("BrewingSpeedBonus", data.brewingSpeedBonus);

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.elements.NMEvents;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -46,7 +48,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
         boolean isBloodMoon = NMUtils.getIsBloodMoon();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + 8 * progress) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(3, progress) * 2 : (20 + 8 * progress) * NMUtils.getNiteMultiplier());
         // 20 -> 28 -> 36 -> 44
     }
 
@@ -60,7 +62,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyConstant(method = {"updateAttackStateClient", "updateEntityActionState"}, constant = @Constant(doubleValue = 4096.0D))
     private double limitAttackRange(double constant){
-        double range = com.itlesports.nightmaremode.util.NMGhastRules.attackRange();
+        double range = com.itlesports.nightmaremode.util.GhastFlightNavigator.attackRange();
         return range * range;
     }
     @Override
@@ -197,7 +199,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
     @Inject(method = "updateEntityActionState", at = @At("HEAD"))
     private void approachPlayerBeforeShooting(CallbackInfo ci) {
         if (this.isCreeperVariant()) return;
-        double preferred = com.itlesports.nightmaremode.util.NMGhastRules.attackRange() * 0.75D;
+        double preferred = com.itlesports.nightmaremode.util.GhastFlightNavigator.attackRange() * 0.75D;
         this.flightNavigator.update((EntityGhast)(Object)this, this.entityTargeted, preferred);
     }
 
@@ -243,6 +245,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyConstant(method = "updateEntityActionState",constant = @Constant(intValue = 10,ordinal = 0))
     private int lowerSoundThreshold(int constant){
+        if (BalanceProfile.isCombatEasy()) return constant;
         EntityGhast thisObj = (EntityGhast)(Object)this;
         if(thisObj.dimension == 0 && !NMUtils.getIsMobEclipsed(this)){
             return constant * 2;
@@ -282,6 +285,7 @@ public abstract class EntityGhastMixin extends EntityFlying{
 
     @ModifyConstant(method = "fireAtTarget", constant = @Constant(intValue = -40))
     private int lowerAttackCooldownOnFire(int constant){
+        if (BalanceProfile.isCombatEasy()) return -60;
         EntityGhast thisObj = (EntityGhast)(Object)this;
         int baseCooldown = (int) ((- 10 - thisObj.rand.nextInt(21)) * NMUtils.getNiteMultiplier());
 
@@ -297,5 +301,18 @@ public abstract class EntityGhastMixin extends EntityFlying{
             return (int)(baseCooldown * 0.8); // faster cooldown when below half health
         }
         return (int)(baseCooldown * 1.2); // slower cooldown by default
+    }
+
+    @org.spongepowered.asm.mixin.Unique private com.itlesports.nightmaremode.util.EasyCombatStats easyLoadedStats;
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void captureEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        this.easyLoadedStats = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void restoreEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, this.easyLoadedStats);
+        this.easyLoadedStats = null;
     }
 }

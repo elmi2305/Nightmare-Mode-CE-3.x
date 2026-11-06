@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.item.items.PickaxeItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
@@ -16,8 +18,8 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         super(par1World);
         this.variantType = NMFields.PACKET_CREEPER_OBSIDIAN;
         this.soundPitchModifier = -0.4f;
-        this.fuseTime = 50;
-        this.explosionMultiplier = 1.5f;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 70 : 50;
+        this.explosionMultiplier = BalanceProfile.isCombatEasy() ? 1.0F : 1.5f;
         this.canLunge = false;
 
     }
@@ -36,7 +38,7 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
         int eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 20 : 0;
 
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((24 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(3, progress) * 2 : ((24 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0.18f);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(6f + NMUtils.getWorldProgress() * 2);
     }
@@ -60,6 +62,7 @@ public class EntityObsidianCreeper extends EntityCreeperVariant{
     @Override
     public boolean interact(EntityPlayer player) {
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
+        if (BalanceProfile.isCombatEasy() && playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) return false;
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) {
             if(NightmareMode.devMode){
                 boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);

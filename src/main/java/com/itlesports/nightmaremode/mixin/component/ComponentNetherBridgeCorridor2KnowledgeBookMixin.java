@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin.component;
 
 import com.itlesports.nightmaremode.util.KnowledgeBookLoot;
 import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.FortressJournalLoot;
+import com.itlesports.nightmaremode.util.FortressLoot;
 import net.minecraft.src.ComponentNetherBridgeCorridor2;
 import net.minecraft.src.WeightedRandomChestContent;
 import net.minecraft.src.World;
@@ -18,7 +18,7 @@ public class ComponentNetherBridgeCorridor2KnowledgeBookMixin {
     private WeightedRandomChestContent[] addKnowledgeBooksToFortressLoot(World world, StructureBoundingBox bounds,
                                                                           Random random, int x, int y, int z,
                                                                           WeightedRandomChestContent[] loot, int count) {
-        return FortressJournalLoot.add(KnowledgeBookLoot.addWeightedBooks(loot,
+        return FortressLoot.add(KnowledgeBookLoot.addWeightedBooks(loot,
                 NMFields.KNOWLEDGE_BOOKS_NETHER_FORTRESS, 5), world, bounds);
     }
 }

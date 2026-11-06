@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.entity.InfiniteArrowEntity;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -54,7 +56,7 @@ public abstract class EntityArrowMixin extends Entity{
                 hitEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 0));
                 hitEntity.addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 140, 0));
 
-            } else if (id == NMFields.SKELETON_ENDER) {
+            } else if (id == NMFields.SKELETON_ENDER && !BalanceProfile.isCombatEasy()) {
                 skeleton.setPositionAndUpdate(hitEntity.posX, hitEntity.posY, hitEntity.posZ);
                 skeleton.playSound("mob.endermen.portal", 1.0F, 1.0F);
                 skeleton.setCurrentItemOrArmor(0, new ItemStack(Item.swordIron));

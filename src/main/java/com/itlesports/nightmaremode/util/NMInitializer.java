@@ -941,6 +941,10 @@ public abstract class NMInitializer implements AchievementExt {
 
     private static void addFishermanTrades() {
         final int profession = EntityFishermanVillager.PROFESSION_ID;
+        sell("ifhy:fisherman_angler_boots", profession, 1, NMItems.anglerBoots.itemID, 0, 1, 1, 1.0F, false, 4, 6);
+        sell("ifhy:fisherman_angler_helmet", profession, 2, NMItems.anglerHelmet.itemID, 0, 1, 1, 1.0F, false, 5, 8);
+        sell("ifhy:fisherman_angler_leggings", profession, 3, NMItems.anglerLeggings.itemID, 0, 1, 1, 1.0F, false, 7, 10);
+        sell("ifhy:fisherman_angler_chestplate", profession, 4, NMItems.anglerChestplate.itemID, 0, 1, 1, 1.0F, false, 8, 12);
 
         // The base pool is intentionally mundane: a fisherman converts supplies and
         // catches into the emeralds needed for his useful stock.
@@ -1151,7 +1155,7 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1PoweredRail", profession, 3, Block.railPowered.blockID, 0, 20, 32, 0.6F, false, 8, 14);
         sell("nmNetherTier1DetectorRail", profession, 3, Block.railDetector.blockID, 0, 20, 32, 0.6F, false, 8, 14);
         sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.4F, false, 16, 24);
-        buy("nmNetherTier1SoulFlint", profession, 3, NMItems.soulFlint.itemID, 0, 2, 8, 0.7F);
+        buy("nmNetherTier1SoulFlint", profession, 3, NMItems.soulFlint.itemID, 0, 1, 1, 0.7F);
         buy("nmNetherTier1GhastTear", profession, 3, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
         buy("nmNetherTier1CreeperOyster", profession, 3, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
         buy("nmNetherTier1Nitre", profession, 3, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
@@ -1416,9 +1420,12 @@ public abstract class NMInitializer implements AchievementExt {
 
         int[] chunks = {ItemLateGameMaterial.GRAVITITE_CHUNK, ItemLateGameMaterial.SOLAR_QUARTZ_CHUNK,
                 ItemLateGameMaterial.ABYSS_CHUNK, ItemLateGameMaterial.CRYOLITE_CHUNK};
-        for (int chunk : chunks) RecipeManager.addStokedCrucibleRecipe(late(chunk + 1, 1), new ItemStack[]{late(chunk, 1)});
+        for (int chunk : chunks) {
+            RecipeManager.addStokedCrucibleRecipe(late(chunk + 1, 1), new ItemStack[]{late(chunk, 1)});
+            RecipeManager.addStokedCrucibleRecipe(late(chunk + 2, 1), new ItemStack[]{late(chunk + 1, 9)});
+        }
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.aetherNugget), new ItemStack[]{new ItemStack(NMItems.aetherChunk)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.aetherIngot), new ItemStack[]{new ItemStack(NMItems.aetherNugget)});
+        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.aetherIngot), new ItemStack[]{new ItemStack(NMItems.aetherNugget, 9)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWBlocks.soulforgedSteelBlock, 2), new ItemStack[]{
                 late(ItemLateGameMaterial.SHADOW_DUST, 32), late(ItemLateGameMaterial.CHARRED_STRING, 32),
                 late(ItemLateGameMaterial.ACID_INK_SAC, 24), late(ItemLateGameMaterial.FROZEN_BONE, 24),
@@ -2557,10 +2564,14 @@ public abstract class NMInitializer implements AchievementExt {
         addAlloyHorseArmorRecipes();
         int[] lateNuggets = {ItemLateGameMaterial.GRAVITITE_NUGGET, ItemLateGameMaterial.SOLAR_QUARTZ_NUGGET,
                 ItemLateGameMaterial.ABYSS_NUGGET, ItemLateGameMaterial.CRYOLITE_NUGGET};
-        for (int nugget : lateNuggets) RecipeManager.addRecipe(late(nugget + 1, 1), new Object[]{
-                "###", "###", "###", Character.valueOf('#'), late(nugget, 1)});
+        for (int nugget : lateNuggets) {
+            RecipeManager.addRecipe(late(nugget + 1, 1), new Object[]{
+                    "###", "###", "###", Character.valueOf('#'), late(nugget, 1)});
+            RecipeManager.addShapelessRecipe(late(nugget, 9), new Object[]{late(nugget + 1, 1)});
+        }
         RecipeManager.addRecipe(new ItemStack(NMItems.aetherIngot), new Object[]{
                 "###", "###", "###", Character.valueOf('#'), new ItemStack(NMItems.aetherNugget)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.aetherNugget, 9), new Object[]{NMItems.aetherIngot});
         for (int color = 0; color < 16; ++color) RecipeManager.addShapelessRecipe(
                 new ItemStack(NMBlocks.phasePortalFrame, 1, color), new Object[]{
                         new ItemStack(NMBlocks.phasePortalFrame, 1, Short.MAX_VALUE), new ItemStack(Item.dyePowder, 1, color)});
@@ -2585,6 +2596,7 @@ public abstract class NMInitializer implements AchievementExt {
         });
         RecipeManager.addRecipe(new ItemStack(NMItems.carbonIronIngot), new Object[]{
                 "NNN", "NYN", "NNN", Character.valueOf('N'), NMItems.carbonIronNugget, Character.valueOf('Y'), BTWItems.stoneBrick});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.carbonIronNugget, 8), new Object[]{NMItems.carbonIronIngot});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.wetGasket), new Object[]{
                 BTWItems.tannedLeather, NMItems.thickenedSap});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.wetRefractoryCloth), new Object[]{
@@ -3145,7 +3157,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pileOfSticks), new Object[]{Item.stick, Item.stick, Item.stick, Item.stick});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.plantFiber), new Object[]{NMItems.leaf, NMItems.leaf, NMItems.leaf, NMItems.leaf});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulFlint), new Object[]{NMItems.soulChip, NMItems.soulChip, NMItems.soulChip, NMItems.soulChip});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulChip, 4), new Object[]{NMItems.soulFlint});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.soulChip, 4), new Object[]{new ItemStack(NMItems.soulFlint, 1, 0)});
         RecipeManager.addShapelessRecipe(
                 new ItemStack(NMItems.pighideStringCrafting, 1, NMItems.pighideStringCrafting.getMaxDamage() - 1),
                 new Object[]{NMItems.pigHide, new ItemStack(NMItems.soulFlint, 1, 0)});
@@ -3286,6 +3298,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenConcentrate), new Object[]{NMItems.crushedTungsten, Item.netherQuartz});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.pureTungstenChunk), new Object[]{NMItems.tungstenPowder, NMItems.tungstenPowder});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenIngot), new Object[]{"###", "###", "###", Character.valueOf('#'), NMItems.tungstenNugget});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.tungstenNugget, 9), new Object[]{NMItems.tungstenIngot});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenBucket), new Object[]{"# #", " # ", Character.valueOf('#'), NMItems.tungstenIngot});
         // Item.cauldron deliberately places the IFHY cistern; BTWBlocks.cauldron remains the
         // separate cooking vessel used by cauldron recipes.
@@ -3307,6 +3320,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenPickaxe), new Object[]{"III", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenSword), new Object[]{" I ", " I ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShovel), new Object[]{" I ", " S ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenAxe), new Object[]{"II", "IS", " S", 'I', NMItems.tungstenIngot, 'S', NMItems.netherStick});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenHoe), new Object[]{"II", " S", " S", 'I', NMItems.tungstenIngot, 'S', NMItems.netherStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.ironScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), Item.ingotIron, Character.valueOf('S'), NMItems.stoneStick});
         RecipeManager.addRecipe(new ItemStack(NMItems.diamondScythe), new Object[]{" II", "ISC", " SC", Character.valueOf('I'), BTWItems.diamondIngot, Character.valueOf('S'), NMItems.ironStick, Character.valueOf('C'), NMItems.crystalPolishedShard});
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenScythe), new Object[]{" II", "IS ", " S ", Character.valueOf('I'), NMItems.tungstenIngot, Character.valueOf('S'), NMTags.netherCompatibleSticks});
@@ -3821,7 +3836,7 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.removeVanillaRecipe(
                 new ItemStack(BTWItems.boneClub),
                 new Object[]{"X", "X", Character.valueOf('X'), Item.bone});
-        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) {
             RecipeManager.addRecipe(new ItemStack(BTWItems.boneClub),
                     new Object[]{"X", "X", Character.valueOf('X'), Item.bone});
         } else {
@@ -4893,6 +4908,10 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenShovel.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenAxe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
+        SkillRecipeGates.crafting(NMItems.tungstenHoe.itemID,
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenKnife.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenScythe.itemID,
@@ -4902,7 +4921,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMBlocks.minerDrill.blockID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
         SkillRecipeGates.crafting(NMBlocks.cisternInterface.blockID,
-                NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_AZURE_SALT_16);
+                NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMBlocks.chunkLoader.blockID,
                 NMSkillNodes.BRING_NETHERRACK_TIER_THREE_256, NMSkillNodes.BRING_DEADZONE_SHARD_64);
 

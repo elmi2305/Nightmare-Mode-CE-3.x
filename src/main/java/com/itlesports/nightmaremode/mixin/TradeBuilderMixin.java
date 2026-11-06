@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.mixin;
 
 import api.entity.mob.villager.TradeProvider;
 import api.entity.mob.villager.VillagerTrade;
-import com.itlesports.nightmaremode.tradetweaks.ApplyAction;
+import com.itlesports.nightmaremode.tradetweaks.TradeTweaks.ApplyAction;
 import com.itlesports.nightmaremode.util.NMInitializer;
 import com.itlesports.nightmaremode.tradetweaks.TradeTweaks;
 import org.spongepowered.asm.mixin.Mixin;

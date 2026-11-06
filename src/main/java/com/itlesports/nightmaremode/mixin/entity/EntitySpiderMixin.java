@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.block.tileentity.beacon.BTWBeaconEffects;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.JungleSpiderEntity;
@@ -326,10 +328,10 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
             double niteMultiplier = NMUtils.getNiteMultiplier();
             if(progress == NMFields.PREHARDMODE) {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16.0 * bloodMoonModifier + eclipseModifier) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 : (16.0 * bloodMoonModifier + eclipseModifier) * niteMultiplier);
                 this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.825f * (1 + (niteMultiplier - 1) / 20));
             } else {
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier + spiderRainModifier) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 13 + Math.min(progress, 3) * 2 : ((13.0 + progress * (isHostile ? 7 : 5)) * bloodMoonModifier + eclipseModifier + spiderRainModifier) * niteMultiplier);
                 // 13 -> 20 -> 27 -> 34
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(MathHelper.floor_double(((4.0 + progress * 2) * (isBloodMoon ? 1.25 : 1)) + (isEclipse ? 1 : 0)) * niteMultiplier);
                 // 4 -> 6 -> 8 -> 10
@@ -340,7 +342,7 @@ public abstract class EntitySpiderMixin extends EntityMob{
             }
 
             if(thisObj instanceof JungleSpiderEntity){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((12.0 + progress * 6) * (isBloodMoon ? 1.25 : 1)) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 12 + Math.min(progress, 3) * 2 : ((12.0 + progress * 6) * (isBloodMoon ? 1.25 : 1)) * niteMultiplier);
                 // 12 -> 18 -> 24 -> 30
             }
         }
@@ -357,5 +359,18 @@ public abstract class EntitySpiderMixin extends EntityMob{
                 ((EntitySpider)tempEntity).entityToAttack = targetPlayer;
             }
         }
+    }
+
+    @org.spongepowered.asm.mixin.Unique private com.itlesports.nightmaremode.util.EasyCombatStats easyLoadedStats;
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void captureEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        this.easyLoadedStats = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void restoreEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, this.easyLoadedStats);
+        this.easyLoadedStats = null;
     }
 }

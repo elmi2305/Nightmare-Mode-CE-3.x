@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
@@ -16,14 +18,14 @@ public abstract class EntityAICreeperSwellMixin extends EntityAIBase{
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean canSeeThroughWalls(EntitySenses senses, Entity entity){
-        if (this.creeperAttackTarget.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
+        if (!BalanceProfile.isCombatEasy() && this.creeperAttackTarget.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
             return true;
         }
         return senses.canSee(this.creeperAttackTarget);
     }
     @ModifyConstant(method = "updateTask", constant = @Constant(doubleValue = 36.0))
     private double increaseRadiusOfCreeperContinueSwelling(double constant){
-        return constant + NMUtils.getWorldProgress() * 3;
+        return BalanceProfile.isCombatEasy() ? constant : constant + NMUtils.getWorldProgress() * 3;
     }
     @Inject(method = "shouldExecute", at = @At(value = "RETURN", ordinal = 2),cancellable = true)
     private void checkHeightDifference(CallbackInfoReturnable<Boolean> cir){

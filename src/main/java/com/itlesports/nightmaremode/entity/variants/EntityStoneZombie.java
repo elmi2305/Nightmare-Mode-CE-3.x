@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -26,7 +28,7 @@ public class EntityStoneZombie extends EntityZombie {
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
 
             int progress = NMUtils.getWorldProgress();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isBloodMoon ? 32 : 28) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 24 + Math.min(progress, 3) * 2 : ((isBloodMoon ? 32 : 28) + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * NMUtils.getNiteMultiplier());
         }
     }
 

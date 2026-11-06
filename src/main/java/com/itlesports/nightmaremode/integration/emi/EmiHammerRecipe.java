@@ -2,7 +2,7 @@ package com.itlesports.nightmaremode.integration.emi;
 
 import com.itlesports.nightmaremode.crafting.recipe.types.HammerRecipe;
 import com.itlesports.nightmaremode.block.NMBlocks;
-import com.itlesports.nightmaremode.util.HammerAnvilMaterials;
+import com.itlesports.nightmaremode.util.HammerAnvilHelper;
 import emi.dev.emi.emi.EmiPort;
 import emi.dev.emi.emi.api.recipe.EmiRecipe;
 import emi.dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -43,7 +43,7 @@ public class EmiHammerRecipe implements EmiRecipe {
             for (Block anvil : new Block[]{NMBlocks.stoneAnvil, NMBlocks.lithiumAnvil, NMBlocks.ironAnvil,
                     NMBlocks.diamondAnvil, NMBlocks.netherrackAnvil, Block.anvil}) {
                 if (anvil == null) continue;
-                int adjusted = HammerAnvilMaterials.getHitsRequired(anvil.blockID, recipe);
+                int adjusted = HammerAnvilHelper.getHitsRequired(anvil.blockID, recipe);
                 if (adjusted < this.hits) bonuses.put(new ItemStack(anvil).getDisplayName(), adjusted);
             }
         }

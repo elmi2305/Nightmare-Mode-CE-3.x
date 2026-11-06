@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -11,14 +13,14 @@ public class EntityGlitchCreeper extends EntityCreeperVariant {
         this.variantType = NMFields.PACKET_CREEPER_GLITCH;
         this.explosionMultiplier = 0;
         this.explosionRadius = 0;
-        this.fuseTime = 80;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 100 : 80;
         this.soundPitchModifier = 3;
     }
 
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + NMUtils.getWorldProgress() * 2) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 : (16 + NMUtils.getWorldProgress() * 2) * NMUtils.getNiteMultiplier());
     }
 
     @Override

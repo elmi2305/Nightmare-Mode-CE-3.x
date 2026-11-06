@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.mixin.entity.EntitySlimeAccessor;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -13,7 +15,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
         super(w);
         this.variantType = NMFields.PACKET_CREEPER_FIRE;
         this.soundPitchModifier = 0.2f;
-        this.fuseTime = 25;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 45 : 25;
     }
 
     protected void applyEntityAttributes() {
@@ -28,6 +30,10 @@ public class EntityFireCreeper extends EntityCreeperVariant{
 
     @Override
     protected void onVariantUpdate() {
+        if (BalanceProfile.isCombatEasy()) {
+            this.extinguish();
+            return;
+        }
         if (!this.worldObj.isRemote && NMUtils.getIsBloodMoon() && this.rangedAttackCooldown == 0) {
             EntityLivingBase target = this.getAttackTarget();
             if(target != null && this.getDistanceSqToEntity(target) > 64.0 && this.getEntitySenses().canSee(target)){
@@ -48,6 +54,7 @@ public class EntityFireCreeper extends EntityCreeperVariant{
 
     @Override
     protected void onDeathEffect() {
+        if (BalanceProfile.isCombatEasy()) return;
         if(NMUtils.getIsMobEclipsed(this)){
             EntityLivingBase target = this.getAttackTarget();
             if (target instanceof EntityPlayer) {

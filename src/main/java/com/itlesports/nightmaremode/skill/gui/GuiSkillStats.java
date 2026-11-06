@@ -189,18 +189,21 @@ public class GuiSkillStats extends GuiScreen {
     }
 
     private static void addPlayerStats(List<String> lines, SkillTreeData data, WorldSkillData world) {
+        lines.add(com.itlesports.nightmaremode.world.BalanceProfile.journeyName(com.itlesports.nightmaremode.world.BalanceProfile.active()));
+        lines.add("Hunger exhaustion: " + percent(com.itlesports.nightmaremode.util.EasyBalance.exhaustion(1.0F)));
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) {
+            lines.add("Combat equipment wear: " + (btw.community.nightmaremode.NightmareMode.testEasyDurability ? "Standard" : "50% less"));
+            lines.add("Earned inventory capacity survives death");
+        }
         if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
-            lines.add("Difficulty: Easy");
             lines.add("Ore mining speed: +200% before skills");
             lines.add("Hostile drops: 2x (knives: 3x / 4x / 5x)");
-            lines.add("Tool and armor wear: " + (btw.community.nightmaremode.NightmareMode.testEasyDurability ? "Hard rules" : "50% less"));
-            lines.add("Ore quantities: " + (com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? "Easy rules" : "Hard rules"));
+            lines.add("Harvesting tool wear: " + (btw.community.nightmaremode.NightmareMode.testEasyDurability ? "Standard" : "50% less"));
+            lines.add("Ore quantities: " + (com.itlesports.nightmaremode.util.EasyBalance.easyOres() ? "Increased" : "Standard"));
             lines.add("Fuel duration: +100%");
             lines.add("Crop yield: +100%");
-            lines.add("Hunger exhaustion: " + percent(com.itlesports.nightmaremode.util.EasyBalance.exhaustion(1.0F)));
             lines.add("Pollution gain: " + percent(com.itlesports.nightmaremode.util.EasyBalance.pollution(1.0F)));
             lines.add("Optional stat counters: 2x credit");
-            lines.add("Earned inventory capacity survives death");
         }
         addPercentBonus(lines, "Block breaking speed", com.itlesports.nightmaremode.util.EasyBalance.miningBonus(data.blockBreakSpeedBonus));
         addPercentBonus(lines, "Shovel speed", data.shovelSpeedBonus);

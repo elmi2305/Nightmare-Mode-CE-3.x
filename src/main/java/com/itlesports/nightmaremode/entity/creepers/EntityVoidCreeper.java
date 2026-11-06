@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.entity.underworld.EntityBlackHole;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -12,7 +14,7 @@ public class EntityVoidCreeper extends EntityCreeperVariant{
         super(w);
         this.variantType = NMFields.PACKET_CREEPER_VOID;
         this.soundPitchModifier = -0.5f;
-        this.fuseTime = 50;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 70 : 50;
         this.canLunge = false;
         this.explosionRadius = 0;
         this.explosionMultiplier = 0f;

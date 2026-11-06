@@ -20,10 +20,14 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor, com.itlesport
     @Unique private String balanceProfile = com.itlesports.nightmaremode.world.BalanceProfile.active();
 
     @Override public String nm$getBalanceProfile() { return this.balanceProfile; }
+    @Override public void nm$setBalanceProfile(String profile) {
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.isValid(profile)) throw new IllegalArgumentException("Invalid Journey settings");
+        this.balanceProfile = profile;
+    }
 
     @Inject(method = "<init>(Lnet/minecraft/src/NBTTagCompound;)V", at = @At("TAIL"))
     private void readBalanceProfile(NBTTagCompound tag, CallbackInfo ci) {
-        this.balanceProfile = com.itlesports.nightmaremode.world.BalanceProfile.fromSave(tag);
+        this.balanceProfile = com.itlesports.nightmaremode.world.BalanceProfile.fromSave(tag, this.getDifficulty() == BTWDifficulties.STANDARD);
     }
 
     @Inject(method = "<init>(Lnet/minecraft/src/WorldInfo;)V", at = @At("TAIL"))
@@ -33,7 +37,7 @@ public abstract class WorldInfoMixin implements WorldInfoAccessor, com.itlesport
 
     @Inject(method = "updateTagCompound", at = @At("TAIL"))
     private void saveBalanceProfile(NBTTagCompound tag, NBTTagCompound playerTag, CallbackInfo ci) {
-        tag.setString(com.itlesports.nightmaremode.world.BalanceProfile.TAG, this.balanceProfile);
+        com.itlesports.nightmaremode.world.BalanceProfile.writeSave(tag, this.balanceProfile);
     }
     @Shadow public abstract Difficulty getDifficulty();
     @Shadow private GameRules theGameRules;

@@ -12,6 +12,8 @@ import btw.community.nightmaremode.NightmareMode;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Mixin(ChewedLogBlock.class)
@@ -42,6 +44,45 @@ public abstract class ChewedLogBlockMixin extends Block {
 
     @Override
     public boolean dropComponentItemsOnBadBreak(World world, int i, int j, int k, int iMetadata, float fChanceOfDrop) {
+        return true;
+    }
+
+    @Override
+    public boolean isFallingBlock() {
+        return NightmareMode.noSkybases || super.isFallingBlock();
+    }
+
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z) {
+        super.onBlockAdded(world, x, y, z);
+        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world)) this.scheduleCheckForFall(world, x, y, z);
+    }
+
+    @Inject(method = "onNeighborBlockChange", at = @At("HEAD"), cancellable = true)
+    private void scheduleChewedLogFall(World world, int x, int y, int z, int neighbor, CallbackInfo ci) {
+        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world) && this.canFallIntoBlockAtPos(world, x, y - 1, z)) {
+            this.scheduleCheckForFall(world, x, y, z);
+            ci.cancel();
+        }
+    }
+
+    @Override
+    public void updateTick(World world, int x, int y, int z, java.util.Random random) {
+        if (NMUtils.shouldWoodBlocksHaveSkybaseGravity(world)) this.checkForFall(world, x, y, z);
+        super.updateTick(world, x, y, z, random);
+    }
+
+    @Override
+    protected boolean checkForFall(World world, int x, int y, int z) {
+        if (world.isRemote || y < 0 || !this.canFallIntoBlockAtPos(world, x, y - 1, z)) return false;
+        int metadata = world.getBlockMetadata(x, y, z);
+        if (world.checkChunksExist(x - 32, y - 32, z - 32, x + 32, y + 32, z + 32)) {
+            world.spawnEntityInWorld(new EntityFallingSand(world, x + 0.5D, y + 0.5D, z + 0.5D, this.blockID, metadata));
+        } else {
+            world.setBlockToAir(x, y, z);
+            while (y > 0 && this.canFallIntoBlockAtPos(world, x, y - 1, z)) --y;
+            if (y > 0) world.setBlock(x, y, z, this.blockID, metadata, 3);
+        }
         return true;
     }
 

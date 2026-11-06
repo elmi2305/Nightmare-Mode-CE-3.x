@@ -8,11 +8,15 @@ import net.minecraft.src.Slot;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 
 public final class NMInventoryLocks {
+    public static boolean isSoulbound(ItemStack stack) {
+        return stack != null && (stack.getItem() == net.minecraft.src.Item.compass
+                || stack.getItem() == com.itlesports.nightmaremode.item.NMItems.skillBook);
+    }
     private static final int[] HOTBAR_SLOT_LEVELS = {0, 3, 6, 9, 12, 15};
     private static final int SECOND_BACKPACK_ROW_LEVEL = 10;
 
     private static int getInventoryLevel(EntityPlayer player) {
-        if (!com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return player.experienceLevel;
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) return player.experienceLevel;
         com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(player);
         data.easyInventoryLevel = Math.max(data.easyInventoryLevel, player.experienceLevel);
         return data.easyInventoryLevel;
@@ -78,7 +82,7 @@ public final class NMInventoryLocks {
     public static boolean isMainInventorySlotUnlockedAfterDeath(EntityPlayer player, int slotIndex) {
         if (player == null || player.capabilities == null || player.capabilities.isCreativeMode
                 || NightmareMode.devMode || NightmareMode.fullInventoryCapacity) return true;
-        if (com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) return isMainInventorySlotUnlocked(player, slotIndex);
+        if (com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) return isMainInventorySlotUnlocked(player, slotIndex);
         if (slotIndex < 0) return false;
         com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(player);
         if (slotIndex < 9) return slotIndex < Math.min(9, 1 + data.permanentXpHotbarSlots + data.extraHotbarSlots);
@@ -97,7 +101,7 @@ public final class NMInventoryLocks {
                     ? isMainInventorySlotUnlockedAfterDeath(player, slot)
                     : isMainInventorySlotUnlocked(player, slot))) continue;
 
-            if (afterDeath && stack.itemID == com.itlesports.nightmaremode.item.NMItems.skillBook.itemID) continue;
+            if (isSoulbound(stack)) continue;
 
             inventory[slot] = null;
             player.dropPlayerItemWithRandomChoice(stack, true);
@@ -116,10 +120,10 @@ public final class NMInventoryLocks {
         ItemStack[] inventory = player.inventory.mainInventory;
         for (int slot = 0; slot < inventory.length; slot++) {
             ItemStack stack = inventory[slot];
-            if (stack == null || stack.itemID != com.itlesports.nightmaremode.item.NMItems.skillBook.itemID
+            if (!isSoulbound(stack)
                     || isMainInventorySlotUnlocked(player, slot)) continue;
             inventory[slot] = null;
-            if (!player.inventory.addItemStackToInventory(stack)) player.dropPlayerItem(stack);
+            if (!player.inventory.addItemStackToInventory(stack)) inventory[slot] = stack;
         }
         player.inventory.onInventoryChanged();
     }

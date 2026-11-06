@@ -4,8 +4,7 @@ import btw.util.hardcorespawn.HardcoreSpawnUtils;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.util.NMFields;
-import com.itlesports.nightmaremode.util.NMHardcoreSpawnContext;
-import com.itlesports.nightmaremode.util.OuterDeathRespawn;
+import com.itlesports.nightmaremode.util.NMRespawn;
 import com.itlesports.nightmaremode.util.interfaces.FoodStatsExt;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -23,7 +22,7 @@ public abstract class HardcoreSpawnUtilsMixin{
     @Inject(method = "handleHardcoreSpawn", at = @At("HEAD"), cancellable = true)
     private static void returnOuterDeathToSpawn(MinecraftServer server, EntityPlayerMP oldPlayer,
                                                EntityPlayerMP newPlayer, CallbackInfo ci) {
-        if (!OuterDeathRespawn.returnsToSpawn(oldPlayer)) return;
+        if (!NMRespawn.returnsToSpawn(oldPlayer)) return;
         countDeath(oldPlayer, newPlayer);
         returnPlayerToOriginalSpawn(newPlayer.worldObj, newPlayer);
         ci.cancel();
@@ -75,31 +74,31 @@ public abstract class HardcoreSpawnUtilsMixin{
 
     @Redirect(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;getSpawnX()I"))
     private static int centerNewSpawnXOnDeath(WorldInfo info, World world, MinecraftServer server, EntityPlayerMP player) {
-        ChunkCoordinates origin = NMHardcoreSpawnContext.getOrigin(world);
+        ChunkCoordinates origin = NMRespawn.getOrigin(world);
         return origin != null ? origin.posX : info.getSpawnX();
     }
 
     @Redirect(method = "assignNewHardcoreSpawnLocation", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;getSpawnZ()I"))
     private static int centerNewSpawnZOnDeath(WorldInfo info, World world, MinecraftServer server, EntityPlayerMP player) {
-        ChunkCoordinates origin = NMHardcoreSpawnContext.getOrigin(world);
+        ChunkCoordinates origin = NMRespawn.getOrigin(world);
         return origin != null ? origin.posZ : info.getSpawnZ();
     }
 
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayerMP;hardcoreSpawnChunk:Lnet/minecraft/src/ChunkCoordinates;"))
     private static ChunkCoordinates centerRapidRespawnOnDeath(EntityPlayerMP player, MinecraftServer server,
                                                             EntityPlayerMP oldPlayer, EntityPlayerMP newPlayer) {
-        ChunkCoordinates origin = NMHardcoreSpawnContext.getOrigin(newPlayer.worldObj);
+        ChunkCoordinates origin = NMRespawn.getOrigin(newPlayer.worldObj);
         return origin != null ? origin : player.hardcoreSpawnChunk;
     }
 
     @Redirect(method = "handleHardcoreSpawn", at = @At(value = "INVOKE", target = "Lbtw/util/hardcorespawn/HardcoreSpawnUtils;canSpawnNearbyOtherPlayers(Lnet/minecraft/src/WorldServer;)Z"))
     private static boolean keepDeathRespawnsLocal(WorldServer world) {
-        return NMHardcoreSpawnContext.getOrigin(world) == null && canSpawnNearbyOtherPlayers(world);
+        return NMRespawn.getOrigin(world) == null && canSpawnNearbyOtherPlayers(world);
     }
 
     @Redirect(method = "returnPlayerToOriginalSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getSpawnPoint()Lnet/minecraft/src/ChunkCoordinates;"))
     private static ChunkCoordinates keepFallbackSpawnNearDeath(World world) {
-        ChunkCoordinates origin = NMHardcoreSpawnContext.getOrigin(world);
+        ChunkCoordinates origin = NMRespawn.getOrigin(world);
         return origin != null ? new ChunkCoordinates(origin.posX,
                 world.getTopSolidOrLiquidBlock(origin.posX, origin.posZ), origin.posZ) : world.getSpawnPoint();
     }

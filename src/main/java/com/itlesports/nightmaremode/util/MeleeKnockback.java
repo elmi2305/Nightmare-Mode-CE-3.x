@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.util;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.util.interfaces.NoMeleeKnockback;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayer;
@@ -18,6 +20,11 @@ public final class MeleeKnockback {
     }
 
     public static float getScale(float damage) {
-        return Math.max(0.1F, Math.min(1.0F, damage / 10.0F));
+        return BalanceProfile.isCombatEasy() ? Math.max(0.6F, Math.min(1.0F, damage / 5.0F))
+                : Math.max(0.1F, Math.min(1.0F, damage / 10.0F));
+    }
+
+    public static float getScale(float damage, Entity attacker) {
+        return attacker instanceof EntityPlayer ? getScale(damage) : Math.max(0.1F, Math.min(1.0F, damage / 10.0F));
     }
 }

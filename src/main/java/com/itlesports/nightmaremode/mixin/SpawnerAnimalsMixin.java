@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -46,6 +48,7 @@ public class SpawnerAnimalsMixin {
     @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;getClosestPlayer(DDDD)Lnet/minecraft/src/EntityPlayer;"))
     private EntityPlayer allowSpawningCloseToPlayerInBloodMoon(WorldServer worldServer, double spawnPosX, double spawnPosY, double spawnPosZ, double exclusionRadius){
         if(NMUtils.getIsBloodMoon()){
+            if (BalanceProfile.isCombatEasy()) return worldServer.getClosestPlayer(spawnPosX, spawnPosY + 0.01D, spawnPosZ, 24.0D);
             if (worldServer.provider.dimensionId == -1) {
                 return worldServer.getClosestPlayer(spawnPosX, spawnPosY + 0.01F, spawnPosZ,
                         Math.max(16.0D, exclusionRadius));

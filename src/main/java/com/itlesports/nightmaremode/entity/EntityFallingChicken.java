@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.block.blocks.GroundCoverBlock;
 import api.world.BlockPos;
 import btw.block.blocks.BlockDispenserBlock;
@@ -19,7 +21,7 @@ public class EntityFallingChicken extends EntityChicken {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((double)200f);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20.0D : (double)200f);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((double)0f);
     }
     @Override

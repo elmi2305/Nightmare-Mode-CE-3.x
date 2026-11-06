@@ -25,7 +25,7 @@ public final class EasyBalance {
             "activity_kill_enderman_250");
     public static String skillRequirement(net.minecraft.src.ResourceLocation id, String text) {
         return BalanceProfile.isEasy() && OPTIONAL_STAT_COUNTERS.contains(id.getResourcePath().replace("skill/", ""))
-                ? text + " (2x Easy credit)" : text;
+                ? text + " (2x Low progression credit)" : text;
     }
     private EasyBalance() {}
     public static int statCount(int recorded) { return BalanceProfile.isEasy() ? (int)Math.min(Integer.MAX_VALUE, (long)recorded * 2L) : recorded; }
@@ -34,9 +34,11 @@ public final class EasyBalance {
     public static float miningBonus(float skillBonus) { return BalanceProfile.isEasy() ? (1.0F + skillBonus) * 2.0F - 1.0F : skillBonus; }
     public static float processingBonus(float skillBonus) { return BalanceProfile.isEasy() ? (1.0F + skillBonus) * 3.0F - 1.0F : skillBonus; }
     public static int processingTicks(int hardTicks) { return BalanceProfile.isEasy() ? Math.max(1, (hardTicks + 2) / 3) : hardTicks; }
-    public static float exhaustion(float hardCost) { return BalanceProfile.isEasy() && !btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost * 0.35F : hardCost; }
-    public static float spoilage(float hardRate) { return BalanceProfile.isEasy() ? hardRate * 0.5F : hardRate; }
+    public static float exhaustion(float hardCost) { return BalanceProfile.isCombatEasy() && !btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost * 0.35F : hardCost; }
+    public static float villagerExhaustion(float hardCost) { return BalanceProfile.isEasy() && !btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost * 0.35F : hardCost; }
+    public static float spoilage(float hardRate) { return BalanceProfile.isCombatEasy() ? hardRate * 0.5F : hardRate; }
     public static float pollution(float hardAmount) { return BalanceProfile.isEasy() && !btw.community.nightmaremode.NightmareMode.testEasyPollution ? hardAmount * 0.25F : hardAmount; }
-    public static float deathLoss(float skillLoss) { return Math.max(0.0F, Math.min(1.0F, skillLoss - (BalanceProfile.isEasy() ? 0.5F : 0.0F))); }
+    public static float deathLoss(float skillLoss) { return Math.max(0.0F, Math.min(1.0F, skillLoss - (BalanceProfile.isCombatEasy() ? 0.5F : 0.0F))); }
+    public static boolean reducedWear(boolean combatGear) { return combatGear ? BalanceProfile.isCombatEasy() : BalanceProfile.isEasy(); }
     public static int hostileMultiplier(int knifeTier) { return BalanceProfile.isEasy() ? 2 + Math.max(0, knifeTier) : 1; }
 }

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Potion;
@@ -15,7 +17,7 @@ public class EntitySiegeGhast extends EntityTieredNetherGhast {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(80.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 40.0D : 80.0D);
     }
 
     @Override

@@ -26,11 +26,12 @@ public final class NMRecipeDurability {
             else continue;
             ItemStack output = recipe.getRecipeOutput();
             boolean armorUpgrade = output != null && isArmor(output.getItem());
+            boolean flintRecycling = output != null && output.getItem() == NMItems.soulChip;
             for (TagOrStack ingredient : ingredients) {
                 if (ingredient instanceof ItemStack stack
                         && (stack.getItem() == NMItems.soulFlint
                             || armorUpgrade && isArmor(stack.getItem()))) {
-                    stack.setItemDamage(Short.MAX_VALUE);
+                    stack.setItemDamage(stack.getItem() == NMItems.soulFlint && flintRecycling ? 0 : Short.MAX_VALUE);
                 }
             }
         }

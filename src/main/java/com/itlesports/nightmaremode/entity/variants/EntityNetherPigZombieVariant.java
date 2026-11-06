@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPigZombie;
@@ -17,11 +19,11 @@ public abstract class EntityNetherPigZombieVariant extends EntityPigZombie {
     protected abstract int getFireSecondsOnHit();
 
     protected double getVariantHealth() {
-        return 65.0D;
+        return BalanceProfile.isCombatEasy() ? 30.0D : 65.0D;
     }
 
     protected double getVariantDamage() {
-        return 11.0D;
+        return BalanceProfile.isCombatEasy() ? 4.0D : 11.0D;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
@@ -105,7 +107,7 @@ public abstract class EntityEndermanMixin extends EntityMob {
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(((progress > 0 ? 0.38f : 0.35f) + (isBloodMoon ? 0.04 : 0) + (NMUtils.getIsMobEclipsed(this) ? 0.07 : 0)) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((6.0 + progress * 2 + bloodMoonModifier) * NMUtils.getNiteMultiplier());
         // 7 -> 9 -> 11 -> 13
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(40 + progress * 20);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 24 + Math.min(progress, 3) * 2 : 40 + progress * 20);
         // 40 -> 60 -> 80 -> 100
     }
 
@@ -470,4 +472,17 @@ public abstract class EntityEndermanMixin extends EntityMob {
 //    }
 
 
+
+    @org.spongepowered.asm.mixin.Unique private com.itlesports.nightmaremode.util.EasyCombatStats easyLoadedStats;
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void captureEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        this.easyLoadedStats = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void restoreEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, this.easyLoadedStats);
+        this.easyLoadedStats = null;
+    }
 }

@@ -12,6 +12,11 @@ public class HellforgeTileEntity extends TileEntityFurnace implements TileEntity
     private int visualFuelLevel = 0;
     private boolean lightOnNextUpdate = false;
 
+    @Override
+    public int getInventoryStackLimit() {
+        return 1;
+    }
+
 
     public void updateEntity() {
         boolean bWasBurning = this.furnaceBurnTime > 0;

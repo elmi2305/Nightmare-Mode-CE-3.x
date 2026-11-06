@@ -20,17 +20,17 @@ public abstract class NetServerHandlerMixin {
 
     @Inject(method = "handleCustomPayload", at = @At("HEAD"), cancellable = true)
     private void verifyClientBalance(net.minecraft.src.Packet250CustomPayload packet, CallbackInfo ci) {
-        if (!"NM|Balance1".equals(packet.channel)) return;
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.CHANNEL.equals(packet.channel)) return;
         this.balanceProfileAccepted = com.itlesports.nightmaremode.world.BalanceProfile.acceptsWireProfile(packet.data);
         if (!this.balanceProfileAccepted) ((NetServerHandler)(Object)this).kickPlayerFromServer(
-                "Journey difficulty does not match this server. Change difficulty and restart the game.");
+                "Journey combat difficulty or progression does not match this server. Change both settings as needed and restart the game.");
         ci.cancel();
     }
 
     @Inject(method = "networkTick", at = @At("TAIL"))
     private void enforceBalanceHandshake(CallbackInfo ci) {
         if (!this.balanceProfileAccepted && ++this.balanceHandshakeTicks == 200)
-            ((NetServerHandler)(Object)this).kickPlayerFromServer("Matching Journey difficulty is required. Change difficulty and restart the game.");
+            ((NetServerHandler)(Object)this).kickPlayerFromServer("Matching Journey combat difficulty and progression are required. Change settings and restart the game.");
     }
 
     @Inject(method = {"handleFlying", "handleBlockDig", "handlePlace", "handleUseEntity", "handleWindowClick",

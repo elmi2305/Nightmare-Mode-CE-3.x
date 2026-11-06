@@ -6,6 +6,6 @@ import net.minecraft.src.EnumToolMaterial;
 public class ItemTungstenHammer extends ItemHammer implements INetherItem {
     public ItemTungstenHammer(int id) {
         super(id, EnumToolMaterial.EMERALD);
-        this.setMaxDamage(750);
+        this.setMaxDamage(1500);
     }
 }

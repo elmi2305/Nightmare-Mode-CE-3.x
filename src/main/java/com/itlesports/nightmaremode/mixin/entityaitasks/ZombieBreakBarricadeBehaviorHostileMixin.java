@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.item.items.ShovelItem;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
@@ -26,8 +28,12 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
         super(par1EntityLiving);
     }
 
-    @Inject(method = "updateTask", at = @At("HEAD"))
+    @Inject(method = "updateTask", at = @At("HEAD"), cancellable = true)
     private void toolZombieBreaksFaster(CallbackInfo ci){
+        if (BalanceProfile.isCombatEasy()) {
+            if (!(this.associatedEntity instanceof EntityBloodZombie) || (this.associatedEntity.ticksExisted & 1) != 0) ci.cancel();
+            return;
+        }
         if(this.associatedEntity instanceof EntityBloodZombie || NMUtils.getIsBloodMoon()){
             this.breakingTime += 8;
         }
@@ -55,6 +61,10 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     }
     @Inject(method = "shouldExecute", at = @At("RETURN"), cancellable = true)
     private void manageBloodZombieBlockBreaking(CallbackInfoReturnable<Boolean> cir){
+        if (BalanceProfile.isCombatEasy() && !(this.associatedEntity instanceof EntityBloodZombie)) {
+            cir.setReturnValue(false);
+            return;
+        }
         if(this.associatedEntity instanceof EntityBloodZombie){
             cir.setReturnValue(cir.getReturnValue() && ((EntityBloodZombie) this.associatedEntity).canBreakBlocks());
         }
@@ -64,6 +74,10 @@ public class ZombieBreakBarricadeBehaviorHostileMixin extends ZombieBreakBarrica
     
     @Inject(method = "continueExecuting", at = @At("HEAD"),cancellable = true)
     private void manageWhenToStop(CallbackInfoReturnable<Boolean> cir){
+        if (BalanceProfile.isCombatEasy() && !(this.associatedEntity instanceof EntityBloodZombie)) {
+            cir.setReturnValue(false);
+            return;
+        }
         Entity target = this.associatedEntity.getAttackTarget();
         if(this.associatedEntity.isAirBorne){
             cir.setReturnValue(false);

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.AITasks.EntityAIAttackOnCollidePigman;
@@ -47,7 +49,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     public Entity findPlayerToAttack() {
-        if(NMEvents.SimpleEvent.HELL.isActive() && this.entityToAttack == null){
+        if(!BalanceProfile.isCombatEasy() && NMEvents.SimpleEvent.HELL.isActive() && this.entityToAttack == null){
             this.angerLevel = 1200;
             EntityPlayer p = this.worldObj.getClosestVulnerablePlayerToEntity(this, 50);
             if (p != null) {
@@ -76,6 +78,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Inject(method = "onUpdate", at = @At("HEAD"))
     private void attackNearestPlayer(CallbackInfo ci){
+        if (BalanceProfile.isCombatEasy()) return;
         if (this.entityToAttack == null && (this.ticksExisted + this.entityId) % 20 == 0) { // using entityID to throttle the checks so all pigmen don't check on the same tick
             if(NMUtils.getIsBloodMoon()){
                 EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 30);
@@ -104,8 +107,8 @@ public class EntityPigZombieMixin extends EntityZombie {
     private void applyAdditionalAttributes(CallbackInfo ci){
         boolean isEclipse = NMUtils.getIsMobEclipsed(this);
 
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + 4 * NMUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NMUtils.getNiteMultiplier());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 + Math.min(3, NMUtils.getWorldProgress()) * 2 : (16 + 4 * NMUtils.getWorldProgress() + (isEclipse ? 10 : 0)) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(BalanceProfile.isCombatEasy() ? 2.0D : (3 + 2 * NMUtils.getWorldProgress()) * NMUtils.getNiteMultiplier());
         if(NMEvents.SimpleEvent.HELL.isActive()){
             this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.1d + this.rand.nextDouble() * 0.1d);
         }
@@ -189,7 +192,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     public boolean isAIEnabled() {
-        return NMEvents.SimpleEvent.HELL.isActive();
+        return !BalanceProfile.isCombatEasy() && NMEvents.SimpleEvent.HELL.isActive();
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -204,7 +207,7 @@ public class EntityPigZombieMixin extends EntityZombie {
 
     @Override
     public boolean attackEntityAsMob(Entity attackedEntity) {
-        if(NMUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
+        if(!BalanceProfile.isCombatEasy() && NMUtils.getIsMobEclipsed(this) && attackedEntity instanceof EntityPlayer){
 
             if(this.rand.nextInt(12) == 0){
                 ((EntityPlayer) attackedEntity).addPotionEffect(new PotionEffect(Potion.poison.id, 60,0));

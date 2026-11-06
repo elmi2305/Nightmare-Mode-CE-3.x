@@ -30,13 +30,11 @@ public class ItemStackMixin {
         if (stack.itemID == com.itlesports.nightmaremode.block.NMBlocks.hellforge.blockID) {
             tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY
                     + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.fuel"));
-            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY
-                    + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.preferredFuel"));
         }
         if (com.itlesports.nightmaremode.util.NMFireproofItems.isFireproof(stack)) {
             tooltip.add(net.minecraft.src.EnumChatFormatting.DARK_AQUA + "Fireproof");
         }
-        if (stack.getItem() == com.itlesports.nightmaremode.item.NMItems.skillBook) {
+        if (com.itlesports.nightmaremode.util.NMInventoryLocks.isSoulbound(stack)) {
             tooltip.add(net.minecraft.src.EnumChatFormatting.DARK_AQUA + "Soulbound");
         }
         if (stack.itemID == net.minecraft.src.Block.netherrack.blockID
@@ -113,12 +111,15 @@ public class ItemStackMixin {
 
     @org.spongepowered.asm.mixin.injection.ModifyVariable(method = "damageItem", at = @At("HEAD"), argsOnly = true)
     private int reduceEasyToolWear(int amount, int originalAmount, EntityLivingBase user) {
-        if (amount <= 0 || user == null || user.worldObj.isRemote || !com.itlesports.nightmaremode.world.BalanceProfile.isEasy()
+        if (amount <= 0 || user == null || user.worldObj.isRemote
                 || btw.community.nightmaremode.NightmareMode.testEasyDurability) return amount;
         ItemStack stack = (ItemStack)(Object)this;
         if (!NMItemStackUtils.isValid(stack) || !stack.isItemStackDamageable()
                 || stack.getItemDamage() >= stack.getMaxDamage() - Math.max(10, amount)) return amount;
         Item item = stack.getItem();
+        boolean combatGear = item instanceof net.minecraft.src.ItemArmor || item instanceof net.minecraft.src.ItemBow
+                || item instanceof net.minecraft.src.ItemSword && !(item instanceof com.itlesports.nightmaremode.item.items.ItemScythe);
+        if (!com.itlesports.nightmaremode.util.EasyBalance.reducedWear(combatGear)) return amount;
         if (!(item instanceof net.minecraft.src.ItemTool || item instanceof net.minecraft.src.ItemArmor
                 || item instanceof net.minecraft.src.ItemSword || item instanceof net.minecraft.src.ItemBow || item instanceof net.minecraft.src.ItemFishingRod || item instanceof net.minecraft.src.ItemShears
                 || item instanceof com.itlesports.nightmaremode.item.items.ItemSoulFlint

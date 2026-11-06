@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.outer;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import net.minecraft.src.*;
 import com.itlesports.nightmaremode.util.GhastFlightNavigator;
 
@@ -51,9 +53,9 @@ abstract class EntityOuterGhast extends EntityGhast {
                 if (this.attackCounter == 10) {
                     this.worldObj.playAuxSFXAtEntity(null, 1007, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
                 }
-                if (++this.attackCounter >= attackWindup()) {
+                if (++this.attackCounter >= (BalanceProfile.isCombatEasy() ? attackWindup() + 10 : attackWindup())) {
                     fireOuterProjectile(this.outerTarget, dx, dy, dz);
-                    this.attackCounter = attackCooldown();
+                    this.attackCounter = BalanceProfile.isCombatEasy() ? Math.min(-60, attackCooldown() * 2) : attackCooldown();
                 }
             } else if (this.attackCounter > 0) {
                 --this.attackCounter;

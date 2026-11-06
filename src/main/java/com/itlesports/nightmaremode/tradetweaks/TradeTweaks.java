@@ -11,6 +11,12 @@ import net.minecraft.src.Item;
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 public final class TradeTweaks {
+    public enum ApplyAction {
+        KEEP,     // mutate builder in-place (or do nothing); let original method proceed
+        DROP,     // cancel original method (don't add trade)
+        REPLACED  // we added a replacement trade ourselves; cancel original method to avoid duplicate
+    }
+
     private TradeTweaks() {}
 
     private static final ConcurrentHashMap<String, Edit> edits = new ConcurrentHashMap<>();

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -164,6 +166,7 @@ public class EntityAILiteHorde extends EntityAIBase {
     }
 
     private int computeRangeForHeldItem(ItemStack heldItem) {
+        if (BalanceProfile.isCombatEasy() && this.taskOwner instanceof EntityZombie) return 2;
         if (heldItem == null) return NightmareMode.isAprilFools ? 7 : 2;
 
         int id = heldItem.itemID;

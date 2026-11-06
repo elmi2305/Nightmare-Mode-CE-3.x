@@ -8,6 +8,7 @@ import btw.block.blocks.NetherrackBlock;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.item.items.ItemTungstenPickaxe;
 import com.itlesports.nightmaremode.item.items.ItemAlloyPickaxe;
+import com.itlesports.nightmaremode.util.NMBlockBreakingRules;
 import com.itlesports.nightmaremode.entity.EntityNetherFish;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.items.bloodItems.ItemBloodPickaxe;
@@ -160,7 +161,7 @@ public class NetherrackBlockMixin extends FullBlock {
         int metadata = world.getBlockMetadata(i, j, k);
         ItemStack held = player.getCurrentEquippedItem();
         boolean hasLateNetherPick = held != null
-                && (held.getItem() == BTWItems.steelPickaxe || held.getItem() instanceof ItemAlloyPickaxe);
+                && (NMBlockBreakingRules.isSteelMiningTool(held) || held.getItem() instanceof ItemAlloyPickaxe);
 
         if (metadata == 4 && !hasLateNetherPick) {
             return 0.0F;

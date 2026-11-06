@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.mob.KickingAnimal;
 import api.world.WorldUtils;
 import btw.community.nightmaremode.NightmareMode;
@@ -27,6 +29,10 @@ import static com.itlesports.nightmaremode.util.NMFields.POSTWITHER;
 
 @Mixin(EntityHorse.class)
 public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTamingClient, IPlayerDirectionTracker {
+    @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
+    private void lowerEasyHorseHealth(CallbackInfo ci) {
+        if (BalanceProfile.isCombatEasy()) this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20.0D);
+    }
 
 
     @Shadow
@@ -310,7 +316,7 @@ public abstract class EntityHorseMixin extends KickingAnimal implements IHorseTa
         double eclipseModifier = NMUtils.getIsEclipse() ? 1.5 : 1;
         double niteMultiplier = NMUtils.getNiteMultiplier();
         if(this.getMaxHealth() != originalHealth * niteMultiplier * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * niteMultiplier * eclipseModifier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 : originalHealth * niteMultiplier * eclipseModifier);
         }
 
         float speed = (float) ((NMUtils.getIsMobEclipsed(this) ? 0.4f : 0.225f) * niteMultiplier);

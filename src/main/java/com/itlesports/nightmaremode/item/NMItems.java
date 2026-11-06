@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.item;
 
+import api.item.items.AxeItem;
+import api.item.items.HoeItem;
 import btw.item.BTWTags;
 import btw.item.BTWItems;
 import btw.item.items.*;
@@ -254,6 +256,12 @@ public class NMItems {
     public static Item netherrackSword;
     public static Item tungstenPickaxe;
     public static Item tungstenShovel;
+    public static Item tungstenAxe;
+    public static Item tungstenHoe;
+    public static ItemAlloyArmor anglerHelmet;
+    public static ItemAlloyArmor anglerChestplate;
+    public static ItemAlloyArmor anglerLeggings;
+    public static ItemAlloyArmor anglerBoots;
     public static Item ironScythe;
     public static Item diamondScythe;
     public static Item tungstenScythe;
@@ -792,6 +800,18 @@ public class NMItems {
         workedScouredLeather = new NMItem(2739).setTextureName("nightmare:ifhyWorkedScouredLeather").setUnlocalizedName("ifhyWorkedScouredLeather").setCreativeTab(CreativeTabs.tabMaterials);
         flintChip = new NMItem(2740).setTextureName("nightmare:ifhyFlintChip").setUnlocalizedName("ifhyFlintChip").setCreativeTab(CreativeTabs.tabMaterials);
         tungstenShovel = new NMShovelItem(2741, EnumToolMaterial.IRON, 3200, 0.7f).setTextureName("nightmare:ifhyTungstenShovel").setUnlocalizedName("ifhyTungstenShovel").setCreativeTab(CreativeTabs.tabTools);
+        tungstenAxe = new AxeItem(3508, EnumToolMaterial.IRON)
+                .setTextureName("nightmare:ifhyTungstenAxe").setUnlocalizedName("ifhyTungstenAxe");
+        tungstenHoe = new HoeItem(3509, EnumToolMaterial.IRON)
+                .setTextureName("nightmare:ifhyTungstenHoe").setUnlocalizedName("ifhyTungstenHoe");
+        anglerHelmet = alloyArmor(3510, 0, 1, 1, 400, 12, 0.0D, Item.leather,
+                "ifhyAnglerArmor", "item.ifhyAnglerArmor.bonus", "ifhyAnglerHelmet");
+        anglerChestplate = alloyArmor(3511, 1, 3, 3, 400, 12, 0.0D, Item.leather,
+                "ifhyAnglerArmor", "item.ifhyAnglerArmor.bonus", "ifhyAnglerChestplate");
+        anglerLeggings = alloyArmor(3512, 2, 2, 2, 400, 12, 0.0D, Item.leather,
+                "ifhyAnglerArmor", "item.ifhyAnglerArmor.bonus", "ifhyAnglerLeggings");
+        anglerBoots = alloyArmor(3513, 3, 1, 1, 400, 12, 0.0D, Item.leather,
+                "ifhyAnglerArmor", "item.ifhyAnglerArmor.bonus", "ifhyAnglerBoots");
         ironScythe = new ItemScythe(2748, EnumToolMaterial.IRON, 3.5F).setTextureName("nightmare:ifhyIronScythe").setUnlocalizedName("ifhyIronScythe").setCreativeTab(CreativeTabs.tabCombat);
         diamondScythe = new ItemScythe(2749, EnumToolMaterial.EMERALD, 4.0F).setTextureName("nightmare:ifhyDiamondScythe").setUnlocalizedName("ifhyDiamondScythe").setCreativeTab(CreativeTabs.tabCombat);
         tungstenScythe = new ItemTungstenScythe(2750).setTextureName("nightmare:ifhyTungstenScythe").setUnlocalizedName("ifhyTungstenScythe").setCreativeTab(CreativeTabs.tabCombat);
@@ -1499,7 +1519,7 @@ public class NMItems {
         BTWTags.foods.add(charredBrownMushroom);
         BTWTags.foods.add(lavafishMushroomSkewer);
         BTWTags.lowQualityAxes.addIgnoringMeta(flintAxe);
-        BTWTags.highQualityAxes.addIgnoringMeta(bloodAxe, enderAxe, coresteelAxe, quicksilverAxe);
+        BTWTags.highQualityAxes.addIgnoringMeta(bloodAxe, enderAxe, coresteelAxe, quicksilverAxe, tungstenAxe);
     }
 
 }

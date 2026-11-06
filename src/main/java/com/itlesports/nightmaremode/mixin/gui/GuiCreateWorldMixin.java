@@ -111,7 +111,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
 
     @Redirect(method = "updateButtonText", at = @At(value = "INVOKE", target = "Lapi/world/difficulty/Difficulty;getLocalizedName()Ljava/lang/String;", remap = false))
     private String customDifficultyName(Difficulty difficulty){
-        return I18n.getString("difficulty.nightmare.name");
+        return com.itlesports.nightmaremode.world.BalanceProfile.name(com.itlesports.nightmaremode.world.BalanceProfile.combat(com.itlesports.nightmaremode.world.BalanceProfile.active()));
     }
     @Inject(method = "updateButtonText", at = @At("TAIL"))
     private void lockButtonCannotBeClicked(CallbackInfo ci){
@@ -194,8 +194,8 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             journeyMode$drawTextBox(this.textboxWorldName, this.width / 2 - 100, 60, 200, theme);
             this.drawString(this.fontRenderer, I18n.getString("selectWorld.enterName"), this.width / 2 - 100, 47, theme.textMuted);
             this.drawString(this.fontRenderer, I18n.getString("selectWorld.resultFolder") + " " + this.folderName, this.width / 2 - 100, 85, theme.textMuted);
-            this.drawString(this.fontRenderer, "Choose a game mode. Journey difficulty is always locked.", this.width / 2 - 153, 125, theme.textMuted);
-            this.drawString(this.fontRenderer, "World settings can be adjusted under More World Options.", this.width / 2 - 153, 139, theme.textMuted);
+            this.drawString(this.fontRenderer, com.itlesports.nightmaremode.world.BalanceProfile.journeyName(com.itlesports.nightmaremode.world.BalanceProfile.active()) + " (locked)", this.width / 2 - 153, 125, theme.textMuted);
+            this.drawString(this.fontRenderer, "Choose both settings in the main menu before restarting.", this.width / 2 - 153, 139, theme.textMuted);
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

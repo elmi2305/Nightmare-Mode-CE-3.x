@@ -25,6 +25,10 @@ public final class GhastFlightNavigator {
     private List<Point> path = List.of();
     private int pathIndex;
 
+    public static double attackRange() {
+        return NMUtils.getWorldProgress() >= NMFields.HARDMODE ? 36.0D : 24.0D;
+    }
+
     public void update(EntityGhast ghast, Entity candidate, double preferredDistance) {
         if (ghast.worldObj.isRemote) return;
         if (candidate != target) {

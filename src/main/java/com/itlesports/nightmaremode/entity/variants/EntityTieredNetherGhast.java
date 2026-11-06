@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import net.minecraft.src.EntityFireball;
 import net.minecraft.src.EntityGhast;
 import net.minecraft.src.EntityPlayer;
@@ -40,14 +42,14 @@ abstract class EntityTieredNetherGhast extends EntityGhast {
             double dy = this.tieredTarget.posY + this.tieredTarget.getEyeHeight() - (this.posY + this.height * 0.5D);
             double dz = this.tieredTarget.posZ - this.posZ;
             this.renderYawOffset = this.rotationYaw = -((float)(Math.atan2(dx, dz) * 180.0D / Math.PI));
-            double range = com.itlesports.nightmaremode.util.NMGhastRules.attackRange();
+            double range = com.itlesports.nightmaremode.util.GhastFlightNavigator.attackRange();
             if (this.getDistanceSqToEntity(this.tieredTarget) <= range * range && this.canEntityBeSeen(this.tieredTarget)) {
                 if (this.attackCounter == 10) {
                     this.worldObj.playAuxSFXAtEntity(null, 1007, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
                 }
-                if (++this.attackCounter >= this.attackWindup()) {
+                if (++this.attackCounter >= (BalanceProfile.isCombatEasy() ? this.attackWindup() + 10 : this.attackWindup())) {
                     this.fireTieredProjectiles(this.tieredTarget, dx, dy, dz);
-                    this.attackCounter = this.attackCooldown();
+                    this.attackCounter = BalanceProfile.isCombatEasy() ? Math.min(-60, this.attackCooldown() * 2) : this.attackCooldown();
                 }
             } else if (this.attackCounter > 0) {
                 --this.attackCounter;

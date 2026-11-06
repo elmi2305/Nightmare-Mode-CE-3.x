@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.AITasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMFields;
@@ -36,7 +38,8 @@ public class EntityAICreeperVariantSwell extends EntityAIBase {
             return true;
         }
         EntityLivingBase var1 = this.swellingCreeper.getAttackTarget();
-        int range = 9;
+        if (BalanceProfile.isCombatEasy() && (var1 == null || !this.swellingCreeper.canEntityBeSeen(var1))) return false;
+        int range = BalanceProfile.isCombatEasy() && this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_OBSIDIAN ? 4 : 9;
         if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_LIGHTNING){
             range = 5;
         }
@@ -47,15 +50,19 @@ public class EntityAICreeperVariantSwell extends EntityAIBase {
     public void updateTask() {
         double retentionDistance = 36.0;
         if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_OBSIDIAN){
-            retentionDistance = 81;
+            retentionDistance = BalanceProfile.isCombatEasy() ? 16 : 81;
         }
         if(this.swellingCreeper.variantType == NMFields.PACKET_CREEPER_LIGHTNING){
             retentionDistance = 4096;
         }
 
+        if (BalanceProfile.isCombatEasy() && (this.creeperAttackTarget == null || !this.swellingCreeper.canEntityBeSeen(this.creeperAttackTarget))) {
+            this.swellingCreeper.setCreeperState(-1);
+            return;
+        }
         if (this.swellingCreeper.getNeuteredState() > 0) {
             this.swellingCreeper.setCreeperState(-1);
-        } else if (!(this.swellingCreeper.getIsDeterminedToExplode() || this.creeperAttackTarget != null && !(this.swellingCreeper.getDistanceSqToEntity(this.creeperAttackTarget) > retentionDistance) && (this.swellingCreeper.getEntitySenses().canSee(this.creeperAttackTarget) || this.creeperAttackTarget.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)))) {
+        } else if (!(this.swellingCreeper.getIsDeterminedToExplode() || this.creeperAttackTarget != null && !(this.swellingCreeper.getDistanceSqToEntity(this.creeperAttackTarget) > retentionDistance) && (this.swellingCreeper.getEntitySenses().canSee(this.creeperAttackTarget) || !BalanceProfile.isCombatEasy() && this.creeperAttackTarget.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)))) {
             this.swellingCreeper.setCreeperState(-1);
         } else {
             this.swellingCreeper.setCreeperState(1);

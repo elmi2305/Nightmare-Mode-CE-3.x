@@ -14,12 +14,14 @@ public final class TestEasyBalanceCommand extends CommandBase {
     @Override public String getCommandUsage(ICommandSender sender) { return "/" + this.name; }
     @Override public int getRequiredPermissionLevel() { return 0; }
     @Override public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return BalanceProfile.isEasy() && sender instanceof EntityPlayer player
+        return (this.name.equals("testeasyhungerdrain") || this.name.equals("testeasydurability")
+                ? BalanceProfile.isEasy() || BalanceProfile.isCombatEasy() : BalanceProfile.isEasy())
+                && sender instanceof EntityPlayer player
                 && !player.capabilities.isCreativeMode;
     }
 
     @Override public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        if (!this.canCommandSenderUseCommand(sender)) throw new CommandException("Available in Easy survival mode.");
+        if (!this.canCommandSenderUseCommand(sender)) throw new CommandException("Requires the corresponding Easy combat or Low progression setting in survival.");
         if (args.length != 0) throw new WrongUsageException(this.getCommandUsage(sender));
         String key;
         boolean enabled;
@@ -39,7 +41,7 @@ public final class TestEasyBalanceCommand extends CommandBase {
             case "testeasydurability" -> NightmareMode.testEasyDurability = enabled;
         }
         sender.sendChatToPlayer(ChatMessageComponent.createFromText("/" + this.name + ": "
-                + (enabled ? "Hard behavior ON" : "Easy behavior restored")
+                + (enabled ? "Baseline behavior ON" : "Selected journey settings restored")
                 + ". Saved in config; applies to this game/server instance."));
     }
 }

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -85,6 +87,7 @@ public abstract class EntityAIAttackOnCollideMixin {
 
     @Unique
     private int computeRangeForHeldItem(ItemStack heldItem) {
+        if (BalanceProfile.isCombatEasy() && this.attacker instanceof EntityZombie) return 2;
         if (heldItem == null) return NightmareMode.isAprilFools ? 7 : 2;
 
         int itemId = heldItem.itemID;

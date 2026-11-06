@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.outer;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.entity.mob.BTWSquidEntity;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.EntityPlayer;
@@ -22,7 +24,7 @@ public class EntityAcidSquid extends BTWSquidEntity {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(26.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20.0D : 26.0D);
     }
 
     @Override
@@ -35,5 +37,12 @@ public class EntityAcidSquid extends BTWSquidEntity {
             this.playSound("random.bow", 0.8F, 0.75F);
             this.acidAttackCooldown = 55 + this.rand.nextInt(30);
         }
+    }
+
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 }

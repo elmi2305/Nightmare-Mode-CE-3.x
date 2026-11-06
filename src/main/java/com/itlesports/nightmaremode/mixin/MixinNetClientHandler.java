@@ -22,7 +22,7 @@ public abstract class MixinNetClientHandler {
 
     @Inject(method = "handleCustomPayload", at = @At("HEAD"), cancellable = true)
     private void receiveBalanceBeforeLogin(Packet250CustomPayload packet, CallbackInfo ci) {
-        if (!"NM|Balance1".equals(packet.channel)) return;
+        if (!com.itlesports.nightmaremode.world.BalanceProfile.CHANNEL.equals(packet.channel)) return;
         this.balanceProfileAccepted = com.itlesports.nightmaremode.world.BalanceProfile.acceptsWireProfile(packet.data);
         if (!this.balanceProfileAccepted) {
             this.balanceRejectionMessage = com.itlesports.nightmaremode.world.BalanceProfile.mismatch(
@@ -38,7 +38,7 @@ public abstract class MixinNetClientHandler {
         if (!this.balanceProfileAccepted) {
             ((NetClientHandler)(Object)this).handleKickDisconnect(new Packet255KickDisconnect(
                     this.balanceRejectionMessage != null ? this.balanceRejectionMessage
-                            : "Server difficulty could not be verified. Matching Journey versions and difficulty are required."));
+                            : "Server difficulty could not be verified. Matching Journey versions, combat difficulty and progression are required."));
             ci.cancel();
         }
     }
@@ -46,7 +46,7 @@ public abstract class MixinNetClientHandler {
     @Inject(method = "handleLogin", at = @At("TAIL"))
     private void acknowledgeBalance(Packet1Login packet, CallbackInfo ci) {
         if (this.balanceProfileAccepted) ((NetClientHandler)(Object)this).addToSendQueue(
-                new Packet250CustomPayload("NM|Balance1", com.itlesports.nightmaremode.world.BalanceProfile.wireProfile()));
+                new Packet250CustomPayload(com.itlesports.nightmaremode.world.BalanceProfile.CHANNEL, com.itlesports.nightmaremode.world.BalanceProfile.wireProfile()));
     }
     @Inject(method = "handleMobSpawn", at = @At(value = "FIELD",
             target = "Lnet/minecraft/src/EntityLivingBase;serverPosX:I", opcode = Opcodes.PUTFIELD),

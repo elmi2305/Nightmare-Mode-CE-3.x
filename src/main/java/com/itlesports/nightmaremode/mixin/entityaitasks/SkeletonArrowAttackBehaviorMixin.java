@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.entity.mob.behavior.SkeletonArrowAttackBehavior;
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -25,13 +27,24 @@ public abstract class SkeletonArrowAttackBehaviorMixin extends EntityAIBase {
     @Shadow @Final private EntityLiving entityOwner;
     @Shadow(remap = false) private float entityMoveSpeed;
     @Shadow(remap = false) private int attackCooldownCounter;
+    @Shadow(remap = false) private int attackInterval;
+
+    @Inject(method = "updateTask", at = @At("HEAD"))
+    private void slowEasySkeletonShots(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        if (!BalanceProfile.isCombatEasy() || !(this.entityOwner instanceof EntitySkeleton skeleton)) return;
+        int interval = Math.max(this.attackInterval, skeleton.getSkeletonType().id() == 0 ? 80 : 120);
+        if (interval != this.attackInterval) {
+            this.attackInterval = interval;
+            this.attackCooldownCounter = Math.max(this.attackCooldownCounter, interval);
+        }
+    }
 
     @Unique boolean isExecuting;
     @Unique int ticksOnGround;
 
     @Redirect(method = "updateTask", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySenses;canSee(Lnet/minecraft/src/Entity;)Z"))
     private boolean superCriticalSkeletonEnhancedSight(EntitySenses instance, Entity entity){
-        if(((EntitySkeleton)this.entityOwner).getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL){
+        if(!BalanceProfile.isCombatEasy() && ((EntitySkeleton)this.entityOwner).getSkeletonType().id() == NMFields.SKELETON_SUPERCRITICAL){
             return true;
         }
         return instance.canSee(entity);

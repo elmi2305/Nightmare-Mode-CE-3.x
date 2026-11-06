@@ -91,7 +91,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
         progress.netherPostCompletedTiers |= com.itlesports.nightmaremode.util.NetherPostProgress.completedTiers(oldPlayer);
         this.setData(NightmareMode.SKILL_TREE, progress);
         if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE
-                || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
+                || com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
         }
         if (!playerLeavingTheEnd && oldPlayer.dimension == -1) {
@@ -100,11 +100,19 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements IPlaye
                 this.inventory.armorInventory[slot] = armor == null ? null : armor.copy();
             }
         }
+        if (!playerLeavingTheEnd) {
+            for (int slot = 0; slot < oldPlayer.inventory.mainInventory.length; ++slot) {
+                ItemStack stack = oldPlayer.inventory.mainInventory[slot];
+                if (NMInventoryLocks.isSoulbound(stack)) this.inventory.mainInventory[slot] = stack.copy();
+            }
+            NMInventoryLocks.relocateSkillBooks(this);
+        }
     }
 
     @Inject(method = "displayGUIEnchantment", at = @At("HEAD"), cancellable = true)
     private void gateEnchantmentTable(int x, int y, int z, String name, CallbackInfo ci) {
-        if (!SkillHandler.getPlayerData((EntityPlayer)(Object)this).canUseEnchantmentTable) {
+        if (!SkillHandler.getPlayerData((EntityPlayer)(Object)this).canUseEnchantmentTable
+                && !SkillHandler.isUnlocked(this, NMSkillNodes.BRING_ANCIENT_MANUSCRIPT)) {
             SkillHandler.sendStatus((EntityPlayer)(Object)this, "Requires skill: Ancient Enchanting - Bring an ancient manuscript.");
             ci.cancel();
         }

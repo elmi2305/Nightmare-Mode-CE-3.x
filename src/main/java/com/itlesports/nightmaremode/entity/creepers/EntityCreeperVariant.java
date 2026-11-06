@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.EntityWithCustomPacket;
 import api.entity.mob.KickingAnimal;
 import api.entity.mob.behavior.SimpleWanderBehavior;
@@ -28,7 +30,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
     protected byte patienceCounter = (byte)100;
 
     // unique
-    public int fuseTime = 30;
+    public int fuseTime = BalanceProfile.isCombatEasy() ? 40 : 30;
     protected int explosionRadius = 3;
     protected float explosionMultiplier = 1; // each creeper has a multiplier that it applies to the default explosion strength of 3
     public int variantType; // must be overridden by children. this is responsible for the spawn packet, so it must match in the packet register too. corresponds to the CREEPER_[TYPE] fields in NMFields
@@ -95,7 +97,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, 10000000,0));
         }
         double niteMultiplier = NMUtils.getNiteMultiplier();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(3, progress) * 2 : ((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));
     }
@@ -133,9 +135,10 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
 
     @Override
     public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
         super.readEntityFromNBT(par1NBTTagCompound);
         this.dataWatcher.updateObject(17, (byte)(par1NBTTagCompound.getBoolean("powered") ? 1 : 0));
-        if (par1NBTTagCompound.hasKey("Fuse")) {
+        if (par1NBTTagCompound.hasKey("Fuse") && !BalanceProfile.isCombatEasy()) {
             this.fuseTime = par1NBTTagCompound.getShort("Fuse");
         }
         if (par1NBTTagCompound.hasKey("ExplosionRadius")) {
@@ -150,6 +153,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         if (par1NBTTagCompound.hasKey("patienceCounter")) {
             this.patienceCounter = par1NBTTagCompound.getByte("patienceCounter");
         }
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 
     @Override
@@ -158,6 +162,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             carcass.nm$tickCarcass();
             return;
         }
+        this.updateEasyFuseState();
         this.onVariantUpdate();
         if (this.isEntityAlive()) {
             if (NightmareMode.isAprilFools && this.getAttackTarget() instanceof EntityPlayer player && this.getDistanceSqToEntity(player) < 81) {
@@ -182,7 +187,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
             if (!this.worldObj.isRemote && var1 > 0 && this.timeSinceIgnited == 0) {
                 this.playSound("random.fuse", 1.0f, 0.5f + soundPitchModifier);
             }
-            if (((Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue() && this.variantType != NMFields.PACKET_CREEPER_LIGHTNING) {
+            if (!BalanceProfile.isCombatEasy() && ((Boolean)this.worldObj.getDifficultyParameter(DifficultyParam.CanCreepersBreachWalls.class)).booleanValue() && this.variantType != NMFields.PACKET_CREEPER_LIGHTNING) {
 
                 if (this.getAttackTarget() == null) {
                     if (this.worldObj.rand.nextInt(20) == 0) {
@@ -252,9 +257,9 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                         if(this.isBurning() && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) && this.variantType == PACKET_CREEPER_FIRE){
                             baseChargedMultiplier = 2.5f;
                         }
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * baseChargedMultiplier * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * baseChargedMultiplier * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE && !BalanceProfile.isCombatEasy(), mobGriefing);
                     } else {
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE && !BalanceProfile.isCombatEasy(), mobGriefing);
 
                     }
 
@@ -270,6 +275,22 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
         super.onUpdate();
     }
+    private void updateEasyFuseState() {
+        if (!BalanceProfile.isCombatEasy()) return;
+        this.fuseTime = this.variantType == PACKET_CREEPER_SUPERCRITICAL ? 30 : Math.max(this.fuseTime, 40);
+        if (this.worldObj.isRemote) {
+            if (this.getCreeperState() <= 0 || this.getNeuteredState() > 0) this.timeSinceIgnited = 0;
+            return;
+        }
+        this.patienceCounter = 100;
+        this.determinedToExplode = false;
+        EntityLivingBase target = this.getAttackTarget();
+        if (this.getNeuteredState() > 0 || target == null || !this.canEntityBeSeen(target)) {
+            this.timeSinceIgnited = 0;
+            this.setCreeperState(-1);
+        }
+    }
+
     protected void onVariantUpdate(){};
     protected void onDeathEffect(){};
     protected void onServerAndClientDeathEffect(){};
@@ -423,6 +444,19 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
 
+        if (BalanceProfile.isCombatEasy() && playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears) {
+            if (this.getNeuteredState() != 0) return false;
+            if (!this.worldObj.isRemote) {
+                this.setNeuteredState(1);
+                this.timeSinceIgnited = 0;
+                this.determinedToExplode = false;
+                this.setCreeperState(-1);
+                this.entityDropItem(new ItemStack(BTWItems.creeperOysters), 0.25F);
+                playersCurrentItem.damageItem(10, player);
+                this.worldObj.playAuxSFX(2258, MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 0);
+            }
+            return true;
+        }
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
             if (!this.worldObj.isRemote && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
                 if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
@@ -435,7 +469,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                             player.sendChatToPlayer(text2);
                         }
 
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * 2 * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE && !BalanceProfile.isCombatEasy(), mobGriefing);
                     } else {
                         if (NightmareMode.devMode) {
                             ChatMessageComponent text2 = new ChatMessageComponent();
@@ -443,7 +477,7 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
                             text2.setColor(EnumChatFormatting.GREEN);
                             player.sendChatToPlayer(text2);
                         }
-                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE, mobGriefing);
+                        this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, getExplosionSize() * this.explosionMultiplier, this.variantType == PACKET_CREEPER_FIRE && !BalanceProfile.isCombatEasy(), mobGriefing);
                     }
                     this.onDeathEffect();
                     this.setDead();

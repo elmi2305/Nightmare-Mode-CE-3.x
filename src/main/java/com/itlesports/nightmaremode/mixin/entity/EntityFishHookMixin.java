@@ -91,8 +91,10 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
     private int adjustFishingBiteChance(int odds) {
+        float equipmentMultiplier = this.rodBiteOddsMultiplier()
+                * (1.0F - 0.10F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler));
         if (this.dimension == -1 || this.isNetherFishing()) {
-            return NMFishingRates.netherBiteOdds(this.rodBiteOddsMultiplier(), this.hasRodUpgrade("IfhyFishingLure"));
+            return NMFishingRates.netherBiteOdds(equipmentMultiplier, this.hasRodUpgrade("IfhyFishingLure"));
         } else {
             float availability = ChunkAttributeManager.getFishAvailability(
                     this.worldObj,
@@ -102,7 +104,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             return NMFishingRates.biteOdds(this.worldObj.getWorldTime(), this.worldObj.getMoonPhase(),
                     NMUtils.getIsBloodMoon(), this.worldObj.isPrecipitatingAtPos(
                             MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)),
-                    availability, this.rodBiteOddsMultiplier(), this.hasRodUpgrade("IfhyFishingLure"));
+                    availability, equipmentMultiplier, this.hasRodUpgrade("IfhyFishingLure"));
         }
     }
 
@@ -212,13 +214,24 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
 
     @Redirect(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
     private boolean identifyCaughtFish(World world, Entity entity) {
+        ItemStack caughtStack = null;
         if (entity instanceof EntityItem) {
-            ItemStack caughtStack = ((EntityItem)entity).getEntityItem();
+            caughtStack = ((EntityItem)entity).getEntityItem();
             this.caughtFishThisCast = this.selectedCatchIsFish
                     && caughtStack != null
                     && caughtStack.itemID == this.selectedCatch.item.itemID;
         }
-        return world.spawnEntityInWorld(entity);
+        boolean spawned = world.spawnEntityInWorld(entity);
+        if (spawned && !world.isRemote && caughtStack != null && caughtStack.stackSize > 0
+                && com.itlesports.nightmaremode.util.ArmorSetHelper.isWearingCompleteAnglerSet(this.angler)) {
+            EntityItem bonus = new EntityItem(world, entity.posX, entity.posY, entity.posZ, caughtStack.copy());
+            // the original catch already has its reel-in velocity toward the angler.
+            bonus.motionX = entity.motionX;
+            bonus.motionY = entity.motionY;
+            bonus.motionZ = entity.motionZ;
+            world.spawnEntityInWorld(bonus);
+        }
+        return spawned;
     }
 
     @Inject(method = "catchFish", at = @At("TAIL"))
@@ -257,7 +270,8 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private FishingCatch selectCatch() {
         if (this.isNetherFishing()) {
             this.selectedCatchIsFish = false;
-            if (this.isBaited && this.hasRodUpgrade("IfhyRareFishLure") && this.rand.nextFloat() < 0.20F) {
+            if (this.isBaited && this.rand.nextFloat() < (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)
+                    + 0.025F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler)) {
                 return BAITED_NETHER_CATCHES[2];
             }
             FishingCatch[] catches = this.isBaited ? BAITED_NETHER_CATCHES : NETHER_CATCHES;
@@ -276,6 +290,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
                 MathHelper.floor_double(this.posZ)
         );
         if (this.angler != null && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus
+                + 0.025F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler)
                 + (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)) {
             this.selectedCatchIsFish = true;
             return biomeCatches[biomeCatches.length - 1];

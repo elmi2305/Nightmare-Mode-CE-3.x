@@ -627,9 +627,14 @@ public class NMBlocks {
 
         blockRefinedDiamondIngot = new NMBlock(2352, Material.iron).setHardness(5f).setCreativeTab(CreativeTabs.tabBlock).setResistance(10f).setStepSound(BTWBlocks.gemStepSound).setUnlocalizedName("nmRefinedDiamondBlock").setTextureName("nightmare:nmRefinedDiamondBlock");
         Item.itemsList[blockRefinedDiamondIngot.blockID] = new NMItemBlock(blockRefinedDiamondIngot.blockID - 256);
-
-
-
+        // nether item protection also applies to these components while placed.
+        for (Block block : Block.blocksList) {
+            if (block != null && Item.itemsList[block.blockID] instanceof com.itlesports.nightmaremode.util.interfaces.INetherItem) {
+                block.setFireProperties(0, 0);
+            }
+        }
+        BTWBlocks.bloodWoodLog.setFireProperties(0, 0);
+        BTWBlocks.bloodWoodLeaves.setFireProperties(0, 0);
 
     }
 

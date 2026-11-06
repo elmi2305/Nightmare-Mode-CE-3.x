@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.mob.BTWSquidEntity;
 import com.itlesports.nightmaremode.entity.variants.EntityCinderBlaze;
@@ -38,7 +40,7 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
             boolean isEclipse = NMUtils.getIsMobEclipsed(this);
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((16.0d + progress * (isBloodMoon ? 2 : 1) + (isEclipse ? 5 : 0)));
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((16 + progress * (isHostile ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 + Math.min(progress, 3) * 2 : (16 + progress * (isHostile ? 10 : 4) + eclipseBonus) * NMUtils.getNiteMultiplier());
             // 16 -> 26 -> 36 -> 46
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(30);
 
@@ -295,5 +297,12 @@ public class EntityBlazeMixin extends EntityMob implements EntityBlazeVariantExt
     @Unique
     public void nm$setBlazeVariant(byte variantType) {
         this.dataWatcher.updateObject(20,variantType);
+    }
+
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 }

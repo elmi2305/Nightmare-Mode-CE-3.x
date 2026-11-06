@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehaviorHostile;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -17,7 +19,7 @@ public class EntityZombieImposter extends EntityZombie {
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.40d);
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 5 : 2));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 : 20 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 5 : 2));
             // 20 -> 25 -> 30 -> 35
             // relaxed: 24 + 26
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0 + progress * (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 3 : 1));

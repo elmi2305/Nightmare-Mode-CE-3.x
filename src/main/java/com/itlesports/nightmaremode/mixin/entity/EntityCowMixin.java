@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.mob.KickingAnimal;
 import api.world.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -23,7 +25,7 @@ public abstract class EntityCowMixin extends KickingAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((15d + NMUtils.getWorldProgress() * 5) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 15 : (15d + NMUtils.getWorldProgress() * 5) * NMUtils.getNiteMultiplier());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -90,7 +92,7 @@ public abstract class EntityCowMixin extends KickingAnimal {
         int originalHealth = 15 + NMUtils.getWorldProgress() * 5;
         double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 2.5 : 1;
         if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 15 : originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
         }
     }
 

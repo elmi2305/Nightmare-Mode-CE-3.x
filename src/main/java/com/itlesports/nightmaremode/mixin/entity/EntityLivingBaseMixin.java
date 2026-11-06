@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.achievement.AchievementEventDispatcher;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -316,7 +318,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
         float healthRatio = oldMax <= 0.0F ? 1.0F : this.getHealth() / oldMax;
 
         applyMultiplicativeModifier(SharedMonsterAttributes.maxHealth, OUTER_HEALTH,
-                1.0D + progress * 2.5D, Double.MAX_VALUE);
+                BalanceProfile.isCombatEasy() && !((Object)this instanceof IBossDisplayData) ? 1.0D : 1.0D + progress * 2.5D, Double.MAX_VALUE);
         applyMultiplicativeModifier(SharedMonsterAttributes.movementSpeed, OUTER_SPEED,
                 1.0D + 0.75D * (1.0D - Math.exp(-3.0D * progress)), 0.6D);
         applyMultiplicativeModifier(SharedMonsterAttributes.attackDamage, OUTER_DAMAGE,
@@ -414,7 +416,7 @@ public abstract class EntityLivingBaseMixin extends Entity implements CarcassAni
 
     @Redirect(method = "knockBack", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityLivingBase;knockbackMagnitude()F"))
     private float scaleDamageKnockback(EntityLivingBase target, Entity attacker, float damage, double x, double z) {
-        return target.knockbackMagnitude() * MeleeKnockback.getScale(damage);
+        return target.knockbackMagnitude() * MeleeKnockback.getScale(damage, attacker);
     }
 
     @Inject(method = "isEntityAlive", at = @At("HEAD"), cancellable = true)

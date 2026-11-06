@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import api.entity.mob.KickingAnimal;
 import btw.item.BTWItems;
@@ -26,11 +28,33 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
     @Shadow private int timeSinceIgnited;
     @Shadow private int fuseTime;
+    @Shadow private boolean determinedToExplode;
+    @Shadow private byte patienceCounter;
+    @Shadow public abstract void setCreeperState(int state);
+    @Shadow public abstract int getCreeperState();
+    @Shadow public abstract int getNeuteredState();
     @Shadow public abstract void onKickedByAnimal(KickingAnimal kickingAnimal);
     @Shadow public abstract boolean getPowered();
 
     public EntityCreeperMixin(World par1World) {
         super(par1World);
+    }
+
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void easyCreeperFuseAndSight(CallbackInfo ci) {
+        if (!BalanceProfile.isCombatEasy()) return;
+        this.fuseTime = 40;
+        if (this.worldObj.isRemote) {
+            if (this.getCreeperState() <= 0 || this.getNeuteredState() > 0) this.timeSinceIgnited = 0;
+            return;
+        }
+        this.patienceCounter = 100;
+        this.determinedToExplode = false;
+        EntityLivingBase target = this.getAttackTarget();
+        if (this.getNeuteredState() > 0 || target == null || !this.canEntityBeSeen(target)) {
+            this.timeSinceIgnited = 0;
+            this.setCreeperState(-1);
+        }
     }
 
     @Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
@@ -93,7 +117,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         double niteMultiplier = NMUtils.getNiteMultiplier();
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
                 NMUtils.getBalancedMobFollowRange(this.worldObj, 16, progress, NMUtils.getIsBloodMoon(), NMUtils.getIsMobEclipsed(this)));
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(3, progress) * 2 : ((20 + progress * 3) * bloodMoonModifier + eclipseModifier * 0.5) * niteMultiplier);
         // 20 -> 26 -> 32 -> 38
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute((0.28 + eclipseModifier * 0.005) * ((((niteMultiplier - 1) / 20)) + 1));
     }
@@ -181,6 +205,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                     target = "Lnet/minecraft/src/InventoryPlayer;getCurrentItem()Lnet/minecraft/src/ItemStack;",
                     shift = At.Shift.AFTER))
     private void explodeIfShorn(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if (BalanceProfile.isCombatEasy()) return;
         ItemStack playersCurrentItem = player.inventory.getCurrentItem();
         boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
         float bloodMoonModifier = (float) NMUtils.getBloodMoonModifier(1.25);
@@ -204,7 +229,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
     }
     @Redirect(method = "interact", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"))
     private boolean doNotDropCreeperOystersIfShorn(World world){
-        if(world.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
+        if(!BalanceProfile.isCombatEasy() && world.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)){
             return true;
         }
         return world.isRemote;
@@ -228,7 +253,7 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
                 this.motionX = vector.xCoord * 0.2;
                 this.motionZ = vector.zCoord * 0.2;
                 this.timeSinceIgnited = 0;
-                this.fuseTime = 20;
+                this.fuseTime = BalanceProfile.isCombatEasy() ? 40 : 20;
                 if (this.posY - 2.5 < target.posY) {
                     this.motionY = 0.5f;
                 }
@@ -412,5 +437,18 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
         }
 
         return 0;
+    }
+
+    @org.spongepowered.asm.mixin.Unique private com.itlesports.nightmaremode.util.EasyCombatStats easyLoadedStats;
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void captureEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        this.easyLoadedStats = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void restoreEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, this.easyLoadedStats);
+        this.easyLoadedStats = null;
     }
 }

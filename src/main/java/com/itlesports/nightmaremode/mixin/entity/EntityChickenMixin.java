@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMUtils;
 import com.itlesports.nightmaremode.item.NMItems;
@@ -112,7 +114,7 @@ public abstract class EntityChickenMixin extends EntityAnimal {
         int originalHealth = 4 + NMUtils.getWorldProgress() * 2;
         double eclipseModifier = NMUtils.getIsMobEclipsed(this) ? 4 : 1;
         if(this.getMaxHealth() != originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 4 : originalHealth * NMUtils.getNiteMultiplier() * eclipseModifier);
         }
     }
 
@@ -146,6 +148,6 @@ public abstract class EntityChickenMixin extends EntityAnimal {
     }
     @Inject(method = "applyEntityAttributes", at = @At("TAIL"))
     private void applyAdditionalAttributes(CallbackInfo ci){
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((4.0d + NMUtils.getWorldProgress() * 2) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 4 : (4.0d + NMUtils.getWorldProgress() * 2) * NMUtils.getNiteMultiplier());
     }
 }

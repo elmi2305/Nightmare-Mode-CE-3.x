@@ -627,7 +627,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Inject(method = "clonePlayer", at = @At("TAIL"))
     private void retainPreHardmodeIfhyDeathInventory(EntityPlayer oldPlayer, boolean playerLeavingTheEnd, CallbackInfo ci) {
-        if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy())) {
+        if (!playerLeavingTheEnd && (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy())) {
             this.inventory.copyInventory(oldPlayer.inventory);
         }
         if (!playerLeavingTheEnd && oldPlayer.dimension == -1) {
@@ -826,14 +826,13 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
             }
         }
 
-        if (this.ticksExisted % 20 == 0) {
-            if (fatigue >= 95) {
-                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
-                this.fatigueSlowdownApplied = true;
-            } else if (fatigue >= 75) {
-                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
-                this.fatigueSlowdownApplied = true;
+        if (fatigue >= 75) {
+            int amplifier = fatigue >= 95 ? 1 : 0;
+            PotionEffect slowdown = this.getActivePotionEffect(Potion.moveSlowdown);
+            if (slowdown == null || slowdown.getAmplifier() < amplifier || slowdown.getDuration() <= 40) {
+                this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, amplifier));
             }
+            this.fatigueSlowdownApplied = true;
         }
     }
 
@@ -1134,7 +1133,7 @@ public abstract class EntityPlayerMixin extends EntityLivingBase implements Enti
 
     @Unique
     private double getDeepCaveOxygenDrainInterval() {
-        double y = Math.max(24.0D, this.boundingBox.minY);
+        double y = this.dimension == 1 ? 24.0D : Math.max(24.0D, this.boundingBox.minY);
         double depthRatio = Math.max(0.0D, Math.min(1.0D, (54.0D - y) / 30.0D));
         int baseInterval = Math.max(3, (int)Math.round(8.0D - depthRatio * 5.0D));
         float cap = this.getEarlyOxygenGearReduction() > 0.0F ? 0.95F

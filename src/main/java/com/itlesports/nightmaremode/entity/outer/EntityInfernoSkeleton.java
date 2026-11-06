@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.outer;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.EntitySkeleton;
 import net.minecraft.src.EntityLivingData;
@@ -9,6 +11,12 @@ import net.minecraft.src.SharedMonsterAttributes;
 import net.minecraft.src.World;
 
 public class EntityInfernoSkeleton extends EntitySkeleton {
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
+    }
     public EntityInfernoSkeleton(World world) {
         super(world);
         this.setSkeletonType(NMFields.SKELETON_INFERNO_OUTER);
@@ -20,7 +28,7 @@ public class EntityInfernoSkeleton extends EntitySkeleton {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(32.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 24.0D : 32.0D);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(8.0D);
     }
 

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.block.BTWBlocks;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.NMUtils;
@@ -28,6 +30,13 @@ public abstract class   EntityLivingMixin extends EntityLivingBase {
     @Shadow public abstract void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack);
     @Shadow public abstract ItemStack getHeldItem();
     @Shadow protected abstract boolean canDespawn();
+    @org.spongepowered.asm.mixin.injection.ModifyArg(method = "meleeAttack", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/Entity;attackEntityFrom(Lnet/minecraft/src/DamageSource;F)Z"), index = 1)
+    private float reduceEasyWeaponDamage(float damage) {
+        if (!BalanceProfile.isCombatEasy() || !((Object)this instanceof IMob) || this.getHeldItem() == null) return damage;
+        return Math.max(1.0F, damage * 0.6F);
+    }
+
     @Shadow private boolean persistenceRequired;
     @Shadow protected float[] equipmentDropChances;
 

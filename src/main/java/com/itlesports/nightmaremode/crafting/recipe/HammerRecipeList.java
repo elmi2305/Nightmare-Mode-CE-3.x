@@ -15,11 +15,12 @@ public abstract class HammerRecipeList {
         HammerCraftingManager.instance.addRecipe(new ItemStack(NMItems.ovenPart, 1), Block.stoneSingleSlab, new int[]{4, 12}).setCanBeMinedByAnyHammer();
         HammerCraftingManager.instance.addRecipe(new ItemStack(BTWItems.sharpStone), BTWBlocks.looseCobblestoneSlab, new int[]{0, 4, 8}).setCanBeMinedByAnyHammer();
         HammerCraftingManager.instance.addRecipe(new ItemStack(BTWItems.ironNugget, 1), NMBlocks.ironBloom, new int[]{0, 1, 2, 3, 4, 5, 6, 7}).setHitsRequired(8);
-        HammerCraftingManager.instance.addRecipe(new ItemStack(NMItems.obsidianPowder), Block.obsidian, new int[]{1}).setHitsRequired(8).setCanBeMinedByAnyHammer();
+        HammerCraftingManager.instance.addRecipe(new ItemStack(NMItems.obsidianPowder), Block.obsidian, new int[]{1, 2, 3, 4, 5, 6, 7, 8}).setHitsRequired(8).setCanBeMinedByAnyHammer();
 
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.ovenPart, 1), new ItemStack(Block.stoneSingleSlab, 1, 4));
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.ovenPart, 1), new ItemStack(Block.stoneSingleSlab, 1, 12));
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(BTWItems.ironNugget, 1), new ItemStack(NMItems.ironBloom)).setHitsRequired(8);
+        HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.obsidianPowder), new ItemStack(Block.obsidian, 1, 1)).setHitsRequired(8).setCanBeMinedByAnyHammer();
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.nickelCrushedRock), new ItemStack(NMItems.nickelRawRock)).setHitsRequired(2);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.lithiumHammered), new ItemStack(NMItems.lithiumRaw)).setHitsRequired(2);
         HammerCraftingManager.instance.addItemRecipe(new ItemStack(NMItems.crystalPolishedShard), new ItemStack(NMItems.crystalCleanShard, 1, Short.MAX_VALUE)).setHitsRequired(4);

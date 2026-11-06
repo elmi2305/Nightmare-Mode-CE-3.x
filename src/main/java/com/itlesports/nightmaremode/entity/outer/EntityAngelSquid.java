@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.outer;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.entity.mob.BTWSquidEntity;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.SharedMonsterAttributes;
@@ -22,11 +24,18 @@ public class EntityAngelSquid extends BTWSquidEntity {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(28.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20.0D : 28.0D);
     }
 
     @Override
     public boolean getCanSpawnHere() {
         return this.worldObj.difficultySetting > 0 && this.worldObj.checkNoEntityCollision(this.boundingBox);
+    }
+
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 }

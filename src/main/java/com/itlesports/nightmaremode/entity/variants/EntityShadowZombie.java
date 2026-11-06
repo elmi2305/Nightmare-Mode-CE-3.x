@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.world.WorldUtils;
 import api.world.difficulty.DifficultyParam;
 import btw.community.nightmaremode.NightmareMode;
@@ -46,7 +48,7 @@ public class EntityShadowZombie extends EntityZombie {
         else if (par1DamageSource == DamageSource.onFire){return false;}
         else if (par1DamageSource == DamageSource.inFire){return false;}
         else if (par1DamageSource == DamageSource.lava){return false;}
-        else if (par1DamageSource instanceof EntityDamageSourceIndirect && par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target){
+        else if (!BalanceProfile.isCombatEasy() && par1DamageSource instanceof EntityDamageSourceIndirect && par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target){
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
@@ -90,6 +92,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void explore() {
+        if (BalanceProfile.isCombatEasy()) return;
         double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
         double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
         double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
@@ -148,15 +151,21 @@ public class EntityShadowZombie extends EntityZombie {
             }
         }
 
+        if (BalanceProfile.isCombatEasy()) {
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(24 + Math.min(3, NMUtils.getWorldProgress()) * 2);
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0D);
+        }
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(followDistance);
-        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(10 * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setAttribute(BalanceProfile.isCombatEasy() ? 0 : 10 * NMUtils.getNiteMultiplier());
     }
     @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {}
+    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {
+        if (BalanceProfile.isCombatEasy()) super.knockBack(par1Entity, par2, par3, par5);
+    }
 
     @Override
     public float knockbackMagnitude() {
-        return 0;
+        return BalanceProfile.isCombatEasy() ? super.knockbackMagnitude() : 0;
     }
 
     @Override
@@ -174,6 +183,7 @@ public class EntityShadowZombie extends EntityZombie {
         }
     }
     private void teleportBehindTarget(EntityPlayer targetPlayer) {
+        if (BalanceProfile.isCombatEasy()) return;
         // get player's facing direction (yaw) and calculate the opposite direction
         boolean coin = this.rand.nextBoolean();
         float yaw;
@@ -206,6 +216,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void teleportToTarget(EntityPlayer targetPlayer){
+        if (BalanceProfile.isCombatEasy()) return;
         int distance = 3 + this.rand.nextInt(2);
         int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;
         int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;

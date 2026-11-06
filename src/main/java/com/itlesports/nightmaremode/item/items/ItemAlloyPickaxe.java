@@ -26,7 +26,7 @@ public class ItemAlloyPickaxe extends PickaxeItem {
 
     @Override
     public float getStrVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
-        if (block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)) {
+        if (this.isSteelMiningTarget(stack, world, block, x, y, z)) {
             return this.efficiencyOnProperMaterial * this.speedMultiplier;
         }
         return super.getStrVsBlock(stack, world, block, x, y, z) * this.speedMultiplier;
@@ -34,19 +34,24 @@ public class ItemAlloyPickaxe extends PickaxeItem {
 
     @Override
     public boolean canHarvestBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
-        return block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)
+        return this.isSteelMiningTarget(stack, world, block, x, y, z)
                 || super.canHarvestBlock(stack, world, block, x, y, z);
     }
 
     @Override
     public boolean isEfficientVsBlock(ItemStack stack, World world, Block block, int x, int y, int z) {
-        return block == Block.anvil && NMBlockBreakingRules.isSteelMiningTool(stack)
+        return this.isSteelMiningTarget(stack, world, block, x, y, z)
                 || super.isEfficientVsBlock(stack, world, block, x, y, z);
     }
 
     @Override
     public int getItemEnchantability() {
         return this.enchantability;
+    }
+
+    private boolean isSteelMiningTarget(ItemStack stack, World world, Block block, int x, int y, int z) {
+        return (block == Block.anvil || block == Block.netherrack && world.getBlockMetadata(x, y, z) == 4)
+                && NMBlockBreakingRules.isSteelMiningTool(stack);
     }
 
     @Override

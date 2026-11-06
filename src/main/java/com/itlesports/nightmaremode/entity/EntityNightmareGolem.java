@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import net.minecraft.src.*;
 
 public class EntityNightmareGolem extends EntityIronGolem {
@@ -22,7 +24,7 @@ public class EntityNightmareGolem extends EntityIronGolem {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(200);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 40 : 200);
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(40);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.27);
     }
@@ -36,5 +38,12 @@ public class EntityNightmareGolem extends EntityIronGolem {
             }
         }
         super.onLivingUpdate();
+    }
+
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 }

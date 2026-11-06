@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.component.VariantComponent;
 import api.world.WorldUtils;
 import api.world.difficulty.DifficultyParam;
@@ -40,6 +42,15 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
     @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
     private void readZombieRemains(NBTTagCompound tag, CallbackInfo ci) {
         this.zombieRemains = tag.getBoolean("nmZombieRemains");
+    }
+
+    @Redirect(method = "readEntityFromNBT", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/EntitySkeleton;setSkeletonType(I)Z"))
+    private boolean preserveEasyLoadedHealth(EntitySkeleton skeleton, int type) {
+        float loadedHealth = skeleton.getHealth();
+        boolean updated = skeleton.setSkeletonType(type);
+        if (BalanceProfile.isCombatEasy()) skeleton.setHealth(Math.min(loadedHealth, skeleton.getMaxHealth()));
+        return updated;
     }
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
@@ -99,6 +110,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
     }
     @ModifyArg(method = "lambda$initComponents$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntitySkeleton;setSize(FF)V", ordinal = 0), index =  1)
     private float shortWitherSkeletons(float constant){
+        if (BalanceProfile.isCombatEasy()) return constant;
         if (this.worldObj != null) {
             return this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 1.8f : constant;
         }
@@ -231,18 +243,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
             int id = this.getSkeletonType().id();
 
             if(id == NMFields.SKELETON_WITHER){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(progress, 3) * 2 : ((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
                 // 24.0 -> 28.0 -> 32.0 -> 36.0
             } else{
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 + Math.min(progress, 3) * 2 : MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
                 // 16.0 -> 23.0 -> 30.0 -> 37.0
             }
             if(id == NMFields.SKELETON_ENDER){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(progress, 3) * 2 : ((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
             }
 
             if(id == NMFields.SKELETON_LIGHTNING){
-                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
+                this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 6 : 6 * niteMultiplier);
             }
 
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute((3.0 + Math.min(progress, 2) + (isEclipse ? 1 : 0)) * niteMultiplier);
@@ -332,6 +344,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
 
     @Inject(method = "attackEntityWithRangedAttack", at = @At("TAIL"))
     private void manageBloodMoonAttack(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
+        if (BalanceProfile.isCombatEasy()) return;
         if(this.worldObj != null){
             if (NMUtils.hasEmpoweredBloodMoonMobs()){
                 if (rand.nextBoolean()) {
@@ -469,7 +482,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void killArrowEntityForEnderSkeleton(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
         if (this.worldObj != null) {
-            if(this.getSkeletonType().id() == NMFields.SKELETON_FIRE){arrow.setDead();}
+            if(!BalanceProfile.isCombatEasy() && this.getSkeletonType().id() == NMFields.SKELETON_FIRE){arrow.setDead();}
         }
     }
     @ModifyConstant(method = "attackEntityWithRangedAttack", constant = @Constant(floatValue = 12.0f))
@@ -511,6 +524,7 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/EntitySkeleton;playSound(Ljava/lang/String;FF)V"))
     private void determineWhatProjectileToShoot(EntityLivingBase target, float fDamageModifier, CallbackInfo ci){
+        if (BalanceProfile.isCombatEasy()) return;
         if (this.worldObj != null) {
             if(this.getSkeletonType().id() == NMFields.SKELETON_FIRE){
                 if (this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
@@ -544,10 +558,11 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void chanceToSetArrowOnFire(EntityLivingBase target, float fDamageModifier, CallbackInfo ci, EntityArrow arrow, int iPowerLevel, int iPunchLevel, int iFlameLevel){
+        if (BalanceProfile.isCombatEasy() && this.getSkeletonType().id() == NMFields.SKELETON_FIRE) arrow.setFire(100);
         if (this.worldObj != null) {
             Boolean isHostile = this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class);
             int progress = NMUtils.getWorldProgress();
-            arrow.setDamage(Math.max(1, 1 + progress - (isHostile ? 0 : 1)) * NMUtils.getNiteMultiplier());
+            arrow.setDamage(BalanceProfile.isCombatEasy() ? 1.0D : Math.max(1, 1 + progress - (isHostile ? 0 : 1)) * NMUtils.getNiteMultiplier());
         }
     }
 
@@ -647,18 +662,18 @@ public abstract class EntitySkeletonMixin extends EntityMob implements ZombieSke
 
 
         if(id == NMFields.SKELETON_WITHER){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(progress, 3) * 2 : ((isHostile ? 24 : 20) + progress * 2 + (isEclipse ? 8 : 0 )) * niteMultiplier);
             // 24.0 -> 28.0 -> 32.0 -> 36.0
         } else{
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 16 + Math.min(progress, 3) * 2 : MathHelper.floor_double(((16.0 + progress * (isHostile ? 3 : 2)) * bloodMoonModifier + (isEclipse ? 8 : 0) * niteMultiplier)));
             // 16.0 -> 23.0 -> 30.0 -> 37.0
         }
         if(id == NMFields.SKELETON_ENDER){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(progress, 3) * 2 : ((isHostile ? 24 : 20) + progress * 3) * niteMultiplier);
         }
 
         if(id == NMFields.SKELETON_LIGHTNING){
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(6 * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 6 : 6 * niteMultiplier);
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(
                     NMUtils.getBalancedMobFollowRange(this.worldObj, 16, progress, bloodMoonModifier > 1, isEclipse));
         }

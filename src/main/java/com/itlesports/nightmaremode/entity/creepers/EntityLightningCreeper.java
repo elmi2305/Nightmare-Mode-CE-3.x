@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.util.NMFields;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
@@ -9,7 +11,7 @@ public class EntityLightningCreeper extends EntityCreeperVariant{
         super(par1World);
         this.variantType = NMFields.PACKET_CREEPER_LIGHTNING;
         this.soundPitchModifier = 0.3f;
-        this.fuseTime = 90 - NMUtils.getWorldProgress() * 10;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 110 : 90 - NMUtils.getWorldProgress() * 10;
         this.canLunge = false;
     }
 

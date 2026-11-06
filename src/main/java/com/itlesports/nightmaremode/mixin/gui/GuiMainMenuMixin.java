@@ -122,10 +122,7 @@ public class GuiMainMenuMixin extends GuiScreen implements JourneyBrowserInput, 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
     private void journeyMode$handleBrowserActions(GuiButton button, CallbackInfo ci) {
         if (button.id == 91) {
-            com.itlesports.nightmaremode.world.BalanceProfile.togglePending();
-            this.mc.displayGuiScreen(new com.itlesports.nightmaremode.nmgui.GuiBalanceMessage(
-                    com.itlesports.nightmaremode.world.BalanceProfile.buttonText()
-                            + ". Restart the game for difficulty changes to take effect. Existing worlds keep their original difficulty."));
+            this.mc.displayGuiScreen(new com.itlesports.nightmaremode.nmgui.GuiJourneySettings(this));
             ci.cancel();
             return;
         }

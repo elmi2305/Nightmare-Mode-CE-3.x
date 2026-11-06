@@ -71,7 +71,7 @@ public class InventoryPlayerMixin {
             return;
         }
         NMInventoryLocks.dropLockedItems(this.player, true);
-        if (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isEasy()) {
+        if (NMUtils.getWorldProgress() == PREHARDMODE || com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()) {
             this.nightmareMode$dropItemsWithPreHardmodeRetention(this.mainInventory, true);
             if (this.player.dimension != -1) this.nightmareMode$dropItemsWithPreHardmodeRetention(this.armorInventory, false);
         } else {
@@ -85,7 +85,7 @@ public class InventoryPlayerMixin {
     private void nightmareMode$dropItemsExceptSkillBook(ItemStack[] inventory) {
         for (int slot = 0; slot < inventory.length; ++slot) {
             ItemStack stack = inventory[slot];
-            if (stack == null || stack.itemID == NMItems.skillBook.itemID) continue;
+            if (stack == null || NMInventoryLocks.isSoulbound(stack)) continue;
             inventory[slot] = null;
             this.player.dropPlayerItemWithRandomChoice(stack, true);
         }
@@ -299,7 +299,7 @@ public class InventoryPlayerMixin {
     private void nightmareMode$dropItemsWithPreHardmodeRetention(ItemStack[] inventory, boolean checkLocks) {
         for (int slot = 0; slot < inventory.length; ++slot) {
             ItemStack stack = inventory[slot];
-            if (stack == null || stack.itemID == NMItems.skillBook.itemID) {
+            if (stack == null || NMInventoryLocks.isSoulbound(stack)) {
                 continue;
             }
             boolean willBeLocked = checkLocks && !NMInventoryLocks.isMainInventorySlotUnlockedAfterDeath(this.player, slot);

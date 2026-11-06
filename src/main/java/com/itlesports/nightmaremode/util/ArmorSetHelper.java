@@ -10,6 +10,15 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
 public final class ArmorSetHelper {
+    public static boolean isWearingCompleteAnglerSet(EntityLivingBase wearer) {
+        return wearer != null && hasSet(wearer, NMItems.anglerHelmet, NMItems.anglerChestplate,
+                NMItems.anglerLeggings, NMItems.anglerBoots);
+    }
+
+    public static int getAnglerPieceCount(EntityLivingBase wearer) {
+        return wearer == null ? 0 : getPieceCount(wearer, NMItems.anglerHelmet,
+                NMItems.anglerChestplate, NMItems.anglerLeggings, NMItems.anglerBoots);
+    }
     private ArmorSetHelper() {
     }
 

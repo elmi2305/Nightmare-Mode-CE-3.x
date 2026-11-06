@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.block.BTWBlocks;
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.attribute.BTWAttributes;
@@ -43,6 +45,11 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void seekAnimalCarcasses(World world, CallbackInfo ci) {
+        if (BalanceProfile.isCombatEasy() && !((Object)this instanceof EntityBloodZombie)) {
+            this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehaviorHostile.class);
+            this.tasks.removeAllTasksOfClass(ZombieBreakBarricadeBehavior.class);
+            this.getNavigator().setBreakDoors(false);
+        }
         this.tasks.addTask(4, new com.itlesports.nightmaremode.AITasks.EntityAIHarvestCarcass((EntityZombie)(Object)this));
     }
 
@@ -55,6 +62,11 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     }
 
 
+
+    @ModifyVariable(method = "setChild", at = @At("HEAD"), argsOnly = true)
+    private boolean preventEasyBabyZombies(boolean child) {
+        return !BalanceProfile.isCombatEasy() && child;
+    }
 
     @Unique private int lungedAgo;
 
@@ -84,7 +96,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
     private void setBaby(EntityLivingData data, CallbackInfoReturnable<EntityLivingData> cir){
         EntityZombie thisObj =(EntityZombie)(Object)this;
 
-        boolean willBeBaby = this.rand.nextInt(32) == 0 && !(thisObj instanceof EntityCinderPigman || thisObj instanceof EntityDeadzonePigman);
+        boolean willBeBaby = !BalanceProfile.isCombatEasy() && this.rand.nextInt(32) == 0 && !(thisObj instanceof EntityCinderPigman || thisObj instanceof EntityDeadzonePigman);
         if ((willBeBaby || this.isChild()) && !this.worldObj.isRemote) {
             this.setChild(true);
             this.clearBabyEquipment();
@@ -433,7 +445,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     }
                 } else if (rand.nextInt((int) Math.max(MathHelper.floor_double ((isHostile ? 22 : 50) * bloodMoonModifier) * (1 / niteMultiplier), 2)) == 0 && (progress > 1 || NightmareMode.evolvedMobs)) {
                     this.setCurrentItemOrArmor(0, new ItemStack(Item.swordDiamond));
-                    this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(36.0);
+                    this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 24.0 : 36.0);
                     this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(Math.floor(12.0 + (progress-2)*3) - (isHostile ? 0 : 4));
                     this.equipmentDropChances[0] = -1f;
                     // 12.0 -> 15.0
@@ -546,7 +558,7 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
                     NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
             this.getEntityAttribute(BTWAttributes.armor).setAttribute((2.0d + progress * (isBloodMoon ? 1.5 : 1) + (isEclipse ? rand.nextInt(3)+2 : 0)) * niteMultiplier);
             double bloodMoonHealthBonus = isBloodMoon ? (NMUtils.isPreHardmodeBloodMoon() ? 1 : 4) : 0;
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((20 + bloodMoonHealthBonus + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 + Math.min(progress, 3) * 2 + (isEclipse ? 4 : 0) : (20 + bloodMoonHealthBonus + progress * (isBloodMoon ? 8 : 6) + (isEclipse ? 20 : 0)) * niteMultiplier);
             // 40 -> 46 -> 52 -> 58 eclipse
             // 24 -> 32 -> 40 -> 48 bm
             // 20 -> 26 -> 32 -> 38 normal
@@ -789,5 +801,18 @@ public abstract class EntityZombieMixin extends EntityMob implements EntityZombi
             }
         }
         return false;
+    }
+
+    @org.spongepowered.asm.mixin.Unique private com.itlesports.nightmaremode.util.EasyCombatStats easyLoadedStats;
+
+    @Inject(method = "readEntityFromNBT", at = @At("HEAD"))
+    private void captureEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        this.easyLoadedStats = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+    }
+
+    @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
+    private void restoreEasyDefaults(NBTTagCompound tag, CallbackInfo ci) {
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, this.easyLoadedStats);
+        this.easyLoadedStats = null;
     }
 }

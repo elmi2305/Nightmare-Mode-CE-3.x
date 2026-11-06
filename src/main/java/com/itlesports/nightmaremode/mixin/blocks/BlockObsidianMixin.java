@@ -65,7 +65,7 @@ public class BlockObsidianMixin extends Block {
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int iMetadata, float fChance, int iFortuneModifier) {
         if (!world.isRemote) {
             if (this.shouldDropBlock) {
-                this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, iMetadata, 1.0F);
+                this.dropItemsIndividually(world, i, j, k, Block.obsidian.blockID, 1, this.damageDropped(iMetadata), 1.0F);
                 this.shouldDropBlock = false;
             } else{
                 this.dropItemsIndividually(world, i, j, k, NMItems.obsidianShard.itemID, Math.min(world.rand.nextInt(4) + 3 + iFortuneModifier, 8), 0, 1.0F);
@@ -104,9 +104,12 @@ public class BlockObsidianMixin extends Block {
     @Override
     @Environment(value=EnvType.CLIENT)
     public void registerIcons(IconRegister reg) {
-        nm_obsidianIcons = new Icon[4];
+        nm_obsidianIcons = new Icon[9];
         nm_obsidianIcons[0] = reg.registerIcon("minecraft:obsidian");
         nm_obsidianIcons[1] = reg.registerIcon("nightmare:nmCrudeObsidian");
+        for (int meta = 2; meta < nm_obsidianIcons.length; ++meta) {
+            nm_obsidianIcons[meta] = nm_obsidianIcons[1];
+        }
     }
 
     @Override
@@ -115,7 +118,7 @@ public class BlockObsidianMixin extends Block {
         if (meta >= 0 && meta < nm_obsidianIcons.length) {
             return (nm_obsidianIcons[meta]);
         }
-        return super.getIcon(side,meta); // default obsidian icon
+        return nm_obsidianIcons[0];
     }
 
     @Override
@@ -137,7 +140,7 @@ public class BlockObsidianMixin extends Block {
 
     @Override
     public int damageDropped(int iMetadata) {
-        return iMetadata;
+        return iMetadata > 0 ? 1 : 0;
     }
 
 }

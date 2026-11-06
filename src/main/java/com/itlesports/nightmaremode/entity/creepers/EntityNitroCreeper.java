@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.creepers;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.World;
@@ -9,7 +11,7 @@ public class EntityNitroCreeper extends EntityCreeperVariant {
         super(par1World);
         this.variantType = NMFields.PACKET_CREEPER_SUPERCRITICAL;
         this.soundPitchModifier = 0.8f;
-        this.fuseTime = 15;
+        this.fuseTime = BalanceProfile.isCombatEasy() ? 30 : 15;
         this.explosionMultiplier = 1.4f;
         this.explosionRadius = 6;
         this.patienceCounter = (byte)20;

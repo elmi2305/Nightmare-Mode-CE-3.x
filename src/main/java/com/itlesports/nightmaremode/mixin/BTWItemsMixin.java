@@ -8,6 +8,7 @@ import btw.item.items.FoodItem;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.itemblock.NetherrackItemBlock;
 import com.itlesports.nightmaremode.item.items.ItemPlaceableStick;
+import com.itlesports.nightmaremode.item.items.template.NMItem;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemAccessor;
 import com.itlesports.nightmaremode.util.ArmorBalance;
 import net.minecraft.src.Block;
@@ -72,6 +73,7 @@ public class BTWItemsMixin {
                 BTWItems.plateHelmet, BTWItems.plateBreastplate, BTWItems.plateLeggings, BTWItems.plateBoots,
                 NMItems.steelHammer, NMItems.steelFishingPole, NMItems.steelFishingPoleBaited);
         multiplyDurability(2, Item.helmetChain, Item.plateChain, Item.legsChain, Item.bootsChain);
+        multiplyDurability(3, NMItems.tungstenAxe, NMItems.tungstenHoe);
         Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)
                 .setUnlocalizedName("netherrack");
     }

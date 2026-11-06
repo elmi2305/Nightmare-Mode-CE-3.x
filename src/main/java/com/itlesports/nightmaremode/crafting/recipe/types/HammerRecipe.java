@@ -91,11 +91,11 @@ public class HammerRecipe {
     }
 
     public boolean isFinalHit(int metadata) {
-        return !this.requiresMultipleHits() || metadata >= this.hitsRequired - 1;
+        return !this.requiresMultipleHits() || metadata >= this.metadatas[0] + this.hitsRequired - 1;
     }
 
     public int getNextHitMetadata(int metadata) {
-        return Math.min(metadata + 1, this.hitsRequired - 1);
+        return Math.min(metadata + 1, this.metadatas[0] + this.hitsRequired - 1);
     }
 
     public HammerRecipe setCanBeMinedByAnyHammer() {

@@ -59,8 +59,8 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Beta Build 4012";
-    public static String betaBuildLineDifficulty = BalanceProfile.active();
+    public static String betaBuildLine = "Beta Build 4020";
+    public static String betaBuildLineDifficulty = BalanceProfile.journeyName(BalanceProfile.active());
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;
     public static boolean alwaysShowRewards = false;
@@ -251,6 +251,8 @@ public class NightmareMode extends BTWAddon {
             AddonHandler.registerCommand(new com.itlesports.nightmaremode.util.command.TestEasyBalanceCommand(name), false);
         }
         if (showBetaOverlay) {
+            AddonHandler.registerCommand(new com.itlesports.nightmaremode.util.command.TestJourneySettingsCommand(true), false);
+            AddonHandler.registerCommand(new com.itlesports.nightmaremode.util.command.TestJourneySettingsCommand(false), false);
             for (String name : TestToolsCommand.NAMES) {
                 AddonHandler.registerCommand(new TestToolsCommand(name), false);
             }

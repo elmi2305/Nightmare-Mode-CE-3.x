@@ -59,7 +59,8 @@ public final class TestToolsCommand extends CommandBase {
                 reply(sender, "/testfreeskills: toggle unlocking skills by clicking without requirements.");
                 reply(sender, "/testdisableplayerfatigue: toggle fatigue suppression.");
                 reply(sender, "/testfullinventorycapacity: toggle 9 hotbar and 27 backpack slots.");
-                reply(sender, "Easy survival: /testeasypollution, /testeasyhungerdrain, /testeasyorequantities, /testeasydurability. Each toggles Hard behavior for that system and persists in config.");
+                reply(sender, "/testdifficulty [easy|hard], /testcomplexity [low|high]: save world-wide combat/progression settings. Restart required.");
+                reply(sender, "Balance overrides: /testeasypollution and /testeasyorequantities require Low progression; /testeasyhungerdrain and /testeasydurability require Easy combat or Low progression. Each toggles baseline behavior and persists in config.");
                 reply(sender, "Current: dev mode " + state(NightmareMode.devMode)
                         + ", rewards " + state(NightmareMode.alwaysShowRewards)
                         + ", free skills " + state(NightmareMode.unlockSkillsWithClick)

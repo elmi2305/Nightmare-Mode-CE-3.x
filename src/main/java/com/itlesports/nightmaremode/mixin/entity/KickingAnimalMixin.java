@@ -26,10 +26,12 @@ public abstract class KickingAnimalMixin extends EntityAnimal {
         KickingAnimal self = (KickingAnimal) (Object)this;
         if (self instanceof EntityHorse) {
             Vec3 kickCenter = this.computeKickAttackCenter();
-            return AxisAlignedBB.getAABBPool().getAABB(kickCenter.xCoord - 1.45, kickCenter.yCoord - 1.2, kickCenter.zCoord - 1.45, kickCenter.xCoord + 1.45, kickCenter.yCoord + 1.2, kickCenter.zCoord + 1.45);
+            double horizontal = BalanceProfile.isCombatEasy() ? 0.65D : 1.45D;
+            double vertical = BalanceProfile.isCombatEasy() ? 0.6D : 1.2D;
+            return AxisAlignedBB.getAABBPool().getAABB(kickCenter.xCoord - horizontal, kickCenter.yCoord - vertical, kickCenter.zCoord - horizontal, kickCenter.xCoord + horizontal, kickCenter.yCoord + vertical, kickCenter.zCoord + horizontal);
         } else if (self instanceof EntityCow){
             Vec3 kickCenter = this.computeKickAttackCenter();
-            float easyModeReduction = BalanceProfile.isEasy() ? 0.3f : 0f;
+            float easyModeReduction = BalanceProfile.isCombatEasy() ? 0.5f : 0f;
             double horizontalOffsetMin = 0.6 - easyModeReduction;
             double verticalOffsetMin = 0.65 - easyModeReduction;
             double verticalOffsetMax = 1.2 - easyModeReduction;

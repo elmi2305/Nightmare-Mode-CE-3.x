@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.entity.SpiderWebEntity;
 import btw.item.BTWItems;
@@ -61,6 +63,12 @@ public abstract class EntitySlimeMixin extends EntityLiving{
 
     @Shadow protected abstract void setSlimeSize(int iSize);
     @Shadow public abstract int getSlimeSize();
+
+    @org.spongepowered.asm.mixin.injection.ModifyArg(method = "setSlimeSize", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/src/AttributeInstance;setAttribute(D)V"), index = 0)
+    private double reduceLargeEasySlimeHealth(double health) {
+        return BalanceProfile.isCombatEasy() && health > 20.0D ? Math.min(40.0D, Math.ceil(health * 0.6D)) : health;
+    }
     @Shadow public abstract void setDead();
 
     @Unique private int timeSpentTargeting = 60;

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.mob.KickingAnimal;
 import api.world.difficulty.DifficultyParam;
 import com.itlesports.nightmaremode.util.interfaces.CarcassAnimal;
@@ -18,7 +20,7 @@ public class EntityMooshroomMixin extends EntityCow {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(30);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 : 30);
     }
 
     @Override

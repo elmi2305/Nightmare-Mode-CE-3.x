@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.entity.mob.behavior.SimpleWanderBehavior;
 import btw.community.nightmaremode.NightmareMode;
 import com.itlesports.nightmaremode.AITasks.EntityAILiteHorde;
@@ -74,7 +76,7 @@ public class EntityBloodZombie extends EntityZombie {
 
     @Override
     protected void dropFewItems(boolean bKilledByPlayer, int lootingLevel) {
-        if(this.rand.nextBoolean() && isValidForEventLoot){
+        if(BalanceProfile.isCombatEasy() || this.rand.nextBoolean() && isValidForEventLoot){
             this.dropItem(Item.porkRaw.itemID,1);
         }
 
@@ -117,8 +119,9 @@ public class EntityBloodZombie extends EntityZombie {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.39f);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute((18 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 18 + Math.min(3, NMUtils.getWorldProgress()) * 2 : (18 + NMUtils.getWorldProgress() * 6) * NMUtils.getNiteMultiplier());
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute((120d));
+        if (BalanceProfile.isCombatEasy()) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(2.0D);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.rendering.entities;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.client.render.util.RenderUtils;
 import com.itlesports.nightmaremode.entity.creepers.EntityCreeperVariant;
 import com.itlesports.nightmaremode.rendering.entities.models.ModelDungCreeper;
@@ -22,6 +24,7 @@ public class RenderCreeperVariant extends RenderLiving {
     private static final ResourceLocation armoredCreeperTextures = new ResourceLocation("textures/entity/creeper/creeper_armor.png");
     private static final ResourceLocation creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
 
+    private static final ResourceLocation FIRE_EXTINGUISHED = new ResourceLocation("nightmare:textures/entity/firecreeperExtinguished.png");
     private static final ResourceLocation FIRE = new ResourceLocation("nightmare:textures/entity/firecreeper.png");
     private static final ResourceLocation FIRE_ECLIPSE = new ResourceLocation("nightmare:textures/entity/firecreeperEclipseHigh.png");
     private static final ResourceLocation FIRE_CHARGED = new ResourceLocation("nightmare:textures/entity/firecreeperCharged.png");
@@ -176,6 +179,7 @@ public class RenderCreeperVariant extends RenderLiving {
         boolean usingLegacy = RenderUtils.shouldRenderLegacyModel();
 
         if(entity.variantType == PACKET_CREEPER_FIRE){
+            if (BalanceProfile.isCombatEasy()) return FIRE_EXTINGUISHED;
             if(NMUtils.getIsMobEclipsed(entity)){
                 return FIRE_ECLIPSE;
             } else if(entity.isCharged()){

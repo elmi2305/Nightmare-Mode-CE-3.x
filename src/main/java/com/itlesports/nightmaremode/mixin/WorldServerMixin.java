@@ -11,6 +11,7 @@ import com.itlesports.nightmaremode.agriculture.ChunkPollutionManager;
 import com.itlesports.nightmaremode.network.SkylightSync;
 import com.itlesports.nightmaremode.util.interfaces.WorldSkylightSyncAccess;
 import net.minecraft.src.*;
+import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,9 +19,33 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldServer.class)
 public abstract class WorldServerMixin extends World implements WorldServerExt, WorldSkylightSyncAccess {
+    @Unique
+    private WorldServer sharedProgressWorld(DataEntry.WorldDataEntry<?> entry) {
+        if (this.provider == null || this.provider.dimensionId == 0
+                || entry != NightmareMode.WORLD_SKILL_TREE && entry != NightmareMode.JOURNEY_PROFILE) return null;
+        MinecraftServer server = MinecraftServer.getServer();
+        return server == null ? null : server.worldServerForDimension(0);
+    }
+
+    @Inject(method = "getData", at = @At("HEAD"), cancellable = true)
+    private <T> void readSharedProgress(DataEntry.WorldDataEntry<T> entry, CallbackInfoReturnable<T> cir) {
+        WorldServer overworld = this.sharedProgressWorld(entry);
+        if (overworld != null) cir.setReturnValue(overworld.getData(entry));
+    }
+
+    @Inject(method = "setData", at = @At("HEAD"), cancellable = true)
+    private <T> void writeSharedProgress(DataEntry.WorldDataEntry<T> entry, T value, CallbackInfo ci) {
+        WorldServer overworld = this.sharedProgressWorld(entry);
+        if (overworld != null) {
+            overworld.setData(entry, value);
+            ci.cancel();
+        }
+    }
+
     @Unique private final SkylightSync skylightSync = new SkylightSync();
 
     @Override

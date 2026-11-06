@@ -23,7 +23,8 @@ public final class NMFireproofItems {
         return isIndestructible(stack) || stack != null
                 && (stack.itemID == BTWItems.creeperOysters.itemID || stack.itemID == Item.magmaCream.itemID
                     || stack.itemID == Block.netherrack.blockID || stack.getItem() == BTWItems.netherSludge
-                    || stack.getItem() == BTWItems.diamondPile
+                    || stack.getItem() == BTWItems.diamondPile || stack.getItem() == NMItems.mechanicalWrench
+                    || stack.getItem() == Item.compass
                     || isNetherEquipment(stack.getItem()) || isPhaseSteelRelated(stack) || isNetherSupply(stack));
     }
 
@@ -48,6 +49,7 @@ public final class NMFireproofItems {
     private static boolean isNetherEquipment(Item item) {
         return item == NMItems.netherrackSword
                 || item == NMItems.tungstenSword || item == NMItems.tungstenShovel
+                || item == NMItems.tungstenAxe || item == NMItems.tungstenHoe
                 || item == NMItems.blackglassSword || item == NMItems.blackglassScythe || item == NMItems.blackglassKnife
                 || item == NMItems.coresteelSword || item == NMItems.coresteelPickaxe
                 || item == NMItems.coresteelAxe || item == NMItems.coresteelShovel

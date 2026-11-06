@@ -6,7 +6,7 @@ import com.itlesports.nightmaremode.item.items.ItemHammer;
 import com.itlesports.nightmaremode.network.HammerAnvilNet;
 import com.itlesports.nightmaremode.util.AutoAnvilUpgrade;
 import com.itlesports.nightmaremode.util.HammerAnvilAnimation;
-import com.itlesports.nightmaremode.util.HammerAnvilMaterials;
+import com.itlesports.nightmaremode.util.HammerAnvilHelper;
 import com.itlesports.nightmaremode.skill.SkillLockedCrafting;
 import net.minecraft.src.ISidedInventory;
 import net.minecraft.src.NBTTagList;
@@ -383,7 +383,7 @@ public class TileEntityHammerAnvil extends TileEntity implements ISidedInventory
     }
 
     public int getHitsRequired(HammerRecipe recipe) {
-        return HammerAnvilMaterials.getHitsRequired(this.getAnvilBlockID(), recipe);
+        return HammerAnvilHelper.getHitsRequired(this.getAnvilBlockID(), recipe);
     }
 
     private int getAnvilBlockID() {

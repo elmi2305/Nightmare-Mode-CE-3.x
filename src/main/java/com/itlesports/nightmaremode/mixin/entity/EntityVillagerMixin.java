@@ -47,6 +47,18 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
     @Shadow protected MerchantRecipeList buyingList;
 
     @Inject(method = "getRecipes", at = @At("RETURN"))
+    private void repairUnstackableSoulFlintTrades(EntityPlayer player, CallbackInfoReturnable<MerchantRecipeList> cir) {
+        if (this.worldObj.isRemote || cir.getReturnValue() == null) return;
+        for (Object entry : cir.getReturnValue()) {
+            MerchantRecipe recipe = (MerchantRecipe)entry;
+            ItemStack first = recipe.getItemToBuy();
+            ItemStack second = recipe.getSecondItemToBuy();
+            if (first != null && first.getItem() == NMItems.soulFlint) first.stackSize = 1;
+            if (second != null && second.getItem() == NMItems.soulFlint) second.stackSize = 1;
+        }
+    }
+
+    @Inject(method = "getRecipes", at = @At("RETURN"))
     private void offerExpeditionJournal(EntityPlayer player, CallbackInfoReturnable<MerchantRecipeList> cir) {
         if (this.worldObj.isRemote || player == null) return;
         MerchantRecipeList recipes = cir.getReturnValue();
@@ -170,7 +182,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
         if (this.getProfession() == 1) this.nightmareMode$refreshLibrarianLockout();
 
         this.nightmareMode$hungerDrainProgress += HUNGER_DRAIN_PER_TICK
-                * com.itlesports.nightmaremode.util.EasyBalance.exhaustion(SkillHandler.getWorldData(this.worldObj).globalVillagerHungerDrainRateMultiplier);
+                * com.itlesports.nightmaremode.util.EasyBalance.villagerExhaustion(SkillHandler.getWorldData(this.worldObj).globalVillagerHungerDrainRateMultiplier);
         while (this.nightmareMode$hungerDrainProgress >= 1.0F) {
             this.nightmareMode$hungerDrainProgress -= 1.0F;
             this.nightmareMode$setHungerLevel(this.nightmareMode$getHungerLevel() - 1);

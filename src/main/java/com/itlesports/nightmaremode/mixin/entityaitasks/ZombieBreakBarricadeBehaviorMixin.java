@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entityaitasks;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import api.item.items.PickaxeItem;
 import btw.block.BTWBlocks;
 import btw.entity.mob.behavior.ZombieBreakBarricadeBehavior;
@@ -27,6 +29,10 @@ public class ZombieBreakBarricadeBehaviorMixin extends EntityAIBase {
 
     @Inject(method = "shouldBreakBarricadeAtPos", at = @At("HEAD"), cancellable = true)
     private void manageBlockBreakingForHeldTool(World world, int i, int j, int k, boolean advancedBreaker, CallbackInfoReturnable<Block> cir){
+        if (BalanceProfile.isCombatEasy() && !(this.associatedEntity instanceof com.itlesports.nightmaremode.entity.variants.EntityBloodZombie)) {
+            cir.setReturnValue(null);
+            return;
+        }
         if (world.getBlockId(i, j, k) == NMBlocks.steelOre.blockID) {
             cir.setReturnValue(null);
             return;

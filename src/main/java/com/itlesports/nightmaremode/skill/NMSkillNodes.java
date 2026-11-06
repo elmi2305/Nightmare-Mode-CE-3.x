@@ -3579,7 +3579,7 @@ public final class NMSkillNodes {
     public static final SkillNode BRING_AZURE_SALT_16 = bring(
             "azure_salt_16", "Azure Chemistry", NMItems.azureSalt, 0, -5,
             "Bring 16 azure salt.", NMItems.azureSalt.itemID, 0, false, 16,
-            "Unlocks Additional Recipes. +1% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.01F), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
+            "+1% cistern processing speed.", SkillRewardActions.addCisternSpeed(0.01F), MINING, false, BRING_NETHERRACK_TIER_TWO_64);
 
     public static final SkillNode BRING_AZURE_SLAG_16 = bring(
             "azure_slag_16", "Azure Slagwork", NMItems.azureSlag, 1, -5,

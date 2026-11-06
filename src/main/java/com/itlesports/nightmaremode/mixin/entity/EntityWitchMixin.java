@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import btw.community.nightmaremode.NightmareMode;
 import btw.item.BTWItems;
 import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
@@ -88,7 +90,7 @@ public abstract class EntityWitchMixin extends EntityMob {
 
         // BLOOD MOON ORBS
         if (validLoot && NMUtils.getIsBloodMoon()) {
-            int count = 6 + rand.nextInt(9); // 6–14
+            int count = 6 + rand.nextInt(9); // 6â€“14
             if (looting > 0) count += rand.nextInt(looting + 1);
 
             for (int i = 0; i < count; i++) {
@@ -197,7 +199,7 @@ public abstract class EntityWitchMixin extends EntityMob {
             boolean isBloodMoon = NMUtils.getIsBloodMoon();
             this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(NMUtils.getBalancedMobFollowRange(this.worldObj, 16.0d, progress, isBloodMoon, isEclipse));
             double niteMultiplier = NMUtils.getNiteMultiplier();
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(((20.0 + progress * 2) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 20 : ((20.0 + progress * 2) * bloodMoonModifier + eclipseModifier) * niteMultiplier);
             this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.3 * (1 + (niteMultiplier - 1) / 20));
         }
     }
@@ -250,5 +252,12 @@ public abstract class EntityWitchMixin extends EntityMob {
         }
         this.isValidForEventLoot = par1DamageSource.getEntity() instanceof EntityPlayer;
         return super.attackEntityFrom(par1DamageSource, par2);
+    }
+
+    @Override
+    public void readEntityFromNBT(net.minecraft.src.NBTTagCompound tag) {
+        com.itlesports.nightmaremode.util.EasyCombatStats defaults = com.itlesports.nightmaremode.util.EasyCombatStats.beforeLoad(this);
+        super.readEntityFromNBT(tag);
+        com.itlesports.nightmaremode.util.EasyCombatStats.afterLoad(this, defaults);
     }
 }

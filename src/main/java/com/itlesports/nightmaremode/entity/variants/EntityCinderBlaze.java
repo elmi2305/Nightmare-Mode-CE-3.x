@@ -1,5 +1,7 @@
 package com.itlesports.nightmaremode.entity.variants;
 
+import com.itlesports.nightmaremode.world.BalanceProfile;
+
 import com.itlesports.nightmaremode.worldgen.NetherTierHelper;
 import net.minecraft.src.EntityBlaze;
 import net.minecraft.src.Entity;
@@ -17,7 +19,7 @@ public class EntityCinderBlaze extends EntityBlaze {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(45.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(BalanceProfile.isCombatEasy() ? 28.0D : 45.0D);
         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(10.0D);
     }
 
