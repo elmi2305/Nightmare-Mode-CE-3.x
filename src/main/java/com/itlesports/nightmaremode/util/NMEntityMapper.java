@@ -89,6 +89,7 @@ public class NMEntityMapper {
         TileEntity.addMapping(TileEntityBloodChest.class, "BloodChest");
         TileEntity.addMapping(TileEntitySteelLocker.class, "SteelLocker");
         TileEntity.addMapping(HellforgeTileEntity.class, "Hellforge");
+        TileEntity.addMapping(com.itlesports.nightmaremode.block.tileEntities.TungstenForgeTileEntity.class, "TungstenForge");
         TileEntity.addMapping(CustomBasketTileEntity.class, "CustomBasket");
         TileEntity.addMapping(TileEntityVillagerContainer.class, "VillagerContainer");
         TileEntity.addMapping(TileEntityDisenchantmentTable.class, "TileEntityDisenchantmentTable");

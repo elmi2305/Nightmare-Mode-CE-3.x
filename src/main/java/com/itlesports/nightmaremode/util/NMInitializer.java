@@ -192,6 +192,10 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Mushroom Oysters", NMItems.mushroomOysters);
         validateItemRegistration("Charred Brown Mushroom", NMItems.charredBrownMushroom);
         validateItemRegistration("Lavafish and Mushroom Skewer", NMItems.lavafishMushroomSkewer);
+        validateItemRegistration("Tungsten Shears", NMItems.tungstenShears);
+        validateItemRegistration("Tungsten Fishing Rod", NMItems.tungstenFishingRod);
+        validateItemRegistration("Baited Tungsten Fishing Rod", NMItems.tungstenFishingRodBaited);
+        validateItemRegistration("Nether Resonance Gem", NMItems.netherResonanceGem);
         NMTags.initTags();
         BTWItems.straw.setfurnaceburntime(5);
         addCraftingRecipes();
@@ -595,6 +599,11 @@ public abstract class NMInitializer implements AchievementExt {
         step.addToTradeList();
     }
     private static void sell(String name, int profession, int level, int id1, int meta, int c1, int c2, float w, boolean levelUp, int minCost, int maxCost){
+        if (name.startsWith("nmNether") && !levelUp && minCost > 0
+                && isNetherInfrastructureTrade(id1)) {
+            minCost = (minCost + 1) / 2;
+            maxCost = (maxCost + 1) / 2;
+        }
         if (name.startsWith("ifhy:")) {
             validateTradeStackLimit(name, id1, c2);
             if (maxCost > Item.emerald.getItemStackLimit()) {
@@ -610,6 +619,13 @@ public abstract class NMInitializer implements AchievementExt {
             return;
         }
         step.addToTradeList();
+    }
+
+    public static boolean isNetherInfrastructureTrade(int id) {
+        return id == NMBlocks.minerDrill.blockID || id == NMBlocks.chunkLoader.blockID
+                || id == NMBlocks.cisternInterface.blockID || id == BTWBlocks.axle.blockID
+                || id == BTWBlocks.gearBox.blockID || id == BTWBlocks.crucible.blockID
+                || id == Item.brewingStand.itemID || id == NMItems.highSpeedMinecart.itemID;
     }
 
     // Overloaded versions with defaults
@@ -1114,6 +1130,12 @@ public abstract class NMInitializer implements AchievementExt {
     }
 
     private static void addNetherPostVillagerTrades() {
+        for (int profession : new int[]{EntityTier1NetherVillager.PROFESSION_ID,
+                EntityTier2NetherVillager.PROFESSION_ID, EntityTier3NetherVillager.PROFESSION_ID}) {
+            convert("nmNetherSteadyIncome" + profession, profession, 1,
+                    TradeItem.fromID(BTWItems.groundNetherrack.itemID, 24, 32), TradeItem.EMPTY,
+                    TradeItem.fromID(Item.emerald.itemID, 3, 4), 1.0F, false, true);
+        }
         addTierOneNetherPostTrades();
         addTierTwoNetherPostTrades();
         addTierThreeNetherPostTrades();
@@ -1159,7 +1181,7 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1GhastTear", profession, 3, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
         buy("nmNetherTier1CreeperOyster", profession, 3, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
         buy("nmNetherTier1Nitre", profession, 3, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
-        buy("nmNetherTier1Bone", profession, 3, Item.bone.itemID, 0, 48, 64, 1.0F);
+        buy("nmNetherTier1Bone", profession, 3, Item.bone.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier1EarlyBlazePowder", profession, 3, Item.blazePowder.itemID, 0, 16, 32, 0.6F);
         // rank four needs repeatable ways to advance that do not consume the diamond commission inputs.
         buy("nmNetherTier1Rank4TungstenIngot", profession, 4, NMItems.tungstenIngot.itemID, 0, 2, 4, 1.0F);
@@ -1197,19 +1219,16 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier2DenseCore", profession, 1, NMItems.denseNetherrackCore.itemID, 0, 8, 16, 1.2F);
         buy("nmNetherTier2RedstoneCrystal", profession, 1, NMItems.redstoneCrystal.itemID, 0, 4, 12, 0.9F);
         buy("nmNetherTier2AzureSlag", profession, 2, NMItems.azureSlag.itemID, 0, 4, 8, 0.8F);
-        buy("nmNetherTier2LapisPrecipitate", profession, 2, NMItems.lapisPrecipitate.itemID, 0, 4, 8, 0.7F);
         // these materials are all established by the time the tier-two drill is relevant.
         buy("nmNetherTier2Rank3RefinedRedstone", profession, 3, NMItems.refinedRedstone.itemID, 0, 4, 8, 1.0F);
         buy("nmNetherTier2Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 0.9F);
         buy("nmNetherTier2Rank3AzureSlag", profession, 3, NMItems.azureSlag.itemID, 0, 8, 16, 0.9F);
-        buy("nmNetherTier2Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier2Rank3RedstoneEye", profession, 3, BTWItems.redstoneEye.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier2DeadzoneShard", profession, 3, NMItems.deadzoneShard.itemID, 0, 4, 10, 0.8F);
         buy("nmNetherTier2Rank4TungstenIngot", profession, 4, NMItems.tungstenIngot.itemID, 0, 2, 4, 1.0F);
         buy("nmNetherTier2Rank4RefinedRedstone", profession, 4, NMItems.refinedRedstone.itemID, 0, 8, 16, 0.9F);
         buy("nmNetherTier2Rank4PolishedShard", profession, 4, NMItems.crystalPolishedShard.itemID, 0, 4, 8, 0.9F);
         buy("nmNetherTier2Rank4AzureSlag", profession, 4, NMItems.azureSlag.itemID, 0, 12, 20, 0.8F);
-        buy("nmNetherTier2Rank4LapisPrecipitate", profession, 4, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.8F);
 
         // early resources remain useful in tier two only as bulk, low-frequency sinks.
         buy("nmNetherTier1MagmaCream", profession, 1, Item.magmaCream.itemID, 0, 32, 48, 0.35F);
@@ -1222,7 +1241,10 @@ public abstract class NMInitializer implements AchievementExt {
         buy("nmNetherTier1Wart", profession, 4, Item.netherStalkSeeds.itemID, 0, 48, 64, 0.35F);
         buy("nmNetherTier1Brick", profession, 4, BTWItems.netherBrick.itemID, 0, 48, 64, 0.35F);
 
-        sell("nmNetherTier2HempSeeds", profession, 1, BTWItems.hempSeeds.itemID, 0, 5, 8, 0.8F, false, 6, 10);
+        sell("nmNetherTier2HempSeeds", profession, 1, BTWItems.hempSeeds.itemID, 0, 5, 8, 3.0F, false, 2, 4);
+        convert("nmNetherTier2Aquamarine", profession, 1,
+                TradeItem.fromID(Item.emerald.itemID, 1, 2), TradeItem.EMPTY,
+                TradeItem.fromID(NMItems.aquamarine.itemID, 8, 16), 1.0F, false, true);
         sell("nmNetherTier2FertileNetherrack", profession, 1, NMBlocks.fertileNetherrack.blockID, 0, 4, 8, 0.8F, false, 8, 14);
         sell("nmNetherTier2Rope", profession, 2, BTWItems.rope.itemID, 0, 6, 12, 0.7F, false, 8, 14);
         sell("nmNetherTier2Axle", profession, 2, BTWBlocks.axle.blockID, 0, 3, 6, 0.6F, false, 10, 16);
@@ -1270,7 +1292,6 @@ public abstract class NMInitializer implements AchievementExt {
 
         // rank three and four both need a broad pool of current-rank experience trades.
         buy("nmNetherTier3Rank3DenseCore", profession, 3, NMItems.denseNetherrackCore.itemID, 0, 2, 4, 1.0F);
-        buy("nmNetherTier3Rank3LapisPrecipitate", profession, 3, NMItems.lapisPrecipitate.itemID, 0, 6, 12, 0.9F);
         buy("nmNetherTier3Rank3TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.8F);
         buy("nmNetherTier3Rank3RedstoneCrystal", profession, 3, NMItems.redstoneCrystal.itemID, 0, 4, 8, 0.8F);
         buy("nmNetherTier3Rank4RedstoneEye", profession, 4, BTWItems.redstoneEye.itemID, 0, 8, 16, 1.0F);
@@ -1665,7 +1686,7 @@ public abstract class NMInitializer implements AchievementExt {
         killCauldronRecipe(BTWItems.nethercoal); // added to cistern
 
         cauldron.addRecipe(new ItemStack(NMItems.thickenedSap), new TagOrStack[]{
-                new ItemStack(NMItems.cupOfSap)
+                new ItemStack(NMItems.cupOfSap, 1, Short.MAX_VALUE)
         });
 
 
@@ -2157,7 +2178,7 @@ public abstract class NMInitializer implements AchievementExt {
         manager.addRecipe(new CisternRecipe(
                 new ItemStack[]{new ItemStack(NMItems.moistureFertilizer, 8),
                         new ItemStack(Item.slimeBall, 32),
-                        new ItemStack(Item.silk, 32), new ItemStack(Item.blazePowder, 8)},
+                        new ItemStack(NMItems.spiderSilk, 32), new ItemStack(Item.blazePowder, 8)},
                 CisternTileEntity.FLUID_BRINE, 3, 8, 600,
                 new ItemStack[]{new ItemStack(NMItems.upgradedMoistureFertilizer, 8)}).setConsumesFluid());
         manager.addRecipe(new CisternRecipe(
@@ -3144,7 +3165,7 @@ public abstract class NMInitializer implements AchievementExt {
                 new Object[]{BTWItems.redMushroom, BTWItems.brownMushroom, NMTags.netherCompatibleSticks});
         RecipeManager.addShapelessRecipe(new ItemStack(NMItems.mushroomOysters),
                 new Object[]{BTWItems.creeperOysters, BTWItems.redMushroom, BTWItems.brownMushroom});
-        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lavafishMushroomSkewer),
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.lavafishMushroomSkewer, 3),
                 new Object[]{NMItems.lavafish, NMItems.charredBrownMushroom,
                         NMItems.charredBrownMushroom, NMTags.netherCompatibleSticks});
         SkillLockedCrafting.requireSkill(RecipeManager.addShapelessRecipe(new ItemStack(NMItems.dandelionMush),
@@ -3170,6 +3191,13 @@ public abstract class NMInitializer implements AchievementExt {
                 "  N", " NS", "H F", Character.valueOf('S'), NMTags.toolStrings,
                 Character.valueOf('N'), NMItems.nickelIngot, Character.valueOf('H'), NMTags.netherCompatibleSticks,
                 Character.valueOf('F'), BTWTags.fishingHooks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenFishingRod), new Object[]{
+                "  T", " TS", "H F", 'T', NMItems.tungstenIngot, 'S', NMTags.toolStrings,
+                'H', NMTags.netherCompatibleSticks, 'F', BTWTags.fishingHooks});
+        RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShears), new Object[]{
+                " T", "T ", 'T', NMItems.tungstenIngot});
+        RecipeManager.addRecipe(new ItemStack(NMItems.netherResonanceGem), new Object[]{
+                " Q ", "QCQ", " B ", 'Q', Item.netherQuartz, 'C', NMItems.denseNetherrackCore, 'B', Item.blazePowder});
         IRecipe netherArrowRecipe = RecipeManager.addShapelessRecipe(new ItemStack(Item.arrow, 4),
                 new Object[]{NMItems.soulFlint, NMItems.pighideString, NMItems.tungstenNugget});
         SkillRecipeGates.exemptCrafting(netherArrowRecipe);
@@ -3197,6 +3225,8 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.netherFishingRod), new Object[]{"  S", " SB", "S T", Character.valueOf('S'), NMItems.netherStick, Character.valueOf('T'), BTWTags.fishingHooks, Character.valueOf('B'), NMTags.toolStrings});
         RecipeManager.addShapelessRecipe(new ItemStack(BTWItems.netherSludge), new Object[]{BTWItems.groundNetherrack, BTWItems.soulSandPile, NMItems.ashClump, BTWItems.gravelPile});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.hellforge), new Object[]{"##", "##", Character.valueOf('#'), BTWBlocks.looseNetherBrickSlab});
+        RecipeManager.addRecipe(new ItemStack(NMBlocks.tungstenForge), new Object[]{
+                "TTT", "THT", "TBT", 'T', NMItems.tungstenIngot, 'H', BTWItems.hellfireDust, 'B', Item.blazePowder});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.netherrackAnvil), new Object[]{"###", " # ", "###", Character.valueOf('#'), Block.netherrack});
         RecipeManager.addRecipe(new ItemStack(NMBlocks.obsidianMillstone), new Object[]{"BBB", "BGB", "BBB", Character.valueOf('B'), NMItems.obsidianBrick, Character.valueOf('G'), BTWItems.gear});
         RecipeManager.addRecipe(new ItemStack(Block.netherrack), new Object[]{"###", "#S#", "###", Character.valueOf('#'), NMItems.netherrackChunk, Character.valueOf('S'), BTWItems.netherSludge});
@@ -3428,6 +3458,8 @@ public abstract class NMInitializer implements AchievementExt {
                 "steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));
         CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
                 "nether", NMItems.netherFishingRod, NMItems.netherFishingRodBaited));
+        CraftingManager.getInstance().getRecipeList().add(new CustomFishingRodBaitingRecipe(
+                "tungsten", NMItems.tungstenFishingRod, NMItems.tungstenFishingRodBaited));
         CraftingManager.getInstance().getRecipeList().add(new ChestDyeRecipe());
 
 
@@ -4204,7 +4236,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillLockedCrafting.requireSkills(RecipeManager.addRecipe(new ItemStack(NMBlocks.diamondAnvil), new Object[]{
                         "NXN", " Y ", "NNN",
                         Character.valueOf('N'), NMItems.refinedDiamondIngot,
-                        Character.valueOf('Y'), NMBlocks.stoneAnvil,
+                        Character.valueOf('Y'), NMBlocks.ironAnvil,
                         Character.valueOf('X'), BTWBlocks.diamondIngot}),
                 NMSkillNodes.BRING_DIAMOND_INGOT_2, NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR, NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.KILL_MOB_250, NMSkillNodes.SMELT_IRON_NUGGET_128);
 
@@ -4900,6 +4932,10 @@ public abstract class NMInitializer implements AchievementExt {
                 NMSkillNodes.BRING_CRUSHED_TUNGSTEN_16, NMSkillNodes.BRING_QUARTZ_16);
         SkillRecipeGates.crafting(NMItems.tungstenIngot.itemID, NMSkillNodes.BRING_TUNGSTEN_NUGGET_32);
         SkillRecipeGates.crafting(NMItems.tungstenBucket.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.tungstenShears.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.tungstenFishingRod.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMItems.tungstenFishingRodBaited.itemID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
+        SkillRecipeGates.crafting(NMBlocks.tungstenForge.blockID, NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMItems.tungstenPickaxe.itemID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8, NMSkillNodes.BRING_NETHER_STICK_16);
         SkillRecipeGates.crafting(NMItems.tungstenHammer.itemID,
@@ -4923,7 +4959,7 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMBlocks.cisternInterface.blockID,
                 NMSkillNodes.BRING_TUNGSTEN_INGOT_8);
         SkillRecipeGates.crafting(NMBlocks.chunkLoader.blockID,
-                NMSkillNodes.BRING_NETHERRACK_TIER_THREE_256, NMSkillNodes.BRING_DEADZONE_SHARD_64);
+                NMSkillNodes.BRING_PRECISION_CRYSTAL_GEAR_4, NMSkillNodes.BRING_DENSE_NETHERRACK_CORE_16);
 
         SkillRecipeGates.crafting(NMItems.stoneKnife.itemID, NMSkillNodes.BRING_SHARP_STONE_4);
         SkillRecipeGates.crafting(NMItems.ironKnife.itemID, NMSkillNodes.BRING_IRON_INGOT_8);

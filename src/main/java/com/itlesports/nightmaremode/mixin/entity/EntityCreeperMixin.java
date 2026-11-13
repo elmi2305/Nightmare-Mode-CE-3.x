@@ -213,7 +213,8 @@ public abstract class EntityCreeperMixin extends EntityMob implements EntityCree
 
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && thisObj.getNeuteredState() == 0) {
             if (!thisObj.worldObj.isRemote) {
-                if (isHostile || (!isHostile && playersCurrentItem.getItem().itemID == Item.shears.itemID)) {
+                if (isHostile || playersCurrentItem.getItem() == Item.shears
+                        || playersCurrentItem.getItem() instanceof com.itlesports.nightmaremode.item.items.ItemTungstenShears) {
                     boolean var2 = thisObj.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (thisObj.getPowered()) {
                         thisObj.worldObj.createExplosion(thisObj, thisObj.posX, thisObj.posY + (double)thisObj.getEyeHeight(), thisObj.posZ, 8 * bloodMoonModifier, var2);

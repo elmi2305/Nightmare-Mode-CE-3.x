@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.worldgen;
 
 import net.minecraft.src.*;
+import com.itlesports.nightmaremode.item.NMItems;
+import btw.item.BTWItems;
 
 import java.util.Random;
 
@@ -28,7 +30,22 @@ public class WorldGenEnderNest extends WorldGenerator {
         world.setBlock(x, y, z, Block.chest.blockID, 0, 2);
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if (!(tile instanceof TileEntityChest chest)) return;
-        chest.setInventorySlotContents(random.nextInt(chest.getSizeInventory()), new ItemStack(Item.enderPearl, 1 + random.nextInt(3)));
-        chest.setInventorySlotContents(random.nextInt(chest.getSizeInventory()), new ItemStack(Item.clay, 2 + random.nextInt(5)));
+        addLoot(chest, random, new ItemStack(Item.enderPearl, 1 + random.nextInt(3)));
+        addLoot(chest, random, new ItemStack(Item.clay, 2 + random.nextInt(5)));
+        ItemStack[] supplies = {new ItemStack(BTWItems.soulforgedSteelIngot), new ItemStack(NMItems.tungstenIngot, 1 + random.nextInt(2)),
+                new ItemStack(NMItems.refinedRedstone, 2 + random.nextInt(3)), new ItemStack(Item.blazeRod, 2 + random.nextInt(3)),
+                new ItemStack(Item.ghastTear, 1 + random.nextInt(2)), new ItemStack(NMItems.spiderSilk, 2 + random.nextInt(3))};
+        addLoot(chest, random, supplies[random.nextInt(supplies.length)]);
+    }
+
+    private static void addLoot(TileEntityChest chest, Random random, ItemStack stack) {
+        int start = random.nextInt(chest.getSizeInventory());
+        for (int offset = 0; offset < chest.getSizeInventory(); ++offset) {
+            int slot = (start + offset) % chest.getSizeInventory();
+            if (chest.getStackInSlot(slot) == null) {
+                chest.setInventorySlotContents(slot, stack);
+                return;
+            }
+        }
     }
 }

@@ -31,6 +31,18 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
         if (!this.worldObj.isRemote) NMCookedFoodTracking.creditOvenPickup(player, this.furnaceItemStacks[2]);
     }
     @Unique private int burnCounter;
+    @Unique private int cakeCookTicks;
+
+    @Inject(method = "updateEntity", at = @At("HEAD"))
+    private void resetCakeCookTimeWhenEmpty(CallbackInfo ci) {
+        ItemStack input = this.furnaceItemStacks[0];
+        if (input == null || input.getItem() != NMItems.unbakedChocolateCake) this.cakeCookTicks = 0;
+    }
+
+    @Inject(method = "updateEntity", at = @At(value = "INVOKE", target = "Lbtw/block/tileentity/OvenTileEntity;smeltItem()V", shift = At.Shift.AFTER))
+    private void resetCakeCookTimeAfterBaking(CallbackInfo ci) {
+        this.cakeCookTicks = 0;
+    }
 
     @Unique private int burnItemId = -1;
     @Unique private int burnItemMetadata;
@@ -62,12 +74,19 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
 
     @Inject(method = "getCookTimeForCurrentItem", at = @At("HEAD"), cancellable = true)
     private void setJourneyCookTime(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(com.itlesports.nightmaremode.util.EasyBalance.processingTicks(NMOvenCookTimes.getCookTime(this.furnaceItemStacks[0])));
+        int ticks = com.itlesports.nightmaremode.util.EasyBalance.processingTicks(NMOvenCookTimes.getCookTime(this.furnaceItemStacks[0]));
+        ItemStack input = this.furnaceItemStacks[0];
+        if (input != null && input.getItem() == NMItems.unbakedChocolateCake && this.worldObj != null && !this.worldObj.isRemote) {
+            if (this.cakeCookTicks <= 0) this.cakeCookTicks = Math.max(1, ticks + this.worldObj.rand.nextInt(201) - 100);
+            ticks = this.cakeCookTicks;
+        }
+        cir.setReturnValue(ticks);
     }
 
     @Inject(method = "writeToNBT", at = @At("TAIL"))
     private void writeCakeBurnTime(NBTTagCompound tag, CallbackInfo ci) {
         tag.setInteger("NmCakeBurnTime", this.burnCounter);
+        tag.setInteger("NmCakeCookTicks", this.cakeCookTicks);
         tag.setInteger("NmBurnItemId", this.burnItemId);
         tag.setInteger("NmBurnItemMetadata", this.burnItemMetadata);
     }
@@ -75,6 +94,7 @@ public abstract class OvenTileEntityMixin extends TileEntityFurnace implements T
     @Inject(method = "readFromNBT", at = @At("TAIL"))
     private void readCakeBurnTime(NBTTagCompound tag, CallbackInfo ci) {
         this.burnCounter = tag.getInteger("NmCakeBurnTime");
+        this.cakeCookTicks = Math.max(0, tag.getInteger("NmCakeCookTicks"));
         ItemStack output = this.furnaceItemStacks[2];
         this.burnItemId = tag.hasKey("NmBurnItemId") ? tag.getInteger("NmBurnItemId") : output == null ? -1 : output.itemID;
         this.burnItemMetadata = tag.hasKey("NmBurnItemMetadata") ? tag.getInteger("NmBurnItemMetadata") : output == null ? 0 : output.getItemDamage();

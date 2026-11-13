@@ -35,6 +35,7 @@ public class ComponentNetherDesertTemple extends ComponentScatteredFeature {
             new WeightedRandomChestContent(BTWItems.groundNetherrack.itemID, 0, 0, 16, 10),
             new WeightedRandomChestContent(Item.netherQuartz.itemID, 0, 0, 3, 10),
             new WeightedRandomChestContent(Item.emerald.itemID, 0, 1, 5, 15),
+            new WeightedRandomChestContent(BTWItems.hempSeeds.itemID, 0, 3, 8, 18),
             new WeightedRandomChestContent(NMItems.boneShard.itemID, 0, 8, 12, 20),
             new WeightedRandomChestContent(Item.rottenFlesh.itemID, 0, 3, 7, 11),
             new WeightedRandomChestContent(Item.skull.itemID, 0, 1, 1, 5),

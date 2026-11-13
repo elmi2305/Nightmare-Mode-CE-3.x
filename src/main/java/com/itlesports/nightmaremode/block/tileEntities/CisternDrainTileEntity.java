@@ -30,9 +30,10 @@ public class CisternDrainTileEntity extends TileEntity {
             return;
         }
         int sourceId = this.worldObj.getBlockId(this.xCoord, this.yCoord + 1, this.zCoord);
-        int fluid = sourceId == Block.waterMoving.blockID
+        int fluid = sourceId == Block.waterMoving.blockID || sourceId == Block.waterStill.blockID
                 ? CisternTileEntity.FLUID_WATER
-                : sourceId == Block.lavaMoving.blockID ? CisternTileEntity.FLUID_LAVA : CisternTileEntity.FLUID_EMPTY;
+                : sourceId == Block.lavaMoving.blockID || sourceId == Block.lavaStill.blockID
+                ? CisternTileEntity.FLUID_LAVA : CisternTileEntity.FLUID_EMPTY;
         if (fluid != CisternTileEntity.FLUID_EMPTY && cisternBelow.addFluid(fluid)) {
             this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
             this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.75D, this.zCoord + 0.5D,

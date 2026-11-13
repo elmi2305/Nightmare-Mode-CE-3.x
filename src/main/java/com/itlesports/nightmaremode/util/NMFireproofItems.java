@@ -34,6 +34,9 @@ public final class NMFireproofItems {
         return stack.getItem() == BTWItems.soulUrn || stack.getItem() == BTWItems.hellfireDust
                 || stack.getItem() == BTWItems.concentratedHellfire
                 || id == BTWBlocks.hibachi.blockID
+                || id == BTWBlocks.planter.blockID || id == BTWBlocks.crucible.blockID
+                || id == Block.glass.blockID || id == Block.thinGlass.blockID
+                || id == Item.glassBottle.itemID || id == Item.potion.itemID
                 || id == BTWBlocks.aestheticOpaque.blockID && metadata == AestheticOpaqueBlock.SUBTYPE_HELLFIRE
                 || id == BTWBlocks.aestheticVegetation.blockID
                     && (metadata == AestheticVegetationBlock.SUBTYPE_BLOOD_WOOD_SAPLING

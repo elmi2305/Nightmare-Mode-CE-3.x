@@ -27,6 +27,13 @@ public class ItemStackMixin {
                                           CallbackInfoReturnable<java.util.List<String>> cir) {
         ItemStack stack = (ItemStack)(Object)this;
         java.util.List<String> tooltip = cir.getReturnValue();
+        if (stack.itemID == com.itlesports.nightmaremode.block.NMBlocks.tungstenForge.blockID) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.fuel"));
+            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY + net.minecraft.src.I18n.getString("tile.ifhyTungstenForge.speed"));
+        }
+        if (stack.getItem() == com.itlesports.nightmaremode.item.NMItems.netherResonanceGem) {
+            tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY + net.minecraft.src.I18n.getString("item.ifhyNetherResonanceGem.use"));
+        }
         if (stack.itemID == com.itlesports.nightmaremode.block.NMBlocks.hellforge.blockID) {
             tooltip.add(net.minecraft.src.EnumChatFormatting.GRAY
                     + net.minecraft.src.I18n.getString("tile.nmHellforgeBlock.fuel"));

@@ -203,6 +203,15 @@ public class ChunkProviderGenerateMixin {
                 } else if (region == OverworldTierHelper.Region.FROZEN_WASTES) {
                     int height = 88 + (int)Math.round(valueNoise2D(worldX, worldZ, 240.0D, 0x46524F5354L) * 20.0D
                             + Math.abs(valueNoise2D(worldX, worldZ, 68.0D, 0x5045414BL)) * 12.0D);
+                    double exit = OverworldTierHelper.getFrozenExitBlend(this.worldObj, worldX, worldZ);
+                    if (exit > 0.0D) {
+                        int naturalHeight = findSurfaceHeight(blocks, localX, localZ);
+                        int blendedHeight = (int)Math.round(Math.min(122, height) * (1.0D - exit) + naturalHeight * exit);
+                        writeFrozenColumn(blocks, metadata, localX, localZ, blendedHeight);
+                        int base = (localX * 16 + localZ) * 128;
+                        for (int y = blendedHeight + 1; y < 63; ++y) blocks[base + y] = (short)Block.waterStill.blockID;
+                        continue;
+                    }
                     double transition = OverworldTierHelper.smoothstep((distance - OverworldTierHelper.FROZEN_WASTES_START)
                             / OverworldTierHelper.FROZEN_SLOPE_LENGTH);
                     writeOceanToFrozenColumn(blocks, metadata, localX, localZ, worldX, worldZ,

@@ -31,7 +31,7 @@ public final class NMBlockBreakingRules {
 
     public static boolean canAttemptBreak(EntityPlayer player, Block block, World world, int x, int y, int z) {
         if (block == null || player.capabilities.isCreativeMode) return true;
-        if (block == Block.anvil) return isSteelMiningTool(player.getCurrentEquippedItem());
+        if (block == Block.anvil || block == Block.netherBrick) return isSteelMiningTool(player.getCurrentEquippedItem());
         if (block == Block.oreDiamond) return isValidDiamondMiningTool(player.getCurrentEquippedItem());
         if (isSoftBlock(block, world, x, y, z)) return true;
         ItemStack held = player.getCurrentEquippedItem();

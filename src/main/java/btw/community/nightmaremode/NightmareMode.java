@@ -59,7 +59,7 @@ public class NightmareMode extends BTWAddon {
     public static volatile double MSPT = 0.0;
     public static boolean showBetaOverlay = true;
     public static String betaEnvironmentLine = "Testing Environment";
-    public static String betaBuildLine = "Beta Build 4020";
+    public static String betaBuildLine = "Beta Build 4030";
     public static String betaBuildLineDifficulty = BalanceProfile.journeyName(BalanceProfile.active());
     public static String betaDateLine = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM d, uuuu"));
     public static boolean allSkillsUnlocked = false;

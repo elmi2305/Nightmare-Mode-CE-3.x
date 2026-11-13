@@ -12,12 +12,16 @@ import net.minecraft.src.MerchantRecipe;
 import net.minecraft.src.MerchantRecipeList;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.World;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import btw.item.BTWItems;
 
 public abstract class EntityNetherPostVillager extends EntityVillager {
     private String postGroup = "";
     private int postSlot = -1;
     private boolean professionCompleted;
     private boolean completionReconciled;
+    private boolean tradesUpdated4030 = true;
 
     protected EntityNetherPostVillager(World world, int profession) {
         super(world, profession);
@@ -69,7 +73,32 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
     public void onLivingUpdate() {
         if (!this.worldObj.isRemote && (this.buyingList == null || this.buyingList.isEmpty())) {
             this.buyingList = new MerchantRecipeList();
+            this.tradesUpdated4030 = true;
             this.checkForNewTrades(this.getCurrentMaxNumTrades());
+        }
+        if (!this.worldObj.isRemote && this.buyingList != null && this.ticksExisted % 20 == 0 && !this.isTrading()) {
+            boolean hasIncome = false;
+            boolean hasAquamarine = false;
+            for (Object entry : this.buyingList) {
+                MerchantRecipe recipe = (MerchantRecipe)entry;
+                ItemStack payment = recipe.getItemToBuy();
+                ItemStack second = recipe.getSecondItemToBuy();
+                if (payment != null && payment.getItem() == Item.bone) payment.stackSize = Math.min(16, payment.stackSize);
+                if (second != null && second.getItem() == Item.bone) second.stackSize = Math.min(16, second.stackSize);
+                if (!this.tradesUpdated4030 && payment != null && payment.getItem() == Item.emerald
+                        && com.itlesports.nightmaremode.util.NMInitializer.isNetherInfrastructureTrade(recipe.getItemToSell().itemID)) {
+                    payment.stackSize = (payment.stackSize + 1) / 2;
+                }
+                if (payment != null && payment.getItem() == BTWItems.groundNetherrack
+                        && recipe.getItemToSell().getItem() == Item.emerald && recipe.getItemToSell().stackSize >= 3) hasIncome = true;
+                if (recipe.getItemToSell().getItem() == com.itlesports.nightmaremode.item.NMItems.aquamarine) hasAquamarine = true;
+            }
+            this.tradesUpdated4030 = true;
+            if (!hasIncome) this.buyingList.addToListWithCheck(new MerchantRecipe(
+                    new ItemStack(BTWItems.groundNetherrack, 24), new ItemStack(Item.emerald, 3)));
+            if (this.getPostTier() == 2 && !hasAquamarine) this.buyingList.addToListWithCheck(new MerchantRecipe(
+                    new ItemStack(Item.emerald, 1 + this.rand.nextInt(2)),
+                    new ItemStack(com.itlesports.nightmaremode.item.NMItems.aquamarine, 8 + this.rand.nextInt(9))));
         }
         if (!this.worldObj.isRemote && !this.completionReconciled && this.getCurrentTradeLevel() >= 5) {
             this.professionCompleted = true;
@@ -182,6 +211,7 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
         tag.setString("NmNetherPostGroup", this.postGroup);
         tag.setInteger("NmNetherPostSlot", this.postSlot);
         tag.setBoolean("NmPostProfessionComplete", this.professionCompleted);
+        tag.setBoolean("NmTradesUpdated4030", this.tradesUpdated4030);
     }
 
     @Override
@@ -190,5 +220,6 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
         this.postGroup = tag.getString("NmNetherPostGroup");
         this.postSlot = tag.hasKey("NmNetherPostSlot") ? tag.getInteger("NmNetherPostSlot") : -1;
         this.professionCompleted = tag.getBoolean("NmPostProfessionComplete") || this.getCurrentTradeLevel() >= 5;
+        this.tradesUpdated4030 = tag.getBoolean("NmTradesUpdated4030");
     }
 }

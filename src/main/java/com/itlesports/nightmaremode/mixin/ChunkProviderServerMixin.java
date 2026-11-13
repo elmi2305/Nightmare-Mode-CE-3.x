@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ChunkProviderServerMixin {
     @Shadow private WorldServer worldObj;
 
-    @Inject(method = "unloadChunksIfNotNearSpawn", at = @At("HEAD"), cancellable = true)
+    @Inject(method = {"unloadChunksIfNotNearSpawn", "forceAddToChunksToUnload"}, at = @At("HEAD"), cancellable = true)
     private void keepChargedLoaderChunksLoaded(int chunkX, int chunkZ, CallbackInfo ci) {
         if (ChunkLoaderManager.keepsChunkLoaded(this.worldObj, chunkX, chunkZ)) {
             ci.cancel();

@@ -49,7 +49,8 @@ public abstract class MillstoneTileEntityMixin extends TileEntity {
     @Unique
     private int millstoneProcessingTicks(int constant) {
         float bonus = MachineSpeedBonuses.get(this);
-        return Math.max(1, Math.round(constant * 8 / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus))));
+        int baseTicks = constant * ((Object)this instanceof ObsidianMillstoneTileEntity ? 4 : 8);
+        return Math.max(1, Math.round(baseTicks / (1.0F + com.itlesports.nightmaremode.util.EasyBalance.processingBonus(bonus))));
     }
 
     @Redirect(

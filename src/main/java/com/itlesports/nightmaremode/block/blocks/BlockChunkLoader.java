@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.block.blocks;
 
 import com.itlesports.nightmaremode.world.ChunkLoaderManager;
+import com.itlesports.nightmaremode.item.NMItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.Block;
@@ -38,7 +39,7 @@ public class BlockChunkLoader extends Block {
             return true;
         }
         ItemStack held = player.getHeldItem();
-        if (held == null || held.itemID != Item.diamond.itemID) {
+        if (held == null || held.getItem() != NMItems.netherResonanceGem) {
             return true;
         }
         if (!world.isRemote) {

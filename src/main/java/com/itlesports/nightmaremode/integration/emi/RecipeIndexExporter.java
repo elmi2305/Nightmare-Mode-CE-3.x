@@ -309,6 +309,11 @@ public final class RecipeIndexExporter {
 
     private static JsonObject details(EmiRecipe recipe) {
         JsonObject details = new JsonObject();
+        if (recipe instanceof EmiTungstenForgeRecipe) {
+            details.addProperty("duration_ticks", 534);
+            details.addProperty("requires_fuel", true);
+            details.addProperty("requires_adjacent_lava", true);
+        }
         if (recipe instanceof EmiCookingRecipe && !recipe.getInputs().isEmpty()) {
             details.addProperty("duration_ticks", NMOvenCookTimes.getCookTime(
                     recipe.getInputs().get(0).getEmiStacks().get(0).getItemStack()));

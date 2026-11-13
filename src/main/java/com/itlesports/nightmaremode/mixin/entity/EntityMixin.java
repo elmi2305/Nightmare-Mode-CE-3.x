@@ -16,6 +16,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements PhaseTransitEntity {
+    @Inject(method = "travelToDimension", at = @At("HEAD"), cancellable = true)
+    private void blockEarlyNetherContainerTransport(int dimension, CallbackInfo ci) {
+        Entity entity = (Entity)(Object)this;
+        if (dimension == -1 && entity.worldObj.provider.dimensionId != -1
+                && entity instanceof EntityMinecartContainer
+                && !com.itlesports.nightmaremode.util.NetherPostProgress.worldData(entity.worldObj).netherVillagerTier1Complete) {
+            ci.cancel();
+        }
+    }
+
     @Unique private boolean expandingEasyLoot;
 
     @Inject(method = "entityDropItem", at = @At("HEAD"), cancellable = true)

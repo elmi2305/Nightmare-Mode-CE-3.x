@@ -46,6 +46,10 @@ public final class ChunkLoaderManager {
         }
     }
 
+    public static java.util.Collection<ChunkLoaderData.LoaderPosition> getLoaders(WorldServer world) {
+        return getCanonicalDataWorld(world).getData(NightmareMode.CHUNK_LOADERS).getLoaders();
+    }
+
     private static World getCanonicalDataWorld(World world) {
         MinecraftServer server = world instanceof WorldServer worldServer
                 ? worldServer.getMinecraftServer()

@@ -32,7 +32,7 @@ public final class CauldronBatchCooking {
         return false;
     }
 
-    // returns a complete new inventory, or null without modifying any input when a cycle cannot finish.
+    // returns a new inventory with fitting complete batches, or null when none fit; inputs are never mutated.
     public static ItemStack[] cook(ItemStack[] contents, BulkCraftingManager manager, World world,
                                    boolean allowFood, int inventoryLimit) {
         List<Recipe> recipes = recipes(manager, world);
@@ -79,21 +79,54 @@ public final class CauldronBatchCooking {
         batches.addAll(singles);
         if (batches.isEmpty()) return null;
 
-        ItemStack[] working = new ItemStack[contents.length];
+        ItemStack[] remainingInputs = copy(contents);
+        ItemStack[] working = copy(contents);
+        boolean cooked = false;
+        // retry blocked batches after others free space, but never cook this cycle's outputs.
+        boolean progress;
+        do {
+            progress = false;
+            for (var iterator = batches.iterator(); iterator.hasNext();) {
+                Batch batch = iterator.next();
+                ItemStack[] candidate = copy(working);
+                boolean fits = true;
+                for (int slot = 0; slot < candidate.length; ++slot) {
+                    if (batch.consumed[slot] == 0) continue;
+                    if (remainingInputs[slot] == null || remainingInputs[slot].stackSize < batch.consumed[slot]
+                            || candidate[slot] == null) {
+                        fits = false;
+                        break;
+                    }
+                    candidate[slot].stackSize -= batch.consumed[slot];
+                    if (candidate[slot].stackSize == 0) candidate[slot] = null;
+                }
+                if (!fits) continue;
+                for (ItemStack output : batch.outputs) {
+                    if (!insert(candidate, output, inventoryLimit)) {
+                        fits = false;
+                        break;
+                    }
+                }
+                if (!fits) continue;
+                working = candidate;
+                for (int slot = 0; slot < remainingInputs.length; ++slot) {
+                    if (batch.consumed[slot] == 0) continue;
+                    remainingInputs[slot].stackSize -= batch.consumed[slot];
+                    if (remainingInputs[slot].stackSize == 0) remainingInputs[slot] = null;
+                }
+                iterator.remove();
+                cooked = progress = true;
+            }
+        } while (progress && !batches.isEmpty());
+        return cooked ? working : null;
+    }
+
+    private static ItemStack[] copy(ItemStack[] contents) {
+        ItemStack[] result = new ItemStack[contents.length];
         for (int slot = 0; slot < contents.length; ++slot) {
-            if (contents[slot] != null) working[slot] = contents[slot].copy();
+            if (contents[slot] != null) result[slot] = contents[slot].copy();
         }
-        for (Batch batch : batches) {
-            for (int slot = 0; slot < working.length; ++slot) {
-                if (batch.consumed[slot] == 0) continue;
-                working[slot].stackSize -= batch.consumed[slot];
-                if (working[slot].stackSize == 0) working[slot] = null;
-            }
-            for (ItemStack output : batch.outputs) {
-                if (!insert(working, output, inventoryLimit)) return null;
-            }
-        }
-        return working;
+        return result;
     }
 
     private static List<Recipe> recipes(BulkCraftingManager manager, World world) {

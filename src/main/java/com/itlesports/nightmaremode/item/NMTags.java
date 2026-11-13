@@ -129,5 +129,8 @@ public class NMTags {
     }
 
 
-    public static void initTags(){}
+    public static void initTags(){
+        BTWTags.shears.addIgnoringMeta(NMItems.tungstenShears);
+        BTWTags.fishingRods.addIgnoringMeta(NMItems.tungstenFishingRod, NMItems.tungstenFishingRodBaited);
+    }
 }

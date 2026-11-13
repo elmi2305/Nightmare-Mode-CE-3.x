@@ -13,6 +13,12 @@ import java.util.Random;
 
 @Mixin(BlockMushroom.class)
 public class BlockMushroomMixin extends BlockFlower {
+    @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
+    private void spreadSlowlyInNether(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (world.provider.dimensionId != -1) return;
+        com.itlesports.nightmaremode.util.NetherMushroomGrowth.tick(this, world, x, y, z, random);
+        ci.cancel();
+    }
     @Unique private World worldObj;
     protected BlockMushroomMixin(int par1, Material par2Material) {
         super(par1, par2Material);

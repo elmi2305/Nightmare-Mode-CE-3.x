@@ -114,6 +114,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         ItemStack held = this.angler.getCurrentEquippedItem();
         if (held == null) return 1.0F;
         Item item = held.getItem();
+        if (item == NMItems.tungstenFishingRod || item == NMItems.tungstenFishingRodBaited) return 0.40F;
         if (item == NMItems.nickelFishingPole || item == NMItems.nickelFishingPoleBaited) return 0.80F;
         if (item == NMItems.ironFishingPole || item == NMItems.ironFishingPoleBaited) return 0.65F;
         if (item == NMItems.diamondFishingPole || item == NMItems.diamondFishingPoleBaited) return 0.50F;
@@ -216,6 +217,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private boolean identifyCaughtFish(World world, Entity entity) {
         ItemStack caughtStack = null;
         if (entity instanceof EntityItem) {
+            ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)entity).nm$protectFishingCatch(200);
             caughtStack = ((EntityItem)entity).getEntityItem();
             this.caughtFishThisCast = this.selectedCatchIsFish
                     && caughtStack != null
@@ -225,6 +227,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         if (spawned && !world.isRemote && caughtStack != null && caughtStack.stackSize > 0
                 && com.itlesports.nightmaremode.util.ArmorSetHelper.isWearingCompleteAnglerSet(this.angler)) {
             EntityItem bonus = new EntityItem(world, entity.posX, entity.posY, entity.posZ, caughtStack.copy());
+            ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)bonus).nm$protectFishingCatch(200);
             // the original catch already has its reel-in velocity toward the angler.
             bonus.motionX = entity.motionX;
             bonus.motionY = entity.motionY;
@@ -270,6 +273,11 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
     private FishingCatch selectCatch() {
         if (this.isNetherFishing()) {
             this.selectedCatchIsFish = false;
+            ItemStack rod = this.angler.getCurrentEquippedItem();
+            if (rod != null && (rod.getItem() == NMItems.tungstenFishingRod || rod.getItem() == NMItems.tungstenFishingRodBaited)
+                    && this.rand.nextFloat() < (this.isBaited ? 0.65F : 0.80F)) {
+                return this.isBaited ? BAITED_NETHER_CATCHES[2] : NETHER_CATCHES[0];
+            }
             if (this.isBaited && this.rand.nextFloat() < (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)
                     + 0.025F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler)) {
                 return BAITED_NETHER_CATCHES[2];
@@ -365,7 +373,7 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             return false;
         }
         ItemStack held = this.angler.getCurrentEquippedItem();
-        return held != null && (held.itemID == NMItems.netherFishingRod.itemID || held.itemID == NMItems.netherFishingRodBaited.itemID);
+        return held != null && held.getItem() instanceof com.itlesports.nightmaremode.item.items.ItemNetherFishingRod;
     }
 
     @Unique

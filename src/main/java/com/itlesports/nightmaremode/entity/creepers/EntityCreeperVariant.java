@@ -459,7 +459,8 @@ public class EntityCreeperVariant extends EntityMob implements EntityWithCustomP
         }
         if (playersCurrentItem != null && playersCurrentItem.getItem() instanceof ItemShears && this.getNeuteredState() == 0) {
             if (!this.worldObj.isRemote && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-                if (isHostile || playersCurrentItem.getItem().itemID == Item.shears.itemID) {
+                if (isHostile || playersCurrentItem.getItem() == Item.shears
+                        || playersCurrentItem.getItem() instanceof com.itlesports.nightmaremode.item.items.ItemTungstenShears) {
                     boolean mobGriefing = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
                     if (this.getPowered()) {
                         if (NightmareMode.devMode) {

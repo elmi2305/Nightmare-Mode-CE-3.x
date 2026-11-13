@@ -51,6 +51,8 @@ public final class NightmareEmiRegistry {
             new ResourceLocation("nightmare", "washing"), EmiStack.of(Item.bucketWater));
     public static final EmiRecipeCategory MISC = new EmiRecipeCategory(
             new ResourceLocation("nightmare", "misc"), EmiStack.of(Item.paper));
+    public static final EmiRecipeCategory TUNGSTEN_FORGE = new EmiRecipeCategory(
+            new ResourceLocation("nightmare", "tungsten_forge"), EmiStack.of(NMBlocks.tungstenForge));
 
     private NightmareEmiRegistry() {
     }
@@ -69,6 +71,8 @@ public final class NightmareEmiRegistry {
         registry.addCategory(ENDER_ASSEMBLER);
         registry.addCategory(WASHING);
         registry.addCategory(MISC);
+        registry.addCategory(TUNGSTEN_FORGE);
+        registry.addWorkstation(TUNGSTEN_FORGE, EmiStack.of(NMBlocks.tungstenForge));
 
         registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.hammers));
         registry.addWorkstation(HAMMERING, EmiIngredient.of(NMTags.anvils));
@@ -80,11 +84,13 @@ public final class NightmareEmiRegistry {
         registry.addWorkstation(WASHING, EmiStack.of(Item.bucketWater));
 
         registry.addDeferredRecipes(addRecipe -> {
+            addRecipe.accept(new EmiTungstenForgeRecipe());
             addRecipe.accept(baiting("nickel", NMItems.nickelFishingPole, NMItems.nickelFishingPoleBaited));
             addRecipe.accept(baiting("iron", NMItems.ironFishingPole, NMItems.ironFishingPoleBaited));
             addRecipe.accept(baiting("diamond", NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited));
             addRecipe.accept(baiting("steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));
             addRecipe.accept(baiting("nether", NMItems.netherFishingRod, NMItems.netherFishingRodBaited));
+            addRecipe.accept(baiting("tungsten", NMItems.tungstenFishingRod, NMItems.tungstenFishingRodBaited));
             int index = 0;
             for (HammerRecipe recipe : HammerCraftingManager.instance.getRecipes()) {
                 addRecipe.accept(new EmiHammerRecipe(recipe, index++));

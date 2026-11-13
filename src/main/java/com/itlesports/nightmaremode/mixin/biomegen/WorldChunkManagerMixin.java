@@ -67,6 +67,13 @@ public class WorldChunkManagerMixin {
     @Unique
     private BiomeGenBase getOuterBiome(int x, int z) {
         if (this.nightmareMode$world == null || this.nightmareMode$world.provider.dimensionId != 0) return null;
+        if (OverworldTierHelper.getRegion(this.nightmareMode$world, x, z) == OverworldTierHelper.Region.FROZEN_WASTES) {
+            double exit = OverworldTierHelper.getFrozenExitBlend(this.nightmareMode$world, x, z);
+            long hash = (x >> 4) * 341873128712L ^ (z >> 4) * 132897987541L ^ this.nightmareMode$world.getSeed();
+            hash = (hash ^ (hash >>> 33)) * 0xff51afd7ed558ccdL;
+            double threshold = (hash >>> 11) * 0x1.0p-53;
+            if (threshold < exit) return null;
+        }
         return OverworldOuterBiomes.forRegion(OverworldTierHelper.getRegion(this.nightmareMode$world, x, z));
     }
 }

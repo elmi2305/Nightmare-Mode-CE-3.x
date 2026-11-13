@@ -50,7 +50,7 @@ public class ItemAlloyPickaxe extends PickaxeItem {
     }
 
     private boolean isSteelMiningTarget(ItemStack stack, World world, Block block, int x, int y, int z) {
-        return (block == Block.anvil || block == Block.netherrack && world.getBlockMetadata(x, y, z) == 4)
+        return (block == Block.anvil || block == Block.netherBrick || block == Block.netherrack && world.getBlockMetadata(x, y, z) == 4)
                 && NMBlockBreakingRules.isSteelMiningTool(stack);
     }
 

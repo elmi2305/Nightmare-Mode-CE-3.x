@@ -14,6 +14,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockFire.class)
 public class BlockFireMixin {
+    @Inject(method = "tryToDestroyBlockWithFire", at = @At("HEAD"), cancellable = true)
+    private void preventNetherNeighborBurning(World world, int x, int y, int z, int chance,
+                                             java.util.Random random, int age, CallbackInfo ci) {
+        if (world.provider.dimensionId == -1) ci.cancel();
+    }
+    @Inject(method = "checkForFireSpreadToOneBlockLocation", at = @At("HEAD"), cancellable = true)
+    private static void preventNetherFireSpread(World world, int x, int y, int z, java.util.Random random,
+                                               int age, boolean humid, int bound, CallbackInfo ci) {
+        if (world.provider.dimensionId == -1) ci.cancel();
+    }
+
+    @Inject(method = "checkForFireSpreadAndDestructionToOneBlockLocation(Lnet/minecraft/src/World;IIILjava/util/Random;II)V",
+            at = @At("HEAD"), cancellable = true)
+    private static void preventNetherFireDestruction(World world, int x, int y, int z, java.util.Random random,
+                                                    int age, int bound, CallbackInfo ci) {
+        if (world.provider.dimensionId == -1) ci.cancel();
+    }
 
     @Inject(method = "onBlockDestroyedByFire", at = @At("HEAD"))
     private static void polluteWhenFuelBurns(World world, int x, int y, int z, int fireAge,

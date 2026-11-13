@@ -20,7 +20,6 @@ public final class NetherItemHelper {
     private static final List<SkillTransferRule> SKILL_TRANSFER_RULES = new ArrayList<>();
 
     static {
-        registerSkillTransfer(NMSkillNodes.BRING_CRUDE_OBSIDIAN_16, NetherItemHelper::isDiamondTool);
         registerSkillTransfer(NMSkillNodes.BRING_CRUDE_OBSIDIAN_16,
                 stack -> stack != null && stack.getItem() instanceof ItemFood);
     }
@@ -36,12 +35,11 @@ public final class NetherItemHelper {
         if (stack == null) {
             return false;
         }
-        if (NMFireproofItems.isFireproof(stack)) {
-            return true;
-        }
         if (player != null && (NetherPostProgress.completedTiers(player) & 1) != 0) {
             return true;
         }
+        if (isDiamondTool(stack)) return false;
+        if (NMFireproofItems.isFireproof(stack)) return true;
         int id = stack.itemID;
         if (id == Block.netherrack.blockID
                 || id == Block.slowSand.blockID
@@ -108,7 +106,14 @@ public final class NetherItemHelper {
                 || id == Item.axeDiamond.itemID
                 || id == Item.shovelDiamond.itemID
                 || id == Item.hoeDiamond.itemID
-                || id == Item.swordDiamond.itemID;
+                || id == Item.swordDiamond.itemID
+                || stack.getItem() == BTWItems.diamondShears || stack.getItem() == BTWItems.diamondChisel
+                || stack.getItem() == NMItems.diamondKnife
+                || stack.getItem() == NMItems.diamondScythe
+                || stack.getItem() == NMItems.diamondHammer
+                || stack.getItem() == NMItems.diamondLeafRake
+                || stack.getItem() == NMItems.diamondFishingPole
+                || stack.getItem() == NMItems.diamondFishingPoleBaited;
     }
 
     private static final class SkillTransferRule {

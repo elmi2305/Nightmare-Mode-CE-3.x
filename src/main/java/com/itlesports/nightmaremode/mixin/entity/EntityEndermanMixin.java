@@ -267,19 +267,10 @@ public abstract class EntityEndermanMixin extends EntityMob {
                 return;
             }
             ItemStack var2 = target.inventory.armorInventory[3];
-            if (target.dimension == 1 && this.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class)) {
-                if (var2 == null) {
-                    this.angerNearbyEndermen(target);
-                    cir.setReturnValue(target);
-                } else if(var2.itemID != BTWItems.enderSpectacles.itemID){
-                    this.angerNearbyEndermen(target);
-                    cir.setReturnValue(target);
-                }
-            } else {
-                if(var2 != null && var2.itemID == BTWBlocks.carvedPumpkin.blockID){ // carved pumpkin aggros all endermen
-                    this.angerNearbyEndermen(target);
-                    cir.setReturnValue(target);
-                }
+            if (target.dimension == 1) return;
+            if(var2 != null && var2.itemID == BTWBlocks.carvedPumpkin.blockID){ // carved pumpkin aggros all endermen
+                this.angerNearbyEndermen(target);
+                cir.setReturnValue(target);
             }
         }
     }

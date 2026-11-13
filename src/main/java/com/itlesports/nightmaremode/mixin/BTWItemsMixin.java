@@ -73,7 +73,7 @@ public class BTWItemsMixin {
                 BTWItems.plateHelmet, BTWItems.plateBreastplate, BTWItems.plateLeggings, BTWItems.plateBoots,
                 NMItems.steelHammer, NMItems.steelFishingPole, NMItems.steelFishingPoleBaited);
         multiplyDurability(2, Item.helmetChain, Item.plateChain, Item.legsChain, Item.bootsChain);
-        multiplyDurability(3, NMItems.tungstenAxe, NMItems.tungstenHoe);
+        multiplyDurability(3, NMItems.tungstenAxe, NMItems.tungstenHoe, NMItems.tungstenFishingRod, NMItems.tungstenShears, NMItems.tungstenFishingRodBaited);
         Item.itemsList[Block.netherrack.blockID] = new NetherrackItemBlock(Block.netherrack.blockID - 256)
                 .setUnlocalizedName("netherrack");
     }

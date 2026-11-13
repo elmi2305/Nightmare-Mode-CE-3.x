@@ -259,6 +259,8 @@ public abstract class BTWPluginMixin {
         this.info(registry, NMBlocks.stoneLadder, 0, "nm.upgradedLadder.info");
         this.info(registry, NMBlocks.ironLadder, 0, "nm.upgradedLadder.info");
         this.info(registry, NMBlocks.hellforge, 0, "nm.hellforge.info");
+        this.info(registry, NMBlocks.tungstenForge, 0, "tile.ifhyTungstenForge.info");
+        this.info(registry, NMItems.netherResonanceGem, 0, "nm.netherResonanceGem.info");
         this.info(registry, NMBlocks.asphaltLayer, 0, "nm.blockAsphalt.info");
         this.info(registry, NMBlocks.bloodSaw, 0, "nm.bloodSaw.info");
         this.info(registry, NMBlocks.disenchantmentTable, 0, "nm.disenchantmentTable.info");

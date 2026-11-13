@@ -76,6 +76,7 @@ public class BTWRenderMapperMixin {
 
 
         TileEntityRenderer.instance.addSpecialRendererForClass(HellforgeTileEntity.class, new HellforgeRenderer());
+        TileEntityRenderer.instance.addSpecialRendererForClass(com.itlesports.nightmaremode.block.tileEntities.TungstenForgeTileEntity.class, new HellforgeRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(CustomBasketTileEntity.class, new CustomBasketRenderer());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityDisenchantmentTable.class, new RenderDisenchantmentTable());
         TileEntityRenderer.instance.addSpecialRendererForClass(TileEntityBloodBone.class, new TileEntityBloodBoneRenderer());

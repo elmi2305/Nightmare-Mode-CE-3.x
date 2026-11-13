@@ -19,6 +19,10 @@ import com.itlesports.nightmaremode.util.NMFields;
 import net.minecraft.src.*;
 
 public class NMItems {
+    public static Item tungstenShears;
+    public static Item tungstenFishingRod;
+    public static Item tungstenFishingRodBaited;
+    public static Item netherResonanceGem;
     public static Item limitedRecallPotion;
     public static final Item[] journeyJournals = {
             new ItemJourneyJournal(3457, 0),
@@ -775,6 +779,16 @@ public class NMItems {
                 .setTextureName("nightmare:ifhyNetherrackSword").setUnlocalizedName("ifhyNetherrackSword").setCreativeTab(CreativeTabs.tabCombat);
         netherFishingRod = new ItemNetherFishingRod(2717, false).setTextureName("nightmare:ifhyNetherFishingRod").setUnlocalizedName("ifhyNetherFishingRod").setCreativeTab(CreativeTabs.tabTools);
         netherFishingRodBaited = new ItemNetherFishingRod(2718, true).setTextureName("nightmare:ifhyNetherFishingRodBaited").setUnlocalizedName("ifhyNetherFishingRodBaited").setCreativeTab(null);
+        tungstenShears = new ItemTungstenShears(3514).setTextureName("nightmare:ifhyTungstenShears")
+                .setUnlocalizedName("ifhyTungstenShears");
+        tungstenFishingRod = new ItemNetherFishingRod(3515, 3516, false, 500)
+                .setTextureName("nightmare:ifhyTungstenFishingRod").setUnlocalizedName("ifhyTungstenFishingRod");
+        tungstenFishingRodBaited = new ItemNetherFishingRod(3516, 3515, true, 500)
+                .setTextureName("nightmare:ifhyTungstenFishingRodBaited").setUnlocalizedName("ifhyTungstenFishingRodBaited")
+                .setCreativeTab(null);
+        netherResonanceGem = new NetherItem(3517).setTextureName("nightmare:ifhyNetherResonanceGem")
+                .setUnlocalizedName("ifhyNetherResonanceGem").setCreativeTab(CreativeTabs.tabMaterials);
+
         lavafish = new ItemLavafish(2719).setTextureName("nightmare:ifhyLavafish").setCreativeTab(CreativeTabs.tabFood);
         tungstenPickaxe = new ItemTungstenPickaxe(2720).setTextureName("nightmare:ifhyTungstenPickaxe").setUnlocalizedName("ifhyTungstenPickaxe").setCreativeTab(CreativeTabs.tabTools);
         netherrackHammer = new ItemNetherrackHammer(2721).setTextureName("nightmare:ifhyNetherrackHammer").setUnlocalizedName("ifhyNetherrackHammer").setCreativeTab(CreativeTabs.tabTools);

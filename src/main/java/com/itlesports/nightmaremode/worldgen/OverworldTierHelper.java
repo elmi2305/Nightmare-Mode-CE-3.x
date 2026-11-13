@@ -16,7 +16,9 @@ public final class OverworldTierHelper {
     public static final double GREAT_VOID_START = 35000.0D;
     public static final double LOST_OCEAN_START = 40000.0D;
     public static final double FROZEN_WASTES_START = 45000.0D;
-    public static final double STRONGHOLD_RADIUS = 50120.0D;
+    public static final double FROZEN_WASTES_END = 50000.0D;
+    public static final double FROZEN_EXIT_BLEND_LENGTH = 256.0D;
+    public static final double STRONGHOLD_RADIUS = 51024.0D;
     public static final double SURFACE_BLEND_LENGTH = 160.0D;
     public static final double VOID_SLOPE_LENGTH = 20.0D;
     public static final double OCEAN_SLOPE_LENGTH = 256.0D;
@@ -50,7 +52,7 @@ public final class OverworldTierHelper {
         if (distance < GREAT_VOID_START) return Region.CRUEL_DESERT;
         if (distance < LOST_OCEAN_START) return Region.GREAT_VOID;
         if (distance < FROZEN_WASTES_START) return Region.LOST_OCEAN;
-        if (distance < STRONGHOLD_RADIUS) return Region.FROZEN_WASTES;
+        if (distance < FROZEN_WASTES_END) return Region.FROZEN_WASTES;
         return Region.BEYOND;
     }
 
@@ -62,7 +64,7 @@ public final class OverworldTierHelper {
     public static boolean hasNoVanillaCaves(World world, double x, double z) {
         double distance = getDistanceFromSpawn(world, x, z);
         return world != null && world.provider.dimensionId == 0
-                && distance >= CRUEL_DESERT_START && distance < STRONGHOLD_RADIUS;
+                && distance >= CRUEL_DESERT_START && distance < FROZEN_WASTES_END;
     }
 
     public static boolean isPortalBlocked(World world, double x, double z) {
@@ -80,6 +82,11 @@ public final class OverworldTierHelper {
         if (world == null || world.provider.dimensionId != 0) return 0.0D;
         double distance = getDistanceFromSpawn(world, x, z);
         return clamp((distance - MOB_SCALING_START) / (STRONGHOLD_RADIUS - MOB_SCALING_START), 0.0D, 1.0D);
+    }
+
+    public static double getFrozenExitBlend(World world, double x, double z) {
+        return smoothstep((getDistanceFromSpawn(world, x, z) - FROZEN_WASTES_END + FROZEN_EXIT_BLEND_LENGTH)
+                / FROZEN_EXIT_BLEND_LENGTH);
     }
 
     public static double getDeadzoneWarpProgress(World world, double x, double z) {

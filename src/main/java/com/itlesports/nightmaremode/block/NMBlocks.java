@@ -40,6 +40,7 @@ public class NMBlocks {
     public static BlockCustomLadder ironLadder;
 
     public static Block hellforge;
+    public static Block tungstenForge;
     public static CustomBasketBlock customWickerBasket;
 
     public static BlockAsphaltCarpet asphaltLayer;
@@ -453,6 +454,8 @@ public class NMBlocks {
 
         hellforge = new BlockHellforge(2315, true);
         Item.itemsList[hellforge.blockID] = new NMNetherItemBlock(NMBlocks.hellforge.blockID - 256);
+        tungstenForge = new BlockTungstenForge(2471);
+        Item.itemsList[tungstenForge.blockID] = new NMNetherItemBlock(tungstenForge.blockID - 256);
 
         customWickerBasket = new CustomBasketBlock(2316);
         Item.itemsList[customWickerBasket.blockID] = new NMItemBlock(NMBlocks.customWickerBasket.blockID - 256);

@@ -770,6 +770,7 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
         }
 
         float r, g, b, range;
+        float fogStart = 0.0F;
         if (region == OverworldTierHelper.Region.CRUEL_DESERT) {
             r = 1.0F;
             g = 0.5F;
@@ -783,15 +784,17 @@ public abstract class EntityRendererMixin implements ZoomStateAccessor {
             range = 120.0F;
         }
         else {
-            // Frozen wastes
-            r = 1.0F;
-            g = 1.0F;
-            b = 1.0F;
-            range = 40.0F;
+            // fade the wastes fog into the normal view before the outer boundary.
+            float exit = (float)OverworldTierHelper.getFrozenExitBlend(this.mc.theWorld, viewEntity.posX, viewEntity.posZ);
+            r = 1.0F + (this.fogColorRed - 1.0F) * exit;
+            g = 1.0F + (this.fogColorGreen - 1.0F) * exit;
+            b = 1.0F + (this.fogColorBlue - 1.0F) * exit;
+            range = 40.0F + (this.farPlaneDistance - 40.0F) * exit;
+            fogStart = this.farPlaneDistance * 0.25F * exit;
         }
 
         GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
-        GL11.glFogf(GL11.GL_FOG_START, 0.0F);
+        GL11.glFogf(GL11.GL_FOG_START, fogStart);
         GL11.glFogf(GL11.GL_FOG_END, range);
         GL11.glHint(GL11.GL_FOG_HINT, GL11.GL_NICEST);
         GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(r, g, b, 1.0f));

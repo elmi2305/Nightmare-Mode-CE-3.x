@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockNetherStalkMixin {
     @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
     private void gateNetherWartFarming(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (world.provider.dimensionId == -1) return;
         EntityPlayer player = world.getClosestPlayer(x + 0.5D, y + 0.5D, z + 0.5D, 16.0D);
         if (player == null || !SkillHandler.getPlayerData(player).canFarmNetherWart) {
             ci.cancel();

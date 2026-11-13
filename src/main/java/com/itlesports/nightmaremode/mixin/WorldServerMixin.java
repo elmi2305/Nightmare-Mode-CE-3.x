@@ -23,6 +23,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldServer.class)
 public abstract class WorldServerMixin extends World implements WorldServerExt, WorldSkylightSyncAccess {
+    @Inject(method = "updateActiveChunkMap", at = @At("TAIL"))
+    private void activateChargedLoaderChunks(CallbackInfo ci) {
+        WorldServer world = (WorldServer)(Object)this;
+        ChunkLoaderManager.loadChargedChunks(world);
+        for (com.itlesports.nightmaremode.world.ChunkLoaderData.LoaderPosition loader
+                : ChunkLoaderManager.getLoaders(world)) {
+            if (loader.dimension == this.provider.dimensionId) this.addToActiveChunkMap(loader.chunkX, loader.chunkZ);
+        }
+    }
     @Unique
     private WorldServer sharedProgressWorld(DataEntry.WorldDataEntry<?> entry) {
         if (this.provider == null || this.provider.dimensionId == 0

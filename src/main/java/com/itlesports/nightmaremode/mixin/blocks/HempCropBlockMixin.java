@@ -56,7 +56,7 @@ public abstract class HempCropBlockMixin extends BlockCrops {
             return;
         }
         cir.setReturnValue(ChunkAttributeManager.adjustGrowthChance(
-                0.01F,
+                world.provider.dimensionId == -1 ? 0.02F : 0.01F,
                 world,
                 x,
                 y,

@@ -5,7 +5,6 @@ import api.world.BlockPos;
 import btw.block.BTWBlocks;
 import btw.block.model.BlockModel;
 import btw.block.model.OvenModel;
-import com.itlesports.nightmaremode.block.NMBlocks;
 import com.itlesports.nightmaremode.block.tileEntities.HellforgeTileEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,6 +37,7 @@ public class BlockHellforge
         this.setResistance(3.33f);
         this.setStepSound(BTWBlocks.clayBrickStepSound);
         this.setUnlocalizedName("nmHellforgeBlock");
+        this.setTextureName("nightmare:hellforge");
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
@@ -103,7 +103,7 @@ public class BlockHellforge
     @Override
     public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
         if (!par1World.isRemote) {
-            this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(NMBlocks.hellforge));
+            this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this));
         }
     }
 
@@ -128,7 +128,7 @@ public class BlockHellforge
         int iMetadata = world.getBlockMetadata(i, j, k);
         TileEntity tileEntity = world.getBlockTileEntity(i, j, k);
         keepFurnaceInventory = true;
-        world.setBlock(i, j, k, NMBlocks.hellforge.blockID);
+        world.setBlock(i, j, k, this.blockID);
         keepFurnaceInventory = false;
         iMetadata = !bHasContents ? (iMetadata &= 7) : (iMetadata |= 8);
         world.SetBlockMetadataWithNotify(i, j, k, iMetadata, 2);
@@ -165,7 +165,7 @@ public class BlockHellforge
 
     @Override
     protected int getIDDroppedOnSilkTouch() {
-        return NMBlocks.hellforge.blockID;
+        return this.blockID;
     }
 
     @Override
@@ -185,10 +185,10 @@ public class BlockHellforge
     @Override
     @Environment(value = EnvType.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.blockIcon = register.registerIcon("nightmare:hellforge");
-        this.furnaceIconTop = register.registerIcon("nightmare:hellforge_top");
-        this.lavaTopIcon = register.registerIcon("nightmare:hellforge_top_lava");
-        this.furnaceIconFront = register.registerIcon("nightmare:hellforge_front_lit");
+        this.blockIcon = register.registerIcon(this.getTextureName());
+        this.furnaceIconTop = register.registerIcon(this.getTextureName() + "_top");
+        this.lavaTopIcon = register.registerIcon(this.getTextureName() + "_top_lava");
+        this.furnaceIconFront = register.registerIcon(this.getTextureName() + "_front_lit");
         this.fuelOverlays = new Icon[9];
         for (int iTempIndex = 0; iTempIndex < 9; ++iTempIndex) {
             this.fuelOverlays[iTempIndex] = register.registerIcon("btw:oven_fuel_overlay_" + iTempIndex);
@@ -199,7 +199,7 @@ public class BlockHellforge
     @Override
     @Environment(value = EnvType.CLIENT)
     public int idPicked(World world, int i, int j, int k) {
-        return NMBlocks.hellforge.blockID;
+        return this.blockID;
     }
 
     @Override

@@ -15,12 +15,44 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import com.itlesports.nightmaremode.util.interfaces.FishingItemProtection;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(EntityItem.class)
-public abstract class EntityItemMixin extends Entity implements com.itlesports.nightmaremode.util.interfaces.LoadedItemAge {
+public abstract class EntityItemMixin extends Entity implements com.itlesports.nightmaremode.util.interfaces.LoadedItemAge, FishingItemProtection {
+    @Unique private int fishingProtectionTicks;
+    @Override public void nm$protectFishingCatch(int ticks) { this.fishingProtectionTicks = Math.max(this.fishingProtectionTicks, Math.min(200, ticks)); }
+    @Override public int nm$getFishingProtection() { return this.fishingProtectionTicks; }
+
+    @Unique private boolean hasLavaProtection() {
+        return this.fishingProtectionTicks > 0 || NMFireproofItems.isFireproof(this.getEntityItem());
+    }
+
+    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockMaterial(III)Lnet/minecraft/src/Material;"))
+    private Material preventLavaFlopping(World world, int x, int y, int z) {
+        Material material = world.getBlockMaterial(x, y, z);
+        return material == Material.lava && this.hasLavaProtection() ? Material.air : material;
+    }
+
+    @Inject(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;updateHardcoreBuoy()V", shift = At.Shift.AFTER))
+    private void floatFireproofItemsOnLava(CallbackInfo ci) {
+        if (this.fishingProtectionTicks > 0) {
+            --this.fishingProtectionTicks;
+            this.extinguish();
+            return;
+        }
+        if (!NMFireproofItems.isFireproof(this.getEntityItem())) return;
+        int x = MathHelper.floor_double(this.posX);
+        int y = MathHelper.floor_double(this.boundingBox.minY - 0.05D);
+        int z = MathHelper.floor_double(this.posZ);
+        if (this.worldObj.getBlockMaterial(x, y, z) != Material.lava) return;
+        double surface = y + 1.0D - BlockFluid.getFluidHeightPercent(this.worldObj.getBlockMetadata(x, y, z)) + 0.04D;
+        this.motionY = Math.max(-0.05D, Math.min(0.05D, (surface - this.boundingBox.minY) * 0.15D));
+        this.extinguish();
+    }
     @Unique private int loadedItemAge;
     @Override public int nm$getLoadedItemAge() { return this.loadedItemAge; }
     @Override public void nm$setLoadedItemAge(int ticks) { this.loadedItemAge = Math.max(0, Math.min(18000, ticks)); }
@@ -31,11 +63,15 @@ public abstract class EntityItemMixin extends Entity implements com.itlesports.n
     }
 
     @Inject(method = "writeEntityToNBT", at = @At("TAIL"))
-    private void saveLoadedItemTime(NBTTagCompound tag, CallbackInfo ci) { tag.setInteger("NmLoadedAge", this.loadedItemAge); }
+    private void saveLoadedItemTime(NBTTagCompound tag, CallbackInfo ci) {
+        tag.setInteger("NmLoadedAge", this.loadedItemAge);
+        tag.setInteger("NmFishingProtection", this.fishingProtectionTicks);
+    }
 
     @Inject(method = "readEntityFromNBT", at = @At("TAIL"))
     private void readLoadedItemTime(NBTTagCompound tag, CallbackInfo ci) {
         this.nm$setLoadedItemAge(tag.hasKey("NmLoadedAge") ? tag.getInteger("NmLoadedAge") : this.age);
+        this.fishingProtectionTicks = Math.max(0, Math.min(200, tag.getInteger("NmFishingProtection")));
     }
 
     @Inject(method = "combineItems", at = @At("RETURN"))
@@ -45,6 +81,10 @@ public abstract class EntityItemMixin extends Entity implements com.itlesports.n
         int oldest = Math.max(this.loadedItemAge, merged.nm$getLoadedItemAge());
         this.nm$setLoadedItemAge(oldest);
         merged.nm$setLoadedItemAge(oldest);
+        FishingItemProtection protectedOther = (FishingItemProtection)other;
+        int protection = Math.max(this.fishingProtectionTicks, protectedOther.nm$getFishingProtection());
+        this.nm$protectFishingCatch(protection);
+        protectedOther.nm$protectFishingCatch(protection);
     }
     @Unique private int ticksInDesiredFluid;
     @Unique private int ticksNearLava;
@@ -164,7 +204,7 @@ public abstract class EntityItemMixin extends Entity implements com.itlesports.n
     private void bloodOrbImmunity(DamageSource par1DamageSource, float par2, CallbackInfoReturnable<Boolean> cir){
         if (this.getEntityItem() != null
                 && (NMFireproofItems.isIndestructible(this.getEntityItem())
-                    || par1DamageSource.isFireDamage() && NMFireproofItems.isFireproof(this.getEntityItem()))) {
+                    || par1DamageSource.isFireDamage() && this.hasLavaProtection())) {
             cir.setReturnValue(false);
         }
     }

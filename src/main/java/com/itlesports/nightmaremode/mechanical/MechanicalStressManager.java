@@ -31,6 +31,12 @@ public final class MechanicalStressManager {
 
     private static final int MAX_NETWORK_NODES = 4096;
     private static boolean validating;
+    private static final Map<World, ValidationPass> validationPasses = new WeakHashMap<>();
+
+    private static final class ValidationPass {
+        long tick = Long.MIN_VALUE;
+        final Set<Pos> checked = new HashSet<>();
+    }
 
     private MechanicalStressManager() {
     }
@@ -39,10 +45,19 @@ public final class MechanicalStressManager {
         if (world.isRemote || validating || !isMechanicalNode(blockAt(world, x, y, z))) {
             return;
         }
+        ValidationPass pass = validationPasses.computeIfAbsent(world, ignored -> new ValidationPass());
+        long tick = world.getTotalWorldTime();
+        if (pass.tick != tick) {
+            pass.tick = tick;
+            pass.checked.clear();
+        }
+        Pos start = new Pos(x, y, z);
+        if (pass.checked.contains(start)) return;
 
         validating = true;
         try {
-            Set<Pos> topology = collectTopology(world, new Pos(x, y, z));
+            Set<Pos> topology = collectTopology(world, start);
+            pass.checked.addAll(topology);
             List<PowerGroup> groups = collectPowerGroups(world, topology);
             Set<Pos> gearboxesToBreak = new HashSet<>();
 
@@ -265,7 +280,10 @@ public final class MechanicalStressManager {
         float supportUnits = 0.0F;
 
         for (Source source : group.sources) {
-            int distance = gearboxDistance(world, source.positions, gearboxPos, group.graph);
+            if (source.gearboxDistances == null) {
+                source.gearboxDistances = gearboxDistances(world, source.positions, group.graph);
+            }
+            int distance = source.gearboxDistances.getOrDefault(gearboxPos, Integer.MAX_VALUE);
             nearestSourceDistance = Math.min(nearestSourceDistance, distance);
             if (distance <= GEARBOX_SOURCE_SUPPORT_RANGE) {
                 ++supportingSources;
@@ -278,6 +296,7 @@ public final class MechanicalStressManager {
         // water wheel is 2. Sources farther than four gearbox hops do not help.
         int sharedLocalLoad = (int) Math.ceil(localLoad / Math.max(1.0F, supportUnits));
         int distanceStress = Math.max(0, nearestSourceDistance - 1) * STRESS_PER_GEARBOX_FROM_SOURCE;
+        if (world.provider.dimensionId == -1) distanceStress = (distanceStress + 1) / 2;
         return new GearboxCalculation(sharedLocalLoad + distanceStress, localLoad,
                 nearestSourceDistance, supportingSources);
     }
@@ -308,7 +327,7 @@ public final class MechanicalStressManager {
     }
 
     /** Returns the fewest gearboxes crossed from this source to the target. */
-    private static int gearboxDistance(World world, Collection<Pos> starts, Pos target, Set<Pos> poweredGraph) {
+    private static Map<Pos, Integer> gearboxDistances(World world, Collection<Pos> starts, Set<Pos> poweredGraph) {
         Map<Pos, Integer> best = new HashMap<>();
         PriorityQueue<DistanceState> queue = new PriorityQueue<>(Comparator.comparingInt(state -> state.distance));
         for (Pos start : starts) queue.add(new DistanceState(start, 0));
@@ -318,7 +337,6 @@ public final class MechanicalStressManager {
             Integer known = best.get(state.pos);
             if (known != null && known <= state.distance) continue;
             best.put(state.pos, state.distance);
-            if (state.pos.equals(target)) return state.distance;
             Block currentBlock = blockAt(world, state.pos);
             if (!(currentBlock instanceof AxleBlock) && !(currentBlock instanceof GearBoxBlock)) continue;
 
@@ -333,7 +351,7 @@ public final class MechanicalStressManager {
                 }
             }
         }
-        return Integer.MAX_VALUE;
+        return best;
     }
 
     private static boolean areStructurallyConnected(World world, Pos current, Pos next, int side) {
@@ -382,7 +400,7 @@ public final class MechanicalStressManager {
                     : entityX == sourcePos.x && entityY == sourcePos.y && entityZ == sourcePos.z;
             if (!ownsAxle) continue;
             int capacity = entity instanceof WaterWheelEntity ? WATER_WHEEL_CAPACITY
-                    : entity instanceof VerticalWindMillEntity ? VERTICAL_WIND_MILL_CAPACITY
+                    : entity instanceof VerticalWindMillEntity ? VERTICAL_WIND_MILL_CAPACITY * (world.provider.dimensionId == -1 ? 2 : 1)
                     : WIND_MILL_CAPACITY;
             return new SourceIdentity(entity.entityId, capacity);
         }
@@ -394,7 +412,7 @@ public final class MechanicalStressManager {
     private static int stressOf(World world, Collection<Pos> positions) {
         int stress = 0;
         for (Pos pos : positions) stress += getStressCost(blockAt(world, pos));
-        return stress;
+        return world.provider.dimensionId == -1 ? (stress + 1) / 2 : stress;
     }
 
     private static boolean intersects(Set<Pos> first, Set<Pos> second) {
@@ -428,6 +446,7 @@ public final class MechanicalStressManager {
     private record SourceIdentity(int key, int capacity) {}
 
     private static final class Source {
+        Map<Pos, Integer> gearboxDistances;
         final int capacity;
         final Set<Pos> positions = new HashSet<>();
 

@@ -16,6 +16,12 @@ import java.util.Random;
 
 @Mixin(MushroomBlockBrown.class)
 public class MushroomBlockBrownMixin {
+    @Inject(method = "updateTick", at = @At("HEAD"), cancellable = true)
+    private void spreadSlowlyInNether(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+        if (world.provider.dimensionId != -1) return;
+        com.itlesports.nightmaremode.util.NetherMushroomGrowth.tick((Block)(Object)this, world, x, y, z, random);
+        ci.cancel();
+    }
     @ModifyArg(method = "checkForSpread", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I",ordinal = 0))
     private int increaseChanceOfMushroomSpreading(int bound){
         return 140;

@@ -1,7 +1,6 @@
 package com.itlesports.nightmaremode.item.items;
 
 import btw.crafting.recipe.types.customcrafting.FishingRodBaitingRecipe;
-import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.util.interfaces.INetherItem;
 import net.minecraft.src.EntityFishHook;
 import net.minecraft.src.EntityPlayer;
@@ -10,7 +9,11 @@ import net.minecraft.src.World;
 
 public class ItemNetherFishingRod extends ItemUpgradeableFishingRod implements INetherItem {
     public ItemNetherFishingRod(int id, boolean baited) {
-        super(id, baited ? 2717 : 2718, baited, 256);
+        this(id, baited ? 2717 : 2718, baited, 256);
+    }
+
+    public ItemNetherFishingRod(int id, int counterpartId, boolean baited, int durability) {
+        super(id, counterpartId, baited, durability);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ItemNetherFishingRod extends ItemUpgradeableFishingRod implements I
                 player.inventory.consumeInventoryItem(bait.itemID);
             }
             ItemStack baitedRod = player.getCurrentEquippedItem().copy();
-            baitedRod.itemID = NMItems.netherFishingRodBaited.itemID;
+            baitedRod.itemID = this.getCounterpartItemId();
             player.inventory.setInventorySlotContents(player.inventory.currentItem, baitedRod);
             return true;
         }
