@@ -15,6 +15,7 @@ import net.minecraft.src.World;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import btw.item.BTWItems;
+import btw.block.BTWBlocks;
 
 public abstract class EntityNetherPostVillager extends EntityVillager {
     private String postGroup = "";
@@ -142,6 +143,26 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
             this.professionCompleted = true;
             this.updatePostCompletion();
         }
+    }
+
+    @Override
+    public MerchantRecipeList getRecipes(EntityPlayer player) {
+        MerchantRecipeList recipes = super.getRecipes(player);
+        if (!this.worldObj.isRemote && this.getPostTier() == 3 && recipes != null) {
+            for (int i = 0; i < recipes.size(); ++i) {
+                MerchantRecipe recipe = (MerchantRecipe)recipes.get(i);
+                ItemStack payment = recipe.getItemToBuy();
+                if (payment != null && payment.getItem() == Item.emerald && recipe.getSecondItemToBuy() == null
+                        && recipe.getItemToSell().itemID == BTWBlocks.crucible.blockID) {
+                    int emeralds = payment.stackSize > 18 ? (payment.stackSize + 1) / 2 : payment.stackSize;
+                    MerchantRecipe reversed = new MerchantRecipe(new ItemStack(BTWBlocks.crucible),
+                            new ItemStack(Item.emerald, Math.max(12, Math.min(18, emeralds))));
+                    reversed.tradeLevel = 2;
+                    recipes.set(i, reversed);
+                }
+            }
+        }
+        return recipes;
     }
 
     @Override

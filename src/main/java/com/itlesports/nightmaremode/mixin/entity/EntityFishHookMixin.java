@@ -57,11 +57,14 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             if (fishingPool == null) fishingPool = new FishingPool((EntityFishHook)(Object)this, isBaited);
             if (++submergedTicks < fishingPool.activationTicks()) return;
             fishingGame = new FishingGame(rand, fishingPool::next, fishingPool.stock(), fishingPool.arrivals(),
-                    fishingPool.habitat.maxDepth, fishingPool.abundance());
+                    fishingPool.habitat.maxDepth, fishingPool.abundance(),
+                    com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy(),
+                    com.itlesports.nightmaremode.world.BalanceProfile.isLowProgression());
             fishingGame.fearMultiplier = fishingPool.has("IfhyFishingBell") ? 0.5F : 1;
             fishingGame.captureMultiplier = fishingPool.captureMultiplier();
             fishingGame.rodResistance = fishingPool.resistance();
             fishingGame.catchLimit = fishingPool.has("IfhyTwinHook") ? 2 : 1;
+            fishingGame.twinHook = fishingPool.has("IfhyTwinHook");
             fishingGame.depthWinch = fishingPool.has("IfhyDepthWinch");
             fishingGame.lureRadius = FishingGame.LURE_RADIUS
                     * (fishingPool.has("IfhyWideHook") ? FishingTuning.WIDE_HOOK_RADIUS_MULTIPLIER : 1);
@@ -102,11 +105,17 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
             loseBait();
             held = angler.getCurrentEquippedItem();
             if (held != null) held.damageItem(1, angler);
-            if (held == null || held.stackSize <= 0 || !fishingGame.keepFishing(caught)) { setDead(); return; }
             fishingPool.setBaited(isBaited);
+            fishingGame.stock = fishingPool.stock();
+            if (held == null || held.stackSize <= 0 || !fishingGame.keepFishing(caught)) { setDead(); return; }
             fishingRod = held.copy();
+            fishingInputX = fishingGame.lureX; fishingInputY = fishingGame.lureY;
+            relativeFishingInput = false;
+            consumeFishingScroll();
             FishingNet.sendCatch((EntityPlayerMP)angler, entityId, lastCatch);
             lastCatch = 0;
+            FishingNet.sendState((EntityPlayerMP)angler, entityId, fishingGame, fishingPool.lava);
+            return;
         }
         if (fishingGame.age % 2 == 0 || fishingGame.age == 1)
             FishingNet.sendState((EntityPlayerMP)angler, entityId, fishingGame, fishingPool.lava);
@@ -130,8 +139,19 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         fishingInputY = y;
         cancelFishing |= cancel;
         relativeFishingInput = relative;
-        fishingScroll = FishingGame.clamp(fishingScroll + scroll, -6, 6);
+        fishingScroll = relative || fishingGame.winchLocked() ? 0 : FishingGame.clamp(fishingScroll + scroll, -6, 6);
         receivedFishingInput = true;
+    }
+
+    @Inject(method = "isBodyOfWaterLargeEnoughForFishing", at = @At("HEAD"), cancellable = true)
+    private void allowSmallerPoolsWithBetterRods(CallbackInfoReturnable<Boolean> cir) {
+        if (angler == null) return;
+        float rod = FishingPool.rodMultiplier(angler.getCurrentEquippedItem());
+        if (rod > 0.8F) return;
+        Material fluid = isNetherFishing() ? Material.lava : Material.water;
+        cir.setReturnValue(FishingWaterRequirements.smallPool((x, y, z) -> worldObj.getBlockMaterial(x, y, z) == fluid
+                        && worldObj.getBlockMetadata(x, y, z) == 0, rod,
+                MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)));
     }
 
     @Unique

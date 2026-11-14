@@ -33,13 +33,24 @@ public abstract class MinecraftMixin {
         com.itlesports.nightmaremode.client.FishingClient.tick();
     }
 
-    @Inject(method = "displayGuiScreen", at = @At("HEAD"))
+    @Inject(method = "displayGuiScreen", at = @At("HEAD"), cancellable = true)
     private void clearScaryScreenState(GuiScreen next, CallbackInfo ci) {
+        if (currentScreen instanceof com.itlesports.nightmaremode.nmgui.GuiFishing fishing) {
+            boolean leavingWorld = next instanceof GuiGameOver || next instanceof GuiDisconnected
+                    || next instanceof GuiScreenDisconnectedOnline || next instanceof GuiDownloadTerrain || next instanceof GuiMainMenu;
+            if (leavingWorld) fishing.allowClose();
+            else if (!fishing.canClose() && thePlayer != null && !thePlayer.isDead && thePlayer.getHealth() > 0
+                    && ((Minecraft)(Object)this).theWorld != null) {
+                ci.cancel();
+                return;
+            }
+        }
         com.itlesports.nightmaremode.client.ScaryEvents.screenChanging(next);
     }
 
     @Inject(method = "loadWorld(Lnet/minecraft/src/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
     private void unloadScaryEvents(WorldClient next, String message, CallbackInfo ci) {
+        if (currentScreen instanceof com.itlesports.nightmaremode.nmgui.GuiFishing fishing) fishing.allowClose();
         com.itlesports.nightmaremode.client.FishingClient.clear();
         if (next != null) com.itlesports.nightmaremode.skill.NMSkillNodes.refreshSlabItems();
         if (next == null) com.itlesports.nightmaremode.client.ScaryEvents.unload();

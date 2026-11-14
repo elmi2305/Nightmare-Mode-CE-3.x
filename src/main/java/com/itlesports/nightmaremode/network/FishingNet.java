@@ -32,7 +32,11 @@ public final class FishingNet {
     private static void receive(byte[] bytes) { FishingClient.receive(bytes); }
 
     public static void sendState(EntityPlayerMP player, int hook, FishingGame game, boolean lava) {
-        send(player, out -> {
+        player.playerNetServerHandler.sendPacketToPlayer(statePacket(hook, game, lava));
+    }
+
+    private static Packet250CustomPayload statePacket(int hook, FishingGame game, boolean lava) {
+        return packet(out -> {
             out.writeByte(0);
             out.writeInt(hook);
             out.writeInt(game.age);
@@ -45,7 +49,8 @@ public final class FishingNet {
             out.writeInt(game.fightAge);
             out.writeByte(game.catchLimit - game.catches);
             out.writeBoolean(lava);
-            out.writeBoolean(game.depthWinch);
+            out.writeBoolean(game.depthWinch && !game.winchLocked());
+            out.writeBoolean(game.twinHook);
             out.writeFloat(game.lureRadius);
             out.writeByte(game.targets.size());
             for (FishingGame.Target t : game.targets) {

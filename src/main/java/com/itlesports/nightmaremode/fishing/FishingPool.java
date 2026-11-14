@@ -99,7 +99,8 @@ public final class FishingPool {
 
     public float abundance() {
         return NMFishingRates.abundance(hook.worldObj.getWorldTime(), hook.worldObj.getMoonPhase(), NMUtils.getIsBloodMoon(),
-                raining(), hook.worldObj.isThundering(), lava);
+                raining(), hook.worldObj.isThundering(), lava)
+                * FishingBalance.abundance(com.itlesports.nightmaremode.world.BalanceProfile.isLowProgression());
     }
 
     public void setBaited(boolean value) { baited = value; }
@@ -124,7 +125,8 @@ public final class FishingPool {
         float bonus = SkillHandler.getPlayerData(hook.angler).rareFishChanceBonus
                 + 0.025F * ArmorSetHelper.getAnglerPieceCount(hook.angler)
                 + (has("IfhyRareFishLure") ? 0.20F : 0);
-        float rareChance = Math.min(1, rarityChance(depth, bonus, raining()) * habitat.rarityMultiplier);
+        float rareChance = Math.min(1, rarityChance(depth, bonus, raining()) * habitat.rarityMultiplier
+                * FishingBalance.rarity(com.itlesports.nightmaremode.world.BalanceProfile.isLowProgression()));
         if (!initial && hook.worldObj.rand.nextFloat() < rareChance) {
             java.util.List<FishingGame.Spec> rare = new java.util.ArrayList<>();
             FishingCatch[] local = biomeCatches();
@@ -222,9 +224,14 @@ public final class FishingPool {
                 {0.65F,0.95F,0.75F,0.85F,1.1F}, {0.65F,1.2F,0.65F,0.8F,0.9F}};
         for (int b = 0; b < tables.length; b++) for (int f = 0; f < tables[b].length; f++) {
             FishingCatch entry = tables[b][f];
-            if (entry.item == item) return new FishingGame.Spec(item.itemID, true, entry.rare,
-                    sizes[b][f], speeds[b][f], 0.20F + (b * 5 + f) * 0.009F)
-                    .depth(entry.rare ? new float[]{60,20,30,50,45,20}[b] : 0).pull(entry.rare ? 0.8F + b * 0.12F : 0);
+            if (entry.item == item) {
+                float speed = item == NMItems.swordfish ? 0.82F : item == NMItems.goldenCarp ? 0.62F : speeds[b][f];
+                FishingGame.Spec spec = new FishingGame.Spec(item.itemID, true, entry.rare,
+                        sizes[b][f], speed, 0.20F + (b * 5 + f) * 0.009F)
+                        .depth(entry.rare ? new float[]{60,20,30,50,45,20}[b] : 0).pull(entry.rare ? 0.8F + b * 0.12F : 0).flippedFacing();
+                if (item == NMItems.swordfish || item == NMItems.goldenCarp) spec.flee(1.25F);
+                return spec;
+            }
         }
         if (item == NMItems.lavafish) return new FishingGame.Spec(item.itemID, true, false, 22, 0.8F, 0.35F).reversed();
         return new FishingGame.Spec(item.itemID, false, false, 14, 0, 0);

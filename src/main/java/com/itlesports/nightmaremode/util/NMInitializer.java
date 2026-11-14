@@ -1334,7 +1334,7 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1Minecart", profession, 2, Item.minecartEmpty.itemID, 0, 1, 1, 0.25F, false, 5, 8);
         sell("nmNetherTier1Chest", profession, 2, BTWBlocks.chest.blockID, 0, 1, 2, 0.35F, false, 3, 6);
         sell("nmNetherTier3Diamond", profession, 1, Item.diamond.itemID, 0, 1, 1, 0.35F, false, 24, 36);
-        sell("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 24, 36);
+        buy("nmNetherTier3Crucible", profession, 2, BTWBlocks.crucible.blockID, 0, 1, 1, 0.4F, false, 12, 18);
         sell("nmNetherTier3ChunkLoader", profession, 2, NMBlocks.chunkLoader.blockID, 0, 1, 1, 0.5F, false, 20, 30);
         sell("nmNetherTier3PrecisionGear", profession, 4, NMItems.crystalPrecisionGear.itemID, 0, 1, 2, 0.5F, false, 18, 30);
         sell("nmNetherTier3TungstenIngot", profession, 5, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.55F, false, 24, 36);

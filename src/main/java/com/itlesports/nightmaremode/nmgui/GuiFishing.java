@@ -26,7 +26,7 @@ public final class GuiFishing extends GuiScreen {
     private int serverAge, finishTicks, caughtItem, fightingId, remaining = 1, catchFlash;
     private int serverFightAge;
     private float serverDepth = 1, depthLimit = 200, serverLureX = 400, serverLureY = 42;
-    private boolean positioned, depthWinch;
+    private boolean positioned, depthWinch, twinHook, closing;
     private float pendingScroll;
     private float lureRadius = FishingGame.LURE_RADIUS;
     private boolean finished, closed;
@@ -36,6 +36,9 @@ public final class GuiFishing extends GuiScreen {
     public GuiFishing(int hook, boolean lava) { this.hook = hook; this.lava = lava; }
 
     @Override public void initGui() {
+        closed = false;
+        Mouse.setGrabbed(fightingId != 0);
+        Mouse.getDX(); Mouse.getDY();
         if (!positioned) { positionCursor(400, 42); positioned = true; }
         // hide the native pointer; the lure is the only tracking cursor.
         if (invisibleCursor == null) try {
@@ -47,11 +50,13 @@ public final class GuiFishing extends GuiScreen {
     }
 
     public void snapshot(int age, float stock, float depth, float maxDepth, float lureX, float lureY,
-                         int fighting, int fightAge, int remaining, boolean winch, float lureRadius, List<FishingGame.Target> targets) {
+                         int fighting, int fightAge, int remaining, boolean winch, boolean twinHook, float lureRadius, List<FishingGame.Target> targets) {
         serverDepth = depth; depthLimit = maxDepth;
         serverLureX = lureX; serverLureY = lureY;
         this.remaining = remaining;
         depthWinch = winch;
+        this.twinHook = twinHook;
+        if (!winch) pendingScroll = 0;
         this.lureRadius = lureRadius;
         if ((fightingId == 0) != (fighting == 0)) {
             Mouse.setGrabbed(fighting != 0);
@@ -82,7 +87,7 @@ public final class GuiFishing extends GuiScreen {
     public void finish(int item) {
         finished = true;
         caughtItem = item;
-        if (item == 0) mc.displayGuiScreen(null);
+        if (item == 0 || item == FishingCreatures.GIANT_SQUID) closeFishingGui();
         else {
             mc.sndManager.playSoundFX("random.splash", 0.7F, 1.15F);
             finishTicks = 24;
@@ -90,13 +95,13 @@ public final class GuiFishing extends GuiScreen {
     }
 
     @Override public void updateScreen() {
-        if (mc.thePlayer == null || mc.theWorld == null || mc.thePlayer.isDead
+        if (mc.thePlayer == null || mc.theWorld == null || mc.thePlayer.isDead || mc.thePlayer.getHealth() <= 0
                 || System.currentTimeMillis() - lastSnapshot > 12000) {
-            mc.displayGuiScreen(null);
+            closeFishingGui();
             return;
         }
         if (finished) {
-            if (--finishTicks <= 0) mc.displayGuiScreen(null);
+            if (--finishTicks <= 0) closeFishingGui();
             return;
         }
         if (catchFlash > 0) catchFlash--;
@@ -121,14 +126,30 @@ public final class GuiFishing extends GuiScreen {
     }
 
     @Override protected void keyTyped(char character, int key) {
-        if (key == Keyboard.KEY_ESCAPE || key == mc.gameSettings.keyBindInventory.keyCode) mc.displayGuiScreen(null);
+        if (key == Keyboard.KEY_ESCAPE || key == mc.gameSettings.keyBindInventory.keyCode) closeFishingGui();
+    }
+
+    public boolean canClose() { return closing || finished; }
+
+    public void allowClose() { closing = true; }
+
+    public void resumeIfInterrupted() { if (closed && !canClose()) initGui(); }
+
+    private void closeFishingGui() {
+        closing = true;
+        if (mc.thePlayer != null) mc.thePlayer.closeScreen();
+        else mc.displayGuiScreen(null);
     }
 
     @Override public boolean doesGuiPauseGame() { return false; }
 
     @Override public void onGuiClosed() {
-        com.itlesports.nightmaremode.client.FishingClient.dismiss(hook);
-        if (!closed && !finished) FishingNet.input(hook, 0, 0, true, fightingId != 0, 0);
+        boolean interrupted = !canClose() && mc.theWorld != null && mc.thePlayer != null
+                && !mc.thePlayer.isDead && mc.thePlayer.getHealth() > 0;
+        if (!interrupted) {
+            com.itlesports.nightmaremode.client.FishingClient.dismiss(hook);
+            if (!closed && !finished && mc.theWorld != null) FishingNet.input(hook, 0, 0, true, fightingId != 0, 0);
+        }
         closed = true;
         if (fightingId != 0) Mouse.setGrabbed(false);
         if (invisibleCursor != null) {
@@ -337,11 +358,8 @@ public final class GuiFishing extends GuiScreen {
         GL11.glEnable(GL11.GL_BLEND); GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glLineWidth(2.5F); GL11.glColor4f(0.86F, 0.94F, 0.91F, 1);
         float hookWidth = lureRadius / FishingGame.LURE_RADIUS;
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        GL11.glVertex2f(x, y + 6); GL11.glVertex2f(x, y + 16);
-        GL11.glVertex2f(x + 4 * hookWidth, y + 17 + 2 * hookWidth);
-        GL11.glVertex2f(x + 8 * hookWidth, y + 16); GL11.glVertex2f(x + 8 * hookWidth, y + 12);
-        GL11.glEnd();
+        if (twinHook) drawHook(x - 3, y, hookWidth, -1);
+        drawHook(x + (twinHook ? 3 : 0), y, hookWidth, 1);
         if (fightingId != 0) {
             Visual hooked = fish.get(fightingId);
             boolean giant = hooked != null && hooked.target.spec.kraken;
@@ -368,6 +386,14 @@ public final class GuiFishing extends GuiScreen {
             }
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
+    private void drawHook(float x, float y, float width, int side) {
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL11.glVertex2f(x, y + 6); GL11.glVertex2f(x, y + 16);
+        GL11.glVertex2f(x + side * 4 * width, y + 17 + 2 * width);
+        GL11.glVertex2f(x + side * 8 * width, y + 16); GL11.glVertex2f(x + side * 8 * width, y + 12);
+        GL11.glEnd();
     }
 
     private float fightAnimationTicks() {

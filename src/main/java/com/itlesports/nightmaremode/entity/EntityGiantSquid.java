@@ -37,7 +37,8 @@ public final class EntityGiantSquid extends BTWSquidEntity implements IBossDispl
         rotationYaw = (float)(Math.atan2(-dx, dz) * 180 / Math.PI);
         squidPitch = (float)(-Math.atan2(dy, Math.hypot(dx, dz)) * 180 / Math.PI);
         if (--strikeCooldown <= 0 && distance < 4.2 && canEntityBeSeen(target)) {
-            target.attackEntityFrom(DamageSource.causeMobDamage(this), 6);
+            target.attackEntityFrom(DamageSource.causeMobDamage(this), com.itlesports.nightmaremode.fishing.FishingBalance.bossDamage(
+                    com.itlesports.nightmaremode.world.BalanceProfile.isCombatEasy()));
             target.addVelocity(dx / distance * 0.65, 0.25, dz / distance * 0.65);
             target.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
             playSound("random.splash", 1, 0.6F);

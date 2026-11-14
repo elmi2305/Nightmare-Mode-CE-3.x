@@ -24,7 +24,13 @@ public final class FishingAttachmentTooltip {
     private FishingAttachmentTooltip() {}
 
     public static void addNames(ItemStack stack, List<String> tooltip) {
-        if (!(stack.getItem() instanceof ItemFishingRod)) return;
+        if (!(stack.getItem() instanceof ItemFishingRod)) {
+            for (String[] attachment : ATTACHMENTS) {
+                if (stack.getItem().getUnlocalizedName().equals("item." + attachment[1]))
+                    tooltip.add(EnumChatFormatting.GRAY + I18n.getString("item." + attachment[1] + ".tooltip"));
+            }
+            return;
+        }
         for (String[] attachment : ATTACHMENTS) {
             if (FishingRodUpgradeRecipe.hasUpgrade(stack, attachment[0]))
                 tooltip.add(EnumChatFormatting.GRAY + I18n.getString("item." + attachment[1] + ".name"));

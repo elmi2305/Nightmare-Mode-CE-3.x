@@ -14,5 +14,7 @@ public final class FishingFishPose {
         float finBand = FishingGame.clamp(1 - Math.abs(x + 1) / 4, 0, 1);
         float fin = Math.max(0, Math.abs(y) - 2.5F) * finBand;
         x += (float)Math.sin(time * 7 + id) * fin * 0.12F;
+        // mirror the completed pose without rebinding the tail to the other end of the texture.
+        if (spec.mirrorFacing) x = -x;
     }
 }

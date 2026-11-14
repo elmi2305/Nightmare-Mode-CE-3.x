@@ -48,7 +48,8 @@ public class EntityShadowZombie extends EntityZombie {
         else if (par1DamageSource == DamageSource.onFire){return false;}
         else if (par1DamageSource == DamageSource.inFire){return false;}
         else if (par1DamageSource == DamageSource.lava){return false;}
-        else if (!BalanceProfile.isCombatEasy() && par1DamageSource instanceof EntityDamageSourceIndirect && par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target){
+        else if (!BalanceProfile.isCombatEasy() && par1DamageSource instanceof EntityDamageSourceIndirect && par1DamageSource.getSourceOfDamage() instanceof EntityArrow arrow && arrow.shootingEntity instanceof EntityPlayer target
+                && this.getDistanceSqToEntity(target) <= 64.0D){
             arrow.setDead();
             this.teleportToTarget(target);
             return false;
@@ -93,9 +94,11 @@ public class EntityShadowZombie extends EntityZombie {
 
     private void explore() {
         if (BalanceProfile.isCombatEasy()) return;
-        double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
-        double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(25) + 5);
+        double targetX = this.posX + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(4) + 2);
+        double targetZ = this.posZ + (this.rand.nextBoolean() ? 1 : -1) * (this.rand.nextInt(4) + 2);
         double targetY = this.worldObj.getPrecipitationHeight((int) targetX, (int) targetZ);
+
+        if (this.getDistanceSq(targetX, targetY, targetZ) > 64.0D) return;
 
         boolean isWood = this.worldObj.getBlockMaterial((int) targetX, (int) targetY, (int) targetZ) == Material.wood;
         int verticalRange = isWood ? 20 : 12;
@@ -122,7 +125,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     public void onLivingUpdate() {
-        if(this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
+        if(!this.worldObj.isRemote && this.posY > 50 && this.ticksExisted % 200 == 199 && !this.hasAttackTarget()){
             this.explore();
         }
         super.onLivingUpdate();
@@ -132,7 +135,7 @@ public class EntityShadowZombie extends EntityZombie {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.26d);
         this.getEntityAttribute(BTWAttributes.armor).setAttribute(4.0 * NMUtils.getNiteMultiplier());
-        double followDistance = 40;
+        double followDistance = BalanceProfile.isCombatEasy() ? 40.0D : 24.0D;
         if (this.worldObj != null) {
             int progress = NMUtils.getWorldProgress();
             if(NMUtils.getIsBloodMoon()){
@@ -169,6 +172,14 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     @Override
+    public void readEntityFromNBT(NBTTagCompound tag) {
+        super.readEntityFromNBT(tag);
+        if (!BalanceProfile.isCombatEasy()) {
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setAttribute(24.0D);
+        }
+    }
+
+    @Override
     protected void addRandomArmor() {
         if(NMUtils.getIsMobEclipsed(this)){
             if (this.rand.nextFloat() < 0.05f) {
@@ -183,7 +194,7 @@ public class EntityShadowZombie extends EntityZombie {
         }
     }
     private void teleportBehindTarget(EntityPlayer targetPlayer) {
-        if (BalanceProfile.isCombatEasy()) return;
+        if (BalanceProfile.isCombatEasy() || this.getDistanceSqToEntity(targetPlayer) > 64.0D) return;
         // get player's facing direction (yaw) and calculate the opposite direction
         boolean coin = this.rand.nextBoolean();
         float yaw;
@@ -207,7 +218,8 @@ public class EntityShadowZombie extends EntityZombie {
         int targetZ = MathHelper.floor_double(targetPlayer.posZ + zOffset);
 
         // ensure the teleport location is valid
-        if (this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 &&
+        if (this.getDistanceSq(targetX, targetY, targetZ) <= 64.0D
+                && this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 &&
                 this.worldObj.getBlockId(targetX, targetY - 1, targetZ) != 0 &&
                 this.worldObj.getBlockId(targetX, targetY + 1, targetZ) == 0) {
             this.setPositionAndUpdate(targetX, targetY, targetZ);
@@ -216,7 +228,7 @@ public class EntityShadowZombie extends EntityZombie {
     }
 
     private void teleportToTarget(EntityPlayer targetPlayer){
-        if (BalanceProfile.isCombatEasy()) return;
+        if (BalanceProfile.isCombatEasy() || this.getDistanceSqToEntity(targetPlayer) > 64.0D) return;
         int distance = 3 + this.rand.nextInt(2);
         int xOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;
         int zOffset = (this.rand.nextBoolean() ? -1 : 1) * (this.rand.nextInt(3)+1) + distance;
@@ -225,7 +237,8 @@ public class EntityShadowZombie extends EntityZombie {
         int targetY = MathHelper.floor_double(targetPlayer.posY);
         int targetZ = MathHelper.floor_double(targetPlayer.posZ + zOffset);
 
-        if(this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 && this.worldObj.getBlockId(targetX, targetY-1, targetZ) != 0 && this.worldObj.getBlockId(targetX, targetY+1, targetZ) == 0){
+        if(this.getDistanceSq(targetX, targetY, targetZ) <= 64.0D
+                && this.worldObj.getBlockId(targetX, targetY, targetZ) == 0 && this.worldObj.getBlockId(targetX, targetY-1, targetZ) != 0 && this.worldObj.getBlockId(targetX, targetY+1, targetZ) == 0){
             this.setPositionAndUpdate(targetX,targetY, targetZ);
             this.playSound("mob.endermen.portal",2.0F,1.0F);
         }

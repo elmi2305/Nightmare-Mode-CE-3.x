@@ -9,7 +9,9 @@ import java.util.function.Supplier;
 public final class FishingGame {
     public static final float WIDTH = 800, HEIGHT = 450, LURE_RADIUS = 13;
     public static final float DEPTH_PIXELS_PER_METRE = 7;
-    public static final int MAX_TARGETS = 18;
+    public static final int MAX_TARGETS = 24;
+    public final int maxTargets;
+    private final float fleeMultiplier, pullMultiplier;
     // tune this field to change swimming and escape speeds together.
     public static float FISH_SPEED_MULTIPLIER = 1.8F;
     public static float DESCENT_METRES_PER_SECOND = 0.57F;
@@ -18,7 +20,7 @@ public final class FishingGame {
     public float lureX = WIDTH / 2, lureY = 42, lureSpeed;
     public float depth = 1, maxDepth = 100, abundance = 1, rodResistance = 1, descentMultiplier = 1;
     public float lureRadius = LURE_RADIUS;
-    public boolean depthWinch;
+    public boolean depthWinch, twinHook;
     private float winchTravel, winchVelocity, pendingScroll;
     public int catchLimit = 1, catches, fightAge;
     public Target fighting;
@@ -39,17 +41,25 @@ public final class FishingGame {
     }
 
     public FishingGame(Random random, Source pool, float stock, float arrivalTicks, float maxDepth, float abundance) {
+        this(random, pool, stock, arrivalTicks, maxDepth, abundance, false, false);
+    }
+
+    public FishingGame(Random random, Source pool, float stock, float arrivalTicks, float maxDepth, float abundance,
+                       boolean combatEasy, boolean lowProgression) {
         this.random = random;
         this.pool = pool;
         this.stock = clamp(stock, 0, 1);
         this.arrivalTicks = arrivalTicks;
         this.maxDepth = clamp(maxDepth, 20, 200);
         this.abundance = abundance;
+        maxTargets = FishingBalance.schoolCap(lowProgression);
+        fleeMultiplier = FishingBalance.flee(combatEasy);
+        pullMultiplier = FishingBalance.pull(combatEasy);
         seedSchool();
     }
 
     private void seedSchool() {
-        int goal = stock <= 0 ? 2 : Math.min(MAX_TARGETS - 2, 2 + Math.round((4 + 5 * abundance) * stock));
+        int goal = stock <= 0 ? 2 : Math.min(maxTargets - 2, 2 + Math.round((4 + 5 * abundance) * stock));
         for (int i = 0; i < goal * 10 && targets.size() < goal; i++) spawn(true);
     }
 
@@ -58,7 +68,7 @@ public final class FishingGame {
         catches++;
         boolean pulledUp = fighting != null;
         fighting = null;
-        if (catches >= catchLimit) return false;
+        if (catches >= catchLimit || caught.spec.kraken) return false;
         depth = Math.max(1, depth);
         if (pulledUp) {
             lureX = inputX = WIDTH / 2;
@@ -72,8 +82,12 @@ public final class FishingGame {
     public interface Source { Spec pick(boolean initial, float depth); }
 
     public void scroll(float notches) {
-        if (!depthWinch || fighting != null || !Float.isFinite(notches)) return;
+        if (!depthWinch || winchLocked() || !Float.isFinite(notches)) return;
         pendingScroll = clamp(pendingScroll + notches, -9, 9);
+    }
+
+    public boolean winchLocked() {
+        return fighting != null;
     }
 
     public void input(float x, float y) {
@@ -93,7 +107,7 @@ public final class FishingGame {
         float bottom = clamp((inputY - 80) / (HEIGHT - 100), 0, 1);
         float plateau = 0.14F + 0.86F * (1 - depth / maxDepth);
         float passive = (DESCENT_METRES_PER_SECOND + BOTTOM_DESCENT_BONUS * bottom * bottom) * descentMultiplier * plateau / 20;
-        if (depthWinch) {
+        if (depthWinch && !winchLocked()) {
             if (pendingScroll * winchTravel < 0) winchTravel = 0;
             winchTravel = clamp(winchTravel + pendingScroll * FishingTuning.WINCH_METRES_PER_NOTCH, -80, 80);
             float targetVelocity = clamp(winchTravel * 0.16F, -2.4F, 2.4F);
@@ -115,7 +129,7 @@ public final class FishingGame {
         float timedArrival = 1 / Math.max(8, arrivalTicks / Math.max(0.25F, abundance));
         float travelArrival = 1 - (float)Math.exp(-Math.abs(cameraShift)
                 * (stock > 0 ? populationLimit(stock) : 2) * Math.max(0.4F, abundance) / HEIGHT);
-        if (targets.size() < MAX_TARGETS && random.nextFloat() < 1 - (1 - timedArrival) * (1 - travelArrival))
+        if (targets.size() < maxTargets && random.nextFloat() < 1 - (1 - timedArrival) * (1 - travelArrival))
             spawn(false, cameraShift > 0.01F ? 2 : cameraShift < -0.01F ? 3 : -1);
         Target best = null;
         float bestDistance = Float.MAX_VALUE;
@@ -136,7 +150,11 @@ public final class FishingGame {
             }
         }
         // resolve body collisions after every fish has moved, including frightened fish.
-        for (int pass = 0; pass < 32 && separate(); pass++) {}
+        for (int pass = 0; pass < 32; pass++) {
+            boolean bounded = constrainSurface();
+            if (!separate() && !bounded) break;
+        }
+        constrainSurface();
         for (Target target : targets) {
             boolean overlapping = Math.hypot(lureX - target.x, lureY - target.y) < target.spec.radius + lureRadius;
             target.progress = target == best && overlapping
@@ -153,6 +171,16 @@ public final class FishingGame {
 
     private void removeDepartedTargets() {
         targets.removeIf(t -> !t.spec.resident && (t.x < -100 || t.x > WIDTH + 100 || t.y < -100 || t.y > HEIGHT + 100));
+    }
+
+    private boolean constrainSurface() {
+        float surface = 24 - (depth - 1) * DEPTH_PIXELS_PER_METRE;
+        boolean moved = false;
+        for (Target target : targets) if (target.spec.fish && target.y < surface + target.spec.radius) {
+            target.y = surface + target.spec.radius;
+            moved = true;
+        }
+        return moved;
     }
 
     public static float fearForSpeed(float pixelsPerSecond) {
@@ -187,12 +215,12 @@ public final class FishingGame {
     }
 
     private void spawn(boolean initial, int entryEdge) {
-        if (targets.size() >= MAX_TARGETS) return;
+        if (targets.size() >= maxTargets) return;
         Spec spec = pool.pick(initial, depth);
         if (spec == null || spec.minDepth > depth || initial && spec.rare) return;
         if (spec.resident && targets.stream().anyMatch(t -> t.spec.itemId == spec.itemId)) return;
         long fishCount = targets.stream().filter(t -> t.spec.fish).count();
-        if (spec.fish && (fishCount >= Math.min(MAX_TARGETS - 2, Math.round(populationLimit(stock) * Math.max(0.4F, abundance))) || random.nextFloat() > stock)) return;
+        if (spec.fish && (fishCount >= Math.min(maxTargets - 2, Math.round(populationLimit(stock) * Math.max(0.4F, abundance))) || random.nextFloat() > stock)) return;
         if (!spec.fish && targets.stream().filter(t -> !t.spec.fish).count() >= 2) return;
         for (int attempt = 0; attempt < 20; attempt++) {
             float x, y, angle;
@@ -202,6 +230,7 @@ public final class FishingGame {
                 angle = random.nextFloat() * (float)(Math.PI * 2);
             } else {
                 int edge = entryEdge >= 0 ? entryEdge : random.nextInt(3);
+                if (edge == 3 && 24 - (depth - 1) * DEPTH_PIXELS_PER_METRE + spec.radius > 0) edge = random.nextInt(3);
                 x = edge == 0 ? -spec.radius : edge == 1 ? WIDTH + spec.radius : 50 + random.nextFloat() * (WIDTH - 100);
                 y = edge == 2 ? HEIGHT + spec.radius : edge == 3 ? -spec.radius : 70 + random.nextFloat() * (HEIGHT - 110);
                 angle = edge == 0 ? 0 : edge == 1 ? (float)Math.PI : edge == 3 ? (float)Math.PI / 2 : -(float)Math.PI / 2;
@@ -239,11 +268,13 @@ public final class FishingGame {
             }
         }
         // calm fish curve back into view; frightened or crowded fish may leave.
+        float surfaceClearance = 24 - (depth - 1) * DEPTH_PIXELS_PER_METRE + t.spec.radius + 22 - t.y;
+        if (surfaceClearance > 0) desiredY += surfaceClearance * 0.2F;
         if (leaving) {
             desiredX += t.x < WIDTH / 2 ? -3 : 3;
             desiredY += t.y > HEIGHT * 0.7F ? 2 : 0;
         }
-        if (!leaving && t.fright < 0.25F && targets.size() < MAX_TARGETS - 3) {
+        if (!leaving && t.fright < 0.25F && targets.size() < maxTargets - 3) {
             if (t.x < 50) desiredX += 1.7F;
             if (t.x > WIDTH - 50) desiredX -= 1.7F;
             if (t.y < 65) desiredY += 1.7F;
@@ -271,7 +302,7 @@ public final class FishingGame {
         float turnLimit = t.spec.kraken ? FishingTuning.GIANT_SQUID_TURN_RATE : t.spec.rare ? 0.25F : 0.18F;
         t.angle = wrap(t.angle + clamp(turn, -turnLimit, turnLimit));
         float speed = t.spec.speed * FISH_SPEED_MULTIPLIER * (1 + depth / 350)
-                * (t.spec.rare ? 1.35F : 1) * (1 + t.fright * (t.spec.kraken ? 0.2F : t.spec.rare ? 2.5F : 1.9F));
+                * (t.spec.rare ? 1.35F : 1) * (1 + t.fright * (t.spec.kraken ? 0.2F : t.spec.fleeStrength) * fleeMultiplier);
         t.x += (float)Math.cos(t.angle) * speed;
         t.y += (float)Math.sin(t.angle) * speed * (t.spec.kraken && t.entered ? 0.065F : 1) - (t.spec.kraken ? 0 : 0.12F);
         if (t.spec.resident) {
@@ -314,7 +345,7 @@ public final class FishingGame {
         float distance = Math.max(1, (float)Math.hypot(dx, dy));
         float force = fighting.spec.pullStrength * Math.max(0, FishingTuning.FISH_PULL_MULTIPLIER)
                 * (fighting.spec.kraken ? Math.max(0, FishingTuning.GIANT_SQUID_PULL_MULTIPLIER) : 1)
-                * (1.6F + fightResistanceDepth / 90) / Math.max(0.5F, rodResistance);
+                * (1.6F + fightResistanceDepth / 90) * pullMultiplier / Math.max(0.5F, rodResistance);
         if (giant) force *= FishingStruggle.pullScale(fightAge);
         float jitter = giant ? 0 : (float)Math.sin(fightAge * 0.16 + fighting.id) * force * 0.45F;
         lureX += dx / distance * force + fightDX * 0.85F + jitter;
@@ -370,12 +401,15 @@ public final class FishingGame {
         public final float radius, speed, flutter;
         public float captureTicks;
         public float minDepth, pullStrength, residentInsetX, residentInsetY;
+        public float fleeStrength;
         public int animation;
-        public boolean reverse, resident, kraken;
+        public boolean reverse, mirrorFacing, resident, kraken;
         public Spec depth(float value) { minDepth = value; return this; }
         public Spec pull(float value) { pullStrength = value; return this; }
+        public Spec flee(float value) { fleeStrength = value; return this; }
         public Spec animate(int value) { animation = value; return this; }
         public Spec reversed() { reverse = true; return this; }
+        public Spec flippedFacing() { mirrorFacing = true; return this; }
         public Spec kraken() { kraken = resident = true; captureTicks = 400; residentInsetX = 270; residentInsetY = 202; return this; }
 
         public Spec(int itemId, boolean fish, boolean rare, float radius, float speed, float flutter) {
@@ -385,6 +419,7 @@ public final class FishingGame {
             this.radius = radius;
             this.speed = speed;
             this.flutter = flutter;
+            this.fleeStrength = rare ? 2.5F : 1.9F;
             this.captureTicks = fish ? (rare ? 160 : 100) : 36;
             this.pullStrength = rare && fish ? 2 : 0;
         }

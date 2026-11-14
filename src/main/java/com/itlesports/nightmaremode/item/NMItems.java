@@ -895,7 +895,7 @@ public class NMItems {
         refinedRedstone = new NMItem(2755).setTextureName("nightmare:ifhyRefinedRedstone").setUnlocalizedName("ifhyRefinedRedstone").setCreativeTab(CreativeTabs.tabMaterials);
         azureSalt = new NetherItem(2756).setTextureName("nightmare:ifhyAzureSalt").setUnlocalizedName("ifhyAzureSalt").setCreativeTab(CreativeTabs.tabMaterials);
         azureSlag = new NetherItem(2757).setTextureName("nightmare:ifhyAzureSlag").setUnlocalizedName("ifhyAzureSlag").setCreativeTab(CreativeTabs.tabMaterials);
-        brittleAzureCake = new NetherItem(2758).setTextureName("nightmare:ifhyBrittleAzureCake").setUnlocalizedName("ifhyBrittleAzureCake").setCreativeTab(CreativeTabs.tabMaterials);
+        brittleAzureCake = new NMItem(2758).setTextureName("nightmare:ifhyBrittleAzureCake").setUnlocalizedName("ifhyBrittleAzureCake").setCreativeTab(CreativeTabs.tabMaterials);
         rawAzureStone = new NMItem(2759).setTextureName("nightmare:ifhyRawAzureStone").setUnlocalizedName("ifhyRawAzureStone").setCreativeTab(CreativeTabs.tabMaterials);
         crushedAzureStone = new NMItem(2760).setTextureName("nightmare:ifhyCrushedAzureStone").setUnlocalizedName("ifhyCrushedAzureStone").setCreativeTab(CreativeTabs.tabMaterials);
         washedAzureSediment = new NMItem(2761).setTextureName("nightmare:ifhyWashedAzureSediment").setUnlocalizedName("ifhyWashedAzureSediment").setCreativeTab(CreativeTabs.tabMaterials);

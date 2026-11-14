@@ -2,11 +2,8 @@ package com.itlesports.nightmaremode.AITasks;
 
 import com.itlesports.nightmaremode.world.BalanceProfile;
 
-import com.itlesports.nightmaremode.util.elements.NMDifficultyParam;
 import com.itlesports.nightmaremode.util.NMUtils;
 import net.minecraft.src.*;
-
-import java.util.Random;
 
 public class EntityAIShadowTeleport extends EntityAITarget {
     private EntityLivingBase targetEntity;
@@ -19,19 +16,23 @@ public class EntityAIShadowTeleport extends EntityAITarget {
 
     @Override
     public boolean shouldExecute() {
-        if (this.taskOwner.getAttackTarget() instanceof EntityPlayer player) {
-            this.targetEntity = player;
-            if (BalanceProfile.isCombatEasy()) return this.taskOwner.getDistanceSqToEntity(player) <= 25.0D;
-            double bloodMoonModifier = NMUtils.getIsBloodMoon() ? 4 : 1;
-            int distance = this.taskOwner.worldObj.getDifficultyParameter(NMDifficultyParam.ShouldMobsBeBuffed.class) ? 400 : 100;
-            return this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= distance * bloodMoonModifier;
-        }
-        return false;
+        this.targetEntity = this.taskOwner.getAttackTarget() instanceof EntityPlayer player ? player : null;
+        return this.isTargetInRange();
+    }
+
+    private boolean isTargetInRange() {
+        return this.targetEntity != null && this.targetEntity.isEntityAlive()
+                && this.taskOwner.getAttackTarget() == this.targetEntity
+                && this.taskOwner.getDistanceSqToEntity(this.targetEntity) <= this.getTeleportRangeSquared();
+    }
+
+    private double getTeleportRangeSquared() {
+        return BalanceProfile.isCombatEasy() ? 25.0D : 64.0D;
     }
 
     @Override
     public boolean continueExecuting() {
-        if (BalanceProfile.isCombatEasy() && (this.targetEntity == null || this.taskOwner.getDistanceSqToEntity(this.targetEntity) > 25.0D)) return false;
+        if (!this.isTargetInRange()) return false;
         if (this.cooldown == 0) {
             boolean bIsBloodmoon = NMUtils.getIsBloodMoon();
             int distance = 3 + this.taskOwner.rand.nextInt(2);
@@ -43,7 +44,7 @@ public class EntityAIShadowTeleport extends EntityAITarget {
             int targetY = MathHelper.floor_double(this.targetEntity.posY);
             int targetZ = MathHelper.floor_double(this.targetEntity.posZ + zOffset);
 
-            if ((!BalanceProfile.isCombatEasy() || this.taskOwner.getDistanceSq(targetX, targetY, targetZ) <= 25.0D)
+            if (this.taskOwner.getDistanceSq(targetX, targetY, targetZ) <= this.getTeleportRangeSquared()
                     && this.canTeleportHere(this.taskOwner.worldObj, targetX,targetY,targetZ)){
 
                 int shadowCooldown = NMUtils.getIsBloodMoon() ? 10 : 20;

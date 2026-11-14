@@ -1,6 +1,8 @@
 package com.itlesports.nightmaremode.mixin.blocks;
 
 import btw.block.blocks.PlantsBlock;
+import btw.block.blocks.HempCropBlock;
+import btw.block.blocks.HempCropBlockRoots;
 import com.itlesports.nightmaremode.skill.SkillHandler;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
@@ -11,6 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlantsBlock.class)
 public class PlantsBlockMixin {
+    @Inject(method = "isInBrightLight", at = @At("HEAD"), cancellable = true)
+    private void useNetherHempGrowthLight(World world, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        if (world.provider.dimensionId == -1
+                && ((Object)this instanceof HempCropBlock || (Object)this instanceof HempCropBlockRoots)
+                && world.getBlockLightValue(x, y, z) >= 9) {
+            cir.setReturnValue(true);
+        }
+    }
+
     @Inject(method = "onBlockActivated", at = @At(value = "INVOKE",
             target = "Lbtw/block/blocks/PlantsBlock;removeWeeds(Lnet/minecraft/src/World;III)V", shift = At.Shift.AFTER))
     private void trackWeedRemoval(World world, int x, int y, int z, EntityPlayer player, int facing,

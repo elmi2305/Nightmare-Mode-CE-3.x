@@ -3,7 +3,6 @@ package com.itlesports.nightmaremode.mixin;
 import api.item.items.FireStarterItemPrimitive;
 import api.item.items.SeedFoodItem;
 import com.itlesports.nightmaremode.item.items.ItemAdvancedHorseArmor;
-import com.itlesports.nightmaremode.item.items.template.NMFoodItem;
 import com.itlesports.nightmaremode.mixin.interfaces.ItemInvoker;
 import com.itlesports.nightmaremode.util.NMFoodSpoilage;
 import com.itlesports.nightmaremode.util.NMPlacedItemHelper;
@@ -52,7 +51,8 @@ public class ItemMixin {
 
         potato = new SeedFoodItem(136, 1, 0.0f, Block.potato.blockID).setAsBasicPigFood().setUnlocalizedName("potato").setTextureName("potato");
         bakedPotato = new ItemFood(137, 1, 0.0f, false).setAsBasicPigFood().setUnlocalizedName("potatoBaked").setTextureName("potato_baked");
-        netherStalkSeeds = new NMFoodItem(116, 1, 0.0F, false, "netherStalkSeeds", false)
+        netherStalkSeeds = new SeedFoodItem(116, 1, 0.0F, Block.netherStalk.blockID)
+                .setUnlocalizedName("netherStalkSeeds")
                 .setPotionEffect("+4")
                 .setMaxStackSize(16)
                 .setTextureName("nether_wart");

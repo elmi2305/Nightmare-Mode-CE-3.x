@@ -24,22 +24,25 @@ public final class FishingClient {
         Minecraft mc = Minecraft.getMinecraft();
         byte[] bytes;
         while ((bytes = pending.poll()) != null) {
-            if (mc.theWorld == null || mc.thePlayer == null) continue;
+            if (mc.theWorld == null || mc.thePlayer == null || mc.thePlayer.isDead || mc.thePlayer.getHealth() <= 0) continue;
             try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes))) {
                 int type = in.readUnsignedByte(), hook = in.readInt();
                 if (hook == dismissedHook) continue;
                 GuiFishing screen = mc.currentScreen instanceof GuiFishing gui && gui.hook == hook ? gui : null;
+                if (screen != null) screen.resumeIfInterrupted();
                 if (type == 1 || type == 2) {
                     int item = in.readShort();
                     if (screen != null) { if (type == 1) screen.finish(item); else screen.caught(item); }
                     continue;
                 }
                 if (type != 0) continue;
+                if (screen == null && !(mc.theWorld.getEntityByID(hook) instanceof EntityFishHook)) continue;
                 int age = in.readInt();
                 float stock = in.readFloat();
                 float depth = in.readFloat(), maxDepth = in.readFloat(), lureX = in.readFloat(), lureY = in.readFloat();
                 int fighting = in.readInt(), fightAge = in.readInt(), remaining = in.readUnsignedByte();
                 boolean lava = in.readBoolean(), winch = in.readBoolean();
+                boolean twinHook = in.readBoolean();
                 float lureRadius = in.readFloat();
                 int count = in.readUnsignedByte();
                 if (count > FishingGame.MAX_TARGETS) continue;
@@ -54,14 +57,12 @@ public final class FishingClient {
                     targets.add(t);
                 }
                 if (screen == null) {
-                    if (mc.currentScreen != null || age > 20) {
-                        FishingNet.input(hook, 400, 42, true, false, 0);
-                        continue;
-                    }
+                    if (mc.currentScreen instanceof GuiFishing previous) previous.allowClose();
+                    if (mc.currentScreen != null) mc.thePlayer.closeScreen();
                     screen = new GuiFishing(hook, lava);
                     mc.displayGuiScreen(screen);
                 }
-                screen.snapshot(age, stock, depth, maxDepth, lureX, lureY, fighting, fightAge, remaining, winch, lureRadius, targets);
+                screen.snapshot(age, stock, depth, maxDepth, lureX, lureY, fighting, fightAge, remaining, winch, twinHook, lureRadius, targets);
             } catch (IOException ignored) {}
         }
     }
