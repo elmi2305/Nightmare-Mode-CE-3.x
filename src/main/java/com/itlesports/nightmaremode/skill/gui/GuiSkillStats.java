@@ -109,6 +109,7 @@ public class GuiSkillStats extends GuiScreen {
         add(lines, "Animals bred", data.animalsBred);
         add(lines, "Cows milked", data.cowsMilked);
         add(lines, "Fish caught", data.fishCaught);
+        add(lines, "Blue squid reeled in", data.blueSquidCaught);
         add(lines, "Rare items caught", data.rareItemsCaught);
         add(lines, "Biomes visited", data.getVisitedBiomeCount());
         lines.add("COMBAT & ACTIVITY");

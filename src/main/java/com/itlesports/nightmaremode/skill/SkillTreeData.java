@@ -26,6 +26,7 @@ public class SkillTreeData {
     public int zombiesKilled;
     public int skeletonsKilled;
     public int fishCaught;
+    public int blueSquidCaught;
     public int rareItemsCaught;
     public int foodCooked;
     public int booksCrafted;
@@ -229,6 +230,7 @@ public class SkillTreeData {
         data.zombiesKilled = tag.getInteger("ZombiesKilled");
         data.skeletonsKilled = tag.getInteger("SkeletonsKilled");
         data.fishCaught = tag.getInteger("FishCaught");
+        data.blueSquidCaught = tag.getInteger("BlueSquidCaught");
         data.rareItemsCaught = tag.getInteger("RareItemsCaught");
         data.foodCooked = tag.getInteger("FoodCooked");
         data.booksCrafted = tag.getInteger("BooksCrafted");
@@ -347,6 +349,7 @@ public class SkillTreeData {
         tag.setInteger("ZombiesKilled", data.zombiesKilled);
         tag.setInteger("SkeletonsKilled", data.skeletonsKilled);
         tag.setInteger("FishCaught", data.fishCaught);
+        tag.setInteger("BlueSquidCaught", data.blueSquidCaught);
         tag.setInteger("RareItemsCaught", data.rareItemsCaught);
         tag.setInteger("FoodCooked", data.foodCooked);
         tag.setInteger("BooksCrafted", data.booksCrafted);

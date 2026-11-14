@@ -1,6 +1,7 @@
 package com.itlesports.nightmaremode.crafting.recipe.types;
 
-import com.itlesports.nightmaremode.item.items.ItemUpgradeableFishingRod;
+import com.itlesports.nightmaremode.item.NMItems;
+import net.minecraft.src.ItemFishingRod;
 import net.minecraft.src.IInventory;
 import net.minecraft.src.IRecipe;
 import net.minecraft.src.InventoryCrafting;
@@ -29,7 +30,7 @@ public class FishingRodUpgradeRecipe implements IRecipe {
         for (int slot = 0; slot < inventory.getSizeInventory(); ++slot) {
             ItemStack stack = inventory.getStackInSlot(slot);
             if (stack == null) continue;
-            if (stack.getItem() instanceof ItemUpgradeableFishingRod) {
+            if (stack.getItem() instanceof ItemFishingRod) {
                 if (rod != null) return false;
                 rod = stack;
             } else if (stack.itemID == this.upgrade.itemID) {
@@ -44,9 +45,25 @@ public class FishingRodUpgradeRecipe implements IRecipe {
         ItemStack rod = null;
         for (int slot = 0; slot < inventory.getSizeInventory(); ++slot) {
             ItemStack stack = inventory.getStackInSlot(slot);
-            if (stack != null && stack.getItem() instanceof ItemUpgradeableFishingRod) rod = stack;
+            if (stack != null && stack.getItem() instanceof ItemFishingRod) rod = stack;
         }
-        if (rod == null || hasUpgrade(rod, this.upgradeKey)) return null;
+        return applyUpgrade(rod, this.upgradeKey);
+    }
+
+    public static String upgradeKey(Item attachment) {
+        if (attachment == null) return null;
+        if (attachment == NMItems.fishingBellUpgrade) return "IfhyFishingBell";
+        if (attachment == NMItems.fishingLureUpgrade) return "IfhyFishingLure";
+        if (attachment == NMItems.fishingAutoReelUpgrade) return "IfhyFishingAutoReel";
+        if (attachment == NMItems.rareFishLureUpgrade) return "IfhyRareFishLure";
+        if (attachment == NMItems.twinHookUpgrade) return "IfhyTwinHook";
+        if (attachment == NMItems.depthWinchUpgrade) return "IfhyDepthWinch";
+        if (attachment == NMItems.wideHookUpgrade) return "IfhyWideHook";
+        return null;
+    }
+
+    public static ItemStack applyUpgrade(ItemStack rod, String upgradeKey) {
+        if (rod == null || !(rod.getItem() instanceof ItemFishingRod) || upgradeKey == null || hasUpgrade(rod, upgradeKey)) return null;
         ItemStack result = rod.copy();
         result.stackSize = 1;
         NBTTagCompound tag = result.getTagCompound();
@@ -54,7 +71,7 @@ public class FishingRodUpgradeRecipe implements IRecipe {
             tag = new NBTTagCompound();
             result.setTagCompound(tag);
         }
-        tag.setBoolean(this.upgradeKey, true);
+        tag.setBoolean(upgradeKey, true);
         return result;
     }
 

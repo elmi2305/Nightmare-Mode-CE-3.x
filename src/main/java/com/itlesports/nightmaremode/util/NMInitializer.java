@@ -196,6 +196,7 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Tungsten Fishing Rod", NMItems.tungstenFishingRod);
         validateItemRegistration("Baited Tungsten Fishing Rod", NMItems.tungstenFishingRodBaited);
         validateItemRegistration("Nether Resonance Gem", NMItems.netherResonanceGem);
+        validateItemRegistration("Emerald Apple", NMItems.emeraldApple);
         NMTags.initTags();
         BTWItems.straw.setfurnaceburntime(5);
         addCraftingRecipes();
@@ -255,6 +256,21 @@ public abstract class NMInitializer implements AchievementExt {
         validateItemRegistration("Agrarian Essence", NMItems.husbandryEssence);
         validateItemRegistration("Infernal Essence", NMItems.infernalEssence);
         validateItemRegistration("Artisan Essence", NMItems.artisanEssence);
+        validateItemRegistration("jellyfish", NMItems.jellyfish);
+        validateItemRegistration("babySquid", NMItems.babySquid);
+        validateItemRegistration("pufferfish", NMItems.pufferfish);
+        validateItemRegistration("electricEel", NMItems.electricEel);
+        validateItemRegistration("stonefish", NMItems.stonefish);
+        validateItemRegistration("lionfish", NMItems.lionfish);
+        validateItemRegistration("sunfish", NMItems.sunfish);
+        validateItemRegistration("blobfish", NMItems.blobfish);
+        validateItemRegistration("anglerfish", NMItems.anglerfish);
+        validateItemRegistration("oarfish", NMItems.oarfish);
+        validateItemRegistration("giantSquidMantle", NMItems.giantSquidMantle);
+        validateItemRegistration("pearl", NMItems.pearl);
+        validateItemRegistration("Twin Hook Upgrade", NMItems.twinHookUpgrade);
+        validateItemRegistration("Depth Winch Upgrade", NMItems.depthWinchUpgrade);
+        validateItemRegistration("Wide Hook Upgrade", NMItems.wideHookUpgrade);
         validateItemRegistration("Fishing Essence", NMItems.fishingEssence);
         validateItemRegistration("Nickel Fishing Rod", NMItems.nickelFishingPole);
         validateItemRegistration("Baited Nickel Fishing Rod", NMItems.nickelFishingPoleBaited);
@@ -962,6 +978,19 @@ public abstract class NMInitializer implements AchievementExt {
         sell("ifhy:fisherman_angler_leggings", profession, 3, NMItems.anglerLeggings.itemID, 0, 1, 1, 1.0F, false, 7, 10);
         sell("ifhy:fisherman_angler_chestplate", profession, 4, NMItems.anglerChestplate.itemID, 0, 1, 1, 1.0F, false, 8, 12);
 
+        buy("ifhy:fisherman_jellyfish", profession, 2, NMItems.jellyfish.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_babysquid", profession, 2, NMItems.babySquid.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_pufferfish", profession, 2, NMItems.pufferfish.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_electriceel", profession, 3, NMItems.electricEel.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_stonefish", profession, 3, NMItems.stonefish.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_lionfish", profession, 3, NMItems.lionfish.itemID, 0, 1, 2);
+        buy("ifhy:fisherman_sunfish", profession, 4, NMItems.sunfish.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_blobfish", profession, 4, NMItems.blobfish.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_anglerfish", profession, 4, NMItems.anglerfish.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_oarfish", profession, 5, NMItems.oarfish.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_giantsquidmantle", profession, 5, NMItems.giantSquidMantle.itemID, 0, 1, 1);
+        buy("ifhy:fisherman_pearl", profession, 5, NMItems.pearl.itemID, 0, 1, 1);
+
         // The base pool is intentionally mundane: a fisherman converts supplies and
         // catches into the emeralds needed for his useful stock.
         buy("ifhy:fisherman_string", profession, 1, Item.silk.itemID, 0, 20, 32);
@@ -1179,7 +1208,7 @@ public abstract class NMInitializer implements AchievementExt {
         sell("nmNetherTier1TungstenIngot", profession, 3, NMItems.tungstenIngot.itemID, 0, 2, 4, 0.4F, false, 16, 24);
         buy("nmNetherTier1SoulFlint", profession, 3, NMItems.soulFlint.itemID, 0, 1, 1, 0.7F);
         buy("nmNetherTier1GhastTear", profession, 3, Item.ghastTear.itemID, 0, 12, 24, 0.5F);
-        buy("nmNetherTier1CreeperOyster", profession, 3, BTWItems.creeperOysters.itemID, 0, 16, 32, 0.7F);
+        buy("nmNetherTier1CreeperOyster", profession, 3, BTWItems.creeperOysters.itemID, 0, 8, 16, 0.7F);
         buy("nmNetherTier1Nitre", profession, 3, BTWItems.nitre.itemID, 0, 48, 64, 0.8F);
         buy("nmNetherTier1Bone", profession, 3, Item.bone.itemID, 0, 8, 16, 1.0F);
         buy("nmNetherTier1EarlyBlazePowder", profession, 3, Item.blazePowder.itemID, 0, 16, 32, 0.6F);
@@ -2477,9 +2506,9 @@ public abstract class NMInitializer implements AchievementExt {
                       NMItems.artisanEssence,
                       NMItems.fishingEssence,
                       NMItems.refinedDiamondIngot,
-                      NMItems.deadzoneShard,
+                      NMItems.darkIngot,
                       BTWItems.soulforgedSteelIngot,
-                      NMItems.tungstenIngot,
+                      NMItems.pearl,
                       NMItems.bloodIngot,
                       NMItems.lithiumHeatCompound,
                       NMItems.crystalPrecisionGear,
@@ -3197,7 +3226,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addRecipe(new ItemStack(NMItems.tungstenShears), new Object[]{
                 " T", "T ", 'T', NMItems.tungstenIngot});
         RecipeManager.addRecipe(new ItemStack(NMItems.netherResonanceGem), new Object[]{
-                " Q ", "QCQ", " B ", 'Q', Item.netherQuartz, 'C', NMItems.denseNetherrackCore, 'B', Item.blazePowder});
+                " Q ", "QCQ", " B ", 'Q', Item.netherQuartz, 'C',
+                com.itlesports.nightmaremode.util.EasyBalance.isJourneyDifficulty() ? NMItems.hellGem : NMItems.denseNetherrackCore,
+                'B', Item.blazePowder});
+        RecipeManager.addRecipe(new ItemStack(NMItems.emeraldApple), new Object[]{
+                "DDD", "DAD", "DDD", 'D', BTWItems.emeraldPile, 'A', Item.appleRed});
         IRecipe netherArrowRecipe = RecipeManager.addShapelessRecipe(new ItemStack(Item.arrow, 4),
                 new Object[]{NMItems.soulFlint, NMItems.pighideString, NMItems.tungstenNugget});
         SkillRecipeGates.exemptCrafting(netherArrowRecipe);
@@ -3436,10 +3469,24 @@ public abstract class NMInitializer implements AchievementExt {
 
 
         for (Item rawFish : NMItems.getRawFish()) {
-            if (rawFish != NMItems.debonedRawFish) {
+            if (rawFish != NMItems.debonedRawFish && rawFish != NMItems.babySquid && rawFish != NMItems.giantSquidMantle) {
                 RecipeManager.addShapelessRecipe(new ItemStack(NMItems.fishFlesh, 1, 99), new Object[]{new ItemStack(rawFish, 1, Short.MAX_VALUE)});
             }
         }
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.calamari, 3), new Object[]{new ItemStack(NMItems.babySquid, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.calamari, 8), new Object[]{new ItemStack(NMItems.giantSquidMantle, 1, Short.MAX_VALUE)});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.depthWinchUpgrade), new Object[]{
+                Item.ingotIron, NMItems.nickelIngot, Item.redstone});
+        RecipeManager.addShapelessRecipe(new ItemStack(NMItems.wideHookUpgrade), new Object[]{
+                BTWItems.boneFishHook, Item.silk});
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "wide_hook_upgrade", NMItems.wideHookUpgrade, "IfhyWideHook"));
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "depth_winch_upgrade", NMItems.depthWinchUpgrade, "IfhyDepthWinch"));
+        RecipeManager.addRecipe(new ItemStack(NMItems.twinHookUpgrade), new Object[]{
+                "H H", " S ", " B ", 'H', BTWItems.boneFishHook, 'S', Item.silk, 'B', NMItems.nickelBinding});
+        CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
+                "twin_hook_upgrade", NMItems.twinHookUpgrade, "IfhyTwinHook"));
         CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
                 "fishing_bell_upgrade", NMItems.fishingBellUpgrade, "IfhyFishingBell"));
         CraftingManager.getInstance().getRecipeList().add(new FishingRodUpgradeRecipe(
@@ -5033,6 +5080,9 @@ public abstract class NMInitializer implements AchievementExt {
         SkillRecipeGates.crafting(NMItems.nickelBoundDiamondMatrix.itemID,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_RAW_LITHIUM_64);
         SkillRecipeGates.crafting(NMItems.fishFlesh.itemID, NMSkillNodes.CATCH_FISH_50);
+        SkillRecipeGates.crafting(NMItems.twinHookUpgrade.itemID, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
+        SkillRecipeGates.crafting(NMItems.depthWinchUpgrade.itemID, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
+        SkillRecipeGates.crafting(NMItems.wideHookUpgrade.itemID, NMSkillNodes.BRING_BONE_FISH_HOOK_8);
         SkillRecipeGates.crafting(NMItems.moistureFertilizer.itemID, NMSkillNodes.CRAFT_BOOK_64);
         SkillRecipeGates.crafting(NMItems.glassBatch.itemID,
                 NMSkillNodes.BRING_ACID_CRYSTAL_16, NMSkillNodes.BRING_POROSITY_AGGREGATE_16);

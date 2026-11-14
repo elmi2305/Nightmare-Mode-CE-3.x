@@ -298,6 +298,11 @@ public final class ChunkAttributeManager {
         return getFishTotals(world, blockX, blockZ).fish > 0;
     }
 
+    public static float getFishingStockFraction(World world, int blockX, int blockZ) {
+        FishTotals totals = getFishTotals(world, blockX, blockZ);
+        return totals.maxFish <= 0 ? 0 : Math.min(1.0F, (float)totals.fish / totals.maxFish);
+    }
+
     public static int getLocalMaxFish(World world, int blockX, int blockZ) {
         return get(world, blockX, blockZ).getMaxFish();
     }

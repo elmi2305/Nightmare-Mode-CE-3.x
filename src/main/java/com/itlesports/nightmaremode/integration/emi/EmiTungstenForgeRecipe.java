@@ -13,7 +13,7 @@ import java.util.List;
 public class EmiTungstenForgeRecipe extends EmiMiscRecipe {
     public EmiTungstenForgeRecipe() {
         super(new MiscRecipe(new ItemStack(NMItems.tungstenNugget), new ItemStack(NMItems.tungstenChunk),
-                "Fuel + adjacent lava"), 0);
+                "Near lava"), 0);
     }
 
     @Override public ResourceLocation getId() { return new ResourceLocation("nightmare", "tungsten_forge/chunk"); }

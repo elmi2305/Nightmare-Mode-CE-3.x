@@ -34,7 +34,8 @@ public final class EasyBalance {
     public static float miningBonus(float skillBonus) { return BalanceProfile.isEasy() ? (1.0F + skillBonus) * 2.0F - 1.0F : skillBonus; }
     public static float processingBonus(float skillBonus) { return BalanceProfile.isEasy() ? (1.0F + skillBonus) * 3.0F - 1.0F : skillBonus; }
     public static int processingTicks(int hardTicks) { return BalanceProfile.isEasy() ? Math.max(1, (hardTicks + 2) / 3) : hardTicks; }
-    public static float exhaustion(float hardCost) { return BalanceProfile.isCombatEasy() && !btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost * 0.35F : hardCost; }
+    public static boolean isJourneyDifficulty() { return !BalanceProfile.isCombatEasy() && !BalanceProfile.isEasy(); }
+    public static float exhaustion(float hardCost) { return isJourneyDifficulty() || btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost : hardCost * 0.35F; }
     public static float villagerExhaustion(float hardCost) { return BalanceProfile.isEasy() && !btw.community.nightmaremode.NightmareMode.testEasyHungerDrain ? hardCost * 0.35F : hardCost; }
     public static float spoilage(float hardRate) { return BalanceProfile.isCombatEasy() ? hardRate * 0.5F : hardRate; }
     public static float pollution(float hardAmount) { return BalanceProfile.isEasy() && !btw.community.nightmaremode.NightmareMode.testEasyPollution ? hardAmount * 0.25F : hardAmount; }

@@ -23,6 +23,7 @@ public class NMItems {
     public static Item tungstenFishingRod;
     public static Item tungstenFishingRodBaited;
     public static Item netherResonanceGem;
+    public static Item emeraldApple;
     public static Item limitedRecallPotion;
     public static final Item[] journeyJournals = {
             new ItemJourneyJournal(3457, 0),
@@ -335,6 +336,9 @@ public class NMItems {
     public static FoodItem duneKoi;
     public static NMProgressiveItem fishFlesh;
     public static FoodItem debonedRawFish;
+    public static FoodItem jellyfish, babySquid, blobfish, anglerfish, oarfish, electricEel;
+    public static FoodItem pufferfish, sunfish, stonefish, lionfish, giantSquidMantle;
+    public static Item pearl, twinHookUpgrade, depthWinchUpgrade, wideHookUpgrade;
     private static Item[] rawFish;
 
 
@@ -706,7 +710,7 @@ public class NMItems {
         mackerel = createRawFish(2658, "nmMackerel");
         cod = createRawFish(2659, "nmCod");
         tuna = createRawFish(2660, "nmTuna");
-        swordfish = createRawFish(2661, "nmSwordfish");
+        swordfish = (FoodItem) new ItemSwordfish(2661).setStandardFoodPoisoningEffect().setTextureName("nightmare:nmSwordfish").setCreativeTab(CreativeTabs.tabFood);
         bass = createRawFish(2662, "nmBass");
         trout = createRawFish(2663, "nmTrout");
         carp = createRawFish(2664, "nmCarp");
@@ -729,7 +733,22 @@ public class NMItems {
         duneKoi = createRawFish(2681, "nmDuneKoi");
         debonedRawFish = createRawFish(2682, "ifhyDebonedRawFish");
         fishFlesh = (NMProgressiveItem) new NMProgressiveItem(2683, debonedRawFish.itemID).setTargetDurability(100).setSoundID("mob.chicken.hurt").setTextureName("fish_raw").setUnlocalizedName("nmFishFlesh").setCreativeTab(CreativeTabs.tabFood);
-        rawFish = new Item[]{mackerel, cod, tuna, swordfish, bass, trout, carp, goldenCarp, mudfish, catfish, swampEel, alligatorGar, piranha, neonTetra, jungleCatfish, arapaima, salmon, perch, icefish, frostfish, desertMinnow, sandfish, tilapia, duneKoi, debonedRawFish};
+        jellyfish = createRawFish(3518, "nmJellyfish");
+        babySquid = createRawFish(3519, "nmBabySquid");
+        blobfish = createRawFish(3520, "nmBlobfish");
+        anglerfish = createRawFish(3521, "nmAnglerfish");
+        oarfish = createRawFish(3522, "nmOarfish");
+        electricEel = createRawFish(3523, "nmElectricEel");
+        pufferfish = createRawFish(3524, "nmPufferfish");
+        sunfish = createRawFish(3525, "nmSunfish");
+        stonefish = createRawFish(3526, "nmStonefish");
+        lionfish = createRawFish(3527, "nmLionfish");
+        giantSquidMantle = createRawFish(3528, "nmGiantSquidMantle");
+        pearl = material(3529, "nmPearl");
+        twinHookUpgrade = material(3530, "ifhyTwinHookUpgrade");
+        depthWinchUpgrade = material(3531, "ifhyDepthWinchUpgrade");
+        wideHookUpgrade = material(3532, "ifhyWideHookUpgrade");
+        rawFish = new Item[]{jellyfish,babySquid,blobfish,anglerfish,oarfish,electricEel,pufferfish,sunfish,stonefish,lionfish,giantSquidMantle, mackerel, cod, tuna, swordfish, bass, trout, carp, goldenCarp, mudfish, catfish, swampEel, alligatorGar, piranha, neonTetra, jungleCatfish, arapaima, salmon, perch, icefish, frostfish, desertMinnow, sandfish, tilapia, duneKoi, debonedRawFish};
 
 
         flintAxe = new ItemFlintAxe(2684).setTextureName("nightmare:ifhyFlintAxe").setUnlocalizedName("ifhyFlintAxe").setCreativeTab(CreativeTabs.tabTools);
@@ -788,6 +807,8 @@ public class NMItems {
                 .setCreativeTab(null);
         netherResonanceGem = new NetherItem(3517).setTextureName("nightmare:ifhyNetherResonanceGem")
                 .setUnlocalizedName("ifhyNetherResonanceGem").setCreativeTab(CreativeTabs.tabMaterials);
+        emeraldApple = new NMFoodItem(3533, ((ItemFood)Item.appleRed).getHungerRestored(), 0.0F, false, "ifhyEmeraldApple", false)
+                .setTextureName("nightmare:ifhyEmeraldApple").setMaxStackSize(16).setCreativeTab(CreativeTabs.tabFood);
 
         lavafish = new ItemLavafish(2719).setTextureName("nightmare:ifhyLavafish").setCreativeTab(CreativeTabs.tabFood);
         tungstenPickaxe = new ItemTungstenPickaxe(2720).setTextureName("nightmare:ifhyTungstenPickaxe").setUnlocalizedName("ifhyTungstenPickaxe").setCreativeTab(CreativeTabs.tabTools);

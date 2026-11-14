@@ -12,6 +12,9 @@ import net.minecraft.src.ResourceLocation;
 
 
 public class NMTags {
+    public static final Tag fishingAttachments = Tag.of(loc("fishing_attachments"),
+            NMItems.fishingBellUpgrade, NMItems.fishingLureUpgrade, NMItems.fishingAutoReelUpgrade,
+            NMItems.rareFishLureUpgrade, NMItems.twinHookUpgrade, NMItems.depthWinchUpgrade, NMItems.wideHookUpgrade);
     public static final Tag sandwichMeats = Tag.of(loc("sandwich_meats"), Item.beefCooked, Item.chickenCooked, Item.porkCooked, BTWItems.cookedMutton, BTWItems.cookedCheval, BTWItems.cookedWolfChop, BTWItems.cookedMysteryMeat, BTWItems.hamAndEggs);
     public static final Tag eclipseDrops = Tag.of(loc("eclipse_drops"),
             NMItems.darksunFragment,

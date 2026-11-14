@@ -1,16 +1,14 @@
 package com.itlesports.nightmaremode.mixin.entity;
 
 import btw.item.BTWItems;
-import btw.util.BTWSounds;
+import com.itlesports.nightmaremode.entity.EntityGiantSquid;
+import com.itlesports.nightmaremode.fishing.*;
+import com.itlesports.nightmaremode.network.FishingNet;
 import api.world.WorldUtils;
 import com.itlesports.nightmaremode.agriculture.ChunkAttributeManager;
 import com.itlesports.nightmaremode.item.NMItems;
 import com.itlesports.nightmaremode.item.items.ItemUpgradeableFishingRod;
-import com.itlesports.nightmaremode.crafting.recipe.types.FishingRodUpgradeRecipe;
 import com.itlesports.nightmaremode.skill.SkillHandler;
-import com.itlesports.nightmaremode.util.NMFishingRates;
-import com.itlesports.nightmaremode.util.NMUtils;
-import com.itlesports.nightmaremode.util.elements.FishingCatch;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,122 +18,135 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.objectweb.asm.Opcodes;
 
-import java.util.Locale;
-
 @Mixin(EntityFishHook.class)
-public abstract class EntityFishHookMixin extends Entity implements EntityFishHookAccessor {
-    @Unique private static final FishingCatch[] JUNK_CATCHES = {
-            catchOf(NMItems.seaweed, 12, false),
-            catchOf(NMItems.scrapedBark, 5, false),
-            catchOf(BTWItems.pointyStick, 3, false),
-            catchOf(Item.stick, 4, false),
-            catchOf(Item.itemsList[Block.dirt.blockID], 5, false),
-            catchOf(Item.itemsList[Block.sand.blockID], 5, false),
-            catchOf(Item.itemsList[Block.gravel.blockID], 5, false)
-    };
-
-    // Each biome table contains three regular fish and one deliberately scarce trophy fish.
-    @Unique private static final FishingCatch[] OCEAN_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.mackerel, 26, false), catchOf(NMItems.cod, 22, false),
-            catchOf(NMItems.tuna, 14, false), catchOf(NMItems.swordfish, 2, true)
-    };
-    @Unique private static final FishingCatch[] RIVER_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.bass, 26, false), catchOf(NMItems.trout, 22, false),
-            catchOf(NMItems.carp, 14, false), catchOf(NMItems.goldenCarp, 2, true)
-    };
-    @Unique private static final FishingCatch[] SWAMP_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.mudfish, 26, false), catchOf(NMItems.catfish, 22, false),
-            catchOf(NMItems.swampEel, 14, false), catchOf(NMItems.alligatorGar, 2, true)
-    };
-    @Unique private static final FishingCatch[] JUNGLE_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.piranha, 26, false), catchOf(NMItems.neonTetra, 22, false),
-            catchOf(NMItems.jungleCatfish, 14, false), catchOf(NMItems.arapaima, 2, true)
-    };
-    @Unique private static final FishingCatch[] COLD_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.salmon, 26, false), catchOf(NMItems.perch, 22, false),
-            catchOf(NMItems.icefish, 14, false), catchOf(NMItems.frostfish, 2, true)
-    };
-    @Unique private static final FishingCatch[] DESERT_CATCHES = {
-            catchOf(Item.fishRaw, 2, false),
-            catchOf(NMItems.desertMinnow, 26, false), catchOf(NMItems.sandfish, 22, false),
-            catchOf(NMItems.tilapia, 14, false), catchOf(NMItems.duneKoi, 2, true)
-    };
-    @Unique private static final FishingCatch[] NETHER_CATCHES = {
-            catchOf(NMItems.obsidianShard, 4, false),
-            catchOf(NMItems.ashClump, 8, false),
-            catchOf(NMItems.netherrackChunk, 10, false)
-    };
-    @Unique private static final FishingCatch[] BAITED_NETHER_CATCHES = {
-            catchOf(NMItems.obsidianShard, 2, false),
-            catchOf(NMItems.ashClump, 8, false),
-            catchOf(NMItems.lavafish, 5, false),
-            catchOf(NMItems.netherrackChunk, 12, false)
-    };
-
+public abstract class EntityFishHookMixin extends Entity implements EntityFishHookAccessor, FishingHookControl {
     @Shadow public EntityPlayer angler;
     @Shadow public Entity bobber;
     @Shadow private boolean isBaited;
+    @Shadow private boolean inGround;
+    @Shadow private int ticksCatchable;
+    @Shadow protected abstract void loseBait();
+    @Shadow protected abstract boolean isBodyOfWaterLargeEnoughForFishing();
 
-    @Unique private FishingCatch selectedCatch = catchOf(Item.fishRaw, 1, false);
-    @Unique private boolean selectedCatchIsFish;
-    @Unique private boolean caughtFishThisCast;
+    @Unique private FishingGame fishingGame;
+    @Unique private FishingPool fishingPool;
+    @Unique private int submergedTicks;
+    @Unique private int lastCatch;
+    @Unique private int fishingRodSlot;
+    @Unique private ItemStack fishingRod;
+    @Unique private float fishingHealth;
+    @Unique private volatile boolean cancelFishing;
+    @Unique private volatile float fishingInputX = 400, fishingInputY = 42;
+    @Unique private int fishingInputAge;
+    @Unique private volatile boolean receivedFishingInput;
+    @Unique private volatile boolean relativeFishingInput;
+    @Unique private float fishingScroll;
 
-    public EntityFishHookMixin(World world) {
-        super(world);
-    }
+    public EntityFishHookMixin(World world) { super(world); }
 
-    @ModifyArg(method = "checkForBite", at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I"), index = 0)
-    private int adjustFishingBiteChance(int odds) {
-        float equipmentMultiplier = this.rodBiteOddsMultiplier()
-                * (1.0F - 0.10F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler));
-        if (this.dimension == -1 || this.isNetherFishing()) {
-            return NMFishingRates.netherBiteOdds(equipmentMultiplier, this.hasRodUpgrade("IfhyFishingLure"));
-        } else {
-            float availability = ChunkAttributeManager.getFishAvailability(
-                    this.worldObj,
-                    MathHelper.floor_double(this.posX),
-                    MathHelper.floor_double(this.posZ)
-            );
-            return NMFishingRates.biteOdds(this.worldObj.getWorldTime(), this.worldObj.getMoonPhase(),
-                    NMUtils.getIsBloodMoon(), this.worldObj.isPrecipitatingAtPos(
-                            MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ)),
-                    availability, equipmentMultiplier, this.hasRodUpgrade("IfhyFishingLure"));
+    @Inject(method = "checkForBite", at = @At("HEAD"), cancellable = true)
+    private void replaceRandomBites(CallbackInfoReturnable<Boolean> cir) { cir.setReturnValue(false); }
+
+    @Inject(method = "onUpdate", at = @At("TAIL"))
+    private void tickFishingMinigame(CallbackInfo ci) {
+        if (worldObj.isRemote || isDead || !(angler instanceof EntityPlayerMP)) return;
+        boolean submerged = !inGround && bobber == null && worldObj.isAABBInMaterial(boundingBox,
+                isNetherFishing() ? Material.lava : Material.water) && isBodyOfWaterLargeEnoughForFishing();
+        if (fishingGame == null) {
+            if (!submerged) { submergedTicks = 0; fishingPool = null; return; }
+            if (fishingPool == null) fishingPool = new FishingPool((EntityFishHook)(Object)this, isBaited);
+            if (++submergedTicks < fishingPool.activationTicks()) return;
+            fishingGame = new FishingGame(rand, fishingPool::next, fishingPool.stock(), fishingPool.arrivals(),
+                    fishingPool.habitat.maxDepth, fishingPool.abundance());
+            fishingGame.fearMultiplier = fishingPool.has("IfhyFishingBell") ? 0.5F : 1;
+            fishingGame.captureMultiplier = fishingPool.captureMultiplier();
+            fishingGame.rodResistance = fishingPool.resistance();
+            fishingGame.catchLimit = fishingPool.has("IfhyTwinHook") ? 2 : 1;
+            fishingGame.depthWinch = fishingPool.has("IfhyDepthWinch");
+            fishingGame.lureRadius = FishingGame.LURE_RADIUS
+                    * (fishingPool.has("IfhyWideHook") ? FishingTuning.WIDE_HOOK_RADIUS_MULTIPLIER : 1);
+            fishingGame.descentMultiplier = fishingPool.habitat.descentMultiplier;
+            fishingRodSlot = angler.inventory.currentItem;
+            fishingRod = angler.getCurrentEquippedItem().copy();
+            fishingHealth = angler.getHealth();
+            if (btw.community.nightmaremode.NightmareMode.devMode) reportFishingHabitat();
         }
+        if (receivedFishingInput) { fishingInputAge = 0; receivedFishingInput = false; }
+        else fishingInputAge++;
+        ItemStack held = angler.getCurrentEquippedItem();
+        if (!submerged || cancelFishing || angler.isDead || angler.getHealth() < fishingHealth
+                || angler.inventory.currentItem != fishingRodSlot || !ItemStack.areItemStacksEqual(held, fishingRod)
+                || fishingInputAge > 200) {
+            setDead();
+            return;
+        }
+        fishingGame.stock = fishingPool.stock();
+        fishingGame.arrivalTicks = fishingPool.arrivals();
+        fishingGame.abundance = fishingPool.abundance();
+        if (fishingGame.stock <= 0 && fishingGame.fighting == null) fishingGame.targets.removeIf(t -> t.spec.fish);
+        if ((fishingGame.fighting != null) == relativeFishingInput) fishingGame.input(fishingInputX, fishingInputY);
+        else if (fishingGame.fighting != null) fishingGame.input(0, 0);
+        if (fishingGame.fighting != null) fishingInputX = fishingInputY = 0;
+        fishingGame.scroll(consumeFishingScroll());
+        FishingGame.Target caught = fishingGame.tick();
+        if (fishingGame.failed) { loseFishingRod(); setDead(); return; }
+        if (caught != null) {
+            // reserve supply on the server before awarding anything, including simultaneous catches.
+            if (caught.spec.fish && !ChunkAttributeManager.takeFish(worldObj,
+                    MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
+                setDead();
+                return;
+            }
+            awardFishingCatch(caught);
+            lastCatch = caught.spec.itemId;
+            loseBait();
+            held = angler.getCurrentEquippedItem();
+            if (held != null) held.damageItem(1, angler);
+            if (held == null || held.stackSize <= 0 || !fishingGame.keepFishing(caught)) { setDead(); return; }
+            fishingPool.setBaited(isBaited);
+            fishingRod = held.copy();
+            FishingNet.sendCatch((EntityPlayerMP)angler, entityId, lastCatch);
+            lastCatch = 0;
+        }
+        if (fishingGame.age % 2 == 0 || fishingGame.age == 1)
+            FishingNet.sendState((EntityPlayerMP)angler, entityId, fishingGame, fishingPool.lava);
     }
 
     @Unique
-    private float rodBiteOddsMultiplier() {
-        if (this.angler == null) return 1.0F;
-        ItemStack held = this.angler.getCurrentEquippedItem();
-        if (held == null) return 1.0F;
-        Item item = held.getItem();
-        if (item == NMItems.tungstenFishingRod || item == NMItems.tungstenFishingRodBaited) return 0.40F;
-        if (item == NMItems.nickelFishingPole || item == NMItems.nickelFishingPoleBaited) return 0.80F;
-        if (item == NMItems.ironFishingPole || item == NMItems.ironFishingPoleBaited) return 0.65F;
-        if (item == NMItems.diamondFishingPole || item == NMItems.diamondFishingPoleBaited) return 0.50F;
-        if (item == NMItems.steelFishingPole || item == NMItems.steelFishingPoleBaited) return 0.40F;
-        return 1.0F;
+    private void reportFishingHabitat() {
+        FishingHabitat habitat = fishingPool.habitat;
+        String offshore = habitat.offshore >= 1 ? "256+" : String.format(java.util.Locale.ROOT, "%.0f", habitat.offshore * 256);
+        angler.sendChatToPlayer(ChatMessageComponent.createFromText(String.format(java.util.Locale.ROOT,
+                "[Fishing] Chunk %d, %d (%s). Source depth: hook %.1f, nearby %.1f, effective %.1f blocks. "
+                        + "Offshore: about %s blocks. Depth cap: %.0f m. Giant squid habitat: %s (needs %.0f blocks offshore and 175 m). Stock: %.0f%%.",
+                MathHelper.floor_double(posX) >> 4, MathHelper.floor_double(posZ) >> 4, habitat.biome,
+                habitat.hookSourceDepth, habitat.averageSourceDepth, habitat.sourceDepth, offshore, habitat.maxDepth,
+                habitat.supportsGiantSquid() ? "yes" : "no", FishingTuning.GIANT_SQUID_MIN_OFFSHORE_BLOCKS, fishingGame.stock * 100)));
     }
 
-    @Inject(method = "checkForBite", at = @At("HEAD"), cancellable = true)
-    private void preventBitesInDepletedChunks(CallbackInfoReturnable<Boolean> cir) {
-        if (!this.isNetherFishing() && !ChunkAttributeManager.hasFish(
-                this.worldObj,
-                MathHelper.floor_double(this.posX),
-                MathHelper.floor_double(this.posZ)
-        )) {
-            cir.setReturnValue(false);
+    @Override public synchronized void nm$fishingInput(float x, float y, boolean cancel, boolean relative, float scroll) {
+        if (fishingGame == null || !Float.isFinite(x) || !Float.isFinite(y) || !Float.isFinite(scroll)) return;
+        fishingInputX = x;
+        fishingInputY = y;
+        cancelFishing |= cancel;
+        relativeFishingInput = relative;
+        fishingScroll = FishingGame.clamp(fishingScroll + scroll, -6, 6);
+        receivedFishingInput = true;
+    }
+
+    @Unique
+    private synchronized float consumeFishingScroll() {
+        float scroll = fishingScroll;
+        fishingScroll = 0;
+        return scroll;
+    }
+
+    @Inject(method = "setDead", at = @At("HEAD"))
+    private void closeFishingMinigame(CallbackInfo ci) {
+        if (!worldObj.isRemote && fishingGame != null && angler instanceof EntityPlayerMP player) {
+            FishingNet.sendEnd(player, entityId, lastCatch);
+            fishingGame = null;
         }
-    }
-
-    @Redirect(method = "checkForBite", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;canBlockSeeTheSky(III)Z"))
-    private boolean allowLavaFishingUnderNetherCeiling(World world, int x, int y, int z) {
-        return this.isNetherFishing() || world.canBlockSeeTheSky(x, y, z);
     }
 
     @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isAABBInMaterial(Lnet/minecraft/src/AxisAlignedBB;Lnet/minecraft/src/Material;)Z"))
@@ -203,168 +214,62 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         }
     }
 
-    @ModifyArg(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;<init>(Lnet/minecraft/src/Item;)V", ordinal = 0))
-    private Item useSelectedCatch(Item item) {
-        return this.selectedCatch.item;
-    }
-
     @Inject(method = "catchFish", at = @At("HEAD"))
-    private void resetCaughtFishState(CallbackInfoReturnable<Integer> cir) {
-        this.caughtFishThisCast = false;
-    }
+    private void preventVanillaCatchBypass(CallbackInfoReturnable<Integer> cir) { ticksCatchable = 0; }
 
-    @Redirect(method = "catchFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;spawnEntityInWorld(Lnet/minecraft/src/Entity;)Z"))
-    private boolean identifyCaughtFish(World world, Entity entity) {
-        ItemStack caughtStack = null;
-        if (entity instanceof EntityItem) {
-            ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)entity).nm$protectFishingCatch(200);
-            caughtStack = ((EntityItem)entity).getEntityItem();
-            this.caughtFishThisCast = this.selectedCatchIsFish
-                    && caughtStack != null
-                    && caughtStack.itemID == this.selectedCatch.item.itemID;
-        }
-        boolean spawned = world.spawnEntityInWorld(entity);
-        if (spawned && !world.isRemote && caughtStack != null && caughtStack.stackSize > 0
-                && com.itlesports.nightmaremode.util.ArmorSetHelper.isWearingCompleteAnglerSet(this.angler)) {
-            EntityItem bonus = new EntityItem(world, entity.posX, entity.posY, entity.posZ, caughtStack.copy());
-            ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)bonus).nm$protectFishingCatch(200);
-            // the original catch already has its reel-in velocity toward the angler.
-            bonus.motionX = entity.motionX;
-            bonus.motionY = entity.motionY;
-            bonus.motionZ = entity.motionZ;
-            world.spawnEntityInWorld(bonus);
-        }
-        return spawned;
-    }
-
-    @Inject(method = "catchFish", at = @At("TAIL"))
-    private void trackSkillFishing(CallbackInfoReturnable<Integer> cir) {
-        if (this.angler != null && cir.getReturnValueI() > 0) {
-            SkillHandler.incrementFishCaught(this.angler, this.selectedCatch.rare);
-            if (this.caughtFishThisCast) {
-                ChunkAttributeManager.takeFish(
-                        this.worldObj,
-                        MathHelper.floor_double(this.posX),
-                        MathHelper.floor_double(this.posZ)
-                );
+    @Unique
+    private void awardFishingCatch(FishingGame.Target caught) {
+        if (caught.spec.itemId < 0) {
+            EntityLiving mob = caught.spec.itemId == FishingCreatures.GIANT_SQUID
+                    ? new EntityGiantSquid(worldObj)
+                    : new btw.entity.mob.BTWSquidEntity(worldObj);
+            mob.setPosition(posX, posY + 1, posZ);
+            for (int i = 0; i < 12; i++) {
+                double angle = i * Math.PI / 6;
+                mob.setPosition(angler.posX + Math.cos(angle) * 7, angler.posY + 2, angler.posZ + Math.sin(angle) * 7);
+                if (worldObj.getCollidingBoundingBoxes(mob, mob.boundingBox).isEmpty()) break;
             }
-        }
-    }
-
-    @Redirect(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFishHook;playSound(Ljava/lang/String;FF)V"))
-    private void playCatchSoundAtPlayer(EntityFishHook instance, String sound, float volume, float pitch) {
-        this.selectedCatch = this.selectCatch();
-        if (this.selectedCatch.rare) {
-            instance.worldObj.playSoundAtEntity(instance.angler, BTWSounds.GEM_STEP.sound(), 2f, 1f + (float)this.rand.nextGaussian());
+            if (caught.spec.itemId == FishingCreatures.BLUE_SQUID) {
+                double dx = angler.posX - mob.posX, dz = angler.posZ - mob.posZ;
+                double length = Math.max(1, Math.hypot(dx, dz));
+                mob.motionX = dx / length * 0.8; mob.motionZ = dz / length * 0.8; mob.motionY = 0.3;
+                com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(angler);
+                data.blueSquidCaught++;
+                angler.setData(btw.community.nightmaremode.NightmareMode.SKILL_TREE, data);
+            }
+            worldObj.spawnEntityInWorld(mob);
         } else {
-            instance.worldObj.playSoundAtEntity(instance.angler, sound, volume, pitch);
+            ItemStack stack = new ItemStack(Item.itemsList[caught.spec.itemId]);
+            spawnReeledItem(stack);
+            if (com.itlesports.nightmaremode.util.ArmorSetHelper.isWearingCompleteAnglerSet(angler)) spawnReeledItem(stack.copy());
         }
-        if (this.hasRodUpgrade("IfhyFishingBell")) {
-            instance.worldObj.playSoundAtEntity(instance.angler, "random.orb", 0.7F, 1.35F);
+        if (caught.spec.fish) SkillHandler.incrementFishCaught(angler, caught.spec.rare);
+        else if (caught.spec.rare) {
+            com.itlesports.nightmaremode.skill.SkillTreeData data = SkillHandler.getPlayerData(angler);
+            data.rareItemsCaught++;
+            angler.setData(btw.community.nightmaremode.NightmareMode.SKILL_TREE, data);
         }
-        if (!instance.worldObj.isRemote && this.hasRodUpgrade("IfhyFishingAutoReel") && instance.angler != null) {
-            int damage = instance.catchFish();
-            ItemStack held = instance.angler.getCurrentEquippedItem();
-            if (held != null) held.damageItem(damage, instance.angler);
-        }
+        angler.addStat(StatList.fishCaughtStat, 1);
+        worldObj.playSoundAtEntity(angler, "random.splash", 0.7F, 1.1F);
     }
 
     @Unique
-    private FishingCatch selectCatch() {
-        if (this.isNetherFishing()) {
-            this.selectedCatchIsFish = false;
-            ItemStack rod = this.angler.getCurrentEquippedItem();
-            if (rod != null && (rod.getItem() == NMItems.tungstenFishingRod || rod.getItem() == NMItems.tungstenFishingRodBaited)
-                    && this.rand.nextFloat() < (this.isBaited ? 0.65F : 0.80F)) {
-                return this.isBaited ? BAITED_NETHER_CATCHES[2] : NETHER_CATCHES[0];
-            }
-            if (this.isBaited && this.rand.nextFloat() < (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)
-                    + 0.025F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler)) {
-                return BAITED_NETHER_CATCHES[2];
-            }
-            FishingCatch[] catches = this.isBaited ? BAITED_NETHER_CATCHES : NETHER_CATCHES;
-            int roll = this.rand.nextInt(totalWeight(catches));
-            for (FishingCatch catchEntry : catches) {
-                if ((roll -= catchEntry.weight) < 0) {
-                    return catchEntry;
-                }
-            }
-            return catches[0];
-        }
-        FishingCatch[] biomeCatches = this.getBiomeCatches();
-        int localCapacity = ChunkAttributeManager.getLocalMaxFish(
-                this.worldObj,
-                MathHelper.floor_double(this.posX),
-                MathHelper.floor_double(this.posZ)
-        );
-        if (this.angler != null && this.rand.nextFloat() < SkillHandler.getPlayerData(this.angler).rareFishChanceBonus
-                + 0.025F * com.itlesports.nightmaremode.util.ArmorSetHelper.getAnglerPieceCount(this.angler)
-                + (this.hasRodUpgrade("IfhyRareFishLure") ? 0.20F : 0.0F)) {
-            this.selectedCatchIsFish = true;
-            return biomeCatches[biomeCatches.length - 1];
-        }
-        int fishMultiplier = this.dimension == -1 ? 3 : NMFishingRates.fishWeightMultiplier(this.worldObj.getWorldTime(),
-                this.worldObj.getMoonPhase(), NMUtils.getIsBloodMoon());
-        int totalWeight = totalWeight(JUNK_CATCHES) + totalFishWeight(biomeCatches, localCapacity) * fishMultiplier;
-        int roll = this.rand.nextInt(totalWeight);
-
-        for (FishingCatch catchEntry : JUNK_CATCHES) {
-            if ((roll -= catchEntry.weight) < 0) {
-                this.selectedCatchIsFish = false;
-                return catchEntry;
-            }
-        }
-        for (FishingCatch catchEntry : biomeCatches) {
-            if ((roll -= adjustedFishWeight(catchEntry, localCapacity) * fishMultiplier) < 0) {
-                this.selectedCatchIsFish = true;
-                return catchEntry;
-            }
-        }
-        this.selectedCatchIsFish = true;
-        return biomeCatches[0];
+    private void spawnReeledItem(ItemStack stack) {
+        EntityItem item = new EntityItem(worldObj, posX, posY, posZ, stack);
+        ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)item).nm$protectFishingCatch(200);
+        double dx = angler.posX - posX, dy = angler.posY - posY, dz = angler.posZ - posZ;
+        double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        item.motionX = dx * 0.1; item.motionY = dy * 0.1 + Math.sqrt(distance) * 0.08; item.motionZ = dz * 0.1;
+        worldObj.spawnEntityInWorld(item);
     }
 
     @Unique
-    private FishingCatch[] getBiomeCatches() {
-        BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
-        String biomeName = biome.biomeName.toLowerCase(Locale.ROOT);
-        if (biomeName.contains("ocean") || biomeName.contains("beach")) return OCEAN_CATCHES;
-        if (biomeName.contains("swamp")) return SWAMP_CATCHES;
-        if (biomeName.contains("jungle")) return JUNGLE_CATCHES;
-        if (biomeName.contains("taiga") || biomeName.contains("ice") || biomeName.contains("frozen")) return COLD_CATCHES;
-        if (biomeName.contains("desert")) return DESERT_CATCHES;
-        return RIVER_CATCHES;
-    }
-
-    @Unique
-    private static int totalWeight(FishingCatch[] catches) {
-        int total = 0;
-        for (FishingCatch catchEntry : catches) total += catchEntry.weight;
-        return total;
-    }
-
-    @Unique
-    private static int totalFishWeight(FishingCatch[] catches, int capacity) {
-        int total = 0;
-        for (FishingCatch catchEntry : catches) {
-            total += adjustedFishWeight(catchEntry, capacity);
-        }
-        return total;
-    }
-
-    @Unique
-    private static int adjustedFishWeight(FishingCatch catchEntry, int capacity) {
-        if (!catchEntry.rare) {
-            return catchEntry.weight;
-        }
-        return Math.max(1, Math.min(5, Math.round(
-                catchEntry.weight * (float)Math.sqrt(30.0D / Math.max(1, capacity))
-        )));
-    }
-
-    @Unique
-    private static FishingCatch catchOf(Item item, int weight, boolean rare) {
-        return new FishingCatch(item, weight, rare);
+    private void loseFishingRod() {
+        EntityItem rod = angler.dropOneItem(false);
+        if (rod == null) return;
+        double angle = angler.rotationYaw * Math.PI / 180;
+        rod.motionX = -Math.sin(angle) * 0.8; rod.motionZ = Math.cos(angle) * 0.8; rod.motionY = 0.2;
+        ((com.itlesports.nightmaremode.util.interfaces.FishingItemProtection)rod).nm$protectFishingCatch(200);
     }
 
     @Unique
@@ -374,11 +279,6 @@ public abstract class EntityFishHookMixin extends Entity implements EntityFishHo
         }
         ItemStack held = this.angler.getCurrentEquippedItem();
         return held != null && held.getItem() instanceof com.itlesports.nightmaremode.item.items.ItemNetherFishingRod;
-    }
-
-    @Unique
-    private boolean hasRodUpgrade(String key) {
-        return this.angler != null && FishingRodUpgradeRecipe.hasUpgrade(this.angler.getCurrentEquippedItem(), key);
     }
 
 }

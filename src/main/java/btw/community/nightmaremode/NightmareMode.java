@@ -299,6 +299,7 @@ public class NightmareMode extends BTWAddon {
         com.itlesports.nightmaremode.network.SkylightSync.register(this);
         com.itlesports.nightmaremode.network.ScaryEventNet.register(this);
         com.itlesports.nightmaremode.network.TesterSettingsNet.register(this);
+        com.itlesports.nightmaremode.network.FishingNet.register(this);
 
 
         this.lavaPillowGenThirdStrata = new WorldGenMinable(BTWBlocks.lavaPillow.blockID, 10);

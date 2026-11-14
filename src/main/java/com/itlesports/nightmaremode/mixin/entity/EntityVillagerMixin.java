@@ -55,6 +55,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
             ItemStack second = recipe.getSecondItemToBuy();
             if (first != null && first.getItem() == NMItems.soulFlint) first.stackSize = 1;
             if (second != null && second.getItem() == NMItems.soulFlint) second.stackSize = 1;
+            for (ItemStack stack : new ItemStack[]{first, second, recipe.getItemToSell()}) {
+                if (stack != null && stack.getItem() == BTWItems.creeperOysters) {
+                    stack.stackSize = Math.min(16, stack.stackSize);
+                }
+            }
         }
     }
 
@@ -199,6 +204,14 @@ public abstract class EntityVillagerMixin extends EntityAgeable implements IMerc
 
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void feedHungryVillager(EntityPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        if (this.isChild()) {
+            cir.setReturnValue(false);
+            return;
+        }
+        if (com.itlesports.nightmaremode.util.VillagerTradeReroll.useApple((EntityVillager)(Object)this, player)) {
+            cir.setReturnValue(true);
+            return;
+        }
         if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemVillagerDebugTool tool){
             player.getHeldItem().func_111282_a(player, this);
             cir.setReturnValue(true);

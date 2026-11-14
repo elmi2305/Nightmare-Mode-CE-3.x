@@ -91,6 +91,12 @@ public final class NightmareEmiRegistry {
             addRecipe.accept(baiting("steel", NMItems.steelFishingPole, NMItems.steelFishingPoleBaited));
             addRecipe.accept(baiting("nether", NMItems.netherFishingRod, NMItems.netherFishingRodBaited));
             addRecipe.accept(baiting("tungsten", NMItems.tungstenFishingRod, NMItems.tungstenFishingRodBaited));
+            for (Item rod : new Item[]{Item.fishingRod, BTWItems.baitedFishingRod, NMItems.nickelFishingPole, NMItems.nickelFishingPoleBaited,
+                    NMItems.ironFishingPole, NMItems.ironFishingPoleBaited, NMItems.diamondFishingPole, NMItems.diamondFishingPoleBaited,
+                    NMItems.steelFishingPole, NMItems.steelFishingPoleBaited, NMItems.netherFishingRod, NMItems.netherFishingRodBaited,
+                    NMItems.tungstenFishingRod, NMItems.tungstenFishingRodBaited}) {
+                addRecipe.accept(new EmiFishingAttachmentRecipe(rod));
+            }
             int index = 0;
             for (HammerRecipe recipe : HammerCraftingManager.instance.getRecipes()) {
                 addRecipe.accept(new EmiHammerRecipe(recipe, index++));

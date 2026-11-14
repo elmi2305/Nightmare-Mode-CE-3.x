@@ -1,7 +1,39 @@
 package com.itlesports.nightmaremode.util;
 
+import com.itlesports.nightmaremode.fishing.FishingTuning;
+
 public final class NMFishingRates {
     private NMFishingRates() {}
+
+    public static float abundance(long time, int moon, boolean blood, boolean rain, boolean thunder, boolean lava) {
+        if (lava) return 1;
+        int phaseBonus = fishWeightMultiplier(time, moon, blood);
+        float quantity = phaseBonus >= 8 ? 2.2F : phaseBonus >= 4 ? 1.8F : phaseBonus >= 2 ? 1.15F : 0.75F;
+        return Math.min(3.5F, quantity * (rain ? thunder ? 2.5F : 1.9F : 1));
+    }
+
+    public static float rareAppearanceChance(float depth, float skillBonus, boolean rain) {
+        float chance = Math.min(0.16F, (0.008F + Math.max(0, depth) * 0.000175F)
+                * (1 + Math.max(0, skillBonus) * 2) * (rain ? 1.2F : 1));
+        return Math.min(1, chance * Math.max(0, FishingTuning.RARE_SPAWN_MULTIPLIER));
+    }
+
+    public static int activationTicks(float arrivals, float rodMultiplier, float abundance) {
+        return Math.round(Math.max(40, Math.min(600, (40 + arrivals * 2 * rodMultiplier) / Math.max(0.1F, abundance))));
+    }
+
+    public static float captureMultiplier(float rodMultiplier, boolean trackingReel) {
+        return (float)Math.pow(1 / Math.max(0.1F, rodMultiplier), 1.25) * (trackingReel ? 1.4F : 1);
+    }
+
+    public static float pullResistance(float rodMultiplier) {
+        return (float)Math.pow(1 / Math.max(0.1F, rodMultiplier), 0.95);
+    }
+
+    public static float arrivalTicks(int biteOdds) {
+        // compress the old waiting times while preserving every equipment and weather bonus.
+        return 18 + 40 * (float)Math.sqrt(Math.max(1, biteOdds) / 150.0F);
+    }
 
     public static int netherBiteOdds(float rodMultiplier, boolean lure) {
         return Math.max(1, Math.round(150.0F * rodMultiplier * (lure ? 0.5F : 1.0F)));

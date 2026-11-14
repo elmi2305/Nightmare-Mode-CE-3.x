@@ -77,8 +77,6 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
             this.checkForNewTrades(this.getCurrentMaxNumTrades());
         }
         if (!this.worldObj.isRemote && this.buyingList != null && this.ticksExisted % 20 == 0 && !this.isTrading()) {
-            boolean hasIncome = false;
-            boolean hasAquamarine = false;
             for (Object entry : this.buyingList) {
                 MerchantRecipe recipe = (MerchantRecipe)entry;
                 ItemStack payment = recipe.getItemToBuy();
@@ -89,16 +87,9 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
                         && com.itlesports.nightmaremode.util.NMInitializer.isNetherInfrastructureTrade(recipe.getItemToSell().itemID)) {
                     payment.stackSize = (payment.stackSize + 1) / 2;
                 }
-                if (payment != null && payment.getItem() == BTWItems.groundNetherrack
-                        && recipe.getItemToSell().getItem() == Item.emerald && recipe.getItemToSell().stackSize >= 3) hasIncome = true;
-                if (recipe.getItemToSell().getItem() == com.itlesports.nightmaremode.item.NMItems.aquamarine) hasAquamarine = true;
             }
             this.tradesUpdated4030 = true;
-            if (!hasIncome) this.buyingList.addToListWithCheck(new MerchantRecipe(
-                    new ItemStack(BTWItems.groundNetherrack, 24), new ItemStack(Item.emerald, 3)));
-            if (this.getPostTier() == 2 && !hasAquamarine) this.buyingList.addToListWithCheck(new MerchantRecipe(
-                    new ItemStack(Item.emerald, 1 + this.rand.nextInt(2)),
-                    new ItemStack(com.itlesports.nightmaremode.item.NMItems.aquamarine, 8 + this.rand.nextInt(9))));
+            this.addGuaranteedTrades();
         }
         if (!this.worldObj.isRemote && !this.completionReconciled && this.getCurrentTradeLevel() >= 5) {
             this.professionCompleted = true;
@@ -109,6 +100,24 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
         this.motionX = 0.0D;
         this.motionY = 0.0D;
         this.motionZ = 0.0D;
+    }
+
+    public void addGuaranteedTrades() {
+        if (this.worldObj.isRemote || this.buyingList == null) return;
+        boolean hasIncome = false;
+        boolean hasAquamarine = false;
+        for (Object entry : this.buyingList) {
+            MerchantRecipe recipe = (MerchantRecipe)entry;
+            ItemStack payment = recipe.getItemToBuy();
+            if (payment != null && payment.getItem() == BTWItems.groundNetherrack
+                    && recipe.getItemToSell().getItem() == Item.emerald && recipe.getItemToSell().stackSize >= 3) hasIncome = true;
+            if (recipe.getItemToSell().getItem() == com.itlesports.nightmaremode.item.NMItems.aquamarine) hasAquamarine = true;
+        }
+        if (!hasIncome) this.buyingList.addToListWithCheck(new MerchantRecipe(
+                new ItemStack(BTWItems.groundNetherrack, 24), new ItemStack(Item.emerald, 3)));
+        if (this.getPostTier() == 2 && !hasAquamarine) this.buyingList.addToListWithCheck(new MerchantRecipe(
+                new ItemStack(Item.emerald, 1 + this.rand.nextInt(2)),
+                new ItemStack(com.itlesports.nightmaremode.item.NMItems.aquamarine, 8 + this.rand.nextInt(9))));
     }
 
     @Override
@@ -137,6 +146,8 @@ public abstract class EntityNetherPostVillager extends EntityVillager {
 
     @Override
     public boolean interact(EntityPlayer player) {
+        if (this.isChild()) return false;
+        if (com.itlesports.nightmaremode.util.VillagerTradeReroll.useApple(this, player)) return true;
         if (!this.worldObj.isRemote && this.getPostTier() == 3 && this.getCurrentTradeLevel() >= 4) {
             if ((NetherPostProgress.completedTiers(player) & 3) != 3) {
                 if (!this.worldObj.isRemote) {

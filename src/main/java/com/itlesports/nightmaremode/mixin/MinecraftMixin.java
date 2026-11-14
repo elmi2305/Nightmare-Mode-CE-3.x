@@ -30,6 +30,7 @@ public abstract class MinecraftMixin {
     @Inject(method = "runTick", at = @At("TAIL"))
     private void tickScaryEvents(CallbackInfo ci) {
         com.itlesports.nightmaremode.client.ScaryEvents.tick();
+        com.itlesports.nightmaremode.client.FishingClient.tick();
     }
 
     @Inject(method = "displayGuiScreen", at = @At("HEAD"))
@@ -39,6 +40,7 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "loadWorld(Lnet/minecraft/src/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
     private void unloadScaryEvents(WorldClient next, String message, CallbackInfo ci) {
+        com.itlesports.nightmaremode.client.FishingClient.clear();
         if (next != null) com.itlesports.nightmaremode.skill.NMSkillNodes.refreshSlabItems();
         if (next == null) com.itlesports.nightmaremode.client.ScaryEvents.unload();
         else com.itlesports.nightmaremode.client.ScaryEvents.clear();
