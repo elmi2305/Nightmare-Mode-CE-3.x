@@ -1402,12 +1402,11 @@ public abstract class NMInitializer implements AchievementExt {
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), (TagOrStack[])new ItemStack[]{new ItemStack(BTWItems.screw)});
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 4), (TagOrStack[])new ItemStack[]{new ItemStack(BTWBlocks.screwPump)});
 
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.ironNugget, 8), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.ironScythe)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(BTWItems.diamondIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.diamondScythe)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.tungstenIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.tungstenScythe)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.blackglassIngot, 2), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.blackglassScythe)});
-        RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.deadzoneAlloyIngot, 1), (TagOrStack[])new ItemStack[]{new ItemStack(NMItems.deadzoneScythe)});
-
+        addCrucibleRecovery(new ItemStack(BTWItems.ironNugget, 8), NMItems.ironScythe);
+        addCrucibleRecovery(new ItemStack(BTWItems.diamondIngot, 2), NMItems.diamondScythe);
+        addCrucibleRecovery(new ItemStack(NMItems.tungstenIngot, 2), NMItems.tungstenScythe);
+        addCrucibleRecovery(new ItemStack(NMItems.blackglassIngot, 2), NMItems.blackglassScythe);
+        addCrucibleRecovery(new ItemStack(NMItems.deadzoneAlloyIngot, 1), NMItems.deadzoneScythe);
 
         RecipeManager.addStokedCrucibleRecipe(new ItemStack(NMItems.refinedDiamondIngot), new ItemStack[]{
                 new ItemStack(BTWItems.diamondIngot),
@@ -5533,4 +5532,3 @@ public abstract class NMInitializer implements AchievementExt {
 
 
 }
-// test
