@@ -3288,6 +3288,8 @@ public abstract class NMInitializer implements AchievementExt {
             int inputMetadata = tier == 0 ? 0 : tier + 1;
             RecipeManager.addRecipe(new ItemStack(Block.netherrack, 1, tier + 2), new Object[]{
                     "###", "###", "###", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, inputMetadata)});
+            RecipeManager.addRecipe(new ItemStack(Block.netherrack, 9, inputMetadata), new Object[]{
+                    "#", Character.valueOf('#'), new ItemStack(Block.netherrack, 1, tier + 2)});
         }
         killCraftingRecipe(BTWItems.netherBrick);
         killCraftingRecipe(Item.netherrackBrick);
@@ -3329,7 +3331,7 @@ public abstract class NMInitializer implements AchievementExt {
                         Character.valueOf('N'), NMItems.nickelPlate,
                         Character.valueOf('R'), NMItems.refinedRedstone,
                         Character.valueOf('F'), NMItems.fluidGauge,
-                        Character.valueOf('B'), Block.netherBrick,
+                        Character.valueOf('B'), BTWBlocks.looseNetherBrick,
                         Character.valueOf('A'), NMItems.aquamarine}),
                 NMSkillNodes.BRING_REDSTONE_BLOCK_12, NMSkillNodes.BRING_AQUAMARINE_16,
                 NMSkillNodes.BRING_NICKEL_PLATE_4, NMSkillNodes.BRING_DYE_BLEND_16);
@@ -5531,3 +5533,4 @@ public abstract class NMInitializer implements AchievementExt {
 
 
 }
+// test
